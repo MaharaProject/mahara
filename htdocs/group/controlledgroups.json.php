@@ -33,13 +33,9 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $userid = param_integer('userid');
-$jointype = param_variable('jointype');
+$groupdata = array();
+$initialgroups = array('controlled' => array(), 'invite' => array());
 
-if (!in_array($jointype, array('controlled', 'invite'))) {
-    json_reply('local', get_string('accessdenied', 'error'));
-}
-
-if ($jointype == 'controlled') {
   /* Get (a) controlled membership groups,
      (b) request membership groups where the displayed user has requested membership,
      where the logged in user either:
@@ -56,7 +52,7 @@ if ($jointype == 'controlled') {
      *                   array(...),
      *           );
 */
-$request = get_records_sql_array("SELECT g.*, gm.role,
+$controlled = get_records_sql_array("SELECT g.*, gm.role,
           (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS member,
           (SELECT gm1.role FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS memberrole
           FROM {group} g
@@ -67,8 +63,20 @@ $request = get_records_sql_array("SELECT g.*, gm.role,
           AND (g.jointype = 'controlled' OR (g.jointype = 'request' AND gmr.member = ?))
           AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
           AND g.deleted = 0", array($userid, $userid, $userid, $USER->get('id'), $userid));
+
+if ($controlled) {
+    foreach ($controlled as &$g) {
+        if ($g->member) {
+            $g->checked = true;
+            $initialgroups['controlled'][] = $g->id;
+            if ($g->role != 'admin') {
+                $g->disabled = true;
+            }
+        }
+    }
+    $groupdata['controlled'] = $controlled;
 }
-elseif ($jointype == 'invite') {
+
   /* Get 'Invite olny' groups where the logged in user is a group admin.
      @return array  A data structure containing results looking like ...
      *         $results = array(
@@ -81,7 +89,7 @@ elseif ($jointype == 'invite') {
      *                   array(...),
      *           );
 */
-$request = get_records_sql_array("SELECT g.*, gm.role,
+$invite = get_records_sql_array("SELECT g.*, gm.role,
         (SELECT 1 FROM {group_member_invite} gi WHERE gi.member = ? AND gi.group = g.id) AS invited,
         (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS member
         FROM {group} g
@@ -90,9 +98,26 @@ $request = get_records_sql_array("SELECT g.*, gm.role,
         AND g.jointype = 'invite'
         AND gm.role = 'admin'
         AND g.deleted = 0", array($userid, $userid, $USER->get('id')));
+
+if ($invite) {
+    foreach ($invite as &$g) {
+        if ($g->member || $g->invited) {
+            $g->checked = true;
+            $g->disabled = true;
+            $initialgroups['invite'][] = $g->id;
+        }
+    }
+    $groupdata['invite'] = $invite;
 }
 
-$data['data'] = $request;
+$smarty = smarty_core();
+$smarty->assign('data', $groupdata);
+$smarty->assign('userid', $userid);
+
+$data['data'] = array(
+    'html' => $smarty->fetch('group/editgroupmembership.tpl'),
+    'initialgroups' => $initialgroups,
+);
 $data['error'] = false;
 $data['message'] = null;
 

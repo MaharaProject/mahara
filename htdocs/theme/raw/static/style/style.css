@@ -419,7 +419,7 @@ input#files_filebrowser_edit_artefact {
 	color: #333;
 }
 /** link buttons **/
-.rbuttons a.btn,
+a.btn,
 .upgradeicon a,
 #loginas .btn-loginas {
     font-size: 1em;
@@ -442,7 +442,7 @@ input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
+a.btn:hover {
 	background: #d1d1d1;
 	text-decoration: none;
 	cursor: default;
@@ -455,7 +455,7 @@ input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+a.btn:active {
 	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
 	background: #d1d1d1;
 }
@@ -1460,12 +1460,28 @@ ul.groupuserstatus {
 	width: 180px;
 	font-size: .9em;
 }
-#friendslist ul.actionlist div.groupbox{
-    position: relative;
-    display: none;
+div.groupbox {
+    width: 500px;
+    text-align: center;
     background: white;
-    border: 1px solid black;
-    z-index: 4;
+    border: 10px solid #d1d1d1;
+    padding: 1.5em 10px .5em;
+}
+div.groupbox div.jointype {
+    border: 1px solid #d1d1d1;
+    margin: 0;
+    padding: .5em .5em 1em;
+}
+div.groupbox h3 {
+    margin-top: 0;
+}
+div.groupbox ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+div.groupbox li.last {
+    margin-top: .5em;
 }
 ul.groupuserstatus li,
 #friendslist ul.actionlist li {

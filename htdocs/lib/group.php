@@ -1266,20 +1266,33 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
 
 function group_get_user_groups($userid=null, $roles=null) {
+    static $usergroups = array();
+
     if (is_null($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }
-    if ($groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype
+
+    if (empty($roles) && isset($usergroups[$userid])) {
+        return $usergroups[$userid];
+    }
+
+    if (!$groups = get_records_sql_array(
+        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype, gtr.see_submitted_views
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
+        JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
         WHERE gm.member = ?
         AND g.deleted = 0 " . (is_array($roles) ? (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')') : '') . "
         ORDER BY gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
-        return $groups;
+        $groups = array();
     }
-    return array();
+
+    if (empty($roles)) {
+        $usergroups[$userid] = $groups;
+    }
+
+    return $groups;
 }
 
 

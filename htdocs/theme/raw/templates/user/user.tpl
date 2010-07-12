@@ -39,17 +39,8 @@
 			{/if}
 		</li>
       {/if}
-      {if $admingroups->controlled}
-      <li><a href="#" onclick="showGroupBox(event, {$user->id}, 'controlled')">{str tag='controlledmembership' section='group'}</a></li>
-      <div class="groupbox" id="controlledgroupbox_{$user->id}">
-          <ul></ul>
-      </div>
-      {/if}
-      {if $admingroups->invite}
-      <li><a href="#" onclick="showGroupBox(event, {$user->id}, 'invite')">{str tag='invitemembership' section='group'}</a></li>
-      <div class="groupbox" id="invitegroupbox_{$user->id}">
-          <ul></ul>
-      </div>
+      {if $admingroups}
+      <li><a href="" onclick="showGroupBox(event, {$user->id})">{str tag='editgroupmembership' section='group'}</a></li>
       {/if}
 	</ul>
 

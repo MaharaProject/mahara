@@ -20,9 +20,8 @@ Array.prototype.compare = function(testArr) {
 
 var ul = null;
 var initialgroups = new Array();
-var reversetypes = {'invite':'controlled','controlled':'invite'};
 
-function showGroupBox(event, user_id, type) {
+function showGroupBox(event, user_id) {
     replaceChildNodes('messages');
 
     if (event.preventDefault) {
@@ -31,17 +30,22 @@ function showGroupBox(event, user_id, type) {
         event.returnValue = false;
     }
 
-    ul = $(type + 'groupbox_' + user_id).getElementsByTagName('ul')[0];
-
-    if (getStyle($(type + 'groupbox_' + user_id), 'display') == 'block'){
-        hideElement($(type + 'groupbox_' + user_id));
+    if (!$('groupbox')) {
+        appendChildNodes(
+            getFirstElementByTagAndClassName('body'),
+            DIV({'id':'groupbox','class':'groupbox hidden'})
+        );
     }
-    else {
-        hideElement($(reversetypes[type] + 'groupbox_' + user_id));
-        getitems(user_id, type, function() {
-            showElement($(type + 'groupbox_' + user_id));
+
+    if (hasElementClass('groupbox', 'hidden')) {
+        getitems(user_id, function() {
+            removeElementClass('groupbox', 'hidden');
         });
     }
+    else {
+        addElementClass('groupbox', 'hidden');
+    }
+    return false;
 }
 
 function changemembership(event, user_id, type) {
@@ -53,8 +57,6 @@ function changemembership(event, user_id, type) {
         event.returnValue = false;
     }
 
-    ul = $(type + 'groupbox_' + user_id).getElementsByTagName('ul')[0];
-
     var groups = document.getElementsByName(type+'group_'+user_id);
     var resultgroups = new Array();
 
@@ -64,61 +66,43 @@ function changemembership(event, user_id, type) {
         }
     });
     // apply changes only if something has been changed
-    if (!initialgroups[user_id].compare(resultgroups)){
+    if (!initialgroups[type].compare(resultgroups)){
         sendjsonrequest('../group/changegroupsmembership.json.php',
         {
             'jointype':type,
             'userid':user_id,
             'resultgroups':resultgroups.join(','),
-            'initialgroups':initialgroups[user_id].join(',')
+            'initialgroups':initialgroups[type].join(',')
             }, 'POST',
         function() {
-            getitems(user_id, type, function() {});
+            addElementClass('groupbox', 'hidden');
         });
     }
 }
 
-function getitems(user_id, type, successfunction) {
+function getitems(user_id, successfunction) {
     sendjsonrequest('../group/controlledgroups.json.php', {
         'userid':user_id,
-        'jointype':type
     }, 'GET',
-    function(groups) {
-        var results = new Array();
-        initialgroups[user_id] = [];
+    function(data) {
+        replaceChildNodes('groupbox');
+        $('groupbox').innerHTML = data.data.html;
 
-        if (groups.data == false) {
-            results.push(LI(get_string('nogroups')));
-        }
-        else {
-            forEach(groups.data, function(group) {
-                var li = LI('');
-                var input = INPUT({
-                    'type':'checkbox',
-                    'class':'checkbox',
-                    'name':type+'group_'+user_id,
-                    'value':group.id
-                    });
-                if (group.member || group.invited) {
-                    input.checked = true;
-                    initialgroups[user_id].push(group.id);
-                }
-                appendChildNodes(li, input, '\u00A0\u00A0', group.name);
-                if (group.invited || (type == 'invite' && group.member) || (group.role == 'tutor' && ((group.memberrole == 'member' && input.checked) || (group.member && group.memberrole != 'member')))) {
-                    li.setAttribute('class', 'disabled');
-                    input.disabled = true;
-                }
-                results.push(li);
-            });
-            var a = A({
-                'href':'#'
-            }, '\u00A0\u00A0', get_string('applychanges'));
-            a.setAttribute('onclick', 'changemembership(event, '+user_id+', \''+type+'\');');
-            results.push(LI({}, a));
-        }
+        var jt = getElementsByTagAndClassName('div', 'jointype', 'groupbox');
+        var jtwidth = 300;
+        forEach(jt, function(elem) { setStyle(elem, {'width': jtwidth + 'px'}); });
 
-        replaceChildNodes(ul, results);
-        if (ul.childNodes.length) ul.lastChild.className = 'last';
+        var gbwidth = jt.length == 2 ? 640 : 315;
+        var d = getElementDimensions('groupbox');
+        var vpdim = getViewportDimensions();
+        var newtop = getViewportPosition().y + Math.max((vpdim.h - d.h) / 2, 5);
+        setStyle('groupbox', {
+            'width': gbwidth + 'px',
+            'left': (vpdim.w - d.w) / 2 + 'px',
+            'top': newtop + 'px',
+            'position': 'absolute'
+        });
+        initialgroups = data.data.initialgroups;
         successfunction();
     });
 }

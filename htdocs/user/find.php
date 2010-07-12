@@ -43,26 +43,15 @@ $limit  = 10;
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 $data['query'] = $query;
 
-$controlledgroups = count_records_sql("SELECT COUNT(g.id)
-          FROM {group} g
-          JOIN {group_member} gm ON (gm.group = g.id)
-          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
-          WHERE gm.member = ?
-          AND g.jointype = 'controlled'
-          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
-          AND g.deleted = 0", array($USER->get('id')));
-
-$invite = count_records_sql("SELECT COUNT(g.id)
-        FROM {group} g
-        JOIN {group_member} gm ON (gm.group = g.id)
-        WHERE gm.member = ?
-        AND g.jointype = 'invite'
-        AND gm.role = 'admin'
-        AND g.deleted = 0", array($USER->get('id')));
-
-$admingroups = new StdClass;
-$admingroups->controlled = $controlledgroups;
-$admingroups->invite = $invite;
+require_once(get_config('libroot').'group.php');
+$admingroups = false;
+foreach (group_get_user_groups() as $g) {
+    if (($g->jointype == 'invite' && $g->role == 'admin')
+        || ($g->jointype == 'controlled' && ($g->role == 'admin' || $g->see_submitted_views))) {
+        $admingroups = true;
+        break;
+    }
+}
 
 build_userlist_html($data, 'find', $admingroups);
 
@@ -94,7 +83,7 @@ addLoadEvent(function () {
 EOF;
 
 $javascript = array('paginator');
-if ($admingroups->invite || $admingroups->controlled) {
+if ($admingroups) {
     array_push($javascript, 'groupbox');
 }
 $smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock('find'))));
