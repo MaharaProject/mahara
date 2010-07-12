@@ -97,7 +97,7 @@ switch ($type) {
         }
 
         // Look for an appropriate image on gravatar.com
-        if ($useremail and $gravatarurl = gravatar_icon($useremail, $size, $notfound)) {
+        if ($useremail and $gravatarurl = remote_avatar($useremail, $size, $notfound)) {
             redirect($gravatarurl);
         }
 
