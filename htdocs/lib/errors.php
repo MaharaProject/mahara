@@ -58,8 +58,6 @@ define('LOG_LEVEL_WARN', 8);
 define('DEVMODE_DEBUGJS', 1);
 /** include debug.css */
 define('DEVMODE_DEBUGCSS', 2);
-/** include firebug lite */
-define('DEVMODE_FIREBUGLITE', 4);
 /** include unpacked mochikit */
 define('DEVMODE_UNPACKEDJS', 8);
 // more here.. start at 16 :)

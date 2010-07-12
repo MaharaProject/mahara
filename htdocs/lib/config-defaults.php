@@ -113,13 +113,12 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 //   debugging javascript at your discretion
 // * 'debug.css' will be included on each page. You can edit this file to add 
 //   debugging CSS at your discretion
-// * firebuglite will be included, if you are not using Firefox
 // * the unpacked version of MochiKit will be used
 //
 // These options are a performance hit otherwise, enable when you are 
 // developing for Mahara
 $cfg->developermode = false;
-// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_FIREBUGLITE | DEVMODE_UNPACKEDJS;
+// $cfg->developermode = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
 
 // Whether to send e-mail. If set to false, Mahara will not send any e-mail at 
 // all. This is useful for when setting up development versions of Mahara where 

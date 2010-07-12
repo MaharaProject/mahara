@@ -292,10 +292,6 @@ EOF;
     if (get_config('developermode') & DEVMODE_DEBUGJS) {
         $javascript_array[] = $jsroot . 'debug.js';
     }
-    if ((get_config('developermode') & DEVMODE_FIREBUGLITE)
-        && isset($_SERVER['HTTP_USER_AGENT']) && false === stripos($_SERVER['HTTP_USER_AGENT'], 'gecko')) {
-        $javascript_array[] = $jsroot . 'firebug/firebug.js';
-    }
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {
