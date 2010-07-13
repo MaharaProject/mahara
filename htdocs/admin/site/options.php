@@ -145,6 +145,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('userscanhiderealnames'),
                     'disabled'     => in_array('userscanhiderealnames', $OVERRIDDEN),
                 ),
+                'searchusernames' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('searchusernames', 'admin'),
+                    'description'  => get_string('searchusernamesdescription', 'admin'),
+                    'defaultvalue' => get_config('searchusernames'),
+                    'disabled'     => in_array('searchusernames', $OVERRIDDEN),
+                ),
                 'anonymouscomments' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('anonymouscomments', 'admin'),
@@ -205,13 +212,6 @@ $siteoptionform = array(
                     'title'        => get_string('allowgroupcategories', 'admin'),
                     'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
                     'defaultvalue' => get_config('allowgroupcategories'),
-                ),
-                'searchusernames' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('searchusernames', 'admin'),
-                    'description'  => get_string('searchusernamesdescription', 'admin'),
-                    'defaultvalue' => get_config('searchusernames'),
-                    'disabled'     => in_array('searchusernames', $OVERRIDDEN),
                 ),
             ),
         ),

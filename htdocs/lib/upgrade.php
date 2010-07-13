@@ -702,6 +702,7 @@ function core_install_firstcoredata_defaults() {
     set_config('homepageinfo', 1);
     set_config('showonlineuserssideblock', 1);
     set_config('footerlinks', serialize(array('privacystatement', 'about', 'contactus')));
+    set_config('searchusernames', 1);
 
     // install the applications
     $app = new StdClass;
