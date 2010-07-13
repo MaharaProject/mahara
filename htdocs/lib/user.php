@@ -645,13 +645,18 @@ function process_email($address) {
  * blank, will default to the currently logged in user).
  * @param boolean $nameonly do not append the user's username even if $userto can see it.
  * @param boolean $realname show the user's real name even if preferredname exists
+ * @param boolean $username show the user's username even if the viewer is not an admin
  *
  * @returns string name to display
  */
-function display_name($user, $userto=null, $nameonly=false, $realname=false) {
+function display_name($user, $userto=null, $nameonly=false, $realname=false, $username=false) {
     global $USER;
-    static $resultcache = array();
+    static $tutorcache  = array();
     static $usercache   = array();
+
+    if ($nameonly) {
+        return display_default_name($user);
+    }
 
     if (empty($userto)) {
         $userto = new StdClass;
@@ -726,39 +731,53 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false) {
     $user->id   = (isset($user->id)) ? $user->id : null;
     $userto->id = (isset($userto->id)) ? $userto->id : null;
 
-    if (isset($resultcache[$user->id][$userto->id][$nameonly][$realname])) {
-        return $resultcache[$user->id][$userto->id][$nameonly][$realname];
-    }
+    $addusername = $username || !empty($userto->admin) || !empty($userto->staff);
 
     // if they don't have a preferred name set, just return here
-    $firstlast = (isset($user->deleted) && $user->deleted) ? get_string('deleteduser') : ($user->firstname . ' ' . $user->lastname);
     if (empty($user->preferredname)) {
-        if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-            return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $firstlast . ' (' . $user->username . ')');
+        $firstlast = full_name($user);
+        if ($addusername) {
+            return $firstlast . ' (' . $user->username . ')';
         }
-        return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $firstlast);
+        return $firstlast;
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $user->preferredname);
+        return $user->preferredname;
     }
 
-    if ((!empty($userto->admin) || !empty($userto->staff)) && !$nameonly) {
-        return ($resultcache[$user->id][$userto->id][$nameonly][$realname]
-            = $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')');
+    // Preferred name is set
+    $addrealname = $realname || !empty($userto->admin) || !empty($userto->staff);
+
+    if (!$addrealname) {
+        // Tutors can always see the user's real name, so we need to check if the
+        // viewer is a tutor of the user whose name is being displayed
+        if (!isset($tutorcache[$user->id][$userto->id])) {
+            $tutorcache[$user->id][$userto->id] = record_exists_sql('
+                SELECT s.member
+                FROM {group_member} s
+                JOIN {group_member} t ON s.group = t.group
+                JOIN {group} g ON (g.id = s.group AND g.deleted = 0)
+                JOIN {grouptype_roles} gtr
+                    ON (g.grouptype = gtr.grouptype AND gtr.role = t.role AND gtr.see_submitted_views = 1)
+                WHERE s.member = ? AND t.member = ?',
+                array($user->id, $userto->id)
+            );
+        }
+        $addrealname = $tutorcache[$user->id][$userto->id];
     }
 
-    $sql = "SELECT g1.member
-            FROM {group_member} g1 
-            JOIN {group_member} g2
-                ON g1.group = g2.group
-            JOIN {group} g ON (g.id = g1.group AND g.deleted = 0)
-            WHERE g1.member = ? AND g2.member = ? AND g2.role = 'tutor'";
-    if ($realname || record_exists_sql($sql, array($user->id, $userto->id))) {
-        return ($resultcache[$user->id][$userto->id][$nameonly][$realname]
-            = $user->preferredname . ($nameonly ? '' : ' (' . $firstlast . ')'));
+    if ($addrealname) {
+        $firstlast = full_name($user);
+        if ($addusername) {
+            return $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')';
+        }
+        return $user->preferredname . ' (' . $firstlast . ')';
     }
-    return ($resultcache[$user->id][$userto->id][$nameonly][$realname] = $user->preferredname);
+    if ($addusername) {
+        return $user->preferredname . ' (' . $user->username . ')';
+    }
+    return $user->preferredname;
 }
 
 /**
@@ -783,16 +802,10 @@ function display_default_name($user) {
         $user->preferredname = $userObj->get('preferredname');
         $user->firstname     = $userObj->get('firstname');
         $user->lastname      = $userObj->get('lastname');
-        $user->admin         = $userObj->get('admin');
+        $user->deleted       = $userObj->get('deleted');
     }
 
-    // if they don't have a preferred name set, just return here
-    if (empty($user->preferredname)) {
-        return $user->firstname . ' ' . $user->lastname;
-    }
-    else {
-        return $user->preferredname;
-    }
+    return empty($user->preferredname) ? full_name($user) : $user->preferredname;
 }
 
 
@@ -812,9 +825,10 @@ function full_name($user=null) {
         $user = new StdClass;
         $user->firstname = $USER->get('firstname');
         $user->lastname  = $USER->get('lastname');
+        $user->deleted   = $USER->get('deleted');
     }
 
-    return $user->firstname . ' ' . $user->lastname;
+    return isset($user->deleted) && $user->deleted ? get_string('deleteduser') : $user->firstname . ' ' . $user->lastname;
 }
 
 
