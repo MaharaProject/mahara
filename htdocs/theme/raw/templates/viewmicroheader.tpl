@@ -8,16 +8,16 @@
     <div id="loading-box"></div>
     <div id="top-wrapper">
       <div class="viewheader rel">
-        <div class="rbuttons">
-          <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>
-        </div>
-        <div class="links lbuttons">
+        <div class="links rbuttons">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
               <a {if $item.type}class="btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a>&nbsp;
             {/foreach}
           {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;
           {/if}
+        </div>
+        <div class="lbuttons">
+          <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>
         </div>
 {if $LOGGEDIN}
         <div class="nav">
