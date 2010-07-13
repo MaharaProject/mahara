@@ -1311,11 +1311,12 @@ function get_users_data($userlist, $getviews=true) {
     $userid = $USER->get('id');
     $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
     $allowhidename = get_config('userscanhiderealnames');
+    $showusername = get_config('searchusernames');
 
     foreach ($data as &$record) {
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
         $record->institutions = get_institution_string_for_user($record->id);
-        $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref);
+        $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref, $showusername);
     }
 
     if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {

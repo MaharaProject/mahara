@@ -50,9 +50,7 @@
 
 	<div class="rightdiv">
       <h3>
-		<a href="{$WWWROOT}user/view.php?id={$user->id}">
-			{$user->display_name}
-		</a>
+		<a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->display_name}</a>
 		{if $user->pending}- {str tag='pending' section='group'}
         {elseif $user->friend && $page == 'find'}- {str tag='existingfriend' section='group'}
         {/if}
