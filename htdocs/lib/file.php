@@ -305,6 +305,56 @@ function get_mime_type($file) {
 
 
 /**
+ * Given a file path, guesses the mime type of the file using the
+ * php functions finfo_file, mime_content_type, or looking for the
+ * file extension in the artefact_file_mime_types table
+ *
+ * @param string $file The file to check
+ * @return string      The mime type of the file
+ */
+function file_mime_type($file) {
+    static $mimetypes = null;
+
+    if (class_exists('finfo')) {
+        if (defined('FILEINFO_MIME_TYPE')) {
+            if ($finfo = @new finfo(FILEINFO_MIME_TYPE)) {
+                if ($type = @$finfo->file($file)) {
+                    return $type;
+                }
+            }
+        }
+        else if ($finfo = @new finfo(FILEINFO_MIME)) {
+            if ($type = @$finfo->file($file)) {
+                if ($bits = explode(';', $type)) {
+                    return $bits[0];
+                }
+            }
+        }
+    }
+    else if (function_exists('mime_content_type')) {
+        return mime_content_type($file);
+    }
+
+    // Try the filename extension in case it's a file that Mahara
+    // cares about.  For now, use the artefact_file_mime_types table,
+    // even though it's in a plugin and the description column doesn't
+    // really contain filename extensions.
+    $basename = basename($file);
+    if (strpos($basename, '.', 1)) {
+        if (is_null($mimetypes)) {
+            $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
+        }
+        $ext = strtolower(array_pop(explode('.', $basename)));
+        if (isset($mimetypes[$ext])) {
+            return $mimetypes[$ext]->mimetype;
+        }
+    }
+
+    return 'application/octet-stream';
+}
+
+
+/**
  * Given a mimetype (perhaps returned by {@link get_mime_type}, returns whether
  * Mahara thinks it is a valid image file.
  *
