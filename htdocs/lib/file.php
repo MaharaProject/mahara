@@ -318,21 +318,23 @@ function file_mime_type($file) {
     if (class_exists('finfo')) {
         if (defined('FILEINFO_MIME_TYPE')) {
             if ($finfo = @new finfo(FILEINFO_MIME_TYPE)) {
-                if ($type = @$finfo->file($file)) {
-                    return $type;
-                }
+                $type = @$finfo->file($file);
             }
         }
         else if ($finfo = @new finfo(FILEINFO_MIME)) {
-            if ($type = @$finfo->file($file)) {
-                if ($bits = explode(';', $type)) {
-                    return $bits[0];
+            if ($typecharset = @$finfo->file($file)) {
+                if ($bits = explode(';', $typecharset)) {
+                    $type = $bits[0];
                 }
             }
         }
     }
     else if (function_exists('mime_content_type')) {
-        return mime_content_type($file);
+        $type = mime_content_type($file);
+    }
+
+    if (!empty($type) && $type != 'application/octet-stream') {
+        return $type;
     }
 
     // Try the filename extension in case it's a file that Mahara
