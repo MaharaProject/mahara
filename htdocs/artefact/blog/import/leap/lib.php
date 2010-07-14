@@ -253,10 +253,11 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         }
         // Note: this data is passed (eventually) to ArtefactType->__construct,
         // which calls strtotime on the dates for us
+        require_once('file.php');
         $data = (object)array(
             'title' => (string)$blogpostentry->title . ' ' . get_string('attachment', 'artefact.blog'),
             'owner' => $importer->get('usr'),
-            'filetype' => mime_content_type($pathname),
+            'filetype' => file_mime_type($pathname),
         );
         return ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true);
     }

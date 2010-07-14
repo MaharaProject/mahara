@@ -191,8 +191,8 @@ function adduser_validate(Pieform $form, $values) {
         }
 
         if ($values['leap2afile']['type'] == 'application/octet-stream') {
-            // the browser wasn't sure, so use mime_content_type to guess
-            $mimetype = mime_content_type($values['leap2afile']['tmp_name']);
+            require_once('file.php');
+            $mimetype = file_mime_type($values['leap2afile']['tmp_name']);
         }
         else {
             $mimetype = $values['leap2afile']['type'];

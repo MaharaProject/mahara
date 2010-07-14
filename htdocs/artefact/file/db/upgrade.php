@@ -263,9 +263,10 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
     if ($oldversion < 2010012702) {
         if ($records = get_records_sql_array("SELECT * FROM {artefact_file_files} WHERE filetype='application/octet-stream'", array())) {
+            require_once('file.php');
             foreach ($records as &$r) {
                 $path = get_config('dataroot') . 'artefact/file/originals/' . $r->fileid % 256 . '/' . $r->fileid;
-                set_field('artefact_file_files', 'filetype', mime_content_type($path), 'fileid', $r->fileid);
+                set_field('artefact_file_files', 'filetype', file_mime_type($path), 'fileid', $r->fileid);
             }
         }
     }

@@ -403,7 +403,8 @@ abstract class ImporterTransport {
         safe_require('artefact', 'file');
         $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
         if (empty($this->mimetype)) {
-            $this->mimetype = mime_content_type($this->importfile);
+            require_once('file.php');
+            $this->mimetype = file_mime_type($this->importfile);
         }
         // if we don't have a zipfile, just move the import file to the extract location
         if (!in_array($this->mimetype, $ziptypes)) {
@@ -514,8 +515,9 @@ class MnetImporterTransport extends ImporterTransport {
         }
         // detect the filetype and bail if it's not a zip file
         safe_require('artefact', 'file');
+        require_once('file.php');
         $ziptypes = PluginArtefactFile::get_mimetypes_from_description('zip');
-        $this->mimetype = mime_content_type($this->tempdir . $this->importfilename);
+        $this->mimetype = file_mime_type($this->tempdir . $this->importfilename);
         if (!in_array($this->mimetype, $ziptypes)) {
             throw new ImportException($this->importer, 'Not a valid zipfile - mimetype was ' . $this->mimetype);
         }
