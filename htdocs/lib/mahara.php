@@ -76,12 +76,6 @@ function ensure_sanity() {
     if (!extension_loaded('dom')) {
         throw new ConfigSanityException(get_string('domextensionnotloaded', 'error'));
     }
-    if (!function_exists('mime_content_type')) {
-        log_environ(get_string('mimemagicnotloaded', 'error'));
-        function mime_content_type($filename) {
-            return 'application/octet-stream';
-        }
-    }
 
     //Check for freetype in the gd extension
     $gd_info = gd_info();
