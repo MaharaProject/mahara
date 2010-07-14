@@ -487,10 +487,6 @@ div.btn-edit input.submit,
     * overflow: visible;
 }
 
-#userview .user-icon a {
-	margin: 0 0 0 1em;
-}
-
 .rbuttons {
     position: absolute;
     right: 0;
@@ -554,6 +550,18 @@ div.rbuttons form div {
 div.rbuttons .small-logo {
 	border: 0;
 	background: none;
+}
+
+/* Profile icons */
+#userview .user-icon a {
+	margin: 0 0 0 1em;
+}
+.profile-icon-container {
+  width: 20px;
+  height: 20px;
+  float: left;
+  padding-right:.5em;
+  text-align: center;
 }
 
 /**************************** Top of page elements ****************************/
@@ -922,13 +930,6 @@ li#pendingfriends a {
 }
 #sb-onlineusers li {
     line-height: 2.1em;
-}
-#sb-onlineusers .image-container {
-  width: 20px;
-  height: 20px;
-  float: left;
-  padding-right:.5em;
-  text-align: center;
 }
 #lastminutes {
     float: right;
