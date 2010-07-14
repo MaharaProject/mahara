@@ -19,7 +19,7 @@
       <td><a class="grouplink" href="{$WWWROOT}group/view.php?id={$row.group}" target="_blank">{$row.sharedby}</a></td>
 {elseif $row.owner}
       <td>
-        <img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=20&maxheight=20&id={$row.owner}" />
+        <img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt="">
         <a class="userlink" href="{$WWWROOT}user/view.php?id={$row.owner}" target="_blank">{$row.sharedby}</a>
       </td>
 {else}

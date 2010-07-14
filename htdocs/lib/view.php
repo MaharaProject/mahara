@@ -2683,7 +2683,7 @@ class View {
             }
             if (!empty($owners)) {
                 $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
-                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid');
+                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid,email,profileicon');
             }
             if (!empty($groups)) {
                 $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
@@ -2696,6 +2696,7 @@ class View {
                 $v->shortdescription = str_shorten_html(str_replace('<br />', ' ', $v->description), 100, true);
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
+                    $v->user = $owners[$v->owner];
                 } else if ($v->group) {
                     $v->sharedby = $groups[$v->group]->name;
                 } else if ($v->institution) {
