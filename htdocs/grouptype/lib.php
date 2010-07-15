@@ -84,6 +84,13 @@ abstract class GroupType {
     public static function can_be_created_by_user() {
         return true;
     }
+    /**
+     * Returns whether a user can be promoted to admin of a group of this
+     * grouptype (by an existing group admin, on the 'change role' page)
+     */
+    public static function can_become_admin($userid) {
+        return true;
+    }
 
     /**
      * Returns the roles this group type implements
