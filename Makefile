@@ -10,7 +10,7 @@ imageoptim:
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
 minaccept:
-	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null
+	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l && echo All good!
 
 push: minaccept
 	git push
