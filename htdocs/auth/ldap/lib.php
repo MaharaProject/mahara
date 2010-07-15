@@ -123,12 +123,13 @@ class AuthLdap extends Auth {
                     $ldapattributes = array();
                     $ldapattributes['firstname'] = $this->config['firstnamefield'];
                     $ldapattributes['lastname']  = $this->config['surnamefield' ];
+                    $ldapattributes['email']     = $this->config['emailfield' ];
 
                     // Retrieve information of user from LDAP
                     $ldapdetails = $this->get_userinfo_ldap($username, $ldapattributes);
 
                     // Match database and ldap entries and update in database if required
-                    $fieldstoimport = array('firstname', 'lastname');
+                    $fieldstoimport = array('firstname', 'lastname', 'email');
                     foreach ($fieldstoimport as $field) {
                         if ($user->$field != $ldapdetails[$field]) {
                             $user->$field = $ldapdetails[$field];
