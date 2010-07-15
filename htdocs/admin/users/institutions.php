@@ -141,6 +141,8 @@ if ($institution || $add) {
     $c = count($authinstances);
     $inuse = '';
 
+    $sitelockedfields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', 'mahara');
+
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
@@ -307,11 +309,18 @@ if ($institution || $add) {
         'collapsed' => true,
         'elements' => array(),
     );
+    if ($institution != 'mahara') {
+        $elements['lockedfields']['elements']['description'] = array(
+            'type' => 'html',
+            'value' => get_string('disabledlockedfieldhelp', 'admin', get_field('institution', 'displayname', 'name', 'mahara')),
+        );
+    }
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements['lockedfields']['elements'][$field] = array(
             'type' => 'checkbox',
             'title' => get_string($field, 'artefact.internal'),
-            'defaultvalue' => in_array($field, $lockedprofilefields)
+            'defaultvalue' => in_array($field, $lockedprofilefields) || ($institution != 'mahara' && in_array($field, $sitelockedfields)),
+            'disabled' => $institution != 'mahara' && in_array($field, $sitelockedfields)
         );
     }
     $elements['lockedfieldshelp'] = array(

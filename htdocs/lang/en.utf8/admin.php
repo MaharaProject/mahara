@@ -561,6 +561,7 @@ $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form.  If registration is off, non-members cannot request membership of the institution, and members cannot leave the institution or delete their user accounts voluntarily.';
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
+
 $string['authenticatedby'] = 'Authentication Method';
 $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';
 $string['remoteusername'] = 'Username for external authentication';
@@ -632,6 +633,7 @@ $string['noinstitutions'] = 'No Institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 
 $string['Lockedfields'] = 'Locked fields';
+$string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the in the institution settings for "%s".  These profile fields are locked at the site level and cannot be unlocked here.';
 
 // Suspend Institutions
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
