@@ -57,12 +57,23 @@ $elements['description'] = array(
             'rows'         => 10,
             'cols'         => 55,
             'defaultvalue' => $group_data->description);
+
+$grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
+$currenttype = $group_data->grouptype . '.' . $group_data->jointype;
+if (!isset($grouptypeoptions[$currenttype])) {
+    // The user can't create groups of this type.  Probably a non-staff user
+    // who's been promoted to admin of a controlled group.  Just don't let
+    // them change it.
+    $grouptypeoptions = array($currenttype => get_string('membershiptype.' . $group_data->jointype, 'group'));
+}
+
 $elements['grouptype'] = array(
-            'type'         => 'select',
-            'title'        => get_string('grouptype', 'group'),
-            'options'      => group_get_grouptype_options($group_data->grouptype),
-            'defaultvalue' => $group_data->grouptype . '.' . $group_data->jointype,
-            'help'         => true);
+    'type'         => 'select',
+    'title'        => get_string('grouptype', 'group'),
+    'options'      => $grouptypeoptions,
+    'defaultvalue' => $currenttype,
+    'help'         => true
+);
 if (get_config('allowgroupcategories')) {
     $elements['category'] = array(
                 'type'         => 'select',
