@@ -133,7 +133,6 @@ function find_remote_user($username, $wwwroot) {
 
     $authinstances = auth_get_auth_instances_for_institution($institution);
     $candidates    = array();
-    $auths         = array();
 
     $aiid = 'ai.id';
     if (!is_mysql()) {
@@ -164,11 +163,21 @@ function find_remote_user($username, $wwwroot) {
         try {
             $user = new User;
             $user->find_by_instanceid_username($authinstance->id, $username, true);
-            $candidates[$user->id] = $user;
-            $auths[] = $authinstance->id;
+            $candidates[$authinstance->id] = $user;
         } catch (Exception $e) {
             // we don't care
             continue;
+        }
+    }
+
+    if (count($candidates) > 1) {
+        if (!$wwwrootauths = get_column('auth_instance_config', 'instance', 'value', $wwwroot, 'field', 'wwwroot')) {
+            return false;
+        }
+        foreach (array_keys($candidates) as $a) {
+            if (!in_array($a, $wwwrootauths)) {
+                unset($candidates[$a]);
+            }
         }
     }
 
@@ -177,7 +186,7 @@ function find_remote_user($username, $wwwroot) {
     }
 
     safe_require('auth', 'xmlrpc');
-    return array(array_pop($candidates), new AuthXmlrpc(array_pop($auths)));
+    return array(end($candidates), new AuthXmlrpc(key($candidates)));
 }
 
 function fetch_user_image($username) {
