@@ -1045,8 +1045,6 @@ function reload_html_filters() {
         );
         log_info('- ' . $f->file);
     }
-    $filters[] = (object) array('site' => 'http://www.youtube.com', 'file' => 'YouTube');
-    log_info('- YouTube');
     set_config('filters', serialize($filters));
 }
 

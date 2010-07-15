@@ -2441,17 +2441,21 @@ function clean_html($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
-
-    $config->set('Core.Encoding', 'UTF-8');
     $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
     $config->set('AutoFormat.Linkify', true);
+
+    // Permit embedding contents from other sites
+    $config->set('HTML.SafeEmbed', true);
+    $config->set('HTML.SafeObject', true);
+    $config->set('Output.FlashCompat', true);
 
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
-            if ($filter->file == 'YouTube') {
-                $config->set('Filter.YouTube', true);
-            } else {
+            // These filters are no longer necessary and have been removed
+            $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
+
+            if (!in_array($filter->file, $builtinfilters)) {
                 require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
                 $classname = 'HTMLPurifier_Filter_' . $filter->file;
                 $customfilters[] = new $classname();

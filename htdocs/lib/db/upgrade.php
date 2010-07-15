@@ -2070,5 +2070,9 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('searchusernames', 1);
     }
 
+    if ($oldversion < 2010071500) {
+        reload_html_filters();
+    }
+
     return $status;
 }

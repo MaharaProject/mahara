@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <filters>
     <filter>
-        <filename>GoogleVideo</filename>
-        <site>http://video.google.com</site>
-    </filter>
-    <filter>
-        <filename>TeacherTube</filename>
-        <site>http://www.teachertube.com</site>
-    </filter>
-    <filter>
-        <filename>SciVee</filename>
-        <site>http://www.scivee.tv</site>
-    </filter>
-    <filter>
         <filename>Skype</filename>
         <site>http://skype.com</site>
     </filter>
     <filter>
         <filename>Twitter</filename>
         <site>http://twitter.com</site>
-    </filter>
-    <filter>
-        <filename>SlideShare</filename>
-        <site>http://slideshare.net</site>
     </filter>
 </filters>
