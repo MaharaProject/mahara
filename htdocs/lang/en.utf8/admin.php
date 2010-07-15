@@ -633,7 +633,7 @@ $string['noinstitutions'] = 'No Institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 
 $string['Lockedfields'] = 'Locked fields';
-$string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the in the institution settings for "%s".  These profile fields are locked at the site level and cannot be unlocked here.';
+$string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the institution settings for "%s".  These profile fields are locked at the site level and cannot be unlocked here.';
 
 // Suspend Institutions
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
