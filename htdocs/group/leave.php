@@ -69,7 +69,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('subheading', get_string('leavespecifiedgroup', 'group', $group->name));
 $smarty->assign('form', $form);
-$smarty->assign('message', get_string('groupconfirmleave', 'group');
+$smarty->assign('message', get_string('groupconfirmleave', 'group'));
 $smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 
