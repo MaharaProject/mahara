@@ -37,15 +37,18 @@ require_once('SimpleSpamTrap.php');
  */
 class AdvancedSpamTrap extends SimpleSpamTrap {
 
-    // TODO: in addition to checking for an MX record, connect to the mailserver
-    // and see if the email address exists. This will detect the case where
-    // a nonexistant email at a valid domain is used.
     protected function valid_email($email) {
         if (!parent::valid_email($email)) {
             return false;
         }
         list($local, $domain) = explode('@', $email);
-        return checkdnsrr($domain);
+
+        // TODO: we could connect to the mailserver and see if the
+        // email address exists. This will detect the case where a
+        // nonexistant email at a valid domain is used.
+
+        // If an MX record is not found, mail goes to the A or AAAA record
+        return checkdnsrr($domain, 'MX') or checkdnsrr($domain, 'A') or checkdnsrr($domain, 'AAAA');
     }
 
     protected function blacklisted_url($url) {
