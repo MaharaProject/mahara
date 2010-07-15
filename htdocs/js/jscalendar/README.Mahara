@@ -11,5 +11,7 @@ maintained upstream.
 
 Changes:
 
- * Slovenian language file that ships with jscalendar removed (calendar-si.js),
- * and new calendar-sl.js put in place, provided thanks to Gregor Anzelj
+ * Removed built-in Slovenian translation (calendar-si.js)
+ * Added Slovenian translation from Gregor (calendar-sl.js)
+ * Removed built-in Japanese translation (calendar-jp.js)
+ * Added Japanese translation from Mits (calendar-ja.js)
