@@ -223,10 +223,16 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('id',          'portfolio:view' . $view->get('id'));
             $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
             $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($view->get('ctime'))));
-            $this->smarty->assign('summarytype', 'html');
-            $this->smarty->assign('summary',     $config['description']);
-            $this->smarty->assign('contenttype', 'html');
-            $this->smarty->assign('content',     $view->build_columns());
+            $content = $config['description'];
+            if ($newcontent = self::parse_xhtmlish_content($content)) {
+                $this->smarty->assign('summarytype', 'xhtml');
+                $this->smarty->assign('summary',     $newcontent);
+            } else {
+                $this->smarty->assign('summarytype', 'text');
+                $this->smarty->assign('summary',     $content);
+            }
+            $this->smarty->assign('contenttype', 'xhtml');
+            $this->smarty->assign('content',     self::parse_xhtmlish_content($view->build_columns()));
             $this->smarty->assign('viewdata',    $config['columns']);
             $this->smarty->assign('layout',      $view->get_layout()->widths);
             $this->smarty->assign('type',        $config['type']);
@@ -509,6 +515,44 @@ class PluginExportLeap extends PluginExport {
         $d = format_date($date, 'strftimew3cdatetime');
         return substr($d, 0, -2) . ':' . substr($d, -2);
     }
+
+
+    /**
+     * given some content that might be html or xhtml, try to coerce it to xhtml and return it.
+     *
+     * @param string $content some html or xhtmlish content
+     *
+     * @return xhtml content or false for unmodified text content
+     */
+    public static function parse_xhtmlish_content($content) {
+        $dom = new DomDocument();
+        $topel = $dom->createElement('tmp');
+        $tmp = new DomDocument();
+        if (strpos($content, '<') === false && strpos($content, '>') === false) {
+            return false;
+        }
+        if (@$tmp->loadXML('<div>' . $content . '</div>')) {
+            $topel->setAttribute('type', 'xhtml');
+            $content = $dom->importNode($tmp->documentElement, true);
+            $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+            $topel->appendChild($content);
+            // if that fails, it could still be html
+        } else if (@$tmp->loadHTML('<div>' . $content . '</div>')) {
+            $xpath = new DOMXpath($tmp);
+            $elements = $xpath->query('/html/body/div');
+            if ($elements->length == 1) {
+                $ourelement = $elements->item(0);
+            }
+
+            $content = $dom->importNode($ourelement, true);
+            $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+            $topel->appendChild($content);
+        } else {
+            return false; // wtf is it then?
+        }
+        $dom->appendChild($topel);
+        return $dom->saveXML($dom->documentElement);
+    }
 }
 
 /**
@@ -579,8 +623,15 @@ class LeapExportElement {
         $this->smarty->assign('created', PluginExportLeap::format_rfc3339_date($this->artefact->get('ctime')));
         // these are the ones we really need to override
         $this->add_links();
-        $this->smarty->assign('content', $this->get_content());
-        $this->smarty->assign('contenttype', $this->get_content_type());
+        $content = $this->get_content();
+        // try to coerce it to xhtml
+        if ($this->get_content_type() != 'text' && $newcontent = PluginExportLeap::parse_xhtmlish_content($content)) {
+            $this->smarty->assign('contenttype', 'xhtml');
+            $this->smarty->assign('content', $newcontent);
+        } else {
+            $this->smarty->assign('contenttype', 'text');
+            $this->smarty->assign('content', $content);
+        }
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('author', $this->get_entry_author());
 
