@@ -550,7 +550,7 @@ class PluginExportLeap extends PluginExport {
         } else {
             return false; // wtf is it then?
         }
-        $dom->appendChild($topel);
+        $dom->appendChild($topel->firstChild);
         return $dom->saveXML($dom->documentElement);
     }
 }
