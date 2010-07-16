@@ -338,6 +338,37 @@ $siteoptionform = array(
                 ),
             ),
         ),
+        # TODO: this should become "Network Settings" at some point
+        'proxysettings' => array(
+            'type'         => 'fieldset',
+            'collapsible'  => true,
+            'collapsed'    => true,
+            'legend'       => get_string('proxysettings', 'admin'),
+            'elements'     => array(
+                'proxyaddress' => array(
+                   'type'          => 'text',
+                   'title'         => get_string('proxyaddress', 'admin'),
+                   'description'   => get_string('proxyaddressdescription', 'admin'),
+                   'defaultvalue'  => get_config('proxyaddress'),
+                ),
+                'proxyauthmodel' => array(
+                    'type'          => 'select',
+                    'title'         => get_string('proxyauthmodel', 'admin'),
+                    'description'   => get_string('proxyauthmodeldescription', 'admin'),
+                    'defaultvalue'  => get_config('proxyauthmodel'),
+                    'options'       => array(
+                                        '' => 'None',
+                                        'basic' => 'Basic (NCSA)',
+                                    ),
+                ),
+                'proxyauthcredentials' => array(
+                    'type'          => 'text',
+                    'title'         => get_string('proxyauthcredentials', 'admin'),
+                    'description'   => get_string('proxyauthcredentialsdescription', 'admin'),
+                    'defaultvalue'  => get_config('proxyauthcredentials'),
+                ),
+            ),
+        ),
         'generalsettings' => array(
             'type'         => 'fieldset',
             'collapsible'  => true,
@@ -434,6 +465,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'showselfsearchsideblock', 'searchusernames', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
+        'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms',
         'creategroups', 'createpublicgroups', 'allowgroupcategories',
     );
