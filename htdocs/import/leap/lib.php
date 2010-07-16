@@ -1086,6 +1086,11 @@ class PluginImportLeap extends PluginImport {
      * Look for leap2:date elements that are part of an entry (if any) and 
      * return the values we parse from them
      *
+     *
+     * @param SimpleXMLElement $entry The element containing the date
+     * @param array $namespaces array of namespaces @see PluginImportLeap::namespaces
+     * @param string $ns namespace URL which is used as a key in the $namespaces array
+     *
      * Returned in a structure like so:
      * array(
      *     'start' => array(
@@ -1156,10 +1161,20 @@ class PluginImportLeap extends PluginImport {
         return $attributes;
     }
 
+    /**
+     * getter to return the leap2anamespace property
+     *
+     * @return string namespace URL
+     */
     public function get_leap2a_namespace() {
         return $this->leap2anamespace;
     }
 
+    /**
+     * getter to return the namespace property
+     *
+     * @return array
+     */
     public function get_namespaces() {
         return $this->namespaces;
     }
