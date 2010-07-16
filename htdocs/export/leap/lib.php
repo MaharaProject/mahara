@@ -962,7 +962,7 @@ class LeapExportOutputFilter {
     private function replace_download_link($matches) {
         $artefactid = $matches[3];
         if (in_array($artefactid, $this->artefactids)) {
-            return '<' . $matches[1] . 'rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
+            return '<' . $matches[1] . 'rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . ($matches[1] == 'img' ? '/' : '') . '>';
         }
 
         log_debug("Not providing an export-relative link for $artefactid");
