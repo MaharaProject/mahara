@@ -1,24 +1,24 @@
 {include file="export:leap:entry.tpl" skipfooter=true}
 {foreach from=$persondata item=entry}
-        <leap:persondata
-            mahara:artefactplugin="{$entry->artefactplugin|escape}"
-            mahara:artefacttype="{$entry->artefacttype|escape}"
+        <leap2:persondata
+            mahara:artefactplugin="{$entry->artefactplugin}"
+            mahara:artefacttype="{$entry->artefacttype}"
 {if $entry->mahara}
-            leap:field="other" mahara:field="{$entry->field|escape}"
+            leap2:field="other" mahara:field="{$entry->field}"
 {else}
-            leap:field="{$entry->field|escape}"
+            leap2:field="{$entry->field}"
 {/if}
-            leap:label="{$entry->label|escape}"
+            leap2:label="{$entry->label}"
 {if $entry->service}
-            leap:service="{$entry->service|escape}"
+            leap2:service="{$entry->service}"
 {/if}
-        >{$entry->value|escape}</leap:persondata>
+        >{$entry->value}</leap2:persondata>
 {/foreach}
 {if $spacialdata}
-        <leap:spatial>
+        <leap2:spatial>
 {foreach from=$spacialdata item=entry}
-            <leap:{$entry->type|escape} mahara:artefacttype="{$entry->artefacttype|escape}"{if $entry->countrycode} leap:countrycode="{$entry->countrycode|escape}"{/if}>{$entry->value|escape}</leap:{$entry->type|escape}>
+            <leap2:{$entry->type} mahara:artefacttype="{$entry->artefacttype}"{if $entry->countrycode} leap2:countrycode="{$entry->countrycode}"{/if}>{$entry->value}</leap2:{$entry->type}>
 {/foreach}
-        </leap:spatial>
+        </leap2:spatial>
 {/if}
 {include file="export:leap:entryfooter.tpl"}
