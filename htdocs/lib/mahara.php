@@ -1621,6 +1621,17 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
                     continue;
                 }
             }
+            else if ($a->accesstype == 'objectionable') {
+                if ($owner = $view->get('owner')) {
+                    if ($USER->is_admin_for_user($owner)) {
+                        return true;
+                    }
+                }
+                else if ($view->get('group') && $USER->get('admin')) {
+                    return true;
+                }
+                continue;
+            }
             // The view must have loggedin access, user access for the user
             // or group/role access for one of the user's groups
             return true;

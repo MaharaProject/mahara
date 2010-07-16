@@ -2950,7 +2950,7 @@ class View {
                 WHERE va.view = ?
                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                    AND (va.accesstype IN ('public', 'loggedin', 'friends')
+                    AND (va.accesstype IN ('public', 'loggedin', 'friends', 'objectionable')
                          OR va.usr = ? OR va.token IS NOT NULL OR gm.member IS NOT NULL)
                 ORDER BY va.token IS NULL DESC, va.accesstype != 'friends' DESC",
                 array($userid, $viewid, $userid)
@@ -3035,6 +3035,53 @@ class View {
 
         return false;
     }
+
+    // Returns a form to mark a view as unobjectionable, if the user is allowed
+    // to do that.
+    function notrude_form() {
+        global $USER;
+        $owner = $this->get('owner');
+        if (!(($owner && ($USER->get('admin') || $USER->is_admin_for_user($owner)))
+              || ($this->get('group') && $USER->get('admin')))) {
+            return;
+        }
+
+        $access = self::user_access_records($this->id, $USER->get('id'));
+
+        if (empty($access)) {
+            return;
+        }
+
+        $isrude = false;
+        foreach ($access as $a) {
+            // Nasty hack: If the objectionable access record has a stop date, it
+            // means that one of the admins has already dealt with it, so we don't
+            // mark the view as objectionable.
+            if ($a->accesstype == 'objectionable' && empty($a->stopdate)) {
+                $isrude = true;
+                break;
+            }
+        }
+
+        if (!$isrude) {
+            return;
+        }
+
+        return array(
+            'name'     => 'viewnotrude',
+            'elements' => array(
+                'text' => array(
+                    'type' => 'html',
+                    'value' => get_string('viewobjectionableunmark', 'view', $this->title),
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('notobjectionable', 'view'),
+                ),
+            ),
+        );
+    }
+
 }
 
 
@@ -3204,6 +3251,22 @@ function objection_form_submit(Pieform $form, $values) {
 
     require_once('activity.php');
 
+    db_begin();
+
+    // The objectionable access record ensures the view is visible
+    // to admins, and also marks the view as objectionable.
+
+    $accessrecord = (object) array(
+        'view'            => $view->get('id'),
+        'accesstype'      => 'objectionable',
+        'allowcomments'   => 1,
+        'approvecomments' => 0,
+        'visible'         => 0,
+    );
+
+    delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);
+    insert_record('view_access', $accessrecord);
+
     $data = new StdClass;
     $data->view       = $view->get('id');
     $data->message    = $values['message'];
@@ -3213,6 +3276,9 @@ function objection_form_submit(Pieform $form, $values) {
     }
 
     activity_occurred('objectionable', $data);
+
+    db_commit();
+
     if ($artefact) {
         $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
     }
@@ -3224,6 +3290,66 @@ function objection_form_submit(Pieform $form, $values) {
         'goto' => $goto,
     ));
 }
+
+function viewnotrude_submit(Pieform $form, $values) {
+    global $view, $artefact, $USER;
+
+    require_once('activity.php');
+
+    db_begin();
+
+    // Set exipiry date on view access record
+    $accessrecord = (object) array(
+        'view'            => $view->get('id'),
+        'accesstype'      => 'objectionable',
+        'allowcomments'   => 1,
+        'approvecomments' => 0,
+        'visible'         => 0,
+        'stopdate'        => db_format_timestamp(time() + 60*60*24*7),
+    );
+
+    delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);
+    insert_record('view_access', $accessrecord);
+
+    // Send notification to other admins
+    $reportername = display_default_name($USER);
+
+    if ($artefact) {
+        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
+    }
+    else {
+        $goto = get_config('wwwroot') . 'view/view.php?id='.$view->get('id');
+    }
+
+    $data = (object) array(
+        'view'      => $view->get('id'),
+        'reporter'  => $USER->get('id'),
+        'subject'   => false,
+        'message'   => false,
+        'strings'   => (object) array(
+            'subject' => (object) array(
+                'key'     => 'viewunobjectionablesubject',
+                'section' => 'view',
+                'args'    => array($view->get('title'), $reportername),
+            ),
+            'message' => (object) array(
+                'key'     => 'viewunobjectionablebody',
+                'section' => 'view',
+                'args'    => array($reportername, $view->get('title'), $view->formatted_owner()),
+            ),
+        ),
+    );
+
+    activity_occurred('objectionable', $data);
+
+    db_commit();
+
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('messagesent'),
+        'goto' => $goto,
+    ));
+}
+
 
 function objection_form_cancel_submit(Pieform $form) {
     global $view;

@@ -150,6 +150,9 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
+    if ($notrudeform = $view->notrude_form()) {
+        $notrudeform = pieform($notrudeform);
+    }
 }
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
@@ -279,6 +282,7 @@ if (isset($addfeedbackform)) {
 }
 if (isset($objectionform)) {
     $smarty->assign('objectionform', $objectionform);
+    $smarty->assign('notrudeform', $notrudeform);
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
