@@ -141,7 +141,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      */
     private static function has_parent_folder(SimpleXMLElement $entry, PluginImportLeap $importer) {
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_part_of') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_part_of') && isset($link['href'])) {
                 $potentialfolder = $importer->get_entry_by_id((string)$link['href']);
                 if ($potentialfolder && self::is_folder($potentialfolder, $importer)) {
                     return true;
@@ -169,7 +169,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
 
         // Get entries that this folder feels are a part of it
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'has_part') && isset($link['href'])) {
                 $child = $importer->get_entry_by_id((string)$link['href']);
                 if ($child) {
                     if (self::is_file($child, $importer) || self::is_folder($child, $importer)) {

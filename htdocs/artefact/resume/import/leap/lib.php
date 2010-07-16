@@ -190,7 +190,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             // the qualification the user gained in relation to this entry
             foreach ($entry->link as $link) {
                 if (!isset($other_required_entries['achievement'])
-                    && $importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'supports') && isset($link['href'])) {
+                    && $importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'supports') && isset($link['href'])) {
                     if ($potentialqualification = $importer->get_entry_by_id((string)$link['href'])) {
                         if (PluginImportLeap::is_rdf_type($potentialqualification, $importer, 'achievement')) {
                             // We have a related achievement!
@@ -280,7 +280,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             }
             break;
         case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
             $enddate = (isset($dates['end'])) ? self::convert_leap_date_to_resume_date($dates['end']) : '';
 
             $values = array(
@@ -292,7 +292,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'certification', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_EMPLOYMENT:
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
             $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
@@ -313,7 +313,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'employmenthistory', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_BOOK:
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
             $contribution = $description = '';
@@ -333,7 +333,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'book', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_EDUCATION:
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
             $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
@@ -366,7 +366,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             ArtefactTypeResumeComposite::ensure_composite_value($values, 'educationhistory', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_MEMBERSHIP:
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
             $startdate = (isset($dates['start'])) ? self::convert_leap_date_to_resume_date($dates['start']) : '';
             $enddate   = (isset($dates['end']))   ? self::convert_leap_date_to_resume_date($dates['end'])   : '';
 
@@ -397,14 +397,14 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $composites = array();
 
             $person = $importer->get_entry_by_id($persondataid);
-            $persondata = $person->xpath('leap:persondata');
+            $persondata = $person->xpath('leap2:persondata');
             foreach ($persondata as $item) {
-                $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
+                $leapattributes = PluginImportLeap::get_attributes($item, $importer->get_leap2a_namespace());
 
                 if (!isset($leapattributes['field'])) {
                     // 'Field' is required
                     // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#field
-                    $importer->trace('WARNING: persondata element did not have leap:field attribute');
+                    $importer->trace('WARNING: persondata element did not have leap2:field attribute');
                     continue;
                 }
 
@@ -491,7 +491,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * @return string The ID of the organization if there is one, else an empty string
      */
     private static function check_for_supporting_organization(PluginImportLeap $importer, $link) {
-        if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_supported_by') && isset($link['href'])) {
+        if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_supported_by') && isset($link['href'])) {
             if ($potentialorganization = $importer->get_entry_by_id((string)$link['href'])) {
                 if (PluginImportLeap::is_rdf_type($potentialorganization, $importer, 'organization')) {
                     return (string)$link['href'];
@@ -522,7 +522,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $found = false;
 
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_part_of') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_part_of') && isset($link['href'])) {
                 $href = (string)$link['href'];
                 if (isset($cache[$href])) {
                     $found = true;
@@ -539,7 +539,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
 
                 if ($found) {
-                    $leapattributes = $importer->get_attributes($link, PluginImportLeap::NS_LEAP);
+                    $leapattributes = $importer->get_attributes($link, $importer->get_leap2a_namespace());
                     $displayorder = (isset($leapattributes['display_order']) && intval($leapattributes['display_order']) > 0)
                         ? $leapattributes['display_order']
                         : '';

@@ -50,6 +50,8 @@ class PluginImportLeap extends PluginImport {
     protected $logtargets = LOG_TARGET_ERRORLOG;
     protected $logfile = '';
     protected $profile = false;
+    protected $leap2anamespace = null;
+    protected $leap2atypenamespace = null;
 
     private $snapshots = array();
 
@@ -58,9 +60,11 @@ class PluginImportLeap extends PluginImport {
 
     const NS_ATOM       = 'http://www.w3.org/2005/Atom';
     const NS_RDF        = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    const NS_LEAP       = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#';
-    const NS_LEAPTYPE   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
-    const NS_CATEGORIES = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
+    const NS_LEAP_200903       = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#';
+    const NS_LEAPTYPE_200903   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
+    const NS_CATEGORIES_200903 = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
+    const NS_LEAP              = 'http://terms.leapspecs.org/';
+    const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories';
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
@@ -117,6 +121,8 @@ class PluginImportLeap extends PluginImport {
         $this->trace("Document loaded, entries: " . count($this->xml->entry));
         $this->snapshot('loaded XML');
 
+        $this->detect_leap2a_namespace();
+
         $this->ensure_document_valid();
 
         $this->create_strategy_listing();
@@ -128,6 +134,23 @@ class PluginImportLeap extends PluginImport {
         $this->import_completed();
 
         db_commit();
+    }
+
+    /**
+     * detect the leap2a namespace of the import document by looking for the 'version' element
+     *
+     *
+     */
+    private function detect_leap2a_namespace () {
+        // check for the leap2a version used
+        $version = $this->xml->xpath('//leap2:version');
+        if($version) {
+            $this->leap2anamespace = self::NS_LEAP;
+            $this->leap2atypenamespace = self::NS_LEAP;
+        } else {
+            $this->leap2anamespace = self::NS_LEAP_200903;
+            $this->leap2atypenamespace = self::NS_LEAPTYPE_200903;
+        }
     }
 
     private function ensure_document_valid() {
@@ -146,7 +169,12 @@ class PluginImportLeap extends PluginImport {
 
         // Check all the namespaces we're gonna need are declared, and warn if 
         // they're not there
-        foreach (array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_LEAPTYPE, self::NS_CATEGORIES) as $ns) {
+        if($this->leap2anamespace == self::NS_LEAP) {
+            $namespaces = array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_CATEGORIES);
+        } else {
+            $namespaces = array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP_200903, self::NS_LEAPTYPE_200903, self::NS_CATEGORIES_200903);
+        }
+        foreach ($namespaces as $ns) {
             if (!isset($this->namespaces[$ns])) {
                 $this->trace("WARNING: Namespaces $ns wasn't declared - this will make importing data correctly difficult");
             }
@@ -831,7 +859,8 @@ class PluginImportLeap extends PluginImport {
      * @return boolean Whether it's worth checking in more detail
      */
     private function artefact_reference_quickcheck($field) {
-        return (false !== strpos($field, 'rel="leap:has_part"')
+
+        return (false !== strpos($field, 'rel="'.$this->leap2anamespace.':has_part"')
                 || false !== strpos($field, 'rel="enclosure"'))
             && (
                 (false !== strpos($field, '<img'))
@@ -846,7 +875,7 @@ class PluginImportLeap extends PluginImport {
      * @return string The fixed field
      */
     private function fix_artefact_reference($field) {
-        $match = '#<((img)|a)([^>]+)rel="(?:leap:has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
+        $match = '#<((img)|a)([^>]+)rel="(?:'.$this->leap2anamespace.':has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
         $field = preg_replace_callback($match,
             array($this, '_fixref'),
             $field);
@@ -973,7 +1002,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
         $result = $entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, $rdftype) . ']');
+            . $importer->curie_xpath('@rdf:resource', $importer->leap2anamespace, $rdftype) . ']');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
@@ -1054,7 +1083,7 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * Look for leap:date elements that are part of an entry (if any) and 
+     * Look for leap2:date elements that are part of an entry (if any) and 
      * return the values we parse from them
      *
      * Returned in a structure like so:
@@ -1082,10 +1111,10 @@ class PluginImportLeap extends PluginImport {
      *
      * Spec reference: http://wiki.cetis.ac.uk/2009-03/Leap2A_literals#date
      */
-    public static function get_leap_dates(SimpleXMLElement $entry) {
+    public static function get_leap_dates(SimpleXMLElement $entry, $namespaces, $ns) {
         $dates = array();
         foreach (array('start', 'end', 'target') as $point) {
-            $dateelement = $entry->xpath('leap:date[@leap:point="' . $point . '"]');
+            $dateelement = $entry->xpath($namespaces[$ns].':date[@'.$namespaces[$ns].':point="' . $point . '"]');
             if (count($dateelement) == 1) {
                 $dateelement = $dateelement[0];
             }
@@ -1096,9 +1125,9 @@ class PluginImportLeap extends PluginImport {
                     $dates[$point]['value'] = $date;
                 }
 
-                // Parse for leap:label
+                // Parse for leap2:label
                 $leapattributes = array();
-                foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                foreach ($dateelement->attributes($ns) as $key => $value) {
                     $leapattributes[$key] = (string)$value;
                 }
                 if (isset($leapattributes['label'])) {
@@ -1127,6 +1156,13 @@ class PluginImportLeap extends PluginImport {
         return $attributes;
     }
 
+    public function get_leap2a_namespace() {
+        return $this->leap2anamespace;
+    }
+
+    public function get_namespaces() {
+        return $this->namespaces;
+    }
 }
 
 

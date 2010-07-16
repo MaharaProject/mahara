@@ -227,6 +227,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      *                                   to the author, if there is one
      */
     public static function import_author_data(PluginImportLeap $importer, $persondataid) {
+        $namespaces = $importer->get_namespaces();
+        $ns = $namespaces[$importer->get_leap2a_namespace()];
         if ($persondataid) {
             // Grab all the leap:persondata elements and import them
             $person = $importer->get_entry_by_id($persondataid);
@@ -239,9 +241,9 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             }
 
             // Most of the rest of the profile data comes from leap:persondata elements
-            $persondata = $person->xpath('leap:persondata');
+            $persondata = $person->xpath($ns.':persondata');
             foreach ($persondata as $item) {
-                $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
+                $leapattributes = PluginImportLeap::get_attributes($item, $importer->get_leap2a_namespace());
 
                 if (isset($leapattributes['field'])) {
                     self::import_persondata($importer, $item, $leapattributes);
@@ -259,8 +261,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             self::import_namedata($importer, $persondata);
 
             // People can have address info associated with them
-            $addressdata = $person->xpath('leap:spatial');
-            if (count($addressdata) == 1) {
+            $addressdata = $person->xpath($ns.':spatial');
+            if (is_array($addressdata) && count($addressdata) == 1) {
                 self::import_addressdata($importer, $addressdata[0]);
             }
 
@@ -456,7 +458,9 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static function import_addressdata(PluginImportLeap $importer, SimpleXMLElement $addressdata) {
         // TODO: this xpath doesn't respect the namespace prefix - we should 
         // look it up from $importer->namespaces[NS_LEAP]
-        $addresslines = $addressdata->xpath('leap:addressline');
+        $namespaces = $importer->get_namespaces();
+        $ns = $namespaces[$importer->get_leap2a_namespace()];
+        $addresslines = $addressdata->xpath($ns.':addressline');
 
         // We look for 'town' and 'city' deliberately, Mahara has 
         // separate fields for those. The rest get thrown in the 
@@ -483,11 +487,11 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         }
 
         // Now deal with country
-        $country = $addressdata->xpath('leap:country');
+        $country = $addressdata->xpath($ns.':country');
 
         if (count($country) == 1) {
             $country = $country[0];
-            $leapattributes = PluginImportLeap::get_attributes($country, PluginImportLeap::NS_LEAP);
+            $leapattributes = PluginImportLeap::get_attributes($country, $importer->get_leap2a_namespace());
 
             // Try using countrycode attribute first, but fall back to name if it's not present or 
             // doesn't represent a country
@@ -520,7 +524,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         );
 
         foreach ($persondata as $item) {
-            $leapattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_LEAP);
+            $leapattributes = PluginImportLeap::get_attributes($item, $importer->get_leap2a_namespace());
             if (isset($leapattributes['field'])) {
                 if (in_array($leapattributes['field'], array_keys($namefields))) {
                     // legal_given_name is allowed to occur any number of times

@@ -78,7 +78,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
 
             // Get entries that this blog/selection feels are a part of it
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
+                if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'has_part') && isset($link['href'])) {
                     $otherrequiredentries[] = (string)$link['href'];
                 }
             }

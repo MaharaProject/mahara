@@ -90,7 +90,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
             // Check that the entry 'reflects_on' something
             $otherentries = array();
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'reflects_on') && isset($link['href'])) {
+                if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'reflects_on') && isset($link['href'])) {
                     $otherentries[] = (string)$link['href'];
                 }
             }
@@ -172,7 +172,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      */
     public static function get_referent_entryid(SimpleXMLElement $entry, PluginImportLeap $importer) {
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'reflects_on') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'reflects_on') && isset($link['href'])) {
                 return (string)$link['href'];
             }
         }
