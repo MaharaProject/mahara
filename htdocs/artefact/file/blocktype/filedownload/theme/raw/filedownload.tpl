@@ -1,6 +1,6 @@
 {foreach $files file}
 <div title="{$file.title}">
-  <div class="fl"><a href="{$WWWROOT}{$file.downloadurl}" target="_blank"><img src="{$file.iconsrc}" alt=""></a></div>
+  <div class="fl"><a href="{$file.downloadurl}" target="_blank"><img src="{$file.iconsrc}" alt=""></a></div>
   <div style="margin-left: 30px;">
     <h4><a href="{$file.downloadurl}" target="_blank">{$file.title|str_shorten_text:20}</a></h4>
     {if $file.description}<p style="margin: 0;"><strong>{$file.description}</strong></p>{/if}
