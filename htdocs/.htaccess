@@ -19,13 +19,6 @@ php_value post_max_size 50M
     deny from all
 </Files>
 
-# HTTP performance. This stuff tested in apache2 only.
-# Enable mod_expires, mod_headers and mod_deflate!
-
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/css application/x-javascript
-</IfModule>
-
 <IfModule mod_headers.c>
     Header unset ETag
 </IfModule>
