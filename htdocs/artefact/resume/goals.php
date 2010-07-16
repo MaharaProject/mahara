@@ -72,22 +72,22 @@ $gform = array(
             'elements' => array(
                 'personalgoal' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => $personal,
                     'title' => get_string('personalgoal', 'artefact.resume'),
                 ),
                 'academicgoal' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => $academic,
                     'title' => get_string('academicgoal', 'artefact.resume'),
                 ),
                 'careergoal' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => $career,
                     'title' => get_string('careergoal', 'artefact.resume'),
                 ),
