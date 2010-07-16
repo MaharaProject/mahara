@@ -153,7 +153,7 @@ function check_upgrades($name=null) {
         foreach ($pluginstocheck as $plugin) {
             $dirhandle = opendir(get_config('docroot') . $plugin);
             while (false !== ($dir = readdir($dirhandle))) {
-                if (strpos($dir, '.') === 0) {
+                if (strpos($dir, '.') === 0 or 'CVS' == $dir) {
                     continue;
                 }
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
@@ -174,7 +174,7 @@ function check_upgrades($name=null) {
                     }
                     $btdirhandle = opendir($btlocation);
                     while (false !== ($btdir = readdir($btdirhandle))) {
-                        if (strpos($btdir, '.') === 0) {
+                        if (strpos($btdir, '.') === 0 or 'CVS' == $btdir) {
                             continue;
                         }
                         if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
