@@ -7,8 +7,6 @@ php_flag allow_call_time_pass_reference off
 php_value upload_max_filesize 50M
 php_value post_max_size 50M
 
-Options -Indexes
-
 <Files config.php>
     Order deny,allow
     deny from all
