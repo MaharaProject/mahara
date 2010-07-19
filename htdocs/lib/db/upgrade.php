@@ -2085,5 +2085,12 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_enum($table, $field);
     }
 
+    if ($oldversion < 2010071900) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('viewnotify');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+    }
+
     return $status;
 }

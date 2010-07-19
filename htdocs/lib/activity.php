@@ -238,7 +238,7 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                 UNION SELECT m.member 
                     FROM {group_member} m
                     JOIN {view_access} vg ON vg.group = m.group
-                    JOIN {group} g ON (g.id = vg.group AND g.deleted = 0)
+                    JOIN {group} g ON (g.id = vg.group AND g.deleted = 0 AND g.viewnotify = 1)
                     JOIN {group_member} og ON (g.id = og.group AND og.member = ?)
                         WHERE vg.view = ? AND (vg.role IS NULL OR vg.role = m.role)
                 ) AS userlist
