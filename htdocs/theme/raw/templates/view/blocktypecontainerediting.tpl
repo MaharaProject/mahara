@@ -1,4 +1,4 @@
-    <div class="blockinstance{if $configure} configure{/if}" id="blockinstance_{$id}{if $configure}_configure{/if}">
+    <div class="blockinstance cb{if $configure} configure{/if}" id="blockinstance_{$id}{if $configure}_configure{/if}">
         <div class="blockinstance-header">
             <h4>{$title|default:"[$strnotitle]"}{if $configure}: {str tag=Configure section=view}{/if}</h4>
         </div>
