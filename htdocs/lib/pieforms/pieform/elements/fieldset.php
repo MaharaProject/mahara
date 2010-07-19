@@ -59,7 +59,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     if (isset($element['legend'])) {
         $result .= '<legend';
         if (!empty($element['collapsible'])) {
-            $id = substr(md5(microtime()), 0, 4);
+            $id = 'a' . substr(md5(microtime()), 0, 4);
             $result .= ' id="' . $id . '">';
             $result .= '<script type="text/javascript">';
             $result .= "var a = A({'href':'', 'tabindex':{$form->get_property('tabindex')}}, " . json_encode($element['legend']) . "); ";
