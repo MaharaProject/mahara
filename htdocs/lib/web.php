@@ -415,6 +415,14 @@ EOF;
         $smarty->assign('PAGEHEADING', $group->name);
     }
 
+    if (defined('COLLECTION')) {
+        require_once('collection.php');
+        $collection = collection_current_collection();
+        $smarty->assign('COLLECTION', $collection);
+        $smarty->assign('SUBPAGENAV', collection_get_menu_tabs());
+        $smarty->assign('PAGEHEADING', hsc($collection->name));
+    }
+
     // ---------- sideblock stuff ----------
     $sidebars = !isset($extraconfig['sidebars']) || $extraconfig['sidebars'] !== false;
     if ($sidebars && !defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
@@ -1958,6 +1966,16 @@ function mahara_standard_nav() {
             'weight' => 40,
         ),
     );
+
+    // check if My Collections is enabled
+    if (get_config('allowcollections')) {
+         $menu[] = array(
+            'path' => 'myportfolio/collection',
+            'url' => 'collection/',
+            'title' => get_string('mycollections', 'collection'),
+            'weight' => 50,
+        );
+    }
 
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
     

@@ -825,6 +825,20 @@ class User {
         return false;
     }
 
+    /**
+     * Function to check current user can edit collection
+     *
+     * This is fairly straightforward at the moment but it might require more
+     * if groups are allowed collections and other amendments in the future
+     */
+    public function can_edit_collection($c) {
+        $owner = get_column('collection', 'owner','id',$c);
+        if ($owner[0] == $this->get('id')) {
+            return true;
+        }
+        return false;
+    }
+
     public function can_delete_self() {
         if (!$this->get('admin')) {
             // Users who belong to an institution that doesn't allow
