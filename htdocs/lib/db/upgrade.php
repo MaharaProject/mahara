@@ -2074,5 +2074,16 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2010071600) {
+        if (is_postgres()) {
+            // change_field_enum should do this
+            execute_sql('ALTER TABLE {view_access} DROP CONSTRAINT {viewacce_acc_ck}');
+        }
+        $table = new XMLDBTable('view_access');
+        $field = new XMLDBField('accesstype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends', 'objectionable'));
+        change_field_enum($table, $field);
+    }
+
     return $status;
 }

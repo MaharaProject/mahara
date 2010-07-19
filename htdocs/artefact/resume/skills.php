@@ -67,22 +67,22 @@ $sform = array(
             'elements' => array(
                 'personalskill' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
                     'title' => get_string('personalskill', 'artefact.resume'),
                 ),
                 'academicskill' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
                     'title' => get_string('academicskill', 'artefact.resume'),
                 ),
                 'workskill' => array(
                     'type' => 'wysiwyg',
-                    'rows' => 10,
-                    'cols' => 65,
+                    'rows' => 20,
+                    'cols' => 80,
                     'defaultvalue' => ((!empty($work)) ? $work->get('description') : null),
                     'title' => get_string('workskill', 'artefact.resume'),
                 ),

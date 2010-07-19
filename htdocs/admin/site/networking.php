@@ -104,34 +104,6 @@ $networkingform = pieform(
                 'defaultvalue' => get_config('promiscuousmode'),
                 'options'      => $yesno,
             ),
-            'proxyfieldset'    => array(
-                'type'         => 'fieldset',
-                'legend'       => get_string('proxysettings', 'admin'),
-                'elements'     => array(
-                    'proxyaddress' => array(
-                        'type'          => 'text',
-                        'title'         => get_string('proxyaddress', 'admin'),
-                        'description'   => get_string('proxyaddressdescription', 'admin'),
-                        'defaultvalue'  => get_config('proxyaddress'),
-                    ),
-                    'proxyauthmodel' => array(
-                        'type'          => 'select',
-                        'title'         => get_string('proxyauthmodel', 'admin'),
-                        'description'   => get_string('proxyauthmodeldescription', 'admin'),
-                        'defaultvalue'  => get_config('proxyauthmodel'),
-                        'options'       => array(
-                                            '' => 'None',
-                                            'basic' => 'Basic (NCSA)',
-                                        ),
-                    ),
-                    'proxyauthcredentials' => array(
-                        'type'          => 'text',
-                        'title'         => get_string('proxyauthcredentials', 'admin'),
-                        'description'   => get_string('proxyauthcredentialsdescription', 'admin'),
-                        'defaultvalue'  => get_config('proxyauthcredentials'),
-                    ),
-                ),
-            ),
             'submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('savechanges','admin')
@@ -175,33 +147,6 @@ function networkingform_submit(Pieform $form, $values) {
             else {
                 $reply .= get_string('promiscuousmodeenabled','admin');
             }
-        }
-    }
-
-    if(get_config('proxyaddress') != $values['proxyaddress']) {
-        if(!set_config('proxyaddress', $values['proxyaddress'])) {
-            networkingform_fail($form);
-        }
-        else {
-            $reply .= get_string('proxyaddressset', 'admin');
-        }
-    }
-
-    if(get_config('proxyauthmodel') != $values['proxyauthmodel']) {
-        if(!set_config('proxyauthmodel', $values['proxyauthmodel'])) {
-            networkingform_fail($form);
-        }
-        else {
-            $reply .= get_string('proxyauthmodelset', 'admin');
-        }
-    }
-
-    if(get_config('proxyauthcredentials') != $values['proxyauthcredentials']) {
-        if(!set_config('proxyauthcredentials', $values['proxyauthcredentials'])) {
-            networkingform_fail($form);
-        }
-        else {
-            $reply .= get_string('proxyauthcredntialsset', 'admin');
         }
     }
 

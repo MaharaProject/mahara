@@ -63,8 +63,8 @@ $coverletterform = pieform(array(
             'elements' => array(
                 'coverletter' => array(
                     'type'  => 'wysiwyg',
-                    'cols'  => 70,
-                    'rows'  => 10,
+                    'cols'  => 100,
+                    'rows'  => 30,
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
                 ),
                 'save' => array(

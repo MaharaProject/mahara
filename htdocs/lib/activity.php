@@ -540,22 +540,23 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         else {
             $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact . '&view=' . $this->view;
         }
-    }
-
-    function get_subject($user) {
-        if (!$viewtitle = get_field('view', 'title', 'id', $this->view)) {
-            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
-        }
-        if (empty($this->artefact)) {
-            return get_string_from_language($user->lang, 'objectionablecontentview', 'activity',
-                                            $viewtitle, display_name($this->reporter, $user));
-        }
-        else {
-            if (!$artefacttitle = get_field('artefact', 'title', 'id', $this->artefact)) {
-                throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $this->artefact));
+        if (empty($this->strings->subject)) {
+            $viewtitle = get_field('view', 'title', 'id', $this->view);
+            if (empty($this->artefact)) {
+                $this->strings->subject = (object) array(
+                    'key'     => 'objectionablecontentview',
+                    'section' => 'activity',
+                    'args'    => array($viewtitle, display_default_name($this->reporter)),
+                );
             }
-            return get_string_from_language($user->lang, 'objectionablecontentartefact', 'activity',
-                                            $artefacttitle, display_name($this->reporter, $user));
+            else {
+                $title = get_field('artefact', 'title', 'id', $this->artefact);
+                $this->strings->subject = (object) array(
+                    'key'     => 'objectionablecontentviewartefact',
+                    'section' => 'activity',
+                    'args'    => array($viewtitle, $title, display_default_name($this->reporter)),
+                );
+            }
         }
     }
 

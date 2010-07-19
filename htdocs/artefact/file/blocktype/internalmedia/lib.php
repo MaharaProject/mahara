@@ -372,7 +372,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance, $wmp=false) {
         return get_config('wwwroot') . 'artefact/file/download.php?file=' 
-            . $artefact->get('id') . '&view=' . $instance->get('view')
+            . $artefact->get('id') . '&amp;view=' . $instance->get('view')
             . ($wmp ? '&download=1' : '');
     }
 

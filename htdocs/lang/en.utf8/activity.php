@@ -88,7 +88,7 @@ $string['ongroup'] = 'on Group';
 $string['ownedby'] = 'owned by';
 
 $string['objectionablecontentview'] = 'Objectionable content on View "%s" reported by %s';
-$string['objectionablecontentartefact'] = 'Objectionable content on Artefact "%s" reported by %s';
+$string['objectionablecontentviewartefact'] = 'Objectionable content on View "%s" in "%s" reported by %s';
 
 $string['newgroupmembersubj'] = '%s is now a group member!';
 $string['removedgroupmembersubj'] = '%s is no longer a group member';

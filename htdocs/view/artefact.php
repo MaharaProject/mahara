@@ -123,6 +123,9 @@ if ($artefact->get('allowcomments')) {
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $artefact->get('approvecomments')));
 }
 $objectionform = pieform(objection_form());
+if ($notrudeform = $view->notrude_form()) {
+    $notrudeform = pieform($notrudeform);
+}
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
@@ -187,6 +190,7 @@ if (isset($addfeedbackform)) {
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
 $smarty->assign('objectionform', $objectionform);
+$smarty->assign('notrudeform', $notrudeform);
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/artefact.tpl');

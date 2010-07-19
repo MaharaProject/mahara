@@ -58,8 +58,8 @@ $interestsform = pieform(array(
                 'interest' => array(
                     'type' => 'wysiwyg',
                     'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
-                    'cols'  => 70,
-                    'rows'  => 10,
+                    'cols'  => 100,
+                    'rows'  => 30,
                 ),
                 'save' => array(
                     'type' => 'submit',
