@@ -131,6 +131,11 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('safemodeon', 'error'));
     }
 
+    if ('0' === ini_get('apc.stat') or 'off' === ini_get('apc.stat')) {
+        // We don't run with apc.stat=0 (see https://bugs.launchpad.net/mahara/+bug/548333)
+        throw new ConfigSanityException(get_string('apcstatoff', 'error'));
+    }
+
     // Other things that might be worth checking:
     //    memory limit
     //    file_uploads (off|on)
