@@ -1246,6 +1246,7 @@ a.tag {
 }
 #myviews .vi .videsc p {
 	margin: 0;
+    overflow: hidden;
 }
 #myviews .submit-viewitem {
     float: left;
