@@ -2092,7 +2092,7 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    if ($oldversion < 2010071901) {
+    if ($oldversion < 2010080400) {
 
         // new table collection
         $table = new XMLDBTable('collection');
