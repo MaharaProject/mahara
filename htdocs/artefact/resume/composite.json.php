@@ -54,9 +54,6 @@ $sql = 'SELECT ar.*, a.owner
     ORDER BY ar.displayorder';
 
 if (!empty($view)) { 
-    if (!can_view_view($view)) {
-        throw new AccessDeniedException();
-    }
     require_once('view.php');
     $v = new View($view);
     $owner = $v->get('owner');
