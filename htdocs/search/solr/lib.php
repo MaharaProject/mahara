@@ -626,7 +626,7 @@ END;
         $url = get_config_plugin('search', 'solr', 'solrurl') . 'select';
 
         if (!$client->submit($url, $data)) {
-            throw new Exception('Request to solr failed');
+            throw new SystemException('Request to solr failed');
         }
 
         if( $client->status != 200 ) {

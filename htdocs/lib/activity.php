@@ -270,7 +270,7 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
         }
     }
     if (empty($at)) {
-        throw new Exception("Invalid activity type $activitytype");
+        throw new SystemException("Invalid activity type $activitytype");
     }
     return $at;
 }

@@ -1037,7 +1037,7 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
 function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
     $plugintypes = plugin_types();
     if (!in_array($plugintype, $plugintypes)) {
-        throw new Exception("\"$plugintype\" is not a valid plugin type");
+        throw new SystemException("\"$plugintype\" is not a valid plugin type");
     }
     require_once(get_config('docroot') . $plugintype . '/lib.php');
 
@@ -1045,7 +1045,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         if (!empty($nonfatal)) {
             return false;
         }
-        throw new Exception ('invalid require type');
+        throw new SystemException ('Invalid require type');
     }
 
     if ($plugintype == 'blocktype') { // these are a bit of a special case
@@ -1218,7 +1218,7 @@ function blocktype_name_to_namespaced($blocktype) {
  */
 function handle_event($event, $data) {
     if (!$e = get_record('event_type', 'name', $event)) {
-        throw new Exception("Invalid event");
+        throw new SystemException("Invalid event");
     }
 
     if ($data instanceof ArtefactType || $data instanceof BlockInstance) {

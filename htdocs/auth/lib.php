@@ -898,8 +898,7 @@ function requiredfields_submit(Pieform $form, $values) {
             $SESSION->add_ok_msg(get_string('passwordsaved'));
         }
         else {
-            // TODO: Exception is the wrong type here!
-            throw new Exception('Attempt by "' . $USER->get('username') . '@'
+            throw new SystemException('Attempt by "' . $USER->get('username') . '@'
                 . $USER->get('institution') . 'to change their password failed');
         }
     }

@@ -202,7 +202,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
         $user = new User();
         $user->find_by_id($values['user']);
     } catch (AuthUnknownUserException $e) {
-        throw new Exception('Request to change the password for a user who does not exist');
+        throw new UserException('Request to change the password for a user who does not exist');
     }
 
     $authobj = AuthFactory::create($user->authinstance);
@@ -217,7 +217,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
         exit;
     }
 
-    throw new Exception('User "' . $user->username
+    throw new SystemException('User "' . $user->username
         . ' tried to change their password, but the attempt failed');
 }
 
