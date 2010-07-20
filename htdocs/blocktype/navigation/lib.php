@@ -87,22 +87,35 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
 
         $default = false;
         $options = array();
-        foreach ($collections as $collection) {
-            if (!$default) { // need to have an initially selected item
-                $default = $collection->id;
+        if (!empty($collections)) {
+            foreach ($collections as $collection) {
+                if (!$default) { // need to have an initially selected item
+                    $default = $collection->id;
+                }
+                $options[$collection->id] = $collection->name;
             }
-            $options[$collection->id] = $collection->name;
+
+            return array(
+                'collection' => array(
+                    'type' => 'select',
+                    'title' => get_string('collection','blocktype.navigation'),
+                    'rules' => array('required' => true),
+                    'options' => $options,
+                    'defaultvalue' => !empty($configdata['collection']) ? $configdata['collection'] : $default,
+                ),
+            );
+        }
+        else {
+            return array(
+                'nocollections' => array(
+                    'type'  => 'html',
+                    'title' => get_string('collection', 'blocktype.navigation'),
+                    'description' => get_string('nocollections', 'blocktype.navigation', get_config('wwwroot')),
+                    'value' => '',
+                ),
+            );
         }
 
-        return array(
-            'collection' => array(
-                'type' => 'select',
-                'title' => get_string('collection','blocktype.navigation'),
-                'rules' => array('required' => true),
-                'options' => $options,
-                'defaultvalue' => !empty($configdata['collection']) ? $configdata['collection'] : $default,
-            ),
-        );
     }
 
     public static function default_copy_type() {
