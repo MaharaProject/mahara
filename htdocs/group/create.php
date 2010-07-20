@@ -77,6 +77,12 @@ $elements['usersautoadded'] = array(
             'defaultvalue' => 'no',
             'help'         => true,
             'ignore'       => !$USER->get('admin'));
+$elements['viewnotify'] = array(
+    'type' => 'checkbox',
+    'title' => get_string('viewnotify', 'group'),
+    'description' => get_string('viewnotifydescription', 'group'),
+    'defaultvalue' => 1
+);
 $elements['submit']   = array(
             'type'  => 'submitcancel',
             'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
@@ -122,6 +128,7 @@ function creategroup_submit(Pieform $form, $values) {
         'public'         => intval($values['public']),
         'usersautoadded' => intval($values['usersautoadded']),
         'members'        => array($USER->get('id') => 'admin'),
+        'viewnotify'     => intval($values['viewnotify']),
     ));
 
     $USER->reset_grouproles();

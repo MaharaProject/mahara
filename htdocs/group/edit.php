@@ -35,7 +35,7 @@ define('TITLE', get_string('editgroup', 'group'));
 $id = param_integer('id');
 define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.id, g.name, g.description, g.grouptype, g.jointype, g.public, g.usersautoadded, g.category
+$group_data = get_record_sql("SELECT g.*
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -100,6 +100,12 @@ $elements['usersautoadded'] = array(
             'defaultvalue' => $group_data->usersautoadded,
             'help'         => true,
             'ignore'       => !$USER->get('admin'));
+$elements['viewnotify'] = array(
+    'type' => 'checkbox',
+    'title' => get_string('viewnotify', 'group'),
+    'description' => get_string('viewnotifydescription', 'group'),
+    'defaultvalue' => $group_data->viewnotify
+);
 $elements['id'] = array(
             'type'         => 'hidden',
             'value'        => $id);
@@ -149,6 +155,7 @@ function editgroup_submit(Pieform $form, $values) {
             'mtime'          => $now,
             'usersautoadded' => intval($values['usersautoadded']),
             'public'         => intval($values['public']),
+            'viewnotify'     => intval($values['viewnotify']),
         ),
         'id'
     );

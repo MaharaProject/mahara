@@ -96,6 +96,12 @@ function ViewManager() {
                 });
             }
         }
+        // Unhide the radio button if the browser is iPhone, IPad or IPod
+        else if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+            forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
+                    setNodeAttribute(i, 'style', 'display:inline');
+                });
+        }
 
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
@@ -1153,6 +1159,11 @@ function ViewManager() {
 
     // Whether the browser is IE6
     this.isIE6 = !this.isIE7 && document.all && !window.opera;
+
+    // Whether the brower is iPhone, IPad or IPod
+    if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+        this.isIE6 = true; // work-around for broken drag-and-drop
+    }
 
     addLoadEvent(self.init);
 }

@@ -513,7 +513,7 @@ function search_friend($filter, $limit, $offset) {
     $userid = $USER->get('id');
 
     if (!in_array($filter, array('all','current','pending'))) {
-        throw new Exception();
+        throw new SystemException('Invalid search filter');
     }
 
     $sql = array();

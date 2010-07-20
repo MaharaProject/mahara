@@ -1016,7 +1016,7 @@ EOF;
         if (isset($element['name'])) {
             return self::hsc($element['name']);
         }
-        return substr(md5(mt_rand()), 0, 4);
+        return 'a' . substr(md5(mt_rand()), 0, 4);
     }/*}}}*/
 
     /**

@@ -65,8 +65,7 @@ if ($institution || $add) {
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
             if (get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
-                // TODO: exception is of the wrong type
-                throw new Exception('Attempt to delete an institution that has members');
+                throw new ConfigException('Attempt to delete an institution that has members');
             }
         }
 
@@ -401,20 +400,17 @@ function institution_submit(Pieform $form, $values) {
         $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
         if (array_diff($allinstances, $instancearray)) {
-            // TODO wrong exception type
-            throw new Exception('Attempt to delete or update another institution\'s auth instance');
+            throw new ConfigException('Attempt to delete or update another institution\'s auth instance');
         }
 
         if (array_diff($instancearray, $allinstances)) {
-            // TODO wrong exception type
-            throw new Exception('One of your instances is unaccounted for in this transaction');
+            throw new ConfigException('One of your instances is unaccounted for in this transaction');
         }
 
         foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
             if (in_array($instanceid, $values['authplugin']['deletearray'])) {
                 // Should never happen:
-                // TODO wrong exception type
-                throw new Exception('Attempt to update AND delete an auth instance');
+                throw new SystemException('Attempt to update AND delete an auth instance');
             }
             $record = new StdClass;
             $record->priority = $priority;

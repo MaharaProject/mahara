@@ -81,6 +81,8 @@ $string['hasrequestedmembership'] = 'has requested membership of this group';
 $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
+$string['viewnotify'] = 'View notifications';
+$string['viewnotifydescription'] = 'If checked, a notification will be sent to every group member whenever a member shares one of their Views with the group.  Enabling this setting in very large groups can produce a lot of notifications.';
 
 $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';

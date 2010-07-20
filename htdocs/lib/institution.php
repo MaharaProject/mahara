@@ -174,7 +174,7 @@ class Institution {
 
     function commit() {
         if (!$this->verifyReady()) {
-            throw new Exception();
+            throw new SystemException('Commit failed');
         }
 
         $record = new stdClass();

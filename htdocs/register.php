@@ -97,8 +97,7 @@ if (isset($key)) {
 
         $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', 'internal');
         if (false == $authinstance) {
-            // TODO: Specify exception
-            throw new Exception('No internal auth instance for institution');
+            throw new ConfigException('No internal auth instance for institution');
         }
 
         $user = new User();
