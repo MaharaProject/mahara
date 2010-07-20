@@ -210,7 +210,7 @@ function edituser_site_submit(Pieform $form, $values) {
         if ($USER->get('admin') || 
             ($USER->is_institutional_admin($authinst[$values['authinstance']]->institution) &&
              $USER->is_institutional_admin($authinst[$user->authinstance]->institution))) {
-            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
+            delete_records('auth_remote_user', 'localusr', $user->id);
             if ($authinst[$values['authinstance']]->authname != 'internal') {
                 if (isset($values['remoteusername']) && strlen($values['remoteusername']) > 0) {
                     $un = $values['remoteusername'];
