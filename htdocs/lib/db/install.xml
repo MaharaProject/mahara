@@ -681,7 +681,7 @@
         <TABLE NAME="view_access">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends', 'objectionable'" DEFAULT="public" />
+                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends', 'objectionable'" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false" />
@@ -689,8 +689,8 @@
                 <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" />
-                <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="1" />
+                <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
