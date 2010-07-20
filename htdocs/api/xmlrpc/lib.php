@@ -123,42 +123,13 @@ function api_dummy_method($methodname, $argsarray, $functionname) {
 }
 
 function find_remote_user($username, $wwwroot) {
-    $institution = get_field('host', 'institution', 'wwwroot', $wwwroot);
+    $authinstances = auth_get_auth_instances_for_wwwroot($wwwroot);
 
-    if (false == $institution) {
-        // This should never happen, because if we don't know the host we'll
-        // already have exited
-        throw new XmlrpcServerException('Unknown error');
-    }
-
-    $authinstances = auth_get_auth_instances_for_institution($institution);
-    $candidates    = array();
-
-    $aiid = 'ai.id';
-    if (!is_mysql()) {
-        $aiid = 'CAST(ai.id AS TEXT)';
-    }
-    $sql = 'SElECT
-                ai.*
-            FROM
-                {auth_instance} ai,
-                {auth_instance} ai2,
-                {auth_instance_config} aic
-            WHERE
-                ai.id = ? AND
-                ai.institution = ? AND
-                ai2.institution = ai.institution AND
-                ' . $aiid . ' = aic.value AND
-                aic.field = \'parent\' AND
-                aic.instance = ai2.id AND
-                ai2.authname = \'xmlrpc\'';
+    $candidates = array();
 
     foreach ($authinstances as $authinstance) {
         if ($authinstance->authname != 'xmlrpc') {
-            $records = get_records_sql_array($sql, array($authinstance->id, $institution));
-            if (false == $records) {
-                continue;
-            }
+            continue;
         }
         try {
             $user = new User;
@@ -167,17 +138,6 @@ function find_remote_user($username, $wwwroot) {
         } catch (Exception $e) {
             // we don't care
             continue;
-        }
-    }
-
-    if (count($candidates) > 1) {
-        if (!$wwwrootauths = get_column('auth_instance_config', 'instance', 'value', $wwwroot, 'field', 'wwwroot')) {
-            return false;
-        }
-        foreach (array_keys($candidates) as $a) {
-            if (!in_array($a, $wwwrootauths)) {
-                unset($candidates[$a]);
-            }
         }
     }
 
@@ -894,7 +854,7 @@ function get_peer($wwwroot, $cache=true) {
 
 function get_peer_from_instanceid($authinstanceid) {
     $sql = 'SELECT
-                h.*
+                h.wwwroot, h.name
             FROM
                 {auth_instance_config} aic,
                 {host} h
