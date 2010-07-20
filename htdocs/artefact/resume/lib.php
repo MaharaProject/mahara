@@ -539,9 +539,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             ORDER BY ar.displayorder';
 
         if (!empty($options['viewid'])) { 
-            if (!can_view_view($options['viewid'])) {
-                throw new AccessDeniedException();
-            }
             require_once('view.php');
             $v = new View($options['viewid']);
             $owner = $v->get('owner');
