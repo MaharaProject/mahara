@@ -871,16 +871,9 @@ class View {
                     $categories[$blocktypecategory->category] = array(
                         'name'  => $blocktypecategory->category,
                         'title' => call_static_method("PluginBlocktype", "category_title_from_name", $blocktypecategory->category),
-                        'count' => 0,
                     );
                 }
-                $categories[$blocktypecategory->category]['count']++;
             }
-        }
-
-        foreach ($categories as &$category) {
-            $category['title'] .= ' (' . $category['count'] . ')';
-            unset($category['count']);
         }
 
         // The 'internal' plugin is known to the outside world as 'profile', so 
