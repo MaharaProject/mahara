@@ -451,34 +451,32 @@ function collection_set_access($collection, $master) {
 
         db_commit();
 
-        // update access for all other views
         $access = $masterview->get_access();
         $views = collection_get_views($collection);
+
+        // if the selected master only has 1 access type and it is secret URL: ignore
+        if (count($access) == 1 AND !empty($access[0]['token'])) {
+            $SESSION->add_info_msg(get_string('incorrectaccesstype', 'collection'));
+            redirect('/collection/access.php?id=' . $collection);
+        }
+
+        // sort out what the new access first
+        $newaccess = array();
+        foreach ($access as $a) {
+            if (empty($a['token'])) {
+                $newaccess[] = $a;
+            }
+            else {
+                // alert user about irnored secret url accesses
+                $SESSION->add_info_msg(get_string('incorrectaccesstype', 'collection'));
+            }
+        }
+
+        // update each other views access in the collection
         foreach ($views as $view) {
-            if ($view->view != $master) {
-
-                // if the selected master only has 1 access type and it is secret URL: ignore
-                if (count($access) == 1 AND !empty($access[0]['token'])) {
-                    $SESSION->add_info_msg(get_string('incorrectaccesstype', 'collection'));
-                    redirect('/collection/access.php?id=' . $collection);
-                }
-
-                // else delete all the other views records and set their new access to be the same as master
-                // except for any secret URL ones that might exist
+            if ($view->view != $master AND $v = new View($view->view)) {
                 delete_records('view_access','view',$view->view); // try deleting the current access first ...
-                foreach ($access as $a) {
-                    if ($v = new View($view->view) AND empty($a['token'])) {
-                        if (!empty($a['token'])) {
-                            $newtoken = View::new_token($view->view);
-                            $access['token'] = $newtoken->token;
-                            $access['type'] = 'token';
-                        } 
-                        else {
-                            $SESSION->add_info_msg(get_string('incorrectaccesstype', 'collection'));
-                        }
-                        $v->set_access($access);
-                    }
-                }
+                $v->set_access($newaccess);
             }
         }
 
