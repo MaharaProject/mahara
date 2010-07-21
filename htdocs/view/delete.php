@@ -56,6 +56,7 @@ $form = pieform(array(
     'name' => 'deleteview',
     'autofocus' => false,
     'method' => 'post',
+    'renderer' => 'div',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',

@@ -1,4 +1,7 @@
 {include file="header.tpl"}
-{str tag="deleteviewconfirm" section="view"}
-{$form|safe}
+<div class="message delete">
+  <p>{str tag="deleteviewconfirm" section="view"}</p>
+  {$form|safe}
+  {str tag="deleteviewconfirmnote" section="view"}
+</div>
 {include file="footer.tpl"}
