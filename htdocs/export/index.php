@@ -82,6 +82,11 @@ if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'port
             'viewlink' => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
         );
     }
+    $jsfiles = array('js/preview.js', 'js/export.js');
+}
+else {
+    $elements['what']['disabled'] = true;
+    $jsfiles = array();
 }
 
 $elements['submit'] = array(
@@ -137,7 +142,7 @@ function export_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(
-    array('js/preview.js', 'js/export.js'),
+    $jsfiles,
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(),
     array('stylesheets' => array('style/views.css'))
