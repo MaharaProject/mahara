@@ -97,12 +97,13 @@ function pieform_element_wysiwyg_get_headdata() {
     global $USER, $_PIEFORM_WYSIWYGS;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
         $result = '<script type="text/javascript">'
+         . "\nvar editor_to_focus;"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
             $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
             $result .= "    $('{$editor}').focus = function() {\n";
-            $result .= "        callLater(0.0001, function(){ tinyMCE.execCommand('mceFocus', false, '$editor'); });\n";
+            $result .= "        editor_to_focus = '$editor';\n";
             $result .= "    };\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";

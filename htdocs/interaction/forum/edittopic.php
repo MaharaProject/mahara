@@ -107,7 +107,7 @@ else { // edit topic
 $editform = array(
     'name'     => isset($topic) ? 'edittopic' : 'addtopic',
     'method'   => 'post',
-    'autofocus' => false,
+    'autofocus' => isset($topic) ? 'body' : 'subject',
     'elements' => array(
         'subject' => array(
             'type'         => 'text',

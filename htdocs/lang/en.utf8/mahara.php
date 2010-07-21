@@ -909,6 +909,7 @@ $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.
 $string['deleteduser'] = 'Deleted user';
 
 $string['theme'] = 'Theme';
+$string['choosetheme'] = 'Choose theme...';
 
 // Home page info block
 $string['Hide'] = 'Hide';

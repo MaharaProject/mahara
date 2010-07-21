@@ -132,13 +132,13 @@ addLoadEvent(function() {
         });
         insertSiblingNodesBefore(subjectInput, expandLink);
     }
-    tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
 });
 EOF;
 
 $editform = pieform(array(
     'name'     => 'editpost',
     'successcallback' => isset($post) ? 'editpost_submit' : 'addpost_submit',
+    'autofocus' => 'body',
     'elements' => array(
         'subject' => array(
             'type'         => 'text',
