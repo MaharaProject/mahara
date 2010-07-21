@@ -806,7 +806,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     $goto = $comment->get_view_url($view->get('id'));
 
-    if ($data->requestpublic && $data->requestpublic === 'author' && $data->owner) {
+    if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
         $arg = $author ? display_name($USER, null, true) : $data->authorname;
         $moderatemsg = (object) array(
             'subject'   => false,
