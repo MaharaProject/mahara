@@ -318,10 +318,14 @@ class PluginExportLeap extends PluginExport {
         foreach (plugins_installed('artefact') as $plugin) {
             $classname = 'LeapExportElement' . ucfirst($plugin->name);
             if (is_callable($classname . '::setup_links')) {
-                call_static_method(
-                    $classname,
-                    'setup_links',
-                    $this->links,
+                // You must explicitly pass variables by reference when calling
+                // call_user_func, or else they get copied automatically.
+                // Using a dummy variable here to avoid the "Call time pass by reference
+                // is deprecated" warning that php displays on the screen.
+                $dummyref =& $this->links;
+                call_user_func(
+                    array($classname, 'setup_links'),
+                    $dummyref,
                     array_keys($this->views),
                     array_keys($this->artefacts)
                 );
