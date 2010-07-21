@@ -311,6 +311,9 @@ html>body #column-container {
 }
 
 /* group homepage */
+.grouphomepage {
+  width: 100%;
+}
 .grouphomepage .column {
   float: none;
 }
