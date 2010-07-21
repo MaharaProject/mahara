@@ -8,7 +8,7 @@
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
         <label for="viewtheme-select">{str tag=theme}: </label>
         <select id="viewtheme-select" name="viewtheme">
-            <option value="">Choose theme...</option>
+            <option value="">{str tag=choosetheme}</option>
 {foreach from=$viewthemes key=themeid item=themename}
             <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
