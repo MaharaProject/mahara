@@ -167,7 +167,14 @@ tinyMCE.init({
     content_css : {$content_css},
     //document_base_url: {$jswwwroot},
     remove_script_host: false,
-    relative_urls: false
+    relative_urls: false,
+    setup: function(ed) {
+        ed.onInit.add(function(ed) {
+            if (editor_to_focus && typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
+                ed.focus();
+            }
+        });
+    }
 });
 function custom_urlconvert (u, n, e) {
   // Don't convert the url on the skype status buttons.
