@@ -259,6 +259,115 @@ class PluginExportLeap extends PluginExport {
         }
     }
 
+
+    // Some links can be determined in advance
+    private function setup_links() {
+        if (empty($this->views) || empty($this->artefacts)) {
+            return;
+        }
+
+        $viewlist = join(',', array_keys($this->views));
+        $artefactlist = join(',', array_keys($this->artefacts));
+
+        // Artefacts directly in views
+        $records = get_records_select_array(
+            'view_artefact',
+            "view IN ($viewlist) OR artefact IN ($artefactlist)"
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->viewcontents[$r->view][$r->artefact] = 1;
+                $this->links->artefactinview[$r->artefact][$r->view] = 1;
+            }
+        }
+
+        // Artefact parent-child relationships
+        $records = get_records_select_array(
+            'artefact',
+            "parent IN ($artefactlist) AND id IN ($artefactlist)",
+            array(),
+            '',
+            'id,parent'
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->children[$r->parent][$r->id] = 1;
+                $this->links->parent[$r->id] = $r->parent;
+            }
+        }
+
+        // Artefact-attachment relationships
+        $records = get_records_select_array(
+            'artefact_attachment',
+            "artefact IN ($artefactlist) AND attachment IN ($artefactlist)"
+        );
+        if ($records) {
+            foreach ($records as &$r) {
+                $this->links->attachments[$r->artefact][$r->attachment] = 1;
+            }
+        }
+
+        // Other leap2a relationships
+        $this->links->viewartefact = array();
+        $this->links->artefactview = array();
+        $this->links->artefactartefact = array();
+        foreach (require_artefact_plugins() as $plugin) {
+            safe_require('export', 'leap/' . $plugin->name, 'lib.php', 'require_once', true);
+        }
+        foreach (plugins_installed('artefact') as $plugin) {
+            $classname = 'LeapExportElement' . ucfirst($plugin->name);
+            if (is_callable($classname . '::setup_links')) {
+                // You must explicitly pass variables by reference when calling
+                // call_user_func, or else they get copied automatically.
+                // Using a dummy variable here to avoid the "Call time pass by reference
+                // is deprecated" warning that php displays on the screen.
+                $dummyref =& $this->links;
+                call_user_func(
+                    array($classname, 'setup_links'),
+                    $dummyref,
+                    array_keys($this->views),
+                    array_keys($this->artefacts)
+                );
+            }
+        }
+    }
+
+    public function artefact_in_view_links($artefactid) {
+        if (isset($this->links->artefactinview[$artefactid])) {
+            return array_keys($this->links->artefactinview[$artefactid]);
+        }
+    }
+
+    public function artefact_parent_link($artefactid) {
+        if (isset($this->links->parent[$artefactid])) {
+            return $this->artefacts[$this->links->parent[$artefactid]];
+        }
+    }
+
+    public function artefact_child_links($artefactid) {
+        if (isset($this->links->children[$artefactid])) {
+            return array_intersect_key($this->artefacts, $this->links->children[$artefactid]);
+        }
+    }
+
+    public function artefact_attachment_links($artefactid) {
+        if (isset($this->links->attachments[$artefactid])) {
+            return array_intersect_key($this->artefacts, $this->links->attachments[$artefactid]);
+        }
+    }
+
+    public function artefact_artefact_links($artefactid) {
+        if (isset($this->links->artefactartefact[$artefactid])) {
+            return $this->links->artefactartefact[$artefactid];
+        }
+    }
+
+    public function artefact_view_links($artefactid) {
+        if (isset($this->links->artefactview[$artefactid])) {
+            return $this->links->artefactview[$artefactid];
+        }
+    }
+
     /**
      * Looks at all blockinstance configurations, and rewrites the artefact IDs
      * found to be IDs in the generated export.
