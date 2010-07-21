@@ -142,7 +142,8 @@ $string['cantsubmitviewtogroup'] = 'You cannot submit this View to this group fo
 
 $string['cantdeleteview'] = 'You cannot delete this View';
 $string['deletespecifiedview'] = 'Delete View "%s"';
-$string['deleteviewconfirm'] = '<p>Do you really want to delete this View? It cannot be undone.</p><p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted. <br/>Consider backuping the view by exporting it first.</p>';
+$string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
+$string['deleteviewconfirmnote'] = '<p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted.  Consider backing up the view by exporting it first.</p>';
 
 $string['editaccesspagedescription2'] = '<p>By default, only you can see your View. You can share your View with others by adding access rules on this page.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
