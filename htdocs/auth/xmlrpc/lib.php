@@ -245,7 +245,8 @@ class AuthXmlrpc extends Auth {
                 }
             }
 
-            $this->import_user_settings($user, $remoteuser);
+            $locked = $this->import_user_settings($user, $remoteuser);
+            $locked = array_merge($simplefieldstoimport, $locked);
 
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
@@ -354,6 +355,9 @@ class AuthXmlrpc extends Auth {
                     log_warn(get_string('cantcreatetempprofileiconfile', 'artefact.file', $filename));
                 }
             }
+            if ($update) {
+                $locked[] = 'profileicon';
+            }
         }
 
         /*******************************************/
@@ -368,6 +372,10 @@ class AuthXmlrpc extends Auth {
         $SESSION->set('mnetuser', $user->id);
         $SESSION->set('authinstance', $this->instanceid);
         $SESSION->set('mnetuserfrom', $_SERVER['HTTP_REFERER']);
+
+        if ($update && isset($locked)) {
+            $SESSION->set('lockedfields', $locked);
+        }
 
         return true;
     }
@@ -470,6 +478,8 @@ class AuthXmlrpc extends Auth {
                 $user->set_account_preference('wysiwyg', $htmleditor);
             }
         }
+
+        return array('town', 'country', 'introduction');
     }
 
     public function kill_parent($username) {

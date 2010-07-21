@@ -28,7 +28,6 @@
 // TODO : lib
 
 defined('INTERNAL') || die();
-require_once(get_config('libroot') .'hostset.php');
 
 class Institution {
 
@@ -37,7 +36,6 @@ class Institution {
     const   PERSISTENT     = 2;
 
     protected $initialized = self::UNINITIALIZED;
-    protected $hostset;
     protected $members = array(
         'name' => '',
         'displayname' => '',
@@ -58,11 +56,6 @@ class Institution {
     }
 
     function __get($name) {
-        if ($name == 'hosts') {
-            if (count($this->hosts) == 0 && $this->ready) {
-                $this->getHostData();
-            }
-        }
         if (array_key_exists($name, $this->members)) {
             return $this->members[$name];
         }
@@ -119,33 +112,6 @@ class Institution {
         return $this;
     }
 
-    function findByWwwroot($wwwroot) {
-
-        if (!is_string($wwwroot) || strlen($wwwroot) < 1 || strlen($wwwroot) > 255) {
-            throw new SystemException('Invalid wwwroot: ' . $wwwroot);
-        }
-
-        $this->hostset = new HostSet();
-        $this->hostset->findByWwwroot($wwwroot);
-        if (false == $a_host = $this->hostset->current()) {
-            return false;
-        }
-        $institution = $a_host->institution;
-
-        $result = get_record('institution', 'name', $institution);
-        if (false == $result) {
-            throw new SystemException('Invalid Institution name');
-        }
-
-        $this->initialized = self::PERSISTENT;
-        $this->populate($result);
-    }
-
-    function getHostData() {
-        $this->hostset = new HostSet();
-        $this->hostset->findByInstitution($this->name);
-    }
-
     function initialise($name, $displayname) {
         if (empty($name) || !is_string($name)) {
             return false;
@@ -191,18 +157,6 @@ class Institution {
         }
         // Shouldn't happen but who noes?
         return false;
-    }
-
-    function findByHostset(HostSet $hostset) {
-
-        // get the first host record:
-        $host = reset($hostset);
-
-        $result = get_record('institution', 'name', $host->institution);
-        if (false == $result) {
-            throw new SystemException('No institution for hostset '.addslashes($host->institution));
-        }
-        $this->populate($result);
     }
 
     protected function populate($result) {
@@ -360,13 +314,22 @@ class Institution {
         }
         db_begin();
         // If the user is being authed by the institution they are
-        // being removed from, change them to internal auth
-        $authinstances = get_records_select_assoc('auth_instance', "
-            institution IN ('mahara', " . db_quote($this->name) . ')');
+        // being removed from, change them to internal auth, or if
+        // we can't find that, some other no institution auth.
+        $authinstances = get_records_select_assoc(
+            'auth_instance',
+            "institution IN ('mahara', ?)",
+            array($this->name),
+            "institution = 'mahara' DESC, authname = 'internal' DESC"
+        );
         $oldauth = $user->authinstance;
         if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
             foreach ($authinstances as $ai) {
                 if ($ai->authname == 'internal' && $ai->institution == 'mahara') {
+                    $user->authinstance = $ai->id;
+                    break;
+                }
+                else if ($ai->institution == 'mahara') {
                     $user->authinstance = $ai->id;
                     break;
                 }

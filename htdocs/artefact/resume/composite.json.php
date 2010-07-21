@@ -28,17 +28,12 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
-if (isset($_POST['view'])) {
-    define('PUBLIC', 1);
-}
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'resume');
 
 $limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $type = param_alpha('type');
-$view = param_integer('view', 0);
 
 $data = array();
 $count = 0;
@@ -52,12 +47,6 @@ $sql = 'SELECT ar.*, a.owner
     JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
     ORDER BY ar.displayorder';
-
-if (!empty($view)) { 
-    require_once('view.php');
-    $v = new View($view);
-    $owner = $v->get('owner');
-}
 
 if (!$data = get_records_sql_array($sql, array($owner, $type))) {
     $data = array();

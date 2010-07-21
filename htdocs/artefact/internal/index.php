@@ -84,6 +84,7 @@ foreach ( $element_list as $element => $type ) {
         $items[$element] = array(
             'type'  => 'html',
             'title' => get_string($element, 'artefact.internal'),
+            'value' => '--',
         );
         if (isset($profilefields[$element])) {
             $items[$element]['value'] = clean_html($profilefields[$element]);
@@ -445,7 +446,7 @@ $smarty->display('artefact:internal:index.tpl');
 
 
 function locked_profile_fields() {
-    global $USER;
+    global $USER, $SESSION;
 
     // Profile fields are locked for a user if they are locked by any
     // institution the user is a member of, but not an admin for.
@@ -453,11 +454,21 @@ function locked_profile_fields() {
     $lockinginstitutions[] = 'mahara';
     $lockinginstitutions = array_diff($lockinginstitutions, $USER->get('admininstitutions'));
 
-    return get_records_select_assoc(
+    $locked = get_records_select_assoc(
         'institution_locked_profile_field',
         'name IN (' . join(',', array_map('db_quote', $lockinginstitutions)) . ')',
         null, '', 'profilefield,name'
     );
+
+    if ($remotelocked = $SESSION->get('lockedfields')) {
+        foreach ($remotelocked as $f) {
+            if (!isset($locked[$f])) {
+                $locked[$f] = $f;
+            }
+        }
+    }
+
+    return $locked;
 }
 
 ?>

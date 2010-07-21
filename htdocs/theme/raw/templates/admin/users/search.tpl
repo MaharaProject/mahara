@@ -24,7 +24,7 @@
     </div>
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">
-            <label>{str tag='Query' section='admin'}:</label>
+            <label>{str tag='Search' section='admin'}:</label>
                 <input type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             
             {if count($institutions) > 1}

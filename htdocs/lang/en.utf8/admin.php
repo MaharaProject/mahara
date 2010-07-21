@@ -660,7 +660,7 @@ $string['couldnotexportusers'] = 'The following user(s) could not be exported: %
 $string['exportingusername'] = 'Exporting \'%s\'...';
 
 // Admin User Search
-$string['Query'] = 'Query';
+$string['Search'] = 'Search';
 $string['Institution'] = 'Institution';
 $string['confirm'] = 'confirm';
 $string['invitedby'] = 'Invited by';

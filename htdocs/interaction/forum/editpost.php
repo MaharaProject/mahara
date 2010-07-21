@@ -159,7 +159,7 @@ $editform = pieform(array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($post) ? get_string('edit') : get_string('Post','interaction.forum'),
+                isset($post) ? get_string('save') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic . '#post' . (isset($postid) ? $postid : $parentid)

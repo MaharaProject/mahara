@@ -63,10 +63,15 @@ function search_submit(Pieform $form, $values) {
 $groups = search_group($query, $limit, $offset, 'all');
 
 if ($ids = array_map(create_function('$a', 'return intval($a->id);'), $groups['data'])) {
+    $sumsql = "(m.role = 'admin')";
+    if (is_postgres()) {
+        $sumsql .= '::int';
+    }
+
     // Member & admin counts
     $ids = join(',', $ids);
     $counts = get_records_sql_assoc("
-        SELECT m.group, COUNT(m.member) AS members, SUM((m.role = 'admin')::int) AS admins
+        SELECT m.group, COUNT(m.member) AS members, SUM($sumsql) AS admins
         FROM {group_member} m
         WHERE m.group IN ($ids)
         GROUP BY m.group",
