@@ -60,6 +60,12 @@ if ($blog->count_children()) {
 }
 
 $smarty = smarty(array('tablerenderer'));
+
+if (!$USER->get_account_preference('multipleblogs')
+    && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
+    $smarty->assign('enablemultipleblogstext', 1);
+}
+
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', $blog->get('title'));

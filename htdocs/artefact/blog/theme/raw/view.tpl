@@ -22,7 +22,10 @@
                   {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=artefact.blog}</a>{/if}
                 </div>
                 {/if}
-					
+
+                {if $enablemultipleblogstext}
+                <p class="s dull center">{str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
+                {/if}
             </div>
 {include file="footer.tpl"}
 
