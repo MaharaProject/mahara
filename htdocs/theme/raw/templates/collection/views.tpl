@@ -20,7 +20,7 @@
             <td class="displayordercontrols">
                 {if $view->displayorder == $views.min}
                     <div id="viewdisplayorder_{$view->view}">
-                        <a href="{$WWWROOT}collection/views.php?id={$view->collection|safe}&amp;v={$view->view|safe}&amp;d=down"><img src="{theme_url filename='images/move-block-down.png'}" alt="" ></a>
+                        <a href="{$WWWROOT}collection/views.php?id={$view->collection|safe}&amp;view={$view->view|safe}&amp;direction=down"><img src="{theme_url filename='images/move-block-down.png'}" alt="" ></a>
                     </div>
                 {elseif $view->displayorder == $views.max}
                     <div id="viewdisplayorder_{$view->view}">
