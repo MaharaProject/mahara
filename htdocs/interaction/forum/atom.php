@@ -73,12 +73,10 @@ $feedtype = param_alpha('type'); //g = group, f = forum, t = topic
 $id = param_integer('id');
 
 if ($feedtype == 'g') {
-    if (!record_exists('group', 'id', $id, 'deleted', 0)) {
+    if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
         generate_feed(error_feed(), error_post(get_string('groupnotfound', 'group', $id)));
         exit();
     }
-
-    $groupid = $id;
 
     $sql = "
         SELECT u.firstname, u.lastname, p.id, p.parent, p.topic, p.subject, p.body, p.ctime
@@ -94,7 +92,13 @@ if ($feedtype == 'g') {
         get_string('allposts', 'interaction.forum')));
 }
 elseif ($feedtype == 'f') {
-    if (!($groupid = get_field('interaction_instance', '"group"', 'id', $id, 'deleted', 0))) {
+    $group = get_record_sql('
+        SELECT g.*
+        FROM {interaction_instance} i JOIN {group} g ON i.group = g.id
+        WHERE i.id = ? AND i.deleted = 0 AND g.deleted = 0',
+        array($id)
+    );
+    if (!$group) {
         generate_feed(error_feed(), error_post(get_string('cantfindforum', 'interaction.forum', $id)));
         exit();
     }
@@ -108,17 +112,25 @@ elseif ($feedtype == 'f') {
         AND p.deleted = 0";
 
     $link = get_config('wwwroot') . 'interaction/forum/view.php?id=' . $id;
-    $title = implode(' - ', array(get_field('group', 'name', 'id', $groupid),
+    $title = implode(' - ', array(get_field('group', 'name', 'id', $group->id),
         get_field('interaction_instance', 'title', 'id', $id),
         get_string('allposts', 'interaction.forum')));
 }
 elseif ($feedtype == 't') {
-    if (!($forumid = get_field('interaction_forum_topic', 'forum', 'id', $id, 'deleted', 0))) {
+    $group = get_record_sql('
+        SELECT g.*, f.id AS forumid
+        FROM {interaction_forum_topic} t
+            INNER JOIN {interaction_instance} f ON t.forum = f.id
+            INNER JOIN {group} g ON f.group = g.id
+        WHERE t.id = ? AND t.deleted = 0 AND g.deleted = 0',
+        array($id)
+    );
+    if (!$group) {
         generate_feed(error_feed(), error_post(get_string('cantfindtopic', 'interaction.forum', $id)));
         exit();
     }
 
-    $groupid = get_field('interaction_instance', '"group"', 'id', $forumid, 'deleted', 0);
+    $forumid = $group->forumid;
 
     $sql = "
         SELECT u.firstname, u.lastname, p.id, p.parent, p.topic, p.subject, p.body, p.ctime
@@ -128,7 +140,7 @@ elseif ($feedtype == 't') {
         AND p.topic = ?";
 
     $link = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $id;
-    $title = implode(' - ', array(get_field('group', 'name', 'id', $groupid),
+    $title = implode(' - ', array(get_field('group', 'name', 'id', $group->id),
         get_field('interaction_instance', 'title', 'id', $forumid),
         get_field_sql("
             SELECT p.subject
@@ -137,7 +149,7 @@ elseif ($feedtype == 't') {
             AND p.parent IS NULL", array($id)),
         get_string('allposts', 'interaction.forum')));
 }
-if (!get_field('"group"', 'public', 'id', $groupid)) {
+if (!$group->public) {
     generate_feed(error_feed(), error_post(get_string('notpublic', 'group')));
     exit();
 }
