@@ -43,6 +43,8 @@ if (!get_config('allowcollections')) {
     die();
 }
 
+$view = param_integer('view',0);
+$direction = param_variable('direction','');
 $collectionid = param_integer('id');
 define('COLLECTION', $collectionid);
 
@@ -53,7 +55,12 @@ if (!$USER->can_edit_collection($collection)) {
     redirect('/collection/');
 }
 
-$incollection = $collection->views();
+if ($view AND !empty($direction)) {
+    $collection->set_viewdisplayorder($view,$direction);
+    redirect('/collection/views.php?id='.COLLECTION);
+}
+
+$views = $collection->views();
 
 $elements = array();
 if ($available = Collection::available_views()) {
@@ -83,7 +90,7 @@ else {
 }
 
 $smarty = smarty();
-$smarty->assign_by_ref('incollection', $incollection);
+$smarty->assign_by_ref('views', $views);
 $smarty->assign('form', $form);
 $smarty->assign('addviews', get_string('addviews', 'collection'));
 $smarty->display('collection/views.tpl');

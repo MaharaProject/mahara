@@ -2121,5 +2121,15 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2010080401) {
+
+        // new field displayorder on collection_view
+        $table = new XMLDBTable('collection_view');
+        $field = new XMLDBField('displayorder');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_NOTNULL);
+        add_field($table, $field);
+
+    }
+
     return $status;
 }

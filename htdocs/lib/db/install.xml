@@ -809,6 +809,7 @@
                 <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="master" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="collection,view" />

@@ -43,9 +43,8 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$viewid = param_integer('v');
-$collectionid = param_integer('c');
-define('VIEW', $viewid);
+$viewid = param_integer('view');
+$collectionid = param_integer('id');
 define('COLLECTION', $collectionid);
 
 $collection = Collection::current_collection();

@@ -67,7 +67,7 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
             $data = get_record_select('collection', 'id = ?', array($configdata['collection']));
             $collection = new Collection($configdata['collection'], (array)$data);
             if ($views = $collection->views()) {
-                $smarty->assign('views',$views);
+                $smarty->assign('views',$views['views']);
             }
         }
         $smarty->assign('currentview',$instance->get('view'));

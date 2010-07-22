@@ -59,7 +59,7 @@ if ($collection->has_views()) {
 
     $views = $collection->views();
     $options[0] = get_string('nooverride','collection');
-    foreach ($views as $v) {
+    foreach ($views['views'] as $v) {
         $options[$v->view] = $v->title;
     }
 

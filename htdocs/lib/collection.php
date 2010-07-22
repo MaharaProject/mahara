@@ -322,12 +322,23 @@ class Collection {
                     LEFT JOIN {collection} c ON cv.collection = c.id
                     LEFT JOIN {view} v ON cv.view = v.id
                 WHERE c.id = ? AND c.owner = ? " . $mastersql . "
-                ORDER BY v.title, v.ctime ASC";
+                ORDER BY cv.displayorder, v.title, v.ctime ASC";
 
-        ($views = get_records_sql_array($sql, array($this->get('id'), $USER->get('id'))))
-            || ($views = array());
+        $result = get_records_sql_array($sql, array($this->get('id'), $USER->get('id')));
+
+        if (!empty($result)) {
+            $max = get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id'));
+            $min = get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id'));
+            $views = array(
+                'views' => $result,
+                'max'   => $max,
+                'min'   => $min,
+            );
 
             return $views;
+        }
+
+        return array();
     }
 
     /**
@@ -372,6 +383,11 @@ class Collection {
                 $cv = array();
                 $cv['view'] = substr($key,5);
                 $cv['collection'] = $this->get('id');
+
+                // set displayorder value
+                $max = get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id'));
+                $cv['displayorder'] = is_numeric($max) ? $max + 1 : 0;
+
                 insert_record('collection_view', (object)$cv);
                 $count++;
             }
@@ -456,7 +472,7 @@ class Collection {
 
             // update all other views access
             $views = $this->views(false);
-            foreach ($views as $view) {
+            foreach ($views['views'] as $view) {
                 if ($v = new View($view->view)) {
                     delete_records('view_access','view',$view->view); // clear all current access
                     $v->set_access($validaccess['valid']);
@@ -494,4 +510,46 @@ class Collection {
             'secreturl' => $secretURL,
         );
     }
+
+    /**
+     * Sets the displayorder for a view
+     *
+     * @param integer view
+     * @param string direction
+     *
+     */
+    public function set_viewdisplayorder($id, $direction) {
+
+        $ids = get_column_sql('
+            SELECT view FROM {collection_view}
+            WHERE collection = ?
+            ORDER BY displayorder', array($this->get('id')));
+
+        foreach ($ids as $k => $v) {
+            if ($v == $id) {
+                $oldorder = $k;
+                break;
+            }
+        }
+
+        if ($direction == 'up' && $oldorder > 0) {
+            $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
+                                    array($id, $ids[$oldorder-1]),
+                                    array_slice($ids, $oldorder+1));
+        }
+        else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
+            $neworder = array_merge(array_slice($ids, 0, $oldorder),
+                                    array($ids[$oldorder+1], $id),
+                                    array_slice($ids, $oldorder+2));
+        }
+
+        if (isset($neworder)) {
+            foreach ($neworder as $k => $v) {
+                set_field('collection_view', 'displayorder', $k, 'view', $v, 'collection',$this->get('id'));
+            }
+            $this->set('mtime', time());
+            $this->commit();
+        }
+    }
+
 }
