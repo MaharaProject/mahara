@@ -832,8 +832,8 @@ class User {
      * if groups are allowed collections and other amendments in the future
      */
     public function can_edit_collection($c) {
-        $owner = get_column('collection', 'owner','id',$c);
-        if ($owner[0] == $this->get('id')) {
+        $owner = $c->get('owner');
+        if ($owner == $this->get('id')) {
             return true;
         }
         return false;

@@ -27,7 +27,13 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection/access');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'views');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
 require_once('view.php');
 define('TITLE', get_string('collectionaccess','collection'));
@@ -40,34 +46,29 @@ if (!get_config('allowcollections')) {
 
 $collectionid = param_integer('id');
 define('COLLECTION', $collectionid);
-$smarty = smarty();
 
-if (!$USER->can_edit_collection(COLLECTION)) {
+$collection = Collection::current_collection();
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
+$master = $collection->master();
 
-$views = collection_get_views(COLLECTION);
-$master = collection_get_master(COLLECTION);
+$form = null;
+if ($collection->has_views()) {
 
-// we only need to have a select list if there is more than one view
-if (count($views) > 1) {
-
+    $views = $collection->views();
     $options[0] = get_string('nooverride','collection');
-    foreach ($views as $value) {
-        $options[$value->view] = $value->title; 
+    foreach ($views as $v) {
+        $options[$v->view] = $v->title;
     }
 
-    $elements['collection'] = array(
-        'type' => 'hidden',
-        'value' => COLLECTION,
-    );
     $elements['view'] = array(
         'type'         => 'select',
         'title'        => get_string('masterview','collection'),
         'options'      => $options,
         'rules'        => array('required' => true),
-        'defaultvalue' => $master ? $master->id : 0,
+        'defaultvalue' => $master ? $master->view : 0,
     );
     $elements['submit'] = array(
         'type' => 'submit',
@@ -77,25 +78,47 @@ if (count($views) > 1) {
 
     $form = pieform(array(
         'name' => 'access',
-        'renderer' => 'div',
+        'plugintype' => 'core',
+        'pluginname' => 'collection',
         'autofocus' => false,
-        'method' => 'post',
+        'successcallback' => 'submit',
+        'renderer' => 'div',
         'elements' => $elements,
     ));
 
-    $smarty->assign('form', $form);
 }
 
-if ($master) {
-    $smarty->assign('master',$master->title);
-    $smarty->assign('masterid',$master->id);
-}
+$smarty = smarty();
+$smarty->assign('master',$master);
+$smarty->assign('form', $form);
 $smarty->assign('accessdesc',get_string('accessdesc','collection'));
-$smarty->assign('viewcount', count($views));
 $smarty->display('collection/access.tpl');
 
-function access_submit(Pieform $form, $values) {
-   collection_set_access($values['collection'],$values['view']);
+function submit(Pieform $form, $values) {
+    global $SESSION, $collection;
+
+    $success = $collection->set_master($values['view']);
+
+    if (!$success) {
+        $SESSION->add_ok_msg(get_string('nooverridesaved', 'collection'));
+        redirect('/collection/access.php?id=' . $collection->get('id'));
+    }
+
+    if ($success['secreturl'] == false) {
+        $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+        redirect('/collection/access.php?id=' . $collection->get('id'));
+    }
+    else {
+        if (!empty($success['valid'])) {
+            $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+            $SESSION->add_info_msg(get_string('accessignored', 'collection'));
+            redirect('/collection/access.php?id=' . $collection->get('id'));
+        }
+        else {
+            $SESSION->add_error_msg(get_string('accesscantbeused', 'collection'));
+            redirect('/collection/access.php?id=' . $collection->get('id'));
+        }
+    }
 }
 
 ?>

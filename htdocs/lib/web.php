@@ -417,10 +417,10 @@ EOF;
 
     if (defined('COLLECTION')) {
         require_once('collection.php');
-        $collection = collection_current_collection();
+        $collection = Collection::current_collection();
         $smarty->assign('COLLECTION', $collection);
-        $smarty->assign('SUBPAGENAV', collection_get_menu_tabs());
-        $smarty->assign('PAGEHEADING', hsc($collection->name));
+        $smarty->assign('SUBPAGENAV', $collection->get_menu_tabs());
+        $smarty->assign('PAGEHEADING', hsc($collection->get('name')));
     }
 
     // ---------- sideblock stuff ----------

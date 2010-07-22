@@ -1,11 +1,11 @@
 {auto_escape off}
 {include file="header.tpl"}
         <div class="message">{$accessdesc}<br /><br />
-{if !$viewcount}
+{if !$form}
             <div>{str tag=noviews section=collection}</div>
 {else}
             {if $master}
-                <label>{str tag=currentmaster section=collection}: </label><a href="{$WWWROOT}view/access.php?id={$masterid}">{$master|safe}</a><br />
+                <label>{str tag=currentmaster section=collection}: </label><a href="{$WWWROOT}view/access.php?id={$master->view}">{$master->title|safe}</a><br />
             {/if}
             <fieldset>
             <legend>{str tag=overrideaccess section=collection}</legend>

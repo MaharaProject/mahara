@@ -27,10 +27,16 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'create');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('SECTION_PAGE', 'mycollections');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
-define('TITLE', get_string('newcollection','collection'));
+require_once('collection2.php');
+define('TITLE', get_string('newcollection', 'collection'));
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -38,11 +44,30 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$form = collection_get_form();
+$elements = Collection::get_collectionform_elements();
+$elements['submit'] = array(
+    'type' => 'submitcancel',
+    'value' => array(get_string('savecollection','collection'), get_string('cancel')),
+    'goto' => get_config('wwwroot') . 'collection/',
+);
+$form = pieform(array(
+    'name' => 'createcollection',
+    'plugintype' => 'core',
+    'pluginname' => 'collection',
+    'successcallback' => 'submit',
+    'elements' => $elements,
+));
 
-$smarty =& smarty();
+$smarty = smarty();
 $smarty->assign_by_ref('newcollectionform', $form);
 $smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
 $smarty->display('collection/new.tpl');
+
+function submit(Pieform $form, $values) {
+    global $SESSION;
+    Collection::save($values);
+    $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
+    redirect('/collection/');
+}
 
 ?>

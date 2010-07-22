@@ -27,7 +27,13 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection/info');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'edit');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('editcollection', 'collection'));
 
@@ -37,18 +43,39 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$id = param_integer('id');
-define('COLLECTION', $id);
+$collectionid = param_integer('id');
+define('COLLECTION', $collectionid);
 
-if (!$USER->can_edit_collection(COLLECTION)) {
+$data = get_record_select('collection', 'id = ?', array(COLLECTION));
+$collection = new Collection(COLLECTION, (array)$data);
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
-$collection = get_record_select('collection', 'id = ?', array(COLLECTION));
-$editcollection = collection_get_form($collection);
+
+$elements = Collection::get_collectionform_elements($data);
+$elements['submit'] = array(
+    'type' => 'submitcancel',
+    'value' => array(get_string('savecollection','collection'), get_string('cancel')),
+    'goto' => get_config('wwwroot') . 'collection/about.php?id='.COLLECTION,
+);
+$form = pieform(array(
+    'name' => 'editcollection',
+    'plugintype' => 'core',
+    'pluginname' => 'collection',
+    'successcallback' => 'submit',
+    'elements' => $elements,
+));
 
 $smarty = smarty();
-$smarty->assign('editcollection', $editcollection);
+$smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
+
+function submit(Pieform $form, $values) {
+    global $SESSION, $collectionid;
+    Collection::save($values);
+    $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
+    redirect('/collection/about.php?id='.$collectionid);
+}
 
 ?>

@@ -27,9 +27,14 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection/info');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'about');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('collection.php');
-define('TITLE', get_string('viewcollection','collection'));
+define('TITLE', get_string('viewcollection', 'collection'));
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -40,19 +45,19 @@ if (!get_config('allowcollections')) {
 $collectionid = param_integer('id');
 define('COLLECTION', $collectionid);
 
-if (!$USER->can_edit_collection(COLLECTION)) {
+$data = get_record_select('collection', 'id = ?', array(COLLECTION), '*, ' . db_format_tsfield('ctime'));
+$collection = new Collection(COLLECTION, (array)$data);
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
 
-$collection = get_record_select('collection', 'id = ?', array(COLLECTION), '*, ' . db_format_tsfield('ctime'));
-$collection->ctime = strftime(get_string('strftimedate'), $collection->ctime);
-$collection->viewcount = count_records('collection_view','collection',COLLECTION);
-$accessoverride = collection_get_master(COLLECTION);
+$data->ctime = strftime(get_string('strftimedate'), $data->ctime);
+$data->views = count_records('collection_view','collection',COLLECTION);
+$data->access = $collection->master();
 
 $smarty = smarty();
-$smarty->assign('collection', $collection);
-$smarty->assign('accessoverride',$accessoverride);
+$smarty->assign('collection', $data);
 $smarty->display('collection/info.tpl');
 
 ?>

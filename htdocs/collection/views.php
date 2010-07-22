@@ -27,6 +27,11 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection/views');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'views');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
@@ -38,30 +43,26 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$id = param_integer('id');
-define('COLLECTION', $id);
+$collectionid = param_integer('id');
+define('COLLECTION', $collectionid);
 
-if (!$USER->can_edit_collection(COLLECTION)) {
+$data = get_record_select('collection', 'id = ?', array(COLLECTION), '*, ' . db_format_tsfield('ctime'));
+$collection = new Collection(COLLECTION, (array)$data);
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
 
-$currentviews = collection_get_views(COLLECTION);
-collection_build_view_list_html($currentviews);
+$incollection = $collection->views();
 
 $elements = array();
-if ($userviews = collection_get_user_views()) {
-    foreach ($userviews as $value) {
-        $elements['view_'.$value->id] = array(
+if ($available = Collection::available_views()) {
+    foreach ($available as $a) {
+        $elements['view_'.$a->id] = array(
             'type'      => 'checkbox', 
-            'title'     => $value->title,
+            'title'     => $a->title,
         );
     }
-
-    $elements['id'] = array(
-        'type' => 'hidden',
-        'value' => COLLECTION,
-    );
     $elements['submit'] = array(
         'type' => 'submit',
         'value' => get_string('add','collection'),
@@ -70,9 +71,10 @@ if ($userviews = collection_get_user_views()) {
 
     $form = pieform(array(
         'name' => 'addviews',
-        'renderer' => 'div',
+        'plugintype' => 'core',
+        'pluginname' => 'collection',
         'autofocus' => false,
-        'method' => 'post',
+        'successcallback' => 'submit',
         'elements' => $elements,
     ));
 }
@@ -81,9 +83,23 @@ else {
 }
 
 $smarty = smarty();
-$smarty->assign_by_ref('currentviews', $currentviews);
+$smarty->assign_by_ref('incollection', $incollection);
 $smarty->assign('form', $form);
 $smarty->assign('addviews', get_string('addviews', 'collection'));
 $smarty->display('collection/views.tpl');
+
+function submit(Pieform $form, $values) {
+    global $SESSION, $collection;
+    $count = $collection->add_views($values);
+    if ($count > 1) {
+        $SESSION->add_ok_msg(get_string('viewsaddedtocollection', 'collection'));
+    }
+    else {
+        $SESSION->add_ok_msg(get_string('viewaddedtocollection', 'collection'));
+    }
+
+    redirect('/collection/views.php?id=' . $collection->get('id'));
+
+}
 
 ?>

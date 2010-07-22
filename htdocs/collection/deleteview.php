@@ -26,9 +26,14 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/collection');
+define('MENUITEM', 'myportfolio/collection/views');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'deleteview');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('SECTION_PAGE', 'mycollections');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('deleteview', 'collection'));
 
@@ -38,44 +43,44 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$id = param_integer('id');
-define('VIEW', $id);
+$viewid = param_integer('v');
+$collectionid = param_integer('c');
+define('VIEW', $viewid);
+define('COLLECTION', $collectionid);
 
-$collection = get_column('collection_view','collection','view',VIEW);
-if (!$USER->can_edit_collection($collection[0])) {
+$collection = Collection::current_collection();
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
-$cv = get_record_select('collection_view', 'collection = ? AND view = ?', array($collection[0], VIEW));
 
 $form = pieform(array(
     'name' => 'removeview',
     'renderer' => 'div',
+    'plugintype' => 'core',
+    'pluginname' => 'collection',
+    'autofocus' => false,
+    'successcallback' => 'submit',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'collection/views.php?id='.$collection[0],
-        ),
-        'view' => array(
-            'type' => 'hidden',
-            'value' => VIEW,
-        ),
-        'collection' => array(
-            'type' => 'hidden',
-            'value' => $collection[0],
+            'goto' => get_config('wwwroot') . 'collection/views.php?id='.COLLECTION,
         ),
     ),
 ));
 
 $smarty = smarty();
 $smarty->assign('subheading', hsc(TITLE));
-$smarty->assign('message', get_string('viewconfirmdelete', 'collection'));
+$smarty->assign('message', get_string('viewconfirmremove', 'collection'));
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
-function removeview_submit(Pieform $form, $values) {
-    collection_view_delete($values['view'], $values['collection']);
+function submit(Pieform $form, $values) {
+    global $SESSION, $viewid, $collection;
+    $collection->remove_view($viewid);
+    $SESSION->add_ok_msg(get_string('viewremovedsuccessfully','collection'));
+    redirect('/collection/views.php?id='.$collection->get('id'));
 }
 
 ?>

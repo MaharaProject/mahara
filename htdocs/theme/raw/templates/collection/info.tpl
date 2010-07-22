@@ -9,15 +9,19 @@
         </div>
         <ul>
             <li><div>{$collection->description}</div></li>
-            <li><label>{str tag=created section=collection}: </label> {$collection->ctime}</li>
+            <li><label>{str tag=created section=collection}: </label> {$collection->ctime|safe}</li>
             <li><label>{str tag=viewcount section=collection}: </label> 
-                {$collection->viewcount}
+            {if $collection->views}
+                {$collection->views|safe}
+            {else}
+                {str tag=none}
+            {/if}
             </li>
             <li><label>{str tag=accessoverride section=collection}: </label> 
-                {if $accessoverride}
-                    <a href="{$WWWROOT}view/view.php?id={$accessoverride->id}">{$accessoverride->title|safe}</a>
+                {if $collection->access}
+                    <a href="{$WWWROOT}view/view.php?id={$collection->access->id|safe}">{$collection->access->title|safe}</a>
                 {else}
-                   {str tag=nooverride section=collection}
+                   {str tag=none}
                 {/if}
             </li>
         </ul>

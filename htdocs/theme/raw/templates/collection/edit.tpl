@@ -1,7 +1,7 @@
 {auto_escape off}
 {include file="header.tpl"}
 <div>
-    {$editcollection}
+    {$form|safe}
 </div>
 {include file="footer.tpl"}
 {/auto_escape}

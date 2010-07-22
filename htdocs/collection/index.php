@@ -26,15 +26,16 @@
  */
 
 define('INTERNAL', 1);
-
 define('MENUITEM', 'myportfolio/collection');
-require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
-define('TITLE', get_string('mycollections','collection'));
+
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
-define('SECTION_PAGE', 'mycollections');
+define('SECTION_PAGE', 'index');
+
+require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
+define('TITLE', get_string('mycollections', 'collection'));
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -44,15 +45,31 @@ if (!get_config('allowcollections')) {
 
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 10);
+$limit  = param_integer('limit', 5);
 
-$collections = collection_get_user_collections($offset, $limit);
-collection_build_list_html($collections);
+$data = Collection::get_mycollections_data($offset, $limit);
+
+$pagination = build_pagination(array(
+    'id' => 'collectionslist_pagination',
+    'class' => 'center',
+    'url' => get_config('wwwroot') . 'collection/index.php',
+    'jsonscript' => 'collection/collections.json.php',
+    'datatable' => 'collectionslist',
+    'count' => $data->count,
+    'limit' => $data->limit,
+    'offset' => $data->offset,
+    'firsttext' => '',
+    'previoustext' => '',
+    'nexttext' => '',
+    'lasttext' => '',
+    'numbersincludefirstlast' => false,
+    'resultcounttextsingular' => get_string('collection', 'collection'),
+    'resultcounttextplural' => get_string('collections', 'collection'),
+));
 
 $smarty = smarty(array('paginator'));
-if ($collections['count'] > 0) {
-    $smarty->assign('collections', $collections);
-}
+$smarty->assign('collections', $data->data);
+$smarty->assign('pagination', $pagination['html']);
 $smarty->assign('strnocollectionsaddone',
     get_string('nocollectionsaddone','collection','<a href="' . get_config('wwwroot') . 'collection/create.php">', '</a>'));
 $smarty->assign('PAGEHEADING', hsc(get_string('mycollections', 'collection')));

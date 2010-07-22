@@ -27,10 +27,16 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/collection');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PAGE', 'delete');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('SECTION_PAGE', 'mycollections');
+require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('deletecollection', 'collection'));
+$collectionid = param_integer('id');
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -38,15 +44,12 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$id = param_integer('id');
-define('COLLECTION', $id);
-
-if (!$USER->can_edit_collection(COLLECTION)) {
+$data = get_record_select('collection', 'id = ?', array($collectionid));
+$collection = new Collection($collectionid, (array)$data);
+if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
-$collection = get_record_select('collection', 'id = ?', array(COLLECTION));
-
 $form = pieform(array(
     'name' => 'deletecollection',
     'renderer' => 'div',
@@ -55,10 +58,6 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'collection/',
-        ),
-        'collection' => array(
-            'type'  => 'hidden',
-            'value' => COLLECTION,    
         ),
     ),
 ));
@@ -70,7 +69,10 @@ $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
 function deletecollection_submit(Pieform $form, $values) {
-    collection_delete($values['collection']);
+    global $SESSION, $collection;
+    $collection->delete();
+    $SESSION->add_ok_msg(get_string('collectiondeleted', 'collection'));
+    redirect('/collection/');
 }
 
 ?>
