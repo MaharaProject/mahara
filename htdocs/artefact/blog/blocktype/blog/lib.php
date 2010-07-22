@@ -201,6 +201,14 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return $view->get('owner') != null;
     }
 
+    public static function feed_url(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata['artefactid']) && $instance->get_view()->is_public()) {
+            return get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
+                . $configdata['artefactid'] . '&view=' . $instance->get('view');
+        }
+    }
+
 }
 
 ?>

@@ -613,8 +613,9 @@ class BlockInstance {
     public function render_viewing() {
 
         safe_require('blocktype', $this->get('blocktype'));
+        $classname = generate_class_name('blocktype', $this->get('blocktype'));
         try {
-            $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+            $content = call_static_method($classname, 'render_instance', $this);
         }
         catch (ArtefactNotFoundException $e) {
             // Whoops - where did the image go? There is possibly a bug
@@ -631,9 +632,9 @@ class BlockInstance {
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
+        $title = call_static_method($classname, 'override_instance_title', $this);
         // hide the title if required and no content is present
-        if(call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'hide_title_on_empty_content')
+        if (call_static_method($classname, 'hide_title_on_empty_content')
             && !trim($content)) {
             return;
         }
@@ -647,21 +648,9 @@ class BlockInstance {
                 . $configdata['artefactid'] . '&view=' . $this->get('view'));
         }
 
-        // if the artefact has a feed and the view is public, display a feed icon
-        if ($this->get('blocktype') == 'blog' && !empty($configdata['artefactid']) && $this->get_view()->is_public()) {
-            $smarty->assign('hasfeed', true);
-            $smarty->assign('feedlink', get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
-                . $configdata['artefactid'] . '&view=' . $this->get('view'));
+        if (method_exists($classname, 'feed_url')) {
+            $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
-        elseif ($this->get('blocktype') == 'recentforumposts') {
-            $configdata = $this->get('configdata');
-            if (get_field('"group"', 'public', 'id', $configdata['groupid'])) {
-                $smarty->assign('hasfeed', true);
-                $smarty->assign('feedlink', get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' .
-                    $configdata['groupid']);
-            }
-        }
-
         $smarty->assign('content', $content);
 
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');

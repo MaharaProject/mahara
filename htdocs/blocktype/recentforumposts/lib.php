@@ -44,18 +44,37 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         return array('profile', 'portfolio', 'dashboard');
     }
 
-    public static function render_instance(BlockInstance $instance, $editing=false) {
-        // When this block is in a group view it should always display the
-        // forum posts from that group
-        $groupid = $instance->get_view()->get('group');
-        $configdata = $instance->get('configdata');
+    private static function get_group(BlockInstance $instance) {
+        static $groups = array();
 
-        if (!$groupid && !empty($configdata['groupid'])) {
-            $groupid = intval($configdata['groupid']);
+        $block = $instance->get('id');
+
+        if (!isset($groups[$block])) {
+
+            // When this block is in a group view it should always display the
+            // forum posts from that group
+
+            $groupid = $instance->get_view()->get('group');
+            $configdata = $instance->get('configdata');
+
+            if (!$groupid && !empty($configdata['groupid'])) {
+                $groupid = intval($configdata['groupid']);
+            }
+
+            if ($groupid) {
+                $groups[$block] = get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
+            }
+            else {
+                $groups[$block] = false;
+            }
         }
 
-        if ($groupid) {
-            $group = get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
+        return $groups[$block];
+    }
+
+    public static function render_instance(BlockInstance $instance, $editing=false) {
+        if ($group = self::get_group($instance)) {
+
             require_once('group.php');
             $role = group_user_access($group->id);
 
@@ -80,7 +99,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                         AND p.deleted = 0
                     ORDER BY
                         p.ctime DESC
-                    LIMIT ?', array($groupid, $limit));
+                    LIMIT ?', array($group->id, $limit));
 
                 $smarty = smarty_core();
                 $smarty->assign('group', $group);
@@ -191,6 +210,14 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         }
         else {
             return $instance->get('title');
+        }
+    }
+
+    public static function feed_url(BlockInstance $instance) {
+        if ($group = self::get_group($instance)) {
+            if ($group->public) {
+                return get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
+            }
         }
     }
 
