@@ -50,7 +50,9 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
 
         if (!empty($configdata['collection'])) {
             require_once('collection.php');
-            $title = collection_get_name($configdata['collection']);
+            $data = get_record_select('collection', 'id = ?', array($configdata['collection']));
+            $collection = new Collection($configdata['collection'], (array)$data);
+            $title = $collection->get('name');
             return $title;
         }
         return '';
@@ -62,7 +64,9 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
 
         if (!empty($configdata['collection'])) {
             require_once('collection.php');
-            if ($views = collection_get_views($configdata['collection'])) {
+            $data = get_record_select('collection', 'id = ?', array($configdata['collection']));
+            $collection = new Collection($configdata['collection'], (array)$data);
+            if ($views = $collection->views()) {
                 $smarty->assign('views',$views);
             }
         }
