@@ -100,6 +100,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $isability     = PluginImportLeap::is_rdf_type($entry, $importer, 'ability');
         $isachievement = PluginImportLeap::is_rdf_type($entry, $importer, 'achievement');
         $isactivity    = PluginImportLeap::is_rdf_type($entry, $importer, 'activity');
+        $isaffiliation = PluginImportLeap::is_rdf_type($entry, $importer, 'affiliation');
         $isresource    = PluginImportLeap::is_rdf_type($entry, $importer, 'resource');
 
         // Goals, cover letter & interests
@@ -214,7 +215,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Professional Membership
         $correctmaharatype = count($entry->xpath('mahara:artefactplugin[@mahara:plugin="resume" and @mahara:type="pseudo:membership"]')) == 1;
-        if ($isactivity && $correctmaharatype) {
+        if (($isactivity && $correctmaharatype) || $isaffiliation) {
             return array(array(
                 'strategy' => self::STRATEGY_IMPORT_AS_MEMBERSHIP,
                 'score'    => 100,
