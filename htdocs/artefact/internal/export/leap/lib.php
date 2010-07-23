@@ -50,9 +50,11 @@ class LeapExportElementInternal extends LeapExportElement {
     public function assign_smarty_vars() {
         $user = $this->get('exporter')->get('user');
         $userid = $user->get('id');
+        $updated = get_record_sql('select '.db_format_tsfield('max(mtime)', 'mtime').' from {artefact} a join {artefact_installed_type} t on a.artefacttype = t.name where t.plugin = \'internal\'');
         $this->smarty->assign('artefacttype', 'internal');
         $this->smarty->assign('artefactplugin', 'internal');
         $this->smarty->assign('title', display_name($user, $user));
+        $this->smarty->assign('updated', PluginExportLeap::format_rfc3339_date($updated->mtime));
         // If this ID is changed, you'll have to change it in author.tpl too
         $this->smarty->assign('id', 'portfolio:artefactinternal');
         $this->smarty->assign('leaptype', $this->get_leap_type());
