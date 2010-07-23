@@ -293,7 +293,7 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
     }
 
     public function get_leap_type() {
-        return 'activity';
+        return 'affiliation';
     }
 }
 
