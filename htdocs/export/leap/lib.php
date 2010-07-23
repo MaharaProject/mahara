@@ -390,7 +390,7 @@ class PluginExportLeap extends PluginExport {
     * @param string $filepath path to file to add
     * @param string $newname proper resulting filename
     *
-    * @return filename string use this to substitute into <content src="">
+    * @return filename string use this to pass to add_enclosure_link
     */
     public function add_attachment($filepath, $newname) {
         if (!file_exists($filepath)) {
@@ -619,6 +619,41 @@ class LeapExportElement {
                 $this->add_artefact_link($child, $this->get_child_relationship($child));
             }
         }
+        if ($attachments = $this->exporter->artefact_attachment_links($id)) {
+            foreach ($attachments as $a) {
+                $this->add_artefact_link($a, 'related');
+            }
+        }
+        if ($views = $this->exporter->artefact_view_links($id)) {
+            foreach ($views as $viewid => $linktypes) {
+                foreach ($linktypes as $linktype) {
+                    $this->add_view_link($viewid, $linktype);
+                }
+            }
+        }
+        if ($artefacts = $this->exporter->artefact_artefact_links($id)) {
+            foreach ($artefacts as $artefactid => $linktypes) {
+                foreach ($linktypes as $linktype) {
+                    $this->add_artefact_link($this->exporter->artefacts[$artefactid], $linktype);
+                }
+            }
+        }
+    }
+
+    /**
+     * add an enclosure link to the export
+     * for where we previously used the src attribute of the content tag.
+     * this does not attach the file to the expot, you have to use the
+     * {@link add_attachment} method on the exporter object.
+     *
+     * @param string $filename the relative path of the file.
+     */
+    public function add_enclosure_link($filename) {
+        $this->links[$filename] = (object)array(
+            'id' => $filename,
+            'type' => 'enclosure',
+            'file' => true
+        );
     }
 
     /**
