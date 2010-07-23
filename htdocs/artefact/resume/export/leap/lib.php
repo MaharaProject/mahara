@@ -389,28 +389,20 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
         ));
     }
 }
-class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChildWithSiblings {
-
-    public function ensure_siblings() {
-        $this->siblings = array(
-            'related' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
-                'title' => $this->originalrecord->contribution,
-                'content' => $this->originalrecord->description,
-                'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
-            ), 'achievement', 'related')
-        );
-    }
+class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChild {
 
     public function record_to_entrydata($record) {
         return array(
             'end'     => $record->date,
             'title'   => $record->title,
+            'myrole'  => $record->contribution,
+            'content' => $record->description,
             'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
     public function get_leap_type() {
-        return 'resource';
+        return 'publication';
     }
 
     public function get_categories() {
