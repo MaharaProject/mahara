@@ -24,6 +24,9 @@
  *
  */
 
+global $_PIEFORM_FIELDSETS;
+$_PIEFORM_FIELDSETS = array();
+
 /**
  * Renders a fieldset. Fieldsets contain other elements, and do not count as a
  * "true" element, in that they do not have a value and cannot be validated.
@@ -33,12 +36,17 @@
  * @return string          The HTML for the element
  */
 function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
+    global $_PIEFORM_FIELDSETS;
     $result = "\n<fieldset";
     if (!empty($element['collapsible']) || !empty($element['class'])) {
         if (!isset($element['legend']) || $element['legend'] === '') {
             Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
         }
         $classes = array('collapsible');
+        $formname = $form->get_name();
+        if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
+            $_PIEFORM_FIELDSETS['forms'][$formname] = array('formname' => $formname);
+        }
         // Work out whether any of the children have errors on them
         $error = false;
         foreach ($element['elements'] as $subelement) {
@@ -57,17 +65,12 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     }
     $result .= ">\n";
     if (isset($element['legend'])) {
-        $result .= '<legend';
+        $result .= '<legend>';
         if (!empty($element['collapsible'])) {
-            $id = 'a' . substr(md5(microtime()), 0, 4);
-            $result .= ' id="' . $id . '">';
-            $result .= '<script type="text/javascript">';
-            $result .= "var a = A({'href':'', 'tabindex':{$form->get_property('tabindex')}}, " . json_encode($element['legend']) . "); ";
-            $result .= "connect(a, 'onclick', function(e) { toggleElementClass('collapsed', $('{$id}').parentNode); e.stop(); });";
-            $result .= "replaceChildNodes('{$id}', a);</script>";
+            $result .= '<a href="">' . Pieform::hsc($element['legend']) . '</a>';
         }
         else {
-            $result .= '>' . Pieform::hsc($element['legend']);
+            $result .= Pieform::hsc($element['legend']);
         }
         // Help icon
         if (!empty($element['help'])) {
@@ -93,6 +96,43 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     return $result;
 }/*}}}*/
 
+
+function pieform_element_fieldset_js() {/*{{{*/
+    return <<<EOF
+function pieform_update_legends(element) {
+    if (!element) {
+        element = getFirstElementByTagAndClassName('body');
+    }
+    forEach(getElementsByTagAndClassName('fieldset', 'collapsible', element), function(fieldset) {
+        var legend = getFirstElementByTagAndClassName('legend', null, fieldset);
+        if (legend.firstChild.tagName == 'A') {
+            connect(legend.firstChild, 'onclick', function(e) {
+                toggleElementClass('collapsed', fieldset);
+                e.stop();
+            });
+        }
+    });
+}
+EOF;
+}/*}}}*/
+
+function pieform_element_fieldset_get_headdata() {/*{{{*/
+    global $_PIEFORM_FIELDSETS;
+
+    $result = '<script type="text/javascript">';
+    $result .= pieform_element_fieldset_js();
+    foreach ($_PIEFORM_FIELDSETS['forms'] as $fieldsetform) {
+        $result .= "\nPieformManager.connect('onload', '{$fieldsetform['formname']}', partial(pieform_update_legends, '{$fieldsetform['formname']}'));";
+    }
+    $result .= "\n</script>";
+
+    // Used below to try to work out whether pieform_update_legends is defined
+    $_PIEFORM_FIELDSETS['head'] = true;
+
+    return array($result);
+}/*}}}*/
+
+
 /**
  * Extension by Mahara. This api function returns the javascript required to 
  * set up the element, assuming the element has been placed in the page using 
@@ -104,19 +144,14 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
  * @param array   $element  The element
  */
 function pieform_element_fieldset_views_js(Pieform $form, $element) {
-    // NOTE: $element['name'] is not set properly at this point
-    return <<<EOF
-    forEach(getElementsByTagAndClassName('legend', null, 'instconf'), function(legend) {
-        if (legend.firstChild.tagName == 'SCRIPT') {
-            if (typeof(legend.firstChild.text) != 'undefined') {
-                // IE7
-                eval(legend.firstChild.text);
-            }
-            else {
-                eval(legend.firstChild.firstChild.nodeValue);
-            }
-        }
-    });
-EOF;
+    global $_PIEFORM_FIELDSETS;
+
+    $result = '';
+    if (!isset($_PIEFORM_FIELDSETS['head'])) {
+        $result .= pieform_element_fieldset_js();
+    }
+    $result .= "pieform_update_legends('instconf');";
+
+    return $result;
 }
 ?>
