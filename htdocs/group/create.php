@@ -51,11 +51,13 @@ $elements['grouptype'] = array(
             'options'      => group_get_grouptype_options(),
             'defaultvalue' => 'standard.open',
             'help'         => true);
-if (get_config('allowgroupcategories')) {
+if (get_config('allowgroupcategories')
+    && ($groupcategories = get_records_menu('group_category','','','displayorder', 'id,title'))
+) {
     $elements['category'] = array(
                 'type'         => 'select',
                 'title'        => get_string('groupcategory', 'group'),
-                'options'      => array('0'=>get_string('nocategoryselected', 'group')) + get_records_menu('group_category','','','displayorder', 'id,title'),
+                'options'      => array('0'=>get_string('nocategoryselected', 'group')) + $groupcategories,
                 'defaultvalue' => '',
                 'help'         => true);
 }

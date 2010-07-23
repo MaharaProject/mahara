@@ -53,10 +53,12 @@ $elements['options'] = array(
                 'request' => get_string('groupsiwanttojoin', 'group')
             ),
             'defaultvalue' => $filter);
-if (get_config('allowgroupcategories')) {
+if (get_config('allowgroupcategories')
+    && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
+) {
     $options[0] = get_string('allcategories', 'group');
     $options[-1] = get_string('categoryunassigned', 'group');
-    $options += get_records_menu('group_category','','','displayorder', 'id,title');
+    $options += $groupcategories;
     $elements['groupcategory'] = array(
                 'type'         => 'select',
                 'options'      => $options,
