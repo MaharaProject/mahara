@@ -339,7 +339,8 @@ function profileform_submit(Pieform $form, $values) {
             foreach ($profilefields['email']['unvalidated'] as $email) {
                 if (
                     in_array($email, $values['email']['validated'])
-                    || in_array($email, $values['email']['unvalidated'])
+                    || (isset($values['email']['unvalidated'])
+                        && in_array($email, $values['email']['unvalidated']))
                 ) {
                     continue;
                 }
