@@ -1144,6 +1144,28 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
+     * Look for a leap2:myrole element that is part of an entry (if any) and
+     * return the value
+     *
+     *
+     * @param SimpleXMLElement $entry The element containing the date
+     * @param array $namespaces array of namespaces @see PluginImportLeap::namespaces
+     * @param string $ns namespace URL which is used as a key in the $namespaces array
+     *
+     * @return string
+     *
+     * Spec reference: http://wiki.leapspecs.org/2A/literals#myrole
+     */
+    public static function get_leap_myrole(SimpleXMLElement $entry, $namespaces, $ns) {
+        $myrole = $entry->xpath($namespaces[$ns].':myrole');
+        // we only expect one role
+        if($myrole[0]) {
+            return $myrole[0];
+        }
+        return '';
+    }
+
+    /**
      * Waffer thin helper to grab all attributes in a namespace.
      *
      * It's often much easier to work with them in this form. SimpleXML doesn't 

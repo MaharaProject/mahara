@@ -102,6 +102,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         $isactivity    = PluginImportLeap::is_rdf_type($entry, $importer, 'activity');
         $isaffiliation = PluginImportLeap::is_rdf_type($entry, $importer, 'affiliation');
         $isresource    = PluginImportLeap::is_rdf_type($entry, $importer, 'resource');
+        $ispublication = PluginImportLeap::is_rdf_type($entry, $importer, 'publication');
 
         // Goals, cover letter & interests
         if ($isentry && $correctplugintype) {
@@ -162,7 +163,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
 
         // Books
         $other_required_entries = array();
-        if (($isresource || $isentry) && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'resource_type', 'Printed')) {
+        if (($ispublication || $isresource || $isentry) && PluginImportLeap::is_correct_category_scheme($entry, $importer, 'resource_type', 'Printed')) {
             // If it exists, the related achievement will be the user's role in 
             // relation to the book
             foreach ($entry->link as $link) {
@@ -322,6 +323,14 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 $role = $importer->get_entry_by_id($otherentries[0]);
                 $contribution = $role->title;
                 $description  = PluginImportLeap::get_entry_content($role, $importer);
+            }
+            // check if the import is of the version leap2a 2010-07. If it is then override the contribution and description
+            if($importer->get_leap2a_namespace() == PluginImportLeap::NS_LEAP) {
+                $myrole = PluginImportLeap::get_leap_myrole($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
+                if($myrole) {
+                    $contribution = $myrole;
+                }
+                $description  = PluginImportLeap::get_entry_content($entry, $importer);
             }
 
             $values = array(
