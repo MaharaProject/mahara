@@ -35,6 +35,8 @@ def generate_index(root, files):
     tests = list(s.strip() for s in f.readlines())
     f.close()
     for test in tests:
+        if test.find('#', 0, 1) == 0:
+            continue;
         if test != '':
             if test + '.html' in files:
                 path = '.'
