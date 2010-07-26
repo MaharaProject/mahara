@@ -33,5 +33,6 @@ $string['videourl'] = 'Video URL';
 $string['videourldescription2'] = 'Paste the embed code or the URL of the page where the video is located. You can embed videos from the following sites:';
 $string['width'] = 'Width';
 $string['height'] = 'Height';
+$string['invalidurl'] = 'Invalid URL';
 
 ?>

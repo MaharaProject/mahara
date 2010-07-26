@@ -121,6 +121,15 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         );
     }
 
+    public static function instance_config_validate(Pieform $form, $values) {
+        if ($values['videoid']) {
+            $urlparts = parse_url($values['videoid']);
+            if (empty($urlparts['host'])) {
+                $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'));
+            }
+        }
+    }
+
     private static function make_video_url($url) {
         static $embedsources = array(
             // www.youtube.com
