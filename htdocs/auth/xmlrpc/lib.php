@@ -237,16 +237,24 @@ class AuthXmlrpc extends Auth {
             $user->find_by_id($userobj->id);
 
         } elseif ($update) {
-            $simplefieldstoimport = array('firstname', 'lastname', 'email');
-            foreach ($simplefieldstoimport as $field) {
+            $imported = array('firstname', 'lastname', 'email');
+            foreach ($imported as $field) {
                 if ($user->$field != $remoteuser->$field) {
                     $user->$field = $remoteuser->$field;
                     set_profile_field($user->id, $field, $user->$field);
                 }
             }
 
+            if (isset($remoteuser->idnumber)) {
+                if ($user->studentid != $remoteuser->idnumber) {
+                    $user->studentid = $remoteuser->idnumber;
+                    set_profile_field($user->id, 'studentid', $user->studentid);
+                }
+                $imported[] = 'studentid';
+            }
+
             $locked = $this->import_user_settings($user, $remoteuser);
-            $locked = array_merge($simplefieldstoimport, $locked);
+            $locked = array_merge($imported, $locked);
 
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
@@ -437,11 +445,14 @@ class AuthXmlrpc extends Auth {
      * @param stdClass $remoteuser
      */
     private function import_user_settings($user, $remoteuser) {
+        $imported = array();
+
         // City
         if (!empty($remoteuser->city)) {
             if (get_profile_field($user->id, 'town') != $remoteuser->city) {
                 set_profile_field($user->id, 'town', $remoteuser->city);
             }
+            $imported[] = 'town';
         }
 
         // Country
@@ -451,6 +462,7 @@ class AuthXmlrpc extends Auth {
             if (in_array($newcountry, $validcountries)) {
                 set_profile_field($user->id, 'country', $newcountry);
             }
+            $imported[] = 'country';
         }
 
         // Language
@@ -468,6 +480,7 @@ class AuthXmlrpc extends Auth {
             if (get_profile_field($user->id, 'introduction') != $remoteuser->description) {
                 set_profile_field($user->id, 'introduction', $remoteuser->description);
             }
+            $imported[] = 'introduction';
         }
 
         // HTML Editor setting
@@ -479,7 +492,7 @@ class AuthXmlrpc extends Auth {
             }
         }
 
-        return array('town', 'country', 'introduction');
+        return $imported;
     }
 
     public function kill_parent($username) {
