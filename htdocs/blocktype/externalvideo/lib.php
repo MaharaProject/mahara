@@ -63,15 +63,32 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
         if (isset($configdata['videoid'])) {
             $url     = hsc(self::make_video_url($configdata['videoid']));
-            $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">';
-            $result .= '<object width="' . $width . '" height="' . $height . '">';
-            $result .= '<param name="movie" value="' . $url . '"></param>';
-            $result .= '<param name="wmode" value="transparent"></param>';
-            $result .= '<param name="allowscriptaccess" value="never"></param>';
-            $result .= '<embed src="' . $url . '" ';
-            $result .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
-            $result .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+
+            $embed = '<object width="' . $width . '" height="' . $height . '">';
+            $embed .= '<param name="movie" value="' . $url . '"></param>';
+            $embed .= '<param name="wmode" value="transparent"></param>';
+            $embed .= '<param name="allowscriptaccess" value="never"></param>';
+            $embed .= '<embed src="' . $url . '" ';
+            $embed .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
+            $embed .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+
+            $block = $instance->get('id');
+            $configuring = $block == param_integer('blockconfig', 0);
+
+            $result .= '<div class="mediaplayer-container center">';
+            $result .= '<div id="vid_' . $block . '" class="mediaplayer" style="width: {$width}px; height: {$height}px; margin: 0 auto;">';
+
+            if (!$editing || $configuring) {
+                $result .= $embed;
+            }
+
             $result .= '</div></div>';
+
+            if ($editing && !$configuring) {
+                $result .= '<script>';
+                $result .= 'addLoadEvent(function() {$(\'vid_' . $block . "').innerHTML = " . json_encode($embed) . ';});';
+                $result .= '</script>';
+            }
         }
 
         return $result;
