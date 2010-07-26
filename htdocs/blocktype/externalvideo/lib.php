@@ -62,6 +62,16 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
 
         if (isset($configdata['videoid'])) {
+            // IE seems to wait for all elements on the page to load
+            // fully before the onload event goes off.  This means the
+            // view editor isn't initialised until all videos have
+            // finished loading, and an invalid video URL can stop the
+            // editor from loading and result in an uneditable view.
+
+            // Therefore, when this block appears on first load of the
+            // view editing page, keep the embed code out of the page
+            // initially and add it in after the page has loaded.
+
             $url     = hsc(self::make_video_url($configdata['videoid']));
 
             $embed = '<object width="' . $width . '" height="' . $height . '">';
