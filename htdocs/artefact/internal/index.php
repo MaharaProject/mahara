@@ -315,10 +315,10 @@ function profileform_submit(Pieform $form, $values) {
 
             // remove old addresses
             foreach ($profilefields['email']['validated'] as $email) {
-                if (
-                    in_array($email, $values['email']['validated'])
-                    || in_array($email, $values['email']['unvalidated'])
-                ) {
+                if (in_array($email, $values['email']['validated'])) {
+                    continue;
+                }
+                if (!empty($values['email']['unvalidated']) && in_array($email, $values['email']['unvalidated'])) {
                     continue;
                 }
 
