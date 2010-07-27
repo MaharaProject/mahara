@@ -103,10 +103,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                 $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
                 $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
-                $execcommand = '';
-                if (isset($extraconfig['tinymcesetup'])) {
-                    $execcommand = 'setup: ' . $extraconfig['tinymcesetup'] . ',';
-                }
+                $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
                 $adv_buttons = array(
                     "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
@@ -159,7 +156,6 @@ EOF;
 tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
-    {$execcommand}
     extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
@@ -174,6 +170,7 @@ tinyMCE.init({
                 ed.focus();
             }
         });
+        {$extrasetup}
     }
 });
 function custom_urlconvert (u, n, e) {

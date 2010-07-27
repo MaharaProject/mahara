@@ -323,13 +323,8 @@ function editpost_error(form, data) {
 
 EOF;
 
-$tinymcesetup = "
-function (ed) {
-    ed.addCommand('mceImage', blogpostImageWindow);
-}";
-
 $smarty = smarty(array(), array(), array(), array(
-    'tinymcesetup' => $tinymcesetup,
+    'tinymcesetup' => "ed.addCommand('mceImage', blogpostImageWindow);",
     'sideblocks' => array(
         array(
             'name'   => 'quota',
