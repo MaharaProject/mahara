@@ -522,14 +522,14 @@ class HtmlExportOutputFilter {
 
         // Links to artefacts
         $html = preg_replace_callback(
-            '#<a[^>]+href="(' . preg_quote(get_config('wwwroot')) . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;page=\d+)?"[^>]*>([^<]*)</a>#',
+            '#<a[^>]+href="(' . $wwwroot . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;page=\d+)?"[^>]*>([^<]*)</a>#',
             array($this, 'replace_artefact_link'),
             $html
         );
 
         // Links to download files
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_download_link'),
             $html
         );
@@ -537,14 +537,14 @@ class HtmlExportOutputFilter {
         // Thumbnails
         require_once('file.php');
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_thumbnail_link'),
             $html
         );
 
         // Images out of the theme directory
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
             array($this, 'replace_theme_image_link'),
             $html
         );
