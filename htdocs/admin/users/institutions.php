@@ -33,7 +33,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutions');
-$smarty = smarty(array('lib/pieforms/static/core/pieforms.js'));
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
@@ -129,7 +128,9 @@ if ($institution || $add) {
                 )
             )
         );
-        $smarty->assign('delete_form', pieform($form));
+        $deleteform = pieform($form);
+        $smarty = smarty();
+        $smarty->assign('delete_form', $deleteform);
         $smarty->assign('institutionname', get_field('institution', 'displayname', 'name', $institution));
         $smarty->display('admin/users/institutions.tpl');
         exit;
@@ -175,7 +176,6 @@ if ($institution || $add) {
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
-        $smarty->assign('add', true);
 
         $authtypes = auth_get_available_auth_types();
     }
@@ -333,15 +333,13 @@ if ($institution || $add) {
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 
-    $smarty->assign('instancestring', $instancestring);
-
-    $smarty->assign('institution_form', pieform(array(
+    $institutionform = pieform(array(
         'name'     => 'institution',
         'renderer' => 'table',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements' => $elements
-    )));
+    ));
 
 }
 else {
@@ -352,12 +350,10 @@ else {
         $showdefault = false;
     }
     else {
-        $smarty->assign('siteadmin', true);
         $filter      = false;
         $showdefault = true;
     }
     $institutions = Institution::count_members($filter, $showdefault);
-    $smarty->assign('institutions', $institutions);
 }
 
 function institution_validate(Pieform $form, $values) {
@@ -574,13 +570,30 @@ if ($institution && $institution != 'mahara') {
             $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
             $suspendform_top = pieform($suspendformdef);
         }
+    }
+}
+
+$smarty = smarty();
+
+if (isset($institutionform)) {
+    $smarty->assign('institution_form', $institutionform);
+    $smarty->assign('instancestring', $instancestring);
+    $smarty->assign('add', $add);
+}
+else {
+    $smarty->assign('siteadmin', $USER->get('admin'));
+    $smarty->assign('institutions', $institutions);
+}
+
+if (isset($suspended)) {
+    if ($suspended) {
+        $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
+    }
+    if (isset($suspendform)) {
         $smarty->assign('suspendform', $suspendform);
         if (isset($suspendform_top)) {
             $smarty->assign('suspendform_top', $suspendform_top);
         }
-    }
-    if ($suspended) {
-        $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
     }
 }
 
