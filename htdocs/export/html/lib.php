@@ -544,7 +544,7 @@ class HtmlExportOutputFilter {
 
         // Images out of the theme directory
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?theme/([a-zA-Z0-9_.-]+)/static/images/([a-z0-9_.-]+)#',
             array($this, 'replace_theme_image_link'),
             $html
         );
@@ -668,7 +668,7 @@ class HtmlExportOutputFilter {
      * Callback
      */
     private function replace_theme_image_link($matches) {
-        $file = '/theme/' . get_config('theme') . '/static/images/' . $matches[2];
+        $file = '/theme/' . $matches[2] . '/static/images/' . $matches[3];
         $this->htmlexportcopyproxy->add(
             get_config('docroot') . $file,
             '/static/' . $file
