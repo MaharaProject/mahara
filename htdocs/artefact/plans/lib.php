@@ -36,7 +36,7 @@ class PluginArtefactPlans extends PluginArtefact {
     }
 
     public static function get_block_types() {
-        return array('plans');
+        return array();
     }
 
     public static function get_plugin_name() {
