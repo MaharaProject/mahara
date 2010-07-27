@@ -1,5 +1,5 @@
 {auto_escape on}
 {include file="header.tpl"}
-    {$newplanform|safe}
+    {$form|safe}
 {include file="footer.tpl"}
 {/auto_escape}

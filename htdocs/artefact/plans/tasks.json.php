@@ -1,7 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +21,21 @@
  * @subpackage artefact-plans
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2010072301;
-$config->release = '0.0.1';
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'plans');
 
-?>
+$plan = param_integer('id');
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+
+$tasks = ArtefactTypeTask::get_tasks($plan, $offset, $limit);
+ArtefactTypeTask::build_tasks_list_html($tasks);
+
+json_reply(false, (object) array('message' => false, 'data' => $tasks));

@@ -25,19 +25,26 @@
  *
  */
 
-define('INTERNAL', 1);
-define('JSON', 1);
+define('INTERNAL', true);
+define('MENUITEM', 'profile/myplans');
 
-require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
-safe_require('artefact', 'plans');
-require_once(get_config('docroot') . 'blocktype/lib.php');
-require_once(get_config('docroot') . 'artefact/plans/blocktype/plans/lib.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact','plans');
 
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-$bi = new BlockInstance(param_integer('block'));
+define('TITLE', get_string('edittask','artefact.plans'));
 
-$plans = ArtefactTypePlan::get_plans($offset, $limit);
-PluginBlocktypePlans::build_plans_html($plans, false, $bi);
+$id = param_integer('id');
+$task = artefact_instance_from_id($id);
+$USER->can_edit_artefact($task);
 
-json_reply(false, (object) array('message' => false, 'data' => $plans));
+$form = ArtefactTypeTask::get_form($task->get('parent'), $task);
+
+$smarty = smarty();
+$smarty->assign('editform', $form);
+$smarty->assign('PAGEHEADING', hsc(get_string("editingtask", "artefact.plans")));
+$smarty->display('artefact:plans:edit.tpl');
+
+?>

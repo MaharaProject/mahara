@@ -44,19 +44,25 @@ class PluginBlocktypePlans extends PluginBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         safe_require('artefact','plans');
+        $configdata = $instance->get('configdata');
 
-        $plans = ArtefactTypePlan::get_plans();
-        self::build_plans_html($plans, $editing, $instance);
         $smarty = smarty_core();
+        if (isset($configdata['artefactid'])) {
+            $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid']);
+            self::build_plans_html($tasks, $editing, $instance);
+            $smarty->assign('tasks',$tasks);
+        }
+        else {
+            $smarty->assign('noplans','blocktype.plans/plans');
+        }
         $smarty->assign('blockid', $instance->get('id'));
-        $smarty->assign('plans', $plans);
         return $smarty->fetch('blocktype:plans:content.tpl');
     }
 
-    public static function build_plans_html(&$plans, $editing=false, BlockInstance $instance) {
+    public static function build_plans_html(&$tasks, $editing=false, BlockInstance $instance) {
         $smarty = smarty_core();
-        $smarty->assign_by_ref('plans', $plans);
-        $plans['tablerows'] = $smarty->fetch('blocktype:plans:planrows.tpl');
+        $smarty->assign_by_ref('tasks', $tasks);
+        $tasks['tablerows'] = $smarty->fetch('blocktype:plans:taskrows.tpl');
         if ($editing) {
             return;
         }
@@ -65,18 +71,18 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $pagination = build_pagination(array(
             'id' => 'block' . $blockid . '_pagination',
             'class' => 'center nojs-hidden-block',
-            'datatable' => 'planstable_' . $blockid,
+            'datatable' => 'taskstable_' . $blockid,
             'url' => $baseurl,
-            'jsonscript' => 'artefact/plans/blocktype/plans/plans.json.php',
-            'count' => $plans['count'],
-            'limit' => $plans['limit'],
-            'offset' => $plans['offset'],
+            'jsonscript' => 'artefact/plans/blocktype/plans/tasks.json.php',
+            'count' => $tasks['count'],
+            'limit' => $tasks['limit'],
+            'offset' => $tasks['offset'],
             'numbersincludefirstlast' => false,
-            'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
-            'resultcounttextplural' => get_string('plans', 'artefact.plans'),
+            'resultcounttextsingular' => get_string('task', 'artefact.plans'),
+            'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
         ));
-        $plans['pagination'] = $pagination['html'];
-        $plans['pagination_js'] = 'var paginator' . $blockid . ' = ' . $pagination['javascript'];
+        $tasks['pagination'] = $pagination['html'];
+        $tasks['pagination_js'] = 'var paginator' . $blockid . ' = ' . $pagination['javascript'];
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal
@@ -85,11 +91,29 @@ class PluginBlocktypePlans extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance) {
-        return array();
+        $configdata = $instance->get('configdata');
+
+        $form = array();
+
+        // Which resume field does the user want
+        $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+
+        return $form;
     }
 
     public static function artefactchooser_element($default=null) {
-        return array();
+        safe_require('artefact', 'plans');
+        return array(
+            'name'  => 'artefactid',
+            'type'  => 'artefactchooser',
+            'title' => get_string('planstoshow', 'blocktype.plans/plans'),
+            'defaultvalue' => $default,
+            'blocktype' => 'plans',
+            'selectone' => true,
+            'search'    => false,
+            'artefacttypes' => array('plan'),
+            'template'  => 'artefact:plans:artefactchooser-element.tpl',
+        );
     }
 }
 

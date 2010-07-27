@@ -25,23 +25,43 @@
  *
  */
 
+
 define('INTERNAL', 1);
 define('MENUITEM', 'profile/plans');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'plans');
-define('SECTION_PAGE', 'index');
+define('SECTION_PAGE', 'plans');
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'plans');
 
-define('TITLE', get_string('newplan','artefact.plans'));
+define('TITLE', get_string('tasks','artefact.plans'));
 
-$form = ArtefactTypePlan::get_form();
+$id = param_integer('id');
 
-$smarty =& smarty();
-$smarty->assign_by_ref('newplanform', $form);
-$smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
-$smarty->display('artefact:plans:new.tpl');
-exit;
+// offset and limit for pagination
+$offset = param_integer('offset', 0);
+$limit  = param_integer('limit', 10);
+
+$plan = artefact_instance_from_id($id);
+$USER->can_edit_artefact($plan);
+
+$tasks = ArtefactTypeTask::get_tasks($plan->get('id'), $offset, $limit);
+ArtefactTypeTask::build_tasks_list_html($tasks);
+
+$js = <<< EOF
+addLoadEvent(function () {
+    {$tasks['pagination_js']}
+});
+EOF;
+
+$smarty = smarty(array('paginator'));
+$smarty->assign_by_ref('tasks', $tasks);
+$smarty->assign('strnotasksaddone',
+    get_string('notasksaddone', 'artefact.plans',
+    '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php?id='.$plan->get('id').'">', '</a>'));
+$smarty->assign('PAGEHEADING', hsc(get_string("planstasks", "artefact.plans",$plan->get('title'))));
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->display('artefact:plans:plan.tpl');
 
 ?>

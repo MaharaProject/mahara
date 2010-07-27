@@ -26,17 +26,20 @@
 
 defined('INTERNAL') || die();
 
-$string['newplan'] = 'New plan';
+/* Plans */
 $string['completed'] = 'Completed';
 $string['completiondate'] = 'Completion date';
 $string['completeddesc'] = 'Mark your plan completed.';
-$string['deleteplan'] = 'Delete plan';
-$string['deletingplan'] = 'Deleting Plan: \'%s\'';
 $string['description'] = 'Description';
+$string['deleteplanconfirm'] = 'Are you sure you wish to delete this plan? Deleting this plan will also remove any tasks it contains.';
+$string['deleteplan'] = 'Delete plan';
+$string['deletethisplan'] = 'Delete plan: \'%s\'';
 $string['editplan'] = 'Edit Plan';
 $string['editingplan'] = 'Editing Plan';
+$string['managetasks'] = 'Manage tasks';
 $string['myplans'] = 'My Plans';
-$string['noplanssaddone'] = 'No plans yet. %sAdd one%s!';
+$string['newplan'] = 'New plan';
+$string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
 $string['noplans'] = 'No plans to display';
 $string['plan'] = 'Plan';
 $string['plans'] = 'Plans';
@@ -44,6 +47,24 @@ $string['plandeletedsuccessfully'] = 'Plan deleted successfully.';
 $string['plannotdeletedsuccessfully'] = 'There was an error deleting plan.';
 $string['plannotsavedsuccessfully'] = 'There was an error submitting this form. Please check the marked fields and try again.';
 $string['plansavedsuccessfully'] = 'Plan saved successfully.';
+$string['planstasks'] = 'Plan \'%s\' tasks.';
 $string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
+
+/* Tasks */
+$string['deletetaskconfirm'] = 'Are you sure you wish to delete this task?';
+$string['deletetask'] = 'Delete task';
+$string['deletethistask'] = 'Delete task: \'%s\'';
+$string['edittask'] = 'Edit task';
+$string['editingtask'] = 'Editing task';
+$string['mytasks'] = 'My Tasks';
+$string['newtask'] = 'New task';
+$string['notasksaddone'] = 'No tasks yet. %sAdd one%s!';
+$string['savetask'] = 'Save task';
+$string['task'] = 'task';
+$string['tasks'] = 'tasks';
+$string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
+$string['tasksavedsuccessfully'] = 'Task saved successfully.';
+
+
 ?>

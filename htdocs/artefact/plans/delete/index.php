@@ -28,28 +28,21 @@
 define('INTERNAL', true);
 define('MENUITEM', 'profile/plans');
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
+safe_require('artefact','plans');
 
 define('TITLE', get_string('deleteplan','artefact.plans'));
 
-safe_require('artefact','plans');
+$id = param_integer('id');
+$todelete = artefact_instance_from_id($id);
+$USER->can_edit_artefact($todelete);
 
-$delete = param_integer('plan');
-$plan = new ArtefactTypePlan($delete);
-$USER->can_edit_artefact($delete);
-
-$todelete = (object) array(
-    'completiondate' => strftime(get_string('strftimedate'), $plan->get('completiondate')),
-    'completed'      => $plan->get('completed'),
-    'title'          => $plan->get('title'),
-    'description'    => $plan->get('description')
-);
-
-$form = array(
+$deleteform = array(
     'name' => 'deleteplanform',
     'plugintype' => 'artefact',
-    'pluginname' => 'plans',
+    'pluginname' => 'plan',
+    'renderer' => 'div',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
@@ -58,19 +51,20 @@ $form = array(
         ),
     )
 );
-$deleteplanform = pieform($form);
+$form = pieform($deleteform);
 
 $smarty = smarty();
-$smarty->assign('todelete', $todelete);
-$smarty->assign('deleteplanform', $deleteplanform);
-$smarty->assign('PAGEHEADING', hsc(get_string('deletingplan','artefact.plans',$plan->get('title'))));
+$smarty->assign('form', $form);
+$smarty->assign('PAGEHEADING', hsc($todelete->get('title')));
+$smarty->assign('subheading', get_string('deletethisplan','artefact.plans',$todelete->get('title')));
+$smarty->assign('message', get_string('deleteplanconfirm','artefact.plans'));
 $smarty->display('artefact:plans:delete.tpl');
 
 // calls this function first so that we can get the artefact and call delete on it
 function deleteplanform_submit(Pieform $form, $values) {
-    global $SESSION, $plan;
+    global $SESSION, $todelete;
 
-    $plan->delete();
+    $todelete->delete();
     $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
 
     redirect('/artefact/plans/');

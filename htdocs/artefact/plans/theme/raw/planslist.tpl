@@ -1,27 +1,23 @@
 {auto_escape on}
 {foreach from=$plans.data item=plan}
-    {if $plan->completed == -1}
-        <tr class="incomplete">
-            <td>{$plan->completiondate}</td>
-            <td>{$plan->title}</td>
-            <td>{$plan->description}</td>
-            <td>&nbsp;</td>
-            <td><a href="{$WWWROOT}artefact/plans/edit.php?plan={$plan->plan}">Edit</a></td>
-            <td><a href="{$WWWROOT}artefact/plans/delete.php?plan={$plan->plan}">Delete</a></td>
-        </tr>
-    {else}
-        <tr class="{cycle values='r0,r1'}">
-            <td>{$plan->completiondate}</td>
-            <td>{$plan->title}</td>
-            <td>{$plan->description}</td>
-            {if $plan->completed == 1}
-                <td><div class="completed"><img src="{$WWWROOT}theme/raw/static/images/success.gif" alt="" /></div></td>
-            {else}
-                <td>&nbsp;</td>
-            {/if}
-            <td><a href="{$WWWROOT}artefact/plans/edit.php?plan={$plan->plan}">Edit</a></td>
-            <td><a href="{$WWWROOT}artefact/plans/delete.php?plan={$plan->plan}">Delete</a></td>
-        </tr>
-    {/if}
+    <tr class="{cycle values='r0,r1'}">
+        <td>
+            <div class="fr">
+                <ul class="groupuserstatus">
+                    <li><a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id|escape}" class="btn-edit">{str tag="edit"}</a></li>
+                    <li><a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id|escape}" class="btn-del">{str tag="delete"}</a></li>
+                </ul>
+            </div>
+
+            <h3><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id|escape}">{$plan->title|escape}</a></h3>
+
+        <div class="codesc">{$plan->description}</div>
+        <div class="fl">
+            <ul class="planslist">
+                <li><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id|escape}">{str tag="managetasks" section="artefact.plans"}</a></li>
+            </ul>
+        </td>
+        </div>
+    </tr>
 {/foreach}
 {/auto_escape}

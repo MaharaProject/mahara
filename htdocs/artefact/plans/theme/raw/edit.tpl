@@ -1,7 +1,7 @@
 {auto_escape off}
 {include file="header.tpl"}
 <div id="planswrap">
-    {$editplanform}
+    {$editform}
 </div>
 {include file="footer.tpl"}
 {/auto_escape}

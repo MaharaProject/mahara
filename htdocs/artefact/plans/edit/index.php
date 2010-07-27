@@ -25,38 +25,27 @@
  *
  */
 
+define('INTERNAL', true);
+define('MENUITEM', 'profile/myplans');
 
-define('INTERNAL', 1);
-define('MENUITEM', 'profile/plans');
-define('SECTION_PLUGINTYPE', 'artefact');
-define('SECTION_PLUGINNAME', 'plans');
-define('SECTION_PAGE', 'index');
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact','plans');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'plans');
+define('TITLE', get_string('editplan','artefact.plans'));
 
-define('TITLE', get_string('myplans','artefact.plans'));
+$id = param_integer('id');
 
-// offset and limit for pagination
-$offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 10);
+$artefact = artefact_instance_from_id($id);
+$USER->can_edit_artefact($id);
 
-$plans = ArtefactTypePlan::get_plans($offset, $limit);
-ArtefactTypePlan::build_plans_list_html($plans);
+$editform = ArtefactTypePlan::get_form($artefact);
 
-$js = <<< EOF
-addLoadEvent(function () {
-    {$plans['pagination_js']}
-});
-EOF;
-
-$smarty = smarty(array('paginator'));
-$smarty->assign_by_ref('plans', $plans);
-$smarty->assign('strnoplansaddone',
-    get_string('noplansaddone', 'artefact.plans',
-    '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php">', '</a>'));
-$smarty->assign('PAGEHEADING', hsc(get_string("myplans", "artefact.plans")));
-$smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->display('artefact:plans:index.tpl');
+$smarty = smarty();
+$smarty->assign('editform', $editform);
+$smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
+$smarty->display('artefact:plans:edit.tpl');
 
 ?>

@@ -1,6 +1,6 @@
 <div class="blockinstance-content">
-{if $plans.data}
-<table id="planstable_{$blockid}">
+{if $tasks.data}
+<table id="taskstable_{$blockid}">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
@@ -10,18 +10,18 @@
         </tr>
     </thead>
     <tbody>
-    {$plans.tablerows|safe}
+    {$tasks.tablerows|safe}
     </tbody>
 </table>
-<div id="plans_page_container">{$plans.pagination|safe}</div>
+<div id="plans_page_container">{$tasks.pagination|safe}</div>
 <script>
 addLoadEvent(function() {literal}{{/literal}
-    {$plans.pagination_js|safe}
+    {$tasks.pagination_js|safe}
     removeElementClass('plans_page_container', 'hidden');
 {literal}}{/literal});
 </script>
 {else}
-    <p>{str tag='noplans' section='artefact.plans'}</p>
+    <p>{str tag='notasks' section='artefact.plans'}</p>
 {/if}
 </div>
 

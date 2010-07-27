@@ -25,27 +25,29 @@
  *
  */
 
-define('INTERNAL', true);
-define('MENUITEM', 'profile/myplans');
+define('INTERNAL', 1);
+define('MENUITEM', 'profile/plans');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'plans');
 
-require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
-require_once('pieforms/pieform/elements/calendar.php');
-require_once(get_config('docroot') . 'artefact/lib.php');
-safe_require('artefact','plans');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'plans');
 
-define('TITLE', get_string('editplan','artefact.plans'));
+$id = param_integer('id',0);
+if ($id) {
+    $plan = new ArtefactTypePlan($id);
+    $USER->can_edit_artefact($plan);
+    define('TITLE', get_string('newtask','artefact.plans'));
+    $form = ArtefactTypeTask::get_form($id);
+}
+else {
+    define('TITLE', get_string('newplan','artefact.plans'));
+    $form = ArtefactTypePlan::get_form();
+}
 
-$plan = param_integer('plan');
-
-$artefact = artefact_instance_from_id($plan);
-$USER->can_edit_artefact($plan);
-
-$editplanform = ArtefactTypePlan::get_form($artefact);
-
-$smarty = smarty();
-$smarty->assign('editplanform', $editplanform);
-$smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
-$smarty->display('artefact:plans:edit.tpl');
+$smarty =& smarty();
+$smarty->assign_by_ref('form', $form);
+$smarty->assign_by_ref('PAGEHEADING', hsc(TITLE));
+$smarty->display('artefact:plans:new.tpl');
 
 ?>

@@ -29,6 +29,33 @@ defined('INTERNAL') || die();
 
 function xmldb_artefact_plans_upgrade($oldversion=0) {
 
+    if ($oldversion < 2010072300) {
+        if (field_exists(new XMLDBTable('artefact_plan'), new XMLDBField('plan'))) {
+            execute_sql("ALTER TABLE {artefact_plan} RENAME TO {artefact_task}");
+            if (is_postgres()) {
+                execute_sql('
+                    ALTER TABLE {artefact_task} RENAME COLUMN plan TO task;
+                    ALTER TABLE {artefact_task} DROP CONSTRAINT {arteplan_pla_fk};
+                    ALTER TABLE {artefact_task} ADD CONSTRAINT {artetask_tas_fk} FOREIGN KEY (task) REFERENCES {artefact}(id);
+                    ALTER INDEX {arteplan_pla_pk} RENAME TO {artetask_tas_pk};
+                    ALTER INDEX {arteplan_pla_ix} RENAME TO {artetask_tas_ix};
+                ');
+            }
+            else if (is_mysql()) {
+                execute_sql('ALTER TABLE {artefact_task} CHANGE plan task TEXT');
+                execute_sql("ALTER TABLE {artefact_task} DROP FOREIGN KEY {arteplan_pla_fk}");
+                execute_sql("ALTER TABLE {artefact_task} DROP INDEX {arteplan_pla_ix}");
+                execute_sql("ALTER TABLE {artefact_task} CHANGE plan task BIGINT(10) DEFAULT NULL");
+                execute_sql("ALTER TABLE {artefact_task} ADD CONSTRAINT {artetask_tas_fk} FOREIGN KEY {artetask_tas_ix} (task) REFERENCES {artefact}(id)");
+            }
+        }
+    }
+
+    if ($oldversion < 2010072301) {
+        execute_sql("INSERT INTO {artefact_installed_type} (name,plugin) VALUES ('task','plans')");
+        execute_sql("UPDATE {artefact} SET artefacttype = 'task' WHERE artefacttype = 'plan'");
+    }
+
     return true;
 }
 

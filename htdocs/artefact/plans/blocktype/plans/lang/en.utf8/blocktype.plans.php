@@ -30,5 +30,7 @@ defined('INTERNAL') || die();
 $string['title'] = 'Your Plans';
 $string['description'] = 'Display your plans list';
 $string['newerplans'] = 'Newer plans';
+$string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
 $string['olderplans'] = 'Older plans';
+$string['planstoshow'] = 'Plan to show';
 ?>
