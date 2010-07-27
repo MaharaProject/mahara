@@ -203,7 +203,11 @@ class PluginExportHtml extends PluginExport {
         $copyproxy = HtmlExportCopyProxy::singleton();
         $copydata = $copyproxy->get_copy_data();
         foreach ($copydata as $from => $to) {
-            if (!copy($from, $this->get('exportdir') . '/' . $this->get('rootdir') . $to)) {
+            $to = $this->get('exportdir') . '/' . $this->get('rootdir') . $to;
+            if (!check_dir_exists(dirname($to))) {
+                throw new SystemException("Could not create directory $todir");
+            }
+            if (!copy($from, $to)) {
                 throw new SystemException("Could not copy static file $from");
             }
         }
@@ -544,7 +548,7 @@ class HtmlExportOutputFilter {
 
         // Images out of the theme directory
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?theme/([a-zA-Z0-9_.-]+)/static/images/([a-z0-9_.-]+)#',
+            '#(?<=[\'"])(' . $wwwroot . '|/)?((?:[a-z]+/)*)theme/([a-zA-Z0-9_.-]+)/static/images/([a-z0-9_.-]+)#',
             array($this, 'replace_theme_image_link'),
             $html
         );
@@ -668,7 +672,7 @@ class HtmlExportOutputFilter {
      * Callback
      */
     private function replace_theme_image_link($matches) {
-        $file = '/theme/' . $matches[2] . '/static/images/' . $matches[3];
+        $file = $matches[2] . 'theme/' . $matches[3] . '/static/images/' . $matches[4];
         $this->htmlexportcopyproxy->add(
             get_config('docroot') . $file,
             '/static/' . $file
