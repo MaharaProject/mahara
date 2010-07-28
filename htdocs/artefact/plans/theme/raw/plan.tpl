@@ -5,6 +5,7 @@
         <a class="btn btn-add" href="{$WWWROOT}artefact/plans/new.php?id={$plan}">{str section="artefact.plans" tag="newtask"}</a>
     </div>
 {if !$tasks.data}
+    <div>{str tag="planstasksdesc" section="artefact.plans"}</div>
     <div class="message">{$strnotasksaddone|safe}</div>
 {else}
 <table id="taskslist">

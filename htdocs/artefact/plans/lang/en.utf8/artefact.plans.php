@@ -48,8 +48,10 @@ $string['plannotdeletedsuccessfully'] = 'There was an error deleting plan.';
 $string['plannotsavedsuccessfully'] = 'There was an error submitting this form. Please check the marked fields and try again.';
 $string['plansavedsuccessfully'] = 'Plan saved successfully.';
 $string['planstasks'] = 'Plan \'%s\' tasks.';
+$string['planstasksdesc'] = 'Add tasks below or using the button to the right to begin to build your plan.';
 $string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
+$string['titledesc'] = 'The title will be used to display each task in the My Plans blocktype.';
 
 /* Tasks */
 $string['deletetaskconfirm'] = 'Are you sure you wish to delete this task?';

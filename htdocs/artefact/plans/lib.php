@@ -365,6 +365,7 @@ class ArtefactTypeTask extends ArtefactType {
                 'type' => 'text',
                 'defaultvalue' => null,
                 'title' => get_string('title', 'artefact.plans'),
+                'description' => get_string('titledesc','artefact.plans'),
                 'size' => 30,
                 'rules' => array(
                     'required' => true,
