@@ -24,5 +24,5 @@ checksignoff:
 		echo "All commits signed!"; \
 	fi
 
-push: minaccept
+push: minaccept checksignoff
 	git push
