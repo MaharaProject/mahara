@@ -63,11 +63,15 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $smarty = smarty_core();
 
         if (!empty($configdata['collection'])) {
-            require_once('collection.php');
-            $data = get_record_select('collection', 'id = ?', array($configdata['collection']));
-            $collection = new Collection($configdata['collection'], (array)$data);
-            if ($views = $collection->views()) {
-                $smarty->assign('views',$views['views']);
+            $sql = "SELECT cv.*, v.title
+                    FROM {collection_view} cv
+                        LEFT JOIN {collection} c ON cv.collection = c.id
+                        LEFT JOIN {view} v ON cv.view = v.id
+                    WHERE c.id = ?
+                    ORDER BY cv.displayorder, v.title, v.ctime ASC";
+
+            if ($views = get_records_sql_array($sql, array($configdata['collection']))) {
+                $smarty->assign('views',$views);
             }
         }
         $smarty->assign('currentview',$instance->get('view'));
