@@ -4,9 +4,9 @@
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
-            <th>{str tag='completiondate' section='artefact.plans'}</th>
-            <th>{str tag='title' section='artefact.plans'}</th>
-            <th>{str tag='completed' section='artefact.plans'}</th>
+            <th class="c1">{str tag='completiondate' section='artefact.plans'}</th>
+            <th class="c2">{str tag='title' section='artefact.plans'}</th>
+            <th class="c3">{str tag='completed' section='artefact.plans'}</th>
         </tr>
     </thead>
     <tbody>
