@@ -41,6 +41,22 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return array('general');
     }
 
+     /**
+     * Optional method. If exists, allows this class to decide the title for
+     * all blockinstances of this type
+     */
+    public static function get_instance_title(BlockInstance $bi) {
+        $configdata = $bi->get('configdata');
+
+        if (!empty($configdata['artefactid'])) {
+            safe_require('artefact','plans');
+            $plan = new ArtefactTypePlan($configdata['artefactid']);
+            $title = $plan->get('title');
+            return $title;
+        }
+        return '';
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         safe_require('artefact','plans');
