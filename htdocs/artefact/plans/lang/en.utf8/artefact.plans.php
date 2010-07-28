@@ -61,6 +61,7 @@ $string['edittask'] = 'Edit task';
 $string['editingtask'] = 'Editing task';
 $string['mytasks'] = 'My Tasks';
 $string['newtask'] = 'New task';
+$string['notasks'] = 'No tasks to display.';
 $string['notasksaddone'] = 'No tasks yet. %sAdd one%s!';
 $string['savetask'] = 'Save task';
 $string['task'] = 'task';
