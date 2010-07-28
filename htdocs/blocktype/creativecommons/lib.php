@@ -49,6 +49,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $THEME;
         $configdata = $instance->get('configdata');
         if (!isset($configdata['license'])) {
             return '';
@@ -60,8 +61,8 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
 
         $html = '<a rel="license" href="http://creativecommons.org/licenses/'.$licensetype.'/3.0/"><img alt="'.
             get_string('alttext', 'blocktype.creativecommons').
-            '" style="border-width:0" src="'.get_config('wwwroot').'blocktype/creativecommons/icons/'.
-            $licensetype.'-3_0.png" /></a>';
+            '" style="border-width:0" src="'.
+            $THEME->get_url('images/' . $licensetype . '-3_0.png', false, 'blocktype/creativecommons') . '" /></a>';
         $html .= '<br>';
         $html .= get_string('licensestatement', 'blocktype.creativecommons', $licenseurl, $licensename);
         return $html;
@@ -90,6 +91,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
     }
 
     public static function instance_config_form($instance) {
+        global $THEME;
         $configdata = $instance->get('configdata');
 
         $noncommercial = 0;
@@ -123,7 +125,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
                            '<img "alt="'.hsc(get_string('sealalttext', 'blocktype.creativecommons')).'" '.
                            'onload="'.hsc($sealpositionhack).'" '.
                            'style="border-width:0;" src="'.
-                           get_config('wwwroot').'blocktype/creativecommons/icons/seal.png" /></a></div>',
+                           $THEME->get_url('images/seal.png', false, 'blocktype/creativecommons') . '" /></a></div>',
             ),
 
             'noncommercial' => array(
