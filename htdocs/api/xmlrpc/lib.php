@@ -627,6 +627,12 @@ function submit_view_for_assessment($username, $viewid) {
         }
     }
 
+    $view->commit();
+
+    // Lock view contents
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    ArtefactType::update_locked($user->get('id'));
+
     return $data;
 }
 
