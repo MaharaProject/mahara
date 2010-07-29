@@ -104,8 +104,8 @@ class Collection {
      */
     public function delete() {
         db_begin();
-        delete_records('collection','id',$this->id);
         delete_records('collection_view','view',$this->id);
+        delete_records('collection','id',$this->id);
         db_commit();
     }
 
