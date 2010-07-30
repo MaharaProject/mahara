@@ -220,7 +220,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $cleanup = new StdClass;
         $cleanup->callfunction = 'cleanup_feeds';
         $cleanup->hour = '3';
-        $cleanup->minute = '0';
+        $cleanup->minute = '30';
 
         return array($refresh, $cleanup);
 

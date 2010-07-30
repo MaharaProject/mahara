@@ -61,6 +61,15 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010073000) {
+        execute_sql('
+            UPDATE {blocktype_cron}
+            SET minute = ?
+            WHERE minute = ? AND hour = ? AND plugin = ? AND callfunction = ?',
+            array('30', '0', '3', 'externalfeed', 'cleanup_feeds')
+        );
+    }
+
     return true;
 }
 
