@@ -228,10 +228,21 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function refresh_feeds() {
         if (!$feeds = get_records_select_array('blocktype_externalfeed_data', 
-            'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))))) {
+            'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))),
+            '', 'id,url,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
             return;
         }
+        $yesterday = time() - 60*60*24;
         foreach ($feeds as $feed) {
+            // Hack to stop the updating of dead feeds from delaying other
+            // more important stuff that runs on cron.
+            if (defined('CRON') && $feed->tslastupdate < $yesterday) {
+                // We've been trying for 24 hours already, so waste less
+                // time on this one and just try it once a day
+                if (mt_rand(0, 24) != 0) {
+                    continue;
+                }
+            }
             try {
                 $data = self::parse_feed($feed->url);
                 $data->id = $feed->id;
