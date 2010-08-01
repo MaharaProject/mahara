@@ -352,7 +352,7 @@ $elements = array(
      ),
 );
 
-$allinstitutions = get_records_assoc('institution');
+$allinstitutions = get_records_assoc('institution', '', '', 'displayname');
 foreach ($user->get('institutions') as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
