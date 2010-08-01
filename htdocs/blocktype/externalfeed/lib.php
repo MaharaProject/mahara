@@ -59,7 +59,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['feedid'])) {
-            $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);
+            $data = get_record(
+                'blocktype_externalfeed_data', 'id', $configdata['feedid'], null, null, null, null,
+                'id,url,link,title,description,content,' . db_format_tsfield('lastupdate') . ',image'
+            );
 
             $data->content = unserialize($data->content);
             $data->image   = unserialize($data->image);
@@ -93,7 +96,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $smarty->assign('link', $data->link);
             $smarty->assign('entries', $data->content);
             $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
-            $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(time($data->lastupdate))));
+            $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date($data->lastupdate)));
             return $smarty->fetch('blocktype:externalfeed:feed.tpl');
         }
         return '';
