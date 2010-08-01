@@ -3,7 +3,6 @@
 
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
-
     <form action="{$formurl}" method="post">
         <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
         <input type="hidden" id="viewid" name="id" value="{$view}">

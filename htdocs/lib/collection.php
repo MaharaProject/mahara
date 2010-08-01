@@ -95,7 +95,7 @@ class Collection {
         $collection = new Collection(0, $data);
         $collection->commit();
 
-        return new Collection($collection->get('id')); // return newly created Collection
+        return $collection; // return newly created Collections id
     }
 
     /**
@@ -113,7 +113,6 @@ class Collection {
      * This method updates the contents of the collection table only.
      */
     public function commit() {
-        global $SESSION;
 
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
@@ -130,7 +129,10 @@ class Collection {
             update_record('collection', $fordb, 'id');
         }
         else {
-            insert_record('collection', $fordb, 'id', true);
+            $id = insert_record('collection', $fordb, 'id', true);
+            if ($id) {
+                $this->set('id',$id);
+            }
         }
 
         db_commit();
@@ -183,7 +185,7 @@ class Collection {
     * @param array collection
     * @return array $elements
     */
-    public static function get_collectionform_elements($collection=null) {
+    public static function get_collectionform_elements($data=null) {
         $elements = array(
             'name' => array(
                 'type' => 'text',
@@ -205,17 +207,17 @@ class Collection {
         );
 
         // populate the fields with the existing values if any
-        if (!empty($collection)) {
+        if (!empty($data)) {
             foreach ($elements as $k => $element) {
-                $elements[$k]['defaultvalue'] = $collection->$k;
+                $elements[$k]['defaultvalue'] = $data->$k;
             }
             $elements['id'] = array(
                 'type' => 'hidden',
-                'value' => $collection->id,
+                'value' => $data->id,
             );
             $elements['owner'] = array(
                 'type' => 'hidden',
-                'value' => $collection->owner,
+                'value' => $data->owner,
             );
         }
 
@@ -550,6 +552,19 @@ class Collection {
             $this->set('mtime', time());
             $this->commit();
         }
+    }
+
+    /**
+     * after editing the collection, redirect back to the appropriate place
+     */
+    public function post_edit_redirect($new=false) {
+        if ($new) {
+            $redirecturl = '/collection/views.php?id=' . $this->get('id') . '&new=1';
+        }
+        else {
+            $redirecturl = '/collection/about.php?id='.$this->get('id');
+        }
+        redirect($redirecturl);
     }
 
 }

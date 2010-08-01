@@ -42,18 +42,18 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$collectionid = param_integer('id');
-define('COLLECTION', $collectionid);
+$id = param_integer('id');
+define('COLLECTION', $id);
 
-$data = get_record_select('collection', 'id = ?', array(COLLECTION), '*, ' . db_format_tsfield('ctime'));
-$collection = new Collection(COLLECTION, (array)$data);
+$data = get_record_select('collection', 'id = ?', array($id), '*, ' . db_format_tsfield('ctime'));
+$collection = new Collection($id, (array)$data);
 if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
 
 $data->ctime = strftime(get_string('strftimedate'), $data->ctime);
-$data->views = count_records('collection_view','collection',COLLECTION);
+$data->views = count_records('collection_view','collection',$id);
 $data->access = $collection->master();
 
 $smarty = smarty();

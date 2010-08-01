@@ -43,15 +43,29 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$viewid = param_integer('view');
-$collectionid = param_integer('id');
-define('COLLECTION', $collectionid);
+$vid = param_integer('view');
+$new = param_integer('new',0);
+$id = param_integer('id');
 
-$collection = Collection::current_collection();
+if (!$new) {
+    define('COLLECTION', $id);
+}
+
+$data = (array)get_record_select('collection', 'id = ?', array($id), '*');
+$collection = new Collection($id, $data);
 if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');
 }
+
+$newtxt = $new ? 'new=1' : '';
+$elements = array(
+    'submit' => array(
+        'type' => 'submitcancel',
+        'value' => array(get_string('yes'), get_string('no')),
+        'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id.$newtxt,
+    ),
+);
 
 $form = pieform(array(
     'name' => 'removeview',
@@ -60,13 +74,7 @@ $form = pieform(array(
     'pluginname' => 'collection',
     'autofocus' => false,
     'successcallback' => 'submit',
-    'elements' => array(
-        'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'collection/views.php?id='.COLLECTION,
-        ),
-    ),
+    'elements' => $elements,
 ));
 
 $smarty = smarty();
@@ -76,10 +84,10 @@ $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
 function submit(Pieform $form, $values) {
-    global $SESSION, $viewid, $collection;
-    $collection->remove_view($viewid);
+    global $SESSION, $vid, $collection, $newtxt;
+    $collection->remove_view($vid);
     $SESSION->add_ok_msg(get_string('viewremovedsuccessfully','collection'));
-    redirect('/collection/views.php?id='.$collection->get('id'));
+    redirect('/collection/views.php?id='.$collection->get('id').$newtxt);
 }
 
 ?>

@@ -36,7 +36,8 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('deletecollection', 'collection'));
-$collectionid = param_integer('id');
+
+$id = param_integer('id');
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -44,8 +45,8 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$data = get_record_select('collection', 'id = ?', array($collectionid));
-$collection = new Collection($collectionid, (array)$data);
+$data = get_record_select('collection', 'id = ?', array($id));
+$collection = new Collection($id, (array)$data);
 if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('/collection/');

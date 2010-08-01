@@ -2,4 +2,4 @@
 {include file="header.tpl"}
     {$newcollectionform|safe}
 {include file="footer.tpl"}
-{/auto_escape}
+{auto_escape off}

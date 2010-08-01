@@ -35,7 +35,6 @@ define('SECTION_PAGE', 'edit');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
-define('TITLE', get_string('editcollection', 'collection'));
 
 // check that My Collections is enabled in the config
 // if not as the user is trying to access this illegally
@@ -43,24 +42,47 @@ if (!get_config('allowcollections')) {
     die();
 }
 
-$collectionid = param_integer('id');
-define('COLLECTION', $collectionid);
+$new = param_boolean('new', 0);
+$id = param_integer('id', 0);
 
-$data = get_record_select('collection', 'id = ?', array(COLLECTION));
-$collection = new Collection(COLLECTION, (array)$data);
-if (!$USER->can_edit_collection($collection)) {
-    $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect('/collection/');
+$data = null;
+if ($data = get_record_select('collection', 'id = ?', array($id))) {
+    $collection = new Collection($id, (array)$data);
+    if (!$USER->can_edit_collection($collection)) {
+        $SESSION->add_error_msg(get_string('canteditdontown'));
+        redirect('/collection/');
+    }
+}
+
+// if not a new collection
+if (!$new) {
+    define('COLLECTION', $id);
+    define('TITLE', $collection->get('name').': '.get_string('edittitleanddesc', 'collection'));
+}
+else {
+    define('TITLE', get_string('edittitleanddesc', 'collection'));
 }
 
 $elements = Collection::get_collectionform_elements($data);
-$elements['submit'] = array(
-    'type' => 'submitcancel',
-    'value' => array(get_string('savecollection','collection'), get_string('cancel')),
-    'goto' => get_config('wwwroot') . 'collection/about.php?id='.COLLECTION,
-);
+if ($new) {
+    $elements['submit'] = array(
+        'type' => 'submitcancel',
+        'value' => array(get_string('next') . ': ' . get_string('editviews', 'collection'), get_string('cancel')),
+    );
+}
+else {
+    $elements['id'] = array(
+        'type' => 'hidden',
+        'value' => $id,
+    );
+    $elements['submit'] = array(
+        'type' => 'submitcancel',
+        'value' => array(get_string('savecollection','collection'), get_string('cancel')),
+    );
+}
+
 $form = pieform(array(
-    'name' => 'editcollection',
+    'name' => 'edit',
     'plugintype' => 'core',
     'pluginname' => 'collection',
     'successcallback' => 'submit',
@@ -68,14 +90,28 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
 
+function edit_cancel_submit() {
+    global $new;
+    if ($new) {
+        redirect('/collection/');
+    }
+    else {
+        global $id;
+        redirect('/collection/about.php?id='.$id);
+    }
+}
+
 function submit(Pieform $form, $values) {
-    global $SESSION, $collectionid;
-    Collection::save($values);
-    $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
-    redirect('/collection/about.php?id='.$collectionid);
+    global $SESSION, $new;
+    $collection = Collection::save($values);
+    if (!$new) {
+        $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
+    }
+    $collection->post_edit_redirect($new);
 }
 
 ?>

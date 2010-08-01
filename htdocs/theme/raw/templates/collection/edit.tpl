@@ -1,7 +1,7 @@
-{auto_escape off}
+{auto_escape on}
 {include file="header.tpl"}
 <div>
     {$form|safe}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}
+{auto_escape off}
