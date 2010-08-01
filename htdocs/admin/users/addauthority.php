@@ -187,12 +187,14 @@ function updateSsoOptions() {
 }
 addLoadEvent(
     function() {
-        connect('auth_config_parent', 'onchange', authloginmsgVisibility);
-        authloginmsgVisibility();
+        if ($('auth_config_parent')) {
+            connect('auth_config_parent', 'onchange', authloginmsgVisibility);
+            authloginmsgVisibility();
+        }
         if ($('auth_config_ssodirection')) {
             connect('auth_config_ssodirection', 'onchange', updateSsoOptions);
+            updateSsoOptions();
         }
-        updateSsoOptions();
     }
 );
 EOF;
