@@ -30,7 +30,7 @@ define('MENUITEM', 'myportfolio/collection/access');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
-define('SECTION_PAGE', 'views');
+define('SECTION_PAGE', 'access');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
