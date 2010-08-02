@@ -44,7 +44,7 @@ if (!get_config('allowcollections')) {
 
 $new = param_integer('new',0);
 $id = param_integer('id');
-$newtxt = $new ? '&new=1' : '';
+$newurl = $new ? '&new=1' : '';
 
 // view addition/displayorder values
 $view = param_integer('view',0);
@@ -67,7 +67,7 @@ else {
 
 if ($view AND !empty($direction)) {
     $collection->set_viewdisplayorder($view,$direction);
-    redirect('/collection/views.php?id='.$id.$newtxt);
+    redirect('/collection/views.php?id='.$id.$newurl);
 }
 
 $views = $collection->views();
@@ -117,8 +117,8 @@ if ($new) {
 }
 
 $smarty->assign('PAGEHEADING', hsc(TITLE));
-$smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id.$newtxt);
-$smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newtxt);
+$smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id.$newurl);
+$smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newurl);
 $smarty->assign_by_ref('views', $views);
 $smarty->assign_by_ref('viewsform', $viewsform);
 $smarty->display('collection/views.tpl');
@@ -136,13 +136,13 @@ function addviews_submit(Pieform $form, $values) {
 
 }
 
-function newcol_cancel_submit() {
+function new_cancel_submit() {
     global $collection;
     $collection->delete();
     redirect('/collection/');
 }
 
-function newcol_submit(Pieform $form, $values) {
+function new_submit(Pieform $form, $values) {
     global $collection;
     if (param_boolean('back')) {
         redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');

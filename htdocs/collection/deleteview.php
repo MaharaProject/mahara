@@ -58,12 +58,12 @@ if (!$USER->can_edit_collection($collection)) {
     redirect('/collection/');
 }
 
-$newtxt = $new ? 'new=1' : '';
+$newurl = $new ? '&new=1' : '';
 $elements = array(
     'submit' => array(
         'type' => 'submitcancel',
         'value' => array(get_string('yes'), get_string('no')),
-        'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id.$newtxt,
+        'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id.$newurl,
     ),
 );
 
@@ -84,10 +84,10 @@ $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
 function submit(Pieform $form, $values) {
-    global $SESSION, $vid, $collection, $newtxt;
+    global $SESSION, $vid, $collection, $newurl;
     $collection->remove_view($vid);
     $SESSION->add_ok_msg(get_string('viewremovedsuccessfully','collection'));
-    redirect('/collection/views.php?id='.$collection->get('id').$newtxt);
+    redirect('/collection/views.php?id='.$collection->get('id').$newurl);
 }
 
 ?>
