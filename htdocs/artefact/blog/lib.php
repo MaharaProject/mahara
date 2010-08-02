@@ -597,14 +597,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-     * This function returns a list of the current user's blog posts, for the
-     * given blog.
+     * This function returns a list of posts in a given blog.
      *
-     * @param User
      * @param integer
      * @param integer
+     * @param integer
+     * @param boolean
      */
-    public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
+    public static function get_posts($id, $limit, $offset, $editing=false) {
         ($result = get_records_sql_assoc("
          SELECT a.id, a.title, a.description, " . db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ", a.locked, bp.published
          FROM {artefact} a
@@ -612,18 +612,15 @@ class ArtefactTypeBlogPost extends ArtefactType {
            ON a.id = bp.blogpost
          WHERE a.parent = ?
           AND a.artefacttype = 'blogpost'
-          AND a.owner = ?
          ORDER BY bp.published ASC, a.ctime DESC
          LIMIT ? OFFSET ?;", array(
             $id,
-            $user->get('id'),
             $limit,
             $offset
         )))
             || ($result = array());
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 
-                                'artefacttype', 'blogpost', 'parent', $id);
+        $count = count_records('artefact', 'artefacttype', 'blogpost', 'parent', $id);
 
         if (count($result) > 0) {
             // Get the attached files.
@@ -640,11 +637,47 @@ class ArtefactTypeBlogPost extends ArtefactType {
             foreach ($result as &$post) {
                 $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
                 $post->mtime = format_date($post->mtime);
-                $post->description = clean_html($post->description);
+                if ($editing) {
+                    if (!$post->published) {
+                        $post->publish = ArtefactTypeBlogpost::publish_form($post->id);
+                    }
+                    $post->delete = ArtefactTypeBlogpost::delete_form($post->id);
+                }
             }
         }
 
-        return array($count, array_values($result));
+        return array(
+            'count'  => $count,
+            'data'   => array_values($result),
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+    }
+
+    public function render_posts(&$posts, $blog=null) {
+        $smarty = smarty_core();
+        $smarty->assign('posts', $posts['data']);
+        $posts['tablerows'] = $smarty->fetch('artefact:blog:posts.tpl');
+
+        $baseurl = get_config('wwwroot') . 'artefact/blog/view';
+        if ($blog) {
+            $baseurl .= '/index.php?id=' . $blog;
+        }
+        $pagination = build_pagination(array(
+            'id' => 'blogpost_pagination',
+            'class' => 'center',
+            'datatable' => 'postlist',
+            'url' => $baseurl,
+            'jsonscript' => 'artefact/blog/view/index.json.php',
+            'count' => $posts['count'],
+            'limit' => $posts['limit'],
+            'offset' => $posts['offset'],
+            'numbersincludefirstlast' => false,
+            'resultcounttextsingular' => get_string('post', 'artefact.blog'),
+            'resultcounttextplural' => get_string('posts', 'artefact.blog'),
+        ));
+        $posts['pagination'] = $pagination['html'];
+        $posts['pagination_js'] = $pagination['javascript'];
     }
 
     /** 
@@ -683,6 +716,52 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
         return true;
+    }
+
+
+    public static function publish_form($id) {
+        return pieform(array(
+            'name' => 'publish_' . $id,
+            'successcallback' => 'publish_submit',
+            'jsform' => true,
+            'jssuccesscallback' => 'publish_success',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'publish' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
+                    'help' => true,
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('publish', 'artefact.blog'),
+                ),
+            ),
+        ));
+    }
+
+
+    public static function delete_form($id) {
+        return pieform(array(
+            'name' => 'delete_' . $id,
+            'successcallback' => 'delete_submit',
+            'jsform' => true,
+            'jssuccesscallback' => 'delete_success',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'delete' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
+                    'help' => true,
+                ),
+                'submit' => array(
+                    'class' => 'delete',
+                    'type' => 'submit',
+                    'value' => get_string('delete', 'artefact.blog'),
+                    'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
+                ),
+            ),
+        ));
     }
 
 

@@ -34,6 +34,14 @@ define('SECTION_PAGE', 'view');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');
+require_once(get_config('libroot') . 'pieforms/pieform.php');
+
+if ($publish = param_integer('publish', null)) {
+    ArtefactTypeBlogpost::publish_form($publish);
+}
+if ($delete = param_integer('delete', null)) {
+    ArtefactTypeBlogpost::delete_form($delete);
+}
 
 $id = param_integer('id', null);
 if (is_null($id)) {
@@ -53,13 +61,32 @@ else {
 }
 $blog->check_permission();
 
-// This javascript is used to generate a list of blog posts.
-$js = '';
-if ($blog->count_children()) {
-    $js = require('index.js.php'); 
-}
+$limit = param_integer('limit', 5);
+$offset = param_integer('offset', 0);
+$editing = true;
 
-$smarty = smarty(array('tablerenderer'));
+$posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset, $editing);
+ArtefactTypeBlogPost::render_posts($posts, $id);
+
+$strpublished = json_encode(get_string('published', 'artefact.blog'));
+$js = <<<EOF
+function publish_success(form, data) {
+    removeElement('publish_' + data.id);
+    $('poststatus' + data.id).innerHTML = {$strpublished};
+}
+function delete_success(form, data) {
+    addElementClass('postdetails_' + data.id, 'hidden');
+    if ($('postfiles_' + data.id)) {
+        addElementClass('postfiles_' + data.id, 'hidden');
+    }
+    addElementClass('postdescription_' + data.id, 'hidden');
+    addElementClass('posttitle_' + data.id, 'hidden');
+}
+EOF;
+
+$smarty = smarty(array('paginator'));
+$smarty->assign('PAGEHEADING', $blog->get('title'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 
 if (!$USER->get_account_preference('multipleblogs')
     && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
@@ -67,8 +94,33 @@ if (!$USER->get_account_preference('multipleblogs')
 }
 
 $smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', $blog->get('title'));
+$smarty->assign_by_ref('posts', $posts);
 $smarty->display('artefact:blog:view.tpl');
+exit;
+
+function publish_submit(Pieform $form, $values) {
+    $blogpost = new ArtefactTypeBlogPost((int) $values['publish']);
+    $blogpost->check_permission();
+    $blogpost->publish();
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('blogpostpublished', 'artefact.blog'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'id' => $values['publish'],
+    ));
+}
+
+function delete_submit(Pieform $form, $values) {
+    $blogpost = new ArtefactTypeBlogPost((int) $values['delete']);
+    $blogpost->check_permission();
+    if ($blogpost->get('locked')) {
+        $form->reply(PIEFORM_ERR, get_string('submittedforassessment', 'view'));
+    }
+    $blogpost->delete();
+    $form->reply(PIEFORM_OK, array(
+        'message' => get_string('blogpostdeleted', 'artefact.blog'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'id' => $values['delete'],
+    ));
+}
 
 ?>
