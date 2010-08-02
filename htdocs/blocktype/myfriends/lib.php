@@ -51,13 +51,13 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         return array('profile', 'dashboard');
     }
 
-    public static function build_myfriends_html(&$friends, $userid) {
+    public static function build_myfriends_html(&$friends, $userid, BlockInstance $instance) {
         $friendarray = array_chunk($friends['data'], 4); // get the friends into a 4x4 array
         $smarty = smarty_core();
         $smarty->assign_by_ref('friends', $friendarray);
         $friends['tablerows'] = $smarty->fetch('blocktype:myfriends:myfriendrows.tpl');
-        $baseurl = $_SERVER['REQUEST_URI']; // hmm
-        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'user=' . (int) $userid;
+        $baseurl = $instance->get_view()->get_url() . '&block=' . $instance->get('id');
+        $baseurl .= '&user=' . (int) $userid;
         $pagination = build_pagination(array(
             'id' => 'userfriendstable_pagination',
             'class' => 'center nojs-hidden-block',
@@ -85,7 +85,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
 
         $friends = get_friends($userid, MAXFRIENDDISPLAY, 0);
         if ($friends['count']) {
-            self::build_myfriends_html($friends, $userid);
+            self::build_myfriends_html($friends, $userid, $instance);
         }
         else {
             $friends = false;
