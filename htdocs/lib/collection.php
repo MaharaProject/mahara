@@ -332,9 +332,10 @@ class Collection {
             $max = get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id'));
             $min = get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id'));
             $views = array(
-                'views' => $result,
-                'max'   => $max,
-                'min'   => $min,
+                'views'     => $result,
+                'max'       => $max,
+                'min'       => $min,
+                'count'     => count($result),
             );
 
             return $views;

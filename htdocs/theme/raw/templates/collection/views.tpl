@@ -17,6 +17,7 @@
                 {/if}
                 <td>&nbsp;</td>
                 <td><a href="{$removeurl|safe}&amp;view={$view->view|safe}">{str tag=remove}</a></td>
+                {if $views.count > 1}
                 <td class="displayordercontrols">
                     {if $view->displayorder == $views.min}
                         <div id="viewdisplayorder_{$view->view|safe}">
@@ -33,6 +34,9 @@
                         </div>
                     {/if}
                 </td>
+                {else}
+                    <td>&nbsp;</td>
+                {/if}
             </tr>
         {/foreach}
     </tbody>
