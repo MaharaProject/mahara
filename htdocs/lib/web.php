@@ -2344,7 +2344,7 @@ function get_relative_script_path() {
  * @param string $url the url which may have a query string attached
  * @return string
  */
- function strip_querystring($url) {
+function strip_querystring($url) {
 
     if ($commapos = strpos($url, '?')) {
         return substr($url, 0, $commapos);
