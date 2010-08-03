@@ -68,6 +68,16 @@ var Paginator = function(id, datatable, script, extradata) {
             else {
                 tbody.innerHTML = data['data']['tablerows'];
             }
+
+            // Pieforms should probably separate its js from its html. For
+            // now, be evil: scrape it out of the script elements and eval
+            // it every time the page changes.
+            forEach(getElementsByTagAndClassName('script', null, tbody), function(s) {
+                var m = scrapeText(s).match(new RegExp('^(new Pieform\\\(.*?\\\);)$'));
+                if (m && m[1]) {
+                    eval('var pf = ' + m[1] + ' pf.init();');
+                }
+            });
         }
 
         // Update the pagination
