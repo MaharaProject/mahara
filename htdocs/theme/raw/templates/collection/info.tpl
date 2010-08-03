@@ -19,7 +19,7 @@
             </li>
             <li><label>{str tag=accessoverride section=collection}: </label> 
                 {if $collection->access}
-                    <a href="{$WWWROOT}view/view.php?id={$collection->access->id|safe}">{$collection->access->title|safe}</a>
+                    <a href="{$WWWROOT}view/view.php?id={$collection->access->view|safe}">{$collection->access->title|safe}</a>
                 {else}
                    {str tag=none}
                 {/if}
