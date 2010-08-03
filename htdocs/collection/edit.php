@@ -77,7 +77,7 @@ else {
     );
     $elements['submit'] = array(
         'type' => 'submitcancel',
-        'value' => array(get_string('savecollection','collection'), get_string('cancel')),
+        'value' => array(get_string('save'), get_string('cancel')),
     );
 }
 

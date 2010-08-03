@@ -10,7 +10,7 @@
                 <td><label><a href="{$WWWROOT}view/view.php?id={$view->view|safe}">{$view->title|safe}</a></label></td>
                 {if $view->master == 1 && !$new}
                     <td>
-                        {str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/access.php?id={$view->view|safe}">{str tag=editaccess section=view}</a>
+                        {str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/access.php?id={$view->view|safe}">{str tag=editviewaccess section=collection}</a>
                     </td>
                 {else}
                     <td>&nbsp;</td>

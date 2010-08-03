@@ -3,35 +3,42 @@
     <div class="rbuttons">
         <a class="btn btn-add" href="{$WWWROOT}collection/edit.php?new=1">{str section=collection tag=newcollection}</a>
     </div>
-{if !$collections}
-        <div class="message">{$strnocollectionsaddone|safe}</div>
-{else}
-    <table id="mycollections" class="fullwidth listing">
+{if $collections}
+    <table id="myviews" class="fullwidth listing">
         <tbody>
         {foreach from=$collections item=collection}
                 <tr class="{cycle values='r0,r1'}">
-                    <td>
-                        <div class="fr">
-                            <ul class="groupuserstatus">
-                                <li><a href="{$WWWROOT}collection/edit.php?id={$collection->id|safe}" class="btn-edit">{str tag=edit}</a></li>
-                                <li><a href="{$WWWROOT}collection/delete.php?id={$collection->id|safe}" class="btn-del">{str tag=delete}</a></li>
-                            </ul>
-                        </div>
+                    <td><div class="rel">
 
                         <h3><a href="{$WWWROOT}collection/about.php?id={$collection->id|safe}">{$collection->name|safe}</a></h3>
 
-                    <div class="codesc">{$collection->description|safe}</div>
-                    <div class="fl">
-                        <ul class="collectionlist">
-                            <li><a href="{$WWWROOT}collection/views.php?id={$collection->id|safe}">{str tag=manageviews section="collection"}</a></li>
-                        </ul>
-                    </td>
+                        <div class="rbuttons"><a href="{$WWWROOT}collection/delete.php?id={$collection->id|safe}" class="btn-del">{str tag=delete}</a></div>
+
+                        <div class="vi">
+                            <h4><a href="{$WWWROOT}collection/edit.php?id={$collection->id|safe}" id="editcollectiondetails">{str tag="edittitleanddesc" section="collection"}</a></h4>
+
+                            <div class="videsc">{$collection->description|safe}</div>
+                        </div>
+
+                    <div class="vi">
+                        <h4><a href="{$WWWROOT}collection/views.php?id={$collection->id|safe}" id="editcollectionviews">{str tag=manageviews section="collection"}</a></h4>
                     </div>
+
+                    <div class="vi">
+                        <h4><a href="{$WWWROOT}collection/access.php?id={$collection->id|safe}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
+{if $collection->masterid}
+                            <div class="videsc">{str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/view.php?id={$collection->masterid}">{$collection->mastertitle|safe}</a></div>
+{/if}
+                    </div>
+
+                    </div></td>
                 </tr>
         {/foreach}
         </tbody>
     </table>
        {$pagination|safe}
+{else}
+        <div class="message">{$strnocollectionsaddone|safe}</div>
 {/if}
 {include file="footer.tpl"}
 {auto_escape off}

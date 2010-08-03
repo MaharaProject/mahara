@@ -117,7 +117,7 @@ class Collection {
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if (in_array($k, array('mtime', 'ctime')) && !empty($v)) {
+            if (in_array($k, array('mti.me', 'ctime')) && !empty($v)) {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
@@ -161,12 +161,23 @@ class Collection {
         global $USER;
 
         ($data = get_records_sql_array("
-            SELECT c.*
+            SELECT c.id, c.description, c.name
                 FROM {collection} c
-            WHERE c.owner = ?
+                WHERE c.owner = ?
             ORDER BY c.name, c.ctime ASC
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($data = array());
+
+        // ToDo: use a faster less intensive way to do this
+        if (!empty($data)) {
+            foreach ($data as $d) {
+                $master = get_record_sql('SELECT v.id, v.title FROM {view} v JOIN {collection_view} cv ON v.id = cv.view WHERE cv.collection = ? AND cv.master = 1',array($d->id));
+                if ($master) {
+                    $d->masterid = $master->id;
+                    $d->mastertitle = $master->title;
+                }
+            }
+        }
 
         $result = (object) array(
             'count'  => count_records('collection', 'owner', $USER->get('id')),
@@ -289,6 +300,17 @@ class Collection {
         return $menu;
     }
 
+    /**
+     * Returns if the view is master
+     *
+     * @return bool
+     */
+    public static function is_master($id) {
+        if (record_exists('collection_view','master',1,'view',$id)) {
+            return true;
+        }
+        return false;
+    }
     /**
      * Returns the current master view
      *
