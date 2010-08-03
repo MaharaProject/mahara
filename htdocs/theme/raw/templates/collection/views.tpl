@@ -47,7 +47,7 @@
 {if $viewsform}
     {$viewsform|safe}
 {else}
-    {str tag=noviewstochoose section=collection}
+    {str tag=noviewsavailable section=collection}
 {/if}
 </fieldset>
 {if $newform}{$newform|safe}{/if}
