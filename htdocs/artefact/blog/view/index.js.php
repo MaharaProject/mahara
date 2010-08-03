@@ -128,7 +128,7 @@ postlist.rowfunction = function(d, n, gd) {
     var rows = [
         TR(
             null,
-            TH(null, d.title),
+            TH({'class':'posttitle'}, d.title),
             status,
             TH({'class': 'controls'}, controls)
         ),
