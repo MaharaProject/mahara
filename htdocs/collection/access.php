@@ -45,6 +45,7 @@ if (!get_config('allowcollections')) {
 
 $new = param_integer('new', 0);
 $id = param_integer('id');
+$newurl = $new ? '&new=1' : '';
 
 $data = get_record_select('collection', 'id = ?', array($id), '*');
 $collection = new Collection($id, (array)$data);
@@ -64,6 +65,7 @@ else {
 $master = $collection->master();
 
 $form = null;
+$newform = null;
 if ($collection->has_views()) {
 
     $views = $collection->views();
@@ -73,92 +75,73 @@ if ($collection->has_views()) {
     }
 
     $elements['view'] = array(
-        'type'         => 'select',
+        'type'         => 'radio',
         'title'        => get_string('masterview','collection'),
+        'separator'      => '<br />',
         'options'      => $options,
         'rules'        => array('required' => true),
         'defaultvalue' => $master ? $master->view : 0,
     );
-    if ($new) {
+
+    if (!$new) {
         $elements['submit'] = array(
             'type' => 'submit',
-            'value' => get_string('save'),
-            'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id.'&new='.$new,
+            'value' => get_string('saveapply','collection'),
+            'goto' => get_config('wwwroot') . 'collection/access.php?id='.$id,
         );
     }
     else {
         $elements['submit'] = array(
-            'type' => 'submit',
-            'value' => get_string('save'),
-            'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
+            'type'      => 'cancelbackcreate',
+            'value'     => array(get_string('cancel'), get_string('back'), get_string('saveapply','collection')),
+            'confirm'   => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
         );
     }
-
     $form = pieform(array(
-        'name' => 'access',
+        'name' => 'updateaccess',
         'plugintype'    => 'core',
         'pluginname'    => 'collection',
         'autofocus'     => false,
         'method'        => 'post',
-        'renderer'      => 'div',
         'elements'      => $elements,
     ));
-
 }
-
-$smarty = smarty();
-if ($new) {
+else if ($new) {
     $newform = pieform(array(
-        'name'          =>  'new',
+        'name' => 'new',
         'plugintype'    => 'core',
         'pluginname'    => 'collection',
         'autofocus'     => false,
         'method'        => 'post',
         'elements'      => array(
-            'submit' => array(
-                'type'  => 'cancelbackcreate',
-                'value' => array(get_string('cancel'), get_string('back','collection'), get_string('save')),
-                'confirm' => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
+            'submit'  => array(
+                'type'      => 'cancelbackcreate',
+                'value'     => array(get_string('cancel'), get_string('back'),get_string('save')),
+                'confirm'   => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
             ),
         ),
     ));
-    $smarty->assign('newform', $newform);
 }
 
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('master', $master);
+$smarty->assign('strnoviews', get_string('noviewsaddsome','collection','<a href='.get_config('wwwroot').'/collection/views.php?id='.$id.$newurl.'>','</a>'));
 $smarty->assign_by_ref('form', $form);
+$smarty->assign_by_ref('newform', $newform);
 $smarty->display('collection/access.tpl');
 
-function access_submit(Pieform $form, $values) {
+function updateaccess_submit(Pieform $form, $values) {
     global $SESSION, $collection, $new;
 
-    $new = $new ? '&new=1' : '';
+    // new collection back case
+    if (param_boolean('back')) {
+        redirect('/collection/views.php?id='.$collection->get('id').'&new=1');
+    }
     $success = $collection->set_master($values['view']);
-
-    if (!$success) {
-        $SESSION->add_ok_msg(get_string('nooverridesaved', 'collection'));
-        redirect('/collection/access.php?id=' . $collection->get('id') . $new);
-    }
-
-    if ($success['secreturl'] == false) {
-        $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
-        redirect('/collection/access.php?id=' . $collection->get('id') . $new);
-    }
-    else {
-        if (!empty($success['valid'])) {
-            $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
-            $SESSION->add_info_msg(get_string('accessignored', 'collection'));
-            redirect('/collection/access.php?id=' . $collection->get('id') . $new);
-        }
-        else {
-            $SESSION->add_error_msg(get_string('accesscantbeused', 'collection'));
-            redirect('/collection/access.php?id=' . $collection->get('id') . $new);
-        }
-    }
+    $collection->post_access_redirect($success, $new);
 }
 
-function new_cancel_submit() {
+function updateaccess_cancel_submit() {
     global $collection;
     $collection->delete();
     redirect('/collection/');
@@ -166,12 +149,19 @@ function new_cancel_submit() {
 
 function new_submit(Pieform $form, $values) {
     global $collection;
+
     if (param_boolean('back')) {
         redirect('/collection/views.php?id='.$collection->get('id').'&new=1');
     }
     else {
         redirect('/collection/about.php?id='.$collection->get('id'));
     }
+}
+
+function new_cancel_submit() {
+    global $collection;
+    $collection->delete();
+    redirect('/collection/');
 }
 
 ?>

@@ -131,7 +131,7 @@ class Collection {
         else {
             $id = insert_record('collection', $fordb, 'id', true);
             if ($id) {
-                $this->set('id',$id);
+                $this->set('id', $id);
             }
         }
 
@@ -139,7 +139,7 @@ class Collection {
     }
 
     /**
-     * Checks if a Colletion has views 
+     * Checks if a Collection has views
      *
      * @return bool
      */
@@ -226,6 +226,7 @@ class Collection {
 
     /**
      * Returns the current collection
+     *  - called by lib/web.php for displaying sub page navigation
      *
      * @return object $collection
      */
@@ -234,11 +235,12 @@ class Collection {
         static $dying;
 
         if (defined('COLLECTION') AND !$dying) {
-            $data = get_record_select('collection', 'id = ?', array(COLLECTION), '*, ' . db_format_tsfield('ctime'));
-            $collection = new Collection(COLLECTION,(array)$data);
+            $id = COLLECTION;
+            $data = get_record_select('collection', 'id = ?', array($id), '*, ' . db_format_tsfield('ctime'));
+            $collection = new Collection($id,(array)$data);
             if (!$collection) {
                 $dying = 1;
-                throw new CollectionNotFoundException(get_string('collectionnotfound', 'collection', $id));
+                throw new CollectionNotFoundException("Collection with id $id not found");
             }
         }
         else {
@@ -249,7 +251,7 @@ class Collection {
     }
 
     /**
-     * Returns a datastructure describing the tabs that appear on a collection page
+     * Returns a datastructure describing the tabs that appear on a collection sub page navigation
      *
      * @return array $menu
      */
@@ -259,19 +261,19 @@ class Collection {
         $menu = array(
             'info' => array(
                 'path' => 'myportfolio/collection/info',
-                'url' => 'collection/about.php?id='.$this->id,
+                'url' => 'collection/about.php?id='.$this->get('id'),
                 'title' => get_string('about', 'collection'),
                 'weight' => 20
             ),
             'views' => array(
                 'path' => 'myportfolio/collection/views',
-                'url' => 'collection/views.php?id='.$this->id,
+                'url' => 'collection/views.php?id='.$this->get('id'),
                 'title' => get_string('views', 'collection'),
                 'weight' => 30
             ),
             'access' => array(
                 'path' => 'myportfolio/collection/access',
-                'url' => 'collection/access.php?id='.$this->id,
+                'url' => 'collection/access.php?id='.$this->get('id'),
                 'title' => get_string('access', 'collection'),
                 'weight' => 40
             ),
@@ -288,7 +290,7 @@ class Collection {
     }
 
     /**
-     * Returns the current master
+     * Returns the current master view
      *
      * @return array master
      */
@@ -304,13 +306,11 @@ class Collection {
             ", array($this->get('id'), $USER->get('id')))) {
             return $master[0];
         }
-        else {
-            return null;
-        }
+        return null;
     }
 
     /**
-     * Returns array of views belonging to the current collection
+     * Returns array of views in the current collection
      *
      * @param bool master (optional) whether or not to include master view in results
      * @return array views 
@@ -318,24 +318,22 @@ class Collection {
     public function views($master=true) {
         global $USER;
 
-        $mastersql= $master ? '' : "AND cv.master = 0";
+        $mastersql = $master ? '' : "AND cv.master = 0";
         $sql = "SELECT cv.*, v.title
                 FROM {collection_view} cv
                     LEFT JOIN {collection} c ON cv.collection = c.id
-                    LEFT JOIN {view} v ON cv.view = v.id
+                    JOIN {view} v ON cv.view = v.id
                 WHERE c.id = ? AND c.owner = ? " . $mastersql . "
                 ORDER BY cv.displayorder, v.title, v.ctime ASC";
 
         $result = get_records_sql_array($sql, array($this->get('id'), $USER->get('id')));
 
         if (!empty($result)) {
-            $max = get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id'));
-            $min = get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id'));
             $views = array(
                 'views'     => $result,
-                'max'       => $max,
-                'min'       => $min,
                 'count'     => count($result),
+                'max'       => get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id')),
+                'min'       => get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id')),
             );
 
             return $views;
@@ -347,7 +345,7 @@ class Collection {
     /**
      * Get the available views the current user can choose from
      * - currently dashboard, group and profile views are ignored to solve access issues
-     * - each view can currently only belong to one collection to solve access issues
+     * - each view can only belong to one collection
      *
      * @return array $views
      */
@@ -369,7 +367,7 @@ class Collection {
     }
 
     /**
-     * Submits the selected views
+     * Submits the selected views to the collection
      *
      * @param array values selected views
      * @return integer count so we know what SESSION message to display
@@ -380,7 +378,7 @@ class Collection {
         db_begin();
 
         // each view was marked with a key of view_<id> in order to identify the correct items
-        // from the passed values
+        // from the form values
         foreach ($values as $key => $value) {
             if (substr($key,0,5) === 'view_' AND $value == true) {
                 $cv = array();
@@ -402,7 +400,7 @@ class Collection {
     }
 
     /**
-     * Removes the selected views
+     * Removes the selected views from the collection
      *
      * @param integer $view the view to remove
      */
@@ -413,18 +411,18 @@ class Collection {
     }
 
     /**
-     * Set access for all views in the collection
+     * Set master view
      *
      * @param integer $newmaster the view to clone access from
-     * @return array validaccess (valid: array, secreturl: bool)
+     * @return array $validaccess
      */
     public function set_master($newmaster) {
         require_once('view.php');
 
-        // no override: each view can retain separate access
-        // remove existing master
+        // no master selected; set no override
         if (!$newmaster) {
             db_begin();
+            // clear previous master
             update_record(
                 'collection_view',
                 (object) array(
@@ -435,23 +433,16 @@ class Collection {
             );
             db_commit();
 
-            return false;
+            return true;
         }
 
+        // master view selected
         if ($master = new View($newmaster)) {
 
             $access = $master->get_access();
-            $validaccess = $this->validate_access_types($access);
+            $validaccess = $this->validate_access_types($access); // for reporting purposes
 
-            // no valid access to set (only secret URL)
-            // retains current master
-            if (empty($validaccess['valid'])) {
-                return $validaccess;
-            }
-
-            // override: chosen master has vaild access type/s 
             db_begin();
-
             // clear previous master
             update_record(
                 'collection_view',
@@ -472,22 +463,37 @@ class Collection {
                 ),
                 array('collection','view')
             );
-
-            // update all other views access
-            $views = $this->views(false);
-            foreach ($views['views'] as $view) {
-                if ($v = new View($view->view)) {
-                    delete_records('view_access','view',$view->view); // clear all current access
-                    $v->set_access($validaccess['valid']);
-                }
-            }
-
             db_commit();
+
+            // update the access for all other views
+            $this->update_access($validaccess);
 
             return $validaccess;
         }
 
-        return null;
+        // something went wrong and master could not be set
+        return false;
+    }
+
+    /**
+     * Update access in collection
+     *
+     */
+    private function update_access($validaccess) {
+        require_once('view.php');
+        db_begin();
+        // update all other views access records
+        if ($views = $this->views(false)) {
+            foreach ($views['views'] as $view) {
+                if ($v = new View($view->view)) {
+                    delete_records('view_access','view',$view->view); // clear all current access
+                    if (!empty($validaccess['valid'])) {
+                        $v->set_access($validaccess['valid']);
+                    }
+                }
+            }
+        }
+        db_commit();
     }
 
     /**
@@ -504,7 +510,7 @@ class Collection {
                 $valid[] = $a;
             }
             else {
-                $secretURL = true; // keep a record of any secret URLs to be ignored
+                $secretURL = true; // keep a record if any secret URLs to be ignored
             }
         }
 
@@ -566,6 +572,50 @@ class Collection {
             $redirecturl = '/collection/about.php?id='.$this->get('id');
         }
         redirect($redirecturl);
+    }
+
+    /**
+     * after editing the collection access redirect back to the appropriate place
+     */
+    public function post_access_redirect($success, $new=false) {
+        global $SESSION;
+
+        $newurl = $new ? '&new=1' : '';
+        $master = $this->master();
+
+        // access and master not set
+        if (!$success) {
+            $SESSION->add_error_msg(get_string('masternotset','collection'));
+            $SESSION->add_error_msg(get_string('accessnotset','collection'));
+            redirect('/collection/access.php?id='.$this->get('id').$newurl);
+        }
+        else if (empty($success['valid'])) {
+            if ($success['secreturl']) {
+                $SESSION->add_error_msg(get_string('invalidaccess', 'collection'));
+                redirect('/collection/access.php?id='.$this->get('id').$newurl);
+            }
+            else if (!$master) {
+                $SESSION->add_ok_msg(get_string('nooverridesaved', 'collection'));
+            }
+            else {
+                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+            }
+        }
+        else if (!empty($success['valid'])) {
+            if (!$success['secreturl']) {
+                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+            }
+            else {
+                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+            }
+        }
+
+        if (!$new) {
+            redirect('/collection/access.php?id=' . $this->get('id'));
+        }
+        else {
+            redirect('/collection/about.php?id=' . $this->get('id'));
+        }
     }
 
 }
