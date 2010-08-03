@@ -17,7 +17,7 @@
                 {str tag=none}
             {/if}
             </li>
-            <li><label>{str tag=accessoverride section=collection}: </label> 
+            <li><label>{str tag=accessmaster section=collection}: </label> 
                 {if $collection->access}
                     <a href="{$WWWROOT}view/view.php?id={$collection->access->view|safe}">{$collection->access->title|safe}</a>
                 {else}

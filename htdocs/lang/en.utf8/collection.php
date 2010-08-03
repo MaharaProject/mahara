@@ -50,6 +50,7 @@ $string['collectionsaved'] = 'Collection saved successfully.';
 $string['confirmcancelcreatingcollection'] = 'This Collection has not been completed. Do you really want to cancel?';
 $string['created'] = 'Created';
 $string['currentmaster'] = 'Current master';
+$string['accessmaster'] = 'Access master';
 $string['deletecollection'] = 'Delete collection';
 $string['deletespecifiedcollection'] = 'Delete collection \'%s\'';
 $string['deletingcollection'] = 'Deleting collection';
