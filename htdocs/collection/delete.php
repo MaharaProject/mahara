@@ -64,7 +64,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('subheading', hsc(TITLE));
+$smarty->assign('subheading', TITLE);
 $smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');

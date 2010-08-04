@@ -1,4 +1,3 @@
-{auto_escape on}
 {include file="header.tpl"}
     <div class="rbuttons">
         <a class="btn btn-add" href="{$WWWROOT}collection/edit.php?new=1">{str section=collection tag=newcollection}</a>
@@ -10,24 +9,24 @@
                 <tr class="{cycle values='r0,r1'}">
                     <td><div class="rel">
 
-                        <h3><a href="{$WWWROOT}collection/about.php?id={$collection->id|safe}">{$collection->name|safe}</a></h3>
+                        <h3><a href="{$WWWROOT}collection/about.php?id={$collection->id}">{$collection->name}</a></h3>
 
-                        <div class="rbuttons"><a href="{$WWWROOT}collection/delete.php?id={$collection->id|safe}" class="btn-del">{str tag=delete}</a></div>
+                        <div class="rbuttons"><a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a></div>
 
                         <div class="vi">
-                            <h4><a href="{$WWWROOT}collection/edit.php?id={$collection->id|safe}" id="editcollectiondetails">{str tag="edittitleanddesc" section="collection"}</a></h4>
+                            <h4><a href="{$WWWROOT}collection/edit.php?id={$collection->id}" id="editcollectiondetails">{str tag="edittitleanddesc" section="collection"}</a></h4>
 
-                            <div class="videsc">{$collection->description|safe}</div>
+                            <div class="videsc">{$collection->description}</div>
                         </div>
 
                     <div class="vi">
-                        <h4><a href="{$WWWROOT}collection/views.php?id={$collection->id|safe}" id="editcollectionviews">{str tag=manageviews section="collection"}</a></h4>
+                        <h4><a href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a></h4>
                     </div>
 
                     <div class="vi">
-                        <h4><a href="{$WWWROOT}collection/access.php?id={$collection->id|safe}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
+                        <h4><a href="{$WWWROOT}collection/access.php?id={$collection->id}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
 {if $collection->masterid}
-                            <div class="videsc">{str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/view.php?id={$collection->masterid}">{$collection->mastertitle|safe}</a></div>
+                            <div class="videsc">{str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/view.php?id={$collection->masterid}">{$collection->mastertitle}</a></div>
 {/if}
                     </div>
 
@@ -41,4 +40,3 @@
         <div class="message">{$strnocollectionsaddone|safe}</div>
 {/if}
 {include file="footer.tpl"}
-{auto_escape off}

@@ -1,7 +1,3 @@
-{auto_escape on}
 {include file="header.tpl"}
-<div>
-    {$form|safe}
-</div>
+{$form|safe}
 {include file="footer.tpl"}
-{auto_escape off}

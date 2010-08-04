@@ -116,7 +116,7 @@ if ($new) {
     $smarty->assign_by_ref('newform', $newform);
 }
 
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id.$newurl);
 $smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newurl);
 $smarty->assign_by_ref('views', $views);

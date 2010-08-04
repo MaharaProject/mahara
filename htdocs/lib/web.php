@@ -420,7 +420,7 @@ EOF;
         $collection = Collection::current_collection();
         $smarty->assign('COLLECTION', $collection);
         $smarty->assign('SUBPAGENAV', $collection->get_menu_tabs());
-        $smarty->assign('PAGEHEADING', hsc($collection->get('name')));
+        $smarty->assign('PAGEHEADING', $collection->get('name'));
     }
 
     // ---------- sideblock stuff ----------
