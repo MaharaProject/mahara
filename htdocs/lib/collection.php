@@ -416,6 +416,8 @@ class Collection {
             }
         }
 
+        $this->combine_access();
+
         db_commit();
 
         return $count;
@@ -517,6 +519,49 @@ class Collection {
         }
         db_commit();
     }
+
+
+    /**
+     * Synchronise access records across all views in the collection by
+     * copying all access records to all views
+     *
+     * @todo: allow access records to apply to things other than views,
+     * (e.g. collections), so we don't have to do this.
+     */
+    private function combine_access() {
+        if (!$viewids = get_column('collection_view', 'view', 'collection', $this->id)) {
+            return;
+        }
+
+        $select = 'view IN (' . join(',', $viewids) . ')';
+
+        if (!$access = get_records_select_array('view_access', $select)) {
+            return;
+        }
+
+        $unique = array();
+        foreach ($access as &$a) {
+            unset($a->view);
+            $k = serialize($a);
+            if (!isset($unique[$k])) {
+                $unique[$k] = $a;
+            }
+        }
+
+        db_begin();
+
+        delete_records_select('view_access', $select);
+
+        foreach ($unique as &$a) {
+            foreach ($viewids as $id) {
+                $a->view = $id;
+                insert_record('view_access', $a);
+            }
+        }
+
+        db_commit();
+    }
+
 
     /**
      * Checks the access types for cloning master access 
