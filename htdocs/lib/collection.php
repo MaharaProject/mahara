@@ -463,9 +463,6 @@ class Collection {
         // master view selected
         if ($master = new View($newmaster)) {
 
-            $access = $master->get_access();
-            $validaccess = $this->validate_access_types($access); // for reporting purposes
-
             db_begin();
             // clear previous master
             update_record(
@@ -490,9 +487,10 @@ class Collection {
             db_commit();
 
             // update the access for all other views
-            $this->update_access($validaccess);
+            $access = $master->get_access();
+            $this->update_access($access);
 
-            return $validaccess;
+            return true;
         }
 
         // something went wrong and master could not be set
@@ -503,7 +501,7 @@ class Collection {
      * Update access in collection
      *
      */
-    private function update_access($validaccess) {
+    private function update_access($access) {
         require_once('view.php');
         db_begin();
         // update all other views access records
@@ -511,8 +509,8 @@ class Collection {
             foreach ($views['views'] as $view) {
                 if ($v = new View($view->view)) {
                     delete_records('view_access','view',$view->view); // clear all current access
-                    if (!empty($validaccess['valid'])) {
-                        $v->set_access($validaccess['valid']);
+                    if (!empty($access)) {
+                        $v->set_access($access);
                     }
                 }
             }
@@ -560,31 +558,6 @@ class Collection {
         }
 
         db_commit();
-    }
-
-
-    /**
-     * Checks the access types for cloning master access 
-     *
-     * @param array access chosen masters access 
-     * @return array validaccess (valid: array, secreturl: bool)
-     */
-    private function validate_access_types($access) {
-        $valid = array();
-        $secretURL = false;
-        foreach ($access as $a) {
-            if (empty($a['token'])) { // as long as it isn't a secret URL access type
-                $valid[] = $a;
-            }
-            else {
-                $secretURL = true; // keep a record if any secret URLs to be ignored
-            }
-        }
-
-        return array(
-            'valid' => $valid,
-            'secreturl' => $secretURL,
-        );
     }
 
     /**
@@ -647,42 +620,23 @@ class Collection {
     public function post_access_redirect($success, $new=false) {
         global $SESSION;
 
-        $newurl = $new ? '&new=1' : '';
-        $master = $this->master();
-
         // access and master not set
+        $newurl = $new ? '&new=1' : '';
         if (!$success) {
             $SESSION->add_error_msg(get_string('masternotset','collection'));
             $SESSION->add_error_msg(get_string('accessnotset','collection'));
             redirect('/collection/access.php?id='.$this->get('id').$newurl);
         }
-        else if (empty($success['valid'])) {
-            if ($success['secreturl']) {
-                $SESSION->add_error_msg(get_string('invalidaccess', 'collection'));
-                redirect('/collection/access.php?id='.$this->get('id').$newurl);
-            }
-            else if (!$master) {
-                $SESSION->add_ok_msg(get_string('nooverridesaved', 'collection'));
+        else {
+            $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+            if (!$new) {
+                redirect('/collection/access.php?id=' . $this->get('id'));
             }
             else {
-                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
-            }
-        }
-        else if (!empty($success['valid'])) {
-            if (!$success['secreturl']) {
-                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
-            }
-            else {
-                $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
+                redirect('/collection/about.php?id=' . $this->get('id'));
             }
         }
 
-        if (!$new) {
-            redirect('/collection/access.php?id=' . $this->get('id'));
-        }
-        else {
-            redirect('/collection/about.php?id=' . $this->get('id'));
-        }
     }
 
     public function find_by_view($viewid) {
