@@ -119,7 +119,7 @@ addLoadEvent(function () {
 EOF;
 
 if ($artefact->get('allowcomments')) {
-    $anonfeedback = !$USER->is_logged_in() && $viewid == get_view_from_token(get_cookie('viewaccess:'.$viewid));
+    $anonfeedback = !$USER->is_logged_in() && view_has_token($viewid, get_cookie('viewaccess:'.$viewid));
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $artefact->get('approvecomments')));
 }
 $objectionform = pieform(objection_form());

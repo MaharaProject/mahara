@@ -1652,15 +1652,50 @@ function get_view_from_token($token, $visible=true) {
     if (!$token) {
         return false;
     }
-    return get_field_sql('
+    $viewids = get_column_sql('
         SELECT "view"
         FROM {view_access}
         WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
             AND (stopdate IS NULL OR stopdate > current_timestamp)
-        ', array($token, (int)$visible));
+        ORDER BY "view"
+        ', array($token, (int)$visible)
+    );
+    if (empty($viewids)) {
+        return false;
+    }
+    if (count($viewids) > 1) {
+        // if any of the views are in collection(s), pick one of the ones
+        // with the lowest displayorder.
+        $order = get_column_sql('
+            SELECT cv.view
+            FROM {collection_view} cv
+            WHERE cv.view IN (' . join(',', $viewids) . ')
+            ORDER BY displayorder, collection',
+            array()
+        );
+        if ($order) {
+            return $order[0];
+        }
+    }
+    return $viewids[0];
 }
 
+/**
+ * Determine whether a view is accessible by a given token
+ */
+function view_has_token($view, $token) {
+    if (!$view || !$token) {
+        return false;
+    }
+    return record_exists_select(
+        'view_access',
+        'view = ? AND token = ? AND visible = ?
+         AND (startdate IS NULL OR startdate < current_timestamp)
+         AND (stopdate IS NULL OR stopdate > current_timestamp)',
+        array($view, $token, (int)$visible)
+    );
+}
 
 /**
  * get the views that a user can see belonging
