@@ -2131,5 +2131,17 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2010080402) {
+        // Drop unique constraint on token column of view_access
+        $table = new XMLDBTable('view_access');
+        $index = new XMLDBIndex('tokenuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('token'));
+        drop_index($table, $index);
+        $index = new XMLDBIndex('tokenix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('token'));
+        add_index($table, $index);
+
+    }
+
     return $status;
 }

@@ -698,7 +698,7 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
-                <INDEX NAME="tokenuk" UNIQUE="true" FIELDS="token"/>
+                <INDEX NAME="tokenix" UNIQUE="false" FIELDS="token"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="view_visit">
