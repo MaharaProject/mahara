@@ -1,7 +1,7 @@
 {auto_escape on}
 <div class="blockinstance-content">
 {if $tasks.data}
-<table id="taskstable_{$blockid}">
+<table id="tasktable_{$blockid}">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
@@ -20,6 +20,23 @@ addLoadEvent(function() {literal}{{/literal}
     {$tasks.pagination_js|safe}
     removeElementClass('plans_page_container', 'hidden');
 {literal}}{/literal});
+
+{literal}
+addLoadEvent(function() {
+    forEach(
+{/literal}
+        getElementsByTagAndClassName('a', 'task-title','tasktable_{$blockid}'),
+{literal}
+        function(element) {
+        connect(element, 'onclick', function(e) {
+        log(element);
+            e.stop();
+            var description = getFirstElementByTagAndClassName('div', 'task-desc', element.parentNode);
+            toggleElementClass('hidden', description);
+        });
+    });
+});
+{/literal}
 </script>
 {else}
     <p>{str tag='notasks' section='artefact.plans'}</p>

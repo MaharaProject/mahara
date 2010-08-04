@@ -454,12 +454,12 @@ class ArtefactTypeTask extends ArtefactType {
         $datenow = time(); // time now to use for formatting tasks by completion
 
         ($results = get_records_sql_array("
-            SELECT ap.task, ap.completed, ".db_format_tsfield('completiondate').", a.title, a.description, a.parent
+            SELECT a.id, at.task, at.completed, ".db_format_tsfield('completiondate').", a.title, a.description, a.parent
                 FROM {artefact} a
-            JOIN {artefact_task} ap ON ap.task = a.id
+            JOIN {artefact_task} at ON at.task = a.id
             WHERE a.owner = ? AND a.artefacttype = 'task'
             AND a.parent = ?
-            ORDER BY ap.completiondate DESC
+            ORDER BY at.completiondate DESC
             LIMIT ? OFFSET ?", array($USER->get('id'), $plan, $limit, $offset)))
             || ($results = array());
 
