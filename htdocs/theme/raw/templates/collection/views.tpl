@@ -7,15 +7,7 @@
         {foreach from=$views.views item=view}
             <tr class="{cycle values='r0,r1'}">
                 <td><label><a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a></label></td>
-                {if $view->master == 1 && !$new}
-                    <td>
-                        {str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/access.php?id={$view->view}">{str tag=editviewaccess section=collection}</a>
-                    </td>
-                {else}
-                    <td>&nbsp;</td>
-                {/if}
-                <td>&nbsp;</td>
-                <td><a href="{$removeurl}&amp;view={$view->view}">{str tag=remove}</a></td>
+                <td><div class="fr"><a href="{$removeurl}&amp;view={$view->view}">{str tag=remove}</a></div></td>
                 {if $views.count > 1}
                 <td class="displayordercontrols">
                     {if $view->displayorder == $views.min}

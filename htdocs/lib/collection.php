@@ -148,18 +148,6 @@ class Collection {
     }
 
     /**
-     * Checks if a Collection has views
-     *
-     * @return bool
-     */
-    public function has_views() {
-        if (count_records('collection_view','collection',$this->get('id'))) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns a list of the current users collections
      *
      * @param offset current page to display
@@ -176,17 +164,6 @@ class Collection {
             ORDER BY c.name, c.ctime ASC
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($data = array());
-
-        // ToDo: use a faster less intensive way to do this
-        if (!empty($data)) {
-            foreach ($data as $d) {
-                $master = get_record_sql('SELECT v.id, v.title FROM {view} v JOIN {collection_view} cv ON v.id = cv.view WHERE cv.collection = ? AND cv.master = 1',array($d->id));
-                if ($master) {
-                    $d->masterid = $master->id;
-                    $d->mastertitle = $master->title;
-                }
-            }
-        }
 
         $result = (object) array(
             'count'  => count_records('collection', 'owner', $USER->get('id')),
@@ -242,102 +219,6 @@ class Collection {
         }
 
         return $elements;
-    }
-
-    /**
-     * Returns the current collection
-     *  - called by lib/web.php for displaying sub page navigation
-     *
-     * @return object $collection
-     */
-    public static function current_collection() {
-        static $collection;
-        static $dying;
-
-        if (defined('COLLECTION') AND !$dying) {
-            $id = COLLECTION;
-            $data = get_record_select('collection', 'id = ?', array($id), '*, ' . db_format_tsfield('ctime'));
-            $collection = new Collection($id,(array)$data);
-            if (!$collection) {
-                $dying = 1;
-                throw new CollectionNotFoundException("Collection with id $id not found");
-            }
-        }
-        else {
-            $collection = null;
-        }
-
-        return $collection;
-    }
-
-    /**
-     * Returns a datastructure describing the tabs that appear on a collection sub page navigation
-     *
-     * @return array $menu
-     */
-    public function get_menu_tabs() {
-        static $menu;
-
-        $menu = array(
-            'info' => array(
-                'path' => 'myportfolio/collection/info',
-                'url' => 'collection/about.php?id='.$this->get('id'),
-                'title' => get_string('about', 'collection'),
-                'weight' => 20
-            ),
-            'views' => array(
-                'path' => 'myportfolio/collection/views',
-                'url' => 'collection/views.php?id='.$this->get('id'),
-                'title' => get_string('views', 'collection'),
-                'weight' => 30
-            ),
-            'access' => array(
-                'path' => 'myportfolio/collection/access',
-                'url' => 'collection/access.php?id='.$this->get('id'),
-                'title' => get_string('access', 'collection'),
-                'weight' => 40
-            ),
-        );
-
-        if (defined('MENUITEM')) {
-            $key = substr(MENUITEM, strlen('myportfolio/collection/'));
-            if ($key && isset($menu[$key])) {
-                $menu[$key]['selected'] = true;
-            }
-        }
-
-        return $menu;
-    }
-
-    /**
-     * Returns if the view is master
-     *
-     * @return bool
-     */
-    public static function is_master($id) {
-        if (record_exists('collection_view','master',1,'view',$id)) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Returns the current master view
-     *
-     * @return array master
-     */
-    public function master() {
-        global $USER;
-
-        if ($master = get_records_sql_array("
-                SELECT cv.*, v.title
-                FROM {collection} c
-                    LEFT JOIN {collection_view} cv on cv.collection = c.id
-                    LEFT JOIN {view} v ON cv.view = v.id
-                WHERE c.id = ? AND c.owner = ? AND cv.master = 1
-            ", array($this->get('id'), $USER->get('id')))) {
-            return $master[0];
-        }
-        return null;
     }
 
     /**
@@ -446,69 +327,6 @@ class Collection {
         delete_records_select('view_access', 'view = ? AND token IS NOT NULL', array($view));
 
         db_commit();
-    }
-
-    /**
-     * Set master view
-     *
-     * @param integer $newmaster the view to clone access from
-     * @return array $validaccess
-     */
-    public function set_master($newmaster) {
-        require_once('view.php');
-
-        // no master selected; set no override
-        if (!$newmaster) {
-            db_begin();
-            // clear previous master
-            update_record(
-                'collection_view',
-                (object) array(
-                    'collection'       => $this->get('id'),
-                    'master'            => 0,
-                ),
-                'collection'
-            );
-            db_commit();
-
-            return true;
-        }
-
-        // master view selected
-        if ($master = new View($newmaster)) {
-
-            db_begin();
-            // clear previous master
-            update_record(
-                'collection_view',
-                (object) array(
-                    'collection'       => $this->get('id'),
-                    'master'            => 0,
-                ),
-                'collection'
-            );
-
-            // set new master
-            update_record(
-                'collection_view',
-                (object) array(
-                    'view'             => $newmaster,
-                    'collection'       => $this->get('id'),
-                    'master'            => 1,
-                ),
-                array('collection','view')
-            );
-            db_commit();
-
-            // update the access for all other views
-            $access = $master->get_access();
-            $this->update_access($access);
-
-            return true;
-        }
-
-        // something went wrong and master could not be set
-        return false;
     }
 
     /**
@@ -633,34 +451,9 @@ class Collection {
             $redirecturl = '/collection/views.php?id=' . $this->get('id') . '&new=1';
         }
         else {
-            $redirecturl = '/collection/about.php?id='.$this->get('id');
+            $redirecturl = '/collection/index.php';
         }
         redirect($redirecturl);
-    }
-
-    /**
-     * after editing the collection access redirect back to the appropriate place
-     */
-    public function post_access_redirect($success, $new=false) {
-        global $SESSION;
-
-        // access and master not set
-        $newurl = $new ? '&new=1' : '';
-        if (!$success) {
-            $SESSION->add_error_msg(get_string('masternotset','collection'));
-            $SESSION->add_error_msg(get_string('accessnotset','collection'));
-            redirect('/collection/access.php?id='.$this->get('id').$newurl);
-        }
-        else {
-            $SESSION->add_ok_msg(get_string('accesssaved', 'collection'));
-            if (!$new) {
-                redirect('/collection/access.php?id=' . $this->get('id'));
-            }
-            else {
-                redirect('/collection/about.php?id=' . $this->get('id'));
-            }
-        }
-
     }
 
     public function find_by_view($viewid) {

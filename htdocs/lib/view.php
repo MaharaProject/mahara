@@ -2743,7 +2743,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false) {
+    public static function set_nav($group, $institution, $profile=false, $collection) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -2754,6 +2754,9 @@ class View {
         }
         else if ($profile) {
             define('MENUITEM', 'profile/editprofilepage');
+        }
+        else if ($collection) {
+            define('MENUITEM', 'myportfolio/collection');
         }
         else {
             define('MENUITEM', 'myportfolio/views');

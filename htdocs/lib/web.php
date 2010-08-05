@@ -1912,6 +1912,7 @@ function institutional_admin_nav() {
  */
 function mahara_standard_nav() {
     $exportenabled = plugins_installed('export');
+    $collectionenabled = get_config('allowcollections');
     $menu = array(
         array(
             'path' => '',
@@ -1939,6 +1940,13 @@ function mahara_standard_nav() {
             'title' => get_string('Export', 'export'),
             'weight' => 40,
             'ignore' => !$exportenabled,
+        ),
+        array(
+            'path' => 'myportfolio/collection',
+            'url' => 'collection/',
+            'title' => get_string('mycollections', 'collection'),
+            'weight' => 50,
+            'ignore' => !$collectionenabled,
         ),
         array(
             'path' => 'groups',
@@ -1972,16 +1980,6 @@ function mahara_standard_nav() {
             'weight' => 40,
         ),
     );
-
-    // check if My Collections is enabled
-    if (get_config('allowcollections')) {
-         $menu[] = array(
-            'path' => 'myportfolio/collection',
-            'url' => 'collection/',
-            'title' => get_string('mycollections', 'collection'),
-            'weight' => 50,
-        );
-    }
 
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
     

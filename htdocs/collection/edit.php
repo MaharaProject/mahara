@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/collection/info');
+define('MENUITEM', 'myportfolio/collection');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');

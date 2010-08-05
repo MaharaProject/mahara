@@ -9,19 +9,14 @@
         <ul>
             <li><div>{$collection->description}</div></li>
             <li><label>{str tag=created section=collection}: </label> {$collection->ctime}</li>
-            <li><label>{str tag=viewcount section=collection}: </label> 
-            {if $collection->views}
-                {$collection->views}
+            <li><label>{str tag=views section=collection}: </label>
+            {if $views}
+                {foreach from=$views item=view}
+                    <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>,
+                {/foreach}
             {else}
                 {str tag=none}
             {/if}
-            </li>
-            <li><label>{str tag=accessmaster section=collection}: </label> 
-                {if $collection->access}
-                    <a href="{$WWWROOT}view/view.php?id={$collection->access->view}">{$collection->access->title}</a>
-                {else}
-                   {str tag=none}
-                {/if}
             </li>
         </ul>
     </div>

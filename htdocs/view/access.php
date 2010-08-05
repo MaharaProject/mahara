@@ -27,7 +27,6 @@
 
 define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -40,6 +39,7 @@ require_once(get_config('libroot') . 'group.php');
 $new = param_boolean('new');
 
 if ($collectionid = param_integer('collection', null)) {
+    define('SECTION_PLUGINNAME', 'collection');
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
@@ -51,13 +51,10 @@ if ($collectionid = param_integer('collection', null)) {
 }
 else {
     $viewid = param_integer('id');
+    define('SECTION_PLUGINNAME', 'view');
 }
 
 $view = new View($viewid);
-
-if (empty($collection)) {
-    $collection = $view->get_collection();
-}
 
 if ($collection) {
     define('TITLE', $collection->get('name') . ': ' . get_string('editaccess', 'view'));
@@ -68,7 +65,7 @@ else {
 
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution);
+View::set_nav($group, $institution, false, $collection);
 
 
 if (!$USER->can_edit_view($view)) {
@@ -276,12 +273,14 @@ $form['elements']['overrides'] = array(
     ),
 );
 
+$confirmcancelstr = $collection ? get_string('confirmcancelcreatingcollection', 'collection') : get_string('confirmcancelcreatingview', 'view');
+$goto = $collection ? '' : '';
 $form['elements']['submit'] = array(
     'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',
     'value' => !empty($new) 
         ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
         : array(get_string('save'), get_string('cancel')),
-    'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
+    'confirm' => !empty($new) ? array($confirmcancelstr, null, null) : null,
 );
 
 if (!function_exists('strptime')) {
@@ -401,19 +400,31 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-    global $view, $new, $group, $institution;
+    global $view, $new, $collection;
     if ($new) {
-        $view->delete();
+        if (!$collection) {
+            $view->delete();
+            $view->post_edit_redirect();
+        }
+        else {
+            $collection->delete();
+            $collection->post_edit_redirect();
+        }
     }
-    $view->post_edit_redirect();
+    $collection ? $collection->post_edit_redirect() : $view->post_edit_redirect();
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $group, $institution, $collection;
+    global $SESSION, $view, $new, $institution, $collection;
 
     if (param_boolean('back')) {
-        redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
+        if (!$collection) {
+            redirect('/view/edit.php?id=' . $view->get('id') . '&new=' . $new);
+        }
+        else {
+            redirect('/collection/views.php?id=' . $collection->get('id') . '&new=' . $new);
+        }
     }
 
     if ($values['accesslist']) {
@@ -463,13 +474,19 @@ function editaccess_submit(Pieform $form, $values) {
     db_commit();
 
     if ($values['new']) {
-        $str = get_string('viewcreatedsuccessfully', 'view');
+        $str = $collection ? get_string('collectioncreatedsuccessfully','collection') : get_string('viewcreatedsuccessfully', 'view');
     }
     else {
-        $str = get_string('viewaccesseditedsuccessfully', 'view');
+        $str = $collection ? get_string('collectionaccesseditedsuccessfully','collection') : get_string('viewaccesseditedsuccessfully', 'view');
     }
     $SESSION->add_ok_msg($str);
-    $view->post_edit_redirect();
+
+    if (!$collection) {
+        $view->post_edit_redirect();
+    }
+    else {
+        $collection->post_edit_redirect();
+    }
 }
 
 $form = pieform($form);

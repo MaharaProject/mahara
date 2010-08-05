@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/collection/info');
+define('MENUITEM', 'myportfolio/collection');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
@@ -53,11 +53,11 @@ if (!$USER->can_edit_collection($collection)) {
 }
 
 $data->ctime = strftime(get_string('strftimedate'), $data->ctime);
-$data->views = count_records('collection_view','collection',$id);
-$data->access = $collection->master();
+$views = $collection->views();
 
 $smarty = smarty();
 $smarty->assign('collection', $data);
+$smarty->assign('views', $views['views']);
 $smarty->display('collection/info.tpl');
 
 ?>
