@@ -43,8 +43,8 @@ if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
-        $SESSION->add_error_msg(get_string('addviewsfirst', 'collection'));
-        redirect('/collection/views.php?id=' . $collection . '&new=' . $new);
+        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
+        redirect('/collection/views.php?id=' . $collectionid . '&new=' . $new);
     }
     // Pick any old view, they all have the same access records.
     $viewid = $views['views'][0]->view;
@@ -487,7 +487,10 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescriptionhtml', get_string('editaccesspagedescription2', 'view'));
 if ($collection) {
-    $smarty->assign('views', $collection->views());
+    $views = $collection->views();
+    if ($views['count'] > 1) {
+        $smarty->assign('views', $views);
+    }
 }
 $smarty->assign('form', $form);
 $smarty->display('view/access.tpl');
