@@ -410,7 +410,7 @@ function editaccess_cancel_submit() {
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $group, $institution;
+    global $SESSION, $view, $new, $group, $institution, $collection;
 
     if (param_boolean('back')) {
         redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
@@ -427,7 +427,6 @@ function editaccess_submit(Pieform $form, $values) {
             }
         }
     }
-    $view->set_access($values['accesslist']);
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
@@ -450,11 +449,18 @@ function editaccess_submit(Pieform $form, $values) {
     if ($values['allowcomments']) {
         $view->set('approvecomments', (int) $values['approvecomments']);
     }
+
+    db_begin();
+
     $view->commit();
 
-    if ($view->get_collection()) {
-        $view->get_collection()->combine_access();
+    $view->set_access($values['accesslist']);
+
+    if ($collection) {
+        $collection->set_access($view->get('id'));
     }
+
+    db_commit();
 
     if ($values['new']) {
         $str = get_string('viewcreatedsuccessfully', 'view');

@@ -514,21 +514,31 @@ class Collection {
     /**
      * Update access in collection
      *
+     * Copy access records from one view to all other views
      */
-    private function update_access($access) {
-        require_once('view.php');
-        db_begin();
-        // update all other views access records
-        if ($views = $this->views(false)) {
-            foreach ($views['views'] as $view) {
-                if ($v = new View($view->view)) {
-                    delete_records('view_access','view',$view->view); // clear all current access
-                    if (!empty($access)) {
-                        $v->set_access($access);
-                    }
-                }
+    public function set_access($viewid) {
+        if (!$views = $this->views()) {
+            return;
+        }
+
+        if ($views['count'] < 2) {
+            return;
+        }
+
+        $toupdate = array();
+        foreach ($views['views'] as &$v) {
+            if ($v->view != $viewid) {
+                $toupdate[] = $v->view;
             }
         }
+
+        if (count($toupdate) != $views['count'] - 1) {
+            throw new SystemException('error setting collection access');
+        }
+
+        db_begin();
+        delete_records_select('view_access', 'view IN (' . join(',', $toupdate) . ') AND visible = 1');
+        $this->combine_access();
         db_commit();
     }
 
