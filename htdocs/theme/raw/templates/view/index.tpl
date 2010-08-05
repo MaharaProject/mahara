@@ -62,33 +62,37 @@
                             <div class="vi">
 {if $view.togglepublic}
                                 {$view.togglepublic|safe}
+{elseif $view.collection}
+                                <strong>{str tag=Collection section=collection}:</strong> <a href="{$WWWROOT}collection/views.php?id={$view.collection->id}">{$view.collection->name}</a>
 {elseif $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {/if}
 {if $view.access}
                                <div class="videsc">{$view.access}</div>
 {/if}
-{if $view.accessgroups}
-                                <div class="videsc">{str tag="whocanseethisview" section="view"}:
-{foreach from=$view.accessgroups item=accessgroup name=artefacts}{strip}
-{if $accessgroup.accesstype == 'loggedin'}
-    {str tag="loggedinlower" section="view"}
-{elseif $accessgroup.accesstype == 'public'}
-    {str tag="publiclower" section="view"}
-{elseif $accessgroup.accesstype == 'friends'}
-    <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>
-{elseif $accessgroup.accesstype == 'group'}
-    <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
-{elseif $accessgroup.accesstype == 'user'}
-    <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
-{elseif $accessgroup.accesstype == 'secreturl'}
-    {str tag="peoplewiththesecreturl" section="view"}
-{/if}{/strip}{if !$.foreach.artefacts.last}, {/if}
-{/foreach}
-{if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
-                                </div>
-{else}
-                                <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
+{if !$view.collection}
+  {if $view.accessgroups}
+                                  <div class="videsc">{str tag="whocanseethisview" section="view"}:
+  {foreach from=$view.accessgroups item=accessgroup name=artefacts}{strip}
+  {if $accessgroup.accesstype == 'loggedin'}
+      {str tag="loggedinlower" section="view"}
+  {elseif $accessgroup.accesstype == 'public'}
+      {str tag="publiclower" section="view"}
+  {elseif $accessgroup.accesstype == 'friends'}
+      <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friendslower" section="view"}</a>
+  {elseif $accessgroup.accesstype == 'group'}
+      <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
+  {elseif $accessgroup.accesstype == 'user'}
+      <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
+  {elseif $accessgroup.accesstype == 'secreturl'}
+      {str tag="peoplewiththesecreturl" section="view"}
+  {/if}{/strip}{if !$.foreach.artefacts.last}, {/if}
+  {/foreach}
+  {if $view.template}<br>{str tag=thisviewmaybecopied section=view}{/if}
+                                  </div>
+  {else}
+                                  <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
+  {/if}
 {/if}
                             </div>
 {if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}

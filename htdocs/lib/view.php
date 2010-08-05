@@ -2160,6 +2160,12 @@ class View {
                 array()
             );
             $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
+            $collections = get_records_sql_array('
+                SELECT c.name, c.id, cv.view
+                FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+                WHERE cv.view IN (' . $viewidlist . ')',
+                array()
+            );
         }
     
         $data = array();
@@ -2259,6 +2265,11 @@ class View {
             if ($tags) {
                 foreach ($tags as $tag) {
                     $data[$index[$tag->view]]['tags'][] = $tag->tag;
+                }
+            }
+            if ($collections) {
+                foreach ($collections as $c) {
+                    $data[$index[$c->view]]['collection'] = $c;
                 }
             }
         }
