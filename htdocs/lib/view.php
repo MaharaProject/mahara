@@ -2245,6 +2245,7 @@ class View {
             }
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
+                    $key = null;
                     if ($access->usr) {
                         $access->accesstype = 'user';
                         $access->id = $access->usr;
@@ -2258,8 +2259,19 @@ class View {
                     }
                     else if ($access->token) {
                         $access->accesstype = 'secreturl';
+                        $key = 'secreturl';
                     }
-                    $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    else {
+                        $key = $access->accesstype;
+                    }
+                    if ($key) {
+                        if (!isset($data[$index[$access->view]]['accessgroups'][$key])) {
+                            $data[$index[$access->view]]['accessgroups'][$key] = (array) $access;
+                        }
+                    }
+                    else {
+                        $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    }
                 }
             }
             if ($tags) {
