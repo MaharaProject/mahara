@@ -68,6 +68,7 @@ if ($new) {
     $elements['submit'] = array(
         'type' => 'submitcancel',
         'value' => array(get_string('next') . ': ' . get_string('editviews', 'collection'), get_string('cancel')),
+        'goto' => get_config('wwwroot') . 'collection',
     );
 }
 else {
@@ -78,6 +79,7 @@ else {
     $elements['submit'] = array(
         'type' => 'submitcancel',
         'value' => array(get_string('save'), get_string('cancel')),
+        'goto' => get_config('wwwroot') . 'collection',
     );
 }
 
@@ -93,17 +95,6 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign_by_ref('form', $form);
 $smarty->display('collection/edit.tpl');
-
-function edit_cancel_submit() {
-    global $new;
-    if ($new) {
-        redirect('/collection/');
-    }
-    else {
-        global $id;
-        redirect('/collection/about.php?id='.$id);
-    }
-}
 
 function submit(Pieform $form, $values) {
     global $SESSION, $new;

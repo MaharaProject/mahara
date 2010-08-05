@@ -148,7 +148,7 @@ function new_submit(Pieform $form, $values) {
         redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');
     }
     else {
-        redirect('/collection/access.php?id='.$collection->get('id').'&new=1');
+        redirect('/view/access.php?collection='.$collection->get('id').'&new=1');
     }
 }
 
