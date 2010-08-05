@@ -415,14 +415,6 @@ EOF;
         $smarty->assign('PAGEHEADING', $group->name);
     }
 
-    if (defined('COLLECTION')) {
-        require_once('collection.php');
-        $collection = Collection::current_collection();
-        $smarty->assign('COLLECTION', $collection);
-        $smarty->assign('SUBPAGENAV', $collection->get_menu_tabs());
-        $smarty->assign('PAGEHEADING', $collection->get('name'));
-    }
-
     // ---------- sideblock stuff ----------
     $sidebars = !isset($extraconfig['sidebars']) || $extraconfig['sidebars'] !== false;
     if ($sidebars && !defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
