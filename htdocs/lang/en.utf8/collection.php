@@ -43,6 +43,7 @@ $string['addviews'] = 'Add views to collection';
 $string['back'] = 'Back';
 $string['collection'] = 'Collection';
 $string['collectionaccess'] = 'Collection access';
+$string['collectioneditaccess'] = 'You are editing access for %d Views in this Collection';
 $string['collectionconfirmdelete'] = 'Are you sure you wish to delete this collection?';
 $string['collections'] = 'Collections';
 $string['collectiondeleted'] = 'Collection deleted successfully.';

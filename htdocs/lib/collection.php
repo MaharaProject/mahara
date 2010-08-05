@@ -35,6 +35,7 @@ class Collection {
     private $owner;
     private $mtime;
     private $ctime;
+    private $views;
 
     public function __construct($id=0, $data=null) {
         global $USER;
@@ -342,34 +343,34 @@ class Collection {
     /**
      * Returns array of views in the current collection
      *
-     * @param bool master (optional) whether or not to include master view in results
      * @return array views 
      */
-    public function views($master=true) {
-        global $USER;
+    public function views() {
 
-        $mastersql = $master ? '' : "AND cv.master = 0";
-        $sql = "SELECT cv.*, v.title
-                FROM {collection_view} cv
-                    LEFT JOIN {collection} c ON cv.collection = c.id
-                    JOIN {view} v ON cv.view = v.id
-                WHERE c.id = ? AND c.owner = ? " . $mastersql . "
+        if (!isset($this->views)) {
+
+            $sql = "SELECT cv.*, v.title
+                FROM {collection_view} cv JOIN {view} v ON cv.view = v.id
+                WHERE cv.collection = ?
                 ORDER BY cv.displayorder, v.title, v.ctime ASC";
 
-        $result = get_records_sql_array($sql, array($this->get('id'), $USER->get('id')));
+            $result = get_records_sql_array($sql, array($this->get('id')));
 
-        if (!empty($result)) {
-            $views = array(
-                'views'     => $result,
-                'count'     => count($result),
-                'max'       => get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id')),
-                'min'       => get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id')),
-            );
+            if (!empty($result)) {
+                $this->views = array(
+                    'views'     => $result,
+                    'count'     => count($result),
+                    'max'       => get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id')),
+                    'min'       => get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id')),
+                );
+            }
+            else {
+                $this->views = array();
+            }
 
-            return $views;
         }
 
-        return array();
+        return $this->views;
     }
 
     /**
@@ -539,7 +540,7 @@ class Collection {
      * @todo: allow access records to apply to things other than views,
      * (e.g. collections), so we don't have to do this.
      */
-    private function combine_access() {
+    public function combine_access() {
         if (!$viewids = get_column('collection_view', 'view', 'collection', $this->id)) {
             return;
         }

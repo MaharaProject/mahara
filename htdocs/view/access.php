@@ -34,22 +34,49 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'group.php');
 
-$view = new View(param_integer('id'));
+$new = param_boolean('new');
+
+if ($collectionid = param_integer('collection', null)) {
+    $collection = new Collection($collectionid);
+    $views = $collection->views();
+    if (empty($views)) {
+        $SESSION->add_error_msg(get_string('addviewsfirst', 'collection'));
+        redirect('/collection/views.php?id=' . $collection . '&new=' . $new);
+    }
+    // Pick any old view, they all have the same access records.
+    $viewid = $views['views'][0]->view;
+}
+else {
+    $viewid = param_integer('id');
+}
+
+$view = new View($viewid);
+
+if (empty($collection)) {
+    $collection = $view->get_collection();
+}
+
+if ($collection) {
+    define('TITLE', $collection->get('name') . ': ' . get_string('editaccess', 'view'));
+}
+else {
+    define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
+}
+
 $group = $view->get('group');
 $institution = $view->get('institution');
 View::set_nav($group, $institution);
-$new = param_boolean('new');
 
-define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
 $js = '';
-if (!count_records('block_instance', 'view', $view->get('id'))) {
+if (empty($collection) && !count_records('block_instance', 'view', $view->get('id'))) {
     $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
     $js .= <<<EOF
 addLoadEvent(function() {
@@ -425,6 +452,10 @@ function editaccess_submit(Pieform $form, $values) {
     }
     $view->commit();
 
+    if ($view->get_collection()) {
+        $view->get_collection()->combine_access();
+    }
+
     if ($values['new']) {
         $str = get_string('viewcreatedsuccessfully', 'view');
     }
@@ -449,5 +480,8 @@ $smarty = smarty(
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescriptionhtml', get_string('editaccesspagedescription2', 'view'));
+if ($collection) {
+    $smarty->assign('views', $collection->views());
+}
 $smarty->assign('form', $form);
-$smarty->display('form.tpl');
+$smarty->display('view/access.tpl');
