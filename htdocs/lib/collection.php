@@ -685,4 +685,17 @@ class Collection {
         }
     }
 
+    public function find_by_view($viewid) {
+        $record = get_record_sql('
+            SELECT c.*
+            FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+            WHERE cv.view = ?',
+            array($viewid)
+        );
+        if ($record) {
+            return new Collection(0, $record);
+        }
+        return false;
+    }
+
 }

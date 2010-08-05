@@ -67,6 +67,7 @@ class View {
     private $visits;
     private $allowcomments;
     private $approvecomments;
+    private $collection;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -359,6 +360,9 @@ class View {
         if ($field == 'categorydata') {
             return $this->get_category_data();
         }
+        if ($field == 'collection') {
+            return $this->get_collection();
+        }
         return $this->{$field};
     }
 
@@ -380,6 +384,21 @@ class View {
             $this->tags = get_column('view_tag', 'tag', 'view', $this->get('id'));
         }
         return $this->tags;
+    }
+
+    public function get_collection() {
+        if (!isset($this->collection)) {
+            require_once(get_config('libroot') . 'collection.php');
+            $this->collection = Collection::find_by_view($this->id);
+        }
+        return $this->collection;
+    }
+
+    public function collection_id() {
+        if ($collection = $this->get_collection()) {
+            return $collection->get('id');
+        }
+        return false;
     }
 
     /**
@@ -2991,6 +3010,8 @@ class View {
 
         $mnettoken = get_cookie('mviewaccess:'.$this->id);
         $usertoken = get_cookie('viewaccess:'.$this->id);
+        $cid = $this->collection_id();
+        $ctoken = $cid ? get_cookie('caccess:'.$cid) : null;
 
         foreach ($access as $a) {
             if ($a->accesstype == 'public') {
@@ -2998,7 +3019,8 @@ class View {
                     continue;
                 }
             }
-            else if ($a->token && $a->token != $mnettoken && ($a->token != $usertoken || !$publicviews)) {
+            else if ($a->token && $a->token != $mnettoken
+                     && (!$publicviews || ($a->token != $usertoken && $a->token != $ctoken))) {
                 continue;
             }
             else if (!$user->is_logged_in()) {

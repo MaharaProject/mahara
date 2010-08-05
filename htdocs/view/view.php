@@ -47,16 +47,10 @@ if ($mnettoken) {
     if (!$viewid = get_view_from_token($mnettoken, false)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
-    if ($mnettoken != get_cookie('mviewaccess:'.$viewid)) {
-        set_cookie('mviewaccess:'.$viewid, $mnettoken);
-    }
 }
 else if ($usertoken) {
     if (!$viewid = get_view_from_token($usertoken, true)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
-    }
-    if ($usertoken != get_cookie('viewaccess:'.$viewid)) {
-        set_cookie('viewaccess:'.$viewid, $usertoken);
     }
 }
 else {
@@ -65,7 +59,7 @@ else {
 
 $new = param_boolean('new');
 
-if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
+if (!can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
