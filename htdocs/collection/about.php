@@ -53,11 +53,11 @@ if (!$USER->can_edit_collection($collection)) {
 }
 
 $data->ctime = strftime(get_string('strftimedate'), $data->ctime);
-$views = $collection->views();
+$collection->views();
 
 $smarty = smarty();
 $smarty->assign('collection', $data);
-$smarty->assign('views', $views['views']);
+$smarty->assign('views', $collection->get('views'));
 $smarty->display('collection/info.tpl');
 
 ?>

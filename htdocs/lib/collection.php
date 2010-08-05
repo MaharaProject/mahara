@@ -67,6 +67,7 @@ class Collection {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
+            $this->views();
         }
     }
 
@@ -456,7 +457,7 @@ class Collection {
         redirect($redirecturl);
     }
 
-    public function find_by_view($viewid) {
+    public static function search_by_view_id($viewid) {
         $record = get_record_sql('
             SELECT c.*
             FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection

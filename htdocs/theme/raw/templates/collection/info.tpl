@@ -11,8 +11,8 @@
             <li><label>{str tag=created section=collection}: </label> {$collection->ctime}</li>
             <li><label>{str tag=views section=collection}: </label>
             {if $views}
-                {foreach from=$views item=view}
-                    <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>,
+                {foreach from=$views.views item=view name=cviews}
+                    <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
                 {/foreach}
             {else}
                 {str tag=none}

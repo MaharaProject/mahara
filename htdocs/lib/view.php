@@ -389,7 +389,7 @@ class View {
     public function get_collection() {
         if (!isset($this->collection)) {
             require_once(get_config('libroot') . 'collection.php');
-            $this->collection = Collection::find_by_view($this->id);
+            $this->collection = Collection::search_by_view_id($this->id);
         }
         return $this->collection;
     }
