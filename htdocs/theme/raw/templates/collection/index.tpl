@@ -24,10 +24,7 @@
                     </div>
 
                     <div class="vi">
-                        <h4><a href="{$WWWROOT}collection/access.php?id={$collection->id}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
-{if $collection->masterid}
-                            <div class="videsc">{str tag=currentmaster section=collection}: <a href="{$WWWROOT}view/view.php?id={$collection->masterid}">{$collection->mastertitle}</a></div>
-{/if}
+                        <h4><a href="{$WWWROOT}view/access.php?collection={$collection->id}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
                     </div>
 
                     </div></td>
