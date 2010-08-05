@@ -103,9 +103,17 @@ class Collection {
      *
      */
     public function delete() {
+        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
         db_begin();
         delete_records('collection_view','collection',$this->id);
         delete_records('collection','id',$this->id);
+
+        // Secret url records belong to the collection, so remove them from the view.
+        // @todo: add user message to whatever calls this.
+        if ($viewids) {
+            delete_records_select('view_access', 'view IN (' . join(',', $viewids) . ') AND token IS NOT NULL');
+        }
+
         db_commit();
     }
 
@@ -431,6 +439,11 @@ class Collection {
     public function remove_view($view) {
         db_begin();
         delete_records('collection_view','view',$view,'collection',$this->get('id'));
+
+        // Secret url records belong to the collection, so remove them from the view.
+        // @todo: add user message to whatever calls this.
+        delete_records_select('view_access', 'view = ? AND token IS NOT NULL', array($view));
+
         db_commit();
     }
 
