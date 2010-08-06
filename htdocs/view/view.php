@@ -184,8 +184,11 @@ EOF;
 if ($collection = Collection::search_by_view_id($viewid)) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
-        $views = $collection->get('views');
-        $smarty->assign_by_ref('collection',$views['views']);
+        if ($views = $collection->get('views')) {
+            if (count($views['views']) > 1) {
+                $smarty->assign_by_ref('collection',$views['views']);
+            }
+        }
     }
 }
 
