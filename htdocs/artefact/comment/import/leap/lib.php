@@ -194,7 +194,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $comment = null;
-
+        $newartefacts = array(); // save any newly created extra ones (eg enclosures)
         $referentid = self::get_referent_entryid($entry, $importer);
 
         // Link artefact comments; view comments are done later
@@ -206,21 +206,18 @@ class LeapImportComment extends LeapImportArtefactPlugin {
 
         // Attachments
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href'])) {
-                if (!$comment) {
-                    $comment = self::get_comment_instance($entry, $importer);
-                }
-                $importer->trace("Attaching file $link[href] to comment $entry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
-                $artefactids = $importer->get_artefactids_imported_by_entryid((string)$link['href']);
-                if (isset($artefactids[0])) {
-                    $comment->attach($artefactids[0]);
-                }
+            if (!$comment) {
+                $comment = self::get_comment_instance($entry, $importer);
+            }
+            if ($id = $importer->create_attachment($entry, $link, $comment)) {
+                $newartefacts[] = $id;
             }
         }
 
         if ($comment) {
             $comment->commit();
         }
+        return $newartefacts;
     }
 
     /**

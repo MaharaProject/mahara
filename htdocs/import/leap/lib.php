@@ -1200,6 +1200,65 @@ class PluginImportLeap extends PluginImport {
     public function get_namespaces() {
         return $this->namespaces;
     }
+
+    /**
+     * helper function to create attachments between entries.
+     * The 2010-07 version of leap2a says that linked *entries* should use related relation,
+     * and directly linked files (attachments) should use enclosures.
+     * However, for BC we should support both.
+     * This function supports both and additionally creates the File artefacts for attachments, then links them.
+     *
+     * @param SimpleXMLElement $entry    the entry we want to attach things *to*
+     * @param SimpleXMLElement $link     the link to inspect
+     * @param ArtefactType     $artefact the artefact that has been created from the entry.
+     *
+     * @return void|int the id of a *newly created* attached artefact
+     */
+    public function create_attachment(SimpleXMLElement $entry, SimpleXMLElement $link, ArtefactType $artefact) {
+        if (($this->curie_equals($link['rel'], '', 'enclosure') || $this->curie_equals($link['rel'], '', 'related')) && isset($link['href'])) {
+            $this->trace("Attaching file $link[href] to comment $entry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
+            $artefactids = $this->get_artefactids_imported_by_entryid((string)$link['href']);
+            if (isset($artefactids[0])) {
+                $artefact->attach($artefactids[0]);
+            } else { // it may be just an attached file, with no Leap2A element in its own right ....
+                if ($id = $this->create_linked_file($entry, $link)) {
+                    $artefact->attach($id);
+                    $newartefactmapping[(string)$link['href']][] = $id;
+                    return $id;
+                }
+            }
+        }
+    }
+
+    /**
+     * Attaches a file to a blogpost entry that was just linked directly, rather than having a Leap2a entry
+     * See http://wiki.leapspecs.org/2A/files
+     *
+     * @param SimpleXMLElement $entry
+     * @param SimpleXMLElement $link
+     */
+    private function create_linked_file(SimpleXMLElement $entry, SimpleXMLElement $link) {
+        $this->trace($link);
+        $pathname = urldecode((string)$link['href']);
+        $dir = dirname($this->get('filename'));
+        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        if (!file_exists($pathname)) {
+            return false;
+        }
+        // Note: this data is passed (eventually) to ArtefactType->__construct,
+        // which calls strtotime on the dates for us
+        require_once('file.php');
+        $data = (object)array(
+            'title' => (string)$entry->title . ' ' . get_string('attachment'),
+            'owner' => $this->get('usr'),
+            'filetype' => file_mime_type($pathname),
+        );
+        return ArtefactTypeFile::save_file($pathname, $data, $this->get('usrobj'), true);
+    }
+
+    public function entry_exists($entryid) {
+        return array_key_exists($entryid, $this->strategylisting);
+    }
 }
 
 
