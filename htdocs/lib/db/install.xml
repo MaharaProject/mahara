@@ -798,6 +798,7 @@
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="name" TYPE="text" NOTNULL="true"  />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="navigation" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -808,7 +809,6 @@
             <FIELDS>
                 <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="master" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>

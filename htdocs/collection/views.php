@@ -83,7 +83,7 @@ if ($available = Collection::available_views()) {
     }
     $elements['submit'] = array(
         'type' => 'submit',
-        'value' => get_string('add','collection'),
+        'value' => get_string('addview','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 
@@ -97,30 +97,42 @@ if ($available = Collection::available_views()) {
     ));
 }
 
-$smarty = smarty();
+$elements = array();
+$elements['navigation'] = array(
+        'type'  => 'checkbox',
+        'title' => get_string('viewnavigation','collection'),
+        'description' => get_string('viewnavigationdesc','collection'),
+        'defaultvalue' => $collection ? $collection->get('navigation') : 1,
+);
 if ($new) {
-    $newform = pieform(array(
-        'name'          =>  'new',
-        'plugintype'    => 'core',
-        'pluginname'    => 'collection',
-        'autofocus'     => false,
-        'method'        => 'post',
-        'elements'      => array(
-            'submit' => array(
-                'type'  => 'cancelbackcreate',
-                'value' => array(get_string('cancel'), get_string('back','collection'), get_string('next') . ': ' . get_string('editaccess', 'collection')),
-                'confirm' => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
-            ),
-        ),
-    ));
-    $smarty->assign_by_ref('newform', $newform);
+    $elements['submit'] = array(
+        'type'  => 'cancelbackcreate',
+        'value' => array(get_string('cancel'), get_string('back','collection'), get_string('next') . ': ' . get_string('editaccess', 'collection')),
+        'confirm' => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
+    );
 }
+else {
+    $elements['submit'] = array(
+        'type'  => 'submitcancel',
+        'value' => array(get_string('save'), get_string('cancel')),
+    );
+}
+$nextform = pieform(array(
+    'name'          =>  'next',
+    'plugintype'    => 'core',
+    'pluginname'    => 'collection',
+    'autofocus'     => false,
+    'method'        => 'post',
+    'elements'      => $elements,
+));
 
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id.$newurl);
 $smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newurl);
 $smarty->assign_by_ref('views', $views);
 $smarty->assign_by_ref('viewsform', $viewsform);
+$smarty->assign_by_ref('nextform', $nextform);
 $smarty->display('collection/views.tpl');
 
 function addviews_submit(Pieform $form, $values) {
@@ -136,19 +148,28 @@ function addviews_submit(Pieform $form, $values) {
 
 }
 
-function new_cancel_submit() {
-    global $collection;
-    $collection->delete();
+function next_cancel_submit() {
+    global $collection, $new;
+    if ($new) {
+        $collection->delete();
+    }
     redirect('/collection/');
 }
 
-function new_submit(Pieform $form, $values) {
-    global $collection;
+function next_submit(Pieform $form, $values) {
+    global $collection, $new;
     if (param_boolean('back')) {
         redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');
     }
     else {
-        redirect('/view/access.php?collection='.$collection->get('id').'&new=1');
+        if ($new) {
+            redirect('/view/access.php?collection='.$collection->get('id').'&new=1');
+        }
+        else {
+            $collection->set('navigation',(int)$values['navigation']);
+            $collection->commit();
+            redirect('/collection/');
+        }
     }
 }
 

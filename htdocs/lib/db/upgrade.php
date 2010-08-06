@@ -2110,7 +2110,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('collection_view');
         $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
         $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
-        $table->addFieldInfo('master', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view','collection'));
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
         $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
@@ -2141,6 +2140,13 @@ function xmldb_core_upgrade($oldversion=0) {
         $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('token'));
         add_index($table, $index);
 
+    }
+
+    if ($oldversion < 2010080500) {
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('navigation');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
     }
 
     return $status;

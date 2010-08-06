@@ -41,11 +41,7 @@
     {str tag=noviewsavailable section=collection}
 {/if}
 </fieldset>
-{if $newform}
-  {$newform|safe}
-{else}
-  <div id="view-wizard-controls" class="center">
-    <a class="btn" href="{$WWWROOT}collection">{str tag=done}</a>
-  </div>
+{if $nextform}
+  {$nextform|safe}
 {/if}
 {include file="footer.tpl"}

@@ -2743,7 +2743,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false, $collection) {
+    public static function set_nav($group, $institution, $profile=false, $collection=null) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);

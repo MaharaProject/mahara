@@ -35,6 +35,7 @@ class Collection {
     private $owner;
     private $mtime;
     private $ctime;
+    private $navigation;
     private $views;
 
     public function __construct($id=0, $data=null) {

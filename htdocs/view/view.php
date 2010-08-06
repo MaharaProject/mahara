@@ -34,6 +34,7 @@ define('SECTION_PAGE', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'collection.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
 
@@ -180,12 +181,12 @@ addLoadEvent(function () {
 EOF;
 
 // collection top navigation
-$allowcollections = get_config('allowcollections');
-if ($allowcollections) {
-    require_once(get_config('libroot') . 'collection.php');
-    $collection = Collection::search_by_view_id($viewid);
-    $views = $collection->get('views');
-    $smarty->assign_by_ref('collection',$views['views']);
+if ($collection = Collection::search_by_view_id($viewid)) {
+    $shownav = $collection->get('navigation');
+    if ($shownav) {
+        $views = $collection->get('views');
+        $smarty->assign_by_ref('collection',$views['views']);
+    }
 }
 
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
