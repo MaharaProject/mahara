@@ -425,7 +425,11 @@ abstract class ImporterTransport {
         $output = array();
         exec($command, $output, $returnvar);
         if ($returnvar != 0) {
-            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
+            if ($returnvar == 1) {
+                log_warn("Unzipping the zip file caused a warning, but it is recoverable so continuing anyway");
+            } else {
+                throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
+            }
         }
         $this->extracted = true;
     }
