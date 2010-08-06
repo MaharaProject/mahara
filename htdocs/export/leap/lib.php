@@ -127,6 +127,7 @@ class PluginExportLeap extends PluginExport {
         $this->export_header();
         $this->setup_links();
         $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
+        $this->export_collections();
         $this->export_views();
         $this->notify_progress_callback(50, get_string('exportingartefacts', 'export'));
         $this->export_artefacts();
@@ -203,6 +204,44 @@ class PluginExportLeap extends PluginExport {
         $this->xml .= $this->smarty->fetch('export:leap:header.tpl');
     }
 
+
+    /**
+     * Export the collections
+     */
+    private function export_collections() {
+        foreach ($this->collections as $id => $collection) {
+            $this->smarty->assign('title',       $collection->get('name'));
+            $this->smarty->assign('id',          'portfolio:collection' . $id);
+            $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($collection->get('mtime'))));
+            $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($collection->get('ctime'))));
+            $this->smarty->assign('summarytype', 'text');
+            $this->smarty->assign('summary',     $collection->get('description'));
+            $this->smarty->assign('contenttype', 'text');
+            $this->smarty->assign('content',     $collection->get('description'));
+            $this->smarty->assign('leaptype',    'selection');
+
+            $this->smarty->assign('categories', array(
+                array(
+                    'scheme' => 'selection_type',
+                    'term' => 'Website',
+                )
+            ));
+
+            $links = array();
+            if (!empty($this->links->collectionview[$id])) {
+                foreach (array_keys($this->links->collectionview[$id]) as $viewid) {
+                    $links[] = (object)array(
+                        'type' => 'has_part',
+                        'id'   => 'portfolio:view' . $viewid,
+                    );
+                }
+            }
+            $this->smarty->assign('links', $links);
+            $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
+        }
+    }
+
+
     /**
      * Export the views
      */
@@ -263,6 +302,21 @@ class PluginExportLeap extends PluginExport {
 
         $viewlist = join(',', array_keys($this->views));
         $artefactlist = join(',', array_keys($this->artefacts));
+
+        // Views in collections
+        if ($this->collections) {
+            $collectionlist = join(',', array_keys($this->collections));
+            $records = get_records_select_array(
+                'collection_view',
+                "view IN ($viewlist) AND collection IN ($collectionlist)"
+            );
+            if ($records) {
+                foreach ($records as &$r) {
+                    $this->links->collectionview[$r->collection][$r->view] = 1;
+                    $this->links->viewcollection[$r->view][$r->collection] = 1;
+                }
+            }
+        }
 
         // Artefacts directly in views
         $records = get_records_select_array(
@@ -399,6 +453,15 @@ class PluginExportLeap extends PluginExport {
 
     private function get_links_for_view($viewid) {
         $links = array();
+
+        if (!empty($this->links->viewcollection[$viewid])) {
+            foreach (array_keys($this->links->viewcollection[$viewid]) as $collectionid) {
+                $links[] = (object)array(
+                    'type' => 'is_part_of',
+                    'id'   => 'portfolio:collection' . $collectionid,
+                );
+            }
+        }
 
         if (!empty($this->links->viewcontents[$viewid])) {
             foreach (array_keys($this->links->viewcontents[$viewid]) as $artefactid) {
