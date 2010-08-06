@@ -3,10 +3,10 @@
 }
 /********************** Top pane of Edit View *************************/
 #top-pane {
-    background: #1D499F;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
+    background: #1D499F;
     height: 25px;
     padding-left: 1em;
 }
