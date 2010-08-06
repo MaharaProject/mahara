@@ -73,6 +73,51 @@ if ($body) {
 
 echo '</fieldset></div>';
 
+$body = array();
+$row = $col = 0;
+foreach ($elements as $key => $element) {
+    if (substr($key, 0, 11) == 'collection_') {
+        $body[$row][$col] = "<td>{$element['html']} {$element['labelhtml']}"
+            . '<div>' . hsc($element['description']) . '</div></td>';
+        $col++;
+        if ($col % 3 == 0) {
+            $row++;
+            $col = 0;
+        }
+    }
+}
+
+if ($body) {
+    echo '<div id="whatcollections" class="js-hidden"><fieldset><legend>' . get_string('collectionstoexport', 'export') . "</legend>\n";
+    echo "<table>\n";
+    foreach ($body as $rownum => $row) {
+        if ($rownum == 0) {
+            switch (count($row)) {
+            case 2:
+                echo '<colgroup><col width="50%"><col width="50%"></colgroup>' . "\n";
+                break;
+            case 3:
+                echo '<colgroup><col width="33%"><col width="33%"><col width="33%"></colgroup>' . "\n";
+                break;
+            }
+            echo "    <tbody>\n";
+        }
+        echo '    <tr class="r' . $rownum % 2 . "\">\n";
+        $i = 0;
+        foreach ($row as $col) {
+            echo $col . "\n";
+            $i++;
+        }
+        for (; $i < 3; $i++) {
+            echo "<td></td>\n";
+        }
+        echo "    </tr>\n";
+    }
+    echo "    </tbody>\n";
+    echo "</table>\n";
+    echo '</fieldset></div>';
+}
+
 echo '<div id="export_submit_container">';
 echo $elements['submit']['html'];
 echo '</div>';
