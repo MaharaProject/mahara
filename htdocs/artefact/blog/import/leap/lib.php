@@ -174,23 +174,14 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                 if (!isset($blogpostentry->link)) {
                     continue;
                 }
+                $blogpost = null;
                 foreach ($blogpostentry->link as $blogpostlink) {
-                    $blogpost = null;
-                    if ($importer->curie_equals($blogpostlink['rel'], '', 'enclosure') && isset($blogpostlink['href'])) {
-                        if (!$blogpost) {
-                            $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
-                            $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
-                        }
-                        $importer->trace("Attaching file $blogpostlink[href] to blog post $blogpostentry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
-                        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
-                        if (isset($artefactids[0])) {
-                            $blogpost->attach($artefactids[0]);
-                        } else { // it may be just an attached file, with no leap2a element in its own right ....
-                            if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
-                                $blogpost->attach($id);
-                                $newartefactmapping[(string)$blogpostlink['href']][] = $id;
-                            }
-                        }
+                    if (!$blogpost) {
+                        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
+                        $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
+                    }
+                    if ($id = $importer->create_attachment($entry, $blogpostlink, $blogpost)) {
+                        $newartefactmapping[$link['href']][] = $id;
                     }
                     if ($blogpost) {
                         $blogpost->commit();
@@ -201,6 +192,18 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             }
             break;
         case self::STRATEGY_IMPORT_AS_ENTRY:
+            $blogpostids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
+            if (!isset($blogpostids[0])) {
+                // weird!
+                break;
+            }
+            $blogpost = new ArtefactTypeBlogPost($blogpostids[0]);
+            foreach ($entry->link as $link) {
+                if ($id = $importer->create_attachment($entry, $link, $blogpost)) {
+                    $newartefactmapping[$link['href']][] = $id;
+                }
+            }
+            $blogpost->commit();
             self::setup_outoflinecontent_relationship($entry, $importer);
             break;
         default:

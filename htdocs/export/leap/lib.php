@@ -755,11 +755,11 @@ class LeapExportElement {
      * this does not attach the file to the expot, you have to use the
      * {@link add_attachment} method on the exporter object.
      *
-     * @param string $filename the relative path of the file.
+     * @param string $filename the relative path of the file (NOT including the filesdir)
      */
     public function add_enclosure_link($filename) {
         $this->links[$filename] = (object)array(
-            'id' => $filename,
+            'id' => $this->exporter->get('filedir') . $filename,
             'type' => 'enclosure',
             'file' => true
         );
