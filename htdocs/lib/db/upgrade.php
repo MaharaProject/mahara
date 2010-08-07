@@ -2115,9 +2115,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
         create_table($table);
 
-        // set site config to allow collections for users
-        set_config('allowcollections','1');
-
     }
 
     if ($oldversion < 2010080401) {

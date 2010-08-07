@@ -36,12 +36,6 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
 
-// check that My Collections is enabled in the config
-// if not as the user is trying to access this illegally
-if (!get_config('allowcollections')) {
-    die();
-}
-
 $new = param_boolean('new', 0);
 $id = param_integer('id', 0);
 

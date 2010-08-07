@@ -39,12 +39,6 @@ define('TITLE', get_string('deletecollection', 'collection'));
 
 $id = param_integer('id');
 
-// check that My Collections is enabled in the config
-// if not as the user is trying to access this illegally
-if (!get_config('allowcollections')) {
-    die();
-}
-
 $data = get_record_select('collection', 'id = ?', array($id));
 $collection = new Collection($id, (array)$data);
 if (!$USER->can_edit_collection($collection)) {

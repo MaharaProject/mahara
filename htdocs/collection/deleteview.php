@@ -37,12 +37,6 @@ require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('deleteview', 'collection'));
 
-// check that My Collections is enabled in the config
-// if not as the user is trying to access this illegally
-if (!get_config('allowcollections')) {
-    die();
-}
-
 $vid = param_integer('view');
 $new = param_integer('new',0);
 $id = param_integer('id');

@@ -1912,7 +1912,6 @@ function institutional_admin_nav() {
  */
 function mahara_standard_nav() {
     $exportenabled = plugins_installed('export');
-    $collectionenabled = get_config('allowcollections');
     $menu = array(
         array(
             'path' => '',
@@ -1946,7 +1945,6 @@ function mahara_standard_nav() {
             'url' => 'collection/',
             'title' => get_string('mycollections', 'collection'),
             'weight' => 50,
-            'ignore' => !$collectionenabled,
         ),
         array(
             'path' => 'groups',

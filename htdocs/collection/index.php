@@ -37,12 +37,6 @@ require_once('pieforms/pieform.php');
 require_once('collection.php');
 define('TITLE', get_string('mycollections', 'collection'));
 
-// check that My Collections is enabled in the config
-// if not as the user is trying to access this illegally
-if (!get_config('allowcollections')) {
-    die();
-}
-
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 5);

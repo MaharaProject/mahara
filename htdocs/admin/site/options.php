@@ -407,13 +407,6 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('showtagssideblock'),
                     'disabled'     => in_array('showtagssideblock', $OVERRIDDEN),
                 ),
-                'allowcollections' =>  array(
-                    'type' => 'checkbox',
-                    'title' => get_string('allowcollections', 'admin'),
-                    'description' => get_string('allowcollectionsdescription', 'admin'),
-                    'defaultvalue' => get_config('allowcollections'),
-                    'disabled' => in_array('allowcollections', $OVERRIDDEN),
-                ),
                 'tagssideblockmaxtags' => array(
                     'type'         => 'text',
                     'size'         => 4,
@@ -475,7 +468,6 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms',
         'creategroups', 'createpublicgroups', 'allowgroupcategories',
-        'allowcollections',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

@@ -36,12 +36,6 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('collection.php');
 define('TITLE', get_string('viewcollection', 'collection'));
 
-// check that My Collections is enabled in the config
-// if not as the user is trying to access this illegally
-if (!get_config('allowcollections')) {
-    die();
-}
-
 $id = param_integer('id');
 define('COLLECTION', $id);
 
