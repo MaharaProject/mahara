@@ -1309,6 +1309,20 @@ function get_cookie($name) {
     return (isset($_COOKIE[$name])) ? $_COOKIE[$name] : null;
 }
 
+function get_cookies($prefix) {
+    static $prefixes = array();
+    if (!isset($prefixes[$prefix])) {
+        $prefixes[$prefix] = array();
+        $cprefix = get_config('cookieprefix') . $prefix;
+        foreach ($_COOKIE as $k => $v) {
+            if (strpos($k, $cprefix) === 0) {
+                $prefixes[$prefix][substr($k, strlen($cprefix))] = $v;
+            }
+        }
+    }
+    return $prefixes[$prefix];
+}
+
 /**
  * Sets a cookie, respecting the configured cookie prefix
  *
@@ -1925,6 +1939,12 @@ function mahara_standard_nav() {
             'title' => get_string('Export', 'export'),
             'weight' => 40,
             'ignore' => !$exportenabled,
+        ),
+        array(
+            'path' => 'myportfolio/collection',
+            'url' => 'collection/',
+            'title' => get_string('mycollections', 'collection'),
+            'weight' => 10,
         ),
         array(
             'path' => 'groups',

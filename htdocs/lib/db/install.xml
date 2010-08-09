@@ -698,7 +698,7 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
-                <INDEX NAME="tokenuk" UNIQUE="true" FIELDS="token"/>
+                <INDEX NAME="tokenix" UNIQUE="false" FIELDS="token"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="view_visit">
@@ -788,6 +788,33 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="ctime,type" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="collection">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="name" TYPE="text" NOTNULL="true"  />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="navigation" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id"  />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="collection_view">
+            <FIELDS>
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view" />
+                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id"  />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"  />
             </KEYS>
         </TABLE>
     </TABLES>

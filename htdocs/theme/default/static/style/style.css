@@ -875,8 +875,33 @@ ul.groupuserstatus li,
 .home-info-table {
     margin: 2em 0 2.5em;
 }
+
 #hideinfo {
 }
+
+/* Collections */
+#collectionviews {
+	background: #f6f6f6;
+}
+#collectionviews table {
+    width: 100%;
+}
+* html #collectionviews table,
+* html #collectionviews {
+	width: 96%;
+}
+#collectionviews td {
+	padding: .25em 0;
+}
+#collectionviews td label {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+#collectionviews td div {
+    text-align: center;
+}
+
 .inbox-message {
 	background: #FAFBF7;
 }

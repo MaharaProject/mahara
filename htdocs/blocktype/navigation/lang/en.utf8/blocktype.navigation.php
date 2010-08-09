@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage blocktype-mycollections
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2010081000;
-$config->release = '1.3.0beta4dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$string['defaulttitledescription'] = 'If no title is provided here the title of the collection will be used.';
+$string['collection'] = 'Collection';
+$string['title'] = 'Navigation';
+$string['description'] = 'Display a collection of views as a simple navigation.';
+$string['nocollections'] = 'No collections. <a href="%scollection/create.php">Create one</a>.';
+?>

@@ -2092,5 +2092,41 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2010081000) {
+
+        // new table collection
+        $table = new XMLDBTable('collection');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('owner', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('navigation', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('owner'), 'usr', array('id'));
+        create_table($table);
+
+        // new table collection_view
+        $table = new XMLDBTable('collection_view');
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('displayorder', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view'));
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+        create_table($table);
+
+        // Drop unique constraint on token column of view_access
+        $table = new XMLDBTable('view_access');
+        $index = new XMLDBIndex('tokenuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('token'));
+        drop_index($table, $index);
+        $index = new XMLDBIndex('tokenix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('token'));
+        add_index($table, $index);
+
+    }
+
     return $status;
 }

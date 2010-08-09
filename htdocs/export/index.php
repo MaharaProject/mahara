@@ -29,6 +29,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/export');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('view.php');
+require_once('collection.php');
 define('TITLE', get_string('exportyourportfolio', 'export'));
 
 $SESSION->set('exportdata', '');
@@ -83,6 +84,25 @@ if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'port
         );
     }
     $jsfiles = array('js/preview.js', 'js/export.js');
+
+    $collections = get_records_sql_array('
+        SELECT c.id, c.name, c.description
+        FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+        WHERE c.owner = ?
+        GROUP BY c.id, c.name, c.description
+        HAVING COUNT(cv.view) > 0',
+        array($USER->get('id'))
+    );
+    if ($collections) {
+        $elements['what']['options']['collections'] = get_string('justsomecollections', 'export');
+        foreach ($collections as $collection) {
+            $elements['collection_' . $collection->id] = array(
+                'type' => 'checkbox',
+                'title' => $collection->name,
+                'description' => $collection->description,
+            );
+        }
+    }
 }
 else {
     $elements['what']['disabled'] = true;
@@ -117,15 +137,38 @@ function export_validate(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('youmustselectatleastoneviewtoexport', 'export'));
         }
     }
+    else if ($values['what'] == 'collections') {
+        $viewchosen = false;
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 11) == 'collection_' && $value) {
+                $viewchosen = true;
+            }
+        }
+        if (!$viewchosen) {
+            $form->set_error('what', '');
+            $SESSION->add_error_msg(get_string('youmustselectatleastonecollectiontoexport', 'export'));
+        }
+    }
 }
 
 function export_submit(Pieform $form, $values) {
     global $SESSION;
     $views = array();
-    foreach ($values as $key => $value) {
-        if (substr($key, 0, 5) == 'view_' && $value) {
-            $views[] = intval(substr($key, 5));
+    if ($values['what'] == 'views') {
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 5) == 'view_' && $value) {
+                $views[] = intval(substr($key, 5));
+            }
         }
+    }
+    else if ($values['what'] == 'collections') {
+        foreach ($values as $key => $value) {
+            if (substr($key, 0, 11) == 'collection_' && $value) {
+                $collection = intval(substr($key, 11));
+                $views = array_merge($views, get_column('collection_view', 'view', 'collection', $collection));
+            }
+        }
+        $values['what'] = 'views';
     }
 
     $exportdata = array(

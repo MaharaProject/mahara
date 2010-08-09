@@ -1552,7 +1552,7 @@ function pieform_template_dir($file, $pluginlocation='') {
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
+function can_view_view($view_id, $user_id=null) {
     global $USER, $SESSION;
 
     if (defined('BULKEXPORT')) {
@@ -1574,12 +1574,10 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
     }
 
     require_once(get_config('libroot') . 'view.php');
+    $view = new View($view_id);
 
-    if ($USER->is_logged_in()) {
-        $view = new View($view_id);
-        if ($USER->can_edit_view($view)) {
-            return true;
-        }
+    if ($USER->is_logged_in() && $USER->can_edit_view($view)) {
+        return true;
     }
 
     $access = View::user_access_records($view_id, $user_id);
@@ -1588,7 +1586,7 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         return false;
     }
 
-    if ($SESSION->get('mnetuser') && !$mnettoken) {
+    if ($SESSION->get('mnetuser')) {
         $mnettoken = get_cookie('mviewaccess:'.$view_id);
     }
 
@@ -1602,7 +1600,7 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
             }
         }
         else if ($a->token) {
-            $usertoken = $usertoken ? $usertoken : get_cookie('viewaccess:'.$view_id);
+            $usertoken = get_cookie('viewaccess:'.$view_id);
             if ($a->token == $usertoken && $publicviews) {
                 return true;
             }
@@ -1614,6 +1612,14 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
                 $mnetviewlist[$view_id] = true;
                 $SESSION->set('mnetviewaccess', $mnetviewlist);
                 return true;
+            }
+            // Don't bother to pull the collection out unless the user actually
+            // has some collection access cookies.
+            if ($ctokens = get_cookies('caccess:')) {
+                $cid = $view->collection_id();
+                if ($cid && isset($ctokens[$cid]) && $a->token == $ctokens[$cid]) {
+                    return true;
+                }
             }
         }
         else if ($USER->is_logged_in()) {
@@ -1647,20 +1653,68 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
 }
 
 
-/* return the view associated with a given token */
+/**
+ * Return the view associated with a given token, and set the
+ * appropriate access cookie.
+ */
 function get_view_from_token($token, $visible=true) {
     if (!$token) {
         return false;
     }
-    return get_field_sql('
+    $viewids = get_column_sql('
         SELECT "view"
         FROM {view_access}
         WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
             AND (stopdate IS NULL OR stopdate > current_timestamp)
-        ', array($token, (int)$visible));
+        ORDER BY "view"
+        ', array($token, (int)$visible)
+    );
+    if (empty($viewids)) {
+        return false;
+    }
+    if (count($viewids) > 1) {
+        // if any of the views are in collection(s), pick one of the ones
+        // with the lowest displayorder.
+        $order = get_records_sql_array('
+            SELECT cv.view, collection
+            FROM {collection_view} cv
+            WHERE cv.view IN (' . join(',', $viewids) . ')
+            ORDER BY displayorder, collection',
+            array()
+        );
+        if ($order) {
+            if ($token != get_cookie('caccess:'.$order[0]->collection)) {
+                set_cookie('caccess:'.$order[0]->collection, $token);
+            }
+            return $order[0]->view;
+        }
+    }
+    $viewid = $viewids[0];
+    if (!$visible && $token != get_cookie('mviewaccess:'.$viewid)) {
+        set_cookie('mviewaccess:'.$viewid, $token);
+    }
+    if ($visible && $token != get_cookie('viewaccess:'.$viewid)) {
+        set_cookie('viewaccess:'.$viewid, $token);
+    }
+    return $viewid;
 }
 
+/**
+ * Determine whether a view is accessible by a given token
+ */
+function view_has_token($view, $token) {
+    if (!$view || !$token) {
+        return false;
+    }
+    return record_exists_select(
+        'view_access',
+        'view = ? AND token = ? AND visible = ?
+         AND (startdate IS NULL OR startdate < current_timestamp)
+         AND (stopdate IS NULL OR stopdate > current_timestamp)',
+        array($view, $token, (int)$visible)
+    );
+}
 
 /**
  * get the views that a user can see belonging

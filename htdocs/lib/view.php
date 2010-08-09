@@ -67,6 +67,7 @@ class View {
     private $visits;
     private $allowcomments;
     private $approvecomments;
+    private $collection;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -359,6 +360,9 @@ class View {
         if ($field == 'categorydata') {
             return $this->get_category_data();
         }
+        if ($field == 'collection') {
+            return $this->get_collection();
+        }
         return $this->{$field};
     }
 
@@ -380,6 +384,21 @@ class View {
             $this->tags = get_column('view_tag', 'tag', 'view', $this->get('id'));
         }
         return $this->tags;
+    }
+
+    public function get_collection() {
+        if (!isset($this->collection)) {
+            require_once(get_config('libroot') . 'collection.php');
+            $this->collection = Collection::search_by_view_id($this->id);
+        }
+        return $this->collection;
+    }
+
+    public function collection_id() {
+        if ($collection = $this->get_collection()) {
+            return $collection->get('id');
+        }
+        return false;
     }
 
     /**
@@ -521,6 +540,7 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
+        delete_records('collection_view','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
@@ -2140,6 +2160,12 @@ class View {
                 array()
             );
             $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
+            $collections = get_records_sql_array('
+                SELECT c.name, c.id, cv.view
+                FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+                WHERE cv.view IN (' . $viewidlist . ')',
+                array()
+            );
         }
     
         $data = array();
@@ -2219,6 +2245,7 @@ class View {
             }
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
+                    $key = null;
                     if ($access->usr) {
                         $access->accesstype = 'user';
                         $access->id = $access->usr;
@@ -2232,13 +2259,29 @@ class View {
                     }
                     else if ($access->token) {
                         $access->accesstype = 'secreturl';
+                        $key = 'secreturl';
                     }
-                    $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    else {
+                        $key = $access->accesstype;
+                    }
+                    if ($key) {
+                        if (!isset($data[$index[$access->view]]['accessgroups'][$key])) {
+                            $data[$index[$access->view]]['accessgroups'][$key] = (array) $access;
+                        }
+                    }
+                    else {
+                        $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    }
                 }
             }
             if ($tags) {
                 foreach ($tags as $tag) {
                     $data[$index[$tag->view]]['tags'][] = $tag->tag;
+                }
+            }
+            if ($collections) {
+                foreach ($collections as $c) {
+                    $data[$index[$c->view]]['collection'] = $c;
                 }
             }
         }
@@ -2700,7 +2743,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false) {
+    public static function set_nav($group, $institution, $profile=false, $collection=null) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -2711,6 +2754,9 @@ class View {
         }
         else if ($profile) {
             define('MENUITEM', 'profile/editprofilepage');
+        }
+        else if ($collection) {
+            define('MENUITEM', 'myportfolio/collection');
         }
         else {
             define('MENUITEM', 'myportfolio/views');
@@ -2990,6 +3036,8 @@ class View {
 
         $mnettoken = get_cookie('mviewaccess:'.$this->id);
         $usertoken = get_cookie('viewaccess:'.$this->id);
+        $cid = $this->collection_id();
+        $ctoken = $cid ? get_cookie('caccess:'.$cid) : null;
 
         foreach ($access as $a) {
             if ($a->accesstype == 'public') {
@@ -2997,7 +3045,8 @@ class View {
                     continue;
                 }
             }
-            else if ($a->token && $a->token != $mnettoken && ($a->token != $usertoken || !$publicviews)) {
+            else if ($a->token && $a->token != $mnettoken
+                     && (!$publicviews || ($a->token != $usertoken && $a->token != $ctoken))) {
                 continue;
             }
             else if (!$user->is_logged_in()) {

@@ -30,6 +30,7 @@ defined('INTERNAL') || die();
 $string['allmydata'] = 'All my data';
 $string['chooseanexportformat'] = 'Choose an export format';
 $string['clicktopreview'] = 'Click to preview';
+$string['collectionstoexport'] = 'Collections to export';
 $string['creatingzipfile'] = 'Creating zipfile';
 $string['Done'] = 'Done';
 $string['Export']     = 'Export';
@@ -45,6 +46,7 @@ $string['exportpagedescription'] = 'This tool exports all of your portfolio info
 $string['exportyourportfolio'] = 'Export Your Portfolio';
 $string['generateexport'] = 'Generate export';
 $string['noexportpluginsenabled'] = 'No export plugins have been enabled by the administrator, so you are unable to use this feature';
+$string['justsomecollections'] = 'Just some of my Collections';
 $string['justsomeviews'] = 'Just some of my Views';
 $string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
 $string['reverseselection'] = 'Reverse selection';
@@ -57,6 +59,7 @@ $string['viewstoexport'] = 'Views to export';
 $string['whatdoyouwanttoexport'] = 'What do you want to export?';
 $string['writingfiles'] = 'Writing files';
 $string['youarehere'] = 'You are here';
+$string['youmustselectatleastonecollectiontoexport'] = 'You must select at least one collection to export';
 $string['youmustselectatleastoneviewtoexport'] = 'You must select at least one View to export';
 $string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature';
 
