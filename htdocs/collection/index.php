@@ -42,6 +42,13 @@ $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 5);
 
 $data = Collection::get_mycollections_data($offset, $limit);
+foreach ($data->data as $value) {
+    $collection = new Collection($value->id);
+    $views = $collection->get('views');
+    if (!empty($views)) {
+        $value->views = $views['views'];
+    }
+}
 
 $pagination = build_pagination(array(
     'id' => 'collectionslist_pagination',
