@@ -2092,7 +2092,7 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    if ($oldversion < 2010080400) {
+    if ($oldversion < 2010081000) {
 
         // new table collection
         $table = new XMLDBTable('collection');
@@ -2102,6 +2102,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
         $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('navigation', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('owner'), 'usr', array('id'));
         create_table($table);
@@ -2110,24 +2111,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('collection_view');
         $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
         $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
-        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view','collection'));
+        $table->addFieldInfo('displayorder', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view'));
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
         $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
         create_table($table);
 
-    }
-
-    if ($oldversion < 2010080401) {
-
-        // new field displayorder on collection_view
-        $table = new XMLDBTable('collection_view');
-        $field = new XMLDBField('displayorder');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_NOTNULL);
-        add_field($table, $field);
-
-    }
-
-    if ($oldversion < 2010080402) {
         // Drop unique constraint on token column of view_access
         $table = new XMLDBTable('view_access');
         $index = new XMLDBIndex('tokenuk');
@@ -2137,13 +2126,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('token'));
         add_index($table, $index);
 
-    }
-
-    if ($oldversion < 2010080500) {
-        $table = new XMLDBTable('collection');
-        $field = new XMLDBField('navigation');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
-        add_field($table, $field);
     }
 
     return $status;
