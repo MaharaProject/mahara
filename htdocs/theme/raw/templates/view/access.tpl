@@ -9,10 +9,6 @@
   </strong>
 </div>
 {/if}
-{if $pagedescription}
-  <p>{$pagedescription}</p>
-{elseif $pagedescriptionhtml}
-  {$pagedescriptionhtml|safe}
-{/if}
+{$pagedescriptionhtml|safe}
 {$form|safe}
 {include file="footer.tpl"}

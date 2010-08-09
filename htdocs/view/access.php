@@ -120,7 +120,7 @@ $form = array(
         'template' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcopying', 'view'),
-            'description'  => get_string('templatedescription', 'view'),
+            'description'  => $collection ? get_string('templatedescriptionplural', 'view') : get_string('templatedescription', 'view'),
             'defaultvalue' => $view->get('template'),
         ),
     )
@@ -503,12 +503,13 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('pagedescriptionhtml', get_string('editaccesspagedescription2', 'view'));
 if ($collection) {
     $views = $collection->views();
     if ($views['count'] > 1) {
         $smarty->assign('views', $views);
     }
 }
+$thing = $collection ? get_string('Collection', 'collection') : get_string('View', 'view');
+$smarty->assign('pagedescriptionhtml', get_string('editaccessdescription', 'view', $thing, $thing));
 $smarty->assign('form', $form);
 $smarty->display('view/access.tpl');

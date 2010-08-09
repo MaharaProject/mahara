@@ -2,6 +2,7 @@
     <div class="rbuttons">
         <a class="btn btn-add" href="{$WWWROOT}collection/edit.php?new=1">{str section=collection tag=newcollection}</a>
     </div>
+<p>{str tag=collectiondescription section=collection}</p>
 {if $collections}
     <table id="myviews" class="fullwidth listing">
         <tbody>
