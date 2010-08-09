@@ -42,6 +42,8 @@ class PluginImportLeap extends PluginImport {
     private $coreloadmapping = array();
     private $artefactids = array();
     private $viewids = array();
+    private $collectionids = array();
+    private $collectionviewentries = array();
     protected $filename;
 
     protected $persondataid = null;
@@ -67,6 +69,7 @@ class PluginImportLeap extends PluginImport {
     const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
 
     const STRATEGY_IMPORT_AS_VIEW = 1;
+    const STRATEGY_IMPORT_AS_COLLECTION = 2;
 
     public static function validate_transported_data(ImporterTransport $transport) {
         $importdata = $transport->files_info();
@@ -445,6 +448,22 @@ class PluginImportLeap extends PluginImport {
             $loadedentries[] = $entryid;
         }
 
+        // Put views into collections
+        foreach ($this->collectionviewentries as $cid => $entryids) {
+            $i = 0;
+            foreach ($entryids as $entryid) {
+                if ($viewid = self::get_viewid_imported_by_entryid($entryid)) {
+                    $record = (object) array(
+                        'collection' => $cid,
+                        'view' => $viewid,
+                        'displayorder' => $i,
+                    );
+                    insert_record('collection_view', $record);
+                    $i++;
+                }
+            }
+        }
+
         // Allow each plugin to load relationships to views if they need to
         foreach ($loadedentries as $entryid) {
             if (isset($this->loadmapping[$entryid])) {
@@ -553,13 +572,21 @@ class PluginImportLeap extends PluginImport {
      * @param SimpleXMLElement $entry
      */
     public function get_import_strategies_for_entry(SimpleXMLElement $entry) {
-        if (self::is_rdf_type($entry, $this, 'selection')
-            && self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
-            return array(array(
-                'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
-                'score'    => 100,
-                'other_required_entries' => array(),
-            ));
+        if (self::is_rdf_type($entry, $this, 'selection')) {
+            if (self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
+                return array(array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
+                    'score'    => 100,
+                    'other_required_entries' => array(),
+                ));
+            }
+            if (self::is_correct_category_scheme($entry, $this, 'selection_type', 'Website')) {
+                return array(array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_COLLECTION,
+                    'score'    => 100,
+                    'other_required_entries' => array(),
+                ));
+            }
         }
         return array();
     }
@@ -609,6 +636,34 @@ class PluginImportLeap extends PluginImport {
                 $view->addblockinstance($bi);
                 $this->viewids[(string)$entry->id] = $view->get('id');
             }
+            break;
+        case self::STRATEGY_IMPORT_AS_COLLECTION:
+            require_once('collection.php');
+
+            $collectiondata = array(
+                'name'        => (string)$entry->title,
+                'description' => (string)$entry->summary,
+                'owner'       => $this->get('usr'),
+            );
+            if ($published = strtotime((string)$entry->published)) {
+                $collectiondata['ctime'] = $published;
+            }
+            if ($updated = strtotime((string)$entry->updated)) {
+                $collectiondata['mtime'] = $updated;
+            }
+
+            $collection = new Collection(0, $collectiondata);
+            $collection->commit();
+            $this->collectionids[(string)$entry->id] = $collection->get('id');
+
+            // Remember entry ids that form part of this entry, and use them later
+            // to put views into collections.
+            foreach ($entry->link as $link) {
+                if ($this->curie_equals($link['rel'], '', 'has_part') && isset($link['href'])) {
+                    $this->collectionviewentries[$collection->get('id')][] = (string) $link['href'];
+                }
+            }
+
             break;
         default:
             throw new ImportException($this, 'TODO: get_string: unknown strategy chosen for importing entry');
