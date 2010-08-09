@@ -210,7 +210,7 @@ ul.artefactchooser-subtabs li.current a:hover {
 
 /* View Page footer menu */
 #view .viewfooter {
-	border-top: 1px solid #10171A;
+	border: 1px solid #10171A;
 }
 #view #feedbacktable {
 	border: 1px solid #10171A;

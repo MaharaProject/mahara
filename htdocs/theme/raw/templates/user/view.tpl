@@ -31,7 +31,7 @@
 {if $requestedlist}
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
 {/if}
-                            <div class="btn-add">{if $addform}{$addform|safe}{/if}</div>
+                            {if $addform}<div class="btn-add">{$addform|safe}</div>{/if}
                     	</div>
 {if $relationship == 'pending'}
                     	<div class="message">

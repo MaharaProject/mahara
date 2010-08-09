@@ -25,7 +25,7 @@
           {if !$.foreach.footermenu.first}| {/if}<a href="{$WWWROOT}{$item.url}">{$item.title}</a>
         {/foreach}
         </div>
-		<div id="performance-info">{mahara_performance_info}</div>
+		<!-- there is a div id="performance-info" wrapping this -->{mahara_performance_info}
 		<div id="version">{mahara_version}</div>
 		<div class="cb"></div>
     </div>

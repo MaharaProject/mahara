@@ -36,6 +36,11 @@
 	background: #ca0000;
 }
 
+.site-stats-table div {
+	background: none;
+	border-bottom: 1px dotted #BEE3F1;
+}
+
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table th {
 }
@@ -49,6 +54,8 @@
 #institutionusers, 
 #staffusers, 
 #adminusers {
+	background: none;
+	border: 1px solid #0C2839;
 }
 
 /* add user */

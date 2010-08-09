@@ -1,11 +1,11 @@
-<table id="home-info" class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
+
+{if $USER->is_logged_in()}
+                <div id="hideinfo"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>
+{/if}<table id="home-info" class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
     <tr>
         <td>
             <div class="home-info rel">
             <div class="home-info-inner">
-{if $USER->is_logged_in()}
-                <a id="hideinfo" title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a>
-{/if}
                 <div>
                     <h3>{str tag=createcollect}</h3>
                 </div>

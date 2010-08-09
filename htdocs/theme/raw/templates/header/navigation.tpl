@@ -1,16 +1,8 @@
-{if $RIGHTNAV}
-        <div id="right-nav">
-            <ul>{strip}
-{foreach from=$RIGHTNAV item=item}
-                <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}">{if $item.title}{$item.title}{/if}{if $item.icon}<img src="{$item.icon}" alt="{$item.alt}">{if isset($item.count)}<span class="navcount{if $item.countclass} {$item.countclass}{/if}">{$item.count}</span>{/if}</a></li>
-{/foreach}
-                <li><a href="{$WWWROOT}?logout" accesskey="l">{str tag="logout"}</a></li>
-            {/strip}</ul>
-        </div>
-{/if}
+
 
 {if $MAINNAV}
         <div id="main-nav">
+{if !$nosearch && $LOGGEDIN}        {user_search_form}{/if}
             <ul>{strip}
 {foreach from=$MAINNAV item=item}
                 <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a></li>
@@ -23,6 +15,7 @@
                 <li><a href="{$WWWROOT}admin/users/search.php" accesskey="a">{str tag="useradministration"}</a></li>
 {/if}
             {/strip}</ul>
+            
         </div>
 
         <div id="sub-nav">

@@ -194,12 +194,13 @@ input.error, select.error {
 /****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
-input.cancel,
 button,
 input.button,
 input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact {
+input#files_filebrowser_edit_artefact,
+#delete_all_notifications_submit,
+input.cancel {
 	background-color: #14436F;
 	border-color: #5388b9 #011e3a #011e3a #5388b9;
 	color: #FFF;
@@ -214,25 +215,27 @@ input#files_filebrowser_edit_artefact {
 }
 /** hover for buttons **/
 input.submit:hover,
-input.cancel:hover,
 button:hover,
 input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
+.rbuttons a.btn:hover,
+#delete_all_notifications_submit:hover,
+input.cancel:hover {
 	background: #155a9b;
 	text-decoration: none;
 }
 /** Depress for buttons **/
 input.submit:active,
-input.cancel:active,
 button:active,
 input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+.rbuttons a.btn:active,
+#delete_all_notifications_submit:active,
+input.cancel:active {
 	border-color: #011e3a #5388b9 #5388b9 #011e3a;
 	background: #155a9b;
 	color: #FFF;
@@ -251,11 +254,6 @@ a.btn-del,
 a#btn-delete {
     background: transparent url(../images/icon-delete.gif) no-repeat left center;
     color: #ca0000 !important;
-	padding-left: 12px;
-}
-#btn-request, 
-a.btn-add {
-	background: url(../images/icon-add.gif) no-repeat left center;
 	padding-left: 12px;
 }
 a.btn-msg, #btn-sendmessage {
@@ -370,17 +368,14 @@ input#myfriends_addfriend_add {
 }
 /* Search and language bar */
 #language-select, #usf {
-    padding: 45px 10px 0 0;
 }
 #usf_query_container input {
-	font-size: .9em;
-	padding: .25em;
     color: #333333;
 }
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  margin: 1.5em 1em 0 0;
+  margin: 1.5em 1em 1em 0;
   min-width: 20em;
 }
 #right-nav li {
@@ -745,11 +740,6 @@ div.sideblock #friendscontrol label {
 #editviewaccess {
 	padding-left: 12px;
     background: url(../images/icon-edit.gif) no-repeat left center;
-}
-#myviews .btn-del {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #ca0000 !important;
-	padding-left: 12px;
 }
 
 /* Copy a view */

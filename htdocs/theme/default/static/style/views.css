@@ -213,10 +213,24 @@ ul.artefactchooser-subtabs li.current a:hover {
 
 /* View Page footer menu */
 #view .viewfooter {
-  border-top: 0;
 }
 #view #feedbacktable {
 }
-#viewmenu a {
-    padding-left: 12px;
+
+/* views */
+#add_feedback_link {
+	background: url(../images/feedback.gif) no-repeat left center;
+	padding-left: 20px;
+}
+#objection_link {
+	background: url(../images/objectionable.gif) no-repeat left center;
+	padding-left: 20px;
+}
+#print_link {
+	background: url(../images/icon-print.gif) no-repeat left center;
+	padding-left: 20px;
+}
+#toggle_watchlist_link {
+	background: url(../images/watchlist.gif) no-repeat left center;
+	padding-left: 20px;
 }

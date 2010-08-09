@@ -1,8 +1,8 @@
 			</div>
-			<div id="footer-wrap">
-				<div id="performance-info">{mahara_performance_info}</div>
-			</div>
 		</div>
+	</div>
+	<div id="footer-wrap">
+		{mahara_performance_info}
 	</div>
     </body>
 </html>

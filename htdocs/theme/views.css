@@ -57,7 +57,7 @@
 #blocktype-list {
     min-height: 95px;
     padding: .5em .5em 1em .5em;
-    font-size: .8em;
+    font-size: .9167em;
 }
 #blocktype-list ul {
     list-style-type: none;
@@ -99,7 +99,7 @@ html>body #column-container {
 	* width: 100%;
 }
 #blocksinstruction {
-    padding: 0 1em .5em;
+    padding: .5em 1em;
     font-weight: bold;
 	margin-bottom: 1em;
 }
@@ -138,7 +138,7 @@ html>body #column-container {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9%;
+    padding: 0 0.9% 1em 0.9%;
 	position: relative;
 }
 * html .column {
@@ -187,7 +187,7 @@ html>body #column-container {
 }
 .column-content .add-button input {
 	border: none;
-	font-size: .85em;
+	font-size: .9167em;
 }
 
 #block-placeholder {
@@ -196,8 +196,8 @@ html>body #column-container {
 
 /**************** Blockinstance **********************/
 .blockinstance {
-    margin: 0 0 1em 0;
-    padding: 0 .5em 1em 0;
+    margin: 0 0 2em 0;
+    padding: 0;
     position: relative;
 }
 /* Configure blockinstance */
@@ -236,22 +236,20 @@ html>body #column-container {
 
 /* content */
 .blockinstance-content {
-	padding: .5em 0;
-    margin-top: .25em;
 }
 
 .main-column .blockinstance-header h4, 
 .blockinstance.configure h4 {
     margin: 0;
-	font-size: 1.4em;
+	font-size: 1.3333em;
 }
 .blockinstance-content h3 {
-	font-size: 1.2em !important;
+	font-size: 1.1667em !important;
 	margin-top: .5em !important;
 	margin-bottom: 0 !important;
 }
 .blockinstance-content h4 {
-	font-size: 1.1em !important;
+	font-size: 1em !important;
 	margin-bottom: 0 !important;
 }
 .blockinstance-content p:first-child {
@@ -265,7 +263,7 @@ html>body #column-container {
     padding: .5em;
 }
 .blockinstance-content .description {
-	font-size: .9em;
+	font-size: .9167em;
 }
 
 
@@ -288,7 +286,7 @@ html>body #column-container {
 /* External Feed */
 #blocktype_externalfeed_title {
 	font-weight: bold;
-	font-size: 1.1em;
+	font-size: 1.1667em;
 }
 #blocktype_externalfeed_entries ol,
 #blocktype_externalfeed_entries ul {
@@ -298,11 +296,11 @@ html>body #column-container {
 /* Inbox */
 .bt-inbox td.icon-container {
   vertical-align: top;
-  padding: 0;
+  padding: .25em 0;
   width: 15px;
 }
 .bt-inbox td.icon-container .icon {
-  height: 1.4em;
+  height: 1.7em;
   vertical-align: bottom;
   display: table-cell;
 }
@@ -331,7 +329,7 @@ ul.artefactchooser-tabs {
   font-weight: bold;
   list-style: none;
   line-height: 25px;
-  font-size: 12px;
+  font-size: 1em;
 }
 ul.artefactchooser-tabs li {
   display: inline;
@@ -359,7 +357,7 @@ ul.artefactchooser-tabs li.current a:hover {
 ul.artefactchooser-subtabs {
   margin: 2px !important;
   padding: 0 0 .2em 0 !important;
-  font-size: .9em;
+  font-size: .9167em;
   list-style: none;
 }
 ul.artefactchooser-subtabs li {
@@ -402,17 +400,14 @@ ul.artefactchooser-subtabs li.current a:hover {
     width: 100%;
 }
 .maharatable thead th {
-	padding-top: 0 !important;
 	font-size: 1em !important;
 	text-align: left !important;
 }
 .maharatable tbody th {
-	padding: .5em 0 0 0 !important;
-	font-size: 1.2em;
+	font-size: 1.1667em;
 	text-align: left !important;
 }
 .maharatable tbody td {
-	padding: .25em 0;
 }
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,
@@ -426,7 +421,7 @@ ul.artefactchooser-subtabs li.current a:hover {
 }
 #artefactchooser-body th label {
 	font-weight: normal;
-	font-size: .85em;
+	font-size: .9167em;
 }
 .maharatable td label {
 	font-weight: normal;
@@ -472,12 +467,12 @@ div.artefactchooser-splitter {
 	padding: .25em .5em !important;
 }
 .attachments td input.small {
-    font-size: .9em;
+    font-size: .9167em;
 }
 
 /* upload */
 .uploadform td {
-	font-size: .9em;
+	font-size: .9167em;
 }
 .uploadform th label {
 	font-weight: bold !important;
@@ -493,13 +488,13 @@ div.artefactchooser-splitter {
 	padding: .25em .5em;
 }
 .fileupload #filelist td input.small {
-	font-size: .9em;
+	font-size: .9167em;
 }
 .upload_browse #artefactchooser-body {
 	padding: 1em !important;
 }
 .upload_browse .uploadform td {
-	line-height: 1.2em;
+	line-height: 1.1667em;
 }
 .upload_browse #artefactchooser-body {
 	margin-bottom: .5em;
@@ -534,7 +529,7 @@ div.artefactchooser-splitter {
 	margin-bottom: 1em;
 }
 #viewmenu {
-	font-size: .9em;
+	font-size: .9167em;
 }
 #viewmenu a {
 	margin: 0 .5em;
@@ -543,7 +538,7 @@ div.artefactchooser-splitter {
 	padding: 0;
 }
 #feedbacktable .details {
-	font-size: .9em;
+	font-size: .9167em;
 }
 #feedbacktable .icon {
 	float: left;
@@ -569,7 +564,7 @@ div.artefactchooser-splitter {
 	margin: 0 0 1em 0;
 }
 #view .filedata-icon h4 {
-	font-size: .9em;
+	font-size: .9167em;
 	margin: 0;
 }
 #view .filedata-icon.fl {

@@ -28,7 +28,7 @@
     border-bottom: 1px solid #aaa;
 }
 #finished {
-    font-size: larger;
+    font-size: 1.6667em;
     font-weight: bold;
     margin-top: 1em;
     text-align: center;
@@ -40,11 +40,11 @@
 
 /* ADMIN HOME */
 #adminhome {
-	width: 75%;
+	width: 70%;
 	float: left;
 }
 * html #adminhome {
-	width: 72%;
+	width: 67%;
 }
 
 /* close site box */
@@ -53,7 +53,7 @@
 	background: #fbeceb;
     text-align: left;
 	padding: 1em 1.5em;
-	width: 20%;
+	width: 25%;
 	float: right;
 	margin: 0 0 1em 0;
 }
@@ -63,6 +63,7 @@
 #close_site_submit {
 	border-color: #f69595 #750000 #750000 #f69595 !important;
 	background: #ca0000 !important;
+	color: #FFF;
 }
 
 
@@ -70,15 +71,17 @@
 #register-site {
     text-align: left;
 	padding: 1em 1.5em;
-	margin: 0 0 1em 0;
+	margin: 0 1em 1em 0;
+	float: left;
+	width: 43%;
 }
 #register-site form fieldset.collapsed {
 	border: 0;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #register-site form fieldset.collapsible {
 	border: 0;
-	font-size: .9em;
+	font-size: .9167em;
 	margin: 0;
 	padding: 0;
 }
@@ -116,7 +119,7 @@
 	background: #fefefe;
 }
 #register-site fieldset legend a {
-	font-size: .85em;
+	font-size: .9167em;
 }
 #register_register_container th {
 	display: none;
@@ -135,6 +138,7 @@ input#register_register {
     background: #f6f6f6;
     border: 1px solid #ddd;
 	margin: 0 0 1em 0;
+	float: left;
 }
 #runupgrade h4 {
     margin: 0;
@@ -142,7 +146,7 @@ input#register_register {
 }
 #upgradestable {
     border: none;
-	font-size: .9em;
+	font-size: .9167em;
 	width: 100%;
 }
 #upgradestable th {
@@ -155,22 +159,44 @@ input#register_register {
 	background: #fefefe;
 }
 
-.site-stats {
-  margin: 1.5em 0 1em 0;
-  padding: 0 1em 0 0;
-  text-align: left;
-}
-.message.site-stats {
+#site-stats {
   margin: 0 0 1em 0;
   padding: 1em 1.5em;
+  text-align: left;
+  float: left;
+  width: 43%;
 }
-.site-stats p:first-child,
-.site-stats p:last-child,
-.site-stats p {
+#site-stats .icon-sitestats {
+	background: url(../images/icon-sitestats.png) no-repeat left;
+	padding-left: 18px;
+}
+#site-stats p:first-child,
+#site-stats p:last-child,
+#site-stats p {
   margin: .1em;
 }
 #site-stats-graph {
   margin: 0 .3em 1em;
+}
+.site-stats-left {
+	width: 30%;
+}
+.site-stats-right {
+	width: 67%;
+}
+
+.site-stats-table div {
+	padding: .25em .5em;
+	border-bottom: 1px solid #FFF;
+	background: #F8F8F8;
+}
+#site-stats .site-stats-table {
+	margin-top: .5em;
+}
+#site-stats .site-stats-table div {
+	border-bottom: 0;
+	background: none;
+	padding: 0;
 }
 .statistics-subpage-left-column {
   width: 40%;
@@ -181,7 +207,25 @@ input#register_register {
 
 .admin-home-column {
   width: 49%;
-  margin: 0 .1em;
+  margin: 1em .1em 0 .1em;
+}
+* html .admin-home-column {
+	width: 47%;
+}
+
+/* CONFIGURE SITE SITE OPTIONS */
+#siteoptions th label {
+	white-space: nowrap;
+}
+#siteoptions legend {
+	font-size: 1em;
+}
+#siteoptions th label {
+	font-weight: bold;
+	font-size: 1em;
+}
+#siteoptions_submit_container td {
+	padding-top: 1em;
 }
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
@@ -200,21 +244,21 @@ input#register_register {
 	line-height: 2em;
 }
 #menuitemlist table td .button {
-	font-size: .9em;
+	font-size: .9167em;
 }
 
 /* CONFIGURE SITE > NETWORKING */
 #networkingform_pubkey_container td {
-	line-height: .9em;
+	line-height: .9167em;
 }
 #networkingform fieldset table th label {
 	font-weight: bold;
 }
 
 
-/* MANAGE USERS > USER SEARCH */
+/* USERS > USER SEARCH */
 #initials {
-	font-size: 1.2em;
+	font-size: 1.1667em;
 	margin: 0 0 .5em 0;
 }
 #initials span {
@@ -231,7 +275,7 @@ input#register_register {
 }
 #users_search_btn {
 	line-height: 1.5em;
-	* line-height: .9em;
+	* line-height: .9167em;
 }
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
@@ -250,12 +294,12 @@ table.tablerenderer th.desc {
 }
 
 
-/* MANAGE USERS > EDIT USER */
+/* USERS > EDIT USER */
 #edituser_institution td {
 	padding: 0;
 }
 #edituser_institution td h4 {
-	font-size: 1.2em;
+	font-size: 1.1667em;
 }
 #edituser_institution th label {
 	font-size: 1em;
@@ -266,7 +310,7 @@ table.tablerenderer th.desc {
 }
 #profilepict {
 	padding: 1em;
-	font-size: .9em;
+	font-size: .9167em;
 	margin-right: 1em;
 	text-align: center;
 	border: 1px solid #ccc;
@@ -299,6 +343,7 @@ table.tablerenderer th.desc {
 #institution_suspend_submit {
 	border-color: #f69595 #750000 #750000 #f69595 !important;
 	background: #ca0000 !important;
+	color: #FFF !important;
 }
 
 /* delete user */
@@ -320,13 +365,13 @@ table.tablerenderer th.desc {
 
 
 
-/* MANAGE USERS > SUSPENDED USERS */
+/* USERS > SUSPENDED USERS */
 #suspendedlist {
 	margin: 1em 0;
 }
 
 
-/* MANAGE USERS > SITE ADMINS */
+/* USERS > SITE ADMINS */
 .userlistform table {
     width: 100%;
 }
@@ -343,22 +388,20 @@ table.tablerenderer th.desc {
 }
 
 
-/* MANAGE USERS > ADMIN NOTIFICATIONS */
+/* USERS > ADMIN NOTIFICATIONS */
 #notificationstable td {
 	vertical-align: middle;
 }
 
 
-/* MANAGE USERS > ADD USER */
+/* USERS > ADD USER */
 #adduser-t {
-    margin: 0 auto;
     min-width: 800px;
     max-width: 1000px;
-    width: 950px;
 }
 #adduser thead th {
     text-align: left;
-    font-size: 1.3em;
+    font-size: 1.333em;
     border-bottom: none !important;
 }
 #adduser td.step1 {
@@ -409,7 +452,7 @@ table.tablerenderer th.desc {
 	vertical-align: middle;
 }
 #adduser #adduser_submit {
-	font-size: 1.6em;
+	font-size: 1.6667em;
 	font-weight: bold;
 }
 #adduser #step3info {
@@ -422,11 +465,11 @@ table.tablerenderer th.desc {
 	color: #8d8d8d;
 }
 #adduser table table label {
-    font-size: .9em;
+    font-size: .9167em;
 }
 
 
-/* MANAGE USERS > ADD USERS BY CSV */
+/* USERS > ADD USERS BY CSV */
 ul.fieldslist li {
 	float: left;
 	width: 15%;
@@ -435,9 +478,35 @@ form#uploadcsv {
 	clear: both;
 }
 
+
+/* GROUPS */
+#adminstitutionslist td .btn-manage {
+	background: url(../images/icon-manage.gif) no-repeat left;
+	padding-left: 12px;
+}
+#adminstitutionslist td .btn-del {
+	background: url(../images/icon-delete.gif) no-repeat left;
+	padding-left: 10px;
+}
+#editmenus #menuitemlist table {
+	width: auto;
+}
+#groupadminsform table {
+	width: 97%;
+}
+
 /* MANAGE INSTITUTIONS > INSTITUTIONS */
 .admininstitutionbtns {
-	font-size: .9em;
+	font-size: .9167em;
+}
+.admininstitutionbtns .btn-edit,
+.admininstitutionbtns .btn-edit:hover,
+.admininstitutionbtns .btn-edit:active {
+	background: url(../images/icon-edit.gif) no-repeat left;
+	border: 0;
+	padding-left: 8px;
+	cursor: pointer;
+	color: #333;
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
@@ -452,20 +521,27 @@ form#uploadcsv {
 	display: inline;
 }
 #institution_maxuseraccounts_container th {
-	white-space: nowrap;
+	width: 220px;
 }
 #instanceList .authIcons a {
 	color: #ca0000;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #institution #lockedfieldshelp {
 	float: right;
 }
 #suspendinstitution {
-	margin-top: 1em;
+	margin-top: 2em;
 	border: 1px solid #e98a88;
 	background: #fbeceb;
 	padding: 1em 1em 1em 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 220px;
+}
+* html #suspendinstitution {
+	right: 2em;
 }
 #suspendinstitution h3#suspend {
 	color: #ca0000;
@@ -540,10 +616,10 @@ form#uploadcsv {
 #adminplugin ul.adminpluginstypes ul ul li {
 	float: none;
 	list-style: none;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #adminplugin ul.adminpluginstypes ul ul ul li {
 	list-style: disc;
 	margin: 0 0 0 1.5em;
-	line-height: 1.4em;
+	line-height: 1.333em;
 }

@@ -27,8 +27,8 @@
 	font-weight: bold !important;
 }
 .uploadform td {
-	font-size: .9em;
-	line-height: 1.4em;
+	font-size: .9167em;
+	line-height: 1.3333em;
 }
 .fileupload td#files_filebrowser_upload_messages,
 .fileupload td#editpost_filebrowser_upload_messages {
@@ -39,18 +39,18 @@
 .foldernav {
     font-weight: bold;
     margin: 1em 0 0 0;
-    padding: 0 0 0 1.4em;
-    font-size: 1.2em;
-	line-height: 1em;
-    height: 1.6em;
-    background: url(../images/foldernav_small.png) no-repeat left top;
+    padding: 0 0 0 1.6667em;
+    font-size: 1.3333em;
+	line-height: 1.6667em;
+    height: 1.6667em;
+    background: url(../images/foldernav_small.png) no-repeat left;
 }
 form#files .foldernav {
-    padding: 0 0 0 1.6em;
-    font-size: 1.4em;
-	line-height: 1.6em;
-    height: 1.7em;
-    background: url(../images/foldernav.png) no-repeat left 3px;
+    padding: 0 0 0 1.6667em;
+    font-size: 1.3333em;
+	line-height: 1.6667em;
+    height: 1.6667em;
+    background: url(../images/foldernav.png) no-repeat left;
 }
 
 /* File list */
@@ -62,7 +62,24 @@ form#files .foldernav {
 	border-bottom: 1px solid #CCCCCC;
 }
 .filelist td.right input {
-	font-size: .9em;
+	font-size: .9167em;
+}
+.filelist td.right input.btn-edit {
+	font-size: .9167em;
+	background: transparent url(../images/icon-edit.gif) no-repeat left center;
+	border: 0;
+	padding-left: 8px;
+	cursor: pointer;
+	color: #333;
+}
+.filelist td.right input.btn-del {
+	font-size: .9167em;
+	background: transparent url(../images/icon-delete.gif) no-repeat left center;
+	border: 0;
+	padding-left: 8px;
+	* padding-left: 10px;
+	cursor: pointer;
+	color: #333;
 }
 /* parent folder row */
 tr.parentfolder td {
@@ -97,7 +114,8 @@ tr.folderhover a {
 	border: 2px solid #eee;
 }
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
-	font-size: 1.2em;
+	font-size: 1.1667em;
+	padding: .5em 0.25em 0 .25em;
 }
 #files_filebrowser_edit_row table th {
 	text-align: left;
@@ -133,7 +151,7 @@ tr.folderhover a {
 
 .filelist table table.editpermissions th,
 .filelist table table.editpermissions td {
-	font-size: .9em;
+	font-size: .9167em;
 }
 
 .filelist .disabled {

@@ -127,6 +127,10 @@ h6 {
 tr.folder td {
     background-color: #10171A;
 }
+tr.highlight td {
+  background-color: #000 !important;
+  border-bottom: none;
+}
 
 /**************************** Pagination ****************************/
 div.pagination a {
@@ -201,12 +205,13 @@ input.error, select.error {
 /****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
-input.cancel,
 button,
 input.button,
 input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact {
+input#files_filebrowser_edit_artefact,
+#delete_all_notifications_submit,
+input.cancel {
     background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 	border-color: #386d82 #1A292F #1A292F #386d82 !important;
 	padding: 3px 10px;
@@ -234,26 +239,28 @@ input#files_filebrowser_edit_artefact {
 }
 /** hover for buttons **/
 input.submit:hover,
-input.cancel:hover,
 button:hover,
 input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
+.rbuttons a.btn:hover,
+#delete_all_notifications_submit:hover,
+input.cancel:hover {
 	color: #FFF;
     text-decoration:none;
     background-color: #1C3740;
 }
 /** Depress for buttons **/
 input.submit:active,
-input.cancel:active,
 button:active,
 input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+.rbuttons a.btn:active,
+#delete_all_notifications_submit:active,
+input.cancel:active {
     background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 	border-color: #1A292F !important;
 	padding: 3px 10px;
@@ -382,10 +389,17 @@ input#myfriends_addfriend_add {
 }
 #containerX #top-wrapper {
 	height: auto;
-	background: #080D0F;
+	background: #0C2839;
 }
 #loading-box {
     background-color: #000;
+}
+.viewheader .nav {
+  border-bottom: 1px dotted #1C3740;
+  color: #1C3740;
+}
+.viewheader .title {
+	color:#BEE3F1;
 }
 #site-logo {
     padding: 1em 0.75em 0em 0.75em;
@@ -393,9 +407,10 @@ input#myfriends_addfriend_add {
 #top-wrapper ul,
 #top-wrapper li {
 }
+#header-right {
+}
 /* Search and language bar */
 #language-select, #usf {
-    padding: 35px 6px 0 0;
 }
 #usf_query_container input {
     color: #333333;
@@ -405,7 +420,7 @@ input#myfriends_addfriend_add {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  margin: 2em 1em 0 0;
+  margin: 1em 1em 1em 0;
   min-width: 20em;
 }
 #right-nav li {
@@ -642,6 +657,10 @@ div.sideblock ul ul {
 }
 
 /* Side Profile */
+#user-profileicon {
+	padding-top: 3.5em;
+	padding-right: .5em;
+}
 #sb-profile ul a,
 #sb-profile ul a:link,
 #sb-profile ul a:visited,
@@ -722,13 +741,15 @@ div.sideblock #friendscontrol label {
 
 /******************** FOOTER ****************************/
 #footer-wrap {
-    background-color: transparent;
     padding: 10px 5px 15px;
     border: 0;
-	height:30px;
+}
+
+#micro #footer-wrap {
+	background:transparent;
 }
 #footernav {
-  color: #FFFFFF;
+  color: #888;
 } 
 #footernav a,
 #footernav a:link,
@@ -744,6 +765,9 @@ div.sideblock #friendscontrol label {
     margin-top: 0;
 }
 #performance-info {
+    color: #888;
+}
+#performance-info span {
     color: #fff;
 }
 #version {
@@ -800,11 +824,6 @@ div.sideblock #friendscontrol label {
 	padding-left: 12px;
     background: url(../images/icon-edit.gif) no-repeat left center;
 }
-#myviews .btn-del {
-	font-size: 11px;
-    font-weight: bold;
-    color:#ca0000;
-}
 
 /* Copy a view */
 #viewpreview {
@@ -837,6 +856,9 @@ div.sideblock #friendscontrol label {
 }
 #accesslistitems .ai-container table th {
 	color: #BEE3F1;
+}
+#potentialpresetitems div {
+	border-bottom: 0;
 }
 
 
@@ -892,6 +914,9 @@ ul.groupuserstatus li,
 #friendslist ul.viewlist li.label {
 }
 #friendslist ul.viewlist li {
+}
+#friendslist td {
+	border-bottom: 0;
 }
 
 /* Group: about */

@@ -197,20 +197,21 @@ input.error, select.error {
 /****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
-input.cancel,
 button,
 input.button,
 input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact {
+input#files_filebrowser_edit_artefact,
+#delete_all_notifications_submit,
+input.cancel {
 	background-color: #c66c14;
-	border-color: #f87e3b #8E1901 #8E1901 #f87e3b !important;
+	border-color: #f87e3b #8E1901 #8E1901 #f87e3b;
 	border-style: solid;
 	border-width: 1px;
 	padding: 3px 10px;
 	font-size: 11px;
     font-weight:normal;
-	color: #FFF !important;
+	color: #FFF;
 	margin-left: 5px;
 }
 
@@ -220,38 +221,40 @@ input#files_filebrowser_edit_artefact {
 #loginas .btn-loginas {
 	background-color: #c66c14;
 	padding: 3px 10px;
-	border-color: #f87e3b #8E1901 #8E1901 #f87e3b !important;
+	border-color: #f87e3b #8E1901 #8E1901 #f87e3b;
 	border-style: solid;
 	border-width: 1px;
 	font-size: 11px;
     font-weight:normal;
-	color: #FFF !important;
+	color: #FFF;
 	margin-left: 5px;
 }
 /** hover for buttons **/
 input.submit:hover,
-input.cancel:hover,
 button:hover,
 input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
+.rbuttons a.btn:hover,
+#delete_all_notifications_submit:hover,
+input.cancel:hover {
 	background-color: #c66c14;
 	color: #FFF;
     text-decoration:none;
 }
 /** Depress for buttons **/
 input.submit:active,
-input.cancel:active,
 button:active,
 input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+.rbuttons a.btn:active,
+#delete_all_notifications_submit:active,
+input.cancel:active {
 	background-color: #c66c14;
-	border-color: #8E1901 #f87e3b #f87e3b #8E1901 !important;
+	border-color: #8E1901 #f87e3b #f87e3b #8E1901;
 }
 
 /** Buttons with icons **/
@@ -267,11 +270,6 @@ a.btn-del,
 a#btn-delete {
     background: transparent url(../images/icon-delete.gif) no-repeat left center;
     color: #ca0000 !important;
-	padding-left: 12px;
-}
-#btn-request, 
-a.btn-add {
-	background: url(../images/icon-add.gif) no-repeat left center;
 	padding-left: 12px;
 }
 a.btn-msg, #btn-sendmessage {
@@ -383,8 +381,11 @@ input#myfriends_addfriend_add {
 #top-wrapper li {
 }
 /* Search and language bar */
-#language-select, #usf {
-    padding: 48px 6px 0 0;
+#language-select {
+	margin: 0;
+}
+#usf {
+	margin: 0;
 }
 #usf_query_container input {
     color: #8E1901;
@@ -392,7 +393,7 @@ input#myfriends_addfriend_add {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  margin: 1.1em 1em 0 0;
+  margin: 1.1em 0 1em 0;
   min-width: 20em;
 }
 #right-nav li {
@@ -617,6 +618,9 @@ div.sideblock ul ul li {
 }
 
 /* Side Profile */
+#user-profileicon {
+	padding-top: 3.5em;
+}
 #sb-profile ul a,
 #sb-profile ul a:link,
 #sb-profile ul a:visited,
@@ -714,7 +718,10 @@ div.sideblock #friendscontrol label {
 #powered-by {
 }
 #performance-info {
-    color: #fff;
+    color: #9A4C01;
+}
+#performance-info span {
+    color: #9A4C01;
 }
 #version {
   color: #8E1901;

@@ -46,11 +46,14 @@
 	border: 1px solid #eee;
 }
 #viewforum h3 {
-	font-size: 1.4em;
+	font-size: 1.3333em;
 }
 #viewforum .rbuttons {
 	right: 1em;
 	top: 1em;
+}
+* html #viewforum .rbuttons {
+	right: 3em;
 }
 #forumtopicstable {
 	border-bottom: 1px solid #ccc;
@@ -89,7 +92,7 @@
 }
 /* admin & moderator */
 .forummods {
-	font-size: .9em;
+	font-size: .9167em;
 	padding: .5em;
 	margin: .5em 0;
 }
@@ -120,7 +123,7 @@
 	width: 160px;
 	border-right: 1px solid #eee;
 	text-align: center;
-    font-size: .9em;
+    font-size: .9167em;
 }
 .forumpostleft .posttime {
 	color: #888;
@@ -138,7 +141,7 @@
     margin: 0;
 }
 .postbtns {
-	font-size: .9em;
+	font-size: .9167em;
 	text-align: right;
 	color: #d1d1d1;
 }
@@ -151,4 +154,20 @@
 }
 .postreply {
 	padding: 0 0 0 1em;
+}
+
+
+#forumslist .btn-edit,
+#forumtopicstable .btn-edit {
+	background: url(../images/icon-edit.gif) no-repeat left;
+	border: 0;
+	cursor: pointer;
+	padding-left: 12px;
+}
+#forumslist .btn-del,
+#forumtopicstable .btn-del {
+	background: url(../images/icon-delete.gif) no-repeat left;
+	border: 0;
+	cursor: pointer;
+	padding-left: 12px;
 }

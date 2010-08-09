@@ -7,7 +7,7 @@
  
  /* Blog list */
 #bloglist .right a {
-	font-size: .9em;
+	font-size: .9167em;
 	margin-left: 1em;
 }
 #bloglist td .addicon {
@@ -20,20 +20,40 @@
 /* Post list */
 #postlist th {
 	border-bottom: 1px dotted #d1d1d1;
+	font-size: 1em;
+	padding: .5em 0 .25em 0;
+	vertical-align: bottom;
+}
+#postlist th.posttitle {
+	font-size: 1.8em;
 }
 #postlist th.controls {
     font-weight: normal;
+	text-align: right;
 }
-#postlist input.delete,
+#postlist input.delete {
+	font-size: .9167em;
+	background: url(../images/icon-delete.gif) no-repeat left center;
+	border: 0;
+	padding-left: 8px;
+	* padding-left: 6px;
+	cursor: pointer;
+	color: #333;
+}
 #postlist input.edit {
-	font-size: .9em;
+	font-size: .9167em;
+	background: url(../images/icon-edit.gif) no-repeat left center;
+	border: 0;
+	padding-left: 8px;
+	cursor: pointer;
+	color: #333;
 }
 #postlist p {
 	margin: 0 0 1em 0;
 }
 #postlist td.postdetails {
 	padding-bottom: 2em;
-	font-size: .9em;
+	font-size: .9167em;
 	color: #888;
 }
 
@@ -44,6 +64,10 @@
 	border: 0;
 }
 .attachments .unselect {
-	font-size: .9em;
+	font-size: .9167em;
 }
-
+#postlist td h1,
+#postlist td h2 {
+	margin: 1em 0 0.5em 0;
+	font-size: 1.5em;
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
-<body>
+<body id="micro">
 {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
 {if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
 <div id="containerX">
@@ -11,9 +11,9 @@
         <div class="links rbuttons">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a {if $item.type}class="btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a>&nbsp;
+              <a {if $item.type}class="btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
             {/foreach}
-          {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a>&nbsp;
+          {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a> 
           {/if}
         </div>
         <div class="lbuttons">
@@ -21,16 +21,16 @@
         </div>
 {if $LOGGEDIN}
         <div class="nav">
-          <a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a>&nbsp;:
+          <a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a> : 
           {foreach from=$MAINNAV item=item}
             {if $item.path}
-              <a href="{if $item.url=='account/' && get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url}">{$item.title}</a>&nbsp;
+              <a href="{if $item.url=='account/' && get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url}">{$item.title}</a> | 
             {/if}
           {/foreach}
           {if $USER->get('admin')}
-            <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a>&nbsp;
+            <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a> |
           {elseif $USER->is_institutional_admin()}
-            <a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a>&nbsp;
+            <a href="{$WWWROOT}admin/users/search.php">{str tag="useradministration"}</a> |
           {/if}
 
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}

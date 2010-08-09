@@ -23,7 +23,8 @@
 				</thead>
                 <tfoot>
 				  	<tr>
-						<td colspan="5" class="right">
+						<td colspan="2">{$deleteall|safe}</td>
+						<td colspan="3" class="right">
 						  <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
 						  <input class="submit btn-delete" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
 						</td>
@@ -36,6 +37,5 @@
             {$activitylist.pagination|safe}
 			</form>
 			</div>
-            <div class="left">{$deleteall|safe}</div>
 			
 {include file="footer.tpl"}

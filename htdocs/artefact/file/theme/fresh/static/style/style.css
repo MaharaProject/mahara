@@ -6,6 +6,8 @@
  */
 /* File upload box */
 .fileupload {
+	background: #1C3740;
+	border: 0;
 }
 /* folder nav */
 .foldernav {

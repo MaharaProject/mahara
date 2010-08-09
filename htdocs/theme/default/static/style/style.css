@@ -22,7 +22,7 @@
 
 /* General rules */
 body {
-    background: url(../images/background.gif) repeat;
+    background: #ccdce7 url(../images/background.gif) repeat-x top left;
 	color: #474220;
 }
 acronym {
@@ -164,35 +164,23 @@ input.error, select.error {
 /****************************** Buttons ****************************/
 /** input buttons **/
 input.submit,
-input.cancel,
 button,
 input.button,
 input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact {
+input#files_filebrowser_edit_artefact,
+#delete_all_notifications_submit,
+input.cancel {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
 	background: #6e8e00;
 	color: #FFF;
 }
 #btn-logout,
 #buttons_delete,
-input.cancel,
-input.btn-del {
+#settings_delete {
     border-color: #eda58c #611700 #611700 #eda58c !important;
     background: #8f2100 !important;
-}
-#btn-logout:hover,
-#buttons_delete:hover,
-input.cancel:hover,
-input.btn-del:hover {
-    background: #A82700 !important;
-}
-#btn-logout:active,
-#buttons_delete:active,
-input.cancel:active,
-input.btn-del:active {
-    border-color: #611700 #eda58c #eda58c #611700 !important;
-    background: #A82700 !important;
+	coloR: #FFF !important;
 }
 input.quiet {
   background: none !important;
@@ -213,30 +201,52 @@ input.quiet.btn-del {
 }
 /** hover for buttons **/
 input.submit:hover,
-input.cancel:hover,
 button:hover,
 input.button:hover,
 input.buttondk:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
+.rbuttons a.btn:hover,
+#delete_all_notifications_submit:hover {
 	background: #84aa00;
 	text-decoration: none;
 }
+#btn-logout:hover,
+#buttons_delete:hover,
+#settings_delete:hover {
+    background: #A82700 !important;
+}
+input.cancel:hover {
+    background: #e3e3e3 !important;
+}
 /** Depress for buttons **/
 input.submit:active,
-input.cancel:active,
 button:active,
 input.button:active,
 input.buttondk:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+.rbuttons a.btn:active,
+#delete_all_notifications_submit:active {
 	border-color: #496000 #d5ed8a #d5ed8a #496000;
 	background: #84aa00;
 	color: #FFF;
 }
+#btn-logout:active,
+#buttons_delete:active,
+#settings_delete:active {
+    border-color: #611700 #eda58c #eda58c #611700 !important;
+    background: #A82700 !important;
+}
+input.cancel:active {
+	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3 !important;
+	background: #e3e3e3 !important;
+}
 
+#delete_all_notifications_submit {
+	background: #6e8e00 !important;
+	color: #FFF !important;
+}
 
 /** Buttons with icons **/
 a.btn-req {
@@ -253,16 +263,11 @@ a#btn-delete {
     color: #ca0000 !important;
 	padding-left: 12px;
 }
-#btn-request, 
-a.btn-add {
-	background: url(../images/icon-add.gif) no-repeat left center;
-	padding-left: 12px;
-}
 a.btn-msg, #btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat left center;
 	padding-left: 12px;
 }
-a.btn-edit {
+.rbuttons a.btn-edit {
 	background: url(../images/icon-edit.gif) no-repeat left center;
 	padding-left: 12px;
 }
@@ -270,19 +275,10 @@ a.btn-edit {
 	background: url(../images/icon-pending.gif) no-repeat left center;
 	padding-left: 12px;
 }
-.btn-reply, #add_feedback_link {
+.btn-reply {
 	background: url(../images/icon-reply.gif) no-repeat left center;
 	padding-left: 12px;
-}
-#objection_link {
-	background: url(../images/icon-flag.gif) no-repeat left center;
-}
-#print_link {
-	background: url(../images/icon-print.gif) no-repeat left center;
-}
-#toggle_watchlist_link {
-	background: url(../images/icon-watch.gif) no-repeat left center;
-}
+} 
 .btn-settings {
 	background: url(../images/icon-settings.gif) no-repeat left center;
 	padding-left: 12px;
@@ -299,12 +295,23 @@ input#myfriends_addfriend_add {
 	color: #7f9d16;
 	border: 0;
 }
-.lbuttons a {
-	padding-left: 12px !important;
-}
 
 /* Search buttons */
-#usf_submit,
+#usf_submit {
+	background: #6e8e00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
+	border-color: #6e8e00 #496000 #496000 #6e8e00;
+	color: #6e8e00;
+	text-indent: -999px;
+	font-size: 1%;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 23px;
+	width: 23px;
+	* height: 24px;
+}
+* html #usf_submit {
+	height: 22px;
+}
 #dosearch,
 #selfsearch button ,
 .query-button,
@@ -313,20 +320,45 @@ input#myfriends_addfriend_add {
 #search_submit,
 #search_search,
 #selfsearch button,
-#users_search_btn {
-	background: url(../images/btn_search_off.gif) no-repeat !important;
-	border: 0;
-	width: 25px;
-	height: 24px;
+#users_search_btn,
+#admins_search_btn {
+	background: #6e8e00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
+	border-color: #6e8e00 #496000 #496000 #6e8e00;
+	color: #6e8e00;
 	text-indent: -999px;
 	font-size: 1%;
-	color: #94ba18;
 	cursor: pointer;
-	padding: 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	vertical-align: bottom;
+	height: 25px;
+	width: 24px;
 }
-
+#usf_submit:hover,
+#dosearch:hover,
+#selfsearch button:hover,
+.query-button:hover,
+#query-button:hover,
+#moderator_search_btn:hover,
+#search_submit:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#users_search_btn:hover,
+#admins_search_btn:hover { 
+	background: #84aa00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
+}
+#usf_submit:active,
+#dosearch:active,
+#selfsearch button:active,
+.query-button:active,
+#query-button:active,
+#moderator_search_btn:active,
+#search_submit:active,
+#search_search:active,
+#selfsearch button:active,
+#users_search_btn:active,
+#admins_search_btn:active { 
+	border-color: #496000 #d5ed8a #d5ed8a #496000;
+	background: #84aa00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
+}
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
@@ -354,26 +386,23 @@ input#myfriends_addfriend_add {
     text-align: right;
     display: inline;
 }
+#header-right {
+}
 /* Search and language bar */
 #language-select, #usf {
-	padding: 25px 1em 0 0;
+	font-size: .8333em !important;
 }
 #usf_query_container input {
-	font-size: .9em;
-	padding: .25em;
     color: #767676;
 	background-color: #ecf3d4;
 }
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  float: right;
-  text-align: right;
-  margin: 2.5em 0.5em 0 0;
-  min-width: 20em;
 }
 #right-nav li {
-  padding: 0 0.25em;
+}
+#right-nav li a {
 }
 
 #main-nav {
@@ -396,6 +425,7 @@ input#myfriends_addfriend_add {
 	display: block;
 	float: left;
 	padding: 0 10px 0 12px;
+	border-right: 1px solid #4C711D;
 }
 #main-nav li a:hover {
     color: #e4ffb4;
@@ -407,8 +437,8 @@ input#myfriends_addfriend_add {
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
-    color: #feef45;
-	background: url(../images/menu-over-bg.gif) no-repeat left;
+    color: #4C711D;
+	background: url(../images/menu-over-bg.gif) no-repeat left bottom;
 }
 #main-nav li.selected a:hover {
 }
@@ -476,9 +506,11 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active {
   color: #1E6297;
-  padding: 5px 12px 6px 10px;
+  padding: 5px 12px 4px 10px;
   text-decoration: none;
   background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+  border-right: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
 }
 ul.in-page-tabs li a:hover {
   color: #7E7327;
@@ -487,8 +519,9 @@ ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active {
-  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+  background: transparent url(../images/tabs-over-bg.gif) no-repeat right bottom;
   color: #000;
+  border-bottom: 1px solid #FFF;
 }
 ul.in-page-tabs li a.current-tab:hover {
 }
@@ -638,12 +671,16 @@ div.sideblock #friendscontrol label {
 
 /******************** FOOTER ****************************/
 #footer-wrap {
-    background-color: #939393;
+    background: #939393;
 	border: 0;
-    color: #c9c9c9;
+    color: #bababa;
+}
+#micro #footer-wrap {
+	background: #939393;
+    color: #bababa;
 }
 #footernav {
-    color: #c9c9c9;
+    color: #bababa;
 }
 #footernav a,
 #footernav a:link,
@@ -657,6 +694,10 @@ div.sideblock #friendscontrol label {
 #powered-by {
 }
 #performance-info {
+	color: #bababa;
+}
+#performance-info span {
+	color: #c9c9c9;
 }
 #version {
 	color: #c9c9c9;
@@ -830,4 +871,12 @@ ul.groupuserstatus li,
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
+}
+.home-info-table {
+    margin: 2em 0 2.5em;
+}
+#hideinfo {
+}
+.inbox-message {
+	background: #FAFBF7;
 }

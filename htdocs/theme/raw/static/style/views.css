@@ -33,6 +33,7 @@
 #layout-link {
 	background: url(../images/icon-change.gif) no-repeat left center;
 	padding-left: 1.5em;
+	padding-top: 1px;
 	font-weight: bold;
 }
 #layout-link.disabled {

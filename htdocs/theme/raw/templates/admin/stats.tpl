@@ -1,33 +1,30 @@
 {if $sitedata.weekly}
-  <div class="fr">
-    <div id="site-stats-graph" class="fr">
+    <div id="site-stats-graph">
       <img src="{$sitedata.weekly}" alt="" />
     </div>
-  </div>
 {/if}
-  <div class="fl">
-    <p><strong>{str tag=siteinstalled section=admin}:</strong> {$sitedata.installdate}</p>
+  <div class="site-stats-table">
+    <div><strong>{str tag=siteinstalled section=admin}:</strong> {$sitedata.installdate}</div>
     {if $sitedata.users}
-    <p><strong>{str tag=users}:</strong> {$sitedata.users}{if $sitedata.rank.users} ({str tag=Rank section=admin}: {$sitedata.rank.users}*){/if}</p>
-    <p>&nbsp;{str tag=activeusers section=admin}: {$sitedata.usersloggedin}</p>
+    <div><strong>{str tag=users}:</strong> {$sitedata.users}{if $sitedata.rank.users} ({str tag=Rank section=admin}: {$sitedata.rank.users}*){/if}<br />
+    {str tag=activeusers section=admin}: {$sitedata.usersloggedin}</div>
     {/if}
     {if $sitedata.groups}
-    <p><strong>{str tag=groups}:</strong> {$sitedata.groups}{if $sitedata.rank.groups} ({str tag=Rank section=admin}: {$sitedata.rank.groups}*){/if}</p>
-    <p>&nbsp;{$sitedata.strgroupmemberaverage}</p>
+    <div><strong>{str tag=groups}:</strong> {$sitedata.groups}{if $sitedata.rank.groups} ({str tag=Rank section=admin}: {$sitedata.rank.groups}*){/if}</br />
+    {$sitedata.strgroupmemberaverage}</div>
     {/if}
     {if $sitedata.views}
-    <p><strong>{str tag=views}:</strong> {$sitedata.views}{if $sitedata.rank.views} ({str tag=Rank section=admin}: {$sitedata.rank.views}*){/if}</p>
-    <p>&nbsp;{$sitedata.strviewsperuser}</p>
+    <div><strong>{str tag=views}:</strong> {$sitedata.views}{if $sitedata.rank.views} ({str tag=Rank section=admin}: {$sitedata.rank.views}*){/if}<br />
+    {$sitedata.strviewsperuser}</div>
     {/if}
     {if $sitedata.rank.users}
-    <p>{$sitedata.strrankingsupdated}</p>
+    <div>{$sitedata.strrankingsupdated}</div>
     {/if}
-    <p><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</p>
+    <div><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</div>
     {if $sitedata.diskusage}
-    <p><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</p>
+    <div><strong>{str tag=diskusage section=admin}:</strong> {$sitedata.diskusage|display_size}</div>
     {/if}
-    <p><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</p>
-    <p><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning section=admin}{/if}</p>
-    {if $sitedata.rank.users}<p class="s dull fr">* {str tag=registrationrankdescription section=admin}</p>{/if}
+    <div><strong>{str tag=maharaversion section=admin}:</strong> {$sitedata.release}{if $sitedata.strlatestversion} ({$sitedata.strlatestversion|clean_html|safe}){/if}</div>
+    <div><strong>{str tag=Cron section=admin}:</strong> {if $sitedata.cronrunning}{str tag=runningnormally section=admin}{else}{str tag=cronnotrunning section=admin}{/if}</div>
+    {if $sitedata.rank.users}<div class="s dull fr">* {str tag=registrationrankdescription section=admin}</div>{/if}
   </div>
-<div class="cb"></div>

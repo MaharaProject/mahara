@@ -6,29 +6,23 @@
  */
  
  /* Blog list */
-#bloglist .right a {
-	padding-left: 12px;
-}
 
 /* Post list */
 #postlist th {
-	border-bottom: 1px dotted #d1d1d1;
 }
 
 #postlist input.delete {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
     color: #ca0000;
-	padding-left: .8em;
-	border: 0;
 }
 
 #postlist input.edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
 	color: #4C711D;
-	padding-left: .8em;
-	border: 0;
 }
 #postlist td.postdetails {
-	color: #888;
 }
 
+/* attachment files */
+#postlist .attachments th {
+	background: #AABC8B;
+	color: #FFF;
+}

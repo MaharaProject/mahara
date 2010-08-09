@@ -1,7 +1,8 @@
 /* ADMIN HOME */
 /* Administration Home styles */
 #register-site,
-#runupgrade {
+#runupgrade,
+#site-stats {
     background-color: #ebf0f4;
     border: 1px solid #95a8b7;
 }
@@ -39,6 +40,7 @@
 	background: #ca0000 !important;
 }
 
+
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table th {
 	border-bottom: 1px solid #ccc;
@@ -75,4 +77,8 @@
 }
 #adduser #or {
 	color: #7c826c;
+}
+
+.admininstitutionbtns .btn-edit {
+	color: #6E8E00;
 }

@@ -1,13 +1,13 @@
 body {
 	font-family: Arial, Helvetica, sans-serif !important;
-	font-size: 12px !important;
+	font-size: 75% !important;
 	padding: 0 !important;
 	color: #333 !important;
 }
 td {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 1em !important;
-	padding: .5em !important;
+	padding: .25em !important;
 	color: #333 !important;
 }
 pre {
@@ -32,29 +32,29 @@ h2 {
     font-weight: bold !important;
     margin: 0 0 .5em 0 !important;
     padding: 0 !important;
-    font-size: 1.8em !important;
+    font-size: 1.8333em !important;
 }
 
 h3 {
     font-weight: bold !important;
     margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.4em !important;
+    font-size: 1.3333em !important;
 }
 h4 {
     font-weight: bold !important;
     margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.3em !important;
+    font-size: 1.1667em !important;
 }
 
 h5 {
     font-weight: bold !important;
     margin: .5em 0 !important;
-    font-size: 1.2em !important;
+    font-size: 1em !important;
 }
 h6 {
     font-weight: bold !important;
     margin: .5em 0 !important;
-    font-size: 1em !important;
+    font-size: .9167em !important;
 }
 
 ul {

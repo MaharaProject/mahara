@@ -44,9 +44,9 @@
 {/if}
 
 {if $sitedata}
-<div class="message site-stats">
-  <div class="fl"><h3>{$sitedata.name}: {str tag=siteinformation section=admin}</h3></div>
-  <div class="fr"><a href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin}</a></div>
+<div class="message" id="site-stats">
+  <div><h3>{$sitedata.name}: {str tag=siteinformation section=admin}</h3></div>
+  <div><a class="icon-sitestats" href="{$WWWROOT}admin/statistics.php">{str tag=viewfullsitestatistics section=admin}</a></div>
   <div class="cb"></div>
   {include file='admin/stats.tpl' full=0}
 </div>
