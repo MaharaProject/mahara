@@ -38,6 +38,7 @@ require_once(get_config('libroot') . 'group.php');
 
 $new = param_boolean('new');
 
+$collection = null;
 if ($collectionid = param_integer('collection', null)) {
     define('SECTION_PLUGINNAME', 'collection');
     $collection = new Collection($collectionid);
