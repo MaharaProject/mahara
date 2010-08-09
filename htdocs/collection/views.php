@@ -97,7 +97,7 @@ if ($available = Collection::available_views()) {
     }
     $elements['submit'] = array(
         'type' => 'submit',
-        'value' => get_string('addview','collection'),
+        'value' => get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 

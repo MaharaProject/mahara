@@ -34,7 +34,7 @@
 </table>
 {/if}
 <fieldset>
-<legend>{str tag=addviews section=collection}</legend>
+<legend>{str tag=addviewstocollection section=collection}</legend>
 {if $viewsform}
     {$viewsform|safe}
 {else}
