@@ -66,6 +66,26 @@ if ($view AND !empty($direction)) {
 
 $views = $collection->views();
 
+if ($views['count']) {
+    foreach ($views['views'] as &$v) {
+        $v->remove = pieform(array(
+            'name' => 'removeview_' . $v->view,
+            'successcallback' => 'removeview_submit',
+            'elements' => array(
+                'view' => array(
+                    'type' => 'hidden',
+                    'value' => $v->view,
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'confirm' => get_string('viewconfirmremove', 'collection'),
+                    'value' => get_string('remove'),
+                ),
+            ),
+        ));
+    }
+}
+
 $elements = array();
 $viewsform = null;
 if ($available = Collection::available_views()) {
@@ -165,6 +185,13 @@ function next_submit(Pieform $form, $values) {
             redirect('/collection/');
         }
     }
+}
+
+function removeview_submit(Pieform $form, $values) {
+    global $SESSION, $collection, $newurl;
+    $collection->remove_view((int)$values['view']);
+    $SESSION->add_ok_msg(get_string('viewremovedsuccessfully','collection'));
+    redirect('/collection/views.php?id='.$collection->get('id').$newurl);
 }
 
 ?>

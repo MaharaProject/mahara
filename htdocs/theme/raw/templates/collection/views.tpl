@@ -7,7 +7,7 @@
         {foreach from=$views.views item=view}
             <tr class="{cycle values='r0,r1'}">
                 <td><label><a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a></label></td>
-                <td><div class="fr"><a href="{$removeurl}&amp;view={$view->view}">{str tag=remove}</a></div></td>
+                <td><div class="fr s">{$view->remove|safe}</div></td>
                 {if $views.count > 1}
                 <td class="displayordercontrols">
                     {if $view->displayorder == $views.min}
