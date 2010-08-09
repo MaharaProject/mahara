@@ -66,7 +66,7 @@ if ($view AND !empty($direction)) {
 
 $views = $collection->views();
 
-if ($views['count']) {
+if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'name' => 'removeview_' . $v->view,
