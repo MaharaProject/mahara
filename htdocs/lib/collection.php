@@ -68,13 +68,15 @@ class Collection {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
-            $this->views();
         }
     }
 
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        if ($field == 'views') {
+            return $this->views();
         }
         return $this->{$field};
     }
