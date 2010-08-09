@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h3>Forums > <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">{$topic->forumtitle}</a></h3>
+<h3>{str tag=nameplural section=interaction.forum} &gt; <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}">{$topic->forumtitle}</a></h3>
 <h4>{$topic->subject}</h4>
 {if $membership}
 	<div id="forumbtns" class="rbuttons">
