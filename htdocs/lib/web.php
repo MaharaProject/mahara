@@ -1944,7 +1944,7 @@ function mahara_standard_nav() {
             'path' => 'myportfolio/collection',
             'url' => 'collection/',
             'title' => get_string('mycollections', 'collection'),
-            'weight' => 50,
+            'weight' => 10,
         ),
         array(
             'path' => 'groups',
