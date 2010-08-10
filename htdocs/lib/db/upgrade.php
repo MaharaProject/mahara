@@ -2128,5 +2128,14 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2010081001) {
+        if ($data = check_upgrades('artefact.plans')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.plans/plans')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

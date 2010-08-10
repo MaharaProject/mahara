@@ -247,7 +247,7 @@ class ArtefactTypeTask extends ArtefactType {
         parent::__construct($id, $data);
 
         if ($this->id) {
-            if ($pdata = get_record('artefact_task', 'task', $this->id, null, null, null, null, '*, ' . db_format_tsfield('completiondate'))) {
+            if ($pdata = get_record('artefact_plans_task', 'artefact', $this->id, null, null, null, null, '*, ' . db_format_tsfield('completiondate'))) {
                 foreach($pdata as $name => $value) {
                     if (property_exists($this, $name)) {
                         $this->$name = $value;
@@ -274,7 +274,7 @@ class ArtefactTypeTask extends ArtefactType {
 
     /**
      * This method extends ArtefactType::commit() by adding additional data
-     * into the artefact_task table.
+     * into the artefact_plans_task table.
      *
      */
     public function commit() {
@@ -297,16 +297,16 @@ class ArtefactTypeTask extends ArtefactType {
             $date = db_format_timestamp($completiondate);
         }
         $data = (object)array(
-            'task'  => $this->get('id'),
+            'artefact'  => $this->get('id'),
             'completed' => $this->get('completed'),
             'completiondate' => $date,
         );
 
         if ($new) {
-            $success = insert_record('artefact_task', $data);
+            $success = insert_record('artefact_plans_task', $data);
         }
         else {
-            $success = update_record('artefact_task', $data, 'task');
+            $success = update_record('artefact_plans_task', $data, 'artefact');
         }
 
         db_commit();
@@ -326,7 +326,7 @@ class ArtefactTypeTask extends ArtefactType {
         }
 
         db_begin();
-        delete_records('artefact_task', 'task', $this->id);
+        delete_records('artefact_plans_task', 'artefact', $this->id);
 
         parent::delete();
         db_commit();
@@ -454,9 +454,10 @@ class ArtefactTypeTask extends ArtefactType {
         $datenow = time(); // time now to use for formatting tasks by completion
 
         ($results = get_records_sql_array("
-            SELECT a.id, at.task, at.completed, ".db_format_tsfield('completiondate').", a.title, a.description, a.parent
+            SELECT a.id, at.artefact AS task, at.completed, ".db_format_tsfield('completiondate').",
+                a.title, a.description, a.parent
                 FROM {artefact} a
-            JOIN {artefact_task} at ON at.task = a.id
+            JOIN {artefact_plans_task} at ON at.artefact = a.id
             WHERE a.owner = ? AND a.artefacttype = 'task'
             AND a.parent = ?
             ORDER BY at.completiondate DESC

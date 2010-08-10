@@ -6,17 +6,17 @@
 <TABLES>
 
     <!-- This table is supposed to have a 1-1 relation with every row in the
-    artefact table with artefacttype = 'plan'.  It contains additional data
+    artefact table with artefacttype = 'task'.  It contains additional data
     that isn't in the artefact table. -->
-    <TABLE NAME="artefact_task">
+    <TABLE NAME="artefact_plans_task">
         <FIELDS>
-            <FIELD NAME="task" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
             <FIELD NAME="completiondate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="task" />
-            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="task" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="artefact" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
 </TABLES>
