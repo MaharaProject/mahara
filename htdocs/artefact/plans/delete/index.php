@@ -55,7 +55,7 @@ $form = pieform($deleteform);
 
 $smarty = smarty();
 $smarty->assign('form', $form);
-$smarty->assign('PAGEHEADING', hsc($todelete->get('title')));
+$smarty->assign('PAGEHEADING', $todelete->get('title'));
 $smarty->assign('subheading', get_string('deletethisplan','artefact.plans',$todelete->get('title')));
 $smarty->assign('message', get_string('deleteplanconfirm','artefact.plans'));
 $smarty->display('artefact:plans:delete.tpl');
