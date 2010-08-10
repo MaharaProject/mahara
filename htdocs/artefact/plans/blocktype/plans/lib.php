@@ -87,7 +87,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $pagination = build_pagination(array(
             'id' => 'block' . $blockid . '_pagination',
             'class' => 'center nojs-hidden-block',
-            'datatable' => 'taskstable_' . $blockid,
+            'datatable' => 'tasktable_' . $blockid,
             'url' => $baseurl,
             'jsonscript' => 'artefact/plans/blocktype/plans/tasks.json.php',
             'count' => $tasks['count'],
