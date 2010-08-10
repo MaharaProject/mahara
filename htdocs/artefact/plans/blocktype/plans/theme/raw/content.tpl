@@ -15,27 +15,35 @@
 </table>
 <div id="plans_page_container">{$tasks.pagination|safe}</div>
 <script>
-addLoadEvent(function() {literal}{{/literal}
-    {$tasks.pagination_js|safe}
-    removeElementClass('plans_page_container', 'hidden');
-{literal}}{/literal});
-
 {literal}
-addLoadEvent(function() {
+function rewriteTaskTitles() {
     forEach(
 {/literal}
         getElementsByTagAndClassName('a', 'task-title','tasktable_{$blockid}'),
 {literal}
         function(element) {
-        connect(element, 'onclick', function(e) {
-        log(element);
-            e.stop();
-            var description = getFirstElementByTagAndClassName('div', 'task-desc', element.parentNode);
-            toggleElementClass('hidden', description);
-        });
-    });
-});
+            connect(element, 'onclick', function(e) {
+                e.stop();
+                var description = getFirstElementByTagAndClassName('div', 'task-desc', element.parentNode);
+                toggleElementClass('hidden', description);
+            });
+        }
+    );
+}
+
+addLoadEvent(function() {{/literal}
+    {$tasks.pagination_js|safe}
+    removeElementClass('plans_page_container', 'hidden');
+{literal}}{/literal});
+
+function TaskPager_{$blockid}() {literal}{
+    var self = this;
+    paginatorProxy.addObserver(self);
+    connect(self, 'pagechanged', rewriteTaskTitles);
+}
 {/literal}
+var taskPager_{$blockid} = new TaskPager_{$blockid}();
+addLoadEvent(rewriteTaskTitles);
 </script>
 {else}
     <p>{str tag='notasks' section='artefact.plans'}</p>
