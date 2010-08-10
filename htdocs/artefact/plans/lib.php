@@ -230,6 +230,10 @@ class ArtefactTypePlan extends ArtefactType {
         return $elements;
     }
 
+    // @TODO
+    public function render_self() {
+        return array('html' => '<div>' . hsc($this->title) . '</div>', 'javascript' => '');
+    }
 }
 
 class ArtefactTypeTask extends ArtefactType {
