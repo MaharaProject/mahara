@@ -1,4 +1,3 @@
-{auto_escape on}
 <div class="blockinstance-content">
 {if $tasks.data}
 <table id="tasktable_{$blockid}">
@@ -42,4 +41,3 @@ addLoadEvent(function() {
     <p>{str tag='notasks' section='artefact.plans'}</p>
 {/if}
 </div>
-{auto_escape off}
