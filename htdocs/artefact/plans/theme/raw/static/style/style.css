@@ -1,0 +1,42 @@
+/**
+ * CSS rules for the resume artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+th.planscontrols {
+    width:50px; !important;
+}
+
+#planswrap table {
+	width: 100%;
+}
+
+#planswrap table tr.incomplete {
+    background: #FFD3D9;
+    color: #DD0221;
+}
+
+#planswrap table td {
+    text-align: left
+}
+
+#planswrap table th {
+	text-align: left;
+	padding: 0.25em;
+}
+
+#planswrap table td div.completed {
+    margin:3px;
+    text-align:center;
+    width:60px;
+}
+
+#container #planswrap table td.errmsg {
+   padding-left: 2em;
+}
+
+fieldset legend.plansh3 a {
+	background: none;
+	padding: 0;
+}

@@ -581,3 +581,14 @@ div.artefactchooser-splitter {
 #publicfeedback {
 	clear: both;
 }
+
+/* My Plans incomplete/complete styling */
+table tr.plan_incomplete {
+    background: #FFD3D9;
+    color: #DD0221;
+}
+table td div.plan_completed {
+    margin:3px;
+    text-align:center;
+    width:60px;
+}

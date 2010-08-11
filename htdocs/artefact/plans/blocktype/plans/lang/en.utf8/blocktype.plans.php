@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage blocktype-plans
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,9 +27,11 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2010081001;
-$config->release = '1.3.0beta4dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$string['title'] = 'Your Plans';
+$string['description'] = 'Display your plans list';
+$string['defaulttitledescription'] = 'If this is left empty the title of the plan will be used.';
+$string['newerplans'] = 'Newer plans';
+$string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
+$string['olderplans'] = 'Older plans';
+$string['planstoshow'] = 'Plan to show';
+?>

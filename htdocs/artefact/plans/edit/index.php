@@ -18,18 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage artefact-plans
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', true);
+define('MENUITEM', 'profile/myplans');
 
-$config = new StdClass;
-$config->version = 2010081001;
-$config->release = '1.3.0beta4dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact','plans');
+
+define('TITLE', get_string('editplan','artefact.plans'));
+
+$id = param_integer('id');
+
+$artefact = artefact_instance_from_id($id);
+$USER->can_edit_artefact($id);
+
+$editform = ArtefactTypePlan::get_form($artefact);
+
+$smarty = smarty();
+$smarty->assign('editform', $editform);
+$smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
+$smarty->display('artefact:plans:edit.tpl');
+
+?>
