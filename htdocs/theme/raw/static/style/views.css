@@ -210,14 +210,16 @@ input.addcolumn, input.removecolumn {
 }
 
 /* Collection navigation */
-#colnav ul {
+ul.colnav {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-
-#colnav li {
-    float: left;
+ul.colnav li {
+    display: inline;
     padding: 0;
     margin: 0 0.15em;
+}
+ul.colnav li.selected a {
+    color: #333;
 }

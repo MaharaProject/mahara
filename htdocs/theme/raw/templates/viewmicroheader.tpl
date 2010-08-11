@@ -37,7 +37,11 @@
           <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
 {/if}
+{if $collection}
+        <div class="center cb"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
+{else}
         <div class="center cb title">{$microheadertitle|safe}</div>
+{/if}
       </div>
     </div>
     <div id="main-wrapper">

@@ -181,7 +181,7 @@ addLoadEvent(function () {
 EOF;
 
 // collection top navigation
-if ($collection = Collection::search_by_view_id($viewid)) {
+if ($collection = $view->get('collection')) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
         if ($views = $collection->get('views')) {
@@ -202,7 +202,7 @@ $smarty->assign('tags', $view->get('tags'));
 
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false));
+    $smarty->assign('microheadertitle', $collection ? hsc($collection->get('name')) : $view->display_title(true, false));
 
     if ($can_edit) {
         $smarty->assign('visitstring', $view->visit_message());
@@ -259,7 +259,7 @@ if (get_config('viewmicroheaders')) {
 $title = hsc(TITLE);
 
 if ($viewtype != 'profile' && !get_config('viewmicroheaders')) {
-    $title = $view->display_title();
+    $title = $collection ? hsc($collection->get('name')) : $view->display_title();
 }
 
 if ($viewtype != 'profile' || !get_config('viewmicroheaders')) {

@@ -2,24 +2,11 @@
 
 {if $notrudeform}<div class="message delete">{$notrudeform|safe}</div>{/if}
 
-{if $collection}
-    <div id="colnav">
-        <ul>
-        {foreach from=$collection item=view name=cviews}
-            <li><strong>
-                {if $view->view != $viewid}
-                    <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>
-                {else}
-                    {$view->title}
-                {/if}
-            {if !$.foreach.cviews.last}: {/if}</strong></li>
-        {/foreach}
-        </ul>
-    </div>
-    <div class="cb"></div>
-{/if}
-
 {if $maintitle}<h1>{$maintitle|safe}</h1>{/if}
+
+{if !$microheaders && $collection}
+    {include file=collectionnav.tpl}
+{/if}
 
 {if !$microheaders && $mnethost}
 <div class="rbuttons">
