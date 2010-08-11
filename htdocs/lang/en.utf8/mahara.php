@@ -288,9 +288,9 @@ $string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
 <p>You can prevent your account from becoming inactive by logging in.</p>
 
 <p>Regards, %s Site Administrator</p>';
-$string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
-$string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
-$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
+$string['accountsuspended'] = 'Your account has been suspended as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['chooseusernamepassword'] = 'Choose your username and password';
