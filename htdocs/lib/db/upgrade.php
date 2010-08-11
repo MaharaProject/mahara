@@ -2137,5 +2137,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010081100) {
+        if ($data = check_upgrades('blocktype.navigation')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
