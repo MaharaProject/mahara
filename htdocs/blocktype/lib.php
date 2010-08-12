@@ -643,8 +643,7 @@ class BlockInstance {
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
-        // @TODO: Remove this hack soon, once plan artefact has render_self.
-        if (!empty($configdata['artefactid']) && $this->get('blocktype') != 'plans') {
+        if (!empty($configdata['artefactid'])) {
             $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/artefact.php?artefact='
                 . $configdata['artefactid'] . '&view=' . $this->get('view'));
         }

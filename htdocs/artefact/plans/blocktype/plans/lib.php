@@ -78,7 +78,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
     public static function build_plans_html(&$tasks, $editing=false, BlockInstance $instance) {
         $smarty = smarty_core();
         $smarty->assign_by_ref('tasks', $tasks);
-        $tasks['tablerows'] = $smarty->fetch('blocktype:plans:taskrows.tpl');
+        $tasks['tablerows'] = $smarty->fetch('artefact:plans:taskrows.tpl');
         if ($editing) {
             return;
         }
@@ -89,7 +89,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
             'class' => 'center nojs-hidden-block',
             'datatable' => 'tasktable_' . $blockid,
             'url' => $baseurl,
-            'jsonscript' => 'artefact/plans/blocktype/plans/tasks.json.php',
+            'jsonscript' => 'artefact/plans/viewtasks.json.php',
             'count' => $tasks['count'],
             'limit' => $tasks['limit'],
             'offset' => $tasks['offset'],

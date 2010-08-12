@@ -28,17 +28,36 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
-require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'plans');
 require_once(get_config('docroot') . 'blocktype/lib.php');
 require_once(get_config('docroot') . 'artefact/plans/blocktype/plans/lib.php');
 
-$limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
-$bi = new BlockInstance(param_integer('block'));
-$configdata = $bi->get('configdata');
+$limit = param_integer('limit', 10);
 
-$tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], $offset, $limit);
-PluginBlocktypePlans::build_plans_html($tasks, false, $bi);
+if ($blockid = param_integer('block', null)) {
+    $bi = new BlockInstance($blockid);
+    $configdata = $bi->get('configdata');
+    $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], $offset, $limit);
+    PluginBlocktypePlans::build_plans_html($tasks, false, $bi);
+}
+else {
+    $planid = param_integer('artefact');
+    $viewid = param_integer('view');
+    $options = array('viewid' => $viewid);
+    $tasks = ArtefactTypeTask::get_tasks($planid, $offset, $limit);
+
+    $template = 'artefact:plans:taskrows.tpl';
+    $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $planid . '&view=' . $options['viewid'];
+    $pagination = array(
+        'baseurl' => $baseurl,
+        'id' => 'task_pagination',
+        'datatable' => 'tasklist',
+        'jsonscript' => 'artefact/plans/viewtasks.json.php',
+    );
+
+    ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination);
+}
 
 json_reply(false, (object) array('message' => false, 'data' => $tasks));

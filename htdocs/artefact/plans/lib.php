@@ -230,9 +230,32 @@ class ArtefactTypePlan extends ArtefactType {
         return $elements;
     }
 
-    // @TODO
-    public function render_self() {
-        return array('html' => '<div>' . hsc($this->title) . '</div>', 'javascript' => '');
+    public function render_self($options) {
+        $this->add_to_render_path($options);
+
+        $tasks = ArtefactTypeTask::get_tasks($this->id);
+
+        $template = 'artefact:plans:taskrows.tpl';
+        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id . '&view=' . $options['viewid'];
+        $pagination = array(
+            'baseurl' => $baseurl,
+            'id' => 'task_pagination',
+            'datatable' => 'tasklist',
+            'jsonscript' => 'artefact/plans/viewtasks.json.php',
+        );
+
+        ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination);
+
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('tasks', $tasks);
+        $smarty->assign(
+            'artefacttitle',
+            '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id
+            . '&view=' . $options['viewid'] . '">' . hsc($this->title) . '</a>'
+        );
+        $smarty->assign('plan', $this);
+
+        return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
     }
 }
 
@@ -454,7 +477,6 @@ class ArtefactTypeTask extends ArtefactType {
      * @return array (count: integer, data: array)
      */
     public static function get_tasks($plan, $offset=0, $limit=10) {
-        global $USER;
         $datenow = time(); // time now to use for formatting tasks by completion
 
         ($results = get_records_sql_array("
@@ -462,10 +484,9 @@ class ArtefactTypeTask extends ArtefactType {
                 a.title, a.description, a.parent
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
-            WHERE a.owner = ? AND a.artefacttype = 'task'
-            AND a.parent = ?
+            WHERE a.artefacttype = 'task' AND a.parent = ?
             ORDER BY at.completiondate DESC
-            LIMIT ? OFFSET ?", array($USER->get('id'), $plan, $limit, $offset)))
+            LIMIT ? OFFSET ?", array($plan, $limit, $offset)))
             || ($results = array());
 
         // format the date and setup completed for display if task is incomplete
@@ -482,7 +503,7 @@ class ArtefactTypeTask extends ArtefactType {
         }
 
         $result = array(
-            'count'  => count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', 'task', 'parent', $plan),
+            'count'  => count_records('artefact', 'artefacttype', 'task', 'parent', $plan),
             'data'   => $results,
             'offset' => $offset,
             'limit'  => $limit,
@@ -520,6 +541,32 @@ class ArtefactTypeTask extends ArtefactType {
         ));
         $tasks['pagination'] = $pagination['html'];
         $tasks['pagination_js'] = $pagination['javascript'];
+    }
+
+    // @TODO: make blocktype use this too
+    public function render_tasks(&$tasks, $template, $options, $pagination) {
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('tasks', $tasks);
+        $smarty->assign_by_ref('options', $options);
+        $tasks['tablerows'] = $smarty->fetch($template);
+
+        if ($tasks['limit']) {
+            $pagination = build_pagination(array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'count' => $tasks['count'],
+                'limit' => $tasks['limit'],
+                'offset' => $tasks['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => get_string('task', 'artefact.plans'),
+                'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
+            ));
+            $tasks['pagination'] = $pagination['html'];
+            $tasks['pagination_js'] = $pagination['javascript'];
+        }
     }
 }
 
