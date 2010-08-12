@@ -743,6 +743,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 ),
                 'submit' => array(
                     'type' => 'submit',
+                    'class' => 'publish',
                     'value' => get_string('publish', 'artefact.blog'),
                 ),
             ),

@@ -15,6 +15,7 @@
     color: #ca0000;
 }
 
+#postlist input.publish,
 #postlist input.edit {
 	color: #4C711D;
 }

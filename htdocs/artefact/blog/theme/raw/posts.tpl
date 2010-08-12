@@ -2,14 +2,21 @@
 <tr id="posttitle_{$post->id}">
   <th class="posttitle">{$post->title}</th>
   <th id="poststatus{$post->id}">
-    {if $post->published}{str tag=published section=artefact.blog}{else}{str tag=draft section=artefact.blog}{/if}
+    {if $post->published}
+      {str tag=published section=artefact.blog}
+    {else}
+      {str tag=draft section=artefact.blog}
+      {if !$post->locked && !$post->published}&nbsp;{$post->publish|safe}{/if}
+    {/if}
   </th>
   <th class="controls">
     {if $post->locked}
       {str tag=submittedforassessment section=view}
     {else}
-      {if !$post->published}{$post->publish|safe}{/if}
-      <a class="btn-edit" href="{$WWWROOT}artefact/blog/post.php?id={$post->id}">{str tag=edit section=artefact.blog}</a>
+      <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
+        <input type="hidden" name="id" value="{$post->id}">
+        <input type="submit" class="edit submit" value="{str tag=edit section=artefact.blog}">
+      </form>
       {$post->delete|safe}
     {/if}
   </th>

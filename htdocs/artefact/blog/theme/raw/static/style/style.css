@@ -40,6 +40,7 @@
 	cursor: pointer;
 	color: #333;
 }
+#postlist input.publish,
 #postlist input.edit {
 	font-size: .9167em;
 	background: url(../images/icon-edit.gif) no-repeat left center;
@@ -48,8 +49,8 @@
 	cursor: pointer;
 	color: #333;
 }
-#postlist th.controls form,
-#postlist th.controls form div {
+#postlist th form,
+#postlist th form div {
   display: inline;
 }
 #postlist p {
