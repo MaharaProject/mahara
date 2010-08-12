@@ -308,6 +308,10 @@ html>body #column-container {
   font-weight: bold;
 }
 
+.blockinstance-content table.postlist td {
+  padding: 0;
+}
+
 /* group homepage */
 .grouphomepage {
   width: 100%;

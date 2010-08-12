@@ -992,6 +992,18 @@ abstract class ArtefactType {
         return $attachments;
     }
 
+    public function tags_from_id_list($artefactids) {
+        if (empty($artefactids)) {
+            return array();
+        }
+        $artefactids = join(',', array_map('intval', $artefactids));
+        $tags = get_records_select_array('artefact_tag', 'artefact IN (' . $artefactids . ')');
+        if (!$tags) {
+            return array();
+        }
+        return $tags;
+    }
+
     public function get_attachments($assoc=false) {
         $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_attachment} aa

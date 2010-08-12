@@ -63,10 +63,16 @@ $blog->check_permission();
 
 $limit = param_integer('limit', 5);
 $offset = param_integer('offset', 0);
-$editing = true;
 
-$posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset, $editing);
-ArtefactTypeBlogPost::render_posts($posts, $id);
+$posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset);
+$template = 'artefact:blog:posts.tpl';
+$pagination = array(
+    'baseurl'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $id,
+    'id'         => 'blogpost_pagination',
+    'jsonscript' => 'artefact/blog/view/index.json.php',
+    'datatable'  => 'postlist',
+);
+ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 
 $strpublished = json_encode(get_string('published', 'artefact.blog'));
 $js = <<<EOF
