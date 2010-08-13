@@ -35,8 +35,9 @@ defined('INTERNAL') || die();
 function ensure_sanity() {
 
     // PHP version
-    if (version_compare(phpversion(), '5.2.0') < 0) {
-        throw new ConfigSanityException(get_string('phpversion', 'error'));
+    $phpversionrequired = '5.2.0';
+    if (version_compare(phpversion(), $phpversionrequired) < 0) {
+        throw new ConfigSanityException(get_string('phpversion', 'error', $phpversionrequired));
     }
 
     // Various required extensions
