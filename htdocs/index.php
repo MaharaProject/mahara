@@ -65,7 +65,7 @@ if ($USER->is_logged_in()) {
         // allow the user to choose never to see the info boxes again
         $js = <<<JAVASCRIPT
 function hideinfo() {
-    slideUp($('home-info'));
+    slideUp($('home-info-container'));
 }
 
 function nevershow() {

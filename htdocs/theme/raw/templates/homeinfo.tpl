@@ -1,4 +1,4 @@
-
+<div id="home-info-container">
 {if $USER->is_logged_in()}
                 <div id="hideinfo"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>
 {/if}<table id="home-info" class="home-info-table{if $USER->is_logged_in()} loggedin{/if}">
@@ -111,3 +111,4 @@
         </td>
     </tr>
 </table>
+</div>
