@@ -96,8 +96,7 @@ class ArtefactTypePlan extends ArtefactType {
 
         ($plans = get_records_sql_array("SELECT * FROM {artefact}
                                         WHERE owner = ? AND artefacttype = 'plan'
-                                        ORDER BY id
-                                        OFFSET ? LIMIT ?",array($USER->get('id'), $offset, $limit)))
+                                        ORDER BY id", array($USER->get('id')), $offset, $limit))
                                         || ($plans = array());
         $result = array(
             'count'  => count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', 'plan'),
