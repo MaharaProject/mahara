@@ -6,8 +6,8 @@
             <td class="c2">{$task->title}</td>
             <td class="c3">{$task->description}</td>
             <td class="c4">&nbsp;</td>
-            <td class="c5"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}">Edit</a></td>
-            <td class="c6"><a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}">Delete</a></td>
+            <td class="c5"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}">{str tag=edit}</a></td>
+            <td class="c6"><a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}">{str tag=delete}</a></td>
         </tr>
     {else}
         <tr class="{cycle values='r0,r1'}">
