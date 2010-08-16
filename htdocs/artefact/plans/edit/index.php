@@ -39,7 +39,9 @@ define('TITLE', get_string('editplan','artefact.plans'));
 $id = param_integer('id');
 
 $artefact = new ArtefactTypePlan($id);
-$USER->can_edit_artefact($id);
+if (!$USER->can_edit_artefact($artefact)) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
 
 $editform = ArtefactTypePlan::get_form($artefact);
 

@@ -38,7 +38,9 @@ define('TITLE', get_string('edittask','artefact.plans'));
 
 $id = param_integer('id');
 $task = new ArtefactTypeTask($id);
-$USER->can_edit_artefact($task);
+if (!$USER->can_edit_artefact($task)) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
 
 $form = ArtefactTypeTask::get_form($task->get('parent'), $task);
 
