@@ -138,6 +138,17 @@ class ArtefactTypePlan extends ArtefactType {
         $plans['pagination_js'] = $pagination['javascript'];
     }
 
+    public static function validate(Pieform $form, $values) {
+        global $USER;
+        if (!empty($values['plan'])) {
+            $id = (int) $values['plan'];
+            $artefact = new ArtefactTypePlan($id);
+            if (!$USER->can_edit_artefact($artefact)) {
+                $form->set_error('submit', get_string('canteditdontown'));
+            }
+        }
+    }
+
     public static function submit(Pieform $form, $values) {
         global $USER, $SESSION;
 
@@ -146,7 +157,6 @@ class ArtefactTypePlan extends ArtefactType {
         if (!empty($values['plan'])) {
             $id = (int) $values['plan'];
             $artefact = new ArtefactTypePlan($id);
-            $USER->can_edit_artefact($id);
         }
         else {
             $artefact = new ArtefactTypePlan();
@@ -184,6 +194,7 @@ class ArtefactTypePlan extends ArtefactType {
             'name' => empty($plan) ? 'addplan' : 'editplan',
             'plugintype' => 'artefact',
             'pluginname' => 'task',
+            'validatecallback' => array(generate_artefact_class_name('plan'),'validate'),
             'successcallback' => array(generate_artefact_class_name('plan'),'submit'),
             'elements' => $elements,
         );
@@ -374,6 +385,7 @@ class ArtefactTypeTask extends ArtefactType {
             'name' => empty($task) ? 'addtasks' : 'edittask',
             'plugintype' => 'artefact',
             'pluginname' => 'task',
+            'validatecallback' => array(generate_artefact_class_name('task'),'validate'),
             'successcallback' => array(generate_artefact_class_name('task'),'submit'),
             'elements' => $elements,
         );
@@ -442,6 +454,17 @@ class ArtefactTypeTask extends ArtefactType {
         );
 
         return $elements;
+    }
+
+    public static function validate(Pieform $form, $values) {
+        global $USER;
+        if (!empty($values['task'])) {
+            $id = (int) $values['task'];
+            $artefact = new ArtefactTypeTask($id);
+            if (!$USER->can_edit_artefact($artefact)) {
+                $form->set_error('submit', get_string('canteditdontown'));
+            }
+        }
     }
 
     public static function submit(Pieform $form, $values) {

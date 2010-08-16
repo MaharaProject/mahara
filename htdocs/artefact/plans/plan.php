@@ -43,8 +43,11 @@ $id = param_integer('id');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
-$plan = artefact_instance_from_id($id);
-$USER->can_edit_artefact($plan);
+$plan = new ArtefactTypePlan($id);
+if (!$USER->can_edit_artefact($plan)) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
+
 
 $tasks = ArtefactTypeTask::get_tasks($plan->get('id'), $offset, $limit);
 ArtefactTypeTask::build_tasks_list_html($tasks);

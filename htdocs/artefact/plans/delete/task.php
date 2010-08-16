@@ -35,8 +35,10 @@ safe_require('artefact','plans');
 define('TITLE', get_string('deletetask','artefact.plans'));
 
 $id = param_integer('id');
-$todelete = artefact_instance_from_id($id);
-$USER->can_edit_artefact($todelete);
+$todelete = new ArtefactTypeTask($id);
+if (!$USER->can_edit_artefact($todelete)) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
 
 $deleteform = array(
     'name' => 'deletetaskform',
