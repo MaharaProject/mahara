@@ -38,7 +38,7 @@ define('TITLE', get_string('editplan','artefact.plans'));
 
 $id = param_integer('id');
 
-$artefact = artefact_instance_from_id($id);
+$artefact = new ArtefactTypePlan($id);
 $USER->can_edit_artefact($id);
 
 $editform = ArtefactTypePlan::get_form($artefact);

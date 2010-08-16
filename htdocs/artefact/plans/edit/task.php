@@ -37,7 +37,7 @@ safe_require('artefact','plans');
 define('TITLE', get_string('edittask','artefact.plans'));
 
 $id = param_integer('id');
-$task = artefact_instance_from_id($id);
+$task = new ArtefactTypeTask($id);
 $USER->can_edit_artefact($task);
 
 $form = ArtefactTypeTask::get_form($task->get('parent'), $task);
