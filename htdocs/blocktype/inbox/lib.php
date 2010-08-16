@@ -62,7 +62,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             $desiredtypes += get_column('activity_type', 'name', 'admin', 1);
         }
 
-        $maxitems = $configdata['maxitems'] ? $configdata['maxitems'] : 5;
+        $maxitems = isset($configdata['maxitems']) ? $configdata['maxitems'] : 5;
 
         $records = array();
         if ($desiredtypes) {
