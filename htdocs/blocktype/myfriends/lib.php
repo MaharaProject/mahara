@@ -56,6 +56,11 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
         $smarty = smarty_core();
         $smarty->assign_by_ref('friends', $friendarray);
         $friends['tablerows'] = $smarty->fetch('blocktype:myfriends:myfriendrows.tpl');
+
+        if ($friends['limit'] === false) {
+            return;
+        }
+
         $baseurl = $instance->get_view()->get_url() . '&block=' . $instance->get('id');
         $baseurl .= '&user=' . (int) $userid;
         $pagination = build_pagination(array(
@@ -76,14 +81,17 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        global $USER;
+        global $USER, $exporter;
+
         $userid = $instance->get_view()->get('owner');
         if (!$userid) {
             // 'My Friends' doesn't make sense for group/site views
             return '';
         }
 
-        $friends = get_friends($userid, MAXFRIENDDISPLAY, 0);
+        $limit = isset($exporter) ? false : MAXFRIENDDISPLAY;
+
+        $friends = get_friends($userid, $limit, 0);
         if ($friends['count']) {
             self::build_myfriends_html($friends, $userid, $instance);
         }

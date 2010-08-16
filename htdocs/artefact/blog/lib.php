@@ -219,7 +219,10 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $template = 'artefact:blog:viewposts.tpl';
 
-        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id . '&view=' . $options['viewid'];
+        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        if (!empty($options['viewid'])) {
+            $baseurl .= '&view=' . $options['viewid'];
+        }
         $pagination = array(
             'baseurl' => $baseurl,
             'id' => 'blogpost_pagination',
@@ -670,8 +673,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         $posts['tablerows'] = $smarty->fetch($template);
 
-        if ($posts['limit']) {
-            $pagination = build_pagination(array(
+        if ($posts['limit'] && $pagination) {
+            $pagination = build_pagination($foo = array(
                 'id' => $pagination['id'],
                 'class' => 'center',
                 'datatable' => $pagination['datatable'],

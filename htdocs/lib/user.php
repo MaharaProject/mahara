@@ -1899,7 +1899,12 @@ function get_friends($userid, $limit=10, $offset=0) {
         SELECT f.* ' . $from . "
         ORDER BY CASE WHEN NOT f.preferredname IS NULL AND f.preferredname <> '' THEN f.preferredname ELSE f.firstname || f.lastname END";
 
-    $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+    if ($limit === false) {
+        $result['data'] = get_records_sql_array($sql, $values);
+    }
+    else {
+        $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+    }
 
     return $result;
 }

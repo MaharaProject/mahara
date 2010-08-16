@@ -57,6 +57,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $exporter;
         $configdata = $instance->get('configdata');
 
         $result = '';
@@ -75,19 +76,28 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
             $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
             $template = 'artefact:blog:viewposts.tpl';
-            $pagination = array(
-                'baseurl' => $instance->get_view()->get_url() . '&block=' . $instance->get('id'),
-                'id' => 'blogpost_pagination_' . $instance->get('id'),
-                'datatable' => 'postlist_' . $instance->get('id'),
-                'jsonscript' => 'artefact/blog/posts.json.php',
-            );
+            if ($exporter) {
+                $pagination = false;
+            }
+            else {
+                $pagination = array(
+                    'baseurl' => $instance->get_view()->get_url() . '&block=' . $instance->get('id'),
+                    'id' => 'blogpost_pagination_' . $instance->get('id'),
+                    'datatable' => 'postlist_' . $instance->get('id'),
+                    'jsonscript' => 'artefact/blog/posts.json.php',
+                );
+            }
             ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
 
             $smarty = smarty_core();
             if (isset($configdata['viewid'])) {
-                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
-                                . $blog->get('id') . '&view=' . $configdata['viewid']
-                                . '">' . hsc($blog->get('title')) . '</a>');
+                $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $blog->get('id') . '&amp;view='
+                    . $configdata['viewid'];
+                $smarty->assign('artefacttitle', '<a href="' . $artefacturl . '">' . hsc($blog->get('title')) . '</a>');
+                if ($exporter && $posts['count'] > $limit) {
+                    $posts['pagination'] = '<a href="' . $artefacturl . '">'
+                        . get_string('allposts', 'artefact.blog') . '</a>';
+                }
             }
             else {
                 $smarty->assign('artefacttitle', hsc($blog->get('title')));

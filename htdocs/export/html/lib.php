@@ -526,7 +526,7 @@ class HtmlExportOutputFilter {
 
         // Links to artefacts
         $html = preg_replace_callback(
-            '#<a[^>]+href="(' . $wwwroot . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;page=\d+)?"[^>]*>([^<]*)</a>#',
+            '#<a[^>]+href="(' . $wwwroot . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;offset=\d+)?"[^>]*>([^<]*)</a>#',
             array($this, 'replace_artefact_link'),
             $html
         );
@@ -582,9 +582,9 @@ class HtmlExportOutputFilter {
 
         switch ($artefact->get('artefacttype')) {
         case 'blog':
-            $page = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;page='))) : 1;
-            $page = ($page == 1) ? 'index' : $page;
-            return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
+            $offset = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;offset='))) : 0;
+            $offset = ($offset == 0) ? 'index' : $offset;
+            return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $offset . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'folder':
         case 'image':

@@ -50,6 +50,10 @@ a img {
 .r1 {
     background-color: #f8f8f8;
 }
+div.pagination span.selected,
+span.pagination {
+    padding: 5px;
+}
 
 /* Headings */
 h1 {

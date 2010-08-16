@@ -2804,7 +2804,7 @@ function build_pagination($params) {
     if (isset($params['forceoffset']) && !is_null($params['forceoffset'])) {
         $params['offset'] = (int) $params['forceoffset'];
     }
-    else {
+    else if (!isset($params['offset'])) {
         $params['offset'] = param_integer($params['offsetname'], 0);
     }
 

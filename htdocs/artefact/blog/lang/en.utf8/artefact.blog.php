@@ -35,6 +35,7 @@ $string['addblog'] = 'Create Blog';
 $string['addpost'] = 'New Post';
 $string['alignment'] = 'Alignment';
 $string['allowcommentsonpost'] = 'Allow comments on your post.';
+$string['allposts'] = 'All posts';
 $string['attach'] = 'Attach';
 $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';

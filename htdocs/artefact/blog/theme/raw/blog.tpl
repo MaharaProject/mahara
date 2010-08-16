@@ -10,10 +10,14 @@
   {$posts.tablerows|safe}
   </tbody>
 </table>
+{if $posts.pagination}
 <div id="blogpost_page_container_{$blockid}" class="hidden center">{$posts.pagination|safe}</div>
+{/if}
+{if $posts.pagination_js}
 <script>
 addLoadEvent(function() {literal}{{/literal}
     {$posts.pagination_js|safe}
     removeElementClass('blogpost_page_container_{$blockid}', 'hidden');
 {literal}}{/literal});
 </script>
+{/if}

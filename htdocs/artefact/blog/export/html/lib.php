@@ -62,8 +62,8 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
                 $postcount = $artefact->count_published_posts();
                 $perpage   = ArtefactTypeBlog::pagination;
                 if ($postcount > $perpage) {
-                    for ($i = 2; $i <= ceil($postcount / $perpage); $i++) {
-                        $rendered = $artefact->render_self(array('page' => $i));
+                    for ($i = $perpage; $i <= $postcount; $i += $perpage) {
+                        $rendered = $artefact->render_self(array('limit' => $perpage, 'offset' => $i));
                         $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
                         $content = $smarty->fetch('export:html/blog:index.tpl');
 
