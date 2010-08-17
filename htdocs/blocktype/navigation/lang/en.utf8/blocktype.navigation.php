@@ -31,5 +31,5 @@ $string['defaulttitledescription'] = 'If no title is provided here the title of 
 $string['collection'] = 'Collection';
 $string['title'] = 'Navigation';
 $string['description'] = 'Display a collection of views as a simple navigation.';
-$string['nocollections'] = 'No collections. <a href="%scollection/create.php">Create one</a>.';
+$string['nocollections'] = 'No collections. <a href="%scollection/edit.php?new=1">Create one</a>.';
 ?>
