@@ -39,7 +39,7 @@
 			{/if}
 		</li>
       {/if}
-      {if $admingroups}
+      {if $admingroups->invite || $admingroups->controlled}
       <li><a href="" onclick="showGroupBox(event, {$user->id})">{str tag='editgroupmembership' section='group'}</a></li>
       {/if}
 	</ul>
