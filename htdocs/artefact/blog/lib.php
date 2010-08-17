@@ -768,7 +768,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'help' => true,
                 ),
                 'submit' => array(
-                    'class' => 'delete',
+                    'class' => 'icon btn-del',
                     'type' => 'submit',
                     'value' => get_string('delete', 'artefact.blog'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),

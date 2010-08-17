@@ -391,9 +391,9 @@ input#myfriends_addfriend_add {
 }
 
 #main-nav {
-    float:right;
+	float: right;
     padding: 0;
-    margin: 0 10px 0 0;
+    margin: 0;
 	height: 27px;
 }
 #main-nav ul {
@@ -452,7 +452,7 @@ input#myfriends_addfriend_add {
 #sub-nav ul {
     float:right;
 	height: 15px;
-	padding: 6px 10px 6px 0;
+	padding: 6px 10px 6px 10px;
 	background: #FFF;
 }
 #sub-nav li {
@@ -696,6 +696,9 @@ div.sideblock #friendscontrol label {
 }
 #performance-info {
     color: #fff;
+}
+#performance-info span {
+	color: #fff;
 }
 #version  {
   color: #FFFFFF;

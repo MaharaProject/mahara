@@ -18,6 +18,9 @@ body {
     margin: 0;
     padding: 0;
 }
+body#micro {
+	background: #eee;
+}
 img {
     border: 0;
 }
@@ -34,19 +37,19 @@ img {
     font-size: 2em; /* 24px */
 }
 .main-column h2 {
-    font-size: 1.8333em; /* 22px */
+    font-size: 1.5em; /* 18px */
 }
 .main-column h3 {
-    font-size: 1.3333em; /* 18px */
+    font-size: 1.3333em; /* 16px */
 }
 .main-column h4 {
-    font-size: 1.1667em; /* 16px */
+    font-size: 1.1667em; /* 14px */
 }
 .main-column h5 {
-    font-size: 1em; /* 14px */
+    font-size: 1em; /* 12px */
 }
 .main-column h6 {
-    font-size: .9167em; /* 12px */
+    font-size: .9167em; /* 10px */
 }
 
 p {
@@ -303,6 +306,7 @@ label {
 	padding-top: 0 !important;
     font-size: .9167em;
 	color: #7d7d7d;
+	line-height: 1.3333em;
 }
 div.grippie {
 	border-color: #a5acb2;
@@ -411,10 +415,8 @@ input.submit,
 input.cancel,
 button,
 input.button,
-input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact,
-#delete_all_notifications_submit {
+input#files_filebrowser_edit_artefact {
 	font-size: 1em;
 	font-family: Arial, Helvetica, sans-serif;
 	border-width: 1px;
@@ -429,59 +431,57 @@ input#files_filebrowser_edit_artefact,
 	cursor: default;
 	color: #333;
 }
-/** link buttons **/
-a.btn,
-.upgradeicon a,
-#loginas .btn-loginas {
+/** links that need to look like buttons **/
+.btn {
     font-size: 1em;
 	font-family: Arial, Helvetica, sans-serif;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
 	margin: 0 0.25em 0 0;
-	padding: .2em .5em;
+	padding: .25em .5em;
 	background: #e3e3e3;
 	text-decoration: none;
 	cursor: default;
 	color: #333;
 }
 /** hover for buttons **/
+.btn:hover,
 input.submit:hover,
 input.cancel:hover,
 button:hover,
 input.button:hover,
-input.buttondk:hover,
 input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-a.btn:hover,
-#delete_all_notifications_submit:hover {
+input#files_filebrowser_edit_artefact:hover {
 	background: #d1d1d1;
 	text-decoration: none;
 	cursor: default;
 }
 /** Depress for buttons **/
+.btn:active,
 input.submit:active,
 input.cancel:active,
 button:active,
 input.button:active,
-input.buttondk:active,
 input.select:active,
-input#files_filebrowser_edit_artefact:active,
-a.btn:active,
-#delete_all_notifications_submit:active {
+input#files_filebrowser_edit_artefact:active {
 	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
 	background: #d1d1d1;
 }
-
-/** fixes block control buttons **/
-.blockinstance-controls input {
-	background: none !important;
+/* buttons that look like links with icons */
+.icon {
 	border: 0;
-	margin: 0 0.1em;
-	padding: 0;
-}
-.blockinstance-controls input:hover {
+	cursor: pointer;
+	color: #0000ee;
 	background: none;
+	padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+/* buttons that look like links */
+.linkbtn {
+	border: 0;
+	cursor: pointer;
+	color: #0000ee; 
 }
 
 div.btn-del input.submit, 
@@ -495,7 +495,6 @@ div.btn-msg input.submit,
 div.btn-edit input.submit, 
 .btn-reply,
 .btn-subscribe input.submit {
-    margin-right: .25em;
     * width: 1;
     * overflow: visible;
 }
@@ -508,9 +507,6 @@ div.btn-edit input.submit,
 }
 .viewheader .rbuttons {
 	line-height: 1.8em;
-}
-.rbuttons a {
-	margin-left: .5em;
 }
 * html .rbuttons {
 	right: 2em;
@@ -555,8 +551,8 @@ div.btn-edit input.submit,
 #usf_submit {
 	border-color: #a3a3a3 #a3a3a3 #a3a3a3 #e3e3e3;
 	margin: 0;
-	padding: .1em .25em;
-	* padding: .1em .25em 0 .25em;
+	padding: .18em .25em;
+	* padding: .25em .25em .1em .25em;
 	background: #e3e3e3;
 	border-width: 1px 1px 1px 0;
 	* border-width: 1px 1px 1px 1px;
@@ -564,16 +560,14 @@ div.btn-edit input.submit,
 	cursor: pointer;
 	font-size: 1em;
 }
-#dosearch,
-#selfsearch button ,
+#selfsearch button,
 .query-button,
 #query-button,
 #moderator_search_btn,
-#search_submit,
 #search_search,
 #selfsearch button,
-#users_search_btn,
-#admins_search_btn {
+#search_submit,
+.btn-search {
 	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
 	margin: 0;
 	padding: .25em;
@@ -632,7 +626,6 @@ div.rbuttons .small-logo {
 
 /**************************** Top of page elements ****************************/
 .viewheader {
-    text-align: center;
     padding: 0;
     margin: 0 .5em 1px .5em;
 }
@@ -645,7 +638,7 @@ div.rbuttons .small-logo {
   font-size: .9167em;
 }
 .viewheader .nav {
-  padding: 0 .5em .5em;
+  padding: 0 .5em .5em 100px;
   font-size: .9167em;
   border-bottom: 1px dotted #ddd;
   color: #d1d1d1;
@@ -705,12 +698,17 @@ div.rbuttons .small-logo {
 }
 /* Search and language bar */
 #language-select {
-    text-align: right;
+	display: inline;
+	margin: 0 .25em 0 2em;
+}
+#language-select label {
+	color: #333;
 }
 #usf {
     text-align: right;
 	float: right;
-	margin: 0 1em;
+	margin: 0 .5em;
+	clear: right;
 }
 #usf_query_container input {
     width: 12em;
@@ -722,18 +720,18 @@ div.rbuttons .small-logo {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  float: right;
-  text-align: right;
-  margin: 0 0 1em 0;
-  min-width: 20em;
+	float: right;
+	text-align: right;
+	margin: .5em 0 .5em 0;
+	min-width: 20em;
 }
 #right-nav li {
-  display: inline;
-  padding: 0;
-  color: #d1d1d1;
+	display: inline;
+	padding: 0;
+	color: #d1d1d1;
 }
 #right-nav li .navcount {
-  padding: 0 0 0 0.15em;
+	padding: 0 0 0 0.15em;
 }
 #right-nav li a {
 	padding: 0 .5em;
@@ -769,12 +767,12 @@ div.rbuttons .small-logo {
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
     white-space: nowrap;
-	border-top: 1px solid #ddd;
+	background: #ddd;
+	min-height: 5px;
 }
 #sub-nav ul {
     margin: 0;
 	padding: .25em;
-	background: #ddd;
 }
 #sub-nav li {
     padding: .5em 1em;
@@ -821,6 +819,8 @@ ul.in-page-tabs li a.current-tab:active {
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
+  padding: .4em 1em;
+  * padding: .35em 1em;
 }
 
 .subpage {
@@ -995,9 +995,10 @@ div.sideblock ul {
 }
 #sb-profile ul {
     font-weight: bold;
+	font-size: 1.1em;
 }
 #sb-profile ul ul {
-    font-size: 1em;
+    font-size: .9167em;
     font-weight: normal;
     padding-left: 1.5em;
     list-style-type: disc;
@@ -1331,7 +1332,12 @@ a.tag {
 
 
 #viewlayout .fl {
-	margin: 0 2em 1em 0;
+	margin: 0 2em 2em 0;
+	text-align: center;
+	width: 150px;
+}
+#viewlayout .fl img {
+	padding: 0;
 }
 
 
@@ -1340,14 +1346,16 @@ a.tag {
 	border-bottom: 2px solid #FFF;
 }
 #myviews h4 {
-	font-size: 1.1667em;
-	margin: 0 0 .25em 0;
+	margin: .25em 0 .25em 0;
 }
 #myviews .vi {
+    line-height: 1.3em;
     float: left;
-    line-height: 1.2em;
-    padding: .5em 1.5em .5em 0;
+    padding: .5em 2em .5em 0;
     width: 30%;
+}
+#myviews .vi .videsc {
+	font-size: 1em;
 }
 #myviews .vi .videsc p {
 	margin: 0;
@@ -1615,22 +1623,6 @@ ul.groupuserstatus li:first-child,
 #friendslist ul.actionlist li:first-child {
     border-top: none;
 }
-ul.groupuserstatus li a.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left;
-	padding-left: 12px;
-}
-ul.groupuserstatus li a.btn-del {
-	background: url(../images/icon-delete.gif) no-repeat left;
-	padding-left: 12px;
-}
-ul.actionlist li #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left;
-	padding-left: 12px;
-}
-ul.actionlist li #btn-request {
-	background: url(../images/icon-friendrequest.gif) no-repeat left;
-	padding-left: 12px;
-}
 
 #editgroup th label {
 	white-space: nowrap;
@@ -1754,10 +1746,9 @@ form#search input.text {
 	line-height: 1.4em;
 }
 #delete_all_notifications {
+	float: right;
 	position: relative;
 	top: -30px;
-	left: -15px;
-    width: 10%;
 }
 
 /* Settings > Institution membership */
@@ -1786,30 +1777,40 @@ form#search input.text {
 /* Home page info boxes */
 .home-info-table {
     margin: .5em 0 1.5em;
+	border: 4px solid #eee;
 }
 #hideinfo {
-    margin: 0 0 -15px 10px;
+    margin: 0 -4px -15px 0;
     padding: 1px 0 0 2px;
     position: relative;
+	text-align: right;
 }
 .home-info-table td {
     width: 1%;
-    padding: 0 5px 0 0;
+    padding: 0 4px 0 0;
 }
-.home-info.rel {
-    padding-top: 0;
+.home-info {
+	margin-bottom: 2px;
+}
+.home-info-1 {
+	margin-top: 2px;
+	margin-left: 4px;
+}
+.home-info-2 {
+	margin-top: 2px;
 }
 .home-info-inner {
     padding: 6px;
-    min-height: 255px;
+    min-height: 260px;
     text-align: center;
 	vertical-align: top;
 }
 .home-info .desc {
-    text-align: left;
+    text-align: center;
 }
-.home-info .caption td {
+.home-info .caption {
     padding-bottom: .5em;
+	line-height: 1.2em;
 }
 .home-info a,
 .home-info a:hover,
@@ -1823,12 +1824,17 @@ form#search input.text {
     padding: 0;
     width: 1%;
     vertical-align: top;
-    white-space: nowrap;
+}
+.home-info p.subtitle {
+	font-size: 1.1667em;
+	border-top: 1px solid #d1d1d1;
+	border-bottom: 1px solid #d1d1d1;
 }
 #accessdesc {
     background: url(../images/access.png) no-repeat left;
     padding-left: 40px;
     margin: 15px 10px 0 10px;
+	text-align: left;
 }
 .help, .help a, .help a img {
     vertical-align: top;
@@ -1848,13 +1854,6 @@ ul.viewlist li {
 img.feedicon {
     margin-left: 10px;
 }
-#resumewrap table.mceLayout {
-	width: 570px !important;
-}
-#resumewrap #goalform table.mceLayout,
-#resumewrap #skillform table.mceLayout {
-	width: 490px !important;
-}
 
 #editpost_allowcomments_container th label, 
 #edit_interaction th label,
@@ -1865,14 +1864,15 @@ img.feedicon {
 }
 
 
+/* to get user picts to align with text */
+.group-info li img {
+    vertical-align: top;
+}
+.bt-recentforumposts .blockinstance-content td img {
+    vertical-align: middle;
+}
 
 /* views comment */
-#delete_comment_delete_comment_submit {
-	background: url(../images/icon-delete.gif) no-repeat left center !important;
-	padding-left: 8px;
-	border: 0;
-	cursor: pointer;
-}
 * html #feedbacktable .details .fr {
 	padding: 0;
 	border: 0;
@@ -1880,7 +1880,12 @@ img.feedicon {
 
 
 .inbox-message {
-	background: #eee;
 	font-size: .9167em;
-	padding: .1em .5em;
+	line-height: 1.4em;
+}
+
+.morelink {
+	float: right;
+	padding: .25em .5em;
+	font-weight: bold;
 }

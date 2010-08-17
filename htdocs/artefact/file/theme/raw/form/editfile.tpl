@@ -1,9 +1,9 @@
   <tr id="{$prefix}_edit_row"{if !$fileinfo} class="hidden"{/if}>
-    <td colspan=6>
+    <td colspan="6">
       <table>
         <tbody>
           <tr>
-            <th colspan=2 id="{$prefix}_edit_heading">
+            <th colspan="2" id="{$prefix}_edit_heading">
             {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </th>
           </tr>
@@ -18,7 +18,7 @@
           <tr>
             <th><label>{str tag=tags}</label></th>
             <td>
-              <input name="{$prefix}_edit_tags" size="40"  id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
+              <input name="{$prefix}_edit_tags" size="40" id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
               <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
             </td>
           </tr>
@@ -52,9 +52,9 @@
           </tr>
 {/if}
           <tr>
-            <td colspan=2>
+            <td colspan="2">
               <input type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
-              <input type="submit" class="button" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
+              <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>
           <tr><td colspan=2 id="{$prefix}_edit_messages"></td></tr>

@@ -172,7 +172,6 @@ $deleteall = pieform(array(
             'type' => 'submit',
             'value' => get_string('deleteallnotifications', 'activity'),
             'confirm' => get_string('reallydeleteallnotifications', 'activity'),
-            'class' => 'btn-del',
         ),
     ),
 ));

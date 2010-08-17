@@ -63,23 +63,7 @@ form#files .foldernav {
 }
 .filelist td.right input {
 	font-size: .9167em;
-}
-.filelist td.right input.btn-edit {
-	font-size: .9167em;
-	background: transparent url(../images/icon-edit.gif) no-repeat left center;
-	border: 0;
-	padding-left: 8px;
-	cursor: pointer;
-	color: #333;
-}
-.filelist td.right input.btn-del {
-	font-size: .9167em;
-	background: transparent url(../images/icon-delete.gif) no-repeat left center;
-	border: 0;
-	padding-left: 8px;
-	* padding-left: 10px;
-	cursor: pointer;
-	color: #333;
+	margin-left: .5em;
 }
 /* parent folder row */
 tr.parentfolder td {

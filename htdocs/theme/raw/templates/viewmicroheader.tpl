@@ -11,9 +11,9 @@
         <div class="links rbuttons">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a {if $item.type}class="btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
+              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
             {/foreach}
-          {elseif $backurl}<a class="btn-reply" href="{$backurl}">{str tag=back}</a> 
+          {elseif $backurl}<a class="icon btn-reply" href="{$backurl}">{str tag=back}</a> 
           {/if}
         </div>
         <div class="lbuttons">
@@ -38,7 +38,7 @@
         </div>
 {/if}
 {if $collection}
-        <div class="center cb"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
+        <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
 {else}
         <div class="center cb title">{$microheadertitle|safe}</div>
 {/if}

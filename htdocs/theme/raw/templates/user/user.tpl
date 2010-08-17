@@ -18,7 +18,7 @@
       {/if}
       {if $user->friend}
 		<li>
-			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-delete">
+			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-del">
 				{str tag='removefromfriendslist' section='group'}
 			</a>
 		</li>

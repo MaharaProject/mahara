@@ -11,8 +11,8 @@
             {foreach from=$interactions item=interaction}
                 <li>
                     <a href="{$WWWROOT}interaction/{$interaction->plugin}/view.php?id={$interaction->id}">{$interaction->title}</a> [
-                    <a href="{$WWWROOT}interaction/edit.php?id={$interaction->id}">{str tag='edit'}</a> |
-                    <a href="{$WWWROOT}interaction/delete.php?id={$interaction->id}">{str tag='delete'}</a> ]
+                    <a href="{$WWWROOT}interaction/edit.php?id={$interaction->id}" class="btn-edit">{str tag='edit'}</a> |
+                    <a href="{$WWWROOT}interaction/delete.php?id={$interaction->id}" class="btn-del">{str tag='delete'}</a> ]
                 </li>
             {/foreach}
                 <li> [ <a href="{$WWWROOT}interaction/edit.php?group={$group->id}&plugin={$plugin}">{str tag='addnewinteraction' args=$pluginnames.$plugin.single section='group'}</a> ]

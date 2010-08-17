@@ -20,7 +20,7 @@
 {elseif $relationship == 'none' && $friendscontrol == 'auto'}
                             {$newfriendform|safe}
 {elseif $relationship == 'none' && $friendscontrol == 'auth'}
-                            <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-req">{str tag='requestfriendship' section='group'}</a>
+                            <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-request">{str tag='requestfriendship' section='group'}</a>
 {/if}
 {if $invitedlist}
 							<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>

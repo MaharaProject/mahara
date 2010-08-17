@@ -8,10 +8,10 @@
 	<base target="_self" />
 </head>
 <body id="image" style="display: none">
-<form onsubmit="ImageDialog.update();return false;" action="#">
+<form onSubmit="ImageDialog.update();return false;" action="#">
 	<div class="tabs">
 		<ul>
-			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onmousedown="return false;">{str tag=insertimage section=artefact.blog}</a></span></li>
+			<li id="general_tab" class="current"><span><a href="javascript:mcTabs.displayTab('general_tab','general_panel');" onMouseDown="return false;">{str tag=insertimage section=artefact.blog}</a></span></li>
 		</ul>
 	</div>
 
@@ -67,11 +67,11 @@
 
 	<div class="mceActionPanel">
 		<div style="float: left">
-			<input type="button" id="insert" name="insert" value="{str section=artefact.blog tag=insert}" onclick="ImageDialog.update();return false;" />
+			<input type="button" id="insert" class="submit" name="insert" value="{str section=artefact.blog tag=insert}" onClick="ImageDialog.update();return false;" />
 		</div>
 
 		<div style="float: right">
-			<input type="button" id="cancel" name="cancel" value="{str section=artefact.blog tag=cancel}" onclick="tinyMCEPopup.close();" />
+			<input type="button" id="cancel" class="cancel" name="cancel" value="{str section=artefact.blog tag=cancel}" onClick="tinyMCEPopup.close();" />
 		</div>
 	</div>
 </form>

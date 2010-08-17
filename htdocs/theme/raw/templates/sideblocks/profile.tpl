@@ -5,7 +5,7 @@
 {/if}
         <ul>
 {if $sbdata.unreadnotifications}
-            <li id="unreadmessages"><a class="btn-msg" href="{$WWWROOT}account/activity/">
+            <li id="unreadmessages"><a class="icon btn-msg" href="{$WWWROOT}account/activity/">
                 <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$sbdata.unreadnotifications}</span> <span class="unreadmessages">{$sbdata.unreadnotificationsmessage}</span></span>
             </a></li>
 {/if}

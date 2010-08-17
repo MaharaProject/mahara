@@ -385,7 +385,7 @@ input#myfriends_addfriend_add {
 	margin: 0;
 }
 #usf {
-	margin: 0;
+	margin: 5px 0 0 0;
 }
 #usf_query_container input {
     color: #8E1901;
@@ -409,7 +409,6 @@ input#myfriends_addfriend_add {
 }
 
 #main-nav {
-    float:right;
     padding: 0;
     margin: 0;
     height: 33px;
@@ -469,8 +468,7 @@ input#myfriends_addfriend_add {
 	border:none;
 }
 #sub-nav ul {
-    float:right;
-	padding: 8px 0 5px 0;
+	padding: 8px 0 5px 20px;
     background: transparent;
 }
 #sub-nav li {

@@ -4,7 +4,7 @@
             {str tag="youaregroup$group->role" section="group"}
         </li>
 {if $group->canleave}
-    <li><a href = "{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
+    <li><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
 {elseif $group->membershiptype == 'admin'}
 	<li><a href="{$WWWROOT}group/edit.php?id={$group->id}" class="btn-edit">{str tag="edit"}</a></li>
@@ -35,7 +35,7 @@
 	{$group->groupjoin|safe}
 	
 {elseif $group->jointype == 'request'}
-	<li><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-req">{str tag="requestjoingroup" section="group"}</a></li>
+	<li><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>
 	
 {/if}
 </ul>

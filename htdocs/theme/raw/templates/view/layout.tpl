@@ -18,7 +18,7 @@
             <div class="cb">
                 <input type="hidden" name="pieform_viewlayout" value="">
                 {if $back}
-                <input type="submit" class="submit submitcancel" name="cancel_submit" value="{str tag='back'}">
+                <input type="submit" class="cancel" name="cancel_submit" value="{str tag='back'}">
                 {/if}
                 <input type="submit" class="submit" name="submit" value="{str tag='changeviewlayout' section='view'}">
             </div>

@@ -107,9 +107,11 @@ html>body #column-container {
 /* columns */
 #column-container input.submit {
     cursor: pointer;
+	padding: 0;
+	margin: 0;
 }
-.remove-column input.removecolumn {
-    width: 50px;
+#column-container input.submit:hover {
+	background: none;
 }
 #column-container .column-header input[disabled="disabled"] {
     cursor: default;
@@ -219,7 +221,7 @@ html>body #column-container {
 /* control */
 .blockinstance-controls {
     position: absolute;
-	right: 2px;
+	right: 0;
 	top: 2px;
 }
 .blockinstance-controls input,
@@ -231,7 +233,7 @@ html>body #column-container {
     background: none;
     padding: 0;
     cursor: pointer;
-	margin: 0;
+	margin: 0 0 0 0.1em;
 }
 
 /* content */
@@ -296,8 +298,7 @@ html>body #column-container {
 /* Inbox */
 .bt-inbox td.icon-container {
   vertical-align: top;
-  padding: .25em 0;
-  width: 15px;
+  width: 16px;
 }
 .bt-inbox td.icon-container .icon {
   height: 1.7em;
@@ -514,7 +515,7 @@ div.artefactchooser-splitter {
 
 #view-description {
     margin: 0 0 1em 0;
-	padding: .25em 0;
+	padding: 0 0 .25em 0;
 	border-bottom: 1px dotted #ccc;
 }
 
@@ -523,6 +524,26 @@ div.artefactchooser-splitter {
 	margin:0; 
 	padding:0; 
 	width: auto;
+}
+
+/* Collection navigation */
+#collection {
+	margin: 1em 0 0 0;
+}
+#collection strong {
+	font-size: 1.1667em;
+}
+ul.colnav {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0 0 0;
+	display: inline;
+}
+ul.colnav li {
+    display: inline;
+    padding: 0;
+    margin: 0 0.15em;
+	display: inline;
 }
 
 /* VIEWS */
@@ -546,7 +567,17 @@ div.artefactchooser-splitter {
 }
 #feedbacktable .icon {
 	float: left;
-	margin-right: 5px;
+	margin-right: .25em;
+}
+#feedbacktable .username {
+	margin-right: .25em;
+}
+#feedbacktable .details span {
+	margin: 0 .25em;
+}
+#feedbacktable .attachmessage {
+	font-size: .9167em;
+	font-style: italic;
 }
 #feedbacktable p {
     margin: 0 0 .25em;

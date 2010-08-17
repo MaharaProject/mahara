@@ -2,7 +2,6 @@
 
 {if $MAINNAV}
         <div id="main-nav">
-{if !$nosearch && $LOGGEDIN}        {user_search_form}{/if}
             <ul>{strip}
 {foreach from=$MAINNAV item=item}
                 <li{if $item.selected}{assign var=MAINNAVSELECTED value=$item} class="selected"{/if}><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a></li>

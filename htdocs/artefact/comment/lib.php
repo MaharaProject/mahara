@@ -554,7 +554,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'submit',
-                    'class' => 'quiet btn-del',
+                    'class' => 'quiet',
                     'name'  => 'delete_comment_submit',
                     'value' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),

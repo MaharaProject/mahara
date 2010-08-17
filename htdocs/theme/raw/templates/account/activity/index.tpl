@@ -10,6 +10,8 @@
 			{/foreach}
 			</select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
 			</form>
+            
+            {$deleteall|safe}
 			<form name="notificationlist" method="post" onSubmit="markread(this, 'read'); return false;">
 			<table id="activitylist" class="fullwidth">
 				<thead>
@@ -17,16 +19,16 @@
 						<th width="10"></th>
 						<th>{str section='activity' tag='subject'}</th>
 						<th width="60">{str section='activity' tag='date'}</th>
-						<th width="50" class="center">{str section='activity' tag='read'}<br><a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}</a></th>
+						<th width="70" class="center">{str section='activity' tag='read'}<br><a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}</a></th>
 						<th width="50" class="center">{str tag='delete'}<br><a href="" onclick="toggleChecked('tocheckdel'); return false;">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
                 <tfoot>
 				  	<tr>
-						<td colspan="2">{$deleteall|safe}</td>
+						<td colspan="2"></td>
 						<td colspan="3" class="right">
 						  <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
-						  <input class="submit btn-delete" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
+						  <input class="submit btn-del" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
 						</td>
 				  	</tr>
 				</tfoot>

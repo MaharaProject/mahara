@@ -3,8 +3,8 @@
         <td>
             <div class="fr">
                 <ul class="groupuserstatus">
-                    <li><a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" class="btn-edit">{str tag="edit"}</a></li>
-                    <li><a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id}" class="btn-del">{str tag="delete"}</a></li>
+                    <li><a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" class="icon btn-edit">{str tag="edit"}</a></li>
+                    <li><a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id}" class="icon btn-del">{str tag="delete"}</a></li>
                 </ul>
             </div>
 
@@ -13,9 +13,9 @@
         <div class="codesc">{$plan->description}</div>
         <div class="fl">
             <ul class="planslist">
-                <li><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{str tag="managetasks" section="artefact.plans"}</a></li>
+                <li><a class="icon btn-manage" href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{str tag="managetasks" section="artefact.plans"}</a></li>
             </ul>
-        </td>
         </div>
+        </td>
     </tr>
 {/foreach}

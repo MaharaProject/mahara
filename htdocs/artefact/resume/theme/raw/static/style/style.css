@@ -17,6 +17,19 @@
 #resumewrap table td {
 	padding: 0;
 }
+#resumewrap table.resumecomposite {
+	margin-bottom: .5em;
+}
+#resumewrap table.resumecomposite td {
+	padding: .25em .5em;
+}
+#resumewrap table.mceLayout {
+	width: 570px !important;
+}
+#resumewrap #goalform table.mceLayout,
+#resumewrap #skillform table.mceLayout {
+	width: 490px !important;
+}
 
 #addemploymenthistory table,
 #addeducationhistory table,

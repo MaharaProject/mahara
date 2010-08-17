@@ -1,21 +1,10 @@
 {include file='header.tpl'}
 
-<div class="message" id="close-site">
-{if $closed}
-    <h3>{str tag=reopensite section=admin}</h3>
-    {str tag=reopensitedetail section=admin}
-{else}
-    <h3>{str tag=closesite section=admin}</h3>
-    {str tag=closesitedetail section=admin}
-{/if}
-    {$closeform|safe}
-</div>
-
 <div id="adminhome">
 {if $upgrades}
 <div id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
-<div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
+<div class="fr"><span class="upgradeicon"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
 <table id="upgradestable">
     <tr>
@@ -51,6 +40,17 @@
   {include file='admin/stats.tpl' full=0}
 </div>
 {/if}
+
+<div class="message" id="close-site">
+{if $closed}
+    <h3>{str tag=reopensite section=admin}</h3>
+    {str tag=reopensitedetail section=admin}
+{else}
+    <h3>{str tag=closesite section=admin}</h3>
+    {str tag=closesitedetail section=admin}
+{/if}
+    {$closeform|safe}
+</div>
 
 </div>
 

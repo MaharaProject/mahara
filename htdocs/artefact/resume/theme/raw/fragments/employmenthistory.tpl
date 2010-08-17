@@ -31,7 +31,7 @@
 {if $controls}
 <div>
     <div id="employmenthistoryform" class="hidden">{$compositeforms.employmenthistory|safe}</div>
-    <button id="addemploymenthistorybutton" class="cancel" onclick="toggleCompositeForm('employmenthistory');">{str tag='add'}</button>
+    <button id="addemploymenthistorybutton" class="submit" onclick="toggleCompositeForm('employmenthistory');">{str tag='add'}</button>
 </div>
 {/if}
 </fieldset>

@@ -156,18 +156,3 @@
 	padding: 0 0 0 1em;
 }
 
-
-#forumslist .btn-edit,
-#forumtopicstable .btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left;
-	border: 0;
-	cursor: pointer;
-	padding-left: 12px;
-}
-#forumslist .btn-del,
-#forumtopicstable .btn-del {
-	background: url(../images/icon-delete.gif) no-repeat left;
-	border: 0;
-	cursor: pointer;
-	padding-left: 12px;
-}

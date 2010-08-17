@@ -249,6 +249,19 @@ input.cancel:active {
 }
 
 /** Buttons with icons **/
+.btn-edit {
+	background: url(../images/icon-edit.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-del {
+    background: transparent url(../images/icon-delete.gif) no-repeat left center;
+    color: #ca0000;
+	padding-left: 13px;
+}
+.btn-manage {
+	background: url(../images/icon-manage.gif) no-repeat left;
+	padding-left: 15px;
+}
 a.btn-req {
 	background: url(../images/icon-join.gif) no-repeat left center;
 	padding-left: 15px;
@@ -257,18 +270,8 @@ a.btn-req {
     background: transparent url(../images/icon-leave.gif) no-repeat left center;
 	padding-left: 15px;
 }
-a.btn-del,
-a#btn-delete {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #ca0000 !important;
-	padding-left: 12px;
-}
 a.btn-msg, #btn-sendmessage {
 	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.rbuttons a.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
 	padding-left: 12px;
 }
 .btn-pending {
@@ -295,19 +298,27 @@ input#myfriends_addfriend_add {
 	color: #7f9d16;
 	border: 0;
 }
+ul.actionlist li #btn-sendmessage {
+	background: url(../images/icon-mail.gif) no-repeat left;
+	padding-left: 13px;
+}
+ul.actionlist li #btn-request {
+	background: url(../images/icon-friendrequest.gif) no-repeat left;
+	padding-left: 13px;
+}
 
 /* Search buttons */
 #usf_submit {
-	background: #6e8e00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
-	border-color: #6e8e00 #496000 #496000 #6e8e00;
+	background: transparent url(../images/btn-search.gif) no-repeat !important;
+	border: 0;
 	color: #6e8e00;
 	text-indent: -999px;
 	font-size: 1%;
 	cursor: pointer;
 	vertical-align: bottom;
-	height: 23px;
-	width: 23px;
-	* height: 24px;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
 * html #usf_submit {
 	height: 22px;
@@ -322,15 +333,16 @@ input#myfriends_addfriend_add {
 #selfsearch button,
 #users_search_btn,
 #admins_search_btn {
-	background: #6e8e00 url(../images/icon-search-white.gif) no-repeat 6px 6px !important;
-	border-color: #6e8e00 #496000 #496000 #6e8e00;
+	background: transparent url(../images/btn-search.gif) no-repeat !important;
+	border: 0;
 	color: #6e8e00;
 	text-indent: -999px;
 	font-size: 1%;
 	cursor: pointer;
 	vertical-align: bottom;
-	height: 25px;
+	height: 24px;
 	width: 24px;
+	margin-left: 2px;
 }
 #usf_submit:hover,
 #dosearch:hover,
@@ -399,6 +411,7 @@ input#myfriends_addfriend_add {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
+	margin: .5em 0 .5em 0;
 }
 #right-nav li {
 }
@@ -873,8 +886,8 @@ ul.groupuserstatus li,
     border-bottom: solid 1px #cccccc;
 }
 .home-info-table {
-    margin: 2em 0 2.5em;
 }
+
 
 #hideinfo {
 }
