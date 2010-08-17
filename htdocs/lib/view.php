@@ -2407,7 +2407,7 @@ class View {
             FROM {view} v
             LEFT OUTER JOIN (
                 SELECT
-                    gtr.edit_views, gm.group AS groupid
+                    gtr.edit_views, gm.group AS groupid, g.deleted
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
                 INNER JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gtr.role = gm.role)
@@ -2450,6 +2450,9 @@ class View {
                             OR (ag.member = ?)
                         )
                     )
+                )
+                AND (
+                    v.group IS NULL OR vg.deleted = 0
                 )";
             $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
         }
