@@ -7,8 +7,8 @@
 <div id="containerX">
     <div id="loading-box"></div>
     <div id="top-wrapper">
-      <div class="viewheader rel">
-        <div class="links rbuttons">
+      <div class="viewheader top">
+        <div class="fr links">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
               <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
@@ -16,11 +16,12 @@
           {elseif $backurl}<a class="icon btn-reply" href="{$backurl}">{str tag=back}</a> 
           {/if}
         </div>
-        <div class="lbuttons">
+        <div class="fl">
           <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>
         </div>
 {if $LOGGEDIN}
-        <div class="nav">
+        <div id="mainnav-container" class="nav">
+         <div id="mainnav" class="js-hidden">
           <a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a> : 
           {foreach from=$MAINNAV item=item}
             {if $item.path}
@@ -36,7 +37,20 @@
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
           <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
+        <script>{literal}
+        addLoadEvent(function(){
+            setStyle('mainnav', {'display': 'none'});
+            removeElementClass('mainnav', 'js-hidden');
+            connect('mainnav-container', 'onmouseenter', function(e) { appear('mainnav', {'duration': 0.25}); });
+            connect('mainnav-container', 'onmouseleave', function(e) { fade('mainnav', {'duration': 0.25}); });
+        });
+        {/literal}
+        </script>
+       </div>
+      </div>
+      <div class="viewheader">
 {/if}
+
 {if $collection}
         <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
 {else}

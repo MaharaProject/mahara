@@ -230,3 +230,7 @@ ul.colnav li.selected a {
 	background: #fff;
 	text-decoration: none;
 }
+ul.colnav-extra {
+  display: block;
+  text-align: right;
+}

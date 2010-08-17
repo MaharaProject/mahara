@@ -186,7 +186,7 @@ if ($collection = $view->get('collection')) {
     if ($shownav) {
         if ($views = $collection->get('views')) {
             if (count($views['views']) > 1) {
-                $smarty->assign_by_ref('collection',$views['views']);
+                $smarty->assign_by_ref('collection', array_chunk($views['views'], 5));
             }
         }
     }
