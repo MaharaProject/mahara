@@ -702,10 +702,10 @@ EOF;
         $js .= <<<EOF
 
         function (r) {
-            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact}, '{$editstr}'));
+            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'class': 'btn-edit'}, '{$editstr}'));
         },
         function (r, d) {
-           var link = A({'href': ''}, '{$delstr}');
+            var link = A({'href': '', 'class': 'btn-del'}, '{$delstr}');
             connect(link, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
