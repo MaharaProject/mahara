@@ -22,7 +22,7 @@
 
                     <div class="vi">
                         <h4><a href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a></h4>
-                        {str tag=views section=collection}:
+                        <div class="viviews">{str tag=views section=collection}:
                         {if $collection->views}
                             {foreach from=$collection->views item=view name=cviews}
                                 <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
@@ -30,6 +30,7 @@
                         {else}
                             {str tag=none}
                         {/if}
+                        </div>
                     </div>
 
                     <div class="vi">

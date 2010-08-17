@@ -142,13 +142,15 @@ ul.artefactchooser-subtabs li.current a:active {
     margin: 5px 0;
 }
 .add-button .newblockhere {
-    background: url(../images/btn_addblock.gif) repeat-x;
+    background: url(../images/btn-addblock.gif) repeat-x;
     font-weight: normal;
-    height: 18px;
+    height: 16px;
     padding: 1px 5px 2px 5px;
     color: #FFF;
     width: 100%;
     margin: 0;
+	border-left: 1px solid #5d5d5d;
+	border-right: 1px solid #5d5d5d;
 }
 /* this rule compresses and centers the buttons better in konqueror and safari */
 body:last-child:not(:root:root) .newblockhere {

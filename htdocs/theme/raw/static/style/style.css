@@ -219,10 +219,12 @@ td.narrow {
 .r0,
 .r0 td  {
     background-color: #f9f9f9;
+  border-bottom: 1px solid #FFF;
 }
 .r1,
 .r1 td {
     background-color: #f3f3f3;
+  border-bottom: 1px solid #FFF;
 }
 tr.highlight td {
   background-color: #fffcd8 !important;
@@ -241,6 +243,23 @@ div.listing {
 .listing div div {
 	font-size: .9167em;
 }
+.listing .vi .videsc {
+	font-size: .9167em;
+}
+.listing .vi .tags {
+	font-size: 1em;
+	margin-top: .25em;
+	color: #888;
+}
+.listing .vi .viartefacts {
+	color: #888;
+	font-size: 1em;
+}
+.listing .vi .viviews {
+	color: #888;
+	font-size: 1em;
+}
+
 
 /**************************** Pagination ****************************/
 div.pagination  {
@@ -267,11 +286,15 @@ div.pagination .selected {
     font-weight: bold;
     border: none;
 	padding: .25em .5em;
+    border: 1px solid #d1d1d1;
 }
 div.pagination .results {
     color: #838383;
 	display: inline;
 	padding: .25em .5em;
+}
+div.pagination .results a {
+	border: 0;
 }
 
 /**************************** Forms ****************************/
@@ -326,6 +349,7 @@ legend {
 /* Select */
 select {
 	margin-right: .25em;
+	padding: .16em;
 }
 
 /* Fieldset */
@@ -476,6 +500,8 @@ input#files_filebrowser_edit_artefact:active {
 	background: none;
 	padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+	margin-left: .5em;
+	text-decoration: underline;
 }
 /* buttons that look like links */
 .linkbtn {
@@ -1093,6 +1119,9 @@ li#pendingfriends a {
 
 
 /* Friends control sideblock */
+div.sideblock #friendscontrol td {
+	padding: 0;
+}
 div.sideblock #friendscontrol label {
 	line-height: 1.833em;
 	vertical-align: top;
@@ -1100,6 +1129,9 @@ div.sideblock #friendscontrol label {
 }
 
 /* Tags */
+#results_heading {
+	margin-top: 1.5em;
+}
 .mytags {
   padding: .5em 0;
 }
@@ -1107,7 +1139,6 @@ div.sideblock #friendscontrol label {
   margin-bottom: 2em;
 }
 a.tag {
-  text-decoration: none;
 	line-height: 1.1667em;
 }
 .mytags a.tag {
@@ -1809,7 +1840,7 @@ form#search input.text {
 }
 .home-info-inner {
     padding: 6px;
-    min-height: 260px;
+    min-height: 265px;
     text-align: center;
 	vertical-align: top;
 }

@@ -54,7 +54,7 @@
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
-                                <div class="videsc">{str tag="artefacts" section="view"}:
+                                <div class="viartefacts">{str tag="artefacts" section="view"}:
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
 {/if}
                             </div>

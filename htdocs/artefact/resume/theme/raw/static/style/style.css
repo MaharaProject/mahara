@@ -20,6 +20,10 @@
 #resumewrap table.resumecomposite {
 	margin-bottom: .5em;
 }
+#resumewrap table.resumecomposite .btn-edit,
+#resumewrap table.resumecomposite .btn-del {
+	font-size: .9167em;
+}
 #resumewrap table.resumecomposite td {
 	padding: .25em .5em;
 }

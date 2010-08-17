@@ -413,6 +413,7 @@ ul.artefactchooser-subtabs li.current a:hover {
 	text-align: left !important;
 }
 .maharatable tbody td {
+	padding: 0;
 }
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,

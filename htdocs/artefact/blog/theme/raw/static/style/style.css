@@ -28,10 +28,26 @@
 	font-size: 1.8em;
 }
 #postlist th.controls {
-	font-size: .9167em;
 	text-align: right;
 }
 #postlist th.controls input {
+	margin-left: .5em;
+}
+#postlist th.controls .btn-edit {
+	background: transparent url(../images/edit.gif) no-repeat left;
+	width: 16px;
+	height: 16px;
+	border: 0;
+	cursor: pointer;
+	font-size: 1%;
+}
+#postlist th.controls .btn-del {
+	background: transparent url(../images/delete.gif) no-repeat left;
+	width: 16px;
+	height: 16px;
+	border: 0;
+	cursor: pointer;
+	font-size: 1%;
 	margin-left: .5em;
 }
 #postlist th form,

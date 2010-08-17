@@ -47,7 +47,7 @@
 	background: #fbeceb;
     text-align: left;
 	padding: 1em 1.5em;
-	width: 25%;
+	width: 24%;
 	float: left;
 	margin: 0 0 0 1em;
 	min-height: 160px;
@@ -350,16 +350,23 @@ table.tablerenderer th.desc {
 	padding: 1em;
 	margin-left: 1em;
 }
-#suspenddelete h4 {
+#suspenddelete #delete h4 {
 	margin-top: 0;
 	color: #ca0000;
 }
 #suspenddelete #delete #edituser_delete_submit {
 	border-color: #f69595 #750000 #750000 #f69595 !important;
 	background: #ca0000 !important;
+	color: #FFF;
 }
 
-
+#edituser_institution_addinstitution_container,
+#edituser_institution_add_container {
+	display: inline;
+}
+#edituser_site_passwordchange_container th label {
+	white-space: nowrap;
+}
 
 /* USERS > SUSPENDED USERS */
 #suspendedlist {
@@ -484,9 +491,6 @@ form#uploadcsv {
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTIONS */
-.admininstitutionbtns {
-	font-size: .9167em;
-}
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #usertypeselect table td,
