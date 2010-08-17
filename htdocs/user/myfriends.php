@@ -106,7 +106,7 @@ if (!$data['count']) {
     }
 }
 
-$javascript = array('paginator');
+$javascript = array('paginator', 'groupbox');
 if ($admingroups->invite || $admingroups->controlled) {
     array_push($javascript, 'groupbox');
 }
