@@ -2030,7 +2030,7 @@ function right_nav() {
             'path' => 'settings',
             'wwwroot' => get_config('httpswwwroot'),
             'url' => 'account/',
-            'title' => $USER->get('username'),
+            'title' => get_string('settings'),
             'icon' => $THEME->get_url('images/settings.png'),
             'alt' => get_string('settings'),
             'weight' => 10,
