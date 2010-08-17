@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'profile/plans');
+define('MENUITEM', 'myportfolio/plans');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'plans');
 

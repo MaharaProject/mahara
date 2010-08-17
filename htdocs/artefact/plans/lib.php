@@ -46,7 +46,7 @@ class PluginArtefactPlans extends PluginArtefact {
     public static function menu_items() {
         return array(
             array(
-                'path' => 'profile/plans',
+                'path' => 'myportfolio/plans',
                 'url'  => 'artefact/plans/',
                 'title' => get_string('myplans', 'artefact.plans'),
                 'weight' => 40,
