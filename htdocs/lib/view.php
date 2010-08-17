@@ -2907,6 +2907,7 @@ class View {
         }
 
         $wwwroot = get_config('wwwroot');
+        $ownername = hsc($this->formatted_owner());
 
         if ($this->type == 'grouphomepage') {
             return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
@@ -2927,7 +2928,6 @@ class View {
         }
 
         if (isset($ownerlink)) {
-            $ownername = hsc($this->formatted_owner());
             return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
         }
 
