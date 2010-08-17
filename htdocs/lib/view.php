@@ -145,6 +145,9 @@ class View {
         $this->dirtycolumns = array();
         if ($this->group) {
             $group = get_record('group', 'id', $this->group);
+            if ($group->deleted) {
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
+            }
             safe_require('grouptype', $group->grouptype);
             $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
         }
