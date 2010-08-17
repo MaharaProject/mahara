@@ -58,24 +58,14 @@ else {
 }
 
 $elements = Collection::get_collectionform_elements($data);
-if ($new) {
-    $elements['submit'] = array(
-        'type' => 'submitcancel',
-        'value' => array(get_string('next') . ': ' . get_string('editviews', 'collection'), get_string('cancel')),
-        'goto' => get_config('wwwroot') . 'collection',
-    );
-}
-else {
-    $elements['id'] = array(
-        'type' => 'hidden',
-        'value' => $id,
-    );
-    $elements['submit'] = array(
-        'type' => 'submitcancel',
-        'value' => array(get_string('save'), get_string('cancel')),
-        'goto' => get_config('wwwroot') . 'collection',
-    );
-}
+$submitcancelstr = $new ? array(get_string('next') . ': ' . get_string('editviews', 'collection'), get_string('cancel'))
+    : array(get_string('save'), get_string('cancel'));
+
+$elements['submit'] = array(
+    'type' => 'submitcancel',
+    'value' => $submitcancelstr,
+    'goto' => get_config('wwwroot') . 'collection',
+);
 
 $form = pieform(array(
     'name' => 'edit',

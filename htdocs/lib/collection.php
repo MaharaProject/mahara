@@ -220,6 +220,10 @@ class Collection {
                 'type' => 'hidden',
                 'value' => $data->owner,
             );
+            $elements['navigation'] = array(
+                'type' => 'hidden',
+                'value' => $data->navigation,
+            );
         }
 
         return $elements;
