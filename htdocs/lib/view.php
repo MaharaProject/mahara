@@ -116,8 +116,8 @@ class View {
         if (!empty($id)) {
             $tempdata = get_record('view','id',$id);
             if (empty($tempdata)) {
-                throw new ViewNotFoundException("View with id $id not found");
-            }    
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
+            }
             if (!empty($data)) {
                 $data = array_merge((array)$tempdata, $data);
             }
