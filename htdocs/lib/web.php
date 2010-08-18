@@ -380,8 +380,10 @@ EOF;
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
+        global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());
         $smarty->assign('RIGHTNAV', right_nav());
+        $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
@@ -2110,13 +2112,13 @@ function footer_menu($all=false) {
  * Used by main_nav()
  */
 function find_menu_children(&$menu, $path) {
+    global $SELECTEDSUBNAV;
     $result = array();
     if (!$menu) {
         return array();
     }
 
     foreach ($menu as $key => $item) {
-        $len = strlen($item['path']);
         $item['selected'] = defined('MENUITEM')
             && ($item['path'] == MENUITEM
                 || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
@@ -2131,6 +2133,9 @@ function find_menu_children(&$menu, $path) {
     if ($menu) {
         foreach ($result as &$item) {
             $item['submenu'] = find_menu_children($menu, $item['path']);
+            if ($item['selected']) {
+                $SELECTEDSUBNAV = $item['submenu'];
+            }
         }
     }
 
