@@ -3142,6 +3142,17 @@ class View {
             ),
         );
     }
+
+    /**
+     * Determine whether the current view is of a type which can be themed.
+     * Certain view types do not respect themes when displayed.
+     *
+     * @return boolean whether the view type may be themed
+     */
+    function is_themeable() {
+        $unthemable_types = array('grouphomepage', 'dashboard');
+        return !in_array($this->type, $unthemable_types);
+    }
 }
 
 

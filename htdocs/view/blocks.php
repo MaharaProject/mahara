@@ -239,7 +239,8 @@ $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
-if (get_config('userscanchooseviewthemes')) {
+if (get_config('userscanchooseviewthemes')
+    && $view->is_themeable()) {
     $smarty->assign('viewtheme', $viewtheme);
     $smarty->assign('viewthemes', $allowedthemes);
 }
