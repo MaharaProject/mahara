@@ -449,16 +449,23 @@ class PluginImportLeap extends PluginImport {
         }
 
         // Put views into collections
+
+        // Keep track of which views have been placed in a collection, because
+        // Mahara can't handle more one collection per view.
+        $incollection = array();
+
         foreach ($this->collectionviewentries as $cid => $entryids) {
             $i = 0;
             foreach ($entryids as $entryid) {
-                if ($viewid = self::get_viewid_imported_by_entryid($entryid)) {
+                $viewid = self::get_viewid_imported_by_entryid($entryid);
+                if ($viewid && !isset($incollection[$viewid])) {
                     $record = (object) array(
                         'collection' => $cid,
                         'view' => $viewid,
                         'displayorder' => $i,
                     );
                     insert_record('collection_view', $record);
+                    $incollection[$viewid] = $cid;
                     $i++;
                 }
             }
