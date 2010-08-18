@@ -529,7 +529,7 @@ div.artefactchooser-splitter {
 
 /* Collection navigation */
 #collection {
-	margin: 1em 0 0 0;
+	margin: 2em 0 0 0;
 }
 #collection strong {
 	font-size: 1.1667em;
@@ -552,6 +552,9 @@ ul.colnav li {
 .viewfooter {
 	clear: both;
 	padding: 1em;
+	margin-bottom: 1em;
+}
+.viewfooter .tags {
 	margin-bottom: 1em;
 }
 #viewmenu {

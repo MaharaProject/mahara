@@ -227,11 +227,11 @@ input#files_filebrowser_edit_artefact:active {
 
 /** Buttons with icons **/
 .btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
+	background: url(../images/icon-edit.gif) no-repeat left;
 	padding-left: 13px;
 }
 .btn-del {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
+    background: transparent url(../images/icon-delete.gif) no-repeat left;
     color: #ca0000;
 	padding-left: 13px;
 }
@@ -239,10 +239,23 @@ input#files_filebrowser_edit_artefact:active {
 	background: url(../images/icon-manage.gif) no-repeat left;
 	padding-left: 15px;
 }
-#btn-request {
-	background: url(../images/icon-friendrequest.gif) no-repeat left;
+.btn-message {
+	background: url(../images/icon-mail.gif) no-repeat left;
 	padding-left: 13px;
 }
+.btn-friend {
+	background: url(../images/icon-friend.gif) no-repeat left;
+	padding-left: 13px;
+}
+.btn-reply {
+	background: url(../images/icon-reply.gif) no-repeat left;
+	padding-left: 13px;
+} 
+.btn-download {
+	background: url(../images/icon-download.gif) no-repeat right;
+	padding-right: 13px;
+}
+
 a.btn-req {
 	background: url(../images/icon-join.gif) no-repeat left center;
 	padding-left: 15px;
@@ -251,18 +264,10 @@ a.btn-req {
     background: transparent url(../images/icon-leave.gif) no-repeat left center;
 	padding-left: 15px;
 }
-a.btn-msg, #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 12px;
-}
 .btn-pending {
 	background: url(../images/icon-pending.gif) no-repeat left center;
 	padding-left: 12px;
 }
-.btn-reply {
-	background: url(../images/icon-reply.gif) no-repeat left center;
-	padding-left: 12px;
-} 
 .btn-settings {
 	background: url(../images/icon-settings.gif) no-repeat left center;
 	padding-left: 12px;
@@ -278,10 +283,6 @@ input#myfriends_addfriend_add {
 	padding-left: 12px !important;
 	color: #7f9d16;
 	border: 0;
-}
-ul.actionlist li #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left;
-	padding-left: 13px;
 }
 
 /* Search buttons */
@@ -355,6 +356,7 @@ ul.actionlist li #btn-sendmessage {
 #usf_query_container input {
     color: #767676;
 	background-color: #ecf3d4;
+	width: 195px;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -659,6 +661,11 @@ div.sideblock #friendscontrol label {
 }
 #performance-info span {
 	color: #c9c9c9;
+}
+#performance-info a,
+#performance-info a:hover {
+	color: #bababa;
+	text-decoration: none;
 }
 #version {
 	color: #c9c9c9;

@@ -38,6 +38,10 @@
 }
 #layout-link.disabled {
     color: #aaa;
+	cursor: default;
+}
+#layout-link.disabled:hover {
+	text-decoration: none;
 }
 #btn-displaymyview {
 	background: url(../images/icon-display.gif) no-repeat left center;
@@ -159,10 +163,10 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* VIEWS */
 #delete_comment_delete_comment_submit {
-	background: url(../images/icon-delete.gif) no-repeat left;
-	border: 0;
-	padding: 0 0 0 10px;
-	color: #CA0000;
+	background: url(../images/icon-delete.gif) no-repeat left !important;
+	border: 0 !important;
+	padding: 0 0 0 10px !important;
+	color: #CA0000 !important;
 }
 
 /* views footer */

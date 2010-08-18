@@ -4,32 +4,32 @@
       {if $user->pending}
 		<li>{$user->accept|safe}</li>
 		<li>
-			<a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest">
+			<a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest" class="btn-deny">
 				{str tag='denyrequest' section='group'}
 			</a>
 		</li>
       {/if}
       {if $user->messages}
 		<li>
-			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage">
+			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" id="btn-sendmessage" class="btn-message">
 				{str tag='sendmessage' section='group'}
 			</a>
 		</li>
       {/if}
       {if $user->friend}
 		<li>
-			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-del">
+			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" id="btn-del" class="btn-del">
 				{str tag='removefromfriendslist' section='group'}
 			</a>
 		</li>
       {elseif $user->requestedfriendship}
-		<li>
+		<li class="requested">
 			{str tag='friendshiprequested' section='group'}
 		</li>
       {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
 		<li>
 			{if $user->friendscontrol == 'auth'}
-			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request">
+			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request" class="btn-friend">
 				{str tag='sendfriendrequest' section='group'}
 			</a>
 			{elseif $user->friendscontrol == 'auto'}
@@ -40,7 +40,7 @@
 		</li>
       {/if}
       {if $admingroups->invite || $admingroups->controlled}
-      <li><a href="" onclick="showGroupBox(event, {$user->id})">{str tag='editgroupmembership' section='group'}</a></li>
+      <li><a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a></li>
       {/if}
 	</ul>
 

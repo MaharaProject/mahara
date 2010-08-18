@@ -1670,8 +1670,6 @@ ul.groupuserstatus li:first-child,
 form#search, form#filter, div.searchform {
     margin-bottom: 1em;
 }
-form#search input.text {
-}
 
 #friendslist ul.viewlist {
 	margin: 0;
@@ -1695,6 +1693,10 @@ form#search input.text {
 	min-height: 35px;
 	padding: .5em 0 0 0;
 	margin-left: 4.5em;
+}
+.requested {
+	font-style: italic;
+	color: #888;
 }
 
 /* Group: about */
@@ -1927,4 +1929,23 @@ img.feedicon {
 	float: right;
 	padding: .25em .5em;
 	font-weight: bold;
+}
+
+.licensedesc {
+	font-size: .9167em;
+	line-height: 1.4em;
+	text-align: center;
+	padding: .5em 0;
+}
+.inlinelist {
+	padding: 0;
+}
+.inlinelist li {
+	display: inline;
+	margin-right: 2em;
+}
+
+.mediaplayer-container embed {
+	max-width: 98%;
+	margin-top: 2px;
 }

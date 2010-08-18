@@ -203,7 +203,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
      */
     private static function get_html_of_supported_websites() {
         return <<<EOF
-<ul style="list-style-type: none;">
+<ul style="list-style-type: none;" class="inlinelist">
     <li><a href="http://www.youtube.com/" target="_blank"><img src="http://www.youtube.com/favicon.ico" alt="YouTube"> youtube.com</a></li>
     <li><a href="http://video.google.com/" target="_blank"><img src="http://video.google.com/favicon.ico" alt="Google Video"> video.google.com</a></li>
     <li><a href="http://www.teachertube.com/" target="_blank"><img src="http://www.teachertube.com/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>

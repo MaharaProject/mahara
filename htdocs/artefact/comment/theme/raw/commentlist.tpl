@@ -31,7 +31,7 @@
           {if $.foreach.attachments.first} | <span>{str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}">{$a->attachtitle}</a> ({$a->attachsize})</span>
         {/foreach}
         {/strip}
-        {if $item->canedit} | <span><a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&view={$viewid}">{str tag=edit}</a></span>{/if}
+        {if $item->canedit} | <span><a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&view={$viewid}" class="btn-edit">{str tag=edit}</a></span>{/if}
       {/if}
       </div>
     </td>

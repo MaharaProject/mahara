@@ -25,7 +25,7 @@
             </div>
         </div>
   <div class="viewfooter cb">
-    {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
+    {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
     <div>{$releaseform|safe}</div>
     {if $view_group_submission_form}<div>{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}

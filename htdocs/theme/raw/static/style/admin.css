@@ -604,5 +604,5 @@ form#uploadcsv {
 #adminplugin ul.adminpluginstypes ul ul ul li {
 	list-style: disc;
 	margin: 0 0 0 1.5em;
-	line-height: 1.333em;
+	font-size: 1em;
 }
