@@ -212,9 +212,11 @@ html>body #column-container {
 }
 
 /* header */
+.blockinstance-header {
+    width: 100%;
+}
 .blockinstance-header h4 {
     margin: 0 !important;
-    cursor: default;
 	font-size: 1.4em;
 }
 
