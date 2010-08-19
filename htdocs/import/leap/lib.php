@@ -483,6 +483,19 @@ class PluginImportLeap extends PluginImport {
         }
     }
 
+    public function entry_has_strategy($entryid, $strategyid, $artefactplugin=null) {
+        if (isset($this->loadmapping[$entryid])) {
+            if (empty($this->loadmapping[$entryid]['artefactplugin']) && !empty($artefactplugin)) {
+                return false;
+            }
+            if ($this->loadmapping[$entryid]['artefactplugin'] != $artefactplugin) {
+                return false;
+            }
+            return $this->loadmapping[$entryid]['strategy'] == $strategyid;
+        }
+        return false;
+    }
+
     private function import_completed() {
         // Give all plugins a chance to perform final tasks
         foreach (plugins_installed('artefact') as $plugin) {
