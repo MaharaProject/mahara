@@ -57,6 +57,10 @@ else {
 
 $view = new View($viewid);
 
+if (empty($collection)) {
+    $collection = $view->get_collection();
+}
+
 if ($collection) {
     define('TITLE', $collection->get('name') . ': ' . get_string('editaccess', 'view'));
 }
