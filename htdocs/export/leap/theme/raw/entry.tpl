@@ -13,6 +13,9 @@
 {if $artefacttype}        <mahara:artefactplugin mahara:type="{$artefacttype}" mahara:plugin="{$artefactplugin}"/>{/if}
 {include file="export:leap:links.tpl"}
 {include file="export:leap:categories.tpl"}
+{foreach from=$dates item=date}
+        <leap:date leap:point="{$date.point}"{if $date.label} leap:label="{$date.label}"{/if}>{$date.date}</leap:date>
+{/foreach}
 {if !$skipfooter}
 {include file="export:leap:entryfooter.tpl"}
 {/if}

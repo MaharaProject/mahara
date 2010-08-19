@@ -650,6 +650,7 @@ class LeapExportElement {
         $this->smarty->assign('contenttype', $this->get_content_type());
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('author', $this->get_entry_author());
+        $this->smarty->assign('dates', $this->get_dates());
 
         if ($tags = $this->artefact->get('tags')) {
             $tags = array_map(create_function('$a',
@@ -830,6 +831,15 @@ class LeapExportElement {
             return;
         }
         return $this->artefact->get('authorname');
+    }
+
+    /**
+    * Get leap:date items for the entry
+    *
+    * @return array
+    */
+    public function get_dates() {
+        return array();
     }
 
     /**
