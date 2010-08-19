@@ -58,13 +58,14 @@ else {
 }
 
 $elements = Collection::get_collectionform_elements($data);
-$submitcancelstr = $new ? array(get_string('next') . ': ' . get_string('editviews', 'collection'), get_string('cancel'))
+$submitstr = $new ? array('cancel' => get_string('cancel'), 'submit' => get_string('next') . ': ' . get_string('editviews', 'collection'))
     : array(get_string('save'), get_string('cancel'));
+$confirm = $new ? array('cancel' => get_string('confirmcancelcreatingcollection','collection')) : null;
 
 $elements['submit'] = array(
-    'type' => 'submitcancel',
-    'value' => $submitcancelstr,
-    'goto' => get_config('wwwroot') . 'collection',
+    'type'      => 'submitcancel',
+    'value'     => $submitstr,
+    'confirm'   => $confirm,
 );
 
 $form = pieform(array(
@@ -87,6 +88,14 @@ function submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
     }
     $collection->post_edit_redirect($new);
+}
+
+function edit_cancel_submit() {
+    global $collection, $new;
+    if ($new && $collection) {
+       $collection->delete();
+    }
+    redirect('/collection/');
 }
 
 ?>

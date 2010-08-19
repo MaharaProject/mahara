@@ -164,7 +164,7 @@ function addviews_submit(Pieform $form, $values) {
 
 function manageviews_cancel_submit() {
     global $collection, $new;
-    if ($new) {
+    if ($new && $collection) {
         $collection->delete();
     }
     redirect('/collection/');
