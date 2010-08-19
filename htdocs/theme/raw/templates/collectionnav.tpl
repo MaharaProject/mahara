@@ -1,5 +1,6 @@
 {foreach from=$collection item=chunk name=cchunk}
-<ul class="colnav{if !$dwoo.foreach.cchunk.first} colnav-extra js-hidden{/if}">
+<div class="{if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra hidden{/if}">
+<ul class="colnav">
   {foreach from=$chunk item=view}
   <li{if $view->view == $viewid} class="selected"{/if}><a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title|str_shorten_text:30:true}</a></li>
   {/foreach}
@@ -7,6 +8,7 @@
   <li id="colnav-more" class="nojs-hidden"><a href="">…</a></li>
   {/if}
 </ul>
+</div>
 {/foreach}
 
 {if $dwoo.foreach.cchunk.index > 1}
@@ -14,7 +16,7 @@
 addLoadEvent(function() {
     connect('colnav-more', 'onclick', function(e) {
         e.stop();
-        forEach (getElementsByTagAndClassName('ul', 'colnav-extra', null), partial(toggleElementClass, 'js-hidden'));
+        forEach (getElementsByTagAndClassName('div', 'colnav-extra', null), partial(toggleElementClass, 'hidden'));
     });
 });{/literal}
 </script>
