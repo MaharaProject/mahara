@@ -544,7 +544,7 @@ class PluginAuthLdap extends PluginAuth {
                 'help'  => true,
             ),
             'bind_pw' => array(
-                'type'  => 'text',
+                'type'  => 'password',
                 'title' => get_string('password', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['bind_pw'],
                 'help'  => true,
