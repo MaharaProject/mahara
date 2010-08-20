@@ -83,14 +83,14 @@ $string['savecollection'] = 'Save collection';
 $string['update'] = 'Update';
 $string['usecollectionname'] = 'Use collection name?';
 $string['usecollectionnamedesc'] = 'If you wish to use the collection name instead of the Block Title leave this checked.';
-$string['viewaddedtocollection'] = 'View added to collection.';
+$string['viewaddedtocollection'] = 'View added to collection. Collection updated to include access from new view.';
 $string['viewcollection'] = 'View Collection Details';
 $string['viewcount'] = 'Views';
 $string['viewremovedsuccessfully'] = 'View removed successfully.';
 $string['viewnavigation'] = 'View navigation bar';
 $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every view in this collection by default.';
 $string['views'] = 'Views';
-$string['viewsaddedtocollection'] = 'Views added to collection.';
+$string['viewsaddedtocollection'] = 'Views added to collection. Collection updated to include access from new views.';
 $string['viewstobeadded'] = 'Views to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this view from the collection?';
 ?>
