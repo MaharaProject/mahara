@@ -127,8 +127,8 @@ if ($new) {
 }
 else {
     $elements['submit'] = array(
-        'type'  => 'submitcancel',
-        'value' => array(get_string('save'), get_string('cancel')),
+        'type'  => 'submit',
+        'value' => get_string('done'),
     );
 }
 $nextform = pieform(array(
