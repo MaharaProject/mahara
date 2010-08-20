@@ -5,23 +5,6 @@
  * This file is distributed under the same terms as Mahara itself
  */
  
- /* Blog list */
-
-/* Post list */
-#postlist th {
-}
-
-#postlist input.delete {
-    color: #ca0000;
-}
-
-#postlist input.publish,
-#postlist input.edit {
-	color: #4C711D;
-}
-#postlist td.postdetails {
-}
-
 /* attachment files */
 #postlist .attachments th {
 	background: #AABC8B;

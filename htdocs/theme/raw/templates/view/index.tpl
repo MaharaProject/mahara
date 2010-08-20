@@ -48,13 +48,13 @@
                                 <div class="videsc">{$view.description|clean_html|safe}</div>
 {/if}
 {if $view.tags}
-                                <div class="tags">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>
+                                <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>
 {/if}
                             </div>
                             <div class="vi">
                                 <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
 {if $view.artefacts}
-                                <div class="viartefacts">{str tag="artefacts" section="view"}:
+                                <div class="artefacts"><label>{str tag="artefacts" section="view"}:</label>
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
 {/if}
                             </div>
@@ -63,7 +63,7 @@
 {if $view.togglepublic}
                                 {$view.togglepublic|safe}
 {elseif $view.collection}
-                                <strong>{str tag=Collection section=collection}:</strong> <a href="{$WWWROOT}collection/views.php?id={$view.collection->id}">{$view.collection->name}</a>
+                                <div class="collection"><label>{str tag=Collection section=collection}:</label> <a href="{$WWWROOT}collection/views.php?id={$view.collection->id}">{$view.collection->name}</a></div>
 {elseif $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
                                 <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
 {/if}

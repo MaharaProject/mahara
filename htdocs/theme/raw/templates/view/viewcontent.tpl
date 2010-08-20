@@ -12,7 +12,7 @@
         </div>
 {if $tags}
   <div class="viewfooter cb">
-    <div class="tags">{str tag=tags}: {list_tags owner=0 tags=$tags}</div>
+    <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=0 tags=$tags}</div>
   </div>
 {/if}
 </div>

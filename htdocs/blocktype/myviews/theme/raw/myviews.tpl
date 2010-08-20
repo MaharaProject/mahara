@@ -5,10 +5,10 @@
             <td class="{cycle values='r0,r1'}">
                 <h4><a href="{$WWWROOT}view/view.php?id={$item->id}">{$item->title}</a></h4>
                 {if $item->description}
-                  <div>{$item->description|str_shorten_html:100:true|safe}</div>
+                  <div class="details">{$item->description|str_shorten_html:100:true|safe}</div>
                 {/if}
                 {if $item->tags}
-                  <div class="tags s"><strong>{str tag=tags}:</strong> {list_tags owner=$item->owner tags=$item->tags}</div>
+                  <div class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$item->owner tags=$item->tags}</div>
                 {/if}
                 {if $item->artefacts}
                   <div class="artefacts s">

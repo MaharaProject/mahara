@@ -18,7 +18,6 @@
 	<div>{str tag=edittagdescription arg1=$tag}</div>
 	{$edittagform|safe}
 </div>
-
 <div class="deletetag">
 	<h3>{str tag=deletetag arg1=$tagsearchurl arg2=$tag}</h3>
 	<div>{str tag=deletetagdescription}</div>

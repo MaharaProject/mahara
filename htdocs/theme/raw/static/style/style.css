@@ -28,11 +28,10 @@ img {
 .main-column h1, .main-column h2, .main-column h3, .main-column h4, .main-column h5, .main-column h6 {
     margin: 1.5em 0 .5em;
 }
- .main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
+.main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child,
 * html .main-column h1, * html .main-column h2, * html .main-column h3, * html .main-column h4, * html .main-column h5, * html .main-column h6 {
     margin-top: 0;
 }
-
 .main-column h1 {
     font-size: 2em; /* 24px */
 }
@@ -95,6 +94,7 @@ p {
 .description {
 	font-size: .9167em;
 	color: #888;
+	line-height: 1.4em;
 }
 .nowrap {
 	white-space: nowrap;
@@ -251,7 +251,11 @@ div.listing {
 	margin-top: .25em;
 	color: #888;
 }
-.listing .vi .viartefacts {
+.listing .vi .artefacts {
+	color: #888;
+	font-size: 1em;
+}
+.listing .vi .collection {
 	color: #888;
 	font-size: 1em;
 }
@@ -409,6 +413,10 @@ textarea {
 .mceEditor {
     display: inline-block;
 }
+.radio,
+.checkbox {
+	vertical-align: top;
+}
 
 /* error */
 input.error, select.error {
@@ -438,6 +446,7 @@ input.calendar.required {
 input.submit,
 input.cancel,
 button,
+.buttondk,
 input.button,
 input.select,
 input#files_filebrowser_edit_artefact {
@@ -474,6 +483,7 @@ input#files_filebrowser_edit_artefact {
 input.submit:hover,
 input.cancel:hover,
 button:hover,
+.buttondk:hover,
 input.button:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover {
@@ -486,6 +496,7 @@ input#files_filebrowser_edit_artefact:hover {
 input.submit:active,
 input.cancel:active,
 button:active,
+.buttondk:active,
 input.button:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active {
@@ -572,6 +583,7 @@ div.btn-edit input.submit,
 	position: relative;
 	float: left;
 }
+
 
 /* Search buttons */
 #usf_submit {
@@ -660,7 +672,7 @@ div.rbuttons .small-logo {
     padding: 0;
 }
 .viewheader .links {
-  padding: 0 0 0 .5em;
+  padding: 0.25em 0 0 .5em;
   font-size: .9167em;
 }
 .viewheader .nav {
@@ -678,7 +690,8 @@ div.rbuttons .small-logo {
 .viewheader #mainnav-container {
   width: 60%;
   height: 1.5em;
-  padding: 0 .5em .5em 100px;
+  padding: .25em .5em .5em 110px;
+  background: url(../images/icon_fieldset_left.gif) no-repeat 100px center;
 }
 .viewheader .title {
   padding: .5em 0 .25em;
@@ -1138,6 +1151,21 @@ div.sideblock #friendscontrol label {
 .subpage.mytags {
   margin-bottom: 2em;
 }
+.tags label {
+	color: #888;
+}
+.tags {
+	background: url(../images/icon-tag.gif) no-repeat left 3px;
+	padding-left: 15px;
+}
+tr.tags {
+	background: none;
+	padding-left: auto;
+}
+tr.tags th {
+	background: url(../images/icon-tag.gif) no-repeat right 6px;
+	padding-right: 15px !important;
+}
 a.tag {
 	line-height: 1.1667em;
 }
@@ -1145,7 +1173,7 @@ a.tag {
   padding: 0 5px;
   white-space: nowrap;
 }
-.sidebar-content.tags .tag {
+.sidebar-content.tagblock .tag {
     padding: 0 5px;
     vertical-align: middle;
 }
@@ -1174,16 +1202,16 @@ a.tag {
 	background: #f6f6f6;
 	padding: 1em;
 	float: left;
-	width: 45%;
+	min-height: 110px;
 }
 /* delete tag box */
 .deletetag {
-	border: 1px solid #d1d1d1;
-	background: #f6f6f6;
-	padding: 1em;
+	padding: 1em 1.5em;
 	float: left;
 	margin-left: 1em;
-	width: 45%;
+    background: #FBECEB;
+    border: 1px solid #E98A88;
+	min-height: 110px;
 }
 .deletetag h3 {
 	color: #ca0000;
@@ -1191,6 +1219,8 @@ a.tag {
 #delete_tag_submit {
 	border-color: #f69595 #750000 #750000 #f69595;
 	background: #ca0000;
+	color: #FFF;
+	margin-top: .5em;
 }
 
 /* Ajax Login */
@@ -1388,7 +1418,7 @@ a.tag {
 	margin: .25em 0 .25em 0;
 }
 #myviews .vi {
-    line-height: 1.3em;
+    line-height: 1.4em;
     float: left;
     padding: .5em 2em .5em 0;
     width: 30%;
@@ -1419,24 +1449,22 @@ a.tag {
 /* Copy a view */
 #viewpreview {
   position: absolute;
-  border: 10px solid #ccc;
+  border: 25px solid #ccc;
   background-color: #fff;
 }
 #viewpreviewinner {
-  border: 1px solid #888;
+  border: 25px solid #ccc;
   padding: 1em;
 }
-#viewpreviewclose {
-  width: 100%;
-  text-align: right;
-  border-bottom: 1px dotted #d1d1d1;
-  padding-bottom: .5em;
-}
-* html #viewpreviewclose {
-	width: 96%;
-}
-#viewpreviewcontent {
-  margin-top: 1em;
+#closepreview {
+	background: url(../images/remove-block.png) no-repeat left;
+	font-size: 1%;
+	width: 16px;
+	height: 16px;
+	display: block;
+	padding: 0;
+	text-indent: -9999px;
+	float: right;
 }
 
 /* View access */
@@ -1514,7 +1542,7 @@ a.tag {
 }
 
 #accesslistitems table th img {
-	height: 16px;
+	vertical-align: top;
 }
 #editaccess_overrides_container {
 	clear: both;
@@ -1538,14 +1566,15 @@ a.tag {
     margin: .75em 0 .25em 0;
 }
 #export .radio-description {
-    padding-left: 2em;
+    padding-left: 2.1em;
+	font-size: .9167em;
+	color: #888;
+	line-height: 1.4em;
+	padding-bottom: .5em;
 }
 #export fieldset {
     padding: .5em;
     margin: .5em;
-}
-#export .element div {
-    padding-bottom: .25em;
 }
 #export .view {
     float: left;
@@ -1565,19 +1594,39 @@ a.tag {
 	padding: 0 .5em 0 0;
 }
 #export fieldset table {
-    width: 96%;
+    width: 98%;
     margin: 0 auto;
 }
 #export fieldset table colgroup col {
 	border: 2px solid #eee;
 }
 #export fieldset table div {
-    padding: 0 0 0 1.8333em;
+    padding: 0 0 0 2em;
 	font-size: .9167em;
+	line-height: 1.4em;
+}
+#export fieldset table div p {
+	margin: 0 0 .5em 0;
 }
 #export fieldset label {
     font-size: normal;
     font-weight: bold;
+}
+#export #whattoexport-buttons div {
+	padding-bottom: .25em;
+}
+#export #whatviewsselection {
+	width: 96%;
+	margin: 0 auto;
+}
+#export #whatviewsselection a {
+	padding: 0 .25em;
+}
+#export .viewlink img {
+	vertical-align: middle;
+}
+#export_submit {
+	margin-left: 2em;
 }
 #exportgeneration {
     text-align: center;
@@ -1714,7 +1763,7 @@ form#search, form#filter, div.searchform {
 	margin: 0;
 }
 .group-info ul li span {
-	margin: 0 4em 0 0;
+	margin: 0 3em 0 0;
 }
 .groupdescription {
 	margin-bottom: 1em;

@@ -104,7 +104,7 @@ html>body #column-container {
 	margin-bottom: 1em;
 }
 
-/* columns */
+/* columns 
 #column-container input.submit {
     cursor: pointer;
 	padding: 0;
@@ -115,7 +115,7 @@ html>body #column-container {
 }
 #column-container .column-header input[disabled="disabled"] {
     cursor: default;
-}
+}*/
 
 /* These column width rules are required only for when a column is
    added/removed dynamically (users have to turn this on in their
@@ -217,7 +217,7 @@ html>body #column-container {
 }
 .blockinstance-header h4 {
     margin: 0 !important;
-	font-size: 1.4em;
+	font-size: 1.4em !important;
 }
 
 /* control */
@@ -242,11 +242,11 @@ html>body #column-container {
 .blockinstance-content {
 }
 
-.main-column .blockinstance-header h4, 
+/*.main-column .blockinstance-header h4, 
 .blockinstance.configure h4 {
     margin: 0;
 	font-size: 1.3333em;
-}
+}*/
 .blockinstance-content h3 {
 	font-size: 1.1667em !important;
 	margin-top: .5em !important;

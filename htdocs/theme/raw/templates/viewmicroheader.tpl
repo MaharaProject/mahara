@@ -22,7 +22,7 @@
 {if $LOGGEDIN}
         <div id="mainnav-container" class="nav">
          <div id="mainnav" class="js-hidden">
-          <a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a> : 
+          <strong><a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a>:</strong> 
           {foreach from=$MAINNAV item=item}
             {if $item.path}
               <a href="{if $item.url=='account/' && get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url}">{$item.title}</a> | 

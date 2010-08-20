@@ -49,6 +49,7 @@
 	cursor: pointer;
 	font-size: 1%;
 	margin-left: .5em;
+	padding-left: 0;
 }
 #postlist th form,
 #postlist th form div {
@@ -58,9 +59,9 @@
 	margin: 0 0 1em 0;
 }
 #postlist td.postdetails {
-	padding-bottom: 2em;
 	font-size: .9167em;
 	color: #888;
+	padding-bottom: 1em;
 }
 
 /* attachment files */

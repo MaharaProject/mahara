@@ -108,8 +108,6 @@ tr.folder td {
 div.pagination a {
 	background-color: #E7EFC5;
 }
-div.pagination .disabled {
-}
 
 /**************************** Forms ****************************/
 /* Label */
@@ -154,15 +152,6 @@ input[type=password],
 input[type=file] {
     border: 1px solid #D1D1D1;
 }
-input.text.required {
-}
-
-/* error */
-input.error, select.error {
-}
-.errmsg {
-}
-
 
 /****************************** Buttons ****************************/
 /** input buttons **/
@@ -170,6 +159,7 @@ input.error, select.error {
 input.submit,
 input.cancel,
 button,
+.buttondk,
 input.button,
 input.select,
 input#files_filebrowser_edit_artefact {
@@ -197,6 +187,7 @@ input.quiet.btn-del {
 input.submit:hover,
 input.cancel:hover,
 button:hover,
+.buttondk:hover,
 input.button:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover {
@@ -208,6 +199,7 @@ input#files_filebrowser_edit_artefact:hover {
 input.submit:active,
 input.cancel:active,
 button:active,
+.buttondk:active,
 input.button:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active {
@@ -266,10 +258,6 @@ a.btn-req {
 }
 .btn-pending {
 	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-settings {
-	background: url(../images/icon-settings.gif) no-repeat left center;
 	padding-left: 12px;
 }
 input#addfriend_add,
@@ -347,8 +335,6 @@ input#myfriends_addfriend_add {
     text-align: right;
     display: inline;
 }
-#header-right {
-}
 /* Search and language bar */
 #language-select, #usf {
 	font-size: .8333em !important;
@@ -362,15 +348,6 @@ input#myfriends_addfriend_add {
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
 	margin: .5em 0 .5em 0;
-}
-#right-nav li {
-}
-#right-nav li a {
-}
-
-#main-nav {
-}
-#main-nav ul {
 }
 #main-nav li {
     color: #e6c560;
@@ -394,16 +371,12 @@ input#myfriends_addfriend_add {
     color: #e4ffb4;
     text-decoration: none;
 }
-#main-nav li.selected {
-}
 #main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #4C711D;
 	background: url(../images/menu-over-bg.gif) no-repeat left bottom;
-}
-#main-nav li.selected a:hover {
 }
 
 
@@ -421,8 +394,6 @@ input#myfriends_addfriend_add {
     padding: 0 0 0 .5em;
 	background: none;
 }
-#sub-nav li {
-}
 #sub-nav li a,
 #sub-nav li a:link,
 #sub-nav li a:visited,
@@ -436,16 +407,12 @@ input#myfriends_addfriend_add {
     color: #7e7327;
     text-decoration: none;
 }
-#sub-nav li.selected {
-}
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
 	background: url(../images/submenu-over-bg.gif) no-repeat right top;
     color: #4c711d;
-}
-#sub-nav li.selected a:hover {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
@@ -486,33 +453,9 @@ ul.in-page-tabs li a.current-tab:active {
   color: #000;
   border-bottom: 1px solid #FFF;
 }
-ul.in-page-tabs li a.current-tab:hover {
-}
-
 .subpage {
 	display: block;
 	border-top: 0;
-}
-
-
-/**************** MAIN CONTENT *****************/
-/* system messages between nav and main content */
-/* upload file message */
-div.info {
-}
-/* different message types */
-#messages .ok,
-div.ok {
-}
-#messages .error,
-div.error {
-}
-#messages .info {
-}
-/* system messages */
-.message {
-}
-.message.delete {
 }
 
 
@@ -523,8 +466,6 @@ div.error {
 }
 div.sideblock {
     background: url(../images/sidebar-bg.gif) repeat-x top;
-}
-div.sideblock h3 {
 }
 div.sideblock h3 a,
 div.sideblock h3 a:link,
@@ -570,15 +511,6 @@ div.sideblock h3 a:hover {
 	color: #3986c3 !important;
 }
 
-/* Side Online Users */
-#sb-onlineusers ul {
-}
-#sb-onlineusers li {
-}
-#sb-onlineusers ul img {
-}
-#lastminutes {
-}
 
 /* Side Quota Bar */
 #quota_used {
@@ -595,10 +527,6 @@ div.sideblock h3 a:hover {
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
-}
-
-/* Friends control sideblock */
-div.sideblock #friendscontrol label {
 }
 
 /* Tags */
@@ -622,15 +550,6 @@ div.sideblock #friendscontrol label {
 	border-color: #f69595 #750000 #750000 #f69595;
 	background: #ca0000;
 }
-
-/* Ajax Login */
-#ajax-login-form {
-}
-
-/* Help popups & icons */
-.contextualHelp {
-}
-
 
 /******************** FOOTER ****************************/
 #footer-wrap {
@@ -678,122 +597,6 @@ div.sideblock #friendscontrol label {
 }
 
 
-/****************************** PAGE BY PAGE STYLES **********************************/
-/* Userlists used in admin section and on edit interaction form */
-.userlisttable tbody tr th {
-}
-
-/* Attached file lists */
-.attachments {
-}
-.attachments tbody th {
-}
-
-/* User/view */
-#userview .user-icon {
-}
-
-/* Wall */
-.wallpost {
-}
-#wall .private {
-}
-.wallpost .controls {
-}
-
-/* My Views */
-#myviews td {
-}
-#myviews h4 {
-}
-#myviews .submitted-viewitem {
-}
-#deleteview label {
-}
-
-/* Copy a view */
-#viewpreview {
-}
-#viewpreviewinner {
-}
-#viewpreviewclose {
-}
-
-/* View access */
-#viewacl_lhs {
-}
-#viewacl_lhs #results tfoot td {
-}
-#accesslistitems {
-}
-#accesslistitems .ai-container {
-}
-#accesslistitems .removebutton {
-}
-#accesslistitems .ai-container table th {
-}
-
-/* Export */
-#export h3 {
-}
-#export .radio-description {
-}
-#export fieldset {
-}
-#export .element div {
-}
-#export .view {
-}
-#export fieldset {
-}
-#export fieldset legend {
-}
-#export fieldset div a {
-}
-#export fieldset table {
-}
-#export fieldset table colgroup col {
-}
-#export fieldset table div {
-}
-#export fieldset label {
-}
-#exportgeneration {
-}
-#progress {
-}
-div.progress-bar {
-}
-* html div.progress-bar {
-}
-div.progress-bar a {
-}
-p.progress-text {
-}
-#progressbar {
-}
-
-/* My Groups *//* My Friends */
-ul.groupuserstatus {
-}
-#friendslist ul.actionlist {
-}
-ul.groupuserstatus li,
-#friendslist ul.actionlist li {
-}
-#friendslist ul.viewlist li.label {
-}
-#friendslist ul.viewlist li {
-}
-
-/* Group: about */
-.group-info {
-}
-
-/* Group: members */
-.listing.twocolumn td {
-}
-
 /* Group: members (Add members) */
 #addmembers {
 	background-color: #EBF0F4;
@@ -801,8 +604,6 @@ ul.groupuserstatus li,
 }
 
 /* Settings > Preferences */
-#accountprefs table h3 {
-}
 #accountprefs table label,
 #accountprefs table th {
 	color: #66879F;
@@ -811,27 +612,8 @@ ul.groupuserstatus li,
 	color: #333333;
 	font-size: 1em;
 }
-#deleteaccount {
-}
-#deleteaccount h1 {
-}
-#deleteaccount input.submit {
-}
-
-/* Settings > Notifications */
-#activitylist th {
-}
-#activitylist th a {
-}
-#activitylist tbody td div {
-}
-
-/* Settings > Institution membership */
-#requestmembership_studentid_container label {
-}
 
 /* Home page info boxes */
-
 .home-info {
     border: solid 2px #cccccc;
     background: #eeeeee;
@@ -839,12 +621,6 @@ ul.groupuserstatus li,
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
-}
-.home-info-table {
-}
-
-
-#hideinfo {
 }
 
 /* Collections */
@@ -859,7 +635,7 @@ ul.groupuserstatus li,
 	width: 96%;
 }
 #collectionviews td {
-	padding: .25em 0;
+	vertical-align: middle;
 }
 #collectionviews td label {
 	font-size: 1em;
@@ -868,6 +644,11 @@ ul.groupuserstatus li,
 
 #collectionviews td div {
     text-align: center;
+}
+
+.collection {
+	background: url(../images/icon-collection.gif) no-repeat left top;
+	padding-left: 15px;
 }
 
 .inbox-message {

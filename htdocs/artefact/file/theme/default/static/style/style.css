@@ -41,23 +41,6 @@ tr.folder td {
 tr.folderhover td {
     background-color: #daf0ff !important;
 }
-/* File list edit box */
-#files_filebrowser_edit_row td {
-	border: 2px solid #eee;
-}
-#files_filebrowser_edit_row #files_filebrowser_edit_heading {
-	color: #333;
-}
-
-/* Edit post File list */
-#editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
-	border-top: 1px solid #eee;
-	border-right: 1px solid #eee;
-	border-bottom: 4px solid #eee;
-	border-left: 1px solid #eee;
-}
-
 /* Edit post selected file list */
 .filelist .disabled {
 	color: #C3C3C3;

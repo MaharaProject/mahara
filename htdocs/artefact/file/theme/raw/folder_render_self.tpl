@@ -1,7 +1,7 @@
 <div>
   {if !$simpledisplay}<h3>{$title}</h3>{/if}
   <div>{$description}</div>
-  {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
+  {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
   <div>
   {if (isset($children))}
   <table class="fullwidth">

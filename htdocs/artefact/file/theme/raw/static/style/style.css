@@ -94,15 +94,10 @@ tr.folderhover a {
     cursor: move;
 }
 /* File list edit box */
-#files_filebrowser_edit_row td {
-	border: 2px solid #eee;
-}
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
-	font-size: 1.1667em;
-	padding: .5em 0.25em 0 .25em;
+	font-size: 1.3333em;
 }
 #files_filebrowser_edit_row table th {
-	text-align: left;
 	border: 0;
 }
 #files_filebrowser_edit_row table th label {

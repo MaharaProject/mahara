@@ -224,8 +224,10 @@ input#register_register {
 	font-weight: bold;
 	font-size: 1em;
 }
+#siteoptions_submit_container th,
 #siteoptions_submit_container td {
 	padding-top: 1em;
+	float: left;
 }
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
