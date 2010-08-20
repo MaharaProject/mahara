@@ -132,12 +132,12 @@ else {
     );
 }
 $nextform = pieform(array(
-    'name'          =>  'next',
-    'plugintype'    => 'core',
-    'pluginname'    => 'collection',
-    'autofocus'     => false,
-    'method'        => 'post',
-    'elements'      => $elements,
+    'name'       =>  'manageviews',
+    'plugintype' => 'core',
+    'pluginname' => 'collection',
+    'autofocus'  => false,
+    'method'     => 'post',
+    'elements'   => $elements,
 ));
 
 $smarty = smarty();
@@ -162,7 +162,7 @@ function addviews_submit(Pieform $form, $values) {
 
 }
 
-function next_cancel_submit() {
+function manageviews_cancel_submit() {
     global $collection, $new;
     if ($new) {
         $collection->delete();
@@ -170,7 +170,7 @@ function next_cancel_submit() {
     redirect('/collection/');
 }
 
-function next_submit(Pieform $form, $values) {
+function manageviews_submit(Pieform $form, $values) {
     global $collection, $new;
     if (param_boolean('back')) {
         redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');
