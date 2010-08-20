@@ -106,7 +106,7 @@ class PluginExportHtml extends PluginExport {
             count($this->views) == 1
         );
 
-        $this->notify_progress_callback(15, 'Setup complete');
+        $this->notify_progress_callback(15, get_string('setupcomplete', 'export'));
     }
 
     public static function get_title() {
@@ -136,7 +136,7 @@ class PluginExportHtml extends PluginExport {
         $i = 0;
         foreach ($plugins as $plugin) {
             $plugin = $plugin->name;
-            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Preparing ' . $plugin);
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), get_string('preparing', 'export.html', $plugin));
 
             if (safe_require('export', 'html/' . $plugin, 'lib.php', 'require_once', true)) {
                 $exportplugins[] = $plugin;
@@ -167,7 +167,7 @@ class PluginExportHtml extends PluginExport {
         $progressend   = 50;
         $i = 0;
         foreach ($exportplugins as $plugin) {
-            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), get_string('exportingdatafor', 'export.html', $plugin));
             $classname = 'HtmlExport' . ucfirst($plugin);
             $artefactexporter = new $classname($this);
             $artefactexporter->dump_export_data();
@@ -178,14 +178,14 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Get the view data
-        $this->notify_progress_callback(55, 'Exporting Views');
+        $this->notify_progress_callback(55, get_string('exportingviews', 'export'));
         $this->dump_view_export_data();
 
         if (!$this->exportingoneview) {
             $summaries['view'] = array(100, $this->get_view_summary());
 
             // Sort by weight (then drop the weight information)
-            $this->notify_progress_callback(75, 'Building index page');
+            $this->notify_progress_callback(75, get_string('buildingindexpage', 'export.html'));
             uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
             foreach ($summaries as &$summary) {
                 $summary = $summary[1];
@@ -196,7 +196,7 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Copy all static files into the export
-        $this->notify_progress_callback(80, 'Copying extra files');
+        $this->notify_progress_callback(80, get_string('copyingextrafiles', 'export.html'));
         $this->copy_static_files();
 
         // Copy all resized images that were found while rewriting the HTML
@@ -214,7 +214,7 @@ class PluginExportHtml extends PluginExport {
         
 
         // zip everything up
-        $this->notify_progress_callback(90, 'Creating zipfile');
+        $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
         $cwd = getcwd();
         $command = sprintf('%s %s %s %s',
             get_config('pathtozip'),
@@ -229,7 +229,7 @@ class PluginExportHtml extends PluginExport {
         if ($returnvar != 0) {
             throw new SystemException('Failed to zip the export file');
         }
-        $this->notify_progress_callback(100, 'Done');
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
         return $this->zipfile;
     }
 
@@ -314,7 +314,7 @@ class PluginExportHtml extends PluginExport {
         $rootpath = ($this->exportingoneview) ? './' : '../../';
         $smarty = $this->get_smarty($rootpath);
         foreach ($this->views as $viewid => $view) {
-            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), "Exporting Views ($i/$viewcount)");
+            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), get_string('exportingviewsprogress', 'export', $i, $viewcount));
             $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
 
