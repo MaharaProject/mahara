@@ -865,7 +865,10 @@ class PluginAuthXmlrpc extends PluginAuth {
                 $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
             } catch (RemoteServerException $e) {
                 log_debug($e->getMessage());
-                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth') . '<br>' . $e->getMessage());
+            } catch (ParamOutOfRangeException $e) {
+                log_debug($e->getMessage());
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth') . '<br>' . $e->getMessage());
             }
         }
         else if ($values['institution'] != $peer->institution) {
