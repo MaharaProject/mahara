@@ -2379,9 +2379,6 @@ function cron_send_registration_data() {
     }
     else {
         set_config('registration_lastsent', time());
-        set_config('usersrank', $data->usersrank);
-        set_config('groupsrank', $data->groupsrank);
-        set_config('viewsrank', $data->viewsrank);
     }
 }
 

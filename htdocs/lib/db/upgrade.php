@@ -2143,5 +2143,9 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010082000) {
+        delete_records_select('config', "field IN ('usersrank', 'groupsrank', 'viewsrank')");
+    }
+
     return $status;
 }

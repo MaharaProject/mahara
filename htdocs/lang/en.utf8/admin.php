@@ -195,9 +195,6 @@ $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href
 $string['groupcountsbytype'] = 'Number of groups by Group Type';
 $string['groupcountsbyjointype'] = 'Number of groups by Access Type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
-$string['Rank'] = 'Rank';
-$string['registrationrankdescription'] = 'Rank of this site when compared against all other sites that have regsitered and are sending weekly updates to mahara.org';
-$string['rankingsupdated'] = 'Rankings last updated: %s';
 $string['uptodate'] = 'up to date';
 $string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
 $string['viewsbytype'] = 'Views by Type';
