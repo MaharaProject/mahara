@@ -27,9 +27,6 @@
 defined('INTERNAL') || die();
 
 /* Plans */
-$string['completed'] = 'Completed';
-$string['completiondate'] = 'Completion date';
-$string['completeddesc'] = 'Mark your plan completed.';
 $string['description'] = 'Description';
 $string['deleteplanconfirm'] = 'Are you sure you wish to delete this plan? Deleting this plan will also remove any tasks it contains.';
 $string['deleteplan'] = 'Delete plan';
@@ -54,6 +51,9 @@ $string['title'] = 'Title';
 $string['titledesc'] = 'The title will be used to display each task in the My Plans blocktype.';
 
 /* Tasks */
+$string['completed'] = 'Completed';
+$string['completiondate'] = 'Completion date';
+$string['completeddesc'] = 'Mark your task completed.';
 $string['deletetaskconfirm'] = 'Are you sure you wish to delete this task?';
 $string['deletetask'] = 'Delete task';
 $string['deletethistask'] = 'Delete task: \'%s\'';
