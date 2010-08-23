@@ -275,12 +275,13 @@ class Collection {
         $userid = $USER->get('id');
         ($views = get_records_sql_array("SELECT v.id, v.title
                   FROM {view} v
-                WHERE v.owner = ? AND v.type NOT IN ('dashboard','grouphomepage','profile')
-                AND v.id NOT IN (
-                    SELECT cv.view
-                      FROM {collection_view} cv
-                )
-                GROUP BY v.id, v.title", array($userid)))
+                LEFT JOIN {collection_view} cv ON cv.view = v.id
+                WHERE v.owner = ?
+                AND cv.view IS NULL
+                AND v.type NOT IN ('dashboard','grouphomepage','profile')
+                GROUP BY v.id, v.title
+                ORDER BY v.title ASC
+                ", array($userid)))
                 || ($views = array());
 
         return $views;
