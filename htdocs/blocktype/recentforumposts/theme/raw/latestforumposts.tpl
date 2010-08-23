@@ -11,6 +11,9 @@
         {/foreach}
         </table>
     {else}
-        <p>{str tag=noforumpostsyet section=interaction.forum}</p>
+        <table class="fullwidth"><tr class="{cycle values='r0,r1'}">
+                <td align="center">{str tag=noforumpostsyet section=interaction.forum}</td>
+            </tr>
+        </table>
     {/if}
     <a class="morelink" href="{$WWWROOT}interaction/forum/?group={$group->id}">{str tag=gotoforums section=interaction.forum} &raquo;</a>

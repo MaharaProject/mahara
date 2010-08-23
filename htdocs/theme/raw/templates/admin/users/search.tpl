@@ -42,7 +42,7 @@
                     </select>
             </span>
             {/if}
-            <button id="query-button" type="submit">{str tag="go"}</button>
+            <button id="query-button" class="btn-search" type="submit">{str tag="go"}</button>
         </div>
         <div id="results" class="section">
             {$results|safe}

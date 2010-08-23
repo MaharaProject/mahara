@@ -12,7 +12,7 @@
    <th>{str tag=Date section=artefact.file}</th>
   {/if}
   {if $showtags}
-   <th>{str tag=tags}</th>
+   <th><div class="tags">{str tag=tags}</div></th>
   {/if}
   {if $editmeta}
    <th></th>
@@ -49,14 +49,14 @@
     <td>{tif $file->mtime ?: ''}</td>
     {/if}
     {if $showtags}
-    <td>{if $file->tags}<span class="tags">{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
+    <td>{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
     {/if}
     {if $editmeta}
-    <td>
+    <td class="right">
       {if $file->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {elseif !$file->isparent}
-        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
+        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="icon btn-edit tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
       {/if}
     </td>
     {/if}

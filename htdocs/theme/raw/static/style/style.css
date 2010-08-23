@@ -219,16 +219,16 @@ td.narrow {
 .r0,
 .r0 td  {
     background-color: #f9f9f9;
-  border-bottom: 1px solid #FFF;
+  	border-bottom: 2px solid #FFF;
 }
 .r1,
 .r1 td {
     background-color: #f3f3f3;
-  border-bottom: 1px solid #FFF;
+  	border-bottom: 2px solid #FFF;
 }
 tr.highlight td {
   background-color: #fffcd8 !important;
-  border-bottom: 1px solid #FFF;
+  border-bottom: 2px solid #FFF;
 }
 .listing {
 	margin-bottom: .5em;
@@ -240,31 +240,6 @@ tr.highlight td {
 div.listing {
 	padding: .5em;
 }
-.listing div div {
-	font-size: .9167em;
-}
-.listing .vi .videsc {
-	font-size: .9167em;
-}
-.listing .vi .tags {
-	font-size: 1em;
-	margin-top: .25em;
-	color: #888;
-}
-.listing .vi .artefacts {
-	color: #888;
-	font-size: 1em;
-}
-.listing .vi .collection {
-	color: #888;
-	font-size: 1em;
-}
-.listing .vi .viviews {
-	color: #888;
-	font-size: 1em;
-}
-
-
 /**************************** Pagination ****************************/
 div.pagination  {
     font-size: .9167em;
@@ -318,6 +293,10 @@ label {
 	font-weight: normal;
 	font-size: .9167em;
 }
+.pieform th label {
+	font-weight: bold;
+	font-size: .9167em;
+}
 #editpost_allowcomments_container th label {
 	white-space: nowrap;
 }
@@ -331,9 +310,6 @@ label {
 }
 .pieform td.description {
 	padding-top: 0 !important;
-    font-size: .9167em;
-	color: #7d7d7d;
-	line-height: 1.3333em;
 }
 div.grippie {
 	border-color: #a5acb2;
@@ -381,6 +357,9 @@ fieldset.collapsed table {
 	padding: 0;
 	border: 0;
 	margin: 0;
+}
+fieldset.collapsible legend {
+	font-size: 1.1333em;
 }
 fieldset.collapsible legend a {
     padding-left: 15px;
@@ -454,12 +433,12 @@ input#files_filebrowser_edit_artefact {
 	font-family: Arial, Helvetica, sans-serif;
 	border-width: 1px;
 	border-style: solid;
-	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
+	border-color: #7d99ae #003c74 #003c74 #7d99ae;
 	margin: 0 0.25em 0 0;
 	* margin: 0 0.1em 0 0;
 	padding: .15em .25em;
 	* padding: .15em .25em 0em .25em;
-	background: #e3e3e3;
+	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	text-decoration: none;
 	cursor: default;
 	color: #333;
@@ -470,10 +449,10 @@ input#files_filebrowser_edit_artefact {
 	font-family: Arial, Helvetica, sans-serif;
 	border-width: 1px;
 	border-style: solid;
-	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
+	border-color: #7d99ae #003c74 #003c74 #7d99ae;
 	margin: 0 0.25em 0 0;
 	padding: .25em .5em;
-	background: #e3e3e3;
+	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	text-decoration: none;
 	cursor: default;
 	color: #333;
@@ -487,7 +466,7 @@ button:hover,
 input.button:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover {
-	background: #d1d1d1;
+	background: #FFF url(../images/btn-bkgd-hover.gif) repeat-x left top;
 	text-decoration: none;
 	cursor: default;
 }
@@ -500,19 +479,22 @@ button:active,
 input.button:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active {
-	border-color: #a3a3a3 #f0f0f0 #f0f0f0 #a3a3a3;
-	background: #d1d1d1;
+	border-color: #003c74 #7d99ae #7d99ae #003c74;
+	background: #FFF url(../images/btn-bkgd-hover.gif) repeat-x left top;
 }
 /* buttons that look like links with icons */
 .icon {
-	border: 0;
-	cursor: pointer;
-	color: #0000ee;
-	background: none;
-	padding: 0;
     font-family: Arial, Helvetica, sans-serif;
 	margin-left: .5em;
-	text-decoration: underline;
+	border: 0;
+	cursor: pointer;
+	background: none;
+	padding: 0;
+	color: #0000ee;
+}
+.fl .icon {
+	margin-left: 0;
+	margin-right: .5em;
 }
 /* buttons that look like links */
 .linkbtn {
@@ -591,30 +573,86 @@ div.btn-edit input.submit,
 	margin: 0;
 	padding: .18em .25em;
 	* padding: .25em .25em .1em .25em;
-	background: #e3e3e3;
+	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	border-width: 1px 1px 1px 0;
 	* border-width: 1px 1px 1px 1px;
 	color: #333;
 	cursor: pointer;
 	font-size: 1em;
 }
+#usf_submit:hover {
+	background: #FFF url(../images/btn-bkgd-hover.gif) repeat-x left top;
+}
 #selfsearch button,
 .query-button,
-#query-button,
 #moderator_search_btn,
 #search_search,
 #selfsearch button,
 #search_submit,
 .btn-search {
-	border-color: #f0f0f0 #a3a3a3 #a3a3a3 #f0f0f0;
+	border-color: #7d99ae #003c74 #003c74 #7d99ae;
 	margin: 0;
 	padding: .25em;
 	* padding: .25em .25em 0 .25em;
-	background: #e3e3e3;
+	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	border-width: 1px 1px 1px 1px;
 	color: #333;
 	cursor: pointer;
 	font-size: 1em;
+}
+#selfsearch button:hover,
+.query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover {
+	border-color: #003c74 #7d99ae #7d99ae #003c74;
+	background: #FFF url(../images/btn-bkgd-hover.gif) repeat-x left top;
+}
+
+/** Buttons with icons **/
+.btn-edit {
+	background: transparent url(../images/icon-edit.gif) no-repeat left;
+	padding-left: 13px;
+}
+.btn-del {
+    background: transparent url(../images/icon-delete.gif) no-repeat left;
+    color: #ca0000;
+	padding-left: 13px;
+}
+.btn-manage {
+	background: transparent url(../images/icon-manage.gif) no-repeat left;
+	padding-left: 15px;
+}
+.btn-message {
+	background: transparent url(../images/icon-mail.gif) no-repeat left;
+	padding-left: 13px;
+}
+.btn-friend {
+	background: transparent url(../images/icon-friend.gif) no-repeat left;
+	padding-left: 13px;
+}
+.btn-reply {
+	background: transparent url(../images/icon-reply.gif) no-repeat left;
+	padding-left: 13px;
+} 
+.btn-download {
+	background: transparent url(../images/icon-download.gif) no-repeat right;
+	padding-right: 13px;
+}
+
+.btn-request {
+	background: transparent url(../images/icon-join.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-leavegroup {
+    background: transparent url(../images/icon-leave.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-pending {
+	background: transparent url(../images/icon-pending.gif) no-repeat left center;
+	padding-left: 13px;
 }
 
 div.pagetabs {
@@ -690,8 +728,8 @@ div.rbuttons .small-logo {
 .viewheader #mainnav-container {
   width: 60%;
   height: 1.5em;
-  padding: .25em .5em .5em 110px;
-  background: url(../images/icon_fieldset_left.gif) no-repeat 100px center;
+  padding: .25em .5em .5em 105px;
+  background: url(../images/icon_fieldset_left.gif) no-repeat 95px center;
 }
 .viewheader .title {
   padding: .5em 0 .25em;
@@ -868,6 +906,7 @@ ul.in-page-tabs li a.current-tab:active {
   background: #D1D1D1;
   padding: .4em 1em;
   * padding: .35em 1em;
+  cursor: default;
 }
 
 .subpage {
@@ -1151,9 +1190,6 @@ div.sideblock #friendscontrol label {
 .subpage.mytags {
   margin-bottom: 2em;
 }
-.tags label {
-	color: #888;
-}
 .tags {
 	background: url(../images/icon-tag.gif) no-repeat left 3px;
 	padding-left: 15px;
@@ -1345,11 +1381,17 @@ a.tag {
 }
 
 /* Attached file lists */
+table.attachments {
+	border: 2px solid #ddd;
+}
 .attachments tbody th {
 	text-align: left;
 	background-color: #ddd;
 	padding: .25em .5em;
 	border: 0;
+}
+table.attachments td {
+	border-bottom: 2px solid #ddd;
 }
 
 /* User/view */
@@ -1411,34 +1453,43 @@ a.tag {
 
 
 /* My Views */
-#myviews td {
-	border-bottom: 2px solid #FFF;
-}
 #myviews h4 {
 	margin: .25em 0 .25em 0;
 }
 #myviews .vi {
     line-height: 1.4em;
     float: left;
-    padding: .5em 2em .5em 0;
+    padding: 0 2em 0 0;
     width: 30%;
 }
-#myviews .vi .videsc {
-	font-size: 1em;
+.vi .videsc,
+.vi .tags,
+.vi .artefacts,
+.vi .collection,
+.vi .viviews {
+	font-size: .9167em;
+	margin-top: .25em;
 }
-#myviews .vi .videsc p {
+.vi .videsc p {
 	margin: 0;
     overflow: hidden;
 }
 #myviews .submit-viewitem {
     float: left;
-    padding: .25em 0;
+	clear: left;
+	margin-top: .25em;
+	padding: .25em .5em;
+	background: #eee;
+	width: 98%;
+}
+#myviews .submit-viewitem .submit {
+	margin-left: .25em;
 }
 #myviews .submitted-viewitem {
     float: left;
-    padding: 1em 2.75em 0 0;
+    padding: .5em 4em 0 0;
     font-style: italic;
-    color: #969696;
+    color: #888;
     font-size: 1em;
     width: 60%;
 }
@@ -1768,6 +1819,10 @@ form#search, form#filter, div.searchform {
 .groupdescription {
 	margin-bottom: 1em;
 }
+.groupviewsection .submit {
+	margin-left: .5em;
+}
+
 
 /* Group: members */
 .listing.twocolumn td {

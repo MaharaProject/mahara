@@ -3,7 +3,7 @@
 {/if}
 
 {$description|clean_html|safe}
-{if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
+{if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
 
 <table id="postlist_{$blockid}" class="postlist">
   <tbody>

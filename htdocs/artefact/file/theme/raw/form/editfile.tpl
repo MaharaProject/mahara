@@ -1,7 +1,7 @@
   <tr id="{$prefix}_edit_row"{if !$fileinfo} class="hidden"{/if}>
   	<td></td>
     <td colspan="5">
-      <table>
+      <table class="fileedittable">
         <tbody>
           <tr>
             <th colspan="2" id="{$prefix}_edit_heading" class="fl">
@@ -55,7 +55,7 @@
           <tr>
           	<td></td>
             <td>
-              <input type="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
+              <input type="submit" class="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
               <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>

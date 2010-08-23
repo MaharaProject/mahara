@@ -17,6 +17,10 @@
 #resumewrap table td {
 	padding: 0;
 }
+#resumewrap table tr#coverletter_save_container td,
+#resumewrap table tr#interests_save_container td {
+	padding-top: .5em;
+}
 #resumewrap table.resumecomposite {
 	margin-bottom: .5em;
 }

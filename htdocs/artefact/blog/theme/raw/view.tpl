@@ -9,7 +9,7 @@
 				</div>
 
                 <p>{clean_html($blog->get('description'))|safe}</p>
-                {if $blog->get('tags')}<p class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
+                {if $blog->get('tags')}<p class="tags"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
 
                 {if $posts}
 				<table id="postlist" class="tablerenderer fullwidth nohead">

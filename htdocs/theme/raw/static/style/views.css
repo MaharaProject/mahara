@@ -96,9 +96,6 @@ ul.artefactchooser-tabs li.current a:active {
   background: #ddd;
   color: #333;
 }
-ul.artefactchooser-subtabs {
-  border-bottom: 1px solid #ddd;
-}
 ul.artefactchooser-subtabs li {
   border-right: 1px solid #d1d1d1;
 }
@@ -207,9 +204,6 @@ body:last-child:not(:root:root) .newblockhere {
 	line-height: 1.3em;
 }
 
-#userfriendstable td {
-	background: none;
-}
 
 /* My Views / Latest Views*/
 #userviewstable {

@@ -16,6 +16,7 @@
 .fileupload {
 	background: #eee;
 	border: 1px solid #d1d1d1;
+	margin-bottom: 1em;
 }
 .fileupload th {
 	text-align: left;
@@ -38,7 +39,6 @@
 /* folder nav */
 .foldernav {
     font-weight: bold;
-    margin: 1em 0 0 0;
     padding: 0 0 0 1.6667em;
     font-size: 1.3333em;
 	line-height: 1.6667em;
@@ -61,10 +61,14 @@ form#files .foldernav {
 .filelist th {
 	border-bottom: 1px solid #CCCCCC;
 }
+.filelist table th {
+	border-bottom: 0;
+}
 .filelist td.right input {
 	font-size: .9167em;
-	margin-left: .5em;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
 /* parent folder row */
 tr.parentfolder td {
 	background-color: #ddd !important;

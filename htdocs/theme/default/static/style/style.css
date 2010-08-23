@@ -211,70 +211,22 @@ input#files_filebrowser_edit_artefact:active {
 /* buttons that look like links with icons */
 .icon {
 	color: #6e8e00;
+	border: 0;
+	cursor: pointer;
+	background: none;
+	padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+	margin-left: .5em;
+	text-decoration: underline;
 }
 /* buttons that look like links */
 .linkbtn {
 	color: #6e8e00; 
 }
 
-/** Buttons with icons **/
-.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left;
-	padding-left: 13px;
-}
-.btn-del {
-    background: transparent url(../images/icon-delete.gif) no-repeat left;
-    color: #ca0000;
-	padding-left: 13px;
-}
-.btn-manage {
-	background: url(../images/icon-manage.gif) no-repeat left;
-	padding-left: 15px;
-}
-.btn-message {
-	background: url(../images/icon-mail.gif) no-repeat left;
-	padding-left: 13px;
-}
-.btn-friend {
-	background: url(../images/icon-friend.gif) no-repeat left;
-	padding-left: 13px;
-}
-.btn-reply {
-	background: url(../images/icon-reply.gif) no-repeat left;
-	padding-left: 13px;
-} 
-.btn-download {
-	background: url(../images/icon-download.gif) no-repeat right;
-	padding-right: 13px;
-}
-
-a.btn-req {
-	background: url(../images/icon-join.gif) no-repeat left center;
-	padding-left: 15px;
-}
-.btn-leavegroup {
-    background: transparent url(../images/icon-leave.gif) no-repeat left center;
-	padding-left: 15px;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 12px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left center;
-	border: 0;
-    margin: 0;
-}
-#togglepublic_submit {
-	background: url(../images/icon-login.gif) no-repeat left center;
-	padding-left: 12px !important;
-	color: #7f9d16;
-	border: 0;
-}
-
 /* Search buttons */
-#usf_submit {
+#usf_submit,
+#usf_submit:hover {
 	background: transparent url(../images/btn-search.gif) no-repeat !important;
 	border: 0;
 	color: #6e8e00;
@@ -296,7 +248,15 @@ input#myfriends_addfriend_add {
 #search_search,
 #selfsearch button,
 #search_submit,
-.btn-search {
+.btn-search,
+#selfsearch button:hover,
+.query-button:hover,
+#query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover {
 	background: transparent url(../images/btn-search.gif) no-repeat !important;
 	border: 0;
 	color: #6e8e00;

@@ -4,7 +4,7 @@
     <h3><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a></h3>
     <div>{$post->description|clean_html|safe}</div>
     {if $post->tags}
-    <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->tags}</div>
+    <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$post->owner tags=$post->tags}</div>
     {/if}
     {if $post->files}
     <table class="cb attachments fullwidth">

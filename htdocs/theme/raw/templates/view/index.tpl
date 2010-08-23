@@ -31,7 +31,7 @@
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
 {/if}
 {if $view.submittedto}
-                            <div class="vi submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
+                            <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {else}
                             {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
                             <div class="vi">
@@ -72,7 +72,7 @@
 {/if}
 {if !$view.collection}
   {if $view.accessgroups}
-                                  <div class="videsc">{str tag="whocanseethisview" section="view"}:
+                                  <div class="videsc"><label>{str tag="whocanseethisview" section="view"}:</label>
   {foreach from=$view.accessgroups item=accessgroup name=artefacts}{strip}
   {if $accessgroup.accesstype == 'loggedin'}
       {str tag="loggedinlower" section="view"}
@@ -96,7 +96,7 @@
 {/if}
                             </div>
 {if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}
-                            <div class="vi submit-viewitem">{$view.submitto|safe}</div>
+                            <div class="submit-viewitem">{$view.submitto|safe}</div>
 {/if}
                         </div></td>
                     </tr>

@@ -75,6 +75,6 @@
 }
 #postlist td h1,
 #postlist td h2 {
+	font-size: 1.3333em !important;
 	margin: 1em 0 0.5em 0;
-	font-size: 1.5em;
 }
