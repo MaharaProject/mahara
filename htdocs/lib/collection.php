@@ -381,7 +381,7 @@ class Collection {
             return;
         }
 
-        $select = 'view IN (' . join(',', $viewids) . ')';
+        $select = 'view IN (' . join(',', $viewids) . ') AND visible = 1';
 
         if (!$access = get_records_select_array('view_access', $select)) {
             return;
