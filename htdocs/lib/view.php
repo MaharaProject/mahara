@@ -685,7 +685,6 @@ class View {
         //
         db_begin();
         delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
-        $time = db_format_timestamp(time());
 
         // View access
         if ($accessdata) {
@@ -693,62 +692,74 @@ class View {
              * There should be a cleaner way to do this
              * $accessdata_added ensures that the same access is not granted twice because the profile page
              * gets very grumpy if there are duplicate access rules
+             *
+             * Additional rules:
+             * - Don't insert records with stopdate in the past
+             * - Remove startdates that are in the past
+             * - If view allows comments, access record comment permissions, don't apply, so reset them.
+             * @todo: merge overlapping date ranges.
              */
             $accessdata_added = array();
+            $time = time();
             foreach ($accessdata as $item) {
+
+                if (!empty($item['stopdate']) && $item['stopdate'] < $time) {
+                    continue;
+                }
+                if (!empty($item['startdate']) && $item['startdate'] < $time) {
+                    unset($item['startdate']);
+                }
+                if ($this->get('allowcomments')) {
+                    unset($item['allowcomments']);
+                    unset($item['approvecomments']);
+                }
+
                 $accessrecord = new StdClass;
+
+                switch ($item['type']) {
+                case 'user':
+                    $accessrecord->usr = $item['id'];
+                    break;
+                case 'group':
+                    $accessrecord->group = $item['id'];
+                    if (isset($item['role']) && strlen($item['role'])) {
+                        // Don't insert a record for a role the group doesn't have
+                        $roleinfo = group_get_role_info($item['id']);
+                        if (!isset($roleinfo[$item['role']])) {
+                            break;
+                        }
+                        $accessrecord->role = $item['role'];
+                    }
+                    break;
+                case 'token':
+                    $accessrecord->token = $item['id'];
+                    break;
+                case 'friends':
+                    if (!$this->owner) {
+                        continue; // Don't add friend access to group, institution or system views
+                    }
+                case 'public':
+                case 'loggedin':
+                    $accessrecord->accesstype = $item['type'];
+                }
+
                 $accessrecord->view = $this->get('id');
-                $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
-                $accessrecord->approvecomments = (int) !empty($item['approvecomments']);
+                if (isset($item['allowcomments'])) {
+                    $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
+                    if ($accessrecord->allowcomments) {
+                        $accessrecord->approvecomments = (int) !empty($item['approvecomments']);
+                    }
+                }
                 if (isset($item['startdate'])) {
                     $accessrecord->startdate = db_format_timestamp($item['startdate']);
                 }
                 if (isset($item['stopdate'])) {
                     $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
                 }
-                switch ($item['type']) {
-                    case 'friends':
-                        if (!$this->owner) {
-                            break; // Don't add friend access to group, institution or system views
-                        }
-                    case 'public':
-                    case 'loggedin':
-                        $accessrecord->accesstype = $item['type'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
-                    case 'user':
-                        $accessrecord->usr = $item['id'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
-                    case 'group':
-                        $accessrecord->group = $item['id'];
-                        if (isset($item['role']) && strlen($item['role'])) {
-                            // Don't insert a record for a role the group doesn't have
-                            $roleinfo = group_get_role_info($item['id']);
-                            if (!isset($roleinfo[$item['role']])) {
-                                break;
-                            }
-                            $accessrecord->role = $item['role'];
-                        }
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
 
-                        break;
-                    case 'token':
-                        $accessrecord->token = $item['id'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
+                if (array_search($accessrecord, $accessdata_added) === false) {
+                    insert_record('view_access', $accessrecord);
+                    $accessdata_added[] = $accessrecord;
                 }
             }
         }
