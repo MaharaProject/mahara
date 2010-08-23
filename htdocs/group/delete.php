@@ -45,13 +45,6 @@ if (!$group) {
 
 define('TITLE', get_string('deletespecifiedgroup', 'group', $group->name));
 
-$views = count_records_sql(
-    'SELECT COUNT(*)
-    FROM {view_access} a
-    WHERE a.group = ?',
-    array($groupid)
-);
-
 $form = pieform(array(
     'name' => 'deletegroup',
     'renderer' => 'div',
@@ -68,7 +61,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('subheading', TITLE);
-$smarty->assign('message', $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'));
+$smarty->assign('message', get_string('groupconfirmdelete', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 

@@ -144,7 +144,6 @@ $string['grouprequestmessage'] = '%s would like to join your group %s';
 $string['grouprequestmessagereason'] = "%s would like to join your group %s. Their reason for wanting to join is:\n\n%s";
 $string['cantdeletegroup'] = 'You cannot delete this group';
 $string['groupconfirmdelete'] = 'Are you sure you wish to delete this group?';
-$string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this group? Some of your views use this group for access control, removing this group would mean that the members of that group would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
 $string['allmygroups'] = 'All My Groups';
 $string['groupsimin']  = 'Groups I\'m In';
