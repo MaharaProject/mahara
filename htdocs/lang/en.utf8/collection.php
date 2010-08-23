@@ -65,6 +65,7 @@ $string['editviews'] = 'Edit Collection Views';
 $string['editviewaccess'] = 'Edit View access';
 $string['editaccess'] = 'Edit Collection Access';
 $string['emptycollectionnoeditaccess'] = 'You cannot edit access to empty collections.  Add some views first.';
+$string['emptycollection'] = 'Empty collection';
 $string['incorrectaccesstype'] = 'Attention: access type \'secret URL\' is unavailable to be set as override access type.  This has been ignored and existing view accesses retained.  However, if the selected override view had other access types these have been used and existing view access types removed.';
 $string['manageviews'] = 'Manage views';
 $string['mycollections'] = 'My Collections';

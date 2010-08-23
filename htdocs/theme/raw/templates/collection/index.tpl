@@ -10,7 +10,11 @@
                 <tr class="{cycle values='r0,r1'}">
                     <td><div class="rel">
 
-                        <h3>{$collection->name}</h3>
+            {if $collection->views[0]->view}
+                        <h3><a href="{$WWWROOT}view/view.php?id={$collection->views[0]->view}">{$collection->name}</a></h3>
+            {else}
+                        <h3 title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
+            {/if}
 
                         <div class="rbuttons"><a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a></div>
 
