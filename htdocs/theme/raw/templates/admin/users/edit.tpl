@@ -6,7 +6,7 @@
         <div id="profilename"><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></div>
     </div>
     {if $loginas}
-       <div id="loginas"><a class="btn-loginas" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
+       <div id="loginas"><a class="btn" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
     {/if}
 </div>
 

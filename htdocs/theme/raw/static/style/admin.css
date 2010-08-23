@@ -136,8 +136,8 @@ input#register_register {
     padding: 1em 1.5em;
     background: #f6f6f6;
     border: 1px solid #ddd;
-	margin: 0 0 1em 0;
-	float: left;
+    margin: 0 0 1em 0;
+    float: left;
 }
 #runupgrade h4 {
     margin: 0;
@@ -488,8 +488,20 @@ form#uploadcsv {
 #editmenus #menuitemlist table {
 	width: auto;
 }
-#groupadminsform table {
-	width: 97%;
+
+/* MANAGE GROUPS > GROUP ADMINS */
+#groupadminsform {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+}
+#groupadminsform table #groupadminsform_admins_container td th {
+	width: auto !important;
+	white-space: nowrap;
+	font-weight: bold;
+}
+#groupadminsform table #groupadminsform_admins_container th {
+	width: 80px !important;
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTIONS */

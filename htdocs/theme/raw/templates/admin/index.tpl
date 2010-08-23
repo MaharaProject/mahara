@@ -1,6 +1,13 @@
 {include file='header.tpl'}
 
 <div id="adminhome">
+{if $register}
+<div class="message" id="register-site">
+    <h3>{str tag=registeryourmaharasite section=admin}</h3>
+    {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
+</div>
+{/if}
+
 {if $upgrades}
 <div id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
@@ -22,13 +29,6 @@
 {/if}
 {/foreach}
 </table>
-</div>
-{/if}
-
-{if $register}
-<div class="message" id="register-site">
-    <h3>{str tag=registeryourmaharasite section=admin}</h3>
-    {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
 </div>
 {/if}
 

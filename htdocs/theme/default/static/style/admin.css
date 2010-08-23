@@ -57,7 +57,8 @@
 
 #institutionusers, 
 #staffusers, 
-#adminusers {
+#adminusers,
+#groupadminsform {
 	background-color: #EBF0F4;
 	border: 1px solid #95A8B7;
 }
