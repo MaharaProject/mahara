@@ -446,6 +446,46 @@ abstract class HtmlExportArtefactPlugin {
 
     abstract public function get_summary_weight();
 
+    public function paginate($artefact) {
+
+        // Create directory for storing the artefact
+        $dirname = PluginExportHtml::text_to_path($artefact->get('title'));
+        if (!check_dir_exists($this->fileroot . $dirname)) {
+            throw new SystemException("Couldn't create artefact directory {$this->fileroot}{$dirname}");
+        }
+
+        // Get artefact-specific pagination options
+        $options = $this->pagination_data($artefact);
+
+        // Render the first page of the artefact (the only one if there aren't many children)
+        $smarty = $this->exporter->get_smarty('../../../', $artefact->get('artefacttype'));
+        $smarty->assign('page_heading', $artefact->get('title'));
+        $smarty->assign('breadcrumbs', array(
+            array('text' => $options['plural']),
+            array('text' => $artefact->get('title'), 'path' => 'index.html'),
+        ));
+        $rendered = $artefact->render_self(array('hidetitle' => true));
+        $outputfilter = new HtmlExportOutputFilter('../../../', $this->exporter);
+        $smarty->assign('rendered', $outputfilter->filter($rendered['html']));
+        $content = $smarty->fetch('export:html:page.tpl');
+
+        if (false === file_put_contents($this->fileroot . $dirname . '/index.html', $content)) {
+            throw new SystemException("Unable to create index.html for artefact " . $artefact->get('id'));
+        }
+
+        // If the artefact has many children, we'll need to write out archive pages
+        if ($options['childcount'] > $options['perpage']) {
+            for ($i = $options['perpage']; $i <= $options['childcount']; $i += $options['perpage']) {
+                $rendered = $artefact->render_self(array('limit' => $options['perpage'], 'offset' => $i));
+                $smarty->assign('rendered', $outputfilter->filter($rendered['html']));
+                $content = $smarty->fetch('export:html:page.tpl');
+
+                if (false === file_put_contents($this->fileroot . $dirname . "/{$i}.html", $content)) {
+                    throw new SystemException("Unable to create {$i}.html for artefact {$artefact->get('id')}");
+                }
+            }
+        }
+    }
 }
 
 /**
