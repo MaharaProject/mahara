@@ -39,9 +39,10 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
 
+    $plugins = array('submit', 'cancel');
     $elems = '';
     foreach ($element['value'] as $key => $value) {
-        if (!is_numeric($key)) {
+        if (!is_numeric($key) && in_array($key, $plugins)) {
             $function = 'pieform_element_' . $key;
             if (function_exists($function)) {
                 $item = $element;
