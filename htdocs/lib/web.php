@@ -166,7 +166,7 @@ tinyMCE.init({
     relative_urls: false,
     setup: function(ed) {
         ed.onInit.add(function(ed) {
-            if (editor_to_focus && typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
+            if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
                 ed.focus();
             }
         });
