@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {$searchform|safe}
-			<table id="adminstitutionslist" class="fullwidth">
+			<table id="admgroupslist" class="fullwidth">
 				<thead>
 				<tr>
 					<th>{str tag="groupname" section="admin"}</th>
@@ -14,19 +14,9 @@
 				</tr>
 				</thead>
 				<tbody>
-				{foreach from=$groups.data item=group}
-				<tr class="{cycle values='r0,r1'}">
-					<td>{$group->name}</td>
-                    <td class="center">{$group->members}</td>
-					<td class="center">{$group->admins}</td>
-					<td class="center">{str tag=name section=grouptype.$group->grouptype}: {str tag=membershiptype.$group->jointype section=group}</td>
-					<td class="center">{$group->visibility}</td>
-                    <td class="center s"><a class="icon btn-manage" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">{str tag="groupmanage" section="admin"}</a></td>
-                    <td class="center s"><a class="icon btn-del" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">{str tag="groupdelete" section="admin"}</a></td>
-				</tr>
-				{/foreach}
+				{$results.tablerows|safe}
 				</tbody>
 			</table>
-{$pagination.html|safe}
+{$results.pagination|safe}
 
 {include file="footer.tpl"}

@@ -38,67 +38,45 @@ require_once('searchlib.php');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$limit = param_integer('limit', 10);
+$limit = 10;
+
+$data = build_grouplist_html($query, $limit, $offset);
 
 $searchform = pieform(array(
     'name'   => 'search',
-    'method' => 'post',
     'renderer' => 'oneline',
     'elements' => array(
         'query' => array(
             'type' => 'text',
             'defaultvalue' => $query,
         ),
-        'search' => array(
+        'submit' => array(
             'type' => 'submit',
             'value' => get_string('search'),
         ),
     ),
 ));
 
+$js = <<< EOF
+addLoadEvent(function () {
+p = {$data['pagination_js']}
+connect('search_submit', 'onclick', function (event) {
+    replaceChildNodes('messages');
+    var params = {'query': $('search_query').value};
+    p.sendQuery(params);
+    event.stop();
+    });
+});
+EOF;
+
+$smarty = smarty(array('paginator'));
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('searchform', $searchform);
+$smarty->assign('results', $data);
+$smarty->display('admin/groups/groups.tpl');
+
 function search_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'admin/groups/groups.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
-
-$groups = search_group($query, $limit, $offset, 'all');
-
-if ($ids = array_map(create_function('$a', 'return intval($a->id);'), $groups['data'])) {
-    $sumsql = "(m.role = 'admin')";
-    if (is_postgres()) {
-        $sumsql .= '::int';
-    }
-
-    // Member & admin counts
-    $ids = join(',', $ids);
-    $counts = get_records_sql_assoc("
-        SELECT m.group, COUNT(m.member) AS members, SUM($sumsql) AS admins
-        FROM {group_member} m
-        WHERE m.group IN ($ids)
-        GROUP BY m.group",
-        array()
-    );
-}
-
-foreach ($groups['data'] as &$group) {
-    $group->visibility = $group->public ? get_string('Public', 'group') : get_string('Members', 'group');
-    $group->admins = empty($counts[$group->id]->admins) ? 0 : $counts[$group->id]->admins;
-    $group->members = empty($counts[$group->id]->members) ? 0 : $counts[$group->id]->members;
-}
-
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'admin/groups/groups.php?query=' . $query,
-    'count' => $groups['count'],
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('group', 'group'),
-    'resultcounttextplural' => get_string('groups', 'group'),
-));
-
-$smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('searchform', $searchform);
-$smarty->assign('groups', $groups);
-$smarty->assign('pagination', $pagination);
-$smarty->display('admin/groups/groups.tpl');
-
 ?>
