@@ -104,7 +104,7 @@ p {
 }
 pre, tt {
 	font-size: 1.1667em;
-    white-space: normal;
+    white-space: pre-wrap;
 }
 .fullwidth {
     width: 100%;
