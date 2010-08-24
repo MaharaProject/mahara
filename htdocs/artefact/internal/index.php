@@ -39,6 +39,7 @@ safe_require('artefact', 'internal');
 $fieldset = param_alpha('fs', 'aboutme');
 
 $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+$element_data = ArtefactTypeProfile::get_field_element_data();
 $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
 
 // load existing profile information
@@ -96,6 +97,10 @@ foreach ( $element_list as $element => $type ) {
         'type'  => $type,
         'title' => get_string($element, 'artefact.internal'),
     );
+
+    if (isset($element_data[$element]['rules'])) {
+        $items[$element]['rules'] = $element_data[$element]['rules'];
+    }
 
     if ($type == 'wysiwyg') {
         $items[$element]['rows'] = 10;
