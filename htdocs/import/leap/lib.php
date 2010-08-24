@@ -52,6 +52,7 @@ class PluginImportLeap extends PluginImport {
     protected $profile = false;
     protected $leap2anamespace = null;
     protected $leap2atypenamespace = null;
+    protected $leap2acategories = null;
 
     private $snapshots = array();
 
@@ -150,9 +151,11 @@ class PluginImportLeap extends PluginImport {
         if($leap2) {
             $this->leap2anamespace = self::NS_LEAP;
             $this->leap2atypenamespace = self::NS_LEAP;
+            $this->leap2acategories = self::NS_CATEGORIES;
         } else {
             $this->leap2anamespace = self::NS_LEAP_200903;
             $this->leap2atypenamespace = self::NS_LEAPTYPE_200903;
+            $this->leap2acategories = self::NS_CATEGORIES_200903;
         }
     }
 
@@ -214,7 +217,7 @@ class PluginImportLeap extends PluginImport {
             }
             else {
                 $persondata = $this->get('xml')->xpath('//a:feed/a:entry/a:category[('
-                    . $this->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'person_type#') . ') and @term="Self"]/../a:id');
+                    . $this->curie_xpath('@scheme', $this->get_categories_namespace(), 'person_type#') . ') and @term="Self"]/../a:id');
                 if (isset($persondata[0])) {
                     $this->persondataid = (string)$persondata[0][0];
                 }
@@ -1020,7 +1023,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_correct_category_scheme(SimpleXMLElement $entry, PluginImportLeap $importer, $category, $term) {
         $result = $entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, $category . '#') . ') and @term="' . $term . '"]');
+            . $importer->curie_xpath('@scheme', $importer->get_categories_namespace(), $category . '#') . ') and @term="' . $term . '"]');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
@@ -1202,6 +1205,15 @@ class PluginImportLeap extends PluginImport {
      */
     public function get_namespaces() {
         return $this->namespaces;
+    }
+
+    /**
+     * getter to return the leap2 categories namespace
+     *
+     * @return string namespace URL
+     */
+    public function get_categories_namespace() {
+        return $this->leap2acategories;
     }
 
     /**
