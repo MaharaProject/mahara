@@ -401,14 +401,55 @@ class Institution {
         return ($this->maxuseraccounts != '') && ($this->countMembers() >= $this->maxuseraccounts);
     }
 
-    public static function count_members($filter, $showdefault) {
+    /**
+     * Returns the list of institutions, implements institution searching
+     *
+     * @param array   Limit the output to only institutions in this array (used for institution admins).
+     * @param bool    Whether default institution should be listed in results.
+     * @param string  Searching query string.
+     * @param int     Limit of results (used for pagination).
+     * @param int     Offset of results (used for pagination).
+     * @param int     Returns the total number of results.
+     * @return array  A data structure containing results looking like ...
+     *   $institutions = array(
+     *                       name => array(
+     *                           displayname     => string
+     *                           maxuseraccounts => integer
+     *                           members         => integer
+     *                           staff           => integer
+     *                           admins          => integer
+     *                           name            => string
+     *                       ),
+     *                       name => array(...),
+     *                   );
+     */
+    public static function count_members($filter, $showdefault, $query='', $limit=null, $offset=null, &$count=null) {
         if ($filter) {
             $where = '
-            WHERE ii.name IN (' . join(',', array_map('db_quote', $filter)) . ')';
+            AND ii.name IN (' . join(',', array_map('db_quote', $filter)) . ')';
         }
         else {
             $where = '';
         }
+
+        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query))));
+        $namesql = '(
+                ii.name ' . db_ilike() . ' \'%\' || ? || \'%\'
+            )
+            OR (
+                ii.displayname ' . db_ilike() . ' \'%\' || ? || \'%\'
+            )';
+        $namesql = join(' OR ', array_fill(0, count($querydata), $namesql));
+        $queryvalues = array();
+        foreach ($querydata as $w) {
+            $queryvalues = array_pad($queryvalues, count($queryvalues) + 2, $w);
+        }
+
+        $count = count_records_sql('SELECT COUNT(ii.name)
+            FROM {institution} ii
+            WHERE' . $namesql, $queryvalues
+        );
+
         $institutions = get_records_sql_assoc('
             SELECT
                 ii.name,
@@ -432,11 +473,12 @@ class Institution {
                         (u.deleted = 0 OR u.id IS NULL)
                     GROUP BY
                         i.name, i.displayname, i.maxuseraccounts
-                    ) a ON (a.name = ii.name)' . $where . '
+                    ) a ON (a.name = ii.name)
+                    WHERE (' . $namesql . ')' . $where . '
                     ORDER BY
-                        ii.name = \'mahara\', ii.displayname', array());
+                        ii.name = \'mahara\', ii.displayname', $queryvalues, $offset, $limit);
 
-        if ($showdefault) {
+        if ($showdefault && $institutions && array_key_exists('mahara', $institutions)) {
             $defaultinstmembers = count_records_sql('
                 SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
                 WHERE u.deleted = 0 AND i.usr IS NULL AND u.id != 0
@@ -532,5 +574,33 @@ EOF;
         'institutionselector'   => $institutionselector,
         'institutionselectorjs' => $js
     );
+}
+
+function build_institutions_html($filter, $showdefault, $query, $limit, $offset, &$count=null) {
+    global $USER;
+
+    $institutions = Institution::count_members($filter, $showdefault, $query, $limit, $offset, $count);
+
+    $smarty = smarty_core();
+    $smarty->assign('institutions', $institutions);
+    $smarty->assign('siteadmin', $USER->get('admin'));
+    $data['tablerows'] = $smarty->fetch('admin/users/institutionsresults.tpl');
+
+    $pagination = build_pagination(array(
+                'id' => 'adminstitutionslist_pagination',
+                'datatable' => 'adminstitutionslist',
+                'url' => get_config('wwwroot') . 'admin/users/institutions.php' . (!empty($query) ? '?query=' . urlencode($query) : ''),
+                'jsonscript' => 'admin/users/institutions.json.php',
+                'count' => $count,
+                'limit' => $limit,
+                'offset' => $offset,
+                'resultcounttextsingular' => get_string('institution', 'admin'),
+                'resultcounttextplural' => get_string('institutions', 'admin'),
+            ));
+
+    $data['pagination'] = $pagination['html'];
+    $data['pagination_js'] = $pagination['javascript'];
+
+    return $data;
 }
 ?>

@@ -33,11 +33,16 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutions');
+$smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
+
+$query = param_variable('query', '');
+$offset = param_integer('offset', 0);
+$limit  = 20;
 
 if (!$USER->get('admin')) {
     // Institutional admins with only 1 institution go straight to the edit page for that institution
@@ -353,7 +358,40 @@ else {
         $filter      = false;
         $showdefault = true;
     }
-    $institutions = Institution::count_members($filter, $showdefault);
+    $data = build_institutions_html($filter, $showdefault, $query, $limit, $offset, $count);
+    $smarty->assign('results', $data);
+    $smarty->assign('countinstitutions', $count);
+
+    /*search institution form*/
+    $searchform = pieform(array(
+        'name' => 'search',
+        'renderer' => 'oneline',
+        'elements' => array(
+            'query' => array(
+                'type' => 'text',
+                'defaultvalue' => $query
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('search')
+            )
+        )
+    ));
+    $smarty->assign('searchform', $searchform);
+
+    $js = <<< EOF
+    addLoadEvent(function () {
+    p = {$data['pagination_js']}
+    connect('search_submit', 'onclick', function (event) {
+        replaceChildNodes('messages');
+        var params = {'query': $('search_query').value};
+        p.sendQuery(params);
+        event.stop();
+        });
+    });
+EOF;
+
+    $smarty->assign('INLINEJAVASCRIPT', $js);
 }
 
 function institution_validate(Pieform $form, $values) {
@@ -573,8 +611,6 @@ if ($institution && $institution != 'mahara') {
     }
 }
 
-$smarty = smarty();
-
 if (isset($institutionform)) {
     $smarty->assign('institution_form', $institutionform);
     $smarty->assign('instancestring', $instancestring);
@@ -582,7 +618,6 @@ if (isset($institutionform)) {
 }
 else {
     $smarty->assign('siteadmin', $USER->get('admin'));
-    $smarty->assign('institutions', $institutions);
 }
 
 if (isset($suspended)) {
