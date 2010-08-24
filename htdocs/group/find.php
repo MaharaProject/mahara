@@ -158,7 +158,7 @@ $pagination = build_pagination(array(
 ));
 
 function search_submit(Pieform $form, $values) {
-    redirect('/group/find.php?filter=' . $values['filter'] . (isset($values['query']) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
+    redirect('/group/find.php?filter=' . $values['filter'] . (!empty($values['query']) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
 
 $smarty = smarty();

@@ -57,7 +57,7 @@ $searchform = pieform(array(
 ));
 
 function search_submit(Pieform $form, $values) {
-    redirect(get_config('wwwroot') . 'admin/groups/groups.php?query=' . urlencode($values['query']));
+    redirect(get_config('wwwroot') . 'admin/groups/groups.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
 
 $groups = search_group($query, $limit, $offset, 'all');
