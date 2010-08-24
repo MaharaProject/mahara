@@ -611,6 +611,10 @@ if ($institution && $institution != 'mahara') {
     }
 }
 
+function search_submit(Pieform $form, $values) {
+    redirect('/admin/users/institutions.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
+}
+
 if (isset($institutionform)) {
     $smarty->assign('institution_form', $institutionform);
     $smarty->assign('instancestring', $instancestring);
