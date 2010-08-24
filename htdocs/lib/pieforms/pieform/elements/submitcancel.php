@@ -38,6 +38,31 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     }
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
+
+    $elems = '';
+    foreach ($element['value'] as $key => $value) {
+        if (!is_numeric($key)) {
+            $function = 'pieform_element_' . $key;
+            if (function_exists($function)) {
+                $item = $element;
+                $item['class'] = isset($element['class']) ? $element['class'] . ' ' . $key : $key;
+                $item['value'] = $element['value'][$key];
+                if (isset($element['confirm']) && isset($element['confirm'][$key])) {
+                    $item['confirm'] = $element['confirm'][$key];
+                }
+                else {
+                    unset($item['confirm']);
+                }
+                $elems .= $function($form, $item);
+                $elems .= ' ';
+            }
+        }
+    }
+
+    if (!empty($elems)) {
+        return $elems;
+    }
+
     $submitelement = $element;
     $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
     $submitelement['value'] = $element['value'][0];
@@ -66,7 +91,12 @@ function pieform_element_submitcancel_set_attributes($element) {/*{{{*/
 
 function pieform_element_submitcancel_get_value(Pieform $form, $element) {/*{{{*/
     if (is_array($element['value'])) {
-        return $element['value'][0];
+        if (isset($element['value']['submit'])) {
+            return $element['value']['submit'];
+        }
+        else {
+            return $element['value'][0];
+        }
     }
     else {
         return $element['value'];
