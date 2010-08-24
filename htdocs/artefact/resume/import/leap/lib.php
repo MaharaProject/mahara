@@ -407,9 +407,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             $composites = array();
 
             $person = $importer->get_entry_by_id($persondataid);
-            $persondata = $person->xpath('leap2:persondata');
+            $namespaces = $importer->get_namespaces();
+            $ns = $importer->get_leap2a_namespace();
+            $persondata = $person->xpath($namespaces[$ns].':persondata');
             foreach ($persondata as $item) {
-                $leapattributes = PluginImportLeap::get_attributes($item, $importer->get_leap2a_namespace());
+                $leapattributes = PluginImportLeap::get_attributes($item, $ns);
 
                 if (!isset($leapattributes['field'])) {
                     // 'Field' is required
