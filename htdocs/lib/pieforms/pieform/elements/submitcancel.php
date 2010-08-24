@@ -39,6 +39,7 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
 
+    // first try for string indices
     $plugins = array('submit', 'cancel');
     $elems = '';
     foreach ($element['value'] as $key => $value) {
@@ -63,26 +64,27 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     if (!empty($elems)) {
         return $elems;
     }
-
-    $submitelement = $element;
-    $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
-    $submitelement['value'] = $element['value'][0];
-    $cancelelement = $element;
-    $cancelelement['class'] = (isset($cancelelement['class'])) ? $cancelelement['class'] . ' cancel' : 'cancel';
-    $cancelelement['value'] = $element['value'][1];
-    if (isset($element['confirm']) && isset($element['confirm'][0])) {
-        $submitelement['confirm'] = $element['confirm'][0];
+    else if (isset($element['value'][0]) && isset($element['value'][1])) { // ensure default numeric indices exist
+        $submitelement = $element;
+        $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
+        $submitelement['value'] = $element['value'][0];
+        $cancelelement = $element;
+        $cancelelement['class'] = (isset($cancelelement['class'])) ? $cancelelement['class'] . ' cancel' : 'cancel';
+        $cancelelement['value'] = $element['value'][1];
+        if (isset($element['confirm']) && isset($element['confirm'][0])) {
+            $submitelement['confirm'] = $element['confirm'][0];
+        }
+        else {
+            unset($submitelement['confirm']);
+        }
+        if (isset($element['confirm']) && isset($element['confirm'][1])) {
+            $cancelelement['confirm'] = $element['confirm'][1];
+        }
+        else {
+            unset($cancelelement['confirm']);
+        }
+        return pieform_element_submit($form, $submitelement) . ' ' . pieform_element_cancel($form, $cancelelement);
     }
-    else {
-        unset($submitelement['confirm']);
-    }
-    if (isset($element['confirm']) && isset($element['confirm'][1])) {
-        $cancelelement['confirm'] = $element['confirm'][1];
-    }
-    else {
-        unset($cancelelement['confirm']);
-    }
-    return pieform_element_submit($form, $submitelement) . ' ' . pieform_element_cancel($form, $cancelelement);
 }/*}}}*/
 
 function pieform_element_submitcancel_set_attributes($element) {/*{{{*/
