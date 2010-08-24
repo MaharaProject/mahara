@@ -243,10 +243,18 @@ class ArtefactTypePlan extends ArtefactType {
     public function render_self($options) {
         $this->add_to_render_path($options);
 
-        $tasks = ArtefactTypeTask::get_tasks($this->id);
+        $limit = !isset($options['limit']) ? 10 : (int) $options['limit'];
+        $offset = isset($options['offset']) ? intval($options['offset']) : 0;
+
+        $tasks = ArtefactTypeTask::get_tasks($this->id, $offset, $limit);
 
         $template = 'artefact:plans:taskrows.tpl';
-        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id . '&view=' . $options['viewid'];
+
+        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        if (!empty($options['viewid'])) {
+            $baseurl .= '&view=' . $options['viewid'];
+        }
+
         $pagination = array(
             'baseurl' => $baseurl,
             'id' => 'task_pagination',
@@ -258,11 +266,12 @@ class ArtefactTypePlan extends ArtefactType {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('tasks', $tasks);
-        $smarty->assign(
-            'artefacttitle',
-            '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id
-            . '&view=' . $options['viewid'] . '">' . hsc($this->title) . '</a>'
-        );
+        if (isset($options['viewid'])) {
+            $smarty->assign('artefacttitle', '<a href="' . $baseurl . '">' . hsc($this->get('title')) . '</a>');
+        }
+        else {
+            $smarty->assign('artefacttitle', hsc($this->get('title')));
+        }
         $smarty->assign('plan', $this);
 
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
@@ -571,7 +580,7 @@ class ArtefactTypeTask extends ArtefactType {
         $smarty->assign_by_ref('options', $options);
         $tasks['tablerows'] = $smarty->fetch($template);
 
-        if ($tasks['limit']) {
+        if ($tasks['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
                 'class' => 'center',

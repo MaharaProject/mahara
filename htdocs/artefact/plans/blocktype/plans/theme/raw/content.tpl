@@ -13,7 +13,10 @@
     {$tasks.tablerows|safe}
     </tbody>
 </table>
+{if $tasks.pagination}
 <div id="plans_page_container">{$tasks.pagination|safe}</div>
+{/if}
+{if $tasks.pagination_js}
 <script>
 {literal}
 function rewriteTaskTitles() {
@@ -45,6 +48,7 @@ function TaskPager_{$blockid}() {literal}{
 var taskPager_{$blockid} = new TaskPager_{$blockid}();
 addLoadEvent(rewriteTaskTitles);
 </script>
+{/if} {* pagination_js *}
 {else}
     <p>{str tag='notasks' section='artefact.plans'}</p>
 {/if}

@@ -51,6 +51,7 @@ $string['title'] = 'Title';
 $string['titledesc'] = 'The title will be used to display each task in the My Plans blocktype.';
 
 /* Tasks */
+$string['alltasks'] = 'All tasks';
 $string['completed'] = 'Completed';
 $string['completiondate'] = 'Completion date';
 $string['completeddesc'] = 'Mark your task completed.';

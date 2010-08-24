@@ -620,11 +620,14 @@ class HtmlExportOutputFilter {
         $artefactid = $matches[2];
         $artefact = artefact_instance_from_id($artefactid);
 
-        switch ($artefact->get('artefacttype')) {
+        $artefacttype = $artefact->get('artefacttype');
+        switch ($artefacttype) {
         case 'blog':
+        case 'plan':
+            $dir = $artefacttype == 'plan' ? 'plans' : $artefacttype;
             $offset = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;offset='))) : 0;
             $offset = ($offset == 0) ? 'index' : $offset;
-            return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $offset . '.html">' . $matches[5] . '</a>';
+            return '<a href="' . $this->basepath . "/files/$dir/" . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $offset . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'folder':
         case 'image':

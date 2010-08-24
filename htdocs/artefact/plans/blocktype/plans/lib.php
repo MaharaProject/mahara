@@ -58,14 +58,36 @@ class PluginBlocktypePlans extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $exporter;
+
         require_once(get_config('docroot') . 'artefact/lib.php');
         safe_require('artefact','plans');
+
         $configdata = $instance->get('configdata');
 
         $smarty = smarty_core();
         if (isset($configdata['artefactid'])) {
             $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid']);
-            self::build_plans_html($tasks, $editing, $instance);
+            $template = 'artefact:plans:taskrows.tpl';
+            $blockid = $instance->get('id');
+            if ($exporter) {
+                $pagination = false;
+            }
+            else {
+                $pagination = array(
+                    'baseurl'   => $instance->get_view()->get_url() . '&block=' . $blockid,
+                    'id'        => 'block' . $blockid . '_pagination',
+                    'datatable' => 'tasktable_' . $blockid,
+                    'jsonscript' => 'artefact/plans/viewtasks.json.php',
+                );
+            }
+            ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination);
+
+            if ($exporter && $tasks['count'] > $tasks['limit']) {
+                $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $configdata['artefactid']
+                    . '&amp;view=' . $instance->get('view');
+                $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
+            }
             $smarty->assign('tasks',$tasks);
         }
         else {
@@ -73,32 +95,6 @@ class PluginBlocktypePlans extends PluginBlocktype {
         }
         $smarty->assign('blockid', $instance->get('id'));
         return $smarty->fetch('blocktype:plans:content.tpl');
-    }
-
-    public static function build_plans_html(&$tasks, $editing=false, BlockInstance $instance) {
-        $smarty = smarty_core();
-        $smarty->assign_by_ref('tasks', $tasks);
-        $tasks['tablerows'] = $smarty->fetch('artefact:plans:taskrows.tpl');
-        if ($editing) {
-            return;
-        }
-        $blockid = $instance->get('id');
-        $baseurl = $instance->get_view()->get_url() . '&block=' . $blockid;
-        $pagination = build_pagination(array(
-            'id' => 'block' . $blockid . '_pagination',
-            'class' => 'center nojs-hidden-block',
-            'datatable' => 'tasktable_' . $blockid,
-            'url' => $baseurl,
-            'jsonscript' => 'artefact/plans/viewtasks.json.php',
-            'count' => $tasks['count'],
-            'limit' => $tasks['limit'],
-            'offset' => $tasks['offset'],
-            'numbersincludefirstlast' => false,
-            'resultcounttextsingular' => get_string('task', 'artefact.plans'),
-            'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
-        ));
-        $tasks['pagination'] = $pagination['html'];
-        $tasks['pagination_js'] = 'var paginator' . $blockid . ' = ' . $pagination['javascript'];
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal

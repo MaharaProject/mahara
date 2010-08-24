@@ -38,9 +38,17 @@ $limit = param_integer('limit', 10);
 
 if ($blockid = param_integer('block', null)) {
     $bi = new BlockInstance($blockid);
-    $configdata = $bi->get('configdata');
+    $options = $configdata = $bi->get('configdata');
+
     $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], $offset, $limit);
-    PluginBlocktypePlans::build_plans_html($tasks, false, $bi);
+
+    $template = 'artefact:plans:taskrows.tpl';
+    $pagination = array(
+        'baseurl'   => $bi->get_view()->get_url() . '&block=' . $blockid,
+        'id'        => 'block' . $blockid . '_pagination',
+        'datatable' => 'tasktable_' . $blockid,
+        'jsonscript' => 'artefact/plans/viewtasks.json.php',
+    );
 }
 else {
     $planid = param_integer('artefact');
@@ -57,7 +65,7 @@ else {
         'jsonscript' => 'artefact/plans/viewtasks.json.php',
     );
 
-    ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination);
 }
+ArtefactTypeTask::render_tasks($tasks, $template, $options, $pagination);
 
 json_reply(false, (object) array('message' => false, 'data' => $tasks));
