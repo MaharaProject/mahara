@@ -60,6 +60,9 @@ addLoadEvent(function() {
                 case 'c':
                     document.location.href = config.wwwroot + 'collection';
                     break;
+                case 'l':
+                    document.location.href = config.wwwroot + 'artefact/plans';
+                    break;
                 case '/':
                     document.usf.query.focus();
                     break;
