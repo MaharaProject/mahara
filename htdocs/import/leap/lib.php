@@ -143,8 +143,11 @@ class PluginImportLeap extends PluginImport {
      */
     private function detect_leap2a_namespace () {
         // check for the leap2a version used
-        $version = $this->xml->xpath('//leap2:version');
-        if($version) {
+        $leap2 = false;
+        if(in_array('leap2', $this->namespaces)) {
+            $leap2 = true;
+        }
+        if($leap2) {
             $this->leap2anamespace = self::NS_LEAP;
             $this->leap2atypenamespace = self::NS_LEAP;
         } else {
@@ -1002,7 +1005,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
         $result = $entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', $importer->leap2anamespace, $rdftype) . ']');
+            . $importer->curie_xpath('@rdf:resource', $importer->get_leap2a_namespace(), $rdftype) . ']');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
