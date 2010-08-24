@@ -225,8 +225,8 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         if ($view->get('owner') !== null) {
             $artefacttypes = array_diff(PluginArtefactInternal::get_artefact_types(), array('email'));
             $artefactids = get_column_sql('
-                SELECT id FROM {artefact}
-                WHERE \"owner\" = ? AND artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
+                SELECT a.id FROM {artefact} a
+                WHERE a.owner = ? AND a.artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
             $configdata['artefactids'] = $artefactids;
             if (isset($configdata['email'])) {
                 if ($newemail = get_field('artefact_internal_profile_email', 'artefact', 'principal', 1, 'owner', $view->get('owner'))) {
