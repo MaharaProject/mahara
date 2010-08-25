@@ -63,9 +63,12 @@ if ($USER->is_logged_in()) {
 
     if ($USER->get_account_preference('showhomeinfo')) {
         // allow the user to choose never to see the info boxes again
+        $strhowtodisable = json_encode(get_string('howtodisable', 'mahara', get_config('wwwroot') . 'account'));
         $js = <<<JAVASCRIPT
 function hideinfo() {
-    slideUp($('home-info-container'));
+    var m = SPAN();
+    m.innerHTML = {$strhowtodisable};
+    slideUp('home-info-container', {afterFinish: function() {displayMessage(m, 'ok');}});
 }
 
 function nevershow() {
@@ -73,12 +76,7 @@ function nevershow() {
     sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
 }
 addLoadEvent(function () {
-    hideElement($('home-info-help'));
-    showElement($('hideinfo'));
     $('hideinfo').onclick = nevershow;
-    connect('hideinfo', 'onmouseenter', function(e) {
-        if ($('home-info-help').style.display == 'none') blindDown('home-info-help', {'duration': 0.25});
-    });
 });
 JAVASCRIPT;
 
@@ -103,7 +101,6 @@ $urls = array(
     'views'   => $wwwroot . 'view',
     'friends' => $wwwroot . 'user/find.php',
     'groups'  => $wwwroot . 'group/find.php',
-    'settings'=> $wwwroot . 'account',
 );
 $smarty->assign('url', $urls);
 

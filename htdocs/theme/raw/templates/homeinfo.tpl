@@ -63,7 +63,7 @@
             </div>
         </td>
         <td>
-            {if $USER->is_logged_in()}<div id="hideinfo"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>{/if}
+            {if $USER->is_logged_in()}<div id="hideinfo" class="nojs-hidden-block"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>{/if}
             <div class="home-info home-info-3">
             <div class="home-info-inner">
                 <h3>{str tag=sharenetwork}</h3>
@@ -88,13 +88,6 @@
                 </table>
                 <p id="accessdesc">{str tag=sharenetworkdescription}</p>
             </div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <div id="home-info-help" class="s">
-                {if $USER->is_logged_in()}{assign var=s value="howtodisable"|str:mahara:$url.settings}{$s|safe}{/if}
             </div>
         </td>
     </tr>
