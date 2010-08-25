@@ -927,4 +927,5 @@ $string['sharenetworksubtitle'] = 'Meet friends and join groups';
 $string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
 $string['joingroups'] = 'Join <a href="%s">Groups</a>';
 $string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
+$string['howtodisable'] = '* You may control this box visibility in <a href="%s">Settings</a>.';
 ?>

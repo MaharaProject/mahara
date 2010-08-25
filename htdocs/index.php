@@ -73,7 +73,11 @@ function nevershow() {
     sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
 }
 addLoadEvent(function () {
+    hideElement($('home-info-help'));
     $('hideinfo').onclick = nevershow;
+    connect('hideinfo', 'onmouseenter', function(e) {
+        if ($('home-info-help').style.display == 'none') blindDown('home-info-help', {'duration': 0.25});
+    });
 });
 JAVASCRIPT;
 
@@ -98,6 +102,7 @@ $urls = array(
     'views'   => $wwwroot . 'view',
     'friends' => $wwwroot . 'user/find.php',
     'groups'  => $wwwroot . 'group/find.php',
+    'settings'=> $wwwroot . 'account',
 );
 $smarty->assign('url', $urls);
 

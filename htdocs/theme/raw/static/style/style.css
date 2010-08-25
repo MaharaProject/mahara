@@ -1977,6 +1977,10 @@ form#search, form#filter, div.searchform {
 .home-info-1 {
 	margin-left: 4px;
 }
+#home-info-help {
+	margin: 0 4px;
+        float: right;
+}
 .home-info-inner {
     padding: 6px;
     min-height: 265px;

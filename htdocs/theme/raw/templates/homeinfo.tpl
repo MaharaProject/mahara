@@ -91,5 +91,12 @@
             </div>
         </td>
     </tr>
+    <tr>
+        <td colspan="3">
+            <div id="home-info-help" class="s">
+                {if $USER->is_logged_in()}{assign var=s value="howtodisable"|str:mahara:$url.settings}{$s|safe}{/if}
+            </div>
+        </td>
+    </tr>
 </table>
 </div>
