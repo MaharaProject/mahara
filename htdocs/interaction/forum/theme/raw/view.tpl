@@ -18,15 +18,17 @@
 	{/if}
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
-    <table id="forumtopicstable" class="fullwidth nohead">
+    <table id="forumtopicstable" class="fullwidth">
+    <thead>
     <tr>
         <th width="12px"></th>
         <th width="12px"></th>
-        <th width="40%">{str tag="Topic" section="interaction.forum"}</th>
+        <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
-        <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
+        <th class="lastpost" width="20%">{str tag="lastpost" section="interaction.forum"}</th>
     </tr>
+    </thead>
     {if $stickytopics}
 	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=true}
     {/if}
@@ -84,7 +86,10 @@
 	{/if}
 </div>
 {else}
-<p>{str tag="notopics" section="interaction.forum"}</p>
+<table class="fullwidth nohead">
+    <tr><td class="{cycle values='r0,r1'} center">{str tag="notopics" section="interaction.forum"}</td>
+    </tr>
+</table>
 {/if}
 
 {include file="footer.tpl"}

@@ -226,6 +226,9 @@ html>body #column-container {
 	font-size: 1.4em !important;
 	border-bottom: 2px solid #d1d1d1;
 }
+.blockinstance-header h4 a {
+	text-decoration: none;
+}
 
 /* control */
 .blockinstance-controls {
@@ -254,6 +257,12 @@ html>body #column-container {
     margin: 0;
 	font-size: 1.3333em;
 }*/
+.blockinstance-content h2 {
+	font-size: 1.3333em !important;
+	margin-top: .5em !important;
+	margin-bottom: 0 !important;
+	border-bottom: 1px dotted #d1d1d1;
+}
 .blockinstance-content h3 {
 	font-size: 1.1667em !important;
 	margin-top: .5em !important;
@@ -263,8 +272,11 @@ html>body #column-container {
 	font-size: 1em !important;
 	margin-bottom: 0 !important;
 }
+.blockinstance-content p {
+	margin: 0 0 1em 0;
+}
 .blockinstance-content p:first-child {
-    margin-top: 0;
+	margin-top: .5em;
 }
 .blockinstance-content p:last-child {
 	margin-bottom: 0;
@@ -275,6 +287,18 @@ html>body #column-container {
 }
 .blockinstance-content .description {
 	font-size: .9167em;
+}
+.blockinstance-content fieldset {
+	padding: .5em;
+	margin: 0 0 1em 0;
+}
+.blockinstance-content fieldset table {
+	* width: 98%;
+	width: 100%;
+}
+.blockinstance-content table.resumepersonalinfo th,
+.blockinstance-content table.resumepersonalinfo td {
+	padding: 0 0 0 .25em;
 }
 
 
@@ -328,7 +352,11 @@ html>body #column-container {
 .postlist td h3 a {
 	text-decoration: none;
 }
-.postlist td div.tags {
+.blockinstance-content div.tags {
+	font-size: .9167em;
+	margin-top: .5em;
+}
+.blockinstance-content div.artefacts {
 	font-size: .9167em;
 	margin-top: .5em;
 }
@@ -358,7 +386,7 @@ html>body #column-container {
   margin: 0;
 }
 .grouphomepage .bt-groupviews .groupviewsection {
-  margin: 1em 0;
+  margin: .5em 0 .5em 0;
 }
 
 /* tabs for the artefact chooser */
@@ -432,9 +460,10 @@ ul.artefactchooser-subtabs li.current a:active {
 .maharatable tbody th {
 	font-size: 1.1667em;
 	text-align: left !important;
+	padding: .25em 0 0 0;
 }
 .maharatable tbody td {
-	padding: 0;
+	padding: 0 0 .5em 0;
 }
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,
@@ -462,13 +491,16 @@ ul.artefactchooser-subtabs li.current a:active {
 	font-size: 1em !important;
 }
 
-#instconf_artefactid_selectlist {
+#instconf_artefactid_selectlist,
+#instconf_artefactids_selectlist {
 	margin-bottom: 1em;
 }
-#instconf_artefactid_selectlist td {
+#instconf_artefactid_selectlist td,
+#instconf_artefactids_selectlist td {
 	padding: .25em;
 }
-#instconf_artefactid_selectlist td input.button {
+#instconf_artefactid_selectlist td input.button,
+#instconf_artefactids_selectlist td input.button {
 	font-size: .9167em;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -577,6 +609,15 @@ div.colnav-extra {
     margin: 0.75em 0 0;
 }
 
+.submissionform {
+	background: #eee;
+	padding: .25em .5em;
+}
+.submittedform {
+	background: #eee;
+	padding: .25em .5em;
+}
+
 /* VIEWS */
 /* views footer */
 .viewfooter {
@@ -586,6 +627,23 @@ div.colnav-extra {
 }
 .viewfooter .tags {
 	margin-bottom: 1em;
+}
+.viewfooter .submissionform {
+	margin-bottom: .5em;
+}
+.viewfooter .submissionform .submit {
+	margin-left: .25em;
+}
+.viewfooter .releaseviewform {
+	background: #eee;
+	padding: .25em 0;
+	margin-bottom: .5em;
+}
+.viewfooter .releaseviewform tr {
+	display: inline;
+}
+.viewfooter .releaseviewform tr th {
+	padding: 0 0 0 .25em !important;
 }
 #viewmenu {
 	font-size: .9167em;
@@ -655,6 +713,7 @@ div.colnav-extra {
 table tr.plan_incomplete {
     background: #FFD3D9;
     color: #DD0221;
+	border-bottom: 2px solid #FFF;
 }
 table td div.plan_completed {
     margin:3px;
@@ -666,3 +725,43 @@ table td div.plan_completed {
 	width: 100%;
 	* width: 98%;
 }
+
+.licensedesc {
+	padding: .5em;
+	margin: 0;
+}
+.licensedesc div {
+	padding-left: 1em;
+	font-size: .9167em;
+	line-height: 1.4em;
+}
+
+.plansblocktable {
+	margin: .5em 0;
+}
+
+/*#instconf_count_container td,
+#instconf_height_container td,
+#instconf_noderivatives_container td,
+#instconf_collection_container td,
+#instconf_text_container td {
+	padding-bottom: 1em;
+}*/
+#blocktype_externalfeed_title {
+	margin-top: .5em;
+}
+#blocktype_externalfeed_entries {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+#recentforumpostsblock {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+#recentforumpostsblock td.s img {
+	vertical-align: top;
+}
+#blocktype_externalfeed_entries h4 {
+	margin-top: .5em;
+}
+

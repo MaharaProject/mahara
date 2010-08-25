@@ -1,5 +1,5 @@
 <p id="{$prefix}_empty_selectlist"{if !$selectedlist} class="hidden"{/if}>{str tag=nofilesfound section=artefact.file}</p>
-<table id="{$prefix}_selectlist"  class="fullwidth{if !$selectedlist} hidden{/if}">
+<table id="{$prefix}_selectlist"  class="fullwidth {if !$selectedlist} hidden{/if}">
  <thead>
   <tr>
    <th></th>

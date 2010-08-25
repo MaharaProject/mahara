@@ -16,7 +16,7 @@
 
 /* forum description */
 #forumdescription {
-	margin: 2em 0 .5em 0;
+	margin: .5em 0;
 	clear: both;
 }
 
@@ -55,12 +55,6 @@
 * html #viewforum .rbuttons {
 	right: 3em;
 }
-#forumtopicstable {
-	border-bottom: 1px solid #ccc;
-}
-#forumtopicstable th {
-	border-bottom: 1px solid #ccc;
-}
 /* to get user picts to align with text */
 .forumuser,
 .inlinelist a img {
@@ -69,6 +63,7 @@
 /* topic types */
 .stickytopic td {
 	background-color: #fffcd8;
+	border-bottom: 2px solid #fff;
 }
 
 
@@ -110,18 +105,19 @@
 	margin: 0 0 1em 0;
 }
 .forumpost {
-	border: 1px solid #eee;
+	border: 2px solid #eee;
 	clear: both;
 }
 .forumsubject {
-	border-bottom: 1px solid #eee;
+	border-bottom: 2px solid #eee;
+	background: #eee;
 }
 .forumsubject h6 {
 	margin: 0 !important;
 }
 .forumpostleft {
 	width: 160px;
-	border-right: 1px solid #eee;
+	border-right: 2px solid #eee;
 	text-align: center;
     font-size: .9167em;
 }
@@ -144,6 +140,7 @@
 	font-size: .9167em;
 	text-align: right;
 	color: #d1d1d1;
+	margin: 0 0 1em 0;
 }
 .postbtns a {
 	margin: 0 .5em;

@@ -72,7 +72,7 @@
 {/if}
 {if !$view.collection}
   {if $view.accessgroups}
-                                  <div class="videsc"><label>{str tag="whocanseethisview" section="view"}:</label>
+                                  <div class="viewaccess"><label>{str tag="whocanseethisview" section="view"}:</label>
   {foreach from=$view.accessgroups item=accessgroup name=artefacts}{strip}
   {if $accessgroup.accesstype == 'loggedin'}
       {str tag="loggedinlower" section="view"}

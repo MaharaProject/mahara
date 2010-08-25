@@ -1,6 +1,6 @@
 <div class="blockinstance-content">
 {if $tasks.data}
-<table id="tasktable_{$blockid}">
+<table id="tasktable_{$blockid}" class="plansblocktable">
     <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>

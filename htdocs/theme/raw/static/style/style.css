@@ -291,11 +291,9 @@ label {
 }
 .pieform td label {
 	font-weight: normal;
-	font-size: .9167em;
 }
 .pieform th label {
 	font-weight: bold;
-	font-size: .9167em;
 }
 #editpost_allowcomments_container th label {
 	white-space: nowrap;
@@ -636,14 +634,22 @@ div.btn-edit input.submit,
 .btn-reply {
 	background: transparent url(../images/icon-reply.gif) no-repeat left;
 	padding-left: 13px;
-} 
+}
+.btn-back {
+	background: transparent url(../images/icon-back.gif) no-repeat left;
+	padding-left: 13px;
+}
 .btn-download {
 	background: transparent url(../images/icon-download.gif) no-repeat right;
 	padding-right: 13px;
 }
+.btn-add {
+    background: transparent url(../images/icon-add.gif) no-repeat left;
+	padding-left: 13px;
+}
 
 .btn-request {
-	background: transparent url(../images/icon-join.gif) no-repeat left center;
+	background: transparent url(../images/icon-request.gif) no-repeat left center;
 	padding-left: 13px;
 }
 .btn-leavegroup {
@@ -652,6 +658,14 @@ div.btn-edit input.submit,
 }
 .btn-pending {
 	background: transparent url(../images/icon-pending.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-login {
+	background: transparent url(../images/icon-login.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-access {
+	background: transparent url(../images/icon-access.gif) no-repeat left center;
 	padding-left: 13px;
 }
 
@@ -688,17 +702,6 @@ div.rbuttons .small-logo {
 	background: none;
 }
 
-/* Profile icons */
-#userview .user-icon a {
-	margin: 0 0 0 1em;
-}
-.profile-icon-container {
-  width: 20px;
-  height: 20px;
-  float: left;
-  padding-right:.5em;
-  text-align: center;
-}
 
 /**************************** Top of page elements ****************************/
 .viewheader {
@@ -964,10 +967,12 @@ div.ok, div.error {
 /* upload file message */
 div.info {
     padding: .4em .5em;
-	background: #e7f1c3;
-	margin: .5em;
-    color: #547c22;
+	background: #d1d1d1;
+	margin: .5em 0;
 	font-size: .9167em;
+}
+div.info img {
+	vertical-align: top;
 }
 /* different message types */
 #messages .ok,
@@ -1396,15 +1401,35 @@ table.attachments td {
 
 /* User/view */
 #userview {
-	margin: 1em 0;
+	margin: 0 0 1em 0;
 }
 #userview .user-icon {
     font-size: .9167em;
 	background: #eee;
+	padding: .25em .5em;
 }
 #userview #invite,
 #userview #addmember {
 	margin-top: 1em;
+}
+/* Profile icons */
+#userview .user-icon a {
+	margin: 0 0 0 1em;
+}
+.profile-icon-container {
+  width: 20px;
+  height: 20px;
+  float: left;
+  padding-right:.5em;
+  text-align: center;
+}
+#userview .user-icon .addform {
+	display: inline;
+	margin-left: 1em;
+}
+#userview .user-icon .addform form,
+#userview .user-icon .addform form div {
+	display: inline;
 }
 
 /* Wall */
@@ -1425,20 +1450,22 @@ table.attachments td {
 .wallpost .userinfo img {
 	float: left;
 	padding-right: .5em;
+	vertical-align: top;
 }
-.wallpost .userinforight {
-	padding: .25em;
+.wallpost .text {
+	margin-left: 31px;
+	margin-bottom: .25em;
+	font-size: .9167em;
 }
 .wallpost .text p {
     margin: 0 0 .25em 0;
 }
 .wallpost .controls {
 	font-size: .9167em;
-    color: #888;
 	line-height: 1em;
 }
 .wallpost .controls a {
-	margin: 0;
+	margin: 0 0 0 .5em;
 }
 
 
@@ -1451,6 +1478,19 @@ table.attachments td {
 	padding: 0;
 }
 
+/* artefacts */
+.artefacts {
+	background: url(../images/icon-artefact.gif) no-repeat left top;
+	padding-left: 15px;
+}
+.viewaccess {
+	background: url(../images/icon-access.gif) no-repeat left 1px;
+	padding-left: 15px;
+}
+.collection {
+	background: url(../images/icon-collection.gif) no-repeat left top;
+	padding-left: 15px;
+}
 
 /* My Views */
 #myviews h4 {
@@ -1466,7 +1506,7 @@ table.attachments td {
 .vi .tags,
 .vi .artefacts,
 .vi .collection,
-.vi .viviews {
+.vi .viewaccess {
 	font-size: .9167em;
 	margin-top: .25em;
 }
@@ -1676,14 +1716,11 @@ table.attachments td {
 #export .viewlink img {
 	vertical-align: middle;
 }
-#export_submit {
-	margin-left: 2em;
-}
 #exportgeneration {
     text-align: center;
 }
 #progress {
-    border: 2px solid #d1d1d1;
+    border: 1px solid #5b5b5b;
     height: 40px;
     width: 600px;
 }
@@ -1691,7 +1728,7 @@ div.progress-bar {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #999;
+    background: #636363 url(../images/progressbar-bkgd.gif) repeat-x top left;
     height: 40px;
     color: #fff;
     text-align: center;
@@ -2035,12 +2072,6 @@ img.feedicon {
 	font-weight: bold;
 }
 
-.licensedesc {
-	font-size: .9167em;
-	line-height: 1.4em;
-	text-align: center;
-	padding: .5em 0;
-}
 .inlinelist {
 	padding: 0;
 }

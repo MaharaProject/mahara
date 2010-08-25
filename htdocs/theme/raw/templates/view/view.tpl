@@ -26,8 +26,8 @@
         </div>
   <div class="viewfooter">
     {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
-    <div>{$releaseform|safe}</div>
-    {if $view_group_submission_form}<div>{$view_group_submission_form|safe}</div>{/if}
+    <div class="releaseviewform">{$releaseform|safe}</div>
+    {if $view_group_submission_form}<div class="submissionform">{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}
     <table id="feedbacktable" class="fullwidth table">
       <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>

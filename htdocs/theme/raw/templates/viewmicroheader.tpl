@@ -13,7 +13,7 @@
             {foreach from=$microheaderlinks item=item}
               <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
             {/foreach}
-          {elseif $backurl}<a class="icon btn-reply" href="{$backurl}">{str tag=back}</a> 
+          {elseif $backurl}<a class="icon btn-back" href="{$backurl}">{str tag=back}</a> 
           {/if}
         </div>
         <div class="fl">

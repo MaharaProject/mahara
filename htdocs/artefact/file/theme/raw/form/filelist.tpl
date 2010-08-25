@@ -12,7 +12,7 @@
    <th>{str tag=Date section=artefact.file}</th>
   {/if}
   {if $showtags}
-   <th><div class="tags">{str tag=tags}</div></th>
+   <th><div>{str tag=tags}</div></th>
   {/if}
   {if $editmeta}
    <th></th>

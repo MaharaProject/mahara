@@ -24,6 +24,9 @@
 	padding: 1em 0 .25em 0;
 	vertical-align: bottom;
 }
+#postlist td {
+	padding: .25em 0;
+}
 #postlist th.posttitle {
 	font-size: 1.8em;
 }
@@ -64,17 +67,26 @@
 	padding-bottom: 1em;
 }
 
+#postlist td h1,
+#postlist td h2 {
+	font-size: 1.3333em !important;
+	margin: 1em 0 0 0;
+}
+#postlist td h3,
+#postlist td h4 {
+	font-size: 1.1333em !important;
+	margin: 1em 0 0 0;
+}
+
 /* attachment files */
 #postlist .attachments th {
 	padding: .25em .5em;
 	font-size: 1em;
 	border: 0;
 }
+#postlist .attachments td {
+	padding: .25em .5em;
+}
 .attachments .unselect {
 	font-size: .9167em;
-}
-#postlist td h1,
-#postlist td h2 {
-	font-size: 1.3333em !important;
-	margin: 1em 0 0.5em 0;
 }
