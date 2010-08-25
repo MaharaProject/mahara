@@ -2369,20 +2369,30 @@ class View {
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
      * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
+     * @param array    $types       List of view types to filter by
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null, $types=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
-        $where = "
-            WHERE v.type NOT IN ('profile','dashboard'";
-        if (!$admin) { // only show the grouphomepage viewtype to admins
-            $where .= ",'grouphomepage'";
+        $where = 'WHERE (v.owner IS NULL OR v.owner > 0)';
+
+        if (is_array($types) && !empty($types)) {
+            $where .= ' AND v.type IN (';
         }
-        $where .= ") AND (v.owner IS NULL OR v.owner > 0)";
+        else {
+            $where .= ' AND v.type NOT IN (';
+            if ($admin) {
+                $types = array('profile', 'dashboard');
+            }
+            else {
+                $types = array('profile', 'dashboard', 'grouphomepage');
+            }
+        }
+        $where .= join(',', array_map('db_quote', $types)) . ')';
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
