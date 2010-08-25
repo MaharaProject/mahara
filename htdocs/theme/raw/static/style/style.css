@@ -1962,24 +1962,20 @@ form#search, form#filter, div.searchform {
 	border: 4px solid #eee;
 }
 #hideinfo {
-    margin: 0 -4px -15px 0;
-    padding: 1px 0 0 2px;
+    margin: 0 -4px;
     position: relative;
-	text-align: right;
+    float: right;
 }
 .home-info-table td {
     width: 1%;
     padding: 0 4px 0 0;
 }
 .home-info {
+        margin-top: 2px;
 	margin-bottom: 2px;
 }
 .home-info-1 {
-	margin-top: 2px;
 	margin-left: 4px;
-}
-.home-info-2 {
-	margin-top: 2px;
 }
 .home-info-inner {
     padding: 6px;
