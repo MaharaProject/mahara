@@ -74,6 +74,7 @@ function nevershow() {
 }
 addLoadEvent(function () {
     hideElement($('home-info-help'));
+    showElement($('hideinfo'));
     $('hideinfo').onclick = nevershow;
     connect('hideinfo', 'onmouseenter', function(e) {
         if ($('home-info-help').style.display == 'none') blindDown('home-info-help', {'duration': 0.25});

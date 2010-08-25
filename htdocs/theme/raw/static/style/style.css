@@ -1965,6 +1965,7 @@ form#search, form#filter, div.searchform {
     margin: 0 -4px;
     position: relative;
     float: right;
+    display: none;
 }
 .home-info-table td {
     width: 1%;
