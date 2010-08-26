@@ -90,7 +90,7 @@ class PluginInteractionForum extends PluginInteraction {
                 'title'        => get_string('maxindent', 'interaction.forum'),
                 'size'         => 2,
                 'defaultvalue' => isset($maxindent) ? $maxindent : 10,
-                'class'        => (isset($indentmode) & $indentmode == 'max_indent') ? '' : 'hidden',
+                'class'        => (isset($indentmode) && $indentmode == 'max_indent') ? '' : 'hidden',
                 'rules' => array(
                     'integer' => true,
                     'minvalue' => 1,
