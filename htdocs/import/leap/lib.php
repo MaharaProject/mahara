@@ -966,7 +966,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
         $result = $entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', $importer->get_leap2a_namespace(), $rdftype) . ']');
+            . $importer->curie_xpath('@rdf:resource', $importer->get_leaptype_namespace(), $rdftype) . ']');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
@@ -1143,6 +1143,15 @@ class PluginImportLeap extends PluginImport {
             $attributes[$key] = (string)$value;
         }
         return $attributes;
+    }
+
+    /**
+     * getter to return the leap2typeanamespace property
+     *
+     * @return string namespace URL
+     */
+    public function get_leaptype_namespace() {
+        return $this->leap2atypenamespace;
     }
 
     /**
