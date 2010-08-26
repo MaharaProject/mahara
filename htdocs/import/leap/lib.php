@@ -1069,7 +1069,7 @@ class PluginImportLeap extends PluginImport {
         case '':
             return ''; // empty entry
         default:
-            throw new SystemException("Unrecognised content type for entry '$entry->id'");
+            throw new SystemException("Unrecognised content type for entry '$entry->id' ($type)");
         }
     }
 
