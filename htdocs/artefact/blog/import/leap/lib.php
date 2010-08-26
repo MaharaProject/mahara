@@ -304,7 +304,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         $blogpost->set('title', (string)$entry->title);
         // If the entry has out of line content, we import that separately as a 
         // file and set the content to refer to it
-        if (isset($entry->content['src']) && isset($entry->content['type'])) {
+        if (LeapImportFile::is_file($entry, $importer)) {
             $file = LeapImportFile::create_file($entry, $importer);
             $createdartefacts[] = $file->get('id');
 
