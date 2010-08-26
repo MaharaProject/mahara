@@ -119,6 +119,16 @@ class PluginArtefactResume extends Plugin {
         }
         return $tabs;
     }
+
+    public static function composite_tabs() {
+        return array(
+            'educationhistory'  => 'employment',
+            'employmenthistory' => 'employment',
+            'certification'     => 'achievements',
+            'book'              => 'achievements',
+            'membership'        => 'achievements',
+        );
+    }
 }
 
 class ArtefactTypeResume extends ArtefactType {
@@ -1171,16 +1181,23 @@ function compositeform_submit(Pieform $form, $values) {
 
 function compositeformedit_submit(Pieform $form, $values) {
     global $SESSION;
+
+    $tabs = PluginArtefactResume::composite_tabs();
+    $goto = get_config('wwwroot') . '/artefact/resume/';
+    if (isset($tabs[$values['compositetype']])) {
+        $goto .= $tabs[$values['compositetype']] . '.php';
+    }
+
     try {
         call_static_method(generate_artefact_class_name($values['compositetype']),
             'process_compositeform', $form, $values);
     }
     catch (Exception $e) {
         $SESSION->add_error_msg(get_string('compositesavefailed', 'artefact.resume'));
-        redirect('/artefact/resume/');
+        redirect($goto);
     }
     $SESSION->add_ok_msg(get_string('compositesaved', 'artefact.resume'));
-    redirect('/artefact/resume/');
+    redirect($goto);
 }
 
 function goalandskillform_submit(Pieform $form, $values) {
