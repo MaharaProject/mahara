@@ -68,9 +68,9 @@ $forums = get_records_sql_array(
     array($USER->get('id'), $groupid)
 );
 
-// query gets a new forum object for every moderator of that forum
-// this combines all moderators together into one object per forum
 if ($forums) {
+    // query gets a new forum object for every moderator of that forum
+    // this combines all moderators together into one object per forum
     $count = count($forums);
     for ($i = 0; $i < $count; $i++) {
         $forums[$i]->moderators = array();
@@ -84,10 +84,10 @@ if ($forums) {
             unset($forums[$i]);
         }
    }
-}
 
-foreach($forums as $forum) {
-    $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
+    foreach($forums as $forum) {
+        $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
+    }
 }
 
 $i = 0;
