@@ -577,6 +577,7 @@ $string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
+$string['attachment'] = 'Attachment';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';

@@ -102,13 +102,30 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * if it's of rdf:type rdf:resource. This may be more strict than necessary 
      * - possibly just having the content ouf of line should be enough.
      *
+     * In the 2010-07 version of Leap2A, an entry is *also* a file, if it's in an enclosure link.
+     * However, since we have to support BC, those might actually be entries too, so we have to check
+     * to see if what's in there is actually something that exists as a key in the array of entry ids.
+     *
      * @param SimpleXMLElement $entry    The entry to check
      * @param PluginImportLeap $importer The importer
      * @return boolean Whether the entry is a file
      */
-    private static function is_file(SimpleXMLElement $entry, PluginImportLeap $importer) {
-        return PluginImportLeap::is_rdf_type($entry, $importer, 'resource')
-            && isset($entry->content['src']);
+    public static function is_file(SimpleXMLElement $entry, PluginImportLeap $importer) {
+        if (PluginImportLeap::is_rdf_type($entry, $importer, 'resource')
+            && isset($entry->content['src'])) {
+                return true;
+        }
+        else {
+            // go through all the links and look for enclsures
+            $filesfound = 0;
+            foreach ($entry->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href']) && !$importer->entry_exists((string)$link['href'])) {
+                    $filesfound++;
+                }
+            }
+            return ($filesfound == 1);
+        }
+        return false;
     }
 
     /**
@@ -141,7 +158,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      */
     private static function has_parent_folder(SimpleXMLElement $entry, PluginImportLeap $importer) {
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'is_part_of') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_part_of') && isset($link['href'])) {
                 $potentialfolder = $importer->get_entry_by_id((string)$link['href']);
                 if ($potentialfolder && self::is_folder($potentialfolder, $importer)) {
                     return true;
@@ -169,7 +186,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
 
         // Get entries that this folder feels are a part of it
         foreach ($entry->link as $link) {
-            if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
+            if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'has_part') && isset($link['href'])) {
                 $child = $importer->get_entry_by_id((string)$link['href']);
                 if ($child) {
                     if (self::is_file($child, $importer) || self::is_folder($child, $importer)) {
@@ -216,7 +233,20 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         // This means that it could have UTF8 characters in it, and the PHP 
         // documentation doesn't sound hopeful that urldecode will work with 
         // UTF8 characters
-        $pathname = urldecode((string)$entry->content['src']);
+        $pathname = false;
+        if (isset($entry->content['src'])) {
+            $pathname = urldecode((string)$entry->content['src']);
+        } else {
+            foreach ($entry->link as $link) {
+                if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href']) && !$importer->entry_exists((string)$link['href'])) {
+                    $pathname = urldecode((string)$link['href']);
+                }
+            }
+        }
+        if (!$pathname) {
+            $importer->trace("WARNING: couldn't find a file for $entry->id ");
+            return;
+        }
         // TODO: might want to make it easier to get at the directory where the import files are
         $dir = dirname($importer->get('filename'));
 
@@ -245,7 +275,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
 
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true)) {
-            $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$entry->content['src']})");
+            $importer->trace("WARNING: the file for entry $entry->id does not exist in the import (path={$pathname})");
             return;
         }
 

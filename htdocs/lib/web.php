@@ -2464,13 +2464,18 @@ function format_whitespace($text) {
  * and removes any nasty tags that could mess up pages.
  *
  * @param string $text The text to be cleaned
+ * @param boolean $xhtml HTML 4.01 will be used for all of mahara, except very special cases (eg leap2a exports)
  * @return string The cleaned up text
  */
-function clean_html($text) {
+function clean_html($text, $xhtml=false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
-    $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    if (empty($xhtml)) {
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    } else {
+        $config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
+    }
     $config->set('AutoFormat.Linkify', true);
 
     // Permit embedding contents from other sites
