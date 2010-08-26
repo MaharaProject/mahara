@@ -110,7 +110,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * @param PluginImportLeap $importer The importer
      * @return boolean Whether the entry is a file
      */
-    private static function is_file(SimpleXMLElement $entry, PluginImportLeap $importer) {
+    public static function is_file(SimpleXMLElement $entry, PluginImportLeap $importer) {
         if (PluginImportLeap::is_rdf_type($entry, $importer, 'resource')
             && isset($entry->content['src'])) {
                 return true;
