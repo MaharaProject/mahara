@@ -1025,7 +1025,7 @@ class PluginImportLeap extends PluginImport {
         case 'text':
             return (string)$entry->content;
         default:
-            throw new SystemException("Unrecognised content type for entry '$entry->id'");
+            throw new SystemException("Unrecognised content type for entry '$entry->id' ($type)");
         }
     }
 
