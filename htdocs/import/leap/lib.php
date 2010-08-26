@@ -53,6 +53,9 @@ class PluginImportLeap extends PluginImport {
     protected $leap2anamespace = null;
     protected $leap2atypenamespace = null;
     protected $leap2acategories = null;
+    // the version is stored with the full url since the url might change in
+    // future versions (as it has between 2009-03 and 2010-07)
+    protected $supportedleap2aversions = array('http://www.leapspecs.org/2010-07/2A/');
 
     private $snapshots = array();
 
@@ -143,12 +146,22 @@ class PluginImportLeap extends PluginImport {
      *
      */
     private function detect_leap2a_namespace () {
+
         // check for the leap2a version used
-        $leap2 = false;
-        if(in_array('leap2', $this->namespaces)) {
-            $leap2 = true;
+        // disable xml warnings. The initial LEAP2A spec hasn't got the leap2
+        // namespace so the following xpath expression triggers a warning
+        // which we want to suppress.
+        $oldvalue = libxml_use_internal_errors(true);
+        $version = $this->xml->xpath('//leap2:version');
+        libxml_use_internal_errors($oldvalue);
+
+        // if there is no version string we assume the first version of the
+        // LEAP2A spec which doesn't contain the version element
+        if(!empty($version) && !in_array($version[0][0], $this->supportedleap2aversions)) {
+            throw new ImportException($this, "FATAL: The version of the uploaded LEAP2A file is not supported by this Mahara version");
         }
-        if($leap2) {
+
+        if($version) {
             $this->leap2anamespace = self::NS_LEAP;
             $this->leap2atypenamespace = self::NS_LEAP;
             $this->leap2acategories = self::NS_CATEGORIES;
