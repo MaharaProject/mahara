@@ -64,6 +64,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
             require_once(get_config('docroot') . 'artefact/lib.php');
             $blogpost = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
+            $configdata['countcomments'] = true;
             $configdata['viewid'] = $instance->get('view');
             $result = $blogpost->render_self($configdata);
             $result = $result['html'];

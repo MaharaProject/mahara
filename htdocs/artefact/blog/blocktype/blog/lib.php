@@ -65,6 +65,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             require_once(get_config('docroot') . 'artefact/lib.php');
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
+            $configdata['countcomments'] = true;
             $configdata['viewid'] = $instance->get('view');
             if ($instance->get_view()->is_submitted()) {
                 // Don't display posts added after the submitted date.
