@@ -83,49 +83,47 @@ if ($forums) {
             $forums[$temp]->moderators[] = $forums[$i]->moderator;
             unset($forums[$i]);
         }
-   }
-
-    foreach($forums as $forum) {
-        $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
     }
-}
 
-$i = 0;
-if ($forums && $membership) {
+    $i = 0;
     foreach ($forums as $forum) {
-        $forum->subscribe = pieform(array(
-            'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
-            'plugintype' => 'interaction',
-            'pluginname' => 'forum',
-            'validatecallback' => 'subscribe_forum_validate',
-            'successcallback' => 'subscribe_forum_submit',
-            'autofocus' => false,
-            'elements' => array(
-                'submit' => array(
+        $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
+
+        if ($membership) {
+            $forum->subscribe = pieform(array(
+                'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
+                'plugintype' => 'interaction',
+                'pluginname' => 'forum',
+                'validatecallback' => 'subscribe_forum_validate',
+                'successcallback' => 'subscribe_forum_submit',
+                'autofocus' => false,
+                'elements' => array(
+                    'submit' => array(
                     'type'  => 'submit',
-                    'class' => 'btn-subscribe',
-                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
-                    'help' => $i == 0 ? true : false
-                ),
-                'forum' => array(
-                    'type' => 'hidden',
-                    'value' => $forum->id
-                ),
-                'redirect' => array(
-                    'type' => 'hidden',
-                    'value' => 'index'
-                ),
-                'group' => array(
-                    'type' => 'hidden',
-                    'value' => $groupid
-                ),
-                'type' => array(
-                    'type' => 'hidden',
-                    'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
+                        'class' => 'btn-subscribe',
+                        'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
+                        'help' => $i == 0 ? true : false
+                    ),
+                    'forum' => array(
+                        'type' => 'hidden',
+                        'value' => $forum->id
+                    ),
+                    'redirect' => array(
+                        'type' => 'hidden',
+                        'value' => 'index'
+                    ),
+                    'group' => array(
+                        'type' => 'hidden',
+                        'value' => $groupid
+                    ),
+                    'type' => array(
+                        'type' => 'hidden',
+                        'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
+                    ),
                 )
-            )
-        ));
-        $i++;
+            ));
+            $i++;
+        }
     }
 }
 
