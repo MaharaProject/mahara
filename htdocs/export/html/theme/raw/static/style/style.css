@@ -79,11 +79,11 @@ h2, h3, h4, h5, h6 {
 }
 
 /* Breadcrumbs */
-#breadcrumbs ul {
+.breadcrumbs ul {
     margin: .5em 0 .1em;
     padding: 0;
 }
-#breadcrumbs li {
+.breadcrumbs li {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -92,8 +92,18 @@ h2, h3, h4, h5, h6 {
     font-size: smaller;
     font-family: Arial, sans-serif;
 }
-#breadcrumbs a {
+.breadcrumbs a {
     color: #808080;
+}
+.breadcrumbs li.selected a {
+    color: #303030;
+}
+.breadcrumbs.collection {
+    margin-top: .5em;
+}
+.breadcrumbs li.collectionname {
+    color: #303030;
+    font-weight: bold;
 }
 #breadcrumbs-footer {
     clear: both;

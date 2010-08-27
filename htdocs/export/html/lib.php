@@ -319,6 +319,22 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
+    private function collection_menu($collectionid) {
+        static $menus = array();
+        if (!isset($menus[$collectionid])) {
+            $menus[$collectionid] = array();
+            foreach ($this->collectionview[$collectionid] as $viewid) {
+                $title = $this->views[$viewid]->get('title');
+                $menus[$collectionid][] = array(
+                    'id'   => $viewid,
+                    'url'  => self::text_to_path($title),
+                    'text' => $title,
+                );
+            }
+        }
+        return $menus[$collectionid];
+    }
+
     /**
      * Dumps all views into the HTML export
      */
@@ -347,6 +363,13 @@ class PluginExportHtml extends PluginExport {
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
+            }
+
+            // Collection menu data
+            if (isset($this->viewcollection[$viewid])) {
+                $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
+                $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
+                $smarty->assign('viewid', $viewid);
             }
 
             $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
