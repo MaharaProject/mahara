@@ -50,26 +50,35 @@ var ImageDialog = {
 
         // Get image list from calling window
         document.getElementById('image_list_container').innerHTML = this.imageSelectorHTML(f.src.value);
+
+        // Check if the image attached
+        if (e.nodeName == 'IMG' && f.image_list.selectedIndex == 0) {
+            f.img_src.value = f.src.value;
+        }
+        // Refresh
+        this.getImageData(f.image_list.options[f.image_list.selectedIndex].value);
     },
 
     imageSelectorHTML : function(src) {
         var imageid = tinyMCEPopup.getWin().imageIdFromSrc(src);
         var imagefiles = tinyMCEPopup.getWin().imageList;
+        var disabled = '';
+
         if (imagefiles.length == 0) {
-            return '';
+            disabled = 'disabled';
         }
-        else {
-            var sel = '<select class="select" name="image_list" id="image_list" onchange="this.form.src.value=this.options[this.selectedIndex].value;ImageDialog.resetImageData();ImageDialog.getImageData(this.form.src.value);">';
-            sel += '<option value="">--</option>';
-            for (var i = 0; i < imagefiles.length; i++) {
-                sel += '<option value="' + imagefiles[i].id + '"';
-                if (imageid == imagefiles[i].id) {
-                    sel += ' selected';
-                }
-                sel += '>' + imagefiles[i].name + '</option>';
+
+        var sel = '<select class="select" name="image_list" id="image_list" ' + disabled + ' onchange="this.form.src.value=this.options[this.selectedIndex].value;ImageDialog.resetImageData();ImageDialog.getImageData(this.form.src.value);">';
+        sel += '<option value="">--</option>';
+        for (var i = 0; i < imagefiles.length; i++) {
+            sel += '<option value="' + imagefiles[i].id + '" title="' + imagefiles[i].description + '"';
+            if (imageid == imagefiles[i].id) {
+                sel += ' selected';
             }
-            return sel;
+            sel += '>' + imagefiles[i].name + '</option>';
         }
+        return sel;
+
     },
 
     update : function() {
@@ -241,7 +250,7 @@ var ImageDialog = {
     resetImageData : function() {
         var f = document.forms[0];
 
-        f.width.value = f.height.value = "";
+        f.width.value = f.height.value = f.alt.value = "";
     },
 
     updateImageData : function() {
@@ -256,18 +265,32 @@ var ImageDialog = {
 
     getImageData : function(imageid) {
         var f = document.forms[0];
+        var imgsrc = '';
 
         this.preloadImg = new Image();
         this.preloadImg.onload = this.updateImageData;
         this.preloadImg.onerror = this.resetImageData;
 
-        var imgsrc = tinyMCEPopup.getWin().imageSrcFromId(imageid);
-        f.src.value = imgsrc;
-        if (f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue &&
-            typeof(f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue) == 'string') {
-            f.alt.value = f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue;
+        if (imageid) {
+            // Image list
+            imgsrc = tinyMCEPopup.getWin().imageSrcFromId(imageid);
+            f.src.value = imgsrc;
+            // Use discription of attached image if possible, but preserve if it was changed.
+            if (f.image_list.options[f.image_list.selectedIndex].title && !f.alt.value.length) {
+                f.alt.value = f.image_list.options[f.image_list.selectedIndex].title;
+            }
+            else if (f.image_list.selectedIndex && !f.alt.value.length) {
+                f.alt.value = f.image_list.options[f.image_list.selectedIndex].childNodes[0].nodeValue;
+            }
+            // Disable img_src inputbox
+            f.img_src.disabled = true;
         }
-        f.imgid.value = imageid;
+        else {
+            // Image URL
+            f.img_src.disabled = false;
+            f.image_list.disabled = (f.img_src.value.length || f.image_list.options.length == 1) ? true : false;
+            imgsrc = f.src.value;
+        }
 
         this.preloadImg.src = imgsrc;
     }

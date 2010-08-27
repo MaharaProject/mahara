@@ -5,6 +5,7 @@
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/tinymce/utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/tinymce/utils/form_utils.js"></script>
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}artefact/blog/image_popup.js"></script>
+        <link rel="stylesheet" href="{$WWWROOT}artefact/blog/theme/raw/static/style/style.css"></link>
 	<base target="_self" />
 </head>
 <body id="image" style="display: none">
@@ -20,15 +21,22 @@
      <!--input id="src" name="src" type="text" value="" style="width: 200px" onchange="getImageData();" /-->
      <input id="src" name="src" type="hidden" value="" />
      <input id="imgid" name="imgid" type="hidden" value="" />
-     <input id="alt" name="alt" type="hidden" value="" />
      <div id="srcbrowsercontainer"></div>
      <table border="0" cellpadding="4" cellspacing="0">
+          <tr>
+            <td class="nowrap"><label for="img_src">{str section=artefact.blog tag=src}</label></td>
+            <td><input id="img_src" name="img_src" type="text" value="" style="width: 200px" onchange="this.form.src.value=this.value;ImageDialog.getImageData();" onmouseup="this.onchange();" onkeyup="this.onchange();"/></td>
+          </tr>
 		  <!-- Image list -->
           <tr>
-            <td nowrap="nowrap"><label for="align">{str tag=image}</label></td>
+            <td nowrap="nowrap"><label for="image_list">{str section=artefact.blog tag=image_list}</label></td>
             <td id="image_list_container"></td>
           </tr>   
 		  <!-- /Image list -->
+          <tr>
+            <td class="nowrap"><label for="alt">{str section=artefact.blog tag=alt}</label></td>
+            <td><input id="alt" name="alt" type="text" value="" style="width: 200px" /></td>
+          </tr>
           <tr>
             <td nowrap="nowrap"><label for="align">{str section=artefact.blog tag=alignment}</label></td>
             <td><select id="align" name="align">

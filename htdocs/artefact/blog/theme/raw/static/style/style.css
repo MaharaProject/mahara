@@ -90,3 +90,8 @@
 .attachments .unselect {
 	font-size: .9167em;
 }
+
+/* Insert Image Dialog */
+#img_src[disabled=""] {
+        background-color: #F0F0EE;
+}
