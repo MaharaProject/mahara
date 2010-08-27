@@ -15,7 +15,7 @@
 {include file="export:leap:links.tpl"}
 {include file="export:leap:categories.tpl"}
 {foreach from=$dates item=date}
-        <leap:date leap:point="{$date.point}"{if $date.label} leap:label="{$date.label}"{/if}>{$date.date}</leap:date>
+        <leap2:date leap2:point="{$date.point}"{if $date.label} leap2:label="{$date.label}"{/if}>{$date.date}</leap2:date>
 {/foreach}
 {if !$skipfooter}
 {include file="export:leap:entryfooter.tpl"}

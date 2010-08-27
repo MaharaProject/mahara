@@ -157,7 +157,8 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             }
             $artefact->set('completiondate', empty($completiondate) ? $artefact->get('mtime') : $completiondate);
 
-            if ($entry->xpath('leap:status[@leap:stage="completed"]')) {
+            $ns = $importer->get_leap2a_namespace();
+            if ($entry->xpath($ns . ':status[@' . $ns . ':stage="completed"]')) {
                 $artefact->set('completed', 1);
             }
         }
