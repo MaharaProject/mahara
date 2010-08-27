@@ -1,4 +1,3 @@
-{auto_escape off}
     <entry>
         <title>{$title}</title>
         <id>{$id}</id>
