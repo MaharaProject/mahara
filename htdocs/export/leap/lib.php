@@ -472,7 +472,7 @@ class PluginExportLeap extends PluginExport {
         if (!empty($this->links->viewcontents[$viewid])) {
             foreach (array_keys($this->links->viewcontents[$viewid]) as $artefactid) {
                 $links[] = (object)array(
-                    'type' => 'has_part',
+                    'type' => 'leap2:has_part',
                     'id'   => 'portfolio:artefact' . $artefactid,
                 );
             }
