@@ -503,7 +503,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * @return string The ID of the organization if there is one, else an empty string
      */
     private static function check_for_supporting_organization(PluginImportLeap $importer, $link) {
-        if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_supported_by') && isset($link['href'])) {
+        if (($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'supported_by') ||
+            // this is necessary for backwards compatibility. For LEAP2A 2009-03 exports the relationship
+            // value 'is_supported_by' was used instead of the correct 'supported_by'.
+            $importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'is_supported_by'))
+            && isset($link['href'])) {
             if ($potentialorganization = $importer->get_entry_by_id((string)$link['href'])) {
                 if (PluginImportLeap::is_rdf_type($potentialorganization, $importer, 'organization')) {
                     return (string)$link['href'];

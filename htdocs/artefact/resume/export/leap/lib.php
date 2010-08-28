@@ -319,7 +319,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+            'supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->institution,
                 'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
             ), 'organization', 'supports'),
@@ -327,7 +327,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
                 'title' => $this->originalrecord->qualtype,
                 'content' => $this->originalrecord->qualname,
                 'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
-            ), 'achievement', 'is_supported_by')
+            ), 'achievement', 'supported_by')
         );
     }
 
@@ -359,7 +359,7 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+            'supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->employer,
                 'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
             ), 'organization', 'supports')
