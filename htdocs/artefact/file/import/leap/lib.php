@@ -234,12 +234,16 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         // documentation doesn't sound hopeful that urldecode will work with 
         // UTF8 characters
         $pathname = false;
+        $description = '';
         if (isset($entry->content['src'])) {
             $pathname = urldecode((string)$entry->content['src']);
+            $filetype = (string)$entry->content['type'];
         } else {
             foreach ($entry->link as $link) {
                 if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href']) && !$importer->entry_exists((string)$link['href'])) {
                     $pathname = urldecode((string)$link['href']);
+                    $filetype = (string)$link['type'];
+                    $description = strip_tags(PluginImportLeap::get_entry_content($entry, $importer)); // TODO do we have a better way of stripping tags? and why isn't this html anyway?
                 }
             }
         }
@@ -254,10 +258,11 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         // which calls strtotime on the dates for us
         $data = (object)array(
             'title' => (string)$entry->title,
+            'description' => $description,
             'owner' => $importer->get('usr'),
-            'filetype' => (string)$entry->content['type'],
+            'filetype' => $filetype,
         );
-        if (isset($entry->summary)) {
+        if (isset($entry->summary) && empty($description)) {
             $data->description = (string)$entry->summary;
         }
         if ($published = strtotime((string)$entry->published)) {
