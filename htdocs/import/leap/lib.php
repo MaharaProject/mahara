@@ -1335,7 +1335,7 @@ class PluginImportLeap extends PluginImport {
             } else { // it may be just an attached file, with no Leap2A element in its own right ....
                 if ($id = $this->create_linked_file($entry, $link)) {
                     $artefact->attach($id);
-                    $newartefactmapping[(string)$link['href']][] = $id;
+
                     return $id;
                 }
             }
