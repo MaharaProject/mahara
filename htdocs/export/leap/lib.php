@@ -820,12 +820,15 @@ class LeapExportElement {
      * {@link add_attachment} method on the exporter object.
      *
      * @param string $filename the relative path of the file (NOT including the filesdir)
+     * @param string $mimetype the (optional) mimetype of the file (according to atom
+     *                          spec the type attribute on an enclosure is optional)
      */
-    public function add_enclosure_link($filename) {
+    public function add_enclosure_link($filename, $mimetype = '') {
         $this->links[$filename] = (object)array(
             'id' => $this->exporter->get('filedir') . $filename,
             'type' => 'enclosure',
-            'file' => true
+            'file' => true,
+            'mimetype' => $mimetype
         );
     }
 
