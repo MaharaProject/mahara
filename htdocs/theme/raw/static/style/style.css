@@ -203,9 +203,13 @@ td.narrow {
 #friendslist td {
 	border-bottom: 2px solid #FFF;
 }
+table#messagethread {
+  table-layout: fixed;
+}
 /* table with preserved whitespace */
 #messagethread .messagebody {
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow: auto;
 }
 /* table without border */
 #bloglist th {
