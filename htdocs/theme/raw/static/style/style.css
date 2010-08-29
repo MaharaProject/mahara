@@ -203,11 +203,11 @@ td.narrow {
 #friendslist td {
 	border-bottom: 2px solid #FFF;
 }
-table#messagethread {
+table.fixwidth {
   table-layout: fixed;
 }
 /* table with preserved whitespace */
-#messagethread .messagebody {
+.messagebody {
     white-space: pre-wrap;
     overflow: auto;
 }

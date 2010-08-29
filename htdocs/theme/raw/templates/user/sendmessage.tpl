@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if $messages}
-<table id="messagethread" class="fullwidth listing">
+<table id="messagethread" class="fullwidth fixwidth listing">
     <tbody>
     {foreach from=$messages item=message}
         <tr class="{cycle values='r0,r1'}">
