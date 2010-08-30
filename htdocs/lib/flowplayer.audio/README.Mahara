@@ -1,0 +1,11 @@
+Flowplayer in Mahara
+=====================
+
+Website: http://flowplayer.org/plugins/streaming/audio.html
+Version: 3.2.1
+
+This flash mp3 player is used by the internal media blocktype.
+
+Changes:
+
+  * None
