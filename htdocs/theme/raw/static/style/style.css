@@ -1827,7 +1827,7 @@ ul.groupuserstatus {
 	background: transparent url(../images/icon-request.gif) no-repeat 3px center;
 	padding-left: 13px;
 	cursor: pointer;
-	color: #0000CC;
+	color: #0000CC !important;
 }
 .jointhisgroup form table td input:hover {
 	border: 0;
