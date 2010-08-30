@@ -7,3 +7,4 @@ Version: 3.3.8
 Changes:
 
  * Additional files in the eu and zh language packs
+ * Removed unused media plugin to fix Debian bug #591200
