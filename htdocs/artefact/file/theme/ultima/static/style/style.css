@@ -4,42 +4,7 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-/* File upload box */
-.fileupload {
-}
-/* folder nav */
-.foldernav {
-}
-form#files .foldernav {
-}
-
-/* File list */
-.filelist th {
-}
-/* parent folder row */
-tr.parentfolder td {
-}
-/* new row */
-.filelist tr.highlight-file td {
-}
 /* folder row */
 tr.folder td {
     background-color: #e99adb;
-}
-/* folder row being moved */
-tr.folderhover td {
-}
-/* File list edit box */
-#files_filebrowser_edit_row td {
-}
-
-/* Edit post File list */
-#editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
-}
-
-/* Edit post selected file list */
-.filelist .disabled {
-}
-.filelist .tag-edit.submit {
 }

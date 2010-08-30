@@ -1,6 +1,7 @@
 {foreach from=$data item=item}
   <tr class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}">
     <td>
+      {if $item->deleteform}{$item->deleteform|safe}{/if}
       {if $item->deletedmessage}
         <span class="details">{str tag=commentremoved section=artefact.comment}</span>
       {else}
@@ -8,10 +9,7 @@
         {if $item->attachmessage}<div class="attachmessage">{$item->attachmessage}</div>{/if}
       {/if}
       <div class="details">
-        <div class="fr">
-          {if $item->makepublicform}{$item->makepublicform|safe}{/if}
-          {if $item->deleteform}{$item->deleteform|safe}{/if}
-        </div>
+        {if $item->makepublicform}<div class="fr">{$item->makepublicform|safe}</div>{/if}
       {if $item->author}
         <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author->id}">
           <img src="{profile_icon_url user=$item->author maxheight=20 maxwidth=20}" valign="middle" alt="{$item->author|display_name|escape}">

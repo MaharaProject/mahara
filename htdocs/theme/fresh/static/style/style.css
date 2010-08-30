@@ -21,11 +21,10 @@
  */
 
 /* styles based on elements */
-body {
+body,
+body#micro {
     background: #10171A url(../images/bg.gif) repeat top center;	
 	color: #BEE3F1;
-}
-acronym {
 }
 a, a:visited, a:link, a:active {
     color: #7EF000;
@@ -35,33 +34,25 @@ a:hover, a:focus {
     color: #00AEF1;
     text-decoration: underline;
 }
-h1 {
-    color: #7EF000;
-    font-weight: normal;
-}
+h1,
 h2 {
-    font-family:Georgia, "Times New Roman", Times, serif;
     color: #7EF000;
     font-weight: normal;
 }
-h3 {
-    font-family:Georgia, "Times New Roman", Times, serif;
-    color: #00AEF1;
-    font-size: 1.2em !important;
-}
-h4 {
-    color: #7EF000;
-}
-h5 {
-    color: #00AEF1;
-}
+h3,
+h4,
+h5,
 h6 {
     color: #00AEF1;
 }
+
 .description,
 .unvalidated,
-.postdetails {
+.postdetails,
+.postedon {
+	color: #c7c7c7;
 }
+
 
 /**************************** Tables ****************************/
 .main-column thead th {
@@ -91,10 +82,7 @@ h6 {
 .listing div h3 a,
 .listing div h3 a:visited,
 .listing div h3 a:link {
-	color: #BEE3F1 !important;
-}
-.main-column table h3 a:hover,
-.listing div h3 a:hover {
+    color: #00AEF1 !important;
 }
 .tablerenderer-loading {
     border: 1px solid #000;
@@ -116,20 +104,22 @@ h6 {
 /* Alternative row background colours */
 .r0,
 .r0 td {
-    border:none;
+    border-bottom: 1px solid #080D0F;
     background: #1C3740;
 }
 .r1,
 .r1 td {
-    border:none;
+    border-bottom: 1px solid #080D0F;
     background-color: #1A292F;
 }
 tr.folder td {
     background-color: #10171A;
+    border-bottom: 1px solid #080D0F !important;
 }
 tr.highlight td {
   background-color: #000 !important;
   border-bottom: none;
+    border-bottom: 1px solid #080D0F;
 }
 
 /**************************** Pagination ****************************/
@@ -140,6 +130,9 @@ div.pagination a {
 div.pagination .disabled {
 	background-color: #080D0F;
 	color: #26363d;
+}
+div.pagination .selected {
+	border: 0;
 }
 
 /**************************** Forms ****************************/
@@ -154,9 +147,6 @@ label {
 /* override required colour to normal colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
     color: #BEE3F1;
-}
-/* description */
-.pieform td.description {
 }
 
 /* Legend */
@@ -183,198 +173,105 @@ fieldset {
 }
 
 /* Text fields and such */
-input.text, 
-input.password, 
-input.file,
-textarea,
-input[type=text],
-input[type=password],
-input[type=file] {
-}
 input.text.required {
 	border: 1px solid #f45e5e;
 }
 
-/* error */
-input.error, select.error {
-}
-.errmsg {
-}
-
-
 /****************************** Buttons ****************************/
 /** input buttons **/
+.btn,
 input.submit,
+input.cancel,
 button,
+.buttondk,
 input.button,
-input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact,
-#delete_all_notifications_submit,
-input.cancel {
-    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
-	border-color: #386d82 #1A292F #1A292F #386d82 !important;
-	padding: 3px 10px;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
+input#files_filebrowser_edit_artefact {
+    background: #1b3b46 url(../images/mainnav-bg.gif) repeat-x center;
+	border-color: #386d82 #1A292F #1A292F #386d82;
 	color: #FFF !important;
-	margin-left: 5px;
-}
-
-/** link buttons **/
-.rbuttons a.btn,
-.upgradeicon a,
-#loginas .btn-loginas {
-    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
-	border-color: #386d82 #1A292F #1A292F #386d82 !important;
-	padding: 3px 10px;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF !important;
-	margin-left: 5px;
 }
 /** hover for buttons **/
+.btn:hover,
 input.submit:hover,
+input.cancel:hover,
 button:hover,
+.buttondk:hover,
 input.button:hover,
-input.buttondk:hover,
 input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#delete_all_notifications_submit:hover,
-input.cancel:hover {
+input#files_filebrowser_edit_artefact:hover {
 	color: #FFF;
     text-decoration:none;
-    background-color: #1C3740;
+    background: #254e5c url(../images/mainnav-bg-hover.gif) repeat-x center;
+	border-color: #1A292F #386d82 #386d82 #1A292F;
 }
 /** Depress for buttons **/
+.btn:active,
 input.submit:active,
+input.cancel:active,
 button:active,
+.buttondk:active,
 input.button:active,
-input.buttondk:active,
 input.select:active,
-input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#delete_all_notifications_submit:active,
-input.cancel:active {
-    background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
-	border-color: #1A292F !important;
-	padding: 3px 10px;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF !important;
-	margin-left: 5px;
+input#files_filebrowser_edit_artefact:active {
+    background: #254e5c url(../images/mainnav-bg-hover.gif) repeat-x center;
+	border-color: #1A292F #386d82 #386d82 #1A292F;
+	color: #FFF;
 }
-
-/** Buttons with icons **/
-a.btn-req {
-	background: url(../images/icon-join.gif) no-repeat left center;
-	padding-left: 15px;
+/* buttons that look like links with icons */
+.icon {
+	color: #7EF000;
 }
-.btn-leavegroup {
-    background: transparent url(../images/icon-leave.gif) no-repeat left center;
-	padding-left: 15px;
-}
-a.btn-del,
-a#btn-delete {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #f45e5e !important;
-	padding-left: 12px;
-}
-#btn-request, 
-a.btn-add {
-	background: url(../images/icon-add.gif) no-repeat left center;
-	padding-left: 12px;
-}
-a.btn-msg, #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 12px;
-}
-a.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-reply, #add_feedback_link {
-	background: url(../images/icon-reply.gif) no-repeat left center;
-	padding-left: 12px;
-}
-#objection_link {
-	background: url(../images/icon-flag.gif) no-repeat left center;
-}
-#print_link {
-	background: url(../images/icon-print.gif) no-repeat left center;
-}
-#toggle_watchlist_link {
-	background: url(../images/icon-watch.gif) no-repeat left center;
-}
-.btn-settings {
-	background: url(../images/icon-settings.gif) no-repeat left center;
-	padding-left: 12px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left center;
-	border: 0;
-    margin: 0;
-}
-#togglepublic_submit {
-	background: url(../images/icon-login.gif) no-repeat left center;
-	padding-left: 15px !important;
-	color: #7f9d16;
-	border: 0;
-}
-.lbuttons a {
-	padding-left: 12px !important;
+/* buttons that look like links */
+.linkbtn {
+	color: #7EF000; 
 }
 
 /* Search buttons */
-#usf_submit {
-    border:none;
-	width: 25px;
-	margin:0;
-	text-indent:-1000px;
-	cursor:pointer;
-    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+#usf_submit,
+#usf_submit:hover {
+	background: transparent url(../images/btn-search.png) no-repeat !important;
+	border: 0;
+	color: #7EF000;
+	text-indent: -999px;
 	font-size: 1%;
-	padding: 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
 * html #usf_submit {
-    background: transparent url(../images/btn_search_off.gif) no-repeat center center;	
+	height: 22px;
 }
-#dosearch,
-#selfsearch button ,
+#selfsearch button,
 .query-button,
-#query-button,
 #moderator_search_btn,
-#search_submit,
 #search_search,
 #selfsearch button,
-#users_search_btn {
-    border:none;
-	width: 25px;
-	margin:0;
-	text-indent:-1000px;
-	cursor:pointer;
-    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+#search_submit,
+.btn-search,
+#selfsearch button:hover,
+.query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover {
+	background: transparent url(../images/btn-search.png) no-repeat !important;
+	border: 0;
+	color: #7EF000;
+	text-indent: -999px;
 	font-size: 1%;
-	padding: 10px;
-	* padding: 1px 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
-
+.btn-del {
+	color: #ff4949 !important;
+}
 
 
 /**************************** Top of page elements ****************************/
@@ -389,7 +286,7 @@ input#myfriends_addfriend_add {
 }
 #containerX #top-wrapper {
 	height: auto;
-	background: #0C2839;
+	background: transparent;
 }
 #loading-box {
     background-color: #000;
@@ -404,18 +301,11 @@ input#myfriends_addfriend_add {
 #site-logo {
     padding: 1em 0.75em 0em 0.75em;
 }
-#top-wrapper ul,
-#top-wrapper li {
-}
-#header-right {
-}
 /* Search and language bar */
-#language-select, #usf {
-}
 #usf_query_container input {
     color: #333333;
 	background-color: #FFFFFF;
-	width: 235px;
+	width: 205px;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -467,16 +357,13 @@ input#myfriends_addfriend_add {
     color: #FFFFFF;
     text-decoration: underline;
 }
-#main-nav li.selected {
-}
 #main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #FFFFFF;
 	background: #00AEF1;
-}
-#main-nav li.selected a:hover {
+	padding: 5px 15px 3px;
 }
 
 /**************** SUB NAVIGATION ****************/
@@ -513,16 +400,12 @@ input#myfriends_addfriend_add {
     color: #FFFFFF;
     text-decoration: underline;
 }
-#sub-nav li.selected {
-}
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
     color: #FFFFFF;
     text-decoration: underline;
-}
-#sub-nav li.selected a:hover {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
@@ -559,9 +442,8 @@ ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active {
   color: #FFF;
   font-weight: bold;
+  padding: 5px 10px 6px 10px;
   background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
-}
-ul.in-page-tabs li a.current-tab:hover {
 }
 
 .subpage {
@@ -570,8 +452,6 @@ ul.in-page-tabs li a.current-tab:hover {
 
 
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
-}
 /* system messages between nav and main content */
 #main-column {
     display: block;
@@ -582,9 +462,6 @@ ul.in-page-tabs li a.current-tab:hover {
 }
 
 /* system messages between nav and main content */
-/* upload file message */
-div.info {
-}
 /* different message types */
 #messages .ok,
 div.ok {
@@ -605,9 +482,10 @@ div.error {
     background-color: #1C3740;
     border: 1px dotted #e0e8ee;
 }
-.message.delete {
-}
 
+.sitemessage {
+	color: #333;
+}
 
 /**************** SIDEBAR *********/
 #left-column,
@@ -624,7 +502,6 @@ div.sideblock {
 div.sideblock h3 {
     padding: 6px 15px;
     margin: 0 0 10px 0;
-    font-size: 14px;
     color: #FFFFFF;
     background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
 }
@@ -633,8 +510,6 @@ div.sideblock h3 a:link,
 div.sideblock h3 a:visited,
 div.sideblock h3 a:active {
 	color: #FFF !important;
-}
-div.sideblock h3 a:hover {
 }
 div.sideblock-content,
 div.sidebar-content {
@@ -653,41 +528,13 @@ div.sideblock ul ul {
 #sb-loginbox input.password {
 	width: 240px;
 }
-#sb-loginbox label {
-}
 
 /* Side Profile */
 #user-profileicon {
 	padding-top: 3.5em;
 	padding-right: .5em;
 }
-#sb-profile ul a,
-#sb-profile ul a:link,
-#sb-profile ul a:visited,
-#sb-profile ul a:active {
-}
-#sb-profile ul ul a,
-#sb-profile ul ul a:link,
-#sb-profile ul ul a:visited,
-#sb-profile ul ul a:active {
-}
-#sb-profile li#unreadmessages a.btn-msg,
-#sb-profile li#unreadmessages a.btn-msg:link,
-#sb-profile li#unreadmessages a.btn-msg:visited,
-#sb-profile li#unreadmessages a.btn-msg:active,
-#sb-profile li#pendingfriends a,
-#sb-profile li#pendingfriends a:link,
-#sb-profile li#pendingfriends a:visited,
-#sb-profile li#pendingfriends a:active {
-}
-
 /* Side Online Users */
-#sb-onlineusers ul {
-}
-#sb-onlineusers li {
-}
-#sb-onlineusers ul img {
-}
 #lastminutes {
     margin: 6px 15px 0 0;
 }
@@ -710,32 +557,6 @@ div.sideblock ul ul {
 /* Side Search */
 .sidebar #selfsearch input {
 	width: 215px;
-}
-
-/* Friends control sideblock */
-div.sideblock #friendscontrol label {
-}
-
-/* Tags */
-.tag-results .sep {
-}
-/* edit tag box */
-.edittag {
-}
-/* delete tag box */
-.deletetag {
-}
-.deletetag h3 {
-}
-#delete_tag_submit {
-}
-
-/* Ajax Login */
-#ajax-login-form {
-}
-
-/* Help popups & icons */
-.contextualHelp {
 }
 
 
@@ -782,11 +603,14 @@ div.sideblock #friendscontrol label {
 }
 
 /* Attached file lists */
-.attachments {
-	border: 1px solid #1A292F;
+table.attachments {
+	border: 2px solid #10171A;
 }
 .attachments tbody th {
 	background-color: #10171A;
+}
+table.attachments td {
+	border-bottom: 2px solid #10171A;
 }
 
 /* User/view */
@@ -799,30 +623,13 @@ div.sideblock #friendscontrol label {
 	border: 0;
 }
 
-/* Wall */
-.wallpost {
-}
-#wall .private {
-}
-.wallpost .controls {
-}
-
 
 /* My Views */
 #myviews td {
    border:none;
 }
-#myviews h4 {
-}
-#myviews .submitted-viewitem {
-}
-#deleteview label {
-}
-#editviewdetails,
-#editthisview,
-#editviewaccess {
-	padding-left: 12px;
-    background: url(../images/icon-edit.gif) no-repeat left center;
+#myviews .submit-viewitem {
+	background: #080D0F;
 }
 
 /* Copy a view */
@@ -847,12 +654,8 @@ div.sideblock #friendscontrol label {
 #viewacl_lhs #results tfoot td {
 	background: none;
 }
-#accesslistitems {
-}
 #accesslistitems .ai-container {
 	background: #1C3740;
-}
-#accesslistitems .removebutton {
 }
 #accesslistitems .ai-container table th {
 	color: #BEE3F1;
@@ -862,59 +665,6 @@ div.sideblock #friendscontrol label {
 }
 
 
-
-/* Export */
-#export h3 {
-}
-#export .radio-description {
-}
-#export fieldset {
-}
-#export .element div {
-}
-#export .view {
-}
-#export fieldset {
-}
-#export fieldset legend {
-}
-#export fieldset div a {
-}
-#export fieldset table {
-}
-#export fieldset table colgroup col {
-}
-#export fieldset table div {
-}
-#export fieldset label {
-}
-#exportgeneration {
-}
-#progress {
-}
-div.progress-bar {
-}
-* html div.progress-bar {
-}
-div.progress-bar a {
-}
-p.progress-text {
-}
-#progressbar {
-}
-
-/* My Groups *//* My Friends */
-ul.groupuserstatus {
-}
-#friendslist ul.actionlist {
-}
-ul.groupuserstatus li,
-#friendslist ul.actionlist li {
-}
-#friendslist ul.viewlist li.label {
-}
-#friendslist ul.viewlist li {
-}
 #friendslist td {
 	border-bottom: 0;
 }
@@ -925,36 +675,6 @@ ul.groupuserstatus li,
 	background-color: #1A292F;
 }
 
-/* Group: members */
-.listing.twocolumn td {
-}
-
-/* Settings > Preferences */
-#accountprefs table h3 {
-}
-#accountprefs table label,
-#accountprefs table th {
-}
-#accountprefs table td label {
-}
-#deleteaccount {
-}
-#deleteaccount h1 {
-}
-#deleteaccount input.submit {
-}
-
-/* Settings > Notifications */
-#activitylist th {
-}
-#activitylist th a {
-}
-#activitylist tbody td div {
-}
-
-/* Settings > Institution membership */
-#requestmembership_studentid_container label {
-}
 
 /* Home page info boxes */
 
@@ -965,4 +685,15 @@ ul.groupuserstatus li,
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
+}
+.home-info-table {
+	border: 0;
+}
+
+#export fieldset {
+    background: #0C2839;
+	border:0;
+}
+ul.groupuserstatus li, #friendslist ul.actionlist li {
+	border-top: 1px solid #080D0F;
 }

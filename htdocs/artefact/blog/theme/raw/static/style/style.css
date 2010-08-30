@@ -43,6 +43,7 @@
 	border: 0;
 	cursor: pointer;
 	font-size: 1%;
+	color: #b8b8c1;
 }
 #postlist th.controls .btn-del {
 	background: transparent url(../images/delete.gif) no-repeat left;
@@ -53,6 +54,7 @@
 	font-size: 1%;
 	margin-left: .5em;
 	padding-left: 0;
+	color: #fff;
 }
 #postlist th form,
 #postlist th form div {

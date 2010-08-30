@@ -32,7 +32,7 @@
 	<li>{str tag="requestedtojoin" section="group"}</li>
 	
 {elseif $group->jointype == 'open'}
-	{$group->groupjoin|safe}
+	<li class="jointhisgroup">{$group->groupjoin|safe}</li>
 	
 {elseif $group->jointype == 'request'}
 	<li><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>

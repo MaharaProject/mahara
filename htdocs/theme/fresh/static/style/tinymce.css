@@ -2,13 +2,14 @@ body {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
 	padding: 0px !important;
-	color: #BEE3F1;
+	color: #333 !important;
+	background: #FFF !important;
 }
 td {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 1em !important;
 	padding: .5em !important;
-	color: #BEE3F1;
+	color: #333 !important;
 }
 pre {
     font: 12px monospace !important;
@@ -31,7 +32,6 @@ h1 {
     font-size: 2em !important;
 }
 h2 {
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #7EF000 !important;
     font-weight: bold !important;
     margin: 0 0 .5em 0 !important;
@@ -39,14 +39,13 @@ h2 {
     font-size: 1.8em !important;
 }
 h3 {
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #00AEF1 !important;
     font-weight: bold !important;
     margin: 1.5em 0 .5em 0 !important;
     font-size: 1.4em !important;
 }
 h4 {
-    color: #7EF000 !important;
+    color: #00AEF1 !important;
     font-weight: bold !important;
     margin: 1.5em 0 .5em 0 !important;
     font-size: 1.3em !important;

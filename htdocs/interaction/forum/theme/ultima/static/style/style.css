@@ -5,11 +5,6 @@
  * This file is distributed under the same terms as Mahara itself
  */
  
-/* Edit and Delete in list */
-.btn-spacer a {
-	padding-left: 12px;
-}
-
 /* Forum list */
 #forumslist{
 	border-bottom: 1px dotted #5c0758;
@@ -19,10 +14,6 @@
 }
 
 /* Topic list */
-#viewforum {
-}
-#viewforum h3 {
-}
 #forumtopicstable {
 	border-bottom: 1px dotted #5c0758;
 }
@@ -36,13 +27,6 @@
 }
 
 
-/* Forum Pagination */
-#viewforum div.pagination {
-}
-#viewforum div.pagination a {
-}
-#viewforum div.pagination .results {
-}
 /* admin & moderator */
 .groupadmin {
 	color: #3366CC;
@@ -53,32 +37,8 @@
 
 
 /* Posts */
-.closed {
-}
 .forumpost {
 	background-color: #f7f7f7;
 	border-top: 1px dotted #5c0758;
 	border-bottom: 1px dotted #5c0758;
 }
-.forumsubject {
-}
-.forumsubject h6 {
-}
-.forumpostleft {
-}
-.forumpostleft .posttime {
-}
-.forumpostleft .author p.poster {
-}
-.forumpostleft .author p.postcount {
-}
-.postbtns {
-}
-.postbtns a {
-	padding-left: 12px;
-}
-.deletedpost {
-}
-.postreply {
-}
- 

@@ -48,12 +48,6 @@ h5,
 h6 {
     color: #5c8727;
 }
-.description,
-.unvalidated,
-.postdetails {
-	color: #888;
-}
-
 
 /**************************** Tables ****************************/
 .main-column thead th {
@@ -107,6 +101,7 @@ tr.folder td {
 /**************************** Pagination ****************************/
 div.pagination a {
 	background-color: #E7EFC5;
+	border: 1px solid #E7EFC5;
 }
 
 /**************************** Forms ****************************/
@@ -164,24 +159,9 @@ input.button,
 input.select,
 input#files_filebrowser_edit_artefact {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-	background: #6e8e00;
+	background: #547b23 url(../images/btn-bkgd.gif) repeat-x left top;
 	color: #FFF !important;
 }
-#buttons_delete,
-#settings_delete {
-    border-color: #eda58c #611700 #611700 #eda58c !important;
-    background: #8f2100 !important;
-	color: #FFF !important;
-}
-input.quiet {
-  background: none !important;
-  color: #6e8e00;
-}
-input.quiet.btn-del {
-  background: none !important;
-  color: #ca0000 !important;
-}
-
 /** hover for buttons **/
 .btn:hover,
 input.submit:hover,
@@ -191,7 +171,7 @@ button:hover,
 input.button:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover {
-	background: #84aa00;
+	background: #94a44a url(../images/btn-bkgd-hover.gif) repeat-x left top;
 	text-decoration: none;
 }
 /** Depress for buttons **/
@@ -204,20 +184,13 @@ input.button:active,
 input.select:active,
 input#files_filebrowser_edit_artefact:active {
 	border-color: #496000 #d5ed8a #d5ed8a #496000;
-	background: #84aa00;
+	background: #94a44a url(../images/btn-bkgd-hover.gif) repeat-x left 1px;
 	color: #FFF;
 }
 
 /* buttons that look like links with icons */
 .icon {
 	color: #6e8e00;
-	border: 0;
-	cursor: pointer;
-	background: none;
-	padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-	margin-left: .5em;
-	text-decoration: underline;
 }
 /* buttons that look like links */
 .linkbtn {
@@ -243,7 +216,6 @@ input#files_filebrowser_edit_artefact:active {
 }
 #selfsearch button,
 .query-button,
-#query-button,
 #moderator_search_btn,
 #search_search,
 #selfsearch button,
@@ -251,7 +223,6 @@ input#files_filebrowser_edit_artefact:active {
 .btn-search,
 #selfsearch button:hover,
 .query-button:hover,
-#query-button:hover,
 #moderator_search_btn:hover,
 #search_search:hover,
 #selfsearch button:hover,
@@ -302,12 +273,12 @@ input#files_filebrowser_edit_artefact:active {
 #usf_query_container input {
     color: #767676;
 	background-color: #ecf3d4;
-	width: 195px;
+	width: 205px;
 }
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-	margin: .5em 0 .5em 0;
+	margin: .5em 0;
 }
 #main-nav li {
     color: #e6c560;
@@ -412,6 +383,7 @@ ul.in-page-tabs li a.current-tab:active {
   background: transparent url(../images/tabs-over-bg.gif) no-repeat right bottom;
   color: #000;
   border-bottom: 1px solid #FFF;
+  padding: 5px 12px 4px 10px;
 }
 .subpage {
 	display: block;
@@ -460,10 +432,6 @@ div.sideblock h3 a:hover {
 #sb-profile ul ul a:active {
 	color: #7f9d16;
 }
-#sb-profile li#unreadmessages a.btn-msg,
-#sb-profile li#unreadmessages a.btn-msg:link,
-#sb-profile li#unreadmessages a.btn-msg:visited,
-#sb-profile li#unreadmessages a.btn-msg:active,
 #sb-profile li#pendingfriends a,
 #sb-profile li#pendingfriends a:link,
 #sb-profile li#pendingfriends a:visited,
@@ -487,28 +455,6 @@ div.sideblock h3 a:hover {
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
-}
-
-/* Tags */
-.tag-results .sep {
-	color: #d1d1d1;
-}
-/* edit tag box */
-.edittag {
-	border: 1px solid #d1d1d1;
-	background: #f6f6f6;
-}
-/* delete tag box */
-.deletetag {
-	border: 1px solid #e98a88;
-	background: #fbeceb;
-}
-.deletetag h3 {
-	color: #ca0000;
-}
-#delete_tag_submit {
-	border-color: #f69595 #750000 #750000 #f69595;
-	background: #ca0000;
 }
 
 /******************** FOOTER ****************************/
@@ -582,6 +528,9 @@ div.sideblock h3 a:hover {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
 }
+.home-info-table {
+	border: 0;
+}
 
 /* Collections */
 #collectionviews {
@@ -606,11 +555,10 @@ div.sideblock h3 a:hover {
     text-align: center;
 }
 
-.collection {
-	background: url(../images/icon-collection.gif) no-repeat left top;
-	padding-left: 15px;
-}
-
 .inbox-message {
 	background: #FAFBF7;
+}
+
+.attachments tbody th {
+	color: #333;
 }

@@ -2,7 +2,7 @@
 {include file="header.tpl"}
 <div id="planswrap">
     <div class="rbuttons">
-        <a class="btn btn-add" href="{$WWWROOT}artefact/plans/new/task.php">{str section="artefact.plans" tag="newtask"}</a>
+        <a class="btn" href="{$WWWROOT}artefact/plans/new/task.php">{str section="artefact.plans" tag="newtask"}</a>
     </div>
 {if !$tasks.data}
     <div class="message">{$strnotasksaddone|safe}</div>

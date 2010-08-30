@@ -28,6 +28,7 @@
   	font-weight: bold;
   	position: relative;
   	z-index: 0;
+	height: 1%;
 }
 #category-list li {
     display: inline;
@@ -72,12 +73,18 @@
     float: left;
     text-align: center;
     margin: 1em 1em 0;
-    width: 22%;
+    width: 200px;
 	* z-index: 100;
 	line-height: 1.4em;
+	white-space: normal;
+	min-height: 110px;
 }
 * html #blocktype-list li {
 	position: relative;
+}
+#blocktype-list li div.blocktype div {
+	white-space: normal;
+    width: 200px;
 }
 #blocktype-list .blocktype-radio {
     border: none;
@@ -355,10 +362,12 @@ html>body #column-container {
 .blockinstance-content div.tags {
 	font-size: .9167em;
 	margin-top: .5em;
+	line-height: 1.4em;
 }
 .blockinstance-content div.artefacts {
 	font-size: .9167em;
 	margin-top: .5em;
+	line-height: 1.4em;
 }
 .postlist td div h1,
 .postlist td div h2 {
@@ -396,6 +405,7 @@ ul.artefactchooser-tabs {
   font-weight: bold;
   list-style: none;
   font-size: 1em;
+  height: 1%;
 }
 ul.artefactchooser-tabs li {
   display: inline;
@@ -409,7 +419,6 @@ ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
   padding: .3em 1em;
-  * padding: .25em 1em;
   text-decoration: none;
   background: #EEEEEE;
 }
@@ -421,7 +430,6 @@ ul.artefactchooser-tabs li.current a:active {
   text-decoration: none;
   background: #D1D1D1;
   padding: .4em 1em .3em 1em;
-  * padding: .35em 1em .25em 1em;
   cursor: default;
 }
 ul.artefactchooser-subtabs {
@@ -595,6 +603,7 @@ ul.colnav {
     list-style: none;
     padding: 0;
     margin: 1em 0 0 0;
+    display: inline;
 }
 ul.colnav li {
     display: inline;
@@ -636,14 +645,13 @@ div.colnav-extra {
 }
 .viewfooter .releaseviewform {
 	background: #eee;
-	padding: .25em 0;
 	margin-bottom: .5em;
 }
 .viewfooter .releaseviewform tr {
 	display: inline;
 }
 .viewfooter .releaseviewform tr th {
-	padding: 0 0 0 .25em !important;
+	padding: .25em !important;
 }
 #viewmenu {
 	font-size: .9167em;
@@ -660,6 +668,7 @@ div.colnav-extra {
 #feedbacktable .icon {
 	float: left;
 	margin-right: .25em;
+	margin-left: 0;
 }
 #feedbacktable .username {
 	margin-right: .25em;
@@ -764,4 +773,13 @@ table td div.plan_completed {
 #blocktype_externalfeed_entries h4 {
 	margin-top: .5em;
 }
+#userview {
+	border-bottom: 1px dotted #d1d1d1;
+}
 
+table.resumecomposite {
+	width: 100%;
+}
+* html table.resumecomposite {
+	width: 96%;
+}

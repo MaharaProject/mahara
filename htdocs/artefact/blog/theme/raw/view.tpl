@@ -3,9 +3,9 @@
 
                 <div class="rbuttons">
                 {if !$blog->get('locked')}
-                    <a class="btn btn-settings" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+                    <a class="btn" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                 {/if}
-                    <a class="btn btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+                    <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 
                 <p>{clean_html($blog->get('description'))|safe}</p>

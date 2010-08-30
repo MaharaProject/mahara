@@ -16,6 +16,7 @@ th.planscontrols {
     background: #f5e8e9;
     color: #DD0221;
 	border-top: 1px solid #FFF;
+	border-bottom: 2px solid #FFF;
 }
 
 #planswrap table td {

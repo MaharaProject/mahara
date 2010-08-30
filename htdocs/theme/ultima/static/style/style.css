@@ -21,7 +21,8 @@
  */
 
 /* General rules */
-body {
+body,
+body#micro {
     background: #e99adb url(../images/bg.jpg) no-repeat top center;	
 	color: #360435;
     font-family: Arial, Helvetica, sans-serif;
@@ -37,35 +38,22 @@ a:hover, a:focus {
     color: #5A0757;
     text-decoration: underline;
 }
-h1 {
-    color: #3C083F;
-    font-weight: normal;
-}
+h1,
 h2 {
-    font-family:Georgia, "Times New Roman", Times, serif;
     color: #3C083F;
-    font-weight: normal;
 }
-h3 {
-    font-family:Georgia, "Times New Roman", Times, serif;
-    color: #5A0757;
-    font-size: 1.1em;
-    font-weight: normal;
-}
+h3,
 h4 {
-    font-size: 1em;
     color: #360435;
 }
-h5 {
-    color: #5A0757;
-    font-size: .9em;
-}
+h5,
 h6 {
     color: #5A0757;
 }
 .description,
 .unvalidated,
-.postdetails {
+.postdetails,
+.postedon {
     color: #5A0757;
 }
 
@@ -119,19 +107,13 @@ h6 {
 /* Alternative row background colours */
 .r0,
 .r0 td {
-    background-color: #e8c1ea;
+    background-color: #f4e7f5;
 }
 .r1,
 .r1 td {
-    background-color: #f7d4fa;
+    background-color: #faeefb;
 }
 tr.folder td {
-}
-
-/**************************** Pagination ****************************/
-div.pagination a {
-}
-div.pagination .disabled {
 }
 
 /**************************** Forms ****************************/
@@ -154,7 +136,6 @@ label {
 /* Legend */
 legend {
 	color: #5A0757;
-    font-family:Georgia, "Times New Roman", Times, serif;
 	margin-bottom:5px;
 }
 legend a,
@@ -187,181 +168,98 @@ input.text.required {
     border-color: #cc0000;
 }
 
-/* error */
-input.error, select.error {
-}
-.errmsg {
-}
-
-
 /****************************** Buttons ****************************/
 /** input buttons **/
+.btn,
 input.submit,
+input.cancel,
 button,
+.buttondk,
 input.button,
-input.buttondk,
 input.select,
-input#files_filebrowser_edit_artefact,
-#delete_all_notifications_submit,
-input.cancel {
-    background-color: #5c0758;
-	padding: 3px 10px;
-	border-color: #b118ba #3C083F #3C083F #b118ba;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF;
-	margin-left: 5px;
-}
-/** link buttons **/
-.rbuttons a.btn,
-.upgradeicon a,
-#loginas .btn-loginas {
-    background-color: #5c0758;
-	padding: 3px 10px;
-	border-color: #b118ba #3C083F #3C083F #b118ba;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
-	color: #FFF;
-	margin-left: 5px;
+input#files_filebrowser_edit_artefact {
+    background: #861d80 url(../images/btn-bkgd.gif) repeat-x top;
+	border-color: #e675d3 #3C083F #3C083F #e675d3;
+	color: #FFF !important;
 }
 /** hover for buttons **/
+.btn:hover,
 input.submit:hover,
+input.cancel:hover,
 button:hover,
+.buttondk:hover,
 input.button:hover,
-input.buttondk:hover,
 input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover,
-#delete_all_notifications_submit:hover,
-input.cancel:hover {
+input#files_filebrowser_edit_artefact:hover {
 	color: #FFF;
-    text-decoration:none;
-    background-color: #5c0758;
+	border-color: #3C083F #e675d3 #e675d3 #3C083F;
+    background: #c94cb4 url(../images/btn-bkgd-hover.gif) repeat-x top;
 }
 /** Depress for buttons **/
+.btn:active,
 input.submit:active,
+input.cancel:active,
 button:active,
+.buttondk:active,
 input.button:active,
-input.buttondk:active,
 input.select:active,
-input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active,
-#delete_all_notifications_submit:active,
-input.cancel:active {
-    background-color: #5c0758;
-	padding: 3px 10px;
-	border-color: #3C083F #b118ba #b118ba #3C083F;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 11px;
-    font-weight:normal;
+input#files_filebrowser_edit_artefact:active {
+	border-color: #3C083F #e675d3 #e675d3 #3C083F;
+    background: #c94cb4 url(../images/btn-bkgd-hover.gif) repeat-x 1px;
 	color: #FFF;
-	margin-left: 5px;
 }
-
-/** Buttons with icons **/
-a.btn-req {
-	background: url(../images/icon-join.gif) no-repeat left center;
-	padding-left: 15px;
+/* buttons that look like links with icons */
+.icon {
+	color: #5A0757;
 }
-.btn-leavegroup {
-    background: transparent url(../images/icon-leave.gif) no-repeat left center;
-	padding-left: 15px;
-}
-a.btn-del,
-a#btn-delete {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #ca0000 !important;
-	padding-left: 12px;
-}
-a.btn-msg, #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 12px;
-}
-a.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-reply, #add_feedback_link {
-	background: url(../images/icon-reply.gif) no-repeat left center;
-	padding-left: 12px;
-}
-#objection_link {
-	background: url(../images/icon-flag.gif) no-repeat left center;
-}
-#print_link {
-	background: url(../images/icon-print.gif) no-repeat left center;
-}
-#toggle_watchlist_link {
-	background: url(../images/icon-watch.gif) no-repeat left center;
-}
-.btn-settings {
-	background: url(../images/icon-settings.gif) no-repeat left center;
-	padding-left: 12px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left center;
-	border: 0;
-    margin: 0;
-}
-#togglepublic_submit {
-	background: url(../images/icon-login.gif) no-repeat left center;
-	padding-left: 12px !important;
-	color: #5A0757 !important;
-	border: 0;
-}
-.lbuttons a {
-	padding-left: 12px !important;
+/* buttons that look like links */
+.linkbtn {
+	color: #5A0757; 
 }
 
 /* Search buttons */
-#usf_submit {
-    border:none;
-	width:30px;
-	padding:3px 0;
-	margin:0;
-	text-indent:-1000px;
-	cursor:pointer;
-    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+#usf_submit,
+#usf_submit:hover {
+	background: transparent url(../images/btn-search.png) no-repeat !important;
+	border: 0;
+	color: #5A0757; 
+	text-indent: -999px;
 	font-size: 1%;
-	padding: 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
 * html #usf_submit {
-    background: transparent url(../images/btn_search_off.gif) no-repeat center center;	
+	height: 22px;
 }
-#dosearch,
-#selfsearch button ,
+#selfsearch button,
 .query-button,
-#query-button,
 #moderator_search_btn,
-#search_submit,
 #search_search,
 #selfsearch button,
-#users_search_btn {
-    border:none;
-	width:30px;
-	padding:3px 0;
-	margin:0;
-	text-indent:-1000px;
-	cursor:pointer;
-    background: transparent url(../images/btn_search_off.png) no-repeat center center;	
+#search_submit,
+.btn-search,
+#selfsearch button:hover,
+.query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover {
+	background: transparent url(../images/btn-search.png) no-repeat !important;
+	border: 0;
+	color: #5A0757; 
+	text-indent: -999px;
 	font-size: 1%;
-	padding: 10px;
-	* padding: 1px 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
+
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
@@ -375,17 +273,12 @@ input#myfriends_addfriend_add {
     background: transparent;
     border: none;
 }
-#containerX #top-wrapper {
-}
 #loading-box {
     color: #fff;
     background-color: #8E1901;
 }
 #site-logo {
 	padding: 25px 25px 0 0
-}
-#top-wrapper ul,
-#top-wrapper li {
 }
 /* Search and language bar */
 #language-select {
@@ -396,6 +289,7 @@ input#myfriends_addfriend_add {
 }
 #usf_query_container input {
     color: #490647;
+	width: 195px;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -407,11 +301,10 @@ input#myfriends_addfriend_add {
   padding: 0 0 0 1em;
 }
 #right-nav li a {
-  color: #e8c1ea;
+  color: #FFF;
 }
 #right-nav li.selected a {
-  color: #e8c1ea;
-  font-weight: normal;
+  color: #FFF;
   text-decoration: underline;
 }
 
@@ -420,8 +313,6 @@ input#myfriends_addfriend_add {
     padding: 0;
     margin: 0;
     background: transparent;
-}
-#main-nav ul {
 }
 #main-nav li {
     float:left;
@@ -448,17 +339,14 @@ input#myfriends_addfriend_add {
     color: #FFFFFF;
     text-decoration: underline;
 }
-#main-nav li.selected {
-}
 #main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
     color: #FFFFFF;
     font-weight: bold;
+    padding: 6px 15px 7px;
 	background: #5c0758;
-}
-#main-nav li.selected a:hover {
 }
 
 /**************** SUB NAVIGATION ****************/
@@ -506,14 +394,8 @@ input#myfriends_addfriend_add {
     color: #FFFFFF;
     text-decoration: underline;
 }
-#sub-nav li.selected a:hover {
-}
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
-}
-ul.in-page-tabs li {
-}
 ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
@@ -535,11 +417,9 @@ ul.in-page-tabs li a.current-tab:active {
   font-weight: bold;
   background-color: #841c7f;
 }
-ul.in-page-tabs li a.current-tab:hover {
-}
 
 .subpage {
-  border: 1px solid #5c0758;  
+  border: 1px solid #841c7f;  
 }
 
 
@@ -556,9 +436,6 @@ ul.in-page-tabs li a.current-tab:hover {
 }
 
 /* system messages between nav and main content */
-/* upload file message */
-div.info {
-}
 /* different message types */
 #messages .ok,
 div.ok {
@@ -580,14 +457,11 @@ div.error {
     background-color: #e8c1ea;
     border: 1px dotted #360435;
 }
-.message.delete {
-}
 
 
 /**************** SIDEBAR *********/
 #left-column,
 #right-column {
-    width: 270px;
 	padding: 0;
 }
 div.sideblock {
@@ -597,7 +471,6 @@ div.sideblock {
     padding: 8px 15px 15px 15px;
 }
 div.sideblock h3 {
-    font-size: 1.2em;
     color: #e8c1ea;
 }
 div.sideblock a,
@@ -606,59 +479,13 @@ div.sideblock a:visited,
 div.sideblock a:active {
 	color: #e8c1ea;
 }
-div.sideblock h3 a:hover {
-}
-div.sideblock-content,
-div.sidebar-content {
-}
 div.sideblock label {
 	color: #e8c1ea;
 }
-div.sideblock ul li {
-	font-weight: bold;
-}
 div.sideblock ul ul {
-	list-style-type: square;
 	color: #e8c1ea;
 }
 
-/* Side Login */
-#sb-loginbox input.text,
-#sb-loginbox input.password {
-}
-#sb-loginbox label {
-}
-
-/* Side Profile */
-#sb-profile ul a,
-#sb-profile ul a:link,
-#sb-profile ul a:visited,
-#sb-profile ul a:active {
-}
-#sb-profile ul ul a,
-#sb-profile ul ul a:link,
-#sb-profile ul ul a:visited,
-#sb-profile ul ul a:active {
-}
-#sb-profile li#unreadmessages a.btn-msg,
-#sb-profile li#unreadmessages a.btn-msg:link,
-#sb-profile li#unreadmessages a.btn-msg:visited,
-#sb-profile li#unreadmessages a.btn-msg:active,
-#sb-profile li#pendingfriends a,
-#sb-profile li#pendingfriends a:link,
-#sb-profile li#pendingfriends a:visited,
-#sb-profile li#pendingfriends a:active {
-}
-
-/* Side Online Users */
-#sb-onlineusers ul {
-}
-#sb-onlineusers li {
-}
-#sb-onlineusers ul img {
-}
-#lastminutes {
-}
 
 /* Side Quota Bar */
 #quota_used {
@@ -675,37 +502,11 @@ div.sideblock ul ul {
     background-image: url(../images/quota_bar_highlight.gif);
 }
 
-/* Side Search */
-.sidebar #selfsearch input {
-}
 
 /* Friends control sideblock */
 div.sideblock #friendscontrol label {
 	color: #fff;
 }
-
-/* Tags */
-.tag-results .sep {
-}
-/* edit tag box */
-.edittag {
-}
-/* delete tag box */
-.deletetag {
-}
-.deletetag h3 {
-}
-#delete_tag_submit {
-}
-
-/* Ajax Login */
-#ajax-login-form {
-}
-
-/* Help popups & icons */
-.contextualHelp {
-}
-
 
 
 /******************** FOOTER ****************************/
@@ -716,15 +517,6 @@ div.sideblock #friendscontrol label {
 #footernav {
     color: #5A0757;
 } 
-#footernav a,
-#footernav a:link,
-#footernav a:active,
-#footernav a:visited {
-}
-#footernav a:hover {
-}
-#powered-by {
-}
 #performance-info {
     color: #5A0757;
 }
@@ -737,167 +529,43 @@ div.sideblock #friendscontrol label {
 
 
 /****************************** PAGE BY PAGE STYLES **********************************/
-/* Userlists used in admin section and on edit interaction form */
-.userlisttable tbody tr th {
-}
-
-/* Attached file lists */
-.attachments {
-}
-.attachments tbody th {
-}
-
-/* User/view */
-#userview .user-icon {
-}
-
-/* Wall */
-.wallpost {
-}
-#wall .private {
-}
-.wallpost .controls {
-}
-
-
-/* My Views */
-#myviews td {
-}
-#myviews h4 {
-}
-#myviews .submitted-viewitem {
-}
-#deleteview label {
-}
-#editviewdetails,
-#editthisview,
-#editviewaccess {
-}
-
-/* Copy a view */
-#viewpreview {
-}
-#viewpreviewinner {
-}
-#viewpreviewclose {
-}
-
-/* View access */
-#viewacl_lhs {
-}
-#viewacl_lhs #results tfoot td {
-}
-#accesslistitems {
-}
-#accesslistitems .ai-container {
-}
-#accesslistitems .removebutton {
-}
-#accesslistitems .ai-container table th {
-}
-
-/* Export */
-#export h3 {
-}
-#export .radio-description {
-}
-#export fieldset {
-}
-#export .element div {
-}
-#export .view {
-}
-#export fieldset {
-}
-#export fieldset legend {
-}
-#export fieldset div a {
-}
-#export fieldset table {
-}
-#export fieldset table colgroup col {
-}
-#export fieldset table div {
-}
-#export fieldset label {
-}
-#exportgeneration {
-}
-#progress {
-}
-div.progress-bar {
-}
-* html div.progress-bar {
-}
-div.progress-bar a {
-}
-p.progress-text {
-}
-#progressbar {
-}
-
-/* My Groups *//* My Friends */
-ul.groupuserstatus {
-}
-#friendslist ul.actionlist {
-}
-ul.groupuserstatus li,
-#friendslist ul.actionlist li {
-}
-.listing ul.groupuserstatus li,
-#friendslist ul.actionlist li {
-	border-color: #b89ab9;
-}
-#friendslist ul.viewlist li.label {
-}
-#friendslist ul.viewlist li {
-}
-
-/* Group: about */
-.group-info {
-}
-
-
-/* Group: members */
-.listing.twocolumn td {
-}
 
 
 /* Settings > Preferences */
 #accountprefs table h3 {
-    border-bottom: 1px solid #360435 !important;
-}
-#accountprefs table label,
-#accountprefs table th {
-}
-#accountprefs table td label {
-}
-#deleteaccount {
-}
-#deleteaccount h1 {
-}
-#deleteaccount input.submit {
+    border-bottom: 1px dotted #360435 !important;
 }
 
-/* Settings > Notifications */
-#activitylist th {
-}
-#activitylist th a {
-}
-#activitylist tbody td div {
-}
-
-/* Settings > Institution membership */
-#requestmembership_studentid_container label {
-}
 
 /* Home page info boxes */
 
 .home-info {
-    border: solid 2px #cccccc;
-    background: #eeeeee;
+    border: solid 2px #F4E7F5;
+    background: #FAEEFB;
 }
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
+}
+.home-info-table {
+	border: 0;
+}
+
+#containerX #top-wrapper {
+	background: transparent;
+}
+#containerX #top-wrapper .selected a {
+	color: #333;
+}
+#containerX #top-wrapper a {
+	color: #ffffff;
+}
+.viewheader .title {
+	color: #FFF;
+}
+#containerX #top-wrapper .viewheader .title a {
+	color: #FFF;
+}
+#micro #footer-wrap {
+	background: transparent;
 }

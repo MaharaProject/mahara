@@ -1,9 +1,8 @@
 {include file="header.tpl"}
 
-<div id="wall">
-    <h3>{$owner->displayname}: {str tag='wall' section='blocktype.wall'}</h3>
-    ( <a href="{$WWWROOT}/user/view.php?id={$owner->id}">{str tag='backtoprofile' section='blocktype.wall'}</a> )
+    <h2>{$owner->displayname}: {str tag='wall' section='blocktype.wall'}</h2>
+    <div class="rbuttons"><a href="{$WWWROOT}/user/view.php?id={$owner->id}" class="btn-back">{str tag='backtoprofile' section='blocktype.wall'}</a></div>
     {include file="blocktype:wall:inlineposts.tpl"}
-</div>
+
 
 {include file="footer.tpl"}

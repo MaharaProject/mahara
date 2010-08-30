@@ -5,8 +5,9 @@
 {/if}
         <ul>
 {if $sbdata.unreadnotifications}
-            <li id="unreadmessages"><a class="icon btn-msg" href="{$WWWROOT}account/activity/">
-                <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$sbdata.unreadnotifications}</span> <span class="unreadmessages">{$sbdata.unreadnotificationsmessage}</span></span>
+            <li id="unreadmessages"><a class="btn-message" href="{$WWWROOT}account/activity/">
+                <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$sbdata.unreadnotifications}</span> 
+                <span class="unreadmessages">{$sbdata.unreadnotificationsmessage}</span></span>
             </a></li>
 {/if}
 {if $sbdata.invitedgroups}
@@ -16,7 +17,7 @@
             </a></li>
 {/if}
 {if $sbdata.pendingfriends}
-            <li id="pendingfriends"><a href="{$WWWROOT}user/myfriends.php?filter=pending">
+            <li id="pendingfriends"><a href="{$WWWROOT}user/myfriends.php?filter=pending" class="btn-friend">
                 <span id="pendingfriendscount">{$sbdata.pendingfriends}</span>
                 <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
             </a></li>
@@ -39,8 +40,8 @@
             </li>
 {/if}
 {if $sbdata.artefacts}
-            <li>
-                {str tag="Artefacts"}:
+            <li class="artefacts">
+                <strong>{str tag="Artefacts"}:</strong>
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}

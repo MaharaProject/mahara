@@ -41,6 +41,22 @@
 /* ADMIN HOME */
 
 
+/* delete/close buttons */
+#close_site_submit,
+#suspenddelete #delete #edituser_delete_submit,
+#institution_suspend_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
+	color: #FFF;
+}
+#close_site_submit:hover,
+#suspenddelete #delete #edituser_delete_submit:hover,
+#institution_suspend_submit:hover {
+	border-color: #750000 #f69595 #f69595 #750000 !important;
+	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
+	color: #FFF;
+}
+
 /* close site box */
 #close-site {
 	border: 1px solid #e98a88;
@@ -55,11 +71,7 @@
 #close-site h3 {
 	color: #ca0000;
 }
-#close_site_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
-	color: #FFF;
-}
+
 #close_site {
 	margin-top: .5em;
 }
@@ -179,12 +191,11 @@ input#register_register {
   margin: 0 .3em 1em;
 }
 .site-stats-left {
-	width: 30%;
+	width: 300px;
 }
 .site-stats-right {
-	width: 67%;
+	width: 62%;
 }
-
 .site-stats-table div {
 	padding: .25em .5em;
 	border-bottom: 1px solid #FFF;
@@ -324,44 +335,56 @@ table.tablerenderer th.desc {
 	margin-right: 1em;
 	margin-top: 1em;
 }
+
+#useraccountsettingsleft {
+	padding-right: 2em;
+}
+#useraccountsettingsright {
+	width: 254px;
+}
+#useraccountsettingsleft h2 {
+	margin-top: 0;
+}
+
 #suspenddelete,
 #institutions {
-	clear: both;
-	margin-top: 2em;
-	padding-top: 1em;
-	border-top: 1px dotted #d1d1d1;
+	margin-bottom: 2em;
+}
+#suspenddelete p {
+	font-size: .9167em;
+	line-height: 1.4em;
 }
 /* suspend user */
 #suspenddelete #suspend {
 	border: 1px solid #d1d1d1;
-	float: left;
 	padding: 1em;
 	background: #f6f6f6;
+	margin-bottom: 1em;
 }
-#institution_suspend_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
-	color: #FFF !important;
+#suspenddelete #suspend table th {
+	float: left;
+	display: block;
+	padding: .25em 0;
+}
+#suspenddelete #suspend table td {
+	display: block;
+	clear: left;
+	padding: 0;
+}
+#suspenddelete #suspend .resizable-textarea {
+	width: 225px !important;
 }
 
 /* delete user */
 #suspenddelete #delete {
 	border: 1px solid #e98a88;
 	background: #fbeceb;
-	float: left;
 	padding: 1em;
-	margin-left: 1em;
 }
-#suspenddelete #delete h4 {
+#suspenddelete #delete h3 {
 	margin-top: 0;
 	color: #ca0000;
 }
-#suspenddelete #delete #edituser_delete_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
-	color: #FFF;
-}
-
 #edituser_institution_addinstitution_container,
 #edituser_institution_add_container {
 	display: inline;

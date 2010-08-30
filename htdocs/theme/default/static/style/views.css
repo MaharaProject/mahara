@@ -29,6 +29,8 @@
 #category-list li.current a:visited,
 #category-list li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 
 /* The panel that contains the blocktype icons */
@@ -91,6 +93,8 @@ ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
     color: #1E6297 !important;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 ul.artefactchooser-tabs li.current a:hover {
 }
@@ -136,11 +140,9 @@ ul.artefactchooser-subtabs li.current a:hover {
     color: #186194;
 }
 
-#delete_comment_delete_comment_submit {
-	background: url(../images/icon-delete.gif) no-repeat left !important;
-	border: 0 !important;
-	padding: 0 0 0 10px !important;
-	color: #CA0000 !important;
+
+.plan_incomplete td {
+	background: #e9f0f5;
 }
 
 /* View Page footer menu */
@@ -166,4 +168,8 @@ ul.artefactchooser-subtabs li.current a:hover {
 /* Collection navigation */
 ul.colnav li a {
 	background: #d6e0c5;
+}
+
+.blockinstance-content .groupviewsection h5 {
+	color: #333;
 }

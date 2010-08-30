@@ -11,19 +11,11 @@
 }
 
 /* Forum list */
-#forumslist{
-}
 #forumslist th{
 	border-bottom: 1px solid #14436F;
 }
 
 /* Topic list */
-#viewforum {
-}
-#viewforum h3 {
-}
-#forumtopicstable {
-}
 #forumtopicstable th {
 	border-bottom: 1px solid #14436F;
 }
@@ -32,14 +24,6 @@
 	background-color: #ceeafe;
 }
 
-
-/* Forum Pagination */
-#viewforum div.pagination {
-}
-#viewforum div.pagination a {
-}
-#viewforum div.pagination .results {
-}
 /* admin & moderator */
 .groupadmin {
 	color: #3366CC;
@@ -50,30 +34,6 @@
 
 
 /* Posts */
-.closed {
-}
 .forumpost {
 	background-color: #f4f7f9;
 }
-.forumsubject {
-}
-.forumsubject h6 {
-}
-.forumpostleft {
-}
-.forumpostleft .posttime {
-}
-.forumpostleft .author p.poster {
-}
-.forumpostleft .author p.postcount {
-}
-.postbtns {
-}
-.postbtns a {
-	padding-left: 12px;
-}
-.deletedpost {
-}
-.postreply {
-}
- 

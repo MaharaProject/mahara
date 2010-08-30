@@ -2,7 +2,7 @@
 	<ul class="actionlist">
       {if $user->institutions}<li>{$user->institutions}</li>{/if}
       {if $user->pending}
-		<li>{$user->accept|safe}</li>
+		<li class="approvefriend">{$user->accept|safe}</li>
 		<li>
 			<a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" id="btn-denyrequest" class="btn-deny">
 				{str tag='denyrequest' section='group'}
@@ -23,13 +23,13 @@
 			</a>
 		</li>
       {elseif $user->requestedfriendship}
-		<li class="requested">
-			{str tag='friendshiprequested' section='group'}
+		<li>
+			<i>{str tag='friendshiprequested' section='group'}</i>
 		</li>
       {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
 		<li>
 			{if $user->friendscontrol == 'auth'}
-			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request" class="btn-friend">
+			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" id="btn-request" class="btn-request">
 				{str tag='sendfriendrequest' section='group'}
 			</a>
 			{elseif $user->friendscontrol == 'auto'}
@@ -56,7 +56,7 @@
         {/if}
       </h3>
     {if $user->friend && $page == 'myfriends' && $user->views}
-      <ul class="viewlist">
+      <ul class="btn-views viewlist">
 			<li class="label">
 				<strong>{str tag='Views' section='group'}</strong>
 			</li>
@@ -71,10 +71,10 @@
     {/if}
     {if $user->introduction}{$user->introduction|str_shorten_html:100:true|safe}{/if}
     {if $user->pending}
-      <div class="pending">
-		<strong>
+      <div class="btn-pending s">
+		<label>
 			{str tag='whymakemeyourfriend' section='group'}
-		</strong>
+		</label>
 		<span>{$user->message|format_whitespace|safe}</span>
       </div>
     {/if}

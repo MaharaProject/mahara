@@ -91,11 +91,14 @@ p {
     font-size: .9167em;
     font-weight: normal;
 }
-.description {
+.description,
+.unvalidated,
+.postdetails {
 	font-size: .9167em;
 	color: #888;
 	line-height: 1.4em;
 }
+
 .nowrap {
 	white-space: nowrap;
 }
@@ -316,6 +319,8 @@ div.grippie {
     background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
     cursor: s-resize;
     height: 14px;
+	padding: .25em 0 0 .25em;
+	* padding: .25em;
 }
 
 /* Legend */
@@ -393,6 +398,13 @@ textarea {
 .radio,
 .checkbox {
 	vertical-align: top;
+}
+
+hr {
+	border-bottom: 1px dotted #d1d1d1;
+	border-top: 0;
+	border-right: 0;
+	border-left: 0;
 }
 
 /* error */
@@ -503,8 +515,6 @@ input#files_filebrowser_edit_artefact:active {
 
 div.btn-del input.submit, 
 input.submit.btn-del,
-.btn-leavegroup,
-.btn-pending,
 div.btn-add input.submit, 
 input.submit.btn-add, 
 button.btn-add,
@@ -591,7 +601,7 @@ div.btn-edit input.submit,
 	border-color: #7d99ae #003c74 #003c74 #7d99ae;
 	margin: 0;
 	padding: .25em;
-	* padding: .25em .25em 0 .25em;
+	* padding: 0 .25em 0 .25em;
 	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	border-width: 1px 1px 1px 1px;
 	color: #333;
@@ -616,7 +626,7 @@ div.btn-edit input.submit,
 }
 .btn-del {
     background: transparent url(../images/icon-delete.gif) no-repeat left;
-    color: #ca0000;
+    color: #ca0000 !important;
 	padding-left: 13px;
 }
 .btn-manage {
@@ -648,6 +658,10 @@ div.btn-edit input.submit,
 	padding-left: 13px;
 }
 
+.btn-group {
+    background: transparent url(../images/icon-group.gif) no-repeat left center;
+	padding-left: 13px;
+}
 .btn-request {
 	background: transparent url(../images/icon-request.gif) no-repeat left center;
 	padding-left: 13px;
@@ -657,8 +671,9 @@ div.btn-edit input.submit,
 	padding-left: 13px;
 }
 .btn-pending {
-	background: transparent url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 13px;
+	background: transparent url(../images/icon-pending.gif) no-repeat 3px center;
+	padding-left: 17px !important;
+	color: #888;
 }
 .btn-login {
 	background: transparent url(../images/icon-login.gif) no-repeat left center;
@@ -667,6 +682,33 @@ div.btn-edit input.submit,
 .btn-access {
 	background: transparent url(../images/icon-access.gif) no-repeat left center;
 	padding-left: 13px;
+}
+.btn-deny {
+	background: transparent url(../images/icon-deny.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-approve {
+	background: transparent url(../images/icon-approve.gif) no-repeat left center;
+	padding-left: 13px;
+}
+.btn-view {
+	background: url(../images/icon-view.gif) no-repeat left top;
+	padding-left: 15px;
+}
+
+
+.artefacts {
+	background: url(../images/icon-artefact.gif) no-repeat left 1px;
+	padding-left: 15px;
+	line-height: 1.4em;
+}
+.viewaccess {
+	background: url(../images/icon-access.gif) no-repeat left 3px;
+	padding-left: 15px;
+}
+.collection {
+	background: url(../images/icon-collection.gif) no-repeat left 1px;
+	padding-left: 15px;
 }
 
 div.pagetabs {
@@ -719,7 +761,6 @@ div.rbuttons .small-logo {
 .viewheader .nav {
   padding: 0 .5em .5em 0;
   font-size: .9167em;
-  /* border-bottom: 1px dotted #ddd; */
   color: #d1d1d1;
 }
 .viewheader .nav a {
@@ -731,8 +772,13 @@ div.rbuttons .small-logo {
 .viewheader #mainnav-container {
   width: 60%;
   height: 1.5em;
-  padding: .25em .5em .5em 105px;
+  padding: .25em .5em .5em 115px;
+  * padding: .25em .5em .5em 25px;
   background: url(../images/icon_fieldset_left.gif) no-repeat 95px center;
+  * background: url(../images/icon_fieldset_left.gif) no-repeat 5px center;
+}
+.viewheader #mainnav-container #mainnav {
+	margin-left: -10px;
 }
 .viewheader .title {
   padding: .5em 0 .25em;
@@ -1056,6 +1102,9 @@ div.sideblock ul {
     display: inline;
     float: left;
 }
+.sideblock #login_submit_container input#login_submit {
+	font-size: 1.1333em;
+}
 #login-helplinks a {
     font-size: .9167em;
     line-height: 1.333em;
@@ -1088,6 +1137,9 @@ div.sideblock ul {
     font-weight: bold;
 	font-size: 1.1em;
 }
+#sb-profile ul li {
+	padding-bottom: .25em;
+}
 #sb-profile ul ul {
     font-size: .9167em;
     font-weight: normal;
@@ -1098,14 +1150,18 @@ div.sideblock ul {
     list-style-type: disc;
     padding-left: 1.5em;
 }
-#changeuser {
-    padding-top: 1em;
-    text-align: center;
-    font-weight: bold;
+#sb-profile ul ul li {
+	padding-bottom: 0;
 }
-li#pendingfriends a {
-	padding-left: 1em;
-	background: url(../images/icon-user.gif) no-repeat 2px 4px;
+#changeuser {
+    margin-top: 1em;
+    text-align: center;
+	clear: both;
+}
+#changeuser a {
+	font-weight: bold;
+	background: transparent url(../images/icon-login.gif) no-repeat left center;
+	padding-left: 13px;
 }
 
 /* Side Online Users */
@@ -1394,6 +1450,7 @@ table.attachments {
 	background-color: #ddd;
 	padding: .25em .5em;
 	border: 0;
+	color: #333 !important;
 }
 table.attachments td {
 	border-bottom: 2px solid #ddd;
@@ -1401,12 +1458,12 @@ table.attachments td {
 
 /* User/view */
 #userview {
-	margin: 0 0 1em 0;
+	margin: 0 0 2em 0;
 }
 #userview .user-icon {
     font-size: .9167em;
-	background: #eee;
-	padding: .25em .5em;
+	margin: 0 0 1em 0;
+	text-align: center;
 }
 #userview #invite,
 #userview #addmember {
@@ -1441,11 +1498,18 @@ table.attachments td {
 #wall .private {
     background: url(../images/privatebg.gif) repeat top left;
 }
-.wallpost .userinfo {
-	min-height: 25px;
+#wall .wallpostdelete {
+	background: url(../images/mini-delete.gif) no-repeat;
+	border: 0;
+	width: 9px;
+	height: 9px;
+	cursor: pointer;
+	float: right;
+	font-size: 1%;
+	text-indent: -9999px;
 }
-* html .wallpost .userinfo {
-	height: 25px;
+.wallpost .userinfo {
+	float: left;
 }
 .wallpost .userinfo img {
 	float: left;
@@ -1456,6 +1520,7 @@ table.attachments td {
 	margin-left: 31px;
 	margin-bottom: .25em;
 	font-size: .9167em;
+	clear: left;
 }
 .wallpost .text p {
     margin: 0 0 .25em 0;
@@ -1478,20 +1543,6 @@ table.attachments td {
 	padding: 0;
 }
 
-/* artefacts */
-.artefacts {
-	background: url(../images/icon-artefact.gif) no-repeat left top;
-	padding-left: 15px;
-}
-.viewaccess {
-	background: url(../images/icon-access.gif) no-repeat left 1px;
-	padding-left: 15px;
-}
-.collection {
-	background: url(../images/icon-collection.gif) no-repeat left top;
-	padding-left: 15px;
-}
-
 /* My Views */
 #myviews h4 {
 	margin: .25em 0 .25em 0;
@@ -1500,7 +1551,7 @@ table.attachments td {
     line-height: 1.4em;
     float: left;
     padding: 0 2em 0 0;
-    width: 30%;
+    width: 29%;
 }
 .vi .videsc,
 .vi .tags,
@@ -1689,7 +1740,7 @@ table.attachments td {
     margin: 0 auto;
 }
 #export fieldset table colgroup col {
-	border: 2px solid #eee;
+	border: 2px solid #FFF;
 }
 #export fieldset table div {
     padding: 0 0 0 2em;
@@ -1758,6 +1809,40 @@ ul.groupuserstatus {
     width: 180px;
 	font-size: .9em;
 	margin: 0 0 0 1em;
+}
+.jointhisgroup form table th {
+	padding: 0;
+}
+.jointhisgroup form table td {
+	padding: 0;
+	width: 180px;
+	border-bottom: 1px solid #d1d1d1;
+}
+.jointhisgroup form table td input {
+	border: 0;
+	background: transparent url(../images/icon-request.gif) no-repeat 3px center;
+	padding-left: 13px;
+	cursor: pointer;
+	color: #0000CC;
+}
+.jointhisgroup form table td input:hover {
+	border: 0;
+	background: transparent url(../images/icon-request.gif) no-repeat 3px center;
+	padding-left: 13px;
+	cursor: pointer;
+}
+.friendinfo li.approvefriend form input {
+	border: 0;
+	background: transparent url(../images/icon-approve.gif) no-repeat left center;
+	padding-left: 10px;
+	cursor: pointer;
+	color: #0000CC;
+}
+ul.friendinfo li.approvefriend form input:hover {
+	border: 0;
+	background: transparent url(../images/icon-approve.gif) no-repeat left center;
+	padding-left: 10px;
+	cursor: pointer;
 }
 #friendslist ul.actionlist {
 	margin: 0 0 0 1em;
@@ -2083,4 +2168,8 @@ img.feedicon {
 .mediaplayer-container embed {
 	max-width: 98%;
 	margin-top: 2px;
+}
+
+#collectionviews td form table td {
+	border-bottom: 0;
 }

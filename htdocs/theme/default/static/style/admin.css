@@ -33,12 +33,6 @@
 #suspenddelete #delete h4 {
 	color: #CA0000;
 }
-#close_site_submit,
-#institution_suspend_submit,
-#suspenddelete #delete #edituser_delete_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
-}
 
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */

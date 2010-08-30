@@ -3,7 +3,7 @@
 <h3>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h3>
 {if $admin}
 <div id="forumbtns" class="rbuttons">
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-add">{str tag="newforum" section=interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
 {if $forums}

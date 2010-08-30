@@ -3,6 +3,7 @@ body{
 	font-size: 12px !important;
 	padding: 5px !important;
 	color: #3C083F;
+	background: #FFF !important;
 }
 td {
 	font-family: Arial, Helvetica, sans-serif !important;
@@ -32,7 +33,6 @@ h1 {
 }
 h2 {
     color: #3C083F !important;
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     font-weight: normal !important;
     margin: 0 0 .5em 0 !important;
     padding: 0 !important;
@@ -40,7 +40,6 @@ h2 {
 }
 
 h3 {
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #3C083F !important;
     font-weight: normal !important;
     margin: 1.5em 0 .5em 0 !important;

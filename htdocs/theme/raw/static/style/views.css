@@ -159,11 +159,19 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /* VIEWS */
-#delete_comment_delete_comment_submit {
-	background: none !important;
-	border: 0 !important;
-	padding: 0 !important;
-	color: #CA0000 !important;
+#feedbacktable .fr {
+	margin-top: .25em;
+}
+#feedbacktable #delete_comment_delete_comment_submit {
+	background: url(../images/mini-delete.gif) no-repeat;
+	border: 0;
+	width: 9px;
+	height: 9px;
+	cursor: pointer;
+	float: right;
+	font-size: 1%;
+	text-indent: -9999px;
+	margin-left: .5em;
 }
 
 /* views footer */
@@ -227,10 +235,23 @@ input.addcolumn, input.removecolumn {
 ul.colnav li a {
 	background: #DDDDDD;
 	padding: .55em 1em;
+	* padding: .55em 1em .5em 1em;
 	font-weight: bold;
 }
 ul.colnav li.selected a {
     color: #333;
 	background: #fff;
 	text-decoration: none;
+}
+
+#approve_deny_friendrequest_deny {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
+	color: #FFF;
+	margin-left: .5em;
+}
+#approve_deny_friendrequest_deny:hover {
+	border-color: #750000 #f69595 #f69595 #750000 !important;
+	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
+	color: #FFF;
 }

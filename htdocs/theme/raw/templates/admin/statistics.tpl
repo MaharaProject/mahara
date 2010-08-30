@@ -34,6 +34,7 @@
   <div class="cb"></div>
 </div>
 </div>
+  <div class="cb"></div>
 {/if}
 
 {include file='footer.tpl'}

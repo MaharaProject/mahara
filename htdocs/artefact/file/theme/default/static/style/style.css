@@ -9,19 +9,7 @@
     background-color: #ebf0f4;
     border: 1px solid #95a8b7;
 }
-/* folder nav */
-.foldernav {
-}
-form#files .foldernav {
-}
-
 /* File list */
-.filelist th {
-	border-bottom: 1px solid #CCCCCC;
-}
-.filelist td.right input.btn-edit {
-	color: #6E8E00;
-}
 .filelist td.right input.btn-del {
 	color: #BC0909;
 }
@@ -40,14 +28,4 @@ tr.folder td {
 /* folder row being moved */
 tr.folderhover td {
     background-color: #daf0ff !important;
-}
-/* Edit post selected file list */
-.filelist .disabled {
-	color: #C3C3C3;
-}
-.filelist .tag-edit.submit {
-    border: 0;
-    background: transparent;
-    color: #6e8e00;
-    cursor: pointer;
 }

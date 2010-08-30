@@ -5,8 +5,14 @@
 {/if}
 
 
+{if $relationship == 'pending'}
+                    	<div class="message">
+                            {str tag='whymakemeyourfriend' section='group'} {$message}
+                            {$requestform|safe}
+                    	</div>
+{/if}
                     <div id="userview">
-                        <div class="user-icon center">
+                        <div class="user-icon">
                             {$institutions}
 {if $loginas}
 							<a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login">{$loginas}</a>
@@ -34,12 +40,6 @@
                             {if $addform}<span class="addform">{$addform|safe}</span>{/if}
                             <div class="cb"></div>
                     	</div>
-{if $relationship == 'pending'}
-                    	<div class="message">
-                            {str tag='whymakemeyourfriend' section='group'} {$message}
-                            {$requestform|safe}
-                    	</div>
-{/if}
                 	</div>
                 	<div id="view" class="cl">
                     	<div id="bottom-pane">

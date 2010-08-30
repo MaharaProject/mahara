@@ -5,15 +5,16 @@
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
             <div class="wallpost{if $wallpost->private} private{/if}">
-                <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=25&amp;maxheight=25&amp;id={$wallpost->from}" alt="Profile Icon"><strong><a href="{$WWWROOT}user/view.php?id={$wallpost->userid}">{$wallpost->displayname}</a></strong><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
+            {if $wallpost->deletable}
+                    <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="wallpostdelete">{str tag='delete' section='blocktype.wall'}</a>
+        {/if}
+                <div class="userinfo"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=25&amp;maxheight=25&amp;id={$wallpost->from}" alt="Profile Icon"><a href="{$WWWROOT}user/view.php?id={$wallpost->userid}">{$wallpost->displayname}</a><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
                 <div class="text">{$wallpost->text|parse_bbcode|safe}</div>
-                <div class="controls right">
+                <div class="controls">
        {* {if $ownwall}
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}" class="btn-reply">{str tag='reply' section='blocktype.wall'}</a>
         {/if}*}
-        {if $wallpost->deletable}
-                    <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn-del">{str tag='delete' section='blocktype.wall'}</a>
-        {/if}
+        
                 </div>
             </div>
         {/foreach}
