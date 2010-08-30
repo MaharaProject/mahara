@@ -63,7 +63,7 @@
             </div>
         </td>
         <td>
-            {if $USER->is_logged_in()}<div id="hideinfo"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>{/if}
+            {if $USER->is_logged_in()}<div id="hideinfo" class="nojs-hidden-block"><a title="{str tag=Hide}"><img src="{theme_url filename='images/icon_close.gif'}" alt="[x]" /></a></div>{/if}
             <div class="home-info home-info-3">
             <div class="home-info-inner">
                 <h3>{str tag=sharenetwork}</h3>

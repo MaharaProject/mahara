@@ -577,6 +577,7 @@ $string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
+$string['attachment'] = 'Attachment';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';
@@ -927,4 +928,5 @@ $string['sharenetworksubtitle'] = 'Meet friends and join groups';
 $string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
 $string['joingroups'] = 'Join <a href="%s">Groups</a>';
 $string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
+$string['howtodisable'] = 'You have hidden the information box.  You can control its visibility in <a href="%s">Settings</a>.';
 ?>

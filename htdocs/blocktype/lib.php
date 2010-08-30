@@ -952,7 +952,7 @@ class BlockInstance {
         }
 
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
-            $configdata['artefactids'] = array_diff($configdata['artefactids'], array($artefact));
+            $configdata['artefactids'] = array_values(array_diff($configdata['artefactids'], array($artefact)));
             $changed = true;
         }
 
@@ -992,7 +992,7 @@ class BlockInstance {
                 }
             }
             else if (isset($blockdata->configdata['artefactids'])) {
-                $blockdata->configdata['artefactids'] = array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts);
+                $blockdata->configdata['artefactids'] = array_values(array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts));
                 $change = true;
             }
             if ($change) {

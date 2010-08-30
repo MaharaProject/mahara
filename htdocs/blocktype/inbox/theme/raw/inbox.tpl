@@ -1,7 +1,7 @@
 {if !$items}
 {str tag=nomessages section=blocktype.inbox}
 {else}
-<table id="inboxblock" class="fullwidth">
+<table id="inboxblock" class="fullwidth fixwidth">
 {foreach from=$items item=i}
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
@@ -12,7 +12,7 @@
     <td>
   {if $i->message}
       <a href="" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
-      <div class="inbox-message hidden" id="inbox-message-{$i->id}">{$i->message|safe}
+      <div class="inbox-message messagebody hidden" id="inbox-message-{$i->id}">{$i->message|safe}
       {if $i->url}<br><a href="{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $i->url}

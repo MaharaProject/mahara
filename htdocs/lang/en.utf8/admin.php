@@ -515,7 +515,7 @@ $string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2
 $string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a zipfile or XML file';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your LEAP2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
 $string['newusercreated'] = 'New user account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again';

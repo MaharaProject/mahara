@@ -151,13 +151,16 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         // Set completiondate and completed status if we can find them
         if ($artefact instanceof ArtefactTypeTask) {
 
-            $dates = PluginImportLeap::get_leap_dates($entry);
+            $namespaces = $importer->get_namespaces();
+            $ns = $importer->get_leap2a_namespace();
+
+            $dates = PluginImportLeap::get_leap_dates($entry, $namespaces, $ns);
             if (!empty($dates['target']['value'])) {
                 $completiondate = strtotime($dates['target']['value']);
             }
             $artefact->set('completiondate', empty($completiondate) ? $artefact->get('mtime') : $completiondate);
 
-            if ($entry->xpath('leap:status[@leap:stage="completed"]')) {
+            if ($entry->xpath($namespaces[$ns] . ':status[@' . $namespaces[$ns] . ':stage="completed"]')) {
                 $artefact->set('completed', 1);
             }
         }

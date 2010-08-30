@@ -1612,10 +1612,10 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
 class ArtefactTypeArchive extends ArtefactTypeFile {
 
-    private $archivetype;
-    private $handle;
-    private $info;
-    private $data = array();
+    protected $archivetype;
+    protected $handle;
+    protected $info;
+    protected $data = array();
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);

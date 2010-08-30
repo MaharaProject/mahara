@@ -1548,8 +1548,6 @@ function pieform_template_dir($file, $pluginlocation='') {
  * @param integer $view_id      View ID to check
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
- * @param string $usertoken     Key created by view owner for logged-out user access
- * @param string $mnettoken     Key created by mahara for teachers roaming from moodle
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
@@ -1564,20 +1562,30 @@ function can_view_view($view_id, $user_id=null) {
     $dbnow = db_format_timestamp($now);
 
     if ($user_id === null) {
+        $user = $USER;
         $user_id = $USER->get('id');
+    }
+    else {
+        $user = new User();
+        if ($user_id) {
+            try {
+                $user->find_by_id($user_id);
+            }
+            catch (AuthUnknownUserException $e) {}
+        }
     }
 
     $publicviews = get_config('allowpublicviews');
     $publicprofiles = get_config('allowpublicprofiles');
 
-    if (!$USER->is_logged_in() && !$publicviews && !$publicprofiles) {
+    if (!$user_id && !$publicviews && !$publicprofiles) {
         return false;
     }
 
     require_once(get_config('libroot') . 'view.php');
     $view = new View($view_id);
 
-    if ($USER->is_logged_in() && $USER->can_edit_view($view)) {
+    if ($user_id && $user->can_edit_view($view)) {
         return true;
     }
 
@@ -1623,7 +1631,7 @@ function can_view_view($view_id, $user_id=null) {
                 }
             }
         }
-        else if ($USER->is_logged_in()) {
+        else if ($user_id) {
             if ($a->accesstype == 'friends') {
                 $owner = $view->get('owner');
                 if (!get_field_sql('
@@ -1635,11 +1643,11 @@ function can_view_view($view_id, $user_id=null) {
             }
             else if ($a->accesstype == 'objectionable') {
                 if ($owner = $view->get('owner')) {
-                    if ($USER->is_admin_for_user($owner)) {
+                    if ($user->is_admin_for_user($owner)) {
                         return true;
                     }
                 }
-                else if ($view->get('group') && $USER->get('admin')) {
+                else if ($view->get('group') && $user->get('admin')) {
                     return true;
                 }
                 continue;

@@ -512,11 +512,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public function render_self($options) {
         $smarty = smarty_core();
+        $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $artefacturl .= '&view=' . $options['viewid'];
+        }
+        $smarty->assign('artefacturl', $artefacturl);
         if (empty($options['hidetitle'])) {
             if (isset($options['viewid'])) {
-                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
-                     . $this->get('id') . '&amp;view=' . $options['viewid']
-                     . '">' . hsc($this->get('title')) . '</a>');
+                $smarty->assign('artefacttitle', '<a href="' . $artefacturl . '">' . hsc($this->get('title')) . '</a>');
             }
             else {
                 $smarty->assign('artefacttitle', hsc($this->get('title')));
@@ -528,6 +531,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (isset($options['viewid'])) {
             safe_require('artefact', 'file');
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
+            if (isset($options['countcomments']) && $this->allowcomments) {
+                safe_require('artefact', 'comment');
+                $empty = array();
+                $ids = array($this->id);
+                $commentcount = ArtefactTypeComment::count_comments($empty, $ids);
+                $smarty->assign('commentcount', $commentcount ? $commentcount[$this->id]->comments : 0);
+            }
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
@@ -607,8 +617,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data = get_records_sql_assoc('
             SELECT
                 a.id, a.title, a.description, a.author, a.authorname, ' .
-                db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ",
-                a.locked, bp.published" . $from . '
+                db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ',
+                a.locked, bp.published, a.allowcomments ' . $from . '
             ORDER BY bp.published ASC, a.ctime DESC',
             array($id),
             $offset, $limit
@@ -636,6 +646,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
         }
 
+        // Get comment counts
+        if (!empty($viewoptions['countcomments'])) {
+            safe_require('artefact', 'comment');
+            $viewids = array();
+            $commentcounts = ArtefactTypeComment::count_comments($viewids, array_keys($data));
+        }
+
         // Format dates properly
         foreach ($data as &$post) {
             if (is_null($viewoptions)) {
@@ -648,6 +665,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
                 $post->postedby = get_string('postedbyon', 'artefact.blog', $by, format_date($post->ctime));
+                if (isset($commentcounts)) {
+                    $post->commentcount = isset($commentcounts[$post->id]) ? $commentcounts[$post->id]->comments : 0;
+                }
             }
             $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
             $post->mtime = format_date($post->mtime);

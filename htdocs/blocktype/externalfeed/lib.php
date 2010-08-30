@@ -411,7 +411,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
         $config = $bi->get('configdata');
-        $url = ($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
+        $url = !empty($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
         return array(
             'url' => $url,
             'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,

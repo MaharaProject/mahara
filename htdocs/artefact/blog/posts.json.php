@@ -39,6 +39,7 @@ if ($blockid = param_integer('block', null)) {
     $bi = new BlockInstance($blockid);
     $configdata = $bi->get('configdata');
     $limit  = isset($configdata['count']) ? $configdata['count'] : 5;
+    $configdata['countcomments'] = true;
     $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
     $pagination = array(

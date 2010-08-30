@@ -78,7 +78,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
 
             // Get entries that this blog/selection feels are a part of it
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], PluginImportLeap::NS_LEAP, 'has_part') && isset($link['href'])) {
+                if ($importer->curie_equals($link['rel'], $importer->get_leap2a_namespace(), 'has_part') && isset($link['href'])) {
                     $otherrequiredentries[] = (string)$link['href'];
                 }
             }
@@ -181,23 +181,14 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                 if (!isset($blogpostentry->link)) {
                     continue;
                 }
+                $blogpost = null;
                 foreach ($blogpostentry->link as $blogpostlink) {
-                    $blogpost = null;
-                    if ($importer->curie_equals($blogpostlink['rel'], '', 'enclosure') && isset($blogpostlink['href'])) {
-                        if (!$blogpost) {
-                            $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
-                            $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
-                        }
-                        $importer->trace("Attaching file $blogpostlink[href] to blog post $blogpostentry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
-                        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostlink['href']);
-                        if (isset($artefactids[0])) {
-                            $blogpost->attach($artefactids[0]);
-                        } else { // it may be just an attached file, with no Leap2A element in its own right ....
-                            if ($id = self::attach_linked_file($blogpostentry, $blogpostlink, $importer)) {
-                                $blogpost->attach($id);
-                                $newartefactmapping[(string)$blogpostlink['href']][] = $id;
-                            }
-                        }
+                    if (!$blogpost) {
+                        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$blogpostentry->id);
+                        $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
+                    }
+                    if ($id = $importer->create_attachment($entry, $blogpostlink, $blogpost)) {
+                        $newartefactmapping[$link['href']][] = $id;
                     }
                     if ($blogpost) {
                         $blogpost->commit();
@@ -215,15 +206,8 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             }
             $blogpost = new ArtefactTypeBlogPost($blogpostids[0]);
             foreach ($entry->link as $link) {
-                if ($importer->curie_equals($link['rel'], '', 'enclosure') && isset($link['href'])) {
-                    if (isset($artefactids[0])) {
-                        $blogpost->attach($artefactids[0]);
-                    } else {
-                        if ($id = self::attach_linked_file($entry, $link, $importer)) {
-                            $blogpost->attach($id);
-                            $newartefactmapping[(string)$link['href']][] = $id;
-                        }
-                    }
+                if ($id = $importer->create_attachment($entry, $link, $blogpost)) {
+                    $newartefactmapping[$link['href']][] = $id;
                 }
             }
             $blogpost->commit();
@@ -320,7 +304,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         $blogpost->set('title', (string)$entry->title);
         // If the entry has out of line content, we import that separately as a 
         // file and set the content to refer to it
-        if (isset($entry->content['src']) && isset($entry->content['type'])) {
+        if (LeapImportFile::is_file($entry, $importer)) {
             $file = LeapImportFile::create_file($entry, $importer);
             $createdartefacts[] = $file->get('id');
 

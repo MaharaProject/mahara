@@ -177,6 +177,22 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
+        // Views in collections
+        if (!$this->exportingoneview && $this->collections) {
+            $viewlist = join(',', array_keys($this->views));
+            $collectionlist = join(',', array_keys($this->collections));
+            $records = get_records_select_array(
+                'collection_view',
+                "view IN ($viewlist) AND collection IN ($collectionlist)"
+            );
+            if ($records) {
+                foreach ($records as &$r) {
+                    $this->collectionview[$r->collection][] = $r->view;
+                    $this->viewcollection[$r->view] = $r->collection;
+                }
+            }
+        }
+
         // Get the view data
         $this->notify_progress_callback(55, get_string('exportingviews', 'export'));
         $this->dump_view_export_data();
@@ -303,6 +319,22 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
+    private function collection_menu($collectionid) {
+        static $menus = array();
+        if (!isset($menus[$collectionid])) {
+            $menus[$collectionid] = array();
+            foreach ($this->collectionview[$collectionid] as $viewid) {
+                $title = $this->views[$viewid]->get('title');
+                $menus[$collectionid][] = array(
+                    'id'   => $viewid,
+                    'url'  => self::text_to_path($title),
+                    'text' => $title,
+                );
+            }
+        }
+        return $menus[$collectionid];
+    }
+
     /**
      * Dumps all views into the HTML export
      */
@@ -333,6 +365,13 @@ class PluginExportHtml extends PluginExport {
                 }
             }
 
+            // Collection menu data
+            if (isset($this->viewcollection[$viewid])) {
+                $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
+                $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
+                $smarty->assign('viewid', $viewid);
+            }
+
             $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
@@ -345,25 +384,43 @@ class PluginExportHtml extends PluginExport {
     private function get_view_summary() {
         $smarty = $this->get_smarty('../');
 
-        $views = array();
-        foreach ($this->views as $view) {
+        $list = array();
+        foreach ($this->collections as $id => $collection) {
+            $list['c' . $id] = array(
+                'title' => $collection->get('name'),
+                'views' => array(),
+            );
+        }
+
+        $nviews = 0;
+        foreach ($this->views as $id => $view) {
             if ($view->get('type') != 'profile') {
-                $views[] = array(
+                $item = array(
                     'title' => $view->get('title'),
                     'folder' => self::text_to_path($view->get('title')),
                 );
+                if (isset($this->viewcollection[$id])) {
+                    $list['c' . $this->viewcollection[$id]]['views'][] = $item;
+                }
+                else {
+                    $list[$id] = $item;
+                }
+                $nviews++;
             }
         }
         function sort_by_title($a, $b) {
             return strnatcasecmp($a['title'], $b['title']);
         }
-        usort($views, 'sort_by_title');
-        $smarty->assign('views', $views);
+        foreach (array_keys($this->collections) as $id) {
+            usort($list['c' . $id]['views'], 'sort_by_title');
+        }
+        usort($list, 'sort_by_title');
+        $smarty->assign('list', $list);
 
-        if ($views) {
-            $stryouhaveviews = (count($views) == 1)
+        if ($list) {
+            $stryouhaveviews = ($nviews == 1)
                 ? get_string('youhaveoneview', 'view')
-                : get_string('youhaveviews', 'view', count($views));
+                : get_string('youhaveviews', 'view', $nviews);
         }
         else {
             $stryouhaveviews = get_string('youhavenoviews', 'view');

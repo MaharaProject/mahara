@@ -126,6 +126,9 @@ $string['texttop'] = 'Text top';
 $string['textbottom'] = 'Text bottom';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
+$string['src'] = 'Image URL';
+$string['image_list'] = 'Attached image';
+$string['alt'] = 'Description';
 
 $string['copyfull'] = 'Others will get their own copy of your %s';
 $string['copyreference'] = 'Others may display your %s in their View';

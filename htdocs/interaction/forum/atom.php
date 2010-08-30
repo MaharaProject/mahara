@@ -164,7 +164,7 @@ $postcount = 20;
 $postrecords = get_records_sql_array($sql, array($id, $postcount));
 
 $image = get_config('wwwroot') . 'theme/raw/static/images/site-logo.png';
-$updated = $postrecords[0]->ctime;
+$updated = ($postrecords) ? atom_date($postrecords[0]->ctime) : '';
 
 $generator = array(
     'uri' => 'http://mahara.org',
@@ -177,7 +177,7 @@ $feed = array(
     'link' => $link,
     'selflink' => $selflink,
     'id' => implode(',', array(get_config('wwwroot'), $feedtype, $id)),
-    'updated' => atom_date($updated),
+    'updated' => $updated,
     'logo' => $image,
     'icon' => get_config('wwwroot') . 'favicon.ico',
     'generator' => $generator,

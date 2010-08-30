@@ -631,58 +631,8 @@ class View {
         global $USER;
         require_once('activity.php');
 
-        // For users who are being removed from having access to this view, they
-        // need to have the view and any attached artefacts removed from their
-        // watchlist.
-        $oldusers = array();
-        foreach ($this->get_access() as $item) {
-            if ($item['type'] == 'user') {
-                $oldusers[] = $item;
-            }
-        }
-
-        $newusers = array();
-        if ($accessdata) {
-            foreach ($accessdata as $item) {
-                if ($item['type'] == 'user') {
-                    $newusers[] = $item;
-                }
-            }
-        }
-
-        $userstodelete = array();
-        foreach ($oldusers as $olduser) {
-            foreach ($newusers as $newuser) {
-                if ($olduser['id'] == $newuser['id']) {
-                    continue(2);
-                }
-            }
-            $userstodelete[] = $olduser;
-        }
-
-        if ($userstodelete) {
-            $userids = array();
-            foreach ($userstodelete as $user) {
-                $userids[] = intval($user['id']);
-            }
-            $userids = implode(',', $userids);
-
-            execute_sql('DELETE FROM {usr_watchlist_view}
-                WHERE view = ?
-                AND usr IN (' . $userids . ')', array($this->get('id')));
-        }
-
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
-        // Procedure:
-        // get list of current friends - this is available in global $data
-        // compare with list of new friends
-        // work out which friends are being removed
-        // foreach friend
-        //     // remove record from usr_watchlist_view where usr = ? and view = ?
-        //     // remove records from usr_watchlist_artefact where usr = ? and view = ?
-        // endforeach
-        //
         db_begin();
         delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
 

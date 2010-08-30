@@ -22,7 +22,8 @@
       </tbody>
     </table>
     {/if}
-    <div class="postdetails">{$post->postedby}</div>
+    <div class="postdetails">{$post->postedby}
+    {if $options.viewid && $post->allowcomments} | <a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>{/if}</div>
   </td>
 </tr>
 {/foreach}

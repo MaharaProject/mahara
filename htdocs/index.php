@@ -63,9 +63,12 @@ if ($USER->is_logged_in()) {
 
     if ($USER->get_account_preference('showhomeinfo')) {
         // allow the user to choose never to see the info boxes again
+        $strhowtodisable = json_encode(get_string('howtodisable', 'mahara', get_config('wwwroot') . 'account'));
         $js = <<<JAVASCRIPT
 function hideinfo() {
-    slideUp($('home-info-container'));
+    var m = SPAN();
+    m.innerHTML = {$strhowtodisable};
+    slideUp('home-info-container', {afterFinish: function() {displayMessage(m, 'ok');}});
 }
 
 function nevershow() {
