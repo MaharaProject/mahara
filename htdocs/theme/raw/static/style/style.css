@@ -1840,7 +1840,7 @@ ul.groupuserstatus {
 	background: transparent url(../images/icon-approve.gif) no-repeat left center;
 	padding-left: 10px;
 	cursor: pointer;
-	color: #0000CC;
+	color: #0000CC !important;
 }
 ul.friendinfo li.approvefriend form input:hover {
 	border: 0;
