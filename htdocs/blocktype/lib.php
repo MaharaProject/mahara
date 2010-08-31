@@ -488,12 +488,21 @@ class BlockInstance {
         }
 
         $this->set('title', $title);
+
+        try {
+            $rendered = $this->render_editing(false, false, $form->submitted_by_js());
+        }
+        catch (HTMLPurifier_Exception $e) {
+            $message = get_string('blockconfigurationrenderingerror', 'view') . ' ' . $e->getMessage();
+            $form->reply(PIEFORM_ERR, array('message' => $message));
+        }
+
         $this->commit();
 
         $result = array(
             'error'   => false,
             'message' => get_string('blockinstanceconfiguredsuccessfully', 'view'),
-            'data'    => $this->render_editing(false, false, $form->submitted_by_js()),
+            'data'    => $rendered,
             'blockid' => $this->get('id'),
             'viewid'  => $this->get('view'),
         );

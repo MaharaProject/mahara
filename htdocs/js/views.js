@@ -1188,5 +1188,9 @@ function blockConfigError(form, data) {
         eval(data.formelementerror + '(form, data)');
         return;
     }
+    else if ($('instconf') && data.message && viewManager) {
+        viewManager.removeConfigureBlocks();
+        viewManager.showMediaPlayers();
+    }
     formError(form, data);
 }

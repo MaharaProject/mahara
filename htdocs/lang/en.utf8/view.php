@@ -191,6 +191,7 @@ $string['err.changetheme'] = 'Could not update theme';
 
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
+$string['blockconfigurationrenderingerror'] = 'Configuration failed because the block could not be rendered.';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
 $string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
