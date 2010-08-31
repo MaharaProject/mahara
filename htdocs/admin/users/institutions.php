@@ -33,7 +33,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutions');
-$smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
@@ -359,6 +358,8 @@ else {
         $showdefault = true;
     }
     $data = build_institutions_html($filter, $showdefault, $query, $limit, $offset, $count);
+
+    $smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
     $smarty->assign('results', $data);
     $smarty->assign('countinstitutions', $count);
 
@@ -392,6 +393,10 @@ else {
 EOF;
 
     $smarty->assign('INLINEJAVASCRIPT', $js);
+    $smarty->assign('siteadmin', $USER->get('admin'));
+    $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+    $smarty->display('admin/users/institutions.tpl');
+    exit;
 }
 
 function institution_validate(Pieform $form, $values) {
@@ -615,14 +620,10 @@ function search_submit(Pieform $form, $values) {
     redirect('/admin/users/institutions.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
 
-if (isset($institutionform)) {
-    $smarty->assign('institution_form', $institutionform);
-    $smarty->assign('instancestring', $instancestring);
-    $smarty->assign('add', $add);
-}
-else {
-    $smarty->assign('siteadmin', $USER->get('admin'));
-}
+$smarty = smarty();
+$smarty->assign('institution_form', $institutionform);
+$smarty->assign('instancestring', $instancestring);
+$smarty->assign('add', $add);
 
 if (isset($suspended)) {
     if ($suspended) {
