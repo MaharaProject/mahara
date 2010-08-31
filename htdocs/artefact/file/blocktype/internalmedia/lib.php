@@ -47,7 +47,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv')));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3')));
         }
     }
 
@@ -215,7 +215,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'wmv'       => 'wmp_player', // tested
             'mpeg'      => 'qt_player',  // tested
             'avi'       => 'wmp_player', // tested
-            'mp4_video' => 'qt_player', // tested
+            'mp4_video' => 'flow_player', // tested
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
