@@ -91,6 +91,7 @@ $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Assign users Staff permissions';
 $string['adminusers'] = 'Admin Users';
 $string['adminusersdescription'] = 'Assign Site Administrator access rights';
+$string['institution']   = 'Institution';
 $string['institutions']   = 'Institutions';
 $string['institutiondetails']   = 'Institution Details';
 $string['institutionauth']   = 'Institution Authorities';
