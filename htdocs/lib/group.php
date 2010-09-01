@@ -862,6 +862,9 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
         $group->visibility = $group->public ? get_string('Public', 'group') : get_string('Members', 'group');
         $group->admins = empty($counts[$group->id]->admins) ? 0 : $counts[$group->id]->admins;
         $group->members = empty($counts[$group->id]->members) ? 0 : $counts[$group->id]->members;
+        if (get_config('allowgroupcategories')) {
+            $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
+        }
     }
 
     $smarty = smarty_core();
