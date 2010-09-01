@@ -46,19 +46,15 @@ $data = View::get_myviews_data($limit, $offset);
 $userid = $USER->get('id');
 
 /* Get a list of groups that the user belongs to which views can
-    be sumitted. */
-if (!$tutorgroupdata = group_get_user_course_groups()) {
-    $tutorgroupdata = array();
-}
-else {
-    $options = array();
-    foreach ($data->data as &$view) {
-        if (empty($view['submittedto'])) {
-            $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
-        }
-        if ($view['type'] == 'profile' && get_config('allowpublicprofiles')) {
-            $view['togglepublic'] = togglepublic_form($view['id']);
-        }
+    be submitted. */
+$tutorgroupdata = group_get_user_course_groups();
+
+foreach ($data->data as &$view) {
+    if ($tutorgroupdata && empty($view['submittedto'])) {
+        $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
+    }
+    if ($view['type'] == 'profile' && get_config('allowpublicprofiles')) {
+        $view['togglepublic'] = togglepublic_form($view['id']);
     }
 }
 
