@@ -204,8 +204,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
 
         quotaUpdate(data.quotaused, data.quota);
-        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message));
-        replaceChildNodes($('uploadstatusline'+data.uploadnumber), newmessage);
+        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), 'info');
+        setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
+        removeElement($('uploadstatusline'+data.uploadnumber));
+        appendChildNodes(self.id + '_upload_messages', newmessage);
     }
 
     this.hide_edit_form = function () {
