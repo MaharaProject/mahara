@@ -341,13 +341,10 @@ class View {
 
         if (isset($viewdata['group'])) {
             // By default, group views should be visible to the group
-            $view->set_access(array(array(
-                'type'      => 'group',
-                'id'        => $viewdata['group'],
-                'startdate' => null,
-                'stopdate'  => null,
-                'role'      => null
-            )));
+            insert_record('view_access', (object) array(
+                'view'  => $view->get('id'),
+                'group' => $viewdata['group'],
+            ));
         }
 
         return new View($view->get('id')); // Reread to ensure defaults are set
