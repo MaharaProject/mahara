@@ -129,6 +129,9 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
             }
         }
         $group->settingsdescription = group_display_settings($group);
+        if (get_config('allowgroupcategories')) {
+            $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
+        }
 
         $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
 
