@@ -1,3 +1,9 @@
+1.2.6 (2010-09-01)
+- Better mimetype detection
+- New flash-based video player
+- Bug fixes including upgrade from 1.0.x, blogpost image button
+- 
+
 1.2.5 (2010-07-02)
 - Multiple XSS vulnerabilities (CVE-2010-1667)
 - Multiple CSRF vulnerabilities (CVE-2010-1668)
