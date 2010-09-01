@@ -806,7 +806,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_title_js_string() {
-        return " r.jobtitle + ' : ' + r.employer";
+        return " r.jobtitle + ': ' + r.employer";
     }
 
     public static function get_tablerenderer_body_js_string() {
