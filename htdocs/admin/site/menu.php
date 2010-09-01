@@ -88,17 +88,17 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
-    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
-    connect(del, 'onclick', function () { delitem(item.id); });
     var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
     connect(edit, 'onclick', function () { edititem(item); });
+    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
+    connect(del, 'onclick', function () { delitem(item.id); });
     var cells = map(
         partial(TD,null),
         [
             type,
             item.name,
             linkedto,
-            [del,edit,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
+            [edit,del,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
         ]
     );
     return TR({'id':'menuitem_'+item.id},cells);
