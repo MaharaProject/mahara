@@ -611,6 +611,12 @@ class User {
         }
     }
 
+    public function quota_refresh() {
+        $quotadata = get_record_sql('SELECT quota, quotaused FROM {usr} WHERE id = ?', array($this->get('id')));
+        $this->set('quota', $quotadata->quota);
+        $this->set("quotaused", $quotadata->quotaused);
+    }
+
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
             require_once('institution.php');
