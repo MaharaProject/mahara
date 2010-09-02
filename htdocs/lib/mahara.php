@@ -1613,7 +1613,7 @@ function can_view_view($view_id, $user_id=null) {
             if ($a->token == $usertoken && $publicviews) {
                 return true;
             }
-            if ($mnettoken && $a->token == $mnettoken) {
+            if (!empty($mnettoken) && $a->token == $mnettoken) {
                 $mnetviewlist = $SESSION->get('mnetviewaccess');
                 if (empty($mnetviewlist)) {
                     $mnetviewlist = array();
