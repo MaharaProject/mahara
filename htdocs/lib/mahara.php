@@ -646,6 +646,7 @@ function get_all_theme_objects() {
             }
         }
         closedir($themedir);
+        sort($themes);
     }
 
     return $themes;
