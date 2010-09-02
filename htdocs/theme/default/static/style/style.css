@@ -282,6 +282,11 @@ input#files_filebrowser_edit_artefact:active {
 }
 #main-nav li {
     color: #e6c560;
+    * zoom: 1;
+    * margin-top: -5px;
+}
+* html #main-nav li {
+    * margin-top: -8px;
 }
 #main-nav li a,
 #main-nav li a:link,

@@ -303,6 +303,7 @@ input#files_filebrowser_edit_artefact:active {
     padding: 0;
     margin: 0;
 	height: 27px;
+	* clear: none;
 }
 #main-nav li {
     float:left;
