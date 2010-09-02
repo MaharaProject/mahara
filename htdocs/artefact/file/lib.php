@@ -1060,6 +1060,32 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+        $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+        if (empty($maxquota)) {
+            $maxquota = 1024 * 1024 * 1024;
+        }
+        $elements['maxquota'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('maxquota', 'artefact.file'),
+            'elements' => array(
+                'maxquotadescription' => array(
+                    'value' => '<tr><td colspan="2">' . get_string('maxquotadescription', 'artefact.file') . '</td></tr>'
+                ),
+                'maxquotaenabled' => array(
+                    'title'        => get_string('maxquotaenabled', 'artefact.file'),
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $maxquotaenabled,
+                ),
+                'maxquota' => array(
+                    'title'        => get_string('maxquota', 'artefact.file'),
+                    'type'         => 'bytes',
+                    'defaultvalue' => $maxquota,
+                ),
+            ),
+            'collapsible' => true
+        );
+
         // Require user agreement before uploading files
         // Rework this when/if we provide translatable agreements
         $uploadagreement = get_config_plugin('artefact', 'file', 'uploadagreement');
@@ -1138,9 +1164,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         );
     }
 
+    public static function validate_config_options($form, $values) {
+        global $USER;
+        if ($values['maxquota'] < $values['defaultquota']) {
+            $form->set_error('maxquota', get_string('maxquotatoolow', 'artefact.file'));
+        }
+    }
+
     public static function save_config_options($values) {
         global $USER;
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
+        set_config_plugin('artefact', 'file', 'maxquota', $values['maxquota']);
+        set_config_plugin('artefact', 'file', 'maxquotaenabled', $values['maxquotaenabled']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
         set_config_plugin('artefact', 'file', 'uploadagreement', $values['uploadagreement']);
