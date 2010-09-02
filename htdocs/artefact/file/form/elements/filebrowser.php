@@ -343,10 +343,10 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             $replacehtml = false; // Don't replace the entire form when replying with json data.
             $result['formelement'] = $prefix;
             if (!empty($result['error'])) {
-                $result['formelementerror'] = $prefix . '.success';
+                $result['formelementerror'] = $prefix . '.callback';
             }
             else {
-                $result['formelementsuccess'] = $prefix . '.success';
+                $result['formelementsuccess'] = $prefix . '.callback';
             }
             $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
         }

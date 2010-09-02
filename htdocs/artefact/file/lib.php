@@ -448,7 +448,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'name'               => 'files',
             'jsform'             => true,
             'newiframeonsubmit'  => true,
-            'jssuccesscallback'  => 'files_success',
+            'jssuccesscallback'  => 'files_callback',
+            'jserrorcallback'    => 'files_callback',
             'renderer'           => 'oneline',
             'plugintype'         => 'artefact',
             'pluginname'         => 'file',
@@ -476,7 +477,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function files_js() {
-        return "function files_success(form, data) { files_filebrowser.success(form, data); }";
+        return "function files_callback(form, data) { files_filebrowser.callback(form, data); }";
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
