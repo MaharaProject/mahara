@@ -44,6 +44,7 @@ $sql = '
     LEFT OUTER JOIN {usr_institution} ui 
         ON (ui.usr = u.id' . ($USER->get('admin') ? '' : ' AND ui.institution IN (' 
                               . join(',',array_map('db_quote', array_keys($USER->get('institutions')))) . ')') . ')
+    WHERE u.deleted = 0
     GROUP BY
         u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff,
         a.activity, a.method
