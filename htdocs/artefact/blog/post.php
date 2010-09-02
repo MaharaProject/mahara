@@ -91,8 +91,8 @@ $form = pieform(array(
     'autofocus'          => $focuselement,
     'jsform'             => true,
     'newiframeonsubmit'  => true,
-    'jssuccesscallback'  => 'editpost_success',
-    'jserrorcallback'    => 'editpost_error',
+    'jssuccesscallback'  => 'editpost_callback',
+    'jserrorcallback'    => 'editpost_callback',
     'plugintype'         => 'artefact',
     'pluginname'         => 'blog',
     'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
@@ -237,12 +237,8 @@ function blogpostImageWindow(ui, v) {
     t.windowManager.open(template);
 }
 
-function editpost_success(form, data) {
-    editpost_filebrowser.success(form, data);
-};
-
-function editpost_error(form, data) {
-    editpost_filebrowser.init();
+function editpost_callback(form, data) {
+    editpost_filebrowser.callback(form, data);
 };
 
 EOF;

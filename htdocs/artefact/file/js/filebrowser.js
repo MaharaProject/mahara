@@ -192,7 +192,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
-    this.upload_success = function (data) {
+    this.upload_feedback = function (data) {
         if (data.problem) {
             var image = 'images/icon_problem.gif';
         }
@@ -561,10 +561,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         return false;
     }
 
-    this.success = function (form, data) {
+    this.callback = function (form, data) {
         self.form = form; // ????
-        if (data.uploaded) {
-            self.upload_success(data);  // Remove uploading message
+        if (data.uploaded || data.error) {
+            self.upload_feedback(data);  // Remove uploading message
         }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
