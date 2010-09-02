@@ -1904,7 +1904,10 @@ function xmldb_core_upgrade($oldversion=0) {
         unset($viewdata->owner);
         $viewdata->template = 0;
 
-        foreach (get_records_array('group', '', '', '', 'id,public') as $group) {
+        if (!$groups = get_records_array('group', '', '', '', 'id,public')) {
+            $groups = array();
+        }
+        foreach ($groups as $group) {
             $viewdata->group = $group->id;
             $id = insert_record('view', $viewdata, 'id', true);
             insert_record('view_access', (object) array(
@@ -2023,11 +2026,13 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
 
         // Insert explicit tutor access records for submitted views
-        $submittedviews = get_records_sql_array('
+        if (!$submittedviews = get_records_sql_array('
             SELECT v.id, v.submittedgroup, g.grouptype
             FROM {view} v JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)',
             array()
-        );
+        )) {
+            $submittedviews = array();
+        }
         $roles = array();
         foreach ($submittedviews as $v) {
             if (!isset($roles[$v->grouptype])) {
