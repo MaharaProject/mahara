@@ -37,8 +37,7 @@
     {/if}
     </td>
     <td id="useraccountsettingsright">
-    <!--<h3>{str tag="suspenduser" section="admin"}</h3>-->
-    {if $USER->get('admin') || (!$user->get('admin') && !$user->get('staff')) }
+    {if $suspendable}
     <div id="suspenddelete">
     	<h2>{str tag="suspenddeleteuser" section=admin}</h2>
     	<p>{str tag="suspenddeleteuserdescription" section=admin}</p>
@@ -46,7 +45,7 @@
         	<h3>{str tag="suspenduser" section=admin}</h3>
             {$suspendform|safe}
      	</div>
-		{if $USER->get('admin')}
+		{if $deletable}
         <div id="delete">
             <h3>{str tag=deleteuser section=admin}</h3>
             <p>{str tag=deleteusernote section=admin}</p>
