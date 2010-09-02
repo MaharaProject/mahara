@@ -2066,6 +2066,10 @@ form#search, form#filter, div.searchform {
 .home-info-1 {
 	margin-left: 4px;
 }
+.home-info-1 .home-info-inner {
+	* padding-top: 5px;
+	* padding-bottom: 5px;
+}
 #home-info-help {
 	margin: 0 4px;
         float: right;
