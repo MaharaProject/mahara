@@ -75,7 +75,7 @@
         {{$name}}_searchfunc({});
 
         connect('{{$name}}_search', 'onkeypress', function (k) {
-            if (k.key().code == 13) {
+            if (keypressKeyCode(k) == 13) {
                 {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
                 k.stop();
             }

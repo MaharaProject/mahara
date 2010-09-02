@@ -728,3 +728,15 @@ function updateUnreadCount(n, decrement) {
     }
 }
 
+// Work around hack for Mochikit Event key function
+// (returns 0 for ff and onkeypress)
+function keypressKeyCode(e) {
+    if (typeof(e._event.charCode) != 'undefined' && e._event.charCode !== 0 &&
+        !MochiKit.Signal._specialMacKeys[e._event.charCode]) {
+        return e._event.charCode;
+    }
+    if (e._event.keyCode && (typeof(e._event.charCode) == 'undefined' || e._event.charCode == 0)) {
+        return e._event.keyCode;
+    }
+    return 0;
+}
