@@ -526,6 +526,15 @@ if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
 }
 $smarty->assign('loginas', $loginas);
 $smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
+
+# Only allow deletion and suspension of a user if the viewed user is not
+# the current user; or if they are the current user, they're not the only
+# admin
+if ($id != $USER->get('id') || count_records('usr', 'admin', 1, 'deleted', 0) > 1) {
+    $smarty->assign('suspendable', ($USER->get('admin') || !$user->get('admin') && !$user->get('staff')));
+    $smarty->assign('deletable', $USER->get('admin'));
+}
+
 $smarty->display('admin/users/edit.tpl');
 
 ?>
