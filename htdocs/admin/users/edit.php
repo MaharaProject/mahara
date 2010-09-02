@@ -168,6 +168,13 @@ function edituser_site_validate(Pieform $form, $values) {
         return false;
     }
 
+    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+    if ($maxquotaenabled && $values['quota'] > $maxquota) {
+        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+        $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+    }
+
     // Check that the external username isn't already in use
     if ($usedby = get_record_select('auth_remote_user',
         'authinstance = ? AND remoteusername = ? AND localusr != ?',
