@@ -339,11 +339,14 @@ html>body #column-container {
 .bt-inbox td.icon-container {
   vertical-align: top;
   width: 16px;
+  width: 25px;
 }
 .bt-inbox td.icon-container .icon {
   height: 1.7em;
   vertical-align: bottom;
   display: table-cell;
+  * margin-left: 0;
+  * zoom: 1;
 }
 .inbox-showmessage.unread {
   font-weight: bold;
@@ -494,11 +497,9 @@ ul.artefactchooser-subtabs li.current a:active {
     text-align: center;
     margin-top: 20px;
 }
-
 .fileedittable th {
 	font-size: 1em !important;
 }
-
 #instconf_artefactid_selectlist,
 #instconf_artefactids_selectlist {
 	margin-bottom: 1em;
