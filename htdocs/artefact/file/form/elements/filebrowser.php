@@ -669,6 +669,10 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
     catch (QuotaExceededException $e) {
         prepare_upload_failed_message($result, $e, $parentfoldername, $originalname);
+        // update the file listing
+        $result['quota'] = $USER->get('quota');
+        $result['quotaused'] = $USER->get('quotaused');
+        $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder);
         return $result;
     }
     catch (UploadException $e) {
