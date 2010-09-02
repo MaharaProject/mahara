@@ -43,7 +43,7 @@
   {if $config.uploadagreement}
   <tr id="{$prefix}_agreement" class="uploadform">
     <th><label>{str tag='uploadfile' section='artefact.file'}</label></th>
-    <td colspan=2>
+    <td>
       <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
       {$agreementtext}
     </td>
