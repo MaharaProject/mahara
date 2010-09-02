@@ -836,6 +836,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             global $USER;
             if ($data->owner == $USER->get('id')) {
                 $owner = $USER;
+                $owner->quota_refresh();
             }
             else {
                 $owner = new User;

@@ -57,6 +57,11 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $userid = ($group || $institution) ? null : $USER->get('id');
 
+    // refresh quotas
+    if ($userid) {
+        $USER->quota_refresh();
+    }
+
     $folder = $element['folder'];
     $path = pieform_element_filebrowser_get_path($folder);
     $smarty->assign('folder', $folder);
