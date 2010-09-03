@@ -162,6 +162,22 @@ $siteform = pieform(array(
     'elements'   => $elements,
 ));
 
+function edituser_site_validate(Pieform $form, $values) {
+    global $SESSION;
+    if (!$user = get_record('usr', 'id', $values['id'])) {
+        return false;
+    }
+
+    // Check that the external username isn't already in use
+    if ($usedby = get_record_select('auth_remote_user',
+        'authinstance = ? AND remoteusername = ? AND localusr != ?',
+        array($values['authinstance'], $values['remoteusername'], $values['id']))
+    ) {
+        $usedbyuser = get_field('usr', 'username', 'id', $usedby->localusr);
+        $SESSION->add_error_msg(get_string('duplicateremoteusername', 'auth', $usedbyuser));
+        $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
+    }
+}
 
 function edituser_site_submit(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['id'])) {
