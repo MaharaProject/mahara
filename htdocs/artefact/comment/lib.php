@@ -171,6 +171,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         db_begin();
         $this->detach();
+        delete_records('artefact_comment_comment', 'artefact', $this->id);
         parent::delete();
         db_commit();
     }
