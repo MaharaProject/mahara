@@ -60,6 +60,9 @@ class ArtefactTypePlan extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
+        if (empty($this->id)) {
+            $this->container = 1;
+        }
     }
 
     public static function get_links($id) {
