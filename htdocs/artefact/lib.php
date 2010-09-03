@@ -479,6 +479,10 @@ abstract class ArtefactType {
       
         db_begin();
 
+        // Call delete() on comments (if there are any)
+        safe_require('artefact', 'comment');
+        ArtefactTypeComment::delete_comments_onartefacts(array($this->id));
+
         // Call delete() on children (if there are any)
         if ($children = $this->get_children_instances()) {
             foreach ($children as $child) {
@@ -518,6 +522,10 @@ abstract class ArtefactType {
         db_begin();
 
         artefact_watchlist_notification($artefactids);
+
+        // Delete comments first
+        safe_require('artefact', 'comment');
+        ArtefactTypeComment::delete_comments_onartefacts($artefactids);
 
         $records = get_records_select_assoc(
             'artefact',

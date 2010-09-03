@@ -194,6 +194,12 @@ class ArtefactTypeComment extends ArtefactType {
         self::bulk_delete($ids);
     }
 
+    public static function delete_comments_onartefacts($artefactids) {
+        $idstr = join(',', array_map('intval', $artefactids));
+        $commentids = get_column_sql("SELECT artefact FROM {artefact_comment_comment} WHERE onartefact IN ($idstr)");
+        self::bulk_delete($commentids);
+    }
+
     public static function get_links($id) {
         return array(
             '_default' => get_config('wwwroot') . 'artefact/comment/view.php?id=' . $id,
