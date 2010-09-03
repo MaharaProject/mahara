@@ -806,7 +806,19 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     global $USER;
     $collide = !empty($data['collide']) ? $data['collide'] : 'fail';
 
-    $artefact = artefact_instance_from_id($data['artefact']);
+    try {
+        $artefact = artefact_instance_from_id($data['artefact']);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $parentfolder = $element['folder'] ? $element['folder'] : null;
+        $result = array(
+            'error'   => true,
+            'message' => get_string('editingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
+        );
+        return $result;
+    }
+
     if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, 'message' => get_string('noeditpermission', 'mahara'));
     }
@@ -859,16 +871,29 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
 function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) {
     global $USER;
-    $artefact = artefact_instance_from_id($artefact);
+
+    try {
+        $artefact = artefact_instance_from_id($artefact);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $parentfolder = $element['folder'] ? $element['folder'] : null;
+        $result = array(
+            'error'   => true,
+            'message' => get_string('deletingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
+        );
+        return $result;
+    }
+
     if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, get_string('nodeletepermission', 'mahara'));
     }
     $parentfolder = $artefact->get('parent');
     $artefact->delete();
     return array(
-        'error' => false, 
-        'deleted' => true, 
-        'message' => get_string('filethingdeleted', 'artefact.file', 
+        'error' => false,
+        'deleted' => true,
+        'message' => get_string('filethingdeleted', 'artefact.file',
                                 get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
         'quotaused' => $USER->get('quotaused'),
         'quota' => $USER->get('quota'),
@@ -882,7 +907,17 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     $artefactid  = $data['artefact'];    // Artefact being moved
     $newparentid = $data['newparent'];   // Folder to move it to
 
-    $artefact = artefact_instance_from_id($artefactid);
+    try {
+        $artefact = artefact_instance_from_id($artefactid);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $result = array(
+            'error' => true,
+            'message' => get_string('movingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $data['folder']),
+        );
+        return $result;
+    }
 
     if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
@@ -898,7 +933,18 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         if ($newparentid == $artefact->get('parent')) {
             return array('error' => false, 'message' => get_string('filealreadyindestination', 'artefact.file'));
         }
-        $newparent = artefact_instance_from_id($newparentid);
+        try {
+            $newparent = artefact_instance_from_id($newparentid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            $parentfolder = $element['folder'] ? $element['folder'] : null;
+            $result = array(
+                'error' => true,
+                'message' => get_string('movingfailed', 'artefact.file'),
+                'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $data['folder']),
+            );
+            return $result;
+        }
         if (!$USER->can_edit_artefact($newparent)) {
             return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
         }
