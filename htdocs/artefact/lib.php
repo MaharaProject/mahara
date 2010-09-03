@@ -1047,6 +1047,9 @@ abstract class ArtefactType {
         if (record_exists('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid)) {
             return;
         }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
+        }
         $data = new StdClass;
         $data->artefact = $this->get('id');
         $data->attachment = $attachmentid;
@@ -1083,6 +1086,9 @@ abstract class ArtefactType {
                 )", array($this->id, $this->id));
             delete_records('artefact_attachment', 'artefact', $this->id);
             return;
+        }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
         }
         delete_records('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid);
         delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $attachmentid);
