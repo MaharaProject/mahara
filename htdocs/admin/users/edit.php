@@ -164,11 +164,24 @@ $siteform = pieform(array(
 
 function edituser_site_validate(Pieform $form, $values) {
     global $USER, $SESSION;
+    if (!$user = get_record('usr', 'id', $values['id'])) {
+        return false;
+    }
     $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
     $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
     if ($maxquotaenabled && $values['quota'] > $maxquota) {
         $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
         $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+    }
+
+    // Check that the external username isn't already in use
+    if ($usedby = get_record_select('auth_remote_user',
+        'authinstance = ? AND remoteusername = ? AND localusr != ?',
+        array($values['authinstance'], $values['remoteusername'], $values['id']))
+    ) {
+        $usedbyuser = get_field('usr', 'username', 'id', $usedby->localusr);
+        $SESSION->add_error_msg(get_string('duplicateremoteusername', 'auth', $usedbyuser));
+        $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
     }
 }
 

@@ -81,4 +81,8 @@ $string['requiredfieldsset'] = 'Required profile fields set';
 $string['noauthpluginconfigoptions'] = 'There are no configuration options associated with this plugin';
 
 $string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%s)';
+
+// Error messages for external authentication usernames
+$string['duplicateremoteusername'] = 'This external authentication username is already in use by the user %s. External authentication usernames must be unique within an authentication method.';
+$string['duplicateremoteusernameformerror'] = 'External authentication usernames must be unique within an authentication method.';
 ?>
