@@ -573,6 +573,19 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
         parent::delete();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_internal_profile_email', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
     public function render_self($options) {
         if (array_key_exists('link', $options) && $options['link'] == true) {
             $html = '<a href="mailto:' . hsc($this->title) . '">' . hsc($this->title) . '</a>';
