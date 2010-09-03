@@ -565,7 +565,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.callback = function (form, data) {
         self.form = form; // ????
-        if (data.uploaded || data.error) {
+        if (data.uploaded || data.error || data.deleted) {
             self.callback_feedback(data);  // add/update message
         }
         // Only update the file listing if the user hasn't changed folders yet

@@ -869,7 +869,7 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
         'error' => false, 
         'deleted' => true, 
         'message' => get_string('filethingdeleted', 'artefact.file', 
-                                get_string($artefact->get('artefacttype'), 'artefact.file')),
+                                get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
         'quotaused' => $USER->get('quotaused'),
         'quota' => $USER->get('quota'),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
