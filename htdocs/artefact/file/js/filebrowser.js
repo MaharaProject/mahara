@@ -192,21 +192,23 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
-    this.upload_feedback = function (data) {
+    this.callback_feedback = function (data) {
         if (data.problem) {
             var image = 'images/icon_problem.gif';
         }
-        else if (!data.error) {
-            var image = 'images/success.gif';
+        else if (data.error) {
+            var image = 'images/failure.gif';
         }
         else {
-            var image = 'images/failure.gif';
+            var image = 'images/success.gif';
         }
 
         quotaUpdate(data.quotaused, data.quota);
         var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), 'info');
         setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
-        removeElement($('uploadstatusline'+data.uploadnumber));
+        if (data.uploadnumber) {
+            removeElement($('uploadstatusline'+data.uploadnumber));
+        }
         appendChildNodes(self.id + '_upload_messages', newmessage);
     }
 
@@ -564,7 +566,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.callback = function (form, data) {
         self.form = form; // ????
         if (data.uploaded || data.error) {
-            self.upload_feedback(data);  // Remove uploading message
+            self.callback_feedback(data);  // add/update message
         }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
