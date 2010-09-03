@@ -1082,7 +1082,10 @@ function delete_user($userid) {
             $view->delete();
         }
     }
+
     $artefactids = get_column('artefact', 'id', 'owner', $userid);
+    // @todo: test all artefact bulk_delete stuff, then replace the one-by-one
+    // artefact deletion below with ArtefactType::delete_by_artefacttype($artefactids);
     if ($artefactids) {
         foreach ($artefactids as $artefactid) {
             try {
