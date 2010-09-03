@@ -493,6 +493,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
         db_commit();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_blog_blogpost', 'blogpost IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
+
     /**
      * Checks that the person viewing this blog is the owner. If not, throws an 
      * AccessDeniedException. Used in the blog section to ensure only the 

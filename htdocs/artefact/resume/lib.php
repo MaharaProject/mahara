@@ -373,6 +373,19 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
         db_commit();
     }
+
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_resume_personal_information', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
 }
 
 
@@ -479,6 +492,19 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         db_commit();
     }
 
+    public static function bulk_delete_composite($artefactids, $compositetype) {
+        $table = 'artefact_resume_' . $compositetype;
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select($table, 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
 
     /**
     * Takes a pieform that's been set up by all the 
@@ -859,6 +885,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
             ),
         );
     }
+
+    public static function bulk_delete($artefactids) {
+        ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'employmenthistory');
+    }
 }
 
 class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
@@ -974,6 +1004,10 @@ function formatQualification(name, type, institution) {
 }
 EOF;
     }
+
+    public static function bulk_delete($artefactids) {
+        ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'educationhistory');
+    }
 }
 
 class ArtefactTypeCertification extends ArtefactTypeResumeComposite { 
@@ -1025,6 +1059,10 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'title' => get_string('description'),
             ),
         );
+    }
+
+    public static function bulk_delete($artefactids) {
+        ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'certification');
     }
 }
 
@@ -1087,6 +1125,10 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
             ),
         );
     }
+
+    public static function bulk_delete($artefactids) {
+        ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'book');
+    }
 }
 
 class ArtefactTypeMembership extends ArtefactTypeResumeComposite { 
@@ -1145,6 +1187,10 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'title' => get_string('description', 'artefact.resume'),
             ),
         );
+    }
+
+    public static function bulk_delete($artefactids) {
+        ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'membership');
     }
 }
 

@@ -378,6 +378,20 @@ class ArtefactTypeTask extends ArtefactType {
         db_commit();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_plans_task', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
+
     /**
     * Gets the new/edit tasks pieform
     *
