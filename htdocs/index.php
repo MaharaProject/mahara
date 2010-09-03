@@ -53,7 +53,7 @@ if ($USER->is_logged_in()) {
 
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
     $smarty = smarty(
-        array(),
+        array('paginator'),
         $stylesheets,
         array(),
         array(
