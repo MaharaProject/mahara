@@ -533,7 +533,16 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             $keys = array_keys($select);
             $add = (int) $keys[0];
             if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
-                $element['selectcallback']($add);
+                try {
+                    $element['selectcallback']($add);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    $result = array(
+                        'error' => true,
+                        'message' => get_string('selectingfailed', 'artefact.file'),
+                    );
+                    return $result;
+                }
             }
             else {
                 $result['select'] = $add;
@@ -548,7 +557,16 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             $keys = array_keys($unselect);
             $del = (int) $keys[0];
             if (isset($element['unselectcallback']) && is_callable($element['unselectcallback'])) {
-                $element['unselectcallback']($del);
+                try {
+                    $element['unselectcallback']($del);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    $result = array(
+                        'error' => true,
+                        'message' => get_string('removingfailed', 'artefact.file'),
+                    );
+                    return $result;
+                }
             }
             else {
                 $result['unselect'] = $del;

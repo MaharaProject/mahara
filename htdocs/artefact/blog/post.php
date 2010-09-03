@@ -293,12 +293,18 @@ function editpost_submit(Pieform $form, $values) {
     if (!empty($new) || !empty($old)) {
         foreach ($old as $o) {
             if (!in_array($o, $new)) {
-                $postobj->detach($o);
+                try {
+                    $postobj->detach($o);
+                }
+                catch (ArtefactNotFoundException $e) {}
             }
         }
         foreach ($new as $n) {
             if (!in_array($n, $old)) {
-                $postobj->attach($n);
+                try {
+                    $postobj->attach($n);
+                }
+                catch (ArtefactNotFoundException $e) {}
             }
         }
     }
