@@ -888,7 +888,11 @@ function add_feedback_form_submit(Pieform $form, $values) {
             try {
                 $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
             }
-            catch (QuotaExceededException $e) {}
+            catch (QuotaExceededException $e) {
+                if ($data->owner == $USER->get('id')) {
+                    $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                }
+            }
 
             $comment->attach($fileid);
         }
