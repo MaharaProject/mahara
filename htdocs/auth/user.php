@@ -826,6 +826,9 @@ class User {
         if ($group) {
             $editroles = $v->get('editingroles');
             $this->reset_grouproles();
+            if ($v->get('type') == 'grouphomepage' && $this->grouproles[$group] != 'admin') {
+                return false;
+            }
             return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $editroles);
         }
         return false;
