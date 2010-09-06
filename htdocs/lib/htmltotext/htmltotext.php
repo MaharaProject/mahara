@@ -124,7 +124,7 @@ class HtmltoText {
     }
 
     private function process_children($node) {
-        if ($node->childNodes->length) {
+        if (is_object($node) && $node->childNodes->length) {
             foreach ($node->childNodes as $child) {
                 $this->process_node($child);
             }
