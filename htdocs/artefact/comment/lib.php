@@ -768,6 +768,9 @@ function add_feedback_form_validate(Pieform $form, $values) {
             $form->set_error('message', $msg);
         }
     }
+    if (empty($values['attachments']) && empty($values['message'])) {
+        $form->set_error('message', get_string('messageempty', 'artefact.comment'));
+    }
 }
 
 function add_feedback_form_submit(Pieform $form, $values) {

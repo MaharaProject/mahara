@@ -64,6 +64,7 @@ $string['makepublicrequestsubject'] = 'Request to change private comment to publ
 $string['makepublicrequestbyauthormessage'] = '%s has requested that you make their comment public.';
 $string['makepublicrequestbyownermessage'] = '%s has requested that you make your comment public.';
 $string['makepublicrequestsent'] = 'A message has been sent to %s to request that the comment be made public.';
+$string['messageempty'] = 'Message is empty. Empty message is only allowed if you attached the file.';
 $string['Moderate'] = 'Moderate';
 $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription'] = 'Comments will remain private until they are approved by you.';
