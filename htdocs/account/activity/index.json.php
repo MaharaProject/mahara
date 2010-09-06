@@ -74,13 +74,16 @@ else if ($delete) {
         $strids = join(',', $ids);
         $userid = $USER->get('id');
         db_begin();
+        // Remove parent pointers to messages we're about to delete
+        // Use temp table in subselect for Mysql compat.
         execute_sql("
             UPDATE {notification_internal_activity}
             SET parent = NULL
             WHERE parent IN (
                 SELECT id
-                FROM {notification_internal_activity}
-                WHERE id IN ($strids) AND usr = ?
+                FROM (
+                   SELECT id FROM {notification_internal_activity} WHERE id IN ($strids) AND usr = ?
+                ) AS temp
             )",
             array($userid)
         );
