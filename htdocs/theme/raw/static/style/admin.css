@@ -326,6 +326,8 @@ table.tablerenderer th.desc {
 	background: #f6f6f6;
 }
 #profilepict a img {
+    width: 100px;
+    height: 100px;
 	padding: 0;
 }
 #profilename {
