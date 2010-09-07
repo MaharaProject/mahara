@@ -1280,7 +1280,7 @@ function login_submit(Pieform $form, $values) {
 
     // Check if the user's account has been suspended
     if ($USER->suspendedcusr) {
-        $suspendedctime  = $USER->suspendedctime;
+        $suspendedctime  = strftime(get_string('strftimedaydate'), $USER->suspendedctime);
         $suspendedreason = $USER->suspendedreason;
         $USER->logout();
         die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
