@@ -1,6 +1,6 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $notrudeform}<div class="message delete">{$notrudeform|safe}</div>{/if}
+{if $notrudeform}<div class="message delete narrow">{$notrudeform|safe}</div>{/if}
 
 {if $maintitle}<h1>{$maintitle|safe}</h1>{/if}
 

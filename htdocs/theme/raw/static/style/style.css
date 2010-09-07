@@ -1080,6 +1080,10 @@ div.error {
 .message p:last-child {
     margin: 1em 0 0 0;
 }
+.message.narrow {
+    width: 60%;
+    margin: .5em auto;
+}
 div.section {
     padding-top: .75em;
 }
