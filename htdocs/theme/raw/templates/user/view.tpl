@@ -32,7 +32,7 @@
 							<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>
 {/if}
 {if $inviteform}
-							<div class="btn-message">{$inviteform|safe}</div>
+							<span class="addform">{$inviteform|safe}</span>
 {/if}
 {if $requestedlist}
 							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
