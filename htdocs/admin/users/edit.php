@@ -271,7 +271,7 @@ if (empty($suspended)) {
             'reason' => array(
                 'type'        => 'textarea',
                 'rows'        => 5,
-                'cols'        => 60,
+                'cols'        => 28,
                 'title'       => get_string('reason'),
                 'description' => get_string('suspendedreasondescription', 'admin'),
             ),
@@ -532,12 +532,7 @@ $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
-if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
-    $loginas = get_string('loginasuser', 'admin', $user->username);
-} else {
-    $loginas = null;
-}
-$smarty->assign('loginas', $loginas);
+$smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
 $smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
 
 # Only allow deletion and suspension of a user if the viewed user is not

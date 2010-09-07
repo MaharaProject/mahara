@@ -529,6 +529,7 @@ $string['basicdetails'] = '2 - Basic Details';
 $string['create'] = '3 - Create';
 
 // Login as
+$string['loginas'] = 'Login as';
 $string['loginasuser'] = 'Login as %s';
 $string['becomeadminagain'] = 'Become %s again';
 // Login-as exceptions
