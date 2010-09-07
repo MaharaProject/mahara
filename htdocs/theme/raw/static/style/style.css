@@ -214,6 +214,9 @@ table.fixwidth {
     white-space: pre-wrap;
     overflow: auto;
 }
+.messagebody-newpost, .messagebody-feedback {
+    white-space: normal;
+}
 /* table without border */
 #bloglist th {
 	border: 0;

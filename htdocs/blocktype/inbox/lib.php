@@ -88,7 +88,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if ($records) {
             require_once('activity.php');
             foreach ($records as &$r) {
-                $r->message = format_notification_whitespace($r->message);
+                $r->message = format_notification_whitespace($r->message, $r->type);
             }
         }
 
