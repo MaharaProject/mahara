@@ -3101,7 +3101,7 @@ class View {
             'elements' => array(
                 'text' => array(
                     'type' => 'html',
-                    'value' => get_string('viewobjectionableunmark', 'view', $this->title),
+                    'value' => get_string('viewobjectionableunmark', 'view'),
                 ),
                 'submit' => array(
                     'type' => 'submit',
