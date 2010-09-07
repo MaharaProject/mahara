@@ -962,10 +962,15 @@ abstract class ActivityTypePlugin extends ActivityType {
 }
 
 
-function format_notification_whitespace($message) {
+function format_notification_whitespace($message, $type=null) {
     $message = preg_replace('/^(\s|<br( ?\/)?>|&nbsp;|\xc2\xa0)*/', '', $message);
     $message = format_whitespace($message);
-    return preg_replace('/(<br( ?\/)?>\s*){2,}/', '<br><br>', $message);
+    // @todo: Sensibly distinguish html notifications, notifications where the full text
+    // appears on another page and this is just an abbreviated preview, and text-only
+    // notifications where the entire text must appear here because there's nowhere else
+    // to see it.
+    $replace = ($type == 'newpost' || $type == 'feedback') ? '<br>' : '<br><br>';
+    return preg_replace('/(<br( ?\/)?>\s*){2,}/', $replace, $message);
 }
 
 /**
