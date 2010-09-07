@@ -58,8 +58,7 @@ if (get_config('allowgroupcategories')
                 'type'         => 'select',
                 'title'        => get_string('groupcategory', 'group'),
                 'options'      => array('0'=>get_string('nocategoryselected', 'group')) + $groupcategories,
-                'defaultvalue' => '',
-                'help'         => true);
+                'defaultvalue' => '');
 }
 $elements['public'] = array(
             'type'         => 'select',
