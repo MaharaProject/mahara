@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Recent Forum Posts for <group>';
+$string['title'] = 'Recent Forum Posts';
 $string['description'] = 'Display recent forum posts for a group';
 
 $string['group'] = 'Group';
