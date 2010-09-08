@@ -891,7 +891,7 @@ div.rbuttons .small-logo {
 #main-nav li {
     padding: .5em 1em;
     line-height: 2em;
-	display: inline;
+	  display: inline;
 }
 #main-nav li.selected {
     background-color: #ddd;

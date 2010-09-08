@@ -472,11 +472,20 @@ div.sideblock ul ul {
 	list-style-type: square;
 	color: #000000;
 }
-
+div#sb-profile {
+  background: #FFF;
+}
+div#sb-profile h3 {
+  background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x bottom left;
+  padding: 0 15px 15px 15px;
+  margin-left: -15px;
+  margin-right: -15px;
+}
 
 /* Side Profile */
 #user-profileicon {
-	padding-top: 3.5em;
+	padding-top: 5.5em;
+  clear: both;
 }
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,

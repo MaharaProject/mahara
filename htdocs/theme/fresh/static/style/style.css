@@ -326,6 +326,7 @@ input#files_filebrowser_edit_artefact:active {
 }
 #main-nav {
 	float: right;
+	* clear: none !important;
     padding: 0;
     margin: 0;
     background: transparent;

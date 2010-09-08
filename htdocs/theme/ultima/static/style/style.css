@@ -23,9 +23,9 @@
 /* General rules */
 body,
 body#micro {
-    background: #e99adb url(../images/bg.jpg) no-repeat top center;	
+  background: #e99adb url(../images/bg1.jpg) no-repeat top center;	
 	color: #360435;
-    font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 acronym {
     border-bottom: 1px dotted #d4d1c0;
@@ -310,6 +310,7 @@ input#files_filebrowser_edit_artefact:active {
 
 #main-nav {
 	float: right;
+		* clear: none !important;
     padding: 0;
     margin: 0;
     background: transparent;
