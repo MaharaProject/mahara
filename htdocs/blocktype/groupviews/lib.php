@@ -103,7 +103,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // shared to the group
             $data['sharedviews'] = View::get_sharedviews_data(null, 0, $group->id);
             if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
-                // Display a list of views submitted to the group
+                // Display a list of views submitted to the group. Own views will
+                // only be shown if $USER is the only member with view assessment
+                // permissions.
                 $data['allsubmittedviews'] = View::get_submitted_views($group->id);
             }
         }
