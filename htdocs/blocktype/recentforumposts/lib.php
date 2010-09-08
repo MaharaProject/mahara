@@ -40,10 +40,6 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         return array('general');
     }
 
-    public static function get_viewtypes() {
-        return array('profile', 'portfolio', 'dashboard');
-    }
-
     private static function get_group(BlockInstance $instance) {
         static $groups = array();
 
