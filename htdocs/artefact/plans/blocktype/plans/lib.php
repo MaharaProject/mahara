@@ -127,6 +127,9 @@ class PluginBlocktypePlans extends PluginBlocktype {
             'template'  => 'artefact:plans:artefactchooser-element.tpl',
         );
     }
+
+    public static function allowed_in_view(View $view) {
+        return $view->get('owner') != null;
+    }
 }
 
-?>
