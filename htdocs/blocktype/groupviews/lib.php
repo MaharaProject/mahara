@@ -108,7 +108,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             }
         }
 
-        if (group_allows_submission($group->grouptype) && ($userviewdata = View::get_user_views())) {
+        if (group_allows_submission($group->grouptype) &&
+                count(group_get_members_can_see_submitted_views($group->id)) &&
+                $userviewdata = View::get_user_views()) {
             // A user can submit more than one view to the same group, but no view can be
             // submitted to more than one group.
 
