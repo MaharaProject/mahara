@@ -47,9 +47,9 @@
         {/literal}
         </script>
        </div>
+{/if}
       </div>
       <div class="viewheader">
-{/if}
 
 {if $collection}
         <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
