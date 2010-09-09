@@ -271,7 +271,9 @@ class PluginExportLeap extends PluginExport {
                 $this->smarty->assign('summary',     $content);
             }
             $this->smarty->assign('contenttype', 'xhtml');
-            $this->smarty->assign('content',     self::parse_xhtmlish_content($view->build_columns()));
+            if ($viewcontent = self::parse_xhtmlish_content($view->build_columns(), $view->get('id'))) {
+                $this->smarty->assign('content', $viewcontent);
+            }
             $this->smarty->assign('viewdata',    $config['columns']);
             $this->smarty->assign('layout',      $view->get_layout()->widths);
             $this->smarty->assign('type',        $config['type']);
@@ -591,7 +593,7 @@ class PluginExportLeap extends PluginExport {
      *
      * @return xhtml content or false for unmodified text content
      */
-    public static function parse_xhtmlish_content($content) {
+    public static function parse_xhtmlish_content($content, $viewid=null) {
         $dom = new DomDocument();
         $topel = $dom->createElement('tmp');
         $tmp = new DomDocument();
@@ -607,10 +609,15 @@ class PluginExportLeap extends PluginExport {
         } else if (@$tmp->loadHTML('<div>' . $content . '</div>')) {
             $xpath = new DOMXpath($tmp);
             $elements = $xpath->query('/html/body/div');
-            if ($elements->length == 1) {
-                $ourelement = $elements->item(0);
+            if ($elements->length != 1) {
+                if ($viewid) {
+                    log_warn("Leap2a export: invalid html found in view $viewid");
+                }
+                if ($elements->length < 1) {
+                    return false;
+                }
             }
-
+            $ourelement = $elements->item(0);
             $content = $dom->importNode($ourelement, true);
             $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
             $topel->appendChild($content);
