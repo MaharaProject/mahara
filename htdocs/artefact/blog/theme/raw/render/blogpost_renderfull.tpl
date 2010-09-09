@@ -20,7 +20,7 @@
   </table>
   {/if}
   <div class="postdetails">{$postedbyon}
-    {if isset($commentcount) && $artefact->get('allowcomments')} | <a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a>{/if}</div>
+    {if isset($commentcount) && $artefact->get('allowcomments')} | <a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a>{/if}
 
   </div>
 </div>
