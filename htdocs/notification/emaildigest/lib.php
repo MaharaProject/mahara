@@ -67,7 +67,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
         }
 
         $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
-                    p.value AS lang, q.*,' . db_format_tsfield('ctime').'
+                    p.value AS lang, q.*,' . db_format_tsfield('q.ctime', 'qctime').'
                 FROM {usr} u 
                     JOIN {notification_emaildigest_queue} q
                         ON q.usr = u.id
@@ -103,7 +103,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
             $body = get_string_from_language($lang, 'emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
                 $body .= get_string_from_language($lang, 'type', 'activity') . ': ' . $entry->nicetype 
-                    . ' ' . get_string_from_language($lang, 'attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
+                    . ' ' . get_string_from_language($lang, 'attime', 'activity')  . ' ' . format_date($entry->qctime) . "\n";
                 if (!empty($entry->subject)) {
                     $body .= get_string_from_language($lang, 'subject') . $entry->subject ."\n";
                 }
