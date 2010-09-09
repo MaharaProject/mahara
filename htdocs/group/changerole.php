@@ -73,10 +73,11 @@ $changeform = pieform(array(
     'renderer'    => 'oneline',
     'elements'    => array(
         'role' => array(
-            'title' => get_string('changeroleto', 'group') . ':',
+            'title' => get_string('changerolefromto', 'group', get_string($currentrole, 'grouptype.'.$group->grouptype)) . ': ',
             'type' => 'select',
             'collapseifoneoption' => false,
             'options' => $roles,
+            'defaultvalue' => $currentrole,
         ),
         'submit' => array(
             'type' => 'submit',
