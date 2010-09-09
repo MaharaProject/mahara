@@ -1167,7 +1167,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function validate_config_options($form, $values) {
         global $USER;
-        if ($values['maxquota'] < $values['defaultquota']) {
+        if ($values['maxquotaenabled'] && $values['maxquota'] < $values['defaultquota']) {
             $form->set_error('maxquota', get_string('maxquotatoolow', 'artefact.file'));
         }
     }
