@@ -1,4 +1,4 @@
-<div id="wall">
+<div id="wall" class="wall">
     {if $wallmessage}
         <p>{$wallmessage}</p>
     {/if}
@@ -18,8 +18,8 @@
                 </div>
             </div>
         {/foreach}
-        {if !$wholewall}
-            <a class="morelink" href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">{str tag='wholewall' section='blocktype.wall'} &raquo;</a>
-        {/if}
     {/if}
 </div>
+{if !$wholewall}
+    <a class="morelink" href="{$WWWROOT}blocktype/wall/wall.php?id={$instanceid}">{str tag='wholewall' section='blocktype.wall'} &raquo;</a>
+{/if}

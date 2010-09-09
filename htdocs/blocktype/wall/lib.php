@@ -57,6 +57,12 @@ class PluginBlocktypeWall extends SystemBlocktype {
         }
         $userid = (!empty($USER) ? $USER->get('id') : 0);
         
+        $returnstr = '';
+        if (!$editing && $userid != 0) {
+            $returnstr .= self::wallpost_form($instance);
+            $returnstr .= self::wallpost_js();
+        }
+
         $smarty = smarty_core();
         $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('ownwall', (!empty($USER) && $USER->get('id') == $owner));
@@ -67,10 +73,6 @@ class PluginBlocktypeWall extends SystemBlocktype {
             $smarty->assign('wallmessage', get_string('noposts', 'blocktype.wall'));
         }
 
-        $returnstr = '';
-        if (!$editing && $userid != 0) {
-            $returnstr .= self::wallpost_form($instance);
-        }
         return $returnstr . $smarty->fetch('blocktype:wall:inlineposts.tpl');
     }
 
@@ -140,10 +142,12 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'name'      => 'wallpost_'.$instance->get('id'),
             'renderer'  => 'maharatable',
             'autofocus' => false,
+            'jsform'    => true,
             'template'  => 'wallpost.php',
             'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
-            'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
+            // 'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
+            'jssuccesscallback' => 'wallpost_success',
             'elements' => array(
                 'text' => array(
                     'type' => 'textarea',
@@ -152,6 +156,10 @@ class PluginBlocktypeWall extends SystemBlocktype {
                     'cols' => 50,
                     'defaultvalue' => '',
                     'width' => '100%',
+                    'rules' => array(
+                        'required' => true,
+                        'maxlength' => get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit'),
+                    ),
                 ),
                 'postsizelimit' => array(
                     'type' => 'html',
@@ -179,11 +187,23 @@ class PluginBlocktypeWall extends SystemBlocktype {
         // depending on if the user we're replying to has a wall
     }
 
-    public static function wallpost_validate(Pieform $form, $values) {
-        $sizelimit = get_config_plugin('blocktype', 'wall', 'defaultpostsizelimit');
-        if (strlen($values['text']) > $sizelimit) {
-            $form->set_error('text', get_string('sorrymaxcharacters', 'blocktype.wall', $sizelimit));
+    public function wallpost_js() {
+        $js = <<<EOF
+function wallpost_success(form, data) {
+    if ($('wall') && data.posts && data.block) {
+        var wall = getFirstElementByTagAndClassName('div', 'wall', 'blockinstance_' + data.block);
+        var temp = DIV();
+        temp.innerHTML = data.posts;
+        newposts = getElementsByTagAndClassName('div', 'wallpost', temp);
+        replaceChildNodes(wall, newposts);
+        if ($('wallpost_' + data.block + '_text')) {
+            $('wallpost_' + data.block + '_text').value = '';
         }
+        formSuccess(form, data);
+    }
+}
+EOF;
+        return "<script>$js</script>";
     }
 
     public static function wallpost_submit(Pieform $form, $values) {
@@ -198,8 +218,22 @@ class PluginBlocktypeWall extends SystemBlocktype {
         );
 
         insert_record('blocktype_wall_post', $record);
-        $userid = get_field_sql('SELECT "owner" FROM {view} WHERE id = (SELECT "view" FROM {block_instance} WHERE id = ?)', array($values['instance']));
-        redirect('/user/view.php?id=' . $userid);
+
+        $instance = new BlockInstance($values['instance']);
+        $owner = $instance->get_view()->get('owner');
+        $smarty = smarty_core();
+        $smarty->assign('instanceid', $instance->get('id'));
+        $smarty->assign('ownwall', (!empty($USER) && $USER->get('id') == $owner));
+        if ($posts = self::fetch_posts($instance)) {
+            $smarty->assign('wallposts', $posts);
+        }
+        $renderedposts = $smarty->fetch('blocktype:wall:inlineposts.tpl');
+
+        $form->reply(PIEFORM_OK, array(
+            'message'  => get_string('addpostsuccess', 'blocktype.wall'),
+            'posts'    => $renderedposts,
+            'block'    => $values['instance'],
+        ));
     }
 
     public static function fetch_posts(BlockInstance $instance ) {
