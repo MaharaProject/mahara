@@ -1377,7 +1377,7 @@ function group_get_user_course_groups($userid=null) {
         global $USER;
         $userid = $USER->get('id');
     }
-    if ($groups = get_records_sql_array(
+    if ($groups = get_records_sql_assoc(
         "SELECT g.id, g.name
         FROM {group_member} u
         INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
@@ -1386,6 +1386,11 @@ function group_get_user_course_groups($userid=null) {
         AND t.submittableto = 1
         ORDER BY g.name
         ", array($userid))) {
+        foreach (array_keys($groups) as $key) {
+            if (!count(group_get_members_can_see_submitted_views($key))) {
+                unset($groups[$key]);
+            }
+        }
         return $groups;
     }
     return array();
