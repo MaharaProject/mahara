@@ -349,6 +349,9 @@ abstract class PluginExport extends Plugin {
     }
 
     protected function get_artefact_extra_artefacts(&$artefactids) {
+        if (empty($artefactids)) {
+            return array();
+        }
         $extra = array();
         $plugins = plugins_installed('artefact');
         foreach ($plugins as &$plugin) {
