@@ -501,7 +501,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         }
     }
 
-    if (isset($_FILES['userfile']['error']) && $_FILES['userfile']['error'] == 0) {
+    if (!empty($_FILES['userfile']['name'])) {
         if (strlen($_FILES['userfile']['name']) > 1024) {
             return array(
                 'error'   => true,
