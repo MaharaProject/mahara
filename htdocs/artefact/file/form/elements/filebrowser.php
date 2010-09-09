@@ -491,39 +491,38 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'browse'  => 1,
             );
         }
-    }
-
-    if (isset($_FILES['userfile']['error']) && $_FILES['userfile']['error'] == 0) {
-        if (strlen($_FILES['userfile']['name']) > 1024) {
-            return array(
-                'error'   => true,
-                'message' => get_string('nametoolong', 'artefact.file'),
-            );
-        }
-        else if ($element['config']['uploadagreement'] && !param_boolean($prefix . '_notice', false)) {
-            return array(
-                'error'   => true,
-                'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
-                'browse'  => 1,
-            );
-        }
-        $result = pieform_element_filebrowser_upload($form, $element, array(
-            'userfile'         => $_FILES['userfile'],
-            'uploadnumber'     => param_integer($prefix . '_uploadnumber'),
-            'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
-            'uploadfoldername' => param_variable($prefix . '_foldername'),
-        ));
-        // If it's a non-js upload, automatically select the newly uploaded file.
-        $result['browse'] = 1;
-        if (!$form->submitted_by_js() && !$result['error'] && !empty($element['config']['select'])) {
-            if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
-                $element['selectcallback']($result['highlight']);
+        else {
+            if (strlen($_FILES['userfile']['name']) > 1024) {
+                return array(
+                    'error'   => true,
+                    'message' => get_string('nametoolong', 'artefact.file'),
+                );
             }
-            else {
-                $result['select'] = $result['highlight'];
+            else if ($element['config']['uploadagreement'] && !param_boolean($prefix . '_notice', false)) {
+                return array(
+                    'error'   => true,
+                    'message' => get_string('youmustagreetothecopyrightnotice', 'artefact.file'),
+                    'browse'  => 1,
+                );
             }
+            $result = pieform_element_filebrowser_upload($form, $element, array(
+                'userfile'         => $_FILES['userfile'],
+                'uploadnumber'     => param_integer($prefix . '_uploadnumber'),
+                'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
+                'uploadfoldername' => param_variable($prefix . '_foldername'),
+            ));
+            // If it's a non-js upload, automatically select the newly uploaded file.
+            $result['browse'] = 1;
+            if (!$form->submitted_by_js() && !$result['error'] && !empty($element['config']['select'])) {
+                if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
+                    $element['selectcallback']($result['highlight']);
+                }
+                else {
+                    $result['select'] = $result['highlight'];
+                }
+            }
+            return $result;
         }
-        return $result;
     }
 
     if (!$form->submitted_by_js()) {
