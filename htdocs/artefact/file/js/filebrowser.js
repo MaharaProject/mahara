@@ -593,9 +593,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 // Newly uploaded files should be automatically selected
                 self.add_to_selected_list(data.highlight, true);
             }
-            else if (data.deleted) {
-                quotaUpdate(data.quotaused, data.quota);
-            }
             if (data.tagblockhtml && $('sb-tags')) {
                 $('sb-tags').innerHTML = data.tagblockhtml;
             }
