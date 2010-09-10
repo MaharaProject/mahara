@@ -108,9 +108,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         }
     }
     if ($config['upload']) {
-        $maxuploadsize = get_max_upload_size(!$institution && !$group);
-        $maxuploadsize = display_size($maxuploadsize);
+        $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
+        $smarty->assign('phpmaxfilesize', get_max_upload_size(false));
     }
 
     if (!empty($element['browsehelp'])) {

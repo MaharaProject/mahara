@@ -39,6 +39,7 @@
  <tbody>
 {if $config.upload}
   <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" />
+  <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
   <tr><td colspan=2 id="{$prefix}_upload_messages"></td></tr>
   {if $config.uploadagreement}
   <tr id="{$prefix}_agreement" class="uploadform">
