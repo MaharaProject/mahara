@@ -262,7 +262,9 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $url = self::get_download_link($artefact, $block);
         $url = str_replace('&', '%26', $url); // Flash needs these escaped
 
-        $playerurl =  get_config('wwwroot') . 'lib/flowplayer/flowplayer-3.2.4.swf';
+        $baseurl = get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/';
+
+        $playerurl = $baseurl . 'flowplayer/flowplayer-3.2.4.swf';
         $autohide = 'true';
         $type = '';
         $audio = '';
@@ -273,7 +275,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             $type = 'type: "audio",'; // force the player to use the audio plugin
             $buffering = 'false'; // without this autoPlay will also be set to true
             $audio = ', audio: {
-		                  url: "'.get_config('wwwroot').'lib/flowplayer.audio/flowplayer.audio-3.2.1.swf",
+		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.1.swf",
 		             }';
         }
 
@@ -427,7 +429,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return '';
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
-        return '<script src="'.get_config('wwwroot').'lib/flowplayer/flowplayer-3.2.4.js"></script>
+        return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/flowplayer/flowplayer-3.2.4.js"></script>
              <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>
              <script defer="defer" src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/eolas_fix.js" type="text/javascript"></script>';
     }
