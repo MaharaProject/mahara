@@ -889,6 +889,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
                 if ($data->owner == $USER->get('id')) {
                     $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
                 }
+                redirect($goto);
             }
             catch (UploadException $e) {
                 $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
