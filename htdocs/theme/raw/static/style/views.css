@@ -232,13 +232,15 @@ input.addcolumn, input.removecolumn {
 }
 
 /* Collection navigation */
-ul.colnav li a {
+ul.colnav li a,
+ul.colnav li span {
 	background: #DDDDDD;
 	padding: .55em 1em;
 	* padding: .55em 1em .5em 1em;
 	font-weight: bold;
 }
-ul.colnav li.selected a {
+ul.colnav li.selected a,
+ul.colnav li.selected span {
     color: #333;
 	background: #fff;
 	text-decoration: none;

@@ -2,7 +2,13 @@
 <div class="{if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra hidden{/if}">
 <ul class="colnav">
   {foreach from=$chunk item=view}
-  <li{if $view->view == $viewid} class="selected"{/if}><a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title|str_shorten_text:30:true}</a></li>
+  <li{if $view->view == $viewid} class="selected"{/if}>
+      {if $view->view != $viewid}
+          <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title|str_shorten_text:30:true}</a>
+      {else}
+          <span>{$view->title|str_shorten_text:30:true}</span>
+      {/if}
+  </li>
   {/foreach}
   {if $dwoo.foreach.cchunk.first && !$dwoo.foreach.cchunk.last}
   <li id="colnav-more" class="nojs-hidden"><a href="">…</a></li>
