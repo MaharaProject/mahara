@@ -90,7 +90,7 @@ else {
 }
 
 $submittedgroup = (int)$view->get('submittedgroup');
-if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
+if ($USER->is_logged_in() && $submittedgroup && !count(group_get_members_can_see_submitted_views($submittedgroup))) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
