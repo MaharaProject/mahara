@@ -2109,7 +2109,7 @@ function get_real_size($size=0) {
  */
 function get_max_upload_size($is_user) {
     global $USER;
-    $maxuploadsize = min(get_real_size(ini_get('post_max_size')), get_real_size(ini_get('upload_max_filesize')));
+    $maxuploadsize = min(get_real_size(ini_get('post_max_size')) - 4096, get_real_size(ini_get('upload_max_filesize')));
     if ($is_user) {
         $userquotaremaining = $USER->get('quota') - $USER->get('quotaused');
         $maxuploadsize = min($maxuploadsize, $userquotaremaining);
