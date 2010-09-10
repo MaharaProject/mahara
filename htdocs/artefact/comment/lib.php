@@ -872,21 +872,14 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
         foreach ($values['attachments'] as $filesindex) {
 
-            $um = new upload_manager($filesindex);
-            if ($error = $um->preprocess_file()) {
-                throw new UploadException($error);
-            }
-
+            $originalname = $_FILES[$filesindex]['name'];
             $attachment->title = ArtefactTypeFileBase::get_new_file_title(
-                $um->file['name'],
+                $originalname,
                 $folderid,
                 $data->owner,
                 $data->group,
                 $data->institution
             );
-            $attachment->size         = $um->file['size'];
-            $attachment->filetype     = $um->file['type'];
-            $attachment->oldextension = $um->original_filename_extension();
 
             try {
                 $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
@@ -895,6 +888,10 @@ function add_feedback_form_submit(Pieform $form, $values) {
                 if ($data->owner == $USER->get('id')) {
                     $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
                 }
+            }
+            catch (UploadException $e) {
+                $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                redirect($goto);
             }
 
             $comment->attach($fileid);
