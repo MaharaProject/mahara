@@ -1,3 +1,45 @@
+1.3.0 (2010-09-10)
+- User-configurable home page (Dashboard View)
+- Simpler main navigation
+- Basic Mahara information & help on home page
+- View/artefact feedback enhancements:
+- Collections (sets of Views that are linked to one another)
+- Plans (task lists)
+- Users can change the theme for individual views
+- Support for Gravatar profile icons
+- Configurable number of items in external feed, blog blocks
+- New block types: notifications, recently modified views, recent forum posts
+- More user-friendly notifications & help text
+- Show entire thread when replying to personal messages
+- External objects that have <embed> or <object> tags can be embedded into blog posts, text boxes or uploaded within an HTML file
+- Locking of blogposts and files in submitted views
+- Atom feeds for public blogs and forums
+- new flash-based video player with support for .mp4 files (H.264)
+- Moodle Repository plugin support (allows a user's Mahara files to be accessed from their Moodle account)
+- Portfolio API to allow import of artefacts from Moodle over MNET.
+- Configurable group home page (Group Homepage View)
+- Improved ways to add/invite users to invite only and "course membership" groups:
+- View submission from group page and from the view itself
+- Group categories for use in group searches
+- Admin group management page for group deletion/assignment of group admins
+- Groups can disable new view access notifictions
+- View access to group only notified when the view owner also belongs to the group
+- Bulk user import & export (experimental)
+- CAPTCHAs replaced with new anti-spam features to make form-filling difficult for bots & check urls in content against known spam blacklists
+- Site statistics & graphs in admin area
+- Admin page shows link to latest Mahara release & status of cron
+- Admin site options grouped into sections
+- Record number of page hits on views & display these to the owner
+- Facility to disable email addresses after receiving multiple bounces.
+- Footer links can be disabled/enabled
+- Online users can be disabled
+- Indenting of threads can be disabled per-forum
+- Active user sessions revoked on suspension
+- Full security review of all db queries & templates; automatic template escaping enabled
+- New version of HTMLPurifier allows safe <embed> and <object> tags in user html content
+- Search options to make users always searchable by their real names & usernames
+- Leap2a support updated to version 2010-07
+
 1.2.6 (2010-09-01)
 - Better mimetype detection
 - New flash-based video player
