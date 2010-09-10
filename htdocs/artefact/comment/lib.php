@@ -528,6 +528,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.comment'),
                 'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
             );
         }
         $form['elements']['submit'] = array(
