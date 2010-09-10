@@ -32,8 +32,12 @@
  * @return string           The HTML for the element
  */
 function pieform_element_file(Pieform $form, $element) {/*{{{*/
-    return '<input type="file"'
-        . $form->element_attributes($element) . '>';
+    $result = '';
+    if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])){
+        $result = '<input type="hidden" name="MAX_FILE_SIZE" value="' . $maxfilesize . '"/>';
+    }
+    $result .= '<input type="file"' . $form->element_attributes($element) . '>';
+    return $result;
 }/*}}}*/
 
 function pieform_element_file_get_value(Pieform $form, $element) {/*{{{*/
