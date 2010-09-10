@@ -108,11 +108,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         }
     }
     if ($config['upload']) {
-        $maxuploadsize = min(get_real_size(ini_get('post_max_size')), get_real_size(ini_get('upload_max_filesize')));
-        if (!$institution && !$group) {
-            $userquotaremaining = $USER->get('quota') - $USER->get('quotaused');
-            $maxuploadsize = min($maxuploadsize, $userquotaremaining);
-        }
+        $maxuploadsize = get_max_upload_size(!$institution && !$group);
         $maxuploadsize = display_size($maxuploadsize);
         $smarty->assign('maxuploadsize', $maxuploadsize);
     }
