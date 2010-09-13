@@ -46,7 +46,7 @@
     <th><label>{str tag='uploadfile' section='artefact.file'}</label></th>
     <td>
       <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
-      {$agreementtext}
+      {$agreementtext|clean_html|safe}
     </td>
   </tr>
   <tr class="uploadform">

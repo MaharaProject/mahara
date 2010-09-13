@@ -1186,7 +1186,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $data->content = $values['customagreement'];
         $data->mtime   = db_format_timestamp(time());
         $data->mauthor = $USER->get('id');
-        update_record('site_content', $data, 'name');
+        if (record_exists('site_content', 'name', $data->name)) {
+            update_record('site_content', $data, 'name');
+        }
+        else {
+            insert_record('site_content', $data);
+        }
     }
 
     public static function short_size($bytes, $abbr=false) {
