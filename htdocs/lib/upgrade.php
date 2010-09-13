@@ -804,6 +804,7 @@ function core_install_firstcoredata_defaults() {
         'import_cleanup_old_imports'             => array('0', '4,16', '*', '*', '*'),
         'cron_site_data_weekly'                  => array('55', '23', '*', '*', '6'),
         'cron_site_data_daily'                   => array('51', '23', '*', '*', '*'),
+        'cron_check_for_updates'                 => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;
