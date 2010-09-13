@@ -1220,7 +1220,8 @@ class PluginImportLeap extends PluginImport {
     private function create_linked_file(SimpleXMLElement $entry, SimpleXMLElement $link) {
         $this->trace($link);
         $pathname = urldecode((string)$link['href']);
-        $dir = dirname($this->get('filename'));
+        $data = $this->get('data');
+        $dir = dirname($data['filename']);
         $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
         if (!file_exists($pathname)) {
             return false;
