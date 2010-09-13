@@ -66,7 +66,8 @@ $uploadform = pieform(array(
         'file' => array(
             'type' => 'file',
             'title' => get_string('profileicon', 'artefact.file'),
-            'rules' => array('required' => true)
+            'rules' => array('required' => true),
+            'maxfilesize'  => get_max_upload_size(false),
         ),
         'title' => array(
             'type' => 'text',
