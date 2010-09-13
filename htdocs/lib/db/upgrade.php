@@ -1570,6 +1570,15 @@ function xmldb_core_upgrade($oldversion=0) {
             SELECT f.*, a.id AS artefactid, a.owner, a.group, a.institution
             FROM {artefact_feedback} f JOIN {artefact} a ON f.artefact = a.id', array())) {
             foreach ($artefactfeedback as &$f) {
+                if ($f->author > 0) {
+                    $f->authorname = null;
+                }
+                else {
+                    $f->author = null;
+                    if (empty($f->authorname)) {
+                        $f->authorname = '?';
+                    }
+                }
                 $artefact = (object) array(
                     'artefacttype' => 'comment',
                     'owner'        => $f->owner,
