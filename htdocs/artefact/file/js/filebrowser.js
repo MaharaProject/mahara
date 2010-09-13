@@ -567,6 +567,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         self.form = form; // ????
         if (data.uploaded || data.error || data.deleted) {
             self.callback_feedback(data);  // add/update message
+            if (data.maxuploadsize) {
+                // keep max upload size up to date
+                replaceChildNodes(self.id + '_userfile_maxuploadsize', '(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
+            }
         }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {

@@ -742,6 +742,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
     $result['quota'] = $USER->get('quota');
     $result['quotaused'] = $USER->get('quotaused');
+    $result['maxuploadsize'] = display_size(get_max_upload_size(!$institution && !$group));
     return $result;
 }
 
@@ -893,6 +894,8 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
 function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) {
     global $USER;
+    $institution = $form->get_property('institution');
+    $group       = $form->get_property('group');
 
     try {
         $artefact = artefact_instance_from_id($artefact);
@@ -919,6 +922,7 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
                                 get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
         'quotaused' => $USER->get('quotaused'),
         'quota' => $USER->get('quota'),
+        'maxuploadsize' => display_size(get_max_upload_size(!$institution && !$group)),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
     );
 }

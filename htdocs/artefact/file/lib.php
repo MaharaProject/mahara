@@ -130,6 +130,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'folderappearsinviews',
                     'foldernamerequired',
                     'foldernotempty',
+                    'maxuploadsize',
                     'nametoolong',
                     'namefieldisrequired',
                     'uploadingfiletofolder',

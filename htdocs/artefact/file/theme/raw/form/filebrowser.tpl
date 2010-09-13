@@ -52,7 +52,8 @@
   <tr class="uploadform">
     <th><label>{str tag='File' section='artefact.file'}</label></th>
     <td>
-      <div id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" /> ({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</div>
+      <span id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile" size="40" /></span>
+      <span id="{$prefix}_userfile_maxuploadsize">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
       <noscript><input type="submit" class="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
       <script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>
     </td>
