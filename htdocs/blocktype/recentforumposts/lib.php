@@ -76,6 +76,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
 
             if ($role || $group->public) {
                 $limit = 5;
+                $configdata = $instance->get('configdata');
                 if (!empty($configdata['limit'])) {
                     $limit = intval($configdata['limit']);
                 }
@@ -94,8 +95,9 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                         AND t.deleted = 0
                         AND p.deleted = 0
                     ORDER BY
-                        p.ctime DESC
-                    LIMIT ?', array($group->id, $limit));
+                        p.ctime DESC',
+                    array($group->id), 0, $limit
+                );
 
                 $smarty = smarty_core();
                 $smarty->assign('group', $group);
