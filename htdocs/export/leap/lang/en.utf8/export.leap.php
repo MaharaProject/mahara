@@ -29,6 +29,6 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Leap2A';
 // TODO: link Leap2A standard format to a primer document on our wiki about Leap2A
-$string['description'] = 'Gives you an export in the <a href="">Leap2A standard format</a>. You can later use this to import your data into <a href="http://wiki.mahara.org/Developer_Area/Import%%2f%%2fExport/Interoperability">other Leap2A compliant systems</a>, although the export is hard for humans to read.';
+$string['description'] = 'Gives you an export in the <a href="http://wiki.leapspecs.org/2A/specification">Leap2A standard format</a>. You can later use this to import your data into <a href="http://wiki.mahara.org/Developer_Area/Import%%2f%%2fExport/Interoperability">other Leap2A compliant systems</a>, although the export is hard for humans to read.';
 
 ?>
