@@ -161,15 +161,18 @@ function upload_validate(Pieform $form, $values) {
     $imageinfo = getimagesize($values['file']['tmp_name']);
     if (!$imageinfo || !is_image_type($imageinfo[2])) {
         $form->set_error('file', get_string('filenotimage'));
+        return false;
     }
 
     if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id) >= 5) {
         $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.file'));
+        return false;
     }
 
-    $filesize = filesize($values['file']['tmp_name']);
+    $filesize = $um->file['size'];
     if (!$USER->quota_allowed($filesize)) {
         $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
+        return false;
     }
 
     // Check the file isn't greater than the max allowable size
