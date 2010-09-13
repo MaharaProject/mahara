@@ -2152,5 +2152,19 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records_select('config', "field IN ('usersrank', 'groupsrank', 'viewsrank')");
     }
 
+    if ($oldversion < 2010091300) {
+        // Cron job missing from installs post 2010041900
+        if (!record_exists('cron', 'callfunction', 'cron_check_for_updates')) {
+            $cron = new StdClass;
+            $cron->callfunction = 'cron_check_for_updates';
+            $cron->minute       = rand(0, 59);
+            $cron->hour         = rand(0, 23);
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
     return $status;
 }
