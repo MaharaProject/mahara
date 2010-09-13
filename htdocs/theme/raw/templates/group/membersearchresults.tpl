@@ -17,8 +17,8 @@
                 <div>{str tag=hasrequestedmembership section=group}.{if $r.reason}
                   <label>{str tag=reason}:</label> {$r.reason|format_whitespace|safe}{/if}
                 </div>
-                <div class="right btn btn-add">{$r.addform|safe}</div>
-                <div class="right btn btn-add">{$r.denyform|safe}</div>
+                <div class="right">{$r.addform|safe}</div>
+                <div class="right">{$r.denyform|safe}</div>
                 {elseif $membershiptype == 'invite'}
                 <div>{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}
