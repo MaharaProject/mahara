@@ -149,6 +149,14 @@ $filesize = 0;
 function upload_validate(Pieform $form, $values) {
     global $USER, $filesize;
     require_once('file.php');
+    require_once('uploadmanager.php');
+
+    $um = new upload_manager('file');
+    if ($error = $um->preprocess_file()) {
+        $form->set_error('file', $error);
+        return false;
+    }
+
     $imageinfo = getimagesize($values['file']['tmp_name']);
     if (!$imageinfo || !is_image_type($imageinfo[2])) {
         $form->set_error('file', get_string('filenotimage'));
