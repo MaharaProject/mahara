@@ -207,9 +207,14 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     global $USER;
 
     $smarty = smarty_core();
-
+    $userid = null;
     if (is_null($group) && is_null($user)) {
         $group = $form->get_property('group');
+    }
+    else if ($user) {
+        $userid = $USER->get('id');
+        $smarty->assign('owner', 'user');
+        $smarty->assign('ownerid', $userid);
     }
     else {
         $smarty->assign('owner', 'group');
@@ -222,7 +227,10 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
         $smarty->assign('owner', 'institution');
         $smarty->assign('ownerid', $institution);
     }
-    $userid = ($group || $institution) ? null : $USER->get('id');
+
+    if (is_null($userid)) {
+        $userid = ($group || $institution) ? null : $USER->get('id');
+    }
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
     $selectfolders = (int) !empty($element['config']['selectfolders']);
