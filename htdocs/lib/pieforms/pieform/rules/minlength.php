@@ -44,6 +44,9 @@ function pieform_rule_minlength_i18n() {/*{{{*/
         'en.utf8' => array(
             'minlength' => 'This field must be at least %d characters long', 
         ),
+        'en_US.utf8' => array(
+            'minlength' => 'This field must be at least %d characters long',
+        ),
         'de.utf8' => array(
             'minlength' => 'Das Feld muss zumindest %d Zeichen lang sein',
         ),
