@@ -1436,7 +1436,10 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010040800) {
-        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('submittedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
     }
 
     if ($oldversion < 2010041200) {
