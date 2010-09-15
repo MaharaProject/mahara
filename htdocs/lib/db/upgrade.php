@@ -2178,5 +2178,20 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010091500) {
+        // Previous version of 2010040800 upgrade created the submittedtime
+        // column not null (see bug #638550)
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('submittedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        change_field_notnull($table, $field);
+        // Our crappy db is full of redundant data (submittedtime depends on
+        // submittedhost or submittedgroup) so it's easy to correct this.
+        execute_sql("
+            UPDATE {view} SET submittedtime = NULL
+            WHERE submittedtime IS NOT NULL AND submittedgroup IS NULL AND submittedhost IS NULL"
+        );
+    }
+
     return $status;
 }
