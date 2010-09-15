@@ -2613,28 +2613,16 @@ class View {
     }
 
 
-     /**
-     * Get views submitted to a group. Views that belong to $USER are excluded
-     * unless data for specific user is requested or $USER is the only member
-     * with view assesment permissions.
-     *
-     * @param int $userid  ID of user
-     * @param int $groupid ID of group
-     * @return array
+    /** 
+     * Get views submitted to a group
      */
     public static function get_submitted_views($groupid, $userid=null) {
-        global $USER;
-
         $values = array($groupid);
         $where = 'submittedgroup = ?';
 
         if (!empty($userid)) { // Filter by view owner
             $values[] = (int) $userid;
             $where .= ' AND owner = ?';
-        }
-        else if (count(group_get_members_can_see_submitted_views($groupid))) {
-            $values[] = (int) $USER->get('id');
-            $where .= ' AND owner <> ?';
         }
 
         $viewdata = get_records_sql_assoc('

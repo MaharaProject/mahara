@@ -1377,7 +1377,7 @@ function group_get_user_course_groups($userid=null) {
         global $USER;
         $userid = $USER->get('id');
     }
-    if ($groups = get_records_sql_assoc(
+    if ($groups = get_records_sql_array(
         "SELECT g.id, g.name
         FROM {group_member} u
         INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
@@ -1386,36 +1386,6 @@ function group_get_user_course_groups($userid=null) {
         AND t.submittableto = 1
         ORDER BY g.name
         ", array($userid))) {
-        foreach (array_keys($groups) as $key) {
-            if (!count(group_get_members_can_see_submitted_views($key))) {
-                unset($groups[$key]);
-            }
-        }
-        return $groups;
-    }
-    return array();
-}
-
-/**
- * Returns a list of users that are allowed to see submitted view for the given group.
- * $USER is excluded from results.
- *
- * @param int $groupid ID of group
- * @return array
- */
-function group_get_members_can_see_submitted_views($groupid) {
-    global $USER;
-    $groupid = group_param_groupid($groupid);
-
-    if ($groups = get_column_sql(
-        "SELECT u.member
-        FROM {group_member} u
-        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
-        INNER JOIN {grouptype} t ON t.name = g.grouptype
-        INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = u.role)
-        WHERE g.id = ?
-        AND t.submittableto = 1 AND r.see_submitted_views = 1 AND u.member != ?
-        ", array($groupid, $USER->get('id')))) {
         return $groups;
     }
     return array();
