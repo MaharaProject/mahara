@@ -1027,10 +1027,10 @@ function auth_get_login_form() {
             $action .= '?';
             foreach ($_GET as $key => $value) {
                 if ($key != 'logout' && $key != 'login') {
-                    $action .= hsc($key) . '=' . hsc($value) . '&amp;';
+                    $action .= hsc($key) . '=' . hsc($value) . '&';
                 }
             }
-            $action = substr($action, 0, -5);
+            $action = substr($action, 0, -1);
         }
     }
     if ($_POST) {
@@ -1532,7 +1532,7 @@ function auth_generate_login_form() {
     }
     $action='';
     if (get_config('httpswwwroot')) {
-        $action = rtrim(get_config('httpswwwroot'), '/') . hsc(strip_querystring(get_relative_script_path()));
+        $action = rtrim(get_config('httpswwwroot'), '/') . strip_querystring(get_relative_script_path());
     }
     require_once('pieforms/pieform.php');
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
