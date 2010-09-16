@@ -175,7 +175,8 @@ function edituser_site_validate(Pieform $form, $values) {
     }
 
     // Check that the external username isn't already in use
-    if ($usedby = get_record_select('auth_remote_user',
+    if (isset($values['remoteusername']) &&
+        $usedby = get_record_select('auth_remote_user',
         'authinstance = ? AND remoteusername = ? AND localusr != ?',
         array($values['authinstance'], $values['remoteusername'], $values['id']))
     ) {
