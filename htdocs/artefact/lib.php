@@ -1180,7 +1180,7 @@ function artefact_check_plugin_sanity($pluginname) {
     }
     $types = call_static_method($classname, 'get_block_types');
     foreach ($types as $type) {
-        $pluginclassname = generate_class_name('blocktype', 'image');
+        $pluginclassname = generate_class_name('blocktype', $type);
         if (get_config('installed')) {
             if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed', 
                 'name = ? AND artefactplugin != ? ',
