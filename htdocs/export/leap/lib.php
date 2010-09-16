@@ -728,25 +728,6 @@ class LeapExportElement {
                 $this->add_artefact_link($child, $this->get_child_relationship($child));
             }
         }
-        if ($attachments = $this->exporter->artefact_attachment_links($id)) {
-            foreach ($attachments as $a) {
-                $this->add_artefact_link($a, 'related');
-            }
-        }
-        if ($views = $this->exporter->artefact_view_links($id)) {
-            foreach ($views as $viewid => $linktypes) {
-                foreach ($linktypes as $linktype) {
-                    $this->add_view_link($viewid, $linktype);
-                }
-            }
-        }
-        if ($artefacts = $this->exporter->artefact_artefact_links($id)) {
-            foreach ($artefacts as $artefactid => $linktypes) {
-                foreach ($linktypes as $linktype) {
-                    $this->add_artefact_link($this->exporter->artefacts[$artefactid], $linktype);
-                }
-            }
-        }
     }
 
     /**
