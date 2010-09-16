@@ -48,9 +48,6 @@ function pieform_rule_before_i18n() {/*{{{*/
         'en.utf8' => array(
             'before' => 'This can not be after the field "%s"'
         ),
-        'en_US.utf8' => array(
-            'before' => 'This can not be after the field "%s"'
-        ),
         'de.utf8' => array(
             'before' => 'Dies kann nicht nach dem Feld "%s" sein'
         ),

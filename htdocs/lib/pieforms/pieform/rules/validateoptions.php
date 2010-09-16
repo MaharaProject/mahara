@@ -52,9 +52,6 @@ function pieform_rule_validateoptions_i18n() {/*{{{*/
         'en.utf8' => array(
             'validateoptions' => 'The option "%s" is invalid'
         ),
-        'en_US.utf8' => array(
-            'validateoptions' => 'The option "%s" is invalid'
-        ),
         'de.utf8' => array(
             'validateoptions' => 'Die Option "%s" ist ungültig'
         ),
