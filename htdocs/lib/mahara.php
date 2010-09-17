@@ -2370,8 +2370,19 @@ function cron_check_for_updates() {
 
     $result = mahara_http_request($request);
 
+    if (!empty($result->errno)) {
+        log_debug('Could not retrieve launchpad download page');
+        return;
+    }
+
     $page = new DOMDocument();
-    $page->loadHTML($result->data);
+    libxml_use_internal_errors(true);
+    $success = $page->loadHTML($result->data);
+    libxml_use_internal_errors(false);
+    if (!$success) {
+        log_debug('Error parsing launchpad download page');
+        return;
+    }
     $xpath = new DOMXPath($page);
     $query = '//div[starts-with(@id,"release-information-")]';
     $elements = $xpath->query($query);
