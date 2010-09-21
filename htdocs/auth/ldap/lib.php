@@ -46,6 +46,7 @@ class AuthLdap extends Auth {
         $this->config['bind_dn'] = '';
         $this->config['bind_pw'] = '';
         $this->config['version'] = '2';
+        $this->config['starttls'] = 0;
         $this->config['updateuserinfoonlogin'] = 0;
         $this->config['weautocreateusers'] = 1;
         $this->config['firstnamefield' ] = '';
@@ -187,6 +188,12 @@ class AuthLdap extends Auth {
 
             if ($this->config['user_type'] == 'ad') {
                  ldap_set_option($connresult, LDAP_OPT_REFERRALS, 0);
+            }
+
+            if (!empty($this->config['starttls'])) {
+                if (!ldap_start_tls($connresult)) {
+                    return false;
+                }
             }
 
             if (!empty($binddn)) {
@@ -411,6 +418,7 @@ class PluginAuthLdap extends PluginAuth {
         'bind_dn'           => '',
         'bind_pw'           => '',
         'version'           => 2,
+        'starttls'          => 0,
         'updateuserinfoonlogin' => 0,
         'weautocreateusers' => 1,
         'firstnamefield'    => '',
@@ -559,6 +567,11 @@ class PluginAuthLdap extends PluginAuth {
                 'defaultvalue' => self::$default_config['version'],
                 'help'  => true,
             ),
+            'starttls' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('starttls', 'auth.ldap'),
+                'defaultvalue' => self::$default_config['starttls'],
+            ),
             'updateuserinfoonlogin' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('updateuserinfoonlogin', 'auth.ldap'),
@@ -645,6 +658,7 @@ class PluginAuthLdap extends PluginAuth {
                                         'bind_dn' => $values['bind_dn'],
                                         'bind_pw' => $values['bind_pw'],
                                         'version' => $values['version'],
+                                        'starttls' => $values['starttls'],
                                         'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
                                         'weautocreateusers' => $values['weautocreateusers'],
                                         'firstnamefield' => $values['firstnamefield'],
