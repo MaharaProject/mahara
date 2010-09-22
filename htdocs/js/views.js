@@ -295,6 +295,11 @@ function ViewManager() {
         var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
 
         var pd = {'id': $('viewid').value, 'change': 1};
+        if (config.blockeditormaxwidth) {
+            // Shouldn't have to pass browser window dimensions here, but can't find
+            // another way to get tinymce elements to use up the available height.
+            pd['cfheight'] = getViewportDimensions().h - 100;
+        }
         pd[getNodeAttribute(button, 'name')] = 1;
 
         var oldContent = contentDiv.innerHTML;
@@ -374,10 +379,26 @@ function ViewManager() {
 
         var d = getElementDimensions(newblock);
         var vpdim = getViewportDimensions();
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - d.h) / 2, 5);
+
+        var h = Math.max(d.h, 200);
+        if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
+            var w = vpdim.w - (h > vpdim.h ? 80 : 50);
+        }
+        else {
+            var w = Math.max(d.w, 500);
+        }
+
+        var tborder = parseFloat(getStyle(newblock, 'border-top-width'));
+        var tpadding = parseFloat(getStyle(newblock, 'padding-top'));
+        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
+
+        var lborder = parseFloat(getStyle(newblock, 'border-left-width'));
+        var lpadding = parseFloat(getStyle(newblock, 'padding-left'));
+
         setStyle(newblock, {
-            'width': d.w + 'px',
-            'left': (vpdim.w - d.w) / 2 + 'px',
+            'width': w + 'px',
+            'height': h + 'px',
+            'left': ((vpdim.w - w) / 2 - lborder - lpadding) + 'px',
             'top': newtop + 'px',
             'position': 'absolute',
             'z-index': 1
@@ -1005,6 +1026,9 @@ function ViewManager() {
                     'change': 1,
                     'blocktype': getFirstElementByTagAndClassName('input', 'blocktype-radio', self.currentlyMovingObject).value
                 };
+                if (config.blockeditormaxwidth) {
+                    pd['cfheight'] = getViewportDimensions().h - 100;
+                }
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();

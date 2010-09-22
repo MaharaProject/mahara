@@ -198,6 +198,9 @@ $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
 $smarty->assign('dashboard', $dashboard);
+if (get_config('blockeditormaxwidth')) {
+    $smarty->assign('INLINEJAVASCRIPT', 'config.blockeditormaxwidth = true;');
+}
 $viewid = $view->get('id');
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
