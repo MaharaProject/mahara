@@ -382,7 +382,7 @@ function ViewManager() {
 
         var h = Math.max(d.h, 200);
         if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
-            var w = vpdim.w - (h > vpdim.h ? 80 : 50);
+            var w = vpdim.w - 80;
         }
         else {
             var w = Math.max(d.w, 500);
