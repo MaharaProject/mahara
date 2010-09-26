@@ -70,6 +70,10 @@ else {
 log_debug('---------- cron running ' . date('r', $now) . ' ----------');
 raise_memory_limit('128M');
 
+if (!is_writable(get_config('dataroot'))) {
+    log_debug("Warning - unable to write to dataroot directory.");
+}
+
 // for each plugin type
 foreach (plugin_types() as $plugintype) {
 
