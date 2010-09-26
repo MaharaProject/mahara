@@ -60,11 +60,12 @@ if (!$maxrunage = get_config('maxrunage')) {
 
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
+$time = time();
 if(isset($argv[1])) {
     $now = strtotime($argv[1]);
 }
 else {
-    $now = time();
+    $now = $time;
 }
 
 log_debug('---------- cron running ' . date('r', $now) . ' ----------');
@@ -178,6 +179,14 @@ if ($jobs = get_records_select_array('cron', 'nextrun < ? OR nextrun IS NULL',
     }
 }
 
+$finish = time();
+
+//Time relative to fake cron time
+if (isset($argv[1])) {
+    $diff = $time - $now;
+    $finish = $finish - $diff;
+}
+log_debug('---------- cron finished ' . date('r', $finish) . ' ----------');
 
 function cron_next_run_time($lastrun, $job) {
     $run_date = getdate($lastrun);
