@@ -7,5 +7,6 @@
 <div class="grouphomepage">
 {$viewcontent|safe}
 </div>
+<div class="cb"></div>
 
 {include file="footer.tpl"}
