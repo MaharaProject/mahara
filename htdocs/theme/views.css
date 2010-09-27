@@ -395,9 +395,6 @@ html>body #column-container {
 .grouphomepage {
   width: 100%;
 }
-.grouphomepage .column {
-  float: none;
-}
 .grouphomepage .bt-groupviews h5 {
   margin: 0;
 }
