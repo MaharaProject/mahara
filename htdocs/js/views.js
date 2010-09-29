@@ -377,32 +377,33 @@ function ViewManager() {
         hideElement(newblock);
         appendChildNodes(getFirstElementByTagAndClassName('body'), newblock);
 
+        var style = {
+            'position': 'absolute',
+            'z-index': 1
+        };
+
         var d = getElementDimensions(newblock);
         var vpdim = getViewportDimensions();
 
         var h = Math.max(d.h, 200);
         if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
-            var w = vpdim.w - 80;
+            style.width = vpdim.w - 80;
+            style.height = h;
         }
         else {
-            var w = Math.max(d.w, 500);
+            style.width = Math.max(d.w, 500);
         }
 
         var tborder = parseFloat(getStyle(newblock, 'border-top-width'));
         var tpadding = parseFloat(getStyle(newblock, 'padding-top'));
         var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
+        style.top = newtop + 'px';
 
         var lborder = parseFloat(getStyle(newblock, 'border-left-width'));
         var lpadding = parseFloat(getStyle(newblock, 'padding-left'));
+        style.left = ((vpdim.w - style.width) / 2 - lborder - lpadding) + 'px';
 
-        setStyle(newblock, {
-            'width': w + 'px',
-            'height': h + 'px',
-            'left': ((vpdim.w - w) / 2 - lborder - lpadding) + 'px',
-            'top': newtop + 'px',
-            'position': 'absolute',
-            'z-index': 1
-        });
+        setStyle(newblock, style);
 
         var deletebutton = getFirstElementByTagAndClassName('input', 'deletebutton', newblock);
 
