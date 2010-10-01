@@ -34,6 +34,7 @@ $string['included'] = 'Included files';
 $string['dbqueries'] = 'DB queries';
 $string['reads'] = 'reads';
 $string['writes'] = 'writes';
+$string['cached'] = 'cached';
 $string['ticks'] = 'ticks';
 $string['sys'] = 'sys';
 $string['user'] = 'user';

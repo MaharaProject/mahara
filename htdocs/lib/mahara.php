@@ -1962,6 +1962,7 @@ function get_performance_info() {
 
     $info['dbreads'] = $PERF->dbreads;
     $info['dbwrites'] = $PERF->dbwrites;
+    $info['dbcached'] = $PERF->dbcached;
 
     if (function_exists('posix_times')) {
         $ptimes = posix_times();
@@ -2008,7 +2009,7 @@ function perf_to_log($info=null) {
     $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
     $logstring .= ' time: '.$info['realtime'].'s';
     $logstring .= ' includecount: '.$info['includecount'];
-    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes';
+    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes, ' . $info['dbcached'] . ' cached';
     $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
     $logstring .= ' serverload: ' . $info['serverload'];
     log_debug($logstring);
