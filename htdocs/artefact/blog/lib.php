@@ -215,6 +215,11 @@ class ArtefactTypeBlog extends ArtefactType {
         }
         $offset = isset($options['offset']) ? intval($options['offset']) : 0;
 
+        if (!isset($options['countcomments'])) {
+            // Count comments if this is a view
+            $options['countcomments'] = (!empty($options['viewid']));
+        }
+
         $posts = ArtefactTypeBlogpost::get_posts($this->id, $limit, $offset, $options);
 
         $template = 'artefact:blog:viewposts.tpl';
