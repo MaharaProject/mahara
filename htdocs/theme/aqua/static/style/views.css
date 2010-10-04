@@ -1,6 +1,4 @@
-/*  Views  */
-#views-loading {
-}
+
 /********************** Top pane of Edit View *************************/
 #top-pane {
     background: #1D499F;
@@ -34,82 +32,27 @@
 #category-list li.current a:active {
     background-color: #f4f7f9;
 	color: #1e6297;
-}
-#category-list li.current a:hover {
+    padding: 5px 10px 7px 10px;
+    * padding: 7px 10px 7px 10px;
 }
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
   color: #1D499F !important;
   background-color: #f4f7f9;
-  border-top: 0;
-}
-.blocktype div {
-}
-#noblocks {
 }
 
-
-/********************** Between Panes **************************************/
-#layout-link {
-}
-#layout-link.disabled {
-}
-#btn-displaymyview {
-}
-
-
-/********************** Bottom pane of Edit View *************************/
-#page #bottom-pane {
-	border-color: #1D499F !important;
-}
-#blocksinstruction {
-    background: #1D499F;
-    color: #FFFFFF;
-}
-
-#column-container .column-header input[disabled="disabled"] {
-}
-
-.column-content .add-button input {
-}
-
-#block-placeholder {
-}
 
 /********************** Blockinstance ***********************************/
-.blockinstance {
-}
-.blockinstance.configure {
-}
 /* header*/
 .blockinstance-header h4 {
     border-bottom: 2px solid #d2d2d2;
-}
-.blockinstance-header h4 a,
-.blockinstance-header h4 a:link,
-.blockinstance-header h4 a:visited,
-.blockinstance-header h4 a:active {
-    text-decoration: none;
-}
-.blockinstance-header h4 a:hover {
-}
-
-/* content */
-.blockinstance-content {
-}
-.blockinstance-content h3 {
-}
-.blockinstance-content h4 {
 }
 
 /* Wall */
 .wallpost {
     background-color: #F4F7F9;
 }
-#wall .private {
-}
-
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
     line-height: 25px;
@@ -134,8 +77,6 @@ ul.artefactchooser-tabs li a:active {
     height: 25px;
     background: #1D499F;
 }
-ul.artefactchooser-tabs li a:hover {
-}
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
 ul.artefactchooser-tabs li.current a:visited
@@ -146,8 +87,8 @@ ul.artefactchooser-tabs li.current a:active {
 	border-top: 1px solid #d1d1d1;
 	border-right: 1px solid #d1d1d1;
 	border-bottom: 0;
-}
-ul.artefactchooser-tabs li.current a:hover {
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 ul.artefactchooser-subtabs {
   margin: 0 !important;
@@ -184,33 +125,11 @@ ul.artefactchooser-subtabs li.current a:hover {
 #artefactchooser-body {
     background: #F5F9FC;
 }
-.upload_browse #artefactchooser-body {
-}
-
-/* pagination */
-.ac-pagination .results {
-}
-
-/* attachments */
-.attachments {
-}
-#view .blockinstance-content .attachments,
-#view .blockinstance-content .attachments td {
-}
-
-/** When viewing an artefact */
-#view .filedata-icon.fr {
-}
-
-#copyview .searchquery {
-}
 
 
 /* table */
 .maharatable thead th {
     color: #186194;
-}
-.maharatable tbody th {
 }
 #artefactchooser-body th label {
 	color: #14336F;
@@ -219,12 +138,9 @@ ul.artefactchooser-subtabs li.current a:hover {
 	color: #14336F;
 }
 
-
-/* View Page footer menu */
-#view .viewfooter {
+#collection {
+	color: #FFF;
 }
-#view #feedbacktable {
-}
-#viewmenu a {
-    padding-left: 12px;
+ul.colnav li a {
+	background: #00084F;
 }

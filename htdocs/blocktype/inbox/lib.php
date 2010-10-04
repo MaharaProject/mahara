@@ -62,7 +62,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             $desiredtypes += get_column('activity_type', 'name', 'admin', 1);
         }
 
-        $maxitems = $configdata['maxitems'] ? $configdata['maxitems'] : 5;
+        $maxitems = isset($configdata['maxitems']) ? $configdata['maxitems'] : 5;
 
         $records = array();
         if ($desiredtypes) {
@@ -88,7 +88,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if ($records) {
             require_once('activity.php');
             foreach ($records as &$r) {
-                $r->message = format_notification_whitespace($r->message);
+                $r->message = format_notification_whitespace($r->message, $r->type);
             }
         }
 
@@ -138,6 +138,10 @@ class PluginBlocktypeInbox extends SystemBlocktype {
             'title' => get_string('maxitems', 'blocktype.inbox'),
             'description' => get_string('maxitemsdescription', 'blocktype.inbox'),
             'defaultvalue' => isset($configdata['maxitems']) ? $configdata['maxitems'] : 5,
+            'rules' => array(
+                'minvalue' => 1,
+                'maxvalue' => 100,
+            ),
         );
 
         return $elements;

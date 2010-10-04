@@ -1,0 +1,14 @@
+/**
+ * CSS rules for the resume artefact plugin
+ *
+ * Copyright (C) 2006-2009 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+#planswrap table tr.incomplete {
+    background: #ffd2d8;
+    color: #DD0221;
+	border-top: 1px solid #080D0F;
+}
+#planswrap table tr.incomplete a.btn-edit {
+    color: #458400;
+}

@@ -38,6 +38,7 @@ $string['ldapfieldforemail'] = 'LDAP field for Email';
 $string['ldapfieldforfirstname'] = 'LDAP field for First Name';
 $string['ldapfieldforsurname'] = 'LDAP field for Surname';
 $string['ldapversion'] = 'LDAP version';
+$string['starttls'] = 'TLS encryption';
 $string['password'] = 'Password';
 $string['searchsubcontexts'] = 'Search subcontexts';
 $string['userattribute'] = 'User attribute';

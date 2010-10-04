@@ -40,27 +40,43 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         return array('general');
     }
 
-    public static function get_viewtypes() {
-        return array('profile', 'portfolio', 'dashboard');
+    private static function get_group(BlockInstance $instance) {
+        static $groups = array();
+
+        $block = $instance->get('id');
+
+        if (!isset($groups[$block])) {
+
+            // When this block is in a group view it should always display the
+            // forum posts from that group
+
+            $groupid = $instance->get_view()->get('group');
+            $configdata = $instance->get('configdata');
+
+            if (!$groupid && !empty($configdata['groupid'])) {
+                $groupid = intval($configdata['groupid']);
+            }
+
+            if ($groupid) {
+                $groups[$block] = get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
+            }
+            else {
+                $groups[$block] = false;
+            }
+        }
+
+        return $groups[$block];
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        // When this block is in a group view it should always display the
-        // forum posts from that group
-        $groupid = $instance->get_view()->get('group');
-        $configdata = $instance->get('configdata');
+        if ($group = self::get_group($instance)) {
 
-        if (!$groupid && !empty($configdata['groupid'])) {
-            $groupid = intval($configdata['groupid']);
-        }
-
-        if ($groupid) {
-            $group = get_record_select('group', 'id = ? AND deleted = 0', array($groupid), '*, ' . db_format_tsfield('ctime'));
             require_once('group.php');
             $role = group_user_access($group->id);
 
             if ($role || $group->public) {
                 $limit = 5;
+                $configdata = $instance->get('configdata');
                 if (!empty($configdata['limit'])) {
                     $limit = intval($configdata['limit']);
                 }
@@ -79,8 +95,9 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                         AND t.deleted = 0
                         AND p.deleted = 0
                     ORDER BY
-                        p.ctime DESC
-                    LIMIT ?', array($groupid, $limit));
+                        p.ctime DESC',
+                    array($group->id), 0, $limit
+                );
 
                 $smarty = smarty_core();
                 $smarty->assign('group', $group);
@@ -191,6 +208,14 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         }
         else {
             return $instance->get('title');
+        }
+    }
+
+    public static function feed_url(BlockInstance $instance) {
+        if ($group = self::get_group($instance)) {
+            if ($group->public) {
+                return get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
+            }
         }
     }
 

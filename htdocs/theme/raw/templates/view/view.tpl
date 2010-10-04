@@ -1,8 +1,12 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $notrudeform}<div class="message delete">{$notrudeform|safe}</div>{/if}
+{if $notrudeform}<div class="message delete narrow">{$notrudeform|safe}</div>{/if}
 
 {if $maintitle}<h1>{$maintitle|safe}</h1>{/if}
+
+{if !$microheaders && $collection}
+    {include file=collectionnav.tpl}
+{/if}
 
 {if !$microheaders && $mnethost}
 <div class="rbuttons">
@@ -20,10 +24,10 @@
                 </div>
             </div>
         </div>
-  <div class="viewfooter cb">
-    {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
-    <div>{$releaseform|safe}</div>
-    {if $view_group_submission_form}<div>{$view_group_submission_form|safe}</div>{/if}
+  <div class="viewfooter">
+    {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
+    <div class="releaseviewform">{$releaseform|safe}</div>
+    {if $view_group_submission_form}<div class="submissionform">{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}
     <table id="feedbacktable" class="fullwidth table">
       <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>

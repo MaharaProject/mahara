@@ -479,6 +479,10 @@ abstract class ArtefactType {
       
         db_begin();
 
+        // Call delete() on comments (if there are any)
+        safe_require('artefact', 'comment');
+        ArtefactTypeComment::delete_comments_onartefacts(array($this->id));
+
         // Call delete() on children (if there are any)
         if ($children = $this->get_children_instances()) {
             foreach ($children as $child) {
@@ -518,6 +522,10 @@ abstract class ArtefactType {
         db_begin();
 
         artefact_watchlist_notification($artefactids);
+
+        // Delete comments first
+        safe_require('artefact', 'comment');
+        ArtefactTypeComment::delete_comments_onartefacts($artefactids);
 
         $records = get_records_select_assoc(
             'artefact',
@@ -992,6 +1000,18 @@ abstract class ArtefactType {
         return $attachments;
     }
 
+    public function tags_from_id_list($artefactids) {
+        if (empty($artefactids)) {
+            return array();
+        }
+        $artefactids = join(',', array_map('intval', $artefactids));
+        $tags = get_records_select_array('artefact_tag', 'artefact IN (' . $artefactids . ')');
+        if (!$tags) {
+            return array();
+        }
+        return $tags;
+    }
+
     public function get_attachments($assoc=false) {
         $list = get_records_sql_assoc('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_attachment} aa
@@ -1026,6 +1046,9 @@ abstract class ArtefactType {
     public function attach($attachmentid) {
         if (record_exists('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid)) {
             return;
+        }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
         }
         $data = new StdClass;
         $data->artefact = $this->get('id');
@@ -1063,6 +1086,9 @@ abstract class ArtefactType {
                 )", array($this->id, $this->id));
             delete_records('artefact_attachment', 'artefact', $this->id);
             return;
+        }
+        if (!record_exists('artefact', 'id', $attachmentid)) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $attachmentid));
         }
         delete_records('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid);
         delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $attachmentid);
@@ -1154,7 +1180,7 @@ function artefact_check_plugin_sanity($pluginname) {
     }
     $types = call_static_method($classname, 'get_block_types');
     foreach ($types as $type) {
-        $pluginclassname = generate_class_name('blocktype', 'image');
+        $pluginclassname = generate_class_name('blocktype', $type);
         if (get_config('installed')) {
             if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed', 
                 'name = ? AND artefactplugin != ? ',

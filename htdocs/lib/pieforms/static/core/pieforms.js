@@ -56,11 +56,14 @@ function PieformManager() {//{{{
                 if (type && type == 'hidden') {
                     return;
                 }
-                element.focus();
-                if (hasElementClass(element, 'autoselect')
-                    && (typeof(element.select) == 'function' || (element.focus && element.select.call))) {
-                    element.select();
+                try { // If element is invisible, IE will throw an error
+                    element.focus();
+                    if (hasElementClass(element, 'autoselect')
+                        && (typeof(element.select) == 'function' || (element.focus && element.select.call))) {
+                        element.select();
+                    }
                 }
+                catch (e) {}
                 throw MochiKit.Iter.StopIteration;
             }
         });

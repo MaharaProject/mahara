@@ -144,7 +144,6 @@ $string['grouprequestmessage'] = '%s would like to join your group %s';
 $string['grouprequestmessagereason'] = "%s would like to join your group %s. Their reason for wanting to join is:\n\n%s";
 $string['cantdeletegroup'] = 'You cannot delete this group';
 $string['groupconfirmdelete'] = 'Are you sure you wish to delete this group?';
-$string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this group? Some of your views use this group for access control, removing this group would mean that the members of that group would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
 $string['allmygroups'] = 'All My Groups';
 $string['groupsimin']  = 'Groups I\'m In';
@@ -178,6 +177,7 @@ $string['groups'] = 'groups';
 $string['notamember'] = 'You are not a member of this group';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 $string['declinerequestsuccess'] = 'Group membership request has been declined sucessfully.';
+$string['notpublic'] = 'This group is not public.';
 
 // Bulk add, invite
 $string['addmembers'] = 'Add members';
@@ -308,7 +308,7 @@ $string['Role'] = 'Role';
 $string['changerole'] = 'Change role';
 $string['changeroleofuseringroup'] = 'Change role of %s in %s';
 $string['currentrole'] = 'Current role';
-$string['changeroleto'] = 'Change role to';
+$string['changerolefromto'] = 'Change role from %s to';
 $string['rolechanged'] = 'Role changed';
 $string['removefromgroup'] = 'Remove from group';
 $string['userremoved'] = 'User removed';

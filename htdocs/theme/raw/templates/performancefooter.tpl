@@ -8,8 +8,8 @@
 {if $perf_includecount}
             <span id="included">{str tag="included" section="performance"}: {$perf_includecount}</span> |
 {/if}
-{if $perf_dbreads || $perf_dbwrites}
-            <span id="dbqueries">{str tag="dbqueries" section="performance"}: {$perf_dbreads} {str tag='reads' section='performance'}, {$perf_dbwrites} {str tag='writes' section='performance'}</span> |
+{if $perf_dbreads || $perf_dbwrites || $perf_dbcached}
+            <span id="dbqueries">{str tag="dbqueries" section="performance"}: {$perf_dbreads} {str tag='reads' section='performance'}, {$perf_dbwrites} {str tag='writes' section='performance'}, {$perf_dbcached} {str tag='cached' section='performance'}</span> |
 {/if}
 {if $perf_ticks}
             <span id="posixtimes">{str tag="ticks" section="performance"}: {$perf_ticks} {str tag="user" section="performance"}: {$perf_utime}

@@ -263,6 +263,22 @@ abstract class PluginExport extends Plugin {
             }
         }
 
+        $this->collections = array();
+        $collections = get_records_sql_assoc('
+            SELECT * FROM {collection} WHERE id IN (
+                SELECT collection
+                FROM {collection_view}
+                WHERE view IN (' . join(',', array_keys($this->views)) . ')
+            )',
+            array()
+        );
+        if ($collections) {
+            require_once('collection.php');
+            foreach ($collections as &$c) {
+                $this->collections[$c->id] = new Collection(0, $c);
+            }
+        }
+
         // Now set up the temporary export directories
         $this->exportdir = get_config('dataroot')
             . 'export/'
@@ -333,6 +349,9 @@ abstract class PluginExport extends Plugin {
     }
 
     protected function get_artefact_extra_artefacts(&$artefactids) {
+        if (empty($artefactids)) {
+            return array();
+        }
         $extra = array();
         $plugins = plugins_installed('artefact');
         foreach ($plugins as &$plugin) {

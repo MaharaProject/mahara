@@ -47,7 +47,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv')));
+            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3')));
         }
     }
 
@@ -208,14 +208,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     private static function get_all_filetype_players() {
         /* Keyed by the file type descriptions from the artefact_file_mime_types table */
         return array(
-            'mp3'       => 'flash_player', // tested
+            'mp3'       => 'flow_player', // tested
             'swf'       => 'flash_player', // tested
-            'flv'       => 'flash_player', // tested
+            'flv'       => 'flow_player', // tested
             'quicktime' => 'qt_player',  // tested
             'wmv'       => 'wmp_player', // tested
             'mpeg'      => 'qt_player',  // tested
             'avi'       => 'wmp_player', // tested
-            'mp4_video' => 'qt_player', // tested
+            'mp4_video' => 'flow_player', // tested
             /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
@@ -227,28 +227,17 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     public static function flash_player($artefact, $block, $width, $height) {
         static $count = 0;
         $count++;
-        $extn = $artefact->get('oldextension');
-        if ($extn == 'mp3') {
-            $height = 0; // one line
-            $width = 100;
-        }
         $id = 'blocktype_internalmedia_flash_' . time() . $count;
         $url = self::get_download_link($artefact, $block);
-        $playerurl =  get_config('wwwroot') . "artefact/file/blocktype/internalmedia/mediaplayer.swf";
-        $params = array();
-        if ($extn == 'swf') {
-            $playerurl = $url;
-            $params['play'] = 'false';
-        }
+        $params = array('play' => 'true');
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
                . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
-                    var so = new SWFObject(" ' . $playerurl . '","player","' . $width . '","' . ($height + 20). '","7");
+                    var so = new SWFObject("' . $url . '","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
-                    so.addVariable("file","' . urlencode($url) . '");
                     so.addVariable("displayheight"," ' . $height . '");
-                    so.addVariable("type", "' . $extn . '");
+                    so.addVariable("type", "swf");
                     so.addVariable("height", "' . $height . '");
                     so.addVariable("width", "' . $width . '");
                 ';
@@ -260,6 +249,65 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                     so.write("' . $id . '");
                 </script>
         ';
+        return $html;
+
+    }
+
+    public static function flow_player($artefact, $block, $width, $height) {
+        static $count = 0;
+        $count++;
+        $extn = $artefact->get('oldextension');
+
+        $id = 'blocktype_internalmedia_flow_' . time() . $count;
+        $url = self::get_download_link($artefact, $block);
+        $url = str_replace('&', '%26', $url); // Flash needs these escaped
+
+        $baseurl = get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/';
+
+        $playerurl = $baseurl . 'flowplayer/flowplayer-3.2.4.swf';
+        $autohide = 'true';
+        $type = '';
+        $audio = '';
+        $buffering = 'true';
+        if ($extn == 'mp3') {
+            $height = 25; // only show the controls
+            $autohide = 'false';
+            $type = 'type: "audio",'; // force the player to use the audio plugin
+            $buffering = 'false'; // without this autoPlay will also be set to true
+            $audio = ', audio: {
+		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.1.swf",
+		             }';
+        }
+
+        $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
+               <span class="blocktype_internalmedia_mp3" id="' . $id . '"
+                     style="display:block;width:'.$width.'px;height:'.$height.'px;">(' 
+               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
+               <script type="text/javascript">
+               flowplayer("'.$id.'", "'.$playerurl.'", {
+                   clip:  {
+                       url: "'.$url.'",
+                       '.$type.'
+                       autoPlay: false,
+                       autoBuffering: '.$buffering.'
+                   },
+                   plugins: {
+	                  controls: {
+                          url: "flowplayer.controls-3.2.2.swf",
+                          play:true,
+                          volume:true,
+                          mute:true,
+                          time:false,
+                          stop:false,
+                          playlist:false,
+                          fullscreen:false,
+                          scrubber: true,
+                          autoHide: '.$autohide.'
+                      }'.$audio.'
+                   }
+               }).load();
+               </script>
+';
         return $html;
 
     }
@@ -381,7 +429,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             return '';
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
-        return '<script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>
+        return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/flowplayer/flowplayer-3.2.4.js"></script>
+             <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>
              <script defer="defer" src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/eolas_fix.js" type="text/javascript"></script>';
     }
 

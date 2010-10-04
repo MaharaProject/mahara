@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
-<h3>{$subheading}</h3>
+<h3>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h3>
 <div id="forumbtns" class="rbuttons">
 	{if $admin}
-		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-editforum">{str tag="edittitle" section="interaction.forum"}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
+		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn">{str tag="edittitle" section="interaction.forum"}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{if $membership}{$forum->subscribe|safe}{/if}
 </div>
@@ -13,25 +13,27 @@
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
     {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
     <div class="rbuttons">
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-add s">{str tag="newtopic" section="interaction.forum"}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn">{str tag="newtopic" section="interaction.forum"}</a>
 	</div>
 	{/if}
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
-    <table id="forumtopicstable" class="fullwidth nohead">
+    <table id="forumtopicstable" class="fullwidth">
+    <thead>
     <tr>
         <th width="12px"></th>
         <th width="12px"></th>
-        <th width="40%">{str tag="Topic" section="interaction.forum"}</th>
+        <th>{str tag="Topic" section="interaction.forum"}</th>
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
-        <th class="lastpost" width="25%">{str tag="lastpost" section="interaction.forum"}</th>
+        <th class="lastpost" width="20%">{str tag="lastpost" section="interaction.forum"}</th>
     </tr>
+    </thead>
     {if $stickytopics}
-    	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum sticky=true}
+	{include file="interaction:forum:topics.tpl" topics=$stickytopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=true}
     {/if}
     {if $regulartopics}
-    	{include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum sticky=false}
+	{include file="interaction:forum:topics.tpl" topics=$regulartopics moderator=$moderator forum=$forum publicgroup=$publicgroup sticky=false}
     {/if}
     </table>
     {if $regulartopics}
@@ -84,7 +86,10 @@
 	{/if}
 </div>
 {else}
-<p>{str tag="notopics" section="interaction.forum"}</p>
+<table class="fullwidth nohead">
+    <tr><td class="{cycle values='r0,r1'} center">{str tag="notopics" section="interaction.forum"}</td>
+    </tr>
+</table>
 {/if}
 
 {include file="footer.tpl"}

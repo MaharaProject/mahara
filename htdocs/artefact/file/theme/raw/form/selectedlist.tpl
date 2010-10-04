@@ -1,5 +1,5 @@
 <p id="{$prefix}_empty_selectlist"{if !$selectedlist} class="hidden"{/if}>{str tag=nofilesfound section=artefact.file}</p>
-<table id="{$prefix}_selectlist"  class="attachments fullwidth{if !$selectedlist} hidden{/if}">
+<table id="{$prefix}_selectlist"  class="fullwidth {if !$selectedlist} hidden{/if}">
  <thead>
   <tr>
    <th></th>
@@ -20,7 +20,7 @@
     </td>
     <td>{$file->description}</td>
     <td>
-       <input type="submit" class="button small unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
+       <input type="submit" class="button submit s unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
        <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>
   </tr>

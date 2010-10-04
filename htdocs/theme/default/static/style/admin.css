@@ -1,7 +1,8 @@
 /* ADMIN HOME */
 /* Administration Home styles */
 #register-site,
-#runupgrade {
+#runupgrade,
+#site-stats {
     background-color: #ebf0f4;
     border: 1px solid #95a8b7;
 }
@@ -32,12 +33,7 @@
 #suspenddelete #delete h4 {
 	color: #CA0000;
 }
-#close_site_submit,
-#institution_suspend_submit,
-#suspenddelete #delete #edituser_delete_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
-}
+
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table th {
@@ -55,7 +51,8 @@
 
 #institutionusers, 
 #staffusers, 
-#adminusers {
+#adminusers,
+#groupadminsform {
 	background-color: #EBF0F4;
 	border: 1px solid #95A8B7;
 }
@@ -75,4 +72,8 @@
 }
 #adduser #or {
 	color: #7c826c;
+}
+
+.admininstitutionbtns .btn-edit {
+	color: #6E8E00;
 }

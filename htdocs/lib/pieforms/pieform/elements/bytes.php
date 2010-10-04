@@ -70,8 +70,7 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
 
-    $uselect = '<select onchange="' . $name . '_change()" ';
-    $uselect .= 'name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
+    $uselect = '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
     foreach (pieform_element_bytes_get_bytes_units() as $u) {
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>'
             . $form->i18n('element', 'bytes', $u, $element) . "</option>\n";

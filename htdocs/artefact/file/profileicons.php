@@ -66,7 +66,8 @@ $uploadform = pieform(array(
         'file' => array(
             'type' => 'file',
             'title' => get_string('profileicon', 'artefact.file'),
-            'rules' => array('required' => true)
+            'rules' => array('required' => true),
+            'maxfilesize'  => get_max_upload_size(false),
         ),
         'title' => array(
             'type' => 'text',
@@ -149,18 +150,29 @@ $filesize = 0;
 function upload_validate(Pieform $form, $values) {
     global $USER, $filesize;
     require_once('file.php');
+    require_once('uploadmanager.php');
+
+    $um = new upload_manager('file');
+    if ($error = $um->preprocess_file()) {
+        $form->set_error('file', $error);
+        return false;
+    }
+
     $imageinfo = getimagesize($values['file']['tmp_name']);
     if (!$imageinfo || !is_image_type($imageinfo[2])) {
         $form->set_error('file', get_string('filenotimage'));
+        return false;
     }
 
     if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id) >= 5) {
         $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.file'));
+        return false;
     }
 
-    $filesize = filesize($values['file']['tmp_name']);
+    $filesize = $um->file['size'];
     if (!$USER->quota_allowed($filesize)) {
         $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
+        return false;
     }
 
     // Check the file isn't greater than the max allowable size

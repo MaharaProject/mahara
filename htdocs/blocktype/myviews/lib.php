@@ -58,50 +58,8 @@ class PluginBlocktypeMyviews extends SystemBlocktype {
         $smarty = smarty_core();
 
         // Get viewable views
-        $views = array();
-        if ($allviews = get_records_select_array('view', "\"owner\" = ? AND type NOT IN ('profile', 'dashboard')", array($userid))) {
-            foreach ($allviews as $view) {
-                if (can_view_view($view->id)) {
-                    $views[$view->id] = $view;
-                    $view->artefacts = array();
-                }
-            }
-        }
-
-        if ($views) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $views));
-            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                FROM {view_artefact} va
-                INNER JOIN {artefact} a ON va.artefact = a.id
-                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-                WHERE va.view IN (' . $viewidlist . ')
-                GROUP BY 1, 2, 3, 4, 5
-                ORDER BY a.title, va.artefact', '');
-            if ($artefacts) {
-                foreach ($artefacts as $artefactrec) {
-                    safe_require('artefact', $artefactrec->plugin);
-                    // Perhaps I shouldn't have to construct the entire
-                    // artefact object to render the name properly.
-                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-                    $artefactobj->set('dirty', false);
-                    if (!$artefactobj->in_view_list()) {
-                        continue;
-                    }
-                    $artname = $artefactobj->display_title(30);
-                    if (strlen($artname)) {
-                        $views[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
-                                                                        'title' => $artname);
-                    }
-                }
-            }
-            $tags = get_records_select_array('view_tag', 'view IN (' . $viewidlist . ')');
-            if ($tags) {
-                foreach ($tags as &$tag) {
-                    $views[$tag->view]->tags[] = $tag->tag;
-                }
-            }
-        }
+        $views = View::view_search(null, null, (object) array('owner' => $userid), null, null, 0, true, null, array('portfolio'));
+        $views = $views->count ? $views->data : array();
         $smarty->assign('VIEWS',$views);
         return $smarty->fetch('blocktype:myviews:myviews.tpl');
     }

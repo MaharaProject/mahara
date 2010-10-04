@@ -62,16 +62,43 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
 
         if (isset($configdata['videoid'])) {
+            // IE seems to wait for all elements on the page to load
+            // fully before the onload event goes off.  This means the
+            // view editor isn't initialised until all videos have
+            // finished loading, and an invalid video URL can stop the
+            // editor from loading and result in an uneditable view.
+
+            // Therefore, when this block appears on first load of the
+            // view editing page, keep the embed code out of the page
+            // initially and add it in after the page has loaded.
+
             $url     = hsc(self::make_video_url($configdata['videoid']));
-            $result .= '<div class="mediaplayer-container center"><div class="mediaplayer">';
-            $result .= '<object width="' . $width . '" height="' . $height . '">';
-            $result .= '<param name="movie" value="' . $url . '"></param>';
-            $result .= '<param name="wmode" value="transparent"></param>';
-            $result .= '<param name="allowscriptaccess" value="never"></param>';
-            $result .= '<embed src="' . $url . '" ';
-            $result .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
-            $result .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+
+            $embed = '<object width="' . $width . '" height="' . $height . '">';
+            $embed .= '<param name="movie" value="' . $url . '"></param>';
+            $embed .= '<param name="wmode" value="transparent"></param>';
+            $embed .= '<param name="allowscriptaccess" value="never"></param>';
+            $embed .= '<embed src="' . $url . '" ';
+            $embed .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
+            $embed .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+
+            $block = $instance->get('id');
+            $configuring = $block == param_integer('blockconfig', 0);
+
+            $result .= '<div class="mediaplayer-container center">';
+            $result .= '<div id="vid_' . $block . '" class="mediaplayer" style="width: {$width}px; height: {$height}px; margin: 0 auto;">';
+
+            if (!$editing || $configuring) {
+                $result .= $embed;
+            }
+
             $result .= '</div></div>';
+
+            if ($editing && !$configuring) {
+                $result .= '<script>';
+                $result .= 'addLoadEvent(function() {$(\'vid_' . $block . "').innerHTML = " . json_encode($embed) . ';});';
+                $result .= '</script>';
+            }
         }
 
         return $result;
@@ -121,6 +148,15 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         );
     }
 
+    public static function instance_config_validate(Pieform $form, $values) {
+        if ($values['videoid']) {
+            $urlparts = parse_url($values['videoid']);
+            if (empty($urlparts['host'])) {
+                $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'));
+            }
+        }
+    }
+
     private static function make_video_url($url) {
         static $embedsources = array(
             // www.youtube.com
@@ -167,7 +203,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
      */
     private static function get_html_of_supported_websites() {
         return <<<EOF
-<ul style="list-style-type: none;">
+<ul style="list-style-type: none;" class="inlinelist">
     <li><a href="http://www.youtube.com/" target="_blank"><img src="http://www.youtube.com/favicon.ico" alt="YouTube"> youtube.com</a></li>
     <li><a href="http://video.google.com/" target="_blank"><img src="http://video.google.com/favicon.ico" alt="Google Video"> video.google.com</a></li>
     <li><a href="http://www.teachertube.com/" target="_blank"><img src="http://www.teachertube.com/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>

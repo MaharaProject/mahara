@@ -54,7 +54,7 @@ $string['studentid'] = 'Student ID';
 $string['preferredname'] = 'Display Name';
 $string['introduction'] = 'Introduction';
 $string['email'] = 'Email Address';
-$string['maildisabled'] = ' ';
+$string['maildisabled'] = 'Email Disabled';
 $string['officialwebsite'] = 'Official Website Address';
 $string['personalwebsite'] = 'Personal Website Address';
 $string['blogaddress'] = 'Blog Address';
@@ -108,6 +108,7 @@ $string['emailactivationdeclined'] = 'Email Activation Declined Successfully';
 $string['verificationlinkexpired'] = 'Verification link expired';
 $string['invalidemailaddress'] = 'Invalid email address';
 $string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to validate is already taken';
+$string['addbutton'] = 'Add';
 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 

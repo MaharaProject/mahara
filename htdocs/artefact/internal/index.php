@@ -39,6 +39,7 @@ safe_require('artefact', 'internal');
 $fieldset = param_alpha('fs', 'aboutme');
 
 $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+$element_data = ArtefactTypeProfile::get_field_element_data();
 $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
 
 // load existing profile information
@@ -96,6 +97,10 @@ foreach ( $element_list as $element => $type ) {
         'type'  => $type,
         'title' => get_string($element, 'artefact.internal'),
     );
+
+    if (isset($element_data[$element]['rules'])) {
+        $items[$element]['rules'] = $element_data[$element]['rules'];
+    }
 
     if ($type == 'wysiwyg') {
         $items[$element]['rows'] = 10;
@@ -315,10 +320,10 @@ function profileform_submit(Pieform $form, $values) {
 
             // remove old addresses
             foreach ($profilefields['email']['validated'] as $email) {
-                if (
-                    in_array($email, $values['email']['validated'])
-                    || in_array($email, $values['email']['unvalidated'])
-                ) {
+                if (in_array($email, $values['email']['validated'])) {
+                    continue;
+                }
+                if (!empty($values['email']['unvalidated']) && in_array($email, $values['email']['unvalidated'])) {
                     continue;
                 }
 
@@ -339,7 +344,8 @@ function profileform_submit(Pieform $form, $values) {
             foreach ($profilefields['email']['unvalidated'] as $email) {
                 if (
                     in_array($email, $values['email']['validated'])
-                    || in_array($email, $values['email']['unvalidated'])
+                    || (isset($values['email']['unvalidated'])
+                        && in_array($email, $values['email']['unvalidated']))
                 ) {
                     continue;
                 }

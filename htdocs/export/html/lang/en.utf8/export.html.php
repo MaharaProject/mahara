@@ -31,4 +31,8 @@ $string['title'] = 'Standalone HTML Website';
 $string['description'] = 'Creates a self-contained website with your portfolio data. You cannot import this again, but it\'s readable in a standard web browser.';
 $string['usersportfolio'] = '%s - Portfolio';
 
+$string['preparing'] = 'Preparing %s';
+$string['exportingdatafor'] = 'Exporting data for %s';
+$string['buildingindexpage'] = 'Building index page';
+$string['copyingextrafiles'] = 'Copying extra files';
 ?>

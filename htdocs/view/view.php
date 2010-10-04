@@ -34,6 +34,7 @@ define('SECTION_PAGE', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'collection.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
 
@@ -47,16 +48,10 @@ if ($mnettoken) {
     if (!$viewid = get_view_from_token($mnettoken, false)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
-    if ($mnettoken != get_cookie('mviewaccess:'.$viewid)) {
-        set_cookie('mviewaccess:'.$viewid, $mnettoken);
-    }
 }
 else if ($usertoken) {
     if (!$viewid = get_view_from_token($usertoken, true)) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
-    }
-    if ($usertoken != get_cookie('viewaccess:'.$viewid)) {
-        set_cookie('viewaccess:'.$viewid, $usertoken);
     }
 }
 else {
@@ -65,7 +60,7 @@ else {
 
 $new = param_boolean('new');
 
-if (!can_view_view($viewid, null, $usertoken, $mnettoken)) {
+if (!can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
@@ -185,6 +180,18 @@ addLoadEvent(function () {
 });
 EOF;
 
+// collection top navigation
+if ($collection = $view->get('collection')) {
+    $shownav = $collection->get('navigation');
+    if ($shownav) {
+        if ($views = $collection->get('views')) {
+            if (count($views['views']) > 1) {
+                $smarty->assign_by_ref('collection', array_chunk($views['views'], 5));
+            }
+        }
+    }
+}
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
@@ -195,7 +202,7 @@ $smarty->assign('tags', $view->get('tags'));
 
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false));
+    $smarty->assign('microheadertitle', $collection ? hsc($collection->get('name')) : $view->display_title(true, false));
 
     if ($can_edit) {
         $smarty->assign('visitstring', $view->visit_message());
@@ -252,7 +259,7 @@ if (get_config('viewmicroheaders')) {
 $title = hsc(TITLE);
 
 if ($viewtype != 'profile' && !get_config('viewmicroheaders')) {
-    $title = $view->display_title();
+    $title = $collection ? hsc($collection->get('name')) : $view->display_title();
 }
 
 if ($viewtype != 'profile' || !get_config('viewmicroheaders')) {

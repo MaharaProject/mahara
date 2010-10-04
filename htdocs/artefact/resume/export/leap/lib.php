@@ -135,7 +135,9 @@ class LeapExportElementResumeComposite extends LeapExportElement {
     }
 
     public function set_composites() {
-        $this->composites = get_records_array($this->artefact->get_other_table_name(), 'artefact', $this->artefact->get('id'));
+        $this->composites = get_records_sql_array('SELECT '.db_format_tsfield('a.mtime', 'mtime').', b.* FROM {artefact} a JOIN {'.$this->artefact->get_other_table_name().'} b
+            ON a.id = b.artefact
+            WHERE b.artefact = ?', array($this->artefact->get('id')));
     }
 
     public function get_leap_type() {
@@ -270,6 +272,7 @@ class LeapExportElementResumeCompositeChildCertification extends LeapExportEleme
             'end'     => $record->date,
             'title'   => $record->title,
             'content' => $record->description,
+            'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
@@ -285,11 +288,12 @@ class LeapExportElementResumeCompositeChildMembership extends LeapExportElementR
             'end'     => $record->enddate,
             'title'   => $record->title,
             'content' => $record->description,
+            'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
     public function get_leap_type() {
-        return 'activity';
+        return 'affiliation';
     }
 }
 
@@ -315,13 +319,15 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+            'supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->institution,
+                'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
             ), 'organization', 'supports'),
             'supports' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->qualtype,
                 'content' => $this->originalrecord->qualname,
-            ), 'achievement', 'is_supported_by')
+                'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
+            ), 'achievement', 'supported_by')
         );
     }
 
@@ -331,6 +337,7 @@ class LeapExportElementResumeCompositeChildEducationhistory extends LeapExportEl
             'end'     => $record->enddate,
             'title'   => $record->qualname,
             'content' => $record->qualdescription,
+            'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
@@ -352,8 +359,9 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
 
     public function ensure_siblings() {
         $this->siblings = array(
-            'is_supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
+            'supported_by' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
                 'title' => $this->originalrecord->employer,
+                'updated' => PluginExportLeap::format_rfc3339_date($this->originalrecord->mtime),
             ), 'organization', 'supports')
         );
     }
@@ -364,6 +372,7 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
             'end'     => $record->enddate,
             'title'   => $record->jobtitle,
             'content' => $record->positiondescription,
+            'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
@@ -380,26 +389,20 @@ class LeapExportElementResumeCompositeChildEmploymenthistory extends LeapExportE
         ));
     }
 }
-class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChildWithSiblings {
-
-    public function ensure_siblings() {
-        $this->siblings = array(
-            'related' => new LeapExportElementResumeCompositeSibling($this->parentartefact, $this->exporter, $this, array(
-                'title' => $this->originalrecord->contribution,
-                'content' => $this->originalrecord->description,
-            ), 'achievement', 'related')
-        );
-    }
+class LeapExportElementResumeCompositeChildBook extends LeapExportElementResumeCompositeChild {
 
     public function record_to_entrydata($record) {
         return array(
             'end'     => $record->date,
             'title'   => $record->title,
+            'myrole'  => $record->contribution,
+            'content' => $record->description,
+            'updated' => PluginExportLeap::format_rfc3339_date($record->mtime),
         );
     }
 
     public function get_leap_type() {
-        return 'resource';
+        return 'publication';
     }
 
     public function get_categories() {

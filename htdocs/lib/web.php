@@ -103,10 +103,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                 $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
                 $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
-                $execcommand = '';
-                if (isset($extraconfig['tinymcesetup'])) {
-                    $execcommand = 'setup: ' . $extraconfig['tinymcesetup'] . ',';
-                }
+                $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
                 $adv_buttons = array(
                     "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
@@ -159,7 +156,6 @@ EOF;
 tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
-    {$execcommand}
     extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
@@ -170,10 +166,11 @@ tinyMCE.init({
     relative_urls: false,
     setup: function(ed) {
         ed.onInit.add(function(ed) {
-            if (editor_to_focus && typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
+            if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
                 ed.focus();
             }
         });
+        {$extrasetup}
     }
 });
 function custom_urlconvert (u, n, e) {
@@ -383,8 +380,10 @@ EOF;
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
+        global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());
         $smarty->assign('RIGHTNAV', right_nav());
+        $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
     }
     else {
         $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
@@ -1312,6 +1311,20 @@ function get_cookie($name) {
     return (isset($_COOKIE[$name])) ? $_COOKIE[$name] : null;
 }
 
+function get_cookies($prefix) {
+    static $prefixes = array();
+    if (!isset($prefixes[$prefix])) {
+        $prefixes[$prefix] = array();
+        $cprefix = get_config('cookieprefix') . $prefix;
+        foreach ($_COOKIE as $k => $v) {
+            if (strpos($k, $cprefix) === 0) {
+                $prefixes[$prefix][substr($k, strlen($cprefix))] = $v;
+            }
+        }
+    }
+    return $prefixes[$prefix];
+}
+
 /**
  * Sets a cookie, respecting the configured cookie prefix
  *
@@ -1930,6 +1943,12 @@ function mahara_standard_nav() {
             'ignore' => !$exportenabled,
         ),
         array(
+            'path' => 'myportfolio/collection',
+            'url' => 'collection/',
+            'title' => get_string('mycollections', 'collection'),
+            'weight' => 10,
+        ),
+        array(
             'path' => 'groups',
             'url' => 'group/mygroups.php',
             'title' => get_string('groups'),
@@ -2013,7 +2032,7 @@ function right_nav() {
             'path' => 'settings',
             'wwwroot' => get_config('httpswwwroot'),
             'url' => 'account/',
-            'title' => $USER->get('username'),
+            'title' => get_string('settings'),
             'icon' => $THEME->get_url('images/settings.png'),
             'alt' => get_string('settings'),
             'weight' => 10,
@@ -2093,13 +2112,13 @@ function footer_menu($all=false) {
  * Used by main_nav()
  */
 function find_menu_children(&$menu, $path) {
+    global $SELECTEDSUBNAV;
     $result = array();
     if (!$menu) {
         return array();
     }
 
     foreach ($menu as $key => $item) {
-        $len = strlen($item['path']);
         $item['selected'] = defined('MENUITEM')
             && ($item['path'] == MENUITEM
                 || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
@@ -2114,6 +2133,9 @@ function find_menu_children(&$menu, $path) {
     if ($menu) {
         foreach ($result as &$item) {
             $item['submenu'] = find_menu_children($menu, $item['path']);
+            if ($item['selected']) {
+                $SELECTEDSUBNAV = $item['submenu'];
+            }
         }
     }
 
@@ -2347,7 +2369,7 @@ function get_relative_script_path() {
  * @param string $url the url which may have a query string attached
  * @return string
  */
- function strip_querystring($url) {
+function strip_querystring($url) {
 
     if ($commapos = strpos($url, '?')) {
         return substr($url, 0, $commapos);
@@ -2442,13 +2464,18 @@ function format_whitespace($text) {
  * and removes any nasty tags that could mess up pages.
  *
  * @param string $text The text to be cleaned
+ * @param boolean $xhtml HTML 4.01 will be used for all of mahara, except very special cases (eg leap2a exports)
  * @return string The cleaned up text
  */
-function clean_html($text) {
+function clean_html($text, $xhtml=false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
-    $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    if (empty($xhtml)) {
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+    } else {
+        $config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
+    }
     $config->set('AutoFormat.Linkify', true);
 
     // Permit embedding contents from other sites
@@ -2787,7 +2814,7 @@ function build_pagination($params) {
     if (isset($params['forceoffset']) && !is_null($params['forceoffset'])) {
         $params['offset'] = (int) $params['forceoffset'];
     }
-    else {
+    else if (!isset($params['offset'])) {
         $params['offset'] = param_integer($params['offsetname'], 0);
     }
 

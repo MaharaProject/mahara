@@ -295,6 +295,11 @@ function ViewManager() {
         var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
 
         var pd = {'id': $('viewid').value, 'change': 1};
+        if (config.blockeditormaxwidth) {
+            // Shouldn't have to pass browser window dimensions here, but can't find
+            // another way to get tinymce elements to use up the available height.
+            pd['cfheight'] = getViewportDimensions().h - 100;
+        }
         pd[getNodeAttribute(button, 'name')] = 1;
 
         var oldContent = contentDiv.innerHTML;
@@ -372,16 +377,33 @@ function ViewManager() {
         hideElement(newblock);
         appendChildNodes(getFirstElementByTagAndClassName('body'), newblock);
 
-        var d = getElementDimensions(newblock);
-        var vpdim = getViewportDimensions();
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - d.h) / 2, 5);
-        setStyle(newblock, {
-            'width': d.w + 'px',
-            'left': (vpdim.w - d.w) / 2 + 'px',
-            'top': newtop + 'px',
+        var style = {
             'position': 'absolute',
             'z-index': 1
-        });
+        };
+
+        var d = getElementDimensions(newblock);
+        var vpdim = getViewportDimensions();
+
+        var h = Math.max(d.h, 200);
+        if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
+            style.width = vpdim.w - 80;
+            style.height = h;
+        }
+        else {
+            style.width = Math.max(d.w, 500);
+        }
+
+        var tborder = parseFloat(getStyle(newblock, 'border-top-width'));
+        var tpadding = parseFloat(getStyle(newblock, 'padding-top'));
+        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
+        style.top = newtop + 'px';
+
+        var lborder = parseFloat(getStyle(newblock, 'border-left-width'));
+        var lpadding = parseFloat(getStyle(newblock, 'padding-left'));
+        style.left = ((vpdim.w - style.width) / 2 - lborder - lpadding) + 'px';
+
+        setStyle(newblock, style);
 
         var deletebutton = getFirstElementByTagAndClassName('input', 'deletebutton', newblock);
 
@@ -1005,6 +1027,9 @@ function ViewManager() {
                     'change': 1,
                     'blocktype': getFirstElementByTagAndClassName('input', 'blocktype-radio', self.currentlyMovingObject).value
                 };
+                if (config.blockeditormaxwidth) {
+                    pd['cfheight'] = getViewportDimensions().h - 100;
+                }
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();
@@ -1187,6 +1212,10 @@ function blockConfigError(form, data) {
     if (data.formelementerror) {
         eval(data.formelementerror + '(form, data)');
         return;
+    }
+    else if ($('instconf') && data.message && viewManager) {
+        viewManager.removeConfigureBlocks();
+        viewManager.showMediaPlayers();
     }
     formError(form, data);
 }

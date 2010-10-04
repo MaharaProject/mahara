@@ -171,6 +171,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         db_begin();
         $this->detach();
+        delete_records('artefact_comment_comment', 'artefact', $this->id);
         parent::delete();
         db_commit();
     }
@@ -191,6 +192,12 @@ class ArtefactTypeComment extends ArtefactType {
     public static function delete_view_comments($viewid) {
         $ids = get_column('artefact_comment_comment', 'artefact', 'onview', $viewid);
         self::bulk_delete($ids);
+    }
+
+    public static function delete_comments_onartefacts($artefactids) {
+        $idstr = join(',', array_map('intval', $artefactids));
+        $commentids = get_column_sql("SELECT artefact FROM {artefact_comment_comment} WHERE onartefact IN ($idstr)");
+        self::bulk_delete($commentids);
     }
 
     public static function get_links($id) {
@@ -521,6 +528,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'type'         => 'files',
                 'title'        => get_string('attachfile', 'artefact.comment'),
                 'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
             );
         }
         $form['elements']['submit'] = array(
@@ -554,7 +562,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'submit',
-                    'class' => 'quiet btn-del',
+                    'class' => 'quiet',
                     'name'  => 'delete_comment_submit',
                     'value' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
@@ -761,6 +769,9 @@ function add_feedback_form_validate(Pieform $form, $values) {
             $form->set_error('message', $msg);
         }
     }
+    if (empty($values['attachments']) && empty($values['message'])) {
+        $form->set_error('message', get_string('messageempty', 'artefact.comment'));
+    }
 }
 
 function add_feedback_form_submit(Pieform $form, $values) {
@@ -806,7 +817,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     $goto = $comment->get_view_url($view->get('id'));
 
-    if ($data->requestpublic && $data->requestpublic === 'author' && $data->owner) {
+    if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
         $arg = $author ? display_name($USER, null, true) : $data->authorname;
         $moderatemsg = (object) array(
             'subject'   => false,
@@ -862,26 +873,28 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
         foreach ($values['attachments'] as $filesindex) {
 
-            $um = new upload_manager($filesindex);
-            if ($error = $um->preprocess_file()) {
-                throw new UploadException($error);
-            }
-
+            $originalname = $_FILES[$filesindex]['name'];
             $attachment->title = ArtefactTypeFileBase::get_new_file_title(
-                $um->file['name'],
+                $originalname,
                 $folderid,
                 $data->owner,
                 $data->group,
                 $data->institution
             );
-            $attachment->size         = $um->file['size'];
-            $attachment->filetype     = $um->file['type'];
-            $attachment->oldextension = $um->original_filename_extension();
 
             try {
                 $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
             }
-            catch (QuotaExceededException $e) {}
+            catch (QuotaExceededException $e) {
+                if ($data->owner == $USER->get('id')) {
+                    $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                }
+                redirect($goto);
+            }
+            catch (UploadException $e) {
+                $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                redirect($goto);
+            }
 
             $comment->attach($fileid);
         }

@@ -127,6 +127,7 @@ class PluginExportLeap extends PluginExport {
         $this->export_header();
         $this->setup_links();
         $this->notify_progress_callback(10, get_string('exportingviews', 'export'));
+        $this->export_collections();
         $this->export_views();
         $this->notify_progress_callback(50, get_string('exportingartefacts', 'export'));
         $this->export_artefacts();
@@ -203,6 +204,44 @@ class PluginExportLeap extends PluginExport {
         $this->xml .= $this->smarty->fetch('export:leap:header.tpl');
     }
 
+
+    /**
+     * Export the collections
+     */
+    private function export_collections() {
+        foreach ($this->collections as $id => $collection) {
+            $this->smarty->assign('title',       $collection->get('name'));
+            $this->smarty->assign('id',          'portfolio:collection' . $id);
+            $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($collection->get('mtime'))));
+            $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($collection->get('ctime'))));
+            $this->smarty->assign('summarytype', 'text');
+            $this->smarty->assign('summary',     $collection->get('description'));
+            $this->smarty->assign('contenttype', 'text');
+            $this->smarty->assign('content',     $collection->get('description'));
+            $this->smarty->assign('leaptype',    'selection');
+
+            $this->smarty->assign('categories', array(
+                array(
+                    'scheme' => 'selection_type',
+                    'term' => 'Website',
+                )
+            ));
+
+            $links = array();
+            if (!empty($this->links->collectionview[$id])) {
+                foreach (array_keys($this->links->collectionview[$id]) as $viewid) {
+                    $links[] = (object)array(
+                        'type' => 'has_part',
+                        'id'   => 'portfolio:view' . $viewid,
+                    );
+                }
+            }
+            $this->smarty->assign('links', $links);
+            $this->xml .= $this->smarty->fetch("export:leap:entry.tpl");
+        }
+    }
+
+
     /**
      * Export the views
      */
@@ -223,10 +262,18 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('id',          'portfolio:view' . $view->get('id'));
             $this->smarty->assign('updated',     self::format_rfc3339_date(strtotime($view->get('mtime'))));
             $this->smarty->assign('created',     self::format_rfc3339_date(strtotime($view->get('ctime'))));
-            $this->smarty->assign('summarytype', 'html');
-            $this->smarty->assign('summary',     $config['description']);
-            $this->smarty->assign('contenttype', 'html');
-            $this->smarty->assign('content',     $view->build_columns());
+            $content = $config['description'];
+            if ($newcontent = self::parse_xhtmlish_content($content)) {
+                $this->smarty->assign('summarytype', 'xhtml');
+                $this->smarty->assign('summary',     $newcontent);
+            } else {
+                $this->smarty->assign('summarytype', 'text');
+                $this->smarty->assign('summary',     $content);
+            }
+            $this->smarty->assign('contenttype', 'xhtml');
+            if ($viewcontent = self::parse_xhtmlish_content($view->build_columns(), $view->get('id'))) {
+                $this->smarty->assign('content', $viewcontent);
+            }
             $this->smarty->assign('viewdata',    $config['columns']);
             $this->smarty->assign('layout',      $view->get_layout()->widths);
             $this->smarty->assign('type',        $config['type']);
@@ -263,6 +310,21 @@ class PluginExportLeap extends PluginExport {
 
         $viewlist = join(',', array_keys($this->views));
         $artefactlist = join(',', array_keys($this->artefacts));
+
+        // Views in collections
+        if ($this->collections) {
+            $collectionlist = join(',', array_keys($this->collections));
+            $records = get_records_select_array(
+                'collection_view',
+                "view IN ($viewlist) AND collection IN ($collectionlist)"
+            );
+            if ($records) {
+                foreach ($records as &$r) {
+                    $this->links->collectionview[$r->collection][$r->view] = 1;
+                    $this->links->viewcollection[$r->view][$r->collection] = 1;
+                }
+            }
+        }
 
         // Artefacts directly in views
         $records = get_records_select_array(
@@ -312,10 +374,14 @@ class PluginExportLeap extends PluginExport {
         foreach (plugins_installed('artefact') as $plugin) {
             $classname = 'LeapExportElement' . ucfirst($plugin->name);
             if (is_callable($classname . '::setup_links')) {
-                call_static_method(
-                    $classname,
-                    'setup_links',
-                    $this->links,
+                // You must explicitly pass variables by reference when calling
+                // call_user_func, or else they get copied automatically.
+                // Using a dummy variable here to avoid the "Call time pass by reference
+                // is deprecated" warning that php displays on the screen.
+                $dummyref =& $this->links;
+                call_user_func(
+                    array($classname, 'setup_links'),
+                    $dummyref,
                     array_keys($this->views),
                     array_keys($this->artefacts)
                 );
@@ -396,10 +462,19 @@ class PluginExportLeap extends PluginExport {
     private function get_links_for_view($viewid) {
         $links = array();
 
+        if (!empty($this->links->viewcollection[$viewid])) {
+            foreach (array_keys($this->links->viewcollection[$viewid]) as $collectionid) {
+                $links[] = (object)array(
+                    'type' => 'is_part_of',
+                    'id'   => 'portfolio:collection' . $collectionid,
+                );
+            }
+        }
+
         if (!empty($this->links->viewcontents[$viewid])) {
             foreach (array_keys($this->links->viewcontents[$viewid]) as $artefactid) {
                 $links[] = (object)array(
-                    'type' => 'has_part',
+                    'type' => 'leap2:has_part',
                     'id'   => 'portfolio:artefact' . $artefactid,
                 );
             }
@@ -485,7 +560,7 @@ class PluginExportLeap extends PluginExport {
     * @param string $filepath path to file to add
     * @param string $newname proper resulting filename
     *
-    * @return filename string use this to substitute into <content src="">
+    * @return filename string use this to pass to add_enclosure_link
     */
     public function add_attachment($filepath, $newname) {
         if (!file_exists($filepath)) {
@@ -508,6 +583,49 @@ class PluginExportLeap extends PluginExport {
     public static function format_rfc3339_date($date) {
         $d = format_date($date, 'strftimew3cdatetime');
         return substr($d, 0, -2) . ':' . substr($d, -2);
+    }
+
+
+    /**
+     * given some content that might be html or xhtml, try to coerce it to xhtml and return it.
+     *
+     * @param string $content some html or xhtmlish content
+     *
+     * @return xhtml content or false for unmodified text content
+     */
+    public static function parse_xhtmlish_content($content, $viewid=null) {
+        $dom = new DomDocument();
+        $topel = $dom->createElement('tmp');
+        $tmp = new DomDocument();
+        if (strpos($content, '<') === false && strpos($content, '>') === false) {
+            return false;
+        }
+        if (@$tmp->loadXML('<div>' . $content . '</div>')) {
+            $topel->setAttribute('type', 'xhtml');
+            $content = $dom->importNode($tmp->documentElement, true);
+            $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+            $topel->appendChild($content);
+            // if that fails, it could still be html
+        } else if (@$tmp->loadHTML('<div>' . $content . '</div>')) {
+            $xpath = new DOMXpath($tmp);
+            $elements = $xpath->query('/html/body/div');
+            if ($elements->length != 1) {
+                if ($viewid) {
+                    log_warn("Leap2a export: invalid html found in view $viewid");
+                }
+                if ($elements->length < 1) {
+                    return false;
+                }
+            }
+            $ourelement = $elements->item(0);
+            $content = $dom->importNode($ourelement, true);
+            $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+            $topel->appendChild($content);
+        } else {
+            return false; // wtf is it then?
+        }
+        $dom->appendChild($topel->firstChild);
+        return $dom->saveXML($dom->documentElement);
     }
 }
 
@@ -579,10 +697,18 @@ class LeapExportElement {
         $this->smarty->assign('created', PluginExportLeap::format_rfc3339_date($this->artefact->get('ctime')));
         // these are the ones we really need to override
         $this->add_links();
-        $this->smarty->assign('content', $this->get_content());
-        $this->smarty->assign('contenttype', $this->get_content_type());
+        $content = $this->get_content();
+        // try to coerce it to xhtml
+        if ($this->get_content_type() != 'text' && $newcontent = PluginExportLeap::parse_xhtmlish_content($content)) {
+            $this->smarty->assign('contenttype', 'xhtml');
+            $this->smarty->assign('content', $newcontent);
+        } else {
+            $this->smarty->assign('contenttype', 'text');
+            $this->smarty->assign('content', $content);
+        }
         $this->smarty->assign('leaptype', $this->get_leap_type());
         $this->smarty->assign('author', $this->get_entry_author());
+        $this->smarty->assign('dates', $this->get_dates());
 
         if ($tags = $this->artefact->get('tags')) {
             $tags = array_map(create_function('$a',
@@ -639,7 +765,7 @@ class LeapExportElement {
     */
     public function add_generic_link($id, $rel, $extras=null) {
         if (!in_array($rel, array('related', 'alternate', 'enclosure'))) {
-            $rel = 'leap:' . $rel;
+            $rel = 'leap2:' . $rel;
         }
         $link = array(
             'id'   => 'portfolio:' . $id,
@@ -675,7 +801,7 @@ class LeapExportElement {
         }
         if ($attachments = $this->exporter->artefact_attachment_links($id)) {
             foreach ($attachments as $a) {
-                $this->add_artefact_link($a, 'enclosure');
+                $this->add_artefact_link($a, 'related');
             }
         }
         if ($views = $this->exporter->artefact_view_links($id)) {
@@ -692,6 +818,25 @@ class LeapExportElement {
                 }
             }
         }
+    }
+
+    /**
+     * add an enclosure link to the export
+     * for where we previously used the src attribute of the content tag.
+     * this does not attach the file to the expot, you have to use the
+     * {@link add_attachment} method on the exporter object.
+     *
+     * @param string $filename the relative path of the file (NOT including the filesdir)
+     * @param string $mimetype the (optional) mimetype of the file (according to atom
+     *                          spec the type attribute on an enclosure is optional)
+     */
+    public function add_enclosure_link($filename, $mimetype = '') {
+        $this->links[$filename] = (object)array(
+            'id' => $this->exporter->get('filedir') . $filename,
+            'type' => 'enclosure',
+            'file' => true,
+            'mimetype' => $mimetype
+        );
     }
 
     /**
@@ -763,6 +908,15 @@ class LeapExportElement {
             return;
         }
         return $this->artefact->get('authorname');
+    }
+
+    /**
+    * Get leap:date items for the entry
+    *
+    * @return array
+    */
+    public function get_dates() {
+        return array();
     }
 
     /**
@@ -930,7 +1084,7 @@ class LeapExportOutputFilter {
         $html = preg_replace_callback(
             array(
                 '#<(a[^>]+)href="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
-                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)(&amp;view=\d+)?"([^>]*)>#',
+                '#<(img[^>]+)src="(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)([^"]*)?"([^>]*)>#',
             ),
             array($this, 'replace_download_link'),
             $html
@@ -946,7 +1100,7 @@ class LeapExportOutputFilter {
     private function replace_artefact_link($matches) {
         $artefactid = $matches[2];
         if (in_array($artefactid, $this->artefactids)) {
-            return '<a rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
+            return '<a rel="leap2:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
         }
 
         // If the artefact isn't in the export, then we can't provide an 
@@ -962,7 +1116,7 @@ class LeapExportOutputFilter {
     private function replace_download_link($matches) {
         $artefactid = $matches[3];
         if (in_array($artefactid, $this->artefactids)) {
-            return '<' . $matches[1] . 'rel="leap:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . '>';
+            return '<' . $matches[1] . 'rel="leap2:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . ($matches[1] == 'img' ? '/' : '') . '>';
         }
 
         log_debug("Not providing an export-relative link for $artefactid");

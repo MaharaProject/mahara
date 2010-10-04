@@ -122,6 +122,7 @@ $string['postedin'] = '%s posted in %s';
 $string['Poster'] = 'Poster';
 $string['postreply'] = 'Post reply';
 $string['Posts'] = 'Posts';
+$string['allposts'] = 'All posts';
 $string['postsvariable'] = 'Posts: %s';
 $string['potentialmoderators'] = 'Potential Moderators';
 $string['re'] ='Re: %s';

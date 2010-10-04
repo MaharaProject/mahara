@@ -1,0 +1,13 @@
+Flowplayer in Mahara
+=====================
+
+Website: http://flowplayer.org
+Version: 3.2.4
+
+This flash video player is used by the internal media blocktype.
+
+Changes:
+
+  * Removed the proprietary bits from the source zipfile
+  * Added source for the javscript bit
+    (http://flowplayer.org/documentation/api/index.html#download1)

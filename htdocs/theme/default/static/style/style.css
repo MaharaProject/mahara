@@ -22,7 +22,7 @@
 
 /* General rules */
 body {
-    background: url(../images/background.gif) repeat;
+    background: #ccdce7 url(../images/background.gif) repeat-x top left;
 	color: #474220;
 }
 acronym {
@@ -48,11 +48,6 @@ h5,
 h6 {
     color: #5c8727;
 }
-.description,
-.unvalidated,
-.postdetails {
-}
-
 
 /**************************** Tables ****************************/
 .main-column thead th {
@@ -106,13 +101,13 @@ tr.folder td {
 /**************************** Pagination ****************************/
 div.pagination a {
 	background-color: #E7EFC5;
-}
-div.pagination .disabled {
+	border: 1px solid #E7EFC5;
 }
 
 /**************************** Forms ****************************/
 /* Label */
 label {
+	color: #333;
 }
 /* required */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
@@ -124,6 +119,7 @@ label {
 }
 /* description */
 .pieform td.description {
+	color: #7d7d7d;
 }
 
 /* Legend */
@@ -151,182 +147,98 @@ input[type=password],
 input[type=file] {
     border: 1px solid #D1D1D1;
 }
-input.text.required {
-}
-
-/* error */
-input.error, select.error {
-}
-.errmsg {
-}
-
 
 /****************************** Buttons ****************************/
 /** input buttons **/
+.btn,
 input.submit,
 input.cancel,
 button,
+.buttondk,
 input.button,
-input.buttondk,
 input.select,
 input#files_filebrowser_edit_artefact {
 	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-	background: #6e8e00;
-	color: #FFF;
-}
-#btn-logout,
-#buttons_delete,
-input.cancel,
-input.btn-del {
-    border-color: #eda58c #611700 #611700 #eda58c !important;
-    background: #8f2100 !important;
-}
-#btn-logout:hover,
-#buttons_delete:hover,
-input.cancel:hover,
-input.btn-del:hover {
-    background: #A82700 !important;
-}
-#btn-logout:active,
-#buttons_delete:active,
-input.cancel:active,
-input.btn-del:active {
-    border-color: #611700 #eda58c #eda58c #611700 !important;
-    background: #A82700 !important;
-}
-input.quiet {
-  background: none !important;
-  color: #6e8e00;
-}
-input.quiet.btn-del {
-  background: none !important;
-  color: #ca0000 !important;
-}
-
-/** link buttons **/
-.rbuttons a.btn,
-.upgradeicon a,
-#loginas .btn-loginas {
-	border-color: #d5ed8a #496000 #496000 #d5ed8a;
-	background: #6e8e00;
+	background: #547b23 url(../images/btn-bkgd.gif) repeat-x left top;
 	color: #FFF !important;
 }
 /** hover for buttons **/
+.btn:hover,
 input.submit:hover,
 input.cancel:hover,
 button:hover,
+.buttondk:hover,
 input.button:hover,
-input.buttondk:hover,
 input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-.rbuttons a.btn:hover {
-	background: #84aa00;
+input#files_filebrowser_edit_artefact:hover {
+	background: #94a44a url(../images/btn-bkgd-hover.gif) repeat-x left top;
 	text-decoration: none;
 }
 /** Depress for buttons **/
+.btn:active,
 input.submit:active,
 input.cancel:active,
 button:active,
+.buttondk:active,
 input.button:active,
-input.buttondk:active,
 input.select:active,
-input#files_filebrowser_edit_artefact:active,
-.rbuttons a.btn:active {
+input#files_filebrowser_edit_artefact:active {
 	border-color: #496000 #d5ed8a #d5ed8a #496000;
-	background: #84aa00;
+	background: #94a44a url(../images/btn-bkgd-hover.gif) repeat-x left 1px;
 	color: #FFF;
 }
 
-
-/** Buttons with icons **/
-a.btn-req {
-	background: url(../images/icon-join.gif) no-repeat left center;
-	padding-left: 15px;
+/* buttons that look like links with icons */
+.icon {
+	color: #6e8e00;
 }
-.btn-leavegroup {
-    background: transparent url(../images/icon-leave.gif) no-repeat left center;
-	padding-left: 15px;
-}
-a.btn-del,
-a#btn-delete {
-    background: transparent url(../images/icon-delete.gif) no-repeat left center;
-    color: #ca0000 !important;
-	padding-left: 12px;
-}
-#btn-request, 
-a.btn-add {
-	background: url(../images/icon-add.gif) no-repeat left center;
-	padding-left: 12px;
-}
-a.btn-msg, #btn-sendmessage {
-	background: url(../images/icon-mail.gif) no-repeat left center;
-	padding-left: 12px;
-}
-a.btn-edit {
-	background: url(../images/icon-edit.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-pending {
-	background: url(../images/icon-pending.gif) no-repeat left center;
-	padding-left: 12px;
-}
-.btn-reply, #add_feedback_link {
-	background: url(../images/icon-reply.gif) no-repeat left center;
-	padding-left: 12px;
-}
-#objection_link {
-	background: url(../images/icon-flag.gif) no-repeat left center;
-}
-#print_link {
-	background: url(../images/icon-print.gif) no-repeat left center;
-}
-#toggle_watchlist_link {
-	background: url(../images/icon-watch.gif) no-repeat left center;
-}
-.btn-settings {
-	background: url(../images/icon-settings.gif) no-repeat left center;
-	padding-left: 12px;
-}
-input#addfriend_add,
-input#myfriends_addfriend_add {
-	background: transparent url(../images/icon-add.gif) no-repeat left center;
-	border: 0;
-    margin: 0;
-}
-#togglepublic_submit {
-	background: url(../images/icon-login.gif) no-repeat left center;
-	padding-left: 12px !important;
-	color: #7f9d16;
-	border: 0;
-}
-.lbuttons a {
-	padding-left: 12px !important;
+/* buttons that look like links */
+.linkbtn {
+	color: #6e8e00; 
 }
 
 /* Search buttons */
 #usf_submit,
-#dosearch,
-#selfsearch button ,
-.query-button,
-#query-button,
-#moderator_search_btn,
-#search_submit,
-#search_search,
-#selfsearch button,
-#users_search_btn {
-	background: url(../images/btn_search_off.gif) no-repeat !important;
+#usf_submit:hover {
+	background: transparent url(../images/btn-search.gif) no-repeat !important;
 	border: 0;
-	width: 25px;
-	height: 24px;
+	color: #6e8e00;
 	text-indent: -999px;
 	font-size: 1%;
-	color: #94ba18;
 	cursor: pointer;
-	padding: 10px;
-	vertical-align: middle;
-	* vertical-align: inherit;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
 }
-
+* html #usf_submit {
+	height: 22px;
+}
+#selfsearch button,
+.query-button,
+#moderator_search_btn,
+#search_search,
+#selfsearch button,
+#search_submit,
+.btn-search,
+#selfsearch button:hover,
+.query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover {
+	background: transparent url(../images/btn-search.gif) no-repeat !important;
+	border: 0;
+	color: #6e8e00;
+	text-indent: -999px;
+	font-size: 1%;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 24px;
+	width: 24px;
+	margin-left: 2px;
+}
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
@@ -356,32 +268,25 @@ input#myfriends_addfriend_add {
 }
 /* Search and language bar */
 #language-select, #usf {
-	padding: 25px 1em 0 0;
+	font-size: .8333em !important;
 }
 #usf_query_container input {
-	font-size: .9em;
-	padding: .25em;
     color: #767676;
 	background-color: #ecf3d4;
+	width: 205px;
 }
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-  float: right;
-  text-align: right;
-  margin: 2.5em 0.5em 0 0;
-  min-width: 20em;
-}
-#right-nav li {
-  padding: 0 0.25em;
-}
-
-#main-nav {
-}
-#main-nav ul {
+	margin: .5em 0;
 }
 #main-nav li {
     color: #e6c560;
+    * zoom: 1;
+    * margin-top: -5px;
+}
+* html #main-nav li {
+    * margin-top: -8px;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -396,21 +301,18 @@ input#myfriends_addfriend_add {
 	display: block;
 	float: left;
 	padding: 0 10px 0 12px;
+	border-right: 1px solid #4C711D;
 }
 #main-nav li a:hover {
     color: #e4ffb4;
     text-decoration: none;
 }
-#main-nav li.selected {
-}
 #main-nav li.selected a,
 #main-nav li.selected a:link,
 #main-nav li.selected a:visited,
 #main-nav li.selected a:active {
-    color: #feef45;
-	background: url(../images/menu-over-bg.gif) no-repeat left;
-}
-#main-nav li.selected a:hover {
+    color: #4C711D;
+	background: url(../images/menu-over-bg.gif) no-repeat left bottom;
 }
 
 
@@ -428,8 +330,6 @@ input#myfriends_addfriend_add {
     padding: 0 0 0 .5em;
 	background: none;
 }
-#sub-nav li {
-}
 #sub-nav li a,
 #sub-nav li a:link,
 #sub-nav li a:visited,
@@ -443,16 +343,12 @@ input#myfriends_addfriend_add {
     color: #7e7327;
     text-decoration: none;
 }
-#sub-nav li.selected {
-}
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
 	background: url(../images/submenu-over-bg.gif) no-repeat right top;
     color: #4c711d;
-}
-#sub-nav li.selected a:hover {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
@@ -476,9 +372,11 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active {
   color: #1E6297;
-  padding: 5px 12px 6px 10px;
+  padding: 5px 12px 4px 10px;
   text-decoration: none;
   background: transparent url(../images/tabs-divider.gif) no-repeat right top;
+  border-right: 1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
 }
 ul.in-page-tabs li a:hover {
   color: #7E7327;
@@ -487,36 +385,14 @@ ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active {
-  background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
+  background: transparent url(../images/tabs-over-bg.gif) no-repeat right bottom;
   color: #000;
+  border-bottom: 1px solid #FFF;
+  padding: 5px 12px 4px 10px;
 }
-ul.in-page-tabs li a.current-tab:hover {
-}
-
 .subpage {
 	display: block;
 	border-top: 0;
-}
-
-
-/**************** MAIN CONTENT *****************/
-/* system messages between nav and main content */
-/* upload file message */
-div.info {
-}
-/* different message types */
-#messages .ok,
-div.ok {
-}
-#messages .error,
-div.error {
-}
-#messages .info {
-}
-/* system messages */
-.message {
-}
-.message.delete {
 }
 
 
@@ -527,8 +403,6 @@ div.error {
 }
 div.sideblock {
     background: url(../images/sidebar-bg.gif) repeat-x top;
-}
-div.sideblock h3 {
 }
 div.sideblock h3 a,
 div.sideblock h3 a:link,
@@ -563,10 +437,6 @@ div.sideblock h3 a:hover {
 #sb-profile ul ul a:active {
 	color: #7f9d16;
 }
-#sb-profile li#unreadmessages a.btn-msg,
-#sb-profile li#unreadmessages a.btn-msg:link,
-#sb-profile li#unreadmessages a.btn-msg:visited,
-#sb-profile li#unreadmessages a.btn-msg:active,
 #sb-profile li#pendingfriends a,
 #sb-profile li#pendingfriends a:link,
 #sb-profile li#pendingfriends a:visited,
@@ -574,15 +444,6 @@ div.sideblock h3 a:hover {
 	color: #3986c3 !important;
 }
 
-/* Side Online Users */
-#sb-onlineusers ul {
-}
-#sb-onlineusers li {
-}
-#sb-onlineusers ul img {
-}
-#lastminutes {
-}
 
 /* Side Quota Bar */
 #quota_used {
@@ -601,49 +462,18 @@ div.sideblock h3 a:hover {
 	background-color: #ecf3d4;
 }
 
-/* Friends control sideblock */
-div.sideblock #friendscontrol label {
-}
-
-/* Tags */
-.tag-results .sep {
-	color: #d1d1d1;
-}
-/* edit tag box */
-.edittag {
-	border: 1px solid #d1d1d1;
-	background: #f6f6f6;
-}
-/* delete tag box */
-.deletetag {
-	border: 1px solid #e98a88;
-	background: #fbeceb;
-}
-.deletetag h3 {
-	color: #ca0000;
-}
-#delete_tag_submit {
-	border-color: #f69595 #750000 #750000 #f69595;
-	background: #ca0000;
-}
-
-/* Ajax Login */
-#ajax-login-form {
-}
-
-/* Help popups & icons */
-.contextualHelp {
-}
-
-
 /******************** FOOTER ****************************/
 #footer-wrap {
-    background-color: #939393;
+    background: #939393;
 	border: 0;
-    color: #c9c9c9;
+    color: #bababa;
+}
+#micro #footer-wrap {
+	background: #939393;
+    color: #bababa;
 }
 #footernav {
-    color: #c9c9c9;
+    color: #bababa;
 }
 #footernav a,
 #footernav a:link,
@@ -657,6 +487,15 @@ div.sideblock #friendscontrol label {
 #powered-by {
 }
 #performance-info {
+	color: #bababa;
+}
+#performance-info span {
+	color: #c9c9c9;
+}
+#performance-info a,
+#performance-info a:hover {
+	color: #bababa;
+	text-decoration: none;
 }
 #version {
 	color: #c9c9c9;
@@ -669,122 +508,6 @@ div.sideblock #friendscontrol label {
 }
 
 
-/****************************** PAGE BY PAGE STYLES **********************************/
-/* Userlists used in admin section and on edit interaction form */
-.userlisttable tbody tr th {
-}
-
-/* Attached file lists */
-.attachments {
-}
-.attachments tbody th {
-}
-
-/* User/view */
-#userview .user-icon {
-}
-
-/* Wall */
-.wallpost {
-}
-#wall .private {
-}
-.wallpost .controls {
-}
-
-/* My Views */
-#myviews td {
-}
-#myviews h4 {
-}
-#myviews .submitted-viewitem {
-}
-#deleteview label {
-}
-
-/* Copy a view */
-#viewpreview {
-}
-#viewpreviewinner {
-}
-#viewpreviewclose {
-}
-
-/* View access */
-#viewacl_lhs {
-}
-#viewacl_lhs #results tfoot td {
-}
-#accesslistitems {
-}
-#accesslistitems .ai-container {
-}
-#accesslistitems .removebutton {
-}
-#accesslistitems .ai-container table th {
-}
-
-/* Export */
-#export h3 {
-}
-#export .radio-description {
-}
-#export fieldset {
-}
-#export .element div {
-}
-#export .view {
-}
-#export fieldset {
-}
-#export fieldset legend {
-}
-#export fieldset div a {
-}
-#export fieldset table {
-}
-#export fieldset table colgroup col {
-}
-#export fieldset table div {
-}
-#export fieldset label {
-}
-#exportgeneration {
-}
-#progress {
-}
-div.progress-bar {
-}
-* html div.progress-bar {
-}
-div.progress-bar a {
-}
-p.progress-text {
-}
-#progressbar {
-}
-
-/* My Groups *//* My Friends */
-ul.groupuserstatus {
-}
-#friendslist ul.actionlist {
-}
-ul.groupuserstatus li,
-#friendslist ul.actionlist li {
-}
-#friendslist ul.viewlist li.label {
-}
-#friendslist ul.viewlist li {
-}
-
-/* Group: about */
-.group-info {
-}
-
-/* Group: members */
-.listing.twocolumn td {
-}
-
 /* Group: members (Add members) */
 #addmembers {
 	background-color: #EBF0F4;
@@ -792,8 +515,6 @@ ul.groupuserstatus li,
 }
 
 /* Settings > Preferences */
-#accountprefs table h3 {
-}
 #accountprefs table label,
 #accountprefs table th {
 	color: #66879F;
@@ -802,27 +523,8 @@ ul.groupuserstatus li,
 	color: #333333;
 	font-size: 1em;
 }
-#deleteaccount {
-}
-#deleteaccount h1 {
-}
-#deleteaccount input.submit {
-}
-
-/* Settings > Notifications */
-#activitylist th {
-}
-#activitylist th a {
-}
-#activitylist tbody td div {
-}
-
-/* Settings > Institution membership */
-#requestmembership_studentid_container label {
-}
 
 /* Home page info boxes */
-
 .home-info {
     border: solid 2px #cccccc;
     background: #eeeeee;
@@ -830,4 +532,38 @@ ul.groupuserstatus li,
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
+}
+.home-info-table {
+	border: 0;
+}
+
+/* Collections */
+#collectionviews {
+	background: #f6f6f6;
+}
+#collectionviews table {
+    width: 100%;
+}
+* html #collectionviews table,
+* html #collectionviews {
+	width: 96%;
+}
+#collectionviews td {
+	vertical-align: middle;
+}
+#collectionviews td label {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+#collectionviews td div {
+    text-align: center;
+}
+
+.inbox-message {
+	background: #FAFBF7;
+}
+
+.attachments tbody th {
+	color: #333;
 }

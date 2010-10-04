@@ -34,6 +34,7 @@
   {/if}
 
 {else}
+{$searchform|safe}
 <table id="adminstitutionslist" class="fullwidth">
 	<thead>
 	<tr>
@@ -55,7 +56,7 @@
             </form>
         {/if}
         </td>
-        <td colspan="5" class="institutionedituserbuttons right">{if count($institutions) > 1}
+        <td colspan="5" class="institutionedituserbuttons right">{if $countinstitutions > 1}
             <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
                 <input type="submit" class="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
             </form>
@@ -70,32 +71,12 @@
     </tr>
 	</tfoot>
 	<tbody>
-	{foreach from=$institutions item=institution}
-	<tr class="{cycle values='r0,r1'}">
-		<td>{$institution->displayname}</td>
-		<td class="center">
-		  {if $institution->name != 'mahara'}
-			<a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
-		  {else}
-			<a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
-		  {/if}
-		</td>
-		<td class="center">{$institution->maxuseraccounts}</td>
-		<td class="center"><a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{$institution->staff}</a></td>
-		<td class="center"><a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{$institution->admins}</a></td>
-		<td class="admininstitutionbtns right">
-			<form action="" method="post">
-				<input type="hidden" name="i" value="{$institution->name}">
-				<input type="submit" class="submit btn-edit s" name="edit" value="{str tag="edit"}">
-				{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit btn-del s" name="delete" value="{str tag="delete"}">{/if}
-			</form>
-		</td>
-          <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
-	</tr>
-	{/foreach}
+        {$results.tablerows|safe}
 	</tbody>
 </table>
-
+<div class="center">
+{$results.pagination|safe}
+</div>
 {/if}
 
 {include file="footer.tpl"}

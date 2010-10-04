@@ -24,40 +24,47 @@
     list-style: none;
     margin: 0;
     padding: 0;
-	display: block;
-	height: 25px;
+	font-size: 1em;
+  	font-weight: bold;
+  	position: relative;
+  	z-index: 0;
+	height: 1%;
 }
 #category-list li {
     display: inline;
-    line-height: 25px;
-    margin: 0 .5em 0 0;
+    line-height: 1.8em;
     padding: 0;
 	position: static;
 	z-index:5;
+  margin: 0 2px 0 0 !important;
+  float: left;
 }
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-    padding: 5px 10px;
-    font-weight: bold;
-}
-#category-list li a:hover {
+  padding: .3em 1em;
+  * padding: .25em 1em;
+  background: #EEEEEE;
+  text-decoration: none;
 }
 #category-list li.current a,
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
     cursor: default;
-    text-decoration: none;
-}
-#category-list li.current a:hover {
+  color: #333;
+  text-decoration: none;
+  background: #D1D1D1;
+  padding: .4em 1em .3em 1em;
+  * padding: .35em 1em .25em 1em;
 }
 /* The panel that contains the blocktype icons */
 #blocktype-list {
+	clear: left;
     min-height: 95px;
     padding: .5em .5em 1em .5em;
-    font-size: .8em;
+    font-size: .9167em;
 }
 #blocktype-list ul {
     list-style-type: none;
@@ -66,12 +73,18 @@
     float: left;
     text-align: center;
     margin: 1em 1em 0;
-    width: 22%;
+    width: 200px;
 	* z-index: 100;
 	line-height: 1.4em;
+	white-space: normal;
+	min-height: 110px;
 }
 * html #blocktype-list li {
 	position: relative;
+}
+#blocktype-list li div.blocktype div {
+	white-space: normal;
+    width: 200px;
 }
 #blocktype-list .blocktype-radio {
     border: none;
@@ -99,21 +112,23 @@ html>body #column-container {
 	* width: 100%;
 }
 #blocksinstruction {
-    padding: 0 1em .5em;
+    padding: .5em 1em;
     font-weight: bold;
 	margin-bottom: 1em;
 }
 
-/* columns */
+/* columns 
 #column-container input.submit {
     cursor: pointer;
+	padding: 0;
+	margin: 0;
 }
-.remove-column input.removecolumn {
-    width: 50px;
+#column-container input.submit:hover {
+	background: none;
 }
 #column-container .column-header input[disabled="disabled"] {
     cursor: default;
-}
+}*/
 
 /* These column width rules are required only for when a column is
    added/removed dynamically (users have to turn this on in their
@@ -138,7 +153,7 @@ html>body #column-container {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9%;
+    padding: 0 0.9% 1em 0.9%;
 	position: relative;
 }
 * html .column {
@@ -187,7 +202,7 @@ html>body #column-container {
 }
 .column-content .add-button input {
 	border: none;
-	font-size: .85em;
+	font-size: .9167em;
 }
 
 #block-placeholder {
@@ -196,8 +211,8 @@ html>body #column-container {
 
 /**************** Blockinstance **********************/
 .blockinstance {
-    margin: 0 0 1em 0;
-    padding: 0 .5em 1em 0;
+    margin: 0 0 2em 0;
+    padding: 0;
     position: relative;
 }
 /* Configure blockinstance */
@@ -209,17 +224,27 @@ html>body #column-container {
   padding: 1em;
 }
 
+.blockinstance.configure .mceEditor {
+  width: 100%;
+}
+
 /* header */
+.blockinstance-header {
+    width: 100%;
+}
 .blockinstance-header h4 {
     margin: 0 !important;
-    cursor: default;
-	font-size: 1.4em;
+	font-size: 1.4em !important;
+	border-bottom: 2px solid #d1d1d1;
+}
+.blockinstance-header h4 a {
+	text-decoration: none;
 }
 
 /* control */
 .blockinstance-controls {
     position: absolute;
-	right: 2px;
+	right: 0;
 	top: 2px;
 }
 .blockinstance-controls input,
@@ -231,31 +256,38 @@ html>body #column-container {
     background: none;
     padding: 0;
     cursor: pointer;
-	margin: 0;
+	margin: 0 0 0 0.1em;
 }
 
 /* content */
 .blockinstance-content {
-	padding: .5em 0;
-    margin-top: .25em;
 }
 
-.main-column .blockinstance-header h4, 
+/*.main-column .blockinstance-header h4, 
 .blockinstance.configure h4 {
     margin: 0;
-	font-size: 1.4em;
+	font-size: 1.3333em;
+}*/
+.blockinstance-content h2 {
+	font-size: 1.3333em !important;
+	margin-top: .5em !important;
+	margin-bottom: 0 !important;
+	border-bottom: 1px dotted #d1d1d1;
 }
 .blockinstance-content h3 {
-	font-size: 1.2em !important;
+	font-size: 1.1667em !important;
 	margin-top: .5em !important;
 	margin-bottom: 0 !important;
 }
 .blockinstance-content h4 {
-	font-size: 1.1em !important;
+	font-size: 1em !important;
 	margin-bottom: 0 !important;
 }
+.blockinstance-content p {
+	margin: 0 0 1em 0;
+}
 .blockinstance-content p:first-child {
-    margin-top: 0;
+	margin-top: .5em;
 }
 .blockinstance-content p:last-child {
 	margin-bottom: 0;
@@ -265,7 +297,19 @@ html>body #column-container {
     padding: .5em;
 }
 .blockinstance-content .description {
-	font-size: .9em;
+	font-size: .9167em;
+}
+.blockinstance-content fieldset {
+	padding: .5em;
+	margin: 0 0 1em 0;
+}
+.blockinstance-content fieldset table {
+	* width: 98%;
+	width: 100%;
+}
+.blockinstance-content table.resumepersonalinfo th,
+.blockinstance-content table.resumepersonalinfo td {
+	padding: 0 0 0 .25em;
 }
 
 
@@ -288,7 +332,7 @@ html>body #column-container {
 /* External Feed */
 #blocktype_externalfeed_title {
 	font-weight: bold;
-	font-size: 1.1em;
+	font-size: 1.1667em;
 }
 #blocktype_externalfeed_entries ol,
 #blocktype_externalfeed_entries ul {
@@ -298,30 +342,64 @@ html>body #column-container {
 /* Inbox */
 .bt-inbox td.icon-container {
   vertical-align: top;
-  padding: 0;
-  width: 15px;
+  width: 16px;
+  * width: 25px;
 }
 .bt-inbox td.icon-container .icon {
-  height: 1.4em;
+  height: 1.7em;
   vertical-align: bottom;
   display: table-cell;
+  * margin-left: 0;
+  * zoom: 1;
 }
 .inbox-showmessage.unread {
   font-weight: bold;
+}
+
+.blockinstance-content table.postlist td {
+  padding: 0;
+}
+.postlist td h3 {
+	border-bottom: 1px dotted #d1d1d1;
+	font-size: 1.4em !important;
+}
+.postlist td h3 a {
+	text-decoration: none;
+}
+.blockinstance-content div.tags {
+	font-size: .9167em;
+	margin-top: .5em;
+	line-height: 1.4em;
+}
+.blockinstance-content div.artefacts {
+	font-size: .9167em;
+	margin-top: .5em;
+	line-height: 1.4em;
+}
+.postlist td div h1,
+.postlist td div h2 {
+	font-size: 1.1667em !important;
+	margin: 0.5em 0 0 0 !important;
+}
+.postlist td div h3,
+.postlist td div h4 {
+	font-size: 1em !important;
+	margin: 0.5em 0 0 0 !important;
+	border: 0 !important;
+}
+.postlist td div p {
+	margin: 0 0 1em 0 !important;
 }
 
 /* group homepage */
 .grouphomepage {
   width: 100%;
 }
-.grouphomepage .column {
-  float: none;
-}
 .grouphomepage .bt-groupviews h5 {
   margin: 0;
 }
 .grouphomepage .bt-groupviews .groupviewsection {
-  margin: 1em 0;
+  margin: .5em 0 .5em 0;
 }
 
 /* tabs for the artefact chooser */
@@ -330,52 +408,44 @@ ul.artefactchooser-tabs {
   margin: 0;
   font-weight: bold;
   list-style: none;
-  line-height: 25px;
-  font-size: 12px;
+  font-size: 1em;
+  height: 1%;
 }
 ul.artefactchooser-tabs li {
   display: inline;
-  margin: 0 .5em 0 0 !important;
   padding: 0;
-  line-height: 25px;
+  line-height: 1.9em;
+  margin: 0 2px 0 0 !important;
+  float: left;
 }
 ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  padding: 5px 10px;
+  padding: .3em 1em;
   text-decoration: none;
-}
-ul.artefactchooser-tabs li a:hover {
-	text-decoration: underline;
+  background: #EEEEEE;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
 ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
-}
-ul.artefactchooser-tabs li.current a:hover {
+  color: #333;
+  text-decoration: none;
+  background: #D1D1D1;
+  padding: .4em 1em .3em 1em;
+  cursor: default;
 }
 ul.artefactchooser-subtabs {
-  margin: 2px !important;
-  padding: 0 0 .2em 0 !important;
-  font-size: .9em;
+  margin: 0 0 1em 0 !important;
+  padding: 0 !important;
+  font-size: .9167em;
   list-style: none;
 }
 ul.artefactchooser-subtabs li {
   display: inline;
-  padding: 0 .5em;
+  padding: 0 1em;
   margin: 0 !important;
-}
-ul.artefactchooser-subtabs li a,
-ul.artefactchooser-subtabs li a:link,
-ul.artefactchooser-subtabs li a:visited,
-ul.artefactchooser-subtabs li a:active {
-  text-decoration: none;
-  padding: 2px;
-}
-ul.artefactchooser-subtabs li a:hover {
-	text-decoration: underline;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
@@ -383,18 +453,12 @@ ul.artefactchooser-subtabs li.current a:visited,
 ul.artefactchooser-subtabs li.current a:active {
   font-weight: bold;
 }
-ul.artefactchooser-subtabs li.current a:hover {
-}
 
 #artefactchooser-body {
+	clear: left;
 	margin-bottom: .5em;
-	padding: 1em;
+	padding: .5em;
 }
-#instconf_artefactids_container #artefactchooser-body,
-#instconf_artefactid_container #artefactchooser-body {
-	padding: 0;
-}
-
 
 /* table */
 .maharatable {
@@ -402,17 +466,16 @@ ul.artefactchooser-subtabs li.current a:hover {
     width: 100%;
 }
 .maharatable thead th {
-	padding-top: 0 !important;
 	font-size: 1em !important;
 	text-align: left !important;
 }
 .maharatable tbody th {
-	padding: .5em 0 0 0 !important;
-	font-size: 1.2em;
+	font-size: 1.1667em;
 	text-align: left !important;
+	padding: .25em 0 0 0;
 }
 .maharatable tbody td {
-	padding: .25em 0;
+	padding: 0 0 .5em 0;
 }
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,
@@ -425,25 +488,31 @@ ul.artefactchooser-subtabs li.current a:hover {
     padding: 0 .25em !important;
 }
 #artefactchooser-body th label {
-	font-weight: normal;
-	font-size: .85em;
+	font-size: .9167em;
 }
 .maharatable td label {
 	font-weight: normal;
-}
-#artefactchooser-searchform {
-	padding: .25em .5em;
-}
-#artefactchooser-searchsubmit {
-    margin: 0;
-}
-div.artefactchooser-splitter {
-    padding: .25em 0 0 0;
 }
 .blockconfig-background {
     width: 100%;
     text-align: center;
     margin-top: 20px;
+}
+.fileedittable th {
+	font-size: 1em !important;
+}
+#instconf_artefactid_selectlist,
+#instconf_artefactids_selectlist {
+	margin-bottom: 1em;
+}
+#instconf_artefactid_selectlist td,
+#instconf_artefactids_selectlist td {
+	padding: .25em;
+}
+#instconf_artefactid_selectlist td input.button,
+#instconf_artefactids_selectlist td input.button {
+	font-size: .9167em;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* pagination */
@@ -453,6 +522,7 @@ div.artefactchooser-splitter {
 }
 .ac-pagination .results {
 	margin: 0;
+	display: block !important;
 }
 .ac-pagination a, 
 .ac-pagination .disabled {
@@ -464,20 +534,18 @@ div.artefactchooser-splitter {
 .attachments {
     border: 0;
 	margin: .5em 0;
-}
-.attachments th {
-	padding: .25em .5em !important;
+	font-size: .9167em;
 }
 .attachments td {
 	padding: .25em .5em !important;
 }
 .attachments td input.small {
-    font-size: .9em;
+    font-size: .9167em;
 }
 
 /* upload */
 .uploadform td {
-	font-size: .9em;
+	font-size: .9167em;
 }
 .uploadform th label {
 	font-weight: bold !important;
@@ -493,13 +561,13 @@ div.artefactchooser-splitter {
 	padding: .25em .5em;
 }
 .fileupload #filelist td input.small {
-	font-size: .9em;
+	font-size: .9167em;
 }
 .upload_browse #artefactchooser-body {
 	padding: 1em !important;
 }
 .upload_browse .uploadform td {
-	line-height: 1.2em;
+	line-height: 1.1667em;
 }
 .upload_browse #artefactchooser-body {
 	margin-bottom: .5em;
@@ -515,7 +583,7 @@ div.artefactchooser-splitter {
 
 #view-description {
     margin: 0 0 1em 0;
-	padding: .25em 0;
+	padding: 0 0 .25em 0;
 	border-bottom: 1px dotted #ccc;
 }
 
@@ -526,6 +594,41 @@ div.artefactchooser-splitter {
 	width: auto;
 }
 
+/* Collection navigation */
+#collection {
+	margin: 2em 0 0 0;
+}
+#collection strong {
+	font-size: 1.1667em;
+}
+ul.colnav {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0 0 0;
+    display: inline;
+}
+ul.colnav li {
+    display: inline;
+    padding: 0;
+    margin: 0 0.15em;
+	display: inline;
+}
+div.colnav1 {
+    display: inline;
+}
+div.colnav-extra {
+    margin: 0.75em 0 0;
+}
+
+.submissionform {
+	background: #eee;
+	padding: .25em .5em;
+}
+.submittedform {
+	background: #eee;
+	padding: .25em .5em;
+}
+
 /* VIEWS */
 /* views footer */
 .viewfooter {
@@ -533,8 +636,27 @@ div.artefactchooser-splitter {
 	padding: 1em;
 	margin-bottom: 1em;
 }
+.viewfooter .tags {
+	margin-bottom: 1em;
+}
+.viewfooter .submissionform {
+	margin-bottom: .5em;
+}
+.viewfooter .submissionform .submit {
+	margin-left: .25em;
+}
+.viewfooter .releaseviewform {
+	background: #eee;
+	margin-bottom: .5em;
+}
+.viewfooter .releaseviewform tr {
+	display: inline;
+}
+.viewfooter .releaseviewform tr th {
+	padding: .25em !important;
+}
 #viewmenu {
-	font-size: .9em;
+	font-size: .9167em;
 }
 #viewmenu a {
 	margin: 0 .5em;
@@ -543,11 +665,22 @@ div.artefactchooser-splitter {
 	padding: 0;
 }
 #feedbacktable .details {
-	font-size: .9em;
+	font-size: .9167em;
 }
 #feedbacktable .icon {
 	float: left;
-	margin-right: 5px;
+	margin-right: .25em;
+	margin-left: 0;
+}
+#feedbacktable .username {
+	margin-right: .25em;
+}
+#feedbacktable .details span {
+	margin: 0 .25em;
+}
+#feedbacktable .attachmessage {
+	font-size: .9167em;
+	font-style: italic;
 }
 #feedbacktable p {
     margin: 0 0 .25em;
@@ -569,7 +702,7 @@ div.artefactchooser-splitter {
 	margin: 0 0 1em 0;
 }
 #view .filedata-icon h4 {
-	font-size: .9em;
+	font-size: .9167em;
 	margin: 0;
 }
 #view .filedata-icon.fl {
@@ -585,4 +718,70 @@ div.artefactchooser-splitter {
 
 #publicfeedback {
 	clear: both;
+}
+
+/* My Plans incomplete/complete styling */
+table tr.plan_incomplete {
+    background: #FFD3D9;
+    color: #DD0221;
+	border-bottom: 2px solid #FFF;
+}
+table td div.plan_completed {
+    margin:3px;
+    text-align:center;
+    width:60px;
+}
+
+.blockinstance .blockinstance-content table.postlist {
+	width: 100%;
+	* width: 98%;
+}
+
+.licensedesc {
+	padding: .5em;
+	margin: 0;
+}
+.licensedesc div {
+	padding-left: 1em;
+	font-size: .9167em;
+	line-height: 1.4em;
+}
+
+.plansblocktable {
+	margin: .5em 0;
+}
+
+/*#instconf_count_container td,
+#instconf_height_container td,
+#instconf_noderivatives_container td,
+#instconf_collection_container td,
+#instconf_text_container td {
+	padding-bottom: 1em;
+}*/
+#blocktype_externalfeed_title {
+	margin-top: .5em;
+}
+#blocktype_externalfeed_entries {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+#recentforumpostsblock {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+#recentforumpostsblock td.s img {
+	vertical-align: top;
+}
+#blocktype_externalfeed_entries h4 {
+	margin-top: .5em;
+}
+#userview {
+	border-bottom: 1px dotted #d1d1d1;
+}
+
+table.resumecomposite {
+	width: 100%;
+}
+* html table.resumecomposite {
+	width: 96%;
 }

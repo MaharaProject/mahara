@@ -749,6 +749,25 @@ class ActivityTypeWatchlist extends ActivityType {
         $this->users = get_records_sql_array($sql, 
                                        array(get_config('wwwroot') . 'view/view.php?id=' 
                                              . $this->view, $this->get_id(), $this->view));
+
+        // Remove the view from the watchlist of users who can no longer see it
+        if ($this->users) {
+            $userstodelete = array();
+            foreach($this->users as $k => &$u) {
+                if (!can_view_view($this->view, $u->id)) {
+                    $userstodelete[] = $u->id;
+                    unset($this->users[$k]);
+                }
+            }
+            if ($userstodelete) {
+                delete_records_select(
+                    'usr_watchlist_view',
+                    'view = ? AND usr IN (' . join(',', $userstodelete) . ')',
+                    array($this->view)
+                );
+            }
+        }
+
         $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
@@ -943,10 +962,15 @@ abstract class ActivityTypePlugin extends ActivityType {
 }
 
 
-function format_notification_whitespace($message) {
+function format_notification_whitespace($message, $type=null) {
     $message = preg_replace('/^(\s|<br( ?\/)?>|&nbsp;|\xc2\xa0)*/', '', $message);
     $message = format_whitespace($message);
-    return preg_replace('/(<br( ?\/)?>\s*){2,}/', '<br><br>', $message);
+    // @todo: Sensibly distinguish html notifications, notifications where the full text
+    // appears on another page and this is just an abbreviated preview, and text-only
+    // notifications where the entire text must appear here because there's nowhere else
+    // to see it.
+    $replace = ($type == 'newpost' || $type == 'feedback') ? '<br>' : '<br><br>';
+    return preg_replace('/(<br( ?\/)?>\s*){2,}/', $replace, $message);
 }
 
 /**

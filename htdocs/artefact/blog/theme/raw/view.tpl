@@ -1,22 +1,29 @@
 {include file="header.tpl"}
 			<div id="myblogs rel">
 
-				{if !$blog->get('locked')}
                 <div class="rbuttons">
-                    <a class="btn btn-settings" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-                    <a class="btn btn-add" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+                {if !$blog->get('locked')}
+                    <a class="btn" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+                {/if}
+                    <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
-				{/if}
 
                 <p>{clean_html($blog->get('description'))|safe}</p>
-                {if $blog->get('tags')}<p class="tags">{str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
+                {if $blog->get('tags')}<p class="tags"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
 
-                {if $blog->count_children() > 0}
-				<table id="postlist" class="hidden tablerenderer fullwidth nohead">
+                {if $posts}
+				<table id="postlist" class="tablerenderer fullwidth nohead">
 					<tbody>
-							  <tr><td></td><td></td><td></td></tr>
+                    {$posts.tablerows|safe}
 					</tbody>
 				</table>
+                <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
+<script>
+addLoadEvent(function() {literal}{{/literal}
+    {$posts.pagination_js|safe}
+    removeElementClass('blogpost_page_container', 'hidden');
+{literal}}{/literal});
+</script>
                 {else}
                 <div class="message">
                   {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=artefact.blog}</a>{/if}

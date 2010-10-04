@@ -9,15 +9,9 @@
     background-color: #ebf0f4;
     border: 1px solid #95a8b7;
 }
-/* folder nav */
-.foldernav {
-}
-form#files .foldernav {
-}
-
 /* File list */
-.filelist th {
-	border-bottom: 1px solid #CCCCCC;
+.filelist td.right input.btn-del {
+	color: #BC0909;
 }
 /* parent folder row */
 tr.parentfolder td {
@@ -34,28 +28,4 @@ tr.folder td {
 /* folder row being moved */
 tr.folderhover td {
     background-color: #daf0ff !important;
-}
-/* File list edit box */
-#files_filebrowser_edit_row td {
-	border: 2px solid #eee;
-}
-
-/* Edit post File list */
-#editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
-	border-top: 1px solid #eee;
-	border-right: 1px solid #eee;
-	border-bottom: 4px solid #eee;
-	border-left: 1px solid #eee;
-}
-
-/* Edit post selected file list */
-.filelist .disabled {
-	color: #C3C3C3;
-}
-.filelist .tag-edit.submit {
-    border: 0;
-    background: transparent;
-    color: #6e8e00;
-    cursor: pointer;
 }

@@ -42,6 +42,8 @@ class PluginImportLeap extends PluginImport {
     private $coreloadmapping = array();
     private $artefactids = array();
     private $viewids = array();
+    private $collectionids = array();
+    private $collectionviewentries = array();
     protected $filename;
 
     protected $persondataid = null;
@@ -50,6 +52,12 @@ class PluginImportLeap extends PluginImport {
     protected $logtargets = LOG_TARGET_ERRORLOG;
     protected $logfile = '';
     protected $profile = false;
+    protected $leap2anamespace = null;
+    protected $leap2atypenamespace = null;
+    protected $leap2acategories = null;
+    // the version is stored with the full url since the url might change in
+    // future versions (as it has between 2009-03 and 2010-07)
+    protected $supportedleap2aversions = array('http://www.leapspecs.org/2010-07/2A/');
 
     private $snapshots = array();
 
@@ -58,15 +66,18 @@ class PluginImportLeap extends PluginImport {
 
     const NS_ATOM       = 'http://www.w3.org/2005/Atom';
     const NS_RDF        = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    const NS_LEAP       = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#';
-    const NS_LEAPTYPE   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
-    const NS_CATEGORIES = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
+    const NS_LEAP_200903       = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#';
+    const NS_LEAPTYPE_200903   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
+    const NS_CATEGORIES_200903 = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
+    const NS_LEAP              = 'http://terms.leapspecs.org/';
+    const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories';
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
     const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
 
     const STRATEGY_IMPORT_AS_VIEW = 1;
+    const STRATEGY_IMPORT_AS_COLLECTION = 2;
 
     public static function validate_transported_data(ImporterTransport $transport) {
         $importdata = $transport->files_info();
@@ -117,6 +128,8 @@ class PluginImportLeap extends PluginImport {
         $this->trace("Document loaded, entries: " . count($this->xml->entry));
         $this->snapshot('loaded XML');
 
+        $this->detect_leap2a_namespace();
+
         $this->ensure_document_valid();
 
         $this->create_strategy_listing();
@@ -128,6 +141,38 @@ class PluginImportLeap extends PluginImport {
         $this->import_completed();
 
         db_commit();
+    }
+
+    /**
+     * detect the leap2a namespace of the import document by looking for the 'version' element
+     *
+     *
+     */
+    private function detect_leap2a_namespace () {
+
+        // check for the leap2a version used
+        // disable xml warnings. The initial LEAP2A spec hasn't got the leap2
+        // namespace so the following xpath expression triggers a warning
+        // which we want to suppress.
+        $oldvalue = libxml_use_internal_errors(true);
+        $version = $this->xml->xpath('//leap2:version');
+        libxml_use_internal_errors($oldvalue);
+
+        // if there is no version string we assume the first version of the
+        // LEAP2A spec which doesn't contain the version element
+        if(!empty($version) && !in_array($version[0][0], $this->supportedleap2aversions)) {
+            throw new ImportException($this, "FATAL: The version of the uploaded LEAP2A file is not supported by this Mahara version");
+        }
+
+        if($version) {
+            $this->leap2anamespace = self::NS_LEAP;
+            $this->leap2atypenamespace = self::NS_LEAP;
+            $this->leap2acategories = self::NS_CATEGORIES;
+        } else {
+            $this->leap2anamespace = self::NS_LEAP_200903;
+            $this->leap2atypenamespace = self::NS_LEAPTYPE_200903;
+            $this->leap2acategories = self::NS_CATEGORIES_200903;
+        }
     }
 
     private function ensure_document_valid() {
@@ -146,7 +191,12 @@ class PluginImportLeap extends PluginImport {
 
         // Check all the namespaces we're gonna need are declared, and warn if 
         // they're not there
-        foreach (array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_LEAPTYPE, self::NS_CATEGORIES) as $ns) {
+        if($this->leap2anamespace == self::NS_LEAP) {
+            $namespaces = array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_CATEGORIES);
+        } else {
+            $namespaces = array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP_200903, self::NS_LEAPTYPE_200903, self::NS_CATEGORIES_200903);
+        }
+        foreach ($namespaces as $ns) {
             if (!isset($this->namespaces[$ns])) {
                 $this->trace("WARNING: Namespaces $ns wasn't declared - this will make importing data correctly difficult");
             }
@@ -183,7 +233,7 @@ class PluginImportLeap extends PluginImport {
             }
             else {
                 $persondata = $this->get('xml')->xpath('//a:feed/a:entry/a:category[('
-                    . $this->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, 'person_type#') . ') and @term="Self"]/../a:id');
+                    . $this->curie_xpath('@scheme', $this->get_categories_namespace(), 'person_type#') . ') and @term="Self"]/../a:id');
                 if (isset($persondata[0])) {
                     $this->persondataid = (string)$persondata[0][0];
                 }
@@ -445,6 +495,29 @@ class PluginImportLeap extends PluginImport {
             $loadedentries[] = $entryid;
         }
 
+        // Put views into collections
+
+        // Keep track of which views have been placed in a collection, because
+        // Mahara can't handle more one collection per view.
+        $incollection = array();
+
+        foreach ($this->collectionviewentries as $cid => $entryids) {
+            $i = 0;
+            foreach ($entryids as $entryid) {
+                $viewid = self::get_viewid_imported_by_entryid($entryid);
+                if ($viewid && !isset($incollection[$viewid])) {
+                    $record = (object) array(
+                        'collection' => $cid,
+                        'view' => $viewid,
+                        'displayorder' => $i,
+                    );
+                    insert_record('collection_view', $record);
+                    $incollection[$viewid] = $cid;
+                    $i++;
+                }
+            }
+        }
+
         // Allow each plugin to load relationships to views if they need to
         foreach ($loadedentries as $entryid) {
             if (isset($this->loadmapping[$entryid])) {
@@ -455,6 +528,19 @@ class PluginImportLeap extends PluginImport {
                     $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
             }
         }
+    }
+
+    public function entry_has_strategy($entryid, $strategyid, $artefactplugin=null) {
+        if (isset($this->loadmapping[$entryid])) {
+            if (empty($this->loadmapping[$entryid]['artefactplugin']) && !empty($artefactplugin)) {
+                return false;
+            }
+            if ($this->loadmapping[$entryid]['artefactplugin'] != $artefactplugin) {
+                return false;
+            }
+            return $this->loadmapping[$entryid]['strategy'] == $strategyid;
+        }
+        return false;
     }
 
     private function import_completed() {
@@ -553,13 +639,21 @@ class PluginImportLeap extends PluginImport {
      * @param SimpleXMLElement $entry
      */
     public function get_import_strategies_for_entry(SimpleXMLElement $entry) {
-        if (self::is_rdf_type($entry, $this, 'selection')
-            && self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
-            return array(array(
-                'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
-                'score'    => 100,
-                'other_required_entries' => array(),
-            ));
+        if (self::is_rdf_type($entry, $this, 'selection')) {
+            if (self::is_correct_category_scheme($entry, $this, 'selection_type', 'Webpage')) {
+                return array(array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_VIEW,
+                    'score'    => 100,
+                    'other_required_entries' => array(),
+                ));
+            }
+            if (self::is_correct_category_scheme($entry, $this, 'selection_type', 'Website')) {
+                return array(array(
+                    'strategy' => self::STRATEGY_IMPORT_AS_COLLECTION,
+                    'score'    => 100,
+                    'other_required_entries' => array(),
+                ));
+            }
         }
         return array();
     }
@@ -609,6 +703,34 @@ class PluginImportLeap extends PluginImport {
                 $view->addblockinstance($bi);
                 $this->viewids[(string)$entry->id] = $view->get('id');
             }
+            break;
+        case self::STRATEGY_IMPORT_AS_COLLECTION:
+            require_once('collection.php');
+
+            $collectiondata = array(
+                'name'        => (string)$entry->title,
+                'description' => (string)$entry->summary,
+                'owner'       => $this->get('usr'),
+            );
+            if ($published = strtotime((string)$entry->published)) {
+                $collectiondata['ctime'] = $published;
+            }
+            if ($updated = strtotime((string)$entry->updated)) {
+                $collectiondata['mtime'] = $updated;
+            }
+
+            $collection = new Collection(0, $collectiondata);
+            $collection->commit();
+            $this->collectionids[(string)$entry->id] = $collection->get('id');
+
+            // Remember entry ids that form part of this entry, and use them later
+            // to put views into collections.
+            foreach ($entry->link as $link) {
+                if ($this->curie_equals($link['rel'], '', 'has_part') && isset($link['href'])) {
+                    $this->collectionviewentries[$collection->get('id')][] = (string) $link['href'];
+                }
+            }
+
             break;
         default:
             throw new ImportException($this, 'TODO: get_string: unknown strategy chosen for importing entry');
@@ -831,7 +953,8 @@ class PluginImportLeap extends PluginImport {
      * @return boolean Whether it's worth checking in more detail
      */
     private function artefact_reference_quickcheck($field) {
-        return (false !== strpos($field, 'rel="leap:has_part"')
+
+        return (false !== strpos($field, 'rel="'.$this->leap2anamespace.':has_part"')
                 || false !== strpos($field, 'rel="enclosure"'))
             && (
                 (false !== strpos($field, '<img'))
@@ -846,7 +969,7 @@ class PluginImportLeap extends PluginImport {
      * @return string The fixed field
      */
     private function fix_artefact_reference($field) {
-        $match = '#<((img)|a)([^>]+)rel="(?:leap:has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
+        $match = '#<((img)|a)([^>]+)rel="(?:'.$this->leap2anamespace.':has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
         $field = preg_replace_callback($match,
             array($this, '_fixref'),
             $field);
@@ -973,7 +1096,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_rdf_type(SimpleXMLElement $entry, PluginImportLeap $importer, $rdftype) {
         $result = $entry->xpath('rdf:type['
-            . $importer->curie_xpath('@rdf:resource', PluginImportLeap::NS_LEAPTYPE, $rdftype) . ']');
+            . $importer->curie_xpath('@rdf:resource', $importer->get_leaptype_namespace(), $rdftype) . ']');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
@@ -988,7 +1111,7 @@ class PluginImportLeap extends PluginImport {
      */
     public static function is_correct_category_scheme(SimpleXMLElement $entry, PluginImportLeap $importer, $category, $term) {
         $result = $entry->xpath('a:category[('
-            . $importer->curie_xpath('@scheme', PluginImportLeap::NS_CATEGORIES, $category . '#') . ') and @term="' . $term . '"]');
+            . $importer->curie_xpath('@scheme', $importer->get_categories_namespace(), $category . '#') . ') and @term="' . $term . '"]');
         return isset($result[0]) && $result[0] instanceof SimpleXMLElement;
     }
 
@@ -1034,7 +1157,7 @@ class PluginImportLeap extends PluginImport {
         case '':
             return ''; // empty entry
         default:
-            throw new SystemException("Unrecognised content type for entry '$entry->id'");
+            throw new SystemException("Unrecognised content type for entry '$entry->id' ($type)");
         }
     }
 
@@ -1054,8 +1177,13 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * Look for leap:date elements that are part of an entry (if any) and 
+     * Look for leap2:date elements that are part of an entry (if any) and 
      * return the values we parse from them
+     *
+     *
+     * @param SimpleXMLElement $entry The element containing the date
+     * @param array $namespaces array of namespaces @see PluginImportLeap::namespaces
+     * @param string $ns namespace URL which is used as a key in the $namespaces array
      *
      * Returned in a structure like so:
      * array(
@@ -1082,10 +1210,10 @@ class PluginImportLeap extends PluginImport {
      *
      * Spec reference: http://wiki.cetis.ac.uk/2009-03/Leap2A_literals#date
      */
-    public static function get_leap_dates(SimpleXMLElement $entry) {
+    public static function get_leap_dates(SimpleXMLElement $entry, $namespaces, $ns) {
         $dates = array();
         foreach (array('start', 'end', 'target') as $point) {
-            $dateelement = $entry->xpath('leap:date[@leap:point="' . $point . '"]');
+            $dateelement = $entry->xpath($namespaces[$ns].':date[@'.$namespaces[$ns].':point="' . $point . '"]');
             if (count($dateelement) == 1) {
                 $dateelement = $dateelement[0];
             }
@@ -1096,9 +1224,9 @@ class PluginImportLeap extends PluginImport {
                     $dates[$point]['value'] = $date;
                 }
 
-                // Parse for leap:label
+                // Parse for leap2:label
                 $leapattributes = array();
-                foreach ($dateelement->attributes(PluginImportLeap::NS_LEAP) as $key => $value) {
+                foreach ($dateelement->attributes($ns) as $key => $value) {
                     $leapattributes[$key] = (string)$value;
                 }
                 if (isset($leapattributes['label'])) {
@@ -1107,6 +1235,28 @@ class PluginImportLeap extends PluginImport {
             }
         }
         return $dates;
+    }
+
+    /**
+     * Look for a leap2:myrole element that is part of an entry (if any) and
+     * return the value
+     *
+     *
+     * @param SimpleXMLElement $entry The element containing the date
+     * @param array $namespaces array of namespaces @see PluginImportLeap::namespaces
+     * @param string $ns namespace URL which is used as a key in the $namespaces array
+     *
+     * @return string
+     *
+     * Spec reference: http://wiki.leapspecs.org/2A/literals#myrole
+     */
+    public static function get_leap_myrole(SimpleXMLElement $entry, $namespaces, $ns) {
+        $myrole = $entry->xpath($namespaces[$ns].':myrole');
+        // we only expect one role
+        if($myrole[0]) {
+            return $myrole[0];
+        }
+        return '';
     }
 
     /**
@@ -1127,6 +1277,100 @@ class PluginImportLeap extends PluginImport {
         return $attributes;
     }
 
+    /**
+     * getter to return the leap2typeanamespace property
+     *
+     * @return string namespace URL
+     */
+    public function get_leaptype_namespace() {
+        return $this->leap2atypenamespace;
+    }
+
+    /**
+     * getter to return the leap2anamespace property
+     *
+     * @return string namespace URL
+     */
+    public function get_leap2a_namespace() {
+        return $this->leap2anamespace;
+    }
+
+    /**
+     * getter to return the namespace property
+     *
+     * @return array
+     */
+    public function get_namespaces() {
+        return $this->namespaces;
+    }
+
+    /**
+     * getter to return the leap2 categories namespace
+     *
+     * @return string namespace URL
+     */
+    public function get_categories_namespace() {
+        return $this->leap2acategories;
+    }
+
+    /**
+     * helper function to create attachments between entries.
+     * The 2010-07 version of leap2a says that linked *entries* should use related relation,
+     * and directly linked files (attachments) should use enclosures.
+     * However, for BC we should support both.
+     * This function supports both and additionally creates the File artefacts for attachments, then links them.
+     *
+     * @param SimpleXMLElement $entry    the entry we want to attach things *to*
+     * @param SimpleXMLElement $link     the link to inspect
+     * @param ArtefactType     $artefact the artefact that has been created from the entry.
+     *
+     * @return void|int the id of a *newly created* attached artefact
+     */
+    public function create_attachment(SimpleXMLElement $entry, SimpleXMLElement $link, ArtefactType $artefact) {
+        if (($this->curie_equals($link['rel'], '', 'enclosure') || $this->curie_equals($link['rel'], '', 'related')) && isset($link['href'])) {
+            $this->trace("Attaching file $link[href] to comment $entry->id", PluginImportLeap::LOG_LEVEL_VERBOSE);
+            $artefactids = $this->get_artefactids_imported_by_entryid((string)$link['href']);
+            if (isset($artefactids[0])) {
+                $artefact->attach($artefactids[0]);
+            } else { // it may be just an attached file, with no Leap2A element in its own right ....
+                if ($id = $this->create_linked_file($entry, $link)) {
+                    $artefact->attach($id);
+
+                    return $id;
+                }
+            }
+        }
+    }
+
+    /**
+     * Attaches a file to a blogpost entry that was just linked directly, rather than having a Leap2a entry
+     * See http://wiki.leapspecs.org/2A/files
+     *
+     * @param SimpleXMLElement $entry
+     * @param SimpleXMLElement $link
+     */
+    private function create_linked_file(SimpleXMLElement $entry, SimpleXMLElement $link) {
+        $this->trace($link);
+        $pathname = urldecode((string)$link['href']);
+        $dir = dirname($this->get('filename'));
+        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        if (!file_exists($pathname)) {
+            return false;
+        }
+        // Note: this data is passed (eventually) to ArtefactType->__construct,
+        // which calls strtotime on the dates for us
+        require_once('file.php');
+        $data = (object)array(
+            'title' => (string)$entry->title . ' ' . get_string('attachment'),
+            'owner' => $this->get('usr'),
+            'filetype' => file_mime_type($pathname),
+        );
+        return ArtefactTypeFile::save_file($pathname, $data, $this->get('usrobj'), true);
+    }
+
+    public function entry_exists($entryid) {
+        return array_key_exists($entryid, $this->strategylisting);
+    }
 }
 
 

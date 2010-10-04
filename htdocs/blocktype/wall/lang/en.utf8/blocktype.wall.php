@@ -42,8 +42,10 @@ $string['deletepost'] = 'Delete post';
 $string['Post'] = 'Post';
 $string['deletepostsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['deletepostsuccess'] = 'Post deleted successfully';
+$string['addpostsuccess'] = 'Post added successfully';
 $string['maxcharacters'] = "Maximum %s characters per post.";
 $string['sorrymaxcharacters'] = "Sorry, your post cannot be more than %s characters long.";
+$string['posttextrequired'] = "This field is required.";
 
 // Config strings
 $string['postsizelimit'] = "Post Size Limit";

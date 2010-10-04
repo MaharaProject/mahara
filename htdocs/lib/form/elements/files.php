@@ -48,6 +48,10 @@ function pieform_element_files(Pieform $form, $element) {
 
     $smarty->assign('name', $form->get_name() . '_' . $element['name']);
 
+    if (isset($element['maxfilesize']) && is_int($element['maxfilesize'])){
+        $smarty->assign('maxfilesize', $element['maxfilesize']);
+    }
+
     return $smarty->fetch('form/files.tpl');
 }
 

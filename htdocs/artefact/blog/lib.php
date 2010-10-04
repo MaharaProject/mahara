@@ -196,17 +196,46 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /**
-     * Renders a blog for a view. This involves using a tablerenderer to paginate the posts.
-     *
-     * This uses some legacy stuff from the old views interface, including its 
-     * dependence on javascript and the table renderer, which would be nice to 
-     * fix using the new pagination stuff some time.
+     * Renders a blog.
      *
      * @param  array  Options for rendering
      * @return array  A two key array, 'html' and 'javascript'.
      */
     public function render_self($options) {
         $this->add_to_render_path($options);
+
+        if (!isset($options['limit'])) {
+            $limit = self::pagination;
+        }
+        else if ($options['limit'] === false) {
+            $limit = null;
+        }
+        else {
+            $limit = (int) $options['limit'];
+        }
+        $offset = isset($options['offset']) ? intval($options['offset']) : 0;
+
+        if (!isset($options['countcomments'])) {
+            // Count comments if this is a view
+            $options['countcomments'] = (!empty($options['viewid']));
+        }
+
+        $posts = ArtefactTypeBlogpost::get_posts($this->id, $limit, $offset, $options);
+
+        $template = 'artefact:blog:viewposts.tpl';
+
+        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        if (!empty($options['viewid'])) {
+            $baseurl .= '&view=' . $options['viewid'];
+        }
+        $pagination = array(
+            'baseurl' => $baseurl,
+            'id' => 'blogpost_pagination',
+            'datatable' => 'postlist',
+            'jsonscript' => 'artefact/blog/posts.json.php',
+        );
+
+        ArtefactTypeBlogpost::render_posts($posts, $template, $options, $pagination);
 
         $smarty = smarty_core();
         if (isset($options['viewid'])) {
@@ -218,63 +247,15 @@ class ArtefactTypeBlog extends ArtefactType {
             $smarty->assign('artefacttitle', hsc($this->get('title')));
         }
 
+        $options['hidetitle'] = true;
         $smarty->assign('options', $options);
         $smarty->assign('description', $this->get('description'));
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('tags', $this->get('tags'));
 
-        // Remove unnecessary options for blog posts
-        unset($options['hidetitle']);
+        $smarty->assign_by_ref('posts', $posts);
 
-        $page = (isset($options['page'])) ? abs(intval($options['page'])) : abs(param_integer('page', 1));
-        $offset = $page ? $page * self::pagination - self::pagination : 1;
-
-        $before = isset($options['before']) ? "a.ctime < '{$options['before']}'" : 'TRUE';
-
-        $from ="FROM {artefact} a
-            LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
-            WHERE a.parent = ? AND $before
-            AND bp.published = 1";
-
-        $postcount = get_field_sql("
-            SELECT COUNT(*) $from",
-            array($this->get('id'))
-        );
-
-        $postids = get_column_sql("
-            SELECT a.id
-            $from
-            ORDER BY a.ctime DESC
-            LIMIT ? OFFSET ?",
-            array($this->get('id'), self::pagination, $offset)
-        );
-
-        $data = array();
-        foreach($postids as $postid) {
-            $blogpost = new ArtefactTypeBlogPost($postid);
-            $data[] = array(
-                'id' => $postid,
-                'content' => $blogpost->render_self($options)
-            );
-        }
-        $smarty->assign('postdata', $data);
-
-        // Pagination
-        if ($postcount > self::pagination) {
-            $baselink = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
-            if (isset($options['viewid'])) {
-                $baselink .= '&view=' . $options['viewid'];
-            }
-
-            if ($offset + self::pagination < $postcount) {
-                $smarty->assign('olderpostslink',  $baselink . '&page=' . ($page + 1));
-            }
-            if ($offset > 0) {
-                $smarty->assign('newerpostslink',  $baselink . '&page=' . ($page - 1));
-            }
-        }
-
-        return array('html' => $smarty->fetch('blocktype:blog:blog_render_self.tpl'), 'javascript' => '');
+        return array('html' => $smarty->fetch('artefact:blog:blog.tpl'), 'javascript' => '');
     }
 
                 
@@ -517,6 +498,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
         db_commit();
     }
 
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_blog_blogpost', 'blogpost IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
+    }
+
+
     /**
      * Checks that the person viewing this blog is the owner. If not, throws an 
      * AccessDeniedException. Used in the blog section to ensure only the 
@@ -536,11 +531,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public function render_self($options) {
         $smarty = smarty_core();
+        $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $artefacturl .= '&view=' . $options['viewid'];
+        }
+        $smarty->assign('artefacturl', $artefacturl);
         if (empty($options['hidetitle'])) {
             if (isset($options['viewid'])) {
-                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
-                     . $this->get('id') . '&amp;view=' . $options['viewid']
-                     . '">' . hsc($this->get('title')) . '</a>');
+                $smarty->assign('artefacttitle', '<a href="' . $artefacturl . '">' . hsc($this->get('title')) . '</a>');
             }
             else {
                 $smarty->assign('artefacttitle', hsc($this->get('title')));
@@ -552,6 +550,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (isset($options['viewid'])) {
             safe_require('artefact', 'file');
             $postcontent = ArtefactTypeFolder::append_view_url($postcontent, $options['viewid']);
+            if (isset($options['countcomments']) && $this->allowcomments) {
+                safe_require('artefact', 'comment');
+                $empty = array();
+                $ids = array($this->id);
+                $commentcount = ArtefactTypeComment::count_comments($empty, $ids);
+                $smarty->assign('commentcount', $commentcount ? $commentcount[$this->id]->comments : 0);
+            }
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
@@ -597,54 +602,133 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
-     * This function returns a list of the current user's blog posts, for the
-     * given blog.
+     * This function returns a list of posts in a given blog.
      *
-     * @param User
      * @param integer
      * @param integer
+     * @param integer
+     * @param array
      */
-    public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
-        ($result = get_records_sql_assoc("
-         SELECT a.id, a.title, a.description, " . db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ", a.locked, bp.published
-         FROM {artefact} a
-          LEFT OUTER JOIN {artefact_blog_blogpost} bp
-           ON a.id = bp.blogpost
-         WHERE a.parent = ?
-          AND a.artefacttype = 'blogpost'
-          AND a.owner = ?
-         ORDER BY bp.published ASC, a.ctime DESC
-         LIMIT ? OFFSET ?;", array(
-            $id,
-            $user->get('id'),
-            $limit,
-            $offset
-        )))
-            || ($result = array());
+    public static function get_posts($id, $limit, $offset, $viewoptions=null) {
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 
-                                'artefacttype', 'blogpost', 'parent', $id);
+        $results = array(
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
 
-        if (count($result) > 0) {
-            // Get the attached files.
-            $files = ArtefactType::attachments_from_id_list(array_map(create_function('$a', 'return $a->id;'), $result));
-            if ($files) {
-                safe_require('artefact', 'file');
-                foreach ($files as &$file) {
-                    $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
-                    $result[$file->artefact]->files[] = $file;
-                }
+        // If viewoptions is null, we're getting posts for the my blogs area,
+        // and we should get all posts & show drafts first.  Otherwise it's a
+        // blog in a view, and we should only get published posts.
+
+        $from = "
+            FROM {artefact} a LEFT JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
+            WHERE a.artefacttype = 'blogpost' AND a.parent = ?";
+
+        if (!is_null($viewoptions)) {
+            if (isset($viewoptions['before'])) {
+                $from .= " AND a.ctime < '{$viewoptions['before']}'";
             }
+            $from .= ' AND bp.published = 1';
+        }
 
-            // Format dates properly
-            foreach ($result as &$post) {
-                $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
-                $post->mtime = format_date($post->mtime);
-                $post->description = clean_html($post->description);
+        $results['count'] = count_records_sql('SELECT COUNT(*) ' . $from, array($id));
+
+        $data = get_records_sql_assoc('
+            SELECT
+                a.id, a.title, a.description, a.author, a.authorname, ' .
+                db_format_tsfield('a.ctime', 'ctime') . ', ' . db_format_tsfield('a.mtime', 'mtime') . ',
+                a.locked, bp.published, a.allowcomments ' . $from . '
+            ORDER BY bp.published ASC, a.ctime DESC',
+            array($id),
+            $offset, $limit
+        );
+
+        if (!$data) {
+            $results['data'] = array();
+            return $results;
+        }
+
+        // Get the attached files.
+        $postids = array_map(create_function('$a', 'return $a->id;'), $data);
+        $files = ArtefactType::attachments_from_id_list($postids);
+        if ($files) {
+            safe_require('artefact', 'file');
+            foreach ($files as &$file) {
+                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
+                $data[$file->artefact]->files[] = $file;
             }
         }
 
-        return array($count, array_values($result));
+        if ($tags = ArtefactType::tags_from_id_list($postids)) {
+            foreach($tags as &$at) {
+                $data[$at->artefact]->tags[] = $at->tag;
+            }
+        }
+
+        // Get comment counts
+        if (!empty($viewoptions['countcomments'])) {
+            safe_require('artefact', 'comment');
+            $viewids = array();
+            $commentcounts = ArtefactTypeComment::count_comments($viewids, array_keys($data));
+        }
+
+        // Format dates properly
+        foreach ($data as &$post) {
+            if (is_null($viewoptions)) {
+                // My Blogs area: create forms for publishing & deleting posts.
+                if (!$post->published) {
+                    $post->publish = ArtefactTypeBlogpost::publish_form($post->id);
+                }
+                $post->delete = ArtefactTypeBlogpost::delete_form($post->id);
+            }
+            else {
+                $by = $post->author ? display_default_name($post->author) : $post->authorname;
+                $post->postedby = get_string('postedbyon', 'artefact.blog', $by, format_date($post->ctime));
+                if (isset($commentcounts)) {
+                    $post->commentcount = isset($commentcounts[$post->id]) ? $commentcounts[$post->id]->comments : 0;
+                }
+            }
+            $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
+            $post->mtime = format_date($post->mtime);
+        }
+
+        $results['data'] = array_values($data);
+
+        return $results;
+    }
+
+    /**
+     * This function renders a list of posts as html
+     *
+     * @param array posts
+     * @param string template
+     * @param array options
+     * @param array pagination
+     */
+    public function render_posts(&$posts, $template, $options, $pagination) {
+        $smarty = smarty_core();
+        $smarty->assign('options', $options);
+        $smarty->assign('posts', $posts['data']);
+
+        $posts['tablerows'] = $smarty->fetch($template);
+
+        if ($posts['limit'] && $pagination) {
+            $pagination = build_pagination($foo = array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'count' => $posts['count'],
+                'limit' => $posts['limit'],
+                'offset' => $posts['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => get_string('post', 'artefact.blog'),
+                'resultcounttextplural' => get_string('posts', 'artefact.blog'),
+            ));
+            $posts['pagination'] = $pagination['html'];
+            $posts['pagination_js'] = $pagination['javascript'];
+        }
     }
 
     /** 
@@ -683,6 +767,53 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
         return true;
+    }
+
+
+    public static function publish_form($id) {
+        return pieform(array(
+            'name' => 'publish_' . $id,
+            'successcallback' => 'publish_submit',
+            'jsform' => true,
+            'jssuccesscallback' => 'publish_success',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'publish' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
+                    'help' => true,
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'class' => 'publish',
+                    'value' => get_string('publish', 'artefact.blog'),
+                ),
+            ),
+        ));
+    }
+
+
+    public static function delete_form($id) {
+        return pieform(array(
+            'name' => 'delete_' . $id,
+            'successcallback' => 'delete_submit',
+            'jsform' => true,
+            'jssuccesscallback' => 'delete_success',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'delete' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
+                    'help' => true,
+                ),
+                'submit' => array(
+                    'class' => 'icon btn-del',
+                    'type' => 'submit',
+                    'value' => get_string('delete', 'artefact.blog'),
+                    'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
+                ),
+            ),
+        ));
     }
 
 

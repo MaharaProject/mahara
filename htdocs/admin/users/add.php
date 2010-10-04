@@ -130,6 +130,9 @@ $elements = array(
     ),
 );
 
+if (!$USER->get('admin')) {
+    unset ($elements['authinstance']['defaultvalue']);
+}
 
 $form = pieform(array(
     'name'       => 'adduser',

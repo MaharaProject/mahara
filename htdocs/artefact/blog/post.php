@@ -91,8 +91,8 @@ $form = pieform(array(
     'autofocus'          => $focuselement,
     'jsform'             => true,
     'newiframeonsubmit'  => true,
-    'jssuccesscallback'  => 'editpost_success',
-    'jserrorcallback'    => 'editpost_error',
+    'jssuccesscallback'  => 'editpost_callback',
+    'jserrorcallback'    => 'editpost_callback',
     'plugintype'         => 'artefact',
     'pluginname'         => 'blog',
     'configdirs'         => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
@@ -188,78 +188,6 @@ $javascript = <<<EOF
 // to select an image from the list of image files attached to the
 // post.
 
-// The contents of this function is stolen straight out of the tinyMCE
-// code in tinymce/themes/advanced/editor_template_src.js
-function getSelectedImgAttributes (editorid) {
-    var src = "", alt = "", border = "", hspace = "", vspace = "", width = "", height = "", align = "";
-    var title = "", onmouseover = "", onmouseout = "", action = "insert";
-    var img = tinyMCE.imgElement;
-    var inst = tinyMCE.getInstanceById(editorid);
-
-    if (tinyMCE.selectedElement != null && tinyMCE.selectedElement.nodeName.toLowerCase() == "img") {
-        img = tinyMCE.selectedElement;
-        tinyMCE.imgElement = img;
-    }
-
-    if (img) {
-        // Is it a internal MCE visual aid image, then skip this one.
-        if (tinyMCE.getAttrib(img, 'name').indexOf('mce_') == 0)
-            return true;
-
-        src = tinyMCE.getAttrib(img, 'src');
-        alt = tinyMCE.getAttrib(img, 'alt');
-
-        // Try polling out the title
-        if (alt == "")
-            alt = tinyMCE.getAttrib(img, 'title');
-
-        // Fix width/height attributes if the styles is specified
-        if (tinyMCE.isGecko) {
-            var w = img.style.width;
-            if (w != null && w != "")
-                img.setAttribute("width", w);
-
-            var h = img.style.height;
-            if (h != null && h != "")
-                img.setAttribute("height", h);
-        }
-
-        border = tinyMCE.getAttrib(img, 'border');
-        hspace = tinyMCE.getAttrib(img, 'hspace');
-        vspace = tinyMCE.getAttrib(img, 'vspace');
-        width = tinyMCE.getAttrib(img, 'width');
-        height = tinyMCE.getAttrib(img, 'height');
-        align = tinyMCE.getAttrib(img, 'align');
-        onmouseover = tinyMCE.getAttrib(img, 'onmouseover');
-        onmouseout = tinyMCE.getAttrib(img, 'onmouseout');
-        title = tinyMCE.getAttrib(img, 'title');
-
-        // Is realy specified?
-        if (tinyMCE.isMSIE) {
-            width = img.attributes['width'].specified ? width : "";
-            height = img.attributes['height'].specified ? height : "";
-        }
-
-        src = eval(tinyMCE.settings['urlconverter_callback'] + "(src, img, true);");
-
-        // Use mce_src if defined
-        mceRealSrc = tinyMCE.getAttrib(img, 'mce_src');
-        if (mceRealSrc != "") {
-            src = mceRealSrc;
-
-            if (tinyMCE.getParam('convert_urls'))
-                src = eval(tinyMCE.settings['urlconverter_callback'] + "(src, img, true);");
-        }
-
-        action = "update";
-    }
-    return {'src' : src, 'alt' : alt, 'border' : border, 'hspace' : hspace, 'vspace' : vspace, 
-            'width' : width, 'height' : height, 'align' : align, 'title' : title, 
-            'onmouseover' : onmouseover, 'onmouseout' : onmouseout, 'action' : action};
-}
-
-
-
 // Get all the files in the attached files list that have been
 // recognised as images.  This function is called by the the popup
 // window, but needs access to the attachment list on this page
@@ -268,7 +196,7 @@ function attachedImageList() {
     var attachments = editpost_filebrowser.selecteddata;
     for (var a in attachments) {
         if (attachments[a].artefacttype == 'image') {
-            images.push({'id': attachments[a].id, 'name': attachments[a].title});
+            images.push({'id': attachments[a].id, 'name': attachments[a].title, 'description': attachments[a].description});
         }
     }
     return images;
@@ -294,14 +222,10 @@ function blogpostImageWindow(ui, v) {
     var t = tinyMCE.activeEditor;
 
     imageList = attachedImageList();
-    if (imageList.length == 0) {
-        alert({$noimagesmessage});
-        return true;
-    }
 
     var template = new Array();
 
-    template['file'] = '{$wwwroot}artefact/blog/image_popup.php?src=\{\$src\}';
+    template['file'] = '{$wwwroot}artefact/blog/image_popup.php';
     template['width'] = 355;
     template['height'] = 275 + (tinyMCE.isMSIE ? 25 : 0);
 
@@ -313,23 +237,14 @@ function blogpostImageWindow(ui, v) {
     t.windowManager.open(template);
 }
 
-function editpost_success(form, data) {
-    editpost_filebrowser.success(form, data);
-};
-
-function editpost_error(form, data) {
-    editpost_filebrowser.init();
+function editpost_callback(form, data) {
+    editpost_filebrowser.callback(form, data);
 };
 
 EOF;
 
-$tinymcesetup = "
-function (ed) {
-    ed.addCommand('mceImage', blogpostImageWindow);
-}";
-
 $smarty = smarty(array(), array(), array(), array(
-    'tinymcesetup' => $tinymcesetup,
+    'tinymcesetup' => "ed.addCommand('mceImage', blogpostImageWindow);",
     'sideblocks' => array(
         array(
             'name'   => 'quota',
@@ -378,12 +293,18 @@ function editpost_submit(Pieform $form, $values) {
     if (!empty($new) || !empty($old)) {
         foreach ($old as $o) {
             if (!in_array($o, $new)) {
-                $postobj->detach($o);
+                try {
+                    $postobj->detach($o);
+                }
+                catch (ArtefactNotFoundException $e) {}
             }
         }
         foreach ($new as $n) {
             if (!in_array($n, $old)) {
-                $postobj->attach($n);
+                try {
+                    $postobj->attach($n);
+                }
+                catch (ArtefactNotFoundException $e) {}
             }
         }
     }

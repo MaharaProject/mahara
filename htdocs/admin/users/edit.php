@@ -162,6 +162,29 @@ $siteform = pieform(array(
     'elements'   => $elements,
 ));
 
+function edituser_site_validate(Pieform $form, $values) {
+    global $USER, $SESSION;
+    if (!$user = get_record('usr', 'id', $values['id'])) {
+        return false;
+    }
+    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+    if ($maxquotaenabled && $values['quota'] > $maxquota) {
+        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+        $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+    }
+
+    // Check that the external username isn't already in use
+    if (isset($values['remoteusername']) &&
+        $usedby = get_record_select('auth_remote_user',
+        'authinstance = ? AND remoteusername = ? AND localusr != ?',
+        array($values['authinstance'], $values['remoteusername'], $values['id']))
+    ) {
+        $usedbyuser = get_field('usr', 'username', 'id', $usedby->localusr);
+        $SESSION->add_error_msg(get_string('duplicateremoteusername', 'auth', $usedbyuser));
+        $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
+    }
+}
 
 function edituser_site_submit(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['id'])) {
@@ -249,7 +272,7 @@ if (empty($suspended)) {
             'reason' => array(
                 'type'        => 'textarea',
                 'rows'        => 5,
-                'cols'        => 60,
+                'cols'        => 28,
                 'title'       => get_string('reason'),
                 'description' => get_string('suspendedreasondescription', 'admin'),
             ),
@@ -352,7 +375,7 @@ $elements = array(
      ),
 );
 
-$allinstitutions = get_records_assoc('institution');
+$allinstitutions = get_records_assoc('institution', '', '', 'displayname');
 foreach ($user->get('institutions') as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
@@ -510,13 +533,17 @@ $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
-if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
-    $loginas = get_string('loginasuser', 'admin', $user->username);
-} else {
-    $loginas = null;
-}
-$smarty->assign('loginas', $loginas);
+$smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
 $smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
+
+# Only allow deletion and suspension of a user if the viewed user is not
+# the current user; or if they are the current user, they're not the only
+# admin
+if ($id != $USER->get('id') || count_records('usr', 'admin', 1, 'deleted', 0) > 1) {
+    $smarty->assign('suspendable', ($USER->get('admin') || !$user->get('admin') && !$user->get('staff')));
+    $smarty->assign('deletable', $USER->get('admin'));
+}
+
 $smarty->display('admin/users/edit.tpl');
 
 ?>

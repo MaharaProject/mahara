@@ -16,6 +16,7 @@
 .fileupload {
 	background: #eee;
 	border: 1px solid #d1d1d1;
+	margin-bottom: 1em;
 }
 .fileupload th {
 	text-align: left;
@@ -27,8 +28,8 @@
 	font-weight: bold !important;
 }
 .uploadform td {
-	font-size: .9em;
-	line-height: 1.4em;
+	font-size: .9167em;
+	line-height: 1.3333em;
 }
 .fileupload td#files_filebrowser_upload_messages,
 .fileupload td#editpost_filebrowser_upload_messages {
@@ -38,19 +39,18 @@
 /* folder nav */
 .foldernav {
     font-weight: bold;
-    margin: 1em 0 0 0;
-    padding: 0 0 0 1.4em;
-    font-size: 1.2em;
-	line-height: 1em;
-    height: 1.6em;
-    background: url(../images/foldernav_small.png) no-repeat left top;
+    padding: 0 0 0 20px;
+    font-size: 1.3333em;
+	line-height: 1.6667em;
+    height: 1.6667em;
+    background: url(../images/foldernav_small.png) no-repeat left;
 }
 form#files .foldernav {
-    padding: 0 0 0 1.6em;
-    font-size: 1.4em;
-	line-height: 1.6em;
-    height: 1.7em;
-    background: url(../images/foldernav.png) no-repeat left 3px;
+    padding: 0 0 0 30px;
+    font-size: 1.3333em;
+	line-height: 1.6667em;
+    height: 1.6667em;
+    background: url(../images/foldernav.png) no-repeat left;
 }
 
 /* File list */
@@ -61,9 +61,14 @@ form#files .foldernav {
 .filelist th {
 	border-bottom: 1px solid #CCCCCC;
 }
-.filelist td.right input {
-	font-size: .9em;
+.filelist table th {
+	border-bottom: 0;
 }
+.filelist td.right input {
+	font-size: .9167em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 /* parent folder row */
 tr.parentfolder td {
 	background-color: #ddd !important;
@@ -93,14 +98,10 @@ tr.folderhover a {
     cursor: move;
 }
 /* File list edit box */
-#files_filebrowser_edit_row td {
-	border: 2px solid #eee;
-}
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
-	font-size: 1.2em;
+	font-size: 1.3333em;
 }
 #files_filebrowser_edit_row table th {
-	text-align: left;
 	border: 0;
 }
 #files_filebrowser_edit_row table th label {
@@ -133,7 +134,7 @@ tr.folderhover a {
 
 .filelist table table.editpermissions th,
 .filelist table table.editpermissions td {
-	font-size: .9em;
+	font-size: .9167em;
 }
 
 .filelist .disabled {

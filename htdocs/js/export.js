@@ -25,8 +25,14 @@
 
 addLoadEvent(function() {
     removeElementClass($('whatviewsselection'), 'hidden');
-    var container = $('whatviews');
-    var containerVisible = false;
+
+    var containers = {
+        'views': {'container': $('whatviews'), 'visible': false}
+    };
+    if ($('whatcollections')) {
+        containers.collections = {'container': $('whatcollections'), 'visible': false};
+    }
+
     var radios = [];
 
     function toggleRadios(state) {
@@ -41,26 +47,36 @@ addLoadEvent(function() {
     forEach(getElementsByTagAndClassName('input', 'radio', 'whattoexport-buttons'), function(radio) {
         radios.push(radio);
         connect(radio, 'onclick', function(e) {
-            if (radio.value == 'views' && radio.checked && !containerVisible) {
-                disableRadios();
-                containerVisible = true;
-                slideDown(container, {'duration': 0.5, 'afterFinish': enableRadios, 'beforeSetup': function() { removeElementClass(container, 'js-hidden');  }});
-            }
-            else if (radio.checked && radio.value != 'views' && containerVisible) {
-                disableRadios();
-                containerVisible = false;
-                slideUp(container, {'duration': 0.5, 'afterFinish': enableRadios});
+            if (radio.checked) {
+                for (var c in containers) {
+                    if (c != radio.value && containers[c].visible) {
+                        disableRadios();
+                        containers[c].visible = false;
+                        slideUp(containers[c].container, {'duration': 0.5, 'afterFinish': enableRadios});
+                        break;
+                    }
+                }
+                if (radio.value != 'all' && !containers[radio.value].visible) {
+                    disableRadios();
+                    containers[radio.value].visible = true;
+                    slideDown(containers[radio.value].container, {
+                        'duration': 0.5, 'afterFinish': enableRadios,
+                        'beforeSetup': function() {
+                            removeElementClass(containers[radio.value].container, 'js-hidden');
+                        }
+                    });
+                }
             }
         });
         // Open the view selector if the views checkbox is select on page load
-        if (radio.value == 'views' && radio.checked && !containerVisible) {
-            containerVisible = true;
-            removeElementClass(container, 'js-hidden');
+        if (radio.value != 'all' && radio.checked && !containers[radio.value].visible) {
+            containers[radio.value].visible = true;
+            removeElementClass(containers[radio.value].container, 'js-hidden');
         }
     });
 
     // Hook up 'click to preview' links
-    forEach(getElementsByTagAndClassName('a', 'viewlink', container), function(i) {
+    forEach(getElementsByTagAndClassName('a', 'viewlink', containers.views.container), function(i) {
         disconnectAll(i);
         setNodeAttribute(i, 'title', 'Click to preview');
         connect(i, 'onclick', function (e) {
@@ -91,6 +107,6 @@ addLoadEvent(function() {
         });
     });
 
-    insertSiblingNodesBefore(getFirstElementByTagAndClassName('table', null, container), checkboxHelperDiv);
+    insertSiblingNodesBefore(getFirstElementByTagAndClassName('table', null, containers.views.container), checkboxHelperDiv);
 
 });

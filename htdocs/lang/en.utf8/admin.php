@@ -91,6 +91,7 @@ $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Assign users Staff permissions';
 $string['adminusers'] = 'Admin Users';
 $string['adminusersdescription'] = 'Assign Site Administrator access rights';
+$string['institution']   = 'Institution';
 $string['institutions']   = 'Institutions';
 $string['institutiondetails']   = 'Institution Details';
 $string['institutionauth']   = 'Institution Authorities';
@@ -195,9 +196,6 @@ $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href
 $string['groupcountsbytype'] = 'Number of groups by Group Type';
 $string['groupcountsbyjointype'] = 'Number of groups by Access Type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in Portfolio Views:';
-$string['Rank'] = 'Rank';
-$string['registrationrankdescription'] = 'Rank of this site when compared against all other sites that have regsitered and are sending weekly updates to mahara.org';
-$string['rankingsupdated'] = 'Rankings last updated: %s';
 $string['uptodate'] = 'up to date';
 $string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
 $string['viewsbytype'] = 'Views by Type';
@@ -382,7 +380,7 @@ $string['uploadcsverrornorecords'] = 'The file appears to contain no records (al
 $string['uploadcsverrorunspecifiedproblem'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format then this is a bug and you should <a href="https://eduforge.org/tracker/?func=add&group_id=176&atid=739">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields';
-$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
+$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: Passwords must be at least six characters long and contain at least one digit and two letters';
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
@@ -518,7 +516,7 @@ $string['failedtoobtainuploadedleapfile'] = 'Failed to obtain the uploaded Leap2
 $string['failedtounzipleap2afile'] = 'Failed to unzip the Leap2A file. Check the error log for more information';
 $string['fileisnotaziporxmlfile'] = 'This file has not been detected to be a zipfile or XML file';
 $string['howdoyouwanttocreatethisuser'] = 'How do you want to create this user?';
-$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
+$string['leap2aimportfailed'] = '<p><strong>Sorry - Importing the Leap2A file failed.</strong></p><p>This could be because you did not select a valid Leap2A file to upload or because the version of your LEAP2A file is not supported by this Mahara version. Alternatively, there may be a bug in Mahara causing your file to fail, even though it is valid.</p><p>Please <a href="add.php">go back and try again</a>, and if the problem persists, you may want to post to the <a href="http://mahara.org/forums/">Mahara Forums</a> to ask for help. Be prepared to be asked for a copy of your file!</p>';
 $string['newuseremailnotsent'] = 'Failed to send welcome email to new user.';
 $string['newusercreated'] = 'New user account created successfully';
 $string['noleap2axmlfiledetected'] = 'No leap2a.xml file detected - please check your export file again';
@@ -531,6 +529,7 @@ $string['basicdetails'] = '2 - Basic Details';
 $string['create'] = '3 - Create';
 
 // Login as
+$string['loginas'] = 'Login as';
 $string['loginasuser'] = 'Login as %s';
 $string['becomeadminagain'] = 'Become %s again';
 // Login-as exceptions

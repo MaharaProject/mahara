@@ -1,9 +1,9 @@
 {loadquota}
-    <h3>{str tag="quota"}</h3>
+    <h3>{str tag="quota"} 
+        {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}</h3>
         <div class="sidebar-content">
     <p id="quota_message">
         {$QUOTA_MESSAGE|safe}
-        {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
     </p>
     <div id="quotawrap">
 {if $QUOTA_PERCENTAGE < 100}

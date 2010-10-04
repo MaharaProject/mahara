@@ -611,6 +611,12 @@ class User {
         }
     }
 
+    public function quota_refresh() {
+        $quotadata = get_record_sql('SELECT quota, quotaused FROM {usr} WHERE id = ?', array($this->get('id')));
+        $this->set('quota', $quotadata->quota);
+        $this->set("quotaused", $quotadata->quotaused);
+    }
+
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
             require_once('institution.php');
@@ -820,7 +826,24 @@ class User {
         if ($group) {
             $editroles = $v->get('editingroles');
             $this->reset_grouproles();
+            if ($v->get('type') == 'grouphomepage' && $this->grouproles[$group] != 'admin') {
+                return false;
+            }
             return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $editroles);
+        }
+        return false;
+    }
+
+    /**
+     * Function to check current user can edit collection
+     *
+     * This is fairly straightforward at the moment but it might require more
+     * if groups are allowed collections and other amendments in the future
+     */
+    public function can_edit_collection($c) {
+        $owner = $c->get('owner');
+        if ($owner == $this->get('id')) {
+            return true;
         }
         return false;
     }

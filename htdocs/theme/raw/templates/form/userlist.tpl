@@ -75,7 +75,7 @@
         {{$name}}_searchfunc({});
 
         connect('{{$name}}_search', 'onkeypress', function (k) {
-            if (k.key().code == 13) {
+            if (keypressKeyCode(k) == 13) {
                 {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
                 k.stop();
             }
@@ -153,8 +153,8 @@
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
         <td class="lrbuttons">
-            <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button><br>
-            <button type="button" onClick="{{$name}}_moveopts('members','potential')">&lt;--</button>
+            <button type="button" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow">&gt;</button><br>
+            <button type="button" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow">&lt;</button>
         </td>
         <td class="lrfieldlists">
             <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
@@ -166,7 +166,7 @@
     </tr>
     <tr>
         <td colspan="3">
-            <label for="{{$name}}_search" class="plain">{{str tag='search'}}:</label> <input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
+            <label for="{{$name}}_search" class="plain">{{str tag='search'}}:</label> <input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="btn btn-search">{{str tag="go"}}</button>
         </td>
     </tr>
 </table>

@@ -53,11 +53,11 @@ class LeapExportElementFile extends LeapExportElement {
     public function assign_smarty_vars() {
         parent::assign_smarty_vars();
         $this->smarty->assign('summary', $this->artefact->get('description'));
-        $this->smarty->assign('contentsrc', $this->exporter->get('filedir') . $this->filename);
     }
 
     public function add_attachments() {
         $this->filename = $this->exporter->add_attachment($this->artefact->get_path(), $this->artefact->get('title'));
+        $this->add_enclosure_link($this->filename, $this->get_content_type());
     }
 
     public function get_content_type() {

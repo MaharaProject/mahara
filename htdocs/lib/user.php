@@ -1082,7 +1082,10 @@ function delete_user($userid) {
             $view->delete();
         }
     }
+
     $artefactids = get_column('artefact', 'id', 'owner', $userid);
+    // @todo: test all artefact bulk_delete stuff, then replace the one-by-one
+    // artefact deletion below with ArtefactType::delete_by_artefacttype($artefactids);
     if ($artefactids) {
         foreach ($artefactids as $artefactid) {
             try {
@@ -1899,7 +1902,12 @@ function get_friends($userid, $limit=10, $offset=0) {
         SELECT f.* ' . $from . "
         ORDER BY CASE WHEN NOT f.preferredname IS NULL AND f.preferredname <> '' THEN f.preferredname ELSE f.firstname || f.lastname END";
 
-    $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+    if ($limit === false) {
+        $result['data'] = get_records_sql_array($sql, $values);
+    }
+    else {
+        $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
+    }
 
     return $result;
 }

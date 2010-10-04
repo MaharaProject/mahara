@@ -30,23 +30,21 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
-
-json_headers();
+require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $id = param_integer('id');
-$limit = param_integer('limit', ArtefactTypeBlog::pagination);
+$limit = param_integer('limit', 5);
 $offset = param_integer('offset', 0);
 
-list($count, $data) = ArtefactTypeBlogPost::get_posts($USER, $id, $limit, $offset);
-
-$result = array(
-    'error' => false,
-    'count' => $count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'data' => $data
+$posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset);
+$template = 'artefact:blog:posts.tpl';
+$pagination = array(
+    'baseurl'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $id,
+    'id'         => 'blogpost_pagination',
+    'jsonscript' => 'artefact/blog/view/index.json.php',
+    'datatable'  => 'postlist',
 );
+ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 
-echo json_encode($result);
-
+json_reply(false, array('data' => $posts));
 ?>

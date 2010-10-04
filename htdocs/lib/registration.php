@@ -187,11 +187,6 @@ function site_data_current() {
         'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
         'groups' => count_records('group', 'deleted', 0),
         'views' => count_records_select('view', 'owner != 0 OR owner IS NULL'),
-        'rank' => array(
-            'users' => get_config('usersrank'),
-            'groups' => get_config('groupsrank'),
-            'views' => get_config('viewsrank'),
-        ),
     );
 }
 
@@ -252,8 +247,6 @@ function site_statistics($full=false) {
             $data['strlatestversion'] = get_string('latestversionis', 'admin', $download_page, $latestversion);
         }
     }
-
-    $data['strrankingsupdated'] = get_string('rankingsupdated', 'admin', date('Y-m-d H:i', get_config('registration_lastsent')));
 
     return($data);
 }

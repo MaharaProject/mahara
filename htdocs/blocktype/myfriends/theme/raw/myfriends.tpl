@@ -19,7 +19,7 @@ addLoadEvent(function() {literal}{{/literal}
         {if $relationship == 'none' && $friendscontrol == 'auto'}
             <div class="message">{$newfriendform|safe}</div>
         {elseif $relationship == 'none' && $friendscontrol == 'auth'}
-            <div class="message"><a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-request">{str tag='requestfriendship' section='group'}</a></div>
+            <div class="message"><a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view">{str tag='requestfriendship' section='group'}</a></div>
         {elseif $relationship == 'requestedfriendship'}
             <div class="message">{str tag=friendshiprequested section=group}</div>
         {/if}

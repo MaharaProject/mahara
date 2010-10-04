@@ -67,6 +67,7 @@ class View {
     private $visits;
     private $allowcomments;
     private $approvecomments;
+    private $collection;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -115,8 +116,8 @@ class View {
         if (!empty($id)) {
             $tempdata = get_record('view','id',$id);
             if (empty($tempdata)) {
-                throw new ViewNotFoundException("View with id $id not found");
-            }    
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
+            }
             if (!empty($data)) {
                 $data = array_merge((array)$tempdata, $data);
             }
@@ -144,6 +145,9 @@ class View {
         $this->dirtycolumns = array();
         if ($this->group) {
             $group = get_record('group', 'id', $this->group);
+            if ($group->deleted) {
+                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
+            }
             safe_require('grouptype', $group->grouptype);
             $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
         }
@@ -337,13 +341,10 @@ class View {
 
         if (isset($viewdata['group'])) {
             // By default, group views should be visible to the group
-            $view->set_access(array(array(
-                'type'      => 'group',
-                'id'        => $viewdata['group'],
-                'startdate' => null,
-                'stopdate'  => null,
-                'role'      => null
-            )));
+            insert_record('view_access', (object) array(
+                'view'  => $view->get('id'),
+                'group' => $viewdata['group'],
+            ));
         }
 
         return new View($view->get('id')); // Reread to ensure defaults are set
@@ -358,6 +359,9 @@ class View {
         }
         if ($field == 'categorydata') {
             return $this->get_category_data();
+        }
+        if ($field == 'collection') {
+            return $this->get_collection();
         }
         return $this->{$field};
     }
@@ -380,6 +384,21 @@ class View {
             $this->tags = get_column('view_tag', 'tag', 'view', $this->get('id'));
         }
         return $this->tags;
+    }
+
+    public function get_collection() {
+        if (!isset($this->collection)) {
+            require_once(get_config('libroot') . 'collection.php');
+            $this->collection = Collection::search_by_view_id($this->id);
+        }
+        return $this->collection;
+    }
+
+    public function collection_id() {
+        if ($collection = $this->get_collection()) {
+            return $collection->get('id');
+        }
+        return false;
     }
 
     /**
@@ -521,6 +540,7 @@ class View {
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('view_visit','view',$this->id);
+        delete_records('collection_view','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         if ($blockinstanceids = get_column('block_instance', 'id', 'view', $this->id)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
@@ -608,61 +628,10 @@ class View {
         global $USER;
         require_once('activity.php');
 
-        // For users who are being removed from having access to this view, they
-        // need to have the view and any attached artefacts removed from their
-        // watchlist.
-        $oldusers = array();
-        foreach ($this->get_access() as $item) {
-            if ($item['type'] == 'user') {
-                $oldusers[] = $item;
-            }
-        }
-
-        $newusers = array();
-        if ($accessdata) {
-            foreach ($accessdata as $item) {
-                if ($item['type'] == 'user') {
-                    $newusers[] = $item;
-                }
-            }
-        }
-
-        $userstodelete = array();
-        foreach ($oldusers as $olduser) {
-            foreach ($newusers as $newuser) {
-                if ($olduser['id'] == $newuser['id']) {
-                    continue(2);
-                }
-            }
-            $userstodelete[] = $olduser;
-        }
-
-        if ($userstodelete) {
-            $userids = array();
-            foreach ($userstodelete as $user) {
-                $userids[] = intval($user['id']);
-            }
-            $userids = implode(',', $userids);
-
-            execute_sql('DELETE FROM {usr_watchlist_view}
-                WHERE view = ?
-                AND usr IN (' . $userids . ')', array($this->get('id')));
-        }
-
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
-        // Procedure:
-        // get list of current friends - this is available in global $data
-        // compare with list of new friends
-        // work out which friends are being removed
-        // foreach friend
-        //     // remove record from usr_watchlist_view where usr = ? and view = ?
-        //     // remove records from usr_watchlist_artefact where usr = ? and view = ?
-        // endforeach
-        //
         db_begin();
         delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
-        $time = db_format_timestamp(time());
 
         // View access
         if ($accessdata) {
@@ -670,62 +639,74 @@ class View {
              * There should be a cleaner way to do this
              * $accessdata_added ensures that the same access is not granted twice because the profile page
              * gets very grumpy if there are duplicate access rules
+             *
+             * Additional rules:
+             * - Don't insert records with stopdate in the past
+             * - Remove startdates that are in the past
+             * - If view allows comments, access record comment permissions, don't apply, so reset them.
+             * @todo: merge overlapping date ranges.
              */
             $accessdata_added = array();
+            $time = time();
             foreach ($accessdata as $item) {
+
+                if (!empty($item['stopdate']) && $item['stopdate'] < $time) {
+                    continue;
+                }
+                if (!empty($item['startdate']) && $item['startdate'] < $time) {
+                    unset($item['startdate']);
+                }
+                if ($this->get('allowcomments')) {
+                    unset($item['allowcomments']);
+                    unset($item['approvecomments']);
+                }
+
                 $accessrecord = new StdClass;
+
+                switch ($item['type']) {
+                case 'user':
+                    $accessrecord->usr = $item['id'];
+                    break;
+                case 'group':
+                    $accessrecord->group = $item['id'];
+                    if (isset($item['role']) && strlen($item['role'])) {
+                        // Don't insert a record for a role the group doesn't have
+                        $roleinfo = group_get_role_info($item['id']);
+                        if (!isset($roleinfo[$item['role']])) {
+                            break;
+                        }
+                        $accessrecord->role = $item['role'];
+                    }
+                    break;
+                case 'token':
+                    $accessrecord->token = $item['id'];
+                    break;
+                case 'friends':
+                    if (!$this->owner) {
+                        continue; // Don't add friend access to group, institution or system views
+                    }
+                case 'public':
+                case 'loggedin':
+                    $accessrecord->accesstype = $item['type'];
+                }
+
                 $accessrecord->view = $this->get('id');
-                $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
-                $accessrecord->approvecomments = (int) !empty($item['approvecomments']);
+                if (isset($item['allowcomments'])) {
+                    $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
+                    if ($accessrecord->allowcomments) {
+                        $accessrecord->approvecomments = (int) !empty($item['approvecomments']);
+                    }
+                }
                 if (isset($item['startdate'])) {
                     $accessrecord->startdate = db_format_timestamp($item['startdate']);
                 }
                 if (isset($item['stopdate'])) {
                     $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
                 }
-                switch ($item['type']) {
-                    case 'friends':
-                        if (!$this->owner) {
-                            break; // Don't add friend access to group, institution or system views
-                        }
-                    case 'public':
-                    case 'loggedin':
-                        $accessrecord->accesstype = $item['type'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
-                    case 'user':
-                        $accessrecord->usr = $item['id'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
-                    case 'group':
-                        $accessrecord->group = $item['id'];
-                        if (isset($item['role']) && strlen($item['role'])) {
-                            // Don't insert a record for a role the group doesn't have
-                            $roleinfo = group_get_role_info($item['id']);
-                            if (!isset($roleinfo[$item['role']])) {
-                                break;
-                            }
-                            $accessrecord->role = $item['role'];
-                        }
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
 
-                        break;
-                    case 'token':
-                        $accessrecord->token = $item['id'];
-                        if (array_search($accessrecord, $accessdata_added) === false) {
-                            insert_record('view_access', $accessrecord);
-                            $accessdata_added[] = $accessrecord;
-                        }
-                        break;
+                if (array_search($accessrecord, $accessdata_added) === false) {
+                    insert_record('view_access', $accessrecord);
+                    $accessdata_added[] = $accessrecord;
                 }
             }
         }
@@ -2140,6 +2121,12 @@ class View {
                 array()
             );
             $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
+            $collections = get_records_sql_array('
+                SELECT c.name, c.id, cv.view
+                FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
+                WHERE cv.view IN (' . $viewidlist . ')',
+                array()
+            );
         }
     
         $data = array();
@@ -2219,6 +2206,7 @@ class View {
             }
             if ($accessgroups) {
                 foreach ($accessgroups as $access) {
+                    $key = null;
                     if ($access->usr) {
                         $access->accesstype = 'user';
                         $access->id = $access->usr;
@@ -2232,13 +2220,29 @@ class View {
                     }
                     else if ($access->token) {
                         $access->accesstype = 'secreturl';
+                        $key = 'secreturl';
                     }
-                    $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    else {
+                        $key = $access->accesstype;
+                    }
+                    if ($key) {
+                        if (!isset($data[$index[$access->view]]['accessgroups'][$key])) {
+                            $data[$index[$access->view]]['accessgroups'][$key] = (array) $access;
+                        }
+                    }
+                    else {
+                        $data[$index[$access->view]]['accessgroups'][] = (array) $access;
+                    }
                 }
             }
             if ($tags) {
                 foreach ($tags as $tag) {
                     $data[$index[$tag->view]]['tags'][] = $tag->tag;
+                }
+            }
+            if ($collections) {
+                foreach ($collections as $c) {
+                    $data[$index[$c->view]]['collection'] = $c;
                 }
             }
         }
@@ -2312,20 +2316,30 @@ class View {
      * @param integer  $offset
      * @param bool     $extra       Return full set of properties on each view including an artefact list
      * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
+     * @param array    $types       List of view types to filter by
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null, $types=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
-        $where = "
-            WHERE v.type NOT IN ('profile','dashboard'";
-        if (!$admin) { // only show the grouphomepage viewtype to admins
-            $where .= ",'grouphomepage'";
+        $where = 'WHERE (v.owner IS NULL OR v.owner > 0)';
+
+        if (is_array($types) && !empty($types)) {
+            $where .= ' AND v.type IN (';
         }
-        $where .= ") AND (v.owner IS NULL OR v.owner > 0)";
+        else {
+            $where .= ' AND v.type NOT IN (';
+            if ($admin) {
+                $types = array('profile', 'dashboard');
+            }
+            else {
+                $types = array('profile', 'dashboard', 'grouphomepage');
+            }
+        }
+        $where .= join(',', array_map('db_quote', $types)) . ')';
 
         if ($ownedby) {
             $where .= ' AND v.' . self::owner_sql($ownedby);
@@ -2364,7 +2378,7 @@ class View {
             FROM {view} v
             LEFT OUTER JOIN (
                 SELECT
-                    gtr.edit_views, gm.group AS groupid
+                    gtr.edit_views, gm.group AS groupid, g.deleted
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
                 INNER JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gtr.role = gm.role)
@@ -2407,6 +2421,9 @@ class View {
                             OR (ag.member = ?)
                         )
                     )
+                )
+                AND (
+                    v.group IS NULL OR vg.deleted = 0
                 )";
             $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
         }
@@ -2700,7 +2717,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false) {
+    public static function set_nav($group, $institution, $profile=false, $collection=null) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -2711,6 +2728,9 @@ class View {
         }
         else if ($profile) {
             define('MENUITEM', 'profile/editprofilepage');
+        }
+        else if ($collection) {
+            define('MENUITEM', 'myportfolio/collection');
         }
         else {
             define('MENUITEM', 'myportfolio/views');
@@ -2858,6 +2878,7 @@ class View {
         }
 
         $wwwroot = get_config('wwwroot');
+        $ownername = hsc($this->formatted_owner());
 
         if ($this->type == 'grouphomepage') {
             return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
@@ -2878,7 +2899,6 @@ class View {
         }
 
         if (isset($ownerlink)) {
-            $ownername = hsc($this->formatted_owner());
             return get_string('viewtitleby', 'view', $title, $ownerlink, $ownername);
         }
 
@@ -2923,6 +2943,19 @@ class View {
         redirect($redirecturl);
     }
 
+
+    /**
+     * Makes a URL for a view page
+     */
+    public function get_url() {
+        if ($this->type == 'profile') {
+            $url = 'user/view.php?id=' . (int) $this->owner;
+        }
+        else {
+            $url = 'view/view.php?id=' . (int) $this->id;
+        }
+        return get_config('wwwroot') . $url;
+    }
 
 
     /**
@@ -2990,6 +3023,8 @@ class View {
 
         $mnettoken = get_cookie('mviewaccess:'.$this->id);
         $usertoken = get_cookie('viewaccess:'.$this->id);
+        $cid = $this->collection_id();
+        $ctoken = $cid ? get_cookie('caccess:'.$cid) : null;
 
         foreach ($access as $a) {
             if ($a->accesstype == 'public') {
@@ -2997,7 +3032,8 @@ class View {
                     continue;
                 }
             }
-            else if ($a->token && $a->token != $mnettoken && ($a->token != $usertoken || !$publicviews)) {
+            else if ($a->token && $a->token != $mnettoken
+                     && (!$publicviews || ($a->token != $usertoken && $a->token != $ctoken))) {
                 continue;
             }
             else if (!$user->is_logged_in()) {
@@ -3065,7 +3101,7 @@ class View {
             'elements' => array(
                 'text' => array(
                     'type' => 'html',
-                    'value' => get_string('viewobjectionableunmark', 'view', $this->title),
+                    'value' => get_string('viewobjectionableunmark', 'view'),
                 ),
                 'submit' => array(
                     'type' => 'submit',
@@ -3075,6 +3111,16 @@ class View {
         );
     }
 
+    /**
+     * Determine whether the current view is of a type which can be themed.
+     * Certain view types do not respect themes when displayed.
+     *
+     * @return boolean whether the view type may be themed
+     */
+    function is_themeable() {
+        $unthemable_types = array('grouphomepage', 'dashboard');
+        return !in_array($this->type, $unthemable_types);
+    }
 }
 
 

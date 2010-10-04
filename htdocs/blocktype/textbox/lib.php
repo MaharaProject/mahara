@@ -72,12 +72,16 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
 
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
+        if (!$height = get_config('blockeditorheight')) {
+            $cfheight = param_integer('cfheight', 0);
+            $height = $cfheight ? $cfheight * 0.7 : 150;
+        }
         return array(
             'text' => array(
                 'type' => 'wysiwyg',
                 'title' => get_string('blockcontent', 'blocktype.textbox'),
-                'width' => '90%',
-                'height' => '150px',
+                'width' => '100%',
+                'height' => $height . 'px',
                 'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
             ),
         );

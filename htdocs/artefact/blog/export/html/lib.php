@@ -32,46 +32,20 @@ defined('INTERNAL') || die();
  */
 class HtmlExportBlog extends HtmlExportArtefactPlugin {
 
+    public function pagination_data($artefact) {
+        if ($artefact instanceof ArtefactTypeBlog) {
+            return array(
+                'perpage'    => ArtefactTypeBlog::pagination,
+                'childcount' => $artefact->count_published_posts(),
+                'plural'     => get_string('blogs', 'artefact.blog'),
+            );
+        }
+    }
+
     public function dump_export_data() {
         foreach ($this->exporter->get('artefacts') as $artefact) {
-            if ($artefact->get('artefacttype') == 'blog') {
-                // Create directory for storing the blog
-                $dirname = PluginExportHtml::text_to_path($artefact->get('title'));
-                if (!check_dir_exists($this->fileroot . $dirname)) {
-                    throw new SystemException("Couldn't create blog directory {$this->fileroot}{$dirname}");
-                }
-
-                // Render the first page of the blog (the only one if there's 
-                // not many posts)
-                $smarty = $this->exporter->get_smarty('../../../', 'blog');
-                $smarty->assign('page_heading', $artefact->get('title'));
-                $smarty->assign('breadcrumbs', array(
-                    array('text' => get_string('blogs', 'artefact.blog')),
-                    array('text' => $artefact->get('title'), 'path' => 'index.html'),
-                ));
-                $rendered = $artefact->render_self(array('hidetitle' => true));
-                $outputfilter = new HtmlExportOutputFilter('../../../', $this->exporter);
-                $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
-                $content = $smarty->fetch('export:html/blog:index.tpl');
-
-                if (false === file_put_contents($this->fileroot . $dirname . '/index.html', $content)) {
-                    throw new SystemException("Unable to create index.html for blog $blogid");
-                }
-
-                // If the blog has many posts, we'll need to write out archive pages
-                $postcount = $artefact->count_published_posts();
-                $perpage   = ArtefactTypeBlog::pagination;
-                if ($postcount > $perpage) {
-                    for ($i = 2; $i <= ceil($postcount / $perpage); $i++) {
-                        $rendered = $artefact->render_self(array('page' => $i));
-                        $smarty->assign('rendered_blog', $outputfilter->filter($rendered['html']));
-                        $content = $smarty->fetch('export:html/blog:index.tpl');
-
-                        if (false === file_put_contents($this->fileroot . $dirname . "/{$i}.html", $content)) {
-                            throw new SystemException("Unable to create {$i}.html for blog {$artefact->get('id')}");
-                        }
-                    }
-                }
+            if ($artefact instanceof ArtefactTypeBlog) {
+                $this->paginate($artefact);
             }
         }
     }

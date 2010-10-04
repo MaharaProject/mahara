@@ -27,29 +27,58 @@
 
 define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'group.php');
 
-$view = new View(param_integer('id'));
-$group = $view->get('group');
-$institution = $view->get('institution');
-View::set_nav($group, $institution);
 $new = param_boolean('new');
 
-define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
+$collection = null;
+if ($collectionid = param_integer('collection', null)) {
+    define('SECTION_PLUGINNAME', 'collection');
+    $collection = new Collection($collectionid);
+    $views = $collection->views();
+    if (empty($views)) {
+        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
+        redirect('/collection/views.php?id=' . $collectionid . '&new=' . $new);
+    }
+    // Pick any old view, they all have the same access records.
+    $viewid = $views['views'][0]->view;
+}
+else {
+    $viewid = param_integer('id');
+    define('SECTION_PLUGINNAME', 'view');
+}
+
+$view = new View($viewid);
+
+if (empty($collection)) {
+    $collection = $view->get_collection();
+}
+
+if ($collection) {
+    define('TITLE', $collection->get('name') . ': ' . get_string('editaccess', 'view'));
+}
+else {
+    define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
+}
+
+$group = $view->get('group');
+$institution = $view->get('institution');
+View::set_nav($group, $institution, false, $collection);
+
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
 $js = '';
-if (!count_records('block_instance', 'view', $view->get('id'))) {
+if (empty($collection) && !count_records('block_instance', 'view', $view->get('id'))) {
     $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
     $js .= <<<EOF
 addLoadEvent(function() {
@@ -95,7 +124,7 @@ $form = array(
         'template' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcopying', 'view'),
-            'description'  => get_string('templatedescription', 'view'),
+            'description'  => $collection ? get_string('templatedescriptionplural', 'view') : get_string('templatedescription', 'view'),
             'defaultvalue' => $view->get('template'),
         ),
     )
@@ -249,12 +278,14 @@ $form['elements']['overrides'] = array(
     ),
 );
 
+$confirmcancelstr = $collection ? get_string('confirmcancelcreatingcollection', 'collection') : get_string('confirmcancelcreatingview', 'view');
+$goto = $collection ? '' : '';
 $form['elements']['submit'] = array(
     'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',
     'value' => !empty($new) 
         ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
         : array(get_string('save'), get_string('cancel')),
-    'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
+    'confirm' => !empty($new) ? array($confirmcancelstr, null, null) : null,
 );
 
 if (!function_exists('strptime')) {
@@ -374,19 +405,31 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-    global $view, $new, $group, $institution;
+    global $view, $new, $collection;
     if ($new) {
-        $view->delete();
+        if (!$collection) {
+            $view->delete();
+            $view->post_edit_redirect();
+        }
+        else {
+            $collection->delete();
+            $collection->post_edit_redirect();
+        }
     }
-    $view->post_edit_redirect();
+    $collection ? $collection->post_edit_redirect() : $view->post_edit_redirect();
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $group, $institution;
+    global $SESSION, $view, $new, $institution, $collection;
 
     if (param_boolean('back')) {
-        redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
+        if (!$collection) {
+            redirect('/view/edit.php?id=' . $view->get('id') . '&new=' . $new);
+        }
+        else {
+            redirect('/collection/views.php?id=' . $collection->get('id') . '&new=' . $new);
+        }
     }
 
     if ($values['accesslist']) {
@@ -400,7 +443,6 @@ function editaccess_submit(Pieform $form, $values) {
             }
         }
     }
-    $view->set_access($values['accesslist']);
 
     $view->set('startdate', $values['startdate']);
     $view->set('stopdate', $values['stopdate']);
@@ -423,16 +465,33 @@ function editaccess_submit(Pieform $form, $values) {
     if ($values['allowcomments']) {
         $view->set('approvecomments', (int) $values['approvecomments']);
     }
+
+    db_begin();
+
     $view->commit();
 
+    $view->set_access($values['accesslist']);
+
+    if ($collection) {
+        $collection->set_access($view->get('id'));
+    }
+
+    db_commit();
+
     if ($values['new']) {
-        $str = get_string('viewcreatedsuccessfully', 'view');
+        $str = $collection ? get_string('collectioncreatedsuccessfully','collection') : get_string('viewcreatedsuccessfully', 'view');
     }
     else {
-        $str = get_string('viewaccesseditedsuccessfully', 'view');
+        $str = $collection ? get_string('collectionaccesseditedsuccessfully','collection') : get_string('viewaccesseditedsuccessfully', 'view');
     }
     $SESSION->add_ok_msg($str);
-    $view->post_edit_redirect();
+
+    if (!$collection) {
+        $view->post_edit_redirect();
+    }
+    else {
+        $collection->post_edit_redirect();
+    }
 }
 
 $form = pieform($form);
@@ -448,6 +507,13 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('pagedescriptionhtml', get_string('editaccesspagedescription2', 'view'));
+if ($collection) {
+    $views = $collection->views();
+    if ($views['count'] > 1) {
+        $smarty->assign('views', $views);
+    }
+}
+$thing = $collection ? get_string('Collection', 'collection') : get_string('View', 'view');
+$smarty->assign('pagedescriptionhtml', get_string('editaccessdescription', 'view', $thing, $thing));
 $smarty->assign('form', $form);
-$smarty->display('form.tpl');
+$smarty->display('view/access.tpl');

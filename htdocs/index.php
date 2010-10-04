@@ -53,7 +53,7 @@ if ($USER->is_logged_in()) {
 
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
     $smarty = smarty(
-        array(),
+        array('paginator'),
         $stylesheets,
         array(),
         array(
@@ -63,9 +63,12 @@ if ($USER->is_logged_in()) {
 
     if ($USER->get_account_preference('showhomeinfo')) {
         // allow the user to choose never to see the info boxes again
+        $strhowtodisable = json_encode(get_string('howtodisable', 'mahara', get_config('wwwroot') . 'account'));
         $js = <<<JAVASCRIPT
 function hideinfo() {
-    slideUp($('home-info'));
+    var m = SPAN();
+    m.innerHTML = {$strhowtodisable};
+    slideUp('home-info-container', {afterFinish: function() {displayMessage(m, 'ok');}});
 }
 
 function nevershow() {

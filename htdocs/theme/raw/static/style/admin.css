@@ -28,7 +28,7 @@
     border-bottom: 1px solid #aaa;
 }
 #finished {
-    font-size: larger;
+    font-size: 1.6667em;
     font-weight: bold;
     margin-top: 1em;
     text-align: center;
@@ -39,12 +39,22 @@
 }
 
 /* ADMIN HOME */
-#adminhome {
-	width: 75%;
-	float: left;
+
+
+/* delete/close buttons */
+#close_site_submit,
+#suspenddelete #delete #edituser_delete_submit,
+#institution_suspend_submit {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
+	color: #FFF;
 }
-* html #adminhome {
-	width: 72%;
+#close_site_submit:hover,
+#suspenddelete #delete #edituser_delete_submit:hover,
+#institution_suspend_submit:hover {
+	border-color: #750000 #f69595 #f69595 #750000 !important;
+	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
+	color: #FFF;
 }
 
 /* close site box */
@@ -53,16 +63,17 @@
 	background: #fbeceb;
     text-align: left;
 	padding: 1em 1.5em;
-	width: 20%;
-	float: right;
-	margin: 0 0 1em 0;
+	width: 24%;
+	float: left;
+	margin: 0 0 0 1em;
+	min-height: 160px;
 }
 #close-site h3 {
 	color: #ca0000;
 }
-#close_site_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
+
+#close_site {
+	margin-top: .5em;
 }
 
 
@@ -70,15 +81,18 @@
 #register-site {
     text-align: left;
 	padding: 1em 1.5em;
-	margin: 0 0 1em 0;
+	margin: 0 1em 1em 0;
+	float: left;
+	width: 35%;
+	min-height: 160px;
 }
 #register-site form fieldset.collapsed {
 	border: 0;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #register-site form fieldset.collapsible {
 	border: 0;
-	font-size: .9em;
+	font-size: .9167em;
 	margin: 0;
 	padding: 0;
 }
@@ -116,7 +130,7 @@
 	background: #fefefe;
 }
 #register-site fieldset legend a {
-	font-size: .85em;
+	font-size: .9167em;
 }
 #register_register_container th {
 	display: none;
@@ -134,7 +148,8 @@ input#register_register {
     padding: 1em 1.5em;
     background: #f6f6f6;
     border: 1px solid #ddd;
-	margin: 0 0 1em 0;
+    margin: 0 0 1em 0;
+    float: left;
 }
 #runupgrade h4 {
     margin: 0;
@@ -142,7 +157,7 @@ input#register_register {
 }
 #upgradestable {
     border: none;
-	font-size: .9em;
+	font-size: .9167em;
 	width: 100%;
 }
 #upgradestable th {
@@ -155,22 +170,44 @@ input#register_register {
 	background: #fefefe;
 }
 
-.site-stats {
-  margin: 1.5em 0 1em 0;
-  padding: 0 1em 0 0;
-  text-align: left;
-}
-.message.site-stats {
+#site-stats {
   margin: 0 0 1em 0;
   padding: 1em 1.5em;
+  text-align: left;
+  float: left;
+  width: 25%;
+	min-height: 160px;
 }
-.site-stats p:first-child,
-.site-stats p:last-child,
-.site-stats p {
+#site-stats .icon-sitestats {
+	background: url(../images/icon-sitestats.png) no-repeat left;
+	padding-left: 18px;
+}
+#site-stats p:first-child,
+#site-stats p:last-child,
+#site-stats p {
   margin: .1em;
 }
 #site-stats-graph {
   margin: 0 .3em 1em;
+}
+.site-stats-left {
+	width: 300px;
+}
+.site-stats-right {
+	width: 62%;
+}
+.site-stats-table div {
+	padding: .25em .5em;
+	border-bottom: 1px solid #FFF;
+	background: #F8F8F8;
+}
+#site-stats .site-stats-table {
+	margin-top: .5em;
+}
+#site-stats .site-stats-table div {
+	border-bottom: 0;
+	background: none;
+	padding: 0;
 }
 .statistics-subpage-left-column {
   width: 40%;
@@ -181,7 +218,27 @@ input#register_register {
 
 .admin-home-column {
   width: 49%;
-  margin: 0 .1em;
+  margin: 1em .1em 0 .1em;
+}
+* html .admin-home-column {
+	width: 47%;
+}
+
+/* CONFIGURE SITE SITE OPTIONS */
+#siteoptions th label {
+	white-space: nowrap;
+}
+#siteoptions legend {
+	font-size: 1em;
+}
+#siteoptions th label {
+	font-weight: bold;
+	font-size: 1em;
+}
+#siteoptions_submit_container th,
+#siteoptions_submit_container td {
+	padding-top: 1em;
+	float: left;
 }
 
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
@@ -200,21 +257,21 @@ input#register_register {
 	line-height: 2em;
 }
 #menuitemlist table td .button {
-	font-size: .9em;
+	font-size: .9167em;
 }
 
 /* CONFIGURE SITE > NETWORKING */
 #networkingform_pubkey_container td {
-	line-height: .9em;
+	line-height: .9167em;
 }
 #networkingform fieldset table th label {
 	font-weight: bold;
 }
 
 
-/* MANAGE USERS > USER SEARCH */
+/* USERS > USER SEARCH */
 #initials {
-	font-size: 1.2em;
+	font-size: 1.1667em;
 	margin: 0 0 .5em 0;
 }
 #initials span {
@@ -228,10 +285,6 @@ input#register_register {
 }
 .searchform .institutions {
 	margin-left: 1em;
-}
-#users_search_btn {
-	line-height: 1.5em;
-	* line-height: .9em;
 }
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
@@ -250,12 +303,12 @@ table.tablerenderer th.desc {
 }
 
 
-/* MANAGE USERS > EDIT USER */
+/* USERS > EDIT USER */
 #edituser_institution td {
 	padding: 0;
 }
 #edituser_institution td h4 {
-	font-size: 1.2em;
+	font-size: 1.1667em;
 }
 #edituser_institution th label {
 	font-size: 1em;
@@ -266,13 +319,15 @@ table.tablerenderer th.desc {
 }
 #profilepict {
 	padding: 1em;
-	font-size: .9em;
+	font-size: .9167em;
 	margin-right: 1em;
 	text-align: center;
 	border: 1px solid #ccc;
 	background: #f6f6f6;
 }
 #profilepict a img {
+    width: 100px;
+    height: 100px;
 	padding: 0;
 }
 #profilename {
@@ -282,51 +337,71 @@ table.tablerenderer th.desc {
 	margin-right: 1em;
 	margin-top: 1em;
 }
+
+#useraccountsettingsleft {
+	padding-right: 2em;
+}
+#useraccountsettingsright {
+	width: 254px;
+}
+#useraccountsettingsleft h2 {
+	margin-top: 0;
+}
+
 #suspenddelete,
 #institutions {
-	clear: both;
-	margin-top: 2em;
-	padding-top: 1em;
-	border-top: 1px dotted #d1d1d1;
+	margin-bottom: 2em;
+}
+#suspenddelete p {
+	font-size: .9167em;
+	line-height: 1.4em;
 }
 /* suspend user */
 #suspenddelete #suspend {
 	border: 1px solid #d1d1d1;
-	float: left;
 	padding: 1em;
 	background: #f6f6f6;
+	margin-bottom: 1em;
 }
-#institution_suspend_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
+#suspenddelete #suspend table th {
+	float: left;
+	display: block;
+	padding: .25em 0;
+}
+#suspenddelete #suspend table td {
+	display: block;
+	clear: left;
+	padding: 0;
+}
+#suspenddelete #suspend .resizable-textarea {
+	width: 225px !important;
 }
 
 /* delete user */
 #suspenddelete #delete {
 	border: 1px solid #e98a88;
 	background: #fbeceb;
-	float: left;
 	padding: 1em;
-	margin-left: 1em;
 }
-#suspenddelete h4 {
+#suspenddelete #delete h3 {
 	margin-top: 0;
 	color: #ca0000;
 }
-#suspenddelete #delete #edituser_delete_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ca0000 !important;
+#edituser_institution_addinstitution_container,
+#edituser_institution_add_container {
+	display: inline;
+}
+#edituser_site_passwordchange_container th label {
+	white-space: nowrap;
 }
 
-
-
-/* MANAGE USERS > SUSPENDED USERS */
+/* USERS > SUSPENDED USERS */
 #suspendedlist {
 	margin: 1em 0;
 }
 
 
-/* MANAGE USERS > SITE ADMINS */
+/* USERS > SITE ADMINS */
 .userlistform table {
     width: 100%;
 }
@@ -343,22 +418,20 @@ table.tablerenderer th.desc {
 }
 
 
-/* MANAGE USERS > ADMIN NOTIFICATIONS */
+/* USERS > ADMIN NOTIFICATIONS */
 #notificationstable td {
 	vertical-align: middle;
 }
 
 
-/* MANAGE USERS > ADD USER */
+/* USERS > ADD USER */
 #adduser-t {
-    margin: 0 auto;
     min-width: 800px;
     max-width: 1000px;
-    width: 950px;
 }
 #adduser thead th {
     text-align: left;
-    font-size: 1.3em;
+    font-size: 1.333em;
     border-bottom: none !important;
 }
 #adduser td.step1 {
@@ -409,7 +482,7 @@ table.tablerenderer th.desc {
 	vertical-align: middle;
 }
 #adduser #adduser_submit {
-	font-size: 1.6em;
+	font-size: 1.6667em;
 	font-weight: bold;
 }
 #adduser #step3info {
@@ -422,11 +495,11 @@ table.tablerenderer th.desc {
 	color: #8d8d8d;
 }
 #adduser table table label {
-    font-size: .9em;
+    font-size: .9167em;
 }
 
 
-/* MANAGE USERS > ADD USERS BY CSV */
+/* USERS > ADD USERS BY CSV */
 ul.fieldslist li {
 	float: left;
 	width: 15%;
@@ -435,10 +508,28 @@ form#uploadcsv {
 	clear: both;
 }
 
-/* MANAGE INSTITUTIONS > INSTITUTIONS */
-.admininstitutionbtns {
-	font-size: .9em;
+
+/* GROUPS */
+#editmenus #menuitemlist table {
+	width: auto;
 }
+
+/* MANAGE GROUPS > GROUP ADMINS */
+#groupadminsform {
+	border: 1px solid #d1d1d1;
+	background: #f6f6f6;
+	padding: 1em;
+}
+#groupadminsform table #groupadminsform_admins_container td th {
+	width: auto !important;
+	white-space: nowrap;
+	font-weight: bold;
+}
+#groupadminsform table #groupadminsform_admins_container th {
+	width: 80px !important;
+}
+
+/* MANAGE INSTITUTIONS > INSTITUTIONS */
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #usertypeselect table td,
@@ -452,20 +543,27 @@ form#uploadcsv {
 	display: inline;
 }
 #institution_maxuseraccounts_container th {
-	white-space: nowrap;
+	width: 220px;
 }
 #instanceList .authIcons a {
 	color: #ca0000;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #institution #lockedfieldshelp {
 	float: right;
 }
 #suspendinstitution {
-	margin-top: 1em;
+	margin-top: 2em;
 	border: 1px solid #e98a88;
 	background: #fbeceb;
 	padding: 1em 1em 1em 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 220px;
+}
+* html #suspendinstitution {
+	right: 2em;
 }
 #suspendinstitution h3#suspend {
 	color: #ca0000;
@@ -540,10 +638,10 @@ form#uploadcsv {
 #adminplugin ul.adminpluginstypes ul ul li {
 	float: none;
 	list-style: none;
-	font-size: .9em;
+	font-size: .9167em;
 }
 #adminplugin ul.adminpluginstypes ul ul ul li {
 	list-style: disc;
 	margin: 0 0 0 1.5em;
-	line-height: 1.4em;
+	font-size: 1em;
 }

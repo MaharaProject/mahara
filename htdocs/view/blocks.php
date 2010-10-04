@@ -198,6 +198,9 @@ $smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
 $smarty->assign('dashboard', $dashboard);
+if (get_config('blockeditormaxwidth')) {
+    $smarty->assign('INLINEJAVASCRIPT', 'config.blockeditormaxwidth = true;');
+}
 $viewid = $view->get('id');
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
@@ -239,7 +242,8 @@ $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
 $smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
-if (get_config('userscanchooseviewthemes')) {
+if (get_config('userscanchooseviewthemes')
+    && $view->is_themeable()) {
     $smarty->assign('viewtheme', $viewtheme);
     $smarty->assign('viewthemes', $allowedthemes);
 }

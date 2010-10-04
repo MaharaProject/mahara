@@ -1436,7 +1436,10 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010040800) {
-        execute_sql('ALTER TABLE {view} ADD COLUMN submittedtime TIMESTAMP');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('submittedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
     }
 
     if ($oldversion < 2010041200) {
@@ -1570,6 +1573,15 @@ function xmldb_core_upgrade($oldversion=0) {
             SELECT f.*, a.id AS artefactid, a.owner, a.group, a.institution
             FROM {artefact_feedback} f JOIN {artefact} a ON f.artefact = a.id', array())) {
             foreach ($artefactfeedback as &$f) {
+                if ($f->author > 0) {
+                    $f->authorname = null;
+                }
+                else {
+                    $f->author = null;
+                    if (empty($f->authorname)) {
+                        $f->authorname = '?';
+                    }
+                }
                 $artefact = (object) array(
                     'artefacttype' => 'comment',
                     'owner'        => $f->owner,
@@ -1904,7 +1916,10 @@ function xmldb_core_upgrade($oldversion=0) {
         unset($viewdata->owner);
         $viewdata->template = 0;
 
-        foreach (get_records_array('group', '', '', '', 'id,public') as $group) {
+        if (!$groups = get_records_array('group', '', '', '', 'id,public')) {
+            $groups = array();
+        }
+        foreach ($groups as $group) {
             $viewdata->group = $group->id;
             $id = insert_record('view', $viewdata, 'id', true);
             insert_record('view_access', (object) array(
@@ -2023,11 +2038,13 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
 
         // Insert explicit tutor access records for submitted views
-        $submittedviews = get_records_sql_array('
+        if (!$submittedviews = get_records_sql_array('
             SELECT v.id, v.submittedgroup, g.grouptype
             FROM {view} v JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)',
             array()
-        );
+        )) {
+            $submittedviews = array();
+        }
         $roles = array();
         foreach ($submittedviews as $v) {
             if (!isset($roles[$v->grouptype])) {
@@ -2090,6 +2107,90 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('viewnotify');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
         add_field($table, $field);
+    }
+
+    if ($oldversion < 2010081000) {
+
+        // new table collection
+        $table = new XMLDBTable('collection');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('owner', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('navigation', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('owner'), 'usr', array('id'));
+        create_table($table);
+
+        // new table collection_view
+        $table = new XMLDBTable('collection_view');
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+        $table->addFieldInfo('displayorder', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view'));
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+        create_table($table);
+
+        // Drop unique constraint on token column of view_access
+        $table = new XMLDBTable('view_access');
+        $index = new XMLDBIndex('tokenuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('token'));
+        drop_index($table, $index);
+        $index = new XMLDBIndex('tokenix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('token'));
+        add_index($table, $index);
+
+    }
+
+    if ($oldversion < 2010081001) {
+        if ($data = check_upgrades('artefact.plans')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.plans/plans')) {
+            upgrade_plugin($data);
+        }
+    }
+
+    if ($oldversion < 2010081100) {
+        if ($data = check_upgrades('blocktype.navigation')) {
+            upgrade_plugin($data);
+        }
+    }
+
+    if ($oldversion < 2010082000) {
+        delete_records_select('config', "field IN ('usersrank', 'groupsrank', 'viewsrank')");
+    }
+
+    if ($oldversion < 2010091300) {
+        // Cron job missing from installs post 2010041900
+        if (!record_exists('cron', 'callfunction', 'cron_check_for_updates')) {
+            $cron = new StdClass;
+            $cron->callfunction = 'cron_check_for_updates';
+            $cron->minute       = rand(0, 59);
+            $cron->hour         = rand(0, 23);
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
+    if ($oldversion < 2010091500) {
+        // Previous version of 2010040800 upgrade created the submittedtime
+        // column not null (see bug #638550)
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('submittedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        change_field_notnull($table, $field);
+        // Our crappy db is full of redundant data (submittedtime depends on
+        // submittedhost or submittedgroup) so it's easy to correct this.
+        execute_sql("
+            UPDATE {view} SET submittedtime = NULL
+            WHERE submittedtime IS NOT NULL AND submittedgroup IS NULL AND submittedhost IS NULL"
+        );
     }
 
     return $status;

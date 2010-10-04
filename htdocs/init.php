@@ -296,7 +296,7 @@ function init_performance_info() {
     global $PERF;
   
     $PERF = new StdClass;
-    $PERF->dbreads = $PERF->dbwrites = 0;
+    $PERF->dbreads = $PERF->dbwrites = $PERF->dbcached = 0;
     $PERF->logwrites = 0;
     if (function_exists('microtime')) {
         $PERF->starttime = microtime();

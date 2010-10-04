@@ -2,24 +2,6 @@
     var {{$name}}_newrefinput = null;
     var {{$name}}_newref = null;
 
-    addLoadEvent(function() {
-        connect('{{$name}}_list', 'onkeypress', function (k) {
-            if (k.key().code == 13 && {{$name}}_newref) {
-                {{$name}}_addedemail();
-                k.stop();
-            }
-
-            // cancel (esc)
-            if (k.key().code == 27 && {{$name}}_newref ) {
-                removeElement({{$name}}_newrefinput);
-                removeElement({{$name}}_newref);
-                {{$name}}_newrefinput = null;
-                {{$name}}_newref = null;
-                k.stop();
-            }
-        });
-    });
-
     function {{$name}}_addedemail() {
         removeElement({{$name}}_newrefinput);
         removeElement({{$name}}_newref);
@@ -44,17 +26,19 @@
 
     function {{$name}}_new() {
         if ( {{$name}}_newref ) {
+            {{$name}}_newrefinput.focus();
             return false;
         }
 
         {{$name}}_newrefinput = INPUT({'type': 'text'});
-        {{$name}}_newref = DIV(null,{{$name}}_newrefinput);
+        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newref = DIV(null,{{$name}}_newrefinput,{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);
 
         {{$name}}_newrefinput.focus();
 
-        connect({{$name}}_newrefinput, 'onblur', function(k) {
+        connect({{$name}}_newrefsubmit, 'onclick', function(k) {
             {{$name}}_addedemail();
             k.stop();
         });

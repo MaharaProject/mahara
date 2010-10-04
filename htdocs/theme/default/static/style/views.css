@@ -1,9 +1,5 @@
 /*  Views  */
-#views-loading {
-}
-/********************** Top pane of Edit View *************************/
-#top-pane {
-}
+
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
     background: url(../images/tabs-bg.gif) repeat-x left top;
@@ -33,8 +29,8 @@
 #category-list li.current a:visited,
 #category-list li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
-}
-#category-list li.current a:hover {
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 
 /* The panel that contains the blocktype icons */
@@ -42,41 +38,7 @@
     background-color: #f5f9fc;
     border-top: 0;
 }
-.blocktype div {
-}
-#noblocks {
-}
 
-
-/******************* Between Panes **************************************/
-#layout-link {
-}
-#layout-link.disabled {
-}
-#btn-displaymyview {
-}
-
-
-/********************** Bottom pane of Edit View *************************/
-#page #bottom-pane {
-}
-#blocksinstruction {
-}
-
-#column-container .column-header input[disabled="disabled"] {
-}
-
-.column-content .add-button input {
-}
-
-#block-placeholder {
-}
-
-/**************** Blockinstance **********************/
-.blockinstance {
-}
-.blockinstance.configure {
-}
 /* header*/
 .blockinstance-header h4 {
     border-bottom: 2px solid #d2d2d2;
@@ -92,19 +54,10 @@
 	color: #267bbd;
 }
 
-/* content */
-.blockinstance-content {
-}
-.blockinstance-content h3 {
-}
-.blockinstance-content h4 {
-}
 
 /* Wall */
 .wallpost {
     background-color: #F8FBFD;
-}
-#wall .private {
 }
 
 /* tabs for the artefact chooser */
@@ -140,6 +93,8 @@ ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
     color: #1E6297 !important;
+    padding: 5px 12px 6px 10px;
+    height: 25px;
 }
 ul.artefactchooser-tabs li.current a:hover {
 }
@@ -178,45 +133,43 @@ ul.artefactchooser-subtabs li.current a:hover {
 #artefactchooser-body {
     background: #F5F9FC;
 }
-.upload_browse #artefactchooser-body {
-}
 
-/* pagination */
-.ac-pagination .results {
-}
-
-/* attachments */
-.attachments {
-}
-#view .blockinstance-content .attachments,
-#view .blockinstance-content .attachments td {
-}
-
-/** When viewing an artefact */
-#view .filedata-icon.fr {
-}
-
-#copyview .searchquery {
-}
 
 /* table */
 .maharatable thead th {
     color: #186194;
 }
-.maharatable tbody th {
-}
-#artefactchooser-body th label {
-}
-.maharatable td label {
-}
 
+
+.plan_incomplete td {
+	background: #e9f0f5;
+}
 
 /* View Page footer menu */
-#view .viewfooter {
-  border-top: 0;
+
+/* views */
+.feedback {
+	background: url(../images/feedback.gif) no-repeat left center;
+	padding-left: 20px;
 }
-#view #feedbacktable {
+.objection {
+	background: url(../images/objectionable.gif) no-repeat left center;
+	padding-left: 20px;
 }
-#viewmenu a {
-    padding-left: 12px;
+.print {
+	background: url(../images/icon-print.gif) no-repeat left center;
+	padding-left: 20px;
+}
+.watchlist {
+	background: url(../images/watchlist.gif) no-repeat left center;
+	padding-left: 20px;
+}
+
+/* Collection navigation */
+ul.colnav li a {
+	background: #d6e0c5;
+}
+
+.blockinstance-content .groupviewsection h5 {
+	color: #333;
 }

@@ -1,7 +1,7 @@
 body {
 	font-family: "Times New Roman", Times, serif;
-	font-size: 12pt;
-	line-height: 16pt;
+	font-size: 10pt;
+	line-height: 14pt;
 	background: none;
 	color: #000000;
 	width: 100%;
@@ -17,19 +17,19 @@ body {
 /* TITLES */
 h1 {
 	color: #000000;
-    font-size: 16pt;
+    font-size: 18pt;
 	page-break-after: avoid; 
     page-break-inside: avoid;
 }
 h2 {
-    font-size: 14pt;
+    font-size: 16pt;
 	color: #000000;
 	page-break-after: avoid; 
     page-break-inside: avoid;
 }
 h3 {
 	color: #000000;
-    font-size: 13pt;
+    font-size: 14pt;
 	page-break-after: avoid; 
     page-break-inside: avoid;
 }
@@ -41,12 +41,12 @@ h4 {
 }
 h5 {
 	color: #000000;
-    font-size: 11pt;
+    font-size: 10pt;
 	page-break-after: avoid; 
     page-break-inside: avoid;
 }
 h6 {
-    font-size: 10pt;
+    font-size: 9pt;
 	color: #000000;
 	page-break-after: avoid; 
     page-break-inside: avoid;
@@ -69,7 +69,7 @@ h6 {
 .s,
 .description,
 td.description {
-	font-size: 6pt;
+	font-size: 8pt;
     font-weight: normal;
 	line-height: 10pt;
     color: #000;

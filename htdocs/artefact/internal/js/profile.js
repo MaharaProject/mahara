@@ -30,7 +30,7 @@ addLoadEvent(function() {
 
     var tabs = [];
     forEach(legends, function(legend) {
-        var a = A({'href': ''}, legend.firstChild);
+        var a = A({'href': ''}, scrapeText(legend));
         legend.parentNode.tabLink = a;
         // Pieforms is unhelpful with legend/fieldset ids; get it from children
         var fsid = 'general';

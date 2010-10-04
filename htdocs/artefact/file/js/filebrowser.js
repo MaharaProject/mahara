@@ -192,20 +192,24 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
     }
 
-    this.upload_success = function (data) {
+    this.callback_feedback = function (data) {
         if (data.problem) {
             var image = 'images/icon_problem.gif';
         }
-        else if (!data.error) {
-            var image = 'images/success.gif';
+        else if (data.error) {
+            var image = 'images/failure.gif';
         }
         else {
-            var image = 'images/failure.gif';
+            var image = 'images/success.gif';
         }
 
         quotaUpdate(data.quotaused, data.quota);
-        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message));
-        replaceChildNodes($('uploadstatusline'+data.uploadnumber), newmessage);
+        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), 'info');
+        setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
+        if (data.uploadnumber) {
+            removeElement($('uploadstatusline'+data.uploadnumber));
+        }
+        appendChildNodes(self.id + '_upload_messages', newmessage);
     }
 
     this.hide_edit_form = function () {
@@ -559,10 +563,14 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         return false;
     }
 
-    this.success = function (form, data) {
+    this.callback = function (form, data) {
         self.form = form; // ????
-        if (data.uploaded) {
-            self.upload_success(data);  // Remove uploading message
+        if (data.uploaded || data.error || data.deleted) {
+            self.callback_feedback(data);  // add/update message
+            if (data.maxuploadsize) {
+                // keep max upload size up to date
+                replaceChildNodes(self.id + '_userfile_maxuploadsize', '(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
+            }
         }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
@@ -588,9 +596,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             else if (data.uploaded && self.config.select && data.highlight) {
                 // Newly uploaded files should be automatically selected
                 self.add_to_selected_list(data.highlight, true);
-            }
-            else if (data.deleted) {
-                quotaUpdate(data.quotaused, data.quota);
             }
             if (data.tagblockhtml && $('sb-tags')) {
                 $('sb-tags').innerHTML = data.tagblockhtml;

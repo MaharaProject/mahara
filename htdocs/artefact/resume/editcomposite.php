@@ -27,17 +27,24 @@
 
 define('INTERNAL', true);
 define('MENUITEM', 'profile/myresume');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'resume');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
+define('TITLE', get_string('myresume', 'artefact.resume'));
+
 $id = param_integer('id');
 $artefact = param_integer('artefact');
 
 $a = artefact_instance_from_id($artefact);
 $type = $a->get('artefacttype');
+
+$tabs = PluginArtefactResume::composite_tabs();
+define('RESUME_SUBPAGE', $tabs[$type]);
 
 if ($a->get('owner') != $USER->get('id')) {
     throw new AccessDeniedException(get_string('notartefactowner', 'error'));
@@ -47,7 +54,7 @@ $elements = call_static_method(generate_artefact_class_name($type), 'get_addform
 $elements['submit'] = array(
     'type' => 'submitcancel',
     'value' => array(get_string('save'), get_string('cancel')),
-    'goto' => get_config('wwwroot') . '/artefact/resume/',
+    'goto' => get_config('wwwroot') . '/artefact/resume/' . $tabs[$type] . '.php',
 );
 $elements['compositetype'] = array(
     'type' => 'hidden',
@@ -67,6 +74,6 @@ $compositeform = pieform($cform);
 $smarty = smarty();
 $smarty->assign('compositeform', $compositeform);
 $smarty->assign('composite', $type);
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:editcomposite.tpl');
-
-?>

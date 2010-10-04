@@ -33,10 +33,15 @@
 #layout-link {
 	background: url(../images/icon-change.gif) no-repeat left center;
 	padding-left: 1.5em;
+	padding-top: 1px;
 	font-weight: bold;
 }
 #layout-link.disabled {
     color: #aaa;
+	cursor: default;
+}
+#layout-link.disabled:hover {
+	text-decoration: none;
 }
 #btn-displaymyview {
 	background: url(../images/icon-display.gif) no-repeat left center;
@@ -91,9 +96,6 @@ ul.artefactchooser-tabs li.current a:active {
   background: #ddd;
   color: #333;
 }
-ul.artefactchooser-subtabs {
-  border-bottom: 1px solid #ddd;
-}
 ul.artefactchooser-subtabs li {
   border-right: 1px solid #d1d1d1;
 }
@@ -141,13 +143,15 @@ ul.artefactchooser-subtabs li.current a:active {
     margin: 5px 0;
 }
 .add-button .newblockhere {
-    background: url(../images/btn_addblock.gif) repeat-x;
+    background: url(../images/btn-addblock.gif) repeat-x;
     font-weight: normal;
-    height: 18px;
+    height: 16px;
     padding: 1px 5px 2px 5px;
     color: #FFF;
     width: 100%;
     margin: 0;
+	border-left: 1px solid #5d5d5d;
+	border-right: 1px solid #5d5d5d;
 }
 /* this rule compresses and centers the buttons better in konqueror and safari */
 body:last-child:not(:root:root) .newblockhere {
@@ -155,6 +159,21 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /* VIEWS */
+#feedbacktable .fr {
+	margin-top: .25em;
+}
+#feedbacktable #delete_comment_delete_comment_submit {
+	background: url(../images/mini-delete.gif) no-repeat;
+	border: 0;
+	width: 9px;
+	height: 9px;
+	cursor: pointer;
+	float: right;
+	font-size: 1%;
+	text-indent: -9999px;
+	margin-left: .5em;
+}
+
 /* views footer */
 .viewfooter {
 	border: 1px solid #eee;
@@ -163,6 +182,9 @@ body:last-child:not(:root:root) .newblockhere {
 	color: #d1d1d1;
 }
 #feedbacktable .details {
+	color: #d1d1d1;
+}
+#feedbacktable .details span {
 	color: #9e9e9e;
 }
 #feedback_pagination {
@@ -190,25 +212,48 @@ body:last-child:not(:root:root) .newblockhere {
 	line-height: 1.3em;
 }
 
-#userfriendstable td {
-	background: none;
-}
 
-/* My Views */
+/* My Views / Latest Views*/
 #userviewstable {
 	width: 100%;
 }
 * html #userviewstable {
 	width: 98%;
 }
-
+#userviewstable .details,
+.viewlist .details {
+	line-height: 1.4em;
+	font-size: .9167em;
+}
 
 input.addcolumn, input.removecolumn {
     background: none;
     border: none;
 }
 
-/* Feed icons */
-img.feedicon {
-    margin-left: 10px;
+/* Collection navigation */
+ul.colnav li a,
+ul.colnav li span {
+	background: #DDDDDD;
+	padding: .55em 1em;
+	* padding: .55em 1em .5em 1em;
+	font-weight: bold;
+}
+ul.colnav li.selected a,
+ul.colnav li.selected span {
+    color: #333;
+	background: #fff;
+	text-decoration: none;
+}
+
+#approve_deny_friendrequest_deny {
+	border-color: #f69595 #750000 #750000 #f69595 !important;
+	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
+	color: #FFF;
+	margin-left: .5em;
+}
+#approve_deny_friendrequest_deny:hover {
+	border-color: #750000 #f69595 #f69595 #750000 !important;
+	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
+	color: #FFF;
 }

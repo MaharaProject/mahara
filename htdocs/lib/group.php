@@ -833,6 +833,62 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
     }
 }
 
+/*
+ * Used by admin/groups/groups.php and admin/groups/groups.json.php for listing groups.
+ */
+function build_grouplist_html($query, $limit, $offset, &$count=null) {
+
+    $groups = search_group($query, $limit, $offset, 'all');
+    $count = $groups['count'];
+
+    if ($ids = array_map(create_function('$a', 'return intval($a->id);'), $groups['data'])) {
+        $sumsql = "(m.role = 'admin')";
+        if (is_postgres()) {
+            $sumsql .= '::int';
+        }
+
+        // Member & admin counts
+        $ids = join(',', $ids);
+        $counts = get_records_sql_assoc("
+            SELECT m.group, COUNT(m.member) AS members, SUM($sumsql) AS admins
+            FROM {group_member} m
+            WHERE m.group IN ($ids)
+            GROUP BY m.group",
+            array()
+        );
+    }
+
+    foreach ($groups['data'] as &$group) {
+        $group->visibility = $group->public ? get_string('Public', 'group') : get_string('Members', 'group');
+        $group->admins = empty($counts[$group->id]->admins) ? 0 : $counts[$group->id]->admins;
+        $group->members = empty($counts[$group->id]->members) ? 0 : $counts[$group->id]->members;
+        if (get_config('allowgroupcategories')) {
+            $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
+        }
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('groups', $groups['data']);
+    $data = array();
+    $data['tablerows'] = $smarty->fetch('admin/groups/groupsresults.tpl');
+
+    $pagination = build_pagination(array(
+                'id' => 'admgroupslist_pagination',
+                'datatable' => 'admgroupslist',
+                'url' => get_config('wwwroot') . 'admin/groups/groups.php' . (!empty($query) ? '?query=' . urlencode($query) : ''),
+                'jsonscript' => 'admin/groups/groups.json.php',
+                'count' => $count,
+                'limit' => $limit,
+                'offset' => $offset,
+                'resultcounttextsingular' => get_string('group', 'group'),
+                'resultcounttextplural' => get_string('groups', 'group'),
+            ));
+
+    $data['pagination'] = $pagination['html'];
+    $data['pagination_js'] = $pagination['javascript'];
+
+    return $data;
+}
 
 function group_get_membersearch_data($results, $group, $query, $membershiptype) {
     global $USER;

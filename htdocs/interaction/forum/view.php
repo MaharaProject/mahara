@@ -68,13 +68,14 @@ if (!$forum) {
 $membership = user_can_access_forum((int)$forumid);
 $admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
-
-if (!$membership
-    && !get_field('group', 'public', 'id', $forum->groupid)) {
+$publicgroup = get_field('group', 'public', 'id', $forum->groupid);
+if (!$membership && !$publicgroup) {
     throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
+
+$feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
 
 $moderators = get_column_sql(
     'SELECT gm.user FROM {interaction_forum_moderator} gm
@@ -244,10 +245,17 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty();
+$headers = array();
+if ($publicgroup) {
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+}
+
+$smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('forum', $forum);
+$smarty->assign('publicgroup', $publicgroup);
+$smarty->assign('feedlink', $feedlink);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
@@ -269,6 +277,7 @@ function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
+            $topic->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;
         }
     }
 }

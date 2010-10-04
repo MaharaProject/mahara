@@ -7,6 +7,6 @@
       </tbody>
     </table>
 {/if}
-<div class="message"><a href="{$show_all.url}">{$show_all.message|escape}</div>
+<a class="morelink" href="{$show_all.url}">{$show_all.message|escape} &raquo;</a>
 </div>
 {/auto_escape}

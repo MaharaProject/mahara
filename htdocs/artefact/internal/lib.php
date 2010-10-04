@@ -348,6 +348,15 @@ class ArtefactTypeProfile extends ArtefactType {
         );
     }
 
+    public static function get_field_element_data() {
+        return array(
+            'firstname'       => array('rules' => array('maxlength' => 50)),
+            'lastname'        => array('rules' => array('maxlength' => 50)),
+            'studentid'       => array('rules' => array('maxlength' => 50)),
+            'preferredname'   => array('rules' => array('maxlength' => 50)),
+        );
+    }
+
     public static function get_mandatory_fields() {
         $m = array();
         $all = self::get_all_fields();
@@ -562,6 +571,19 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
     public function delete() {
         delete_records('artefact_internal_profile_email', 'artefact', $this->id);
         parent::delete();
+    }
+
+    public static function bulk_delete($artefactids) {
+        if (empty($artefactids)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $artefactids));
+
+        db_begin();
+        delete_records_select('artefact_internal_profile_email', 'artefact IN (' . $idstr . ')');
+        parent::bulk_delete($artefactids);
+        db_commit();
     }
 
     public function render_self($options) {

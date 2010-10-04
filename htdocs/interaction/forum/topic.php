@@ -59,6 +59,9 @@ if (!$topic) {
 
 define('GROUP', $topic->groupid);
 
+$publicgroup = get_field('group', 'public', 'id', $topic->groupid);
+$feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;
+
 $membership = user_can_access_forum((int)$topic->forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
@@ -170,7 +173,12 @@ execute_sql('
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpostlist($posts, $indentmode, $maxindentdepth);
 
-$smarty = smarty();
+$headers = array();
+if ($publicgroup) {
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+}
+
+$smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);

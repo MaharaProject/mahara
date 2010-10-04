@@ -3,7 +3,6 @@
 
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
-
     <form action="{$formurl}" method="post">
         <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
         <input type="hidden" id="viewid" name="id" value="{$view}">
@@ -75,7 +74,7 @@
             <input type="submit" class="submit" value="{str tag=next}: {str tag='edittitleanddescription' section=view}">
         </form>
     {else}
-        <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}group/view.php{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{/if}" method="GET">
+        <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}group/view.php{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view{/if}" method="GET">
         {if $groupid}
             {if $viewtype == 'grouphomepage'}
             <input type="hidden" name="id" value="{$groupid}">

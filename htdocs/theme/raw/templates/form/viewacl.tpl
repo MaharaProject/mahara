@@ -7,7 +7,7 @@
             <option value="group">{{str tag=groups}}</option>
             <option value="user" selected="selected">{{str tag=users}}</option>
         </select>
-        <button id="dosearch" type="button">{{str tag=go}}</button>
+        <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
         <table id="results" class="fullwidth">
             <thead>
                 <tr>

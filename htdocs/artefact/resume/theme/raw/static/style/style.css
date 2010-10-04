@@ -17,6 +17,27 @@
 #resumewrap table td {
 	padding: 0;
 }
+#resumewrap table tr#coverletter_save_container td,
+#resumewrap table tr#interests_save_container td {
+	padding-top: .5em;
+}
+#resumewrap table.resumecomposite {
+	margin-bottom: .5em;
+}
+#resumewrap table.resumecomposite .btn-edit,
+#resumewrap table.resumecomposite .btn-del {
+	font-size: .9167em;
+}
+#resumewrap table.resumecomposite td {
+	padding: .25em .5em;
+}
+#resumewrap table.mceLayout {
+	width: 570px !important;
+}
+#resumewrap #goalform table.mceLayout,
+#resumewrap #skillform table.mceLayout {
+	width: 490px !important;
+}
 
 #addemploymenthistory table,
 #addeducationhistory table,

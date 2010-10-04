@@ -50,10 +50,16 @@ if (is_logged_in()) {
 
 $view = group_get_homepage_view($group->id);
 $viewcontent = $view->build_columns();
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+
+$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+if ($group->public) {
+    $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+}
+
 $smarty = smarty(
     array(),
-    $stylesheets,
+    $headers,
     array(),
     array('stylesheets' => array('style/views.css'))
 );

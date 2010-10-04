@@ -42,7 +42,7 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
-$string['allowcommentsonview']    = 'If checked, users who can see your View will be allowed to leave comments.';
+$string['allowcommentsonview']    = 'If checked, users will be allowed to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your View to see your name?';
 $string['profileviewtitle']       = 'Profile View';
@@ -118,7 +118,7 @@ $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['print'] = 'Print';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
-$string['viewobjectionableunmark'] = 'The View "%s", or something within it, has been reported as containing objectionable content.  If this is no longer the case, you can click the button to remove this notice and notify the other administrators.';
+$string['viewobjectionableunmark'] = 'This View, or something within it, has been reported as containing objectionable content.  If this is no longer the case, you can click the button to remove this notice and notify the other administrators.';
 $string['notobjectionable'] = 'Not objectionable';
 $string['viewunobjectionablesubject'] = 'View %s was marked as not objectionable by %s';
 $string['viewunobjectionablebody'] = '%s has looked at %s by %s and marked it as no longer containing objectionable material.';
@@ -145,7 +145,7 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 $string['deleteviewconfirmnote'] = '<p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted.  Consider backing up the view by exporting it first.</p>';
 
-$string['editaccesspagedescription2'] = '<p>By default, only you can see your View. You can share your View with others by adding access rules on this page.</p>
+$string['editaccessdescription'] = '<p>By default, only you can see your %s. You can share your %s with others by adding access rules on this page.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
@@ -191,6 +191,7 @@ $string['err.changetheme'] = 'Could not update theme';
 
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
+$string['blockconfigurationrenderingerror'] = 'Configuration failed because the block could not be rendered.';
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your View. You can position a block using the arrow buttons in its titlebar';
 $string['blocksinstructionajax'] = 'This area shows a preview of what your View will look like.<br>Drag blocks below this line to add them to your View layout. You can drag blocks around your View layout to position them.';
@@ -261,6 +262,7 @@ $string['changeviewtheme'] = 'The theme you have chosen for this view is no long
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
 $string['templatedescription'] = 'Check this box if you would like the people who can see your view to be able to make their own copies of it, along with any files and folders it contains.';
+$string['templatedescriptionplural'] = 'Check this box if you would like the people who can see your views to be able to make their own copies of them, along with any files and folders they contain.';
 $string['choosetemplatepagedescription'] = '<p>Here you can search through the Views that you are allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p>';
 $string['choosetemplategrouppagedescription'] = '<p>Here you can search through the Views that this group is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Groups cannot currently make copies of Blogs or Blog Posts.</p>';
 $string['choosetemplateinstitutionpagedescription'] = '<p>Here you can search through the Views that this institution is allowed to copy as a starting point for making a new View. You can see a preview of each View by clicking on its name. Once you have found the View you wish to copy, click the corresponding "Copy View" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Institutions cannot currently make copies of Blogs or Blog Posts.</p>';

@@ -57,6 +57,11 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $userid = ($group || $institution) ? null : $USER->get('id');
 
+    // refresh quotas
+    if ($userid) {
+        $USER->quota_refresh();
+    }
+
     $folder = $element['folder'];
     $path = pieform_element_filebrowser_get_path($folder);
     $smarty->assign('folder', $folder);
@@ -103,13 +108,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         }
     }
     if ($config['upload']) {
-        $maxuploadsize = min(get_real_size(ini_get('post_max_size')), get_real_size(ini_get('upload_max_filesize')));
-        if (!$institution && !$group) {
-            $userquotaremaining = $USER->get('quota') - $USER->get('quotaused');
-            $maxuploadsize = min($maxuploadsize, $userquotaremaining);
-        }
-        $maxuploadsize = display_size($maxuploadsize);
+        $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
+        $smarty->assign('phpmaxfilesize', get_max_upload_size(false));
     }
 
     if (!empty($element['browsehelp'])) {
@@ -206,9 +207,14 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     global $USER;
 
     $smarty = smarty_core();
-
+    $userid = null;
     if (is_null($group) && is_null($user)) {
         $group = $form->get_property('group');
+    }
+    else if ($user) {
+        $userid = $USER->get('id');
+        $smarty->assign('owner', 'user');
+        $smarty->assign('ownerid', $userid);
     }
     else {
         $smarty->assign('owner', 'group');
@@ -221,7 +227,10 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
         $smarty->assign('owner', 'institution');
         $smarty->assign('ownerid', $institution);
     }
-    $userid = ($group || $institution) ? null : $USER->get('id');
+
+    if (is_null($userid)) {
+        $userid = ($group || $institution) ? null : $USER->get('id');
+    }
     $editable = (int) $element['config']['edit'];
     $selectable = (int) $element['config']['select'];
     $selectfolders = (int) !empty($element['config']['selectfolders']);
@@ -338,10 +347,10 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
             $replacehtml = false; // Don't replace the entire form when replying with json data.
             $result['formelement'] = $prefix;
             if (!empty($result['error'])) {
-                $result['formelementerror'] = $prefix . '.success';
+                $result['formelementerror'] = $prefix . '.callback';
             }
             else {
-                $result['formelementsuccess'] = $prefix . '.success';
+                $result['formelementsuccess'] = $prefix . '.callback';
             }
             $form->json_reply(empty($result['error']) ? PIEFORM_OK : PIEFORM_ERR, $result, $replacehtml);
         }
@@ -488,7 +497,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         }
     }
 
-    if (isset($_FILES['userfile']['error']) && $_FILES['userfile']['error'] == 0) {
+    if (!empty($_FILES['userfile']['name'])) {
         if (strlen($_FILES['userfile']['name']) > 1024) {
             return array(
                 'error'   => true,
@@ -528,7 +537,16 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             $keys = array_keys($select);
             $add = (int) $keys[0];
             if (isset($element['selectcallback']) && is_callable($element['selectcallback'])) {
-                $element['selectcallback']($add);
+                try {
+                    $element['selectcallback']($add);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    $result = array(
+                        'error' => true,
+                        'message' => get_string('selectingfailed', 'artefact.file'),
+                    );
+                    return $result;
+                }
             }
             else {
                 $result['select'] = $add;
@@ -543,7 +561,16 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             $keys = array_keys($unselect);
             $del = (int) $keys[0];
             if (isset($element['unselectcallback']) && is_callable($element['unselectcallback'])) {
-                $element['unselectcallback']($del);
+                try {
+                    $element['unselectcallback']($del);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    $result = array(
+                        'error' => true,
+                        'message' => get_string('removingfailed', 'artefact.file'),
+                    );
+                    return $result;
+                }
             }
             else {
                 $result['unselect'] = $del;
@@ -664,6 +691,10 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
     catch (QuotaExceededException $e) {
         prepare_upload_failed_message($result, $e, $parentfoldername, $originalname);
+        // update the file listing
+        $result['quota'] = $USER->get('quota');
+        $result['quotaused'] = $USER->get('quotaused');
+        $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder);
         return $result;
     }
     catch (UploadException $e) {
@@ -711,6 +742,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
     $result['quota'] = $USER->get('quota');
     $result['quotaused'] = $USER->get('quotaused');
+    $result['maxuploadsize'] = display_size(get_max_upload_size(!$institution && !$group));
     return $result;
 }
 
@@ -797,7 +829,19 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     global $USER;
     $collide = !empty($data['collide']) ? $data['collide'] : 'fail';
 
-    $artefact = artefact_instance_from_id($data['artefact']);
+    try {
+        $artefact = artefact_instance_from_id($data['artefact']);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $parentfolder = $element['folder'] ? $element['folder'] : null;
+        $result = array(
+            'error'   => true,
+            'message' => get_string('editingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
+        );
+        return $result;
+    }
+
     if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, 'message' => get_string('noeditpermission', 'mahara'));
     }
@@ -850,19 +894,35 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
 function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) {
     global $USER;
-    $artefact = artefact_instance_from_id($artefact);
+    $institution = $form->get_property('institution');
+    $group       = $form->get_property('group');
+
+    try {
+        $artefact = artefact_instance_from_id($artefact);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $parentfolder = $element['folder'] ? $element['folder'] : null;
+        $result = array(
+            'error'   => true,
+            'message' => get_string('deletingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
+        );
+        return $result;
+    }
+
     if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
         return array('error' => true, get_string('nodeletepermission', 'mahara'));
     }
     $parentfolder = $artefact->get('parent');
     $artefact->delete();
     return array(
-        'error' => false, 
-        'deleted' => true, 
-        'message' => get_string('filethingdeleted', 'artefact.file', 
-                                get_string($artefact->get('artefacttype'), 'artefact.file')),
+        'error' => false,
+        'deleted' => true,
+        'message' => get_string('filethingdeleted', 'artefact.file',
+                                get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
         'quotaused' => $USER->get('quotaused'),
         'quota' => $USER->get('quota'),
+        'maxuploadsize' => display_size(get_max_upload_size(!$institution && !$group)),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
     );
 }
@@ -873,7 +933,17 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     $artefactid  = $data['artefact'];    // Artefact being moved
     $newparentid = $data['newparent'];   // Folder to move it to
 
-    $artefact = artefact_instance_from_id($artefactid);
+    try {
+        $artefact = artefact_instance_from_id($artefactid);
+    }
+    catch (ArtefactNotFoundException $e) {
+        $result = array(
+            'error' => true,
+            'message' => get_string('movingfailed', 'artefact.file'),
+            'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $data['folder']),
+        );
+        return $result;
+    }
 
     if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
@@ -889,7 +959,18 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         if ($newparentid == $artefact->get('parent')) {
             return array('error' => false, 'message' => get_string('filealreadyindestination', 'artefact.file'));
         }
-        $newparent = artefact_instance_from_id($newparentid);
+        try {
+            $newparent = artefact_instance_from_id($newparentid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            $parentfolder = $element['folder'] ? $element['folder'] : null;
+            $result = array(
+                'error' => true,
+                'message' => get_string('movingfailed', 'artefact.file'),
+                'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $data['folder']),
+            );
+            return $result;
+        }
         if (!$USER->can_edit_artefact($newparent)) {
             return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
         }

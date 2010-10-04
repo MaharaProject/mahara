@@ -4,16 +4,9 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
- 
-/* Edit and Delete in list */
-.btn-spacer a {
-	padding-left: 12px;
-}
 
 /* Forum list */
-#forumslist{
-	border-bottom: 1px solid #ccc;
-}
+#forumslist,
 #forumslist th{
 	border-bottom: 1px solid #ccc;
 }
@@ -22,11 +15,7 @@
 #viewforum {
 	border: 1px solid #eee;
 }
-#viewforum h3 {
-}
-#forumtopicstable {
-	border-bottom: 1px solid #ccc;
-}
+#forumtopicstable,
 #forumtopicstable th {
 	border-bottom: 1px solid #ccc;
 }
@@ -36,15 +25,6 @@
 	border-bottom: 1px solid #FFFFFF;
 }
 
-
-/* Forum Pagination */
-#viewforum div.pagination {
-}
-#viewforum div.pagination a {
-	border: 1px solid #ccc;
-}
-#viewforum div.pagination .results {
-}
 /* admin & moderator */
 .groupadmin {
 	color: #3366CC;
@@ -55,18 +35,19 @@
 
 
 /* Posts */
-.closed {
-}
 .forumpost {
-	border: 1px solid #eee;
+	border: 3px solid #F3F7EC;
 }
 .forumsubject {
-	border-bottom: 1px solid #eee;
+	border-bottom: 0;
+	background: #e9f1dc;
 }
 .forumsubject h6 {
+	color: #1E6297;
 }
 .forumpostleft {
-	border-right: 1px solid #eee;
+	border-right: 1px solid #F3F7EC;
+	background: #F3F7EC;
 }
 .forumpostleft .posttime {
 	color: #888;
@@ -74,17 +55,10 @@
 .forumpostleft .author p.poster {
 	color: #888;
 }
-.forumpostleft .author p.postcount {
-}
 .postbtns {
 	color: #d1d1d1;
 }
-.postbtns a {
-	padding-left: 12px;
-}
 .deletedpost {
     color: #666666;
-}
-.postreply {
 }
  

@@ -30,7 +30,6 @@ h1 {
     font-size: 2em !important;
 }
 h2 {
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #8E1901 !important;
     font-weight: normal !important;
     margin: 0 0 .5em 0 !important;
@@ -38,7 +37,6 @@ h2 {
     font-size: 1.8em !important;
 }
 h3 {
-    font-family:Georgia, "Times New Roman", Times, serif !important;
     color: #000000 !important;
     font-weight: normal !important;
     font-size: 17px !important;

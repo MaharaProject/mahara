@@ -106,7 +106,7 @@ class PluginExportHtml extends PluginExport {
             count($this->views) == 1
         );
 
-        $this->notify_progress_callback(15, 'Setup complete');
+        $this->notify_progress_callback(15, get_string('setupcomplete', 'export'));
     }
 
     public static function get_title() {
@@ -136,7 +136,7 @@ class PluginExportHtml extends PluginExport {
         $i = 0;
         foreach ($plugins as $plugin) {
             $plugin = $plugin->name;
-            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Preparing ' . $plugin);
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), get_string('preparing', 'export.html', $plugin));
 
             if (safe_require('export', 'html/' . $plugin, 'lib.php', 'require_once', true)) {
                 $exportplugins[] = $plugin;
@@ -167,7 +167,7 @@ class PluginExportHtml extends PluginExport {
         $progressend   = 50;
         $i = 0;
         foreach ($exportplugins as $plugin) {
-            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), 'Exporting data for ' . $plugin);
+            $this->notify_progress_callback(intval($progressstart + (++$i / $plugincount) * ($progressend - $progressstart)), get_string('exportingdatafor', 'export.html', $plugin));
             $classname = 'HtmlExport' . ucfirst($plugin);
             $artefactexporter = new $classname($this);
             $artefactexporter->dump_export_data();
@@ -177,15 +177,31 @@ class PluginExportHtml extends PluginExport {
             }
         }
 
+        // Views in collections
+        if (!$this->exportingoneview && $this->collections) {
+            $viewlist = join(',', array_keys($this->views));
+            $collectionlist = join(',', array_keys($this->collections));
+            $records = get_records_select_array(
+                'collection_view',
+                "view IN ($viewlist) AND collection IN ($collectionlist)"
+            );
+            if ($records) {
+                foreach ($records as &$r) {
+                    $this->collectionview[$r->collection][] = $r->view;
+                    $this->viewcollection[$r->view] = $r->collection;
+                }
+            }
+        }
+
         // Get the view data
-        $this->notify_progress_callback(55, 'Exporting Views');
+        $this->notify_progress_callback(55, get_string('exportingviews', 'export'));
         $this->dump_view_export_data();
 
         if (!$this->exportingoneview) {
             $summaries['view'] = array(100, $this->get_view_summary());
 
             // Sort by weight (then drop the weight information)
-            $this->notify_progress_callback(75, 'Building index page');
+            $this->notify_progress_callback(75, get_string('buildingindexpage', 'export.html'));
             uasort($summaries, create_function('$a, $b', 'return $a[0] > $b[0];'));
             foreach ($summaries as &$summary) {
                 $summary = $summary[1];
@@ -196,21 +212,25 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Copy all static files into the export
-        $this->notify_progress_callback(80, 'Copying extra files');
+        $this->notify_progress_callback(80, get_string('copyingextrafiles', 'export.html'));
         $this->copy_static_files();
 
         // Copy all resized images that were found while rewriting the HTML
         $copyproxy = HtmlExportCopyProxy::singleton();
         $copydata = $copyproxy->get_copy_data();
         foreach ($copydata as $from => $to) {
-            if (!copy($from, $this->get('exportdir') . '/' . $this->get('rootdir') . $to)) {
+            $to = $this->get('exportdir') . '/' . $this->get('rootdir') . $to;
+            if (!check_dir_exists(dirname($to))) {
+                throw new SystemException("Could not create directory $todir");
+            }
+            if (!copy($from, $to)) {
                 throw new SystemException("Could not copy static file $from");
             }
         }
         
 
         // zip everything up
-        $this->notify_progress_callback(90, 'Creating zipfile');
+        $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
         $cwd = getcwd();
         $command = sprintf('%s %s %s %s',
             get_config('pathtozip'),
@@ -225,7 +245,7 @@ class PluginExportHtml extends PluginExport {
         if ($returnvar != 0) {
             throw new SystemException('Failed to zip the export file');
         }
-        $this->notify_progress_callback(100, 'Done');
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
         return $this->zipfile;
     }
 
@@ -299,6 +319,22 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
+    private function collection_menu($collectionid) {
+        static $menus = array();
+        if (!isset($menus[$collectionid])) {
+            $menus[$collectionid] = array();
+            foreach ($this->collectionview[$collectionid] as $viewid) {
+                $title = $this->views[$viewid]->get('title');
+                $menus[$collectionid][] = array(
+                    'id'   => $viewid,
+                    'url'  => self::text_to_path($title),
+                    'text' => $title,
+                );
+            }
+        }
+        return $menus[$collectionid];
+    }
+
     /**
      * Dumps all views into the HTML export
      */
@@ -310,7 +346,7 @@ class PluginExportHtml extends PluginExport {
         $rootpath = ($this->exportingoneview) ? './' : '../../';
         $smarty = $this->get_smarty($rootpath);
         foreach ($this->views as $viewid => $view) {
-            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), "Exporting Views ($i/$viewcount)");
+            $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), get_string('exportingviewsprogress', 'export', $i, $viewcount));
             $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
 
@@ -329,6 +365,13 @@ class PluginExportHtml extends PluginExport {
                 }
             }
 
+            // Collection menu data
+            if (isset($this->viewcollection[$viewid])) {
+                $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
+                $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
+                $smarty->assign('viewid', $viewid);
+            }
+
             $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
@@ -341,25 +384,43 @@ class PluginExportHtml extends PluginExport {
     private function get_view_summary() {
         $smarty = $this->get_smarty('../');
 
-        $views = array();
-        foreach ($this->views as $view) {
+        $list = array();
+        foreach ($this->collections as $id => $collection) {
+            $list['c' . $id] = array(
+                'title' => $collection->get('name'),
+                'views' => array(),
+            );
+        }
+
+        $nviews = 0;
+        foreach ($this->views as $id => $view) {
             if ($view->get('type') != 'profile') {
-                $views[] = array(
+                $item = array(
                     'title' => $view->get('title'),
                     'folder' => self::text_to_path($view->get('title')),
                 );
+                if (isset($this->viewcollection[$id])) {
+                    $list['c' . $this->viewcollection[$id]]['views'][] = $item;
+                }
+                else {
+                    $list[$id] = $item;
+                }
+                $nviews++;
             }
         }
         function sort_by_title($a, $b) {
             return strnatcasecmp($a['title'], $b['title']);
         }
-        usort($views, 'sort_by_title');
-        $smarty->assign('views', $views);
+        foreach (array_keys($this->collections) as $id) {
+            usort($list['c' . $id]['views'], 'sort_by_title');
+        }
+        usort($list, 'sort_by_title');
+        $smarty->assign('list', $list);
 
-        if ($views) {
-            $stryouhaveviews = (count($views) == 1)
+        if ($list) {
+            $stryouhaveviews = ($nviews == 1)
                 ? get_string('youhaveoneview', 'view')
-                : get_string('youhaveviews', 'view', count($views));
+                : get_string('youhaveviews', 'view', $nviews);
         }
         else {
             $stryouhaveviews = get_string('youhavenoviews', 'view');
@@ -442,6 +503,46 @@ abstract class HtmlExportArtefactPlugin {
 
     abstract public function get_summary_weight();
 
+    public function paginate($artefact) {
+
+        // Create directory for storing the artefact
+        $dirname = PluginExportHtml::text_to_path($artefact->get('title'));
+        if (!check_dir_exists($this->fileroot . $dirname)) {
+            throw new SystemException("Couldn't create artefact directory {$this->fileroot}{$dirname}");
+        }
+
+        // Get artefact-specific pagination options
+        $options = $this->pagination_data($artefact);
+
+        // Render the first page of the artefact (the only one if there aren't many children)
+        $smarty = $this->exporter->get_smarty('../../../', $artefact->get('artefacttype'));
+        $smarty->assign('page_heading', $artefact->get('title'));
+        $smarty->assign('breadcrumbs', array(
+            array('text' => $options['plural']),
+            array('text' => $artefact->get('title'), 'path' => 'index.html'),
+        ));
+        $rendered = $artefact->render_self(array('hidetitle' => true));
+        $outputfilter = new HtmlExportOutputFilter('../../../', $this->exporter);
+        $smarty->assign('rendered', $outputfilter->filter($rendered['html']));
+        $content = $smarty->fetch('export:html:page.tpl');
+
+        if (false === file_put_contents($this->fileroot . $dirname . '/index.html', $content)) {
+            throw new SystemException("Unable to create index.html for artefact " . $artefact->get('id'));
+        }
+
+        // If the artefact has many children, we'll need to write out archive pages
+        if ($options['childcount'] > $options['perpage']) {
+            for ($i = $options['perpage']; $i <= $options['childcount']; $i += $options['perpage']) {
+                $rendered = $artefact->render_self(array('limit' => $options['perpage'], 'offset' => $i));
+                $smarty->assign('rendered', $outputfilter->filter($rendered['html']));
+                $content = $smarty->fetch('export:html:page.tpl');
+
+                if (false === file_put_contents($this->fileroot . $dirname . "/{$i}.html", $content)) {
+                    throw new SystemException("Unable to create {$i}.html for artefact {$artefact->get('id')}");
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -522,14 +623,14 @@ class HtmlExportOutputFilter {
 
         // Links to artefacts
         $html = preg_replace_callback(
-            '#<a[^>]+href="(' . preg_quote(get_config('wwwroot')) . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;page=\d+)?"[^>]*>([^<]*)</a>#',
+            '#<a[^>]+href="(' . $wwwroot . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;offset=\d+)?"[^>]*>([^<]*)</a>#',
             array($this, 'replace_artefact_link'),
             $html
         );
 
         // Links to download files
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_download_link'),
             $html
         );
@@ -537,14 +638,14 @@ class HtmlExportOutputFilter {
         // Thumbnails
         require_once('file.php');
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_thumbnail_link'),
             $html
         );
 
         // Images out of the theme directory
         $html = preg_replace_callback(
-            '#(' . preg_quote(get_config('wwwroot')) . ')?/?theme/' . get_config('theme') . '/static/images/([a-z0-9_.-]+)#',
+            '#(?<=[\'"])(' . $wwwroot . '|/)?((?:[a-z]+/)*)theme/([a-zA-Z0-9_.-]+)/static/images/([a-z0-9_.-]+)#',
             array($this, 'replace_theme_image_link'),
             $html
         );
@@ -576,11 +677,14 @@ class HtmlExportOutputFilter {
         $artefactid = $matches[2];
         $artefact = artefact_instance_from_id($artefactid);
 
-        switch ($artefact->get('artefacttype')) {
+        $artefacttype = $artefact->get('artefacttype');
+        switch ($artefacttype) {
         case 'blog':
-            $page = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;page='))) : 1;
-            $page = ($page == 1) ? 'index' : $page;
-            return '<a href="' . $this->basepath . '/files/blog/' . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $page . '.html">' . $matches[5] . '</a>';
+        case 'plan':
+            $dir = $artefacttype == 'plan' ? 'plans' : $artefacttype;
+            $offset = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;offset='))) : 0;
+            $offset = ($offset == 0) ? 'index' : $offset;
+            return '<a href="' . $this->basepath . "/files/$dir/" . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $offset . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'folder':
         case 'image':
@@ -668,7 +772,7 @@ class HtmlExportOutputFilter {
      * Callback
      */
     private function replace_theme_image_link($matches) {
-        $file = '/theme/' . get_config('theme') . '/static/images/' . $matches[2];
+        $file = $matches[2] . 'theme/' . $matches[3] . '/static/images/' . $matches[4];
         $this->htmlexportcopyproxy->add(
             get_config('docroot') . $file,
             '/static/' . $file

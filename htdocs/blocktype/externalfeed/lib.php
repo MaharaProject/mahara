@@ -59,7 +59,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['feedid'])) {
-            $data = get_record('blocktype_externalfeed_data', 'id', $configdata['feedid']);
+            $data = get_record(
+                'blocktype_externalfeed_data', 'id', $configdata['feedid'], null, null, null, null,
+                'id,url,link,title,description,content,' . db_format_tsfield('lastupdate') . ',image'
+            );
 
             $data->content = unserialize($data->content);
             $data->image   = unserialize($data->image);
@@ -93,7 +96,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $smarty->assign('link', $data->link);
             $smarty->assign('entries', $data->content);
             $smarty->assign('feedimage', self::make_feed_image_tag($data->image));
-            $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date(time($data->lastupdate))));
+            $smarty->assign('lastupdated', get_string('lastupdatedon', 'blocktype.externalfeed', format_date($data->lastupdate)));
             return $smarty->fetch('blocktype:externalfeed:feed.tpl');
         }
         return '';
@@ -220,7 +223,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $cleanup = new StdClass;
         $cleanup->callfunction = 'cleanup_feeds';
         $cleanup->hour = '3';
-        $cleanup->minute = '0';
+        $cleanup->minute = '30';
 
         return array($refresh, $cleanup);
 
@@ -228,10 +231,21 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function refresh_feeds() {
         if (!$feeds = get_records_select_array('blocktype_externalfeed_data', 
-            'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))))) {
+            'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))),
+            '', 'id,url,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
             return;
         }
+        $yesterday = time() - 60*60*24;
         foreach ($feeds as $feed) {
+            // Hack to stop the updating of dead feeds from delaying other
+            // more important stuff that runs on cron.
+            if (defined('CRON') && $feed->tslastupdate < $yesterday) {
+                // We've been trying for 24 hours already, so waste less
+                // time on this one and just try it once a day
+                if (mt_rand(0, 24) != 0) {
+                    continue;
+                }
+            }
             try {
                 $data = self::parse_feed($feed->url);
                 $data->id = $feed->id;
@@ -397,7 +411,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
         $config = $bi->get('configdata');
-        $url = ($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
+        $url = !empty($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
         return array(
             'url' => $url,
             'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,

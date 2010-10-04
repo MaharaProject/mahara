@@ -858,6 +858,11 @@ class QuotaExceededException extends UserException {}
 class UploadException extends UserException {}
 
 /**
+ * Exception - collection not found
+ */
+class CollectionNotFoundException extends NotFoundException {}
+
+/**
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
 class AccessDeniedException extends UserException {

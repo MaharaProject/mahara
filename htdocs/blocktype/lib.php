@@ -488,12 +488,21 @@ class BlockInstance {
         }
 
         $this->set('title', $title);
+
+        try {
+            $rendered = $this->render_editing(false, false, $form->submitted_by_js());
+        }
+        catch (HTMLPurifier_Exception $e) {
+            $message = get_string('blockconfigurationrenderingerror', 'view') . ' ' . $e->getMessage();
+            $form->reply(PIEFORM_ERR, array('message' => $message));
+        }
+
         $this->commit();
 
         $result = array(
             'error'   => false,
             'message' => get_string('blockinstanceconfiguredsuccessfully', 'view'),
-            'data'    => $this->render_editing(false, false, $form->submitted_by_js()),
+            'data'    => $rendered,
             'blockid' => $this->get('id'),
             'viewid'  => $this->get('view'),
         );
@@ -613,8 +622,9 @@ class BlockInstance {
     public function render_viewing() {
 
         safe_require('blocktype', $this->get('blocktype'));
+        $classname = generate_class_name('blocktype', $this->get('blocktype'));
         try {
-            $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+            $content = call_static_method($classname, 'render_instance', $this);
         }
         catch (ArtefactNotFoundException $e) {
             // Whoops - where did the image go? There is possibly a bug
@@ -631,9 +641,9 @@ class BlockInstance {
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
+        $title = call_static_method($classname, 'override_instance_title', $this);
         // hide the title if required and no content is present
-        if(call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'hide_title_on_empty_content')
+        if (call_static_method($classname, 'hide_title_on_empty_content')
             && !trim($content)) {
             return;
         }
@@ -647,13 +657,9 @@ class BlockInstance {
                 . $configdata['artefactid'] . '&view=' . $this->get('view'));
         }
 
-        // if the artefact has a feed and the view is public, display a feed icon
-        if ($this->get('blocktype') == 'blog' && !empty($configdata['artefactid']) && $this->get_view()->is_public()) {
-            $smarty->assign('hasfeed', true);
-            $smarty->assign('feedlink', get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
-                . $configdata['artefactid'] . '&view=' . $this->get('view'));
+        if (method_exists($classname, 'feed_url')) {
+            $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
-
         $smarty->assign('content', $content);
 
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
@@ -955,7 +961,7 @@ class BlockInstance {
         }
 
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
-            $configdata['artefactids'] = array_diff($configdata['artefactids'], array($artefact));
+            $configdata['artefactids'] = array_values(array_diff($configdata['artefactids'], array($artefact)));
             $changed = true;
         }
 
@@ -995,7 +1001,7 @@ class BlockInstance {
                 }
             }
             else if (isset($blockdata->configdata['artefactids'])) {
-                $blockdata->configdata['artefactids'] = array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts);
+                $blockdata->configdata['artefactids'] = array_values(array_diff($blockdata->configdata['artefactids'], $blockdata->artefacts));
                 $change = true;
             }
             if ($change) {

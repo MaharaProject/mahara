@@ -35,8 +35,9 @@ defined('INTERNAL') || die();
 function ensure_sanity() {
 
     // PHP version
-    if (version_compare(phpversion(), '5.2.0') < 0) {
-        throw new ConfigSanityException(get_string('phpversion', 'error'));
+    $phpversionrequired = '5.2.0';
+    if (version_compare(phpversion(), $phpversionrequired) < 0) {
+        throw new ConfigSanityException(get_string('phpversion', 'error', $phpversionrequired));
     }
 
     // Various required extensions
@@ -645,6 +646,7 @@ function get_all_theme_objects() {
             }
         }
         closedir($themedir);
+        asort($themes);
     }
 
     return $themes;
@@ -1547,12 +1549,10 @@ function pieform_template_dir($file, $pluginlocation='') {
  * @param integer $view_id      View ID to check
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
- * @param string $usertoken     Key created by view owner for logged-out user access
- * @param string $mnettoken     Key created by mahara for teachers roaming from moodle
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null) {
+function can_view_view($view_id, $user_id=null) {
     global $USER, $SESSION;
 
     if (defined('BULKEXPORT')) {
@@ -1563,23 +1563,31 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
     $dbnow = db_format_timestamp($now);
 
     if ($user_id === null) {
+        $user = $USER;
         $user_id = $USER->get('id');
+    }
+    else {
+        $user = new User();
+        if ($user_id) {
+            try {
+                $user->find_by_id($user_id);
+            }
+            catch (AuthUnknownUserException $e) {}
+        }
     }
 
     $publicviews = get_config('allowpublicviews');
     $publicprofiles = get_config('allowpublicprofiles');
 
-    if (!$USER->is_logged_in() && !$publicviews && !$publicprofiles) {
+    if (!$user_id && !$publicviews && !$publicprofiles) {
         return false;
     }
 
     require_once(get_config('libroot') . 'view.php');
+    $view = new View($view_id);
 
-    if ($USER->is_logged_in()) {
-        $view = new View($view_id);
-        if ($USER->can_edit_view($view)) {
-            return true;
-        }
+    if ($user_id && $user->can_edit_view($view)) {
+        return true;
     }
 
     $access = View::user_access_records($view_id, $user_id);
@@ -1588,7 +1596,7 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         return false;
     }
 
-    if ($SESSION->get('mnetuser') && !$mnettoken) {
+    if ($SESSION->get('mnetuser')) {
         $mnettoken = get_cookie('mviewaccess:'.$view_id);
     }
 
@@ -1602,11 +1610,11 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
             }
         }
         else if ($a->token) {
-            $usertoken = $usertoken ? $usertoken : get_cookie('viewaccess:'.$view_id);
+            $usertoken = get_cookie('viewaccess:'.$view_id);
             if ($a->token == $usertoken && $publicviews) {
                 return true;
             }
-            if ($mnettoken && $a->token == $mnettoken) {
+            if (!empty($mnettoken) && $a->token == $mnettoken) {
                 $mnetviewlist = $SESSION->get('mnetviewaccess');
                 if (empty($mnetviewlist)) {
                     $mnetviewlist = array();
@@ -1615,8 +1623,16 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
                 $SESSION->set('mnetviewaccess', $mnetviewlist);
                 return true;
             }
+            // Don't bother to pull the collection out unless the user actually
+            // has some collection access cookies.
+            if ($ctokens = get_cookies('caccess:')) {
+                $cid = $view->collection_id();
+                if ($cid && isset($ctokens[$cid]) && $a->token == $ctokens[$cid]) {
+                    return true;
+                }
+            }
         }
-        else if ($USER->is_logged_in()) {
+        else if ($user_id) {
             if ($a->accesstype == 'friends') {
                 $owner = $view->get('owner');
                 if (!get_field_sql('
@@ -1628,11 +1644,11 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
             }
             else if ($a->accesstype == 'objectionable') {
                 if ($owner = $view->get('owner')) {
-                    if ($USER->is_admin_for_user($owner)) {
+                    if ($user->is_admin_for_user($owner)) {
                         return true;
                     }
                 }
-                else if ($view->get('group') && $USER->get('admin')) {
+                else if ($view->get('group') && $user->get('admin')) {
                     return true;
                 }
                 continue;
@@ -1647,20 +1663,68 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
 }
 
 
-/* return the view associated with a given token */
+/**
+ * Return the view associated with a given token, and set the
+ * appropriate access cookie.
+ */
 function get_view_from_token($token, $visible=true) {
     if (!$token) {
         return false;
     }
-    return get_field_sql('
+    $viewids = get_column_sql('
         SELECT "view"
         FROM {view_access}
         WHERE token = ? AND visible = ?
             AND (startdate IS NULL OR startdate < current_timestamp)
             AND (stopdate IS NULL OR stopdate > current_timestamp)
-        ', array($token, (int)$visible));
+        ORDER BY "view"
+        ', array($token, (int)$visible)
+    );
+    if (empty($viewids)) {
+        return false;
+    }
+    if (count($viewids) > 1) {
+        // if any of the views are in collection(s), pick one of the ones
+        // with the lowest displayorder.
+        $order = get_records_sql_array('
+            SELECT cv.view, collection
+            FROM {collection_view} cv
+            WHERE cv.view IN (' . join(',', $viewids) . ')
+            ORDER BY displayorder, collection',
+            array()
+        );
+        if ($order) {
+            if ($token != get_cookie('caccess:'.$order[0]->collection)) {
+                set_cookie('caccess:'.$order[0]->collection, $token);
+            }
+            return $order[0]->view;
+        }
+    }
+    $viewid = $viewids[0];
+    if (!$visible && $token != get_cookie('mviewaccess:'.$viewid)) {
+        set_cookie('mviewaccess:'.$viewid, $token);
+    }
+    if ($visible && $token != get_cookie('viewaccess:'.$viewid)) {
+        set_cookie('viewaccess:'.$viewid, $token);
+    }
+    return $viewid;
 }
 
+/**
+ * Determine whether a view is accessible by a given token
+ */
+function view_has_token($view, $token) {
+    if (!$view || !$token) {
+        return false;
+    }
+    return record_exists_select(
+        'view_access',
+        'view = ? AND token = ? AND visible = ?
+         AND (startdate IS NULL OR startdate < current_timestamp)
+         AND (stopdate IS NULL OR stopdate > current_timestamp)',
+        array($view, $token, (int)$visible)
+    );
+}
 
 /**
  * get the views that a user can see belonging
@@ -1898,6 +1962,7 @@ function get_performance_info() {
 
     $info['dbreads'] = $PERF->dbreads;
     $info['dbwrites'] = $PERF->dbwrites;
+    $info['dbcached'] = $PERF->dbcached;
 
     if (function_exists('posix_times')) {
         $ptimes = posix_times();
@@ -1944,7 +2009,7 @@ function perf_to_log($info=null) {
     $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
     $logstring .= ' time: '.$info['realtime'].'s';
     $logstring .= ' includecount: '.$info['includecount'];
-    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes';
+    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes, ' . $info['dbcached'] . ' cached';
     $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
     $logstring .= ' serverload: ' . $info['serverload'];
     log_debug($logstring);
@@ -2035,6 +2100,22 @@ function get_real_size($size=0) {
     }
 
     throw new SystemException('get_real_size called without valid size');
+}
+
+/**
+ * Determines maximum upload size based on quota and PHP settings.
+ *
+ * @param  bool $is_user whether upload size should be evaluated for user (quota is considered)
+ * @return integer
+ */
+function get_max_upload_size($is_user) {
+    global $USER;
+    $maxuploadsize = min(get_real_size(ini_get('post_max_size')) - 4096, get_real_size(ini_get('upload_max_filesize')));
+    if ($is_user) {
+        $userquotaremaining = $USER->get('quota') - $USER->get('quotaused');
+        $maxuploadsize = min($maxuploadsize, $userquotaremaining);
+    }
+    return $maxuploadsize;
 }
 
 /**
@@ -2290,8 +2371,19 @@ function cron_check_for_updates() {
 
     $result = mahara_http_request($request);
 
+    if (!empty($result->errno)) {
+        log_debug('Could not retrieve launchpad download page');
+        return;
+    }
+
     $page = new DOMDocument();
-    $page->loadHTML($result->data);
+    libxml_use_internal_errors(true);
+    $success = $page->loadHTML($result->data);
+    libxml_use_internal_errors(false);
+    if (!$success) {
+        log_debug('Error parsing launchpad download page');
+        return;
+    }
     $xpath = new DOMXPath($page);
     $query = '//div[starts-with(@id,"release-information-")]';
     $elements = $xpath->query($query);
@@ -2324,9 +2416,6 @@ function cron_send_registration_data() {
     }
     else {
         set_config('registration_lastsent', time());
-        set_config('usersrank', $data->usersrank);
-        set_config('groupsrank', $data->groupsrank);
-        set_config('viewsrank', $data->viewsrank);
     }
 }
 

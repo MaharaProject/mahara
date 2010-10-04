@@ -1026,11 +1026,11 @@ function auth_get_login_form() {
         } else {
             $action .= '?';
             foreach ($_GET as $key => $value) {
-                if ($key != 'logout' && $key != 'login') {
-                    $action .= hsc($key) . '=' . hsc($value) . '&amp;';
+                if ($key != 'login') {
+                    $action .= hsc($key) . '=' . hsc($value) . '&';
                 }
             }
-            $action = substr($action, 0, -5);
+            $action = substr($action, 0, -1);
         }
     }
     if ($_POST) {
@@ -1280,7 +1280,7 @@ function login_submit(Pieform $form, $values) {
 
     // Check if the user's account has been suspended
     if ($USER->suspendedcusr) {
-        $suspendedctime  = $USER->suspendedctime;
+        $suspendedctime  = strftime(get_string('strftimedaydate'), $USER->suspendedctime);
         $suspendedreason = $USER->suspendedreason;
         $USER->logout();
         die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
@@ -1532,7 +1532,7 @@ function auth_generate_login_form() {
     }
     $action='';
     if (get_config('httpswwwroot')) {
-        $action = rtrim(get_config('httpswwwroot'), '/') . hsc(strip_querystring(get_relative_script_path()));
+        $action = rtrim(get_config('httpswwwroot'), '/') . strip_querystring(get_relative_script_path());
     }
     require_once('pieforms/pieform.php');
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {

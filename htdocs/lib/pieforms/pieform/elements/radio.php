@@ -70,7 +70,6 @@ function pieform_element_radio(Pieform $form, $element) {/*{{{*/
 }/*}}}*/
 
 function pieform_element_radio_set_attributes($element) {/*{{{*/
-    $element['nolabel'] = true;
     $element['rules']['validateoptions'] = true;
     return $element;
 }/*}}}*/

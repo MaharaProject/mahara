@@ -33,12 +33,15 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 define('MENUITEM', 'manageinstitutions/institutions');
-$smarty = smarty(array('lib/pieforms/static/core/pieforms.js'));
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
+
+$query = param_variable('query', '');
+$offset = param_integer('offset', 0);
+$limit  = 20;
 
 if (!$USER->get('admin')) {
     // Institutional admins with only 1 institution go straight to the edit page for that institution
@@ -129,7 +132,9 @@ if ($institution || $add) {
                 )
             )
         );
-        $smarty->assign('delete_form', pieform($form));
+        $deleteform = pieform($form);
+        $smarty = smarty();
+        $smarty->assign('delete_form', $deleteform);
         $smarty->assign('institutionname', get_field('institution', 'displayname', 'name', $institution));
         $smarty->display('admin/users/institutions.tpl');
         exit;
@@ -175,7 +180,6 @@ if ($institution || $add) {
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
-        $smarty->assign('add', true);
 
         $authtypes = auth_get_available_auth_types();
     }
@@ -333,15 +337,13 @@ if ($institution || $add) {
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 
-    $smarty->assign('instancestring', $instancestring);
-
-    $smarty->assign('institution_form', pieform(array(
+    $institutionform = pieform(array(
         'name'     => 'institution',
         'renderer' => 'table',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements' => $elements
-    )));
+    ));
 
 }
 else {
@@ -352,12 +354,49 @@ else {
         $showdefault = false;
     }
     else {
-        $smarty->assign('siteadmin', true);
         $filter      = false;
         $showdefault = true;
     }
-    $institutions = Institution::count_members($filter, $showdefault);
-    $smarty->assign('institutions', $institutions);
+    $data = build_institutions_html($filter, $showdefault, $query, $limit, $offset, $count);
+
+    $smarty = smarty(array('lib/pieforms/static/core/pieforms.js', 'paginator'));
+    $smarty->assign('results', $data);
+    $smarty->assign('countinstitutions', $count);
+
+    /*search institution form*/
+    $searchform = pieform(array(
+        'name' => 'search',
+        'renderer' => 'oneline',
+        'elements' => array(
+            'query' => array(
+                'type' => 'text',
+                'defaultvalue' => $query
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('search')
+            )
+        )
+    ));
+    $smarty->assign('searchform', $searchform);
+
+    $js = <<< EOF
+    addLoadEvent(function () {
+    p = {$data['pagination_js']}
+    connect('search_submit', 'onclick', function (event) {
+        replaceChildNodes('messages');
+        var params = {'query': $('search_query').value};
+        p.sendQuery(params);
+        event.stop();
+        });
+    });
+EOF;
+
+    $smarty->assign('INLINEJAVASCRIPT', $js);
+    $smarty->assign('siteadmin', $USER->get('admin'));
+    $smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+    $smarty->display('admin/users/institutions.tpl');
+    exit;
 }
 
 function institution_validate(Pieform $form, $values) {
@@ -389,10 +428,10 @@ function institution_submit(Pieform $form, $values) {
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     if ($institution != 'mahara') {
-        $newinstitution->expiry                   = db_format_timestamp($values['expiry']);
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
         if ($USER->get('admin')) {
             $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+            $newinstitution->expiry               = db_format_timestamp($values['expiry']);
         }
     }
 
@@ -574,13 +613,27 @@ if ($institution && $institution != 'mahara') {
             $suspendformdef['successcallback'] = 'institution_unsuspend_submit';
             $suspendform_top = pieform($suspendformdef);
         }
+    }
+}
+
+function search_submit(Pieform $form, $values) {
+    redirect('/admin/users/institutions.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
+}
+
+$smarty = smarty();
+$smarty->assign('institution_form', $institutionform);
+$smarty->assign('instancestring', $instancestring);
+$smarty->assign('add', $add);
+
+if (isset($suspended)) {
+    if ($suspended) {
+        $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
+    }
+    if (isset($suspendform)) {
         $smarty->assign('suspendform', $suspendform);
         if (isset($suspendform_top)) {
             $smarty->assign('suspendform_top', $suspendform_top);
         }
-    }
-    if ($suspended) {
-        $smarty->assign('suspended', get_string('suspendedinstitutionmessage', 'admin'));
     }
 }
 

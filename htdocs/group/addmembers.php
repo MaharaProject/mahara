@@ -84,7 +84,7 @@ function addmembers_submit(Pieform $form, $values) {
     global $SESSION;
 
     if (empty($values['users'])) {
-        return;
+        redirect(get_config('wwwroot') . 'group/addmembers.php?id=' . GROUP);
     }
 
     db_begin();

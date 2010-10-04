@@ -288,9 +288,9 @@ $string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
 <p>You can prevent your account from becoming inactive by logging in.</p>
 
 <p>Regards, %s Site Administrator</p>';
-$string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
-$string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
-$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
+$string['accountsuspended'] = 'Your account has been suspended as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['chooseusernamepassword'] = 'Choose your username and password';
@@ -545,7 +545,7 @@ $string['collapse'] = 'Collapse';
 $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
 $string['nohelpfoundpage'] = 'There was no help found for this page';
-$string['couldnotgethelp'] = 'An error occurred trying to retrive the help page';
+$string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page';
 $string['profileimage'] = 'Profile image';
 $string['primaryemailinvalid'] = 'Your primary email address is invalid';
 $string['addemail'] = 'Add email address';
@@ -577,6 +577,7 @@ $string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
+$string['attachment'] = 'Attachment';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';
@@ -927,4 +928,5 @@ $string['sharenetworksubtitle'] = 'Meet friends and join groups';
 $string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
 $string['joingroups'] = 'Join <a href="%s">Groups</a>';
 $string['sharenetworkdescription'] = 'You can fine-tune who has access to each view, and for how long.';
+$string['howtodisable'] = 'You have hidden the information box.  You can control its visibility in <a href="%s">Settings</a>.';
 ?>

@@ -57,6 +57,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $exporter;
         $configdata = $instance->get('configdata');
 
         $result = '';
@@ -64,6 +65,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             require_once(get_config('docroot') . 'artefact/lib.php');
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
             $configdata['hidetitle'] = true;
+            $configdata['countcomments'] = true;
             $configdata['viewid'] = $instance->get('view');
             if ($instance->get_view()->is_submitted()) {
                 // Don't display posts added after the submitted date.
@@ -71,10 +73,45 @@ class PluginBlocktypeBlog extends PluginBlocktype {
                     $configdata['before'] = $submittedtime;
                 }
             }
-            $result = $blog->render_self($configdata);
-            $result = $result['html'] . '<script type="text/javascript">'
-                . $result['javascript'];
-            $result .= '</script>'; 
+
+            $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+            $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
+            $template = 'artefact:blog:viewposts.tpl';
+            if ($exporter) {
+                $pagination = false;
+            }
+            else {
+                $pagination = array(
+                    'baseurl' => $instance->get_view()->get_url() . '&block=' . $instance->get('id'),
+                    'id' => 'blogpost_pagination_' . $instance->get('id'),
+                    'datatable' => 'postlist_' . $instance->get('id'),
+                    'jsonscript' => 'artefact/blog/posts.json.php',
+                );
+            }
+            ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
+
+            $smarty = smarty_core();
+            if (isset($configdata['viewid'])) {
+                $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $blog->get('id') . '&amp;view='
+                    . $configdata['viewid'];
+                $smarty->assign('artefacttitle', '<a href="' . $artefacturl . '">' . hsc($blog->get('title')) . '</a>');
+                if ($exporter && $posts['count'] > $limit) {
+                    $posts['pagination'] = '<a href="' . $artefacturl . '">'
+                        . get_string('allposts', 'artefact.blog') . '</a>';
+                }
+            }
+            else {
+                $smarty->assign('artefacttitle', hsc($blog->get('title')));
+            }
+
+            $smarty->assign('options', $configdata);
+            $smarty->assign('description', $blog->get('description'));
+            $smarty->assign('owner', $blog->get('owner'));
+            $smarty->assign('tags', $blog->get('tags'));
+            $smarty->assign('blockid', $instance->get('id'));
+            $smarty->assign('posts', $posts);
+
+            $result = $smarty->fetch('artefact:blog:blog.tpl');
         }
 
         return $result;
@@ -105,6 +142,12 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         // blogs
         if (empty($configdata['artefactid']) || $blog->get('owner') == $USER->get('id')) {
             $elements[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
+            $elements['count'] = array(
+                'type' => 'text',
+                'title' => get_string('postsperpage', 'blocktype.blog/blog'),
+                'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 5,
+                'size' => 3,
+            );
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
         }
         else {
@@ -199,6 +242,14 @@ class PluginBlocktypeBlog extends PluginBlocktype {
      */
     public static function allowed_in_view(View $view) {
         return $view->get('owner') != null;
+    }
+
+    public static function feed_url(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (!empty($configdata['artefactid']) && $instance->get_view()->is_public()) {
+            return get_config('wwwroot') . 'artefact/blog/atom.php?artefact='
+                . $configdata['artefactid'] . '&view=' . $instance->get('view');
+        }
     }
 
 }

@@ -35,9 +35,10 @@ require_once('user.php');
 $userid = param_integer('user');
 $offset = param_integer('offset');
 $limit  = param_integer('limit', MAXFRIENDDISPLAY);
+$bi = new BlockInstance(param_integer('block'));
 
 $friends = get_friends($userid, $limit, $offset);
-PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid);
+PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid, $bi);
 
 json_reply(false, array('data' => $friends));
 ?>

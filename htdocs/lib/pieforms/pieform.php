@@ -192,7 +192,8 @@ class Pieform {/*{{{*/
         }
 
         // Assign defaults for the form
-        $this->data = array_merge(self::get_pieform_defaults(), $formconfig, $data);
+        $this->defaults = self::get_pieform_defaults();
+        $this->data = array_merge($this->defaults, $formconfig, $data);
 
         // Set the method - only get/post allowed
         $this->data['method'] = strtolower($this->data['method']);
@@ -1148,7 +1149,7 @@ EOF;
     /**
      * Return an internationalised string based on the passed input key
      *
-     * Returns english by default.
+     * Returns English by default.
      *
      * @param string $plugin     The type of plugin (element, renderer, rule)
      * @param string $pluginname The name of the plugin to get the language
@@ -1188,6 +1189,10 @@ EOF;
             $strings = $function();
             if (isset($strings[$this->data['language']][$key])) {
                 return $strings[$this->data['language']][$key];
+            }
+            // If all else fails, try to get the string in the default language.
+            if (isset($strings[$this->defaults['language']][$key])) {
+                return $strings[$this->defaults['language']][$key];
             }
             return '[[' . $key . '/' . $this->data['language'] . ']]';
         }
@@ -1639,6 +1644,10 @@ function pieform_get_headdata() {/*{{{*/
                 $htmlelements = array_merge($htmlelements, $elems);
             }
         }
+    }
+    // Fieldsets don't appear in $form->get_elements(), so get their headdata
+    if (!empty($GLOBALS['_PIEFORM_FIELDSETS'])) {
+        $htmlelements = array_merge($htmlelements, pieform_element_fieldset_get_headdata());
     }
 
     // TODO: jsdirectory should be independent of ANY form

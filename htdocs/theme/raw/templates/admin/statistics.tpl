@@ -1,10 +1,10 @@
 {include file='header.tpl'}
 
 {if $sitedata}
-<div class="site-stats">
+<div class="site-stats-left fl">
   {include file='admin/stats.tpl' cron=1}
 </div>
-
+<div class="site-stats-right fr">
 <ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
   <li><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
@@ -33,6 +33,8 @@
   </div>
   <div class="cb"></div>
 </div>
+</div>
+  <div class="cb"></div>
 {/if}
 
 {include file='footer.tpl'}

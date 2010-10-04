@@ -458,11 +458,6 @@ class PluginAuthSaml extends PluginAuth {
     public static function validate_config_options($values, $form) {
 
         // fix problems with config validation interface incorrect between site/institution
-        if (get_class($values) == 'Pieform') {
-            $tmp = $form;
-            $form = $values;
-            $values = $tmp;
-        }
         if (isset($values['authglobalconfig'])) {
             // SimpleSAMLPHP lib directory must have right things
             if (! file_exists($values['simplesamlphplib'].'/lib/_autoload.php')) {
