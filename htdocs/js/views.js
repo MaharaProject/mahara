@@ -386,12 +386,10 @@ function ViewManager() {
         var vpdim = getViewportDimensions();
 
         var h = Math.max(d.h, 200);
+        var w = Math.max(d.w, 500);
         if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
-            style.width = vpdim.w - 80;
+            w = vpdim.w - 80;
             style.height = h;
-        }
-        else {
-            style.width = Math.max(d.w, 500);
         }
 
         var tborder = parseFloat(getStyle(newblock, 'border-top-width'));
@@ -401,7 +399,8 @@ function ViewManager() {
 
         var lborder = parseFloat(getStyle(newblock, 'border-left-width'));
         var lpadding = parseFloat(getStyle(newblock, 'padding-left'));
-        style.left = ((vpdim.w - style.width) / 2 - lborder - lpadding) + 'px';
+        style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
+        style.width = w + 'px';
 
         setStyle(newblock, style);
 
