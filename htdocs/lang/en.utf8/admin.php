@@ -380,7 +380,7 @@ $string['uploadcsverrornorecords'] = 'The file appears to contain no records (al
 $string['uploadcsverrorunspecifiedproblem'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format then this is a bug and you should <a href="https://eduforge.org/tracker/?func=add&group_id=176&atid=739">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields';
-$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
+$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: Passwords must be at least six characters long and contain at least one digit and two letters';
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
