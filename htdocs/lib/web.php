@@ -1939,7 +1939,7 @@ function mahara_standard_nav() {
             'path' => 'myportfolio/export',
             'url' => 'export/',
             'title' => get_string('Export', 'export'),
-            'weight' => 40,
+            'weight' => 50,
             'ignore' => !$exportenabled,
         ),
         array(
