@@ -30,6 +30,7 @@ function addFeedbackSuccess(form, data) {
     }
     $('add_feedback_form_' + messageid).value = '';
     rewriteCancelButtons();
+    formSuccess(form, data);
 }
 
 function objectionSuccess() {
