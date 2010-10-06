@@ -78,6 +78,8 @@ function viewcolumns_submit(Pieform $form, $values) {
     $oldcolumns = $view->get('numcolumns');
     $newcolumns = $values['numcolumns'];
 
+    db_begin();
+
     if ($oldcolumns > $newcolumns) {
         for ($i = $oldcolumns; $i > $newcolumns; $i--) {
             $view->removecolumn(array('column' => $i));
@@ -88,6 +90,16 @@ function viewcolumns_submit(Pieform $form, $values) {
             $view->addcolumn(array('before' => $i + 1, 'returndata' => false));
         }
     }
+
+    $dbcolumns = get_field('view', 'numcolumns', 'id', $view->get('id'));
+
+    if ($dbcolumns != $newcolumns) {
+        db_rollback();
+        $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
+        redirect(get_config('wwwroot') . 'view/columns.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+    }
+
+    db_commit();
 
     if ($newcolumns > 1 && $newcolumns < 5) {
         redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
