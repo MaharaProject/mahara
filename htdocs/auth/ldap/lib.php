@@ -119,7 +119,7 @@ class AuthLdap extends Auth {
             $ldap_login = @ldap_bind($ldapconnection, $ldap_user_dn, $password);
             ldap_close($ldapconnection);
             if ($ldap_login) {
-                if ($update) {
+                if ($user->id && $update) {
                     // Define ldap attributes
                     $ldapattributes = array();
                     $ldapattributes['firstname'] = $this->config['firstnamefield'];
