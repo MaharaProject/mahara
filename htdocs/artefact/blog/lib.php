@@ -672,8 +672,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $commentcounts = ArtefactTypeComment::count_comments($viewids, array_keys($data));
         }
 
-        // Format dates properly
         foreach ($data as &$post) {
+            // Format dates properly
             if (is_null($viewoptions)) {
                 // My Blogs area: create forms for publishing & deleting posts.
                 if (!$post->published) {
@@ -690,6 +690,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
             $post->ctime = format_date($post->ctime, 'strftimedaydatetime');
             $post->mtime = format_date($post->mtime);
+
+            // Ensure images in the post have the right viewid associated with them
+            if (!empty($viewoptions['viewid'])) {
+                safe_require('artefact', 'file');
+                $post->description = ArtefactTypeFolder::append_view_url($post->description, $viewoptions['viewid']);
+            }
         }
 
         $results['data'] = array_values($data);
