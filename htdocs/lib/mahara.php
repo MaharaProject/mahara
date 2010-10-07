@@ -1144,7 +1144,14 @@ function plugins_installed($plugintype, $all=false) {
     if (defined('INSTALLER') || !isset($records[$plugintype][true])) {
 
         $sort = $plugintype == 'blocktype' ? 'artefactplugin,name' : 'name';
-        $records[$plugintype][true] = get_records_assoc($plugintype . '_installed', '', '', $sort);
+
+        if ($rs = get_records_assoc($plugintype . '_installed', '', '', $sort)) {
+            $records[$plugintype][true] = $rs;
+        }
+        else {
+            $records[$plugintype][true] = array();
+        }
+        $records[$plugintype][false] = array();
 
         foreach ($records[$plugintype][true] as $r) {
             if ($r->active) {
