@@ -1278,12 +1278,13 @@ function get_new_username($desired) {
 
 /**
  * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
- * @param $userlist the ids separated by commas
- * @return array containing the users in the order from $userlist
+ * @param array $userids
+ * @return array containing the users in the order from $userids
  */
-function get_users_data($userlist, $getviews=true) {
+function get_users_data($userids, $getviews=true) {
 	global $USER;
-    // $userlist is only used by build_userlist_html() in this file and is sanitised there
+    // $userids is only used by build_userlist_html() in this file and is sanitised there
+    $userlist = join(',', $userids);
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
                 u.profileicon, u.email,
                 0 AS pending, ap.value AS hidenamepref,
@@ -1316,9 +1317,12 @@ function get_users_data($userlist, $getviews=true) {
     $allowhidename = get_config('userscanhiderealnames');
     $showusername = get_config('searchusernames');
 
+    $institutionstrings = get_institution_strings_for_users($userids);
     foreach ($data as &$record) {
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
-        $record->institutions = get_institution_string_for_user($record->id);
+        if (isset($institutionstrings[$record->id])) {
+            $record->institutions = $institutionstrings[$record->id];
+        }
         $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref, $showusername);
     }
 
@@ -1417,7 +1421,7 @@ function get_users_data($userlist, $getviews=true) {
 
 function build_userlist_html(&$data, $page, $admingroups) {
     if ($data['data']) {
-        $userlist = join(',', array_map(create_function('$u','return (int)$u[\'id\'];'), $data['data']));
+        $userlist = array_map(create_function('$u','return (int)$u[\'id\'];'), $data['data']);
         $userdata = get_users_data($userlist, $page == 'myfriends');
     }
     $smarty = smarty_core();
@@ -1453,24 +1457,34 @@ function build_userlist_html(&$data, $page, $admingroups) {
     $data['pagination_js'] = $pagination['javascript'];
 }
 
+
+function get_institution_strings_for_users($userids) {
+    $userlist = join(',', $userids);
+    if (!$records = get_records_sql_array('
+        SELECT ui.usr, i.displayname
+        FROM {usr_institution} ui JOIN {institution} i ON ui.institution = i.name
+        WHERE ui.usr IN (' . $userlist . ')', array())) {
+        return array();
+    }
+    $institutions = array();
+    foreach ($records as &$ui) {
+        if (!isset($institutions[$ui->usr])) {
+            $institutions[$ui->usr] = array();
+        }
+        $institutions[$ui->usr][] = $ui->displayname;
+    }
+    foreach ($institutions as &$u) {
+        $u = get_string('memberofinstitutions', 'mahara', join(', ', $u));
+    }
+    return $institutions;
+}
+
 function get_institution_string_for_user($userid) {
-    static $institutions = null;
-    if (is_null($institutions)) {
-        $institutions = get_records_assoc('institution', '', '', '', 'name, displayname');
+    $strings = get_institution_strings_for_users(array($userid));
+    if (empty($strings[$userid])) {
+        return '';
     }
-
-    $user = new User;
-    $user->find_by_id($userid);
-
-    $userinstitutions = array();
-    foreach ($user->get('institutions') as $institution) {
-        $userinstitutions[] = $institutions[$institution->institution]->displayname;
-    }
-
-    if ($userinstitutions) {
-        return get_string('memberofinstitutions', 'mahara', join(', ', $userinstitutions));
-    }
-    return '';
+    return $strings[$userid];
 }
 
 function friends_control_sideblock($returnto='myfriends') {
