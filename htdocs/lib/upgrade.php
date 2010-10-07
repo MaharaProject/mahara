@@ -790,21 +790,22 @@ function core_install_firstcoredata_defaults() {
 
     // install the cronjobs...
     $cronjobs = array(
-        'rebuild_artefact_parent_cache_dirty'    => array('*', '*', '*', '*', '*'),
-        'rebuild_artefact_parent_cache_complete' => array('0', '4', '*', '*', '*'),
-        'auth_clean_partial_registrations'       => array('5', '0', '*', '*', '*'),
-        'auth_handle_account_expiries'           => array('5', '10', '*', '*', '*'),
-        'auth_handle_institution_expiries'       => array('5', '9', '*', '*', '*'),
-        'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
-        'auth_remove_old_session_files'          => array('30', '20', '*', '*', '*'),
-        'recalculate_quota'                      => array('15', '2', '*', '*', '*'),
-        'import_process_queue'                   => array('*/5', '*', '*', '*', '*'),
-        'cron_send_registration_data'            => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
-        'export_cleanup_old_exports'             => array('0', '3,15', '*', '*', '*'),
-        'import_cleanup_old_imports'             => array('0', '4,16', '*', '*', '*'),
-        'cron_site_data_weekly'                  => array('55', '23', '*', '*', '6'),
-        'cron_site_data_daily'                   => array('51', '23', '*', '*', '*'),
-        'cron_check_for_updates'                 => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
+        'rebuild_artefact_parent_cache_dirty'       => array('*', '*', '*', '*', '*'),
+        'rebuild_artefact_parent_cache_complete'    => array('0', '4', '*', '*', '*'),
+        'auth_clean_partial_registrations'          => array('5', '0', '*', '*', '*'),
+        'auth_handle_account_expiries'              => array('5', '10', '*', '*', '*'),
+        'auth_handle_institution_expiries'          => array('5', '9', '*', '*', '*'),
+        'activity_process_queue'                    => array('*/5', '*', '*', '*', '*'),
+        'auth_remove_old_session_files'             => array('30', '20', '*', '*', '*'),
+        'recalculate_quota'                         => array('15', '2', '*', '*', '*'),
+        'import_process_queue'                      => array('*/5', '*', '*', '*', '*'),
+        'cron_send_registration_data'               => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
+        'export_cleanup_old_exports'                => array('0', '3,15', '*', '*', '*'),
+        'import_cleanup_old_imports'                => array('0', '4,16', '*', '*', '*'),
+        'cron_site_data_weekly'                     => array('55', '23', '*', '*', '6'),
+        'cron_site_data_daily'                      => array('51', '23', '*', '*', '*'),
+        'cron_check_for_updates'                    => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
+        'cron_clean_internal_activity_notifications'=> array(45, 22, '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

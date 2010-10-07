@@ -2193,5 +2193,29 @@ function xmldb_core_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2010100701) {
+        // Add general notification cleanup cron
+        if (!record_exists('cron', 'callfunction', 'cron_clean_internal_activity_notifications')) {
+            $cron = new StdClass;
+            $cron->callfunction = 'cron_clean_internal_activity_notifications';
+            $cron->minute       = 45;
+            $cron->hour         = 22;
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+
+        // Add forum notification cleanup cron
+        if ($data = check_upgrades('interaction.forum')) {
+            upgrade_plugin($data);
+        }
+
+        // Add feedback notification cleanup cron
+        if ($data = check_upgrades('artefact.comment')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

@@ -345,7 +345,17 @@ EOF;
                 'callfunction' => 'interaction_forum_new_post',
                 'minute'       => '*/30',
             ),
+            (object)array(
+                'callfunction' => 'clean_forum_notifications',
+                'minute'       => '30',
+                'hour'         => '22',
+            ),
         );
+    }
+
+    public static function clean_forum_notifications() {
+        safe_require('notification', 'internal');
+        PluginNotificationInternal::clean_notifications(array('newpost'));
     }
 
     /**

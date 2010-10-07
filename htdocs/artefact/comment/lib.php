@@ -103,6 +103,21 @@ class PluginArtefactComment extends PluginArtefact {
         }
         return $artefacts;
     }
+
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'clean_feedback_notifications',
+                'minute'       => '35',
+                'hour'         => '22',
+            ),
+        );
+    }
+
+    public static function clean_feedback_notifications() {
+        safe_require('notification', 'internal');
+        PluginNotificationInternal::clean_notifications(array('feedback'));
+    }
 }
 
 class ArtefactTypeComment extends ArtefactType {

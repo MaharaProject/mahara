@@ -2383,6 +2383,13 @@ function recalculate_quota() {
     }
 }
 
+/**
+ * A cronjob to clean general internal activity notifications
+ */
+function cron_clean_internal_activity_notifications() {
+    safe_require('notification', 'internal');
+    PluginNotificationInternal::clean_notifications(array('viewaccess', 'watchlist', 'institutionmessage'));
+}
 
 /**
  * Cronjob to check Launchpad for the latest Mahara version
