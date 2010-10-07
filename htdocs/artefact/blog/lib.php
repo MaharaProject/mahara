@@ -713,7 +713,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $posts['tablerows'] = $smarty->fetch($template);
 
         if ($posts['limit'] && $pagination) {
-            $pagination = build_pagination($foo = array(
+            $pagination = build_pagination(array(
                 'id' => $pagination['id'],
                 'class' => 'center',
                 'datatable' => $pagination['datatable'],
