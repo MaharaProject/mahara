@@ -2,7 +2,7 @@
 <tr>
   <td>
     <h3><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a></h3>
-    <div>{$post->description|clean_html|safe}</div>
+    <div>{$post->description|clean_html|safe|append_view_url:$options.viewid}</div>
     {if $post->tags}
     <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$post->owner tags=$post->tags}</div>
     {/if}
