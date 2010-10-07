@@ -295,11 +295,6 @@ function ViewManager() {
         var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
 
         var pd = {'id': $('viewid').value, 'change': 1};
-        if (config.blockeditormaxwidth) {
-            // Shouldn't have to pass browser window dimensions here, but can't find
-            // another way to get tinymce elements to use up the available height.
-            pd['cfheight'] = getViewportDimensions().h - 100;
-        }
         pd[getNodeAttribute(button, 'name')] = 1;
 
         var oldContent = contentDiv.innerHTML;
@@ -389,7 +384,6 @@ function ViewManager() {
         var w = Math.max(d.w, 500);
         if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
             w = vpdim.w - 80;
-            style.height = h;
         }
 
         var tborder = parseFloat(getStyle(newblock, 'border-top-width'));
@@ -1026,9 +1020,6 @@ function ViewManager() {
                     'change': 1,
                     'blocktype': getFirstElementByTagAndClassName('input', 'blocktype-radio', self.currentlyMovingObject).value
                 };
-                if (config.blockeditormaxwidth) {
-                    pd['cfheight'] = getViewportDimensions().h - 100;
-                }
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();
