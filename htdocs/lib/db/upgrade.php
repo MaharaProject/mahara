@@ -2193,7 +2193,7 @@ function xmldb_core_upgrade($oldversion=0) {
         );
     }
 
-    if ($oldversion < 2010100701) {
+    if ($oldversion < 2010100702) {
         // Add general notification cleanup cron
         if (!record_exists('cron', 'callfunction', 'cron_clean_internal_activity_notifications')) {
             $cron = new StdClass;
@@ -2204,16 +2204,6 @@ function xmldb_core_upgrade($oldversion=0) {
             $cron->month        = '*';
             $cron->dayofweek    = '*';
             insert_record('cron', $cron);
-        }
-
-        // Add forum notification cleanup cron
-        if ($data = check_upgrades('interaction.forum')) {
-            upgrade_plugin($data);
-        }
-
-        // Add feedback notification cleanup cron
-        if ($data = check_upgrades('artefact.comment')) {
-            upgrade_plugin($data);
         }
     }
 
