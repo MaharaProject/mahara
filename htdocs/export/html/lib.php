@@ -630,7 +630,7 @@ class HtmlExportOutputFilter {
 
         // Links to download files
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/download\.php\?file=(\d+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/download\.php\?file=(\d+)(?:(?:&amp;|&|%26)([a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_download_link'),
             $html
         );
@@ -711,12 +711,9 @@ class HtmlExportOutputFilter {
         }
 
         $options = array();
-        if (isset($matches[3])) {
-            $parts = explode('&amp;', substr($matches[3], 5));
-            foreach ($parts as $part) {
-                list($key, $value) = explode('=', $part);
-                $options[$key] = $value;
-            }
+        for ($i = 3; $i < count($matches); $i++) {
+            list($key, $value) = explode('=', $matches[$i]);
+            $options[$key] = $value;
         }
 
         $folderpath = $this->get_folder_path_for_file($artefact);
