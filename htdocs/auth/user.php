@@ -94,6 +94,7 @@ class User {
             'ctime'            => null,
             'views'            => array(),
             'showhomeinfo'     => 1,
+            'mobileuploadtoken'=> null,
         );
         $this->attributes = array();
 
@@ -257,6 +258,43 @@ class User {
         $this->populate($user);
         return $this;
     }
+
+    /**
+     * Populates this object with the user record identified by a mobile IMEI
+     *
+     * @throws AuthUnknownUserException If the user cannot be found. Note that
+     *                                  deleted users _can_ be found
+     */
+    public function find_by_mobileuploadtoken($token) {
+
+        if (!is_string($token)) {
+            throw new InvalidArgumentException('Input parameters must be strings to create a User object from token');
+        }
+
+        $sql = 'SELECT
+                        u.*, 
+                        ' . db_format_tsfield('u.expiry', 'expiry') . ',
+                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
+                        ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
+                        ' . db_format_tsfield('u.lastaccess', 'lastaccess') . ',
+                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . ',
+                        ' . db_format_tsfield('u.ctime', 'ctime') . '
+                FROM
+                    {usr} u
+                    LEFT JOIN {usr_account_preference} p ON u.id = p.usr
+                    		WHERE p.field=\'mobileuploadtoken\' and p.value = ?
+		';
+
+        $user = get_record_sql($sql, array($token));
+
+        if (false == $user) {
+            throw new AuthUnknownUserException("User with mobile upload token \"$token\" is not known");
+        }
+
+        $this->populate($user);
+        return $this;
+    }
+
 
     /**
      * Set stuff that needs to be initialised once before a user record is created.

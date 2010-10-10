@@ -41,7 +41,14 @@ $USER = new User();
 $USER->find_by_mobileuploadtoken(param_variable('token'));
 $data->owner = $USER->get('id'); // id of owner
 
-$data->parent = ArtefactTypeFolder::get_folder_by_name(param_variable('foldername'), null, $USER->get('id'));  // id of folder you're putting the file into
+$folder = param_variable('foldername');
+$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+if ( ! $artefact ) {
+    	header($protocol." 500 Upload folder '$folder' does not exit");
+	exit;	
+}
+
+$data->parent = $artefact->id;
 if ( $data->parent == 0 ) $data->parent = null;
 
 $originalname = $_FILES['userfile']['name'];

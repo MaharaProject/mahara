@@ -206,6 +206,7 @@ function expected_account_preferences() {
                  'hiderealname'   => 0,
                  'multipleblogs' => 0,
                  'showhomeinfo' => 1,
+                 'mobileuploadtoken' => '',
                  );
 }
 

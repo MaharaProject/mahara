@@ -192,6 +192,14 @@ if (get_config('homepageinfo')) {
         'help' => 'true'
     );
 }
+if (get_config('allowmobileuploads')) {
+    $elements['mobileuploadtoken'] = array(
+        'type'         => 'text',
+        'title'        => get_string('mobileuploadtoken', 'account'),
+        'description'  => get_string('mobileuploadtokendescription', 'account'),
+        'defaultvalue' => isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken')
+    );
+}
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')

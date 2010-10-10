@@ -2193,5 +2193,11 @@ function xmldb_core_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2010100821) {
+        execute_sql('ALTER TABLE {usr} ADD COLUMN mobileuploadtoken CHARACTER VARYING(255)');
+        set_config('mobileuploadtoken', 1);
+    }
+
+
     return $status;
 }
