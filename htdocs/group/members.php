@@ -121,6 +121,30 @@ addLoadEvent(function () {
 EOF;
 
 $smarty = smarty(array('paginator'));
+
+if ($role == 'admin') {
+    $membershiptypes = array();
+    $membershiptypes[] = array(
+        'name' => get_string('current', 'group'),
+        'link' => empty($membershiptype) ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id
+        );
+    if ($group->jointype == 'request' && count_records('group_member_request')) {
+        $membershiptypes[] = array(
+            'name' => get_string('requests', 'group'),
+            'link' => $membershiptype == 'request' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=request'
+            );
+    }
+    if ($group->jointype == 'invite' && count_records('group_member_invite')) {
+        $membershiptypes[] = array(
+            'name' => get_string('invites', 'group'),
+            'link' => $membershiptype == 'invite' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=invite'
+            );
+    }
+    if (count($membershiptypes) > 1) {
+        $smarty->assign('membershiptypes', $membershiptypes);
+    }
+}
+
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('form', $searchform);

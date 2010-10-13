@@ -92,6 +92,9 @@ $string['addedtogroupsmessage'] = "%s has added you to the group(s):\n\n%s\n\n";
 $string['removedfromgroupsmessage'] = "%s has removed you from the group(s):\n\n%s\n\n";
 $string['cantremoveuserisadmin'] = "Tutor cannot remove admins and other tutorsmembers.";
 $string['cantremovemember'] = "Tutor cannot remove members.";
+$string['current'] = "Current";
+$string['requests'] = "Requests";
+$string['invites'] = "Invites";
 
 // Used to refer to all the members of a group - NOT a "member" group role!
 $string['member'] = 'member';
