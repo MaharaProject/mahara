@@ -26,6 +26,7 @@
     </td>
     <td id="useraccountsettingsleft"><h2>{str tag="siteaccountsettings" section="admin"}</h2>
     <p>{str tag="usereditdescription" section="admin"}</p>
+    <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
     {$siteform|safe}
     <hr />
     {if ($institutions)}

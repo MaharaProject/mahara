@@ -187,6 +187,8 @@ function edituser_site_validate(Pieform $form, $values) {
 }
 
 function edituser_site_submit(Pieform $form, $values) {
+    global $USER;
+
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
     }
@@ -199,7 +201,11 @@ function edituser_site_submit(Pieform $form, $values) {
     $user->quota = $values['quota'];
     $user->expiry = db_format_timestamp($values['expiry']);
 
-    global $USER;
+
+    // Try to kick the user from any active login sessions, before saving data.
+    require_once(get_config('docroot') . 'auth/session.php');
+    remove_user_sessions($user->id);
+
     if ($USER->get('admin')) {  // Not editable by institutional admins
         $user->staff = (int) ($values['staff'] == 'on');
         $user->admin = (int) ($values['admin'] == 'on');

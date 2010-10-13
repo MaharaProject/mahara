@@ -502,6 +502,7 @@ $string['addusertoinstitution'] = 'Add User to Institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
 $string['usereditdescription'] = 'Here you can view and set details for this user account. Below, you can also <a href="#suspend">suspend or delete this account</a>, or change settings for this user in the <a href="#institutions">institutions they are in</a>.';
+$string['usereditwarning'] = 'NOTE: Saving the account changes will cause the user to be logged out (if currently logged in)';
 $string['suspenddeleteuser'] = 'Suspend/Delete User';
 $string['suspenddeleteuserdescription'] = 'Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
