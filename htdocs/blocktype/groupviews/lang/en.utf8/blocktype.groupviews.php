@@ -28,4 +28,8 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Group Views';
-$string['description'] = 'Display the views shared with the group';
+$string['description'] = 'Display the views related to the group';
+$string['displaygroupviews'] = 'Display Group views?';
+$string['displaygroupviewsdesc'] = 'Group views - views created in the group';
+$string['displaysharedviews'] = 'Display Shared views?';
+$string['displaysharedviewsdesc'] = 'Shared views - views shared by group members from their individual portfolio';

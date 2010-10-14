@@ -1,4 +1,24 @@
 {auto_escape off}
+{if $groupviews}
+    <div class="groupviewsection">
+    <h5>{str tag="groupviews" section="view"}</h5>
+    <table class="fullwidth listing">
+    {foreach from=$groupviews item=view}
+        <tr class="{cycle values='r0,r1'}">
+            <td>
+                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a>
+                <div>{$view.shortdescription|clean_html}</div>
+                {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
+                {if $view.template}
+                <div><a href="">{str tag=copythisview section=view}</a></div>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </table>
+    </div>
+{/if}
+
 {if $sharedviews}
     <div class="groupviewsection">
     <h5>{str tag="viewssharedtogroupbyothers" section="view"}</h5>
