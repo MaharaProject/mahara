@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:leap2="http://terms.leapspecs.org/"
-    xmlns:categories="http://wiki.leapspecs.org/2A/categories"
+    xmlns:categories="http://wiki.leapspecs.org/2A/categories/"
     xmlns:portfolio="{$WWWROOT}export/leap/{$userid}/{$export_time}/"
     xmlns:mahara="http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#"
 >
