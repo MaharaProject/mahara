@@ -606,7 +606,13 @@ class PluginExportLeap extends PluginExport {
             $content->setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
             $topel->appendChild($content);
             // if that fails, it could still be html
-        } else if (@$tmp->loadHTML('<div>' . $content . '</div>')) {
+            // DomDocument::loadHTML() parses the input as iso-8859-1 if no
+            // encoding is declared. Since we are only loading a HTML fragment
+            // there is no  encoding declared which results in garbled output
+            // since the content is actually in utf-8. To work around this
+            // we force the encoding by appending an xml declaration.
+            // see http://php.net/manual/de/domdocument.loadhtml.php#95251
+        } else if (@$tmp->loadHTML('<?xml encoding="UTF-8"><div>' . $content . '</div>')) {
             $xpath = new DOMXpath($tmp);
             $elements = $xpath->query('/html/body/div');
             if ($elements->length != 1) {
