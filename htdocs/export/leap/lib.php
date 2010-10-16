@@ -416,7 +416,7 @@ class PluginExportLeap extends PluginExport {
         foreach ($viewartefactdata as $va) {
             if ($va->view == $viewid) {
                 $links[] = (object)array(
-                    'type' => 'has_part',
+                    'type' => 'leap2:has_part',
                     'id'   => 'portfolio:artefact' . $va->artefact,
                 );
             }
