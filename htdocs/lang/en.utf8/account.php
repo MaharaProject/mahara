@@ -69,7 +69,7 @@ $string['hiderealnamedescription'] = 'Check this box if you have set a display n
 
 $string['showhomeinfo'] = 'Show information about Mahara on the home page';
 
-$string['mobileuploadtoken'] = 'Mobile upload token.';
+$string['mobileuploadtoken'] = 'Mobile upload token';
 $string['mobileuploadtokendescription'] = 'Enter a token here and on your phone to enable uploads (note: it will change automatically after each upload. <br/>If you have any problems - simply reset it here and on your phone.';
 
 $string['prefssaved']  = 'Preferences saved';

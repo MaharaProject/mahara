@@ -106,7 +106,6 @@
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="showhomeinfo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="mobileuploadtoken" TYPE="char" LENGTH="255" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
