@@ -72,19 +72,23 @@ try {
 	$folder = param_variable('foldername');
 	$folder = trim($folder);
 
-	// TODO: create if doesn't exist - note assumes it is a base folder (hence null parent)
-	$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
-	if ( $artefact ) {
-		$data->parent = $artefact->id;
-		if ( $data->parent == 0 ) $data->parent = null;
+	if ( $folder ) {
+		// TODO: create if doesn't exist - note assumes it is a base folder (hence null parent)
+		$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+		if ( $artefact ) {
+			$data->parent = $artefact->id;
+			if ( $data->parent == 0 ) $data->parent = null;
+		} else {
+		        $fd = (object) array( 'owner' => $data->owner,
+				              'title' => $folder,
+				               'parent' => null, 
+					    );
+		        $f = new ArtefactTypeFolder(0, $fd);
+		        $f->commit();
+		        $data->parent = $f->get('id');
+		}
 	} else {
-	        $fd = (object) array( 'owner' => $data->owner,
-			              'title' => $folder,
-			               'parent' => null, 
-				    );
-	        $f = new ArtefactTypeFolder(0, $fd);
-	        $f->commit();
-	        $data->parent = $f->get('id');
+		$data->parent = null;
 	}
 }
 catch (ParameterException $e) {
