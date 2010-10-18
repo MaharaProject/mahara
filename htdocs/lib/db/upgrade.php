@@ -2193,14 +2193,6 @@ function xmldb_core_upgrade($oldversion=0) {
         );
     }
 
-<<<<<<< HEAD
-    if ($oldversion < 2010100821) {
-        execute_sql('ALTER TABLE {usr} ADD COLUMN mobileuploadtoken CHARACTER VARYING(255)');
-        set_config('mobileuploadtoken', 1);
-    }
-
-
-=======
     if ($oldversion < 2010100702) {
         // Add general notification cleanup cron
         if (!record_exists('cron', 'callfunction', 'cron_clean_internal_activity_notifications')) {
@@ -2215,6 +2207,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
->>>>>>> 456a2f1afcc6e0bcd907aaef00a9ed543e3bd99d
+    if ($oldversion < 2010100821) {
+        execute_sql('ALTER TABLE {usr} ADD COLUMN mobileuploadtoken CHARACTER VARYING(255)');
+        set_config('mobileuploadtoken', 1);
+    }
+
     return $status;
 }
