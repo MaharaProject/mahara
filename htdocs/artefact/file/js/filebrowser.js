@@ -85,7 +85,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 }
             });
         }
-        connect(self.id + '_userfile', 'onchange', self.upload_submit);
+        if (self.config.submitbutton && $(self.id + '_uploadsubmit')) {
+            connect(self.id + '_uploadsubmit', 'onclick', self.upload_submit);
+        }
+        else {
+            connect(self.id + '_userfile', 'onchange', self.upload_submit);
+        }
     }
 
     this.upload_validate = function () {
@@ -128,7 +133,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'name':'userfile',
             'size':40
         }));
-        connect(self.id + '_userfile', 'onchange', self.upload_submit);
+        if (self.config.submitbutton && $(self.id + '_uploadsubmit')) {
+            connect(self.id + '_uploadsubmit', 'onclick', self.upload_submit);
+        }
+        else {
+            connect(self.id + '_userfile', 'onchange', self.upload_submit);
+        }
         $(self.id + '_upload').value = 0;
         return false;
     }
