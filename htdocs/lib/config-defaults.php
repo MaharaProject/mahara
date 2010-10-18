@@ -226,14 +226,10 @@ $cfg->leapovermnetloglevel = 0;
 // This should normally be set to http://www.gravatar.com/avatar/
 //$cfg->remoteavatarbaseurl = 'http://www.gravatar.com/avatar/';
 
-// Options for width/height of wysiwyg editor in block configuration
+// Option for width of wysiwyg editor in block configuration
 // forms.  Workaround for current lack of tinymce fullscreen button.
 //
 // Make the block config form expand to the full width of browser window
 // whenever it contains a tinymce (also increases editor height in
 // textbox blocktype):
 // $cfg->blockeditormaxwidth = true;
-//
-// Set a fixed height in pixels for the tinymce editor (currently only
-// affects the textbox blocktype):
-// $cfg->blockeditorheight = 550;

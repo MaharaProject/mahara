@@ -87,7 +87,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
 
     foreach ($element['elements'] as $subname => $subelement) {
         if ($subelement['type'] == 'hidden') {
-            throw new PieformError("You cannot put hidden elements in fieldsets");
+            throw new PieformException("You cannot put hidden elements in fieldsets");
         }
         $result .= "\t" . pieform_render_element($form, $subelement);
     }

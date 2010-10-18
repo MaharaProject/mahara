@@ -14,7 +14,7 @@ class Dwoo_Template_Mahara_Blocktype extends Dwoo_Template_Mahara
         global $THEME;
         
         if (!isset(self::$_filePaths[$name[0]][$name[1]])) {
-            $artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $name[0]);
+            $artefactplugin = blocktype_artefactplugin($name[0]);
             $template_path = $name[1];
         
             $basedir = get_config('docroot');

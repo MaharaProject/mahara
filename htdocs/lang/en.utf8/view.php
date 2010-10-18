@@ -223,6 +223,7 @@ $string['changeviewlayout'] = 'Change my View\'s column layout';
 $string['backtoyourview'] = 'Back to my View';
 $string['viewlayoutchanged'] = 'View layout changed';
 $string['numberofcolumns'] = 'Number of columns';
+$string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time.';
 
 
 $string['by'] = 'by';

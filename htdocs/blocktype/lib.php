@@ -363,6 +363,19 @@ abstract class PluginBlocktype extends Plugin {
         return false;
     }
 
+    /**
+     * Defines if the title should be linked to an artefact view (if possible)
+     * when viewing the block
+     *
+     * This method should be overridden in the child class, if a title link
+     * is not desired.
+     *
+     * @return boolean whether to link the title or not
+     */
+    public static function has_title_link() {
+        return true;
+    }
+
 }
 
 abstract class SystemBlockType extends PluginBlockType {
@@ -653,8 +666,10 @@ class BlockInstance {
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
         if (!empty($configdata['artefactid'])) {
-            $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/artefact.php?artefact='
-                . $configdata['artefactid'] . '&view=' . $this->get('view'));
+            if (call_static_method($classname, 'has_title_link')) {
+                $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/artefact.php?artefact='
+                    . $configdata['artefactid'] . '&view=' . $this->get('view'));
+            }
         }
 
         if (method_exists($classname, 'feed_url')) {

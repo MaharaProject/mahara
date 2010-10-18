@@ -675,6 +675,21 @@ abstract class ArtefactType {
 
 
     /**
+     * A dummy method, giving graceful output, if this method is not implemented in the relevant child class
+     */
+    public function render_self($options) {
+        $smarty = smarty();
+        $smarty->assign('viewtitle', $this->get('title'));
+        $smarty->assign('viewdescription', $this->get('description'));
+
+        return array(
+            'html' => $smarty->fetch('view/viewcontent.tpl'),
+            'javascript'=>''
+        );
+    }
+
+
+    /**
      * Returns a URL for an icon for the appropriate artefact
      *
      * @param array $options Options for the artefact. The array MUST have the 

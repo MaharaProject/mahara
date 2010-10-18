@@ -196,7 +196,11 @@ function attachedImageList() {
     var attachments = editpost_filebrowser.selecteddata;
     for (var a in attachments) {
         if (attachments[a].artefacttype == 'image') {
-            images.push({'id': attachments[a].id, 'name': attachments[a].title, 'description': attachments[a].description});
+            images.push({
+                'id': attachments[a].id,
+                'name': attachments[a].title,
+                'description': attachments[a].description ? attachments[a].description : ''
+            });
         }
     }
     return images;

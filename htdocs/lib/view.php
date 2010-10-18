@@ -925,7 +925,8 @@ class View {
 
         $viewtheme = param_variable('viewtheme', '');
         if ($viewtheme && $viewtheme != $this->get('theme')) {
-            $action = 'changetheme_theme_' . $viewtheme;
+            $action = 'changetheme';
+            $values = array('theme' => $viewtheme);
         }
 
         if (empty($action)) {
@@ -934,16 +935,18 @@ class View {
 
         form_validate(param_alphanum('sesskey', null));
 
-        $actionstring = $action;
-        $action = substr($action, 0, strpos($action, '_'));
-        $actionstring  = substr($actionstring, strlen($action) + 1);
+        if (!isset($values)) {
+            $actionstring = $action;
+            $action = substr($action, 0, strpos($action, '_'));
+            $actionstring  = substr($actionstring, strlen($action) + 1);
 
-        // Actions from <input type="image"> buttons send an _x and _y
-        if (substr($actionstring, -2) == '_x' || substr($actionstring, -2) == '_y') {
-            $actionstring = substr($actionstring, 0, -2);
+            // Actions from <input type="image"> buttons send an _x and _y
+            if (substr($actionstring, -2) == '_x' || substr($actionstring, -2) == '_y') {
+                $actionstring = substr($actionstring, 0, -2);
+            }
+
+            $values = self::get_values_for_action($actionstring);
         }
-        
-        $values = self::get_values_for_action($actionstring);
 
         $result = null;
         switch ($action) {

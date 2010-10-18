@@ -1057,7 +1057,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         }
         else {
             try {
-                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                if ($artefactplugin = blocktype_artefactplugin($pluginname)) {
                     $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
                 }
             }
@@ -1139,14 +1139,28 @@ function plugin_types_installed() {
  * @param string $plugintype type of plugin
  */
 function plugins_installed($plugintype, $all=false) {
-    $sort = 'name';
-    if ($plugintype == 'blocktype') {
-        $sort = 'artefactplugin,name';
+    static $records = array();
+
+    if (defined('INSTALLER') || !isset($records[$plugintype][true])) {
+
+        $sort = $plugintype == 'blocktype' ? 'artefactplugin,name' : 'name';
+
+        if ($rs = get_records_assoc($plugintype . '_installed', '', '', $sort)) {
+            $records[$plugintype][true] = $rs;
+        }
+        else {
+            $records[$plugintype][true] = array();
+        }
+        $records[$plugintype][false] = array();
+
+        foreach ($records[$plugintype][true] as $r) {
+            if ($r->active) {
+                $records[$plugintype][false][$r->name] = $r;
+            }
+        }
     }
-    if ($all) {
-        return get_records_array($plugintype . '_installed', '', '', $sort);
-    }
-    return get_records_array($plugintype . '_installed', 'active', 1, $sort);
+
+    return $records[$plugintype][$all];
 }
 
 /**
@@ -1212,6 +1226,15 @@ function blocktype_name_to_namespaced($blocktype) {
     }
 
     return $resultcache[$blocktype];
+}
+
+/* Get the name of the artefact plugin that provides a given blocktype */
+function blocktype_artefactplugin($blocktype) {
+    $installed = plugins_installed('blocktype');
+    if (isset($installed[$blocktype])) {
+        return $installed[$blocktype]->artefactplugin;
+    }
+    return false;
 }
 
 
@@ -2360,6 +2383,13 @@ function recalculate_quota() {
     }
 }
 
+/**
+ * A cronjob to clean general internal activity notifications
+ */
+function cron_clean_internal_activity_notifications() {
+    safe_require('notification', 'internal');
+    PluginNotificationInternal::clean_notifications(array('viewaccess', 'watchlist', 'institutionmessage'));
+}
 
 /**
  * Cronjob to check Launchpad for the latest Mahara version

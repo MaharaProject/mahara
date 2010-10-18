@@ -15,7 +15,7 @@
           <td>
             <a href="{$WWWROOT}view/artefact.php?artefact={$file->attachment}&view={$options.viewid}">{$file->title}</a>
             ({$file->size|display_size})
-            - <strong><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{str tag=Download section=artefact.file}</a></strong>
+            - <strong><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&view={$options.viewid}">{str tag=Download section=artefact.file}</a></strong>
           </td>
         </tr>
         {/foreach}

@@ -250,6 +250,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
         // $(self.id + '_edit_artefact').value = id; // Changes button text in IE
         setNodeAttribute(self.id + '_edit_artefact', 'name', self.id + '_update[' + id + ']');
+        var tags_control_elem = augment_tags_control(self.id + '_edit_tags', true);
+        swapDOM($(self.id + '_edit_tags').parentNode.firstChild, tags_control_elem);
         var edit_row = removeElement(self.id + '_edit_row');
         var this_row = getFirstParentByTagAndClassName(this, 'tr');
         insertSiblingNodesAfter(this_row, edit_row);

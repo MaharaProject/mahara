@@ -68,7 +68,7 @@ class PluginNotificationInternal extends PluginNotification {
         }
         return $unreadcount[$userid];
     }
-    
+
     public static function get_event_subscriptions() {
         $subscriptions = array(
             (object)array(
@@ -83,6 +83,30 @@ class PluginNotificationInternal extends PluginNotification {
     public static function deleteuser($event, $user) {
         delete_records('notification_internal_activity', 'usr', $user['id']);
     }
+
+    /**
+     * A method that does housekeeping on the notification_internal_activity table
+     * @param $types string|array the activity types to be cleaned
+     * @param $olderthandays integer the age an entry should at least be, before cleaning
+     */
+    public static function clean_notifications($types, $olderthandays=182) {
+        $staletime = db_format_timestamp(time() - ($olderthandays * 24 * 60 * 60));
+
+        if (!is_array($types)) {
+            // We're potentially dealing with just one type
+            $types = array($types);
+        }
+
+        $select = "
+            ctime < ?
+            AND read = 1
+            AND type IN(
+                SELECT id FROM {activity_type}
+                WHERE name IN (" . join(",", array_map(create_function('$a', 'return db_quote($a);'), $types)) . "))";
+
+        delete_records_select('notification_internal_activity', $select, array(db_format_timestamp($staletime)));
+    }
+
 }
 
 ?>

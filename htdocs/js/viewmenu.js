@@ -30,6 +30,7 @@ function addFeedbackSuccess(form, data) {
     }
     $('add_feedback_form_' + messageid).value = '';
     rewriteCancelButtons();
+    formSuccess(form, data);
 }
 
 function objectionSuccess() {
@@ -78,6 +79,8 @@ addLoadEvent(function () {
                 }
                 removeElementClass('add_feedback_form', 'js-hidden');
                 removeElementClass('add_feedback_form', 'hidden');
+                tinymce.EditorManager.get('add_feedback_form_message').plugins.autoresize.autoresize_min_height = 120;
+                tinymce.EditorManager.get('add_feedback_form_message').execCommand('mceAutoResize');
 
                 // IE6 fails to hide tinymce properly after feedback
                 // submission, so force it to reload the page by disconnecting
