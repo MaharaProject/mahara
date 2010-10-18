@@ -72,17 +72,19 @@ try {
 	$folder = param_variable('foldername');
 	$folder = trim($folder);
 
-	if ( $folder == 'Home' ) {
-		$data->parent = null;
+	// TODO: create if doesn't exist - note assumes it is a base folder (hence null parent)
+	$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+	if ( $artefact ) {
+		$data->parent = $artefact->id;
+		if ( $data->parent == 0 ) $data->parent = null;
 	} else {
-		$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
-		if ( $artefact ) {
-			$data->parent = $artefact->id;
-			if ( $data->parent == 0 ) $data->parent = null;
-		} else {
-			header($protocol." 500 Upload folder '$folder' does not exit");
-       	         	exit; 
-		}
+	        $fd = (object) array( 'owner' => $data->owner,
+			              'title' => $folder,
+			               'parent' => null, 
+				    );
+	        $f = new ArtefactTypeFolder(0, $fd);
+	        $f->commit();
+	        $data->parent = $f->get('id');
 	}
 }
 catch (ParameterException $e) {
