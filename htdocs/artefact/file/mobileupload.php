@@ -36,33 +36,58 @@ if ($protocol != 'HTTP/1.1') {
     $protocol = 'HTTP/1.0';
 }
 
+if ( ! get_config('allowmobileuploads') ) {
+    	header($protocol.' 500 Mobile uploads disabled');
+	exit;	
+}
+
+$token = '';
+try {
+	$token = param_variable('token');
+	$token = trim($token);
+}
+catch (ParameterException $e) {
+	$token = '';
+}
+
+if ( $token == '' ) {
+    	header($protocol.' 500 Auth token cannot be blank');
+	exit;	
+}
+
 $data = new StdClass;
 $USER = new User();
 
 try {
-	$USER->find_by_mobileuploadtoken(param_variable('token'));
+	$USER->find_by_mobileuploadtoken($token);
 }
 catch (AuthUnknownUserException $e) {
     	header($protocol.' 500 Invalid user token');
 	exit;	
 }
-
 $data->owner = $USER->get('id'); // id of owner
 
-$folder = param_variable('foldername');
+$folder = '';
+try {
+	$folder = param_variable('foldername');
+	$folder = trim($folder);
 
-if ( $folder == 'Home' ) {
-	$data->parent = null;
-} else {
-	$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
-	if ( ! $artefact ) {
-    		header($protocol." 500 Upload folder '$folder' does not exit");
-		exit;	
+	if ( $folder == 'Home' ) {
+		$data->parent = null;
+	} else {
+		$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+		if ( $artefact ) {
+			$data->parent = $artefact->id;
+			if ( $data->parent == 0 ) $data->parent = null;
+		} else {
+			header($protocol." 500 Upload folder '$folder' does not exit");
+       	         	exit; 
+		}
 	}
-
-	$data->parent = $artefact->id;
 }
-if ( $data->parent == 0 ) $data->parent = null;
+catch (ParameterException $e) {
+	$data->parent = null;
+}
 
 $originalname = $_FILES['userfile']['name'];
 $originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
