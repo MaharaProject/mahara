@@ -133,6 +133,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'maxuploadsize',
                     'nametoolong',
                     'namefieldisrequired',
+                    'upload',
                     'uploadingfiletofolder',
                     'youmustagreetothecopyrightnotice',
                 ),

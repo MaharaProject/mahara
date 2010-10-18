@@ -107,6 +107,10 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             $smarty->assign('agreementtext', get_string('uploadcopyrightdefaultcontent', 'install'));
         }
     }
+    else if (!isset($config['simpleupload'])) {
+        $config['simpleupload'] = 1;
+    }
+
     if ($config['upload']) {
         $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
