@@ -63,7 +63,7 @@
   </tr>
   <tr class="uploadform">
     <th></th>
-    <td>
+    <td id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
       {if $config.submitbutton}
       <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
       {/if}

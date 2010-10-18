@@ -70,6 +70,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 'value':0
             }));
         }
+        if (is_FF() && self.config.select && !$(self.id + '_uploadsubmit') && $(self.id + '_uploadsubmit_container')) {
+            var submitbutton = INPUT({
+                'class': 'submit',
+                'type': 'submit',
+                'name': self.id + '_uploadsubmit',
+                'value': get_string('upload')
+            });
+            appendChildNodes(self.id + '_uploadsubmit_container', submitbutton);
+            self.config.submitbutton = true;
+        }
         self.upload_connectbuttons();
     }
 
@@ -85,7 +95,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 }
             });
         }
-        if (is_FF() && self.config.submitbutton && $(self.id + '_uploadsubmit')) {
+        if (self.config.submitbutton && $(self.id + '_uploadsubmit')) {
             connect(self.id + '_uploadsubmit', 'onclick', self.upload_submit);
         }
         else {
