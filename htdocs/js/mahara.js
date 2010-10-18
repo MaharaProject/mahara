@@ -740,3 +740,10 @@ function keypressKeyCode(e) {
     }
     return 0;
 }
+
+function is_FF() {
+    if ( /Firefox|Gecko|Iceweasel/.test(navigator.userAgent)) {
+        return true;
+    }
+    return false;
+}
