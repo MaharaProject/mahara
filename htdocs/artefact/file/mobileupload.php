@@ -38,17 +38,30 @@ if ($protocol != 'HTTP/1.1') {
 
 $data = new StdClass;
 $USER = new User();
-$USER->find_by_mobileuploadtoken(param_variable('token'));
-$data->owner = $USER->get('id'); // id of owner
 
-$folder = param_variable('foldername');
-$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
-if ( ! $artefact ) {
-    	header($protocol." 500 Upload folder '$folder' does not exit");
+try {
+	$USER->find_by_mobileuploadtoken(param_variable('token'));
+}
+catch (AuthUnknownUserException $e) {
+    	header($protocol.' 500 Invalid user token');
 	exit;	
 }
 
-$data->parent = $artefact->id;
+$data->owner = $USER->get('id'); // id of owner
+
+$folder = param_variable('foldername');
+
+if ( $folder == 'Home' ) {
+	$data->parent = null;
+} else {
+	$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+	if ( ! $artefact ) {
+    		header($protocol." 500 Upload folder '$folder' does not exit");
+		exit;	
+	}
+
+	$data->parent = $artefact->id;
+}
 if ( $data->parent == 0 ) $data->parent = null;
 
 $originalname = $_FILES['userfile']['name'];
@@ -68,5 +81,6 @@ catch (UploadException $e) {
 	exit;	
 }
 
-echo 'foo';
+// Here we need to create a new hash - update our own store of it and return it too the handset
+echo $USER->refresh_mobileuploadtoken();
 

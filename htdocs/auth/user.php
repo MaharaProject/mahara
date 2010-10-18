@@ -93,8 +93,7 @@ class User {
             'sesskey'          => '',
             'ctime'            => null,
             'views'            => array(),
-            'showhomeinfo'     => 1,
-            'mobileuploadtoken'=> null,
+            'showhomeinfo'     => 1
         );
         $this->attributes = array();
 
@@ -260,10 +259,9 @@ class User {
     }
 
     /**
-     * Populates this object with the user record identified by a mobile IMEI
+     * Populates this object with the user record identified by a mobile 'token'
      *
-     * @throws AuthUnknownUserException If the user cannot be found. Note that
-     *                                  deleted users _can_ be found
+     * @throws AuthUnknownUserException If the user cannot be found. 
      */
     public function find_by_mobileuploadtoken($token) {
 
@@ -295,6 +293,17 @@ class User {
         return $this;
     }
 
+    /**
+     * Refreshes a users mobile 'token' and returns it
+     *
+     */
+    public function refresh_mobileuploadtoken() {
+	$new_token = md5( uniqid() );
+        $this->set_account_preference('mobileuploadtoken', $new_token);
+        $this->set('lastaccess', time());
+	$this->commit();
+	return $new_token;
+    }
 
     /**
      * Set stuff that needs to be initialised once before a user record is created.
