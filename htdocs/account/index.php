@@ -36,7 +36,7 @@ define('TITLE', get_string('account'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences
-$prefs = (object)($USER->accountprefs);
+$prefs = (object) load_account_preferences($USER->id);
 
 $authobj = AuthFactory::create($USER->authinstance);
 
