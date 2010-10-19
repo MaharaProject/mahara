@@ -275,7 +275,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             $type = 'type: "audio",'; // force the player to use the audio plugin
             $buffering = 'false'; // without this autoPlay will also be set to true
             $audio = ', audio: {
-		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.1.swf",
+		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.1.swf"
 		             }';
         }
 
