@@ -66,7 +66,7 @@ class AdvancedSpamTrap extends SimpleSpamTrap {
         $domain = $match[2];
         foreach ($blacklists as $bl) {
             if (checkdnsrr($domain . '.' . $bl, 'A')) {
-                return true;
+                return $domain;
             }
         }
         return false;
@@ -81,6 +81,18 @@ class AdvancedSpamTrap extends SimpleSpamTrap {
             }
         }
         return $score;
+    }
+
+    // Call this when you want to know if there's a url with a
+    // blacklisted domain in some text but you don't care how many
+    // non-blacklisted ones there are.
+    public function has_blacklisted_urls($string) {
+        foreach ($this->get_urls($string) as $url) {
+            if ($domain = $this->blacklisted_url($url)) {
+                return $domain;
+            }
+        }
+        return false;
     }
 }
 

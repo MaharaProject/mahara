@@ -54,4 +54,8 @@ class NoneSpamTrap {
         }
         return false;
     }
+
+    public function has_blacklisted_urls($string) {
+        return false;
+    }
 }
