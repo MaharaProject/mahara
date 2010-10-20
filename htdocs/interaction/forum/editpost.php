@@ -36,6 +36,7 @@ safe_require('interaction', 'forum');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('pieforms/pieform.php');
+require_once('antispam.php');
 
 $postid = param_integer('id', 0);
 
@@ -174,6 +175,12 @@ $editform = pieform(array(
         )
     ),
 ));
+
+function editpost_validate(Pieform $form, $values) {
+    if ($baddomain = get_first_blacklisted_domain($values['body'])) {
+        $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
+    }
+}
 
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;

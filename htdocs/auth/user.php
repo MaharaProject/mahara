@@ -263,14 +263,14 @@ class User {
      *
      * @throws AuthUnknownUserException If the user cannot be found. 
      */
-    public function find_by_mobileuploadtoken($token) {
+    public function find_by_mobileuploadtoken($token, $username) {
 
         if (!is_string($token)) {
             throw new InvalidArgumentException('Input parameters must be strings to create a User object from token');
         }
 
         $sql = 'SELECT
-                        u.*, 
+                        u.*,
                         ' . db_format_tsfield('u.expiry', 'expiry') . ',
                         ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ',
                         ' . db_format_tsfield('u.lastlastlogin', 'lastlastlogin') . ',
@@ -280,10 +280,10 @@ class User {
                 FROM
                     {usr} u
                     LEFT JOIN {usr_account_preference} p ON u.id = p.usr
-                    		WHERE p.field=\'mobileuploadtoken\' and p.value = ?
+                            WHERE p.field=\'mobileuploadtoken\' AND p.value = ? AND u.username = ?
 		';
 
-        $user = get_record_sql($sql, array($token));
+        $user = get_record_sql($sql, array($token, $username));
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with mobile upload token \"$token\" is not known");

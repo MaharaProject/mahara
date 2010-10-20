@@ -36,6 +36,7 @@ safe_require('interaction', 'forum');
 require_once('group.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('pieforms/pieform.php');
+require_once('antispam.php');
 
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
@@ -163,6 +164,18 @@ if(!$moderator){
 }
 
 $editform = pieform($editform);
+
+function addtopic_validate(Pieform $form, $values) {
+    if ($baddomain = get_first_blacklisted_domain($values['body'])) {
+        $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
+    }
+}
+
+function edittopic_validate(Pieform $form, $values) {
+    if ($baddomain = get_first_blacklisted_domain($values['body'])) {
+        $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
+    }
+}
 
 function addtopic_submit(Pieform $form, $values) {
     global $USER, $SESSION;

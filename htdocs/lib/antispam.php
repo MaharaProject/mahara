@@ -45,6 +45,13 @@ function new_spam_trap($fields) {
     return new $spamclass($fields);
 }
 
+function get_first_blacklisted_domain($text) {
+    $spamtrap = new_spam_trap(array());
+    if ($baddomain = $spamtrap->has_blacklisted_urls($text)) {
+        return $baddomain;
+    }
+}
+
 // windows has no checkdnsrr until PHP 5.3
 if (!function_exists('checkdnsrr')) {
     function checkdnsrr($host, $type='MX') {

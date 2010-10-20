@@ -36,63 +36,81 @@ if ($protocol != 'HTTP/1.1') {
     $protocol = 'HTTP/1.0';
 }
 
-if ( ! get_config('allowmobileuploads') ) {
-    	header($protocol.' 500 Mobile uploads disabled');
-	exit;	
+if (!get_config('allowmobileuploads')) {
+    header($protocol.' 500 Mobile uploads disabled');
+    exit;
 }
 
 $token = '';
 try {
-	$token = param_variable('token');
-	$token = trim($token);
+    $token = param_variable('token');
+    $token = trim($token);
 }
 catch (ParameterException $e) {
-	$token = '';
+    $token = '';
 }
 
-if ( $token == '' ) {
-    	header($protocol.' 500 Auth token cannot be blank');
-	exit;	
+if ($token == '') {
+    header($protocol.' 500 Auth token cannot be blank');
+    exit;
+}
+
+$username = '';
+try {
+    $username = param_variable('username');
+}
+catch (ParameterException $e) {
+    $username = '';
+}
+
+if ($username == '') {
+    header($protocol.' 500 Username cannot be blank');
+    exit;
 }
 
 $data = new StdClass;
 $USER = new User();
 
 try {
-	$USER->find_by_mobileuploadtoken($token);
+    $USER->find_by_mobileuploadtoken($token, $username);
 }
 catch (AuthUnknownUserException $e) {
-    	header($protocol.' 500 Invalid user token');
-	exit;	
+    header($protocol.' 500 Invalid user token');
+    exit;
 }
 $data->owner = $USER->get('id'); // id of owner
 
 $folder = '';
 try {
-	$folder = param_variable('foldername');
-	$folder = trim($folder);
+    $folder = param_variable('foldername');
+    $folder = trim($folder);
 
-	if ( $folder ) {
-		// TODO: create if doesn't exist - note assumes it is a base folder (hence null parent)
-		$artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
-		if ( $artefact ) {
-			$data->parent = $artefact->id;
-			if ( $data->parent == 0 ) $data->parent = null;
-		} else {
-		        $fd = (object) array( 'owner' => $data->owner,
-				              'title' => $folder,
-				               'parent' => null, 
-					    );
-		        $f = new ArtefactTypeFolder(0, $fd);
-		        $f->commit();
-		        $data->parent = $f->get('id');
-		}
-	} else {
-		$data->parent = null;
-	}
+    if ($folder) {
+        // TODO: create if doesn't exist - note assumes it is a base folder (hence null parent)
+        $artefact = ArtefactTypeFolder::get_folder_by_name($folder, null, $data->owner);  // id of folder you're putting the file into
+        if ($artefact) {
+            $data->parent = $artefact->id;
+            if ($data->parent == 0) {
+                $data->parent = null;
+            }
+        }
+        else {
+            $fd = (object) array(
+                'owner' => $data->owner,
+                'title' => $folder,
+                'parent' => null,
+            );
+            $f = new ArtefactTypeFolder(0, $fd);
+            $f->commit();
+            $data->parent = $f->get('id');
+        }
+    }
+    else {
+        $data->parent = null;
+    }
 }
 catch (ParameterException $e) {
-	$data->parent = null;
+    $data->parent = null;
 }
 
 $originalname = $_FILES['userfile']['name'];
@@ -104,14 +122,13 @@ try {
     $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data);
 }
 catch (QuotaExceededException $e) {
-    	header($protocol.' 500 Quota exceeded');
-	exit;	
+    header($protocol.' 500 Quota exceeded');
+    exit;
 }
 catch (UploadException $e) {
-    	header($protocol.' 500 Failed to save file');
-	exit;	
+    header($protocol.' 500 Failed to save file');
+    exit;
 }
 
 // Here we need to create a new hash - update our own store of it and return it too the handset
 echo $USER->refresh_mobileuploadtoken();
-
