@@ -602,6 +602,39 @@ class ArtefactTypeComment extends ArtefactType {
         }
         return $url;
     }
+
+    // Check whether the logged-in user can see a comment within the
+    // context of a given view.  Does not check whether the user can
+    // view the view.
+    public function viewable_in($viewid) {
+        global $USER;
+        if ($this->get('deletedby')) {
+            return false;
+        }
+
+        if ($USER->is_logged_in()) {
+            if ($USER->can_view_artefact($this)) {
+                return true;
+            }
+            if ($this->get('author') == $USER->get('id')) {
+                return true;
+            }
+        }
+
+        if ($this->get('private')) {
+            return false;
+        }
+
+        if ($onview = $this->get('onview')) {
+            return $onview == $viewid;
+        }
+
+        if ($onartefact = $this->get('onartefact')) {
+            return artefact_in_view($onartefact, $viewid);
+        }
+
+        return false;
+    }
 }
 
 /* To make private comments public, both the author and the owner must agree. */
