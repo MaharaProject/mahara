@@ -113,10 +113,17 @@ catch (ParameterException $e) {
     $data->parent = null;
 }
 
-$originalname = $_FILES['userfile']['name'];
-$originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
+$title = '';
+try {
+    $title = param_variable('title');
+}
+catch (ParameterException $e) {
+    // Default ot the name given with the post
+    $title = $_FILES['userfile']['name'];
+}
+$title = $title ? basename($title) : get_string('file', 'artefact.file');
 
-$data->title = ArtefactTypeFileBase::get_new_file_title($originalname, $data->parent, $data->owner);
+$data->title = ArtefactTypeFileBase::get_new_file_title($title, $data->parent, $data->owner);
 
 try {
     $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data);
