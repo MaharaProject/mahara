@@ -26,7 +26,7 @@
         {if $item->makepublicrequested} | <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>{/if}
         {strip}
         {foreach $item->attachments item=a name=attachments}
-          {if $.foreach.attachments.first} | <span>{str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}">{$a->attachtitle}</a> ({$a->attachsize})</span>
+          {if $.foreach.attachments.first} | <span>{str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle}</a> ({$a->attachsize})</span>
         {/foreach}
         {/strip}
         {if $item->canedit} | <span><a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&view={$viewid}" class="btn-edit">{str tag=edit}</a></span>{/if}

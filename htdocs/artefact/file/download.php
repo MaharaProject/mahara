@@ -47,7 +47,20 @@ else {
 }
 
 if ($viewid && $fileid) {
-    if (!artefact_in_view($fileid, $viewid)) {
+
+    // The user may be trying to download a file that's not in the view, but which has
+    // been attached to public feedback on the view
+    if ($commentid = param_integer('comment', null)) {
+        if (!record_exists('artefact_attachment', 'artefact', $commentid, 'attachment', $fileid)) {
+            throw new AccessDeniedException('');
+        }
+        safe_require('artefact', 'comment');
+        $comment = new ArtefactTypeComment($commentid);
+        if (!$comment->viewable_in($viewid)) {
+            throw new AccessDeniedException('');
+        }
+    }
+    else if (!artefact_in_view($fileid, $viewid)) {
         throw new AccessDeniedException('');
     }
 
