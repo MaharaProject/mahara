@@ -437,6 +437,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('registerterms'),
                     'disabled'     => in_array('registerterms', $OVERRIDDEN),
                 ),
+                'allowmobileuploads' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('allowmobileuploads', 'admin'),
+                    'description'  => get_string('allowmobileuploadsdescription', 'admin'),
+                    'defaultvalue' => get_config('allowmobileuploads'),
+                    'disabled'     => in_array('allowmobileuploads', $OVERRIDDEN),
+                ),
             ),
         ),
     )
@@ -466,7 +473,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials',
-        'homepageinfo', 'showonlineuserssideblock', 'registerterms',
+        'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
         'creategroups', 'createpublicgroups', 'allowgroupcategories',
     );
     $oldlanguage = get_config('lang');

@@ -36,7 +36,7 @@ define('TITLE', get_string('account'));
 require_once('pieforms/pieform.php');
 
 // load up user preferences
-$prefs = (object)($USER->accountprefs);
+$prefs = (object) load_account_preferences($USER->id);
 
 $authobj = AuthFactory::create($USER->authinstance);
 
@@ -190,6 +190,14 @@ if (get_config('homepageinfo')) {
         'title' => get_string('showhomeinfo', 'account'),
         'separator' => '<br>',
         'help' => 'true'
+    );
+}
+if (get_config('allowmobileuploads')) {
+    $elements['mobileuploadtoken'] = array(
+        'type'         => 'text',
+        'title'        => get_string('mobileuploadtoken', 'account'),
+        'description'  => get_string('mobileuploadtokendescription', 'account'),
+        'defaultvalue' => isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken')
     );
 }
 $elements['submit'] = array(
