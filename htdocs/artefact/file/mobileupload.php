@@ -55,11 +55,24 @@ if ($token == '') {
     exit;
 }
 
+$username = '';
+try {
+    $username = param_variable('username');
+}
+catch (ParameterException $e) {
+    $username = '';
+}
+
+if ($username == '') {
+    header($protocol.' 500 Username cannot be blank');
+    exit;
+}
+
 $data = new StdClass;
 $USER = new User();
 
 try {
-    $USER->find_by_mobileuploadtoken($token);
+    $USER->find_by_mobileuploadtoken($token, $username);
 }
 catch (AuthUnknownUserException $e) {
     header($protocol.' 500 Invalid user token');
