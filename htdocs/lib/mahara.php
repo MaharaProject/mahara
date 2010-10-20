@@ -1718,17 +1718,17 @@ function get_view_from_token($token, $visible=true) {
         );
         if ($order) {
             if ($token != get_cookie('caccess:'.$order[0]->collection)) {
-                set_cookie('caccess:'.$order[0]->collection, $token);
+                set_cookie('caccess:'.$order[0]->collection, $token, 0, true);
             }
             return $order[0]->view;
         }
     }
     $viewid = $viewids[0];
     if (!$visible && $token != get_cookie('mviewaccess:'.$viewid)) {
-        set_cookie('mviewaccess:'.$viewid, $token);
+        set_cookie('mviewaccess:'.$viewid, $token, 0, true);
     }
     if ($visible && $token != get_cookie('viewaccess:'.$viewid)) {
-        set_cookie('viewaccess:'.$viewid, $token);
+        set_cookie('viewaccess:'.$viewid, $token, 0, true);
     }
     return $viewid;
 }
