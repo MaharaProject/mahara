@@ -30,45 +30,19 @@ define('PUBLIC', 1);
 define('CRON', 1);
 define('TITLE', '');
 
-/**
-  * This defines (in seconds) how far PAST the next run time of a cron job
-  * we're allowed to get and still go back and run it.
-  *
-  * For both these examples we will assume a value of 300 (seconds)
-  *
-  * example 1: If we have a job that was meant to run at 10:45am, and it's now
-  * 10:48am we know that the job was meant to run 3 minutes (180 seconds) ago.
-  * This is within the threshold MAXRUNAGE and so we will run the job, and
-  * update the next run time.
-  *
-  * example 2: If we have a job that was meant to run at 9:34am, and it's now
-  * 9:40am we know the job _should_ have been run, but it's too late now. We
-  * DON'T run the job, but do update it's next run time.
- */
-define('MAXRUNAGE', 300);
-
-
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 require_once(get_config('docroot') . 'import/lib.php');
 require_once(get_config('docroot') . 'export/lib.php');
 require_once(get_config('docroot') . 'lib/activity.php');
 
-if (!$maxrunage = get_config('maxrunage')) {
-    $maxrunage = MAXRUNAGE;
-}
-
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
-$time = time();
-if(isset($argv[1])) {
-    $now = strtotime($argv[1]);
-}
-else {
-    $now = $time;
-}
+$realstart = time();
+$fake = isset($argv[1]);
+$start = $fake ? strtotime($argv[1]) : $realstart;
 
-log_debug('---------- cron running ' . date('r', $now) . ' ----------');
+log_debug('---------- cron running ' . date('r', $start) . ' ----------');
 raise_memory_limit('128M');
 
 if (!is_writable(get_config('dataroot'))) {
@@ -78,11 +52,14 @@ if (!is_writable(get_config('dataroot'))) {
 // for each plugin type
 foreach (plugin_types() as $plugintype) {
 
+    $table = $plugintype . '_cron';
+
     // get list of cron jobs to run for this plugin type
+    $now = $fake ? (time() - ($realstart - $start)) : time();
     $jobs = get_records_select_array(
-        $plugintype . '_cron',
-        'nextrun >= ? AND nextrun < ?',
-        array(db_format_timestamp($now - $maxrunage), db_format_timestamp($now)),
+        $table,
+        'nextrun < ?',
+        array(db_format_timestamp($now)),
         '',
         'plugin,callfunction,minute,hour,day,month,dayofweek,' . db_format_tsfield('nextrun')
     );
@@ -90,6 +67,24 @@ foreach (plugin_types() as $plugintype) {
     if ($jobs) {
         // for each cron entry
         foreach ($jobs as $job) {
+            if (!cron_lock($job, $start, $plugintype)) {
+                continue;
+            }
+
+            // If some other cron instance ran the job while we were messing around,
+            // skip it.
+            $nextrun = get_field_sql('
+                SELECT ' . db_format_tsfield('nextrun') . '
+                FROM {' . $table . '}
+                WHERE plugin = ? AND callfunction = ?',
+                array($job->plugin, $job->callfunction)
+            );
+            if ($nextrun != $job->nextrun) {
+                log_debug("Too late to run $plugintype $job->plugin $job->callfunction; skipping.");
+                cron_free($job, $start, $plugintype);
+                continue;
+            }
+
             $classname = generate_class_name($plugintype, $job->plugin);
 
             log_debug("Running $classname::" . $job->callfunction);
@@ -100,7 +95,7 @@ foreach (plugin_types() as $plugintype) {
                 $job->callfunction
             );
 
-            $nextrun = cron_next_run_time($now, (array)$job);
+            $nextrun = cron_next_run_time($start, (array)$job);
 
             // update next run time
             set_field(
@@ -112,70 +107,54 @@ foreach (plugin_types() as $plugintype) {
                 'callfunction',
                 $job->callfunction
             );
-        }
-    }
 
-    // get a list of cron jobs that should have, but didn't get run
-    $jobs = get_records_select_array(
-        $plugintype . '_cron',
-        'nextrun < ? OR nextrun IS NULL',
-        array(db_format_timestamp($now - $maxrunage)),
-        '',
-        'plugin,callfunction,minute,hour,day,month,dayofweek,nextrun'
-    );
-
-    if ($jobs) {
-        // for each cron entry
-        foreach ($jobs as $job) {
-            if ($job->nextrun) {
-                log_warn('cronjob "' . $job->plugin . '.' . $job->callfunction . '" didn\'t get run because the nextrun time was too old');
-            }
-            
-            $nextrun = cron_next_run_time($now, (array)$job);
-
-            // update next run time
-            set_field(
-                $plugintype . '_cron',
-                'nextrun',
-                db_format_timestamp($nextrun), 
-                'plugin',
-                $job->plugin,
-                'callfunction',
-                $job->callfunction
-            );
+            cron_free($job, $start, $plugintype);
+            $now = $fake ? (time() - ($realstart - $start)) : time();
         }
     }
 }
 
 // and now the core ones (much simpler)
-if ($jobs = get_records_select_array('cron', 'nextrun >= ? AND nextrun < ?',
-    array(db_format_timestamp($now - $maxrunage), db_format_timestamp($now)))) {
+$now = $fake ? (time() - ($realstart - $start)) : time();
+$jobs = get_records_select_array(
+    'cron',
+    'nextrun < ?',
+    array(db_format_timestamp($now)),
+    '',
+    'id,callfunction,minute,hour,day,month,dayofweek,' . db_format_tsfield('nextrun')
+);
+if ($jobs) {
     foreach ($jobs as $job) {
+        if (!cron_lock($job, $start)) {
+            continue;
+        }
+
+        // If some other cron instance ran the job while we were messing around,
+        // skip it.
+        $nextrun = get_field_sql('
+            SELECT ' . db_format_tsfield('nextrun') . '
+            FROM {cron}
+            WHERE id = ?',
+            array($job->id)
+        );
+        if ($nextrun != $job->nextrun) {
+            log_debug("Too late to run core $job->callfunction; skipping.");
+            cron_free($job, $start);
+            continue;
+        }
+
         log_debug("Running core cron " . $job->callfunction);
 
         $function = $job->callfunction;
         $function();
         
-        $nextrun = cron_next_run_time($now, (array)$job);
+        $nextrun = cron_next_run_time($start, (array)$job);
         
         // update next run time
         set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job->id);
-    }
-}
 
-// and missed ones...
-if ($jobs = get_records_select_array('cron', 'nextrun < ? OR nextrun IS NULL',
-    array(db_format_timestamp($now - $maxrunage)))) {
-    foreach ($jobs as $job) {
-      if ($job->nextrun) {
-          log_warn('core cronjob "' . $job->callfunction 
-              . '" didn\'t get run because the nextrun time (' . $job->nextrun . ') was too old (less than ' . ($now - $maxrunage) . ')');
-      }
-      
-      $nextrun = cron_next_run_time($now, (array)$job);
-      
-      // update next run time
-      set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job->id);
+        cron_free($job, $start);
+        $now = $fake ? (time() - ($realstart - $start)) : time();
     }
 }
 
@@ -183,7 +162,7 @@ $finish = time();
 
 //Time relative to fake cron time
 if (isset($argv[1])) {
-    $diff = $time - $now;
+    $diff = $realstart - $start;
     $finish = $finish - $diff;
 }
 log_debug('---------- cron finished ' . date('r', $finish) . ' ----------');
@@ -482,4 +461,46 @@ function cron_first_minute($job, &$run_date) {
     $run_date['minutes'] = cron_next_field_value($job['minute'], 0, 60, $propagate, $steps);
 }
 
-?>
+function cron_job_id($job, $plugintype) {
+    return $plugintype . (!empty($job->plugin) ? "_$job->plugin" : '') . '_' . $job->callfunction;
+}
+
+function cron_lock($job, $start, $plugintype='core') {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+
+    $jobname = cron_job_id($job, $plugintype);
+    $lockname = '_cron_lock_' . $jobname;
+
+    try {
+        $DB_IGNORE_SQL_EXCEPTIONS = true;
+        // May fail with duplicate pk error
+        insert_record('config', (object) array('field' => $lockname, 'value' => $start));
+    }
+    catch (SQLException $e) {
+        $DB_IGNORE_SQL_EXCEPTIONS = false;
+
+        $started = get_field('config', 'value', 'field', $lockname);
+
+        $strstart = $started ? date('r', $started) : '';
+        $msg = "long-running cron job $jobname ($strstart).";
+
+        // If it's been going for more than 24 hours, start another one anyway
+        if ($started && $started < $start - 60*60*24) {
+            delete_records('config', 'field', $lockname);
+            insert_record('config', (object) array('field' => $lockname, 'value' => $start));
+            log_debug('Restarting ' . $msg);
+            return true;
+        }
+
+        log_debug('Skipping ' . $msg);
+        return false;
+    }
+
+    $DB_IGNORE_SQL_EXCEPTIONS = false;
+    return true;
+}
+
+function cron_free($job, $start, $plugintype='core') {
+    delete_records('config', 'field', '_cron_lock_' . cron_job_id($job, $plugintype), 'value', $start);
+}
+
