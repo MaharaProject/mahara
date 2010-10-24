@@ -70,7 +70,7 @@ class PluginImportLeap extends PluginImport {
     const NS_LEAPTYPE_200903   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
     const NS_CATEGORIES_200903 = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
     const NS_LEAP              = 'http://terms.leapspecs.org/';
-    const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories';
+    const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories/';
     const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
