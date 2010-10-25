@@ -46,9 +46,7 @@ try {
     $token = param_variable('token');
     $token = trim($token);
 }
-catch (ParameterException $e) {
-    $token = '';
-}
+catch (ParameterException $e) { }
 
 if ($token == '') {
     header($protocol.' 500 Auth token cannot be blank');
@@ -59,9 +57,7 @@ $username = '';
 try {
     $username = param_variable('username');
 }
-catch (ParameterException $e) {
-    $username = '';
-}
+catch (ParameterException $e) { }
 
 if ($username == '') {
     header($protocol.' 500 Username cannot be blank');
@@ -113,6 +109,7 @@ catch (ParameterException $e) {
     $data->parent = null;
 }
 
+// Set title
 $title = '';
 try {
     $title = param_variable('title');
@@ -122,8 +119,19 @@ catch (ParameterException $e) {
     $title = $_FILES['userfile']['name'];
 }
 $title = $title ? basename($title) : get_string('file', 'artefact.file');
-
 $data->title = ArtefactTypeFileBase::get_new_file_title($title, $data->parent, $data->owner);
+
+// Set description
+try {
+    $data->description = param_variable('description');
+}
+catch (ParameterException $e) { }
+
+// Set tags
+try {
+    $data->tags = explode(" ", param_variable('tags'));
+}
+catch (ParameterException $e) { }
 
 try {
     $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data);
