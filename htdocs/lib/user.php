@@ -1837,8 +1837,26 @@ function install_system_dashboard_view() {
  * gravatar.
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
+    global $USER;
+    static $usercache   = array();
+
     if (is_array($user)) {
         $user = (object)$user;
+    }
+    else if (is_numeric($user)) {
+        if (isset($usercache[$user])) {
+            $user = $usercache[$user];
+        }
+        else if ($user == $USER->get('id')) {
+            $user = new StdClass;
+            $user->id            = $USER->get('id');
+            $user->profileicon   = $USER->get('profileicon');
+            $user->email         = $USER->get('email');
+            $usercache[$user->id] = $user;
+        }
+        else {
+            $user = $usercache[$user] = get_record('usr', 'id', $user);
+        }
     }
     if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
         throw new SystemException('profile_icon_url requires a user with profileicon & email properties');

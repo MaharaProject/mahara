@@ -6,7 +6,7 @@
     {foreach from=$messages item=message}
         <tr class="{cycle values='r0,r1'}">
           <td style="width: 20px;">
-            <img src="{profile_icon_url user=$user maxwidth=20 maxheight=20}" alt="">
+            <img src="{profile_icon_url user=$message->from maxwidth=20 maxheight=20}" alt="">
           </td>
           <td>
             <h5>
