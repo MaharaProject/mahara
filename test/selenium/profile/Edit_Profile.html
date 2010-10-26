@@ -71,13 +71,10 @@
 	<td>//div[@id='email_list']/div[2]/input</td>
 	<td>cri@catalyst.net.nz</td>
 </tr>
-<!-- the next rules ensures that the email confirm element is unfocused properly-->
-<!--click //tr[12]/td/span/a/img-->
-<!--click //img[@alt='X']-->
 <tr>
-	<td>fireEvent</td>
-	<td>//div[@id='email_list']/div[2]/input</td>
-	<td>blur</td>
+	<td>click</td>
+    <td>//input[@value='Add']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
