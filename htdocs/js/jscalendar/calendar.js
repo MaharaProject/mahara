@@ -1569,6 +1569,10 @@ Calendar.prototype._dragStart = function (ev) {
 	}
 };
 
+// The calendar display is broken unless first day is defined, so
+// add a default to be overridden in language files.
+Calendar._FD = 1;
+
 // BEGIN: DATE OBJECT PATCHES
 
 /** Adds the number of days array to the Date object. */
