@@ -15,3 +15,4 @@ Changes:
  * Added Slovenian translation from Gregor (calendar-sl.js)
  * Removed built-in Japanese translation (calendar-jp.js)
  * Added Japanese translation from Mits (calendar-ja.js)
+ * Added default Calendar._FD (first day of week) to fix display for languages that don't define it (bug #663056)
