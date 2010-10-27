@@ -402,6 +402,23 @@ html>body #column-container {
   margin: .5em 0 .5em 0;
 }
 
+/* Slideshow */
+.thumbnails img {
+    padding: 5px;
+}
+.slideshow {
+    margin: auto;
+    text-align: center;
+}
+.slideshow .images td {
+    margin: 0;
+    padding: 0;
+}
+.slideshow .images td.control {
+    padding: 8px;
+    vertical-align: middle;
+}
+
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
   padding: 0 !important;
