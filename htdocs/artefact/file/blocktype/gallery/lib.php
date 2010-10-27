@@ -163,7 +163,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             $user = $values['user'];
             $userimages = get_records_sql_array("
                 SELECT im.artefact
-                FROM artefact a, artefact_file_image im
+                FROM {artefact} a, {artefact_file_image} im
                 WHERE a.id = im.artefact
                 AND a.owner = ?;",
                 array($user));
