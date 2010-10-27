@@ -205,11 +205,17 @@ EOF;
                 unset($check[$key]);
             }
         }
+        // Load jquery first, so that it doesn't break Mochikit
+        if (($key = array_search('jquery', $check)) !== false) {
+            $jquery = (get_config('developermode') & DEVMODE_UNPACKEDJS) ? 'jquery-1.3.2.js' : 'jquery-1.3.2.min.js';
+            array_unshift($javascript_array, $jsroot . 'jquery/' . $jquery);
+            // Make jQuery accessible with $j (Mochikit has $)
+            $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
+            unset($check[$key]);
+        }
     }
-    
-    // Load jquery first, so that it doesn't break Mochikit
+
     if (get_config('developermode') & DEVMODE_UNPACKEDJS) {
-        $javascript_array[] = $jsroot . 'jquery/jquery-1.3.2.js';
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
         $javascript_array[] = $jsroot . 'MochiKit/Position.js';
         $javascript_array[] = $jsroot . 'MochiKit/Color.js';
@@ -218,12 +224,9 @@ EOF;
         $javascript_array[] = $jsroot . 'MochiKit/Format.js';
     }
     else {
-        $javascript_array[] = $jsroot . 'jquery/jquery-1.3.2.min.js';
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
     }
     $javascript_array[] = $jsroot . 'keyboardNavigation.js';
-    // Make jQuery accessible with $j (Mochikit is $)
-    $javascript_array[] = $jsroot . 'jquery-shortname.js';
 
     $strings = array();
     foreach ($pagestrings as $k => $v) {
