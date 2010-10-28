@@ -70,7 +70,7 @@ if (!$view || !can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
-$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
+$javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($view->get_blocktype_javascript());
 
 // Set up theme

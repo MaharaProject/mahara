@@ -154,7 +154,7 @@ $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('
 
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
 
-$javascript = array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js');
+$javascript = array('paginator', 'viewmenu', 'jquery', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 // Set up theme

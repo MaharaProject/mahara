@@ -57,8 +57,11 @@ if ($group->public) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
 }
 
+$javascript = array('paginator', 'jquery');
+$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+
 $smarty = smarty(
-    array(),
+    $javascript,
     $headers,
     array(),
     array('stylesheets' => array('style/views.css'))
