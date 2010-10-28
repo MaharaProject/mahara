@@ -189,30 +189,9 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     }
 
     public static function artefactchooser_element($default=null) {
-        return array(
-            'name'  => 'artefactids',
-            'type'  => 'artefactchooser',
-            'title' => get_string('image'),
-            'defaultvalue' => $default,
-            'blocktype' => 'image',
-            'limit' => 10,
-            'artefacttypes' => array('image', 'profileicon'),
-            'template' => 'artefact:file:artefactchooser-element.tpl',
-        );
-    }
-
-    /**
-     * Optional method. If specified, allows the blocktype class to munge the
-     * artefactchooser element data before it's templated
-     */
-    public static function artefactchooser_get_element_data($artefact) {
-        return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
 
     public static function default_copy_type() {
         return 'full';
     }
-
 }
-
-?>
