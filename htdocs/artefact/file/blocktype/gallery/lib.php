@@ -168,8 +168,10 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 AND a.owner = ?;",
                 array($user));
             $values['artefactids'] = array();
-            foreach ($userimages as $image) {
-                $values['artefactids'][] = $image->artefact;
+            if ($userimages) {
+                foreach ($userimages as $image) {
+                    $values['artefactids'][] = $image->artefact;
+                }
             }
         }
         return $values;
