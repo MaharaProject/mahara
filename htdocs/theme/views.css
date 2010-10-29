@@ -574,10 +574,10 @@ ul.artefactchooser-subtabs li.current a:active {
 .fileupload td {
 	padding: .25em .5em;
 }
-.fileupload #filelist td {
+.fileupload .filelist td {
 	padding: .25em .5em;
 }
-.fileupload #filelist td input.small {
+.fileupload .filelist td input.small {
 	font-size: .9167em;
 }
 .upload_browse #artefactchooser-body {
