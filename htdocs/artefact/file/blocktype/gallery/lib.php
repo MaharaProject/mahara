@@ -68,34 +68,44 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 break;
         }
 
+        $artefactids = array();
+        if (isset($configdata['select']) && $configdata['select'] == 1 && is_array($configdata['artefactids'])) {
+            $artefactids = $configdata['artefactids'];
+        }
+        else if (!empty($configdata['artefactid'])) {
+            // Get descendents of this folder.
+            $artefactids = artefact_get_descendants(array(intval($configdata['artefactid'])));
+        }
+
         // This can be either an image or profileicon. They both implement
         // render_self
         $images = array();
-        if (isset($configdata['artefactids'])) {
-            foreach ($configdata['artefactids'] as $artefactid) {
-                $image = $instance->get_artefact_instance($artefactid);
+        foreach ($artefactids as $artefactid) {
+            $image = $instance->get_artefact_instance($artefactid);
 
-                if ($image instanceof ArtefactTypeProfileIcon) {
-                    $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
-                    $description = $image->get('title');
-                }
-                else {
-                    $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid;
-                    $src .= '&view=' . $instance->get('view');
-                    $description = $image->get('description');
-                }
-
-                if (!empty($configdata['width'])) {
-                    $src .= '&maxwidth=' . $configdata['width'];
-                }
-
-                $images[] = array(
-                    'link' => get_config('wwwroot') . 'view/artefact.php?artefact=' .
-                        $artefactid . '&view=' . $instance->get('view'),
-                    'source' => hsc($src),
-                    'title' => $image->get('title'),
-                );
+            if ($image instanceof ArtefactTypeProfileIcon) {
+                $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
+                $description = $image->get('title');
             }
+            else if ($image instanceof ArtefactTypeImage) {
+                $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid;
+                $src .= '&view=' . $instance->get('view');
+                $description = $image->get('description');
+            }
+            else {
+                continue;
+            }
+
+            if (!empty($configdata['width'])) {
+                $src .= '&maxwidth=' . $configdata['width'];
+            }
+
+            $images[] = array(
+                'link' => get_config('wwwroot') . 'view/artefact.php?artefact=' .
+                    $artefactid . '&view=' . $instance->get('view'),
+                'source' => $src,
+                'title' => $image->get('title'),
+            );
         }
 
         $smarty = smarty_core();
@@ -116,13 +126,23 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $instance->set('artefactplugin', 'file');
         $user = $instance->get('view_obj')->get('owner');
         $select_options = array(
-            0 => get_string('selectall', 'blocktype.file/gallery'),
-            1 => get_string('selectchoose', 'blocktype.file/gallery'),
+            0 => get_string('selectfolder', 'blocktype.file/gallery'),
+            1 => get_string('selectimages', 'blocktype.file/gallery'),
         );
         $style_options = array(
             0 => get_string('stylethumbs', 'blocktype.file/gallery'),
             1 => get_string('styleslideshow', 'blocktype.file/gallery'),
         );
+        if (isset($configdata['select']) && $configdata['select'] == 1) {
+            $imageids = isset($configdata['artefactids']) ? $configdata['artefactids'] : array();
+            $imageselector = self::imageselector($instance, $imageids);
+            $folderselector = self::folderselector($instance, null, 'hidden');
+        }
+        else {
+            $imageselector = self::imageselector($instance, null, 'hidden');
+            $folderid = !empty($configdata['artefactid']) ? array(intval($configdata['artefactid'])) : null;
+            $folderselector = self::folderselector($instance, $folderid);
+        }
         return array(
             'user' => array(
                 'type' => 'hidden',
@@ -135,7 +155,8 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 'defaultvalue' => (isset($configdata['select'])) ? $configdata['select'] : 0,
                 'separator' => '<br>',
             ),
-            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
+            'images' => $imageselector,
+            'folder' => $folderselector,
             'style' => array(
                 'type' => 'radio',
                 'title' => get_string('style', 'blocktype.file/gallery'),
@@ -158,32 +179,45 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     }
 
     public static function instance_config_save($values) {
-        // modify artefactids accordingly if the user wants all their images
         if ($values['select'] == 0) {
-            $user = $values['user'];
-            $userimages = get_records_sql_array("
-                SELECT im.artefact
-                FROM {artefact} a, {artefact_file_image} im
-                WHERE a.id = im.artefact
-                AND a.owner = ?;",
-                array($user));
-            $values['artefactids'] = array();
-            if ($userimages) {
-                foreach ($userimages as $image) {
-                    $values['artefactids'][] = $image->artefact;
-                }
-            }
+            $values['artefactid'] = $values['folder'];
+            unset($values['artefactids']);
         }
+        else if ($values['select'] == 1) {
+            $values['artefactids'] = $values['images'];
+            unset($values['artefactid']);
+        }
+        unset($values['folder']);
+        unset($values['images']);
         return $values;
     }
 
-    public static function filebrowser_element(&$instance, $default=array()) {
+    public static function imageselector(&$instance, $default=array(), $class=null) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('image');
-        $element['name'] = 'artefactids';
+        $element['title'] = get_string('Images', 'artefact.file');
+        $element['name'] = 'images';
+        if ($class) {
+            $element['class'] = $class;
+        }
         $element['config']['selectone'] = false;
         $element['filters'] = array(
             'artefacttype'    => array('image'),
+        );
+        return $element;
+    }
+
+    public static function folderselector(&$instance, $default=array(), $class=null) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('folder', 'artefact.file');
+        $element['name'] = 'folder';
+        if ($class) {
+            $element['class'] = $class;
+        }
+        $element['config']['upload'] = false;
+        $element['config']['selectone'] = true;
+        $element['config']['selectfolders'] = true;
+        $element['filters'] = array(
+            'artefacttype'    => array('folder'),
         );
         return $element;
     }

@@ -31,8 +31,8 @@ $string['title'] = 'Image Gallery';
 $string['description'] = 'A collection of images from your Files area';
 
 $string['select'] = 'Image Selection';
-$string['selectall'] = 'Display all my images (will not include images uploaded later)';
-$string['selectchoose'] = 'I will choose the images to display';
+$string['selectfolder'] = 'Display all images from one of my folders (will include images uploaded later)';
+$string['selectimages'] = 'I will choose individual images to display';
 $string['width'] = 'Width';
 $string['widthdescription'] = 'Specify the width for your images (in pixels). The images will be scaled to this width.';
 $string['style'] = 'Style';
