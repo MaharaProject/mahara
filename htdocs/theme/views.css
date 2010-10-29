@@ -418,6 +418,12 @@ html>body #column-container {
     padding: 8px;
     vertical-align: middle;
 }
+.thumbnails {
+  padding: .5em;
+}
+.thumbnails img {
+  vertical-align: middle;
+}
 
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
