@@ -403,20 +403,28 @@ html>body #column-container {
 }
 
 /* Slideshow */
-.thumbnails img {
-    padding: 5px;
-}
 .slideshow {
-    margin: auto;
+    padding: .5em 0;
     text-align: center;
+    width: 100%;
 }
-.slideshow .images td {
-    margin: 0;
-    padding: 0;
-}
-.slideshow .images td.control {
-    padding: 8px;
+.slideshow table.images {
+    margin: 0 auto;
     vertical-align: middle;
+}
+.slideshow .control {
+  vertical-align: middle;
+  font-size: 2em;
+  padding: 0;
+}
+.slideshow .control .disabled:hover,
+.slideshow .control .disabled {
+  color: #ddd;
+  cursor: default;
+}
+.slideshow .control span:hover {
+  color: #888;
+  cursor: pointer;
 }
 .thumbnails {
   padding: .5em;

@@ -173,21 +173,3 @@ ul.colnav li a {
 .blockinstance-content .groupviewsection h5 {
 	color: #333;
 }
-
-/* Slideshow */
-
-.slideshow .control {
-    background: #333333;
-    font-weight: bold;
-    font-size: 3em;
-    color: #FFFFFF;
-}
-.slideshow .highlight {
-    background: #555555;
-}
-.slideshow .images td {
-    border: 5px solid #888888;
-}
-.slideshow img {
-    max-width: 100% !important;
-}
