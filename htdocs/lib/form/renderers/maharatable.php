@@ -73,7 +73,11 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
         $result .= $element['labelhtml'];
         $result .= "</th>\n\t</tr>\n";
     }
-    $result .= "\t<tr id=\"{$formname}_{$element['name']}_container\">\n\t\t<td>";
+    $result .= "\t<tr id=\"{$formname}_{$element['name']}_container\"";
+    if ($element['class']) {
+        $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+    }
+    $result .= ">\n\t\t<td>";
 
     // Wrap WYSIWYG elements in a table with two cells side by side, one for the element and one for the help icon
     if (!empty($element['help']) && $element['type'] == 'wysiwyg') {
