@@ -6,12 +6,12 @@
         <span class="prev disabled">&lsaquo;</span>
     </td>
     <td>
-    {foreach from=$images item=image}
-        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" /></a>
+    {foreach from=$images item=image name=images}
+        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" {if !$dwoo.foreach.images.first}style="display:none;"{/if}/></a>
     {/foreach}
     </td>
     <td class="control">
-        <span class="next">&rsaquo;</span>
+        <span class="next disabled">&rsaquo;</span>
         {*<span class="last">&raquo;</span>*}
     </td>
     </tr>

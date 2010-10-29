@@ -30,5 +30,6 @@ function Slideshow(id, count) {
     // $j(this.id + ' td.control span.last').click(function() {return self.change(self.count);});
     $j(this.id + " img").hide();
     $j(this.id + " img:eq(" + this.current + ")").show();
+    $j(this.id + ' td.control span.next').removeClass('disabled');
 }
 
