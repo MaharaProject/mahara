@@ -428,8 +428,10 @@ html>body #column-container {
 }
 .thumbnails {
   padding: .5em;
+  text-align: center;
 }
 .thumbnails img {
+  padding: .5em;
   vertical-align: middle;
 }
 
