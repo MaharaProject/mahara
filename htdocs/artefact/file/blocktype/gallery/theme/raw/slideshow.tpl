@@ -1,3 +1,4 @@
+{if $images}
 <div class="slideshow" id="slideshow{$instanceid}">
     <table class="images">
     <tr>
@@ -7,7 +8,7 @@
     </td>
     <td>
     {foreach from=$images item=image name=images}
-        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" {if !$dwoo.foreach.images.first}style="display:none;"{/if}/></a>
+        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" {if !$dwoo.foreach.images.first}style="display:none;"{/if}></a>
     {/foreach}
     </td>
     <td class="control">
@@ -17,6 +18,9 @@
     </tr>
     </table>
 </div>
-<script>
+<script type="text/javascript">
 var slideshow{$instanceid} = new Slideshow({$instanceid}, {$count});
 </script>
+{else}
+  {str tag=noimagesfound section=artefact.file}
+{/if}
