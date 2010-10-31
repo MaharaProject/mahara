@@ -15,8 +15,8 @@
 </script>
 <div id="{{$name}}_list">
     {{if $maxfilesize}}
-    <input type="hidden" name="MAX_FILE_SIZE" value="{{$maxfilesize}}"/>
+    <input type="hidden" name="MAX_FILE_SIZE" value="{{$maxfilesize}}">
     {{/if}}
-    <input type="file" name="{{$name}}_files_0"/>
+    <input type="file" name="{{$name}}_files_0">
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">[+]</a>

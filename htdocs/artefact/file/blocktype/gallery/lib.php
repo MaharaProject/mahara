@@ -62,9 +62,11 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         switch ($style) {
             case 0: // thumbnails
                 $template = 'thumbnails';
+                $width = isset($configdata['width']) ? $configdata['width'] : 75;
                 break;
             case 1: // slideshow
                 $template = 'slideshow';
+                $width = isset($configdata['width']) ? $configdata['width'] : 400;
                 break;
         }
 
@@ -96,9 +98,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 continue;
             }
 
-            if (!empty($configdata['width'])) {
-                $src .= '&maxwidth=' . $configdata['width'];
-            }
+            $src .= '&maxwidth=' . $width;
 
             $images[] = array(
                 'link' => get_config('wwwroot') . 'view/artefact.php?artefact=' .
@@ -112,6 +112,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('count', count($images));
         $smarty->assign('images', $images);
+        $smarty->assign('width', $width);
 
         return $smarty->fetch('blocktype:gallery:' . $template . '.tpl');
     }

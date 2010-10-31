@@ -8,7 +8,7 @@
     </td>
     <td>
     {foreach from=$images item=image name=images}
-        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" {if !$dwoo.foreach.images.first}style="display:none;"{/if}></a>
+        <a href="{$image.link}" target="_blank"><img src="{$image.source}" alt="{$image.title}" title="{$image.title}" style="max-width: {$width}px;{if !$dwoo.foreach.images.first} display:none;{/if}"></a>
     {/foreach}
     </td>
     <td class="control">
