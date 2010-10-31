@@ -1,9 +1,10 @@
-			</div>
-		</div>
-	</div>
+			</div>{* main-column-container *}
+		</div>{* main-column *}
+	</div>{* main-wrapper *}
 	<div id="footer-wrap">
 		{mahara_performance_info}
 	</div>
-    </body>
+</div>{* containerX *}
+</body>
 </html>
 

@@ -37,7 +37,7 @@
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
           <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
-        <script>{literal}
+        <script type="text/javascript">{literal}
         addLoadEvent(function(){
             setStyle('mainnav', {'display': 'none'});
             removeElementClass('mainnav', 'js-hidden');
