@@ -68,7 +68,7 @@ h6 {
 }
 /* table with th border-bottom */
 #searchresults thead th,
-#filelist,
+.filelist,
 .tag-results #results {
 	border-bottom: 1px solid #14436F;
 }

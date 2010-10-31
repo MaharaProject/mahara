@@ -294,7 +294,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.browse_init = function () {
         if (self.config.edit || self.config.editmeta) {
-            forEach(getElementsByTagAndClassName('input', null, 'filelist'), function (elem) {
+            forEach(getElementsByTagAndClassName('input', null, self.id + '_filelist'), function (elem) {
                 var name = getNodeAttribute(elem, 'name').match(new RegExp('^' + self.id + "_([a-z]+)\\[(\\d+)\\]$"));
                 if (name && name[1]) {
                     if (name[1] == 'edit') {
@@ -350,10 +350,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 forEach(Draggables.drags, function (drag) { drag.destroy(); });
                 forEach(Droppables.drops, function (drop) { drop.destroy(); });
 
-                forEach(getElementsByTagAndClassName('div', 'icon-drag', 'filelist'), function (elem) {
+                forEach(getElementsByTagAndClassName('div', 'icon-drag', self.id + '_filelist'), function (elem) {
                     self.make_icon_draggable(elem);
                 });
-                forEach(getElementsByTagAndClassName('tr', 'folder', 'filelist'), self.make_row_droppable);
+                forEach(getElementsByTagAndClassName('tr', 'folder', self.id + '_filelist'), self.make_row_droppable);
             }
         }
         forEach(getElementsByTagAndClassName('a', 'changeowner', self.id + '_upload_browse'), function (elem) {
@@ -501,7 +501,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.connect_select_buttons = function () {
-        forEach(getElementsByTagAndClassName('input', 'select', 'filelist'), function (elem) {
+        forEach(getElementsByTagAndClassName('input', 'select', self.id + '_filelist'), function (elem) {
             var id = elem.name.replace(/.*_select\[(\d+)\]$/, '$1');
             if (self.selecteddata[id]) {
                 addElementClass(elem, 'hidden');

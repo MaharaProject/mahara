@@ -73,6 +73,10 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         return true;
     }
 
+    public static function get_instance_config_javascript() {
+        return array('js/creativecommons.js');
+    }
+
     public static function instance_config_save($values) {
         $license = 'by';
         if (1 == $values['noncommercial']) {
