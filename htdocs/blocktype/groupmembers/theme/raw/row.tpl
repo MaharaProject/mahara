@@ -1,4 +1,3 @@
-{auto_escape off}
     {foreach from=$groupmembers item=row}
         <tr>
         {foreach from=$row item=groupmember}
@@ -11,4 +10,3 @@
         {/foreach}
         </tr>
     {/foreach}
-{/auto_escape}
