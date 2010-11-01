@@ -178,8 +178,23 @@ $deleteall = pieform(array(
 
 function delete_all_notifications_submit() {
     global $USER, $SESSION;
+    db_begin();
     $count = count_records('notification_internal_activity', 'usr', $USER->get('id'));
+    // Remove parent pointers to messages we're about to delete
+    // Use temp table in subselect for Mysql compat.
+    execute_sql("
+        UPDATE {notification_internal_activity}
+        SET parent = NULL
+        WHERE parent IN (
+            SELECT id
+            FROM (
+               SELECT id FROM {notification_internal_activity} WHERE usr = ?
+            ) AS temp
+        )",
+        array($USER->get('id'))
+    );
     delete_records('notification_internal_activity', 'usr', $USER->get('id'));
+    db_commit();
     $SESSION->add_ok_msg(get_string('deletednotifications', 'activity', $count));
     redirect(get_config('wwwroot') . 'account/activity/index.php');
 }
