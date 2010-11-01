@@ -58,7 +58,7 @@ foreach (plugin_types() as $plugintype) {
     $now = $fake ? (time() - ($realstart - $start)) : time();
     $jobs = get_records_select_array(
         $table,
-        'nextrun < ?',
+        'nextrun < ? OR nextrun IS NULL',
         array(db_format_timestamp($now)),
         '',
         'plugin,callfunction,minute,hour,day,month,dayofweek,' . db_format_tsfield('nextrun')
@@ -118,7 +118,7 @@ foreach (plugin_types() as $plugintype) {
 $now = $fake ? (time() - ($realstart - $start)) : time();
 $jobs = get_records_select_array(
     'cron',
-    'nextrun < ?',
+    'nextrun < ? OR nextrun IS NULL',
     array(db_format_timestamp($now)),
     '',
     'id,callfunction,minute,hour,day,month,dayofweek,' . db_format_tsfield('nextrun')
