@@ -1079,12 +1079,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
     }
 
-    if (!$realpath = realpath($fullpath)) {
+    if (!file_exists($fullpath)) {
         if (!empty($nonfatal)) {
             return false;
         }
         throw new SystemException ("File $fullpath did not exist");
     }
+
+    $realpath = realpath($fullpath);
 
     if (strpos($realpath, get_config('docroot') !== 0)) {
         if (!empty($nonfatal)) {
