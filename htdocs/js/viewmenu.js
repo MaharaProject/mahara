@@ -33,10 +33,11 @@ function addFeedbackSuccess(form, data) {
     formSuccess(form, data);
 }
 
-function objectionSuccess() {
+function objectionSuccess(form, data) {
     addElementClass('objection_form', 'hidden');
     $('objection_form_message').value = '';
     rewriteCancelButtons();
+    formSuccess(form, data);
 }
 
 function rewriteCancelButtons() {
