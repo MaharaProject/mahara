@@ -258,6 +258,9 @@ if (get_config('viewmicroheaders')) {
         }
     }
 }
+else if ($can_edit) {
+    $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
+}
 
 $title = hsc(TITLE);
 

@@ -8,9 +8,10 @@
     {include file=collectionnav.tpl}
 {/if}
 
-{if !$microheaders && $mnethost}
+{if !$microheaders && ($mnethost || $editurl)}
 <div class="rbuttons">
-  <a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>
+  {if $editurl}<a class="s icon {if $new}btn-reply{else}btn-edit{/if}" href="{$editurl}">{if $new}{str tag=back}{else}{str tag=editthisview section=view}{/if}</a>{/if}
+  {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>{/if}
 </div>
 {/if}
 
