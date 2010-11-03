@@ -222,7 +222,7 @@ if (get_config('viewmicroheaders')) {
             $microheaderlinks = array(
                 array(
                     'name' => get_string('back'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&amp;new=1',
+                    'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . '&new=1',
                     'type' => 'reply',
                 ),
             );
