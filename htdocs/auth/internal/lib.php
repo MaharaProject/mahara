@@ -167,15 +167,6 @@ class AuthInternal extends Auth {
      */
     private function validate_password($theysent, $wehave, $salt) {
         $this->must_be_ready();
-        if ($salt == null) {
-            // This allows "plaintext" passwords, which are eaiser for an admin to
-            // create by hacking in the database directly. The application does not
-            // create passwords in this form.
-            // We don't allow empty passwords here to prevent anyone logging in to
-            // user accounts that were created by some other passwordless auth
-            // method and subsequently changed to internal.
-            return $wehave != '' && $theysent == $wehave;
-        }
 
         if ($salt == '*') {
             // This is a special salt that means this user simply CAN'T log in.

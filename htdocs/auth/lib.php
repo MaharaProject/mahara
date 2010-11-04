@@ -1628,6 +1628,10 @@ function password_validate(Pieform $form, $values, $user) {
 
 }
 
+function auth_get_random_salt() {
+    return substr(md5(rand(1000000, 9999999)), 2, 8);
+}
+
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {

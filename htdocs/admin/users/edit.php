@@ -38,6 +38,7 @@ require_once('activity.php');
 $id = param_integer('id');
 $user = new User;
 $user->find_by_id($id);
+$authobj = AuthFactory::create($user->authinstance);
 
 if (!$USER->is_admin_for_user($user)) {
     $SESSION->add_error_msg(get_string('youcannotadministerthisuser', 'admin'));
@@ -53,17 +54,22 @@ $elements['id'] = array(
     'rules'   => array('integer' => true),
     'value'   => $id,
 );
-$elements['password'] = array(
-    'type'         => 'text',
-    'title'        => get_string('resetpassword','admin'),
-    'description'  => get_string('resetpassworddescription','admin'),
-);
-$elements['passwordchange'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('forcepasswordchange','admin'),
-    'description'  => get_string('forcepasswordchangedescription','admin'),
-    'defaultvalue' => $user->passwordchange,
-);
+
+if (method_exists($authobj, 'change_password')) {
+    // Only show the password options if the plugin allows for the functionality
+    $elements['password'] = array(
+        'type'         => 'text',
+        'title'        => get_string('resetpassword','admin'),
+        'description'  => get_string('resetpassworddescription','admin'),
+    );
+
+    $elements['passwordchange'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('forcepasswordchange','admin'),
+        'description'  => get_string('forcepasswordchangedescription','admin'),
+        'defaultvalue' => $user->passwordchange,
+    );
+}
 if ($USER->get('admin')) {
     $elements['staff'] = array(
         'type'         => 'checkbox',
@@ -193,10 +199,6 @@ function edituser_site_submit(Pieform $form, $values) {
         return false;
     }
 
-    if (isset($values['password']) && $values['password'] !== '') {
-        $user->password = $values['password'];
-        $user->salt = '';
-    }
     $user->passwordchange = (int) ($values['passwordchange'] == 'on');
     $user->quota = $values['quota'];
     $user->expiry = db_format_timestamp($values['expiry']);
@@ -255,6 +257,23 @@ function edituser_site_submit(Pieform $form, $values) {
             }
             $user->authinstance = $values['authinstance'];
         }
+    }
+    if (isset($values['password']) && $values['password'] !== '') {
+        $userobj = new User();
+        $userobj = $userobj->find_by_id($user->id);
+        $authobj = AuthFactory::create($user->authinstance);
+
+        if (method_exists($authobj, 'change_password')) {
+            // Only change the pw if the new auth instance allows for it
+            $user->password = $authobj->change_password($userobj, $values['password']);
+            $user->salt = $userobj->salt;
+        } else {
+            // Set empty pw with salt
+            $user->password = '';
+            $user->salt = auth_get_random_salt();
+        }
+
+        unset($userobj, $authobj);
     }
 
     update_record('usr', $user);

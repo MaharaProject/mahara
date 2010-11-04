@@ -324,6 +324,19 @@ function adduser_submit(Pieform $form, $values) {
         }
     }
 
+    // Add salt and encrypt the pw, if the auth instance allows for it
+    $userobj = new User();
+    $userobj = $userobj->find_by_id($user->id);
+    $authobj = AuthFactory::create($user->authinstance);
+    if (method_exists($authobj, 'change_password')) {
+        $authobj->change_password($userobj, $user->password);
+    } else {
+        $userobj->password = '';
+        $userobj->salt = auth_get_random_salt();
+        $userobj->commit();
+    }
+    unset($userobj, $authobj);
+
     $SESSION->add_ok_msg(get_string('newusercreated', 'admin'));
     redirect('/admin/users/edit.php?id=' . $user->id);
 }

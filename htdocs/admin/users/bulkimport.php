@@ -367,6 +367,20 @@ function finish_import() {
         }
     }
 
+    foreach ($ADDEDUSERS as $user) {
+        // Add salt and encrypt the pw, if the auth instance allows for it
+        $userobj = new User();
+        $userobj = $userobj->find_by_id($user->id);
+        $authobj = AuthFactory::create($user->authinstance);
+        if (method_exists($authobj, 'change_password')) {
+            $authobj->change_password($userobj, $user->password);
+        } else {
+            $userobj->password = '';
+            $userobj->salt = auth_get_random_salt();
+            $userobj->commit();
+        }
+    }
+
     if (!empty($FAILEDUSERS)) {
         $message = get_string('importfailedfornusers', 'admin', count($FAILEDUSERS), $totalusers) . "\n<ul>\n";
         foreach ($FAILEDUSERS as $username => $error) {
