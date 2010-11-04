@@ -147,14 +147,15 @@ $cfg->sendemail = true;
 // port 465 is usually used with ssl, port 587 is usually used with tls),
 // specify it below. Alternatively you may specify the port in smtphosts
 // definition above using format [hostname:port] (e.g. 'smtp1.example.com:465').
-// $cfg->smtpport = 465;
+// $cfg->smtpport = 25;
 // If you have specified an smtp server above, and the server requires
 // authentication, enter user credentials here:
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
-// If smtp server requres secure connection, specify its type below. Valid options
-// are 'ssl' or 'tls'.
-// $cfg->smtpsecure = 'ssl';
+// If smtp server requres secure connection, specify the protocol type below.
+// Valid options are '', 'ssl' or 'tls'. Setting it to '' or leaving the line
+// commented means that secure connection will not be used.
+// $cfg->smtpsecure = '';
 
 // Variable Envelope Return Path Handling
 // If you want mahara to keep track of email addresses which generate a
