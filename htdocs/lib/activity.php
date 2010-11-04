@@ -451,6 +451,13 @@ abstract class ActivityType {
                 // go into the activity log as 'unread'
                 $changes->read = 0;
                 update_record('notification_internal_activity', $changes);
+                // Though, admins should probably know about the error
+                $message = (object) array(
+                    'users' => get_column('usr', 'id', 'admin', 1),
+                    'subject' => get_string('adminnotificationerror', 'activity'),
+                    'message' => $e,
+                );
+                activity_occurred('maharamessage', $message);
             }
         }
 

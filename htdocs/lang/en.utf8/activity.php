@@ -110,4 +110,5 @@ $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all y
 $string['viewsubmittedsubject'] = 'View submitted to %s';
 $string['viewsubmittedmessage'] = '%s has submitted their view "%s" to %s';
 
+$string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
 ?>
