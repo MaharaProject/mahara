@@ -340,9 +340,11 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->Host = get_config('smtphosts');
         if (get_config('smtpuser')) {
             // Use SMTP authentication
-            $mail->SMTPAuth = true;
-            $mail->Username = get_config('smtpuser');
-            $mail->Password = get_config('smtppass');
+            $mail->SMTPAuth   = true;
+            $mail->Username   = get_config('smtpuser');
+            $mail->Password   = get_config('smtppass');
+            $mail->SMTPSecure = get_config('smtpsecure');
+            $mail->Port       = get_config('smtpport');
         }
     }
 

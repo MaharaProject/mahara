@@ -139,14 +139,22 @@ $cfg->sendemail = true;
 // $cfg->perftolog = true;
 // if neither are set, performance info wont be captured.
 
-// mail handling
-// if you want mahara to use smtp servers to send mail, enter one or more here
+// Mail handling
+// If you want mahara to use SMTP servers to send mail, enter one or more here
 // blank means mahara will use the default PHP method.
-// $cfg->smtphosts = 'mail.a.com;mail.b.com';
-// If you have specified an smtp server above, and the server requires authentication, 
-// enter them here
+// $cfg->smtphosts = 'smtp1.example.com;smtp2.example.com';
+// If smtp server uses port number different from 25 (e.g. for secure connections,
+// port 465 is usually used with ssl, port 587 is usually used with tls),
+// specify it below. Alternatively you may specify the port in smtphosts
+// definition above using format [hostname:port] (e.g. 'smtp1.example.com:465').
+// $cfg->smtpport = 465;
+// If you have specified an smtp server above, and the server requires
+// authentication, enter user credentials here:
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
+// If smtp server requres secure connection, specify its type below. Valid options
+// are 'ssl' or 'tls'.
+// $cfg->smtpsecure = 'ssl';
 
 // Variable Envelope Return Path Handling
 // If you want mahara to keep track of email addresses which generate a
