@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
     {if $membershiptypes}
-        <div id="memberoptions" class="right">
+        <div id="memberoptions" class="fr">
         {foreach from=$membershiptypes item=item implode="&nbsp;&nbsp;|&nbsp;&nbsp;"}
             {if $item.link}
                 <a href="{$item.link}">{$item.name}</a>
@@ -10,7 +10,6 @@
             {/if}
         {/foreach}
         </div>
-        <br>
     {/if}
     {$form|safe}
     <p>{$instructions|clean_html|safe}</p>
