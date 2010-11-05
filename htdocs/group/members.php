@@ -128,13 +128,13 @@ if ($role == 'admin') {
         'name' => get_string('current', 'group'),
         'link' => empty($membershiptype) ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id
         );
-    if ($group->jointype == 'request' && count_records('group_member_request')) {
+    if ($group->jointype == 'request' && count_records('group_member_request', 'group', $group->id)) {
         $membershiptypes[] = array(
             'name' => get_string('requests', 'group'),
             'link' => $membershiptype == 'request' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=request'
             );
     }
-    if ($group->jointype == 'invite' && count_records('group_member_invite')) {
+    if ($group->jointype == 'invite' && count_records('group_member_invite', 'group', $group->id)) {
         $membershiptypes[] = array(
             'name' => get_string('invites', 'group'),
             'link' => $membershiptype == 'invite' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=invite'
