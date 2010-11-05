@@ -3156,6 +3156,51 @@ class View {
         $unthemable_types = array('grouphomepage', 'dashboard');
         return !in_array($this->type, $unthemable_types);
     }
+
+    /**
+     * Get all views for a (user,group,institution), grouping views
+     * into their collections.  Empty collections not returned.
+     *
+     * @param integer $owner
+     * @param integer $group
+     * @param string  $institution
+     *
+     * @return array, array
+     */
+    function get_views_and_collections($owner=null, $group=null, $institution=null) {
+        $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
+        $records = get_records_sql_array("
+            SELECT v.id AS vid, v.title AS vname, c.id AS cid, c.name AS cname
+            FROM {view} v
+                LEFT JOIN {collection_view} cv ON v.id = cv.view
+                LEFT JOIN {collection} c ON cv.collection = c.id
+            WHERE v.$ownersql AND v.type = 'portfolio'
+            ORDER BY c.name, v.title",
+            array()
+        );
+
+        $collections = array();
+        $views = array();
+
+        if (!$records) {
+            return array($collections, $views);
+        }
+
+        foreach ($records as &$r) {
+            $v = array('id' => $r->vid, 'name' => $r->vname);
+            if ($r->cid) {
+                if (!isset($collections[$r->cid])) {
+                    $collections[$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'views' => array());
+                }
+                $collections[$r->cid]['views'][$r->vid] = $v;
+            }
+            else {
+                $views[$r->vid] = $v;
+            }
+        }
+
+        return array($collections, $views);
+    }
 }
 
 
