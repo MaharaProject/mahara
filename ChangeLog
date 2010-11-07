@@ -1,3 +1,11 @@
+1.3.3 (2010-11-07)
+- Fix for XSS vulnerability (CVE-2010-3871)
+- Fixes to category namespaces and encoding in Leap2a import/export
+- Updates to selenium tests
+- Fixes to permissions in secret URL views and feedback attachments
+- Fixes in view creation wizard, embedded media block, js calendar
+- 
+
 1.3.2 (2010-10-08)
 - Bug fixes to group homepage, blogs, LDAP authentication, view themes, and embedded video.
 - 
