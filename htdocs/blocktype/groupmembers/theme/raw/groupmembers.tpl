@@ -1,12 +1,10 @@
-{auto_escape off}
 <div class="friends">
 {if $groupmembers}
     <table id="userfriendstable" class="center fullwidth">
       <tbody>
-      {$groupmembers.tablerows}
+      {$groupmembers.tablerows|safe}
       </tbody>
     </table>
 {/if}
-<a class="morelink" href="{$show_all.url}">{$show_all.message|escape} &raquo;</a>
+<a class="morelink" href="{$show_all.url}">{$show_all.message} &raquo;</a>
 </div>
-{/auto_escape}
