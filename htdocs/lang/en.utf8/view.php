@@ -145,8 +145,9 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 $string['deleteviewconfirmnote'] = '<p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted.  Consider backing up the view by exporting it first.</p>';
 
-$string['editaccessdescription'] = '<p>By default, only you can see your %s. You can share your %s with others by adding access rules on this page.</p>
+$string['editaccesspagedescription3'] = '<p>By default, only you can see your Views. You can share views with others by adding access rules on this page.</p>
 <p>Once you are done, scroll down and click Save to continue.</p>';
+$string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of views and collections';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
 $string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your View before the start date and after the end date, regardless of any other access you have granted.';
@@ -163,7 +164,7 @@ $string['submittedforassessment'] = 'Submitted for assessment';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
-$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
+$string['updatedaccessfornumviews'] = 'Access rules were updated for %d View(s)';
 $string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';

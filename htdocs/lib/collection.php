@@ -294,6 +294,7 @@ class Collection {
      * @return integer count so we know what SESSION message to display
      */
     public function add_views($values) {
+        require_once(get_config('libroot') . 'view.php');
 
         $count = 0; // how many views we are adding
         db_begin();
@@ -315,7 +316,8 @@ class Collection {
             }
         }
 
-        $this->combine_access();
+        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+        View::combine_access($viewids);
 
         db_commit();
 
@@ -334,79 +336,6 @@ class Collection {
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
         delete_records_select('view_access', 'view = ? AND token IS NOT NULL', array($view));
-
-        db_commit();
-    }
-
-    /**
-     * Update access in collection
-     *
-     * Copy access records from one view to all other views
-     */
-    public function set_access($viewid) {
-        if (!$views = $this->views()) {
-            return;
-        }
-
-        if ($views['count'] < 2) {
-            return;
-        }
-
-        $toupdate = array();
-        foreach ($views['views'] as &$v) {
-            if ($v->view != $viewid) {
-                $toupdate[] = $v->view;
-            }
-        }
-
-        if (count($toupdate) != $views['count'] - 1) {
-            throw new SystemException('error setting collection access');
-        }
-
-        db_begin();
-        delete_records_select('view_access', 'view IN (' . join(',', $toupdate) . ') AND visible = 1');
-        $this->combine_access();
-        db_commit();
-    }
-
-
-    /**
-     * Synchronise access records across all views in the collection by
-     * copying all access records to all views
-     *
-     * @todo: allow access records to apply to things other than views,
-     * (e.g. collections), so we don't have to do this.
-     */
-    public function combine_access() {
-        if (!$viewids = get_column('collection_view', 'view', 'collection', $this->id)) {
-            return;
-        }
-
-        $select = 'view IN (' . join(',', $viewids) . ') AND visible = 1';
-
-        if (!$access = get_records_select_array('view_access', $select)) {
-            return;
-        }
-
-        $unique = array();
-        foreach ($access as &$a) {
-            unset($a->view);
-            $k = serialize($a);
-            if (!isset($unique[$k])) {
-                $unique[$k] = $a;
-            }
-        }
-
-        db_begin();
-
-        delete_records_select('view_access', $select);
-
-        foreach ($unique as &$a) {
-            foreach ($viewids as $id) {
-                $a->view = $id;
-                insert_record('view_access', $a);
-            }
-        }
 
         db_commit();
     }

@@ -27,6 +27,7 @@
 
 define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -40,7 +41,6 @@ $new = param_boolean('new');
 
 $collection = null;
 if ($collectionid = param_integer('collection', null)) {
-    define('SECTION_PLUGINNAME', 'collection');
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
@@ -52,7 +52,6 @@ if ($collectionid = param_integer('collection', null)) {
 }
 else {
     $viewid = param_integer('id');
-    define('SECTION_PLUGINNAME', 'view');
 }
 
 $view = new View($viewid);
@@ -61,38 +60,17 @@ if (empty($collection)) {
     $collection = $view->get_collection();
 }
 
-if ($collection) {
-    define('TITLE', $collection->get('name') . ': ' . get_string('editaccess', 'view'));
-}
-else {
-    define('TITLE', $view->get('title') . ': ' . get_string('editaccess', 'view'));
-}
+define('TITLE', get_string('editaccess', 'view'));
 
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution, false, $collection);
+View::set_nav($group, $institution);
 
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
-$js = '';
-if (empty($collection) && !count_records('block_instance', 'view', $view->get('id'))) {
-    $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
-    $js .= <<<EOF
-addLoadEvent(function() {
-    connect('editaccess_submit', 'onclick', function () {
-        var accesslistrows = getElementsByTagAndClassName('tr', null, 'accesslistitems');
-        if (accesslistrows.length > 0 && !confirm('{$confirmmessage}')) {
-            replaceChildNodes('accesslistitems', []);
-        }
-    });
-});
-EOF;
-}
-
-// @todo need a rule here that prevents stopdate being smaller than startdate
 $form = array(
     'name' => 'editaccess',
     'renderer' => 'div',
@@ -109,26 +87,70 @@ $form = array(
             'type' => 'hidden',
             'value' => $new,
         ),
-        'allowcomments' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('allowcomments','artefact.comment'),
-            'description'  => get_string('allowcommentsonview','view'),
-            'defaultvalue' => $view->get('allowcomments'),
-        ),
-        'approvecomments' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('moderatecomments', 'artefact.comment'),
-            'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
-            'defaultvalue' => $view->get('approvecomments'),
-        ),
-        'template' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('allowcopying', 'view'),
-            'description'  => $collection ? get_string('templatedescriptionplural', 'view') : get_string('templatedescription', 'view'),
-            'defaultvalue' => $view->get('template'),
-        ),
     )
 );
+
+// Create checkboxes to allow the user to apply these access rules to
+// any of their views/collections.
+
+list($collections, $views) = View::get_views_and_collections($view->get('owner'), $group, $institution);
+
+if (!empty($collections)) {
+    foreach ($collections as &$c) {
+        $viewtitles = array();
+        foreach ($c['views'] as &$v) {
+            $viewtitles[] = str_shorten_text($v['name'], 15, true);
+        }
+        $c = array(
+            'title'        => $c['name'],
+            'description'  => str_shorten_text(join(', ', $viewtitles), 100, true),
+            'value'        => $c['id'],
+            'defaultvalue' => !empty($collection) && $collection->get('id') == $c['id'],
+            'views'        => $c['views'], // Keep these hanging around to check in submit function
+        );
+    }
+    $form['elements']['collections'] = array(
+        'type'         => 'checkboxes',
+        'title'        => get_string('collections', 'collection'),
+        'elements'     => $collections,
+    );
+}
+
+if (!empty($views)) {
+    foreach ($views as &$v) {
+        $v = array(
+            'title'        => $v['name'],
+            'value'        => $v['id'],
+            'defaultvalue' => $viewid == $v['id'],
+        );
+    }
+    $form['elements']['views'] = array(
+        'type'         => 'checkboxes',
+        'title'        => get_string('views'),
+        'elements'     => $views,
+    );
+}
+
+$form['elements']['allowcomments'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('allowcomments','artefact.comment'),
+    'description'  => get_string('allowcommentsonview','view'),
+    'defaultvalue' => $view->get('allowcomments'),
+);
+$form['elements']['approvecomments'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('moderatecomments', 'artefact.comment'),
+    'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
+    'defaultvalue' => $view->get('approvecomments'),
+);
+$form['elements']['template'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('allowcopying', 'view'),
+    'description'  => get_string('templatedescription', 'view'),
+    'defaultvalue' => $view->get('template'),
+);
+
+$js = '';
 
 if ($institution) {
     if ($institution == 'mahara') {
@@ -405,32 +427,12 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-    global $view, $new, $collection;
-    if ($new) {
-        if (!$collection) {
-            $view->delete();
-            $view->post_edit_redirect();
-        }
-        else {
-            $collection->delete();
-            $collection->post_edit_redirect();
-        }
-    }
-    $collection ? $collection->post_edit_redirect() : $view->post_edit_redirect();
+    redirect(); // @todo redirect to new share tab.
 }
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $view, $new, $institution, $collection;
-
-    if (param_boolean('back')) {
-        if (!$collection) {
-            redirect('/view/edit.php?id=' . $view->get('id') . '&new=' . $new);
-        }
-        else {
-            redirect('/collection/views.php?id=' . $collection->get('id') . '&new=' . $new);
-        }
-    }
+    global $SESSION, $new, $institution, $collections, $views;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -444,54 +446,60 @@ function editaccess_submit(Pieform $form, $values) {
         }
     }
 
-    $view->set('startdate', $values['startdate']);
-    $view->set('stopdate', $values['stopdate']);
-    $istemplate = (int) $values['template'];
-    $view->set('template', $istemplate);
-    if (isset($values['copynewuser'])) {
-        $view->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
-    }
-    if ($institution == 'mahara') {
-        $createfor = array();
-        foreach (group_get_grouptypes() as $grouptype) {
-            if ($istemplate && $values['copyfornewgroups_'.$grouptype]) {
-                $createfor[] = $grouptype;
-            }
+    $toupdate = array();
+
+    foreach ($values['collections'] as $cid) {
+        if (!isset($collections[$cid])) {
+            throw new UserException(get_string('editaccessinvalidviewset', 'view'));
         }
-        $view->set('copynewgroups', $createfor);
+        $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
     }
 
-    $view->set('allowcomments', (int) $values['allowcomments']);
-    if ($values['allowcomments']) {
-        $view->set('approvecomments', (int) $values['approvecomments']);
+    foreach ($values['views'] as $viewid) {
+        if (!isset($views[$viewid])) {
+            throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+        }
+        $toupdate[] = $viewid;
     }
 
     db_begin();
 
-    $view->commit();
+    foreach ($toupdate as $viewid) {
+        $view = new View($viewid);
+        $view->set('startdate', $values['startdate']);
+        $view->set('stopdate', $values['stopdate']);
+        $istemplate = (int) $values['template'];
+        $view->set('template', $istemplate);
+        if (isset($values['copynewuser'])) {
+            $view->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
+        }
+        if ($institution == 'mahara') {
+            $createfor = array();
+            foreach (group_get_grouptypes() as $grouptype) {
+                if ($istemplate && $values['copyfornewgroups_'.$grouptype]) {
+                    $createfor[] = $grouptype;
+                }
+            }
+            $view->set('copynewgroups', $createfor);
+        }
 
-    $view->set_access($values['accesslist']);
+        $view->set('allowcomments', (int) $values['allowcomments']);
+        if ($values['allowcomments']) {
+            $view->set('approvecomments', (int) $values['approvecomments']);
+        }
 
-    if ($collection) {
-        $collection->set_access($view->get('id'));
+        $view->commit();
     }
+
+    $first = new View($toupdate[0]);
+    $first->set_access($values['accesslist']);
+    $first->copy_access($toupdate);
 
     db_commit();
 
-    if ($values['new']) {
-        $str = $collection ? get_string('collectioncreatedsuccessfully','collection') : get_string('viewcreatedsuccessfully', 'view');
-    }
-    else {
-        $str = $collection ? get_string('collectionaccesseditedsuccessfully','collection') : get_string('viewaccesseditedsuccessfully', 'view');
-    }
-    $SESSION->add_ok_msg($str);
+    $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
 
-    if (!$collection) {
-        $view->post_edit_redirect();
-    }
-    else {
-        $collection->post_edit_redirect();
-    }
+    redirect(); // @todo redirect to new share tab.
 }
 
 $form = pieform($form);
@@ -507,13 +515,5 @@ $smarty = smarty(
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
-if ($collection) {
-    $views = $collection->views();
-    if ($views['count'] > 1) {
-        $smarty->assign('views', $views);
-    }
-}
-$thing = $collection ? get_string('Collection', 'collection') : get_string('View', 'view');
-$smarty->assign('pagedescriptionhtml', get_string('editaccessdescription', 'view', $thing, $thing));
 $smarty->assign('form', $form);
 $smarty->display('view/access.tpl');

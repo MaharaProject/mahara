@@ -721,6 +721,70 @@ class View {
         db_commit();
     }
 
+    /**
+     * Synchronise access records across a set of views
+     */
+    public static function combine_access($viewids) {
+        if (empty($viewids)) {
+            return;
+        }
+
+        $select = 'view IN (' . join(',', array_map('intval', $viewids)) . ') AND visible = 1';
+
+        if (!$access = get_records_select_array('view_access', $select)) {
+            return;
+        }
+
+        $unique = array();
+        foreach ($access as &$a) {
+            unset($a->view);
+            $k = serialize($a);
+            if (!isset($unique[$k])) {
+                $unique[$k] = $a;
+            }
+        }
+
+        db_begin();
+
+        delete_records_select('view_access', $select);
+
+        foreach ($unique as &$a) {
+            foreach ($viewids as $id) {
+                $a->view = $id;
+                insert_record('view_access', $a);
+            }
+        }
+
+        db_commit();
+    }
+
+    /**
+     * Copy access records from one view to a set of other views
+     */
+    public function copy_access($to) {
+        if (empty($this->id)) {
+            return;
+        }
+
+        $toupdate = array();
+        foreach ($to as $viewid) {
+            if ($this->id != $viewid) {
+                $toupdate[] = (int) $viewid;
+            }
+        }
+
+        if (empty($toupdate)) {
+            return;
+        }
+
+        db_begin();
+        delete_records_select('view_access', 'view IN (' . join(',', $toupdate) . ') AND visible = 1');
+        $toupdate[] = $this->id;
+        View::combine_access($toupdate);
+        db_commit();
+    }
+
+
     public function get_autocreate_grouptypes() {
         if (!isset($this->copynewgroups)) {
             $this->copynewgroups = get_column('view_autocreate_grouptype', 'grouptype', 'view', $this->id);
@@ -2752,7 +2816,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false, $collection=null) {
+    public static function set_nav($group, $institution) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -2761,14 +2825,8 @@ class View {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
         }
-        else if ($profile) {
-            define('MENUITEM', 'profile/editprofilepage');
-        }
-        else if ($collection) {
-            define('MENUITEM', 'myportfolio/collection');
-        }
         else {
-            define('MENUITEM', 'myportfolio/views');
+            define('MENUITEM', 'myportfolio/share');
         }
     }
 
