@@ -216,6 +216,7 @@ function bulkimport_submit(Pieform $form, $values) {
 function import_next_user() {
     global $SESSION, $ADDEDUSERS, $FAILEDUSERS, $LEAP2AFILES, $AUTHINSTANCE;
 
+    require_once('file.php');
     require_once(get_config('docroot') . 'import/lib.php');
     safe_require('import', 'leap');
 
@@ -285,39 +286,41 @@ function import_next_user() {
         log_debug("Failed sending email during user import");
     }
 
-    $importerfilename = substr($leap2afilename, strlen(get_config('dataroot')));
-    $logfile          = dirname($leap2afilename) . '/import.log';
-
-    $importer = PluginImport::create_importer(null, (object)array(
+    $niceuser = preg_replace('/[^a-zA-Z0-9_-]/', '-', $user->username);
+    $record = (object)array(
         'token'      => '',
         'usr'        => $user->id,
         'queue'      => (int)!(PluginImport::import_immediately_allowed()), // import allowed straight away? Then don't queue
         'ready'      => 0, // maybe 1?
         'expirytime' => db_format_timestamp(time()+(60*60*24)),
         'format'     => 'leap',
-        'data'       => array('filename' => $importerfilename),
+        'data'       => array('importfile' => $filename, 'importfilename' => $filename, 'importid' => $niceuser.time(), 'mimetype' => file_mime_type($filename)),
         'loglevel'   => PluginImportLeap::LOG_LEVEL_VERBOSE,
         'logtargets' => LOG_TARGET_FILE,
-        'logfile'    => $logfile,
         'profile'    => true,
-    ));
+    );
+    $tr = new LocalImporterTransport($record);
+    $tr->extract_file();
 
+    $importer = PluginImport::create_importer(null, $tr, $record);
+    unset($record, $tr);
     try {
         $importer->process();
-        log_info("Imported user account $user->id from Leap2A file, see $logfile for a full log");
+        log_info("Imported user account $user->id from Leap2A file, see" . $importer->get('logfile') . 'for a full log');
     }
     catch (ImportException $e) {
         log_info("Leap2A import failed: " . $e->getMessage());
         $FAILEDUSERS[$username] = get_string("leap2aimportfailed");
         db_rollback();
-        continue;
     }
 
     db_commit();
 
-    // Reload the user details, as various fields are changed by the
-    // importer when importing (e.g. firstname/lastname)
-    $ADDEDUSERS[] = get_record('usr', 'id', $user->id);
+    if (empty($FAILEDUSERS[$username])) {
+        // Reload the user details, as various fields are changed by the
+        // importer when importing (e.g. firstname/lastname)
+        $ADDEDUSERS[] = get_record('usr', 'id', $user->id);
+    }
 
     $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
     $SESSION->set('bulkimport_addedusers', $ADDEDUSERS);
@@ -370,7 +373,7 @@ function finish_import() {
             $message .= '<li>' . hsc($username) . ': ' . hsc($error) . "</li>\n";
         }
         $message .= "</ul>\n";
-        $SESSION->add_err_msg($message, false);
+        $SESSION->add_error_msg($message, false);
     }
 
     $SESSION->set('bulkimport_leap2afiles', '');
