@@ -196,7 +196,11 @@ class PluginExportHtml extends PluginExport {
         $copyproxy = HtmlExportCopyProxy::singleton();
         $copydata = $copyproxy->get_copy_data();
         foreach ($copydata as $from => $to) {
-            if (!copy($from, $this->get('exportdir') . '/' . $this->get('rootdir') . $to)) {
+            $to = $this->get('exportdir') . '/' . $this->get('rootdir') . $to;
+            if (!check_dir_exists(dirname($to))) {
+                throw new SystemException("Could not create directory $todir");
+            }
+            if (!copy($from, $to)) {
                 throw new SystemException("Could not copy static file $from");
             }
         }
