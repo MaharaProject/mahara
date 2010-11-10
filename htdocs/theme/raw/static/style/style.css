@@ -367,6 +367,7 @@ fieldset.collapsed {
 	margin: 0;
 	border: 0;
 }
+fieldset.collapsed div,
 fieldset.collapsed table {
     position: absolute;
     display: none;
@@ -1711,13 +1712,6 @@ table.attachments td {
   padding-left: 1em;
 }
 
-#viewacl-advanced-show {
-    padding-left: 15px;
-    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
-}
-#viewacl-advanced-show.collapsed {
-    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
-}
 #viewacl-advanced {
     padding: 0 1em 0 2em;
     font-size: .9167em;

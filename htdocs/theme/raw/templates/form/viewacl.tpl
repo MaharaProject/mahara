@@ -27,10 +27,9 @@
   </tbody>
 </table>
 
-<div class="cb">
-  <h6><a href="" id="viewacl-advanced-show" class="collapsed">{{str tag=sharewithothers section=view}}</a></h6>
-  <div id="viewacl-advanced" class="hidden">
-    <div class="fl viewacl-advanced-search">
+<fieldset id="viewacl-advanced" class="collapsible collapsed cb">
+  <legend><a href="" id="viewacl-advanced-show">{{str tag=sharewithothers section=view}}</a></legend>
+    <div class="collapse fl viewacl-advanced-search">
       <label>{{str tag=search}}</label>&nbsp;&nbsp;
       <select name="type" id="type">
         <option value="group">{{str tag=groups}}</option>
@@ -45,8 +44,7 @@
         </tbody>
     </table>
     <div class="cb"></div>
-  </div>
-</div>
+</fieldset>
 
 <div class="cb"></div>
 <script type="text/javascript">
@@ -388,8 +386,7 @@ addLoadEvent(function() {
     connect($('dosearch'), 'onclick', search);
     connect('viewacl-advanced-show', 'onclick', function(e) {
         e.stop();
-        toggleElementClass('hidden','viewacl-advanced');
-        toggleElementClass('collapsed','viewacl-advanced-show');
+        toggleElementClass('collapsed','viewacl-advanced');
     });
 });
 
