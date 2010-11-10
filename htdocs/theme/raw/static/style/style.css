@@ -1658,53 +1658,42 @@ table.attachments td {
 }
 
 /* View access */
-#viewacl_lhs {
-    float: left;
-    padding: 1em;
-    margin: 0 1em 1em 0;
-    border: 1px solid #d1d1d1;
-	width: 320px;
-}
-#potentialpresetitems {
-	margin-bottom: 1em;
+.presets-container {
+  margin: 1.5em 1em 1.5em 0;
 }
 #potentialpresetitems button {
 	* padding: 0 .25em;
 }
 #potentialpresetitems div {
-	border-bottom: 1px solid #F3F3F3;
 	padding: 0.25em 0.5em;
 }
-#viewacl_lhs #results thead td div {
-	font-size: .9167em;
-	font-weight: bold;
-	padding: 0 .5em;
-	position: relative;
-	display: inline;
-	top: 25px;
-	left: 145px;
+#potentialpresetitems div.preset {
+  font-weight: bold;
 }
-#viewacl_lhs #results tfoot td {
-	border-top: 1px solid #ccc;
-	font-size: .9167em;
-	font-weight: bold;
-	padding: .25em .5em .25em 100px;
+
+#accesslisttable {
+  margin: 1em 0 .5em 3em;
 }
-#accesslistitems {
-	margin-left: 360px;
+.main-column .accesslist-head1 th {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.main-column .accesslist-head2 th {
+    padding-top: 0;
 }
 #accesslistitems .ai-container {
-	margin: 0 1em 1em 0;
-	float: left;
     background: #eee;
+}
+#accesslistitems .ai-container td {
+	padding: 0.25em;
 }
 #accesslistitems .ai-container th {
 	text-align: left;
 	line-height: 1.6667em;
-	padding: 0.5em 0.5em 0em 1em;
+	padding: 0.25em 0.25em 0.25em 0;
 }
-#accesslistitems .removebutton {
-	padding: .5em;
+#accesslistitems .ai-container td.removebutton {
+    padding: .5em .5em 0 0;
 }
 #accesslistitems .removebutton button {
 	background: url(../images/remove-block.png) no-repeat;
@@ -1714,26 +1703,39 @@ table.attachments td {
 	height: 16px;
 	cursor: pointer;
 }
-#accesslistitems .ai-container table {
-	margin: 0;
-	padding: 0;
-	width: auto;
+.accesslistname {
+  width: 20em;
 }
-#accesslistitems .ai-container table td,
-#accesslistitems .ai-container table th {
-	padding: .25em .5em;
-}
-#accesslistitems .ai-container table th {
-	color: #555555;
-}
-#accesslistitems .ai-container table td {
-	font-size: .9167em;
-	color: #666;
+.ai-container .secreturl {
+  font-weight: bold;
+  padding-left: 1em;
 }
 
-#accesslistitems table th img {
-	vertical-align: top;
+#viewacl-advanced-show {
+    padding-left: 15px;
+    background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
 }
+#viewacl-advanced-show.collapsed {
+    background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
+}
+#viewacl-advanced {
+    padding: 0 1em 0 2em;
+    font-size: .9167em;
+}
+.viewacl-advanced-search {
+    margin: 1em 1em 0 0;
+}
+.viewacl-advanced-search input {
+    margin: .5em 0 0 .5em;
+}
+#viewacl-advanced #results {
+    margin: 0 0 0 1em;
+}
+#viewacl-advanced #results thead,
+#viewacl-advanced #results tfoot {
+    font-weight: bold;
+}
+
 #editaccess_overrides_container {
 	clear: both;
 }

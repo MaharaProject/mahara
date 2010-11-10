@@ -1,30 +1,54 @@
 <input type="hidden" name="accesslist" value="">
-<div id="viewacl_lhs">
-    <div id="potentialpresetitems"></div>
-    <div>
-        <label>{{str tag=search}}</label> <input type="text" name="search" id="search">
-        <select name="type" id="type">
-            <option value="group">{{str tag=groups}}</option>
-            <option value="user" selected="selected">{{str tag=users}}</option>
-        </select>
-        <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
-        <table id="results" class="fullwidth">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>{{str tag=name}}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<h3>{{str tag=Added section=view}}</h3>
-<div id="accesslistitems">
+
+<div class="fl presets-container">
+  <div id="potentialpresetitems">
+    <h3>{{str tag=sharewith section=view}}</h3>
+  </div>
 </div>
 
+<table id="accesslisttable" class="fl hidden">
+  <thead>
+    <tr class="accesslist-head1">
+      <th colspan="2">{{str tag=Added section=view}}</th>
+      <th colspan="2">{{str tag=accessdates section=view}}</th>
+      <th colspan="2" class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
+      <th></th>
+    </tr>
+    <tr class="accesslist-head2">
+      <th></th>
+      <th></th>
+      <th>{{str tag=From}}:</th>
+      <th>{{str tag=To}}:</th>
+      <th colspan="2" class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Allow section=artefact.comment}} {{str tag=Moderate section=artefact.comment}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="accesslistitems">
+  </tbody>
+</table>
+
+<div class="cb">
+  <h6><a href="" id="viewacl-advanced-show" class="collapsed">{{str tag=sharewithothers section=view}}</a></h6>
+  <div id="viewacl-advanced" class="hidden">
+    <div class="fl viewacl-advanced-search">
+      <label>{{str tag=search}}</label>&nbsp;&nbsp;
+      <select name="type" id="type">
+        <option value="group">{{str tag=groups}}</option>
+        <option value="user" selected="selected">{{str tag=users}}</option>
+      </select>
+      <br>
+      <input type="text" name="search" id="search">
+      <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
+    </div>
+    <table id="results" class="fl">
+        <tbody>
+        </tbody>
+    </table>
+    <div class="cb"></div>
+  </div>
+</div>
+
+<div class="cb"></div>
 <script type="text/javascript">
 var count = 0;
 
@@ -33,7 +57,8 @@ var count = 0;
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
-    var row = DIV(null, addButton, ' ', item.name);
+    var attribs = item.preset ? {'class': 'preset'} : null;
+    var row = DIV(attribs, addButton, ' ', item.name);
     item.preset = true;
 
     if (item.type == 'token') {
@@ -68,26 +93,6 @@ function renderAccessListItem(item) {
                         'name': 'accesslist[' + count + '][approvecomments]',
                         'id'  :  'approvecomments' + count,
                         'value':  1});
-    var dateInfo = TABLE(null,
-        TBODY(null,
-            TR(null,
-                TH(null, get_string('From') + ':'),
-                TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start'))
-            ),
-            TR(null,
-                TH(null, get_string('To') + ':'),
-                TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
-            ),
-            TR(null,
-                TH(null, null),
-                TD(null, get_string('datetimeformatguide'))
-            ),
-            TR({'class':'comments' + (allowcomments ? ' hidden' : '')},
-                TH(null, get_string('Comments') + ':'),
-                TD(null, allowfdbk, get_string('Allow'), approvefdbk, get_string('Moderate'))
-            )
-        )
-    );
 
     if (item['allowcomments']==1) {
         setNodeAttribute(allowfdbk,'checked',true);
@@ -112,54 +117,76 @@ function renderAccessListItem(item) {
         cssClass += '  preset';
     }
     cssClass += ' ' + item.type + '-container';
+    name = [item.name];
+    var expandrow = null;
     if (item.type == 'token') {
-        item.name = config.wwwroot + 'view/view.php?t=' + item.id;
+        item.url = config.wwwroot + 'view/view.php?t=' + item.id;
+        var expandlink = A({'href':'', 'title':item.url}, item.id.substr(0, 6) + '…');
+        var expandrow = TR({'id':'accesslistitem' + count + '_url', 'class':'hidden ai-container'},
+            TD(null), TD({'colspan': 6, 'class': 'secreturl'}, item.url));
+        connect(expandlink, 'onclick', function(e) {
+            e.stop();
+            if (hasElementClass(expandrow, 'hidden')) {
+                removeElementClass(expandrow, 'hidden');
+            }
+            else {
+                addElementClass(expandrow, 'hidden');
+            }
+        });
+        name.push(' ', expandlink);
     }
-    var name = item.name;
+    if (item.role != null) {
+        name.push(' - ', item.roledisplay);
+    }
+    var icon = null;
     if (item.type == 'user') {
-        name = [IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'}), ' ', name];
+        icon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'});
     }
-    var row = TABLE({'class': cssClass},
-        TBODY(null, 
-            TR(null,
-                TH(null, name,  (item.role != null ? ' - ' + item.roledisplay : '')),
-                TD({'class': 'right removebutton'}, removeButton)
+    var row = TR({'class': cssClass, 'id': 'accesslistitem' + count},
+        TD(null, icon),
+        TH({'class': 'accesslistname'}, name),
+        TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start')),
+        TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop')),
+        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, allowfdbk),
+        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, approvefdbk),
+        TD({'class': 'right removebutton'}, removeButton,
+            INPUT({
+                'type': 'hidden',
+                'name': 'accesslist[' + count + '][type]',
+                'value': item.type
+            }),
+            (item.id ?
+            INPUT({
+                'type': 'hidden',
+                'name': 'accesslist[' + count + '][id]',
+                'value': item.id
+            })
+            :
+            null
             ),
-            TR(null,
-                TD({'colspan': 2},
-                    dateInfo,
-                    INPUT({
-                        'type': 'hidden',
-                        'name': 'accesslist[' + count + '][type]',
-                        'value': item.type
-                    }),
-                    (item.id ?
-                    INPUT({
-                        'type': 'hidden',
-                        'name': 'accesslist[' + count + '][id]',
-                        'value': item.id
-                    })
-                    :
-                    null
-                    ),
-                    (item.role != null ?
-                    INPUT({
-                        'type': 'hidden',
-                        'name': 'accesslist[' + count + '][role]',
-                        'value': item.role
-                    })
-                    :
-                    null
-                    )
-                )
+            (item.role != null ?
+            INPUT({
+                'type': 'hidden',
+                'name': 'accesslist[' + count + '][role]',
+                 'value': item.role
+            })
+            :
+            null
             )
         )
     );
 
     connect(removeButton, 'onclick', function() {
         removeElement(row);
+        if (expandrow) {
+            removeElement(expandrow);
+        }
+        if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
+            addElementClass('accesslisttable', 'hidden');
+        }
     });
-    appendChildNodes('accesslistitems', row);
+    appendChildNodes('accesslistitems', row, expandrow);
+    removeElementClass('accesslisttable', 'hidden');
 
     setupCalendar(item, 'start');
     setupCalendar(item, 'stop');
@@ -230,6 +257,13 @@ var potentialPresets = {{$potentialpresets|safe}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
 });
+var myGroups = {{$mygroups|safe}};
+if (myGroups) {
+    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmygroups section=view}}'));
+    forEach(myGroups, function(preset) {
+        renderPotentialPresetItem(preset);
+    });
+}
 var loggedinindex = {{$loggedinindex}};
 function ensure_loggedin_access() {
     var oldaccess = getFirstElementByTagAndClassName(null, 'loggedin-container', 'accesslistitems');
@@ -319,7 +353,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
         TD({'style': 'vertical-align: middle;'}, identityNodes),
-        TD({'class': 'center', 'style': 'vertical-align: top;width:20px;'}, profileIcon)
+        TD({'class': 'center', 'style': 'vertical-align:top;width:20px;'}, profileIcon)
     );
 }
 searchTable.updateOnLoad();
@@ -352,6 +386,11 @@ addLoadEvent(function() {
         }
     });
     connect($('dosearch'), 'onclick', search);
+    connect('viewacl-advanced-show', 'onclick', function(e) {
+        e.stop();
+        toggleElementClass('hidden','viewacl-advanced');
+        toggleElementClass('collapsed','viewacl-advanced-show');
+    });
 });
 
 </script>

@@ -247,13 +247,13 @@ function update_comment_options() {
     if (allowcomments) {
         removeElementClass($('editaccess_approvecomments'), 'hidden');
         removeElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
+        forEach(getElementsByTagAndClassName(null, 'comments', 'accesslisttable'), function (elem) {
             addElementClass(elem, 'hidden');
         });
     }
     else {
         addElementClass($('editaccess_approvecomments_container'), 'hidden');
-        forEach(getElementsByTagAndClassName('tr', 'comments', 'accesslistitems'), function (elem) {
+        forEach(getElementsByTagAndClassName(null, 'comments', 'accesslisttable'), function (elem) {
             removeElementClass(elem, 'hidden');
         });
     }
@@ -265,8 +265,9 @@ EOF;
 
 
 $form['elements']['accesslist'] = array(
-    'type'         => 'viewacl',
-    'defaultvalue' => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
+    'type'          => 'viewacl',
+    'allowcomments' => $allowcomments,
+    'defaultvalue'  => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
 );
 
 $form['elements']['overrides'] = array(

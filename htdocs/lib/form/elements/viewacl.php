@@ -33,6 +33,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
+    global $USER;
     $smarty = smarty_core();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
@@ -87,12 +88,30 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'preset' => true
         );
     }
+
+    $mygroups = array();
+    # @todo: paginate
+    foreach (group_get_user_groups($USER->get('id')) as $g) {
+        $mygroups[] = array(
+            'type' => 'group',
+            'id'   => $g->id,
+            'start' => null,
+            'end'   => null,
+            'name' => $g->name,
+            'preset' => false
+        );
+        if (count($mygroups) > 10) {
+            break;
+        }
+    }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($value));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
+    $smarty->assign('allowcomments', $element['allowcomments']);
+    $smarty->assign('mygroups', json_encode($mygroups));
     return $smarty->fetch('form/viewacl.tpl');
 }
 

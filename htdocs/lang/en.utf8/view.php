@@ -39,6 +39,7 @@ $string['title']                  = 'View Title';
 $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
+$string['accessdates']            = 'Access Date/Time';
 $string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
@@ -133,6 +134,9 @@ $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
 $string['Added'] = 'Added';
+$string['sharewith'] = 'Share with';
+$string['sharewithmygroups'] = 'Share with My Groups';
+$string['sharewithothers'] = 'Share with other users and groups';
 $string['allviews'] = 'All Views';
 
 $string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the View until your tutor has finished marking the View.  Are you sure you want to submit this View now?';
