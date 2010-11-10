@@ -167,7 +167,15 @@ class PluginImportLeap extends PluginImport {
         if($version) {
             $this->leap2anamespace = self::NS_LEAP;
             $this->leap2atypenamespace = self::NS_LEAP;
-            $this->leap2acategories = self::NS_CATEGORIES;
+            // this is a workaround for a bug that was introduced during the
+            // update to LEAP2A 2010-07. Exports between the update and this
+            // bugfix will contain a wrong namespace. This workaround will
+            // allow those exports to still import properly. (bug #673434)
+            if (isset($this->namespaces['http://wiki.leapspecs.org/2A/categories'])) {
+                $this->leap2acategories = 'http://wiki.leapspecs.org/2A/categories';
+            } else {
+                $this->leap2acategories = self::NS_CATEGORIES;
+            }
         } else {
             $this->leap2anamespace = self::NS_LEAP_200903;
             $this->leap2atypenamespace = self::NS_LEAPTYPE_200903;
