@@ -99,6 +99,7 @@ $string['loggedinlower'] = 'logged in users';
 $string['publiclower'] = 'public';
 $string['everyoneingroup'] = 'Everyone in Group';
 $string['token'] = 'Secret URL';
+$string['showfullurl'] = 'Show full URL';
 $string['peoplewiththesecreturl'] = 'People with the Secret URL';
 
 // view user

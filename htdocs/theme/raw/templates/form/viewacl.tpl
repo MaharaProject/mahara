@@ -121,7 +121,7 @@ function renderAccessListItem(item) {
     var expandrow = null;
     if (item.type == 'token') {
         item.url = config.wwwroot + 'view/view.php?t=' + item.id;
-        var expandlink = A({'href':'', 'title':item.url}, item.id.substr(0, 6) + '…');
+        var expandlink = A({'href':'', 'title':'{{str tag=showfullurl section=view}}'}, item.id.substr(0, 6) + '…');
         var expandrow = TR({'id':'accesslistitem' + count + '_url', 'class':'hidden ai-container'},
             TD(null), TD({'colspan': 6, 'class': 'secreturl'}, item.url));
         connect(expandlink, 'onclick', function(e) {
