@@ -1660,7 +1660,7 @@ table.attachments td {
 
 /* View access */
 .presets-container {
-  margin: 1.5em 1em 1.5em 0;
+  margin: 1.5em 1em 1em 0;
 }
 #potentialpresetitems button {
 	* padding: 0 .25em;
@@ -1712,9 +1712,15 @@ table.attachments td {
   padding-left: 1em;
 }
 
-#viewacl-advanced {
-    padding: 0 1em 0 2em;
-    font-size: .9167em;
+#editaccess fieldset.collapsed {
+  padding: 0;
+}
+#editaccess fieldset {
+  margin: .5em 0 0;
+  padding: 1em;
+}
+#editaccess fieldset legend {
+  font-size: .9167em;
 }
 .viewacl-advanced-search {
     margin: 1em 1em 0 0;
@@ -1729,22 +1735,8 @@ table.attachments td {
 #viewacl-advanced #results tfoot {
     font-weight: bold;
 }
-
-#editaccess_overrides_container {
-	clear: both;
-}
-#editaccess_overrides_container fieldset legend {
-	margin-top: 1em;
-}
-#editaccess_startdate_container,
-#editaccess_stopdate_container {
-	padding: .25em 0;
-	position: static;
-	z-index: 10;
-}
-#editaccess_startdate_container label,
-#editaccess_stopdate_container label {
-	padding: 0 .25em 0 0;
+#editaccess_submit_container {
+  margin: 1em 0 0;
 }
 
 /* Export */

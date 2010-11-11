@@ -131,40 +131,57 @@ if (!empty($views)) {
     );
 }
 
-$form['elements']['allowcomments'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('allowcomments','artefact.comment'),
-    'description'  => get_string('allowcommentsonview','view'),
-    'defaultvalue' => $view->get('allowcomments'),
+$allowcomments = $view->get('allowcomments');
+
+$form['elements']['accesslist'] = array(
+    'type'          => 'viewacl',
+    'allowcomments' => $allowcomments,
+    'defaultvalue'  => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
 );
-$form['elements']['approvecomments'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('moderatecomments', 'artefact.comment'),
-    'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
-    'defaultvalue' => $view->get('approvecomments'),
-);
-$form['elements']['template'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('allowcopying', 'view'),
-    'description'  => get_string('templatedescription', 'view'),
-    'defaultvalue' => $view->get('template'),
+
+
+$form['elements']['more'] = array(
+    'type' => 'fieldset',
+    'collapsible' => true,
+    'collapsed' => true,
+    'legend' => get_string('moreoptions', 'view'),
+    'elements' => array(
+        'allowcomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcomments','artefact.comment'),
+            'description'  => get_string('allowcommentsonview','view'),
+            'defaultvalue' => $view->get('allowcomments'),
+        ),
+        'approvecomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('moderatecomments', 'artefact.comment'),
+            'description'  => get_string('moderatecommentsdescription', 'artefact.comment'),
+            'defaultvalue' => $view->get('approvecomments'),
+        ),
+        'template' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcopying', 'view'),
+            'description'  => get_string('templatedescription', 'view'),
+            'defaultvalue' => $view->get('template'),
+        ),
+    ),
 );
 
 $js = '';
 
 if ($institution) {
     if ($institution == 'mahara') {
-        $form['elements']['copynewuser'] = array(
+        $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewusers', 'view'),
             'description'  => get_string('copyfornewusersdescription', 'view'),
             'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
-        $form['elements']['copyfornewgroups'] = array(
+        $form['elements']['more']['elements']['copyfornewgroups'] = array(
             'type'         => 'html',
             'value'        => '<label>' . get_string('copyfornewgroups', 'view') . '</label>',
         );
-        $form['elements']['copyfornewgroupsdescription'] = array(
+        $form['elements']['more']['elements']['copyfornewgroupsdescription'] = array(
             'type'         => 'html',
             'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription', 'view') . '</div>',
         );
@@ -177,7 +194,7 @@ if ($institution) {
             foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types', true) as $jointype) {
                 $jointypestrings[] = get_string('membershiptype.'.$jointype, 'group');
             }
-            $form['elements']['copyfornewgroups_'.$grouptype] = array(
+            $form['elements']['more']['elements']['copyfornewgroups_'.$grouptype] = array(
                 'type'         => 'checkbox',
                 'title'        => get_string('name', 'grouptype.' . $grouptype) . ' (' . join(', ', $jointypestrings) . ')',
                 'defaultvalue' => $view->get('template') && in_array($grouptype, $createfor),
@@ -187,7 +204,7 @@ if ($institution) {
         }
     }
     else {
-        $form['elements']['copynewuser'] = array(
+        $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewmembers', 'view'),
             'description'  => get_string('copyfornewmembersdescription', 'view', get_field('institution', 'displayname', 'name', $institution)),
@@ -235,8 +252,8 @@ EOF;
     $js .= "function update_loggedin_access() {}\n";
 }
 
-if (!$allowcomments = $view->get('allowcomments')) {
-    $form['elements']['approvecomments']['class'] = 'hidden';
+if (!$allowcomments) {
+    $form['elements']['more']['elements']['approvecomments']['class'] = 'hidden';
 }
 $allowcomments = json_encode((int) $allowcomments);
 
@@ -263,41 +280,29 @@ addLoadEvent(function() {
 });
 EOF;
 
-
-$form['elements']['accesslist'] = array(
-    'type'          => 'viewacl',
-    'allowcomments' => $allowcomments,
-    'defaultvalue'  => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
+$form['elements']['more']['elements']['overrides'] = array(
+    'type' => 'html',
+    'value' => '<strong>' . get_string('overridingstartstopdate', 'view') . '</strong>',
+    'description' => get_string('overridingstartstopdatesdescription', 'view'),
 );
-
-$form['elements']['overrides'] = array(
-    'type' => 'fieldset',
-    'legend' => get_string('overridingstartstopdate', 'view'),
-    'elements' => array(
-        'description' => array(
-            'type' => 'html',
-            'value' => get_string('overridingstartstopdatesdescription', 'view'),
-        ),
-        'startdate'        => array(
-            'type'         => 'calendar',
-            'title'        => get_string('startdate','view'),
-            'description'  => get_string('datetimeformatguide'),
-            'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => get_string('strftimedatetimeshort'),
-            ),
-        ),
-        'stopdate'  => array(
-            'type'         => 'calendar',
-            'title'        => get_string('stopdate','view'),
-            'description'  => get_string('datetimeformatguide'),
-            'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => get_string('strftimedatetimeshort'),
-            ),
-        ),
+$form['elements']['more']['elements']['startdate'] = array(
+    'type'         => 'calendar',
+    'title'        => get_string('startdate','view'),
+    'description'  => get_string('datetimeformatguide'),
+    'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+    'caloptions'   => array(
+        'showsTime'      => true,
+        'ifFormat'       => get_string('strftimedatetimeshort'),
+    ),
+);
+$form['elements']['more']['elements']['stopdate'] = array(
+    'type'         => 'calendar',
+    'title'        => get_string('stopdate','view'),
+    'description'  => get_string('datetimeformatguide'),
+    'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+    'caloptions'   => array(
+        'showsTime'      => true,
+        'ifFormat'       => get_string('strftimedatetimeshort'),
     ),
 );
 

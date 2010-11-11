@@ -137,7 +137,8 @@ $string['profileicon'] = 'Profile Icon';
 $string['Added'] = 'Added';
 $string['sharewith'] = 'Share with';
 $string['sharewithmygroups'] = 'Share with My Groups';
-$string['sharewithothers'] = 'Share with other users and groups';
+$string['otherusersandgroups'] = 'Share with other users and groups';
+$string['moreoptions'] = 'Advanced Options';
 $string['allviews'] = 'All Views';
 
 $string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the View until your tutor has finished marking the View.  Are you sure you want to submit this View now?';
@@ -150,8 +151,7 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 $string['deleteviewconfirmnote'] = '<p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted.  Consider backing up the view by exporting it first.</p>';
 
-$string['editaccesspagedescription3'] = '<p>By default, only you can see your Views. You can share views with others by adding access rules on this page.</p>
-<p>Once you are done, scroll down and click Save to continue.</p>';
+$string['editaccesspagedescription3'] = 'By default, only you can see your Views. You can share views with others by adding access rules on this page.  Once you are done, scroll down and click Save to continue.';
 $string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of views and collections';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';

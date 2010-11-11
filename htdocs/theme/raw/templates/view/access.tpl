@@ -1,4 +1,4 @@
 {include file="header.tpl"}
-{str tag=editaccesspagedescription3 section=view}
+<p>{str tag=editaccesspagedescription3 section=view}</p>
 {$form|safe}
 {include file="footer.tpl"}

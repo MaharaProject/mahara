@@ -28,8 +28,8 @@
 </table>
 
 <fieldset id="viewacl-advanced" class="collapsible collapsed cb">
-  <legend><a href="" id="viewacl-advanced-show">{{str tag=sharewithothers section=view}}</a></legend>
-    <div class="collapse fl viewacl-advanced-search">
+  <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
+    <div class="fl viewacl-advanced-search">
       <label>{{str tag=search}}</label>&nbsp;&nbsp;
       <select name="type" id="type">
         <option value="group">{{str tag=groups}}</option>
@@ -386,7 +386,7 @@ addLoadEvent(function() {
     connect($('dosearch'), 'onclick', search);
     connect('viewacl-advanced-show', 'onclick', function(e) {
         e.stop();
-        toggleElementClass('collapsed','viewacl-advanced');
+        toggleElementClass('collapsed', 'viewacl-advanced');
     });
 });
 
