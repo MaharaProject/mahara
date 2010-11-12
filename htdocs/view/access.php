@@ -97,13 +97,8 @@ list($collections, $views) = View::get_views_and_collections($view->get('owner')
 
 if (!empty($collections)) {
     foreach ($collections as &$c) {
-        $viewtitles = array();
-        foreach ($c['views'] as &$v) {
-            $viewtitles[] = str_shorten_text($v['name'], 15, true);
-        }
         $c = array(
             'title'        => $c['name'],
-            'description'  => str_shorten_text(join(', ', $viewtitles), 100, true),
             'value'        => $c['id'],
             'defaultvalue' => !empty($collection) && $collection->get('id') == $c['id'],
             'views'        => $c['views'], // Keep these hanging around to check in submit function

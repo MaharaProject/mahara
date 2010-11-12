@@ -1659,6 +1659,17 @@ table.attachments td {
 }
 
 /* View access */
+.checkboxes label {
+  clear: left;
+  display: block;
+}
+.checkboxes-option input {
+  margin-right: .5em;
+}
+.checkboxes-option {
+  float: left;
+  width: 15em;
+}
 .presets-container {
   margin: 1.5em 1em 1em 0;
 }

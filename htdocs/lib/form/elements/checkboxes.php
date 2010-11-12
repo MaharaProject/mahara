@@ -39,11 +39,12 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     foreach ($element['elements'] as $e) {
         $checked = ($submitted && !empty($value[$e['value']])) || (!$submitted && !empty($e['defaultvalue']));
-        $result .= '<input type="checkbox" value="' . $e['value'] . '" '
+        $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
         . $form->element_attributes($element)
         . ($checked ? ' checked="checked"' : '')
-        . '>' . Pieform::hsc($e['title']);
+        . '>' . Pieform::hsc(str_shorten_text($e['title'], 17, true)) . '</div>';
     }
+    $result .= '<div class="cl"></div>';
 
     return $result;
 }/*}}}*/
