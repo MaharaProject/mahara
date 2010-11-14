@@ -169,6 +169,7 @@ $string['submittedforassessment'] = 'Submitted for assessment';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
+$string['viewcreatedsuccessfullyshare'] = 'Your View has been created.  You can share your view with others by adding access rules below.';
 $string['updatedaccessfornumviews'] = 'Access rules were updated for %d View(s)';
 $string['viewsavedsuccessfully'] = 'View saved successfully';
 

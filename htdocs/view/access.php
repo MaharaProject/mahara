@@ -37,15 +37,13 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'group.php');
 
-$new = param_boolean('new');
-
 $collection = null;
 if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
         $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
-        redirect('/collection/views.php?id=' . $collectionid . '&new=' . $new);
+        redirect('/collection/views.php?id=' . $collectionid);
     }
     // Pick any old view, they all have the same access records.
     $viewid = $views['views'][0]->view;
@@ -82,10 +80,6 @@ $form = array(
         'id' => array(
             'type' => 'hidden',
             'value' => $view->get('id'),
-        ),
-        'new' => array(
-            'type' => 'hidden',
-            'value' => $new,
         ),
     )
 );
@@ -199,10 +193,13 @@ if ($institution) {
         }
     }
     else {
+        require_once('institution.php');
+        $i = new Institution($institution);
+        $instname = hsc($i->displayname);
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewmembers', 'view'),
-            'description'  => get_string('copyfornewmembersdescription', 'view', get_field('institution', 'displayname', 'name', $institution)),
+            'description'  => get_string('copyfornewmembersdescription', 'view', $instname),
             'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
         $copyoptions = array('copynewuser');
@@ -301,14 +298,9 @@ $form['elements']['more']['elements']['stopdate'] = array(
     ),
 );
 
-$confirmcancelstr = $collection ? get_string('confirmcancelcreatingcollection', 'collection') : get_string('confirmcancelcreatingview', 'view');
-$goto = $collection ? '' : '';
 $form['elements']['submit'] = array(
-    'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',
-    'value' => !empty($new) 
-        ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
-        : array(get_string('save'), get_string('cancel')),
-    'confirm' => !empty($new) ? array($confirmcancelstr, null, null) : null,
+    'type'  => 'submitcancel',
+    'value' => array(get_string('save'), get_string('cancel')),
 );
 
 if (!function_exists('strptime')) {
@@ -433,7 +425,7 @@ function editaccess_cancel_submit() {
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $new, $institution, $collections, $views;
+    global $SESSION, $institution, $collections, $views;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');

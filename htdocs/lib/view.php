@@ -3017,7 +3017,7 @@ class View {
      */
     public function post_edit_redirect($new=false) {
         if ($new) {
-            $redirecturl = '/view/access.php?id=' . $this->get('id') . '&new=1';
+            $redirecturl = '/view/access.php?id=' . $this->get('id');
         }
         else {
             if ($this->get('group')) {
