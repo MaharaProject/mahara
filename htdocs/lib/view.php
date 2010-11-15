@@ -610,15 +610,10 @@ class View {
     }
 
     public function is_public() {
-        $timeformat = get_string('strftimedatetimeshort');
-        $now = strtotime(date('Y/m/d H:i'));
-        foreach($this->get_access($timeformat) as $access) {
-            if($access['type'] == 'public' && (
-                ($access['startdate'] == null && $access['stopdate'] == null) ||
-                ($access['startdate'] == null && strtotime($access['stopdate']) > $now) ||
-                (strtotime($access['startdate']) < $now && $access['stopdate'] == null) ||
-                (strtotime($access['startdate']) < $now && strtotime($access['stopdate']) > $now))) {
-                    return true;
+        $accessrecords = self::user_access_records($this->id, 0);
+        foreach($accessrecords as &$a) {
+            if ($a->accesstype == 'public') {
+                return true;
             }
         }
         return false;
@@ -3537,12 +3532,7 @@ function objection_form_cancel_submit(Pieform $form) {
 
 function togglepublic_form($viewid) {
     $view = new View($viewid);
-    $public = array_filter($view->get_access(),
-        create_function(
-            '$item',
-            'return $item[\'type\'] == \'public\';'
-        )
-    );
+    $public = $view->is_public();
     $togglepublic = pieform(array(
         'name'      => 'togglepublic',
         'autofocus' => false,
