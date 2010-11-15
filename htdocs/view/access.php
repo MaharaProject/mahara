@@ -501,7 +501,10 @@ function editaccess_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
 
-    redirect(); // @todo redirect to new share tab; if new view, redirect back to my views?
+    if ($view->get('owner')) {
+        redirect(); // @todo redirect to new share tab
+    }
+    $view->post_edit_redirect();
 }
 
 $form = pieform($form);
