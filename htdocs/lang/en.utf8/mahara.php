@@ -491,7 +491,7 @@ $string['about']              = 'About';
 $string['contactus']          = 'Contact Us';
 
 // my account
-$string['account'] =  'My Account';
+$string['account'] =  'Settings';
 $string['accountprefs'] = 'Preferences';
 $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
