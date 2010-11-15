@@ -86,8 +86,12 @@ $form = array(
 
 // Create checkboxes to allow the user to apply these access rules to
 // any of their views/collections.
-
-list($collections, $views) = View::get_views_and_collections($view->get('owner'), $group, $institution);
+// For institution views, force edit access of one view at a time for now.  Editing multiple
+// institution views requires doing some tricky stuff with the 'copy for new users/groups'
+// options, and there's not much room for the 'Share' tab in the admin area anyway
+if (!$institution) {
+    list($collections, $views) = View::get_views_and_collections($view->get('owner'), $group, $institution);
+}
 
 if (!empty($collections)) {
     foreach ($collections as &$c) {
@@ -425,7 +429,7 @@ function editaccess_cancel_submit() {
 
 
 function editaccess_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $collections, $views;
+    global $SESSION, $institution, $collections, $views, $view;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -441,18 +445,23 @@ function editaccess_submit(Pieform $form, $values) {
 
     $toupdate = array();
 
-    foreach ($values['collections'] as $cid) {
-        if (!isset($collections[$cid])) {
-            throw new UserException(get_string('editaccessinvalidviewset', 'view'));
-        }
-        $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
+    if ($institution) {
+        $toupdate[] = $view->get('id');
     }
-
-    foreach ($values['views'] as $viewid) {
-        if (!isset($views[$viewid])) {
-            throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+    else {
+        foreach ($values['collections'] as $cid) {
+            if (!isset($collections[$cid])) {
+                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+            }
+            $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
         }
-        $toupdate[] = $viewid;
+
+        foreach ($values['views'] as $viewid) {
+            if (!isset($views[$viewid])) {
+                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+            }
+            $toupdate[] = $viewid;
+        }
     }
 
     db_begin();
@@ -492,7 +501,7 @@ function editaccess_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
 
-    redirect(); // @todo redirect to new share tab.
+    redirect(); // @todo redirect to new share tab; if new view, redirect back to my views?
 }
 
 $form = pieform($form);
