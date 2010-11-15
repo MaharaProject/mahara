@@ -230,7 +230,6 @@ $string['by'] = 'by';
 $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
-$string['Preview'] = 'Preview';
 $string['timeofsubmission'] = 'Time of submission';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
