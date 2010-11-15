@@ -121,7 +121,7 @@ $elements['navigation'] = array(
 if ($new) {
     $elements['submit'] = array(
         'type'  => 'cancelbackcreate',
-        'value' => array(get_string('cancel'), get_string('back','collection'), get_string('next') . ': ' . get_string('editaccess', 'collection')),
+        'value' => array(get_string('cancel'), get_string('back','collection'), get_string('savecollection', 'collection')),
         'confirm' => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
     );
 }
@@ -171,19 +171,22 @@ function manageviews_cancel_submit() {
 }
 
 function manageviews_submit(Pieform $form, $values) {
-    global $collection, $new;
+    global $collection, $new, $SESSION, $views;
     if (param_boolean('back')) {
         redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');
     }
     else {
+        $collection->set('navigation',(int)$values['navigation']);
+        $collection->commit();
         if ($new) {
-            redirect('/view/access.php?collection='.$collection->get('id').'&new=1');
+            if ($views) {
+                $SESSION->add_ok_msg(get_string('collectioncreatedsuccessfullyshare', 'collection'));
+            }
+            else {
+                $SESSION->add_ok_msg(get_string('collectioncreatedsuccessfully', 'collection'));
+            }
         }
-        else {
-            $collection->set('navigation',(int)$values['navigation']);
-            $collection->commit();
-            redirect('/collection/');
-        }
+        redirect('/collection/');
     }
 }
 

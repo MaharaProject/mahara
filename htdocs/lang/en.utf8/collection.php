@@ -48,6 +48,7 @@ $string['collectionaccesseditedsuccessfully'] = 'Collection access saved success
 $string['collectioneditaccess'] = 'You are editing access for %d Views in this Collection';
 $string['collectionconfirmdelete'] = 'Views in this collection will not be deleted.  Are you sure you wish to delete this collection?';
 $string['collectioncreatedsuccessfully'] = 'Collection created successfully.';
+$string['collectioncreatedsuccessfullyshare'] = 'Your collection has been created successfully.  Share your collection with others using the access links below.';
 $string['collectiondeleted'] = 'Collection deleted successfully.';
 $string['collectiondescription'] = 'A Collection is a set of Views that are linked to one another and have the same access permissions.  You can create as many collections as you like, but a View cannot appear in more than one collection.';
 $string['confirmcancelcreatingcollection'] = 'This Collection has not been completed. Do you really want to cancel?';
