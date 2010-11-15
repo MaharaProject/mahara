@@ -467,13 +467,13 @@ function editaccess_submit(Pieform $form, $values) {
     db_begin();
 
     foreach ($toupdate as $viewid) {
-        $view = new View($viewid);
-        $view->set('startdate', $values['startdate']);
-        $view->set('stopdate', $values['stopdate']);
+        $v = new View($viewid);
+        $v->set('startdate', $values['startdate']);
+        $v->set('stopdate', $values['stopdate']);
         $istemplate = (int) $values['template'];
-        $view->set('template', $istemplate);
+        $v->set('template', $istemplate);
         if (isset($values['copynewuser'])) {
-            $view->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
+            $v->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
         }
         if ($institution == 'mahara') {
             $createfor = array();
@@ -482,15 +482,15 @@ function editaccess_submit(Pieform $form, $values) {
                     $createfor[] = $grouptype;
                 }
             }
-            $view->set('copynewgroups', $createfor);
+            $v->set('copynewgroups', $createfor);
         }
 
-        $view->set('allowcomments', (int) $values['allowcomments']);
+        $v->set('allowcomments', (int) $values['allowcomments']);
         if ($values['allowcomments']) {
-            $view->set('approvecomments', (int) $values['approvecomments']);
+            $v->set('approvecomments', (int) $values['approvecomments']);
         }
 
-        $view->commit();
+        $v->commit();
     }
 
     $first = new View($toupdate[0]);
