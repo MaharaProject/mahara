@@ -27,6 +27,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('XML/Feed/Parser.php');
+
 class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
     public static function get_title() {
@@ -298,8 +300,6 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         if (array_key_exists($source, $cache)) {
             return $cache[$source];
         }
-
-        require_once('XML/Feed/Parser.php');
 
         $config = array(CURLOPT_URL => $source);
 
