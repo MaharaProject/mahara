@@ -18,7 +18,7 @@
  * @date       2008-12-24
  * @package    Dwoo
  */
-function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $default=null)
+function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %#d, %Y', $default=null)
 {
 	if (!empty($value)) {
 		// convert if it's not a valid unix timestamp
@@ -40,8 +40,8 @@ function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $defau
 	if (DIRECTORY_SEPARATOR == '\\') {
 		$_win_from = array('%D',       '%h', '%n', '%r',          '%R',    '%t', '%T');
 		$_win_to   = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');
-		if (strpos($format, '%e') !== false) {
-			$_win_from[] = '%e';
+		if (strpos($format, '%#d') !== false) {
+			$_win_from[] = '%#d';
 			$_win_to[]   = sprintf('%\' 2d', date('j', $value));
 		}
 		if (strpos($format, '%l') !== false) {
