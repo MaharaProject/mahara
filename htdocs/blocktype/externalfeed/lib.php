@@ -301,7 +301,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             return $cache[$source];
         }
 
-        $config = array(CURLOPT_URL => $source);
+        $config = array(
+            CURLOPT_URL => $source,
+            CURLOPT_TIMEOUT => 15,
+        );
 
         $result = mahara_http_request($config);
 
