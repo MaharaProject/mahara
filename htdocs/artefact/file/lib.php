@@ -53,7 +53,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'path' => 'myportfolio/files',
                 'url' => 'artefact/file/',
                 'title' => get_string('myfiles', 'artefact.file'),
-                'weight' => 20,
+                'weight' => 40,
             ),
             array(
                 'path' => 'profile/icons',

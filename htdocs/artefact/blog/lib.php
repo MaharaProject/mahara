@@ -51,7 +51,7 @@ class PluginArtefactBlog extends PluginArtefact {
         global $USER;
         $tab = array(
             'path'   => 'myportfolio/blogs',
-            'weight' => 30,
+            'weight' => 50,
         );
         if ($USER->get_account_preference('multipleblogs')) {
             $tab['url']   = 'artefact/blog/';

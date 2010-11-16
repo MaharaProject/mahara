@@ -92,11 +92,7 @@ $string['loggedin'] = 'Logged In Users';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
-$string['friendslower'] = 'friends';
-$string['grouplower'] = 'group';
 $string['tutors'] = 'tutors';
-$string['loggedinlower'] = 'logged in users';
-$string['publiclower'] = 'public';
 $string['everyoneingroup'] = 'Everyone in Group';
 $string['token'] = 'Secret URL';
 $string['showfullurl'] = 'Show full URL';
@@ -135,7 +131,9 @@ $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
 $string['Added'] = 'Added';
+$string['share'] = 'Share';
 $string['sharewith'] = 'Share with';
+$string['accessibleby'] = 'Accessible by';
 $string['sharewithmygroups'] = 'Share with My Groups';
 $string['otherusersandgroups'] = 'Share with other users and groups';
 $string['moreoptions'] = 'Advanced Options';

@@ -1952,17 +1952,23 @@ function mahara_standard_nav() {
             'weight' => 10,
         ),
         array(
+            'path' => 'myportfolio/share',
+            'url' => 'view/share.php',
+            'title' => get_string('share', 'view'),
+            'weight' => 30,
+        ),
+        array(
             'path' => 'myportfolio/export',
             'url' => 'export/',
             'title' => get_string('Export', 'export'),
-            'weight' => 50,
+            'weight' => 70,
             'ignore' => !$exportenabled,
         ),
         array(
             'path' => 'myportfolio/collection',
             'url' => 'collection/',
             'title' => get_string('mycollections', 'collection'),
-            'weight' => 10,
+            'weight' => 20,
         ),
         array(
             'path' => 'groups',

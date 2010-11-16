@@ -49,7 +49,7 @@ class PluginArtefactPlans extends PluginArtefact {
                 'path' => 'myportfolio/plans',
                 'url'  => 'artefact/plans/',
                 'title' => get_string('myplans', 'artefact.plans'),
-                'weight' => 40,
+                'weight' => 60,
             ),
         );
     }
