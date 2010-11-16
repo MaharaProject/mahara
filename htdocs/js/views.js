@@ -1203,5 +1203,4 @@ function blockConfigError(form, data) {
         eval(data.formelementerror + '(form, data)');
         return;
     }
-    formError(form, data);
 }
