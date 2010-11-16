@@ -90,7 +90,9 @@ $form = array(
 // institution views requires doing some tricky stuff with the 'copy for new users/groups'
 // options, and there's not much room for the 'Share' tab in the admin area anyway
 if (!$institution) {
-    list($collections, $views) = View::get_views_and_collections($view->get('owner'), $group, $institution);
+    list($collections, $views) = View::get_views_and_collections(
+        $view->get('owner'), $group, $institution, $view->get('accessconf')
+    );
 }
 
 if (!empty($collections)) {
@@ -98,7 +100,7 @@ if (!empty($collections)) {
         $c = array(
             'title'        => $c['name'],
             'value'        => $c['id'],
-            'defaultvalue' => !empty($collection) && $collection->get('id') == $c['id'],
+            'defaultvalue' => !empty($collection) && ($collection->get('id') == $c['id'] || !empty($c['match'])),
             'views'        => $c['views'], // Keep these hanging around to check in submit function
         );
     }
@@ -114,7 +116,7 @@ if (!empty($views)) {
         $v = array(
             'title'        => $v['name'],
             'value'        => $v['id'],
-            'defaultvalue' => $viewid == $v['id'],
+            'defaultvalue' => $viewid == $v['id'] || !empty($v['match']),
         );
     }
     $form['elements']['views'] = array(
@@ -129,7 +131,7 @@ $allowcomments = $view->get('allowcomments');
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
     'allowcomments' => $allowcomments,
-    'defaultvalue'  => isset($view) ? $view->get_access(get_string('strftimedatetimeshort')) : null
+    'defaultvalue'  => $view->get_access(get_string('strftimedatetimeshort')),
 );
 
 
@@ -443,9 +445,30 @@ function editaccess_submit(Pieform $form, $values) {
         }
     }
 
+    $viewconfig = array(
+        'startdate'       => $values['startdate'],
+        'stopdate'        => $values['stopdate'],
+        'template'        => (int) $values['template'],
+        'allowcomments'   => (int) $values['allowcomments'],
+        'approvecomments' => (int) ($values['allowcomments'] && $values['approvecomments']),
+        'accesslist'      => $values['accesslist'],
+    );
+
     $toupdate = array();
 
     if ($institution) {
+        if (isset($values['copynewuser'])) {
+            $viewconfig['copynewuser'] = (int) ($values['template'] && $values['copynewuser']);
+        }
+        if ($institution == 'mahara') {
+            $createfor = array();
+            foreach (group_get_grouptypes() as $grouptype) {
+                if ($values['template'] && $values['copyfornewgroups_'.$grouptype]) {
+                    $createfor[] = $grouptype;
+                }
+            }
+            $viewconfig['copynewgroups'] = $createfor;
+        }
         $toupdate[] = $view->get('id');
     }
     else {
@@ -464,40 +487,7 @@ function editaccess_submit(Pieform $form, $values) {
         }
     }
 
-    db_begin();
-
-    foreach ($toupdate as $viewid) {
-        $v = new View($viewid);
-        $v->set('startdate', $values['startdate']);
-        $v->set('stopdate', $values['stopdate']);
-        $istemplate = (int) $values['template'];
-        $v->set('template', $istemplate);
-        if (isset($values['copynewuser'])) {
-            $v->set('copynewuser', (int) ($istemplate && $values['copynewuser']));
-        }
-        if ($institution == 'mahara') {
-            $createfor = array();
-            foreach (group_get_grouptypes() as $grouptype) {
-                if ($istemplate && $values['copyfornewgroups_'.$grouptype]) {
-                    $createfor[] = $grouptype;
-                }
-            }
-            $v->set('copynewgroups', $createfor);
-        }
-
-        $v->set('allowcomments', (int) $values['allowcomments']);
-        if ($values['allowcomments']) {
-            $v->set('approvecomments', (int) $values['approvecomments']);
-        }
-
-        $v->commit();
-    }
-
-    $first = new View($toupdate[0]);
-    $first->set_access($values['accesslist']);
-    $first->copy_access($toupdate);
-
-    db_commit();
+    View::update_view_access($viewconfig, $toupdate);
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
 
