@@ -636,17 +636,43 @@ class View {
         return $data;
     }
 
+    /* Attempt to sort two access records in the same order as the
+       query in get_access_records */
+    public static function cmp_accesslist($a, $b) {
+        if (($c = empty($a->accesstype) - empty($b->accesstype))
+            || ($c = strcmp($b->accesstype, $a->accesstype))
+            || ($c = $a->group - $b->group)
+            || ($c = !empty($a->role) - !empty($b->role))
+            || ($c = strcmp($a->role, $b->role))
+            || ($c = $a->usr - $b->usr)
+            || ($c = strcmp($a->token, $b->token))
+            || ($c = !empty($a->startdate) - !empty($b->startdate))
+            || ($c = strcmp($a->startdate, $b->startdate))
+            || ($c = !empty($a->stopdate) - !empty($b->stopdate))
+            || ($c = strcmp($a->stopdate, $b->stopdate))
+            || ($c = $a->allowcomments - $b->allowcomments)) {
+            return $c;
+        }
+        return $a->approvecomments - $b->approvecomments;
+    }
+
 
     public static function update_view_access($config, $viewids) {
 
         db_begin();
 
         // Use set_access() on the first view to get a hopefully consistent
-        // representation of the access list (in the same order as the list
-        // returned by get_access)
+        // and complete representation of the access list
         $firstview = new View($viewids[0]);
         $fullaccesslist = $firstview->set_access($config['accesslist']);
+
+        // Copy the first view's access records to all the other views
         $firstview->copy_access($viewids);
+
+        // Sort the full access list in the same order as the list
+        // returned by get_access, so that views with the same set of
+        // access records get grouped together
+        usort($fullaccesslist, array('self', 'cmp_accesslist'));
 
         // Hash the config object so later on we can easily find
         // all the views with the same config/access rights
