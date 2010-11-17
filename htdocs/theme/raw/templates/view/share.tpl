@@ -2,8 +2,8 @@
 <table class="fullwidth">
   <thead>
     <tr>
-      <th style="width: 47%;">{str tag=Views section=view}/{str tag=collections section=collection}</th>
-      <th style="width: 47%;">{str tag=accessibleby section=view}</th>
+      <th style="width: 40%;">{str tag=Views section=view}/{str tag=collections section=collection}</th>
+      <th style="width: 55%;">{str tag=accessibleby section=view}</th>
       <th></th>
     </tr>
   </thead>
@@ -32,7 +32,7 @@
       {/if}
       {if $accesslist.accessgroups}
         {foreach from=$accesslist.accessgroups item=accessgroup}
-          <div>
+          <div class="accesslistitem">
           {if $accessgroup.accesstype == 'loggedin'}
             {str tag="loggedin" section="view"}
           {elseif $accessgroup.accesstype == 'public'}
@@ -44,7 +44,19 @@
           {elseif $accessgroup.accesstype == 'user'}
             <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
           {elseif $accessgroup.accesstype == 'secreturl'}
-            {str tag="peoplewiththesecreturl" section="view"}
+            {str tag="token" section="view"} <a href="" title="{str tag=showfullurl section=view}" class="secreturl">{$accessgroup.token|str_shorten_text:9:true}</a>
+            {/if}
+          {if $accessgroup.startdate}
+            {if $accessgroup.stopdate}
+              {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
+            {else}
+              {str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}
+            {/if}
+          {elseif $accessgroup.stopdate}
+            {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
+          {/if}
+          {if $accessgroup.accesstype == 'secreturl'}
+            <div class="expandurl hidden">{$WWWROOT}view/view.php?t={$accessgroup.token}</div>
           {/if}
           </div>
         {/foreach}

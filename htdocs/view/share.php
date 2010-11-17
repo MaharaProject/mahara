@@ -33,7 +33,20 @@ define('MENUITEM', 'myportfolio/share');
 
 $accesslists = View::get_accesslists($USER->get('id'));
 
+$js = <<<EOF
+addLoadEvent(function () {
+    forEach(getElementsByTagAndClassName('a', 'secreturl', null), function (elem) {
+        connect(elem, 'onclick', function(e) {
+            e.stop();
+            var displayelem = getFirstElementByTagAndClassName(null, 'expandurl', getFirstParentByTagAndClassName(elem, null, 'accesslistitem'));
+            toggleElementClass('hidden', displayelem);
+        });
+    });
+});
+EOF;
+
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');
