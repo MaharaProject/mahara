@@ -329,7 +329,10 @@ div.grippie {
 	padding: .25em 0 0 .25em;
 	* padding: .25em;
 }
-
+.memberssearch {
+	width: 23em;
+	padding-left: 2em;
+}
 /* Legend */
 legend {
 	font-weight: bold;

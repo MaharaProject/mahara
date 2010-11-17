@@ -11,8 +11,8 @@
         {/foreach}
         </div>
     {/if}
-    {$form|safe}
-    <p>{$instructions|clean_html|safe}</p>
+    <div class="fr memberssearch"><span class="fl">{str tag=search}:</span><span class="fr">{$form|safe}</span></div>
+    <div>{$instructions|clean_html|safe}</div>
     {if $membershiptype}<h3>{str tag=pendingmembers section=group}</h3>{/if}
     <div id="results">
         <table id="membersearchresults" class="tablerenderer fullwidth listing twocolumn">
