@@ -100,7 +100,7 @@ if (!empty($collections)) {
         $c = array(
             'title'        => $c['name'],
             'value'        => $c['id'],
-            'defaultvalue' => !empty($collection) && ($collection->get('id') == $c['id'] || !empty($c['match'])),
+            'defaultvalue' => $collectionid == $c['id'] || !empty($c['match']),
             'views'        => $c['views'], // Keep these hanging around to check in submit function
         );
     }
