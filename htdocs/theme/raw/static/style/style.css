@@ -1376,10 +1376,12 @@ a.tag {
     overflow: auto;
     background-color: #f9f9f9;
     border: 1px solid #b2b2b2;
-    cursor: help;
     font-size: 1em;
 	color: #333;
 	z-index: 2000;
+}
+.help a:hover {
+	cursor: help;
 }
 .help a:focus {
     outline: none;
