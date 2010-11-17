@@ -1,9 +1,9 @@
 {include file="header.tpl"}
-<table>
+<table class="fullwidth">
   <thead>
     <tr>
-      <th>{str tag=Views section=view}/{str tag=collections section=collection}</th>
-      <th>{str tag=accessibleby section=view}</th>
+      <th style="width: 47%;">{str tag=Views section=view}/{str tag=collections section=collection}</th>
+      <th style="width: 47%;">{str tag=accessibleby section=view}</th>
       <th></th>
     </tr>
   </thead>
