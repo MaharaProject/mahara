@@ -3414,7 +3414,7 @@ class View {
         $accessgroups = get_records_sql_array('
             SELECT va.*, g.grouptype, g.name
             FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
-            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ')
+            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1
             ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
             array()
         );
