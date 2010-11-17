@@ -15,7 +15,6 @@
             <th>{str tag='description' section='artefact.plans'}</th>
             <th>{str tag='completed' section='artefact.plans'}</th>
             <th class="planscontrols"></th>
-            <th class="planscontrols"></th>
         </tr>
     </thead>
     <tbody>

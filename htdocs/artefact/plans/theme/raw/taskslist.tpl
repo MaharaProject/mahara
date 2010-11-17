@@ -6,9 +6,6 @@
             <td class="c2">{$task->title}</td>
             <td class="c3">{$task->description}</td>
             <td class="c4">&nbsp;</td>
-            <td class="c5 s"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" class="icon btn-edit">{str tag=edit}</a></td>
-            <td class="c6 s"><a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" class="icon btn-del">{str tag=delete}</a></td>
-        </tr>
     {else}
         <tr class="{cycle values='r0,r1'}">
             <td class="c1">{$task->completiondate}</td>
@@ -19,9 +16,10 @@
             {else}
                 <td class="c4">&nbsp;</td>
             {/if}
-            <td class="c5 s"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" class="icon btn-edit">Edit</a></td>
-            <td class="c6 s"><a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" class="icon btn-del">Delete</a></td>
-        </tr>
+
     {/if}
+            <td class="c5 s"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" class="icon btn-big-edit" title="{str tag=edit}"></a>
+            <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" class="icon btn-big-del" title="{str tag=delete}"></a></td>
+        </tr>
 {/foreach}
 {/auto_escape}

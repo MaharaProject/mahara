@@ -7,8 +7,8 @@
     <li><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
 {elseif $group->membershiptype == 'admin'}
-	<li><a href="{$WWWROOT}group/edit.php?id={$group->id}" class="btn-edit">{str tag="edit"}</a></li>
-	<li><a href="{$WWWROOT}group/delete.php?id={$group->id}" class="btn-del">{str tag="delete"}</a></li>
+	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" class="btn-big-edit" title="{str tag=edit}"></a>
+	<a href="{$WWWROOT}group/delete.php?id={$group->id}" class="btn-big-del" title="{str tag=delete}"></a></li>
 	
 {if $group->jointype == 'request' && $group->requests}
 	<li>
@@ -36,6 +36,9 @@
 	
 {elseif $group->jointype == 'request'}
 	<li><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>
-	
+{elseif $group->jointype == 'controlled' || $group->jointype == 'invite'}
+	<li>{str tag="membershiptype.$group->jointype" section="group"}</li>
+
 {/if}
+{*get_string('membershiptype.'.$group->jointype, 'group')*}
 </ul>

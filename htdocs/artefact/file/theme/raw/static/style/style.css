@@ -68,7 +68,12 @@ form#files .foldernav {
 	font-size: .9167em;
     font-family: Arial, Helvetica, sans-serif;
 }
-
+.filelist td.right input.btn-big-del {
+	font-size: 1%;
+}
+.filelist td.right input.btn-big-edit {
+	font-size: 1%;
+}
 /* parent folder row */
 tr.parentfolder td {
 	background-color: #ddd !important;

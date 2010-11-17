@@ -24,7 +24,9 @@
 .btn-spacer a {
 	margin-left: 1em;
 }
-
+.btn-spacer a.btn-big-del {
+	margin-left: 3px;
+}
 /* Forum list */
 #forumslist{
 	border-bottom: 1px solid #ccc;

@@ -15,7 +15,7 @@
     {else}
       <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
         <input type="hidden" name="id" value="{$post->id}">
-        <input type="submit" class="icon btn-edit s" value="{str tag=edit section=artefact.blog}">
+        <input type="submit" class="icon btn-big-edit s" value="" title="{str tag=edit}">{*{str tag=edit section=artefact.blog}*}
       </form>
       {$post->delete|safe}
     {/if}

@@ -636,9 +636,34 @@ div.btn-edit input.submit,
     color: #ca0000 !important;
 	padding-left: 13px;
 }
+.btn-big-edit {
+	background: transparent url(../images/edit.gif) no-repeat left;
+	width: 0px;
+	height: 0px;
+	padding: 8px;
+	font-size: 1% !important;
+}
+.btn-big-del {
+    background: transparent url(../images/remove-block.gif) no-repeat left;
+	width: 0px;
+	height: 0px;
+	padding: 8px;
+	font-size: 1% !important;
+}
+a.btn-big-del {
+	margin-left: 3px;
+}
+.admincontrol .btn-big-edit {
+	padding-top: 14px;
+}
+.admincontrol .btn-big-del {
+	padding-top: 14px;
+}
 .btn-manage {
 	background: transparent url(../images/icon-manage.gif) no-repeat left;
 	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
 }
 .btn-message {
 	background: transparent url(../images/icon-mail.gif) no-repeat left;
@@ -664,7 +689,6 @@ div.btn-edit input.submit,
     background: transparent url(../images/icon-add.gif) no-repeat left;
 	padding-left: 13px;
 }
-
 .btn-group {
     background: transparent url(../images/icon-group.gif) no-repeat left center;
 	padding-left: 13px;
@@ -1821,13 +1845,20 @@ ul.groupuserstatus {
 	font-size: .9em;
 	margin: 0 0 0 1em;
 }
-.jointhisgroup form table th {
+
+.admincontrol{
+	text-align:right;
+}
+.planstatus {
+	width: 180px;
+	text-align: right;
+}
+.jointhisgroup form.pieform table th {
 	padding: 0;
 }
 .jointhisgroup form table td {
 	padding: 0;
 	width: 180px;
-	border-bottom: 1px solid #d1d1d1;
 }
 .jointhisgroup form table td input {
 	border: 0;
