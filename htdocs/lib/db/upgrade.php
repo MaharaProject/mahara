@@ -2211,12 +2211,12 @@ function xmldb_core_upgrade($oldversion=0) {
         // Encrypt all passwords with no set salt values
         $sql = "SELECT * FROM {usr}
                 WHERE salt IS NULL OR salt = ''";
-        $passwords = get_records_sql_array($sql);
-
-        foreach ($passwords as $p) {
-            $p->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
-            $p->password = sha1($p->salt . $p->password);
-            update_record('usr', $p);
+        if ($passwords = get_records_sql_array($sql, array())) {
+            foreach ($passwords as $p) {
+                $p->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
+                $p->password = sha1($p->salt . $p->password);
+                update_record('usr', $p);
+            }
         }
     }
 
