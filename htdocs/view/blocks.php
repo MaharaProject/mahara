@@ -225,12 +225,12 @@ if (get_config('viewmicroheaders')) {
             $microheaderlinks = array(
                 array(
                     'name' => get_string('edittitle', 'view'),
-                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid . '&amp;new=' . $new,
+                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid,
                     'type' => 'edit',
                 ),
                 array(
                     'name' => get_string('editaccess', 'view'),
-                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid . '&amp;new=' . $new,
+                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
                     'type' => 'edit',
                 ),
             );
