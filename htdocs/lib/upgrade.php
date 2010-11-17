@@ -658,7 +658,8 @@ function core_install_lastcoredata_defaults() {
     // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
-    $user->password = 'mahara';
+    $user->salt = auth_get_random_salt();
+    $user->password = sha1($user->salt . 'mahara');
     $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;
