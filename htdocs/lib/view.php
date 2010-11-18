@@ -2874,7 +2874,7 @@ class View {
             define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
         }
         else {
-            define('MENUITEM', 'myportfolio/share');
+            define('MENUITEM', 'myportfolio/views');
         }
     }
 

@@ -62,7 +62,12 @@ define('TITLE', get_string('editaccess', 'view'));
 
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution);
+if ($group || $institution) {
+    View::set_nav($group, $institution);
+}
+else {
+    define('MENUITEM', 'myportfolio/share');
+}
 
 
 if (!$USER->can_edit_view($view)) {
