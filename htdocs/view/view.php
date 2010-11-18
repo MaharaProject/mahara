@@ -212,9 +212,9 @@ if (get_config('viewmicroheaders')) {
         if ($viewtype == 'profile') {
             $microheaderlinks = array(
                 array(
-                    'name' => get_string('editcontent', 'view'),
+                    'name' => get_string('editprofileview', 'view'),
+                    'image' => $THEME->get_url('images/edit.gif'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                    'type' => 'edit',
                 ),
             );
         }
@@ -230,19 +230,14 @@ if (get_config('viewmicroheaders')) {
         else {
             $microheaderlinks = array(
                 array(
-                    'name' => get_string('edittitle', 'view'),
-                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid,
-                    'type' => 'edit',
-                ),
-                array(
-                    'name' => get_string('editcontent', 'view'),
+                    'name' => get_string('editthisview', 'view'),
+                    'image' => $THEME->get_url('images/edit.gif'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
-                    'type' => 'edit',
                 ),
                 array(
                     'name' => get_string('editaccess', 'view'),
+                    'image' => $THEME->get_url('images/icon_access.gif'),
                     'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
-                    'type' => 'edit',
                 ),
             );
         }

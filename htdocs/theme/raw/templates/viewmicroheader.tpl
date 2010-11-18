@@ -11,7 +11,7 @@
         <div class="fr links">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
+              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{if $item.image}<img src="{$item.image}" title="{$item.name}">{else}{$item.name}{/if}</a> 
             {/foreach}
           {elseif $backurl}<a class="icon btn-back" href="{$backurl}">{str tag=back}</a> 
           {/if}

@@ -10,7 +10,13 @@
 
 {if !$microheaders && ($mnethost || $editurl)}
 <div class="rbuttons">
-  {if $editurl}<a class="s icon {if $new}btn-reply{else}btn-edit{/if}" href="{$editurl}">{if $new}{str tag=back}{else}{str tag=editthisview section=view}{/if}</a>{/if}
+  {if $editurl}{strip}
+    {if $new}
+      <a class="s icon btn-reply" href="{$editurl}">{str tag=back}</a>
+    {else}
+      <a title="{str tag=editthisview section=view}" href="{$editurl}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=editthisview section=view}" /></a>
+    {/if}
+  {/strip}{/if}
   {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>{/if}
 </div>
 {/if}
