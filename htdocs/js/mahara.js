@@ -136,12 +136,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    var a = A({'href': ''}, IMG({'src': get_themeurl('images/icon_close.gif'), 'alt': '[X]'}));
-    connect(a, 'onclick', function(e) {
-        removeElement(a.parentNode.parentNode);
-        e.stop();
-    });
-    return DIV({'class': type}, DIV({'class': 'fr'}, a), message);
+    return DIV({'class': type}, message);
 }
 
 /* Appends a status message to the end of elemid */
