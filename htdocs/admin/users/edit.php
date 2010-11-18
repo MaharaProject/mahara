@@ -85,14 +85,9 @@ if ($USER->get('admin')) {
     );
 }
 $elements['maildisabled'] = array(
-    'type' => 'radio',
+    'type' => 'checkbox',
     'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
     'title' => get_string('email'),
-    'separator' => '<br>',
-    'options' => array(
-        0 => get_string('enabled', 'account'),
-        1 => get_string('disabled', 'account'),
-    ),
     'help' => true,
 );
 $elements['expiry'] = array(

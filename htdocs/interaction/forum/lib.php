@@ -104,10 +104,8 @@ class PluginInteractionForum extends PluginInteraction {
                 'legend' => get_string('settings'),
                 'elements' => array(
                     'autosubscribe' => array(
-                        'type'         => 'select',
+                        'type'         => 'checkbox',
                         'title'        => get_string('autosubscribeusers', 'interaction.forum'),
-                        'options'      => array(true  => get_string('yes'),
-                                                false => get_string('no')),
                         'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
                         'defaultvalue' => isset($autosubscribe) ? $autosubscribe : false,
                         'rules' => array(

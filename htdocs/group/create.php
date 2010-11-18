@@ -61,20 +61,16 @@ if (get_config('allowgroupcategories')
                 'defaultvalue' => '');
 }
 $elements['public'] = array(
-            'type'         => 'select',
+            'type'         => 'checkbox',
             'title'        => get_string('publiclyviewablegroup', 'group'),
             'description'  => get_string('publiclyviewablegroupdescription', 'group'),
-            'options'      => array(true  => get_string('yes'),
-                                    false => get_string('no')),
             'defaultvalue' => 'no',
             'help'         => true,
             'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
 $elements['usersautoadded'] = array(
-            'type'         => 'select',
+            'type'         => 'checkbox',
             'title'        => get_string('usersautoadded', 'group'),
             'description'  => get_string('usersautoaddeddescription', 'group'),
-            'options'      => array(true  => get_string('yes'),
-                                    false => get_string('no')),
             'defaultvalue' => 'no',
             'help'         => true,
             'ignore'       => !$USER->get('admin'));
