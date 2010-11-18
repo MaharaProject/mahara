@@ -71,7 +71,7 @@ if (!$view || !can_view_view($viewid)) {
 }
 
 $javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
-$javascript = array_merge($view->get_blocktype_javascript());
+$javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 // Set up theme
 $viewtheme = $view->get('theme');
