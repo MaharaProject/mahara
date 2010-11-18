@@ -1034,8 +1034,6 @@ div.rel {
 /* system messages between nav and main content */
 #messages {
     padding: 0;
-}
-#messages div {
 	margin: 0 0 1em 0;
 }
 #containerX #messages {

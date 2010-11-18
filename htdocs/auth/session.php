@@ -197,10 +197,8 @@ class Session {
         $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
-                $result .= '<div class="' . $data['type'] . '">';
-                $result .= '<div class="fr"><a href="" onclick="removeElement(this.parentNode.parentNode);return false;">';
-                $result .= '<img src="' . $THEME->get_url('images/icon_close.gif') . '" alt="[X]"></a></div>';
-                $result .= $data['msg'] . '</div>';
+                $result .= '<div class="' . $data['type'] . '"><div>';
+                $result .= $data['msg'] . '</div></div>';
             }
             $_SESSION['messages'] = array();
         }
