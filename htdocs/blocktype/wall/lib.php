@@ -233,6 +233,7 @@ EOF;
             'message'  => get_string('addpostsuccess', 'blocktype.wall'),
             'posts'    => $renderedposts,
             'block'    => $values['instance'],
+            'goto'     => '/user/view.php?id=' . $owner,
         ));
     }
 
