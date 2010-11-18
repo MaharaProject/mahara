@@ -1,5 +1,14 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
+{if $edittitleurl && !$microheaders}
+<div class="viewtitledesc">
+  <h1>{$viewtitle}</h1>
+  <span class="editviewtitle s">
+    <a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a>
+  </span>
+</div>
+{else}
 <h1>{$maintitle}</h1>
+{/if}
 
 {if $columns}
     {str tag="editblockspagedescription" section="view"}

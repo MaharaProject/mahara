@@ -50,6 +50,7 @@ $string['profileviewtitle']       = 'Profile View';
 $string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
 $string['grouphomepageviewtitle'] = 'Group Homepage View';
+$string['showdescription']        = 'Show Description';
 
 // my views
 $string['artefacts'] = 'Artefacts';

@@ -54,7 +54,11 @@
 {if $collection}
         <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
 {else}
-        <div class="center cb title">{$microheadertitle|safe}</div>
+        <div class="center cb title">{$microheadertitle|safe}
+        {if $edittitleurl}
+        <span class="editviewtitle s"><a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a></span>
+        {/if}
+        </div>
 {/if}
       </div>
     </div>

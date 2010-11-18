@@ -120,6 +120,7 @@ else if ($new) {
 else {
     $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id');
     define('TITLE', $view->get('title') . ': ' . get_string('editcontentandlayout', 'view'));
+    $editabletitle = true;
 }
 
 $category = param_alpha('c', '');
@@ -194,7 +195,12 @@ foreach (array_keys($_POST + $_GET) as $key) {
     }
 }
 
+$viewid = $view->get('id');
 $smarty->assign('maintitle', TITLE);
+if (!empty($editabletitle)) {
+    $smarty->assign('edittitleurl', get_config('wwwroot') . 'view/edit.php?id=' . $viewid);
+    $smarty->assign('viewdescription', $view->get('description'));
+}
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
@@ -204,7 +210,6 @@ $smarty->assign('dashboard', $dashboard);
 if (get_config('blockeditormaxwidth')) {
     $smarty->assign('INLINEJAVASCRIPT', 'config.blockeditormaxwidth = true;');
 }
-$viewid = $view->get('id');
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
 $owner = $view->get('owner');
@@ -223,11 +228,6 @@ if (get_config('viewmicroheaders')) {
         }
         else {
             $microheaderlinks = array(
-                array(
-                    'name' => get_string('edittitle', 'view'),
-                    'url' => get_config('wwwroot') . 'view/edit.php?id=' . $viewid,
-                    'type' => 'edit',
-                ),
                 array(
                     'name' => get_string('editaccess', 'view'),
                     'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
