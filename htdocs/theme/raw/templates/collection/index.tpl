@@ -16,29 +16,33 @@
                         <h3 title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
             {/if}
 
-                        <div class="rbuttons"><a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a></div>
+                        <div class="rbuttons">
+                          <a class="icon btn-manage" href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a>
 
-                        <div class="vi">
-                            <h4><a href="{$WWWROOT}collection/edit.php?id={$collection->id}" id="editcollectiondetails">{str tag="edittitleanddesc" section="collection"}</a></h4>
 
-                            <div class="videsc">{$collection->description}</div>
+                          <div class="viewcontrol">
+                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a>
+                          </div>
+                          <div class="viewcontrol">
+                            <a href="{$WWWROOT}view/access.php?collection={$collection->id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
+                          </div>
                         </div>
 
-                    <div class="vi">
-                        <h4><a href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a></h4>
-                        <div class="collection"><label>{str tag=views section=collection}:</label>
-                        {if $collection->views}
+                        <span class="edittitle"><a title="{str tag=edittitleanddescription section=view}" class="btn-edit" href="{$WWWROOT}collection/edit.php?id={$collection->id}"></a></span>
+
+                        <div class="cb videsc">{$collection->description}</div>
+
+                        <div class="videsc">
+                          <div class="collection"><label>{str tag=views section=collection}:</label>
+                          {if $collection->views}
                             {foreach from=$collection->views item=view name=cviews}
                                 <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
                             {/foreach}
-                        {else}
+                          {else}
                             {str tag=none}
-                        {/if}
+                          {/if}
                         </div>
-                    </div>
 
-                    <div class="vi">
-                        <h4><a href="{$WWWROOT}view/access.php?collection={$collection->id}" id="editcollectionaccess">{str tag="editaccess" section="collection"}</a></h4>
                     </div>
 
                     </div></td>
