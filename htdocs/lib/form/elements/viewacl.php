@@ -89,6 +89,14 @@ function pieform_element_viewacl(Pieform $form, $element) {
         );
     }
 
+    $allgroups = array(
+        'type'   => 'allgroups',
+        'id'     => 'allgroups',
+        'start'  => null,
+        'end'    => null,
+        'name'   => get_string('allmygroups', 'group'),
+        'preset' => true
+    );
     $mygroups = array();
     # @todo: paginate
     foreach (group_get_user_groups($USER->get('id')) as $g) {
@@ -100,9 +108,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'name' => $g->name,
             'preset' => false
         );
-        if (count($mygroups) > 10) {
-            break;
-        }
     }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
@@ -111,6 +116,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
     $smarty->assign('allowcomments', $element['allowcomments']);
+    $smarty->assign('allgroups', json_encode($allgroups));
     $smarty->assign('mygroups', json_encode($mygroups));
     return $smarty->fetch('form/viewacl.tpl');
 }

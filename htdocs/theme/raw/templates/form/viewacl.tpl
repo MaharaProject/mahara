@@ -68,6 +68,13 @@ function renderPotentialPresetItem(item) {
         });
         appendChildNodes(row, contextualHelpIcon('{{$formname}}', 'secreturl', 'core', 'view', null, null));
     }
+    else if (item.type == 'allgroups') {
+        connect(addButton, 'onclick', function() {
+            forEach(myGroups, function(g) {
+                appendChildNodes('accesslist', renderAccessListItem(g));
+            });
+        });
+    }
     else {
         connect(addButton, 'onclick', function() {
             appendChildNodes('accesslist', renderAccessListItem(item));
@@ -255,11 +262,18 @@ var potentialPresets = {{$potentialpresets|safe}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
 });
+var allGroups = {{$allgroups|safe}};
 var myGroups = {{$mygroups|safe}};
 if (myGroups) {
     appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmygroups section=view}}'));
+    renderPotentialPresetItem(allGroups);
+    var i = 0;
+    var maxGroups = 2;
     forEach(myGroups, function(preset) {
-        renderPotentialPresetItem(preset);
+        if (i < maxGroups) {
+            renderPotentialPresetItem(preset);
+            i++;
+        }
     });
 }
 var loggedinindex = {{$loggedinindex}};
