@@ -172,7 +172,7 @@ function editview_submit(Pieform $form, $values) {
     }
 
     $view->commit();
-    if (!isset($values['new'])) {
+    if (empty($new)) {
         $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
     }
     else {
