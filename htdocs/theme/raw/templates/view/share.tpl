@@ -2,8 +2,8 @@
 <table class="fullwidth">
   <thead>
     <tr>
-      <th style="width: 40%;">{str tag=Views section=view}/{str tag=collections section=collection}</th>
-      <th style="width: 55%;">{str tag=accessibleby section=view}</th>
+      <th>{str tag=Views section=view}/{str tag=collections section=collection}</th>
+      <th>{str tag=accessibleby section=view}</th>
       <th></th>
     </tr>
   </thead>
@@ -62,12 +62,10 @@
         {/foreach}
         {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
           </div>
-      {else}
-        <div class="videsc">{str tag="nobodycanseethisview2" section="view"}</div>
       {/if}
       </td>
-      <td>
-        <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}">{str tag=edit}</a>
+      <td class="right">
+        <a class="btn-access" href="{$WWWROOT}view/access.php?id={$accesslist.viewid}">{str tag=edit}</a>
       </td>
     </tr>
   {/foreach}
