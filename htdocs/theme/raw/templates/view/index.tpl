@@ -30,47 +30,58 @@
 {else}
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
 {/if}
-{if $view.submittedto}
-                            <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
-{else}
-                            {if $view.removable}<div class="rbuttons"><a href="{$WWWROOT}view/delete.php?id={$view.id}" class="btn-del">{str tag="deletethisview" section="view"}</a></div>{/if}
-                            <div class="vi">
-{if $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
-                                <h4><a href="{$WWWROOT}view/edit.php?id={$view.id}" id="editviewdetails">{str tag="edittitleanddescription" section="view"}</a></h4>
+                            <a class="nojs-hidden-inline expand" href="{$expand}" id="details-{$view.id}"><img src="{theme_url filename='images/expand-down.gif'}" alt="[+]"></a>
+                            <div class="rbuttons">
+{if !$view.submittedto}
+                              <a class="icon btn-edit editink" href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}">{str tag=edit}</a>
 {/if}
-{if $view.type == 'profile'}
-                                <div class="videsc">{str tag=profiledescription}</div>
+                              <div class="viewcontrol">
+{if !$view.submittedto && $view.removable}
+                                <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+{/if}
+                              </div>
+                              <div class="viewcontrol">
+{if !$view.togglepublic && $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
+                                <a href="{$WWWROOT}view/access.php?id={$view.id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
+{/if}
+                              </div>
+                            </div>{* rbuttons *}
+                            <div class="js-hidden expanded" id="details-{$view.id}-expand">
+{if $view.submittedto}
+                              <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
+{elseif $view.type == 'profile'}
+                              <div class="videsc">{str tag=profiledescription}</div>
 {elseif $view.type == 'dashboard'}
-                                <div class="videsc">{str tag=dashboarddescription}</div>
+                              <div class="videsc">{str tag=dashboarddescription}</div>
 {elseif $view.type == 'grouphomepage'}
-                                <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
-{elseif $view.description}
-                                <div class="videsc">{$view.description|clean_html|safe}</div>
+                              <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
+{else}
+  {if $view.description}
+                              <div class="videsc">{$view.description|clean_html|safe}</div>
+  {/if}
+                              <div class="videsc"><a class="btn-edit" href="{$WWWROOT}view/edit.php?id={$view.id}">{str tag="edittitleanddescription" section="view"}</a></div>
 {/if}
 {if $view.tags}
+                              <div class="videsc">
                                 <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>
+                              </div>
 {/if}
-                            </div>
-                            <div class="vi">
-                                <h4><a href="{$WWWROOT}view/blocks.php?id={$view.id}" id="editthisview">{str tag ="editcontentandlayout" section="view"}</a></h4>
+{if $view.collection}
+                              <div class="videsc">
+                                <div class="collection"><label>{str tag=Collection section=collection}:</label> <a href="{$WWWROOT}collection/views.php?id={$view.collection->id}">{$view.collection->name}</a></div>
+                              </div>
+{/if}
 {if $view.artefacts}
+                              <div class="videsc">
                                 <div class="artefacts"><label>{str tag="artefacts" section="view"}:</label>
                                 {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}" id="link-artefacts">{$artefact.title}</a>{if !$.foreach.artefacts.last}, {/if}{/foreach}</div>
+                              </div>
 {/if}
-                            </div>
+{if $view.submitto}
+                              <div class="submit-viewitem">{$view.submitto|safe}</div>
 {/if}
-                            <div class="vi">
-{if $view.togglepublic}
-                                {$view.togglepublic|safe}
-{elseif $view.collection}
-                                <div class="collection"><label>{str tag=Collection section=collection}:</label> <a href="{$WWWROOT}collection/views.php?id={$view.collection->id}">{$view.collection->name}</a></div>
-{elseif $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
-                                <h4><a href="{$WWWROOT}view/access.php?id={$view.id}" id="editviewaccess">{str tag="editaccess" section="view"}</a></h4>
-{/if}
-                            </div>
-{if $view.submitto && $view.type != 'profile' && $view.type != 'dashboard'}
-                            <div class="submit-viewitem">{$view.submitto|safe}</div>
-{/if}
+                              {if $view.togglepublic}{$view.togglepublic|safe}{/if}
+                           </div>
                         </div></td>
                     </tr>
 {/foreach}
