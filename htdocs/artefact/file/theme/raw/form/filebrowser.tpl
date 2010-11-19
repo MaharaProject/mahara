@@ -71,19 +71,6 @@
     </td>
   </tr>
 {/if}
-
-{if $config.createfolder}
-  <tr>
-    <th><label>{str tag='createfolder' section='artefact.file'}</label></th>
-    <td>
-      <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-      <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" />
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" id="{$prefix}_createfolder_messages"></td>
-  </tr>
-{/if}
  </tbody>
 </table>
 
@@ -91,9 +78,18 @@
 <input type="hidden" name="{$prefix}_move" id="{$prefix}_move" value="" />
 <input type="hidden" name="{$prefix}_moveto" id="{$prefix}_moveto" value="" />
 {/if}
-
+{if $config.createfolder}
+  <div id="{$prefix}_createfolder_messages"</div>
+{/if}
 <div id="{$prefix}_foldernav" class="foldernav">
 {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
+{if $config.createfolder}
+  <div class="fr">
+    <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
+    <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" />
+  </div>
+{/if}
+  
 </div>
 
 <div id="{$prefix}_filelist_container">
