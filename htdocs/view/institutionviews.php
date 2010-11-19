@@ -70,7 +70,7 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('views', 'view')
 ));
 
-$smarty = smarty();
+$smarty = smarty(array('jquery', 'myviews'));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
