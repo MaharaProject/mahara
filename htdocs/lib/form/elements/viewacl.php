@@ -66,6 +66,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 else {
                     $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
                 }
+                if (mb_strlen($item['name']) > 30) {
+                    $item['shortname'] = str_shorten_text($item['name'], 30, true);
+                }
                 // only show access that is still current. Expired access will be deleted if the form is saved
                 if($item['stopdate'] && (time() > strtotime($item['stopdate']))) {
                     unset($value[$key]);
@@ -98,7 +101,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
         'preset' => true
     );
     $mygroups = array();
-    # @todo: paginate
     foreach (group_get_user_groups($USER->get('id')) as $g) {
         $mygroups[] = array(
             'type' => 'group',
@@ -108,6 +110,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'name' => $g->name,
             'preset' => false
         );
+        if (mb_strlen($g->name) > 30) {
+            $mygroups[key($mygroups)]['shortname'] = str_shorten_text($g->name, 30, true);
+        }
     }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));

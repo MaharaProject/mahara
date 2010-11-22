@@ -62,7 +62,7 @@ function renderPotentialPresetItem(item) {
     else if (item.class) {
         attribs.class = item.class;
     }
-    var row = DIV(attribs, addButton, ' ', item.name);
+    var row = DIV(attribs, addButton, ' ', item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name);
     item.preset = true;
 
     if (item.type == 'token') {
@@ -128,7 +128,7 @@ function renderAccessListItem(item) {
         cssClass += '  preset';
     }
     cssClass += ' ' + item.type + '-container';
-    name = [item.name];
+    name = [item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name];
     var expandrow = null;
     if (item.type == 'token') {
         item.url = config.wwwroot + 'view/view.php?t=' + item.id;

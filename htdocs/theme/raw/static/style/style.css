@@ -1674,7 +1674,8 @@ table.attachments td {
   width: 15em;
 }
 .presets-container {
-  margin: 1.5em 1em 1em 0;
+  margin: 1.5em .5em 1em 0;
+  width: 25%;
 }
 #potentialpresetitems button {
 	* padding: 0 .25em;
@@ -1687,7 +1688,7 @@ table.attachments td {
 }
 
 #accesslisttable {
-  margin: 1em 0 .5em 3em;
+  margin: 1em 0 .5em .5em;
 }
 .main-column .accesslist-head1 th {
     border-bottom: none;
