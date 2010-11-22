@@ -182,6 +182,7 @@ $string['notamember'] = 'You are not a member of this group';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 $string['declinerequestsuccess'] = 'Group membership request has been declined sucessfully.';
 $string['notpublic'] = 'This group is not public.';
+$string['moregroups'] = 'More groups';
 
 // Bulk add, invite
 $string['addmembers'] = 'Add members';

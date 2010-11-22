@@ -55,7 +55,13 @@ var count = 0;
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
-    var attribs = item.preset ? {'class': 'preset'} : null;
+    var attribs = {};
+    if (item.preset) {
+        attribs.class = 'preset';
+    }
+    else if (item.class) {
+        attribs.class = item.class;
+    }
     var row = DIV(attribs, addButton, ' ', item.name);
     item.preset = true;
 
@@ -268,12 +274,21 @@ if (myGroups) {
     appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmygroups section=view}}'));
     renderPotentialPresetItem(allGroups);
     var i = 0;
-    var maxGroups = 2;
+    var maxGroups = 10;
     forEach(myGroups, function(preset) {
-        if (i < maxGroups) {
-            renderPotentialPresetItem(preset);
-            i++;
+        if (i == maxGroups) {
+            var more = A({'href':''}, '{{str tag=moregroups section=group}} »');
+            connect(more, 'onclick', function(e) {
+                e.stop();
+                forEach(getElementsByTagAndClassName('div', 'moregroups', 'potentialpresetitems'), partial(toggleElementClass, 'hidden'));
+            });
+            appendChildNodes('potentialpresetitems', DIV(null, ' ', more));
         }
+        if (i >= maxGroups) {
+            preset.class = 'hidden moregroups';
+        }
+        renderPotentialPresetItem(preset);
+        i++;
     });
 }
 var loggedinindex = {{$loggedinindex}};
