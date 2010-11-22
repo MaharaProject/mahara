@@ -477,13 +477,15 @@ function editaccess_submit(Pieform $form, $values) {
         $toupdate[] = $view->get('id');
     }
     else {
-        foreach ($values['collections'] as $cid) {
-            if (!isset($collections[$cid])) {
-                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+        if (isset($values['collections'])) {
+            foreach ($values['collections'] as $cid) {
+                if (!isset($collections[$cid])) {
+                    throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+                }
+                $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
             }
-            $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
         }
-
+    
         foreach ($values['views'] as $viewid) {
             if (!isset($views[$viewid])) {
                 throw new UserException(get_string('editaccessinvalidviewset', 'view'));
