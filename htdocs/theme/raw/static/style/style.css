@@ -1593,21 +1593,18 @@ table.attachments td {
 }
 
 /* My Views */
-#myviews h3 {
-  float: left;
-}
-#myviews .editlink {
-  margin: 0 .5em;
-}
 #myviews .edittitle {
   margin: 0 0 0 .5em;
 }
-#myviews .expand {
-  float: left;
-  padding: .25em 0 0;
+#myviews .expand img {
+  vertical-align: middle;
 }
 #myviews .expanded {
   clear: left;
+}
+#myviews .editlink {
+  float: right;
+  margin: 0 .5em 0 0;
 }
 #myviews .viewcontrol {
   width: 16px;

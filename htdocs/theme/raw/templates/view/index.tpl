@@ -22,19 +22,18 @@
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
 {if $view.type == 'profile'}
-                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
+                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a>
 {elseif $view.type == 'dashboard'}
-                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
+                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a>
 {elseif $view.type == 'grouphomepage'}
-                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a></h3>
+                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a>
 {else}
-                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
+                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
 {/if}
-                            <a class="nojs-hidden-inline expand" href="{$expand}" id="details-{$view.id}"><img src="{theme_url filename='images/expand-down.gif'}" alt="[+]"></a>
+                              <a class="nojs-hidden-inline expand" href="{$expand}" id="details-{$view.id}"><img src="{theme_url filename='images/expand-down.gif'}" alt="[+]"></a>
+                            </h3>
+
                             <div class="rbuttons">
-{if !$view.submittedto}
-                              <a class="icon btn-edit editink" href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}">{str tag=edit}</a>
-{/if}
                               <div class="viewcontrol">
 {if !$view.submittedto && $view.removable}
                                 <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
@@ -45,6 +44,12 @@
                                 <a href="{$WWWROOT}view/access.php?id={$view.id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
 {/if}
                               </div>
+                              <div class="editlink">
+{if !$view.submittedto}
+                                <a class="icon btn-edit" href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}">{str tag=edit}</a>
+{/if}
+                              </div>
+
                             </div>{* rbuttons *}
                             <div class="js-hidden expanded" id="details-{$view.id}-expand">
 {if $view.submittedto}
