@@ -70,7 +70,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'path' => 'groups/files',
                 'url' => 'artefact/file/groupfiles.php?group='.$groupid,
                 'title' => get_string('Files', 'artefact.file'),
-                'weight' => 60,
+                'weight' => 70,
             ),
         );
     }

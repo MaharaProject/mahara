@@ -1055,6 +1055,12 @@ function group_get_menu_tabs() {
         'title' => get_string('Views', 'group'),
         'weight' => 50,
     );
+    $menu['share'] = array(
+        'path' => 'groups/share',
+        'url' => 'group/shareviews.php?group='.$group->id,
+        'title' => get_string('share', 'view'),
+        'weight' => 60,
+    );
 
     if (group_user_access($group->id)) {
         safe_require('grouptype', $group->grouptype);
