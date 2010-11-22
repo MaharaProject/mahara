@@ -245,9 +245,9 @@ function update_loggedin_access() {
 }
 addLoadEvent(function() {
     update_copy_options();
-    connect('editaccess_template', 'onchange', update_copy_options);
+    connect('editaccess_template', 'onclick', update_copy_options);
     forEach({$needsaccessstr}, function (id) {
-        connect('editaccess_'+id, 'onchange', update_loggedin_access);
+        connect('editaccess_'+id, 'onclick', update_loggedin_access);
     });
 });
 EOF;
@@ -279,7 +279,7 @@ function update_comment_options() {
     }
 }
 addLoadEvent(function() {
-    connect('editaccess_allowcomments', 'onchange', update_comment_options);
+    connect('editaccess_allowcomments', 'onclick', update_comment_options);
 });
 EOF;
 
