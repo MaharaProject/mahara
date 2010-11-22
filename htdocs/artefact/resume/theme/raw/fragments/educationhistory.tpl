@@ -4,11 +4,10 @@
 {/if}
 </legend>{/if}
 <table id="educationhistorylist{$suffix}" class="tablerenderer resumefive resumecomposite">
-    <colgroup width="25%" span="2"></colgroup>
     <thead>
         <tr>
-            <th class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
-            <th class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
+            <th width="25%" class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
+            <th width="25%" class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='qualification' section='artefact.resume'}</th>
             {if $controls}
             <th class="resumecontrols"></th>
@@ -19,10 +18,13 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r1'}">
-            <td>{$row->startdate}</td>
+        <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
+            <td class="toggle">{$row->startdate}</td>
             <td>{$row->enddate}</td>
-            <td><div class="jstitle">{$row->qualification}</div><div class="jsdescription">{$row->qualdescription}</div></td>
+            <td>{$row->qualification}</td>
+        </tr>
+        <tr class="{cycle values='r0,r0,r1,r1'} expandable-body">
+        	<td colspan="3">{$row->qualdescription}</td>
         </tr>
         {/foreach}
     </tbody>

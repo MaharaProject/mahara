@@ -744,7 +744,20 @@ a.btn-big-del {
 	background: url(../images/icon-collection.gif) no-repeat left 1px;
 	padding-left: 15px;
 }
-
+tr.expandable-body td{
+	padding-left: 1em;
+}
+td.toggle.expandable {
+	width: 1em;
+	height: 1em;
+	padding-left: 16px;
+	background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
+}
+td.toggle.expandable.expanded {
+	background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
+	width: 1em;
+	height: 1em;
+}
 div.pagetabs {
     top: 1em !important;
     right: 1em;

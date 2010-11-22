@@ -18,9 +18,12 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r1'}">
-            <td>{$row->date}</td>
-            <td><div class="jstitle">{$row->title}</div><div class="jsdescription">{$row->description}</div></td>
+        <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
+            <td class="toggle">{$row->date}</td>
+            <td>{$row->title}</td>
+        </tr>
+        <tr class="{cycle values='r0,r0,r1,r1'} expandable-body">
+        	<td colspan="2">{$row->description}</td>
         </tr>
         {/foreach}
     </tbody>
