@@ -35,7 +35,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
-            </KEY>
+            </KEYS>
         </TABLE>
 </TABLES>
 </XMLDB>
