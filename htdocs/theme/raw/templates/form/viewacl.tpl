@@ -57,11 +57,12 @@ function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
     var attribs = {};
     if (item.preset) {
-        attribs.class = 'preset';
+        attribs = {'class': 'preset'};
     }
-    else if (item.class) {
-        attribs.class = item.class;
+    else if (item['class']) {
+        attribs = {'class': item['class']};
     }
+
     var row = DIV(attribs, addButton, ' ', item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name);
     item.preset = true;
 
@@ -128,7 +129,7 @@ function renderAccessListItem(item) {
         cssClass += '  preset';
     }
     cssClass += ' ' + item.type + '-container';
-    name = [item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name];
+    var name = [item.shortname ? SPAN({'title': item.name}, item.shortname) : item.name];
     var expandrow = null;
     if (item.type == 'token') {
         item.url = config.wwwroot + 'view/view.php?t=' + item.id;
@@ -146,7 +147,7 @@ function renderAccessListItem(item) {
         });
         name.push(' ', expandlink);
     }
-    if (item.role != null) {
+    else if (item.role != null) {
         name.push(' - ', item.roledisplay);
     }
     var icon = null;
@@ -285,7 +286,7 @@ if (myGroups) {
             appendChildNodes('potentialpresetitems', DIV(null, ' ', more));
         }
         if (i >= maxGroups) {
-            preset.class = 'hidden moregroups';
+            preset['class'] = 'hidden moregroups';
         }
         renderPotentialPresetItem(preset);
         i++;
