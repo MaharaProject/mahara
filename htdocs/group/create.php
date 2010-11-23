@@ -64,14 +64,12 @@ $elements['public'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('publiclyviewablegroup', 'group'),
             'description'  => get_string('publiclyviewablegroupdescription', 'group'),
-            'defaultvalue' => 'no',
             'help'         => true,
             'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
 $elements['usersautoadded'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('usersautoadded', 'group'),
             'description'  => get_string('usersautoaddeddescription', 'group'),
-            'defaultvalue' => 'no',
             'help'         => true,
             'ignore'       => !$USER->get('admin'));
 $elements['viewnotify'] = array(
