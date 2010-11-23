@@ -330,8 +330,11 @@ div.grippie {
 	* padding: .25em;
 }
 .memberssearch {
-	width: 23em;
 	padding-left: 2em;
+}
+.memberssearch form,
+.memberssearch form div {
+  display: inline;
 }
 /* Legend */
 legend {
