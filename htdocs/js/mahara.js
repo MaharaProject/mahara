@@ -146,13 +146,14 @@ function displayMessage(message, type) {
         type = 'info';
     }
 
+    var oldmessage = getFirstElementByTagAndClassName('div', null, 'messages');
+
     var message = makeMessage(message, type);
     appendChildNodes('messages', message);
 
-    // callLater(2, function() {
-    //     removeElement(message);
-    //     //fade(message);
-    // });
+    if (oldmessage) {
+        fade(oldmessage, {afterFinish: partial(removeElement, oldmessage)});
+    }
 }
 
 /* Display a nice little loading notification */
