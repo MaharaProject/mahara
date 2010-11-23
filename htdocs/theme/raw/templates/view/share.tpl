@@ -1,4 +1,7 @@
 {include file="header.tpl"}
+{if !$accesslists}
+<p>{str tag=youhaventcreatedanyviewsyet section=view}</p>
+{else}
 <table class="fullwidth">
   <thead>
     <tr>
@@ -71,5 +74,5 @@
   {/foreach}
   </tbody>
 </table>
-
+{/if}
 {include file="footer.tpl"}

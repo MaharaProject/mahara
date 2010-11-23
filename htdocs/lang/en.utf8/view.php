@@ -77,6 +77,7 @@ $string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s<
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
+$string['youhaventcreatedanyviewsyet'] = "You haven't created any Views yet.";
 $string['youhaveoneview'] = 'You have 1 View.';
 $string['youhaveviews']   = 'You have %s Views.';
 $string['viewsownedbygroup'] = 'Views owned by this group';
