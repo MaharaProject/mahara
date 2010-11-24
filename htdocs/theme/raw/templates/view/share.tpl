@@ -13,21 +13,24 @@
   <tbody>
 {foreach from=$accesslists item=accesslist}
     <tr class="{cycle values='r0,r1'}">
-      <td>
-      {if $accesslist.collections}
-        <div><strong>{str tag=collections section=collection}:</strong>
-        {foreach from=$accesslist.collections item=collection name=c}{strip}
-          <a href="">{$collection.name|str_shorten_text:30:true}</a>{if !$.foreach.c.last}, {/if}
-        {/strip}{/foreach}
-        </div>
-      {/if}
-      {if $accesslist.views}
-        <div><strong>{str tag=Views section=view}:</strong>
-        {foreach from=$accesslist.views item=view name=v}{strip}
-          <a href="">{$view.name|str_shorten_text:30:true}</a>{if !$.foreach.v.last}, {/if}
-        {/strip}{/foreach}
-        </div>
-      {/if}
+      <td style="width:50%;">
+        {if $accesslist.collections}
+          <div class="fl" style="width: 25%;"><strong>{str tag=collections section=collection}:</strong></div>
+          <div class="fl" style="width: 75%;">
+          {foreach from=$accesslist.collections item=collection name=c}
+            <div><a href="">{$collection.name|str_shorten_text:30:true}</a></div>
+          {/foreach}
+          </div>
+        {/if}
+           <div class="cb"></div>
+        {if $accesslist.views}
+          <div class="fl" style="width: 25%;"><strong>{str tag=Views section=view}:</strong></div>
+          <div class="fl" style="width: 75%;">
+          {foreach from=$accesslist.views item=view name=v}
+            <div><a href="">{$view.name|str_shorten_text:30:true}</a></div>
+          {/foreach}
+          </div>
+        {/if}
       </td>
       <td>
       {if $accesslist.access}
