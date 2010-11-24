@@ -24,7 +24,9 @@
                             <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a>
                           </div>
                           <div class="viewcontrol">
+            {if $collection->views[0]->view}
                             <a href="{$WWWROOT}view/access.php?collection={$collection->id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
+            {/if}
                           </div>
                         </div>
 
