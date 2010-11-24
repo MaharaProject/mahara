@@ -17,6 +17,8 @@
             {/if}
 
                         <div class="rbuttons">
+                          <a class="icon btn-edit" href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}">{str tag=edit}</a>&nbsp;
+
                           <a class="icon btn-manage" href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a>
 
 
@@ -30,7 +32,6 @@
                           </div>
                         </div>
 
-                        <span class="edittitle"><a title="{str tag=edittitleanddescription section=view}" class="btn-edit" href="{$WWWROOT}collection/edit.php?id={$collection->id}"></a></span>
 
                         <div class="cb videsc">{$collection->description}</div>
 
