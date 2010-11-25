@@ -2,37 +2,24 @@
 {if !$accesslists}
 <p>{str tag=youhaventcreatedanyviewsyet section=view}</p>
 {else}
-<table class="fullwidth">
+<table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th>{str tag=Views section=view}/{str tag=collections section=collection}</th>
-      <th>{str tag=accessibleby section=view}</th>
-      <th></th>
+      <th colspan=2>{str tag=accesslist section=view}</th>
+      <th>
+        <span class="fl">{str tag=Views section=view} &amp; {str tag=collections section=collection}</span>
+        <span class="secreturl fr">{str tag=token section=view}</span>
+      </th>
     </tr>
   </thead>
   <tbody>
-{foreach from=$accesslists item=accesslist}
+{foreach from=$accesslists item=accesslist name=als}
     <tr class="{cycle values='r0,r1'}">
-      <td style="width:50%;">
-        {if $accesslist.collections}
-          <div class="fl" style="width: 25%;"><strong>{str tag=collections section=collection}:</strong></div>
-          <div class="fl" style="width: 75%;">
-          {foreach from=$accesslist.collections item=collection name=c}
-            <div><a href="">{$collection.name|str_shorten_text:30:true}</a></div>
-          {/foreach}
-          </div>
-        {/if}
-           <div class="cb"></div>
-        {if $accesslist.views}
-          <div class="fl" style="width: 25%;"><strong>{str tag=Views section=view}:</strong></div>
-          <div class="fl" style="width: 75%;">
-          {foreach from=$accesslist.views item=view name=v}
-            <div><a href="">{$view.name|str_shorten_text:30:true}</a></div>
-          {/foreach}
-          </div>
-        {/if}
+      <td class="al-edit">
+        <div class="center"><strong>{$dwoo.foreach.als.iteration}</strong></div>
+        <a class="btn-access" href="{$WWWROOT}view/access.php?id={$accesslist.viewid}">{str tag=edit}</a>
       </td>
-      <td>
+      <td class="al">
       {if $accesslist.access}
         <div class="videsc">{$accesslist.access}</div>
       {/if}
@@ -70,8 +57,35 @@
           </div>
       {/if}
       </td>
-      <td class="right">
-        <a class="btn-access" href="{$WWWROOT}view/access.php?id={$accesslist.viewid}">{str tag=edit}</a>
+      <td class="cv">
+        {if $accesslist.views}
+          {foreach from=$accesslist.views item=view name=v}
+          <div class="cv-listitem">
+            <div class="fl cv-name">
+              <a href="">{$view.name|str_shorten_text:60:true}</a>
+            </div>
+            <div class="fl secreturl">
+            {foreach from=$view.secreturls item=url}
+              <div><a href="">{$url.token|str_shorten_text:9:true}</a></div>
+            {/foreach}
+            </div>
+          </div>
+          {/foreach}
+        {/if}
+        {if $accesslist.collections}
+          {foreach from=$accesslist.collections item=collection name=c}
+          <div class="cv-listitem">
+            <div class="fl cv-name">
+              <a href="">{$collection.name|str_shorten_text:60:true}</a>
+            </div>
+            <div class="fl secreturl">
+            {foreach from=$view.secreturls item=url}
+              <div><a href="">{$url.token|str_shorten_text:9:true}</a></div>
+            {/foreach}
+            </div>
+          </div>
+          {/foreach}
+        {/if}
       </td>
     </tr>
   {/foreach}

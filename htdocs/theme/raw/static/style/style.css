@@ -1658,6 +1658,29 @@ table.attachments td {
 	float: right;
 }
 
+/* Publish page */
+.accesslists th .secreturl {
+  width: 25%;
+}
+.accesslists .cv {
+  width: 50%;
+}
+.accesslists .al {
+  width: 45%;
+}
+.accesslists .al-edit {
+  width: 5%;
+}
+.accesslists .cv-listitem {
+  width: 100%;
+}
+.accesslists .cv-name {
+  width: 75%;
+}
+.accesslists .secreturl {
+  width: 25%;
+}
+
 /* View access */
 .checkboxes label {
   clear: left;

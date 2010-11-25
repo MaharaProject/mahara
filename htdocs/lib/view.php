@@ -3347,7 +3347,8 @@ class View {
         // field exists on a view, put it (or its collection) in a group of one.
 
         $data = array();
-        $viewindex = array();  // Remember one viewid for each access set
+        $viewindex = array();      // Remember one viewid for each access set
+        $viewaccesslist = array(); // Remember access set for every view
 
         foreach ($records as &$r) {
             $newkey = null;
@@ -3359,17 +3360,20 @@ class View {
                     'viewid' => $r->vid,
                 );
                 $viewindex[$r->vid] = $newkey;
+                $viewaccesslist[$r->vid] = $newkey;
             }
             else if (empty($r->accessconf) && !empty($r->cid)) {
                 // Singleton collection; throw view data away
-                if (!isset($data['c:'.$r->cid])) {
-                    $newkey = 'c:'.$r->cid;
+                $key = 'c:'.$r->cid;
+                if (!isset($data[$key])) {
+                    $newkey = $key;
                     $data[$newkey] = array(
                         'collections' => array($r->cid => array('id' => $r->cid, 'name' => $r->cname)),
                         'viewid'      => $r->vid,
                     );
                     $viewindex[$r->vid] = $newkey;
                 }
+                $viewaccesslist[$r->vid] = $key;
             }
             else if (!empty($r->accessconf)) {
                 if (!isset($data[$r->accessconf])) {
@@ -3387,6 +3391,7 @@ class View {
                 else {
                     $data[$r->accessconf]['views'][$r->vid] = array('id' => $r->vid, 'name' => $r->vname);
                 }
+                $viewaccesslist[$r->vid] = $r->accessconf;
             }
             if ($newkey) {
                 if ($r->startdate && $r->stopdate) {
@@ -3411,10 +3416,13 @@ class View {
             }
         }
 
+        // Get view_access records, apart from those with visible = 0 (system access records),
+        // and token (secret url) records which go with individual views or collections.
+
         $accessgroups = get_records_sql_array('
             SELECT va.*, g.grouptype, g.name
             FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
-            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1
+            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1 AND va.token IS NULL
             ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
             array()
         );
@@ -3433,10 +3441,6 @@ class View {
                         $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
                     }
                 }
-                else if ($access->token) {
-                    $access->accesstype = 'secreturl';
-                    $key = 'secreturl';
-                }
                 else {
                     $key = $access->accesstype;
                 }
@@ -3451,8 +3455,34 @@ class View {
             }
         }
 
+        $tokenaccess = get_records_sql_array('
+            SELECT va.*, cv.collection
+            FROM {view_access} va LEFT JOIN {collection_view} cv ON va.view = cv.view
+            WHERE va.view IN (' . join(',', array_keys($viewaccesslist)) . ') AND va.visible = 1 AND NOT va.token IS NULL
+            ORDER BY va.view',
+            array()
+        );
+
+        if ($tokenaccess) {
+            foreach ($tokenaccess as &$access) {
+                $accesslist =& $data[$viewaccesslist[$access->view]];
+                if (isset($accesslist['views'][$access->view])) {
+                    unset($access->collection);
+                    $accesslist['views'][$access->view]['secreturls'][$access->token] = (array) $access;
+                }
+                else if (isset($accesslist['collections'][(int)$access->collection])) {
+                    $collection = (int)$access->collection;
+                    unset($access->collection);
+                    if (!isset($accesslist['collections'][$collection]['secreturls'][$access->token])) {
+                        $accesslist['collections'][$collection]['secreturls'][$access->token] = (array) $access;
+                    }
+                }
+            }
+        }
+
         return $data;
     }
+
 }
 
 
