@@ -357,7 +357,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
                 $value = get_string($value, 'artefact.resume');
             }
             if ($field == 'dateofbirth' && !empty($value)) {
-                $value = strftime(get_string('strftimedate'), $value);
+                $value = strftime(get_string('strftimedate'), $value+3600);
             }
             $fields[get_string($field, 'artefact.resume')] = $value;
         }
