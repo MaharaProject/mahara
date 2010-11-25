@@ -107,7 +107,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
                 $adv_buttons = array(
                     "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
-                    "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
+                    "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,spellchecker,cleanup,separator,link,unlink,separator,code",
                     "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
                     "fontselect,separator,fontsizeselect,separator,formatselect",
                 );
@@ -120,7 +120,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
-    plugins: "table,emotions,iespell,inlinepopups,paste,autoresize",
+    plugins: "table,emotions,spellchecker,inlinepopups,paste,autoresize",
     theme_advanced_buttons1 : "{$adv_buttons[1]}",
     theme_advanced_buttons2 : "{$adv_buttons[2]}",
     theme_advanced_buttons3 : "{$adv_buttons[3]}",
