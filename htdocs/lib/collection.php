@@ -317,7 +317,7 @@ class Collection {
         }
 
         $viewids = get_column('collection_view', 'view', 'collection', $this->id);
-        View::combine_access($viewids);
+        View::combine_access($viewids, true);
 
         db_commit();
 

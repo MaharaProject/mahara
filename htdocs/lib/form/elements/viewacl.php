@@ -52,9 +52,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
     if ($form->get_property('userview')) {
         $presets[] = 'friends';
     }
-    if ($public) {
-        $presets[] = 'token';
-    }
 
     if ($value) {
         foreach ($value as $key => &$item) {

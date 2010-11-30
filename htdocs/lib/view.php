@@ -561,6 +561,12 @@ class View {
         db_commit();
     }
 
+    /* Only retrieve access records that the owner can edit on the
+     * view access page.  Some records are not visible there, such as
+     * tutor access records for submitted views and objectionable
+     * content access records (visible = 0) and token/secret url
+     * records which are managed per-view, on another page.
+     */
     public function get_access($timeformat=null) {
         if ($data = $this->get_access_records()) {
             return self::process_access_records($data, $timeformat);
@@ -570,14 +576,13 @@ class View {
 
     public function get_access_records() {
         $data = get_records_sql_array("
-            SELECT accesstype, va.group, role, usr, token, startdate, stopdate, allowcomments, approvecomments
+            SELECT accesstype, va.group, role, usr, startdate, stopdate, allowcomments, approvecomments
             FROM {view_access} va
-            WHERE view = ? AND visible = 1
+            WHERE view = ? AND visible = 1 AND token IS NULL
             ORDER BY
                 accesstype IS NULL, accesstype DESC,
                 va.group, role IS NOT NULL, role,
                 usr,
-                token,
                 startdate IS NOT NULL, startdate, stopdate IS NOT NULL, stopdate,
                 allowcomments, approvecomments",
             array($this->id)
@@ -612,10 +617,6 @@ class View {
                 $item['type'] = 'group';
                 $item['id'] = $item['group'];
             }
-            else if ($item['token']) {
-                $item['type'] = 'token';
-                $item['id'] = $item['token'];
-            }
             else {
                 $item['type'] = $item['accesstype'];
                 $item['id'] = null;
@@ -645,7 +646,6 @@ class View {
             || ($c = !empty($a->role) - !empty($b->role))
             || ($c = strcmp($a->role, $b->role))
             || ($c = $a->usr - $b->usr)
-            || ($c = strcmp($a->token, $b->token))
             || ($c = !empty($a->startdate) - !empty($b->startdate))
             || ($c = strcmp($a->startdate, $b->startdate))
             || ($c = !empty($a->stopdate) - !empty($b->stopdate))
@@ -715,8 +715,10 @@ class View {
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
+        $select = 'view = ? AND visible = 1 AND token IS NULL';
+
         db_begin();
-        delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
+        delete_records_select('view_access', $select, array($this->id));
 
         // View access
         if ($accessdata) {
@@ -773,9 +775,6 @@ class View {
                         $accessrecord->role = $item['role'];
                     }
                     break;
-                case 'token':
-                    $accessrecord->token = $item['id'];
-                    break;
                 case 'friends':
                     if (!$this->owner) {
                         continue; // Don't add friend access to group, institution or system views
@@ -821,12 +820,15 @@ class View {
     /**
      * Synchronise access records across a set of views
      */
-    public static function combine_access($viewids) {
+    public static function combine_access($viewids, $synctokens = false) {
         if (empty($viewids)) {
             return;
         }
 
         $select = 'view IN (' . join(',', array_map('intval', $viewids)) . ') AND visible = 1';
+        if (!$synctokens) { // Leave secret URL records alone
+            $select .= ' AND token IS NULL';
+        }
 
         if (!$access = get_records_select_array('view_access', $select)) {
             return;

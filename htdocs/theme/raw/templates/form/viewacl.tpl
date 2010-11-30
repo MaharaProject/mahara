@@ -66,16 +66,7 @@ function renderPotentialPresetItem(item) {
     var row = DIV(attribs, addButton, ' ', item.shortname ? SPAN({'title':item.name}, item.shortname) : item.name);
     item.preset = true;
 
-    if (item.type == 'token') {
-        connect(addButton, 'onclick', function() {
-            sendjsonrequest('newviewtoken.json.php', {'view': {{$viewid}}}, 'POST', function(data) {
-                item.id = data.data.token;
-                appendChildNodes('accesslist', renderAccessListItem(item));
-            });
-        });
-        appendChildNodes(row, contextualHelpIcon('{{$formname}}', 'secreturl', 'core', 'view', null, null));
-    }
-    else if (item.type == 'allgroups') {
+    if (item.type == 'allgroups') {
         connect(addButton, 'onclick', function() {
             forEach(myGroups, function(g) {
                 appendChildNodes('accesslist', renderAccessListItem(g));
@@ -130,24 +121,7 @@ function renderAccessListItem(item) {
     }
     cssClass += ' ' + item.type + '-container';
     var name = [item.shortname ? SPAN({'title': item.name}, item.shortname) : item.name];
-    var expandrow = null;
-    if (item.type == 'token') {
-        item.url = config.wwwroot + 'view/view.php?t=' + item.id;
-        var expandlink = A({'href':'', 'title':'{{str tag=showfullurl section=view}}'}, item.id.substr(0, 6) + '…');
-        var expandrow = TR({'id':'accesslistitem' + count + '_url', 'class':'hidden ai-container'},
-            TD(null), TD({'colspan': 6, 'class': 'secreturl'}, item.url));
-        connect(expandlink, 'onclick', function(e) {
-            e.stop();
-            if (hasElementClass(expandrow, 'hidden')) {
-                removeElementClass(expandrow, 'hidden');
-            }
-            else {
-                addElementClass(expandrow, 'hidden');
-            }
-        });
-        name.push(' ', expandlink);
-    }
-    else if (item.role != null) {
+    if (item.role != null) {
         name.push(' - ', item.roledisplay);
     }
     var icon = null;
@@ -190,14 +164,11 @@ function renderAccessListItem(item) {
 
     connect(removeButton, 'onclick', function() {
         removeElement(row);
-        if (expandrow) {
-            removeElement(expandrow);
-        }
         if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
             addElementClass('accesslisttable', 'hidden');
         }
     });
-    appendChildNodes('accesslistitems', row, expandrow);
+    appendChildNodes('accesslistitems', row);
     removeElementClass('accesslisttable', 'hidden');
 
     setupCalendar(item, 'start');
