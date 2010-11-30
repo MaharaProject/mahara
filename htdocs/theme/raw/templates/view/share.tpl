@@ -79,7 +79,7 @@
               <a href="">{$collection.name|str_shorten_text:60:true}</a>
             </div>
             <div class="fl secreturl">
-            {foreach from=$view.secreturls item=url}
+            {foreach from=$collection.secreturls item=url}
               <div><a href="">{$url.token|str_shorten_text:9:true}</a></div>
             {/foreach}
             </div>
