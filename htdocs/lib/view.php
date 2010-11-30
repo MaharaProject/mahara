@@ -3337,7 +3337,8 @@ class View {
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
-            WHERE v.$ownersql AND v.type = 'portfolio'",
+            WHERE v.$ownersql AND v.type = 'portfolio'
+            ORDER BY cv.displayorder, v.title",
             array()
         );
 
@@ -3370,7 +3371,7 @@ class View {
                 if (!isset($data[$key])) {
                     $newkey = $key;
                     $data[$newkey] = array(
-                        'collections' => array($r->cid => array('id' => $r->cid, 'name' => $r->cname)),
+                        'collections' => array($r->cid => array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid)),
                         'viewid'      => $r->vid,
                     );
                     $viewindex[$r->vid] = $newkey;
@@ -3388,7 +3389,7 @@ class View {
                     $viewindex[$r->vid] = $newkey;
                 }
                 if (!empty($r->cid) && !isset($data[$r->accessconf]['collections'][$r->cid])) {
-                    $data[$r->accessconf]['collections'][$r->cid] = array('id' => $r->cid, 'name' => $r->cname);
+                    $data[$r->accessconf]['collections'][$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid);
                 }
                 else {
                     $data[$r->accessconf]['views'][$r->vid] = array('id' => $r->vid, 'name' => $r->vname);

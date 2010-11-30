@@ -62,7 +62,7 @@
           {foreach from=$accesslist.views item=view name=v}
           <div class="cv-listitem">
             <div class="fl cv-name">
-              <a href="">{$view.name|str_shorten_text:60:true}</a>
+              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
             </div>
             <div class="fl secreturl">
             {foreach from=$view.secreturls item=url}
@@ -76,7 +76,7 @@
           {foreach from=$accesslist.collections item=collection name=c}
           <div class="cv-listitem">
             <div class="fl cv-name">
-              <a href="">{$collection.name|str_shorten_text:60:true}</a>
+              <a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a>
             </div>
             <div class="fl secreturl">
             {foreach from=$collection.secreturls item=url}
