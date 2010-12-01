@@ -3391,7 +3391,7 @@ class View {
                 if (!empty($r->cid) && !isset($data[$r->accessconf]['collections'][$r->cid])) {
                     $data[$r->accessconf]['collections'][$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid);
                 }
-                else {
+                else if (empty($r->cid)) {
                     $data[$r->accessconf]['views'][$r->vid] = array('id' => $r->vid, 'name' => $r->vname);
                 }
                 $viewaccesslist[$r->vid] = $r->accessconf;
