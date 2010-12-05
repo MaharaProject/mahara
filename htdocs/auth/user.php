@@ -183,6 +183,7 @@ class User {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
 
+        $username = strtolower($username);
         if ($remoteuser) {
             // See if the user has either the child or the parent authinstance. 
             // Most of the time, it's the parent auth instance that is 
@@ -203,7 +204,7 @@ class User {
                                     JOIN
                                         {auth_remote_user} aru ON (us.id = aru.localusr)
                                     WHERE
-                                        aru.remoteusername = ' . db_quote($username) . '
+                                        LOWER(aru.remoteusername) = ' . db_quote($username) . '
                                         AND us.authinstance = ' . db_quote($parentid) . '
                                 )
                                 AND
@@ -225,7 +226,7 @@ class User {
                     WHERE
                         (
                             (
-                                r.remoteusername = ?
+                                LOWER(r.remoteusername) = ?
                                 AND r.authinstance = ?
                             )'
                             . $parentwhere
