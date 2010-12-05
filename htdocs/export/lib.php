@@ -374,6 +374,13 @@ abstract class PluginExport extends Plugin {
 function export_cleanup_old_exports() {
     require_once('file.php');
     $basedir = get_config('dataroot') . 'export/';
+
+    // If the export directory hasn't been created yet, there's no point
+    // running the cron.
+    if(!is_dir($basedir)) {
+        return;
+    }
+
     $exportdir = new DirectoryIterator($basedir);
     $mintime = time() - (12 * 60 * 60); // delete exports older than 12 hours
 
