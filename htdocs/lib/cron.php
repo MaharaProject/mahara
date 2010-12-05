@@ -466,21 +466,13 @@ function cron_job_id($job, $plugintype) {
 }
 
 function cron_lock($job, $start, $plugintype='core') {
-    global $DB_IGNORE_SQL_EXCEPTIONS;
-
     $jobname = cron_job_id($job, $plugintype);
     $lockname = '_cron_lock_' . $jobname;
 
-    try {
-        $DB_IGNORE_SQL_EXCEPTIONS = true;
-        // May fail with duplicate pk error
+    if (!$started = get_field('config', 'value', 'field', $lockname)) {
         insert_record('config', (object) array('field' => $lockname, 'value' => $start));
     }
-    catch (SQLException $e) {
-        $DB_IGNORE_SQL_EXCEPTIONS = false;
-
-        $started = get_field('config', 'value', 'field', $lockname);
-
+    else {
         $strstart = $started ? date('r', $started) : '';
         $msg = "long-running cron job $jobname ($strstart).";
 
