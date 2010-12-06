@@ -496,14 +496,17 @@ function get_institution_selector($includedefault = true) {
 
     if ($USER->get('admin')) {
         if ($includedefault) {
-            $institutions = get_records_array('institution');
+            $institutions = get_records_array('institution', '', '', 'displayname');
         }
         else {
-            $institutions = get_records_select_array('institution', "name != 'mahara'");
+            $institutions = get_records_select_array('institution', "name != 'mahara'", null, 'displayname');
         }
     } else if ($USER->is_institutional_admin()) {
-        $institutions = get_records_select_array('institution', 'name IN (' 
-            . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')');
+        $institutions = get_records_select_array(
+            'institution',
+            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')',
+            null, 'displayname'
+        );
     } else {
         return null;
     }
