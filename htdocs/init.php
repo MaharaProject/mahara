@@ -190,6 +190,11 @@ if (isset($CFG->wwwroot)) {
         $CFG->wwwroot .= '/';
     }
 }
+// Make sure that we are using ssl if wwwroot expects us to do so
+if ((!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+    parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https'){
+    redirect(get_relative_script_path());
+}
 if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
     $noreplyaddress = 'noreply@';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
