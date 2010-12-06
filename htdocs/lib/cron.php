@@ -466,30 +466,41 @@ function cron_job_id($job, $plugintype) {
 }
 
 function cron_lock($job, $start, $plugintype='core') {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+
     $jobname = cron_job_id($job, $plugintype);
     $lockname = '_cron_lock_' . $jobname;
 
+    // The rationale for catching the SQLException on this insert is to
+    // ensure that if two crons run simultaneously, they may both fail the
+    // get_field and thus both try the insert. We try the get_field first
+    // to try and limit the number of exceptions that we catch and throw.
     if (!$started = get_field('config', 'value', 'field', $lockname)) {
-        insert_record('config', (object) array('field' => $lockname, 'value' => $start));
-    }
-    else {
-        $strstart = $started ? date('r', $started) : '';
-        $msg = "long-running cron job $jobname ($strstart).";
-
-        // If it's been going for more than 24 hours, start another one anyway
-        if ($started && $started < $start - 60*60*24) {
-            delete_records('config', 'field', $lockname);
+        try {
+            $DB_IGNORE_SQL_EXCEPTIONS = true;
             insert_record('config', (object) array('field' => $lockname, 'value' => $start));
-            log_debug('Restarting ' . $msg);
+            $DB_IGNORE_SQL_EXCEPTIONS = false;
             return true;
         }
-
-        log_debug('Skipping ' . $msg);
-        return false;
+        catch (SQLException $e) {
+            $DB_IGNORE_SQL_EXCEPTIONS = false;
+            $started = get_field('config', 'value', 'field', $lockname);
+        }
     }
 
-    $DB_IGNORE_SQL_EXCEPTIONS = false;
-    return true;
+    $strstart = $started ? date('r', $started) : '';
+    $msg = "long-running cron job $jobname ($strstart).";
+
+    // If it's been going for more than 24 hours, start another one anyway
+    if ($started && $started < $start - 60*60*24) {
+        delete_records('config', 'field', $lockname);
+        insert_record('config', (object) array('field' => $lockname, 'value' => $start));
+        log_debug('Restarting ' . $msg);
+        return true;
+    }
+
+    log_debug('Skipping ' . $msg);
+    return false;
 }
 
 function cron_free($job, $start, $plugintype='core') {
