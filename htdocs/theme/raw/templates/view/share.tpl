@@ -8,7 +8,7 @@
       <th colspan=2>{str tag=accesslist section=view}</th>
       <th>
         <span class="fl">{str tag=Views section=view} &amp; {str tag=collections section=collection}</span>
-        <span class="secreturl fr">{str tag=token section=view}</span>
+        <span class="fr">{str tag=secreturls section=view}</span>
       </th>
     </tr>
   </thead>
@@ -36,9 +36,7 @@
             <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
           {elseif $accessgroup.accesstype == 'user'}
             <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
-          {elseif $accessgroup.accesstype == 'secreturl'}
-            {str tag="token" section="view"} <a href="" title="{str tag=showfullurl section=view}" class="secreturl">{$accessgroup.token|str_shorten_text:9:true}</a>
-            {/if}
+          {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}
               {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
@@ -47,9 +45,6 @@
             {/if}
           {elseif $accessgroup.stopdate}
             {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
-          {/if}
-          {if $accessgroup.accesstype == 'secreturl'}
-            <div class="expandurl hidden">{$WWWROOT}view/view.php?t={$accessgroup.token}</div>
           {/if}
           </div>
         {/foreach}
@@ -61,27 +56,23 @@
         {if $accesslist.views}
           {foreach from=$accesslist.views item=view name=v}
           <div class="cv-listitem">
-            <div class="fl cv-name">
-              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
+            <div class="fr">
+              {count($view.secreturls)} &nbsp; <a class="btn-access" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"></a>
             </div>
-            <div class="fl secreturl">
-            {foreach from=$view.secreturls item=url}
-              <div><a href="">{$url.token|str_shorten_text:9:true}</a></div>
-            {/foreach}
+            <div>
+              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
             </div>
           </div>
           {/foreach}
         {/if}
         {if $accesslist.collections}
           {foreach from=$accesslist.collections item=collection name=c}
-          <div class="cv-listitem">
-            <div class="fl cv-name">
-              <a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a>
+          <div class="cb cv-listitem">
+            <div class="fr">
+              {count($collection.secreturls)} &nbsp; <a class="btn-access" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"></a>
             </div>
-            <div class="fl secreturl">
-            {foreach from=$collection.secreturls item=url}
-              <div><a href="">{$url.token|str_shorten_text:9:true}</a></div>
-            {/foreach}
+            <div>
+              <a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a>
             </div>
           </div>
           {/foreach}

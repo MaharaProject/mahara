@@ -96,8 +96,16 @@ $string['groups'] = 'Groups';
 $string['users'] = 'Users';
 $string['tutors'] = 'tutors';
 $string['everyoneingroup'] = 'Everyone in Group';
+
+// secret url
 $string['token'] = 'Secret URL';
-$string['showfullurl'] = 'Show full URL';
+$string['editsecreturlaccess'] = 'Edit secret URL access';
+$string['newsecreturl'] = 'New Secret URL';
+$string['reallydeletesecreturl'] = 'Are you sure you want to delete this url?';
+$string['secreturldeleted'] = 'Your secret URL was deleted.';
+$string['secreturlupdated'] = 'Secret URL updated';
+$string['generatesecreturl'] = 'Generate a new secret URL for %s';
+$string['secreturls'] = 'Secret URLs';
 
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';

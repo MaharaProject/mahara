@@ -38,6 +38,9 @@ function pieform_element_image(Pieform $form, $element) {/*{{{*/
     if (!isset($element['value'])) {
         $element['value'] = true;
     }
+    if (isset($element['confirm'])) {
+        $element['onclick'] = 'return confirm(' . json_encode($element['confirm']) . ');';
+    }
     return '<input type="image" src="' . Pieform::hsc($element['src']) . '"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';

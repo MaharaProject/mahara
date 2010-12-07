@@ -721,6 +721,7 @@ class View {
         delete_records_select('view_access', $select, array($this->id));
 
         // View access
+        $accessdata_added = array();
         if ($accessdata) {
             /*
              * There should be a cleaner way to do this
@@ -733,7 +734,6 @@ class View {
              * - If view allows comments, access record comment permissions, don't apply, so reset them.
              * @todo: merge overlapping date ranges.
              */
-            $accessdata_added = array();
             $time = time();
             foreach ($accessdata as $item) {
 
@@ -818,17 +818,15 @@ class View {
     }
 
     /**
-     * Synchronise access records across a set of views
+     * Apply all the access rules among a set of views to every view in
+     * the set.
      */
-    public static function combine_access($viewids, $synctokens = false) {
+    public static function combine_access($viewids) {
         if (empty($viewids)) {
             return;
         }
 
         $select = 'view IN (' . join(',', array_map('intval', $viewids)) . ') AND visible = 1';
-        if (!$synctokens) { // Leave secret URL records alone
-            $select .= ' AND token IS NULL';
-        }
 
         if (!$access = get_records_select_array('view_access', $select)) {
             return;
@@ -876,10 +874,26 @@ class View {
             return;
         }
 
+        $firstviewaccess = get_records_select_array(
+            'view_access',
+            'view = ? AND visible = 1 AND token IS NULL',
+            array($this->id)
+        );
+
         db_begin();
-        delete_records_select('view_access', 'view IN (' . join(',', $toupdate) . ') AND visible = 1');
-        $toupdate[] = $this->id;
-        View::combine_access($toupdate);
+        delete_records_select(
+            'view_access',
+            'view IN (' . join(',', $toupdate) . ') AND visible = 1 AND token IS NULL'
+        );
+
+        if ($firstviewaccess) {
+            foreach ($toupdate as $id) {
+                foreach ($firstviewaccess as &$a) {
+                    $a->view = $id;
+                    insert_record('view_access', $a);
+                }
+            }
+        }
         db_commit();
     }
 

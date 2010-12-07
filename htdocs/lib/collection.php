@@ -317,7 +317,23 @@ class Collection {
         }
 
         $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+
+        // Set the most permissive access records on all views
         View::combine_access($viewids, true);
+
+        // Copy the whole view config from the first view to all the others
+        if (count($viewids)) {
+            $firstview = new View($viewids[0]);
+            $viewconfig = array(
+                'startdate'       => $firstview->get('startdate'),
+                'stopdate'        => $firstview->get('stopdate'),
+                'template'        => $firstview->get('template'),
+                'allowcomments'   => $firstview->get('allowcomments'),
+                'approvecomments' => (int) ($firstview->get('allowcomments') && $firstview->get('approvecomments')),
+                'accesslist'      => $firstview->get_access(),
+            );
+            View::update_view_access($viewconfig, $viewids);
+        }
 
         db_commit();
 

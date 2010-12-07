@@ -1674,11 +1674,10 @@ table.attachments td {
 .accesslists .cv-listitem {
   width: 100%;
 }
-.accesslists .cv-name {
-  width: 75%;
-}
-.accesslists .secreturl {
-  width: 25%;
+/* Secret url */
+.secreturls .buttons form,
+.secreturls .buttons form div {
+  display: inline;
 }
 
 /* View access */
