@@ -659,12 +659,6 @@ div.btn-edit input.submit,
 a.btn-big-del {
 	margin-left: 3px;
 }
-.admincontrol .btn-big-edit {
-	padding-top: 14px;
-}
-.admincontrol .btn-big-del {
-	padding-top: 14px;
-}
 .btn-manage {
 	background: transparent url(../images/icon-manage.gif) no-repeat left;
 	padding-left: 15px;
@@ -1864,7 +1858,12 @@ ul.groupuserstatus {
 	font-size: .9em;
 	margin: 0 0 0 1em;
 }
-
+.grouphomepage .group-info .admincontrol {
+    display: none;
+}
+.grouphome-admincontrol {
+    float: right;
+}
 .admincontrol{
 	text-align:right;
 }

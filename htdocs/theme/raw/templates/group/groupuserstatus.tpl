@@ -40,5 +40,4 @@
 	<li>{str tag="membershiptype.$group->jointype" section="group"}</li>
 
 {/if}
-{*get_string('membershiptype.'.$group->jointype, 'group')*}
 </ul>
