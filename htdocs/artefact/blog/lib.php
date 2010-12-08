@@ -800,6 +800,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
 
     public static function delete_form($id) {
+        global $THEME;
         return pieform(array(
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_submit',
@@ -813,9 +814,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'help' => true,
                 ),
                 'submit' => array(
-                    'class' => 'icon btn-big-del',
-                    'type' => 'submit',
-                    'value' => get_string('delete', 'artefact.blog'),
+                    'type' => 'image',
+                    'src' => $THEME->get_url('images/icon_close.gif'),
+                    'elementtitle' => get_string('delete', 'artefact.blog'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
                 ),
             ),
