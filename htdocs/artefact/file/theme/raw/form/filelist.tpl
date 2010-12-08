@@ -65,8 +65,10 @@
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
       {if $file->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
-      {elseif !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="icon btn-big-edit s" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}"/>
-      <input type="submit" class="icon btn-big-del s" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}"/>{/if}
+      {elseif !isset($file->can_edit) || $file->can_edit !== 0}
+        <input type="image" src="{theme_url filename="images/edit.gif"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}"/>
+        <input type="image" src="{theme_url filename="images/icon_close.gif"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}"/>
+      {/if}
     {/if}
     {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
       <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" />
