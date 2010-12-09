@@ -35,7 +35,7 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'plans');
 
-define('TITLE', get_string('myplans','artefact.plans'));
+define('TITLE', get_string('Plans','artefact.plans'));
 
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
@@ -55,7 +55,7 @@ $smarty->assign_by_ref('plans', $plans);
 $smarty->assign('strnoplansaddone',
     get_string('noplansaddone', 'artefact.plans',
     '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php">', '</a>'));
-$smarty->assign('PAGEHEADING', hsc(get_string("myplans", "artefact.plans")));
+$smarty->assign('PAGEHEADING', hsc(get_string("Plans", "artefact.plans")));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:plans:index.tpl');
 

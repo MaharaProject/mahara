@@ -34,12 +34,12 @@ $string['deletethisplan'] = 'Delete plan: \'%s\'';
 $string['editplan'] = 'Edit Plan';
 $string['editingplan'] = 'Editing Plan';
 $string['managetasks'] = 'Manage tasks';
-$string['myplans'] = 'My Plans';
 $string['newplan'] = 'New plan';
 $string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
 $string['noplans'] = 'No plans to display';
 $string['plan'] = 'Plan';
 $string['plans'] = 'Plans';
+$string['Plans'] = 'Plans';
 $string['plandeletedsuccessfully'] = 'Plan deleted successfully.';
 $string['plannotdeletedsuccessfully'] = 'There was an error deleting plan.';
 $string['plannotsavedsuccessfully'] = 'There was an error submitting this form. Please check the marked fields and try again.';
@@ -48,7 +48,7 @@ $string['planstasks'] = 'Plan \'%s\' tasks.';
 $string['planstasksdesc'] = 'Add tasks below or using the button to the right to begin to build your plan.';
 $string['saveplan'] = 'Save plan';
 $string['title'] = 'Title';
-$string['titledesc'] = 'The title will be used to display each task in the My Plans blocktype.';
+$string['titledesc'] = 'The title will be used to display each task in the Plans blocktype.';
 
 /* Tasks */
 $string['alltasks'] = 'All tasks';

@@ -36,7 +36,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
 require_once('group.php');
-define('TITLE', get_string('myviews', 'view'));
+define('TITLE', get_string('Views', 'view'));
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
