@@ -27,6 +27,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('uploadmanager.php');
+
 class PluginImportFile extends PluginImport {
 
     private $manifest;
@@ -64,6 +66,17 @@ class PluginImportFile extends PluginImport {
                 $badfiles[] = $f;
                 unset($includedfiles[$k]);
                 continue;
+            }
+            if (get_config('viruschecking')) {
+                $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
+                if ($pathtoclam && file_exists($pathtoclam) && is_executable($pathtoclam)) {
+                    if ($errormsg = mahara_clam_scan_file($uzd . $f)) {
+                        throw new ImportException($this, $errormsg);
+                    }
+                }
+                else {
+                    clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
+                }
             }
             $sha1 = sha1_file($uzd . $f);
             if (array_key_exists($sha1, $this->manifest)) {
