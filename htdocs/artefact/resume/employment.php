@@ -26,14 +26,14 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'profile/myresume');
+define('MENUITEM', 'profile/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
 define('RESUME_SUBPAGE', 'employment');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myresume', 'artefact.resume'));
+define('TITLE', get_string('resume', 'artefact.resume'));
 safe_require('artefact', 'resume');
 
 $compositetypes = array('employmenthistory', 'educationhistory');
