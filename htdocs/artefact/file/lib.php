@@ -90,7 +90,6 @@ class PluginArtefactFile extends PluginArtefact {
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
-            set_config_plugin('artefact', 'file', 'uploadagreement', 1);
         }
         self::resync_filetype_list();
     }
