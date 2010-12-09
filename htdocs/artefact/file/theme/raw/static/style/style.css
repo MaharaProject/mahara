@@ -36,20 +36,20 @@
 	padding: 0;
 }
 
+.createfolder-message div {
+    margin-bottom: .5em;
+}
+
 /* folder nav */
 .foldernav {
     font-weight: bold;
     padding: 0 0 0 20px;
     font-size: 1.3333em;
-	line-height: 1.6667em;
-    height: 1.6667em;
     background: url(../images/foldernav_small.png) no-repeat left;
 }
 form#files .foldernav {
     padding: 0 0 0 30px;
     font-size: 1.3333em;
-	line-height: 1.6667em;
-    height: 1.6667em;
     background: url(../images/foldernav.png) no-repeat left;
 }
 

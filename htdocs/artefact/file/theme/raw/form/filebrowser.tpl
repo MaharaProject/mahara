@@ -79,17 +79,15 @@
 <input type="hidden" name="{$prefix}_moveto" id="{$prefix}_moveto" value="" />
 {/if}
 {if $config.createfolder}
-  <div id="{$prefix}_createfolder_messages"</div>
-{/if}
-<div id="{$prefix}_foldernav" class="foldernav">
-{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
-{if $config.createfolder}
+  <div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
   <div class="fr">
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
     <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" />
   </div>
 {/if}
   
+<div id="{$prefix}_foldernav" class="foldernav">
+{include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
 </div>
 
 <div id="{$prefix}_filelist_container">
