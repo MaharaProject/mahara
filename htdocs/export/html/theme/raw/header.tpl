@@ -16,7 +16,7 @@
         <div id="content">
             {if !$nobreadcrumbs}<div id="breadcrumbs" class="breadcrumbs">
                 <ul>
-                    <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">Home</a></li>
+                    <li>{str tag=youarehere section=export}: <a href="{$rootpath}index.html">{str tag=home}</a></li>
 {foreach from=$breadcrumbs item=crumb}
                     <li>&raquo; {if $crumb.path}<a href="{$crumb.path}">{$crumb.text}</a>{else}{$crumb.text}{/if}</li>
 {/foreach}
