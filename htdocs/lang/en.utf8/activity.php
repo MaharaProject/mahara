@@ -65,7 +65,6 @@ $string['views'] = 'Views';
 $string['artefacts'] = 'Artefacts';
 $string['groups'] = 'Groups';
 $string['monitored'] = 'Monitored';
-$string['stopmonitoring'] = 'Stop monitoring';
 
 $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
