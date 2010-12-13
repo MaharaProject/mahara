@@ -235,6 +235,7 @@ class AuthSaml extends Auth {
 
         // We know who our user is now. Bring em back to life.
 //        ensure_session();
+        log_debug("remote user '$remoteuser' ");
         $result = $USER->reanimate($user->id, $this->instanceid);
         $SESSION->set('authinstance', $this->instanceid);
 

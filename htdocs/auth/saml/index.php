@@ -74,13 +74,40 @@ $saml_session = SimpleSAML_Session::getInstance();
 $valid_saml_session = $saml_session->isValid('default-sp');
 
 // do we have a logout request?
-if(isset($_GET["logout"])) {
+if(param_variable("logout", false)) {
     // logout the saml session
+    log_warn("auth/saml: saml logout initiated");
     $as->logout($CFG->wwwroot);
+}
+
+// do we have a returnto URL ?
+$wantsurl = param_variable("wantsurl", false);
+if($wantsurl) {
+    // logout the saml session
+    log_warn("auth/saml: storing wantsurl of: ".$wantsurl);
+    $_SESSION['wantsurl'] = $wantsurl;
+}
+else if (isset($_SESSION['wantsurl'])) {
+    $wantsurl = $_SESSION['wantsurl'];
+    log_warn("auth/saml: retrieved wantsurl of: ".$wantsurl);
+}
+else {
+    $wantsurl = $CFG->wwwroot;
+    log_warn("auth/saml: set default wantsurl of: ".$wantsurl);
+}
+// taken from Moodle clean_param
+include_once('validateurlsyntax.php');
+if (!validateUrlSyntax($param, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
+    $wantsurl = $CFG->wwwroot;
 }
 
 // now - are we logged in?
 $as->requireAuth();
+
+// ensure that $_SESSION is cleared
+if (isset($_SESSION['wantsurl'])) {
+    unset($_SESSION['wantsurl']);
+}
 
 $saml_attributes = $as->getAttributes();
 session_write_close();
@@ -161,9 +188,8 @@ if(!$USER->is_logged_in()) {
     simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $as);
 }
 // they are logged in, so they dont need to be here 
-else {
-    header('Location: '.$CFG->wwwroot);
-}
+//    header('Location: '.$CFG->wwwroot);
+redirect($wantsurl);
     
 
 /**
@@ -245,7 +271,6 @@ function simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $a
             $auth = new AuthSaml($instance->id);
             if ($auth->request_user_authorise($saml_attributes)) {
                 session_write_close();
-                redirect($CFG->wwwroot);
             }
             else {
                  throw new UserNotFoundException(get_string('errnosamluser','auth.saml'));
