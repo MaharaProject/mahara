@@ -14,8 +14,8 @@
                 <td class="right">
                         <form action="" method="post">
                                 <input type="hidden" name="i" value="{$institution->name}">
-                                {if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="btn-del icon s" name="delete" value="{str tag="delete"}">{/if}
-                                <input type="submit" class="btn-edit icon s" name="edit" value="{str tag="edit"}">
+                                {if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="btn-big-del icon s" name="delete" value="{str tag="delete"}">{/if}
+                                <input type="submit" class="btn-big-edit icon s" name="edit" value="{str tag="edit"}">
                         </form>
                 </td>
                 <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>

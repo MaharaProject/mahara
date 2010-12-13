@@ -570,15 +570,15 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function delete_comment_form($id) {
+    	global $THEME;
         return array(
             'name'     => 'delete_comment',
             'renderer' => 'oneline',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
-                    'type'  => 'submit',
-                    'class' => 'quiet',
-                    'name'  => 'delete_comment_submit',
+                    'type'  => 'image',
+        			'src' => $THEME->get_url('images/icon_close.gif'),
                     'value' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                 ),

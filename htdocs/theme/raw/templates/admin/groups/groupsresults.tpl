@@ -9,6 +9,6 @@
     {/if}
     <td class="center">{$group->visibility}</td>
     <td class="center s"><a class="icon btn-manage" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">{str tag="groupmanage" section="admin"}</a></td>
-    <td class="center s"><a class="icon btn-del" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">{str tag="groupdelete" section="admin"}</a></td>
+    <td class="center s"><a class="icon btn-big-del" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">{str tag="groupdelete" section="admin"}</a></td>
 </tr>
 {/foreach}

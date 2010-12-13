@@ -87,9 +87,9 @@ function displaymenuitems(itemlist) {
 // Creates one table row
 function formatrow (item) {
     // item has id, type, name, link, linkedto
-    var edit = INPUT({'type':'button','class':'s icon btn-edit','value':{$getstring['edit']}});
+    var edit = INPUT({'type':'button','class':'icon btn-big-edit','value':{$getstring['edit']}});
     connect(edit, 'onclick', function () { edititem(item); });
-    var del = INPUT({'type':'button','class':'s icon btn-del','value':{$getstring['delete']}});
+    var del = INPUT({'type':'button','class':'icon btn-big-del','value':{$getstring['delete']}});
     connect(del, 'onclick', function () { delitem(item.id); });
     var cells = map(
         partial(TD,null),

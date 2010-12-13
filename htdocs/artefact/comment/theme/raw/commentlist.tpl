@@ -1,7 +1,16 @@
 {foreach from=$data item=item}
   <tr class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}">
     <td>
+      <div class="fr">
+      {if $item->canedit}
+	      <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
+	        <input type="hidden" name="id" value="{$item->id}">
+	        <input type="hidden" name="view" value="{$viewid}">
+	        <input type="image" src="{theme_url filename="images/edit.gif"}" title="{str tag=edit}">
+	      </form>
+      {/if}
       {if $item->deleteform}{$item->deleteform|safe}{/if}
+      </div>
       {if $item->deletedmessage}
         <span class="details">{str tag=commentremoved section=artefact.comment}</span>
       {else}
@@ -29,7 +38,6 @@
           {if $.foreach.attachments.first} | <span>{str tag=Attachments section=artefact.comment}:{else},{/if} <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle}</a> ({$a->attachsize})</span>
         {/foreach}
         {/strip}
-        {if $item->canedit} | <span><a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&view={$viewid}" class="btn-edit">{str tag=edit}</a></span>{/if}
       {/if}
       </div>
     </td>
