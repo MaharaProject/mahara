@@ -149,6 +149,8 @@ function forgotpass_submit(Pieform $form, $values) {
         $pwrequest->key = get_random_key();
         $sitename = get_config('sitename');
         $fullname = display_name($user);
+        // Override the disabled status of this e-mail address
+        $user->ignoredisabled = true;
         email_user($user, null,
             get_string('forgotusernamepasswordemailsubject', 'mahara', $sitename),
             get_string('forgotusernamepasswordemailmessagetext', 'mahara',
@@ -171,12 +173,20 @@ function forgotpass_submit(Pieform $form, $values) {
     catch (SQLException $e) {
         die_info(get_string('forgotpassemailsendunsuccessful'));
     }
-    catch (EmailDisabledException $e) {
-        die_info(get_string('forgotpassemaildisabled'));
-    }
     catch (EmailException $e) {
         die_info(get_string('forgotpassemailsendunsuccessful'));
     }
+
+    // Add a note if this e-mail address is over the bounce threshold to
+    // warn users that they may not receive the e-mail
+    if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($user->id))) {
+        if (check_overcount($mailinfo)) {
+            $SESSION->add_info_msg(get_string('forgotpassemailsentanyway'));
+        }
+    }
+
+    // Unsetting disabled status overriding
+    unset($user->ignoredisabled);
 
     // Add a marker in the session to say that the user has registered
     $_SESSION['pwchangerequested'] = true;
