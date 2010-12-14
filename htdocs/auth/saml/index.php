@@ -76,25 +76,25 @@ $valid_saml_session = $saml_session->isValid('default-sp');
 // do we have a logout request?
 if(param_variable("logout", false)) {
     // logout the saml session
-    log_warn("auth/saml: saml logout initiated");
     $as->logout($CFG->wwwroot);
 }
 
 // do we have a returnto URL ?
 $wantsurl = param_variable("wantsurl", false);
 if($wantsurl) {
-    // logout the saml session
-    log_warn("auth/saml: storing wantsurl of: ".$wantsurl);
     $_SESSION['wantsurl'] = $wantsurl;
 }
 else if (isset($_SESSION['wantsurl'])) {
     $wantsurl = $_SESSION['wantsurl'];
-    log_warn("auth/saml: retrieved wantsurl of: ".$wantsurl);
+}
+else if (! $saml_session->getIdP()){
+    $_SESSION['wantsurl'] = array_key_exists('HTTP_REFERER',$_SERVER) ? $_SERVER['HTTP_REFERER'] : $CFG->wwwroot;
+    $wantsurl = $_SESSION['wantsurl'];
 }
 else {
     $wantsurl = $CFG->wwwroot;
-    log_warn("auth/saml: set default wantsurl of: ".$wantsurl);
 }
+
 // taken from Moodle clean_param
 include_once('validateurlsyntax.php');
 if (!validateUrlSyntax($param, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
