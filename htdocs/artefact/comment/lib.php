@@ -578,8 +578,9 @@ class ArtefactTypeComment extends ArtefactType {
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(
                     'type'  => 'image',
-        			'src' => $THEME->get_url('images/icon_close.gif'),
+                    'src' => $THEME->get_url('images/icon_close.gif'),
                     'value' => get_string('delete'),
+                    'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                 ),
             ),
