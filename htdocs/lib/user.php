@@ -288,7 +288,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         throw new InvalidArgumentException("empty user given to email_user");
     }
 
-    if (!$userto->ignoredisabled && !$mailinfo = can_receive_email($userto)) {
+    if (!($mailinfo = can_receive_email($userto)) && !($userto->ignoredisabled)) {
         throw new EmailDisabledException("email for this user has been disabled");
     }
 
