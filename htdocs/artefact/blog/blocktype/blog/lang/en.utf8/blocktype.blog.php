@@ -27,10 +27,10 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Blog';
-$string['description'] = 'Display an entire blog';
+$string['title'] = 'Journal';
+$string['description'] = 'Display an entire journal';
 
-$string['defaulttitledescription'] = 'If you leave this blank, the title of the blog will be used';
-$string['postsperpage'] = 'Posts per page';
+$string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
+$string['postsperpage'] = 'Entries per page';
 
 ?>

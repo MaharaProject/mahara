@@ -27,8 +27,8 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Recent Blog Posts';
-$string['description'] = 'Display the most recent blog posts';
+$string['title'] = 'Recent Journal Entries';
+$string['description'] = 'Display the most recent journal entries';
 $string['itemstoshow'] = 'Items to show';
 $string['postedin'] = 'in';
 $string['postedon'] = 'on';

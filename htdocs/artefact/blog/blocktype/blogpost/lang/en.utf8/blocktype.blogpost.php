@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Blog Post';
-$string['description'] = 'Display one blog post';
+$string['title'] = 'Journal Entry';
+$string['description'] = 'Display one journal entry';
 
-$string['defaulttitledescription'] = 'If you leave this blank, the title of the blog post will be used';
+$string['defaulttitledescription'] = 'If you leave this blank, the title of the journal entry will be used';
 
 ?>
