@@ -92,21 +92,21 @@ $string['notfoundexception'] = 'The page you are looking for could not be found'
 $string['accessdenied'] = 'Access Denied';
 $string['accessdeniedexception'] =  'You do not have access to view this page';
 
-$string['viewnotfoundexceptiontitle'] = 'View not found';
-$string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
-$string['viewnotfound'] = 'View with id %s not found';
+$string['viewnotfoundexceptiontitle'] = 'Page not found';
+$string['viewnotfoundexceptionmessage'] = 'You tried to access a page that didn\'t exist!';
+$string['viewnotfound'] = 'Page with id %s not found';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['artefactnotfound'] = 'Artefact with id %s not found';
-$string['artefactnotinview'] = 'Artefact %s not in View %s';
-$string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a View';
+$string['artefactnotinview'] = 'Artefact %s not in page %s';
+$string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a page';
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
 $string['interactioninstancenotfound'] = 'Activity instance with id %s not found';
 
-$string['invalidviewaction'] = 'Invalid view control action: %s';
+$string['invalidviewaction'] = 'Invalid page control action: %s';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first';
 $string['missingparamcolumn'] = 'Missing column specification';

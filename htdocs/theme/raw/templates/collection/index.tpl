@@ -33,7 +33,7 @@
                         <div class="cb videsc">{$collection->description}</div>
 
                         <div class="videsc">
-                          <div class="collection"><label>{str tag=views section=collection}:</label>
+                          <div class="collection"><label>{str tag=Views section=view}:</label>
                           {if $collection->views}
                             {foreach from=$collection->views item=view name=cviews}
                                 <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}

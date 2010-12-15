@@ -516,7 +516,7 @@ function group_statistics($limit, $offset) {
         array('name' => '#'),
         array('name' => get_string('Group', 'group')),
         array('name' => get_string('Members', 'group'), 'class' => 'center'),
-        array('name' => get_string('views'), 'class' => 'center'),
+        array('name' => get_string('Views', 'view'), 'class' => 'center'),
         array('name' => get_string('nameplural', 'interaction.forum'), 'class' => 'center'),
         array('name' => get_string('Posts', 'interaction.forum'), 'class' => 'center'),
     );
@@ -910,7 +910,7 @@ function graph_site_data_weekly() {
 
     $datasetinfo = array(
         'user-count'  => array('color' => 'blue@0.6', 'name' => get_string('users')),
-        'view-count'  => array('color' => 'green@0.6', 'name' => get_string('views')),
+        'view-count'  => array('color' => 'green@0.6', 'name' => get_string('Views', 'view')),
         'group-count' => array('color' => 'red@0.6', 'name' => get_string('groups')),
     );
 

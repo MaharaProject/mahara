@@ -104,7 +104,7 @@ $string['tagfilter_all'] = 'All';
 $string['tagfilter_file'] = 'Files';
 $string['tagfilter_image'] = 'Images';
 $string['tagfilter_text'] = 'Text';
-$string['tagfilter_view'] = 'Views';
+$string['tagfilter_view'] = 'Pages';
 $string['edittags'] = 'Edit Tags';
 $string['selectatagtoedit'] = 'Select a tag to edit';
 $string['edittag'] = 'Edit <a href="%s">%s</a>';
@@ -133,7 +133,7 @@ $string['logout'] = 'Logout';
 $string['pendingfriend'] = 'pending friend';
 $string['pendingfriends'] = 'pending friends';
 $string['profile'] = 'profile';
-$string['views'] = 'Views';
+$string['views'] = 'Pages';
 
 // Online users sideblock strings
 $string['onlineusers'] = 'Online users';
@@ -573,8 +573,8 @@ $string['nodeletepermission'] = 'You do not have permission to delete this artef
 $string['noeditpermission'] = 'You do not have permission to edit this artefact';
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
-$string['view'] = 'View';
-$string['artefactnotpublishable'] = 'Artefact %s is not publishable in view %s';
+$string['view'] = 'Page';
+$string['artefactnotpublishable'] = 'Artefact %s is not publishable in page %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
@@ -898,13 +898,13 @@ $string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
-$string['profiledescription'] = 'Your profile view is what others see when they click on your name or profile icon';
+$string['profiledescription'] = 'Your profile page is what others see when they click on your name or profile picture';
 
 // Dashboard views
 $string['mydashboard'] = 'My Dashboard';
 $string['editdashboard'] = 'Edit';
 $string['usersdashboard'] = "%s's Dashboard";
-$string['dashboarddescription'] = 'Your dashboard view is what you see on the homepage when you first log in. Only you have access to it';
+$string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it';
 $string['topicsimfollowing'] = "Topics I'm Following";
 $string['recentactivity'] = 'Recent Activity';
 $string['mymessages'] = 'My Messages';
@@ -924,8 +924,8 @@ $string['uploadyourfiles'] = 'Upload your <a href="%s">Files</a>';
 $string['createyourresume'] = 'Create your <a href="%s">Resume</a>';
 $string['publishablog'] = 'Publish a <a href="%s">Blog</a>';
 $string['Organise'] = 'Organise';
-$string['organisesubtitle'] = 'Showcase your portfolio with views';
-$string['organisedescription'] = 'Organise your portfolio into <a href="%s">Views.</a>  Create different views for different audiences - you choose the elements to include.';
+$string['organisesubtitle'] = 'Showcase your portfolio';
+$string['organisedescription'] = 'Organise your portfolio into <a href="%s">pages.</a>  Create different pages for different audiences - you choose the elements to include.';
 $string['sharenetwork'] = 'Share and Network';
 $string['sharenetworksubtitle'] = 'Find friends and join groups';
 $string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';

@@ -41,7 +41,7 @@ $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
 $string['attachment'] = 'Attachment';
 $string['attachments'] = 'Attachments';
-$string['blogcopiedfromanotherview'] = 'Note: This block has been copied from another View. You may move it around or remove it, but you cannot change what %s is in it.';
+$string['blogcopiedfromanotherview'] = 'Note: This block has been copied from another page. You may move it around or remove it, but you cannot change what %s is in it.';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
 $string['blogdoesnotexist'] = 'You are trying to access a blog that does not exist';
@@ -129,8 +129,8 @@ $string['image_list'] = 'Attached image';
 $string['alt'] = 'Description';
 
 $string['copyfull'] = 'Others will get their own copy of your %s';
-$string['copyreference'] = 'Others may display your %s in their View';
-$string['copynocopy'] = 'Skip this block entirely when copying the View';
+$string['copyreference'] = 'Others may display your %s in their page';
+$string['copynocopy'] = 'Skip this block entirely when copying the page';
 
 $string['viewposts'] = 'Copied posts (%s)';
 $string['postscopiedfromview'] = 'Posts copied from %s';
