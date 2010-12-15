@@ -68,16 +68,25 @@ $samlconfig = get_config_plugin('auth', 'saml', 'simplesamlphpconfig');
 // get all the things that we will need from the SAML authentication
 // and then shutdown the session control
 SimpleSAML_Configuration::init($samlconfig);
-$as = new SimpleSAML_Auth_Simple('default-sp');
-$saml_config = SimpleSAML_Configuration::getInstance();
 $saml_session = SimpleSAML_Session::getInstance();
-$valid_saml_session = $saml_session->isValid('default-sp');
 
 // do we have a logout request?
 if(param_variable("logout", false)) {
     // logout the saml session
+    $sp = $saml_session->getAuthority();
+    if (! $sp) {
+        $sp = 'default-sp';
+    }
+    $as = new SimpleSAML_Auth_Simple($sp);
     $as->logout($CFG->wwwroot);
 }
+$sp = param_alphanumext('as','default-sp');
+if (! in_array($sp, SimpleSAML_Auth_Source::getSources())) {
+    $sp = 'default-sp';
+}
+$as = new SimpleSAML_Auth_Simple($sp);
+$saml_config = SimpleSAML_Configuration::getInstance();
+$valid_saml_session = $saml_session->isValid($sp);
 
 // do we have a returnto URL ?
 $wantsurl = param_variable("wantsurl", false);
@@ -97,7 +106,7 @@ else {
 
 // taken from Moodle clean_param
 include_once('validateurlsyntax.php');
-if (!validateUrlSyntax($param, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
+if (!validateUrlSyntax($wantsurl, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
     $wantsurl = $CFG->wwwroot;
 }
 
