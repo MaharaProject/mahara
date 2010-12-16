@@ -77,8 +77,8 @@ $string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
 $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s';
 $string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlocktype::instance_config_save instead';
 $string['invaliddirection'] = 'Invalid direction %s';
-$string['onlyoneprofileviewallowed'] = 'You are only allowed one profile view';
-$string['onlyoneblocktypeperview'] = 'Cannot put more than one %s blocktype into a view';
+$string['onlyoneprofileviewallowed'] = 'You are only allowed one profile page';
+$string['onlyoneblocktypeperview'] = 'Cannot put more than one %s blocktype into a page';
 
 // if you change these next two , be sure to change them in libroot/errors.php
 // as they are duplicated there, in the case that get_string was not available.

@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Text Box';
-$string['description'] = 'Add notes to your view';
+$string['description'] = 'Add notes to your page';
 $string['blockcontent'] = 'Block Content';
 
 ?>
