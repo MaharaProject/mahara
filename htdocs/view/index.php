@@ -53,9 +53,6 @@ foreach ($data->data as &$view) {
     if ($view['type'] == 'portfolio' && $tutorgroupdata && empty($view['submittedto'])) {
         $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
     }
-    if ($view['type'] == 'profile' && get_config('allowpublicprofiles')) {
-        $view['togglepublic'] = togglepublic_form($view['id']);
-    }
 }
 
 $pagination = build_pagination(array(
