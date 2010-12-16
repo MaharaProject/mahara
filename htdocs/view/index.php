@@ -69,7 +69,7 @@ $pagination = build_pagination(array(
 
 $createviewform = pieform(create_view_form());
 
-$smarty = smarty(array('jquery', 'myviews'));
+$smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
