@@ -1,13 +1,15 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
-{if $edittitleurl && !$microheaders}
-<div class="viewtitledesc">
-  <h1>{$viewtitle}</h1>
-  <span class="editviewtitle s">
-    <a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a>
-  </span>
-</div>
-{else}
-<h1>{$maintitle}</h1>
+{if !$edittitleurl}
+  <h1>{if !$microheaders}{$viewtitle}{else}{$maintitle}{/if}</h1>
+{/if}
+
+{if $edittitleurl}
+<ul class="edit-view-tabs">
+  <li>{$viewtitle}</li>
+  <li><a class="current-tab" href="{$WWWROOT}view/edit.php?id={$viewid}">{str tag=edittitleanddescription section=view}</a></li>
+  <li><a class="current-tab" href="{$WWWROOT}view/blocks.php?id={$viewid}">{str tag=editcontent section=view}</a></li>
+</ul>
+<div class="rel">
 {/if}
 
 {if $columns}
@@ -107,4 +109,7 @@
     {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 
+{if $edittitleurl}
+</div>
+{/if}
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}
