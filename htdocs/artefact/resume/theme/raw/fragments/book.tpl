@@ -4,7 +4,6 @@
 {/if}
 </legend>{/if}
 <table id="booklist{$suffix}" class="tablerenderer resumefour resumecomposite">
-    <colgroup width="25%" span="1"></colgroup>
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols"></th>{/if}

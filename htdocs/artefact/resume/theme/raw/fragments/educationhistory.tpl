@@ -7,8 +7,8 @@
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols"></th>{/if}
-            <th width="25%" class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
-            <th width="25%" class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
+            <th class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
+            <th class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='qualification' section='artefact.resume'}</th>
             {if $controls}<th class="resumecontrols"></th>{/if}
         </tr>

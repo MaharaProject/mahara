@@ -4,7 +4,6 @@
 {/if}
 </legend>{/if}
 <table id="employmenthistorylist{$suffix}" class="tablerenderer resumefive resumecomposite">
-    <colgroup width="25%" span="2"></colgroup>
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols"></th>{/if}
