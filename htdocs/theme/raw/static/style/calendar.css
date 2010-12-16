@@ -6,7 +6,7 @@ div.calendar {
 
 .calendar table {
 	border: 1px solid #d1d1d1;
-	font-size: .9em;
+	font-size: .9167em;
 	color: #333;
 	cursor: default;
 	background: #fbffde;
@@ -15,7 +15,7 @@ div.calendar {
 	padding: 0;
 }
 .calendar tbody td {
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 
 /* Header part -- contains navigation buttons and day names. */
@@ -23,7 +23,7 @@ div.calendar {
 	text-align: center;    /* They are the navigation buttons */
 	background-color: #413c1d;
 	color: #eae097;
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 
 .calendar .nav {
@@ -62,14 +62,14 @@ div.calendar {
 }
 
 .calendar thead .daynames td {
-	* padding: .5em;
+	* padding: 5px;
 }
 
 
 /* The body part -- contains all the days in month. */
 
 .calendar tbody .day { /* Cells <TD> containing month days dates */
-  width: 2em;
+  width: 20px;
   text-align: right;
 }
 .calendar tbody .day.othermonth {
@@ -130,7 +130,7 @@ div.calendar {
 
 /* The footer part -- status bar and "Close" button */
 .calendar tfoot {
-	font-size: .9em;
+	font-size: .9167em;
 	background: #413C1D;
 	text-align: center;
 	color: #FFF;
@@ -154,7 +154,7 @@ div.calendar {
   display: none;
   top: 0px;
   left: 0px;
-  width: 4em;
+  width: 45px;
   cursor: default;
   background: #717277;
   color: #FFF;
@@ -169,7 +169,7 @@ div.calendar {
 }
 
 .calendar .combo .label-IEfix {
-  width: 4em;
+  width: 45px;
 }
 
 .calendar .combo .hilite {
@@ -191,7 +191,7 @@ div.calendar {
 .calendar td.time .hour,
 .calendar td.time .minute,
 .calendar td.time .ampm {
-  padding: 0 .25em;
+  padding: 0 3px;
 }
 
 .calendar td.time .ampm {
@@ -199,7 +199,7 @@ div.calendar {
 }
 
 .calendar td.time .colon {
-  padding: 0 .25em;
+  padding: 0 3px;
   font-weight: bold;
 }
 

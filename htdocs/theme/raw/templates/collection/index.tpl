@@ -17,18 +17,21 @@
             {/if}
 
                         <div class="rbuttons">
-                          <a class="icon btn-edit" href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}">{str tag=edit}</a>&nbsp;
-
-                          <a class="icon btn-manage" href="{$WWWROOT}collection/views.php?id={$collection->id}" id="editcollectionviews">{str tag=manageviews section="collection"}</a>
-
 
                           <div class="viewcontrol">
                             <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a>
                           </div>
                           <div class="viewcontrol">
             {if $collection->views[0]->view}
-                            <a href="{$WWWROOT}view/access.php?collection={$collection->id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
+                            <a href="{$WWWROOT}view/access.php?collection={$collection->id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
             {/if}
+                          </div>
+                          <div class="viewcontrol">
+                            <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+                          </div>
+
+                          <div class="viewcontrol">
+                            <a href="{$WWWROOT}collection/views.php?id={$collection->id}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
                           </div>
                         </div>
 

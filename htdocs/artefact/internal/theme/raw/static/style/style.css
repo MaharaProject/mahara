@@ -23,7 +23,7 @@ input#myfriends_addfriend_add {
 #email_list a {
   color: #ca0000;
   text-decoration: none;
-  margin-left: .5em;
+  margin-left: 5px;
 }
 #profileform_email_container a {
 	font-size: .9167em;

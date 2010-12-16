@@ -21,16 +21,16 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
+                             <h3><a class="nojs-hidden-inline expand" href="{$expand}" id="details-{$view.id}">
 {if $view.type == 'profile'}
-                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a>
+                            {str tag=profileviewtitle section=view}
 {elseif $view.type == 'dashboard'}
-                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a>
+                            {str tag=dashboardviewtitle section=view}
 {elseif $view.type == 'grouphomepage'}
-                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a>
+                            {str tag=grouphomepage section=view}
 {else}
-                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
-{/if}
-                              <a class="nojs-hidden-inline expand" href="{$expand}" id="details-{$view.id}"><img src="{theme_url filename='images/expand-down.gif'}" alt="[+]"></a>
+                            {$view.title}
+{/if}</a>
                             </h3>
 
                             <div class="rbuttons">
@@ -39,16 +39,27 @@
                                 <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
 {/if}
                               </div>
-                              <div class="viewcontrol">
+                              <!--<div class="viewcontrol">
 {if !$view.togglepublic && $view.type != 'profile' && $view.type != 'dashboard' && $view.type != 'grouphomepage'}
-                                <a href="{$WWWROOT}view/access.php?id={$view.id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/icon_access.gif'}" alt="{str tag=editaccess}"></a>
+                                <a href="{$WWWROOT}view/access.php?id={$view.id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
 {/if}
-                              </div>
+                              </div>-->
                               <div class="editlink">
 {if !$view.submittedto}
-                                <a class="icon btn-edit" href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}">{str tag=edit}</a>
+                                <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
 {/if}
                               </div>
+                             <!--<div class="viewcontrol">
+                              {if $view.type == 'profile'}
+                            <a href="{$WWWROOT}user/view.php"><img src="{theme_url filename='images/displayview.gif'}" alt="Display View"></a>
+{elseif $view.type == 'dashboard'}
+                            <a href="{$WWWROOT}"><img src="{theme_url filename='images/displayview.gif'}" alt="Display View"></a>
+{elseif $view.type == 'grouphomepage'}
+                            <a href="{$WWWROOT}group/view.php?id={$GROUP->id}"><img src="{theme_url filename='images/displayview.gif'}" alt="Display View"></a>
+{else}
+                            <a href="{$WWWROOT}view/view.php?id={$view.id}"><img src="{theme_url filename='images/displayview.gif'}" alt="Display View"></a>
+{/if}
+                              </div>-->
 
                             </div>{* rbuttons *}
                             <div class="js-hidden expanded" id="details-{$view.id}-expand">

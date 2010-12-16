@@ -13,7 +13,7 @@
         {$item.deleteform|safe}
       </td>
     </tr>
-    <tr class="{cycle} url-editform js-hidden" id="edit-{$item.id}-form">
+    <tr class="editrow {cycle} url-editform js-hidden" id="edit-{$item.id}-form">
       <td colspan=2>{$item.editform|safe}</td>
     </tr>
   {/foreach}

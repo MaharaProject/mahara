@@ -16,16 +16,15 @@
 {foreach from=$accesslists item=accesslist name=als}
     <tr class="{cycle values='r0,r1'}">
       <td class="al-edit">
-        <div class="center"><strong>{$dwoo.foreach.als.iteration}</strong></div>
-        <a class="btn-access" href="{$WWWROOT}view/access.php?id={$accesslist.viewid}">{str tag=edit}</a>
+        <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}" title="Edit Access"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
       </td>
       <td class="al">
       {if $accesslist.access}
         <div class="videsc">{$accesslist.access}</div>
       {/if}
       {if $accesslist.accessgroups}
-        {foreach from=$accesslist.accessgroups item=accessgroup}
           <div class="accesslistitem">
+        {foreach from=$accesslist.accessgroups item=accessgroup}
           {if $accessgroup.accesstype == 'loggedin'}
             {str tag="loggedin" section="view"}
           {elseif $accessgroup.accesstype == 'public'}
@@ -39,15 +38,15 @@
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}
-              {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
+              <span class="date">{$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
             {else}
-              {str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}
+              <span class="date">{str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
             {/if}
           {elseif $accessgroup.stopdate}
-            {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}
-          {/if}
-          </div>
+            <span class="date">{str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+          {/if},&nbsp;
         {/foreach}
+          </div>
         {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
           </div>
       {/if}
@@ -57,10 +56,10 @@
           {foreach from=$accesslist.views item=view name=v}
           <div class="cv-listitem">
             <div class="fr">
-              {count($view.secreturls)} &nbsp; <a class="btn-access" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"></a>
+              {count($view.secreturls)} &nbsp; <div class="fr cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></div>
             </div>
             <div>
-              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
+              <strong><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a></strong>
             </div>
           </div>
           {/foreach}
@@ -69,10 +68,10 @@
           {foreach from=$accesslist.collections item=collection name=c}
           <div class="cb cv-listitem">
             <div class="fr">
-              {count($collection.secreturls)} &nbsp; <a class="btn-access" title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"></a>
+              {count($collection.secreturls)} &nbsp; <div class="fr cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></div>
             </div>
             <div>
-              <a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a>
+              <strong><a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a></strong>
             </div>
           </div>
           {/foreach}

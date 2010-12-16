@@ -3,33 +3,33 @@
  *
  * Copyright (C) 2006-2009 Catalyst IT Ltd
  * This file is licensed under the same terms as Mahara itself
- */
+ */ 
 
 .viewtitledesc h1 {
     display: inline;
 }
 .viewtitledesc .editviewtitle a img,
 .viewtitledesc .editviewtitle a span {
-    padding: 0.5em 0 0 .1em;
+    padding: 5px 0 0 1px;
 }
 .editviewtitle a img {
     vertical-align: top;
-    padding: 0.375em 0 0 .1em;
+    padding: 4px 0 0 1px;
 }
 
 /* The loading spinner/message that pops up before the view is loaded */
 #views-loading {
     text-align: center;
-    margin: 1em;
+    margin: 10px;
     font-size: 100%;
 }
 /* just the bottom pane when not editing */
 #bottom-pane {
-    margin: .5em 0;
+    margin: 5px 0;
 }
 /********************** Top pane of Edit View *************************/
 #page #top-pane {
-    margin-bottom: .5em;
+    margin-bottom: 5px;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
@@ -55,8 +55,7 @@
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-  padding: .3em 1em;
-  * padding: .25em 1em;
+  padding: 3px 10px;
   background: #EEEEEE;
   text-decoration: none;
 }
@@ -68,14 +67,13 @@
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
-  padding: .4em 1em .3em 1em;
-  * padding: .35em 1em .25em 1em;
+  padding: 4px 10px 3px 10px;
 }
 /* The panel that contains the blocktype icons */
 #blocktype-list {
 	clear: left;
     min-height: 95px;
-    padding: .5em .5em 1em .5em;
+    padding: 5px 5px 10px 5px;
     font-size: .9167em;
 }
 #blocktype-list ul {
@@ -84,7 +82,7 @@
 #blocktype-list li {
     float: left;
     text-align: center;
-    margin: 1em 1em 0;
+    margin: 10px 10px 0;
     width: 200px;
 	* z-index: 100;
 	line-height: 1.4em;
@@ -124,9 +122,9 @@ html>body #column-container {
 	* width: 100%;
 }
 #blocksinstruction {
-    padding: .5em 1em;
+    padding: 3px 10px;
     font-weight: bold;
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 }
 
 /* columns 
@@ -165,7 +163,7 @@ html>body #column-container {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9% 1em 0.9%;
+    padding: 0 0.9% 10px 0.9%;
 	position: relative;
 }
 * html .column {
@@ -174,7 +172,7 @@ html>body #column-container {
 
 /* An explicit height for when there is one column and no remove button */
 .column-header {
-    padding-top: .5em;
+    padding-top: 5px;
     width: 100%;
     position: relative;
     height: 25px;
@@ -185,19 +183,19 @@ html>body #column-container {
 /* contains the left-most 'add column' button */
 .add-column-left {
     position: absolute;
-    top: .5em;
+    top: 5px;
     left: 0;
 }
 /* contains all add column buttons in the middle of two columns */
 .add-column-center {
     position: absolute;
-    top: .5em;
+    top: 5px;
     right: 0;
 }
 /* contains the right most 'add column' button */
 .add-column-right {
     position: absolute;
-    top: .5em;
+    top: 5px;
     right: 0;
 }
 /* contains the 'remove column' buttons */
@@ -210,7 +208,7 @@ html>body #column-container {
 	line-height: 1px;
 }
 .column-content {
-    min-height: 2em;
+    min-height: 20px;
 }
 .column-content .add-button input {
 	border: none;
@@ -218,12 +216,12 @@ html>body #column-container {
 }
 
 #block-placeholder {
-    margin-top: 1em;
+    margin-top: 10px;
 }
 
 /**************** Blockinstance **********************/
 .blockinstance {
-    margin: 0 0 2em 0;
+    margin: 0 0 20px 0;
     padding: 0;
     position: relative;
 }
@@ -233,7 +231,7 @@ html>body #column-container {
   text-align: left;
   margin-left: auto;
   margin-right: auto;
-  padding: 1em;
+  padding: 10px;
 }
 
 .blockinstance.configure .mceEditor {
@@ -243,6 +241,7 @@ html>body #column-container {
 /* header */
 .blockinstance-header {
     width: 100%;
+	margin-bottom: 3px;
 }
 .blockinstance-header h4 {
     margin: 0 !important;
@@ -268,7 +267,7 @@ html>body #column-container {
     background: none;
     padding: 0;
     cursor: pointer;
-	margin: 0 0 0 0.1em;
+	margin: 0 0 0 1px;
 }
 
 /* content */
@@ -282,13 +281,13 @@ html>body #column-container {
 }*/
 .blockinstance-content h2 {
 	font-size: 1.3333em !important;
-	margin-top: .5em !important;
+	margin-top: 5px !important;
 	margin-bottom: 0 !important;
 	border-bottom: 1px dotted #d1d1d1;
 }
 .blockinstance-content h3 {
 	font-size: 1.1667em !important;
-	margin-top: .5em !important;
+	margin-top: 5px !important;
 	margin-bottom: 0 !important;
 }
 .blockinstance-content h4 {
@@ -296,24 +295,24 @@ html>body #column-container {
 	margin-bottom: 0 !important;
 }
 .blockinstance-content p {
-	margin: 0 0 1em 0;
+	margin: 0 0 10px 0;
 }
 .blockinstance-content p:first-child {
-	margin-top: .5em;
+	margin-top: 5px;
 }
 .blockinstance-content p:last-child {
 	margin-bottom: 0;
 }
 .blockinstance-content p.noartefacts {
     text-align: center;
-    padding: .5em;
+    padding: 5px;
 }
 .blockinstance-content .description {
 	font-size: .9167em;
 }
 .blockinstance-content fieldset {
-	padding: .5em;
-	margin: 0 0 1em 0;
+	padding: 5px;
+	margin: 0 0 10px 0;
 }
 .blockinstance-content fieldset table {
 	* width: 98%;
@@ -321,13 +320,13 @@ html>body #column-container {
 }
 .blockinstance-content table.resumepersonalinfo th,
 .blockinstance-content table.resumepersonalinfo td {
-	padding: 0 0 0 .25em;
+	padding: 0 0 0 3px;
 }
 
 
 /* Wall */
 .blockinstance-content #wall {
-	margin: .5em 0;
+	margin: 5px 0;
 }
 
 /* Image Blockinstance */
@@ -380,27 +379,27 @@ html>body #column-container {
 }
 .blockinstance-content div.tags {
 	font-size: .9167em;
-	margin-top: .5em;
+	margin-top: 5px;
 	line-height: 1.4em;
 }
 .blockinstance-content div.artefacts {
 	font-size: .9167em;
-	margin-top: .5em;
+	margin-top: 5px;
 	line-height: 1.4em;
 }
 .postlist td div h1,
 .postlist td div h2 {
 	font-size: 1.1667em !important;
-	margin: 0.5em 0 0 0 !important;
+	margin: 5px 0 0 0 !important;
 }
 .postlist td div h3,
 .postlist td div h4 {
 	font-size: 1em !important;
-	margin: 0.5em 0 0 0 !important;
+	margin: 5px 0 0 0 !important;
 	border: 0 !important;
 }
 .postlist td div p {
-	margin: 0 0 1em 0 !important;
+	margin: 0 0 10px 0 !important;
 }
 
 /* group homepage */
@@ -411,12 +410,12 @@ html>body #column-container {
   margin: 0;
 }
 .grouphomepage .bt-groupviews .groupviewsection {
-  margin: .5em 0 .5em 0;
+  margin: 5px 0;
 }
 
 /* Slideshow */
 .slideshow {
-    padding: .5em 0;
+    padding: 5px 0;
     text-align: center;
     width: 100%;
 }
@@ -439,11 +438,11 @@ html>body #column-container {
   cursor: pointer;
 }
 .thumbnails {
-  padding: .5em;
+  padding: 5px;
   text-align: center;
 }
 .thumbnails img {
-  padding: .5em;
+  padding: 5px;
   vertical-align: middle;
 }
 
@@ -467,7 +466,7 @@ ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  padding: .3em 1em;
+  padding: 3px 10px;
   text-decoration: none;
   background: #EEEEEE;
 }
@@ -478,18 +477,18 @@ ul.artefactchooser-tabs li.current a:active {
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
-  padding: .4em 1em .3em 1em;
+  padding: 4px 10px 3px 10px;
   cursor: default;
 }
 ul.artefactchooser-subtabs {
-  margin: 0 0 1em 0 !important;
+  margin: 0 0 10px 0 !important;
   padding: 0 !important;
   font-size: .9167em;
   list-style: none;
 }
 ul.artefactchooser-subtabs li {
   display: inline;
-  padding: 0 1em;
+  padding: 0 10px;
   margin: 0 !important;
 }
 ul.artefactchooser-subtabs li.current a,
@@ -501,8 +500,8 @@ ul.artefactchooser-subtabs li.current a:active {
 
 #artefactchooser-body {
 	clear: left;
-	margin-bottom: .5em;
-	padding: .5em;
+	margin-bottom: 5px;
+	padding: 5px;
 }
 
 /* table */
@@ -517,20 +516,20 @@ ul.artefactchooser-subtabs li.current a:active {
 .maharatable tbody th {
 	font-size: 1.1667em;
 	text-align: left !important;
-	padding: .25em 0 0 0;
+	padding: 3px 0 0 0;
 }
 .maharatable tbody td {
-	padding: 0 0 .5em 0;
+	padding: 0 0 5px 0;
 }
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,
 .maharatable #artefactchooser-body table td {
-    padding: .25em !important;
+    padding: 3px !important;
 }
 .maharatable #artefactchooser-body .artefactchooser-data,
 .maharatable #artefactchooser-body .artefactchooser-data th,
 .maharatable #artefactchooser-body .artefactchooser-data td {
-    padding: 0 .25em !important;
+    padding: 0 3px !important;
 }
 #artefactchooser-body th label {
 	font-size: .9167em;
@@ -548,16 +547,15 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #instconf_artefactid_selectlist,
 #instconf_artefactids_selectlist {
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 }
 #instconf_artefactid_selectlist td,
 #instconf_artefactids_selectlist td {
-	padding: .25em;
+	padding: 3px;
 }
 #instconf_artefactid_selectlist td input.button,
 #instconf_artefactids_selectlist td input.button {
 	font-size: .9167em;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* pagination */
@@ -578,11 +576,11 @@ ul.artefactchooser-subtabs li.current a:active {
 /* attachments */
 .attachments {
     border: 0;
-	margin: .5em 0;
+	margin: 5px 0;
 	font-size: .9167em;
 }
 .attachments td {
-	padding: .25em .5em !important;
+	padding: 3px 5px !important;
 }
 .attachments td input.small {
     font-size: .9167em;
@@ -596,39 +594,39 @@ ul.artefactchooser-subtabs li.current a:active {
 	font-weight: bold !important;
 }
 .fileupload th {
-	padding: .25em 0;
+	padding: 3px 0;
 	text-align: left !important;
 }
 .fileupload td {
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 .fileupload .filelist td {
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 .fileupload .filelist td input.small {
 	font-size: .9167em;
 }
 .upload_browse #artefactchooser-body {
-	padding: 1em !important;
+	padding: 10px !important;
 }
 .upload_browse .uploadform td {
 	line-height: 1.1667em;
 }
 .upload_browse #artefactchooser-body {
-	margin-bottom: .5em;
-	padding: 1em;
+	margin-bottom: 5px;
+	padding: 10px;
 }
 
 #view-wizard-controls form {
     display: inline;
 }
 #view-wizard-controls {
-    padding-bottom: .5em;
+    padding-bottom: 5px;
 }
 
 #view-description {
-    margin: 0 0 1em 0;
-	padding: 0 0 .25em 0;
+    margin: 0 0 10px 0;
+	padding: 0 0 3px 0;
 	border-bottom: 1px dotted #ccc;
 }
 
@@ -641,7 +639,7 @@ ul.artefactchooser-subtabs li.current a:active {
 
 /* Collection navigation */
 #collection {
-	margin: 2em 0 0 0;
+	margin: 20px 0 0 0;
 }
 #collection strong {
 	font-size: 1.1667em;
@@ -649,62 +647,62 @@ ul.artefactchooser-subtabs li.current a:active {
 ul.colnav {
     list-style: none;
     padding: 0;
-    margin: 1em 0 0 0;
+    margin: 10px 0 0 0;
     display: inline;
 }
 ul.colnav li {
     display: inline;
     padding: 0;
-    margin: 0 0.15em;
+    margin: 0 2px;
 	display: inline;
 }
 div.colnav1 {
     display: inline;
 }
 div.colnav-extra {
-    margin: 0.75em 0 0;
+    margin: 8px 0 0;
 }
 
 .submissionform {
 	background: #eee;
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 .submittedform {
 	background: #eee;
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 
 /* VIEWS */
 /* views footer */
 .viewfooter {
 	clear: both;
-	padding: 1em;
-	margin-bottom: 1em;
+	padding: 10px;
+	margin-bottom: 10px;
 }
 .viewfooter .tags {
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 }
 .viewfooter .submissionform {
-	margin-bottom: .5em;
+	margin-bottom: 5px;
 }
 .viewfooter .submissionform .submit {
-	margin-left: .25em;
+	margin-left: 3px;
 }
 .viewfooter .releaseviewform {
 	background: #eee;
-	margin-bottom: .5em;
+	margin-bottom: 5px;
 }
 .viewfooter .releaseviewform tr {
 	display: inline;
 }
 .viewfooter .releaseviewform tr th {
-	padding: .25em !important;
+	padding: 3px !important;
 }
 #viewmenu {
 	font-size: .9167em;
 }
 #viewmenu a {
-	margin: 0 .5em;
+	margin: 0 5px;
 }
 #viewmenu .help a {
 	padding: 0;
@@ -714,21 +712,21 @@ div.colnav-extra {
 }
 #feedbacktable .icon {
 	float: left;
-	margin-right: .25em;
+	margin-right: 3px;
 	margin-left: 0;
 }
 #feedbacktable .username {
-	margin-right: .25em;
+	margin-right: 3px;
 }
 #feedbacktable .details span {
-	margin: 0 .25em;
+	margin: 0 3px;
 }
 #feedbacktable .attachmessage {
 	font-size: .9167em;
 	font-style: italic;
 }
 #feedbacktable p {
-    margin: 0 0 .25em;
+    margin: 0 0 3px;
 }
 #feedback_pagination {
 	margin: 0;
@@ -738,26 +736,26 @@ div.colnav-extra {
 	display: inline;
 }
 #add_feedback_form {
-	margin-top: 1em;
+	margin-top: 10px;
 }
 
 /** viewing artefact */
 #view .filedata-icon.fr {
-	padding: .5em 1em 1em 1em;
-	margin: 0 0 1em 0;
+	padding: 5px 10px 10px 10px;
+	margin: 0 0 10px 0;
 }
 #view .filedata-icon h4 {
 	font-size: .9167em;
 	margin: 0;
 }
 #view .filedata-icon.fl {
-	margin: 0.25em 0 0 0;
+	margin: 3px 0 0 0;
 }
 #view table.filedata th {
-	padding: 0 .5em 0 0;
+	padding: 0 5px 0 0;
 }
 #view table.filedata td {
-	padding: 0 .5em;
+	padding: 0 5px;
 }
 
 
@@ -772,9 +770,9 @@ table tr.plan_incomplete {
 	border-bottom: 2px solid #FFF;
 }
 table td div.plan_completed {
-    margin:3px;
+    margin: 3px;
     text-align:center;
-    width:60px;
+    width: 60px;
 }
 
 .blockinstance .blockinstance-content table.postlist {
@@ -783,17 +781,17 @@ table td div.plan_completed {
 }
 
 .licensedesc {
-	padding: .5em;
+	padding: 5px;
 	margin: 0;
 }
 .licensedesc div {
-	padding-left: 1em;
+	padding-left: 10px;
 	font-size: .9167em;
 	line-height: 1.4em;
 }
 
 .plansblocktable {
-	margin: .5em 0;
+	margin: 5px 0;
 }
 
 /*#instconf_count_container td,
@@ -804,21 +802,21 @@ table td div.plan_completed {
 	padding-bottom: 1em;
 }*/
 #blocktype_externalfeed_title {
-	margin-top: .5em;
+	margin-top: 5px;
 }
 #blocktype_externalfeed_entries {
-	margin-top: .5em;
-	margin-bottom: .5em;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 #recentforumpostsblock {
-	margin-top: .5em;
-	margin-bottom: .5em;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 #recentforumpostsblock td.s img {
 	vertical-align: top;
 }
 #blocktype_externalfeed_entries h4 {
-	margin-top: .5em;
+	margin-top: 5px;
 }
 #userview {
 	border-bottom: 1px dotted #d1d1d1;

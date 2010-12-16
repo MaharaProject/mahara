@@ -18,7 +18,7 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r0,r1,r1'}  expandable-head">
+        <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
             <td class="toggle">{$row->startdate}</td>
             <td>{$row->enddate}</td>
             <td>{$row->jobtitle}: {$row->employer}</td>

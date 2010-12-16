@@ -77,7 +77,6 @@ h6 {
 .listing div h3 a:visited,
 .listing div h3 a:link {
 	color: #186194 !important;
-	text-decoration: underline;
 }
 .main-column table h3 a:hover,
 .listing div h3 a:hover {
@@ -278,7 +277,7 @@ input#files_filebrowser_edit_artefact:active {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-	margin: .5em 0;
+	margin: 5px 0;
 }
 #main-nav li {
     color: #e6c560;
@@ -327,7 +326,7 @@ input#files_filebrowser_edit_artefact:active {
 	border: none;
 }
 #sub-nav ul {
-    padding: 0 0 0 .5em;
+    padding: 0 0 0 5px;
 	background: none;
 }
 #sub-nav li a,
@@ -456,7 +455,7 @@ div.sideblock h3 a:hover {
 /* Side Search */
 .sidebar #selfsearch input {
 	width: 186px;
-    padding: .25em .5em;
+    padding: 3px 5px;
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
@@ -548,16 +547,11 @@ div.sideblock h3 a:hover {
 * html #collectionviews {
 	width: 96%;
 }
-#collectionviews td {
-	vertical-align: middle;
+#collectionviews td.displayordercontrols div {
+	padding-top: 5px;
 }
-#collectionviews td label {
-	font-size: 1em;
-	font-weight: bold;
-}
-
-#collectionviews td div {
-    text-align: center;
+#collectionviews td.displayordercontrols div.justdown {
+    padding-left: 19px;
 }
 
 .inbox-message {

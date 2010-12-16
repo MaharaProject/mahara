@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<table id="accesslisttable" class="fl hidden">
+<table id="accesslisttable" class="hidden">
   <thead>
     <tr class="accesslist-head1">
       <th colspan="2">{{str tag=Added section=view}}</th>
@@ -30,12 +30,11 @@
 <fieldset id="viewacl-advanced" class="collapsible collapsed cb">
   <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
     <div class="fl viewacl-advanced-search">
-      <label>{{str tag=search}}</label>&nbsp;&nbsp;
+      <label>{{str tag=search}}</label>
       <select name="type" id="type">
         <option value="group">{{str tag=groups}}</option>
         <option value="user" selected="selected">{{str tag=users}}</option>
       </select>
-      <br>
       <input type="text" name="search" id="search">
       <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
     </div>

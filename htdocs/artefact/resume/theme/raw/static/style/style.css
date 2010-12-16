@@ -5,11 +5,14 @@
  * This file is distributed under the same terms as Mahara itself
  */
 .tablerenderer th.resumecontrols {
-    width:50px; !important;
+    width: 35px !important;
+}
+.tablerenderer th.resumecontrols .movebuttons {
+    width: 35px !important;
 }
 
 .tablerenderer th.resumedate {
-    width:100px; !important;
+    width: 100px !important;
 }
 #resumewrap table {
 	width: 100%;
@@ -19,17 +22,17 @@
 }
 #resumewrap table tr#coverletter_save_container td,
 #resumewrap table tr#interests_save_container td {
-	padding-top: .5em;
+	padding-top: 5px;
 }
 #resumewrap table.resumecomposite {
-	margin-bottom: .5em;
+	margin-bottom: 5px;
 }
 #resumewrap table.resumecomposite .btn-edit,
 #resumewrap table.resumecomposite .btn-del {
 	font-size: .9167em;
 }
 #resumewrap table.resumecomposite td {
-	padding: .25em .5em;
+	padding: 3px 5px;
 }
 #resumewrap table.mceLayout {
 	width: 570px !important;
@@ -53,7 +56,7 @@
 #addbook th,
 #addmembership th {
 	text-align: left;
-	padding: 0.25em;
+	padding: 3px;
 }
 
 #resumewrap #addemploymenthistory table td,
@@ -65,7 +68,7 @@
 #resumewrap form .resumecontactinfo tbody th,
 #personalinformation table table td,
 #personalinformation table table tbody th  {
-	padding: 0.25em;
+	padding: 3px;
 }
 #resumewrap table table {
 	width: auto;
@@ -74,7 +77,7 @@
 	margin: 0;
 }
 #container #resumewrap table td.errmsg {
-   padding-left: 2em;
+   padding-left: 20px;
 }
 fieldset legend.resumeh3 a {
 	background: none;
@@ -91,5 +94,5 @@ fieldset legend.resumeh3 a {
 
 #goalform .mceEditor .mceLayout,
 #skillform .mceEditor .mceLayout {
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 }
