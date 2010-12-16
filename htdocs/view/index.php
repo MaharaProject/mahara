@@ -45,16 +45,6 @@ $data = View::get_myviews_data($limit, $offset);
 
 $userid = $USER->get('id');
 
-/* Get a list of groups that the user belongs to which views can
-    be submitted. */
-$tutorgroupdata = group_get_user_course_groups();
-
-foreach ($data->data as &$view) {
-    if ($view['type'] == 'portfolio' && $tutorgroupdata && empty($view['submittedto'])) {
-        $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
-    }
-}
-
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'view/',
     'count' => $data->count,
