@@ -44,7 +44,7 @@
             {/if}
           {elseif $accessgroup.stopdate}
             <span class="date">{str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
-          {/if},&nbsp;
+          {/if}, 
         {/foreach}
           </div>
         {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
