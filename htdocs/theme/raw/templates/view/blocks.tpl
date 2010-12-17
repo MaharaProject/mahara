@@ -4,11 +4,8 @@
 {/if}
 
 {if $edittitleurl}
-  <h1>{$viewtitle}</h1>
-<ul class="in-page-tabs edit-view-tabs">
-  <li><a href="{$WWWROOT}view/edit.php?id={$viewid}">{str tag=edittitleanddescription section=view}</a></li>
-  <li><a class="current-tab" href="{$WWWROOT}view/blocks.php?id={$viewid}">{str tag=editcontent section=view}</a></li>
-</ul>
+<h1>{$viewtitle}</h1>
+{include file="view/editviewtabs.tpl" selected='content'}
 <div class="subpage rel">
 {/if}
 
