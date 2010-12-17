@@ -43,7 +43,7 @@ $currentlayout = $view->get('layout');
 $back = !$USER->get_account_preference('addremovecolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution);
+$view->set_edit_nav();
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();

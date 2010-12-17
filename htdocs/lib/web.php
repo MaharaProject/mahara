@@ -425,8 +425,10 @@ EOF;
         require_once('group.php');
         $group = group_current_group();
         $smarty->assign('GROUP', $group);
-        $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
-        $smarty->assign('PAGEHEADING', $group->name);
+        if (!defined('NOGROUPMENU')) {
+            $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
+            $smarty->assign('PAGEHEADING', $group->name);
+        }
     }
 
     // ---------- sideblock stuff ----------

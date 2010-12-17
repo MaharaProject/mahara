@@ -94,7 +94,7 @@ if ($blockid = param_integer('blockconfig', 0)) {
     }
 }
 
-View::set_nav($group, $institution, ($view->get('type') == 'profile'));
+$view->set_edit_nav();
 
 if ($view->get('type') == 'profile') {
     $profile = true;

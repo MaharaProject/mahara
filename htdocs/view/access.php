@@ -62,13 +62,7 @@ define('TITLE', get_string('editaccess', 'view'));
 
 $group = $view->get('group');
 $institution = $view->get('institution');
-if ($group || $institution) {
-    View::set_nav($group, $institution);
-}
-else {
-    define('MENUITEM', 'myportfolio/share');
-}
-
+View::set_nav($group, $institution, true);
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();

@@ -39,7 +39,7 @@ $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution);
+$view->set_edit_nav();
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();

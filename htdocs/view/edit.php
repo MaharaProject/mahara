@@ -49,7 +49,7 @@ if ($view->is_submitted()) {
 
 $group = $view->get('group');
 $institution = $view->get('institution');
-View::set_nav($group, $institution);
+$view->set_edit_nav();
 
 $new = param_boolean('new', 0);
 

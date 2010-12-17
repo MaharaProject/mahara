@@ -2829,20 +2829,43 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution) {
+    public static function set_nav($group, $institution, $share=false) {
         if ($group) {
-            define('MENUITEM', 'groups/views');
+            define('MENUITEM', $share ? 'groups/share' : 'groups/views');
             define('GROUP', $group);
+        }
+        else if ($institution == 'mahara') {
+            define('ADMIN', 1);
+            define('MENUITEM', $share ? 'configsite/share' : 'configsite/siteviews');
         }
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
-            define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+            define('MENUITEM', $share ? 'manageinstitutions/share' : 'manageinstitutions/institutionviews');
+        }
+        else {
+            define('MENUITEM', $share ? 'myportfolio/share' : 'myportfolio/views');
+        }
+    }
+
+    public function set_edit_nav() {
+        if ($this->group) {
+            // Don't display the group nav; 5 levels of menu is too many
+            define('MENUITEM', 'groups');
+            define('GROUP', $this->group);
+            define('NOGROUPMENU', 1);
+        }
+        else if ($this->institution == 'mahara') {
+            define('ADMIN', 1);
+            define('MENUITEM', 'configsite/siteviews');
+        }
+        else if ($this->institution) {
+            define('INSTITUTIONALADMIN', 1);
+            define('MENUITEM', 'manageinstitutions/institutionviews');
         }
         else {
             define('MENUITEM', 'myportfolio/views');
         }
     }
-
 
     public function ownership() {
         if ($this->group) {
