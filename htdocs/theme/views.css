@@ -30,6 +30,7 @@
 /********************** Top pane of Edit View *************************/
 #page #top-pane {
     margin-bottom: 5px;
+	border: 5px solid #eee;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {

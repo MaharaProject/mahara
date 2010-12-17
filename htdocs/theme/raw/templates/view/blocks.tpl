@@ -4,12 +4,12 @@
 {/if}
 
 {if $edittitleurl}
-<ul class="edit-view-tabs">
-  <li>{$viewtitle}</li>
-  <li><a class="current-tab" href="{$WWWROOT}view/edit.php?id={$viewid}">{str tag=edittitleanddescription section=view}</a></li>
+  <h1>{$viewtitle}</h1>
+<ul class="in-page-tabs edit-view-tabs">
+  <li><a href="{$WWWROOT}view/edit.php?id={$viewid}">{str tag=edittitleanddescription section=view}</a></li>
   <li><a class="current-tab" href="{$WWWROOT}view/blocks.php?id={$viewid}">{str tag=editcontent section=view}</a></li>
 </ul>
-<div class="rel">
+<div class="subpage rel">
 {/if}
 
 {if $columns}
