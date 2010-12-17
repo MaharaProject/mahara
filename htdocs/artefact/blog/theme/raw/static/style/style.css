@@ -13,6 +13,13 @@
 #bloglist td .addicon {
 	margin: 0;
 }
+#bloglist h4 {
+	margin: 0;
+}
+#bloglist #blogdesc p {
+	margin: 0;
+	font-size: .9167em;
+}
 #blogdescription {
 	padding: 10px;
 	margin: 10px 0;

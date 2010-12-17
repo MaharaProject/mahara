@@ -8,17 +8,17 @@
   {foreach from=$blogs->data item=blog}
     <tr class="{cycle name=rows values='r0,r1'}">
       <td>
-        <div><strong><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title}</a></strong></div>
-        <div>{$blog->description|clean_html|safe}</div>
+        <h4><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title}</a></h4>
+        <div id="blogdesc">{$blog->description|clean_html|safe}</div>
       </td>
-      <td class="right">
-        <a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount} {if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a>
-        <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn-add">{str tag=addpost section=artefact.blog}</a>
+      <td><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount} {if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a></td>
+      <td class="s"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn s">{str tag=addpost section=artefact.blog}</a></td>
+      <td class="buttonscell right">
         {if $blog->locked}
         	<span class="s dull">{str tag=submittedforassessment section=view}</span>
         {else}
-        	<a href="{$WWWROOT}artefact/blog/settings/?id={$blog->id}" class="btn-big-edit" title="{str tag=settings}"></a>
-        	<a href="#" onClick="confirmdelete({$blog->id});" class="btn-big-del" title="{str tag=delete}"></a>
+        	<a href="{$WWWROOT}artefact/blog/settings/?id={$blog->id}" title="{str tag=settings}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=settings}"></a>
+        	<a href="#" onClick="confirmdelete({$blog->id});" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
         {/if}
       </td>
     </tr>

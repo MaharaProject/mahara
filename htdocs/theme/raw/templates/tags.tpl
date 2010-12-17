@@ -31,9 +31,6 @@
            </div>
            <div class="cb"></div>
            <table id="results" class="tablerenderer fullwidth">
-             <thead>
-               <tr><th></th><th></th><th></th></tr>
-             </thead>
              <tbody>
 {if $results->data}
               {$results->tablerows|safe}

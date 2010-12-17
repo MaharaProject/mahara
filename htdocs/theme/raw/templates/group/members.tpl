@@ -1,6 +1,7 @@
 {include file="header.tpl"}
 
-    <div class="fr memberssearch">
+    <div>{$instructions|clean_html|safe}</div>
+    <div class="memberssearch">
     {if $membershiptypes}
         {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
             {if $item.link}
@@ -10,9 +11,8 @@
             {/if}
         {/foreach}&nbsp;&nbsp;&nbsp;
     {/if}
-        {str tag=search}: {$form|safe}
+        <strong>{str tag=search}:</strong> {$form|safe}
     </div>
-    <div>{$instructions|clean_html|safe}</div>
     <div class="cb"></div>
     {if $membershiptype}<h3>{str tag=pendingmembers section=group}</h3>{/if}
     <div id="results">

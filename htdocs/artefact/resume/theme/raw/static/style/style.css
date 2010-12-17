@@ -4,9 +4,6 @@
  * Copyright (C) 2006-2009 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-.tablerenderer th.resumecontrols {
-    width: 35px !important;
-}
 .tablerenderer th.resumedate {
     width: 100px !important;
 }
@@ -15,6 +12,15 @@
 }
 #resumewrap table td {
 	padding: 0;
+}
+#resumewrap table.resumecomposite .right {
+	width: 40px;
+	padding: 5px 5px 3px 5px;
+	line-height: 1.3333em;
+}
+#resumewrap table.resumecomposite .movebuttons {
+	padding: 5px 5px 3px 5px;
+	line-height: 1.3333em;
 }
 #resumewrap table tr#coverletter_save_container td,
 #resumewrap table tr#interests_save_container td {

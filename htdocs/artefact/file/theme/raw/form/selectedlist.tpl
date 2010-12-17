@@ -12,7 +12,7 @@
   {foreach from=$selectedlist item=file}
     {assign var=displaytitle value=$file->title|str_shorten_text:34|safe}
   <tr class="{cycle values='r0,r1'}{if $highlight && $highlight == $file->id} highlight-file{/if}">
-    <td>
+    <td class="iconcell">
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{theme_url filename=images/`$file->artefacttype`.gif}{/if}">
     </td>
     <td>

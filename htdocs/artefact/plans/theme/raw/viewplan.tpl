@@ -1,5 +1,4 @@
 <table id="tasktable">
-    <colgroup width="50%" span="2"></colgroup>
     <thead>
         <tr>
             <th class="c1">{str tag='completiondate' section='artefact.plans'}</th>

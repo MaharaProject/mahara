@@ -52,7 +52,7 @@
     <td>{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
     {/if}
     {if $editmeta}
-    <td class="right">
+    <td class="buttonscell right">
       {if $file->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {elseif !$file->isparent}
@@ -60,7 +60,7 @@
       {/if}
     </td>
     {/if}
-    <td class="right">
+    <td class="buttonscell right">
     {if $editable && !$file->isparent}
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
       {if $file->locked}

@@ -16,16 +16,16 @@
     <tbody>
         {foreach from=$rows item=row}
         <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
-            {if $controls}<td></td>{/if}
+            {if $controls}<td class="buttonscell"></td>{/if}
             <td class="toggle">{$row->startdate}</td>
             <td>{$row->enddate}</td>
             <td>{$row->title}</td>
-            {if $controls}<td></td>{/if}
+            {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
         <tr class="{cycle values='r0,r0,r1,r1'} expandable-body">
-            {if $controls}<td></td>{/if}
+            {if $controls}<td class="buttonscell"></td>{/if}
         	<td colspan="3">{$row->description}</td>
-            {if $controls}<td></td>{/if}
+            {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
         {/foreach}
     </tbody>

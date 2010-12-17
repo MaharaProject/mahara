@@ -210,9 +210,6 @@ input#files_filebrowser_edit_artefact:active {
 	width: 24px;
 	margin-left: 2px;
 }
-* html #usf_submit {
-	height: 22px;
-}
 #selfsearch button,
 .query-button,
 #moderator_search_btn,
@@ -277,15 +274,10 @@ input#files_filebrowser_edit_artefact:active {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-	margin: 5px 0;
 }
 #main-nav li {
     color: #e6c560;
     * zoom: 1;
-    * margin-top: -5px;
-}
-* html #main-nav li {
-    * margin-top: -8px;
 }
 #main-nav li a,
 #main-nav li a:link,

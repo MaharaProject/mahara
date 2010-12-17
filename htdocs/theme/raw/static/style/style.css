@@ -340,7 +340,10 @@ div.grippie {
  * padding: 3px;
 }
 .memberssearch {
-	padding-left: 20px;
+	margin-top: 10px;
+	padding: 5px 10px;
+	background: #eee;
+	border-right: 4px solid #FFF;
 }
 .memberssearch form, .memberssearch form div {
 	display: inline;
@@ -441,6 +444,7 @@ input.calendar.required {
 /** input buttons **/
 input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact {
 	font-size: 1em;
+	line-height: 1em;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #7d99ae #003c74 #003c74 #7d99ae;
@@ -801,7 +805,9 @@ div.rbuttons .small-logo {
 #site-logo {
 	float: left;
 	margin: 0;
-	padding: 5px;
+}
+#site-logo a {
+	display: block;
 }
 #header-right {
 	float: right;
@@ -835,7 +841,7 @@ div.rbuttons .small-logo {
 #right-nav ul {
 	float: right;
 	text-align: right;
-	margin: 5px 0 5px 0;
+	margin: 5px 0;
 	min-width: 200px;
 }
 #right-nav li {
@@ -850,22 +856,32 @@ div.rbuttons .small-logo {
 	padding: 0 5px;
 }
 #main-nav {
-	clear: left;
+	clear: both;
 	font-size: 1.1667em;
+	line-height: 1.8em;
 	font-weight: bold;
 	white-space: nowrap;
+	margin: 0;
+	padding: 0;
 }
 #main-nav ul {
 	margin: 0;
 	padding: 0;
 }
 #main-nav li {
-	padding: 5px 10px;
-	line-height: 2em;
+	padding: 0;
+	margin: 0;
+	line-height: 1.8em;
 	display: inline;
+	float: left;
 }
 #main-nav li.selected {
 	background-color: #ddd;
+}
+#main-nav li a {
+	padding: 5px 10px;
+	display: block;
+	float: left;
 }
 #main-nav li.selected a, #main-nav li.selected a:link, #main-nav li.selected a:visited, #main-nav li.selected a:active {
 	color: #333;
@@ -892,7 +908,8 @@ div.rbuttons .small-logo {
 	font-weight: bold;
 }
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
+ul.in-page-tabs,
+ul.edit-view-tabs {
 	font-size: 1em;
 	font-weight: bold;
 	list-style: none;
@@ -901,18 +918,21 @@ ul.in-page-tabs {
 	position: relative;
 	z-index: 0;
 }
-ul.in-page-tabs li {
+ul.in-page-tabs li,
+ul.edit-view-tabs li {
 	display: inline;
 	line-height: 1.8em;
 	padding: 0;
 	margin: 0 2px 0 0 !important;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
 	padding: 3px 10px;
 	background: #EEEEEE;
 	text-decoration: none;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
 	color: #333;
 	text-decoration: none;
 	background: #D1D1D1;
@@ -1224,7 +1244,7 @@ a.tag {
 .mytags .tagfreq {
 	font-weight: normal;
 	font-size: .9167em;
-	color: #444;
+	color: #888;
 }
 .tag-results .sep {
 	color: #ccc;
@@ -1328,10 +1348,10 @@ a.tag {
 }
 #performance-info {
 	float: right;
-	margin: 5px;
+	margin: 10px;
 	color: #D1D1D1;
 	text-align: right;
-	width: 550px;
+	width: 450px;
 }
 #micro #footer-wrap #performance-info {
 	width: auto;
@@ -1340,6 +1360,7 @@ a.tag {
 #performance-info span {
 	color: #888;
 	padding: 0 5px;
+	white-space: nowrap;
 }
 #version {
 	clear: right;
@@ -1354,10 +1375,9 @@ a.tag {
 }
 /****************************** PAGE BY PAGE STYLES **********************************/
 .movebuttons {
-	width: 35px;
-}
-.movebuttons .movedown {
-	float: right;
+	width: 40px;
+	text-align: center;
+	padding-top: 5px;
 }
 /* Userlists used in admin section and on edit interaction form */
 .userlisttable .lrbuttons {
@@ -1493,11 +1513,11 @@ table.attachments td {
 }
 #myviews .editlink {
 	float: right;
-	margin: 0 5px 0 0;
+	margin: 3px 0 0 5px;
 }
 #myviews .viewcontrol {
 	width: 16px;
-	margin: 0 5px 0 0;
+	margin: 3px 0 0 5px;
 	float: right;
 }
 .videsc {
@@ -1518,10 +1538,11 @@ table.attachments td {
 	margin-left: 3px;
 }
 #myviews .submitted-viewitem {
-	padding: 5px 45px 0 0;
+	padding: 3px 5px;
+	background: #eee;
 	font-style: italic;
 	color: #888;
-	font-size: 1em;
+	font-size: .9167em;
 }
 #deleteview label {
 	color: #ca0000;
@@ -1566,7 +1587,7 @@ table.attachments td {
 }
 .accesslists .cv-listitem {
 	clear: both;
-	padding: 3px 5px;
+	padding: 2px 5px;
 	border-bottom: 1px solid #FFF;
 }
 .accesslists .cv-listitem .cv-listitem-edit {
@@ -1978,9 +1999,10 @@ form#search, form#filter, div.searchform {
 	margin-left: 5px;
 }
 /* Group: members */
-.listing.twocolumn td {
+.twocolumn td {
 	width: 50%;
-	border: 4px solid #FFF;
+	border-top: 4px solid #FFF;
+	border-right: 4px solid #FFF;
 }
 #search_filter_container #search_filter {
 	margin: 0 4px;
@@ -2180,4 +2202,12 @@ img.feedicon {
 }
 #collectionviews td form table td {
 	border-bottom: 0;
+}
+
+.iconcell {
+	width: 20px;
+}
+.buttonscell {
+	padding-top: 5px;
+	line-height: 1.3333em;
 }

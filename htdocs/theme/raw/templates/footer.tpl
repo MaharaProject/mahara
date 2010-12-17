@@ -12,6 +12,7 @@
         </tbody>
     </table>
     <div id="footer-wrap">
+		<div class="cb"></div>
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
         <!-- This site is powered by Mahara, an Open Source
              ePortfolio system. Mahara is (C) 2006-2009 Catalyst IT

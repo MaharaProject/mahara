@@ -17,7 +17,7 @@
     <tbody>
     {foreach from=$children item=child}
       <tr class="{cycle values='r0,r1'}">
-        <td><img src="{$child->iconsrc}" border="0" alt="{$child->artefacttype}"></td>
+        <td class="iconcell"><img src="{$child->iconsrc}" border="0" alt="{$child->artefacttype}"></td>
         <td><a href="{$WWWROOT}view/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">{$child->title}</a></td>
         <td class="s">{$child->description}</td>
         {if !$simpledisplay}

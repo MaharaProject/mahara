@@ -60,19 +60,15 @@ form#files .foldernav {
 /* File list */
 .filelist {
     width: 100%;
-	* width: 96%;
+}
+* html .filelist {
+	width: 98%;
 }
 .filelist th {
 	border-bottom: 1px solid #CCCCCC;
 }
 .filelist table th {
 	border-bottom: 0;
-}
-.filelist td.right {
-	padding-top: 5px;
-}
-.filelist td.right input {
-	font-size: .9167em;
 }
 .filelist td.right input.btn-big-del {
 	font-size: 1%;
