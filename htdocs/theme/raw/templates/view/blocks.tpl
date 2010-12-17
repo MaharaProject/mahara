@@ -1,13 +1,12 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 {if !$edittitleurl}
   <h1>{if !$microheaders}{$viewtitle}{else}{$maintitle}{/if}</h1>
+{else}
+  <h1>{$viewtitle}</h1>
 {/if}
 
-{if $edittitleurl}
-<h1>{$viewtitle}</h1>
 {include file="view/editviewtabs.tpl" selected='content'}
 <div class="subpage rel">
-{/if}
 
 {if $columns}
     {str tag="editblockspagedescription" section="view"}
@@ -106,7 +105,4 @@
     {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 
-{if $edittitleurl}
-</div>
-{/if}
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

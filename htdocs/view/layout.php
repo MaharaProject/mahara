@@ -44,6 +44,13 @@ $back = !$USER->get_account_preference('addremovecolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
+$goto = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
+if ($category) {
+    $goto .= '&c=' . $category;
+}
+if ($new) {
+    $goto .= '&new=1';
+}
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
@@ -78,7 +85,7 @@ if ($numcolumns > 1 && $numcolumns < 5) {
 }
 else {
     $SESSION->add_error_msg(get_string('noviewlayouts', 'view', $numcolumns));
-    redirect('/view/blocks.php?id=' . $id . '&c=' . $category . '&new=' . $new);
+    redirect($goto);
 }
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
@@ -87,15 +94,17 @@ $smarty->assign('form', $layoutform);
 $smarty->assign('form_start_tag', $layoutform->get_form_tag());
 $smarty->assign('options', $options);
 $smarty->assign('back', $back);
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('edittitle', $view->can_edit_title());
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {
-    global $view, $SESSION, $category, $new;
+    global $view, $SESSION, $goto;
     $view->set('layout', $values['layout']);
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
-    redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+    redirect($goto);
 }
 
 ?>

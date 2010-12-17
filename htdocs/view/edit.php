@@ -185,6 +185,7 @@ $smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('editview', $editview);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('edittitle', $view->can_edit_title());
 $smarty->display('view/edit.tpl');
 
 ?>

@@ -32,6 +32,7 @@ $string['edittitle']              = 'Edit Title';
 $string['edittitleanddescription'] = 'Edit Title and Description';
 $string['editcontent']            = 'Edit Content';
 $string['editcontentandlayout']   = 'Edit Content and Layout';
+$string['editlayout']             = 'Edit Layout';
 $string['editaccess']             = 'Edit Access';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';

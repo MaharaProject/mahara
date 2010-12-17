@@ -40,13 +40,21 @@ $numcolumns = $view->get('numcolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
+$params = 'id=' . $id;
+if ($category) {
+    $params .= '&c=' . $category;
+}
+if ($new) {
+    $params .= '&new=1';
+}
+
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
 if ($USER->get_account_preference('addremovecolumns')) {
-    redirect('/view/layout.php?id=' . $id . '&c=' . $category . '&new=' . $new);
+    redirect('/view/layout.php?' . $params);
 }
 
 $columnsform = pieform(array(
@@ -61,19 +69,20 @@ $columnsform = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('next'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new
+            'goto' => get_config('wwwroot') . 'view/blocks.php?' . $params
         )
     )
 ));
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
-$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $columnsform);
-$smarty->assign('pagedescription', get_string('viewcolumnspagedescription', 'view'));
-$smarty->display('form.tpl');
+$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('edittitle', $view->can_edit_title());
+$smarty->display('view/columns.tpl');
 
 function viewcolumns_submit(Pieform $form, $values) {
-    global $view, $SESSION, $category, $new;
+    global $view, $SESSION, $category, $new, $params;
 
     $oldcolumns = $view->get('numcolumns');
     $newcolumns = $values['numcolumns'];
@@ -96,17 +105,17 @@ function viewcolumns_submit(Pieform $form, $values) {
     if ($dbcolumns != $newcolumns) {
         db_rollback();
         $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-        redirect(get_config('wwwroot') . 'view/columns.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+        redirect(get_config('wwwroot') . 'view/columns.php?' . $params);
     }
 
     db_commit();
 
     if ($newcolumns > 1 && $newcolumns < 5) {
-        redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+        redirect(get_config('wwwroot') . 'view/layout.php?' . $params);
     }
     else {
         $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
-        redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+        redirect(get_config('wwwroot') . 'view/blocks.php?' . $params);
     }
 }
 

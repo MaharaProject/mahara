@@ -197,10 +197,7 @@ foreach (array_keys($_POST + $_GET) as $key) {
 
 $viewid = $view->get('id');
 $smarty->assign('maintitle', TITLE);
-if (!empty($editabletitle)) {
-    $smarty->assign('edittitleurl', get_config('wwwroot') . 'view/edit.php?id=' . $viewid);
-    $smarty->assign('viewdescription', $view->get('description'));
-}
+$smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);

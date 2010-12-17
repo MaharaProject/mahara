@@ -2283,6 +2283,10 @@ class View {
         return true;
     }
 
+    public function can_edit_title() {
+        return self::can_remove_viewtype($this->type);
+    }
+
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;

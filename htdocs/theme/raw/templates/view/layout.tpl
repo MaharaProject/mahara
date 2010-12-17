@@ -1,5 +1,10 @@
 {include file="header.tpl"}
 
+<h1>{$viewtitle}</h1>
+
+{include file="view/editviewtabs.tpl" selected='layout'}
+<div class="subpage rel">
+
         <p>{str tag='viewlayoutpagedescription' section='view'}</p>
 
         {$form_start_tag|safe}
@@ -23,5 +28,7 @@
                 <input type="submit" class="submit" name="submit" value="{str tag='changeviewlayout' section='view'}">
             </div>
         </form>
+
+</div>
 
 {include file="footer.tpl"}
