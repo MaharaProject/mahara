@@ -21,17 +21,15 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td><div class="rel">
-                             <h3>
 {if $view.type == 'profile'}
-                            {str tag=profileviewtitle section=view}
+                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
 {elseif $view.type == 'dashboard'}
-                            {str tag=dashboardviewtitle section=view}
+                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
 {elseif $view.type == 'grouphomepage'}
-                            {str tag=grouphomepage section=view}
+                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a></h3>
 {else}
-                            {$view.title}
+                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
 {/if}
-                            </h3>
 
                             <div class="rbuttons">
                               <div class="viewcontrol">
