@@ -1692,14 +1692,20 @@ function admin_nav() {
         array(
             'path'   => 'configsite/siteviews',
             'url'    => 'admin/site/views.php',
-            'title'  => get_string('siteviews', 'admin'),
+            'title'  => get_string('Views', 'view'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'configsite/share',
+            'url'    => 'admin/site/shareviews.php',
+            'title'  => get_string('share', 'view'),
+            'weight' => 60,
         ),
         array(
             'path'   => 'configsite/sitefiles',
             'url'    => 'artefact/file/sitefiles.php',
-            'title'  => get_string('sitefiles', 'admin'),
-            'weight' => 60,
+            'title'  => get_string('Files', 'artefact.file'),
+            'weight' => 70,
         ),
         array(
             'path'   => 'configusers',
@@ -1782,7 +1788,7 @@ function admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
-            'title'  => get_string('institutionmembers', 'admin'),
+            'title'  => get_string('Members', 'admin'),
             'weight' => 20,
         ),
         array(
@@ -1800,14 +1806,20 @@ function admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('views'),
+            'title'  => get_string('Views', 'view'),
             'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions/share',
+            'url'    => 'view/institutionshare.php',
+            'title'  => get_string('share', 'view'),
+            'weight' => 60,
         ),
         array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 60,
+            'weight' => 70,
         ),
         array(
             'path'   => 'configextensions',
@@ -1909,14 +1921,20 @@ function institutional_admin_nav() {
         array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('views'),
+            'title'  => get_string('Views', 'view'),
             'weight' => 60,
+        ),
+        array(
+            'path'   => 'manageinstitutions/share',
+            'url'    => 'view/institutionshare.php',
+            'title'  => get_string('share', 'view'),
+            'weight' => 70,
         ),
         array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 70,
+            'weight' => 80,
         ),
     );
 

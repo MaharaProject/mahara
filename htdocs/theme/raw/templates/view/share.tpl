@@ -1,4 +1,7 @@
 {include file="header.tpl"}
+
+{if $institution}                {$institutionselector|safe}{/if}
+
 {if !$accesslists}
 <p>{str tag=youhaventcreatedanyviewsyet section=view}</p>
 {else}

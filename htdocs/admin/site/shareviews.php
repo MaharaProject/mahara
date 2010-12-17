@@ -26,19 +26,13 @@
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+define('ADMIN', 1);
+define('MENUITEM', 'configsite/share');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('share', 'view'));
-define('MENUITEM', 'groups/share');
 
-define('GROUP', param_integer('group'));
-$group = group_current_group();
-if (!group_user_can_edit_views($group->id)) {
-    throw new AccessDeniedException();
-}
-
-$accesslists = View::get_accesslists(null, $group->id);
+$accesslists = View::get_accesslists(null, null, 'mahara');
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);

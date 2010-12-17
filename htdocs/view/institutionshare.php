@@ -26,21 +26,39 @@
  */
 
 define('INTERNAL', 1);
+define('INSTITUTIONALADMIN', 1);
+define('MENUITEM', 'manageinstitutions/share');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once(get_config('libroot') . 'group.php');
-define('TITLE', get_string('share', 'view'));
-define('MENUITEM', 'groups/share');
+require_once(get_config('libroot') . 'institution.php');
+require_once('pieforms/pieform.php');
 
-define('GROUP', param_integer('group'));
-$group = group_current_group();
-if (!group_user_can_edit_views($group->id)) {
-    throw new AccessDeniedException();
+$institution = param_alpha('institution', false);
+
+if ($institution == 'mahara') {
+    redirect('/admin/site/shareviews.php');
 }
 
-$accesslists = View::get_accesslists(null, $group->id);
+$s = institution_selector_for_page($institution, get_config('wwwroot') . 'view/institutionshare.php');
+
+$institution = $s['institution'];
+
+define('TITLE', get_string('share', 'view'));
+
+if ($institution === false) {
+    $smarty = smarty();
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
+
+$accesslists = View::get_accesslists(null, null, $institution);
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('institutionselector', $s['institutionselector']);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('accesslists', $accesslists);
+$smarty->assign('institution', $institution);
+
 $smarty->display('view/share.tpl');
