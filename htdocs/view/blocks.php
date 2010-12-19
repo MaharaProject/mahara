@@ -220,23 +220,6 @@ if ($owner &&  $viewtype == 'profile') {
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
-
-    if ($owner) {
-        $nolinks = array('profile', 'dashboard');
-        if ($new || in_array($viewtype, $nolinks)) {
-            $microheaderlinks = array();
-        }
-        else {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('editaccess', 'view'),
-                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
-                    'type' => 'edit',
-                ),
-            );
-        }
-        $smarty->assign('microheaderlinks', $microheaderlinks);
-    }
 }
 
 $smarty->assign('viewtype', $viewtype);

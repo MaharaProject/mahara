@@ -234,11 +234,6 @@ if (get_config('viewmicroheaders')) {
                     'image' => $THEME->get_url('images/edit.gif'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
                 ),
-                array(
-                    'name' => get_string('editaccess', 'view'),
-                    'image' => $THEME->get_url('images/icon_access.gif'),
-                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
-                ),
             );
         }
         $smarty->assign('microheaderlinks', $microheaderlinks);
