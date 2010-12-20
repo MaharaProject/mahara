@@ -11,3 +11,5 @@ Changes:
  * Fix for envelope sender in emails sent on cron (described and fixed in a
    phplist bug at http://mantis.phplist.com/view.php?id=12625 and reported
    upstream at http://sourceforge.net/tracker/index.php?func=detail&aid=2991547&group_id=26031&atid=385707)
+
+ * Remove plain text error output in PHPMailer::Send() exception processing (bug #692557).
