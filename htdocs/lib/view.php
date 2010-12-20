@@ -3092,6 +3092,12 @@ class View {
         if ($this->type == 'profile') {
             $url = 'user/view.php?id=' . (int) $this->owner;
         }
+        else if ($this->type == 'dashboard') {
+            $url = '';
+        }
+        else if ($this->type == 'grouphomepage') {
+            $url = 'group/view.php?id=' . $this->group;
+        }
         else {
             $url = 'view/view.php?id=' . (int) $this->id;
         }

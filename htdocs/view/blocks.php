@@ -95,30 +95,27 @@ if ($blockid = param_integer('blockconfig', 0)) {
 }
 
 $view->set_edit_nav();
+$displaylink = $view->get_url();
 
 if ($view->get('type') == 'profile') {
     $profile = true;
-    $displaylink = get_config('wwwroot') . 'user/view.php';
     $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
-    $displaylink = get_config('wwwroot');
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($view->get('type') == 'grouphomepage') {
-    $displaylink = get_config('wwwroot') . 'group/view.php?id=' . (int) $view->get('group');
     $title = get_string('grouphomepage', 'view');
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
-    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&new=1';
+    $displaylink .= '&new=1';
     define('TITLE', get_string('editcontent', 'view'));
 }
 else {
-    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id');
     define('TITLE', $view->get('title') . ': ' . get_string('editcontent', 'view'));
     $editabletitle = true;
 }
