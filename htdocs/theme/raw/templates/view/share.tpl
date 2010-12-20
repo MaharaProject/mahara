@@ -27,7 +27,7 @@
       {/if}
       {if $accesslist.accessgroups}
           <div class="accesslistitem">
-        {foreach from=$accesslist.accessgroups item=accessgroup}
+        {foreach from=$accesslist.accessgroups item=accessgroup name=ags}{strip}
           {if $accessgroup.accesstype == 'loggedin'}
             {str tag="loggedin" section="view"}
           {elseif $accessgroup.accesstype == 'public'}
@@ -41,14 +41,14 @@
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}
-              <span class="date">{$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+              <span class="date"> {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}&rarr;{$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
             {else}
-              <span class="date">{str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+              <span class="date"> {str tag=after} {$accessgroup.startdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
             {/if}
           {elseif $accessgroup.stopdate}
-            <span class="date">{str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
-          {/if}, 
-        {/foreach}
+            <span class="date"> {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
+          {/if}{if !$dwoo.foreach.ags.last}, {/if}
+        {/strip}{/foreach}
           </div>
         {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
           </div>
