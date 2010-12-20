@@ -137,11 +137,9 @@ $extraconfig = array(
 );
 
 // Set up theme
-$viewtheme = $view->get('theme');
+$viewtheme = $view->set_user_theme();
+
 $allowedthemes = get_user_accessible_themes();
-if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
-}
 
 // Pull in cross-theme view stylesheet and file stylesheets
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
@@ -225,7 +223,6 @@ $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
-$smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
 if (get_config('userscanchooseviewthemes')
     && $view->is_themeable()) {

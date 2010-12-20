@@ -50,6 +50,7 @@ if ($view->is_submitted()) {
 $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
+$view->set_user_theme();
 
 $new = param_boolean('new', 0);
 

@@ -43,6 +43,7 @@ $back = !$USER->get_account_preference('addremovecolumns');
 $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
+$view->set_user_theme();
 $goto = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
 if ($new) {
     $goto .= '&new=1';

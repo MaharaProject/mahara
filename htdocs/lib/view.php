@@ -1789,6 +1789,14 @@ class View {
         }
     }
 
+    public function set_user_theme() {
+        global $THEME;
+        if ($this->theme && $THEME->basename != $this->theme) {
+            $THEME = new Theme($this->theme);
+        }
+        return $this->theme;
+    }
+
     /**
      * This function formats a user's name
      * according to their view preference
