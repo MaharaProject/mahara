@@ -28,27 +28,18 @@
                 <div class="cb"></div>
             </div>
 
-            <div id="middle-pane">
-                <table class="fullwidth"><tr>
-                    <td>
-                        <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
-                    </td>
 {if $viewthemes}
-                    <td class="center">
-                        <label for="viewtheme-select">{str tag=theme}: </label>
-                        <select id="viewtheme-select" name="viewtheme">
-                            <option value="">{str tag=choosetheme}</option>
+            <div id="middle-pane">
+                <div class="center">
+                    <label for="viewtheme-select">{str tag=theme}: </label>
+                    <select id="viewtheme-select" name="viewtheme">
+                        <option value="">{str tag=choosetheme}</option>
 {foreach from=$viewthemes key=themeid item=themename}
-                            <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
+                        <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
-                        </select>
-                    </td>
-{/if}
-                    <td class="right">
-                        <a id="btn-displaymyview" href="{$displaylink}">{str tag=displaymyview section=view} &raquo;</a></td>
-                    </td>
-                </tr></table>
+                    </select>
             </div>
+{/if}
 
             <div id="bottom-pane">
                 <div id="column-container">
