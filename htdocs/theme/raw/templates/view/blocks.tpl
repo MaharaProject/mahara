@@ -1,8 +1,8 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
-{if !$edittitleurl}
-  <h1>{if !$microheaders}{$viewtitle}{else}{$maintitle}{/if}</h1>
+{if $microheaders}
+  {include file="viewmicroheader.tpl"}
 {else}
   <h1>{$viewtitle}</h1>
+  {include file="header.tpl"}
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='content'}

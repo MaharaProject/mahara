@@ -97,6 +97,10 @@ $smarty->assign('back', $back);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
+}
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {
