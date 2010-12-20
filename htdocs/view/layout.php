@@ -36,7 +36,6 @@ define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
 $new = param_boolean('new');
-$category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $currentlayout = $view->get('layout');
@@ -45,9 +44,6 @@ $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
 $goto = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
-if ($category) {
-    $goto .= '&c=' . $category;
-}
 if ($new) {
     $goto .= '&new=1';
 }
@@ -61,34 +57,28 @@ if (!$currentlayout) {
     $currentlayout = $view->get_layout()->id;
 }
 
-if ($numcolumns > 1 && $numcolumns < 5) {
-    $layouts = get_records_array('view_layout', 'columns', $numcolumns);
-    $options = array();
-    foreach ($layouts as $layout) {
-        $options[$layout->id] = get_string($layout->widths, 'view');
-    }
-    $layoutform = new Pieform(array(
-        'name' => 'viewlayout',
-        'elements' => array(
-            'layout'  => array(
-                'type' => 'radio',
-                'options' => $options,
-                'defaultvalue' => $currentlayout,
-            ),
-            'submit' => array(
-                'type' => 'submitcancel',
-                'value' => array(get_string('submit'), get_string('cancel')),
-                'goto' => get_config('wwwroot') . 'view/columns.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new
-            ),
+$layouts = get_records_assoc('view_layout', '', '', 'columns,id');
+$options = array();
+foreach ($layouts as $layout) {
+    $options[$layout->id] = get_string($layout->widths, 'view');
+}
+$layoutform = new Pieform(array(
+    'name' => 'viewlayout',
+    'elements' => array(
+        'layout'  => array(
+            'type' => 'radio',
+            'options' => $options,
+            'defaultvalue' => $currentlayout,
         ),
-    ));
-}
-else {
-    $SESSION->add_error_msg(get_string('noviewlayouts', 'view', $numcolumns));
-    redirect($goto);
-}
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('save'),
+        ),
+    ),
+));
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
+$smarty->assign('layouts', $layouts);
 $smarty->assign('currentlayout', $currentlayout);
 $smarty->assign('form', $layoutform);
 $smarty->assign('form_start_tag', $layoutform->get_form_tag());
@@ -103,12 +93,44 @@ if (get_config('viewmicroheaders')) {
 }
 $smarty->display('view/layout.tpl');
 
+function viewlayout_validate(Pieform $form, $values) {
+    global $layouts;
+    if (!isset($layouts[$values['layout']])) {
+        $form->set_error('invalidlayout');
+    }
+}
+
 function viewlayout_submit(Pieform $form, $values) {
-    global $view, $SESSION, $goto;
+    global $view, $SESSION, $goto, $layouts;
+
+    $oldcolumns = $view->get('numcolumns');
+    $newcolumns = $layouts[$values['layout']]->columns;
+
+    db_begin();
+
+    if ($oldcolumns > $newcolumns) {
+        for ($i = $oldcolumns; $i > $newcolumns; $i--) {
+            $view->removecolumn(array('column' => $i));
+        }
+    }
+    else if ($oldcolumns < $newcolumns) {
+        for ($i = $oldcolumns; $i < $newcolumns; $i++) {
+            $view->addcolumn(array('before' => $i + 1, 'returndata' => false));
+        }
+    }
+
+    $dbcolumns = get_field('view', 'numcolumns', 'id', $view->get('id'));
+
+    if ($dbcolumns != $newcolumns) {
+        db_rollback();
+        $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
+        redirect(get_config('wwwroot') . 'view/layout.php?' . $params);
+    }
+
+    db_commit();
+
     $view->set('layout', $values['layout']);
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
     redirect($goto);
 }
-
-?>
