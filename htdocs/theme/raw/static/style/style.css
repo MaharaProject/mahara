@@ -244,6 +244,9 @@ tr.highlight td {
 	background-color: #fffcd8 !important;
 	border-bottom: 2px solid #FFF;
 }
+.divrow {
+	padding: 3px 5px;
+}
 .listing {
 	margin-bottom: 5px;
 }
@@ -816,7 +819,7 @@ div.rbuttons .small-logo {
 #header-right {
 	float: right;
 	min-width: 250px;
-	padding: 5px 10px;
+	padding: 5px 10px 0 10px;
 	text-align: right;
 	white-space: nowrap;
 	display: block;
@@ -846,7 +849,7 @@ div.rbuttons .small-logo {
 #right-nav ul {
 	float: right;
 	text-align: right;
-	margin: 5px 0;
+	margin: 5px 0 5px 0 !important;
 	min-width: 200px;
 }
 #right-nav li {
@@ -1130,9 +1133,6 @@ div.sideblock ul li {
 * html #sb-profile ul ul {
 	list-style-type: disc;
 	padding-left: 15px;
-}
-#sb-profile ul ul li {
-	padding-bottom: 0;
 }
 #changeuser {
 	margin-top: 10px;
@@ -1605,6 +1605,9 @@ table.attachments td {
 	padding-top: 2px;
 }
 /* Secret url */
+.secreturls {
+	width: 10%;
+}
 .secreturls .buttons {
 	padding-top: 5px;
 }
@@ -2117,8 +2120,7 @@ form#search, form#filter, div.searchform {
 	margin-left: 4px;
 }
 .home-info-1 .home-info-inner {
- * padding-top: 5px;
- * padding-bottom: 5px;
+ * padding-top: 8px;
 }
 #home-info-help {
 	margin: 0 4px;

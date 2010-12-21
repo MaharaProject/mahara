@@ -644,7 +644,7 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #collection strong {
 	font-size: 1.1667em;
-	margin: 5px 10px 0 0;
+	margin: 10px 10px 0 0;
 	float: left;
 }
 #containerX div.colnav1 {
@@ -658,19 +658,19 @@ ul.artefactchooser-subtabs li.current a:active {
 #containerX ul.colnav {
     list-style: none;
     padding: 0;
-    margin: 0 !important;
+    margin: 0;
 	float: left;
 }
 #containerX ul.colnav li {
     padding: 0;
     margin: 0 !important;
+	float: left;
 }
 #containerX ul.colnav li a,
 #containerX ul.colnav li.selected span {
 	padding: 5px 7px;
 	margin: 0 5px 0 0;
 	display: block;
-	float: left;
 }
 #containerX div.colnav-extra {
     margin: 8px 0 0;
@@ -686,18 +686,19 @@ div.colnav1 {
 ul.colnav {
     list-style: none;
     padding: 0;
-    margin: 10px 0 0 0 !important;
+    margin: 5px 0 0 0 !important;
+	float: left;
 }
 ul.colnav li {
-    padding: 0;
+    padding: 0 !important;
     margin: 0 !important;
+	float: left;
 }
 ul.colnav li a,
 ul.colnav li.selected span {
-	padding: 3px 5px;
-	margin: 0 5px 0 0;
+	padding: 5px 7px !important;
+	margin: 0 5px 0 0 !important;
 	display: block;
-	float: left;
 }
 div.colnav-extra {
     margin: 8px 0 0;
@@ -747,6 +748,8 @@ div.colnav-extra {
 }
 #viewmenu a {
 	margin: 0 5px;
+	padding-bottom: 2px;
+	line-height: 1.6667em;
 }
 #viewmenu .help a {
 	padding: 0;
@@ -755,8 +758,12 @@ div.colnav-extra {
 	padding: 3px 0 0 0;
 	font-size: 1.1667em;
 }
+#feedbacktable td {
+	padding: 3px 5px 0 5px;
+}
 #feedbacktable .details {
 	font-size: .9167em;
+	line-height: 1.8em;
 }
 #feedbacktable .icon {
 	float: left;
@@ -772,9 +779,10 @@ div.colnav-extra {
 #feedbacktable .attachmessage {
 	font-size: .9167em;
 	font-style: italic;
+	color: #888;
 }
 #feedbacktable p {
-    margin: 0 0 3px;
+    margin: 5px 0;
 }
 #feedback_pagination {
 	margin: 0;

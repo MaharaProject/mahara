@@ -404,12 +404,6 @@ div.sideblock h3 a:hover {
 }
 
 /* Side Profile */
-#sb-profile ul a,
-#sb-profile ul a:link,
-#sb-profile ul a:visited,
-#sb-profile ul a:active {
-	color: #66879f;
-}
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
 #sb-profile ul ul a:visited,

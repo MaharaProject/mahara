@@ -16,7 +16,7 @@
             {foreach from=$options key=id item=description}
             {if $columns != $layouts[$id]->columns}
               {assign var=columns value=$layouts[$id]->columns}
-              <div class="cb"></div>
+              <hr class="cb" />
               <div class="fl"><strong>{$layouts[$id]->columns} {if $columns > 1}{str tag=columns section=view}{else}{str tag=column section=view}{/if}</strong></div>
             {/if}
             <div class="fl">

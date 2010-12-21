@@ -58,7 +58,7 @@
         {if $accesslist.views}
           {foreach from=$accesslist.views item=view name=v}
           <div class="cv-listitem">
-            <div class="fr">
+            <div class="fr secreturls">
               {count($view.secreturls)} &nbsp; <div class="fr cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></div>
             </div>
             <div>
@@ -70,7 +70,7 @@
         {if $accesslist.collections}
           {foreach from=$accesslist.collections item=collection name=c}
           <div class="cb cv-listitem">
-            <div class="fr">
+            <div class="fr secreturls">
               {count($collection.secreturls)} &nbsp; <div class="fr cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></div>
             </div>
             <div>
