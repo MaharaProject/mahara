@@ -192,7 +192,7 @@ $prefsform = array(
     'jsform'      => true,
     'plugintype'  => 'core',
     'pluginname'  => 'account',
-    'jssuccesscallback' => 'clearPasswords',
+    'jssuccesscallback' => 'accountPrefsSuccess',
     'elements'    => $elements
 );
 
@@ -266,13 +266,18 @@ function accountprefs_submit(Pieform $form, $values) {
         update_send_count($u,true);
     }
 
+    $returndata = array();
+    if (isset($values['multipleblogs'])) {
+        if ((bool) $USER->get_account_preference('multipleblogs') !== (bool) $values['multipleblogs']) {
+            $returndata['multipleblogs'] = $values['multipleblogs'] ? 'on' : 'off'; // Rewrite the blogs link in the menu
+        }
+    }
+
     foreach (array_keys($expectedprefs) as $pref) {
         if (isset($values[$pref])) {
             $USER->set_account_preference($pref, $values[$pref]);
         }
     }
-
-    $returndata = array();
 
     if (isset($values['username']) && $values['username'] != $USER->get('username')) {
         $USER->username = $values['username'];
@@ -293,7 +298,7 @@ $smarty = smarty();
 $smarty->assign('form', $prefsform);
 $smarty->assign('candeleteself', $USER->can_delete_self());
 $smarty->assign('INLINEJAVASCRIPT', "
-function clearPasswords(form, data) {
+function accountPrefsSuccess(form, data) {
     formSuccess(form, data);
     if ($('accountprefs_oldpassword')) {
         $('accountprefs_oldpassword').value = '';
@@ -303,6 +308,14 @@ function clearPasswords(form, data) {
     if (data.username) {
         var username = getFirstElementByTagAndClassName('a', null, 'profile-sideblock-username');
         replaceChildNodes(username, data.username);
+    }
+    if (data.multipleblogs) {
+        var newhref = data.multipleblogs == 'on' ? 'artefact/blog/' : 'artefact/blog/view/';
+        forEach(getElementsByTagAndClassName('a', null, 'main-nav'), function (link) {
+            if (getNodeAttribute(link, 'href').match(new RegExp('/artefact/blog/'))) {
+                setNodeAttribute(link, 'href', config.wwwroot + newhref);
+            }
+        });
     }
 }
 ");
