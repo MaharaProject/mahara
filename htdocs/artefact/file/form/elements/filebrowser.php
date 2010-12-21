@@ -445,6 +445,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'description' => param_variable($prefix . '_edit_description'),
             'tags'        => param_variable($prefix . '_edit_tags'),
             'folder'      => $element['folder'],
+            'allowcomments' => param_boolean($prefix . '_edit_allowcomments'),
         );
         if ($form->get_property('group')) {
             $data['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
@@ -866,6 +867,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
 
     $artefact->set('title', $data['title']);
     $artefact->set('description', $data['description']);
+    $artefact->set('allowcomments', (int) $data['allowcomments']);
 
     $oldtags = $artefact->get('tags');
     $newtags = preg_split("/\s*,\s*/", trim($data['tags']));

@@ -257,6 +257,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
         $(self.id + '_edit_title').value = self.filedata[id].title;
         $(self.id + '_edit_description').value = self.filedata[id].description == null ? '' : self.filedata[id].description;
+        $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
         $(self.id + '_edit_tags').value = self.filedata[id].tags.join(', ');
         replaceChildNodes($(self.id + '_edit_messages'));
         forEach(getElementsByTagAndClassName('input', 'permission', self.id + '_edit_row'), function (elem) {

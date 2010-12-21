@@ -302,7 +302,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked,
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount';
         $from = '
             FROM {artefact} a
@@ -327,7 +327,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $groupby = '
             GROUP BY
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked';
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments';
 
         $phvals = array();
 
@@ -386,6 +386,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
+                $item->allowcomments = (bool) $item->allowcomments;
                 $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);

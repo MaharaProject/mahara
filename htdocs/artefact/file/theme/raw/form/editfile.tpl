@@ -53,6 +53,10 @@
           </tr>
 {/if}
           <tr>
+            <th><label>{str tag=allowcomments section=artefact.comment}</label></th>
+            <td><input type="checkbox" name="{$prefix}_edit_allowcomments" id="{$prefix}_edit_allowcomments" {if $fileinfo->allowcomments}checked {/if}"/></td>
+          </tr>
+          <tr>
           	<td></td>
             <td>
               <input type="submit" class="submit" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
