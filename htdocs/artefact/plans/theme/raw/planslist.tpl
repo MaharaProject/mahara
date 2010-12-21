@@ -10,11 +10,6 @@
             <h3><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{$plan->title}</a></h3>
 
         <div class="codesc">{$plan->description}</div>
-        <div class="fl">
-            <ul class="planslist">
-                <li></li>
-            </ul>
-        </div>
         </td>
     </tr>
 {/foreach}

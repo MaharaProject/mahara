@@ -19,7 +19,7 @@
                         <div class="rbuttons">
 
                           <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" class="btn-del">{str tag=delete}</a>
+                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
                           </div>
                           <div class="viewcontrol">
             {if $collection->views[0]->view}

@@ -17,7 +17,8 @@ body {
 	margin: 0;
 	padding: 0;
 }
-#container {  /* Use a 12px base font size with a 16px line height */
+#container,
+#containerX {  /* Use a 12px base font size with a 16px line height */
 	font-size: 0.75em; /* 16px x .75 = 12px */
 	line-height: 1.333em; /* 12px x 1.333 = 16px */
 }
@@ -184,13 +185,12 @@ th {
 td {
 	padding: 3px 5px;
 	vertical-align: top;
-	line-height: 1.8em;
 }
 .main-column tfoot td {
 	padding: 5px 0;
 }
 td.narrow {
-	padding: 0;
+	padding: 3px 0 0 0;
 }
 /* table with th border-bottom */
 #searchresults thead th, .filelist, .tag-results #results {
@@ -348,6 +348,9 @@ div.grippie {
 .memberssearch form, .memberssearch form div {
 	display: inline;
 }
+#membersearchresults .membericon {
+	width: 50px;
+}
 /* Legend */
 legend {
 	font-weight: bold;
@@ -444,21 +447,22 @@ input.calendar.required {
 /** input buttons **/
 input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact {
 	font-size: 1em;
-	line-height: 1em;
+	line-height: 1.3333em;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #7d99ae #003c74 #003c74 #7d99ae;
 	margin: 0 3px 0 0;
- * margin: 0 1px 0 0;
 	padding: 2px 3px;
 	background: #c6c5d7 url(../images/btn-bkgd.gif) repeat-x left top;
 	text-decoration: none;
 	cursor: default;
 	color: #333;
+  * overflow: visible;
 }
 /** links that need to look like buttons **/
 .btn {
 	font-size: 1em;
+	line-height: 1.3333em;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #7d99ae #003c74 #003c74 #7d99ae;
@@ -468,6 +472,7 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 	text-decoration: none;
 	cursor: default;
 	color: #333;
+  * overflow: visible;
 }
 /** hover for buttons **/
 .btn:hover, input.submit:hover, input.cancel:hover, button:hover, .buttondk:hover, input.button:hover, input.select:hover, input#files_filebrowser_edit_artefact:hover {
@@ -731,42 +736,41 @@ div.rbuttons .small-logo {
 	background: none;
 }
 /**************************** Top of page elements ****************************/
-.viewheader {
-	padding: 0;
-	margin: 0 5px 1px 5px;
+.viewheadertop {
+	height: 30px;
+	margin: 0;
 }
-.viewheader .small-logo img {
-	vertical-align: top;
+.viewheadertop .small-logo img {
 	padding: 0;
 }
-.viewheader .links {
+.viewheadertop .links {
 	padding: 3px 0 0 5px;
 	font-size: .9167em;
 }
-.viewheader .nav {
-	padding: 0 5px 5px 0;
+.viewheadertop .links a {
+}
+.viewheadertop #mainnav-container {
+	width: 60%;
+	height: 16px;
+	padding: 3px 5px 5px 115px;
+ * padding: 3px 5px 5px 25px;
+	background: url(../images/icon_fieldset_left.gif) no-repeat 93px center;
+ * background: url(../images/icon_fieldset_left.gif) no-repeat 5px center;
 	font-size: .9167em;
 	color: #d1d1d1;
 }
-.viewheader .nav a {
-	padding: 0 3px;
-}
-.viewheader.top {
-	height: 15px;
-}
-.viewheader #mainnav-container {
-	width: 60%;
-	height: 15px;
-	padding: 3px 5px 5px 115px;
- * padding: 3px 5px 5px 25px;
-	background: url(../images/icon_fieldset_left.gif) no-repeat 95px center;
- * background: url(../images/icon_fieldset_left.gif) no-repeat 5px center;
-}
-.viewheader #mainnav-container #mainnav {
+.viewheadertop #mainnav-container #mainnav {
 	margin-left: -10px;
 }
+.viewheadertop #mainnav-container #mainnav a {
+	padding: 0 3px;
+}
+.viewheader {
+	padding: 0;
+	margin: 0;
+}
 .viewheader .title {
-	padding: 5px 0 3px;
+	padding: 10px 0;
 	font-size: 1.5em;
 	color: #919191;
 }
@@ -781,7 +785,7 @@ div.rbuttons .small-logo {
 	padding-right: 5px;
 }
 #container, #containerX {
-	background-color: #fff;
+	background: #fff;
 	margin: 0 auto;
 	max-width: 1400px;
 	min-width: 970px;
@@ -792,7 +796,7 @@ div.rbuttons .small-logo {
 }
 #containerX #top-wrapper {
 	background: #eee;
-	padding: 5px;
+	padding: 5px 5px 0 5px;
 }
 #loading-box {
 	background-color: #ddd;
@@ -815,6 +819,7 @@ div.rbuttons .small-logo {
 	padding: 5px 10px;
 	text-align: right;
 	white-space: nowrap;
+	display: block;
 }
 /* Search and language bar */
 #language-select {
@@ -917,6 +922,7 @@ ul.edit-view-tabs {
 	padding: 0;
 	position: relative;
 	z-index: 0;
+	clear: both;
 }
 ul.in-page-tabs li,
 ul.edit-view-tabs li {
@@ -939,13 +945,13 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	padding: 4px 10px;
 	cursor: default;
 }
+ul.in-page-tabs li.fr {
+	float: right !important;
+}
 .subpage {
 	border: 1px solid #d1d1d1;
 	padding: 10px !important;
 	margin-bottom: 10px;
-}
-.subpage p:first-child {
-	margin: 0 0 5px 0;
 }
 /**************** MAIN CONTENT *****************/
 #main-wrapper {
@@ -964,8 +970,9 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
  * padding-top: 2px;
 }
 .twocolumn div.rel {
-	margin-left: 53px;
-	margin-top: 3px;
+	margin-left: 50px;
+	font-size: .9167em;
+	line-height: 1.3333em;
 }
 .main-column ul {
 	margin: 5px 0 10px 0;
@@ -998,7 +1005,7 @@ div.info img {
 /* different message types */
 #messages .ok, div.ok {
 	color: #547c22;
-	background: #e7f1c3 url(../images/success.gif) no-repeat 5px 5px;
+	background: #e7f1c3 url(../images/success.gif) no-repeat 5px 3px;
 	border: 1px solid #C0D76E;
 }
 #messages .error, div.error {
@@ -1068,6 +1075,10 @@ div.sideblock h3 {
 div.sideblock ul {
 	padding: 0 0 0 15px;
 	margin: 0;
+	line-height: 1.5em;
+}
+div.sideblock ul li {
+	padding-bottom: 3px;
 }
 /* Side Login */
 #login_submit_container {
@@ -1105,13 +1116,13 @@ div.sideblock ul {
 }
 #sb-profile ul {
 	font-weight: bold;
-	font-size: 1.1em;
+	font-size: 1em;
 }
 #sb-profile ul li {
 	padding-bottom: 3px;
 }
 #sb-profile ul ul {
-	font-size: .9167em;
+	font-size: 1em;
 	font-weight: normal;
 	padding-left: 15px;
 	list-style-type: disc;
@@ -1434,7 +1445,7 @@ table.attachments td {
 	width: 20px;
 	height: 20px;
 	float: left;
-	padding-right: 5px;
+	padding: 3px 5px 0 0;
 	text-align: center;
 }
 #userview .user-icon .addform {
@@ -1493,7 +1504,7 @@ table.attachments td {
 	width: 150px;
 }
 #viewlayout .fl img {
-	padding: 0;
+	padding: 5px 0 0 0;
 }
 /* My Views */
 #myviews .edittitle {
@@ -1862,7 +1873,6 @@ ul.groupuserstatus {
 	display: none;
 }
 .grouphome-admincontrol {
-	float: right;
 }
 .admincontrol {
 	text-align:right;
@@ -1979,6 +1989,7 @@ form#search, form#filter, div.searchform {
 .group-info {
 	background-color: #eee;
 	padding: 10px;
+	* padding: 0 10px 10px 10px;
 	border: 10px solid #ddd;
 	margin: 0 0 10px 0;
 }
@@ -1993,7 +2004,7 @@ form#search, form#filter, div.searchform {
 	margin: 0 30px 0 0;
 }
 .groupdescription {
-	margin-bottom: 10px;
+	margin: 0 0 10px 0;
 }
 .groupviewsection .submit {
 	margin-left: 5px;
@@ -2186,7 +2197,6 @@ img.feedicon {
 }
 .morelink {
 	float: right;
-	padding: 3px 5px;
 	font-weight: bold;
 }
 .inlinelist {

@@ -24,7 +24,7 @@
   {foreach from=$filelist item=file}
     {if !$publishing || !$file->permissions || $file->can_republish}{assign var=publishable value=1}{else}{assign var=publishable value=0}{/if}
   <tr id="file:{$file->id}" class="{cycle values='r0,r1'} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{/if}{if $highlight && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
-    <td>
+    <td class="filethumb">
       {if $editable}
       <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
         <img src="{$file->icon}"{if !$file->isparent} title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}"{/if}>
@@ -43,10 +43,10 @@
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     {/if}
     </td>
-    <td>{$file->description}</td>
+    <td class="filedescription">{$file->description}</td>
     {if !$showtags && !$editmeta}
-    <td>{tif $file->size ?: ''}</td>
-    <td>{tif $file->mtime ?: ''}</td>
+    <td class="filesize">{tif $file->size ?: ''}</td>
+    <td class="filedate">{tif $file->mtime ?: ''}</td>
     {/if}
     {if $showtags}
     <td>{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>

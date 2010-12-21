@@ -5,7 +5,7 @@
  * This file is distributed under the same terms as Mahara itself
  */
 th.planscontrols {
-    width: 35px !important;
+    width: 40px !important;
 }
 
 #planswrap table {
@@ -20,8 +20,7 @@ th.planscontrols {
 }
 
 #planswrap table td div.completed {
-    margin: 3px;
-    text-align:center;
+    text-align: center;
     width: 60px;
 }
 
@@ -44,4 +43,7 @@ ul.planslist li {
 
 .codesc {
 	font-size: .9167em;
+}
+#taskslist td {
+	padding: 5px 5px 3px 5px;
 }

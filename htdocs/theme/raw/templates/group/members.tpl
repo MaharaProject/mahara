@@ -5,11 +5,11 @@
     {if $membershiptypes}
         {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
             {if $item.link}
-                <a href="{$item.link}">{$item.name}</a>
+                <strong><a href="{$item.link}">{$item.name}</a></strong>
             {else}
-                {$item.name}
+               <strong>{$item.name}</strong>
             {/if}
-        {/foreach}&nbsp;&nbsp;&nbsp;
+        {/foreach}<br />
     {/if}
         <strong>{str tag=search}:</strong> {$form|safe}
     </div>

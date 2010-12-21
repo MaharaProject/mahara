@@ -23,6 +23,13 @@
                     {dynamic}{insert_messages}{/dynamic}
                     <div id="main-column-container">
 
+{if $isadmin}
+<div class="grouphome-admincontrol rbuttons">
+  <a href="{$WWWROOT}group/edit.php?id={$GROUP->id}" title="{str tag=editgroup section=group}" class="btn">{str tag=editgroup section=group}</a>
+  <a href="{$WWWROOT}group/delete.php?id={$GROUP->id}" title="{str tag=deletegroup1 section=group}" class="btn">{str tag=deletegroup1 section=group}</a>
+</div>
+{/if}
+
 {if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
 {/if}
 {if $SUBPAGENAV}{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">

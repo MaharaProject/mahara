@@ -11,7 +11,7 @@
 {foreach from=$results item=row}
     <tr class="{cycle values='r0,r1'}">
       <td>
-        <a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a>
+        <strong><a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a></strong>
       </td>
 {if $row.institution}
       <td>{$row.sharedby}</td>
@@ -27,7 +27,7 @@
 {else}
       <td>-</td>
 {/if}
-      <td>
+      <td class="right s">
         {$row.form|safe}
       </td>
     </tr>

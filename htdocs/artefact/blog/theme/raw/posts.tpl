@@ -1,7 +1,7 @@
 {foreach from=$posts item=post}
 <tr id="posttitle_{$post->id}">
   <th class="posttitle">{$post->title}</th>
-  <th id="poststatus{$post->id}">
+  <th id="poststatus{$post->id}" class="poststatus">
     {if $post->published}
       {str tag=published section=artefact.blog}
     {else}

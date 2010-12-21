@@ -248,6 +248,7 @@ html>body #column-container {
     margin: 0 !important;
 	font-size: 1.4em !important;
 	border-bottom: 2px solid #d1d1d1;
+	padding-bottom: 3px;
 }
 .blockinstance-header h4 a {
 	text-decoration: none;
@@ -257,7 +258,7 @@ html>body #column-container {
 .blockinstance-controls {
     position: absolute;
 	right: 0;
-	top: 2px;
+	top: 0;
 }
 .blockinstance-controls input,
 .blockinstance-controls input.submit,
@@ -296,7 +297,7 @@ html>body #column-container {
 	margin-bottom: 0 !important;
 }
 .blockinstance-content p {
-	margin: 0 0 10px 0;
+	margin: 10px 0;
 }
 .blockinstance-content p:first-child {
 	margin-top: 5px;
@@ -358,7 +359,6 @@ html>body #column-container {
   * width: 25px;
 }
 .bt-inbox td.icon-container .icon {
-  height: 1.7em;
   vertical-align: bottom;
   display: table-cell;
   * margin-left: 0;
@@ -626,9 +626,8 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 
 #view-description {
-    margin: 0 0 10px 0;
-	padding: 0 0 3px 0;
-	border-bottom: 1px dotted #ccc;
+    margin: 10px 0;
+	padding: 0;
 }
 
 .defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {
@@ -638,27 +637,67 @@ ul.artefactchooser-subtabs li.current a:active {
 	width: auto;
 }
 
-/* Collection navigation */
+/* Collection navigation small header */
 #collection {
-	margin: 20px 0 0 0;
+	margin: 0;
+	height: auto;
 }
 #collection strong {
 	font-size: 1.1667em;
+	margin: 5px 10px 0 0;
+	float: left;
+}
+#containerX div.colnav1 {
+	margin: 0;
+	padding: 0;
+	display: block;
+	background: none;
+	clear: none;
+	float: left;
+}
+#containerX ul.colnav {
+    list-style: none;
+    padding: 0;
+    margin: 0 !important;
+	float: left;
+}
+#containerX ul.colnav li {
+    padding: 0;
+    margin: 0 !important;
+}
+#containerX ul.colnav li a,
+#containerX ul.colnav li.selected span {
+	padding: 5px 7px;
+	margin: 0 5px 0 0;
+	display: block;
+	float: left;
+}
+#containerX div.colnav-extra {
+    margin: 8px 0 0;
+}
+/* Collection navigation normal header */
+div.colnav1 {
+	clear: both;
+	margin: 0;
+	padding: 0;
+	background: #EEE;
+	padding: 5px 5px 0 5px;
 }
 ul.colnav {
     list-style: none;
     padding: 0;
-    margin: 10px 0 0 0;
-    display: inline;
+    margin: 10px 0 0 0 !important;
 }
 ul.colnav li {
-    display: inline;
     padding: 0;
-    margin: 0 2px;
-	display: inline;
+    margin: 0 !important;
 }
-div.colnav1 {
-    display: inline;
+ul.colnav li a,
+ul.colnav li.selected span {
+	padding: 3px 5px;
+	margin: 0 5px 0 0;
+	display: block;
+	float: left;
 }
 div.colnav-extra {
     margin: 8px 0 0;
@@ -666,7 +705,13 @@ div.colnav-extra {
 
 .submissionform {
 	background: #eee;
-	padding: 3px 5px;
+	padding: 3px 10px;
+}
+.submissionform select {
+	font-size: 1em;
+}
+.submissionform .submit {
+	margin-left: 3px;
 }
 .submittedform {
 	background: #eee;
@@ -686,9 +731,6 @@ div.colnav-extra {
 .viewfooter .submissionform {
 	margin-bottom: 5px;
 }
-.viewfooter .submissionform .submit {
-	margin-left: 3px;
-}
 .viewfooter .releaseviewform {
 	background: #eee;
 	margin-bottom: 5px;
@@ -701,12 +743,17 @@ div.colnav-extra {
 }
 #viewmenu {
 	font-size: .9167em;
+	margin-top: 5px;
 }
 #viewmenu a {
 	margin: 0 5px;
 }
 #viewmenu .help a {
 	padding: 0;
+}
+#feedbacktable th {
+	padding: 3px 0 0 0;
+	font-size: 1.1667em;
 }
 #feedbacktable .details {
 	font-size: .9167em;

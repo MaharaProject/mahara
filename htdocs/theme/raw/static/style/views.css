@@ -52,11 +52,12 @@
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-    border: 5px solid #ccc;
+    border: 5px solid #888888;
 }
 #blocksinstruction {
-    background: #eee;
-    color: #919191;
+    background: #888888;
+    color: #FFF;
+	padding-bottom: 10px;
 }
 #column-container .column-header input[disabled="disabled"] {
     color: #ccc;
@@ -189,6 +190,7 @@ body:last-child:not(:root:root) .newblockhere {
 }
 #feedback_pagination {
 	border-top: 1px solid #ccc;
+	background: #eee;
 }
 
 /** viewing artefact */
@@ -238,17 +240,15 @@ input.addcolumn, input.removecolumn {
 }
 
 /* Collection navigation */
-ul.colnav li a,
-ul.colnav li span {
+ul.colnav li a {
 	background: #DDDDDD;
-	padding: 6px 10px;
 	font-weight: bold;
 }
-ul.colnav li.selected a,
 ul.colnav li.selected span {
     color: #333;
 	background: #fff;
 	text-decoration: none;
+	font-weight: bold;
 }
 
 #approve_deny_friendrequest_deny {

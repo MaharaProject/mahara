@@ -17,15 +17,15 @@
             {if $columns != $layouts[$id]->columns}
               {assign var=columns value=$layouts[$id]->columns}
               <div class="cb"></div>
-              <div class="fl">{$layouts[$id]->columns} {if $columns > 1}{str tag=columns section=view}{else}{str tag=column section=view}{/if}</div>
+              <div class="fl"><strong>{$layouts[$id]->columns} {if $columns > 1}{str tag=columns section=view}{else}{str tag=column section=view}{/if}</strong></div>
             {/if}
             <div class="fl">
-                <div><img src="{$WWWROOT}thumb.php?type=viewlayout&amp;vl={$id}" alt=""></div>
                 {if $id == $currentlayout}
                 <div><input type="radio" class="radio" name="layout" value="{$id}" checked="checked"></div>
                 {else}
                 <div><input type="radio" class="radio" name="layout" value="{$id}"></div>
                 {/if}
+                <div><img src="{$WWWROOT}thumb.php?type=viewlayout&amp;vl={$id}" alt=""></div>
                 <div>{$description}</div>
             </div>
             {/foreach}

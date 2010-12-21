@@ -3,7 +3,7 @@
           <tr class="{cycle values='r0,r1'}">
             {foreach from=$row item=r}
             <td>
-              <div class="fl"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt=""></div>
+              <div class="fl membericon"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt=""></div>
                 <h3><a href="{$WWWROOT}user/view.php?id={$r.id}">{$r.name}</a></h3>
                 {if $r.role}
                 <div class="rel">
@@ -17,8 +17,8 @@
                 <div>{str tag=hasrequestedmembership section=group}.{if $r.reason}
                   <label>{str tag=reason}:</label> {$r.reason|format_whitespace|safe}{/if}
                 </div>
-                <div class="right">{$r.addform|safe}</div>
-                <div class="right">{$r.denyform|safe}</div>
+                <div class="s fl">{$r.addform|safe}</div>
+                <div class="s fl">{$r.denyform|safe}</div>
                 {elseif $membershiptype == 'invite'}
                 <div>{str tag=hasbeeninvitedtojoin section=group}</div>
                 {/if}

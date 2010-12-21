@@ -14,6 +14,7 @@
   <li id="colnav-more" class="nojs-hidden"><a href="">…</a></li>
   {/if}
 </ul>
+	<div class="cb"></div>
 </div>
 {/foreach}
 

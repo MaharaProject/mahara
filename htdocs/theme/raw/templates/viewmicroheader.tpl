@@ -7,13 +7,13 @@
 <div id="containerX">
     <div id="loading-box"></div>
     <div id="top-wrapper">
-      <div class="viewheader top">
+      <div class="viewheadertop">
         <div class="fr links">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{if $item.image}<img src="{$item.image}" title="{$item.name}">{else}{$item.name}{/if}</a> 
+              <a class="btn " href="{$item.url}">{$item.name}</a> 
             {/foreach}
-          {elseif $backurl}<a class="icon btn-back" href="{$backurl}">{str tag=back}</a> 
+          {elseif $backurl}<a class="btn" href="{$backurl}">{str tag=back}</a> 
           {/if}
         </div>
         <div class="fl">
@@ -52,16 +52,18 @@
       <div class="viewheader">
 
 {if $collection}
-        <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
+        <div id="collection"><strong>{$microheadertitle|safe}:</strong> {include file=collectionnav.tpl}</div>
 {else}
-        <div class="center cb title">{$microheadertitle|safe}
+        <div class="center title">{$microheadertitle|safe}
         {if $edittitleurl}
-        <span class="editviewtitle s"><a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a></span>
+        <span class="editviewtitle s"><a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" />{str tag=edittitleanddescription section=view}</a></span>
         {/if}
         </div>
 {/if}
+		<div class="cb"></div>
       </div>
     </div>
+	<div class="cb"></div>
     <div id="main-wrapper">
         <div class="main-column">
             {dynamic}{insert_messages}{/dynamic}

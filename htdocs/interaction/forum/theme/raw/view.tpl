@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h3>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h3>
+<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
 <div id="forumbtns" class="rbuttons">
 	{if $admin}
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn">{str tag="edittitle" section="interaction.forum"}</a>

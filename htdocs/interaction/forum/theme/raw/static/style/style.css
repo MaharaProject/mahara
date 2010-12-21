@@ -7,22 +7,27 @@
  
 /* top buttons */
 #forumbtns {
-    right: 1em;
-    top: 1em;
+    right: 10px;
+    top: 10px;
 }
 * html #forumbtns {
-	right: 2.5em;
+	right: 30px;
+}
+#forumbtns a.btn {
+	* padding: 3px 5px 4px 5px;
+	* display: block;
+	* float: left;
 }
 
 /* forum description */
 #forumdescription {
-	margin: .5em 0;
+	margin: 5px 0;
 	clear: both;
 }
 
 /* Edit and Delete in list */
 .btn-spacer a {
-	margin-left: 1em;
+	margin-left: 10px;
 }
 .btn-spacer a.btn-big-del {
 	margin-left: 3px;
@@ -43,7 +48,7 @@
 
 /* Topic list */
 #viewforum {
-	padding: 1em;
+	padding: 10px;
 	margin: 0;
 	border: 1px solid #eee;
 }
@@ -51,11 +56,11 @@
 	font-size: 1.3333em;
 }
 #viewforum .rbuttons {
-	right: 1em;
-	top: 1em;
+	right: 10px;
+	top: 10px;
 }
 * html #viewforum .rbuttons {
-	right: 3em;
+	right: 35px;
 }
 /* to get user picts to align with text */
 .forumuser,
@@ -67,34 +72,36 @@
 	background-color: #fffcd8;
 	border-bottom: 2px solid #fff;
 }
-
+#forumtopicstable h4 {
+	margin: 0;
+}
 
 /* Forum Pagination */
 #viewforum div.pagination {
 	background: #eee;
 	margin: 0;
-	padding: .5em .25em;
+	padding: 5px 3px;
 }
 #viewforum div.pagination .results {
 	display: inline;
-	padding: 0.25em 0.5em;
+	padding: 3px 5px;
 }
 /* Forum Action Selector */
 .forumselectwrap {
-	padding: 1em 0 0 0;
+	padding: 10px 0 0 0;
 }
 /* Forum footer */
 .forumfooter {
-	margin: .5em;
+	margin: 5px;
 }
 /* admin & moderator */
 .forummods {
 	font-size: .9167em;
-	padding: .5em;
-	margin: .5em 0;
+	padding: 5px;
+	margin: 5px 0;
 }
 .forummods a {
-	margin-right: .5em;
+	margin-right: 5px;
 }
 .groupadmin {
 }
@@ -104,7 +111,7 @@
 
 /* Posts */
 .closed {
-	margin: 0 0 1em 0;
+	margin: 0 0 10px 0;
 }
 .forumpost {
 	border: 2px solid #eee;
@@ -127,7 +134,7 @@
 	color: #888;
 }
 .forumpostleft .author img {
-    margin: .25em .5em .25em .25em;
+    margin: 3px 5px 3px 3px;
 }
 .forumpostleft .author p.poster {
 	color: #888;
@@ -142,16 +149,16 @@
 	font-size: .9167em;
 	text-align: right;
 	color: #d1d1d1;
-	margin: 0 0 1em 0;
+	margin: 0 0 10px 0;
 }
 .postbtns a {
-	margin: 0 .5em;
+	margin: 0 5px;
 }
 .deletedpost {
     color: #666666;
     margin-top: 0;
 }
 .postreply {
-	padding: 0 0 0 1em;
+	padding: 0 0 0 10px;
 }
 

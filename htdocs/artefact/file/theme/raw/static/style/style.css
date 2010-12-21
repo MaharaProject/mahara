@@ -52,9 +52,30 @@
     background: url(../images/foldernav_small.png) no-repeat top;
 }
 form#files .foldernav {
-    padding: 0 0 0 30px;
+    padding: 5px 0 3px 30px;
     font-size: 1.3333em;
     background: url(../images/foldernav.png) no-repeat left top;
+}
+
+td.filethumb {
+	width: 25px;
+	vertical-align: middle;
+}
+td.filename {
+	padding: 5px 5px 3px 5px;
+}
+td.filedescription {
+	padding: 5px 5px 3px 5px;
+	font-size: .9167em;
+}
+td.filesize {
+	padding: 6px 5px 3px 5px;
+	font-size: .9167em;
+}
+td.filedate {
+	padding: 6px 5px 3px 5px;
+	font-size: .9167em;
+	color: #888888;
 }
 
 /* File list */

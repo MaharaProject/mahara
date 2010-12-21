@@ -70,18 +70,6 @@ h6 {
 #activitylist tfoot td {
 	border-top: 1px solid #ccc;
 }
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-	color: #186194 !important;
-}
-.main-column table h3 a:hover,
-.listing div h3 a:hover {
-	color: #0a77cb !important;
-}
 .tablerenderer-loading {
 }
 /* Alternative row background colours */

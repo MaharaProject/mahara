@@ -46,6 +46,13 @@ td a.btn-add{
 	font-size: 1.8em;
 	line-height: 1.1667em;
 }
+#postlist th.poststatus {
+	color: #888;
+	white-space: nowrap;
+}
+#postlist th.poststatus input {
+	font-size: .9167em;
+}
 #postlist th.controls {
 	text-align: right;
 	width: 35px;
