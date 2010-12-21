@@ -39,15 +39,8 @@ $new = param_boolean('new');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $currentlayout = $view->get('layout');
-$back = !$USER->get_account_preference('addremovecolumns');
-$group = $view->get('group');
-$institution = $view->get('institution');
 $view->set_edit_nav();
 $view->set_user_theme();
-$goto = get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id');
-if ($new) {
-    $goto .= '&new=1';
-}
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
@@ -84,11 +77,11 @@ $smarty->assign('currentlayout', $currentlayout);
 $smarty->assign('form', $layoutform);
 $smarty->assign('form_start_tag', $layoutform->get_form_tag());
 $smarty->assign('options', $options);
-$smarty->assign('back', $back);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());
+$smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
@@ -103,7 +96,7 @@ function viewlayout_validate(Pieform $form, $values) {
 }
 
 function viewlayout_submit(Pieform $form, $values) {
-    global $view, $SESSION, $goto, $layouts;
+    global $view, $SESSION, $new, $layouts;
 
     $oldcolumns = $view->get('numcolumns');
     $newcolumns = $layouts[$values['layout']]->columns;
@@ -126,7 +119,7 @@ function viewlayout_submit(Pieform $form, $values) {
     if ($dbcolumns != $newcolumns) {
         db_rollback();
         $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
-        redirect(get_config('wwwroot') . 'view/layout.php?' . $params);
+        redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
     }
 
     db_commit();
@@ -134,5 +127,5 @@ function viewlayout_submit(Pieform $form, $values) {
     $view->set('layout', $values['layout']);
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
-    redirect($goto);
+    redirect('/view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
 }

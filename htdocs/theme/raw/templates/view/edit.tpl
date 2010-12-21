@@ -5,7 +5,7 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='title'}
+{include file="view/editviewtabs.tpl" selected='title' new=$new}
 <div class="subpage rel">
 			{$editview|safe}
 </div>

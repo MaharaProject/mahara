@@ -5,7 +5,7 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='layout'}
+{include file="view/editviewtabs.tpl" selected='layout' new=$new}
 <div class="subpage rel">
 
         <p>{str tag='viewlayoutpagedescription' section='view'}</p>

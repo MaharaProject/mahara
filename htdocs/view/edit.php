@@ -133,37 +133,16 @@ if (!($group || $institution)) {
     );
 }
 
-if ($new) {
-    $editview['elements']['submit'] = array(
-        'type'  => 'cancelbackcreate',
-        'value' => array(get_string('cancel'), get_string('back','view'), get_string('next') . ': ' . get_string('editaccess', 'view')),
-        'confirm' => array(get_string('confirmcancelcreatingview', 'view'), null, null),
-    );
-}
-else {
-    $editview['elements']['submit'] = array(
-        'type'  => 'submit',
-        'value' => get_string('done'),
-    );
-}
+$editview['elements']['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('save'),
+);
+
 
 $editview = pieform($editview);
 
-function editview_cancel_submit() {
-    global $view, $new, $group, $institution;
-    if ($new) {
-        $view->delete();
-    }
-    $view->post_edit_redirect();
-}
-
 function editview_submit(Pieform $form, $values) {
-
     global $new, $view, $SESSION;
-
-    if (param_boolean('back')) {
-        redirect('/view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
-    }
 
     $view->set('title', $values['title']);
     $view->set('description', $values['description']);
@@ -171,15 +150,9 @@ function editview_submit(Pieform $form, $values) {
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
     }
-
+    $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
     $view->commit();
-    if (empty($new)) {
-        $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-    }
-    else {
-        $SESSION->add_ok_msg(get_string('viewcreatedsuccessfullyshare', 'view'));
-    }
-    $view->post_edit_redirect($values['new']);
+    redirect('/view/blocks.php?id=' . $view->get('id'));
 }
 
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
@@ -188,6 +161,7 @@ $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());
+$smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));

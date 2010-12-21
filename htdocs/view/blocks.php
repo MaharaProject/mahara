@@ -73,16 +73,6 @@ if ($view->is_submitted()) {
 $group = $view->get('group');
 $institution = $view->get('institution');
 
-// check if cancel was selected
-if ($new && isset($_POST['cancel'])) {
-    if ($view->get('type') == 'profile' || $view->get('type') == 'dashboard') {
-        throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
-    }
-    form_validate(param_variable('sesskey', null));
-    $view->delete();
-    $view->post_edit_redirect();
-}
-
 // If a block was configured & submitted, build the form now so it can
 // be processed without having to render the other blocks.
 if ($blockid = param_integer('blockconfig', 0)) {
@@ -95,7 +85,6 @@ if ($blockid = param_integer('blockconfig', 0)) {
 }
 
 $view->set_edit_nav();
-$displaylink = $view->get_url();
 
 if ($view->get('type') == 'profile') {
     $profile = true;
@@ -112,7 +101,6 @@ else if ($view->get('type') == 'grouphomepage') {
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
-    $displaylink .= '&new=1';
     define('TITLE', get_string('editcontent', 'view'));
 }
 else {
@@ -192,7 +180,7 @@ foreach (array_keys($_POST + $_GET) as $key) {
 
 $viewid = $view->get('id');
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $displaylink);
+$smarty->assign('displaylink', $view->get_url());
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);

@@ -5,7 +5,7 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='content'}
+{include file="view/editviewtabs.tpl" selected='content' new=$new}
 <div class="subpage rel">
 
 {if $columns}
@@ -59,19 +59,6 @@
     </form>
 
     <div id="view-wizard-controls" class="center">
-    {if $new}
-        <form action="" method="POST">
-            <input type="hidden" name="id" value="{$view}">
-            <input type="hidden" name="new" value="1">
-            <input type="submit" name="cancel" class="cancel" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
-            <input type="hidden" name="sesskey" value="{$SESSKEY}">
-        </form>
-        <form action="{$WWWROOT}view/edit.php" method="GET">
-            <input type="hidden" name="id" value="{$view}">
-            <input type="hidden" name="new" value="1">
-            <input type="submit" class="submit" value="{str tag=next}: {str tag='edittitleanddescription' section=view}">
-        </form>
-    {else}
         <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}group/view.php{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view{/if}" method="GET">
         {if $groupid}
             {if $viewtype == 'grouphomepage'}
@@ -84,7 +71,6 @@
         {/if}
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
-    {/if}
     </div>
 
 {elseif $block}
