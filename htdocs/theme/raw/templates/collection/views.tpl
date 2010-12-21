@@ -41,7 +41,7 @@
     {str tag=noviewsavailable section=collection}
 {/if}
 </fieldset>
-{if $nextform}
-  {$nextform|safe}
-{/if}
+<form action="{$WWWROOT}collection/index.php">
+  <input type="submit" class="submit" value="{str tag=done}">
+</form>
 {include file="footer.tpl"}

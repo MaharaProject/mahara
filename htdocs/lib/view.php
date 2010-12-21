@@ -712,6 +712,7 @@ class View {
     public function set_access($accessdata) {
         global $USER;
         require_once('activity.php');
+        require_once('group.php');
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 

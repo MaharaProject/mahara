@@ -19,19 +19,13 @@
                         <div class="rbuttons">
 
                           <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
                           </div>
                           <div class="viewcontrol">
-            {if $collection->views[0]->view}
-                            <a href="{$WWWROOT}view/access.php?collection={$collection->id}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
-            {/if}
+                            <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
                           </div>
                           <div class="viewcontrol">
                             <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
-                          </div>
-
-                          <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/views.php?id={$collection->id}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
                           </div>
                         </div>
 

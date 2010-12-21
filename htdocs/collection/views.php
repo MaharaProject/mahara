@@ -111,34 +111,6 @@ if ($available = Collection::available_views()) {
     ));
 }
 
-$elements = array();
-$elements['navigation'] = array(
-        'type'  => 'checkbox',
-        'title' => get_string('viewnavigation','collection'),
-        'description' => get_string('viewnavigationdesc','collection'),
-        'defaultvalue' => $collection ? $collection->get('navigation') : 1,
-);
-if ($new) {
-    $elements['submit'] = array(
-        'type'  => 'cancelbackcreate',
-        'value' => array(get_string('cancel'), get_string('back','collection'), get_string('savecollection', 'collection')),
-        'confirm' => array(get_string('confirmcancelcreatingcollection', 'collection'), null, null),
-    );
-}
-else {
-    $elements['submit'] = array(
-        'type'  => 'submit',
-        'value' => get_string('done'),
-    );
-}
-$nextform = pieform(array(
-    'name'       =>  'manageviews',
-    'plugintype' => 'core',
-    'pluginname' => 'collection',
-    'autofocus'  => false,
-    'method'     => 'post',
-    'elements'   => $elements,
-));
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
@@ -146,7 +118,6 @@ $smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$i
 $smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newurl);
 $smarty->assign_by_ref('views', $views);
 $smarty->assign_by_ref('viewsform', $viewsform);
-$smarty->assign_by_ref('nextform', $nextform);
 $smarty->display('collection/views.tpl');
 
 function addviews_submit(Pieform $form, $values) {
@@ -160,14 +131,6 @@ function addviews_submit(Pieform $form, $values) {
     }
     redirect('/collection/views.php?id='.$collection->get('id').$newurl);
 
-}
-
-function manageviews_cancel_submit() {
-    global $collection, $new;
-    if ($new && $collection) {
-        $collection->delete();
-    }
-    redirect('/collection/');
 }
 
 function manageviews_submit(Pieform $form, $values) {
