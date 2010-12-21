@@ -739,6 +739,7 @@ class BlockInstance {
                     'description' => (method_exists($blocktypeclass, 'get_instance_title'))
                         ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
                     'defaultvalue' => $title,
+                    'rules' => array('maxlength' => 255),
                 ),
                 'blockconfig' => array(
                     'type'  => 'hidden',
