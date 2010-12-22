@@ -30,7 +30,6 @@ defined('INTERNAL') || die();
 $string['pluginname'] = 'Profile';
 
 $string['profile'] = 'Profile';
-$string['myfiles'] = 'My Files';
 
 $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';

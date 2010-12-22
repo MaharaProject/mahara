@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'profile/myresume');
+define('MENUITEM', 'profile/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
@@ -34,7 +34,7 @@ define('RESUME_SUBPAGE', 'skills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('myresume', 'artefact.resume'));
+define('TITLE', get_string('resume', 'artefact.resume'));
 require_once(get_config('docroot') . 'artefact/lib.php');
 
 $personal = null;

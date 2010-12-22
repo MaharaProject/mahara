@@ -1954,7 +1954,7 @@ function mahara_standard_nav() {
         array(
             'path' => '',
             'url' => '',
-            'title' => get_string('home'),
+            'title' => get_string('dashboard', 'view'),
             'weight' => 10,
             'accesskey' => 'h',
         ),
@@ -1968,7 +1968,7 @@ function mahara_standard_nav() {
         array(
             'path' => 'myportfolio/views',
             'url' => 'view/',
-            'title' => get_string('myviews'),
+            'title' => get_string('Views', 'view'),
             'weight' => 10,
         ),
         array(
@@ -1987,7 +1987,7 @@ function mahara_standard_nav() {
         array(
             'path' => 'myportfolio/collection',
             'url' => 'collection/',
-            'title' => get_string('mycollections', 'collection'),
+            'title' => get_string('Collections', 'collection'),
             'weight' => 20,
         ),
         array(

@@ -37,7 +37,6 @@ $string['goals'] = 'Goals';
 $string['skills'] = 'Skills';
 $string['interests'] = 'Interests';
 
-$string['myresume'] = 'My Résumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My Skills';
 $string['coverletter'] = 'Cover Letter';
@@ -79,7 +78,6 @@ $string['compositedeleteconfirm'] = 'Are you sure you want to delete this?';
 $string['compositesaved'] = 'Saved successfully';
 $string['compositesavefailed'] = 'Save failed';
 $string['compositedeleted'] = 'Deleted successfully';
-$string['backtoresume'] = 'Back to My Résumé';
 $string['personalgoal'] = 'Personal Goals';
 $string['academicgoal'] = 'Academic Goals';
 $string['careergoal'] = 'Career Goals';

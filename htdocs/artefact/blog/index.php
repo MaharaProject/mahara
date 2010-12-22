@@ -34,7 +34,7 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
-define('TITLE', get_string('myblogs','artefact.blog'));
+define('TITLE', get_string('blogs','artefact.blog'));
 
 if ($delete = param_integer('delete', 0)) {
     $blog = artefact_instance_from_id($delete);

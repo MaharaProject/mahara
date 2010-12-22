@@ -30,11 +30,11 @@ define('PUBLIC', 1);
 define('MENUITEM', '');
 define('HOME', 1);
 require('init.php');
-define('TITLE', get_string('home'));
 
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$USER->is_logged_in()) {
+    define('TITLE', get_string('home'));
     $pagename = 'loggedouthome';
     $lang = param_alphanumext('lang', null);
     if (!empty($lang)) {
@@ -43,6 +43,7 @@ if (!$USER->is_logged_in()) {
     }
 }
 else {
+    define('TITLE', get_string('dashboard', 'view'));
     $pagename = 'home';
 }
 

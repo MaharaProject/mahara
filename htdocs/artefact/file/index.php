@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'file');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myfiles', 'artefact.file'));
+define('TITLE', get_string('Files', 'artefact.file'));
 safe_require('artefact', 'file');
 
 $form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'artefact/file/index.php'));

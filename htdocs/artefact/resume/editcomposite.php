@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'profile/myresume');
+define('MENUITEM', 'profile/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 
@@ -35,7 +35,7 @@ require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
-define('TITLE', get_string('myresume', 'artefact.resume'));
+define('TITLE', get_string('resume', 'artefact.resume'));
 
 $id = param_integer('id');
 $artefact = param_integer('artefact');

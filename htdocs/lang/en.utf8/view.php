@@ -55,7 +55,6 @@ $string['showdescription']        = 'Show Description';
 
 // my views
 $string['artefacts'] = 'Artefacts';
-$string['myviews'] = 'My Views';
 $string['groupviews'] = 'Group Views';
 $string['institutionviews'] = 'Institution Views';
 $string['reallyaddaccesstoemptyview'] = 'Your View contains no blocks.  Do you really want to give these users access to the View?';

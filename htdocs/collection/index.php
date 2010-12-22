@@ -35,7 +35,7 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
-define('TITLE', get_string('mycollections', 'collection'));
+define('TITLE', get_string('Collections', 'collection'));
 
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
@@ -73,7 +73,7 @@ $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('strnocollectionsaddone',
     get_string('nocollectionsaddone','collection','<a href="' . get_config('wwwroot') . 'collection/edit.php?new=1">', '</a>'));
-$smarty->assign('PAGEHEADING', hsc(get_string('mycollections', 'collection')));
+$smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('collection/index.tpl');
 
 ?>

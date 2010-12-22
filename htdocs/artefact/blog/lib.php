@@ -55,11 +55,11 @@ class PluginArtefactBlog extends PluginArtefact {
         );
         if ($USER->get_account_preference('multipleblogs')) {
             $tab['url']   = 'artefact/blog/';
-            $tab['title'] = get_string('myblogs', 'artefact.blog');
+            $tab['title'] = get_string('blogs', 'artefact.blog');
         }
         else {
             $tab['url']   = 'artefact/blog/view/';
-            $tab['title'] = get_string('myblog', 'artefact.blog');
+            $tab['title'] = get_string('blog', 'artefact.blog');
         }
         return array($tab);
     }

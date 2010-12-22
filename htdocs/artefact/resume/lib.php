@@ -60,8 +60,8 @@ class PluginArtefactResume extends Plugin {
     public static function menu_items() {
         return array(
             array(
-                'path' => 'profile/myresume',
-                'title' => get_string('myresume', 'artefact.resume'),
+                'path' => 'profile/resume',
+                'title' => get_string('resume', 'artefact.resume'),
                 'url' => 'artefact/resume/',
                 'weight' => 20,
             ),

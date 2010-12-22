@@ -467,7 +467,6 @@ $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 // menu
 $string['home']        = 'Home';
 $string['myportfolio'] = 'My Portfolio';
-$string['myviews']       = ' My Views';
 $string['settings']    = 'Settings';
 $string['myfriends']          = 'My Friends';
 $string['findfriends']        = 'Find Friends';
