@@ -4,6 +4,8 @@
 }
 /********************** Top pane of Edit View *************************/
 #top-pane {
+	background: #EEE;
+	padding: 10px;
 }
 
 /* The tabs that allow you to select a blocktype category */
@@ -43,20 +45,22 @@
 #layout-link.disabled:hover {
 	text-decoration: none;
 }
-#btn-displaymyview {
-	background: url(../images/icon-display.gif) no-repeat left center;
-	padding-left: 1.6em;
-	font-weight: bold;
+#middle-pane {
+	background: #EEE;
 }
-
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-    border: 5px solid #ccc;
+    padding: 0 10px 10px 10px;
+	background: #EEE;
 }
 #blocksinstruction {
-    background: #eee;
-    color: #919191;
+    background: #EEE;
+    color: #888;
+	padding-bottom: 10px;
+}
+#column-container {
+	background: #FFF;
 }
 #column-container .column-header input[disabled="disabled"] {
     color: #ccc;
@@ -108,8 +112,12 @@ ul.artefactchooser-subtabs li.current a:active {
 #artefactchooser-body {
     border: 1px solid #ddd;
 }
-.upload_browse #artefactchooser-body {
-    border: 1px solid #ddd;
+.upload_browse #artefactchooser-body,
+#instconf_artefactid_container #artefactchooser-body {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+	border-top: 0;
 }
 
 /* pagination */
@@ -133,9 +141,9 @@ ul.artefactchooser-subtabs li.current a:active {
 #copyview .searchquery {
 	background: #eee;
 	border: 1px solid #d1d1d1;
-	padding: .5em 1em;
+	padding: 5px 10px;
 	line-height: 2.4em;
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 }
 
 /* todo: test this */
@@ -160,7 +168,7 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* VIEWS */
 #feedbacktable .fr {
-	margin-top: .25em;
+	margin-top: 3px;
 }
 #feedbacktable #delete_comment_delete_comment_submit {
 	background: url(../images/mini-delete.gif) no-repeat;
@@ -171,7 +179,7 @@ body:last-child:not(:root:root) .newblockhere {
 	float: right;
 	font-size: 1%;
 	text-indent: -9999px;
-	margin-left: .5em;
+	margin-left: 5px;
 }
 
 /* views footer */
@@ -189,6 +197,7 @@ body:last-child:not(:root:root) .newblockhere {
 }
 #feedback_pagination {
 	border-top: 1px solid #ccc;
+	background: #eee;
 }
 
 /** viewing artefact */
@@ -199,17 +208,14 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* posted or last update */
 .postdetails {
-	padding-bottom: 5px !important;
-	font-size: .9em;
 	color: #888;
-	line-height: 1.3em;
 }
 #blocktype_externalfeed_lastupdate {
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
-	font-size: .9em;
+	font-size: .9167em;
 	color: #888;
-	line-height: 1.3em;
+	line-height: 1.1667em;
 }
 
 
@@ -218,6 +224,12 @@ body:last-child:not(:root:root) .newblockhere {
 	width: 100%;
 }
 * html #userviewstable {
+	width: 98%;
+}
+.viewlist {
+	width: 100%;
+}
+* html .viewlist {
 	width: 98%;
 }
 #userviewstable .details,
@@ -232,25 +244,22 @@ input.addcolumn, input.removecolumn {
 }
 
 /* Collection navigation */
-ul.colnav li a,
-ul.colnav li span {
+ul.colnav li a {
 	background: #DDDDDD;
-	padding: .55em 1em;
-	* padding: .55em 1em .5em 1em;
 	font-weight: bold;
 }
-ul.colnav li.selected a,
 ul.colnav li.selected span {
     color: #333;
 	background: #fff;
 	text-decoration: none;
+	font-weight: bold;
 }
 
 #approve_deny_friendrequest_deny {
 	border-color: #f69595 #750000 #750000 #f69595 !important;
 	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
 	color: #FFF;
-	margin-left: .5em;
+	margin-left: 5px;
 }
 #approve_deny_friendrequest_deny:hover {
 	border-color: #750000 #f69595 #f69595 #750000 !important;

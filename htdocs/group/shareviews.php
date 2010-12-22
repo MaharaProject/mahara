@@ -40,20 +40,7 @@ if (!group_user_can_edit_views($group->id)) {
 
 $accesslists = View::get_accesslists(null, $group->id);
 
-$js = <<<EOF
-addLoadEvent(function () {
-    forEach(getElementsByTagAndClassName('a', 'secreturl', null), function (elem) {
-        connect(elem, 'onclick', function(e) {
-            e.stop();
-            var displayelem = getFirstElementByTagAndClassName(null, 'expandurl', getFirstParentByTagAndClassName(elem, null, 'accesslistitem'));
-            toggleElementClass('hidden', displayelem);
-        });
-    });
-});
-EOF;
-
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');

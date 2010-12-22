@@ -82,12 +82,11 @@ else if (param_variable('delete_comment_submit', null)) {
 $owner    = $view->get('owner');
 $viewtype = $view->get('type');
 
-if ($viewtype == 'profile') {
-    define('TITLE', display_name($owner, null, true));
+if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphomepage') {
+    redirect($view->get_url());
 }
-else {
-    define('TITLE', $view->get('title'));
-}
+
+define('TITLE', $view->get('title'));
 
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
@@ -209,16 +208,7 @@ if (get_config('viewmicroheaders')) {
 
     if ($can_edit) {
         $smarty->assign('visitstring', $view->visit_message());
-        if ($viewtype == 'profile') {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('editprofileview', 'view'),
-                    'image' => $THEME->get_url('images/edit.gif'),
-                    'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                ),
-            );
-        }
-        else if ($new) {
+        if ($new) {
             $microheaderlinks = array(
                 array(
                     'name' => get_string('back'),
@@ -233,11 +223,6 @@ if (get_config('viewmicroheaders')) {
                     'name' => get_string('editthisview', 'view'),
                     'image' => $THEME->get_url('images/edit.gif'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
-                ),
-                array(
-                    'name' => get_string('editaccess', 'view'),
-                    'image' => $THEME->get_url('images/icon_access.gif'),
-                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
                 ),
             );
         }
@@ -259,11 +244,8 @@ else if ($can_edit) {
 
 $title = hsc(TITLE);
 
-if ($viewtype != 'profile' && !get_config('viewmicroheaders')) {
+if (!get_config('viewmicroheaders')) {
     $title = $collection ? hsc($collection->get('name')) : $view->display_title();
-}
-
-if ($viewtype != 'profile' || !get_config('viewmicroheaders')) {
     $smarty->assign('maintitle', $title);
 }
 

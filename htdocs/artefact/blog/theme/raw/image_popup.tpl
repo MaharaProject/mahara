@@ -25,7 +25,7 @@
      <table border="0" cellpadding="4" cellspacing="0">
           <tr>
             <td class="nowrap"><label for="img_src">{str section=artefact.blog tag=src}</label></td>
-            <td><input id="img_src" name="img_src" type="text" value="" style="width: 200px" onchange="this.form.src.value=this.value;ImageDialog.getImageData();" onmouseup="this.onchange();" onkeyup="this.onchange();"/></td>
+            <td><input id="img_src" name="img_src" type="text" value="" style="width: 200px" onChange="this.form.src.value=this.value;ImageDialog.getImageData();" onMouseUp="this.onchange();" onKeyUp="this.onchange();"/></td>
           </tr>
 		  <!-- Image list -->
           <tr>
@@ -74,11 +74,11 @@
 	</div>
 
 	<div class="mceActionPanel">
-		<div style="float: left">
+		<div class="fl">
 			<input type="button" id="insert" class="submit" name="insert" value="{str section=artefact.blog tag=insert}" onClick="ImageDialog.update();return false;" />
 		</div>
 
-		<div style="float: right">
+		<div class="fr">
 			<input type="button" id="cancel" class="cancel" name="cancel" value="{str section=artefact.blog tag=cancel}" onClick="tinyMCEPopup.close();" />
 		</div>
 	</div>

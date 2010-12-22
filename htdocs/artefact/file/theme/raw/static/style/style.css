@@ -16,11 +16,15 @@
 .fileupload {
 	background: #eee;
 	border: 1px solid #d1d1d1;
-	margin-bottom: 1em;
+	margin-bottom: 10px;
+	width: 100%;
+}
+* html .fileupload {
+	width: 98%;
 }
 .fileupload th {
 	text-align: left;
-	padding-left: 1em;
+	padding-left: 10px !important;
 }
 .fileupload th label,
 .uploadform th label {
@@ -31,42 +35,65 @@
 	font-size: .9167em;
 	line-height: 1.3333em;
 }
-.fileupload td#files_filebrowser_upload_messages,
-.fileupload td#editpost_filebrowser_upload_messages {
-	padding: 0;
-}
 
 .createfolder-message div {
-    margin-bottom: .5em;
+    margin-bottom: 3px;
+}
+#createfolder {
+	background-color: #E7E7E7;
+	padding: 3px 5px;
 }
 
 /* folder nav */
 .foldernav {
     font-weight: bold;
-    padding: 0 0 0 20px;
+    padding: 1px 0 0 20px;
     font-size: 1.3333em;
-    background: url(../images/foldernav_small.png) no-repeat left;
+    background: url(../images/foldernav_small.png) no-repeat left top;
 }
 form#files .foldernav {
-    padding: 0 0 0 30px;
+    padding: 5px 0 3px 30px;
     font-size: 1.3333em;
-    background: url(../images/foldernav.png) no-repeat left;
+    background: url(../images/foldernav.png) no-repeat left top;
+}
+
+td.filethumb {
+	width: 25px;
+	vertical-align: middle;
+}
+td.filename {
+	padding: 7px 5px 3px 5px !important;
+}
+td.filedescription {
+	padding: 7px 5px 3px 5px!important;
+	font-size: .9167em;
+}
+td.filesize {
+	padding: 7px 5px 3px 5px!important;
+	font-size: .9167em;
+}
+td.filedate {
+	padding: 7px 5px 3px 5px!important;
+	font-size: .9167em;
+	color: #888888;
+}
+td.filetags {
+	padding: 7px 5px 3px 5px!important;
+	font-size: .9167em;
 }
 
 /* File list */
 .filelist {
     width: 100%;
-	* width: 96%;
+}
+* html .filelist {
+	width: 98%;
 }
 .filelist th {
 	border-bottom: 1px solid #CCCCCC;
 }
 .filelist table th {
 	border-bottom: 0;
-}
-.filelist td.right input {
-	font-size: .9167em;
-    font-family: Arial, Helvetica, sans-serif;
 }
 .filelist td.right input.btn-big-del {
 	font-size: 1%;
@@ -103,11 +130,16 @@ tr.folderhover a {
     cursor: move;
 }
 /* File list edit box */
+#files_filebrowser_edit_row td.fileedittablewrap {
+	padding-left: 0;
+}
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
 	font-size: 1.3333em;
+	padding-bottom: 0;
 }
 #files_filebrowser_edit_row table th {
 	border: 0;
+	text-align: left;
 }
 #files_filebrowser_edit_row table th label {
 	font-weight: bold;
@@ -118,11 +150,11 @@ tr.folderhover a {
 
 /* Edit post File list */
 #editpost_filebrowser_upload_container {
-	margin-top: 1em;
+	margin-top: 10px;
 }
 #editpost_filebrowser_upload_browse,
 #editpost_filebrowser_open_upload_browse_container {
-	padding: 1em;
+	padding: 10px;
 	border-top: 1px solid #eee;
 	border-right: 1px solid #eee;
 	border-bottom: 4px solid #eee;

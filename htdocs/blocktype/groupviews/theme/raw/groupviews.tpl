@@ -67,7 +67,7 @@
       {/foreach}
     {/if}
     {if $group_view_submission_form}
-        <tr class="{cycle values='r0,r1'}">
+        <tr>
             <td class="submissionform">{$group_view_submission_form|safe}</td>
         </tr>
     {/if}
@@ -88,7 +88,7 @@
                     <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
                 {/if}
                 {if $view.submittedtime}
-                    <span> ({str tag=timeofsubmission section=view}: {$view.submittedtime|format_date})</span>
+                    <span class="date s"> ({str tag=timeofsubmission section=view}: {$view.submittedtime|format_date})</span>
                 {/if}
                 <div>{$view.shortdescription}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}

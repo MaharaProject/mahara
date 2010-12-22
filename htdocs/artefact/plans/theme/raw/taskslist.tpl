@@ -18,8 +18,8 @@
             {/if}
 
     {/if}
-            <td class="c5 s"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" class="icon btn-big-edit" title="{str tag=edit}"></a>
-            <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" class="icon btn-big-del" title="{str tag=delete}"></a></td>
+            <td class="c5 buttonscell"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+            <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a></td>
         </tr>
 {/foreach}
 {/auto_escape}

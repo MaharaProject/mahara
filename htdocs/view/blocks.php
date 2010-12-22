@@ -73,16 +73,6 @@ if ($view->is_submitted()) {
 $group = $view->get('group');
 $institution = $view->get('institution');
 
-// check if cancel was selected
-if ($new && isset($_POST['cancel'])) {
-    if ($view->get('type') == 'profile' || $view->get('type') == 'dashboard') {
-        throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
-    }
-    form_validate(param_variable('sesskey', null));
-    $view->delete();
-    $view->post_edit_redirect();
-}
-
 // If a block was configured & submitted, build the form now so it can
 // be processed without having to render the other blocks.
 if ($blockid = param_integer('blockconfig', 0)) {
@@ -94,32 +84,27 @@ if ($blockid = param_integer('blockconfig', 0)) {
     }
 }
 
-View::set_nav($group, $institution, ($view->get('type') == 'profile'));
+$view->set_edit_nav();
 
 if ($view->get('type') == 'profile') {
     $profile = true;
-    $displaylink = get_config('wwwroot') . 'user/view.php';
     $title = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
-    $displaylink = get_config('wwwroot');
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
-    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($view->get('type') == 'grouphomepage') {
-    $displaylink = get_config('wwwroot') . 'group/view.php?id=' . (int) $view->get('group');
     $title = get_string('grouphomepage', 'view');
-    define('TITLE', $title . ': ' . get_string('editcontentandlayout', 'view'));
+    define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
-    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&new=1';
-    define('TITLE', get_string('editcontentandlayout', 'view'));
+    define('TITLE', get_string('editcontent', 'view'));
 }
 else {
-    $displaylink = get_config('wwwroot') . 'view/view.php?id=' . $view->get('id');
-    define('TITLE', $view->get('title') . ': ' . get_string('editcontentandlayout', 'view'));
+    define('TITLE', $view->get('title') . ': ' . get_string('editcontent', 'view'));
     $editabletitle = true;
 }
 
@@ -137,11 +122,9 @@ $extraconfig = array(
 );
 
 // Set up theme
-$viewtheme = $view->get('theme');
+$viewtheme = $view->set_user_theme();
+
 $allowedthemes = get_user_accessible_themes();
-if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
-}
 
 // Pull in cross-theme view stylesheet and file stylesheets
 $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
@@ -196,12 +179,8 @@ foreach (array_keys($_POST + $_GET) as $key) {
 }
 
 $viewid = $view->get('id');
-$smarty->assign('maintitle', TITLE);
-if (!empty($editabletitle)) {
-    $smarty->assign('edittitleurl', get_config('wwwroot') . 'view/edit.php?id=' . $viewid);
-    $smarty->assign('viewdescription', $view->get('description'));
-}
-$smarty->assign('displaylink', $displaylink);
+$smarty->assign('edittitle', $view->can_edit_title());
+$smarty->assign('displaylink', $view->get_url());
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
@@ -215,35 +194,20 @@ $viewtitle = $view->get('title');
 $owner = $view->get('owner');
 if ($owner &&  $viewtype == 'profile') {
     $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
+    if (get_config('allowpublicprofiles')) {
+        $smarty->assign('togglepublic', togglepublic_form($viewid));
+    }
 }
 
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
-
-    if ($owner) {
-        $nolinks = array('profile', 'dashboard');
-        if ($new || in_array($viewtype, $nolinks)) {
-            $microheaderlinks = array();
-        }
-        else {
-            $microheaderlinks = array(
-                array(
-                    'name' => get_string('editaccess', 'view'),
-                    'url' => get_config('wwwroot') . 'view/access.php?id=' . $viewid,
-                    'type' => 'edit',
-                ),
-            );
-        }
-        $smarty->assign('microheaderlinks', $microheaderlinks);
-    }
 }
 
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
 $smarty->assign('institution', $institution);
-$smarty->assign('can_change_layout', (!$USER->get_account_preference('addremovecolumns') || ($view->get('numcolumns') > 1 && $view->get('numcolumns') < 5)));
 
 if (get_config('userscanchooseviewthemes')
     && $view->is_themeable()) {

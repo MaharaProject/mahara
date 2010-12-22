@@ -8,8 +8,8 @@
                     <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 
-                <p>{clean_html($blog->get('description'))|safe}</p>
-                {if $blog->get('tags')}<p class="tags"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}
+                <div id="blogdescription"><p>{clean_html($blog->get('description'))|safe}</p>
+                {if $blog->get('tags')}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}</div>
 
                 {if $posts}
 				<table id="postlist" class="tablerenderer fullwidth nohead">

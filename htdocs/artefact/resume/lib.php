@@ -719,8 +719,8 @@ EOF;
         global $THEME;
         $editstr = get_string('edit');
         $delstr = get_string('delete');
-        $imagemoveblockup   = json_encode($THEME->get_url('images/move-block-up.png'));
-        $imagemoveblockdown = json_encode($THEME->get_url('images/move-block-down.png'));
+        $imagemoveblockup   = json_encode($THEME->get_url('images/move-up.gif'));
+        $imagemoveblockdown = json_encode($THEME->get_url('images/move-down.gif'));
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 
@@ -732,8 +732,6 @@ tableRenderers.{$compositetype} = new TableRenderer(
     'composite.json.php',
     [
 EOF;
-
-        $js .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
 
         $js .= <<<EOF
 
@@ -748,7 +746,7 @@ EOF;
                 buttons.push(up);
             }
             if (!r._last) {
-                var down = A({'href': ''}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
+                var down = A({'href': '', 'class':'movedown'}, IMG({'src': {$imagemoveblockdown}, 'alt':'{$downstr}'}));
                 connect(down, 'onclick', function (e) {
                     e.stop();
                     return moveComposite(d.type, r.id, r.artefact, 'down');
@@ -756,8 +754,13 @@ EOF;
                 buttons.push(' ');
                 buttons.push(down);
             }
-            return TD({'style':'text-align:center;'}, buttons);
+            return TD({'class':'movebuttons'}, buttons);
         },
+EOF;
+
+        $js .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
+
+        $js .= <<<EOF
         function (r, d) {
             var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': '{$editstr}'}, IMG({'src': config.theme['images/edit.gif'], 'alt':'{$editstr}'}));
             var dellink = A({'href': '', 'title': '{$delstr}'}, IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'}));
@@ -765,7 +768,7 @@ EOF;
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
             });
-            return TD(null, editlink, ' ', dellink);
+            return TD({'class':'right'}, null, editlink, ' ', dellink);
         }
     ]
 );

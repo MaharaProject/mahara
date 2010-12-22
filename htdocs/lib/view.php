@@ -712,6 +712,7 @@ class View {
     public function set_access($accessdata) {
         global $USER;
         require_once('activity.php');
+        require_once('group.php');
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
@@ -1789,6 +1790,14 @@ class View {
         }
     }
 
+    public function set_user_theme() {
+        global $THEME;
+        if ($this->theme && $THEME->basename != $this->theme) {
+            $THEME = new Theme($this->theme);
+        }
+        return $this->theme;
+    }
+
     /**
      * This function formats a user's name
      * according to their view preference
@@ -2283,6 +2292,10 @@ class View {
         return true;
     }
 
+    public function can_edit_title() {
+        return self::can_remove_viewtype($this->type);
+    }
+
     public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
 
         global $USER;
@@ -2291,7 +2304,7 @@ class View {
 
         if ($groupid) {
             $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type
                 FROM {view} v
                 WHERE v.group = ?
                 '. (group_user_access($groupid) != 'admin' ? ' AND v.type != \'grouphomepage\'' : '') . '
@@ -2299,14 +2312,14 @@ class View {
         }
         else if ($institution) {
             $count = count_records('view', 'institution', $institution);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type
                 FROM {view} v
                 WHERE v.institution = ?
                 ORDER BY v.title, v.id', array($institution), $offset, $limit);
         }
         else {
             $count = count_records_select('view', 'owner = ?', array($userid));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, v.template, v.type, v.submittedtime,
+            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type,v.submittedtime,
                 g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
                 FROM {view} v
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
@@ -2316,24 +2329,6 @@ class View {
             $owner = $userid;
         }
 
-        if ($viewdata) {
-            $viewidlist = implode(', ', array_map(create_function('$a', 'return (int)$a->id;'), $viewdata));
-            $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                FROM {view_artefact} va
-                INNER JOIN {artefact} a ON va.artefact = a.id
-                INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
-                WHERE va.view IN (' . $viewidlist . ')
-                GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
-                ORDER BY a.title, va.artefact', '');
-            $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
-            $collections = get_records_sql_array('
-                SELECT c.name, c.id, cv.view
-                FROM {collection} c JOIN {collection_view} cv ON c.id = cv.collection
-                WHERE cv.view IN (' . $viewidlist . ')',
-                array()
-            );
-        }
-    
         $data = array();
         if ($viewdata) {
             for ($i = 0; $i < count($viewdata); $i++) {
@@ -2373,39 +2368,6 @@ class View {
                             hsc($viewdata[$i]->submithostname)
                         );
                     }
-                }
-                $data[$i]['artefacts'] = array();
-                $data[$i]['template'] = $viewdata[$i]->template;
-            }
-
-            // Go through all the artefact records and put them in with the
-            // views they belong to.
-            if ($artefacts) {
-                foreach ($artefacts as $artefactrec) {
-                    safe_require('artefact', $artefactrec->plugin);
-                    // Perhaps I shouldn't have to construct the entire
-                    // artefact object to render the name properly.
-                    $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                    $artefactobj = new $classname(0, array('title' => $artefactrec->title));
-                    $artefactobj->set('dirty', false);
-                    if (!$artefactobj->in_view_list()) {
-                      continue;
-                    }
-                    $artname = $artefactobj->display_title(30);
-                    if (strlen($artname)) {
-                      $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
-                                                                               'title' => $artname);
-                    }
-                }
-            }
-            if ($tags) {
-                foreach ($tags as $tag) {
-                    $data[$index[$tag->view]]['tags'][] = $tag->tag;
-                }
-            }
-            if ($collections) {
-                foreach ($collections as $c) {
-                    $data[$index[$c->view]]['collection'] = $c;
                 }
             }
         }
@@ -2880,20 +2842,43 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution) {
+    public static function set_nav($group, $institution, $share=false) {
         if ($group) {
-            define('MENUITEM', 'groups/views');
+            define('MENUITEM', $share ? 'groups/share' : 'groups/views');
             define('GROUP', $group);
+        }
+        else if ($institution == 'mahara') {
+            define('ADMIN', 1);
+            define('MENUITEM', $share ? 'configsite/share' : 'configsite/siteviews');
         }
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
-            define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
+            define('MENUITEM', $share ? 'manageinstitutions/share' : 'manageinstitutions/institutionviews');
+        }
+        else {
+            define('MENUITEM', $share ? 'myportfolio/share' : 'myportfolio/views');
+        }
+    }
+
+    public function set_edit_nav() {
+        if ($this->group) {
+            // Don't display the group nav; 5 levels of menu is too many
+            define('MENUITEM', 'groups');
+            define('GROUP', $this->group);
+            define('NOGROUPMENU', 1);
+        }
+        else if ($this->institution == 'mahara') {
+            define('ADMIN', 1);
+            define('MENUITEM', 'configsite/siteviews');
+        }
+        else if ($this->institution) {
+            define('INSTITUTIONALADMIN', 1);
+            define('MENUITEM', 'manageinstitutions/institutionviews');
         }
         else {
             define('MENUITEM', 'myportfolio/views');
         }
     }
-
 
     public function ownership() {
         if ($this->group) {
@@ -3107,6 +3092,12 @@ class View {
     public function get_url() {
         if ($this->type == 'profile') {
             $url = 'user/view.php?id=' . (int) $this->owner;
+        }
+        else if ($this->type == 'dashboard') {
+            $url = '';
+        }
+        else if ($this->type == 'grouphomepage') {
+            $url = 'group/view.php?id=' . $this->group;
         }
         else {
             $url = 'view/view.php?id=' . (int) $this->id;
@@ -3822,7 +3813,7 @@ function togglepublic_submit(Pieform $form, $values) {
     $view->set_access($access);
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
 
-    redirect('/view');
+    redirect('/view/blocks.php?id=' . $view->get('id'));
 }
 
 /**

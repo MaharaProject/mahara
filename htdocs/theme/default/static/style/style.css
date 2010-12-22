@@ -70,19 +70,6 @@ h6 {
 #activitylist tfoot td {
 	border-top: 1px solid #ccc;
 }
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-	color: #186194 !important;
-	text-decoration: underline;
-}
-.main-column table h3 a:hover,
-.listing div h3 a:hover {
-	color: #0a77cb !important;
-}
 .tablerenderer-loading {
 }
 /* Alternative row background colours */
@@ -211,9 +198,6 @@ input#files_filebrowser_edit_artefact:active {
 	width: 24px;
 	margin-left: 2px;
 }
-* html #usf_submit {
-	height: 22px;
-}
 #selfsearch button,
 .query-button,
 #moderator_search_btn,
@@ -278,15 +262,10 @@ input#files_filebrowser_edit_artefact:active {
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
-	margin: .5em 0;
 }
 #main-nav li {
     color: #e6c560;
     * zoom: 1;
-    * margin-top: -5px;
-}
-* html #main-nav li {
-    * margin-top: -8px;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -327,7 +306,7 @@ input#files_filebrowser_edit_artefact:active {
 	border: none;
 }
 #sub-nav ul {
-    padding: 0 0 0 .5em;
+    padding: 0 0 0 5px;
 	background: none;
 }
 #sub-nav li a,
@@ -425,12 +404,6 @@ div.sideblock h3 a:hover {
 }
 
 /* Side Profile */
-#sb-profile ul a,
-#sb-profile ul a:link,
-#sb-profile ul a:visited,
-#sb-profile ul a:active {
-	color: #66879f;
-}
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
 #sb-profile ul ul a:visited,
@@ -456,7 +429,7 @@ div.sideblock h3 a:hover {
 /* Side Search */
 .sidebar #selfsearch input {
 	width: 186px;
-    padding: .25em .5em;
+    padding: 3px 5px;
     font-size: 1em;
     color: #767676;
 	background-color: #ecf3d4;
@@ -548,16 +521,11 @@ div.sideblock h3 a:hover {
 * html #collectionviews {
 	width: 96%;
 }
-#collectionviews td {
-	vertical-align: middle;
+#collectionviews td.displayordercontrols div {
+	padding-top: 5px;
 }
-#collectionviews td label {
-	font-size: 1em;
-	font-weight: bold;
-}
-
-#collectionviews td div {
-    text-align: center;
+#collectionviews td.displayordercontrols div.justdown {
+    padding-left: 19px;
 }
 
 .inbox-message {

@@ -5,8 +5,8 @@
     <title>{$pagetitle}</title>
 </head>
 <body>
-  <div style="font-family: Arial, sans-serif; font-size: smaller; border-bottom: 1px solid #aaa; margin-bottom: 1em; padding-bottom: .5em; text-align: center;">
-    <div style="float: left; margin-right: 1em; height: 2em;"><a href="" onclick="history.go(-1); return false;">&laquo; {str tag="back"}</a></div>
+  <div style="font-family: Arial, 'Nimbus Sans L', Helvetica, sans-serif; font-size: 100%; border-bottom: 1px solid #aaa; margin-bottom: 10px; padding-bottom: 5px; text-align: center;">
+    <div style="float: left; margin-right: 10px; height: 20px;"><a href="" onclick="history.go(-1); return false;">&laquo; {str tag="back"}</a></div>
     {$htmlremovedmessage|clean_html|safe}{if $params.downloadurl} <a href="{$params.downloadurl}">{str tag="downloadoriginalversion" section="artefact.file"}</a>{/if}</div>
   <div>
     {$content|clean_html|safe}

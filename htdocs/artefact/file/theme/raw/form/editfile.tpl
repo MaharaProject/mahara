@@ -1,6 +1,6 @@
-  <tr id="{$prefix}_edit_row"{if !$fileinfo} class="hidden"{/if}>
+  <tr id="{$prefix}_edit_row"{if !$fileinfo} class="hidden editrow"{/if}>
   	<td></td>
-    <td colspan="5">
+    <td colspan="5" class="fileedittablewrap">
       <table class="fileedittable">
         <tbody>
           <tr>

@@ -5,7 +5,7 @@
                 <tr class="{cycle values='r0,r1'}">
                 	<td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}#post{$postinfo->id}">{$postinfo->topicname}</a></strong><br />
                     <div class="s">{$postinfo->body|str_shorten_html:100:true|safe}</div></td>
-                	<td class="s"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster}" alt="">
+                    <td class="valign s"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$postinfo->poster}" alt="">
                   <a href="{$WWWROOT}user/view.php?id={$postinfo->poster}">{$postinfo->poster|display_name|escape}</a></td>
             	</tr>
                 {/foreach}

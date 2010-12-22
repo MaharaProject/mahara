@@ -1,16 +1,15 @@
-{if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
-{if $edittitleurl && !$microheaders}
-<div class="viewtitledesc">
-  <h1>{$viewtitle}</h1>
-  <span class="editviewtitle s">
-    <a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a>
-  </span>
-</div>
+{if $microheaders}
+  {include file="viewmicroheader.tpl"}
 {else}
-<h1>{$maintitle}</h1>
+  {include file="header.tpl"}
+  <h1>{$viewtitle}</h1>
 {/if}
 
+{include file="view/editviewtabs.tpl" selected='content' new=$new}
+<div class="subpage rel">
+
 {if $columns}
+    {if $togglepublic}<div class="fr">{$togglepublic|safe}</div>{/if}
     {str tag="editblockspagedescription" section="view"}
     <form action="{$formurl}" method="post">
         <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
@@ -30,27 +29,18 @@
                 <div class="cb"></div>
             </div>
 
-            <div id="middle-pane">
-                <table class="fullwidth"><tr>
-                    <td>
-                        <a id="layout-link" href="columns.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a> {contextualhelp plugintype="core" pluginname="view" section="changeviewlayout"}
-                    </td>
 {if $viewthemes}
-                    <td class="center">
-                        <label for="viewtheme-select">{str tag=theme}: </label>
-                        <select id="viewtheme-select" name="viewtheme">
-                            <option value="">{str tag=choosetheme}</option>
+            <div id="middle-pane">
+                <div class="center">
+                    <label for="viewtheme-select">{str tag=theme}: </label>
+                    <select id="viewtheme-select" name="viewtheme">
+                        <option value="">{str tag=choosetheme}</option>
 {foreach from=$viewthemes key=themeid item=themename}
-                            <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
+                        <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
-                        </select>
-                    </td>
-{/if}
-                    <td class="right">
-                        <a id="btn-displaymyview" href="{$displaylink}">{str tag=displaymyview section=view} &raquo;</a></td>
-                    </td>
-                </tr></table>
+                    </select>
             </div>
+{/if}
 
             <div id="bottom-pane">
                 <div id="column-container">
@@ -70,19 +60,6 @@
     </form>
 
     <div id="view-wizard-controls" class="center">
-    {if $new}
-        <form action="" method="POST">
-            <input type="hidden" name="id" value="{$view}">
-            <input type="hidden" name="new" value="1">
-            <input type="submit" name="cancel" class="cancel" value="{str tag='cancel'}" onclick="return confirm('{str tag='confirmcancelcreatingview' section='view'}');">
-            <input type="hidden" name="sesskey" value="{$SESSKEY}">
-        </form>
-        <form action="{$WWWROOT}view/edit.php" method="GET">
-            <input type="hidden" name="id" value="{$view}">
-            <input type="hidden" name="new" value="1">
-            <input type="submit" class="submit" value="{str tag=next}: {str tag='edittitleanddescription' section=view}">
-        </form>
-    {else}
         <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}group/view.php{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view{/if}" method="GET">
         {if $groupid}
             {if $viewtype == 'grouphomepage'}
@@ -95,7 +72,6 @@
         {/if}
             <input class="submit" type="submit" value="{str tag='done'}">
         </form>
-    {/if}
     </div>
 
 {elseif $block}

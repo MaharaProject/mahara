@@ -59,13 +59,13 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         $licenseurl = "http://creativecommons.org/licenses/$licensetype/3.0/";
         $licensename = get_string($licensetype, 'blocktype.creativecommons');
 
-        $html = '<div class="licensedesc"><a class="fl" rel="license" href="http://creativecommons.org/licenses/'.$licensetype.'/3.0/"><img alt="'.
+        $html = '<div class="license"><a class="licenseicon" rel="license" href="http://creativecommons.org/licenses/'.$licensetype.'/3.0/"><img alt="'.
             get_string('alttext', 'blocktype.creativecommons').
             '" style="border-width:0" src="'.
             $THEME->get_url('images/' . $licensetype . '-3_0.png', false, 'blocktype/creativecommons') . '" /></a>';
-        $html .= '<div>';
+        $html .= '<div class="licensedesc">';
         $html .= get_string('licensestatement', 'blocktype.creativecommons', $licenseurl, $licensename);
-        $html .= '</div></div>';
+        $html .= '</div><div class="cb"></div></div>';
         return $html;
     }
 

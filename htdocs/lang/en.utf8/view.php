@@ -32,6 +32,7 @@ $string['edittitle']              = 'Edit Title';
 $string['edittitleanddescription'] = 'Edit Title and Description';
 $string['editcontent']            = 'Edit Content';
 $string['editcontentandlayout']   = 'Edit Content and Layout';
+$string['editlayout']             = 'Edit Layout';
 $string['editaccess']             = 'Edit Access';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
@@ -246,7 +247,9 @@ $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['timeofsubmission'] = 'Time of submission';
 
-$string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
+$string['column'] = 'column';
+$string['columns'] = 'columns';
+$string['100'] = $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = $string['20,20,20,20,20'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
 $string['33,67'] = 'Larger right column';
 $string['25,50,25'] = 'Larger centre column';

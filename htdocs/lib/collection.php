@@ -205,6 +205,12 @@ class Collection {
                 'defaultvalue' => null,
                 'title' => get_string('description', 'collection'),
             ),
+            'navigation' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('viewnavigation','collection'),
+                'description' => get_string('viewnavigationdesc','collection'),
+                'defaultvalue' => 1,
+            ),
         );
 
         // populate the fields with the existing values if any
@@ -219,10 +225,6 @@ class Collection {
             $elements['owner'] = array(
                 'type' => 'hidden',
                 'value' => $data->owner,
-            );
-            $elements['navigation'] = array(
-                'type' => 'hidden',
-                'value' => $data->navigation,
             );
         }
 
