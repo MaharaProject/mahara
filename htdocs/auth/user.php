@@ -795,7 +795,7 @@ class User {
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
-            if (!empty($i->theme) && $i->theme != get_config('theme')) {
+            if (!empty($i->theme) && $this->theme == get_config('theme') && $i->theme != $this->theme) {
                 $this->theme = $i->theme;
             }
         }

@@ -620,6 +620,7 @@ function core_install_lastcoredata_defaults() {
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
     $institution->theme  = 'default';
+    $institution->priority = 0;
     insert_record('institution', $institution);
 
     $auth_instance = new StdClass;

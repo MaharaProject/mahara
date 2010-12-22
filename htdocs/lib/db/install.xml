@@ -45,6 +45,7 @@
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="suspended" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="priority" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />

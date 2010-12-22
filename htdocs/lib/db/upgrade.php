@@ -2220,5 +2220,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2010122200) {
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('priority');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+        set_field('institution', 'priority', 0, 'name', 'mahara');
+    }
+
     return $status;
 }

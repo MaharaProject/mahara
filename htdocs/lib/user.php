@@ -1247,7 +1247,7 @@ function load_user_institutions($userid) {
     if ($institutions = get_records_sql_assoc('
         SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
-        WHERE u.usr = ?', array($userid))) {
+        WHERE u.usr = ? ORDER BY i.priority DESC', array($userid))) {
         return $institutions;
     }
     return array();
