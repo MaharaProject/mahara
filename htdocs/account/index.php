@@ -101,25 +101,15 @@ $elements['friendscontrol'] = array(
     'help' => true
 );
 $elements['wysiwyg'] = array(
-    'type' => 'radio',
+    'type' => 'checkbox',
     'defaultvalue' => $prefs->wysiwyg,
     'title' => get_string('wysiwygdescr', 'account'),
-    'separator' => '<br>',
-    'options' => array(
-        1 => get_string('on', 'account'),
-        0 => get_string('off', 'account'),
-    ),
     'help' => true,
 );
 $elements['maildisabled'] = array(
-    'type' => 'radio',
+    'type' => 'checkbox',
     'defaultvalue' => get_account_preference($USER->get('id'), 'maildisabled'),
     'title' => get_string('email'),
-    'separator' => '<br>',
-    'options' => array(
-        0 => get_string('enabled', 'account'),
-        1 => get_string('disabled', 'account'),
-    ),
     'help' => true,
 );
 $elements['messages'] = array(
@@ -144,14 +134,9 @@ $elements['lang'] = array(
     'ignore' => count($languages) < 2,
 );
 $elements['addremovecolumns'] = array(
-    'type' => 'radio',
-    'options' => array(
-        1 => get_string('on', 'account'),
-        0 => get_string('off', 'account'),
-    ),
+    'type' => 'checkbox',
     'defaultvalue' => $prefs->addremovecolumns,
     'title' => get_string('showviewcolumns', 'account'),
-    'separator' => '<br>',
     'help' => 'true'
 );
 // TODO: add a way for plugins (like blog!) to have account preferences
@@ -181,14 +166,9 @@ if (get_config('userscanhiderealnames')) {
 }
 if (get_config('homepageinfo')) {
     $elements['showhomeinfo'] = array(
-        'type' => 'radio',
-        'options' => array(
-            1 => get_string('on', 'account'),
-            0 => get_string('off', 'account'),
-        ),
+        'type' => 'checkbox',
         'defaultvalue' => $prefs->showhomeinfo,
         'title' => get_string('showhomeinfo', 'account'),
-        'separator' => '<br>',
         'help' => 'true'
     );
 }

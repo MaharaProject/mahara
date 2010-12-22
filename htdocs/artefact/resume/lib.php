@@ -737,17 +737,6 @@ EOF;
 
         $js .= <<<EOF
 
-        function (r) {
-            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'class': 'btn-edit'}, '{$editstr}'));
-        },
-        function (r, d) {
-            var link = A({'href': '', 'class': 'btn-del'}, '{$delstr}');
-            connect(link, 'onclick', function (e) {
-                e.stop();
-                return deleteComposite(d.type, r.id, r.artefact);
-            });
-            return TD(null, link);
-        },
         function (r, d) {
             var buttons = [];
             if (r._rownumber > 1) {
@@ -768,6 +757,15 @@ EOF;
                 buttons.push(down);
             }
             return TD({'style':'text-align:center;'}, buttons);
+        },
+        function (r, d) {
+            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': '{$editstr}'}, IMG({'src': config.theme['images/edit.gif'], 'alt':'{$editstr}'}));
+            var dellink = A({'href': '', 'title': '{$delstr}'}, IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'}));
+            connect(dellink, 'onclick', function (e) {
+                e.stop();
+                return deleteComposite(d.type, r.id, r.artefact);
+            });
+            return TD(null, editlink, ' ', dellink);
         }
     ]
 );

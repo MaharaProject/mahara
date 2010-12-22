@@ -530,6 +530,12 @@ form#uploadcsv {
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTIONS */
+#adminstitutionslist .controls {
+    width: 3em;
+}
+#adminstitutionslist .controls form {
+    display: inline;
+}
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #usertypeselect table td,

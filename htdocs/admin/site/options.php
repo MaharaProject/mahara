@@ -376,20 +376,18 @@ $siteoptionform = array(
             'legend'       => get_string('generalsettingslegend', 'admin'),
             'elements'     => array(
                 'allowpublicviews' => array(
-                    'type'         => 'select',
+                    'type'         => 'checkbox',
                     'title'        => get_string('allowpublicviews', 'admin'),
                     'description'  => get_string('allowpublicviewsdescription', 'admin'),
                     'defaultvalue' => get_config('allowpublicviews'),
-                    'options'      => $yesno,
                     'help'         => true,
                     'disabled'     => in_array('allowpublicviews', $OVERRIDDEN),
                 ),
                 'allowpublicprofiles' => array(
-                    'type'         => 'select',
+                    'type'         => 'checkbox',
                     'title'        => get_string('allowpublicprofiles', 'admin'),
                     'description'  => get_string('allowpublicprofilesdescription', 'admin'),
                     'defaultvalue' => get_config('allowpublicprofiles'),
-                    'options'      => $yesno,
                     'help'         => true,
                     'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
                 ),

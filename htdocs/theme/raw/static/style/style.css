@@ -329,7 +329,13 @@ div.grippie {
 	padding: .25em 0 0 .25em;
 	* padding: .25em;
 }
-
+.memberssearch {
+	padding-left: 2em;
+}
+.memberssearch form,
+.memberssearch form div {
+  display: inline;
+}
 /* Legend */
 legend {
 	font-weight: bold;
@@ -636,9 +642,28 @@ div.btn-edit input.submit,
     color: #ca0000 !important;
 	padding-left: 13px;
 }
+.btn-big-edit {
+	background: transparent url(../images/edit.gif) no-repeat left;
+	width: 0px;
+	height: 0px;
+	padding: 8px;
+	font-size: 1% !important;
+}
+.btn-big-del {
+    background: transparent url(../images/remove-block.gif) no-repeat left;
+	width: 0px;
+	height: 0px;
+	padding: 8px;
+	font-size: 1% !important;
+}
+a.btn-big-del {
+	margin-left: 3px;
+}
 .btn-manage {
 	background: transparent url(../images/icon-manage.gif) no-repeat left;
 	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 3px;
 }
 .btn-message {
 	background: transparent url(../images/icon-mail.gif) no-repeat left;
@@ -664,7 +689,6 @@ div.btn-edit input.submit,
     background: transparent url(../images/icon-add.gif) no-repeat left;
 	padding-left: 13px;
 }
-
 .btn-group {
     background: transparent url(../images/icon-group.gif) no-repeat left center;
 	padding-left: 13px;
@@ -717,7 +741,20 @@ div.btn-edit input.submit,
 	background: url(../images/icon-collection.gif) no-repeat left 1px;
 	padding-left: 15px;
 }
-
+tr.expandable-body td{
+	padding-left: 1em;
+}
+td.toggle.expandable {
+	width: 1em;
+	height: 1em;
+	padding-left: 16px;
+	background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
+}
+td.toggle.expandable.expanded {
+	background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
+	width: 1em;
+	height: 1em;
+}
 div.pagetabs {
     top: 1em !important;
     right: 1em;
@@ -1007,8 +1044,6 @@ div.rel {
 /* system messages between nav and main content */
 #messages {
     padding: 0;
-}
-#messages div {
 	margin: 0 0 1em 0;
 }
 #containerX #messages {
@@ -1352,10 +1387,12 @@ a.tag {
     overflow: auto;
     background-color: #f9f9f9;
     border: 1px solid #b2b2b2;
-    cursor: help;
     font-size: 1em;
 	color: #333;
 	z-index: 2000;
+}
+.help a:hover {
+	cursor: help;
 }
 .help a:focus {
     outline: none;
@@ -1821,13 +1858,25 @@ ul.groupuserstatus {
 	font-size: .9em;
 	margin: 0 0 0 1em;
 }
-.jointhisgroup form table th {
+.grouphomepage .group-info .admincontrol {
+    display: none;
+}
+.grouphome-admincontrol {
+    float: right;
+}
+.admincontrol{
+	text-align:right;
+}
+.planstatus {
+	width: 180px;
+	text-align: right;
+}
+.jointhisgroup form.pieform table th {
 	padding: 0;
 }
 .jointhisgroup form table td {
 	padding: 0;
 	width: 180px;
-	border-bottom: 1px solid #d1d1d1;
 }
 .jointhisgroup form table td input {
 	border: 0;

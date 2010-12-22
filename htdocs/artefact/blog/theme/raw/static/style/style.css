@@ -6,17 +6,20 @@
  */
  
  /* Blog list */
-#bloglist .right a {
+/*#bloglist .right a {
 	font-size: .9167em;
 	margin-left: 1em;
-}
+}*/
 #bloglist td .addicon {
 	margin: 0;
 }
 #bloglist td div.postcontrols {
   min-width: 12.5em;
 }
-
+td a.btn-add{
+	margin-left:10px;
+	margin-right:10px;
+}
 /* Post list */
 #postlist th {
 	border-bottom: 1px dotted #d1d1d1;
@@ -33,28 +36,19 @@
 #postlist th.controls {
 	text-align: right;
 }
-#postlist th.controls input {
-	margin-left: .5em;
+#postlist th.controls .btn-big-del {
+	background:url("../images/delete.gif") no-repeat scroll left center transparent;
+	border:0 none;
+	color:#FFFFFF;
+	cursor:pointer;
+	font-size:1%;
+	height:16px;
+	margin-left:0.5em;
+	padding-left:0;
+	width:16px;
 }
-#postlist th.controls .btn-edit {
-	background: transparent url(../images/edit.gif) no-repeat left;
-	width: 16px;
-	height: 16px;
-	border: 0;
-	cursor: pointer;
-	font-size: 1%;
-	color: #b8b8c1;
-}
-#postlist th.controls .btn-del {
-	background: transparent url(../images/delete.gif) no-repeat left;
-	width: 16px;
-	height: 16px;
-	border: 0;
-	cursor: pointer;
-	font-size: 1%;
-	margin-left: .5em;
-	padding-left: 0;
-	color: #fff;
+#postlist th.controls span.btn-big-del {
+	padding-bottom: 6px;
 }
 #postlist th form,
 #postlist th form div {

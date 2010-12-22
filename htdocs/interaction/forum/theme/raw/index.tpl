@@ -12,16 +12,11 @@
 		<th>{str tag="name" section="interaction.forum"}</th>
 		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
 		<th></th>
+		<th></th>
 	</tr>
     {foreach from=$forums item=forum}
     <tr class="{cycle values='r0,r1'}">
         <td>
-            {if $admin}
-            <div class="fr btn-spacer s">
-                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="icon btn-edit">{str tag=edit}</a>
-                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="icon btn-del">{str tag=delete}</a>
-            </div>
-            {/if}
             <div class="nowrap">
                 <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a>{if $publicgroup}<a href="{$forum->feedlink}"><img class="feedicon" src="{theme_url filename='images/rss_small.gif'}"></a>{/if}</strong>
             </div>
@@ -38,6 +33,14 @@
         </td>
         <td class="center" width="15%">{$forum->topiccount}</td>
         <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe|safe}{/if}</td>
+        <td>
+        {if $admin}
+            <div class="fr btn-spacer s">
+                <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-edit" title="{str tag=edit}"></a>
+                <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-del" title="{str tag=delete}"></a>
+            </div>
+        {/if}
+        </td>
 	</tr>
     {/foreach}
 </table>

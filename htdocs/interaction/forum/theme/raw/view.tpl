@@ -27,6 +27,7 @@
         <th>{str tag="Poster" section="interaction.forum"}</th>
         <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
         <th class="lastpost" width="20%">{str tag="lastpost" section="interaction.forum"}</th>
+        <th width="20px"></th>
     </tr>
     </thead>
     {if $stickytopics}
