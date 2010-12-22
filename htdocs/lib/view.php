@@ -3813,7 +3813,7 @@ function togglepublic_submit(Pieform $form, $values) {
     $view->set_access($access);
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
 
-    redirect('/view');
+    redirect('/view/blocks.php?id=' . $view->get('id'));
 }
 
 /**
