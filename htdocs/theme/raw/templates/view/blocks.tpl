@@ -9,6 +9,7 @@
 <div class="subpage rel">
 
 {if $columns}
+    {if $togglepublic}<div class="fr">{$togglepublic|safe}</div>{/if}
     {str tag="editblockspagedescription" section="view"}
     <form action="{$formurl}" method="post">
         <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
