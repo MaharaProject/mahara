@@ -20,7 +20,7 @@
                 <tbody>
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
-                        <td><div class="rel">
+                        <td>
 {if $view.type == 'profile'}
                             <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
 {elseif $view.type == 'dashboard'}
@@ -31,20 +31,6 @@
                             <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
 {/if}
 
-                            <div class="rbuttons">
-                              <div class="viewcontrol">
-{if !$view.submittedto && $view.removable}
-                                <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
-{/if}
-                              </div>
-                              <div class="editlink">
-{if !$view.submittedto}
-                                <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
-{/if}
-                              </div>
-                            </div>{* rbuttons *}
-
-                            <div>
 {if $view.submittedto}
                               <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {elseif $view.type == 'profile'}
@@ -56,8 +42,15 @@
 {elseif $view.description}
                               <div class="videsc">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
 {/if}
-                           </div>
-                        </div></td>
+                        </td>
+                        <td class="right buttonscell">
+{if !$view.submittedto}
+                                <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+{/if}
+{if !$view.submittedto && $view.removable}
+                                <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+{/if}
+                        </td>{* rbuttons *}
                     </tr>
 {/foreach}
                 </tbody>

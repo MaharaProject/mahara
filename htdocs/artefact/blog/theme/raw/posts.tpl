@@ -36,8 +36,8 @@
       {foreach from=$post->files item=file}
         <tr class="{cycle values='r1,r0'}">
           <td><img src="{$file->icon}" alt=""></td>
-          <td><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-          <td>{$file->description}</td>
+          <td class="valign"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
+          <td class="valign">{$file->description}</td>
         </tr>
       {/foreach}
       </tbody>

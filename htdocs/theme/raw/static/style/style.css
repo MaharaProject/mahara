@@ -22,6 +22,10 @@ body {
 	font-size: 0.75em; /* 16px x .75 = 12px */
 	line-height: 1.333em; /* 12px x 1.333 = 16px */
 }
+#micro .configure {  /* the overlay configure */
+	font-size: 0.75em;
+	line-height: 1.333em;
+}
 body, caption, th, td, input, textarea, select, option, legend, fieldset, button {
 	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
@@ -314,6 +318,7 @@ label {
 }
 .pieform td label {
 	font-weight: normal;
+	line-height: 1.6667em;
 }
 .pieform th label {
 	font-weight: bold;
@@ -1013,7 +1018,7 @@ div.info img {
 }
 #messages .error, div.error {
 	color: #dd0221;
-	background: #ffd3d9 url(../images/failure.gif) no-repeat 5px 5px;
+	background: #ffd3d9 url(../images/failure.gif) no-repeat 5px 3px;
 	border: 1px solid #dd0221;
 }
 #editaccess div.error {
@@ -1234,8 +1239,16 @@ tr.tags {
 	padding-left: auto;
 }
 tr.tags th {
-	background: url(../images/icon-tag.gif) no-repeat right 6px;
+	background: url(../images/icon-tag.gif) no-repeat right 7px;
 	padding-right: 15px !important;
+}
+tr.tags td div div {
+	line-height: 1.8em;
+	font-size: .9167em;
+}
+tr.tags td div div a {
+	line-height: 1.8em;
+	font-size: 1.1667em;
 }
 a.tag {
 	line-height: 1.1667em;
@@ -1522,15 +1535,6 @@ table.attachments td {
 	clear: left;
 	margin-left: 15px;
 }
-#myviews .editlink {
-	float: right;
-	margin: 3px 0 0 5px;
-}
-#myviews .viewcontrol {
-	width: 16px;
-	margin: 3px 0 0 5px;
-	float: right;
-}
 .videsc {
 	font-size: .9167em;
 	line-height: 1.3333em;
@@ -1584,13 +1588,15 @@ table.attachments td {
 }
 .accesslists .cv {
 	width: 50%;
+	padding-left: 0;
+	padding-bottom: 0;
 }
 .accesslist .al-num {
 	width: 5%;
 }
 .accesslists .al-edit {
 	width: 16px;
-	padding-top: 7px;
+	padding-top: 5px;
 }
 .accesslists .al {
 	font-size: .9167em;
@@ -1598,15 +1604,18 @@ table.attachments td {
 }
 .accesslists .cv-listitem {
 	clear: both;
-	padding: 2px 5px;
+	padding: 3px 5px;
 	border-bottom: 1px solid #FFF;
 }
 .accesslists .cv-listitem .cv-listitem-edit {
-	padding-top: 2px;
+	float: right;
+}
+.secreturlcount {
+	float: left;
 }
 /* Secret url */
 .secreturls {
-	width: 10%;
+	width: 15%;
 }
 .secreturls .buttons {
 	padding-top: 5px;
@@ -1668,7 +1677,8 @@ table.attachments td {
 	color: #333;
 	font-size: .9167em;
 }
-#accesslistitems .ai-container {
+#accesslistitems .ai-container th,
+#accesslistitems .ai-container td {
 	border-bottom: 1px solid #FFF;
 }
 #accesslistitems .ai-container td {
@@ -1722,7 +1732,7 @@ table.attachments td {
 #editaccess #editaccess_more_container {
 	border: 1px solid #d1d1d1;
 	background: #eee;
-	padding: 5px;
+	padding: 10px;
 	margin: 5px 0;
 	float: none;
 	clear: both;
@@ -1950,7 +1960,7 @@ ul.groupuserstatus li, #friendslist ul.actionlist li {
 	list-style: none;
 	margin: 0;
 	border-top: 1px solid #d1d1d1;
-	padding: 0 3px;
+	padding: 2px 3px;
 }
 ul.groupuserstatus li:first-child, #friendslist ul.actionlist li:first-child {
 	border-top: none;
@@ -2222,4 +2232,7 @@ img.feedicon {
 .buttonscell {
 	padding-top: 5px;
 	line-height: 1.3333em;
+}
+.valign {
+	padding: 6px 5px 3px 5px;
 }

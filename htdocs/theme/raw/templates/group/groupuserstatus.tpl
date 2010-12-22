@@ -7,8 +7,8 @@
     <li><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
 {elseif $group->membershiptype == 'admin'}
-	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" class="btn-big-edit" title="{str tag=edit}"></a>
-	<a href="{$WWWROOT}group/delete.php?id={$group->id}" class="btn-big-del" title="{str tag=delete}"></a></li>
+	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a></li>
 	
 {if $group->jointype == 'request' && $group->requests}
 	<li>

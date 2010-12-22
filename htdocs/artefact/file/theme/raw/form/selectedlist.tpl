@@ -15,10 +15,10 @@
     <td class="iconcell">
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{theme_url filename=images/`$file->artefacttype`.gif}{/if}">
     </td>
-    <td>
+    <td class="valign">
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     </td>
-    <td>{$file->description}</td>
+    <td class="valign">{$file->description}</td>
     <td class="right">
        <input type="submit" class="button submit s unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
        <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">

@@ -4,6 +4,8 @@
 }
 /********************** Top pane of Edit View *************************/
 #top-pane {
+	background: #EEE;
+	padding: 10px;
 }
 
 /* The tabs that allow you to select a blocktype category */
@@ -43,21 +45,22 @@
 #layout-link.disabled:hover {
 	text-decoration: none;
 }
-#btn-displaymyview {
-	background: url(../images/icon-display.gif) no-repeat left center;
-	padding-left: 1.6em;
-	font-weight: bold;
+#middle-pane {
+	background: #EEE;
 }
-
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-    border: 5px solid #888888;
+    padding: 0 10px 10px 10px;
+	background: #EEE;
 }
 #blocksinstruction {
-    background: #888888;
-    color: #FFF;
+    background: #EEE;
+    color: #888;
 	padding-bottom: 10px;
+}
+#column-container {
+	background: #FFF;
 }
 #column-container .column-header input[disabled="disabled"] {
     color: #ccc;
@@ -109,8 +112,12 @@ ul.artefactchooser-subtabs li.current a:active {
 #artefactchooser-body {
     border: 1px solid #ddd;
 }
-.upload_browse #artefactchooser-body {
-    border: 1px solid #ddd;
+.upload_browse #artefactchooser-body,
+#instconf_artefactid_container #artefactchooser-body {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+	border-top: 0;
 }
 
 /* pagination */
@@ -201,17 +208,14 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* posted or last update */
 .postdetails {
-	padding-bottom: 5px !important;
-	font-size: .9em;
 	color: #888;
-	line-height: 1.3333em;
 }
 #blocktype_externalfeed_lastupdate {
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
-	font-size: .9em;
+	font-size: .9167em;
 	color: #888;
-	line-height: 1.3333em;
+	line-height: 1.1667em;
 }
 
 

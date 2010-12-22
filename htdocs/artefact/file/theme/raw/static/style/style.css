@@ -47,9 +47,9 @@
 /* folder nav */
 .foldernav {
     font-weight: bold;
-    padding: 0 0 0 20px;
+    padding: 1px 0 0 20px;
     font-size: 1.3333em;
-    background: url(../images/foldernav_small.png) no-repeat top;
+    background: url(../images/foldernav_small.png) no-repeat left top;
 }
 form#files .foldernav {
     padding: 5px 0 3px 30px;
@@ -62,20 +62,24 @@ td.filethumb {
 	vertical-align: middle;
 }
 td.filename {
-	padding: 5px 5px 3px 5px;
+	padding: 7px 5px 3px 5px !important;
 }
 td.filedescription {
-	padding: 5px 5px 3px 5px;
+	padding: 7px 5px 3px 5px!important;
 	font-size: .9167em;
 }
 td.filesize {
-	padding: 6px 5px 3px 5px;
+	padding: 7px 5px 3px 5px!important;
 	font-size: .9167em;
 }
 td.filedate {
-	padding: 6px 5px 3px 5px;
+	padding: 7px 5px 3px 5px!important;
 	font-size: .9167em;
 	color: #888888;
+}
+td.filetags {
+	padding: 7px 5px 3px 5px!important;
+	font-size: .9167em;
 }
 
 /* File list */
@@ -127,10 +131,11 @@ tr.folderhover a {
 }
 /* File list edit box */
 #files_filebrowser_edit_row td.fileedittablewrap {
-	padding: 0;
+	padding-left: 0;
 }
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
 	font-size: 1.3333em;
+	padding-bottom: 0;
 }
 #files_filebrowser_edit_row table th {
 	border: 0;

@@ -4,11 +4,11 @@
 #category-list ul {
     background: url(../images/tabs-bg.gif) repeat-x left top;
     height: 25px;
-    padding-left: 1em;
+    padding-left: 10px;
 }
 #category-list li {
     line-height: 25px;
-    margin: 0;
+    margin: 0 !important;
     float: left;
     color: #1E6297;
 }
@@ -54,6 +54,13 @@
 	color: #267bbd;
 }
 
+.blockinstance-content h3 {
+	color: #333;
+}
+.blockinstance-content fieldset table th {
+	color: #888;
+}
+
 
 /* Wall */
 .wallpost {
@@ -67,7 +74,7 @@ ul.artefactchooser-tabs {
     font-size: 12px !important;
     background: url(../images/tabs-bg.gif) repeat-x left top;
     height: 25px;
-    padding-left: 1em !important;
+    padding-left: 10px !important;
 }
 ul.artefactchooser-tabs li {
     line-height: 25px;
@@ -99,21 +106,19 @@ ul.artefactchooser-tabs li.current a:active {
 ul.artefactchooser-tabs li.current a:hover {
 }
 ul.artefactchooser-subtabs {
-  margin: 0 !important;
   padding: 0 !important;
 }
 ul.artefactchooser-subtabs li {
   padding: 0;
-  margin: 0 3px 0 0 !important;
-  border-right: 0;
+  margin: 0 3px !important;
 }
 ul.artefactchooser-subtabs li a,
 ul.artefactchooser-subtabs li a:link,
 ul.artefactchooser-subtabs li a:visited,
 ul.artefactchooser-subtabs li a:active {
   text-decoration: none;
-  padding: .25em .5em;
-  background: #F3F7EC;
+  padding: 3px 5px;
+  font-weight: bold;
 }
 ul.artefactchooser-subtabs li a:hover {
 	text-decoration: none;
@@ -124,14 +129,12 @@ ul.artefactchooser-subtabs li.current a:visited,
 ul.artefactchooser-subtabs li.current a:active {
   color: #333;
   font-weight: bold;
-  background: #DDD;
 }
 ul.artefactchooser-subtabs li.current a:hover {
 	text-decoration: none;
 }
 
 #artefactchooser-body {
-    background: #F5F9FC;
 }
 
 

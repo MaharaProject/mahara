@@ -28,9 +28,11 @@
     margin: 5px 0;
 }
 /********************** Top pane of Edit View *************************/
+#page {
+	margin: 20px 0 10px 0;
+	clear: both;
+}
 #page #top-pane {
-    margin-bottom: 5px;
-	border: 5px solid #eee;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
@@ -49,8 +51,8 @@
     padding: 0;
 	position: static;
 	z-index:5;
-  margin: 0 2px 0 0 !important;
-  float: left;
+    margin: 0 2px 0 0;
+    float: left;
 }
 #category-list li a,
 #category-list li a:link,
@@ -276,24 +278,20 @@ html>body #column-container {
 .blockinstance-content {
 }
 
-/*.main-column .blockinstance-header h4, 
-.blockinstance.configure h4 {
-    margin: 0;
-	font-size: 1.3333em;
-}*/
 .blockinstance-content h2 {
 	font-size: 1.3333em !important;
-	margin-top: 5px !important;
-	margin-bottom: 0 !important;
 	border-bottom: 1px dotted #d1d1d1;
+	padding: 3px 0;
+	margin-bottom: 0 !important;
 }
 .blockinstance-content h3 {
 	font-size: 1.1667em !important;
-	margin-top: 5px !important;
 	margin-bottom: 0 !important;
 }
 .blockinstance-content h4 {
 	font-size: 1em !important;
+}
+.blockinstance-content #userviewstable h4 {
 	margin-bottom: 0 !important;
 }
 .blockinstance-content p {
@@ -314,7 +312,9 @@ html>body #column-container {
 }
 .blockinstance-content fieldset {
 	padding: 5px;
-	margin: 0 0 10px 0;
+}
+.blockinstance-content fieldset table th {
+	padding: 0 5px;
 }
 .blockinstance-content fieldset table {
 	* width: 98%;
@@ -373,20 +373,26 @@ html>body #column-container {
 }
 .postlist td h3 {
 	border-bottom: 1px dotted #d1d1d1;
-	font-size: 1.4em !important;
+	font-size: 1.3333em !important;
+	padding-bottom: 3px;
 }
 .postlist td h3 a {
 	text-decoration: none;
 }
 .blockinstance-content div.tags {
 	font-size: .9167em;
-	margin-top: 5px;
-	line-height: 1.4em;
+	line-height: 1.5em;
+	padding-top: 3px;
 }
 .blockinstance-content div.artefacts {
 	font-size: .9167em;
 	margin-top: 5px;
-	line-height: 1.4em;
+	line-height: 1.5em;
+}
+.blockinstance-content .postlist .postdetails {
+	padding: 3px 3px 10px 3px !important;
+	font-size: .9167em;
+	line-height: 1.1667em;
 }
 .postlist td div h1,
 .postlist td div h2 {
@@ -482,7 +488,7 @@ ul.artefactchooser-tabs li.current a:active {
   cursor: default;
 }
 ul.artefactchooser-subtabs {
-  margin: 0 0 10px 0 !important;
+  margin: 0 0 15px 0 !important;
   padding: 0 !important;
   font-size: .9167em;
   list-style: none;
@@ -522,15 +528,18 @@ ul.artefactchooser-subtabs li.current a:active {
 .maharatable tbody td {
 	padding: 0 0 5px 0;
 }
+.maharatable tbody td.errmsg {
+	padding: 3px 5px 3px 24px;
+}
 .maharatable #artefactchooser-body table,
 .maharatable #artefactchooser-body table th,
 .maharatable #artefactchooser-body table td {
-    padding: 3px !important;
+	padding: 3px 5px;
 }
 .maharatable #artefactchooser-body .artefactchooser-data,
 .maharatable #artefactchooser-body .artefactchooser-data th,
 .maharatable #artefactchooser-body .artefactchooser-data td {
-    padding: 0 3px !important;
+	padding: 3px 5px;
 }
 #artefactchooser-body th label {
 	font-size: .9167em;
@@ -577,7 +586,7 @@ ul.artefactchooser-subtabs li.current a:active {
 /* attachments */
 .attachments {
     border: 0;
-	margin: 5px 0;
+	margin: 0;
 	font-size: .9167em;
 }
 .attachments td {
@@ -608,14 +617,11 @@ ul.artefactchooser-subtabs li.current a:active {
 	font-size: .9167em;
 }
 .upload_browse #artefactchooser-body {
-	padding: 10px !important;
+	padding: 10px;
+	margin-bottom: 5px;
 }
 .upload_browse .uploadform td {
 	line-height: 1.1667em;
-}
-.upload_browse #artefactchooser-body {
-	margin-bottom: 5px;
-	padding: 10px;
 }
 
 #view-wizard-controls form {
@@ -834,16 +840,23 @@ table td div.plan_completed {
 .blockinstance .blockinstance-content table.postlist {
 	width: 100%;
 	* width: 98%;
+	margin-top: 10px;
 }
 
-.licensedesc {
+.license {
 	padding: 5px;
 	margin: 0;
 }
-.licensedesc div {
-	padding-left: 10px;
+.license .licenseicon {
+	vertical-align: top;
+	float: left;
+	width: 100px;
+	display: inline;
+}
+.license .licensedesc {
 	font-size: .9167em;
-	line-height: 1.4em;
+	line-height: 1.1667em;
+	display: inline;
 }
 
 .plansblocktable {
@@ -883,4 +896,8 @@ table.resumecomposite {
 }
 * html table.resumecomposite {
 	width: 96%;
+}
+
+.filedownload-item {
+	margin-bottom: 5px;
 }

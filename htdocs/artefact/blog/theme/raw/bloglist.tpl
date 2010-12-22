@@ -11,9 +11,9 @@
         <h4><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->title}</a></h4>
         <div id="blogdesc">{$blog->description|clean_html|safe}</div>
       </td>
-      <td><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount} {if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a></td>
-      <td class="s"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn s">{str tag=addpost section=artefact.blog}</a></td>
-      <td class="buttonscell right">
+      <td class="valign"><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount} {if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a></td>
+      <td class="valign s"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn">{str tag=addpost section=artefact.blog}</a></td>
+      <td class="valign buttonscell right">
         {if $blog->locked}
         	<span class="s dull">{str tag=submittedforassessment section=view}</span>
         {else}

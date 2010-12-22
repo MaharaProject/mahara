@@ -49,10 +49,10 @@
     <td class="filedate">{tif $file->mtime ?: ''}</td>
     {/if}
     {if $showtags}
-    <td>{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
+    <td class="filetags">{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
     {/if}
     {if $editmeta}
-    <td class="buttonscell right">
+    <td class="right s">
       {if $file->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {elseif !$file->isparent}
@@ -60,7 +60,7 @@
       {/if}
     </td>
     {/if}
-    <td class="buttonscell right">
+    <td class="right s">
     {if $editable && !$file->isparent}
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">{str tag=Unzip section=artefact.file}</a>{/if}
       {if $file->locked}

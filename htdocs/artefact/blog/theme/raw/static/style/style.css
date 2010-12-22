@@ -21,15 +21,10 @@
 	font-size: .9167em;
 }
 #blogdescription {
-	padding: 10px;
-	margin: 10px 0;
-	background: #eee;
+	margin: 0 0 10px 0;
 }
 #blogdescription p {
 	margin: 0;
-}
-#bloglist td div.postcontrols {
-  min-width: 150px;
 }
 td a.btn-add{
 	margin-left:10px;
@@ -39,7 +34,7 @@ td a.btn-add{
 #postlist th {
 	border-bottom: 1px dotted #d1d1d1;
 	font-size: 1em;
-	padding: 10px 0 3px 0;
+	padding: 15px 5px 3px 5px;
 	vertical-align: bottom;
 }
 #postlist th.posttitle {

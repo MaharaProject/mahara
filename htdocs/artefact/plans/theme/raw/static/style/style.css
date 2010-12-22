@@ -12,10 +12,9 @@ th.planscontrols {
 	width: 100%;
 }
 
-#planswrap table tr.incomplete {
+#planswrap table tr.incomplete td {
     background: #f5e8e9;
     color: #DD0221;
-	border-top: 1px solid #FFF;
 	border-bottom: 2px solid #FFF;
 }
 
