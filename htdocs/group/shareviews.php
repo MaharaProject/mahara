@@ -26,43 +26,34 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'configsite/siteviews');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'siteviews');
-
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once('pieforms/pieform.php');
+require_once(get_config('libroot') . 'group.php');
+define('TITLE', get_string('share', 'view'));
+define('MENUITEM', 'groups/share');
 
-$limit   = param_integer('limit', 5);
-$offset  = param_integer('offset', 0);
+define('GROUP', param_integer('group'));
+$group = group_current_group();
+if (!group_user_can_edit_views($group->id)) {
+    throw new AccessDeniedException();
+}
 
-$title = get_string('siteviews', 'admin');
-define('TITLE', $title);
+$accesslists = View::get_accesslists(null, $group->id);
 
-$createviewform = pieform(create_view_form(null, 'mahara'));
+$js = <<<EOF
+addLoadEvent(function () {
+    forEach(getElementsByTagAndClassName('a', 'secreturl', null), function (elem) {
+        connect(elem, 'onclick', function(e) {
+            e.stop();
+            var displayelem = getFirstElementByTagAndClassName(null, 'expandurl', getFirstParentByTagAndClassName(elem, null, 'accesslistitem'));
+            toggleElementClass('hidden', displayelem);
+        });
+    });
+});
+EOF;
 
-$smarty = smarty(array('jquery', 'myviews'));
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-
-$data = View::get_myviews_data($limit, $offset, null, 'mahara');
-
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'admin/site/views.php',
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
-
-$smarty->assign('views', $data->data);
-$smarty->assign('institution', 'mahara');
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', $createviewform);
-
-$smarty->display('view/index.tpl');
-
-?>
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('accesslists', $accesslists);
+$smarty->display('view/share.tpl');

@@ -38,11 +38,15 @@ $_PIEFORM_FIELDSETS = array();
 function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     global $_PIEFORM_FIELDSETS;
     $result = "\n<fieldset";
-    if (!empty($element['collapsible']) || !empty($element['class'])) {
+    $classes = array('pieform-fieldset');
+    if (!empty($element['class'])) {
+        $classes[] = Pieform::hsc($element['class']);
+    }
+    if (!empty($element['collapsible'])) {
         if (!isset($element['legend']) || $element['legend'] === '') {
             Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
         }
-        $classes = array('collapsible');
+        $classes[] = 'collapsible';
         $formname = $form->get_name();
         if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
             $_PIEFORM_FIELDSETS['forms'][$formname] = array('formname' => $formname);
@@ -58,11 +62,8 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         if (!empty($element['collapsed']) && !$error) {
             $classes[] = 'collapsed';
         }
-        if (!empty($element['class'])) {
-            $classes[] = Pieform::hsc($element['class']);
-        }
-        $result .= ' class="' . implode(' ', $classes) . '"';
     }
+    $result .= ' class="' . implode(' ', $classes) . '"';
     $result .= ">\n";
     if (isset($element['legend'])) {
         $result .= '<legend>';
@@ -104,6 +105,9 @@ function pieform_update_legends(element) {
         element = getFirstElementByTagAndClassName('body');
     }
     forEach(getElementsByTagAndClassName('fieldset', 'collapsible', element), function(fieldset) {
+        if (!hasElementClass(fieldset, 'pieform-fieldset')) {
+            return;
+        }
         var legend = getFirstElementByTagAndClassName('legend', null, fieldset);
         if (legend.firstChild.tagName == 'A') {
             connect(legend.firstChild, 'onclick', function(e) {

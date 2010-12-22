@@ -2228,5 +2228,12 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('institution', 'priority', 0, 'name', 'mahara');
     }
 
+    if ($oldversion < 2010122201) {
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('accessconf');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 40, XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+    }
+
     return $status;
 }

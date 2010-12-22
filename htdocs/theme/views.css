@@ -5,6 +5,18 @@
  * This file is licensed under the same terms as Mahara itself
  */
 
+.viewtitledesc h1 {
+    display: inline;
+}
+.viewtitledesc .editviewtitle a img,
+.viewtitledesc .editviewtitle a span {
+    padding: 0.5em 0 0 .1em;
+}
+.editviewtitle a img {
+    vertical-align: top;
+    padding: 0.375em 0 0 .1em;
+}
+
 /* The loading spinner/message that pops up before the view is loaded */
 #views-loading {
     text-align: center;

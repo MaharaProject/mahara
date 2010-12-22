@@ -26,43 +26,14 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'configsite/siteviews');
-define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'siteviews');
-
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once('pieforms/pieform.php');
+define('TITLE', get_string('share', 'view'));
+define('MENUITEM', 'myportfolio/share');
 
-$limit   = param_integer('limit', 5);
-$offset  = param_integer('offset', 0);
+$accesslists = View::get_accesslists($USER->get('id'));
 
-$title = get_string('siteviews', 'admin');
-define('TITLE', $title);
-
-$createviewform = pieform(create_view_form(null, 'mahara'));
-
-$smarty = smarty(array('jquery', 'myviews'));
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-
-$data = View::get_myviews_data($limit, $offset, null, 'mahara');
-
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'admin/site/views.php',
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
-
-$smarty->assign('views', $data->data);
-$smarty->assign('institution', 'mahara');
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', $createviewform);
-
-$smarty->display('view/index.tpl');
-
-?>
+$smarty->assign('accesslists', $accesslists);
+$smarty->display('view/share.tpl');

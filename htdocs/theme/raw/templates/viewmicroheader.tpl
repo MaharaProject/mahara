@@ -11,7 +11,7 @@
         <div class="fr links">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{$item.name}</a> 
+              <a {if $item.type}class="icon btn-{$item.type}" {/if}href="{$item.url}">{if $item.image}<img src="{$item.image}" title="{$item.name}">{else}{$item.name}{/if}</a> 
             {/foreach}
           {elseif $backurl}<a class="icon btn-back" href="{$backurl}">{str tag=back}</a> 
           {/if}
@@ -54,7 +54,11 @@
 {if $collection}
         <div class="left cb" id="collection"><strong>{$microheadertitle|safe}</strong> : {include file=collectionnav.tpl}</div>
 {else}
-        <div class="center cb title">{$microheadertitle|safe}</div>
+        <div class="center cb title">{$microheadertitle|safe}
+        {if $edittitleurl}
+        <span class="editviewtitle s"><a title="{str tag=edittitleanddescription section=view}" href="{$edittitleurl}"><img src="{theme_url filename='images/icon-edit.gif'}" alt="{str tag=edittitleanddescription section=view}" /></a></span>
+        {/if}
+        </div>
 {/if}
       </div>
     </div>

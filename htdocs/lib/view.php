@@ -68,6 +68,7 @@ class View {
     private $allowcomments;
     private $approvecomments;
     private $collection;
+    private $accessconf;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -560,65 +561,149 @@ class View {
         db_commit();
     }
 
+    /* Only retrieve access records that the owner can edit on the
+     * view access page.  Some records are not visible there, such as
+     * tutor access records for submitted views and objectionable
+     * content access records (visible = 0) and token/secret url
+     * records which are managed per-view, on another page.
+     */
     public function get_access($timeformat=null) {
+        if ($data = $this->get_access_records()) {
+            return self::process_access_records($data, $timeformat);
+        }
+        return array();
+    }
 
+    public function get_access_records() {
         $data = get_records_sql_array("
-            SELECT va.*, g.grouptype
+            SELECT accesstype, va.group, role, usr, startdate, stopdate, allowcomments, approvecomments
             FROM {view_access} va
-                LEFT OUTER JOIN {group} g ON (va.group = g.id AND g.deleted = 0)
-            WHERE va.view = ? AND va.visible = 1",
+            WHERE view = ? AND visible = 1 AND token IS NULL
+            ORDER BY
+                accesstype IS NULL, accesstype DESC,
+                va.group, role IS NOT NULL, role,
+                usr,
+                startdate IS NOT NULL, startdate, stopdate IS NOT NULL, stopdate,
+                allowcomments, approvecomments",
             array($this->id)
         );
+        return $data ? $data : array();
+    }
 
-        if ($data) {
-            foreach ($data as &$item) {
-                $item = (array)$item;
-                if ($item['usr']) {
-                    $item['type'] = 'user';
-                    $item['id'] = $item['usr'];
-                }
-                else if ($item['group']) {
-                    $item['type'] = 'group';
-                    $item['id'] = $item['group'];
-                }
-                else if ($item['token']) {
-                    $item['type'] = 'token';
-                    $item['id'] = $item['token'];
-                }
-                else {
-                    $item['type'] = $item['accesstype'];
-                    $item['id'] = null;
-                }
-
-                if ($item['role']) {
-                    $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$item['grouptype']);
-                }
-                if ($timeformat) {
-                    if ($item['startdate']) {
-                        $item['startdate'] = strftime($timeformat, strtotime($item['startdate']));
-                    }
-                    if ($item['stopdate']) {
-                        $item['stopdate'] = strftime($timeformat, strtotime($item['stopdate']));
-                    }
-                }
+    public static function process_access_records($data=array(), $timeformat=null) {
+        $rolegroups = array();
+        foreach ($data as &$item) {
+            if ($item->role && !isset($roledata[$item->group])) {
+                $rolegroups[$item->group] = 1;
             }
         }
-        else {
-            $data = array();
+        if ($rolegroups) {
+            $grouptypes = get_records_sql_assoc('
+                SELECT id, grouptype
+                FROM {group}
+                WHERE id IN (' . join(',', array_map('intval', array_keys($rolegroups))) . ')
+                AND deleted = 0',
+                array()
+            );
+        }
+
+        foreach ($data as &$item) {
+            $item = (array)$item;
+            if ($item['usr']) {
+                $item['type'] = 'user';
+                $item['id'] = $item['usr'];
+            }
+            else if ($item['group']) {
+                $item['type'] = 'group';
+                $item['id'] = $item['group'];
+            }
+            else {
+                $item['type'] = $item['accesstype'];
+                $item['id'] = null;
+            }
+
+            if ($item['role']) {
+                $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$grouptypes[$item['group']]->grouptype);
+            }
+            if ($timeformat) {
+                if ($item['startdate']) {
+                    $item['startdate'] = strftime($timeformat, strtotime($item['startdate']));
+                }
+                if ($item['stopdate']) {
+                    $item['stopdate'] = strftime($timeformat, strtotime($item['stopdate']));
+                }
+            }
         }
         return $data;
     }
 
+    /* Attempt to sort two access records in the same order as the
+       query in get_access_records */
+    public static function cmp_accesslist($a, $b) {
+        if (($c = empty($a->accesstype) - empty($b->accesstype))
+            || ($c = strcmp($b->accesstype, $a->accesstype))
+            || ($c = $a->group - $b->group)
+            || ($c = !empty($a->role) - !empty($b->role))
+            || ($c = strcmp($a->role, $b->role))
+            || ($c = $a->usr - $b->usr)
+            || ($c = !empty($a->startdate) - !empty($b->startdate))
+            || ($c = strcmp($a->startdate, $b->startdate))
+            || ($c = !empty($a->stopdate) - !empty($b->stopdate))
+            || ($c = strcmp($a->stopdate, $b->stopdate))
+            || ($c = $a->allowcomments - $b->allowcomments)) {
+            return $c;
+        }
+        return $a->approvecomments - $b->approvecomments;
+    }
+
+
+    public static function update_view_access($config, $viewids) {
+
+        db_begin();
+
+        // Use set_access() on the first view to get a hopefully consistent
+        // and complete representation of the access list
+        $firstview = new View($viewids[0]);
+        $fullaccesslist = $firstview->set_access($config['accesslist']);
+
+        // Copy the first view's access records to all the other views
+        $firstview->copy_access($viewids);
+
+        // Sort the full access list in the same order as the list
+        // returned by get_access, so that views with the same set of
+        // access records get grouped together
+        usort($fullaccesslist, array('self', 'cmp_accesslist'));
+
+        // Hash the config object so later on we can easily find
+        // all the views with the same config/access rights
+        $config['accesslist'] = $fullaccesslist;
+        $accessconf = substr(md5(serialize($config)), 0, 10);
+
+        foreach ($viewids as $viewid) {
+            $v = new View((int) $viewid);
+            $v->set('startdate', $config['startdate']);
+            $v->set('stopdate', $config['stopdate']);
+            $v->set('template', $config['template']);
+            $v->set('allowcomments', $config['allowcomments']);
+            $v->set('approvecomments', $config['approvecomments']);
+            if (isset($config['copynewuser'])) {
+                $v->set('copynewuser', $config['copynewuser']);
+            }
+            if (isset($config['copynewgroups'])) {
+                $v->set('copynewgroups', $config['copynewgroups']);
+            }
+            $v->set('accessconf', $accessconf);
+            $v->commit();
+        }
+
+        db_commit();
+    }
+
     public function is_public() {
-        $timeformat = get_string('strftimedatetimeshort');
-        $now = strtotime(date('Y/m/d H:i'));
-        foreach($this->get_access($timeformat) as $access) {
-            if($access['type'] == 'public' && (
-                ($access['startdate'] == null && $access['stopdate'] == null) ||
-                ($access['startdate'] == null && strtotime($access['stopdate']) > $now) ||
-                (strtotime($access['startdate']) < $now && $access['stopdate'] == null) ||
-                (strtotime($access['startdate']) < $now && strtotime($access['stopdate']) > $now))) {
-                    return true;
+        $accessrecords = self::user_access_records($this->id, 0);
+        foreach($accessrecords as &$a) {
+            if ($a->accesstype == 'public') {
+                return true;
             }
         }
         return false;
@@ -630,10 +715,13 @@ class View {
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
+        $select = 'view = ? AND visible = 1 AND token IS NULL';
+
         db_begin();
-        delete_records('view_access', 'view', $this->get('id'), 'visible', 1);
+        delete_records_select('view_access', $select, array($this->id));
 
         // View access
+        $accessdata_added = array();
         if ($accessdata) {
             /*
              * There should be a cleaner way to do this
@@ -646,7 +734,6 @@ class View {
              * - If view allows comments, access record comment permissions, don't apply, so reset them.
              * @todo: merge overlapping date ranges.
              */
-            $accessdata_added = array();
             $time = time();
             foreach ($accessdata as $item) {
 
@@ -661,7 +748,17 @@ class View {
                     unset($item['approvecomments']);
                 }
 
-                $accessrecord = new StdClass;
+                $accessrecord = (object)array(
+                    'accesstype' => null,
+                    'group' => null,
+                    'role' => null,
+                    'usr' => null,
+                    'token' => null,
+                    'startdate' => null,
+                    'stopdate' => null,
+                    'allowcomments' => 0,
+                    'approvecomments' => 1,
+                );
 
                 switch ($item['type']) {
                 case 'user':
@@ -678,9 +775,6 @@ class View {
                         $accessrecord->role = $item['role'];
                     }
                     break;
-                case 'token':
-                    $accessrecord->token = $item['id'];
-                    break;
                 case 'friends':
                     if (!$this->owner) {
                         continue; // Don't add friend access to group, institution or system views
@@ -690,7 +784,6 @@ class View {
                     $accessrecord->accesstype = $item['type'];
                 }
 
-                $accessrecord->view = $this->get('id');
                 if (isset($item['allowcomments'])) {
                     $accessrecord->allowcomments = (int) !empty($item['allowcomments']);
                     if ($accessrecord->allowcomments) {
@@ -705,7 +798,9 @@ class View {
                 }
 
                 if (array_search($accessrecord, $accessdata_added) === false) {
+                    $accessrecord->view = $this->get('id');
                     insert_record('view_access', $accessrecord);
+                    unset($accessrecord->view);
                     $accessdata_added[] = $accessrecord;
                 }
             }
@@ -719,7 +814,89 @@ class View {
         handle_event('saveview', $this->get('id'));
 
         db_commit();
+        return $accessdata_added;
     }
+
+    /**
+     * Apply all the access rules among a set of views to every view in
+     * the set.
+     */
+    public static function combine_access($viewids) {
+        if (empty($viewids)) {
+            return;
+        }
+
+        $select = 'view IN (' . join(',', array_map('intval', $viewids)) . ') AND visible = 1';
+
+        if (!$access = get_records_select_array('view_access', $select)) {
+            return;
+        }
+
+        $unique = array();
+        foreach ($access as &$a) {
+            unset($a->view);
+            $k = serialize($a);
+            if (!isset($unique[$k])) {
+                $unique[$k] = $a;
+            }
+        }
+
+        db_begin();
+
+        delete_records_select('view_access', $select);
+
+        foreach ($unique as &$a) {
+            foreach ($viewids as $id) {
+                $a->view = $id;
+                insert_record('view_access', $a);
+            }
+        }
+
+        db_commit();
+    }
+
+    /**
+     * Copy access records from one view to a set of other views
+     */
+    public function copy_access($to) {
+        if (empty($this->id)) {
+            return;
+        }
+
+        $toupdate = array();
+        foreach ($to as $viewid) {
+            if ($this->id != $viewid) {
+                $toupdate[] = (int) $viewid;
+            }
+        }
+
+        if (empty($toupdate)) {
+            return;
+        }
+
+        $firstviewaccess = get_records_select_array(
+            'view_access',
+            'view = ? AND visible = 1 AND token IS NULL',
+            array($this->id)
+        );
+
+        db_begin();
+        delete_records_select(
+            'view_access',
+            'view IN (' . join(',', $toupdate) . ') AND visible = 1 AND token IS NULL'
+        );
+
+        if ($firstviewaccess) {
+            foreach ($toupdate as $id) {
+                foreach ($firstviewaccess as &$a) {
+                    $a->view = $id;
+                    insert_record('view_access', $a);
+                }
+            }
+        }
+        db_commit();
+    }
+
 
     public function get_autocreate_grouptypes() {
         if (!isset($this->copynewgroups)) {
@@ -2148,13 +2325,6 @@ class View {
                 WHERE va.view IN (' . $viewidlist . ')
                 GROUP BY va.view, va.artefact, a.title, a.artefacttype, t.plugin
                 ORDER BY a.title, va.artefact', '');
-            $accessgroups = get_records_sql_array('
-                SELECT va.*, g.grouptype, g.name
-                FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
-                WHERE va.view IN (' . $viewidlist . ')
-                ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
-                array()
-            );
             $tags = get_records_select_array('view_tag', '"view" IN (' . $viewidlist . ')');
             $collections = get_records_sql_array('
                 SELECT c.name, c.id, cv.view
@@ -2205,17 +2375,6 @@ class View {
                     }
                 }
                 $data[$i]['artefacts'] = array();
-                $data[$i]['accessgroups'] = array();
-                if ($viewdata[$i]->startdate && $viewdata[$i]->stopdate) {
-                    $data[$i]['access'] = get_string('accessbetweendates2', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
-                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
-                }
-                else if ($viewdata[$i]->startdate) {
-                    $data[$i]['access'] = get_string('accessfromdate2', 'view', format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'));
-                }
-                else if ($viewdata[$i]->stopdate) {
-                    $data[$i]['access'] = get_string('accessuntildate2', 'view', format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate'));
-                }
                 $data[$i]['template'] = $viewdata[$i]->template;
             }
 
@@ -2236,37 +2395,6 @@ class View {
                     if (strlen($artname)) {
                       $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                                'title' => $artname);
-                    }
-                }
-            }
-            if ($accessgroups) {
-                foreach ($accessgroups as $access) {
-                    $key = null;
-                    if ($access->usr) {
-                        $access->accesstype = 'user';
-                        $access->id = $access->usr;
-                    }
-                    else if ($access->group) {
-                        $access->accesstype = 'group';
-                        $access->id = $access->group;
-                        if ($access->role) {
-                            $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
-                        }
-                    }
-                    else if ($access->token) {
-                        $access->accesstype = 'secreturl';
-                        $key = 'secreturl';
-                    }
-                    else {
-                        $key = $access->accesstype;
-                    }
-                    if ($key) {
-                        if (!isset($data[$index[$access->view]]['accessgroups'][$key])) {
-                            $data[$index[$access->view]]['accessgroups'][$key] = (array) $access;
-                        }
-                    }
-                    else {
-                        $data[$index[$access->view]]['accessgroups'][] = (array) $access;
                     }
                 }
             }
@@ -2752,7 +2880,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $profile=false, $collection=null) {
+    public static function set_nav($group, $institution) {
         if ($group) {
             define('MENUITEM', 'groups/views');
             define('GROUP', $group);
@@ -2760,12 +2888,6 @@ class View {
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', $institution == 'mahara' ? 'configsite/siteviews' : 'manageinstitutions/institutionviews');
-        }
-        else if ($profile) {
-            define('MENUITEM', 'profile/editprofilepage');
-        }
-        else if ($collection) {
-            define('MENUITEM', 'myportfolio/collection');
         }
         else {
             define('MENUITEM', 'myportfolio/views');
@@ -2959,7 +3081,7 @@ class View {
      */
     public function post_edit_redirect($new=false) {
         if ($new) {
-            $redirecturl = '/view/access.php?id=' . $this->get('id') . '&new=1';
+            $redirecturl = '/view/access.php?id=' . $this->get('id');
         }
         else {
             if ($this->get('group')) {
@@ -3156,6 +3278,228 @@ class View {
         $unthemable_types = array('grouphomepage', 'dashboard');
         return !in_array($this->type, $unthemable_types);
     }
+
+    /**
+     * Get all views for a (user,group,institution), grouping views
+     * into their collections.  Empty collections not returned.
+     *
+     * @param integer $owner
+     * @param integer $group
+     * @param string  $institution
+     * @param string  $matchconfig record all matches with given config hash (see set_access)
+     *
+     * @return array, array
+     */
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null) {
+        $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
+        $records = get_records_sql_array("
+            SELECT v.id AS vid, v.title AS vname, v.accessconf, c.id AS cid, c.name AS cname
+            FROM {view} v
+                LEFT JOIN {collection_view} cv ON v.id = cv.view
+                LEFT JOIN {collection} c ON cv.collection = c.id
+            WHERE v.$ownersql AND v.type = 'portfolio'
+            ORDER BY c.name, v.title",
+            array()
+        );
+
+        $collections = array();
+        $views = array();
+
+        if (!$records) {
+            return array($collections, $views);
+        }
+
+        foreach ($records as &$r) {
+            $v = array('id' => $r->vid, 'name' => $r->vname);
+            if ($r->cid) {
+                if (!isset($collections[$r->cid])) {
+                    $collections[$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'views' => array());
+                    if ($matchconfig && $matchconfig == $r->accessconf) {
+                        $collections[$r->cid]['match'] = true;
+                    }
+                }
+                $collections[$r->cid]['views'][$r->vid] = $v;
+            }
+            else {
+                $views[$r->vid] = $v;
+                if ($matchconfig && $matchconfig == $r->accessconf) {
+                    $views[$r->vid]['match'] = true;
+                }
+            }
+        }
+
+        return array($collections, $views);
+    }
+
+
+    /**
+     * Get all views & collections for a (user,group), grouped
+     * by their accesslists as defined by the accessconf column
+     *
+     * @param integer $owner
+     * @param integer $group
+     *
+     * @return array
+     */
+    public static function get_accesslists($owner=null, $group=null, $institution=null) {
+        $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
+        $records = get_records_sql_assoc("
+            SELECT
+                v.id AS vid, v.title AS vname, v.accessconf,
+                v.startdate, v.stopdate, v.description, v.template, v.type,
+                c.id AS cid, c.name AS cname
+            FROM {view} v
+                LEFT JOIN {collection_view} cv ON v.id = cv.view
+                LEFT JOIN {collection} c ON cv.collection = c.id
+            WHERE v.$ownersql AND v.type = 'portfolio'
+            ORDER BY cv.displayorder, v.title",
+            array()
+        );
+
+        if (!$records) {
+            return array();
+        }
+
+        // First group all views & collections by their access sets.  If no accessconf
+        // field exists on a view, put it (or its collection) in a group of one.
+
+        $data = array();
+        $viewindex = array();      // Remember one viewid for each access set
+        $viewaccesslist = array(); // Remember access set for every view
+
+        foreach ($records as &$r) {
+            $newkey = null;
+            if (empty($r->accessconf) && empty($r->cid)) {
+                // Singleton view
+                $newkey = 'v:' . $r->vid;
+                $data[$newkey] = array(
+                    'views'  => array($r->vid => array('id' => $r->vid, 'name' => $r->vname)),
+                    'viewid' => $r->vid,
+                );
+                $viewindex[$r->vid] = $newkey;
+                $viewaccesslist[$r->vid] = $newkey;
+            }
+            else if (empty($r->accessconf) && !empty($r->cid)) {
+                // Singleton collection; throw view data away
+                $key = 'c:'.$r->cid;
+                if (!isset($data[$key])) {
+                    $newkey = $key;
+                    $data[$newkey] = array(
+                        'collections' => array($r->cid => array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid)),
+                        'viewid'      => $r->vid,
+                    );
+                    $viewindex[$r->vid] = $newkey;
+                }
+                $viewaccesslist[$r->vid] = $key;
+            }
+            else if (!empty($r->accessconf)) {
+                if (!isset($data[$r->accessconf])) {
+                    $newkey = $r->accessconf;
+                    $data[$newkey] = array(
+                        'collections' => array(),
+                        'views'       => array(),
+                        'viewid'      => $r->vid,
+                    );
+                    $viewindex[$r->vid] = $newkey;
+                }
+                if (!empty($r->cid) && !isset($data[$r->accessconf]['collections'][$r->cid])) {
+                    $data[$r->accessconf]['collections'][$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid);
+                }
+                else if (empty($r->cid)) {
+                    $data[$r->accessconf]['views'][$r->vid] = array('id' => $r->vid, 'name' => $r->vname);
+                }
+                $viewaccesslist[$r->vid] = $r->accessconf;
+            }
+            if ($newkey) {
+                if ($r->startdate && $r->stopdate) {
+                    $data[$newkey]['access'] = get_string(
+                        'accessbetweendates2', 'view',
+                        format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
+                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate')
+                    );
+                }
+                else if ($r->startdate) {
+                    $data[$newkey] = get_string(
+                        'accessfromdate2', 'view',
+                        format_date(strtotime($viewdata[$i]->startdate), 'strftimedate')
+                    );
+                }
+                else if ($r->stopdate) {
+                    $data[$newkey]['access'] = get_string(
+                        'accessuntildate2', 'view',
+                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate')
+                    );
+                }
+            }
+        }
+
+        // Get view_access records, apart from those with visible = 0 (system access records),
+        // and token (secret url) records which go with individual views or collections.
+
+        $accessgroups = get_records_sql_array('
+            SELECT va.*, g.grouptype, g.name
+            FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
+            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1 AND va.token IS NULL
+            ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
+            array()
+        );
+
+        if ($accessgroups) {
+            foreach ($accessgroups as $access) {
+                $key = null;
+                if ($access->usr) {
+                    $access->accesstype = 'user';
+                    $access->id = $access->usr;
+                }
+                else if ($access->group) {
+                    $access->accesstype = 'group';
+                    $access->id = $access->group;
+                    if ($access->role) {
+                        $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
+                    }
+                }
+                else {
+                    $key = $access->accesstype;
+                }
+                if ($key) {
+                    if (!isset($data[$viewindex[$access->view]]['accessgroups'][$key])) {
+                        $data[$viewindex[$access->view]]['accessgroups'][$key] = (array) $access;
+                    }
+                }
+                else {
+                    $data[$viewindex[$access->view]]['accessgroups'][] = (array) $access;
+                }
+            }
+        }
+
+        $tokenaccess = get_records_sql_array('
+            SELECT va.*, cv.collection
+            FROM {view_access} va LEFT JOIN {collection_view} cv ON va.view = cv.view
+            WHERE va.view IN (' . join(',', array_keys($viewaccesslist)) . ') AND va.visible = 1 AND NOT va.token IS NULL
+            ORDER BY va.view',
+            array()
+        );
+
+        if ($tokenaccess) {
+            foreach ($tokenaccess as &$access) {
+                $accesslist =& $data[$viewaccesslist[$access->view]];
+                if (isset($accesslist['views'][$access->view])) {
+                    unset($access->collection);
+                    $accesslist['views'][$access->view]['secreturls'][$access->token] = (array) $access;
+                }
+                else if (isset($accesslist['collections'][(int)$access->collection])) {
+                    $collection = (int)$access->collection;
+                    unset($access->collection);
+                    if (!isset($accesslist['collections'][$collection]['secreturls'][$access->token])) {
+                        $accesslist['collections'][$collection]['secreturls'][$access->token] = (array) $access;
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
 }
 
 
@@ -3434,12 +3778,7 @@ function objection_form_cancel_submit(Pieform $form) {
 
 function togglepublic_form($viewid) {
     $view = new View($viewid);
-    $public = array_filter($view->get_access(),
-        create_function(
-            '$item',
-            'return $item[\'type\'] == \'public\';'
-        )
-    );
+    $public = $view->is_public();
     $togglepublic = pieform(array(
         'name'      => 'togglepublic',
         'autofocus' => false,

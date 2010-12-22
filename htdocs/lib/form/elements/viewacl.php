@@ -33,6 +33,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
+    global $USER;
     $smarty = smarty_core();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
@@ -51,9 +52,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
     if ($form->get_property('userview')) {
         $presets[] = 'friends';
     }
-    if ($public) {
-        $presets[] = 'token';
-    }
 
     if ($value) {
         foreach ($value as $key => &$item) {
@@ -64,6 +62,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 }
                 else {
                     $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
+                }
+                if (mb_strlen($item['name']) > 30) {
+                    $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
                 // only show access that is still current. Expired access will be deleted if the form is saved
                 if($item['stopdate'] && (time() > strtotime($item['stopdate']))) {
@@ -87,12 +88,38 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'preset' => true
         );
     }
+
+    $allgroups = array(
+        'type'   => 'allgroups',
+        'id'     => 'allgroups',
+        'start'  => null,
+        'end'    => null,
+        'name'   => get_string('allmygroups', 'group'),
+        'preset' => true
+    );
+    $mygroups = array();
+    foreach (group_get_user_groups($USER->get('id')) as $g) {
+        $mygroups[] = array(
+            'type' => 'group',
+            'id'   => $g->id,
+            'start' => null,
+            'end'   => null,
+            'name' => $g->name,
+            'preset' => false
+        );
+        if (mb_strlen($g->name) > 30) {
+            $mygroups[key($mygroups)]['shortname'] = str_shorten_text($g->name, 30, true);
+        }
+    }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($value));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
+    $smarty->assign('allowcomments', $element['allowcomments']);
+    $smarty->assign('allgroups', json_encode($allgroups));
+    $smarty->assign('mygroups', json_encode($mygroups));
     return $smarty->fetch('form/viewacl.tpl');
 }
 

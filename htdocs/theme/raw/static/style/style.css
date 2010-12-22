@@ -367,6 +367,7 @@ fieldset.collapsed {
 	margin: 0;
 	border: 0;
 }
+fieldset.collapsed div,
 fieldset.collapsed table {
     position: absolute;
     display: none;
@@ -1592,45 +1593,45 @@ table.attachments td {
 }
 
 /* My Views */
-#myviews h4 {
-	margin: .25em 0 .25em 0;
+#myviews .edittitle {
+  margin: 0 0 0 .5em;
 }
-#myviews .vi {
-    line-height: 1.4em;
-    float: left;
-    padding: 0 2em 0 0;
-    width: 29%;
+#myviews .expand img {
+  vertical-align: middle;
 }
-.vi .videsc,
-.vi .tags,
-.vi .artefacts,
-.vi .collection,
-.vi .viewaccess {
+#myviews .expanded {
+  clear: left;
+}
+#myviews .editlink {
+  float: right;
+  margin: 0 .5em 0 0;
+}
+#myviews .viewcontrol {
+  width: 16px;
+  margin: .25em 0 0 .5em;
+  float: right;
+}
+.videsc {
 	font-size: .9167em;
 	margin-top: .25em;
 }
-.vi .videsc p {
+.videsc p {
 	margin: 0;
     overflow: hidden;
 }
 #myviews .submit-viewitem {
-    float: left;
-	clear: left;
 	margin-top: .25em;
 	padding: .25em .5em;
 	background: #eee;
-	width: 98%;
 }
 #myviews .submit-viewitem .submit {
 	margin-left: .25em;
 }
 #myviews .submitted-viewitem {
-    float: left;
     padding: .5em 4em 0 0;
     font-style: italic;
     color: #888;
     font-size: 1em;
-    width: 60%;
 }
 #deleteview label {
     color: #ca0000;
@@ -1657,54 +1658,77 @@ table.attachments td {
 	float: right;
 }
 
-/* View access */
-#viewacl_lhs {
-    float: left;
-    padding: 1em;
-    margin: 0 1em 1em 0;
-    border: 1px solid #d1d1d1;
-	width: 320px;
+/* Publish page */
+.accesslists th .secreturl {
+  width: 25%;
 }
-#potentialpresetitems {
-	margin-bottom: 1em;
+.accesslists .cv {
+  width: 50%;
+}
+.accesslists .al {
+  width: 45%;
+}
+.accesslists .al-edit {
+  width: 5%;
+}
+.accesslists .cv-listitem {
+  width: 100%;
+}
+/* Secret url */
+.secreturls .buttons form,
+.secreturls .buttons form div {
+  display: inline;
+}
+
+/* View access */
+.checkboxes label {
+  clear: left;
+  display: block;
+}
+.checkboxes-option input {
+  margin-right: .5em;
+}
+.checkboxes-option {
+  float: left;
+  width: 15em;
+}
+.presets-container {
+  margin: 1.5em .5em 1em 0;
+  width: 25%;
 }
 #potentialpresetitems button {
 	* padding: 0 .25em;
 }
 #potentialpresetitems div {
-	border-bottom: 1px solid #F3F3F3;
 	padding: 0.25em 0.5em;
 }
-#viewacl_lhs #results thead td div {
-	font-size: .9167em;
-	font-weight: bold;
-	padding: 0 .5em;
-	position: relative;
-	display: inline;
-	top: 25px;
-	left: 145px;
+#potentialpresetitems div.preset {
+  font-weight: bold;
 }
-#viewacl_lhs #results tfoot td {
-	border-top: 1px solid #ccc;
-	font-size: .9167em;
-	font-weight: bold;
-	padding: .25em .5em .25em 100px;
+
+#accesslisttable {
+  margin: 1em 0 .5em .5em;
 }
-#accesslistitems {
-	margin-left: 360px;
+.main-column .accesslist-head1 th {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.main-column .accesslist-head2 th {
+    padding-top: 0;
 }
 #accesslistitems .ai-container {
-	margin: 0 1em 1em 0;
-	float: left;
     background: #eee;
+}
+#accesslistitems .ai-container td {
+	padding: 0.25em;
 }
 #accesslistitems .ai-container th {
 	text-align: left;
 	line-height: 1.6667em;
-	padding: 0.5em 0.5em 0em 1em;
+	padding: 0.25em 0.25em 0.25em 0;
 }
-#accesslistitems .removebutton {
-	padding: .5em;
+#accesslistitems .ai-container td.removebutton {
+    padding: .5em .5em 0 0;
 }
 #accesslistitems .removebutton button {
 	background: url(../images/remove-block.png) no-repeat;
@@ -1714,41 +1738,39 @@ table.attachments td {
 	height: 16px;
 	cursor: pointer;
 }
-#accesslistitems .ai-container table {
-	margin: 0;
-	padding: 0;
-	width: auto;
+.accesslistname {
+  width: 20em;
 }
-#accesslistitems .ai-container table td,
-#accesslistitems .ai-container table th {
-	padding: .25em .5em;
-}
-#accesslistitems .ai-container table th {
-	color: #555555;
-}
-#accesslistitems .ai-container table td {
-	font-size: .9167em;
-	color: #666;
+.ai-container .secreturl {
+  font-weight: bold;
+  padding-left: 1em;
 }
 
-#accesslistitems table th img {
-	vertical-align: top;
+#editaccess fieldset.collapsed {
+  padding: 0;
 }
-#editaccess_overrides_container {
-	clear: both;
+#editaccess fieldset {
+  margin: .5em 0 0;
+  padding: 1em;
 }
-#editaccess_overrides_container fieldset legend {
-	margin-top: 1em;
+#editaccess fieldset legend {
+  font-size: .9167em;
 }
-#editaccess_startdate_container,
-#editaccess_stopdate_container {
-	padding: .25em 0;
-	position: static;
-	z-index: 10;
+.viewacl-advanced-search {
+    margin: 1em 1em 0 0;
 }
-#editaccess_startdate_container label,
-#editaccess_stopdate_container label {
-	padding: 0 .25em 0 0;
+.viewacl-advanced-search input {
+    margin: .5em 0 0 .5em;
+}
+#viewacl-advanced #results {
+    margin: 0 0 0 1em;
+}
+#viewacl-advanced #results thead,
+#viewacl-advanced #results tfoot {
+    font-weight: bold;
+}
+#editaccess_submit_container {
+  margin: 1em 0 0;
 }
 
 /* Export */

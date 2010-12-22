@@ -38,7 +38,7 @@ require_once('pieforms/pieform.php');
 require_once('group.php');
 define('TITLE', get_string('myviews', 'view'));
 
-$limit = param_integer('limit', 5);
+$limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 $data = View::get_myviews_data($limit, $offset);
@@ -50,7 +50,7 @@ $userid = $USER->get('id');
 $tutorgroupdata = group_get_user_course_groups();
 
 foreach ($data->data as &$view) {
-    if ($tutorgroupdata && empty($view['submittedto'])) {
+    if ($view['type'] == 'portfolio' && $tutorgroupdata && empty($view['submittedto'])) {
         $view['submitto'] = view_group_submission_form($view['id'], $tutorgroupdata);
     }
     if ($view['type'] == 'profile' && get_config('allowpublicprofiles')) {
@@ -69,7 +69,7 @@ $pagination = build_pagination(array(
 
 $createviewform = pieform(create_view_form());
 
-$smarty = smarty();
+$smarty = smarty(array('jquery', 'myviews'));
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);

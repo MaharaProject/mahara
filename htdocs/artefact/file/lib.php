@@ -53,7 +53,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'path' => 'myportfolio/files',
                 'url' => 'artefact/file/',
                 'title' => get_string('myfiles', 'artefact.file'),
-                'weight' => 20,
+                'weight' => 40,
             ),
             array(
                 'path' => 'profile/icons',
@@ -70,7 +70,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'path' => 'groups/files',
                 'url' => 'artefact/file/groupfiles.php?group='.$groupid,
                 'title' => get_string('Files', 'artefact.file'),
-                'weight' => 60,
+                'weight' => 70,
             ),
         );
     }

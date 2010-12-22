@@ -881,6 +881,8 @@ $string['Created'] = 'Created';
 $string['Updated'] = 'Updated';
 $string['Total'] = 'Total';
 $string['Visits'] = 'Visits';
+$string['after'] = 'after';
+$string['before'] = 'before';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

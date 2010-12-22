@@ -39,6 +39,7 @@ $string['title']                  = 'View Title';
 $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
+$string['accessdates']            = 'Access Date/Time';
 $string['stopdatecannotbeinpast'] = 'The stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
@@ -49,6 +50,7 @@ $string['profileviewtitle']       = 'Profile View';
 $string['dashboardviewtitle']  = 'Dashboard View';
 $string['editprofileview']        = 'Edit profile view';
 $string['grouphomepageviewtitle'] = 'Group Homepage View';
+$string['showdescription']        = 'Show Description';
 
 // my views
 $string['artefacts'] = 'Artefacts';
@@ -75,6 +77,7 @@ $string['viewsubmittedtogroupon'] = 'This View was submitted to <a href="%s">%s<
 $string['nobodycanseethisview2'] = 'Only you can see this View';
 $string['noviews'] = 'No Views.';
 $string['youhavenoviews'] = 'You have no Views.';
+$string['youhaventcreatedanyviewsyet'] = "You haven't created any Views yet.";
 $string['youhaveoneview'] = 'You have 1 View.';
 $string['youhaveviews']   = 'You have %s Views.';
 $string['viewsownedbygroup'] = 'Views owned by this group';
@@ -91,14 +94,18 @@ $string['loggedin'] = 'Logged In Users';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
-$string['friendslower'] = 'friends';
-$string['grouplower'] = 'group';
 $string['tutors'] = 'tutors';
-$string['loggedinlower'] = 'logged in users';
-$string['publiclower'] = 'public';
 $string['everyoneingroup'] = 'Everyone in Group';
+
+// secret url
 $string['token'] = 'Secret URL';
-$string['peoplewiththesecreturl'] = 'People with the Secret URL';
+$string['editsecreturlaccess'] = 'Edit secret URL access';
+$string['newsecreturl'] = 'New Secret URL';
+$string['reallydeletesecreturl'] = 'Are you sure you want to delete this url?';
+$string['secreturldeleted'] = 'Your secret URL was deleted.';
+$string['secreturlupdated'] = 'Secret URL updated';
+$string['generatesecreturl'] = 'Generate a new secret URL for %s';
+$string['secreturls'] = 'Secret URLs';
 
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';
@@ -133,6 +140,12 @@ $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
 $string['Added'] = 'Added';
+$string['share'] = 'Share';
+$string['sharewith'] = 'Share with';
+$string['accesslist'] = 'Access list';
+$string['sharewithmygroups'] = 'Share with My Groups';
+$string['otherusersandgroups'] = 'Share with other users and groups';
+$string['moreoptions'] = 'Advanced Options';
 $string['allviews'] = 'All Views';
 
 $string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the View until your tutor has finished marking the View.  Are you sure you want to submit this View now?';
@@ -145,8 +158,8 @@ $string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this View? It cannot be undone.';
 $string['deleteviewconfirmnote'] = '<p><strong>Note:</strong> all the content blocks that have been added to the view will not be deleted. However, any feedback placed against the view will be deleted.  Consider backing up the view by exporting it first.</p>';
 
-$string['editaccessdescription'] = '<p>By default, only you can see your %s. You can share your %s with others by adding access rules on this page.</p>
-<p>Once you are done, scroll down and click Save to continue.</p>';
+$string['editaccesspagedescription3'] = 'By default, only you can see your Views. You can share views with others by adding access rules on this page.  Once you are done, scroll down and click Save to continue.';
+$string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of views and collections';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
 $string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your View before the start date and after the end date, regardless of any other access you have granted.';
@@ -163,7 +176,8 @@ $string['submittedforassessment'] = 'Submitted for assessment';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
-$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
+$string['viewcreatedsuccessfullyshare'] = 'Your View has been created.  You can share your view with others by adding access rules below.';
+$string['updatedaccessfornumviews'] = 'Access rules were updated for %d View(s)';
 $string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';

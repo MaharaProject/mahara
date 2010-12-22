@@ -292,9 +292,9 @@ if (get_config('viewmicroheaders')) {
     if ($loggedinid && $loggedinid == $userid) {
         $microheaderlinks = array(
             array(
-                'name' => get_string('editcontent', 'view'),
+                'name' => get_string('editprofileview', 'view'),
+                'image' => $THEME->get_url('images/edit.gif'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
-                'type' => 'edit',
             ),
         );
         $smarty->assign('microheaderlinks', $microheaderlinks);
@@ -304,6 +304,9 @@ if (get_config('viewmicroheaders')) {
     }
 }
 else {
+    if ($loggedinid && $loggedinid == $userid) {
+        $smarty->assign('ownprofile', true);
+    }
     $smarty->assign('pageheadinghtml', $view->display_title(false));
 }
 
