@@ -359,7 +359,12 @@ function register_submit(Pieform $form, $values) {
     $values['expiry'] = db_format_timestamp(time() + 86400);
     $values['lang'] = $SESSION->get('lang');
     try {
-        insert_record('usr_registration', $values);
+        if (!record_exists('usr_registration', 'email', $values['email'])) {
+            insert_record('usr_registration', $values);
+        }
+        else {
+            update_record('usr_registration', $values, array('email' => $values['email']));
+        }
 
         $user =(object) $values;
         $user->admin = 0;
