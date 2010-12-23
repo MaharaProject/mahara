@@ -1467,7 +1467,7 @@ function install_system_grouphomepage_view() {
         ),
         array(
             'blocktype' => 'groupviews',
-            'title' => get_string('Views', 'view'),
+            'title' => get_string('groupviews', 'view'),
             'column' => 1,
             'config' => null,
         ),

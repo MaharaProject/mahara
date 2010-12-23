@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Group Views';
-$string['description'] = 'Display the views related to the group';
-$string['displaygroupviews'] = 'Display Group views?';
-$string['displaygroupviewsdesc'] = 'Group views - views created in the group';
-$string['displaysharedviews'] = 'Display Shared views?';
-$string['displaysharedviewsdesc'] = 'Shared views - views shared by group members from their individual portfolio';
+$string['title'] = 'Group Pages';
+$string['description'] = 'Display the pages related to the group';
+$string['displaygroupviews'] = 'Display Group pages?';
+$string['displaygroupviewsdesc'] = 'Group pages - pages created in the group';
+$string['displaysharedviews'] = 'Display Shared pages?';
+$string['displaysharedviewsdesc'] = 'Shared pages - pages shared by group members from their individual portfolio';

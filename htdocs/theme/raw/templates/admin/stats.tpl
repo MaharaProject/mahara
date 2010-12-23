@@ -14,7 +14,7 @@
     {$sitedata.strgroupmemberaverage}</div>
     {/if}
     {if $sitedata.views}
-    <div><strong>{str tag=views}:</strong> {$sitedata.views}<br />
+    <div><strong>{str tag=Views section=view}:</strong> {$sitedata.views}<br />
     {$sitedata.strviewsperuser}</div>
     {/if}
     <div><strong>{str tag=databasesize section=admin}:</strong> {$sitedata.dbsize|display_size}</div>

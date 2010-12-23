@@ -26,7 +26,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Creative Commons License';
-$string['description'] = 'Attach a Creative Commons license to your view';
+$string['description'] = 'Attach a Creative Commons license to your page';
 $string['blockcontent'] = 'Block Content';
 
 $string['alttext'] = 'Creative Commons License';

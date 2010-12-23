@@ -30,7 +30,7 @@ defined('INTERNAL') || die();
 $string['typemaharamessage'] = 'System message';
 $string['typeusermessage'] = 'Message from other users';
 $string['typewatchlist'] = 'Watchlist';
-$string['typeviewaccess'] = 'New view access';
+$string['typeviewaccess'] = 'New page access';
 $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Repeat virus upload';
@@ -60,8 +60,6 @@ $string['deletednotifications'] = 'Deleted %s notifications';
 $string['failedtodeletenotifications'] = 'Failed to delete your notifications';
 
 $string['stopmonitoring'] = 'Stop monitoring';
-$string['viewsandartefacts'] = 'Views and Artefacts';
-$string['views'] = 'Views';
 $string['artefacts'] = 'Artefacts';
 $string['groups'] = 'Groups';
 $string['monitored'] = 'Monitored';
@@ -70,24 +68,24 @@ $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessage'] = 'New activity on your watchlist';
-$string['newwatchlistmessageview'] = '%s has changed their view "%s"';
+$string['newwatchlistmessageview'] = '%s has changed their page "%s"';
 
-$string['newviewsubject'] = 'New view created';
-$string['newviewmessage'] = '%s has created a new view "%s"';
+$string['newviewsubject'] = 'New page created';
+$string['newviewmessage'] = '%s has created a new page "%s"';
 
 $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 
-$string['newviewaccessmessage'] = 'You have been added to the access list for the view called "%s" by %s';
-$string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the view called "%s"';
-$string['newviewaccesssubject'] = 'New view access';
+$string['newviewaccessmessage'] = 'You have been added to the access list for the page "%s" by %s';
+$string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the page "%s"';
+$string['newviewaccesssubject'] = 'New page access';
 
-$string['viewmodified'] = 'has changed their view';
+$string['viewmodified'] = 'has changed their page';
 $string['ongroup'] = 'on Group';
 $string['ownedby'] = 'owned by';
 
-$string['objectionablecontentview'] = 'Objectionable content on View "%s" reported by %s';
-$string['objectionablecontentviewartefact'] = 'Objectionable content on View "%s" in "%s" reported by %s';
+$string['objectionablecontentview'] = 'Objectionable content on Page "%s" reported by %s';
+$string['objectionablecontentviewartefact'] = 'Objectionable content on Page "%s" in "%s" reported by %s';
 
 $string['newgroupmembersubj'] = '%s is now a group member!';
 $string['removedgroupmembersubj'] = '%s is no longer a group member';
@@ -106,8 +104,8 @@ $string['institutioninvitemessage'] = 'You can confirm your membership of this i
 $string['deleteallnotifications'] = 'Delete all notifications';
 $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications?';
 
-$string['viewsubmittedsubject'] = 'View submitted to %s';
-$string['viewsubmittedmessage'] = '%s has submitted their view "%s" to %s';
+$string['viewsubmittedsubject'] = 'Page submitted to %s';
+$string['viewsubmittedmessage'] = '%s has submitted their page "%s" to %s';
 
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
 ?>

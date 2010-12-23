@@ -30,6 +30,6 @@ defined('INTERNAL') || die();
 $string['defaulttitledescription'] = 'If no title is provided here the title of the collection will be used.';
 $string['collection'] = 'Collection';
 $string['title'] = 'Navigation';
-$string['description'] = 'Display a collection of views as a simple navigation.';
+$string['description'] = 'Display a collection of pages as a simple navigation.';
 $string['nocollections'] = 'No collections. <a href="%scollection/edit.php?new=1">Create one</a>.';
 ?>

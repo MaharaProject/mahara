@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Latest Views';
-$string['description'] = 'List the most recently updated Views on the site';
-$string['viewstoshow'] = 'Maximum number of views to show';
+$string['title'] = 'Latest Pages';
+$string['description'] = 'List the most recently updated pages on the site';
+$string['viewstoshow'] = 'Maximum number of pages to show';
 $string['viewstoshowdescription'] = 'Between 1 and 100';
 
 ?>

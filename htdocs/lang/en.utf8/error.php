@@ -77,8 +77,8 @@ $string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
 $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s';
 $string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlocktype::instance_config_save instead';
 $string['invaliddirection'] = 'Invalid direction %s';
-$string['onlyoneprofileviewallowed'] = 'You are only allowed one profile view';
-$string['onlyoneblocktypeperview'] = 'Cannot put more than one %s blocktype into a view';
+$string['onlyoneprofileviewallowed'] = 'You are only allowed one profile page';
+$string['onlyoneblocktypeperview'] = 'Cannot put more than one %s blocktype into a page';
 
 // if you change these next two , be sure to change them in libroot/errors.php
 // as they are duplicated there, in the case that get_string was not available.
@@ -92,21 +92,21 @@ $string['notfoundexception'] = 'The page you are looking for could not be found'
 $string['accessdenied'] = 'Access Denied';
 $string['accessdeniedexception'] =  'You do not have access to view this page';
 
-$string['viewnotfoundexceptiontitle'] = 'View not found';
-$string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
-$string['viewnotfound'] = 'View with id %s not found';
+$string['viewnotfoundexceptiontitle'] = 'Page not found';
+$string['viewnotfoundexceptionmessage'] = 'You tried to access a page that didn\'t exist!';
+$string['viewnotfound'] = 'Page with id %s not found';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['artefactnotfound'] = 'Artefact with id %s not found';
-$string['artefactnotinview'] = 'Artefact %s not in View %s';
-$string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a View';
+$string['artefactnotinview'] = 'Artefact %s not in page %s';
+$string['artefactonlyviewableinview'] = 'Artefacts of this type are only viewable within a page';
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
 $string['interactioninstancenotfound'] = 'Activity instance with id %s not found';
 
-$string['invalidviewaction'] = 'Invalid view control action: %s';
+$string['invalidviewaction'] = 'Invalid page control action: %s';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first';
 $string['missingparamcolumn'] = 'Missing column specification';

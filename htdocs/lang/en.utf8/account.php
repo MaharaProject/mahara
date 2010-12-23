@@ -55,14 +55,14 @@ $string['messagesallow'] = 'Allow anyone to send me messages';
 
 $string['language'] = 'Language';
 
-$string['showviewcolumns'] = 'Show controls to add and remove columns when editing a view';
+$string['showviewcolumns'] = 'Show controls to add and remove columns when editing a page';
 
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
 
-$string['enablemultipleblogs'] = 'Enable multiple blogs';
-$string['enablemultipleblogsdescription']  = 'By default, you have one blog. If you would like to keep more than one blog, check this option.';
-$string['disablemultipleblogserror'] = 'You cannot disable multiple blogs unless you only have one blog';
+$string['enablemultipleblogs'] = 'Enable multiple journals';
+$string['enablemultipleblogsdescription']  = 'By default, you have one journal. If you would like to keep more than one journal, check this option.';
+$string['disablemultipleblogserror'] = 'You cannot disable multiple journals unless you only have one journal';
 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
@@ -83,6 +83,6 @@ EOF;
 $string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
 $string['deleteaccount']  = 'Delete Account';
-$string['deleteaccountdescription']  = 'If you delete your account, your profile information and your Views will no longer be visible to other users.  The content of any forum posts you have written will still be visible, but the author\'s name will no longer be displayed.';
+$string['deleteaccountdescription']  = 'If you delete your account, your profile information and your pages will no longer be visible to other users.  The content of any forum posts you have written will still be visible, but the author\'s name will no longer be displayed.';
 $string['accountdeleted']  = 'Your account has been deleted.';
 ?>

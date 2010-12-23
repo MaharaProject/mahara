@@ -31,6 +31,6 @@ $string['solrurl']      = 'Solr URL';
 $string['indexcontrol'] = 'Index Control';
 $string['reindexusers'] = 'Re-Index Users';
 $string['reindexartefacts'] = 'Re-Index Artefacts';
-$string['reindexviews'] = 'Re-Index Views';
+$string['reindexviews'] = 'Re-Index pages';
 
 ?>
