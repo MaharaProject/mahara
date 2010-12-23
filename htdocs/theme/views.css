@@ -25,7 +25,7 @@
 }
 /* just the bottom pane when not editing */
 #bottom-pane {
-    margin: 5px 0;
+    margin: 0 0 5px 0;
 }
 /********************** Top pane of Edit View *************************/
 #page {
@@ -328,7 +328,7 @@ html>body #column-container {
 
 /* Wall */
 .blockinstance-content #wall {
-	margin: 5px 0;
+	margin: 10px 0 3px 0;
 }
 
 /* Image Blockinstance */
@@ -379,10 +379,11 @@ html>body #column-container {
 .postlist td h3 a {
 	text-decoration: none;
 }
-.blockinstance-content div.tags {
+.blockinstance-content .tags {
 	font-size: .9167em;
-	line-height: 1.5em;
 	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 0 !important;
 }
 .blockinstance-content div.artefacts {
 	font-size: .9167em;
@@ -405,8 +406,16 @@ html>body #column-container {
 	margin: 5px 0 0 0 !important;
 	border: 0 !important;
 }
-.postlist td div p {
-	margin: 0 0 10px 0 !important;
+#blogpost .tags {
+	font-size: .9167em;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 0 !important;
+}
+#blogpost .postdetails {
+	padding: 3px 3px 10px 3px !important;
+	font-size: .9167em;
+	line-height: 1.1667em;
 }
 
 /* group homepage */
@@ -417,7 +426,7 @@ html>body #column-container {
   margin: 0;
 }
 .grouphomepage .bt-groupviews .groupviewsection {
-  margin: 5px 0;
+  margin: 5px 0 10px 0;
 }
 
 /* Slideshow */
@@ -528,6 +537,9 @@ ul.artefactchooser-subtabs li.current a:active {
 .maharatable tbody td {
 	padding: 0 0 5px 0;
 }
+.maharatable .filebrowser tbody td {
+	padding: 3px 5px;
+}
 .maharatable tbody td.errmsg {
 	padding: 3px 5px 3px 24px;
 }
@@ -632,7 +644,7 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 
 #view-description {
-    margin: 10px 0;
+    margin: 0 0 20px 0;
 	padding: 0;
 }
 
@@ -802,22 +814,24 @@ div.colnav-extra {
 }
 
 /** viewing artefact */
-#view .filedata-icon.fr {
+#view .filedata-icon {
 	padding: 5px 10px 10px 10px;
-	margin: 0 0 10px 0;
+	margin: 0 15px 10px 0;
+	text-align: center;
 }
 #view .filedata-icon h4 {
 	font-size: .9167em;
 	margin: 0;
 }
-#view .filedata-icon.fl {
-	margin: 3px 0 0 0;
+#view .filedata-thumb {
+	margin: 0;
 }
 #view table.filedata th {
-	padding: 0 5px 0 0;
+	padding: 3px 5px 3px 0;
+	line-height: 1.3333em;
 }
 #view table.filedata td {
-	padding: 0 5px;
+	padding: 3px 5px;
 }
 
 
@@ -890,6 +904,9 @@ table td div.plan_completed {
 #userview {
 	border-bottom: 1px dotted #d1d1d1;
 }
+#latestforumposts td h4 {
+	margin-bottom: 0;
+}
 
 table.resumecomposite {
 	width: 100%;
@@ -900,4 +917,21 @@ table.resumecomposite {
 
 .filedownload-item {
 	margin-bottom: 5px;
+}
+.filedownload-item h4 {
+	margin-bottom: 0 !important;
+}
+
+
+#blogdescription {
+	margin: 0 0 10px 0;
+}
+#blogdescription p {
+	margin: 0;
+}
+
+td.icon-container {
+  vertical-align: top;
+  width: 16px;
+  * width: 25px;
 }

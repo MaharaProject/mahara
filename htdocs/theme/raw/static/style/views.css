@@ -201,7 +201,7 @@ body:last-child:not(:root:root) .newblockhere {
 }
 
 /** viewing artefact */
-#view .filedata-icon.fr {
+#view .filedata-icon {
 	background: #F6F6F6;
 	border: 1px solid #CCCCCC;
 }
@@ -232,9 +232,22 @@ body:last-child:not(:root:root) .newblockhere {
 * html .viewlist {
 	width: 98%;
 }
+.viewlist h4 {
+	margin-bottom: 0;
+}
 #userviewstable .details,
 .viewlist .details {
-	line-height: 1.4em;
+	line-height: 1.3333em;
+	padding-top: 3px;
+	font-size: .9167em;
+}
+
+#usergroupstable h4 {
+	margin-bottom: 0;
+}
+#usergroupstable .details {
+	line-height: 1.3333em;
+	padding-top: 3px;
 	font-size: .9167em;
 }
 

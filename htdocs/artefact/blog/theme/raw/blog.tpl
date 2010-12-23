@@ -2,9 +2,9 @@
 <h2>{$artefacttitle|safe}</h2>
 {/if}
 
-{$description|clean_html|safe}
-{if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
-
+<div id="blogdescription">{$description|clean_html|safe}
+{if $tags}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</p>{/if}
+</div>
 <table id="postlist_{$blockid}" class="postlist">
   <tbody>
   {$posts.tablerows|safe}

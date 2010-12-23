@@ -8,7 +8,7 @@
                     <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 
-                <div id="blogdescription"><p>{clean_html($blog->get('description'))|safe}</p>
+                <div id="blogdescription">{clean_html($blog->get('description'))|safe}
                 {if $blog->get('tags')}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}</div>
 
                 {if $posts}

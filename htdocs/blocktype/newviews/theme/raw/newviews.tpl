@@ -5,7 +5,7 @@
             <td><h4><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h4>
               <div class="details">{$view.shortdescription|safe|clean_html}</div></td>
             {if $view.sharedby}
-            <td>
+            <td class="right">
                 {if $view.group && $loggedin}
                   <a href="{$WWWROOT}group/view.php?id={$view.group}" class="s">{$view.sharedby}</a>
                 {elseif $view.owner && $loggedin}

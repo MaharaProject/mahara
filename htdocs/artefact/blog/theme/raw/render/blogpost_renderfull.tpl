@@ -1,9 +1,9 @@
 {**
  * This template displays a blog post.
  *}
-<div>
+<div id="blogpost">
   {if $artefacttitle}<h3>{$artefacttitle|safe}</h3>{/if}
-  <div>{$artefactdescription|clean_html|safe}</div>
+  {$artefactdescription|clean_html|safe}
   {if isset($attachments)}
   <table class="cb attachments fullwidth">
     <tbody>

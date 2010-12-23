@@ -1,8 +1,8 @@
 <div>
   {if !$simpledisplay}<h3>{$title}</h3>{/if}
-  <div>{$description}</div>
+  <p>{$description}</p>
   {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
-  <div>
+  <div id="commentfiles">
   {if (isset($children))}
   <h3>{str tag=contents section=artefact.file}:</h3>
   <table class="fullwidth">

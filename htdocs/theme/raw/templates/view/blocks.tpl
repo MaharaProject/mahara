@@ -30,8 +30,7 @@
             </div>
 
 {if $viewthemes}
-            <div id="middle-pane">
-                <div class="center">
+            <div id="middle-pane" class="center">
                     <label for="viewtheme-select">{str tag=theme}: </label>
                     <select id="viewtheme-select" name="viewtheme">
                         <option value="">{str tag=choosetheme}</option>

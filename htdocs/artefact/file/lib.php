@@ -1599,7 +1599,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             return array('html' => $smarty->fetch('artefact:file:image_render_self.tpl'), 'javascript' => '');
         }
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>'
+        $result['html'] = '<div class="fl filedata-icon"><h4>'
             . get_string('Preview', 'artefact.file') . '</h4><a href="'
             . hsc($url) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
             . '" alt=""></a></div>' . $result['html'];

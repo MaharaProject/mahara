@@ -1,6 +1,6 @@
 <div id="wall" class="wall">
     {if $wallmessage}
-        <p>{$wallmessage}</p>
+        <p class="message">{$wallmessage}</p>
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}

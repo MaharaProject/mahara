@@ -1,6 +1,5 @@
 <div>
-    <div class="fl filedata-icon"><a href="{$downloadpath}"><img src="{$iconpath}" alt="{$description}"></a></div>
-    <h4><a href="{$downloadpath}">{$title}</a></h4>
+    <h4><div class="fl filedata-thumb"><a href="{$downloadpath}"><img src="{$iconpath}" alt="{$description}"></a></div> <a href="{$downloadpath}">{$title}</a></h4>
 </div>
 
 <table class="filedata">

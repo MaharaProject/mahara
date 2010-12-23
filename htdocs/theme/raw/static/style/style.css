@@ -353,6 +353,10 @@ div.grippie {
 	background: #eee;
 	border-right: 4px solid #FFF;
 }
+.memberssearch .membershiptypes {
+	margin-right: 20px;
+	display: inline;
+}
 .memberssearch form, .memberssearch form div {
 	display: inline;
 }
@@ -521,6 +525,8 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
 	right: 0;
 	top: 0;
 	line-height: 2.1em;
+ * width: 1;
+ * overflow: visible;
 }
 .viewheader .rbuttons {
 	line-height: 1.8em;
@@ -699,19 +705,32 @@ a.btn-big-del {
 	background: url(../images/icon-collection.gif) no-repeat left 1px;
 	padding-left: 15px;
 }
+tr.expandable-head,
+tr.expandable-head td {
+	border-bottom: 0;
+}
 tr.expandable-body td {
-	padding-left: 10px;
+	font-size: .9167em;
+	padding-top: 0;
+	padding-left: 17px;
 }
-td.toggle.expandable {
-	width: 1em;
-	height: 1em;
-	padding-left: 16px;
-	background: url(../images/icon_fieldset_left.gif) 2px center no-repeat;
-}
-td.toggle.expandable.expanded {
-	background: url(../images/icon_fieldset_down.gif) 2px center no-repeat;
+td.expandable {
 	width: 10px;
 	height: 10px;
+	padding-left: 16px;
+	cursor: pointer;
+	background-image: url(../images/icon_fieldset_left.gif);
+	background-repeat: no-repeat;
+	background-position: 3px 6px;
+}
+td.expanded {
+	width: 10px;
+	height: 10px;
+	padding-left: 16px;
+	cursor: pointer;
+	background-image: url(../images/icon_fieldset_down.gif);
+	background-repeat: no-repeat;
+	background-position: 3px 6px;
 }
 div.pagetabs {
 	top: 10px !important;
@@ -752,7 +771,7 @@ div.rbuttons .small-logo {
 	padding: 0;
 }
 .viewheadertop .links {
-	padding: 3px 0 0 5px;
+	padding: 3px 0 3px 5px;
 	font-size: .9167em;
 }
 .viewheadertop .links a {
@@ -987,7 +1006,7 @@ ul.in-page-tabs li.fr {
 	padding: 0;
 }
 .main-column ul li {
-	margin: 0 0 3px 15px;
+	margin: 0 0 3px 20px;
 }
 /* system messages between nav and main content */
 #messages {
@@ -1431,7 +1450,7 @@ table.attachments {
 .attachments tbody th {
 	text-align: left;
 	background-color: #ddd;
-	padding: 3px 5px;
+	padding: 0 5px;
 	border: 0;
 	color: #333 !important;
 }

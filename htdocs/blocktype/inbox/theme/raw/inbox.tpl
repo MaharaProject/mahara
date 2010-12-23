@@ -5,9 +5,7 @@
 {foreach from=$items item=i}
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
-      <div class="icon">
         <img src="{theme_url filename=cat('images/' $i->type '.gif')}" />
-      </div>
     </td>
     <td>
   {if $i->message}
@@ -26,6 +24,7 @@
 </table>
 {if $desiredtypes}
 <a class="morelink" href="{$WWWROOT}account/activity?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a>
+<div class="cb"></div>
 {/if}
 <script>
 {literal}
