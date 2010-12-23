@@ -200,7 +200,7 @@ class upload_manager {
         if (isset($this->file)
             && !empty($this->file['name']) 
             && preg_match("/\.([^\.]+)$/", $this->file['name'], $m)) {
-            return $m[1];
+            return strtolower($m[1]);
         }
         return null;
     }
