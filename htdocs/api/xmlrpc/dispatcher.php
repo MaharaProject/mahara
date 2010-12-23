@@ -76,7 +76,7 @@ class Dispatcher {
 
     private $methodhelp = array(
         'user_authorise'   => 'Given an authentication token and a useragent hash, look for a record we\'ve created that associates those values with a single user. If we find it, return that user\'s details to the remote host',
-        'fetch_user_image' => 'Given a username, return the default profile icon for that user.'
+        'fetch_user_image' => 'Given a username, return the default profile picture for that user.'
     );
 
     private $methodsig = array(

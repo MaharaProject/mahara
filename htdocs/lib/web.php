@@ -1959,6 +1959,12 @@ function mahara_standard_nav() {
             'accesskey' => 'h',
         ),
         array(
+            'path' => 'content',
+            'url'  => 'artefact/internal/', // @todo possibly do path aliasing and dispatch?
+            'title' => get_string('mycontent'),
+            'weight' => 20,
+        ),
+        array(
             'path' => 'myportfolio',
             'url' => 'view/',
             'title' => get_string('myportfolio'),

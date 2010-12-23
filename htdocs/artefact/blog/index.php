@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/blogs');
+define('MENUITEM', 'content/blogs');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
 define('SECTION_PAGE', 'index');
