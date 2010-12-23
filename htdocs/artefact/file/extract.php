@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/files');
+define('MENUITEM', 'content/files');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 safe_require('artefact', 'file');
