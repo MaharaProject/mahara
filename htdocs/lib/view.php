@@ -701,6 +701,10 @@ class View {
 
     public function is_public() {
         $accessrecords = self::user_access_records($this->id, 0);
+        if (!$accessrecords) {
+            return false;
+        }
+
         foreach($accessrecords as &$a) {
             if ($a->accesstype == 'public') {
                 return true;
