@@ -376,6 +376,9 @@ html>body #column-container {
 	font-size: 1.3333em !important;
 	padding-bottom: 3px;
 }
+.blockinstance-content .postlist td h3 {
+	margin-top: 15px;
+}
 .postlist td h3 a {
 	text-decoration: none;
 }
@@ -854,7 +857,6 @@ table td div.plan_completed {
 .blockinstance .blockinstance-content table.postlist {
 	width: 100%;
 	* width: 98%;
-	margin-top: 10px;
 }
 
 .license {

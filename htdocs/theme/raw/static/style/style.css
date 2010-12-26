@@ -2031,9 +2031,19 @@ form#search, form#filter, div.searchform {
 }
 .group-info ul li {
 	margin: 0;
+	line-height: 1.6667em;
+}
+.group-info li img {
+	vertical-align: top;
+	margin-top: -4px;
 }
 .group-info ul li span {
 	margin: 0 30px 0 0;
+}
+.group-info ul li .groupinfolabel {
+	width: 100px;
+	display: block;
+	float: left;
 }
 .groupdescription {
 	margin: 0 0 10px 0;
@@ -2211,9 +2221,6 @@ img.feedicon {
 	white-space: nowrap;
 }
 /* to get user picts to align with text */
-.group-info li img {
-	vertical-align: top;
-}
 .bt-recentforumposts .blockinstance-content td img {
 	vertical-align: middle;
 }
