@@ -609,10 +609,8 @@ $string['phpuploaderror_7'] = 'Failed to write file to disk.';
 $string['phpuploaderror_8'] = 'File upload stopped by extension.';
 $string['adminphpuploaderror'] = 'A file upload error was probably caused by your server configuration.';
 
-$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
 $string['youraccounthasbeensuspendedtext2'] = 'Your account at %s has been suspended by %s.'; // @todo: more info?
 $string['youraccounthasbeensuspendedreasontext'] = "Your account at %s has been suspended by %s. Reason:\n\n%s";
-$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['youraccounthasbeenunsuspendedtext2'] = 'Your account at %s has been unsuspended. You may once again log in and use the site.'; // can't provide a login link because we don't know how they log in - it might be by xmlrpc
 
 // size of stuff

@@ -284,7 +284,6 @@ $string['Reply'] = 'Reply';
 $string['denyfriendrequest'] = 'Deny Friend Request';
 $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request';
-$string['cantrequestfrienship'] = 'You cannot request frienship from this user';
 $string['cantmessageuser'] = 'You cannot send this user a message';
 $string['cantviewmessage'] = 'You cannot view this message';
 $string['requestedfriendship'] = 'requested friendship';
