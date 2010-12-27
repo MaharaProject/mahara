@@ -2235,5 +2235,12 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2010122700) {
+        $table = new XMLDBTable('view_access');
+        $index = new XMLDBIndex('accesstypeix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('accesstype'));
+        add_index($table, $index);
+    }
+
     return $status;
 }

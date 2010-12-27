@@ -701,6 +701,7 @@
             </KEYS>
             <INDEXES>
                 <INDEX NAME="tokenix" UNIQUE="false" FIELDS="token"/>
+                <INDEX NAME="accesstypeix" UNIQUE="false" FIELDS="accesstype"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="view_visit">
