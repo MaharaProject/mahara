@@ -1718,7 +1718,6 @@ table.attachments td {
 #accesslistitems .removebutton button {
 	background: url(../images/remove-block.png) no-repeat;
 	border: 0;
-	font-size: 1%;
 	width: 16px;
 	height: 16px;
 	cursor: pointer;

@@ -84,7 +84,7 @@ function renderPotentialPresetItem(item) {
 
 // Given a row, render it on the right hand side
 function renderAccessListItem(item) {
-    var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
+    var removeButton = BUTTON({'type': 'button', 'title': '{{str tag=remove}}'});
     var allowfdbk = INPUT({
                         'type': 'checkbox',
                         'name': 'accesslist[' + count + '][allowcomments]',
