@@ -41,6 +41,6 @@ if (!group_user_can_edit_views($group->id)) {
 $accesslists = View::get_accesslists(null, $group->id);
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('heading', $group->name);
 $smarty->assign('accesslists', $accesslists);
 $smarty->display('view/share.tpl');
