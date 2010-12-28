@@ -68,7 +68,9 @@ $smarty = smarty(
 );
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
-$smarty->assign('isadmin', $isadmin);
+if ($isadmin) {
+    $smarty->assign('SUBPAGETOP', 'group/adminbuttons.tpl');
+}
 $smarty->display('group/view.tpl');
 
 ?>
