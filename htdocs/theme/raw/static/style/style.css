@@ -2039,11 +2039,6 @@ form#search, form#filter, div.searchform {
 .group-info ul li span {
 	margin: 0 30px 0 0;
 }
-.group-info ul li .groupinfolabel {
-	width: 100px;
-	display: block;
-	float: left;
-}
 .groupdescription {
 	margin: 0 0 10px 0;
 }
