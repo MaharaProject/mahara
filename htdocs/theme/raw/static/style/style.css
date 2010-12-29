@@ -922,6 +922,7 @@ div.rbuttons .small-logo {
 }
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
+    clear: both;
 	white-space: nowrap;
 	background: #ddd;
 	min-height: 5px;

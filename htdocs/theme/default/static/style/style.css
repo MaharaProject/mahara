@@ -297,7 +297,6 @@ input#files_filebrowser_edit_artefact:active {
 
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
-	clear: both;
     font-size: 12px;
     font-weight: bold;
     background: url(../images/submenu-bg.gif) repeat-x left top;

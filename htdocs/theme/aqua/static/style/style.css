@@ -340,7 +340,6 @@ input#files_filebrowser_edit_artefact:active {
 }
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
-    clear:both;
     padding: 0;
     margin: 0;
     font-size: 12px;
