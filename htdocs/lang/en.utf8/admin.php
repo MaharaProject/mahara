@@ -240,7 +240,7 @@ $string['registertermsdescription'] = "Force users to agree to the Terms and Con
 $string['allowmobileuploads'] = 'Allow Mobile Uploads';
 $string['allowmobileuploadsdescription'] = 'If enabled users will have the option of setting an authentication token - content uploaded with this token will be saved as artefacts.';
 $string['remoteavatars'] = 'Display remote avatars';
-$string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile icons.';
+$string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile pictures.';
 $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
 $string['searchusernames'] = 'Search Usernames';

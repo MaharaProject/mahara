@@ -136,7 +136,7 @@ $string['watchlistupdated'] = 'Your watchlist has been updated';
 $string['viewvisitcount'] = '%d page visit(s) from %s to %s';
 
 $string['friend'] = 'Friend';
-$string['profileicon'] = 'Profile Icon';
+$string['profileicon'] = 'Profile Picture';
 
 // general views stuff
 $string['Added'] = 'Added';
