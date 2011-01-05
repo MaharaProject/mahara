@@ -77,7 +77,7 @@ $string['Pages'] = 'Pages';
 $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">%s</a>';
 $string['viewsubmittedtogroupon'] = 'This page was submitted to <a href="%s">%s</a> on %s';
 $string['nobodycanseethisview2'] = 'Only you can see this page';
-$string['nopages'] = 'No pages.';
+$string['noviews'] = 'No pages.';
 $string['youhavenoviews'] = 'You have no pages.';
 $string['youhaventcreatedanyviewsyet'] = "You haven't created any pages yet.";
 $string['youhaveoneview'] = 'You have 1 page.';
