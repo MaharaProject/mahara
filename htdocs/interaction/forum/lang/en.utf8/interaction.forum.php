@@ -180,3 +180,4 @@ $string['maxindentdescription'] = 'Set the maximum indention level for a topic. 
 $string['closetopics'] = 'Close new topics';
 $string['closetopicsdescription'] = 'If checked, all new topics in this forum will be closed by default.  Only moderators and group administrators can reply to closed topics.';
 
+$string['activetopicsdescription'] = 'Recently updated topics in your groups.';

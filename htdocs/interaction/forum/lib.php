@@ -376,6 +376,17 @@ EOF;
         );
     }
 
+    public static function menu_items() {
+        return array(
+            array(
+                'path' => 'groups/topics',
+                'url' => 'group/topics.php',
+                'title' => get_string('Topics', 'interaction.forum'),
+                'weight' => 60,
+            ),
+        );
+    }
+
     /**
      * When a user joins a group, subscribe them automatically to all forums 
      * that should be subscribable
