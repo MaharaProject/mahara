@@ -973,8 +973,8 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	padding: 4px 10px;
 	cursor: default;
 }
-ul.in-page-tabs li.fr {
-	float: right !important;
+ul.edit-view-tabs li.displaymyview {
+	margin: 0 !important;
 }
 .subpage {
 	border: 1px solid #d1d1d1;
