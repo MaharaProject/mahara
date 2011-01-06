@@ -34,12 +34,26 @@ require_once('pieforms/pieform.php');
 require_once('group.php');
 define('TITLE', get_string('sharedviews', 'view'));
 
-$params = array(
-    'query' => param_variable('query', null),
-    'tag'   => param_variable('tag', null),
-);
+$query  = param_variable('query', null);
+$tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+
+$searchoptions = array(
+    'titleanddescription' => get_string('titleanddescription', 'view'),
+    'tagsonly' => get_string('tagsonly', 'view'),
+);
+if (!empty($tag)) {
+    $searchtype = 'tagsonly';
+    $searchdefault = $tag;
+    $querystring = '?tag=' . urlencode($tag);
+    $query = null;
+}
+else {
+    $searchtype = 'titleanddescription';
+    $searchdefault = $query;
+    $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
+}
 
 $searchform = pieform(array(
     'name' => 'search',
@@ -47,7 +61,13 @@ $searchform = pieform(array(
     'elements' => array(
         'query' => array(
             'type' => 'text',
-            'defaultvalue' => $params['query'],
+            'title' => get_string('search') . ': ',
+            'defaultvalue' => $searchdefault,
+        ),
+        'type' => array(
+            'type'         => 'select',
+            'options'      => $searchoptions,
+            'defaultvalue' => $searchtype,
         ),
         'submit' => array(
             'type' => 'submit',
@@ -56,12 +76,10 @@ $searchform = pieform(array(
     )
 ));
 
-$data = View::shared_to_user($params['query'], $params['tag'], $limit, $offset);
-
-$querystring = http_build_query($params);
+$data = View::shared_to_user($query, $tag, $limit, $offset);
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($querystring) ? '' : '?' . $querystring),
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . $querystring,
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
@@ -77,5 +95,11 @@ $smarty->display('view/sharedviews.tpl');
 exit;
 
 function search_submit(Pieform $form, $values) {
-    redirect('/view/sharedviews.php' . (empty($values['query']) ? '' : '?query=' . urlencode($values['query'])));
+    $goto = '/view/sharedviews.php';
+    if (!empty($values['query'])) {
+        $querystring = $values['type'] == 'tagsonly' ? '?tag=' : '?query=';
+        $querystring .= urlencode($values['query']);
+        $goto .= $querystring;
+    }
+    redirect($goto);
 }

@@ -324,4 +324,6 @@ $string['grouphomepagedescription'] = 'The Group Homepage is the content that ap
 
 // Shared views
 $string['sharedviews'] = 'Shared Pages';
-$string['sharedviewsdescription'] = 'The pages listed here have been shared with you, either directly, because you are a friend of the owner, or because the owner has chosen to share their page with one of your groups.';
+$string['titleanddescription'] = 'Title, description, tags';
+$string['tagsonly'] = 'Tags only';
+$string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you.  They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
