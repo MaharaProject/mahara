@@ -292,8 +292,7 @@ if (get_config('viewmicroheaders')) {
     if ($loggedinid && $loggedinid == $userid) {
         $microheaderlinks = array(
             array(
-                'name' => get_string('editprofileview', 'view'),
-                'image' => $THEME->get_url('images/edit.gif'),
+                'name' => get_string('editthisview', 'view'),
                 'url' => get_config('wwwroot') . 'view/blocks.php?profile=1',
             ),
         );
