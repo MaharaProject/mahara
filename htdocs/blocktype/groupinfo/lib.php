@@ -99,35 +99,6 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
             WHERE \"group\" = ?
             AND \"role\" = 'admin'", array($group->id));
 
-        $role = group_user_access($group->id);
-        $group->role = $role;
-
-        // logged in user can do stuff
-        if (is_logged_in()) {
-            $afterjoin = param_variable('next', 'view');
-            if ($role) {
-                if ($role == 'admin') {
-                    $group->membershiptype = 'admin';
-                    $group->requests = count_records('group_member_request', 'group', $group->id);
-                }
-                else {
-                    $group->membershiptype = 'member';
-                }
-                $group->canleave = group_user_can_leave($group->id);
-            }
-            else if ($group->jointype == 'invite'
-                and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
-                    $group->membershiptype = 'invite';
-                    $group->invite = group_get_accept_form('invite', $group->id, $afterjoin);
-                }
-            else if ($group->jointype == 'request'
-                and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
-                    $group->membershiptype = 'request';
-                }
-            else if ($group->jointype == 'open') {
-                $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
-            }
-        }
         $group->settingsdescription = group_display_settings($group);
         if (get_config('allowgroupcategories')) {
             $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';

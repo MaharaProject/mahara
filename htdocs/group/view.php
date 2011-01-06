@@ -43,9 +43,33 @@ if (!is_logged_in() && !$group->public) {
 
 define('TITLE', $group->name);
 
-$isadmin = false;
-if (is_logged_in()) {
-    $isadmin = group_user_access($group->id, $USER->id) == 'admin';
+$group->role = group_user_access($group->id);
+
+// logged in user can do stuff
+if ($USER->is_logged_in()) {
+    $afterjoin = param_variable('next', 'view');
+    if ($group->role) {
+        if ($group->role == 'admin') {
+            $group->membershiptype = 'admin';
+            $group->requests = count_records('group_member_request', 'group', $group->id);
+        }
+        else {
+            $group->membershiptype = 'member';
+        }
+        $group->canleave = group_user_can_leave($group->id);
+    }
+    else if ($group->jointype == 'invite'
+             and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
+        $group->membershiptype = 'invite';
+        $group->invite = group_get_accept_form('invite', $group->id, $afterjoin);
+    }
+    else if ($group->jointype == 'request'
+             and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
+        $group->membershiptype = 'request';
+    }
+    else if ($group->jointype == 'open') {
+        $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
+    }
 }
 
 $view = group_get_homepage_view($group->id);
@@ -68,9 +92,6 @@ $smarty = smarty(
 );
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
-if ($isadmin) {
-    $smarty->assign('SUBPAGETOP', 'group/adminbuttons.tpl');
-}
+$smarty->assign('group', $group);
+$smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->display('group/view.tpl');
-
-?>
