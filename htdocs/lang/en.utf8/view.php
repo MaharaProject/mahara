@@ -140,6 +140,7 @@ $string['share'] = 'Share';
 $string['sharewith'] = 'Share with';
 $string['accesslist'] = 'Access list';
 $string['sharewithmygroups'] = 'Share with My Groups';
+$string['shareview'] = 'Share page';
 $string['otherusersandgroups'] = 'Share with other users and groups';
 $string['moreoptions'] = 'Advanced Options';
 $string['allviews'] = 'All pages';
@@ -183,7 +184,7 @@ $string['confirmcancelcreatingview'] = 'This page has not been completed. Do you
 // view control stuff
 
 $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your page.</p>';
-$string['displaymyview'] = 'Display my page';
+$string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit this page';
 
 $string['success.addblocktype'] = 'Added block successfully';
