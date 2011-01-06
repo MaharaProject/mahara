@@ -322,4 +322,6 @@ $string['grouphomepage'] = 'Group Homepage';
 
 $string['grouphomepagedescription'] = 'The Group Homepage is the content that appears on the About tab for this group';
 
-?>
+// Shared views
+$string['sharedviews'] = 'Shared Pages';
+$string['sharedviewsdescription'] = 'The pages listed here have been shared with you, either directly, because you are a friend of the owner, or because the owner has chosen to share their page with one of your groups.';

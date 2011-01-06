@@ -2027,6 +2027,12 @@ function mahara_standard_nav() {
             'title' => get_string('findfriends'),
             'weight' => 40,
         ),
+        array(
+            'path' => 'groups/views',
+            'url' => 'view/sharedviews.php',
+            'title' => get_string('sharedviews', 'view'),
+            'weight' => 50,
+        ),
     );
 
     $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
