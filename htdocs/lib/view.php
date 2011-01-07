@@ -2832,7 +2832,6 @@ class View {
                 $institutions['mahara']->displayname = get_config('sitename');
             }
             foreach ($viewdata as &$v) {
-                $v->shortdescription = str_shorten_html(str_replace('<br />', ' ', $v->description), 100, true);
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                     $v->user = $owners[$v->owner];

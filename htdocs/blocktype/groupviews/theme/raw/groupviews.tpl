@@ -6,7 +6,7 @@
         <tr class="{cycle values='r0,r1'}">
             <td>
                 <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
-                <div>{$view.shortdescription}</div>
+                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
                 <div><a href="">{str tag=copythisview section=view}</a></div>
@@ -36,7 +36,7 @@
                         {$view.sharedby}
                     {/if}
                 {/if}
-                <div>{$view.shortdescription}</div>
+                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
                 <div><a href="">{str tag=copythisview section=view}</a></div>
@@ -90,7 +90,7 @@
                 {if $view.submittedtime}
                     <span class="date s"><br />({str tag=timeofsubmission section=view}: {$view.submittedtime|format_date})</span>
                 {/if}
-                <div>{$view.shortdescription}</div>
+                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>
         </tr>

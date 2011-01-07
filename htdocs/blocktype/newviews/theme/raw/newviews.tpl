@@ -3,7 +3,7 @@
   {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
             <td><h4><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h4>
-              <div class="details">{$view.shortdescription|safe|clean_html}</div></td>
+              <div class="details">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div></td>
             {if $view.sharedby}
             <td class="right">
                 {if $view.group && $loggedin}
