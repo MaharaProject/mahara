@@ -26,16 +26,10 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/topics');
+define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 safe_require('interaction', 'forum');
-define('TITLE', get_string('Topics', 'interaction.forum'));
-
-if (!$USER->is_logged_in()) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
-}
 
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
@@ -52,9 +46,10 @@ $pagination = build_pagination(array(
     'offset' => $offset,
 ));
 
-$smarty = smarty(array('paginator'));
+$smarty = smarty_core();
 $smarty->assign_by_ref('topics', $data['data']);
-$smarty->assign_by_ref('pagination', $pagination['html']);
-$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $pagination['javascript'] . '});');
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->display('group/topics.tpl');
+$data['tablerows'] = $smarty->fetch('group/topicrows.tpl');
+$data['pagination'] = $pagination['html'];
+$data['pagination_js'] = $pagination['javascript'];
+
+json_reply(false, array('data' => $data));

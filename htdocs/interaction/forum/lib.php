@@ -548,6 +548,59 @@ EOF;
     public static function save_config_options($values) {
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
+
+    public static function get_active_topics($limit, $offset) {
+        global $USER;
+
+        $from = '
+            FROM
+                {interaction_forum_topic} t
+                JOIN {interaction_instance} f ON t.forum = f.id
+                JOIN {group} g ON f.group = g.id
+                JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
+                JOIN {interaction_forum_post} first ON (first.topic = t.id AND first.parent IS NULL)
+                JOIN (
+                    SELECT DISTINCT ON (topic) topic, id, poster, subject, body, ctime
+                    FROM {interaction_forum_post} p
+                    WHERE p.deleted = 0
+                    ORDER BY topic, ctime DESC
+                ) last ON last.topic = t.id';
+
+        $where = '
+            WHERE g.deleted = 0 AND f.deleted = 0 AND t.deleted = 0';
+
+        $result = array(
+            'count'  => count_records_sql('SELECT COUNT(*) ' . $from . $where, array($USER->get('id'))),
+            'limit'  => $limit,
+            'offset' => $offset,
+            'data'   => array(),
+        );
+
+        if (!$result['count']) {
+            return $result;
+        }
+
+        $select = '
+            SELECT
+                t.id, t.forum AS forumid, f.title AS forumname, g.id AS groupid, g.name AS groupname,
+                first.subject AS topicname, first.poster AS firstpostby,
+                last.id AS postid, last.poster, last.subject, last.body, last.ctime,
+                COUNT(posts) AS postcount';
+
+        $from .= '
+                LEFT JOIN {interaction_forum_post} posts ON posts.topic = t.id';
+
+        $sort = '
+            GROUP BY
+                t.id, t.forum, f.title, g.id, g.name,
+                first.subject, first.poster,
+                last.id, last.poster, last.subject, last.body, last.ctime
+            ORDER BY last.ctime DESC';
+
+        $result['data'] = get_records_sql_array($select . $from . $where . $sort, array($USER->get('id')), $offset, $limit);
+
+        return $result;
+    }
 }
 
 class InteractionForumInstance extends InteractionInstance {
