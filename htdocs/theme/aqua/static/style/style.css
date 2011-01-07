@@ -165,7 +165,8 @@ button,
 .buttondk,
 input.button,
 input.select,
-input#files_filebrowser_edit_artefact {
+input#files_filebrowser_edit_artefact,
+ul.groupuserstatus li a {
 	background: #0b1962 url(../images/btn-bkgd.gif) repeat-x top;
 	border-color: #476ee2 #011e3a #011e3a #476ee2;
 	color: #FFF !important;
@@ -178,7 +179,8 @@ button:hover,
 .buttondk:hover,
 input.button:hover,
 input.select:hover,
-input#files_filebrowser_edit_artefact:hover {
+input#files_filebrowser_edit_artefact:hover,
+ul.groupuserstatus li a:hover {
 	background: #012cac url(../images/btn-bkgd-hover.gif) repeat-x top;
 	border-color: #011e3a #476ee2 #476ee2 #011e3a;
 	color: #FFF;
@@ -191,7 +193,8 @@ button:active,
 .buttondk:active,
 input.button:active,
 input.select:active,
-input#files_filebrowser_edit_artefact:active {
+input#files_filebrowser_edit_artefact:active,
+ul.groupuserstatus li a:active {
 	background: #012cac url(../images/btn-bkgd-hover.gif) repeat-x 1px;
 	border-color: #011e3a #476ee2 #476ee2 #011e3a;
 	color: #FFF;
@@ -390,11 +393,9 @@ ul.in-page-tabs {
   line-height: 25px;
   height: 25px;
   font-size: 12px;
-  display: block;
 }
 ul.in-page-tabs li {
   margin: 0 3px 0 0 !important;
-  float: left;
   height: 25px;
   line-height: 25px;
 }
@@ -403,7 +404,8 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active {
   color: #FFF;
-  padding: 4px 10px 5px 10px;
+  padding: 4px 10px;
+  padding: 4px 10px 5px 10px\0/;
   text-decoration: none;
   background: #00084F;
   line-height: 26px;
@@ -420,7 +422,8 @@ ul.in-page-tabs li a.current-tab:active {
   border-left: 1px solid #ddd;
   border-top: 1px solid #ddd;
   border-right: 1px solid #ddd;
-  padding: 4px 10px 5px 10px;
+  border-bottom: 1px solid #FFF;
+  padding: 4px 10px;
 }
 
 .subpage {
@@ -559,4 +562,11 @@ div.sideblock h3 a:hover {
 }
 .viewheader .title {
 	color: #FFF;
+}
+
+
+#containerX #top-wrapper a,
+#containerX #top-wrapper a:hover,
+#containerX #top-wrapper a:active {
+	color: #ffffff;
 }

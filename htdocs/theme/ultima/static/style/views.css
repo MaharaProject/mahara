@@ -8,15 +8,23 @@
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-	background: #a551a9;
-	color: #FFF;
+  color: #ffffff;
+  font-weight: normal;
+  background-color: #5c0758;
+  padding: 4px 10px;
+}
+#category-list li a:hover {
+  color: #ffffff;
+  background-color: #5c0758;
+  text-decoration: underline;
 }
 #category-list li.current a,
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-	background: #5C0758;
-	color: #FFF;
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #841c7f;
 }
 
 /* The panel that contains the blocktype icons */
@@ -30,11 +38,6 @@
 #page #bottom-pane {
 	border-color: #5C0758 !important;
 }
-#blocksinstruction {
-	background: #5C0758;
-    color: #FFFFFF;
-}
-
 
 /**************** Blockinstance **********************/
 .upload_browse #artefactchooser-body {

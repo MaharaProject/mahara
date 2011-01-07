@@ -11,7 +11,7 @@
                 <div class="fr">
                      {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
                 </div>
-                <div>
+                <div class="mygroupsdetails">
                      {include file="group/group.tpl" group=$group returnto='mygroups'}
                 </div>
             </td></tr>

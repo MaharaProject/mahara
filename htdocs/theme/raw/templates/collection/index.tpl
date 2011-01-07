@@ -8,32 +8,23 @@
         <tbody>
         {foreach from=$collections item=collection}
                 <tr class="{cycle values='r0,r1'}">
-                    <td><div class="rel">
-
+                    <td>
+                        <div class="fr viewcontrolbuttons">
+                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+                            <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
+                            <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+                        </div>
             {if $collection->views[0]->view}
                         <h3><a href="{$WWWROOT}view/view.php?id={$collection->views[0]->view}">{$collection->name}</a></h3>
             {else}
                         <h3 title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
             {/if}
 
-                        <div class="rbuttons">
-
-                          <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
-                          </div>
-                          <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
-                          </div>
-                          <div class="viewcontrol">
-                            <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
-                          </div>
-                        </div>
-
 
                         <div class="cb videsc">{$collection->description}</div>
 
                         <div class="videsc">
-                          <div class="collection"><label>{str tag=Views section=view}:</label>
+                          <div><label>{str tag=Views section=view}:</label>
                           {if $collection->views}
                             {foreach from=$collection->views item=view name=cviews}
                                 <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
@@ -41,11 +32,9 @@
                           {else}
                             {str tag=none}
                           {/if}
+                          </div>
                         </div>
-
-                    </div>
-
-                    </div></td>
+                    </td>
                 </tr>
         {/foreach}
         </tbody>

@@ -126,7 +126,7 @@ html>body #column-container {
 }
 #blocksinstruction {
     padding: 3px 10px;
-    font-weight: bold;
+	font-style: italic;
 	margin-bottom: 10px;
 }
 
@@ -328,7 +328,7 @@ html>body #column-container {
 
 /* Wall */
 .blockinstance-content #wall {
-	margin: 10px 0 3px 0;
+	margin: 10px 0 0 0;
 }
 
 /* Image Blockinstance */
@@ -597,6 +597,9 @@ ul.artefactchooser-subtabs li.current a:active {
     margin: 0 1px;
     padding: 1px 3px;
 }
+.blockinstance-content div.center .pagination {
+	background-color: #EEEEEE;
+}
 
 /* attachments */
 .attachments {
@@ -727,7 +730,7 @@ div.colnav-extra {
 
 .submissionform {
 	background: #eee;
-	padding: 3px 10px;
+	padding: 3px 5px;
 }
 .submissionform select {
 	font-size: 1em;
@@ -757,8 +760,16 @@ div.colnav-extra {
 	background: #eee;
 	margin-bottom: 5px;
 }
+.viewfooter .releaseviewform tr#releaseview_submittedview_container th,
+.viewfooter .releaseviewform tr#releaseview_submit_container th {
+	padding: 0 !important;
+}
+.viewfooter .releaseviewform tr#releaseview_submittedview_container td {
+	padding-top: 6px;
+}
 .viewfooter .releaseviewform tr {
 	display: inline;
+	float: left;
 }
 .viewfooter .releaseviewform tr th {
 	padding: 3px !important;
@@ -784,7 +795,7 @@ div.colnav-extra {
 }
 #feedbacktable .details {
 	font-size: .9167em;
-	line-height: 1.8em;
+	line-height: 2em;
 }
 #feedbacktable .icon {
 	float: left;

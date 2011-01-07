@@ -1,28 +1,44 @@
 /*  Views  */
 /********************** Top pane of Edit View *************************/
+#top-pane,
+#middle-pane,
+#page #bottom-pane,
+#blocksinstruction {
+    background: #1C3740;
+}
 /* The tabs that allow you to select a blocktype category */
 #category-list {
   margin-left:10px;
 }
 #category-list li {
-  margin: 0 3px 0 0;
+  margin: 0 3px 0 0 !important;
+  float: left;
+  height: 25px;
+  background: none;
+  line-height: 25px;
 }
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-  border: 0;
-  background: #1C3740;
+  color: #FFF;
+  font-weight: normal;
+  padding: 5px 10px 6px 10px;
+  background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 }
 #category-list li a:hover {
-    color: #BEE3F1;
+  color: #FFF;
+  background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
+  text-decoration: underline;
 }
 #category-list li.current a,
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-    background: #00AEF1;
-    color: #FFF;
+  color: #FFF;
+  font-weight: bold;
+  padding: 5px 10px 6px 10px;
+  background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
 }
 
 /* The panel that contains the blocktype icons */
@@ -33,6 +49,9 @@
 }
 .blocktype div {
 	color: #BEE3F1;
+}
+#column-container {
+	background: #080D0F;
 }
 
 

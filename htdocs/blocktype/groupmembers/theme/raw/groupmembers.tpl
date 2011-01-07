@@ -6,5 +6,5 @@
       </tbody>
     </table>
 {/if}
-<a class="morelink" href="{$show_all.url}">{$show_all.message} &raquo;</a>
+<div class="morelinkwrap"><a class="morelink" href="{$show_all.url}">{$show_all.message} &raquo;</a></div>
 </div>

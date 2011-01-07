@@ -23,7 +23,7 @@
 {/foreach}
 </table>
 {if $desiredtypes}
-<a class="morelink" href="{$WWWROOT}account/activity?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a>
+<div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}account/activity?type={$desiredtypes}">{str tag=More section=blocktype.inbox} &raquo;</a></div>
 <div class="cb"></div>
 {/if}
 <script>

@@ -14,4 +14,4 @@
             </tr>
         </table>
     {/if}
-    <a class="morelink" href="{$WWWROOT}interaction/forum/?group={$group->id}">{str tag=gotoforums section=interaction.forum} &raquo;</a>
+    <div class="morelinkwrap"><a class="morelink" href="{$WWWROOT}interaction/forum/?group={$group->id}">{str tag=gotoforums section=interaction.forum} &raquo;</a></div>

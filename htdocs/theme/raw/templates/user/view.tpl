@@ -4,7 +4,7 @@
   {include file="header.tpl"}{if $pageheadinghtml}<h1>{$pageheadinghtml|safe}</h1>{/if}
   {if $ownprofile}
   <div class="rbuttons">
-    <a title="{str tag=editprofileview section=view}" href="{$WWWROOT}view/blocks.php?profile=1"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=editprofileview section=view}" /></a>
+    <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1">{str tag=editthisview section=view}</a>
   </div>
   {/if}
 {/if}

@@ -11,7 +11,7 @@
         <div class="fr links">
           {if $microheaderlinks}
             {foreach from=$microheaderlinks item=item}
-              <a class="btn " href="{$item.url}">{$item.name}</a> 
+              <a class="btn" href="{$item.url}">{$item.name}</a>
             {/foreach}
           {elseif $backurl}<a class="btn" href="{$backurl}">{str tag=back}</a> 
           {/if}

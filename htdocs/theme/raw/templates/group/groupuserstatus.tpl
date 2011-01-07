@@ -4,20 +4,20 @@
             {str tag="youaregroup$group->role" section="group"}
         </li>
 {if $group->canleave}
-    <li><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
+    <li class="leavegroup"><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
 {/if}
 {elseif $group->membershiptype == 'admin'}
-	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
-	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a></li>
+	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}">{str tag=edit}</a>
+	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}">{str tag=delete}</a></li>
 	
 {if $group->jointype == 'request' && $group->requests}
-	<li>
+	<li class="requestspending">
 		<a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="btn-pending">{str tag="membershiprequests" section="group"} ({$group->requests})</a>
 	</li>
 {/if}
 	
 {elseif $group->membershiptype == 'invite'}
-	<li>
+	<li class="invite">
 {if $group->role}
 		{assign var=grouptype value=$group->grouptype}
 		{assign var=grouprole value=$group->role}
@@ -29,15 +29,15 @@
 	</li>
 	
 {elseif $group->membershiptype == 'request'}
-	<li>{str tag="requestedtojoin" section="group"}</li>
+	<li class="requestedtojoin">{str tag="requestedtojoin" section="group"}</li>
 	
 {elseif $group->jointype == 'open'}
 	<li class="jointhisgroup">{$group->groupjoin|safe}</li>
 	
 {elseif $group->jointype == 'request'}
-	<li><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>
+	<li class="requesttojoin"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>
 {elseif $group->jointype == 'controlled' || $group->jointype == 'invite'}
-	<li>{str tag="membershiptype.$group->jointype" section="group"}</li>
+	<li class="controlled">{str tag="membershiptype.$group->jointype" section="group"}</li>
 
 {/if}
 </ul>

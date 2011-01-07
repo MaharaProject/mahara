@@ -1,7 +1,18 @@
 
 /********************** Top pane of Edit View *************************/
-#top-pane {
+#top-pane,
+#middle-pane,
+#page #bottom-pane,
+#blocksinstruction {
     background: #1D499F;
+}
+#middle-pane label {
+	color: #FFFFFF;
+}
+#blocksinstruction {
+    font-weight: normal;
+	font-style: italic;
+	color: #FFFFFF;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
