@@ -26,54 +26,23 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'groups/views');
+define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
-require_once('pieforms/pieform.php');
-define('TITLE', get_string('sharedviews', 'view'));
 
 $query  = param_variable('query', null);
 $tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$searchoptions = array(
-    'titleanddescription' => get_string('titleanddescription', 'view'),
-    'tagsonly' => get_string('tagsonly', 'view'),
-);
 if (!empty($tag)) {
-    $searchtype = 'tagsonly';
-    $searchdefault = $tag;
     $querystring = '?tag=' . urlencode($tag);
     $query = null;
 }
 else {
-    $searchtype = 'titleanddescription';
-    $searchdefault = $query;
     $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
 }
-
-$searchform = pieform(array(
-    'name' => 'search',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'title' => get_string('search') . ': ',
-            'defaultvalue' => $searchdefault,
-        ),
-        'type' => array(
-            'type'         => 'select',
-            'options'      => $searchoptions,
-            'defaultvalue' => $searchtype,
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('search')
-        )
-    )
-));
 
 $data = View::shared_to_user($query, $tag, $limit, $offset);
 
@@ -87,21 +56,10 @@ $pagination = build_pagination(array(
     'offset' => $offset,
 ));
 
-$smarty = smarty(array('paginator'));
-$smarty->assign('views', $data->data);
-$smarty->assign('searchform', $searchform);
-$smarty->assign('pagination', $pagination['html']);
-$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $pagination['javascript'] . '});');
-$smarty->assign('PAGEHEADING', TITLE);
-$smarty->display('view/sharedviews.tpl');
-exit;
+$smarty = smarty_core();
+$smarty->assign_by_ref('views', $data->data);
+$data->tablerows = $smarty->fetch('view/sharedviewrows.tpl');
+$data->pagination = $pagination['html'];
+$data->pagination_js = $pagination['javascript'];
 
-function search_submit(Pieform $form, $values) {
-    $goto = '/view/sharedviews.php';
-    if (!empty($values['query'])) {
-        $querystring = $values['type'] == 'tagsonly' ? '?tag=' : '?query=';
-        $querystring .= urlencode($values['query']);
-        $goto .= $querystring;
-    }
-    redirect($goto);
-}
+json_reply(false, array('data' => $data));
