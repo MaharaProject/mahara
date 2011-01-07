@@ -2601,7 +2601,7 @@ class View {
                 }
             }
         }
-        $viewdata = get_records_sql_array('
+        $viewdata = get_records_sql_assoc('
             SELECT * FROM (
                 SELECT
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
