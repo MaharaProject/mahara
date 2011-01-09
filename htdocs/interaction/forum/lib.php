@@ -552,6 +552,25 @@ EOF;
     public static function get_active_topics($limit, $offset) {
         global $USER;
 
+        if (is_postgres()) {
+            $lastposts = '
+                    SELECT DISTINCT ON (topic) topic, id, poster, subject, body, ctime
+                    FROM {interaction_forum_post} p
+                    WHERE p.deleted = 0
+                    ORDER BY topic, ctime DESC';
+        }
+        else if (is_mysql()) {
+            $lastposts = '
+                    SELECT topic, id, poster, subject, body, ctime
+                    FROM (
+                        SELECT topic, id, poster, subject, body, ctime
+                        FROM {interaction_forum_post}
+                        WHERE deleted = 0
+                        ORDER BY ctime DESC
+                    ) temp1
+                    GROUP BY topic';
+        }
+
         $from = '
             FROM
                 {interaction_forum_topic} t
@@ -559,11 +578,7 @@ EOF;
                 JOIN {group} g ON f.group = g.id
                 JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
                 JOIN {interaction_forum_post} first ON (first.topic = t.id AND first.parent IS NULL)
-                JOIN (
-                    SELECT DISTINCT ON (topic) topic, id, poster, subject, body, ctime
-                    FROM {interaction_forum_post} p
-                    WHERE p.deleted = 0
-                    ORDER BY topic, ctime DESC
+                JOIN (' . $lastposts . '
                 ) last ON last.topic = t.id';
 
         $where = '
@@ -585,7 +600,7 @@ EOF;
                 t.id, t.forum AS forumid, f.title AS forumname, g.id AS groupid, g.name AS groupname,
                 first.subject AS topicname, first.poster AS firstpostby,
                 last.id AS postid, last.poster, last.subject, last.body, last.ctime,
-                COUNT(posts) AS postcount';
+                COUNT(posts.id) AS postcount';
 
         $from .= '
                 LEFT JOIN {interaction_forum_post} posts ON posts.topic = t.id';
