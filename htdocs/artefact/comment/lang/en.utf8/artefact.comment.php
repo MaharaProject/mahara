@@ -58,6 +58,7 @@ $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio
 $string['feedbackattachmessage'] = 'The attached file(s) have been added to your %s folder';
 $string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
+$string['lastcomment'] = 'Last Comment';
 $string['makepublic'] = 'Make public';
 $string['makepublicnotallowed'] = 'You are not allowed to make this comment public';
 $string['makepublicrequestsubject'] = 'Request to change private comment to public';
@@ -73,6 +74,7 @@ $string['placefeedback'] = 'Place feedback';
 $string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';
 $string['thiscommentisprivate'] = 'This comment is private';
 $string['typefeedback'] = 'Feedback';
+$string['viewcomment'] = 'View comment';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 
 $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s commented on %s</strong><br>%s</div>
