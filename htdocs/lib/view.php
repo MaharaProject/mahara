@@ -2704,6 +2704,25 @@ class View {
         }
 
         // Order by last comment.
+        if (is_postgres()) {
+            $lastcomments = '
+                    SELECT DISTINCT ON (l.onview) l.onview, a.mtime, a.author, a.authorname, a.id, a.description
+                    FROM {artefact_comment_comment} l
+                        JOIN {artefact} a ON (l.artefact = a.id AND l.deletedby IS NULL AND l.private = 0)
+                    ORDER BY l.onview, a.mtime DESC';
+        }
+        else if (is_mysql()) {
+            $lastcomments = '
+                    SELECT onview, mtime, author, authorname, id, description
+                    FROM (
+                        SELECT l.onview, a.mtime, a.author, a.authorname, a.id, a.description
+                        FROM {artefact_comment_comment} l
+                            JOIN {artefact} a ON (l.artefact = a.id AND l.deletedby IS NULL AND l.private = 0)
+                        ORDER BY a.mtime DESC
+                    ) temp1
+                    GROUP BY onview';
+        }
+
         $viewdata = get_records_sql_assoc('
             SELECT
                 v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.mtime, v.ctime,
@@ -2712,11 +2731,7 @@ class View {
                 COUNT(c.artefact) AS commentcount
             FROM {view} v
                 LEFT JOIN {artefact_comment_comment} c ON (c.onview = v.id AND c.deletedby IS NULL AND c.private = 0)
-                LEFT JOIN (
-                    SELECT DISTINCT ON (l.onview) l.onview, a.mtime, a.author, a.authorname, a.id, a.description
-                    FROM {artefact_comment_comment} l
-                        JOIN {artefact} a ON (l.artefact = a.id AND l.deletedby IS NULL AND l.private = 0)
-                    ORDER BY l.onview, a.mtime DESC
+                LEFT JOIN (' . $lastcomments . '
                 ) last ON last.onview = v.id
             WHERE v.id IN (' . $innerselect . ')
             GROUP BY
