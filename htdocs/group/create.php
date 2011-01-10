@@ -45,27 +45,53 @@ $elements['description'] = array(
             'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
             'cols'         => 55);
-$elements['grouptype'] = array(
-            'type'         => 'select',
-            'title'        => get_string('grouptype', 'group'),
-            'options'      => group_get_grouptype_options(),
-            'defaultvalue' => 'standard.open',
-            'help'         => true);
-if (get_config('allowgroupcategories')
-    && ($groupcategories = get_records_menu('group_category','','','displayorder', 'id,title'))
-) {
-    $elements['category'] = array(
-                'type'         => 'select',
-                'title'        => get_string('groupcategory', 'group'),
-                'options'      => array('0'=>get_string('nocategoryselected', 'group')) + $groupcategories,
-                'defaultvalue' => '');
+
+$grouptypeoptions = group_get_grouptype_options();
+if ($grouptypeparam = param_alphanumext('grouptype', 0) and isset($grouptypeoptions[$grouptypeparam])) {
+    $elements['grouptype'] = array(
+        'type'         => 'hidden',
+        'value'        => $grouptypeparam,
+    );
 }
+else {
+    $elements['grouptype'] = array(
+        'type'         => 'select',
+        'title'        => get_string('grouptype', 'group'),
+        'options'      => $grouptypeoptions,
+        'defaultvalue' => 'standard.open',
+        'help'         => true
+    );
+}
+
+if (get_config('allowgroupcategories')
+    && ($groupcategories = get_records_menu('group_category','','','displayorder', 'id,title'))) {
+    if ($groupcategoryparam = param_integer('category', 0) and isset($groupcategories[$groupcategoryparam])) {
+        $elements['category'] = array(
+            'type'  => 'hidden',
+            'value' => $groupcategoryparam,
+        );
+    }
+    else {
+        $elements['category'] = array(
+            'type'         => 'select',
+            'title'        => get_string('groupcategory', 'group'),
+            'options'      => array('0'=>get_string('nocategoryselected', 'group')) + $groupcategories,
+            'defaultvalue' => ''
+        );
+    }
+}
+
+$publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
+$publicparam = param_integer('public', null);
+
 $elements['public'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('publiclyviewablegroup', 'group'),
-            'description'  => get_string('publiclyviewablegroupdescription', 'group'),
-            'help'         => true,
-            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
+    'type'         => 'checkbox',
+    'title'        => get_string('publiclyviewablegroup', 'group'),
+    'description'  => get_string('publiclyviewablegroupdescription', 'group'),
+    'help'         => true,
+    'ignore'       => !$publicallowed || $publicparam === 0,
+);
+
 $elements['usersautoadded'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('usersautoadded', 'group'),
