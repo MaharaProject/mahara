@@ -300,7 +300,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                           time:false,
                           stop:false,
                           playlist:false,
-                          fullscreen:false,
+                          fullscreen:true,
                           scrubber: true,
                           autoHide: '.$autohide.'
                       }'.$audio.'
