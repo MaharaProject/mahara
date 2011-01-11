@@ -5,12 +5,12 @@
     {foreach from=$groupviews item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
-                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
-                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
-                {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
                 {if $view.template}
-                <div><a href="">{str tag=copythisview section=view}</a></div>
+                <div class="s fr valign"><a href="" class="btn">{str tag=copythisview section=view}</a></div>
                 {/if}
+                <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
+                <div class="s">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
+                {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>
         </tr>
     {/foreach}
@@ -25,9 +25,12 @@
     {foreach from=$sharedviews item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
-                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
+                {if $view.template}
+                <div class="s fr valign"><a href="" class="btn">{str tag=copythisview section=view}</a></div>
+                {/if}
+                <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
                 {if $view.sharedby}
-                    {str tag=by section=view}
+                    <span class="owner">{str tag=by section=view}
                     {if $view.group}
                         <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
                     {elseif $view.owner}
@@ -35,12 +38,10 @@
                     {else}
                         {$view.sharedby}
                     {/if}
+                    </span>
                 {/if}
-                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
+                <div class="s">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
-                {if $view.template}
-                <div><a href="">{str tag=copythisview section=view}</a></div>
-                {/if}
             </td>
         </tr>
     {/foreach}
@@ -82,15 +83,16 @@
     {foreach from=$allsubmittedviews item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
-                <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a>
+                <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
                 {if $view.sharedby}
-                    {str tag=by section=view}
+                    <span class="owner">{str tag=by section=view}
                     <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+                    </span>
                 {/if}
                 {if $view.submittedtime}
-                    <span class="date s"><br />({str tag=timeofsubmission section=view}: {$view.submittedtime|format_date})</span>
+                    <span class="date s"> - {str tag=timeofsubmission section=view}: {$view.submittedtime|format_date}</span>
                 {/if}
-                <div>{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
+                <div class="s">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
             </td>
         </tr>

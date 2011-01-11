@@ -1,20 +1,20 @@
 {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td>
-        <div><strong><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|str_shorten_text:65:true}</a></strong></div>
+      <td class="sharedpages">
+        <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|str_shorten_text:65:true}</a></h3>
         {if $view.sharedby}
-        <div>
+        <span class="owner">
           {if $view.group}
-            <a href="{$WWWROOT}group/view.php?id={$view.group}" class="s">{$view.sharedby}</a>
+            <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
           {elseif $view.owner}
-            <a href="{$WWWROOT}user/view.php?id={$view.owner}" class="s">{$view.sharedby}</a>
+            <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
           {else}
             {$view.sharedby}
           {/if}
-          <span class="postedon nowrap">{$view.mtime|strtotime|format_date:'strftimerecent'}</span>
-        </div>
+        </span>
+        <span class="postedon nowrap"> - {$view.mtime|strtotime|format_date:'strftimerecent'}</span>
         {/if}
-        <div>{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
+        <div class="s">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
         {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
       </td>
       <td class="center">{$view.commentcount}</td>

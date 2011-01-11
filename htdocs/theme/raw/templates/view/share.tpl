@@ -8,7 +8,8 @@
 <table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th colspan=2>{str tag=accesslist section=view}</th>
+      <th>{str tag=accesslist section=view}</th>
+      <th>{str tag=editaccess section=view}</th>
       <th>
         <span class="fl">{str tag=Views section=view} &amp; {str tag=collections section=collection}</span>
         <span class="fr">{str tag=secreturls section=view}</span>
@@ -18,9 +19,6 @@
   <tbody>
 {foreach from=$accesslists item=accesslist name=als}
     <tr class="{cycle values='r0,r1'}">
-      <td class="al-edit">
-        <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}" title="Edit Access"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
-      </td>
       <td class="al">
       {if $accesslist.access}
         <div class="videsc">{$accesslist.access}</div>
@@ -53,6 +51,9 @@
         {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
           </div>
       {/if}
+      </td>
+      <td class="al-edit center">
+        <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
       </td>
       <td class="cv">
         {if $accesslist.views}

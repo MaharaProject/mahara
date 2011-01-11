@@ -84,9 +84,9 @@
 </div>
 
 {if $config.createfolder}
-  <div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
+  <div id="createfolder"><div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
-    <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" />
+    <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
 {/if}
 
 <div id="{$prefix}_filelist_container">

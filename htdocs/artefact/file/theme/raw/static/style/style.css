@@ -40,8 +40,15 @@
     margin-bottom: 3px;
 }
 #createfolder {
-	background-color: #E7E7E7;
+	background-color: #EEE;
+	border: 1px solid #D1D1D1;
 	padding: 3px 5px;
+	display: block;
+	margin: 10px 0 5px 0;
+}
+#upload {
+	background-color: #EEE;
+	border: 1px solid #D1D1D1;
 }
 
 /* folder nav */

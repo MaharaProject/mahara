@@ -3,7 +3,7 @@
         {foreach from=$foruminfo item=postinfo}
             <tr class="{cycle values='r0,r1'}">
                 <td><h4><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}#post{$postinfo->id}">{$postinfo->topicname}</a></h4><div class="s">{$postinfo->body|str_shorten_html:100:true|safe}</div></td>
-                <td class="valign s center"><a href="{$WWWROOT}user/view.php?id={$postinfo->poster}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=16&amp;id={$postinfo->poster}" alt=""><br />{$postinfo->poster|display_name|escape}</a>
+                <td class="valign s right"><a href="{$WWWROOT}user/view.php?id={$postinfo->poster}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=16&amp;id={$postinfo->poster}" alt=""> {$postinfo->poster|display_name|escape}</a>
                 </td>
             </tr>
         {/foreach}

@@ -115,6 +115,9 @@ p {
 .nowrap {
 	white-space: nowrap;
 }
+.inline {
+	display: inline;
+}
 .ctime {
 	color: #838383;
 }
@@ -255,13 +258,13 @@ tr.highlight td {
 .listing h3 {
 	margin: 0;
 	font-size: 1.1667em;
-	display: inline;
 }
 .listing h6 {
 	margin: 0;
-	font-size: 1em;
-	display: inline;
+	font-size: .9167em;
 	font-style: italic;
+	font-weight: normal;
+	display: inline;
 }
 div.listing {
 	padding: 5px;
@@ -1644,8 +1647,8 @@ table.attachments td {
 	float: left;
 }
 /* Secret url */
-.secreturls {
-	width: 15%;
+.secreturlcount {
+	margin-right: 5px;
 }
 .secreturls .buttons {
 	padding-top: 5px;
@@ -2104,6 +2107,9 @@ form#search, form#filter, div.searchform {
 .groupviewsection .submit {
 	margin-left: 5px;
 }
+.groupviewsection .owner {
+	font-size: .9167em;
+}
 /* Group: members */
 .twocolumn td {
 	width: 50%;
@@ -2323,4 +2329,30 @@ img.feedicon {
 
 .templateresults .ownericon {
 	line-height: 2em;
+}
+
+/******* Shared Pages **********/
+#search #search_query_container #search_query {
+	margin-right: 3px;
+}
+.sharedpages h3 {
+	margin: 0;
+	font-size: 1.1667em;
+}
+.sharedpages .owner {
+	font-style: italic;
+	font-weight: normal;
+	font-size: .9167em;
+}
+.topictitle {
+	font-weight: bold;
+	font-size: 1.1667em;
+}
+.topicforum {
+}
+.poster {
+	font-style: italic;
+}
+.owner {
+	font-style: italic;
 }

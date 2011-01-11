@@ -45,6 +45,13 @@
 	padding-top: 0;
 	border: 0;
 }
+#forumslist td .inlinelist {
+	font-size: .9167em;
+	line-height: 1.8em;
+}
+#forumslist td .inlinelist span {
+	font-weight: bold;
+}
 
 /* Topic list */
 #viewforum {
