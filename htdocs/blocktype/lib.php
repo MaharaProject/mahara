@@ -194,8 +194,15 @@ abstract class PluginBlocktype extends Plugin {
 
         $blocktypes = array();
 
+        if (function_exists('local_get_allowed_blocktypes')) {
+            $localallowed = local_get_allowed_blocktypes($category, $view);
+        }
+
         foreach ($bts as $bt) {
             $namespaced = blocktype_single_to_namespaced($bt->name, $bt->artefactplugin);
+            if (is_array($localallowed) && !in_array($namespaced, $localallowed)) {
+                continue;
+            }
             safe_require('blocktype', $namespaced); 
             // Note for later: this is Blocktype::allowed_in_view, which 
             // returns true if the blocktype should be insertable into the 
