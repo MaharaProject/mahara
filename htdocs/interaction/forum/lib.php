@@ -549,7 +549,7 @@ EOF;
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 
-    public static function get_active_topics($limit, $offset) {
+    public static function get_active_topics($limit, $offset, $category) {
         global $USER;
 
         if (is_postgres()) {
@@ -581,11 +581,18 @@ EOF;
                 JOIN (' . $lastposts . '
                 ) last ON last.topic = t.id';
 
+        $values = array($USER->get('id'));
+
         $where = '
             WHERE g.deleted = 0 AND f.deleted = 0 AND t.deleted = 0';
 
+        if (!empty($category)) {
+            $where .= ' AND g.category = ?';
+            $values[] = (int) $category;
+        }
+
         $result = array(
-            'count'  => count_records_sql('SELECT COUNT(*) ' . $from . $where, array($USER->get('id'))),
+            'count'  => count_records_sql('SELECT COUNT(*) ' . $from . $where, $values),
             'limit'  => $limit,
             'offset' => $offset,
             'data'   => array(),
@@ -612,7 +619,7 @@ EOF;
                 last.id, last.poster, last.subject, last.body, last.ctime
             ORDER BY last.ctime DESC';
 
-        $result['data'] = get_records_sql_array($select . $from . $where . $sort, array($USER->get('id')), $offset, $limit);
+        $result['data'] = get_records_sql_array($select . $from . $where . $sort, $values, $offset, $limit);
 
         return $result;
     }

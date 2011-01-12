@@ -39,12 +39,13 @@ if (!$USER->is_logged_in()) {
 
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$category = param_integer('category', 0);
 
-$data = PluginInteractionForum::get_active_topics($limit, $offset);
+$data = PluginInteractionForum::get_active_topics($limit, $offset, $category);
 
 $pagination = build_pagination(array(
     'id' => 'topics_pagination',
-    'url' => get_config('wwwroot') . 'group/topics.php',
+    'url' => get_config('wwwroot') . 'group/topics.php' . ($category ? ('?category=' . (int) $category) : ''),
     'jsonscript' => '/json/topics.php',
     'datatable' => 'topiclist',
     'count' => $data['count'],
