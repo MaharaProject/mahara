@@ -118,10 +118,12 @@ $editgroup = pieform(array(
     'elements' => $elements));
 
 function editgroup_validate(Pieform $form, $values) {
-    $cid = get_field('group', 'id', 'name', $values['name']);
-
-    if ($cid && $cid != $values['id']) {
-        $form->set_error('name', get_string('groupalreadyexists', 'group'));
+    global $group_data;
+    if ($group_data->name != $values['name']) {
+        // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
+        if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
+            $form->set_error('name', get_string('groupalreadyexists', 'group'));
+        }
     }
 }
 
@@ -144,7 +146,7 @@ function editgroup_submit(Pieform $form, $values) {
         'group',
         (object) array(
             'id'             => $values['id'],
-            'name'           => $values['name'],
+            'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
             'description'    => $values['description'],
             'grouptype'      => $grouptype,
             'category'       => empty($values['category']) ? null : intval($values['category']),

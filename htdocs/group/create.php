@@ -97,7 +97,8 @@ $smarty->display('form.tpl');
 
 
 function creategroup_validate(Pieform $form, $values) {
-    if (get_field('group', 'id', 'name', $values['name'])) {
+    // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
+    if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
         $form->set_error('name', get_string('groupalreadyexists', 'group'));
     }
 }
@@ -115,7 +116,7 @@ function creategroup_submit(Pieform $form, $values) {
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
     $id = group_create(array(
-        'name'           => $values['name'],
+        'name'           => trim($values['name']),
         'description'    => $values['description'],
         'grouptype'      => $grouptype,
         'category'       => empty($values['category']) ? null : intval($values['category']),
