@@ -33,7 +33,7 @@
         </div>
   <div class="viewfooter">
     {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
-    <div class="releaseviewform">{$releaseform|safe}</div>
+    {if $releaseform}<div class="releaseviewform">{$releaseform|safe}</div>{/if}
     {if $view_group_submission_form}<div class="submissionform">{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}
     <table id="feedbacktable" class="fullwidth table">

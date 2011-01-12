@@ -1553,6 +1553,9 @@ table.attachments td {
 	padding: 5px 0 0 0;
 }
 /* My Views */
+#searchviews #searchviews_query {
+	margin-right: 3px;
+}
 #myviews .edittitle {
 	margin: 0 0 0 5px;
 }
@@ -2049,7 +2052,7 @@ div.groupbox li.last {
 #editgroup th label {
 	white-space: nowrap;
 }
-form#search, form#filter, div.searchform {
+form#search, form#filter, div.searchform, #searchviews {
 	margin-bottom: 10px;
 }
 #friendslist ul.viewlist {

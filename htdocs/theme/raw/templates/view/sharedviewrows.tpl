@@ -18,12 +18,12 @@
         {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
       </td>
       <td class="center">{$view.commentcount}</td>
-      <td>
+      <td class="lastcomment s">
         {if $view.commenttext}
-            <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" class="fr" title="{str tag=viewcomment section=artefact.comment}"><img src="{theme_url filename="images/icon-reply.gif"}" alt="{str tag=viewcomment section=artefact.comment}" /></a>
+            <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" class="fr btn" title="{str tag=viewcomment section=artefact.comment}">{str tag=viewcomment section=artefact.comment}</a>
             <div>{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</div>
           {if $view.commentauthor}
-            <a href="{$WWWROOT}user/view.php?id={$view.commentauthor}" class="s">{$view.commentauthor|display_name|escape}</a>
+            <a href="{$WWWROOT}user/view.php?id={$view.commentauthor}" class="poster">{$view.commentauthor|display_name|escape}</a>
           {else}
             {$view.commentauthorname}
           {/if}

@@ -6,7 +6,7 @@
     <tr>
       <th>{str tag=name}</th>
       <th class="center">{str tag=Comments section=artefact.comment}</th>
-      <th class="center">{str tag=lastcomment section=artefact.comment}</th>
+      <th>{str tag=lastcomment section=artefact.comment}</th>
     </tr>
   </thead>
   <tbody>
