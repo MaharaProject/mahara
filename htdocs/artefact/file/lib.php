@@ -49,13 +49,13 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            array(
+            'content/files' => array(
                 'path' => 'content/files',
                 'url' => 'artefact/file/',
                 'title' => get_string('Files', 'artefact.file'),
                 'weight' => 30,
             ),
-            array(
+            'content/profileicons' => array(
                 'path' => 'content/profileicons',
                 'url' => 'artefact/file/profileicons.php',
                 'title' => get_string('profileicons', 'artefact.file'),

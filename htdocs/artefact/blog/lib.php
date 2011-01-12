@@ -61,7 +61,7 @@ class PluginArtefactBlog extends PluginArtefact {
             $tab['url']   = 'artefact/blog/view/';
             $tab['title'] = get_string('blog', 'artefact.blog');
         }
-        return array($tab);
+        return array('content/blogs' => $tab);
     }
 
     public static function get_cron() {

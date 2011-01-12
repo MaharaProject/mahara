@@ -92,7 +92,7 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            array(
+            'content/profile' => array(
                 'path' => 'content/profile',
                 'url' => 'artefact/internal/',
                 'title' => get_string('profile', 'artefact.internal'),

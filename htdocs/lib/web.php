@@ -1951,83 +1951,83 @@ function institutional_admin_nav() {
 function mahara_standard_nav() {
     $exportenabled = plugins_installed('export');
     $menu = array(
-        array(
+        'home' => array(
             'path' => '',
             'url' => '',
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
             'accesskey' => 'h',
         ),
-        array(
+        'content' => array(
             'path' => 'content',
             'url'  => 'artefact/internal/', // @todo possibly do path aliasing and dispatch?
             'title' => get_string('mycontent'),
             'weight' => 20,
         ),
-        array(
+        'myportfolio' => array(
             'path' => 'myportfolio',
             'url' => 'view/',
             'title' => get_string('myportfolio'),
             'weight' => 30,
             'accesskey' => 'v',
         ),
-        array(
+        'myportfolio/views' => array(
             'path' => 'myportfolio/views',
             'url' => 'view/',
             'title' => get_string('Views', 'view'),
             'weight' => 10,
         ),
-        array(
+        'myportfolio/share' => array(
             'path' => 'myportfolio/share',
             'url' => 'view/share.php',
             'title' => get_string('share', 'view'),
             'weight' => 30,
         ),
-        array(
+        'myportfolio/export' => array(
             'path' => 'myportfolio/export',
             'url' => 'export/',
             'title' => get_string('Export', 'export'),
             'weight' => 70,
             'ignore' => !$exportenabled,
         ),
-        array(
+        'myportfolio/collection' => array(
             'path' => 'myportfolio/collection',
             'url' => 'collection/',
             'title' => get_string('Collections', 'collection'),
             'weight' => 20,
         ),
-        array(
+        'groups' => array(
             'path' => 'groups',
             'url' => 'group/mygroups.php',
             'title' => get_string('groups'),
             'weight' => 40,
             'accesskey' => 'g',
         ),
-        array(
+        'groups/mygroups' => array(
             'path' => 'groups/mygroups',
             'url' => 'group/mygroups.php',
             'title' => get_string('mygroups'),
             'weight' => 10,
         ),
-        array(
+        'groups/find' => array(
             'path' => 'groups/find',
             'url' => 'group/find.php',
             'title' => get_string('findgroups'),
             'weight' => 20,
         ),
-        array(
+        'groups/myfriends' => array(
             'path' => 'groups/myfriends',
             'url' => 'user/myfriends.php',
             'title' => get_string('myfriends'),
             'weight' => 30,
         ),
-        array(
+        'groups/findfriends' => array(
             'path' => 'groups/findfriends',
             'url' => 'user/find.php',
             'title' => get_string('findfriends'),
             'weight' => 40,
         ),
-        array(
+        'groups/views' => array(
             'path' => 'groups/views',
             'url' => 'view/sharedviews.php',
             'title' => get_string('sharedviews', 'view'),

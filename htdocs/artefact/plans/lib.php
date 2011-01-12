@@ -45,7 +45,7 @@ class PluginArtefactPlans extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            array(
+            'content/plans' => array(
                 'path' => 'content/plans',
                 'url'  => 'artefact/plans/',
                 'title' => get_string('Plans', 'artefact.plans'),

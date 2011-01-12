@@ -378,7 +378,7 @@ EOF;
 
     public static function menu_items() {
         return array(
-            array(
+            'groups/topics' => array(
                 'path' => 'groups/topics',
                 'url' => 'group/topics.php',
                 'title' => get_string('Topics', 'interaction.forum'),
