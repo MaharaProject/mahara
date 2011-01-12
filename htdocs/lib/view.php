@@ -2300,38 +2300,49 @@ class View {
         return self::can_remove_viewtype($this->type);
     }
 
-    public static function get_myviews_data($limit=5, $offset=0, $groupid=null, $institution=null) {
-
+    private static function _get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null) {
         global $USER;
-        $userid = $USER->get('id');
-        $owner = null;
+        $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
-        if ($groupid) {
-            $count = count_records('view', 'group', $groupid);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type
-                FROM {view} v
-                WHERE v.group = ?
-                '. (group_user_access($groupid) != 'admin' ? ' AND v.type != \'grouphomepage\'' : '') . '
-                ORDER BY v.title, v.id', array($groupid), $offset, $limit);
+        $select = '
+            SELECT v.id,v.title,v.description,v.type';
+        $from = '
+            FROM {view} v';
+        $where = '
+            WHERE ' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution));
+        $sort = '
+            ORDER BY v.title, v.id';
+        $values = array();
+
+        if ($tag) { // Filter by the tag
+            $from .= "
+                INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+            $values[] = $tag;
         }
-        else if ($institution) {
-            $count = count_records('view', 'institution', $institution);
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type
-                FROM {view} v
-                WHERE v.institution = ?
-                ORDER BY v.title, v.id', array($institution), $offset, $limit);
+        elseif ($query) { // Include matches on the title, description or tag
+            $from .= "
+                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+            $like = db_ilike();
+            $where .= "
+                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?)";
+            array_push($values, $query, $query, $query, $query);
         }
-        else {
-            $count = count_records_select('view', 'owner = ?', array($userid));
-            $viewdata = get_records_sql_array('SELECT v.id,v.title,v.description,v.type,v.submittedtime,
-                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname
-                FROM {view} v
+
+        if ($groupid && group_user_access($groupid) != 'admin') {
+            $where .=  " AND v.type != 'grouphomepage'";
+        }
+        if ($userid) {
+            $select .= ',v.submittedtime,
+                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+            $from .= '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
-                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)
-                WHERE v.owner = ?
-                ORDER BY v.type = \'portfolio\', v.type, v.title, v.id', array($userid), $offset, $limit);
-            $owner = $userid;
+                LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
+            $sort = '
+                ORDER BY v.type = \'portfolio\', v.type, v.title, v.id';
         }
+
+        $count = count_records_sql('SELECT COUNT(v.id) ' . $from . $where, $values);
+        $viewdata = get_records_sql_array($select . $from . $where . $sort, $values, $offset, $limit);
 
         $data = array();
         if ($viewdata) {
@@ -2340,7 +2351,6 @@ class View {
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['type'] = $viewdata[$i]->type;
                 $data[$i]['title'] = $viewdata[$i]->title;
-                $data[$i]['owner'] = $owner;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
@@ -2381,6 +2391,107 @@ class View {
             'count' => $count,
         );
     }
+
+    public static function get_myviews_url($group=null, $institution=null, $query=null, $tag=null) {
+        $queryparams = array();
+
+        if (!empty($tag)) {
+            $queryparams[] = 'tag=' . urlencode($tag);
+        }
+        else if (!empty($query)) {
+            $queryparams[] =  'query=' . urlencode($query);
+        }
+
+        if ($group) {
+            $url = get_config('wwwroot') . 'view/groupviews.php';
+            $queryparams[] = 'group=' . $group;
+        }
+        else if ($institution) {
+            if ($institution == 'mahara') {
+                $url = get_config('wwwroot') . 'admin/site/views.php';
+            }
+            else {
+                $url = get_config('wwwroot') . 'view/institutionviews.php';
+                $queryparams[] = 'institution=' . $institution;
+            }
+        }
+        else {
+            $url = get_config('wwwroot') . 'view/';
+        }
+
+        if (!empty($queryparams)) {
+            $url .= '?' . join('&', $queryparams);
+        }
+
+        return $url;
+    }
+
+    public static function views_by_owner($group=null, $institution=null) {
+
+        $limit  = param_integer('limit', 10);
+        $offset = param_integer('offset', 0);
+        $query  = param_variable('query', null);
+        $tag    = param_variable('tag', null);
+
+        $searchoptions = array(
+            'titleanddescription' => get_string('titleanddescription', 'view'),
+            'tagsonly' => get_string('tagsonly', 'view'),
+        );
+
+        if (!empty($tag)) {
+            $searchtype = 'tagsonly';
+            $searchdefault = $tag;
+            $query = null;
+        }
+        else {
+            $searchtype = 'titleanddescription';
+            $searchdefault = $query;
+        }
+
+        $searchform = array(
+            'name' => 'searchviews',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'query' => array(
+                    'type' => 'text',
+                    'title' => get_string('search') . ': ',
+                    'defaultvalue' => $searchdefault,
+                ),
+                'type' => array(
+                    'type'         => 'select',
+                    'options'      => $searchoptions,
+                    'defaultvalue' => $searchtype,
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('search')
+                )
+            )
+        );
+
+        if ($group) {
+            $searchform['elements']['group'] = array('type' => 'hidden', 'name' => 'group', 'value' => $group);
+        }
+        else if ($institution) {
+            $searchform['elements']['institution'] = array('type' => 'hidden', 'name' => 'institution', 'value' => $institution);
+        }
+
+        $searchform = pieform($searchform);
+
+        $data = self::_get_myviews_data($limit, $offset, $query, $tag, $group, $institution);
+
+        $url = self::get_myviews_url($group, $institution, $query, $tag);
+
+        $pagination = build_pagination(array(
+            'url'    => $url,
+            'count'  => $data->count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        ));
+
+        return array($searchform, $data, $pagination);
+    }
+
 
     public function get_user_views($userid=null) {
         if (is_null($userid)) {
@@ -3697,6 +3808,21 @@ function createview_cancel_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
     }
     redirect(get_config('wwwroot') . 'view/');
+}
+
+function searchviews_submit(Pieform $form, $values) {
+    $tag = $query = null;
+    if (!empty($values['query'])) {
+        if ($values['type'] == 'tagsonly') {
+            $tag = $values['query'];
+        }
+        else {
+            $query = $values['query'];
+        }
+    }
+    $group = isset($values['group']) ? $values['group'] : null;
+    $institution = isset($values['institution']) ? $values['institution'] : null;
+    redirect(View::get_myviews_url($group, $institution, $query, $tag));
 }
 
 function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {

@@ -15,6 +15,8 @@
             </div>
 {if $institution}                {$institutionselector|safe}{/if}
 
+{$searchform|safe}
+
 {if $views}
             <table id="myviews" class="fullwidth listing">
                 <tbody>

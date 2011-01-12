@@ -35,24 +35,9 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
-require_once('group.php');
 define('TITLE', get_string('Views', 'view'));
 
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-
-$data = View::get_myviews_data($limit, $offset);
-
-$userid = $USER->get('id');
-
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/',
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
+list($searchform, $data, $pagination) = View::views_by_owner();
 
 $createviewform = pieform(create_view_form());
 
@@ -60,7 +45,6 @@ $smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
-
-?>

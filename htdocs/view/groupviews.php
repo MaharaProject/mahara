@@ -38,8 +38,6 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 require_once('pieforms/pieform.php');
 
-$limit   = param_integer('limit', 5);
-$offset  = param_integer('offset', 0);
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
@@ -54,11 +52,11 @@ $can_edit = group_user_can_edit_views($group->id);
 // page, otherwise just show a list of the views owned by this group that
 // are visible to the user.
 
-if ($can_edit) {
-    $data = View::get_myviews_data($limit, $offset, $group->id);
-    $createviewform = pieform(create_view_form($group->id));
-}
-else {
+if (!$can_edit) {
+
+    $limit   = param_integer('limit', 5);
+    $offset  = param_integer('offset', 0);
+
     $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
     // Add a copy view form for all templates in the list
     foreach ($data->data as &$v) {
@@ -66,24 +64,29 @@ else {
             $v['copyform'] = pieform(create_view_form(null, null, $v['id']));
         }
     }
+
+    $pagination = build_pagination(array(
+        'url' => get_config('wwwroot') . 'view/groupviews.php?group='.$group->id,
+        'count' => $data->count,
+        'limit' => $limit,
+        'offset' => $offset,
+    ));
+
+    $smarty = smarty();
+    $smarty->assign('views', $data->data);
+    $smarty->assign('pagination', $pagination['html']);
+    $smarty->display('view/groupviews.tpl');
+    exit;
+
 }
 
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/groupviews.php?group='.$group->id,
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
+list($searchform, $data, $pagination) = View::views_by_owner($group->id);
+
+$createviewform = pieform(create_view_form($group->id));
 
 $smarty = smarty();
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-
-if ($can_edit) {
-    $smarty->assign('createviewform', $createviewform);
-    $smarty->display('view/index.tpl');
-} else {
-    $smarty->display('view/groupviews.tpl');
-}
+$smarty->assign('searchform', $searchform);
+$smarty->assign('createviewform', $createviewform);
+$smarty->display('view/index.tpl');

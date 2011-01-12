@@ -37,9 +37,6 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'institution.php');
 require_once('pieforms/pieform.php');
 
-$limit   = param_integer('limit', 5);
-$offset  = param_integer('offset', 0);
-
 $institution = param_alpha('institution', false);
 
 if ($institution == 'mahara') {
@@ -59,16 +56,9 @@ if ($institution === false) {
     exit;
 }
 
-$data = View::get_myviews_data($limit, $offset, null, $institution);
+list($searchform, $data, $pagination) = View::views_by_owner(null, $institution);
 
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'view/institutionviews.php?institution='.$institution,
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
+$createviewform = pieform(create_view_form(null, $institution));
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
@@ -77,8 +67,7 @@ $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('createviewform', pieform(create_view_form(null, $institution)));
-
+$smarty->assign('searchform', $searchform);
+$smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
 
-?>

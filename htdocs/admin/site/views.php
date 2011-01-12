@@ -36,33 +36,19 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
 
-$limit   = param_integer('limit', 5);
-$offset  = param_integer('offset', 0);
-
 $title = get_string('siteviews', 'admin');
 define('TITLE', $title);
+
+list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
 
 $createviewform = pieform(create_view_form(null, 'mahara'));
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-
-$data = View::get_myviews_data($limit, $offset, null, 'mahara');
-
-$pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'admin/site/views.php',
-    'count' => $data->count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural' => get_string('views', 'view')
-));
-
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
-
 $smarty->display('view/index.tpl');
 
-?>
