@@ -118,9 +118,15 @@ addLoadEvent(function () {
 });
 EOF;
 
+$javascript = array('paginator', 'viewmenu');
+$extrastylesheets = array('style/views.css');
+
 if ($artefact->get('allowcomments')) {
     $anonfeedback = !$USER->is_logged_in() && view_has_token($viewid, get_cookie('viewaccess:'.$viewid));
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $artefact->get('approvecomments')));
+    $extrastylesheets[] = 'style/jquery.rating.css';
+    $javascript[] = 'jquery';
+    $javascript[] = 'jquery.rating';
 }
 $objectionform = pieform(objection_form());
 if ($notrudeform = $view->notrude_form()) {
@@ -142,11 +148,11 @@ if($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
 }
 
 $smarty = smarty(
-    array('paginator', 'viewmenu'),
+    $javascript,
     $headers,
     array(),
     array(
-        'stylesheets' => array('style/views.css'),
+        'stylesheets' => $extrastylesheets,
         'sidebars'    => false,
     )
 );
