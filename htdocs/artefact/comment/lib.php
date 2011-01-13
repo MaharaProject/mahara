@@ -473,8 +473,14 @@ class ArtefactTypeComment extends ArtefactType {
 
             if (get_config_plugin('artefact', 'comment', 'commentratings') and $item->rating) {
                 $item->rating = valid_rating($item->rating);
-                $imageurl = $THEME->get_url("images/rating{$item->rating}.png", false, 'artefact/comment');
-                $item->ratingimage = '<img src="' . $imageurl . '" title="'. $item->rating . ' / 5">';
+                $item->ratingimage = '';
+                for ($i = MIN_RATING; $i <= MAX_RATING; $i++) {
+                    $checked = '';
+                    if ($i === $item->rating) {
+                        $checked = 'checked="checked"';
+                    }
+                    $item->ratingimage .= '<input name="star'.$item->id.'" type="radio" class="star" '.$checked.' disabled="disabled"/>';
+                }
             }
         }
 
@@ -552,8 +558,10 @@ class ArtefactTypeComment extends ArtefactType {
         );
         if (get_config_plugin('artefact', 'comment', 'commentratings')) {
             $form['elements']['rating'] = array(
-                'type'  => 'text',
+                'type'  => 'radio',
                 'title' => get_string('rating', 'artefact.comment'),
+                'options' => array('1' => '', '2' => '', '3' => '', '4' => '', '5' => ''),
+                'class' => 'star',
             );
         }
         $form['elements']['ispublic'] = array(
