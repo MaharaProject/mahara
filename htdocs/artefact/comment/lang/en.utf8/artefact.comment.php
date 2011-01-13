@@ -44,6 +44,7 @@ $string['commentmadepublic'] = "Comment made public";
 $string['commentdeletedauthornotification'] = "Your comment on %s was deleted:\n%s";
 $string['commentdeletednotificationsubject'] = 'Comment on %s deleted';
 $string['commentnotinview'] = 'Comment %d not in page %d';
+$string['commentratings'] = 'Enable comment ratings';
 $string['commentremoved'] = 'Comment removed';
 $string['commentremovedbyauthor'] = 'Comment removed by the author';
 $string['commentremovedbyowner'] = 'Comment removed by the owner';

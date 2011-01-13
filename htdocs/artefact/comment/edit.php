@@ -62,35 +62,44 @@ if (!$comment->get('private') && $id != $lastcomment->id) {
     redirect($goto);
 }
 
+$elements = array();
+$elements['message'] = array(
+    'type'         => 'wysiwyg',
+    'title'        => get_string('message'),
+    'rows'         => 5,
+    'cols'         => 80,
+    'defaultvalue' => $comment->get('description'),
+);
+if (get_config_plugin('artefact', 'comment', 'commentratings')) {
+    $elements['rating'] = array(
+        'type'  => 'text',
+        'title' => get_string('rating', 'artefact.comment'),
+        'defaultvalue' => $comment->get('rating'),
+    );
+}
+else {
+    $elements['rating'] = array(
+        'type'  => 'hidden',
+        'value' => $comment->get('rating'),
+    );
+}
+$elements['ispublic'] = array(
+    'type'  => 'checkbox',
+    'title' => get_string('makepublic', 'artefact.comment'),
+    'defaultvalue' => !$comment->get('private'),
+);
+$elements['submit'] = array(
+    'type'  => 'submitcancel',
+    'value' => array(get_string('save'), get_string('cancel')),
+    'goto'  => $goto,
+);
+
 $form = pieform(array(
     'name'            => 'edit_comment',
     'method'          => 'post',
     'plugintype'      => 'artefact',
     'pluginname'      => 'comment',
-    'elements'        => array(
-        'message' => array(
-            'type'         => 'wysiwyg',
-            'title'        => get_string('message'),
-            'rows'         => 5,
-            'cols'         => 80,
-            'defaultvalue' => $comment->get('description'),
-        ),
-        'rating' => array(
-            'type'  => 'text',
-            'title' => get_string('rating', 'artefact.comment'),
-            'defaultvalue' => $comment->get('rating'),
-        ),
-        'ispublic' => array(
-            'type'  => 'checkbox',
-            'title' => get_string('makepublic', 'artefact.comment'),
-            'defaultvalue' => !$comment->get('private'),
-        ),
-        'submit' => array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('save'), get_string('cancel')),
-            'goto'  => $goto,
-        ),
-    )
+    'elements'        => $elements,
 ));
 
 function edit_comment_submit(Pieform $form, $values) {

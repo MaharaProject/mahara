@@ -471,7 +471,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
 
-            if ($item->rating) {
+            if (get_config_plugin('artefact', 'comment', 'commentratings') and $item->rating) {
                 $item->rating = valid_rating($item->rating);
                 $imageurl = $THEME->get_url("images/rating{$item->rating}.png", false, 'artefact/comment');
                 $item->ratingimage = '<img src="' . $imageurl . '" title="'. $item->rating . ' / 5">';
@@ -550,10 +550,12 @@ class ArtefactTypeComment extends ArtefactType {
             'rows'  => 5,
             'cols'  => 80,
         );
-        $form['elements']['rating'] = array(
-            'type'  => 'text',
-            'title' => get_string('rating', 'artefact.comment'),
-        );
+        if (get_config_plugin('artefact', 'comment', 'commentratings')) {
+            $form['elements']['rating'] = array(
+                'type'  => 'text',
+                'title' => get_string('rating', 'artefact.comment'),
+            );
+        }
         $form['elements']['ispublic'] = array(
             'type'  => 'checkbox',
             'title' => get_string('makepublic', 'artefact.comment'),
@@ -663,6 +665,32 @@ class ArtefactTypeComment extends ArtefactType {
         }
 
         return false;
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements =  array(
+            'commentratings' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('commentratings', 'artefact.comment'),
+                'defaultvalue' => get_config_plugin('artefact', 'comment', 'commentratings'),
+                'help'  => true,
+            ),
+        );
+        return array(
+            'name'     => 'commentconfig',
+            'elements' => $elements,
+            'renderer' => 'table'
+        );
+    }
+
+    public static function save_config_options($values) {
+        foreach (array('commentratings') as $settingname) {
+            set_config_plugin('artefact', 'comment', $settingname, $values[$settingname]);
+        }
     }
 }
 
