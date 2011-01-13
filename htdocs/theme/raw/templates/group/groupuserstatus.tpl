@@ -4,15 +4,15 @@
             {str tag="youaregroup$group->role" section="group"}
         </li>
 {if $group->canleave}
-    <li class="leavegroup"><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup">{str tag="leavegroup" section="group"}</a></li>
+    <li class="leavegroup"><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup"><span class="icon">{str tag="leavegroup" section="group"}</span></a></li>
 {/if}
 {elseif $group->membershiptype == 'admin'}
-	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}">{str tag=edit}</a>
-	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}">{str tag=delete}</a></li>
+	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}" class="btn-editgroup"><span class="icon">{str tag=edit}</span></a>
+	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}" class="btn-deletegroup"><span class="icon">{str tag=delete}</span></a></li>
 	
 {if $group->jointype == 'request' && $group->requests}
 	<li class="requestspending">
-		<a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="btn-pending">{str tag="membershiprequests" section="group"} ({$group->requests})</a>
+		<a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="btn-membershiprequests"><span class="icon">{str tag="membershiprequests" section="group"} ({$group->requests})</span></a>
 	</li>
 {/if}
 	
@@ -35,7 +35,7 @@
 	<li class="jointhisgroup">{$group->groupjoin|safe}</li>
 	
 {elseif $group->jointype == 'request'}
-	<li class="requesttojoin"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request">{str tag="requestjoingroup" section="group"}</a></li>
+	<li class="requesttojoin"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}&amp;returnto={$returnto}" class="btn-request"><span class="icon">{str tag="requestjoingroup" section="group"}</span></a></li>
 {elseif $group->jointype == 'controlled' || $group->jointype == 'invite'}
 	<li class="controlled">{str tag="membershiptype.$group->jointype" section="group"}</li>
 

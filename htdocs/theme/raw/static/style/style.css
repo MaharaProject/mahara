@@ -2023,6 +2023,7 @@ div.groupbox {
 	background: white;
 	border: 10px solid #d1d1d1;
 	padding: 15px 10px 5px 10px;
+	font-size: .75em;
 }
 div.groupbox div.jointype {
 	border: 1px solid #d1d1d1;
