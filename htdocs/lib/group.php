@@ -1338,7 +1338,7 @@ function group_get_user_groups($userid=null, $roles=null) {
     }
 
     if (!$groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype, gtr.see_submitted_views
+        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype, gtr.see_submitted_views, g.category
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
