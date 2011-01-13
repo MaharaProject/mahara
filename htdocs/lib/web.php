@@ -1961,7 +1961,7 @@ function mahara_standard_nav() {
         'content' => array(
             'path' => 'content',
             'url'  => 'artefact/internal/', // @todo possibly do path aliasing and dispatch?
-            'title' => get_string('mycontent'),
+            'title' => get_string('Content'),
             'weight' => 20,
         ),
         'myportfolio' => array(
