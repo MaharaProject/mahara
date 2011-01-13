@@ -14,6 +14,7 @@
       {if $item->deletedmessage}
         <span class="details">{str tag=commentremoved section=artefact.comment}</span>
       {else}
+        {if $item->ratingimage}{$item->ratingimage|safe}{/if}
         {$item->description|safe|clean_html}
         {if $item->attachmessage}<div class="attachmessage">{$item->attachmessage}</div>{/if}
       {/if}

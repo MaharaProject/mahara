@@ -71,6 +71,7 @@ $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription'] = 'Comments will remain private until they are approved by you.';
 $string['newfeedbacknotificationsubject'] = 'New feedback on %s';
 $string['placefeedback'] = 'Place feedback';
+$string['rating'] = 'Rating';
 $string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';
 $string['thiscommentisprivate'] = 'This comment is private';
 $string['typefeedback'] = 'Feedback';

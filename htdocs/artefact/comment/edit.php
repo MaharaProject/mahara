@@ -75,6 +75,11 @@ $form = pieform(array(
             'cols'         => 80,
             'defaultvalue' => $comment->get('description'),
         ),
+        'rating' => array(
+            'type'  => 'text',
+            'title' => get_string('rating', 'artefact.comment'),
+            'defaultvalue' => $comment->get('rating'),
+        ),
         'ispublic' => array(
             'type'  => 'checkbox',
             'title' => get_string('makepublic', 'artefact.comment'),
@@ -94,6 +99,7 @@ function edit_comment_submit(Pieform $form, $values) {
     db_begin();
 
     $comment->set('description', $values['message']);
+    $comment->set('rating', valid_rating($values['rating']));
     $comment->set('private', 1 - (int) $values['ispublic']);
     $comment->commit();
 
@@ -116,5 +122,3 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);
 $smarty->display('artefact:comment:edit.tpl');
-
-?>

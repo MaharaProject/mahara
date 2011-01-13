@@ -29,7 +29,15 @@ defined('INTERNAL') || die();
 
 function xmldb_artefact_comment_upgrade($oldversion=0) {
 
-    return true;
-}
+    $success = true;
 
-?>
+    if ($oldversion < 2011011201) {
+        $table = new XMLDBTable('artefact_comment_comment');
+        $field = new XMLDBField('rating');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED);
+
+        $success = $success && add_field($table, $field);
+    }
+
+    return $success;
+}

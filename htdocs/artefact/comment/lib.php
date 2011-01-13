@@ -28,6 +28,22 @@ defined('INTERNAL') || die();
 
 require_once('activity.php');
 
+define('MIN_RATING', 1);
+define('MAX_RATING', 5);
+
+function valid_rating($ratingstr) {
+    if (empty($ratingstr)) {
+        return null;
+    }
+
+    $rating = intval($ratingstr);
+    if ($rating < MIN_RATING) {
+        return null;
+    }
+
+    return max(MIN_RATING, min(MAX_RATING, $rating));
+}
+
 class PluginArtefactComment extends PluginArtefact {
 
     public static function get_artefact_types() {
@@ -127,6 +143,7 @@ class ArtefactTypeComment extends ArtefactType {
     protected $private;
     protected $deletedby;
     protected $requestpublic;
+    protected $rating;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -158,6 +175,7 @@ class ArtefactTypeComment extends ArtefactType {
             'private'       => $this->get('private'),
             'deletedby'     => $this->get('deletedby'),
             'requestpublic' => $this->get('requestpublic'),
+            'rating'        => $this->get('rating'),
         );
 
         if ($new) {
@@ -297,7 +315,7 @@ class ArtefactTypeComment extends ArtefactType {
             $comments = get_records_sql_assoc('
                 SELECT
                     a.id, a.author, a.authorname, a.ctime, a.description,
-                    c.private, c.deletedby, c.requestpublic,
+                    c.private, c.deletedby, c.requestpublic, c.rating,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
                     u.deleted, u.profileicon
                 FROM {artefact} a
@@ -370,7 +388,7 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function build_html(&$data) {
-        global $USER;
+        global $USER, $THEME;
         $candelete = $data->canedit || $USER->get('admin');
         $deletedmessage = array();
         foreach (self::deleted_messages() as $k => $v) {
@@ -452,6 +470,12 @@ class ArtefactTypeComment extends ArtefactType {
                     );
                 }
             }
+
+            if ($item->rating) {
+                $item->rating = valid_rating($item->rating);
+                $imageurl = $THEME->get_url("images/rating{$item->rating}.png", false, 'artefact/comment');
+                $item->ratingimage = '<img src="' . $imageurl . '" title="'. $item->rating . ' / 5">';
+            }
         }
 
         $extradata = array('view' => $data->view);
@@ -525,6 +549,10 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('message'),
             'rows'  => 5,
             'cols'  => 80,
+        );
+        $form['elements']['rating'] = array(
+            'type'  => 'text',
+            'title' => get_string('rating', 'artefact.comment'),
         );
         $form['elements']['ispublic'] = array(
             'type'  => 'checkbox',
@@ -856,6 +884,10 @@ function add_feedback_form_submit(Pieform $form, $values) {
     }
     else {
         $data->private = (int) !$values['ispublic'];
+    }
+
+    if (isset($values['rating'])) {
+        $data->rating = valid_rating($values['rating']);
     }
 
     $comment = new ArtefactTypeComment(0, $data);
