@@ -2300,7 +2300,7 @@ class View {
         return self::can_remove_viewtype($this->type);
     }
 
-    private static function _get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null) {
+    public static function get_myviews_data($limit=5, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
@@ -2478,7 +2478,7 @@ class View {
 
         $searchform = pieform($searchform);
 
-        $data = self::_get_myviews_data($limit, $offset, $query, $tag, $group, $institution);
+        $data = self::get_myviews_data($limit, $offset, $query, $tag, $group, $institution);
 
         $url = self::get_myviews_url($group, $institution, $query, $tag);
 
