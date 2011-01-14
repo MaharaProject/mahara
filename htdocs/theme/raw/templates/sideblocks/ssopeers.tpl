@@ -1,5 +1,5 @@
-    <h3>{str tag="networkservers" section="auth.xmlrpc"}{contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}</h3>
-        <div class="sidebar-content">
+    <div class="sidebar-header"><h3>{str tag="networkservers" section="auth.xmlrpc"}{contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}</h3></div>
+    <div class="sidebar-content">
 {if $sbdata}
     <ul id="sitemenu">
 {foreach from=$sbdata item=peer}

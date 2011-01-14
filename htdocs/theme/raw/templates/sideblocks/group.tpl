@@ -1,5 +1,5 @@
-    <h3>{$sbdata.group->name}</h3>
-        <div class="sidebar-content">
+    <div class="sidebar-header"><h3>{$sbdata.group->name}</h3></div>
+    <div class="sidebar-content">
     <ul>
     {foreach from=$sbdata.menu item=item}
         {if $item.path != 'groups'}

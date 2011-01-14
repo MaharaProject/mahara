@@ -2181,6 +2181,12 @@ form#search, form#filter, div.searchform, #searchviews {
 	position: relative;
 	top: -30px;
 }
+#activitylist td.right input.submit {
+	font-weight: bold;
+}
+#activitylist td.right input.btn-del {
+	font-weight: normal !important;
+}
 /* Settings > Institution membership */
 #requestmembership_studentid_container {
 	margin: 0 5px;

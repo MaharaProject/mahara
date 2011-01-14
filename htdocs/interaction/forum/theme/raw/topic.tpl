@@ -5,7 +5,7 @@
 {if $membership}
 	<div id="forumbtns" class="rbuttons">
 	{if $topic->canedit}
-	<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn">{str tag=edittopic section=interaction.forum}</a>
+	<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn editforum">{str tag=edittopic section=interaction.forum}</a>
 		{if $moderator}
 		<a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}" class="btn">{str tag=deletetopic section=interaction.forum}</a>
 		{/if}

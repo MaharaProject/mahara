@@ -1,7 +1,7 @@
 {loadquota}
-    <h3>{str tag="quota"} 
-        {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}</h3>
-        <div class="sidebar-content">
+    <div class="sidebar-header"><h3>{str tag="quota"} 
+        {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}</h3></div>
+    <div class="sidebar-content">
     <p id="quota_message">
         {$QUOTA_MESSAGE|safe}
     </p>

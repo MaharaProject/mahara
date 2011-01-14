@@ -6,7 +6,7 @@
                     <li><label class="groupinfolabel">{str tag=grouptype section=group}:</label> {$group->settingsdescription}</li>
                     {if $group->categorytitle}<li><label>{str tag=groupcategory section=group}:</label> {$group->categorytitle}</li>{/if}
                     <li><label class="groupinfolabel">{str tag=Created section=group}:</label> {$group->ctime}</li>
-                    <li><span><label>{str tag=Members section=group}:</label> {$membercount}&nbsp;</span>
+                    <li class="last"><span><label>{str tag=Members section=group}:</label> {$membercount}&nbsp;</span>
                         <span><label>{str tag=Views section=view}:</label> {$viewcount}&nbsp;</span>
                         <span><label>{str tag=Files section=artefact.file}:</label> {$filecount}&nbsp;</span>
                         <span><label>{str tag=Folders section=artefact.file}:</label> {$foldercount}</span></li>

@@ -1,10 +1,9 @@
-<h3>{str tag="linksandresources"}</h3>
-
+	<div class="sidebar-header"><h3>{str tag="linksandresources"}</h3></div>
     <div class="sidebar-content">
 {if $sbdata}
-    <ul>
+    <ul id="linksresources">
 {foreach from=$sbdata item=item}
-      <li><strong><a href="{$item.link}">{$item.name}</a></strong></li>
+      <li><a href="{$item.link}">{$item.name}</a></li>
 {/foreach}
     </ul>
 {/if}

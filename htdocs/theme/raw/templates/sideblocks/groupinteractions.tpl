@@ -1,5 +1,4 @@
-    <h3>{str tag="groupinteractions" section="group"}</h3>
-
+    <div class="sidebar-header"><h3>{str tag="groupinteractions" section="group"}</h3></div>
     <div class="sidebar-content">
     {if $sbdata}
     <ul>

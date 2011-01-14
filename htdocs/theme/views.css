@@ -235,6 +235,7 @@ html>body #column-container {
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
+  font-size: .75em;
 }
 
 .blockinstance.configure .mceEditor {

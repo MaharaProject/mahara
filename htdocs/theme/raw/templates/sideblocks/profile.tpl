@@ -1,6 +1,5 @@
-    <div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
-    <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
-    <div class="sideblock-content">
+    <div class="sidebar-header"><h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3></div>
+    <div class="sidebar-content"><div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
 {/if}
         <ul>
@@ -23,7 +22,7 @@
             </a></li>
 {/if}
 {if $sbdata.groups}
-            <li id="groups"><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a>
+            <li id="groups"><label><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></label>
                 <ul>
 {foreach from=$sbdata.groups item=group}
                     <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
@@ -31,7 +30,7 @@
                 </ul></li>
 {/if}
 {if $sbdata.views}
-            <li id="views"><a href="{$WWWROOT}view/">{str tag="views"}:</a>
+            <li id="views"><label><a href="{$WWWROOT}view/">{str tag="views"}:</a></label>
                 <ul>
 {foreach from=$sbdata.views item=view}
                     <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title}</a></li>
@@ -41,7 +40,7 @@
 {/if}
 {if $sbdata.artefacts}
             <li class="artefacts">
-                <strong>{str tag="Artefacts"}:</strong>
+                <label>{str tag="Artefacts"}:</label>
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
