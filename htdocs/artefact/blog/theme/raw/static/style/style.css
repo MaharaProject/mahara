@@ -50,7 +50,6 @@ td a.btn-add{
 }
 #postlist th.controls {
 	text-align: right;
-	width: 35px;
 }
 #postlist th.controls .btn-big-del {
 	background:url("../images/delete.gif") no-repeat scroll left center transparent;

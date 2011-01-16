@@ -10,9 +10,9 @@
                 <tr class="{cycle values='r0,r1'}">
                     <td>
                         <div class="fr viewcontrolbuttons">
-                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
                             <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews}"></a>
                             <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+                            <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
                         </div>
             {if $collection->views[0]->view}
                         <h3><a href="{$WWWROOT}view/view.php?id={$collection->views[0]->view}">{$collection->name}</a></h3>

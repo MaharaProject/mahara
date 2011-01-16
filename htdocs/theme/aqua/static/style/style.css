@@ -203,6 +203,10 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #1F97D5;
 }
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #FFF;
+}
 /* buttons that look like links */
 .linkbtn {
 	color: #1F97D5; 
@@ -569,4 +573,9 @@ div.sideblock h3 a:hover {
 #containerX #top-wrapper a:hover,
 #containerX #top-wrapper a:active {
 	color: #ffffff;
+}
+
+/* collection */
+ul.colnav li a {
+	color: #FFF;
 }

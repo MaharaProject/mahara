@@ -3,13 +3,12 @@
     <td>{$group->name}</td>
     <td class="center">{$group->members}</td>
     <td class="center">{$group->admins}</td>
-    <td class="center">{str tag=name section=grouptype.$group->grouptype}: {str tag=membershiptype.$group->jointype section=group}</td>
+    <td>{str tag=name section=grouptype.$group->grouptype}: {str tag=membershiptype.$group->jointype section=group}</td>
     {if get_config('allowgroupcategories')}
-        <td class="center">{$group->categorytitle}</td>
+        <td>{$group->categorytitle}</td>
     {/if}
-    <td class="center">{$group->visibility}</td>
-    <td class="center s"><a class="icon btn-manage" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}">{str tag="groupmanage" section="admin"}</a></td>
-    <td class="center">
+    <td>{$group->visibility}</td>
+    <td class="right"><a href="{$WWWROOT}admin/groups/manage.php?id={$group->id}"><img src="{theme_url filename="images/manage.gif"}" alt="{str tag="groupmanage" section="admin"}"></a>
       <a title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
         <img src="{theme_url filename="images/icon_close.gif"}" alt="[x]">
       </a>

@@ -29,3 +29,8 @@ tr.folder td {
 tr.folderhover td {
     background-color: #daf0ff !important;
 }
+
+#createfolder {
+    background-color: #ebf0f4;
+    border: 1px solid #95a8b7;
+}

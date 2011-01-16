@@ -221,6 +221,10 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #9a4c01;
 }
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #FFF;
+}
 /* buttons that look like links */
 .linkbtn {
 	color: #9a4c01;
@@ -299,13 +303,6 @@ ul.groupuserstatus li a:active {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav ul {
-  margin: 1.1em 0 1em 0;
-  min-width: 20em;
-}
-#right-nav li {
-  padding: 0 0 0 1em;
-}
 #right-nav li a {
   color: #f7be23;
 }
@@ -326,8 +323,8 @@ ul.groupuserstatus li a:active {
     float:left;
     color: #FFFFFF;
     text-decoration: none;
-    font-weight: normal;
-	font-size: 12px;
+    font-weight: bold;
+	font-size: 14px;
     line-height: 20px;
 	margin: 0 0 0 5px;
 	padding: 0;
@@ -429,7 +426,7 @@ ul.in-page-tabs li a.current-tab:active {
 #main-column {
     display: block;
     margin: 15px 0;
-    padding: 20px 15px;
+    padding: 15px 15px 20px 15px;
 	background: #fff;
 }
 
@@ -487,8 +484,8 @@ div#sb-profile h3 {
 
 /* Side Profile */
 #user-profileicon {
-	padding-top: 5.5em;
-  clear: both;
+	padding-top: 5px;
+	padding-right: 5px;
 }
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
@@ -498,9 +495,6 @@ div#sb-profile h3 {
 }
 
 /* Side Online Users */
-#lastminutes {
-	padding: 5px 0 0 0;
-}
 
 /* Side Quota Bar */
 #quota_used {

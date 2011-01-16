@@ -225,6 +225,10 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #7EF000;
 }
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #FFF;
+}
 /* buttons that look like links */
 .linkbtn {
 	color: #7EF000; 
@@ -535,8 +539,8 @@ div.sideblock ul ul {
 
 /* Side Profile */
 #user-profileicon {
-	padding-top: 3.5em;
-	padding-right: .5em;
+	padding-top: 5px;
+	padding-right: 5px;
 }
 /* Side Online Users */
 #lastminutes {
@@ -683,7 +687,7 @@ table.attachments td {
 /* Home page info boxes */
 
 .home-info {
-    border: solid 2px #cccccc;
+    border: 0;
     background: #0C2839;
 }
 .home-info p.subtitle {
@@ -698,6 +702,42 @@ table.attachments td {
     background: #0C2839;
 	border:0;
 }
-ul.groupuserstatus li, #friendslist ul.actionlist li {
+#friendslist ul.actionlist li {
 	border-top: 1px solid #080D0F;
+}
+
+/* collection */
+div.colnav1 {
+	background: #0C2839;
+}
+ul.colnav li a {
+	color: #FFF;
+}
+
+#feedback_pagination {
+	background: #080D0F !important;
+	border-top: 1px dotted #BEE3F1 !important;
+}
+.morelinkwrap,
+#myviews .submitted-viewitem {
+	background: #080D0F;
+}
+.viewfooter .releaseviewform {
+	background: #080D0F;
+}
+.memberssearch {
+	background: #080D0F !important;
+	border: 0 !important;
+}
+#createfolder {
+	background: #1C3740 !important;
+	border: 0 !important;
+}
+#upload {
+	background: #080D0F !important;
+	border: 0 !important;
+}
+tr.editrow, tr.editrow td {
+	background: #1C3740 !important;
+	border: 0 !important;
 }

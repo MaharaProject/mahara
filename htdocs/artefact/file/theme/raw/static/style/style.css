@@ -11,6 +11,12 @@
 * html #profileicons {
 	width: 97%;
 }
+#profileicons tfoot td.right input.submit {
+	font-weight: bold;
+}
+#profileicons tfoot td.right input#settings_delete {
+	font-weight: normal;
+}
 
 /* File upload box */
 .fileupload {
@@ -49,6 +55,18 @@
 #upload {
 	background-color: #EEE;
 	border: 1px solid #D1D1D1;
+}
+#upload tr th {
+	padding: 5px 5px 3px 10px;
+}
+#upload #upload_file_container th {
+	padding-top: 10px;
+}
+#upload #upload_file_container td {
+	padding-top: 10px;
+}
+#upload #upload_submit_container td {
+	padding-bottom: 10px;
 }
 
 /* folder nav */

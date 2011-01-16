@@ -273,6 +273,7 @@ input#register_register {
 #initials {
 	font-size: 1.1667em;
 	margin: 0 0 5px 0;
+	line-height: 2em;
 }
 #initials span {
 	padding: 0 3px;

@@ -165,6 +165,10 @@ html>body .safe-hidden {
 html>/**/body #overlay {
 	z-index: 1;
 }
+
+a, a:visited, a:link, a:active, a:hover, a:focus {
+	outline: none;
+}
 /**************************** Tables ****************************/
 table {
 	border-spacing: 0;
@@ -514,6 +518,11 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 	padding: 0;
 	color: #0000ee;
 }
+/* except the buttons that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #333;
+	cursor: default;
+}
 .fl .icon {
 	margin-left: 0;
 	margin-right: 5px;
@@ -620,7 +629,6 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
 }
 .btn-del {
 	background: transparent url(../images/icon-delete.gif) no-repeat left;
-	color: #ca0000 !important;
 	padding-left: 13px;
 }
 .btn-big-edit {
@@ -992,6 +1000,9 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	padding: 10px !important;
 	margin-bottom: 10px;
 }
+.subpage h2 {
+	margin-top: 5px !important;
+}
 /**************** MAIN CONTENT *****************/
 #main-wrapper {
 	clear: both;
@@ -1252,6 +1263,10 @@ div.sideblock #friendscontrol label {
 	font-size: 1em;
 }
 /* Tags */
+#results_container #results_sort,
+#results_filter {
+	padding: 3px 0;
+}
 #results_heading {
 	margin-top: 15px;
 }
@@ -1991,9 +2006,6 @@ ul.groupuserstatus table td {
 	float: none;
 }
 
-/*.grouphomepage .group-info .admincontrol {
-	display: none;
-}*/
 .planstatus {
 	width: 180px;
 	text-align: right;
@@ -2083,6 +2095,9 @@ form#search, form#filter, div.searchform, #searchviews {
 	font-style: italic;
 	color: #888;
 }
+#topiclist {
+	margin-bottom: 5px;
+}
 /* Group: about */
 .group-info {
 	background-color: #eee;
@@ -2123,6 +2138,10 @@ form#search, form#filter, div.searchform, #searchviews {
 #search_filter_container #search_filter {
 	margin: 0 4px;
 }
+.membername {
+	font-size: .9167em;
+	line-height: 1.2em;
+}
 /* Group: members (Add members) */
 #addmembers {
 	border: 1px solid #d1d1d1;
@@ -2141,6 +2160,10 @@ form#search, form#filter, div.searchform, #searchviews {
 #addmembers td label {
 	font-size: 1em;
 	font-weight: bold;
+}
+/* Groups > Administer Groups */
+#admgroupslist {
+	margin: 0 0 5px 0;
 }
 /* Settings > Preferences */
 #accountprefs table td {
@@ -2161,6 +2184,10 @@ form#search, form#filter, div.searchform, #searchviews {
 #deleteaccount input.submit {
 	border: 1px solid #e98a88;
 	background-color: #ca0000;
+}
+#accountprefs_addremovecolumns_container th,
+#accountprefs_showhomeinfo_container th {
+	line-height: 1.2em;
 }
 /* Settings > Notifications */
 #activitylist th {

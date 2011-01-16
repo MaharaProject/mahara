@@ -182,6 +182,10 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #6e8e00;
 }
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #FFF;
+}
 /* buttons that look like links */
 .linkbtn {
 	color: #6e8e00; 

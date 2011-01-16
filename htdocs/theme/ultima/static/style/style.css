@@ -215,6 +215,10 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #5A0757;
 }
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #FFF;
+}
 /* buttons that look like links */
 .linkbtn {
 	color: #5A0757; 
@@ -574,4 +578,10 @@ div.sideblock #friendscontrol label {
 }
 #micro #footer-wrap {
 	background: transparent;
+}
+
+
+/* collection */
+ul.colnav li a {
+	color: #FFF;
 }

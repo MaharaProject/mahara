@@ -169,7 +169,11 @@
 	margin: 5px 0 10px 0;
 }
 .postbtns a {
-	margin: 5px;
+	text-decoration: none;
+	cursor: default;
+}
+.postbtns span.btn a.icon {
+	margin-left: 0;
 }
 .deletedpost {
     color: #666666;
