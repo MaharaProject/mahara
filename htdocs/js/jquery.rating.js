@@ -375,9 +375,21 @@
 	$(function(){
 	 $('input[type=radio].star').rating();
 	});
-	
-	
-	
+
+    /* START OF MAHARA CUSTOMISATONS */
+    /* Make sure radio buttons are reskinned when paging */
+    function reskinRadioButtons() {
+        $('input[type=radio].star').rating();
+    }
+    $(function(){
+        var self = this;
+        if (typeof paginatorProxy != 'undefined') {
+            paginatorProxy.addObserver(self);
+            connect(self, 'pagechanged', reskinRadioButtons);
+        }
+    });
+    /* END OF MAHARA CUSTOMISATONS */
+
 /*# AVOID COLLISIONS #*/
 })(jQuery);
 /*# AVOID COLLISIONS #*/
