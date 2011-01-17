@@ -75,6 +75,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 'class': 'submit',
                 'type': 'submit',
                 'name': self.id + '_uploadsubmit',
+                'id': self.id + '_uploadsubmit',
                 'value': get_string('upload')
             });
             appendChildNodes(self.id + '_uploadsubmit_container', submitbutton);

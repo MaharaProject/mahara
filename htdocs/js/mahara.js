@@ -738,7 +738,7 @@ function keypressKeyCode(e) {
 }
 
 function is_FF() {
-    if ( /Firefox|Gecko|Iceweasel/.test(navigator.userAgent)) {
+    if ( /Firefox|Gecko|Iceweasel/.test(navigator.userAgent) && !/Chromium|Chrome|Safari|AppleWebKit/.test(navigator.userAgent) ) {
         return true;
     }
     return false;
