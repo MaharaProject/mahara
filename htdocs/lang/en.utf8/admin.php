@@ -359,6 +359,7 @@ $string['proxyaddressdescription'] = 'If your site uses a proxy server to access
 $string['proxyaddressset'] = 'Proxy address set';
 $string['proxyauthmodel'] = 'Proxy authenticated model';
 $string['proxyauthmodeldescription'] = 'Select your proxy\'s authentication model, if appropriate';
+$string['proxyauthmodelbasic'] = 'Basic (NCSA)';
 $string['proxyauthmodelset'] = 'Proxy authentication model has been set';
 $string['proxyauthcredentials'] = 'Proxy credentials';
 $string['proxyauthcredentialsdescription'] = 'Enter the credentials required for your proxy to authenticate your web server in <em>username:password</em> format';

@@ -357,8 +357,8 @@ $siteoptionform = array(
                     'description'   => get_string('proxyauthmodeldescription', 'admin'),
                     'defaultvalue'  => get_config('proxyauthmodel'),
                     'options'       => array(
-                                        '' => 'None',
-                                        'basic' => 'Basic (NCSA)',
+                                        '' => get_string('none', 'admin'),
+                                        'basic' => get_string('proxyauthmodelbasic', 'admin'),
                                     ),
                 ),
                 'proxyauthcredentials' => array(
