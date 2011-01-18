@@ -24,6 +24,7 @@
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
     paginator.updateResults(data);
+    paginator.alertProxy('pagechanged', data['data']);
     var messageid = 'message';
     if (data.fieldnames && data.fieldnames.message) {
         messageid = data.fieldnames.message;
