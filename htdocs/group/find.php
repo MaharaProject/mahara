@@ -34,11 +34,9 @@ require_once('group.php');
 require_once('searchlib.php');
 $filter = param_alpha('filter', 'notmember');
 $offset = param_integer('offset', 0);
-$groupcategory = param_variable('groupcategory', 0);
-$groupsperpage = 20;
-
+$groupcategory = param_signed_integer('groupcategory', 0);
+$groupsperpage = 10;
 $query = param_variable('query', '');
-
 
 if ($filter == 'member') {
     $type = 'member';
@@ -130,8 +128,19 @@ if ($groups['data']) {
 
 group_prepare_usergroups_for_display($groups['data'], 'find');
 
+$params = array();
+if ($filter != 'notmember') {
+    $params['filter'] = $filter;
+}
+if ($groupcategory != 0) {
+    $params['groupcategory'] = $groupcategory;
+}
+if ($query) {
+    $params['query'] = $query;
+}
+
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/find.php?filter=' . $filter . '&amp;query=' . $query,
+    'url' => get_config('wwwroot') . 'group/find.php' . ($params ? ('?' . http_build_query($params)) : ''),
     'count' => $groups['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,

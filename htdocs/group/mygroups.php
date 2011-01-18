@@ -36,9 +36,9 @@ define('SECTION_PAGE', 'mygroups');
 require_once('group.php');
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 'all');
-$groupcategory = param_variable('groupcategory', 0);
+$groupcategory = param_signed_integer('groupcategory', 0);
 
-$groupsperpage = 20;
+$groupsperpage = 10;
 $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 
 $results = group_get_associated_groups($USER->get('id'), $filter, $groupsperpage, $offset, $groupcategory);
@@ -75,8 +75,16 @@ $form = pieform(array(
     'elements' => $elements
 ));
 
+$params = array();
+if ($filter != 'all') {
+    $params['filter'] = $filter;
+}
+if ($groupcategory != 0) {
+    $params['groupcategory'] = $groupcategory;
+}
+
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/mygroups.php?filter=' . $filter,
+    'url' => get_config('wwwroot') . 'group/mygroups.php' . ($params ? ('?' . http_build_query($params)) : ''),
     'count' => $results['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
