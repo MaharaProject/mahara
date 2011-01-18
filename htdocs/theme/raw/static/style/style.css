@@ -533,6 +533,25 @@ span.btn a.icon, a span.icon {
 	cursor: pointer;
 	color: #0000ee;
 }
+/* bolding some buttons */
+#editgroup #editgroup_submit,
+#editblog #editblog_submit,
+#editpost #editpost_submitpost,
+.fileedittable #files_filebrowser_edit_artefact,
+#profileform #profileform_submit,
+#view-wizard-controls input.submit,
+#editview #editview_submit,
+#viewlayout input.submit,
+#add_feedback_form #add_feedback_form_submit,
+#objection_form #objection_form_submit,
+.submitcancel .submit,
+#export #export_submit,
+#forumbtns a.editforumtitle,
+#viewforum a.newforumtopic,
+#forumbtns a.newforum {
+	font-weight: bold;
+}
+
 div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.submit.btn-add, button.btn-add, div.btn-msg input.submit, div.btn-edit input.submit, .btn-reply, .btn-subscribe input.submit {
  * width: 1;
  * overflow: visible;
@@ -1019,6 +1038,9 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	min-height: 0;  /* IE layout hack */
  * padding-top: 2px;
 }
+div.rel {
+	* position: static;
+}
 .twocolumn div.rel {
 	margin-left: 50px;
 	font-size: .9167em;
@@ -1381,6 +1403,9 @@ a.tag {
 .help a:focus {
 	outline: none;
 }
+.rbuttons .help a {
+	* display: inline;
+}
 .page-help-icon .help {
 	vertical-align: middle;
 	font-size: .4em;
@@ -1490,11 +1515,31 @@ table.attachments td {
 }
 #userview .user-icon {
 	font-size: .9167em;
-	margin: 0 0 10px 0;
+	margin: 0 0 5px 0;
 	text-align: center;
 }
 #userview #invite, #userview #addmember {
 	margin-top: 10px;
+}
+#userview .invitedtojoin,
+#userview .requestedmembership {
+	padding-left: 15px;
+	font-size: .9167em;
+	margin: 0 0 5px 0;
+	text-align: center;
+	display: block;
+}
+#userview .addform {
+	display: block;
+	text-align: center;
+	margin: 0 0 5px 0;
+	font-size: .9167em;
+}
+#userview .addform form, #userview .addform form div {
+	display: inline;
+}
+#userview .addform form select {
+	font-size: 1em;
 }
 /* Profile icons */
 #userview .user-icon a {
@@ -1506,13 +1551,6 @@ table.attachments td {
 	float: left;
 	padding: 3px 5px 0 0;
 	text-align: center;
-}
-#userview .user-icon .addform {
-	display: inline;
-	margin-left: 10px;
-}
-#userview .user-icon .addform form, #userview .user-icon .addform form div {
-	display: inline;
 }
 /* Wall */
 .wallpost {
@@ -1685,6 +1723,9 @@ table.attachments td {
 #potentialpresetitems div.preset {
 	font-weight: bold;
 }
+#potentialpresetitems div button {
+	font-size: .9167em;
+}
 #potentialpresetitems h3 {
 	margin: 0;
 	font-size: 1.1667em;
@@ -1716,6 +1757,13 @@ table.attachments td {
 	margin: 5px 5px 5px 10px;
 	float: right;
 	width: 65%;
+}
+#editpost_filebrowser_selectlist td.right input.unselect,
+#viewacl-advanced #results button {
+	font-size: .9167em;
+}
+#templatesearch_table {
+	margin-bottom: 10px;
 }
 .main-column .accesslist-head1 th {
 	border-bottom: none;
@@ -1770,7 +1818,7 @@ table.attachments td {
 #editaccess #editaccess_views_container {
 	border: 1px solid #d1d1d1;
 	background: #eee;
-	padding: 5px 10px;
+	padding: 10px;
 	margin-bottom: 5px;
 }
 #editaccess #editaccess_accesslist_container {
@@ -1837,18 +1885,14 @@ table.attachments td {
 	line-height: 1.3333em;
 	padding-bottom: 5px;
 }
-#export fieldset {
-	padding: 5px;
-	margin: 5px;
-}
 #export .view {
 	float: left;
 	padding-right: 20px;
 	white-space: nowrap;
 }
 #export fieldset {
-	margin-top: 0;
-	margin-left: 20px;
+	padding: 5px 5px 10px 5px;
+	margin: 0 5px 5px 20px;
 	border: 1px solid #d1d1d1;
 	background: #eee;
 }
@@ -1867,11 +1911,13 @@ table.attachments td {
 }
 #export fieldset table div {
 	padding: 0 0 0 20px;
+	* padding: 0 0 0 25px;
 	font-size: .9167em;
 	line-height: 1.4em;
 }
 #export fieldset table div p {
 	margin: 0 0 5px 0;
+	line-height: 1.2em;
 }
 #export fieldset label {
 	font-size: normal;
@@ -1886,7 +1932,7 @@ table.attachments td {
 }
 #export #whatviewsselection {
 	width: 96%;
-	margin: 0 auto;
+	margin: 5px;
 }
 #export #whatviewsselection a {
 	padding: 0 3px;
@@ -2058,6 +2104,7 @@ div.groupbox li.last {
 	margin: 0;
 	border-top: 1px solid #d1d1d1;
 	padding: 2px 3px;
+	line-height: 1.2em;
 }
 #friendslist ul.actionlist li:first-child {
 	border-top: none;
@@ -2070,7 +2117,7 @@ form#search, form#filter, div.searchform, #searchviews {
 }
 #friendslist ul.viewlist {
 	margin: 0;
-	font-size: 1em;
+	font-size: .9167em;
 }
 #friendslist ul.viewlist li.label {
 	background: none;
@@ -2090,6 +2137,10 @@ form#search, form#filter, div.searchform, #searchviews {
 	min-height: 35px;
 	padding: 5px 0 0 0;
 	margin-left: 50px;
+	margin-right: 200px;
+}
+.userintro br {
+	line-height: .3333em;
 }
 .requested {
 	font-style: italic;
@@ -2102,7 +2153,6 @@ form#search, form#filter, div.searchform, #searchviews {
 .group-info {
 	background-color: #eee;
 	padding: 10px;
-	* padding: 0 10px 10px 10px;
 	border: 10px solid #ddd;
 	margin: 0 0 10px 0;
 }
@@ -2207,6 +2257,9 @@ form#search, form#filter, div.searchform, #searchviews {
 	float: right;
 	position: relative;
 	top: -30px;
+}
+#delete_all_notifications td {
+	text-align: right;
 }
 #activitylist td.right input.submit {
 	font-weight: bold;
@@ -2384,8 +2437,6 @@ img.feedicon {
 .topictitle {
 	font-weight: bold;
 	font-size: 1.1667em;
-}
-.topicforum {
 }
 .poster {
 	font-style: italic;

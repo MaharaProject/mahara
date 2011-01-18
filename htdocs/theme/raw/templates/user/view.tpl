@@ -33,18 +33,22 @@
 {elseif $relationship == 'none' && $friendscontrol == 'auth'}
                             <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view" class="btn-friend">{str tag='requestfriendship' section='group'}</a>
 {/if}
+                    </div>
 {if $invitedlist}
-							<div>{str tag=groupinvitesfrom section=group}{$invitedlist}</div>
+						<span class="invitedtojoin"><label>{str tag=groupinvitesfrom section=group}</label> {$invitedlist}</span>
 {/if}
 {if $inviteform}
-							<span class="addform">{$inviteform|safe}</span>
+						<span class="addform">{$inviteform|safe}</span>
 {/if}
+
 {if $requestedlist}
-							<div>{str tag=requestedmembershipin section=group}{$requestedlist}</div>
+						<span class="requestedmembership"><label>{str tag=requestedmembershipin section=group}</label> {$requestedlist}
 {/if}
-                            {if $addform}<span class="addform">{$addform|safe}</span>{/if}
-                            <div class="cb"></div>
-                    	</div>
+{if $addform}
+						<span class="addform">{$addform|safe}</span>
+{/if}
+
+                        <div class="cb"></div>
                 	</div>
                 	<div id="view" class="cl">
                     	<div id="bottom-pane">

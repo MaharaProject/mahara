@@ -69,7 +69,7 @@
 			{/foreach}
       </ul>
     {/if}
-    {if $user->introduction}{$user->introduction|str_shorten_html:100:true|safe}{/if}
+    {if $user->introduction}<div class="s userintro">{$user->introduction|str_shorten_html:100:true|safe}</div>{/if}
     {if $user->pending}
       <div class="btn-pending s">
 		<label>

@@ -122,7 +122,7 @@
 
 /********************** Bottom pane of Edit View *************************/
 html>body #column-container {
-	* width: 100%;
+	* width: 98%;
 }
 #blocksinstruction {
     padding: 3px 10px;
@@ -920,6 +920,9 @@ table td div.plan_completed {
 }
 #latestforumposts td h4 {
 	margin-bottom: 0;
+}
+#latestforumposts td div.s br {
+	line-height: .5em;
 }
 
 table.resumecomposite {
