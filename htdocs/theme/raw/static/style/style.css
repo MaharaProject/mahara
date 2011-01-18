@@ -803,13 +803,6 @@ div.rbuttons .small-logo {
 	border: 0;
 	background: none;
 }
-#files_filebrowser_userfile,
-#editpost_filebrowser_userfile,
-#add_feedback_form_attachments_list input[type=file] {
-	border: none;
-	font-size: 1em;
-	padding: 0;
-}
 /**************************** Top of page elements ****************************/
 .viewheadertop {
 	height: 30px;
@@ -2462,4 +2455,9 @@ img.feedicon {
 }
 .owner {
 	font-style: italic;
+}
+
+/* rating */
+tr.star td {
+	padding-top: 6px;
 }
