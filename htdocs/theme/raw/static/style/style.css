@@ -803,6 +803,13 @@ div.rbuttons .small-logo {
 	border: 0;
 	background: none;
 }
+#files_filebrowser_userfile,
+#editpost_filebrowser_userfile,
+#add_feedback_form_attachments_list input[type=file] {
+	border: none;
+	font-size: 1em;
+	padding: 0;
+}
 /**************************** Top of page elements ****************************/
 .viewheadertop {
 	height: 30px;
@@ -1684,8 +1691,8 @@ table.attachments td {
 	width: 5%;
 }
 .accesslists .al-edit {
-	width: 16px;
 	padding-top: 5px;
+	text-align: center;
 }
 .accesslists .al {
 	font-size: .9167em;
@@ -1699,10 +1706,16 @@ table.attachments td {
 .accesslists .cv-listitem .cv-listitem-edit {
 	float: right;
 }
+.accesslists .cv-listitem .viewname {
+	font-weight: bold;
+}
 .secreturlcount {
 	float: left;
 }
 /* Secret url */
+.secreturls {
+	width: 20%;
+}
 .secreturlcount {
 	margin-right: 5px;
 }
@@ -1737,6 +1750,9 @@ table.attachments td {
 }
 #viewacl-advanced {
 	width: 250px;
+}
+#viewacl-advanced .viewacl-advanced-search {
+	* margin-top: 5px;
 }
 #viewacl-advanced .viewacl-advanced-search select {
 	margin-right: 1px;
@@ -2432,6 +2448,9 @@ img.feedicon {
 .sharedpages .owner {
 	font-style: italic;
 	font-weight: normal;
+	font-size: .9167em;
+}
+.sharedpages .tags {
 	font-size: .9167em;
 }
 .topictitle {

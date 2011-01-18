@@ -52,7 +52,7 @@
           </div>
       {/if}
       </td>
-      <td class="al-edit center">
+      <td class="al-edit">
         <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
       </td>
       <td class="cv">
@@ -62,8 +62,8 @@
             <div class="fr secreturls">
               <span class="secreturlcount">{count($view.secreturls)}</span> <span class="cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></span>
             </div>
-            <div>
-              <strong><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a></strong>
+            <div class="viewname">
+              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
             </div>
           </div>
           {/foreach}
