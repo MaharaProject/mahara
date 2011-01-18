@@ -134,6 +134,11 @@ function releaseview_submit() {
     }
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
+
+$javascript = array('paginator', 'viewmenu', 'jquery', 'artefact/resume/resumeshowhide.js');
+$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+
+$extrastylesheets = array('style/views.css');
   
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
@@ -141,6 +146,8 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
     $defaultprivate = !empty($releaseform);
     $moderate = isset($commenttype) && $commenttype === 'private';
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
+    $extrastylesheets[] = 'style/jquery.rating.css';
+    $javascript[] = 'jquery.rating';
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
@@ -152,9 +159,6 @@ if ($USER->is_logged_in()) {
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view);
-
-$javascript = array('paginator', 'viewmenu', 'jquery', 'artefact/resume/resumeshowhide.js');
-$javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 // Set up theme
 $viewtheme = $view->get('theme');
@@ -170,7 +174,7 @@ $smarty = smarty(
     $stylesheets,
     array(),
     array(
-        'stylesheets' => array('style/views.css'),
+        'stylesheets' => $extrastylesheets,
         'sidebars' => false,
     )
 );

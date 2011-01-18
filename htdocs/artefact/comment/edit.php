@@ -62,30 +62,46 @@ if (!$comment->get('private') && $id != $lastcomment->id) {
     redirect($goto);
 }
 
+$elements = array();
+$elements['message'] = array(
+    'type'         => 'wysiwyg',
+    'title'        => get_string('message'),
+    'rows'         => 5,
+    'cols'         => 80,
+    'defaultvalue' => $comment->get('description'),
+);
+if (get_config_plugin('artefact', 'comment', 'commentratings')) {
+    $elements['rating'] = array(
+        'type'  => 'radio',
+        'title' => get_string('rating', 'artefact.comment'),
+        'options' => array('1' => '', '2' => '', '3' => '', '4' => '', '5' => ''),
+        'class' => 'star',
+        'defaultvalue' => $comment->get('rating'),
+    );
+}
+else {
+    $elements['rating'] = array(
+        'type'  => 'hidden',
+        'value' => $comment->get('rating'),
+    );
+}
+$elements['ispublic'] = array(
+    'type'  => 'checkbox',
+    'title' => get_string('makepublic', 'artefact.comment'),
+    'defaultvalue' => !$comment->get('private'),
+);
+$elements['submit'] = array(
+    'type'  => 'submitcancel',
+    'value' => array(get_string('save'), get_string('cancel')),
+    'goto'  => $goto,
+);
+
 $form = pieform(array(
     'name'            => 'edit_comment',
     'method'          => 'post',
     'plugintype'      => 'artefact',
     'pluginname'      => 'comment',
-    'elements'        => array(
-        'message' => array(
-            'type'         => 'wysiwyg',
-            'title'        => get_string('message'),
-            'rows'         => 5,
-            'cols'         => 80,
-            'defaultvalue' => $comment->get('description'),
-        ),
-        'ispublic' => array(
-            'type'  => 'checkbox',
-            'title' => get_string('makepublic', 'artefact.comment'),
-            'defaultvalue' => !$comment->get('private'),
-        ),
-        'submit' => array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('save'), get_string('cancel')),
-            'goto'  => $goto,
-        ),
-    )
+    'elements'        => $elements,
 ));
 
 function edit_comment_submit(Pieform $form, $values) {
@@ -94,6 +110,7 @@ function edit_comment_submit(Pieform $form, $values) {
     db_begin();
 
     $comment->set('description', $values['message']);
+    $comment->set('rating', valid_rating($values['rating']));
     $comment->set('private', 1 - (int) $values['ispublic']);
     $comment->commit();
 
@@ -111,10 +128,9 @@ function edit_comment_submit(Pieform $form, $values) {
     redirect($goto);
 }
 
-$smarty = smarty();
+$stylesheets = array('style/jquery.rating.css');
+$smarty = smarty(array('jquery','jquery.rating'), array(), array(), array('stylesheets' => $stylesheets));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);
 $smarty->display('artefact:comment:edit.tpl');
-
-?>
