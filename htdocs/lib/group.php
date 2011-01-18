@@ -1296,31 +1296,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
 
-    $groups = get_records_sql_assoc($sql, $values, $offset, $limit);
+    $groups = get_records_sql_array($sql, $values, $offset, $limit);
     
-    if ($groups) {
-        // Get a few random members from each group. We've tried this with one 
-        // query before but it's painfully slow, databases don't do random rows 
-        // efficiently.
-        foreach (array_keys($groups) as $groupid) {
-            $members = get_records_sql_array("
-                SELECT u.*
-                FROM {group_member} gm
-                INNER JOIN {usr} u ON (gm.member = u.id AND u.deleted = 0)
-                WHERE gm.group = ?
-                ORDER BY " . db_random() . "
-                LIMIT 3", array($groupid));
-            foreach ($members as $m) {
-                $groups[$groupid]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
-            }
-        }
-        $groups = array_values($groups);
-    }
-    else {
-        $groups = array();
-    }
-
-    return array('groups' => $groups, 'count' => $count);
+    return array('groups' => $groups ? $groups : array(), 'count' => $count);
 
 }
 

@@ -95,7 +95,7 @@ if ($groups['data']) {
     foreach ($groups['data'] as $group) {
         $groupids[] = $group->id;
     }
-    $groups['data'] =  get_records_sql_assoc(
+    $groups['data'] =  get_records_sql_array(
         "SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, gm.role, t.membershiptype, COUNT(gm.member) AS membercount
@@ -126,24 +126,6 @@ if ($groups['data']) {
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount',
         array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
-    if ($groups['data']) {
-        // Get 3 members from each group in a separate query -- mysql doesn't like including them as subqueries with limit 1 in the above query
-        $members = get_records_sql_array("
-            SELECT m1.group, m1.member, u.* FROM {group_member} m1
-            INNER JOIN {usr} u ON (m1.member = u.id AND u.deleted = 0)
-            WHERE 3 > (
-                SELECT COUNT(m2.member)
-                FROM {group_member} m2
-                WHERE m1.group = m2.group AND m2.member < m1.member
-            )
-            AND m1.group IN (" . implode($groupids, ',') . ')', array());
-        if ($members) {
-            foreach ($members as $m) {
-                $groups['data'][$m->group]->members[] = (object) array('id' => $m->id, 'name' => display_name($m));
-            }
-        }
-    }
-    $groups['data'] = array_values($groups['data']);
 }
 
 group_prepare_usergroups_for_display($groups['data'], 'find');
