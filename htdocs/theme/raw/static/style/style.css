@@ -1173,7 +1173,7 @@ div.sideblock ul li {
 #user-profileicon {
 	float: right;
 	padding-left: 3px;
-	padding-top: 25px;
+	padding-top: 3px;
 }
 #user-profileicon img {
 	border: 1px solid #FFFFFF;
@@ -1182,16 +1182,14 @@ div.sideblock ul li {
 	padding: 0;
 	list-style: none;
 }
-* html #sb-profile ul {
+#sb-profile ul {
 	list-style-type: none;
 	padding-left: 0;
-}
-#sb-profile ul {
 	font-weight: bold;
 	font-size: 1em;
 }
 #sb-profile ul li {
-	padding-bottom: 3px;
+	padding-bottom: 5px;
 }
 #sb-profile ul ul {
 	font-size: 1em;
@@ -1199,9 +1197,8 @@ div.sideblock ul li {
 	padding-left: 15px;
 	list-style-type: disc;
 }
-* html #sb-profile ul ul {
-	list-style-type: disc;
-	padding-left: 15px;
+#sb-profile ul ul li {
+	padding-bottom: 3px;
 }
 #changeuser {
 	margin-top: 10px;
@@ -1805,6 +1802,9 @@ table.secreturls {
 #accesslistitems .ai-container input {
 	width: 100px;
 	font-size: .9167em;
+}
+#accesslistitems .ai-container .comments input {
+	width: auto;
 }
 #accesslistitems .ai-container td.removebutton {
 	padding: 5px 5px 0 0;

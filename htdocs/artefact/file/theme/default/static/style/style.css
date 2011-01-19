@@ -5,6 +5,7 @@
  * This file is distributed under the same terms as Mahara itself
  */
 /* File upload box */
+#upload,
 .fileupload {
     background-color: #ebf0f4;
     border: 1px solid #95a8b7;
