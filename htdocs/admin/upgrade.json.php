@@ -38,8 +38,7 @@ $name    = param_variable('name');
 $install = ($name == 'firstcoredata' || $name == 'lastcoredata' || $name == 'localpreinst' || $name == 'localpostinst');
 if (!$install) {
     $upgrade = check_upgrades($name);
-    
-    if (empty($upgrade->disablelogin)) {
+    if (!empty($upgrade) && empty($upgrade->disablelogin)) {
         auth_setup();
     }
 }
@@ -107,8 +106,15 @@ if (!empty($upgrade)) {
     }
 }
 else {
-    json_reply(false, array('error' => false,
-                            'message' => get_string('nothingtoupgrade','admin')));
+    // Nothing to upgrade.  This can happen when a plugin upgrade was found
+    // in the original list of upgrades generated on admin/upgrade.php, but
+    // the core upgrade has already upgraded that plugin, so we're trying to
+    // upgrade it again.
+    // It seems a bit wrong.  For one thing, the core upgrade probably
+    // shouldn't upgrade plugins past the version that was current at the
+    // time the core upgrade was written.
+    $data['error'] = false;
+    $data['message'] = get_string('nothingtoupgrade','admin');
+    json_reply(false, $data);
     exit;
 }
-?>

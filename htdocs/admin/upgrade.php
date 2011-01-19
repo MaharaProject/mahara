@@ -129,7 +129,7 @@ $js = <<< EOJS
                             else {
                                 message = {$successstring};
                             }
-                            message += data.newversion;
+                            message += data.newversion ? data.newversion : '?';
                         }
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                         processNext();
