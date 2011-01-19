@@ -798,10 +798,24 @@ div.colnav-extra {
 	font-size: .9167em;
 	line-height: 2em;
 }
-#feedbacktable .icon {
+#feedbacktable .commentleft {
 	float: left;
-	margin-right: 3px;
-	margin-left: 0;
+	width: 100px;
+	text-align: center;
+}
+#feedbacktable .commentright {
+	margin-left: 100px;
+}
+#feedbacktable .makepublicbtn {
+	font-size: .9167em;
+	margin-top: 0;
+	float: right;
+}
+#feedbacktable .icon {
+	margin: 0;
+}
+#feedbacktable .undercomment {
+	font-size: .9167em;
 }
 #feedbacktable .username {
 	margin-right: 3px;
@@ -937,6 +951,10 @@ table.resumecomposite {
 }
 .filedownload-item h4 {
 	margin-bottom: 0 !important;
+}
+.filedownload-item p {
+	margin: 0;
+	font-size: .9167em;
 }
 
 

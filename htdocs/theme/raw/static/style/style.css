@@ -1705,15 +1705,20 @@ table.attachments td {
 .secreturlcount {
 	float: left;
 }
-/* Secret url */
 .secreturls {
 	width: 20%;
+}
+/* Secret url */
+table.secreturls {
+	width: 100%;
 }
 .secreturlcount {
 	margin-right: 5px;
 }
 .secreturls .buttons {
 	padding-top: 5px;
+	white-space: nowrap;
+	text-align: right;
 }
 .secreturls .buttons form, .secreturls .buttons form div {
 	display: inline;
@@ -2148,7 +2153,8 @@ form#search, form#filter, div.searchform, #searchviews {
 	margin-left: 50px;
 	margin-right: 200px;
 }
-.userintro br {
+.userintro br,
+#membersearchresults .rel div br {
 	line-height: .3333em;
 }
 .requested {

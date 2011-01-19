@@ -112,13 +112,6 @@ ul.artefactchooser-subtabs li.current a:active {
 #artefactchooser-body {
     border: 1px solid #ddd;
 }
-.upload_browse #artefactchooser-body,
-#instconf_artefactid_container #artefactchooser-body {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-	border-top: 0;
-}
 
 /* pagination */
 .ac-pagination .results {
