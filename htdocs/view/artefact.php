@@ -111,7 +111,7 @@ $artefactpath[] = array(
 // Feedback
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view, $artefact);
 
-$javascript = <<<EOF
+$inlinejavascript = <<<EOF
 var viewid = {$viewid};
 addLoadEvent(function () {
     paginator = {$feedback->pagination_js}
@@ -159,7 +159,7 @@ $smarty = smarty(
 
 $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
