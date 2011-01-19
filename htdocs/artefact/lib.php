@@ -1244,15 +1244,46 @@ function rebuild_artefact_parent_cache_dirty() {
 function rebuild_artefact_parent_cache_complete() {
     db_begin();
     delete_records('artefact_parent_cache');
-    if ($artefactids = get_column('artefact', 'id')) {
-        foreach ($artefactids as $id) {
-            $parentids = array_keys(artefact_get_parents_for_cache($id));
-            foreach ($parentids as $p) {
-                $apc = new StdClass;
-                $apc->artefact = $id;
-                $apc->parent   = $p;
-                $apc->dirty    = 0;
-                insert_record('artefact_parent_cache', $apc);
+
+    $artefacts = get_records_sql_assoc('
+        SELECT id, parent, COUNT(aa.artefact) AS attached
+        FROM {artefact} a LEFT JOIN {artefact_attachment} aa ON a.id = aa.attachment
+        GROUP BY id, parent
+        HAVING parent IS NOT NULL OR COUNT(aa.artefact) > 0',
+        array()
+    );
+
+    if ($artefacts) {
+
+        foreach ($artefacts as &$artefact) {
+
+            // Nothing that can be a parent can be an attachment, so it's good
+            // enough to first get everything this artefact is attached to, and
+            // then find all its ancestors and the ancestors of everything it's
+            // attached to.
+
+            $ancestors = array();
+            if ($artefact->attached) {
+                $ancestors = get_column('artefact_attachment', 'artefact', 'attachment', $artefact->id);
+            }
+
+            $tocheck = $ancestors;
+            $tocheck[] = $artefact->id;
+
+            foreach ($tocheck as $id) {
+                $p = isset($artefacts[$id]) ? $artefacts[$id]->parent : null;
+                while (!empty($p)) {
+                    $ancestors[] = $p;
+                    $p = isset($artefacts[$p]) ? $artefacts[$p]->parent : null;
+                }
+            }
+
+            foreach (array_unique($ancestors) as $p) {
+                insert_record('artefact_parent_cache', (object) array(
+                    'artefact' => $artefact->id,
+                    'parent'   => $p,
+                    'dirty'    => 0,
+                ));
             }
         }
     }
