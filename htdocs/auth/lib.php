@@ -383,6 +383,10 @@ function auth_setup () {
             log_debug("Strange: user " . $USER->get('username') . " had no authinstance set in their session");
         }
 
+        if (function_exists('local_logout')) {
+            local_logout();
+        }
+
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
         redirect();
