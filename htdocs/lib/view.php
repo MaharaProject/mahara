@@ -1031,7 +1031,7 @@ class View {
             $localallowed = local_get_allowed_blocktype_categories($this->get('type'));
         }
         foreach (get_records_sql_array($sql, array($this->get('type'))) as $blocktypecategory) {
-            if (is_array($localallowed) && !in_array($blocktypecategory->category, $localallowed)) {
+            if (isset($localallowed) && is_array($localallowed) && !in_array($blocktypecategory->category, $localallowed)) {
                 continue;
             }
             safe_require('blocktype', $blocktypecategory->blocktype);

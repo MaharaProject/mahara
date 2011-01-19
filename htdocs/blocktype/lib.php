@@ -200,7 +200,7 @@ abstract class PluginBlocktype extends Plugin {
 
         foreach ($bts as $bt) {
             $namespaced = blocktype_single_to_namespaced($bt->name, $bt->artefactplugin);
-            if (is_array($localallowed) && !in_array($namespaced, $localallowed)) {
+            if (isset($localallowed) && is_array($localallowed) && !in_array($namespaced, $localallowed)) {
                 continue;
             }
             safe_require('blocktype', $namespaced); 
