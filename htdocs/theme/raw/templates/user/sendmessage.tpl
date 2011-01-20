@@ -11,9 +11,9 @@
           <td>
             <h5>
         {if $message->from == $user->id}
-              {$user|display_name|escape}
+              <a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a>
         {else}
-              {$USER|display_name|escape}
+              <a href="{$WWWROOT}user/view.php?id={$USER->id}">{$USER|display_name|escape}</a>
         {/if}
               <span class="postedon">{$message->ctime|strtotime|format_date}</span>
             </h5>
