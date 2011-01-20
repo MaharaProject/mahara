@@ -523,6 +523,7 @@ EOF;
         // Place all sideblocks on the right. If this structure is munged 
         // appropriately, you can put blocks on the left. In future versions of 
         // Mahara, we'll make it easy to do this.
+        $sidebars = $sidebars && !empty($SIDEBLOCKS);
         $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
 
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
