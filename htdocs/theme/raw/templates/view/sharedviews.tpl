@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p>{str tag=sharedviewsdescription section=view}</p>
+<p class="intro">{str tag=sharedviewsdescription section=view}</p>
 <div>{$searchform|safe}</div>
 <table id="sharedviewlist" class="fullwidth">
   <thead>

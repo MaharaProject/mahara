@@ -1,16 +1,15 @@
-{if $GROUP}
-                        </div><!--end group-->
+{if $SUBPAGENAV}
+                        </div><!--end subpage rel-->
 {/if}
                     </div>
-                </td>
+                </div>
 {if $SIDEBARS && $SIDEBLOCKS.right}
-                <td id="right-column" class="sidebar">
+                <div id="right-column" class="sidebar">
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
-                </td>
+                </div>
 {/if}
-            </tr>
-        </tbody>
-    </table>
+				<div class="cb"></div>
+            </div>
     <div id="footer-wrap">
 		<div class="cb"></div>
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>

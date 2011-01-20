@@ -47,3 +47,8 @@
 .posttime {
     color: #BEE3F1;
 }
+
+.postedits {
+	padding: 10px;
+	background: #000;
+}

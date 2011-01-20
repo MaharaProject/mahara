@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p>{str tag=activetopicsdescription section=interaction.forum}</p>
+<p class="intro">{str tag=activetopicsdescription section=interaction.forum}</p>
 <table id="topiclist" class="fullwidth">
   <thead>
     <tr>

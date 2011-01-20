@@ -306,14 +306,15 @@ span.btn a.icon, a span.icon {
 }
 
 #main-nav {
-	float: right;
     padding: 0;
     margin: 0;
 	height: 27px;
-	* clear: none;
+}
+#main-nav ul {
+	float: right;
 }
 #main-nav li {
-    float:left;
+    float: left;
     color: #FFFFFF;
     text-decoration: none;
     line-height: 1.6em;

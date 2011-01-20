@@ -429,6 +429,9 @@ ul.in-page-tabs li a.current-tab:active {
     padding: 15px 15px 20px 15px;
 	background: #fff;
 }
+.main-column-narrow {
+	width: 69%;
+}
 
 /* system messages between nav and main content */
 /* system messages */
@@ -441,7 +444,7 @@ ul.in-page-tabs li a.current-tab:active {
 /**************** SIDEBAR *********/
 #left-column,
 #right-column {
-    width: 270px;
+    min-width: 270px;
 	background: transparent;
     padding: 0px;
 }

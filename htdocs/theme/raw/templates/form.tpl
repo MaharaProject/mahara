@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $pagedescription}
-  <p>{$pagedescription}</p>
+  <p class="intro">{$pagedescription}</p>
 {elseif $pagedescriptionhtml}
   {$pagedescriptionhtml|safe}
 {/if}

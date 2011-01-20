@@ -316,11 +316,12 @@ span.btn a.icon, a span.icon {
 }
 
 #main-nav {
-	float: right;
-		* clear: none !important;
     padding: 0;
     margin: 0;
     background: transparent;
+}
+#main-nav ul {
+	float: right;
 }
 #main-nav li {
     float:left;

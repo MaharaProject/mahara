@@ -1,3 +1,4 @@
+<div id="collectionnavwrap">
 {foreach from=$collection item=chunk name=cchunk}
 <div class="{if $dwoo.foreach.cchunk.first}colnav1{else}colnav-extra hidden{/if}">
 <ul class="colnav">
@@ -14,7 +15,6 @@
   <li id="colnav-more" class="nojs-hidden"><a href="">…</a></li>
   {/if}
 </ul>
-	<div class="cb"></div>
 </div>
 {/foreach}
 
@@ -28,4 +28,6 @@ addLoadEvent(function() {
 });{/literal}
 </script>
 {/if}
+	<div class="cb"></div>
+</div>
 

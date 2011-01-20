@@ -80,9 +80,6 @@ p {
 .fl {
 	float: left;
 }
-.fl img {
-	padding-right: 10px;
-}
 .fr {
 	float: right;
 }
@@ -1027,8 +1024,12 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	clear: both;
 	width: 100%;
 }
-#main-column {
+.main-column {
 	padding: 15px;
+	width: 97%;
+}
+.main-column-narrow {
+	width: 70%;
 }
 #containerX .main-column {
 	padding: 10px 15px;
@@ -1132,8 +1133,15 @@ div.section {
 	padding-top: 8px;
 }
 /**************** SIDEBAR *********/
-#left-column, #right-column {
-	width: 256px;
+#left-column {
+    width: 27%;
+	min-width: 256px;
+	float: left;
+}
+#right-column {
+    width: 27%;
+	min-width: 256px;
+	float: right;
 }
 div.sideblock {
 	clear: both;
@@ -2231,10 +2239,14 @@ form#search, form#filter, div.searchform, #searchviews {
 	margin: 0 0 5px 0;
 }
 /* Settings > Preferences */
+#accountprefs {
+	clear: both;
+}
 #accountprefs table td {
 	padding-left: 0;
 }
 #accountprefs table h3 {
+	margin-top: 10px;
 	border-bottom: 1px dotted #d1d1d1;
 }
 #deleteaccount {

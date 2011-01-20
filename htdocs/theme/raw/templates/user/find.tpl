@@ -8,5 +8,4 @@
             </table>
             </div>
 {$results.pagination|safe}
-</div>
 {include file="footer.tpl"}

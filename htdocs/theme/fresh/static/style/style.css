@@ -332,14 +332,13 @@ span.btn a.icon, a span.icon {
   text-decoration: underline;
 }
 #main-nav {
-	float: right;
-	* clear: none !important;
     padding: 0;
     margin: 0;
     background: transparent;
 }
 #main-nav ul {
     padding-right: 5px;
+	float: right;
 }
 #main-nav li {
     float:left;
@@ -467,6 +466,11 @@ ul.in-page-tabs li a.current-tab:active {
 }
 .main-column {
 	background: #080D0F;
+	width: 96%;
+}
+
+.main-column-narrow {
+	width: 67%;
 }
 
 /* system messages between nav and main content */
@@ -498,7 +502,7 @@ div.error {
 /**************** SIDEBAR *********/
 #left-column,
 #right-column {
-    width: 271px;
+    min-width: 271px;
 	background: transparent;
     padding: 0px;
 }
@@ -707,7 +711,7 @@ table.attachments td {
 }
 
 /* collection */
-div.colnav1 {
+#collectionnavwrap {
 	background: #0C2839;
 }
 ul.colnav li a {

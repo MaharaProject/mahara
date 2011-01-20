@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<p>{str tag="institutionmembershipdescription"}</p>
+<p class="intro">{str tag="institutionmembershipdescription"}</p>
 {if $memberform}
   <h3>{str tag=Memberships}</h3>
   {$memberform|safe}

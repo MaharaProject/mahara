@@ -11,15 +11,13 @@
 {include file="header/navigation.tpl"}
 		<div class="cb"></div>
     </div>
-    <table id="main-wrapper">
-        <tbody>
-            <tr>
+    <div id="main-wrapper">
 {if $SIDEBARS && $SIDEBLOCKS.left}
-                <td id="left-column" class="sidebar">
+                <div id="left-column" class="sidebar">
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
-                </td>
+                </div>
 {/if}
-                <td id="main-column" class="main-column">
+                <div id="main-column" class="main-column{if $SIDEBARS} main-column-narrow {if $SIDEBLOCKS.right}fl{else}fr{/if}{/if}">
                     {dynamic}{insert_messages}{/dynamic}
                     <div id="main-column-container">
 

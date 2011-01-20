@@ -129,6 +129,9 @@ html>body #column-container {
 	font-style: italic;
 	margin-bottom: 10px;
 }
+#column-container {
+	padding-top: 10px;
+}
 
 /* columns 
 #column-container input.submit {
@@ -651,7 +654,7 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 
 #view-description {
-    margin: 0 0 20px 0;
+    margin: 0;
 	padding: 0;
 }
 
@@ -671,6 +674,9 @@ ul.artefactchooser-subtabs li.current a:active {
 	font-size: 1.1667em;
 	margin: 10px 10px 0 0;
 	float: left;
+}
+#collectionnavwrap {
+	background: none;
 }
 #containerX div.colnav1 {
 	margin: 0;
@@ -698,15 +704,18 @@ ul.artefactchooser-subtabs li.current a:active {
 	display: block;
 }
 #containerX div.colnav-extra {
-    margin: 8px 0 0;
+    margin: 0;
+	float: left;
 }
 /* Collection navigation normal header */
+#collectionnavwrap {
+	background: #EEE;
+	padding: 5px 5px 0 5px;
+}
 div.colnav1 {
 	clear: both;
 	margin: 0;
 	padding: 0;
-	background: #EEE;
-	padding: 5px 5px 0 5px;
 }
 ul.colnav {
     list-style: none;
@@ -726,7 +735,8 @@ ul.colnav li.selected span {
 	display: block;
 }
 div.colnav-extra {
-    margin: 8px 0 0;
+    margin: 0;
+	float: left;
 }
 
 .submissionform {
