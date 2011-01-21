@@ -620,6 +620,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'value' => get_string('delete'),
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
+                    'name'  => 'delete_comment_submit',
                 ),
             ),
         );
