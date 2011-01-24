@@ -380,6 +380,9 @@ EOF;
         $smarty->assign('PAGETITLE', $sitename);
     }
 
+    if (function_exists('local_header_top_content')) {
+        $smarty->assign('SITETOP', local_header_top_content());
+    }
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);
     }
