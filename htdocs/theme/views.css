@@ -763,6 +763,7 @@ div.colnav-extra {
 }
 .viewfooter .tags {
 	margin-bottom: 10px;
+	font-size: .9167em;
 }
 .viewfooter .submissionform {
 	margin-bottom: 5px;
@@ -828,7 +829,7 @@ div.colnav-extra {
 	font-size: .9167em;
 }
 #feedbacktable .username {
-	margin-right: 3px;
+	line-height: 1.2em;
 }
 #feedbacktable .details span {
 	margin: 0 3px;
