@@ -24,6 +24,10 @@
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
     paginator.updateResults(data);
+    // Clear rating from previous submission
+    forEach(getElementsByTagAndClassName('input', 'star', 'add_feedback_form_rating_container'), function (r) {
+        r.checked = false;
+    });
     paginator.alertProxy('pagechanged', data['data']);
     var messageid = 'message';
     if (data.fieldnames && data.fieldnames.message) {
