@@ -9,7 +9,7 @@
   <thead>
     <tr>
       <th>{str tag=accesslist section=view}</th>
-      <th>{str tag=editaccess section=view}</th>
+      <th class="center">{str tag=editaccess section=view}</th>
       <th>
         <span class="fl">{str tag=Views section=view} &amp; {str tag=collections section=collection}</span>
         <span class="fr">{str tag=secreturls section=view}</span>

@@ -428,7 +428,6 @@ table.tablerenderer th.desc {
 /* USERS > ADD USER */
 #adduser-t {
     min-width: 800px;
-    max-width: 1000px;
 }
 #adduser thead th {
     text-align: left;
@@ -651,4 +650,8 @@ form#uploadcsv {
 	list-style: disc;
 	margin: 0 0 0 15px;
 	font-size: 1em;
+}
+
+#edituser_institution tr.submit td {
+	padding-top: 5px;
 }

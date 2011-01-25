@@ -81,5 +81,5 @@
     </div>
     {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
-
+</div>
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

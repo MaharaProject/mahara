@@ -843,10 +843,10 @@ div.rbuttons .small-logo {
 	background-color: #f99;
 	font-weight: bold;
 	padding: 5px;
+	font-size: 75%;
 }
 .sitemessage img {
 	float: left;
-	margin-top: 2px;
 	padding-right: 5px;
 }
 #container, #containerX {
@@ -1660,12 +1660,14 @@ table.attachments td {
 /* Copy a view */
 #viewpreview {
 	position: absolute;
-	border: 25px solid #ccc;
-	background-color: #fff;
+	background-color: #777777;
+	padding: 20px;
+	font-size: 75%;
 }
 #viewpreviewinner {
-	border: 25px solid #ccc;
-	padding: 10px;
+	border: 10px solid #d1d1d1;
+	padding: 15px;
+	background-color: #FFF;
 }
 #closepreview {
 	background: url(../images/remove-block.png) no-repeat left;
@@ -2479,4 +2481,11 @@ img.feedicon {
 /* rating */
 tr.star td {
 	padding-top: 6px;
+}
+
+form#sendmessage #sendmessage_message,
+#editpost_description_tbl,
+#editblog_description_tbl {
+	width: 100% !important;
+	* width: 98% !important;
 }
