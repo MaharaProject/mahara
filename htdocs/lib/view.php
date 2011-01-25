@@ -1028,7 +1028,7 @@ class View {
             JOIN {blocktype_installed} bi ON (bic.blocktype = bi.name AND bi.active = 1)
             JOIN {blocktype_installed_viewtype} biv ON (bi.name = biv.blocktype AND biv.viewtype = ?)';
         if (function_exists('local_get_allowed_blocktype_categories')) {
-            $localallowed = local_get_allowed_blocktype_categories($this->get('type'));
+            $localallowed = local_get_allowed_blocktype_categories($this);
         }
         foreach (get_records_sql_array($sql, array($this->get('type'))) as $blocktypecategory) {
             if (isset($localallowed) && is_array($localallowed) && !in_array($blocktypecategory->category, $localallowed)) {
