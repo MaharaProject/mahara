@@ -446,9 +446,11 @@ class View {
             update_record('view', $fordb, 'id');
         }
 
-        delete_records('view_tag', 'view', $this->get('id'));
-        foreach ($this->get_tags() as $tag) {
-            insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+        if (isset($this->tags)) {
+            delete_records('view_tag', 'view', $this->get('id'));
+            foreach ($this->get_tags() as $tag) {
+                insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+            }
         }
 
         if (isset($this->copynewgroups)) {
