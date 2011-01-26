@@ -449,7 +449,8 @@ EOF;
             }
         }
 
-        if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
+        if ($USER->is_logged_in() && defined('MENUITEM') &&
+            (substr(MENUITEM, 0, 11) == 'myportfolio' || substr(MENUITEM, 0, 7) == 'content')) {
             if (get_config('showselfsearchsideblock')) {
                 $SIDEBLOCKS[] = array(
                     'name'   => 'selfsearch',
