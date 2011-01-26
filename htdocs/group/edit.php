@@ -121,8 +121,10 @@ function editgroup_validate(Pieform $form, $values) {
     global $group_data;
     if ($group_data->name != $values['name']) {
         // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
-        if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
-            $form->set_error('name', get_string('groupalreadyexists', 'group'));
+        if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
+            if (count($ids) > 1 || $ids[0]->id != $group_data->id) {
+                $form->set_error('name', get_string('groupalreadyexists', 'group'));
+            }
         }
     }
 }
