@@ -78,6 +78,10 @@ class PluginArtefactComment extends PluginArtefact {
         );
     }
 
+    public static function can_be_disabled() {
+        return false;
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'comment', 'commenteditabletime', 10);
