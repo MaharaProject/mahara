@@ -1134,12 +1134,12 @@ div.section {
 }
 /**************** SIDEBAR *********/
 #left-column {
-    width: 27%;
+    width: 26%;
 	min-width: 256px;
 	float: left;
 }
 #right-column {
-    width: 27%;
+    width: 26%;
 	min-width: 256px;
 	float: right;
 }
