@@ -87,12 +87,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                 'title' => get_string('width'),
                 'size' => 3,
                 'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
+                'rules' => array('minvalue' => 1, 'maxvalue' => 2000),
             ),
             'height' => array(
                 'type' => 'text',
                 'title' => get_string('height'),
                 'size' => 3,
                 'defaultvalue' => (isset($configdata['height'])) ? $configdata['height'] : '',
+                'rules' => array('minvalue' => 1, 'maxvalue' => 2000),
             ),
         );
     }
