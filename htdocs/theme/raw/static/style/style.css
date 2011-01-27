@@ -317,6 +317,7 @@ label {
 }
 .pieform tbody tr th label {
 	white-space: normal;
+	line-height: 1.2em;
 }
 .pieform td label {
 	font-weight: normal;
@@ -324,6 +325,12 @@ label {
 }
 .pieform th label {
 	font-weight: bold;
+}
+.pieform tr.checkbox label {
+	white-space: nowrap;
+}
+.pieform tr.checkbox td {
+	vertical-align: middle;
 }
 #editpost_allowcomments_container th label {
 	white-space: nowrap;
@@ -522,7 +529,7 @@ span.btn a.icon, a span.icon {
 }
 .fl .icon {
 	margin-left: 0;
-	margin-right: 5px;
+	margin-right: 0;
 }
 /* buttons that look like links */
 .linkbtn {
@@ -742,6 +749,12 @@ a.btn-big-del {
 .collection {
 	background: url(../images/icon-collection.gif) no-repeat left 1px;
 	padding-left: 15px;
+}
+#sb-profile ul li#unreadmessages a,
+#sb-profile ul li#invitedgroups a,
+#sb-profile ul li#pendingfriends a {
+	padding-left: 15px;
+	background: url(../images/icon-mail.gif) no-repeat left 4px;
 }
 tr.expandable-head,
 tr.expandable-head td {
@@ -2476,6 +2489,9 @@ img.feedicon {
 }
 .owner {
 	font-style: italic;
+}
+#sharedviewlist .lastcomment a.btn {
+	margin-left: 10px;
 }
 
 /* rating */
