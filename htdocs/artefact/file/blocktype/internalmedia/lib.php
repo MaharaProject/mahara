@@ -282,9 +282,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         }
 
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
-               <span class="blocktype_internalmedia_mp3" id="' . $id . '"
-                     style="display:block;width:'.$width.'px;height:'.$height.'px;">(' 
-               . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
+               <span class="blocktype_internalmedia_mp3" id="' . $id . '" style="display:block;width:'.$width.'px;height:'.$height.'px;"></span>
+               <span id="' . $id . '_h">' . get_string('flashanimation', 'blocktype.file/internalmedia') . '</span>
                <script type="text/javascript">
                flowplayer("'.$id.'", "'.$playerurl.'", {
                    clip:  {
@@ -308,6 +307,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                       }'.$audio.'
                    }
                }).load();
+               addElementClass("' . $id . '_h", "hidden");
                </script>
 ';
         return $html;
