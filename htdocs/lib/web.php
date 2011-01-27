@@ -156,7 +156,7 @@ EOF;
 tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
-    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact]",
+    extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact],iframe[src|width|height|align|title|class|type|frameborder|allowfullscreen]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",

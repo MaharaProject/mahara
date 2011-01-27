@@ -2242,5 +2242,9 @@ function xmldb_core_upgrade($oldversion=0) {
         add_index($table, $index);
     }
 
+    if ($oldversion < 2011012800) {
+        reload_html_filters();
+    }
+
     return $status;
 }
