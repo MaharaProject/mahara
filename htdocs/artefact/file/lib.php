@@ -91,6 +91,7 @@ class PluginArtefactFile extends PluginArtefact {
         if ($prevversion == 0) {
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
         }
+        set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
     }
 
@@ -246,6 +247,14 @@ class PluginArtefactFile extends PluginArtefact {
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (empty($this->id)) {
+            $this->allowcomments = get_config_plugin('artefact', 'file', 'commentsallowed' . $this->artefacttype);
+        }
+    }
 
     public static function is_singular() {
         return false;
@@ -1161,6 +1170,29 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        $commentdefaults = array();
+        foreach(PluginArtefactFile::get_artefact_types() as $at) {
+            $commentdefaults[] = array(
+                'title'        => get_string($at, 'artefact.file'),
+                'value'        => $at,
+                'defaultvalue' => get_config_plugin('artefact', 'file', 'commentsallowed' . $at),
+            );
+        }
+
+        $elements['comments'] = array(
+            'type'     => 'fieldset',
+            'legend'   => get_string('Comments', 'artefact.comment'),
+            'elements' => array(
+                'commentdefault' => array(
+                    'type'         => 'checkboxes',
+                    'title'        => get_string('artefactdefaultpermissions', 'artefact.comment'),
+                    'description'  => get_string('artefactdefaultpermissionsdescription', 'artefact.comment'),
+                    'elements'     => $commentdefaults,
+                ),
+            ),
+            'collapsible' => true,
+        );
+
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -1193,6 +1225,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         else {
             insert_record('site_content', $data);
+        }
+        foreach(PluginArtefactFile::get_artefact_types() as $at) {
+            set_config_plugin('artefact', 'file', 'commentsallowed' . $at, (int) in_array($at, $values['commentdefault']));
         }
     }
 
@@ -1495,9 +1530,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             }
         }
 
-        if (empty($this->id)) {
-            $this->allowcomments = 1;
-        }
     }
 
     /**
@@ -1608,14 +1640,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
-
-    public function __construct($id = 0, $data = null) {
-        parent::__construct($id, $data);
-
-        if (empty($this->id)) {
-            $this->allowcomments = 0;
-        }
-    }
 
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');

@@ -111,4 +111,6 @@ $string['feedbackdeletedtext'] = "A comment on %s was removed
 ------------------------------------------------------------------------
 To see %s online, follow this link:
 %s";
-?>
+
+$string['artefactdefaultpermissions'] = 'Default comment permission';
+$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation.  Users can override these settings for individual artefacts.';
