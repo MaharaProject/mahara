@@ -124,9 +124,6 @@ class AuthXmlrpc extends Auth {
             throw new AccessDeniedException();
         }
 
-        $virgin = false;
-
-        $oldlastlogin = null;
         $create = false;
         $update = false;
 

@@ -97,9 +97,6 @@ class AuthSaml extends Auth {
         $email           = $attributes[$this->config['emailfield']][0];
         $institutionname = $this->institution;
         
-        $virgin = false;
-
-        $oldlastlogin = null;
         $create = false;
         $update = false;
 
