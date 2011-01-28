@@ -9,6 +9,8 @@
 #forumbtns {
     right: 10px;
     top: 10px;
+	* top: -30px;
+    * right: 0;
 }
 * html #forumbtns {
 	right: 30px;
@@ -68,6 +70,8 @@
 #viewforum .rbuttons {
 	right: 10px;
 	top: 10px;
+	* top: -30px;
+	* right: 0;
 }
 * html #viewforum .rbuttons {
 	right: 35px;
@@ -142,6 +146,7 @@
 	border-right: 2px solid #eee;
 	text-align: center;
     font-size: .9167em;
+	background: #eaeeed;
 }
 .postedits .posttime {
 	color: #888;
