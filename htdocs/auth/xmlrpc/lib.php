@@ -126,6 +126,9 @@ class AuthXmlrpc extends Auth {
 
         $create = false;
         $update = false;
+        if ('1' == $this->config['updateuserinfoonlogin']) {
+            $update = true;
+        }
 
         // Retrieve a $user object. If that fails, create a blank one.
         try {
@@ -170,9 +173,6 @@ class AuthXmlrpc extends Auth {
                 die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
 
-            if ('1' == $this->config['updateuserinfoonlogin']) {
-                $update = true;
-            }
         } catch (AuthUnknownUserException $e) {
             if (!empty($this->config['weautocreateusers'])) {
                 $institution = new Institution($this->institution);
@@ -206,6 +206,7 @@ class AuthXmlrpc extends Auth {
             $user->firstname          = $remoteuser->firstname;
             $user->lastname           = $remoteuser->lastname;
             $user->email              = $remoteuser->email;
+            $imported = array('firstname', 'lastname', 'email');
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
@@ -216,7 +217,8 @@ class AuthXmlrpc extends Auth {
 
             $user->id = create_user($user, array(), $this->institution, $this, $remoteuser->username);
 
-            $this->import_user_settings($user, $remoteuser);
+            $locked = $this->import_user_settings($user, $remoteuser);
+            $locked = array_merge($imported, $locked);
 
             /*
              * We need to convert the object to a stdclass with its own
