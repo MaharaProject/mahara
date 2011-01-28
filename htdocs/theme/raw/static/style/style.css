@@ -565,7 +565,10 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
 	right: 0;
 	top: 0;
 	line-height: 2.1em;
+ * position: relative;
+ * top: -30px;
  * width: 1;
+ * float: right;
  * overflow: visible;
  * display: block;
  * height: 30px;
@@ -574,6 +577,7 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
  * width: 1;
  * overflow: visible;
  * display: block;
+	* float: left;
 }
 .viewheader .rbuttons {
 	line-height: 1.8em;
@@ -786,6 +790,8 @@ td.expanded {
 div.pagetabs {
 	top: 10px !important;
 	right: 10px;
+	* top: -30px !important;
+	* right: 0;
 }
 * html div.pagetabs {
 	right: 35px;
@@ -800,7 +806,10 @@ div.pagetabs a {
 div.pagetabs .help a {
 	margin: 0;
 }
-div.rbuttons form, div.rbuttons form div {
+div.rbuttons form {
+	display: inline;
+}
+div.rbuttons form div {
 	display: inline;
 }
 .controls a {

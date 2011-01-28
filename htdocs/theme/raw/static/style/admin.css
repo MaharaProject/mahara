@@ -30,7 +30,7 @@
 #finished {
     font-size: 1.6667em;
     font-weight: bold;
-    margin-top: 10px;
+    margin: 10px 0;
     text-align: center;
     visibility: hidden;
 }

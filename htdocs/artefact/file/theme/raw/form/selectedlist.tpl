@@ -19,7 +19,7 @@
       <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
     </td>
     <td class="valign">{$file->description}</td>
-    <td class="right">
+    <td>
        <input type="submit" class="button submit s unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
        <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>
