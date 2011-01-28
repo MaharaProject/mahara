@@ -543,6 +543,8 @@ class AuthXmlrpc extends Auth {
         }
 
         $USER->logout();
+        // Unset locked fields
+        $SESSION->clear('lockedfields');
 
         if (isset($_GET['logout'])) {
             // Explicit logout request
