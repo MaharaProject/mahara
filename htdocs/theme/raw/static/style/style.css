@@ -156,13 +156,8 @@ html>body .safe-hidden {
 	opacity: 0.5;
 	background-color: #808080;
 	filter: alpha(opacity=50);
- * z-index: 1;
+    z-index: 1;
 }
-/** all browsers except ie7 hack to make it at least partially work */
-html>/**/body #overlay {
-	z-index: 1;
-}
-
 a, a:visited, a:link, a:active, a:hover, a:focus {
 	outline: none;
 }
@@ -565,13 +560,15 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
 	right: 0;
 	top: 0;
 	line-height: 2.1em;
- * position: relative;
- * top: -30px;
  * width: 1;
  * float: right;
  * overflow: visible;
  * display: block;
  * height: 30px;
+}
+.rel .rbuttons {
+ * position: relative;
+ * top: -30px;
 }
 .rbuttons a {
  * width: 1;
@@ -1049,6 +1046,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 .main-column {
 	padding: 15px;
 	width: 97%;
+	position: static;
 }
 .main-column-narrow {
 	width: 70%;
@@ -1056,13 +1054,15 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 #containerX .main-column {
 	padding: 10px 15px;
 }
-#main-column-container, div.rel {
+#main-column-container {
 	position: relative;
 	min-height: 0;  /* IE layout hack */
  * padding-top: 2px;
 }
 div.rel {
-	* position: static;
+	position: relative;
+	min-height: 0;  /* IE layout hack */
+ * padding-top: 2px;
 }
 .twocolumn div.rel {
 	margin-left: 50px;
@@ -1157,12 +1157,12 @@ div.section {
 /**************** SIDEBAR *********/
 #left-column {
     width: 26%;
-	min-width: 256px;
+	min-width: 255px;
 	float: left;
 }
 #right-column {
     width: 26%;
-	min-width: 256px;
+	min-width: 255px;
 	float: right;
 }
 div.sideblock {
@@ -2513,4 +2513,11 @@ form#sendmessage #sendmessage_message,
 #editblog_description_tbl {
 	width: 100% !important;
 	* width: 98% !important;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0){
+form#sendmessage #sendmessage_message,
+#editpost_description_tbl,
+#editblog_description_tbl {
+	width: 98% !important;
+}
 }

@@ -126,6 +126,15 @@ td.filetags {
 .filelist td.right input.btn-big-edit {
 	font-size: 1%;
 }
+.filelist .filethumb img {
+	width: 20px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0){
+.filelist td.right input {
+	display: inline;
+}
+}
+
 /* parent folder row */
 tr.parentfolder td {
 	background-color: #ddd !important;

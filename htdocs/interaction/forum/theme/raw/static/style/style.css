@@ -89,6 +89,12 @@
 #forumtopicstable h4 {
 	margin: 0;
 }
+@media screen and (-webkit-min-device-pixel-ratio:0){
+#forumtopicstable td div.btn-spacer {
+	width: 50px;
+	text-align: right;
+}
+}
 
 /* Forum Pagination */
 #viewforum div.pagination {
