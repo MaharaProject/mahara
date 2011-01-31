@@ -1,7 +1,7 @@
 <script type="text/javascript">
     function confirmdelete(id) {
         if(confirm("{str tag=deleteblog? section=artefact.blog}")) {
-            window.location = "{$WWWROOT}artefact/blog/index.php?delete=" + id;
+            window.location = "{$WWWROOT}artefact/blog/index.php?delete=" + id + '&sesskey=' + config.sesskey;
         }
     }
 </script>
