@@ -297,8 +297,10 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     public static function build_blog_list_html(&$blogs) {
+        global $USER;
         $smarty = smarty_core();
         $smarty->assign_by_ref('blogs', $blogs);
+        $smarty->assign('SESSKEY', $USER->get('sesskey'));
         $blogs->tablerows = $smarty->fetch('artefact:blog:bloglist.tpl');
         $pagination = build_pagination(array(
             'id' => 'bloglist_pagination',
