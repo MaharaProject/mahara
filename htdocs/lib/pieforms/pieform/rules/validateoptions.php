@@ -42,7 +42,7 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
     $allowedvalues = array_keys($element['options']);
     foreach ($field as $key) {
         if (!in_array($key, $allowedvalues)) {
-            return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), $key);
+            return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), Pieform::hsc($key));
         }
     }
 }/*}}}*/
