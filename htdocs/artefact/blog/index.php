@@ -37,6 +37,7 @@ safe_require('artefact', 'blog');
 define('TITLE', get_string('blogs','artefact.blog'));
 
 if ($delete = param_integer('delete', 0)) {
+    form_validate(param_alphanum('sesskey', null));
     $blog = artefact_instance_from_id($delete);
     if ($blog instanceof ArtefactTypeBlog) {
         $blog->check_permission();
