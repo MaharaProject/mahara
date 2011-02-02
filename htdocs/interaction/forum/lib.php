@@ -108,9 +108,6 @@ class PluginInteractionForum extends PluginInteraction {
                         'title'        => get_string('autosubscribeusers', 'interaction.forum'),
                         'description'  => get_string('autosubscribeusersdescription', 'interaction.forum'),
                         'defaultvalue' => isset($autosubscribe) ? $autosubscribe : false,
-                        'rules' => array(
-                            'required' => true,
-                        ),
                         'help'         => true,
                     ),
                     'weight' => array(

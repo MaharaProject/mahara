@@ -33,6 +33,9 @@
  */
 function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
     $checked = false;
+    if (isset($element['rules']['required'])){
+        throw new PieformException("For pieform_element_checkbox, 'required' is not allowed as a rule. Radio should be used instead.");
+    }
     if (!empty($element['value'])) {
         $checked = true;
     }
