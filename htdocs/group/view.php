@@ -93,5 +93,6 @@ $smarty = smarty(
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('group', $group);
+$smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->display('group/view.tpl');
