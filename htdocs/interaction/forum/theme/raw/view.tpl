@@ -91,6 +91,7 @@
     <tr><td class="{cycle values='r0,r1'} center">{str tag="notopics" section="interaction.forum"}</td>
     </tr>
 </table>
+</div>
 {/if}
 
 {include file="footer.tpl"}
