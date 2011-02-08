@@ -348,6 +348,10 @@ table.tablerenderer th.desc {
 #useraccountsettingsleft h2 {
 	margin-top: 0;
 }
+#useraccountsettingsleft .pieform tr.checkbox label {
+	white-space: normal !important;
+}
+
 
 #suspenddelete,
 #institutions {
@@ -376,6 +380,11 @@ table.tablerenderer th.desc {
 }
 #suspenddelete #suspend .resizable-textarea {
 	width: 225px !important;
+	* width: 180px !important;
+	width: 180px\0/ !important;
+}
+#suspenddelete #suspend table td.description {
+	* width: 180px;
 }
 
 /* delete user */
