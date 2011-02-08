@@ -445,8 +445,15 @@ hr {
 	border-left: 0;
 }
 /* error */
-input.error, select.error {
+input.error, select.error, textarea.error {
 	border-color: #dd0221;
+	background-color: #ffd3d9;
+}
+.error {
+	color: #dd0221;
+}
+#main-column-container tbody td.errmsg {
+    color: #dd0221;
 }
 .errmsg {
 	color: #dd0221;
