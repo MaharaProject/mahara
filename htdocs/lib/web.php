@@ -1351,12 +1351,11 @@ function get_cookies($prefix) {
  * @param string $name    The name of the cookie
  * @param string $value   The value for the cookie
  * @param int    $expires The unix timestamp of the time the cookie should expire
- * @todo path/domain/secure: should be set automatically by this function if possible (?)
  */
 function set_cookie($name, $value='', $expires=0, $access=false) {
     $name = get_config('cookieprefix') . $name;
     $url = parse_url(get_config('wwwroot'));
-    setcookie($name, $value, $expires, $url['path'], $url['host'], false);
+    setcookie($name, $value, $expires, $url['path'], $url['host'], false, true);
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }
