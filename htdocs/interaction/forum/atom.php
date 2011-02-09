@@ -109,7 +109,8 @@ elseif ($feedtype == 'f') {
         INNER JOIN {interaction_forum_topic} t ON p.topic = t.id
         INNER JOIN {usr} u ON p.poster = u.id
         WHERE t.forum = ?
-        AND p.deleted = 0";
+        AND p.deleted = 0
+        AND t.deleted = 0";
 
     $link = get_config('wwwroot') . 'interaction/forum/view.php?id=' . $id;
     $title = implode(' - ', array(get_field('group', 'name', 'id', $group->id),
