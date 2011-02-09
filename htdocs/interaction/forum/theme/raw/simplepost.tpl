@@ -4,7 +4,7 @@
 <table class="forumpost fullwidth">
 {if $post->subject && !$nosubject}
 <tr>
-	<td colspan="2" class="forumsubject"><h6>{$post->subject}</h6></td>
+	<td colspan="2" class="forumsubject"><h6><a href="#post{$post->id}">{$post->subject}</a></h6></td>
 </tr>
 {/if}
 <tr>

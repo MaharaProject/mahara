@@ -42,7 +42,7 @@
 	border-bottom: 0;
 	background: #e9f1dc;
 }
-.forumsubject h6 {
+.forumsubject h6, .forumsubject h6 a {
 	color: #1E6297;
 }
 .forumpostleft {
