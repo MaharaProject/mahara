@@ -82,7 +82,7 @@ if (get_config('allowgroupcategories')
 }
 
 $publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
-$publicparam = param_integer('public', null);
+$publicparam = param_variable('public', null);
 
 $elements['public'] = array(
     'type'         => 'checkbox',
