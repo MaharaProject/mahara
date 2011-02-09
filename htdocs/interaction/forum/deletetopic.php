@@ -101,10 +101,17 @@ $form = pieform(array(
 function deletetopic_submit(Pieform $form, $values) {
     global $SESSION;
     $topicid = param_integer('id');
+    // mark topic as deleted
     update_record(
         'interaction_forum_topic',
         array('deleted' => 1),
         array('id' => $topicid)
+    );
+    // mark relevant posts as deleted
+    update_record(
+        'interaction_forum_post',
+        array('deleted' => 1),
+        array('topic' => $topicid)
     );
     $SESSION->add_ok_msg(get_string('deletetopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
