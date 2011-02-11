@@ -421,18 +421,20 @@ abstract class ActivityType {
         if (!empty($user->url)) {
             $userdata->url = $user->url;
         }
-        $userdata->urltext = $this->get_urltext($user);
         if (empty($user->lang) || $user->lang == 'default') {
             $user->lang = get_config('lang');
         }
-        $userdata->message = $this->get_message($user);
-        $userdata->subject = $this->get_subject($user);
         if (empty($user->method)) {
             $user->method = call_static_method(get_class($this), 'default_notification_method');
         }
 
         // always do internal
-        $userdata->internalid = call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+        foreach (PluginNotificationInternal::$userdata as &$p) {
+            $function = 'get_' . $p;
+            $userdata->$p = $this->$function($user);
+        }
+
+        $userdata->internalid = PluginNotificationInternal::notify_user($user, $userdata);
         if ($this->update_url($userdata->internalid)) {
             $changes->url = $userdata->url = $this->url;
         }
@@ -446,8 +448,18 @@ abstract class ActivityType {
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method);
+            $notificationclass = generate_class_name('notification', $method);
+            $classvars = get_class_vars($notificationclass);
+            if (!empty($classvars['userdata'])) {
+                foreach ($classvars['userdata'] as &$p) {
+                    $function = 'get_' . $p;
+                    if (!isset($userdata->$p) && method_exists($this, $function)) {
+                        $userdata->$p = $this->$function($user);
+                    }
+                }
+            }
             try {
-                call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
+                call_static_method($notificationclass, 'notify_user', $user, $userdata);
             }
             catch (MaharaException $e) {
                 // We don't mind other notification methods failing, as it'll

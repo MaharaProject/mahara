@@ -645,6 +645,7 @@ class InteractionForumInstance extends InteractionInstance {
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
+    protected $temp;
 
     public function __construct($data) {
         parent::__construct($data);
@@ -694,55 +695,59 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             $this->customheaders[] = 'References: <forumpost' . $post->parent . '@' . $hostname . '>';
         }
 
-        $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
-        $htmlbody = $post->body;
-        $this->message = strip_tags(str_shorten_html($htmlbody, 200, true)); // For internal notifications.
+        $post->posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $this->message = strip_tags(str_shorten_html($post->body, 200, true)); // For internal notifications.
 
-        $textbody = trim(html2text($post->body));
-        $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        $post->textbody = trim(html2text($post->body));
+        $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
-        $this->url = $postlink;
         $this->add_urltext(array(
             'key'     => 'Topic',
             'section' => 'interaction.forum'
         ));
 
+        $this->strings->subject = (object) array(
+            'key'     => $post->parent ? 'replyforumpostnotificationsubject' : 'newforumpostnotificationsubject',
+            'section' => 'interaction.forum',
+            'args'    => array($post->groupname, $post->forumtitle, $post->parent ? $post->topicsubject : $post->subject),
+        );
+
         foreach ($this->users as &$user) {
-            $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
-            if ($post->parent) {
-                $user->subject = get_string_from_language($lang, 'replyforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->topicsubject);
-            }
-            else {
-                $user->subject = get_string_from_language($lang, 'newforumpostnotificationsubject', 'interaction.forum', $post->groupname, $post->forumtitle, $post->subject);
-            }
-
-            $type = $subscribers[$user->id]->type;
-            $unsubscribeid = $post->{$type . 'id'};
-            $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $type . '=' . $unsubscribeid . '&key=' . $subscribers[$user->id]->key;
-
-            $user->emailmessage = get_string_from_language($lang, 'forumposttemplate', 'interaction.forum',
-                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
-                display_name($post->poster, $user),
-                $posttime,
-                $textbody,
-                $postlink,
-                $type,
-                $unsubscribelink
-            );
-            $user->htmlmessage = get_string_from_language($lang, 'forumposthtmltemplate', 'interaction.forum',
-                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
-                display_name($post->poster, $user),
-                $posttime,
-                $htmlbody,
-                $postlink,
-                $unsubscribelink,
-                $type
-            );
+            $user->subscribetype = $subscribers[$user->id]->type;
+            $user->unsubscribekey = $subscribers[$user->id]->key;
         }
+
+        $this->temp = (object) array('post' => $post);
     }
 
-    public function get_subject($user) {
-        return $user->subject;
+    public function get_emailmessage($user) {
+        $post = $this->temp->post;
+        $unsubscribeid = $post->{$user->subscribetype . 'id'};
+        $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
+        return get_string_from_language($user->lang, 'forumposttemplate', 'interaction.forum',
+            $post->subject ? $post->subject : get_string_from_language($user->lang, 're', 'interaction.forum', $post->topicsubject),
+            display_name($post->poster, $user),
+            $post->posttime,
+            $post->textbody,
+            $this->url,
+            $user->subscribetype,
+            $unsubscribelink
+        );
+    }
+
+    public function get_htmlmessage($user) {
+        $post = $this->temp->post;
+        $unsubscribeid = $post->{$user->subscribetype . 'id'};
+        $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
+        return get_string_from_language($user->lang, 'forumposthtmltemplate', 'interaction.forum',
+            $post->subject ? $post->subject : get_string_from_language($user->lang, 're', 'interaction.forum', $post->topicsubject),
+            display_name($post->poster, $user),
+            $post->posttime,
+            $post->body,
+            $this->url,
+            $unsubscribelink,
+            $user->subscribetype
+        );
     }
 
     public function get_plugintype(){

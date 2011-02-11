@@ -31,19 +31,27 @@ require_once(get_config('docroot') . 'notification/lib.php');
 
 class PluginNotificationEmail extends PluginNotification {
 
+    static $userdata = array('htmlmessage', 'emailmessage');
+
     public static function notify_user($user, $data) {
 
         $messagehtml = null;
 
         if (!empty($data->overridemessagecontents)) {
             $subject = $data->subject;
-            if (!empty($user->emailmessage)) {
+            if (!empty($data->emailmessage)) {
+                $messagebody = $data->emailmessage;
+            }
+            else if (!empty($user->emailmessage)) {
                 $messagebody = $user->emailmessage;
             }
             else {
                 $messagebody = $data->message;
             }
-            if (!empty($user->htmlmessage)) {
+            if (!empty($data->htmlmessage)) {
+                $messagehtml = $data->htmlmessage;
+            }
+            else if (!empty($user->htmlmessage)) {
                 $messagehtml = $user->htmlmessage;
             }
         }

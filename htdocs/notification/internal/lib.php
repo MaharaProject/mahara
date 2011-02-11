@@ -29,6 +29,8 @@ defined('INTERNAL') || die();
 
 class PluginNotificationInternal extends PluginNotification {
 
+    static $userdata = array('urltext', 'subject', 'message');
+
     public static function notify_user($user, $data) {
         $toinsert = new StdClass;
         $toinsert->type = $data->type;
