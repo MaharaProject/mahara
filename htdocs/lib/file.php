@@ -525,17 +525,17 @@ function get_dataroot_image_path($path, $id, $size=null) {
                 case 'image/x-bmp':
                 case 'image/ms-bmp':
                 case 'image/x-ms-bmp':
-                    if (!extension_loaded('imagick')) {
+                    if (!extension_loaded('imagick') || !class_exists('Imagick')) {
                         log_info('Bitmap image detected for resizing, but imagick extension is not available');
                         return false;
                     }
 
-                    $ih = imagick_readimage($originalimage);
-                    if (!$newdimensions = image_get_new_dimensions(imagick_getwidth($ih), imagick_getheight($ih), $size)) {
+                    $ih = new Imagick($originalimage);
+                    if (!$newdimensions = image_get_new_dimensions($ih->getImageWidth(), $ih->getImageHeight(), $size)) {
                         return false;
                     }
-                    imagick_resize($ih, $newdimensions['w'], $newdimensions['h'], IMAGICK_FILTER_LANCZOS, 1);
-                    if (imagick_writeimage($ih, $resizedimagefile)) {
+                    $ih->resizeImage($newdimensions['w'], $newdimensions['h'], imagick::FILTER_LANCZOS, 1);
+                    if ($ih->writeImage($resizedimagefile)) {
                         return $resizedimagefile;
                     }
                     return false;
