@@ -472,7 +472,8 @@ abstract class ActivityType {
         safe_require('notification', 'internal');
         $this->type = $this->get_id();
 
-        foreach ($this->get_users() as $user) {
+        while (!empty($this->users)) {
+            $user = array_shift($this->users);
             $this->notify_user($user);
         }
     }
