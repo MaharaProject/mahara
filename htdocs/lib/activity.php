@@ -99,7 +99,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     $sql = '
         SELECT
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, 
-            p.method, ap.value AS lang, aic.value AS mnethostwwwroot, h.appname AS mnethostapp
+            p.method, ap.value AS lang, apm.value AS maildisabled, aic.value AS mnethostwwwroot,
+            h.appname AS mnethostapp
         FROM {usr} u
         LEFT JOIN {usr_activity_preference} p
             ON (p.usr = u.id AND p.activity = ?)' . (empty($admininstitutions) ? '' : '
@@ -108,6 +109,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
                 AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
         LEFT OUTER JOIN {usr_account_preference} ap
             ON (ap.usr = u.id AND ap.field = \'lang\')
+        LEFT OUTER JOIN {usr_account_preference} apm
+            ON (apm.usr = u.id AND ap.field = \'maildisabled\')
         LEFT OUTER JOIN {auth_instance} ai
             ON (ai.id = u.authinstance AND ai.authname = \'xmlrpc\')
         LEFT OUTER JOIN {auth_instance_config} aic
@@ -127,7 +130,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         $sql .= '
         GROUP BY
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
-            p.method, ap.value, aic.value, h.appname
+            p.method, ap.value, apm.value, aic.value, h.appname
         HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
