@@ -82,14 +82,17 @@ if (get_config('allowgroupcategories')
 }
 
 $publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
-$publicparam = param_variable('public', null);
+if (!param_variable('creategroup_submit', null)) {
+    // If 'public=0' param is passed on first page load, hide the public checkbox.
+    $publicparam = param_integer('public', null);
+}
 
 $elements['public'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('publiclyviewablegroup', 'group'),
     'description'  => get_string('publiclyviewablegroupdescription', 'group'),
     'help'         => true,
-    'ignore'       => !$publicallowed || $publicparam === 0,
+    'ignore'       => !$publicallowed || (isset($publicparam) && $publicparam === 0),
 );
 
 $elements['usersautoadded'] = array(
@@ -104,9 +107,11 @@ $elements['viewnotify'] = array(
     'description' => get_string('viewnotifydescription', 'group'),
     'defaultvalue' => 1
 );
-$elements['submit']   = array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
+$elements['submit'] = array(
+    'type'  => 'submitcancel',
+    'name'  => 'creategroup_submit',
+    'value' => array(get_string('savegroup', 'group'), get_string('cancel'))
+);
 
 $creategroup = pieform(array(
     'name'     => 'creategroup',
