@@ -31,14 +31,8 @@ define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 
-$protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
-if ($protocol != 'HTTP/1.1') {
-    $protocol = 'HTTP/1.0';
-}
-
 if (!get_config('allowmobileuploads')) {
-    header($protocol.' 500 Mobile uploads disabled');
-    exit;
+    JSONResponse('fail', 'Mobile uploads disabled');
 }
 
 $token = '';
@@ -49,8 +43,7 @@ try {
 catch (ParameterException $e) { }
 
 if ($token == '') {
-    header($protocol.' 500 Auth token cannot be blank');
-    exit;
+    JSONResponse('fail', 'Auth token cannot be blank');
 }
 
 $username = '';
@@ -60,8 +53,7 @@ try {
 catch (ParameterException $e) { }
 
 if ($username == '') {
-    header($protocol.' 500 Username cannot be blank');
-    exit;
+    JSONResponse('fail', 'Username cannot be blank');
 }
 
 $data = new StdClass;
@@ -71,9 +63,9 @@ try {
     $USER->find_by_mobileuploadtoken($token, $username);
 }
 catch (AuthUnknownUserException $e) {
-    header($protocol.' 500 Invalid user token');
-    exit;
+    JSONResponse('fail', 'Invalid user token');
 }
+
 $data->owner = $USER->get('id'); // id of owner
 
 $folder = '';
@@ -137,13 +129,17 @@ try {
     $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data);
 }
 catch (QuotaExceededException $e) {
-    header($protocol.' 500 Quota exceeded');
-    exit;
+    JSONResponse('fail', 'Quota exceeded');
 }
 catch (UploadException $e) {
-    header($protocol.' 500 Failed to save file');
-    exit;
+    JSONResponse('fail', 'Failed to save file');
 }
 
 // Here we need to create a new hash - update our own store of it and return it too the handset
-echo $USER->refresh_mobileuploadtoken();
+JSONResponse ( "success", $USER->refresh_mobileuploadtoken() );
+
+function JSONResponse ( $key, $value ) {
+  header('Content-Type: application/json');
+  echo json_encode(array($key => $value));
+  exit;
+}
