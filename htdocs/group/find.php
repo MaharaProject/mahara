@@ -96,28 +96,28 @@ if ($groups['data']) {
     $groups['data'] =  get_records_sql_array(
         "SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-            SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, gm.role, t.membershiptype, COUNT(gm.member) AS membercount
+            SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.role, t.membershiptype, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)
             LEFT JOIN (
-                SELECT g.id, 'admin' AS membershiptype
+                SELECT g.id, 'admin' AS membershiptype, gm.role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
                 UNION
-                SELECT g.id, 'member' AS membershiptype
+                SELECT g.id, 'member' AS membershiptype, gm.role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
                 UNION
-                SELECT g.id, 'invite' AS membershiptype
+                SELECT g.id, 'invite' AS membershiptype, gmi.role
                 FROM {group} g
                 INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
                 UNION
-                SELECT g.id, 'request' AS membershiptype
+                SELECT g.id, 'request' AS membershiptype, NULL as role
                 FROM {group} g
                 INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
             ) t ON t.id = g.id
             WHERE g.id IN (" . implode($groupids, ',') . ')
-            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, gm.role, t.membershiptype
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.role, t.membershiptype
             ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
