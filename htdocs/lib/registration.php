@@ -177,6 +177,13 @@ function registration_data() {
         }
     }
 
+    // Plugin versions
+    foreach (plugin_types() as $type) {
+        foreach (plugins_installed($type) as $plugin) {
+            $data_to_send['plugin_' . $type . '_' . $plugin->name . '_version'] = $plugin->version;
+        }
+    }
+
     $data_to_send['newstats'] = 1;
 
     return $data_to_send;
