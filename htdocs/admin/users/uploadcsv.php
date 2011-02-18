@@ -266,6 +266,13 @@ function uploadcsv_submit(Pieform $form, $values) {
     db_begin();
 
     $addedusers = array();
+
+    $cfgsendemail = get_config('sendemail');
+    if (empty($values['emailusers'])) {
+        // Temporarily disable email sent during user creation, e.g. institution membership
+        $GLOBALS['CFG']->sendemail = false;
+    }
+
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
@@ -299,6 +306,9 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
     }
     db_commit();
+
+    // Reenable email
+    set_config('sendemail', $cfgsendemail);
 
     // Only send e-mail to users after we're sure they have been inserted 
     // successfully
