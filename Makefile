@@ -11,7 +11,7 @@ imageoptim:
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
 minaccept:
-	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l && echo All good!
+	@echo "Running minimum acceptance test..."; find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
 
 checksignoff:
 	@branch=`git status | head -1 | sed 's/.* On branch //'`; \
