@@ -533,6 +533,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
 
     protected $view;
     protected $artefact;
+    protected $owner;
     protected $reporter;
 
     /**
@@ -544,6 +545,14 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
      */
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
+
+        if ($this->owner) {
+            // Notify institutional admins of the view owner
+            if ($institutions = get_column('usr_institution', 'institution', 'usr', $this->owner)) {
+                $this->users = activity_get_users($this->get_id(), null, null, null, $institutions);
+            }
+        }
+
         if (empty($this->artefact)) {
             $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
         }
@@ -571,7 +580,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     }
 
     public function get_required_parameters() {
-        return array('message', 'view', 'reporter');
+        return array('message', 'view', 'owner', 'reporter');
     }
 
 }
