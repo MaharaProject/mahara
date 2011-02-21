@@ -121,7 +121,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         return 'shallow';
     }
 
-    protected static function get_data($groupid, $order=null) {
+    protected static function get_data($groupid) {
         global $USER;
 
         if(!defined('GROUP')) {
@@ -151,7 +151,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // Display a list of views this user has submitted to this group, and a submission
             // form containing drop-down of their unsubmitted views.
 
-            $data['mysubmittedviews'] = View::get_submitted_views($group->id, $USER->get('id'), $order);
+            $data['mysubmittedviews'] = View::get_submitted_views($group->id, $USER->get('id'));
 
             if (!empty($data['mysubmittedviews'])) {
                 foreach ($data['mysubmittedviews'] as &$v) {
