@@ -330,5 +330,75 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011082200) {
+        // video file type
+        if (!get_record('artefact_installed_type', 'plugin', 'file', 'name', 'video')) {
+            insert_record('artefact_installed_type', (object) array('plugin' => 'file', 'name' => 'video'));
+        }
+
+        // update existing records
+        $videotypes = get_records_sql_array('
+            SELECT DISTINCT description
+            FROM {artefact_file_mime_types}
+            WHERE mimetype ' . db_ilike() . ' \'%video%\'', array());
+        if ($videotypes) {
+            $mimetypes = array();
+            foreach ($videotypes as $type) {
+                $mimetypes[] = $type->description;
+            }
+            $files = get_records_sql_array('
+                SELECT *
+                FROM {artefact_file_files}
+                WHERE filetype IN (
+                    SELECT mimetype
+                    FROM {artefact_file_mime_types}
+                    WHERE description IN (' . join(',', array_map('db_quote', array_values($mimetypes))) . ')
+                )', array());
+            if ($files) {
+                $checked = array();
+                foreach ($files as $file) {
+                    $checked[] = $file->artefact;
+                }
+                if (!empty($checked)) {
+                    set_field_select('artefact', 'artefacttype', 'video', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
+                }
+            }
+        }
+
+        // audio file type
+        if (!get_record('artefact_installed_type', 'plugin', 'file', 'name', 'audio')) {
+            insert_record('artefact_installed_type', (object) array('plugin' => 'file', 'name' => 'audio'));
+        }
+
+        // update existing records
+        $audiotypes = get_records_sql_array('
+            SELECT DISTINCT description
+            FROM {artefact_file_mime_types}
+            WHERE mimetype ' . db_ilike() . ' \'%audio%\'', array());
+        if ($audiotypes) {
+            $mimetypes = array();
+            foreach ($audiotypes as $type) {
+                $mimetypes[] = $type->description;
+            }
+            $files = get_records_sql_array('
+                SELECT *
+                FROM {artefact_file_files}
+                WHERE filetype IN (
+                    SELECT mimetype
+                    FROM {artefact_file_mime_types}
+                    WHERE description IN (' . join(',', array_map('db_quote', array_values($mimetypes))) . ')
+                 )', array());
+             if ($files) {
+                 $checked = array();
+                 foreach ($files as $file) {
+                     $checked[] = $file->artefact;
+                 }
+                 if (!empty($checked)) {
+                     set_field_select('artefact', 'artefacttype', 'audio', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
+                }
+            }
+        }
+    }
+
     return $status;
 }

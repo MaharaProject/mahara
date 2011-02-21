@@ -36,6 +36,8 @@ class PluginArtefactFile extends PluginArtefact {
             'image',
             'profileicon',
             'archive',
+            'video',
+            'audio',
         );
     }
     
@@ -256,18 +258,26 @@ class PluginArtefactFile extends PluginArtefact {
             'image'       => array('file', 'image'),
             'profileicon' => array('file', 'image'),
             'archive'     => array('file'),
+            'video'       => array('file'),
+            'audio'       => array('file'),
         );
     }
 
     public static function get_attachment_types() {
-        return array('file', 'image', 'archive');
+        return array(
+            'file',
+            'image',
+            'archive',
+            'video',
+            'audio'
+        );
     }
 
     public static function recalculate_quota() {
         $data = get_records_sql_assoc("
             SELECT a.owner, SUM(f.size) AS bytes
             FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
+            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive', 'video', 'audio')
             AND a.owner IS NOT NULL
             GROUP BY a.owner", array()
         );
@@ -833,6 +843,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->width    = $imageinfo[0];
             $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
+        }
+        if ($video = ArtefactTypeVideo::new_video($data)) {
+            return $video;
+        }
+        if ($audio = ArtefactTypeAudio::new_audio($data)) {
+            return $audio;
         }
         if ($archive = ArtefactTypeArchive::new_archive($path, $data)) {
             return $archive;
@@ -2202,4 +2218,102 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         return $this->data;
     }
 
+}
+
+class ArtefactTypeVideo extends ArtefactTypeFile {
+
+    protected $videotype;
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id) {
+            $descriptions = self::video_file_descriptions();
+            $validtypes = self::video_mime_types();
+            $this->videotype = $descriptions[$validtypes[$this->filetype]->description];
+        }
+    }
+
+    public static function new_video($data) {
+        $descriptions = self::video_file_descriptions();
+        $validtypes = self::video_mime_types();
+        if (isset($validtypes[$data->filetype])) {
+            return new ArtefactTypeVideo(0, $data);
+        }
+        return false;
+    }
+
+    public static function video_file_descriptions() {
+        static $descriptions = null;
+        if (is_null($descriptions)) {
+            $descriptions = array(
+                'flv'       => 'flv',
+                'avi'       => 'avi',
+                'mpeg'      => 'mpeg',
+                'wmv'       => 'wmv',
+                'quicktime' => 'quicktime',
+                'sgi_movie' => 'sgi_movie',
+                'mp4_video' => 'mp4_video',
+            );
+        }
+        return $descriptions;
+    }
+
+    public static function video_mime_types() {
+        static $mimetypes = null;
+        if (is_null($mimetypes)) {
+            $descriptions = self::video_file_descriptions();
+            $mimetypes = PluginArtefactFile::get_mimetypes_from_description(array_keys($descriptions), true);
+        }
+        return $mimetypes;
+    }
+
+    public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/video.gif');
+    }
+
+}
+
+class ArtefactTypeAudio extends ArtefactTypeFile {
+
+    public static function new_audio($data) {
+        $descriptions = self::audio_file_descriptions();
+        $validtypes = self::audio_mime_types();
+        if (isset($validtypes[$data->filetype])) {
+            return new ArtefactTypeAudio(0, $data);
+        }
+        return false;
+    }
+
+    public static function audio_file_descriptions() {
+        static $descriptions = null;
+        if (is_null($descriptions)) {
+            $descriptions = array(
+                'mp3',
+                'mp4_audio',
+                'mp4',
+                'wav',
+                'ra',
+                'au',
+                'aiff',
+                'm3u'
+            );
+        }
+        return $descriptions;
+    }
+
+    public static function audio_mime_types() {
+        static $mimetypes = null;
+        if (is_null($mimetypes)) {
+            $descriptions = self::audio_file_descriptions();
+            $mimetypes = PluginArtefactFile::get_mimetypes_from_description(array_keys($descriptions), true);
+        }
+        return $mimetypes;
+    }
+
+    public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/audio.gif');
+    }
 }
