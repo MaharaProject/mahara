@@ -705,6 +705,10 @@ function auth_get_available_auth_types($institution=null) {
 function auth_check_required_fields() {
     global $USER, $SESSION;
 
+    if (defined('NOCHECKREQUIREDFIELDS')) {
+        return;
+    }
+
     $changepassword = true;
     $elements = array();
 
