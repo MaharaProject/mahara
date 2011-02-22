@@ -2991,7 +2991,7 @@ class View {
             $where .= ' AND v.owner = ?';
         }
 
-        $viewdata = get_records_sql_assoc('
+        $viewdata = get_records_sql_array('
             SELECT
                 v.id as id, v.title, v.description, v.owner, v.ownerformat, u.firstname, u.lastname, u.preferredname,
                 ' . db_format_tsfield('v.submittedtime','submittedtime') . '
@@ -3003,23 +3003,13 @@ class View {
         );
 
         if ($viewdata) {
-           foreach ($viewdata as &$v) {
-                $v->shortdescription = str_shorten_html(str_replace('<br />', ' ', $v->description), 60, true);
-                if ($v->owner) {
-                    if(empty($v->preferredname)) {
-                        $v->sharedby = $v->firstname . ' '. $v->lastname;
-                    }
-                    else{
-                        $v->sharedby = $v->preferredname;
-                    }
-
-                    $v->user = $v->owner;
-                }
+            foreach ($viewdata as &$v) {
+                $v->sharedby = full_name($v);
                 $v = (array)$v;
             }
-            return array_values($viewdata);
         }
-        return false;
+
+        return $viewdata;
     }
 
 

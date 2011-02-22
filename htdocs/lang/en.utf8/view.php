@@ -240,10 +240,7 @@ $string['by'] = 'by';
 $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
-$string['Preview'] = 'Preview';
-$string['submission'] = 'Submission';
-$string['submitter'] = 'Submitter';
-$string['timeofsubmission'] = 'Time of Submission';
+$string['timeofsubmission'] = 'Time of submission';
 
 $string['column'] = 'column';
 $string['columns'] = 'columns';

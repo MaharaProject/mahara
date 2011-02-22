@@ -78,38 +78,20 @@
 
 {if $allsubmittedviews}
     <div class="groupviewsection">
-    <h5>{str tag="viewssubmittedtogroup" section="view"}</h5>
     <table class="fullwidth listing">
-    	<th>
-    		{str tag=submitter section=view}
-    	</th>
-    	<th>
-    		{str tag=submission section=view}
-    	</th>
-    	<th>
-    		{str tag=timeofsubmission section=view}
-    	</th>
-    	<th>
-    		{str tag=description section=view}
-    	</th>
+        <tr>
+          <td><h5>{str tag="viewssubmittedtogroup" section="view"}</h5></td>
+          <th>{str tag=timeofsubmission section=view}</th>
+        </tr>
     {foreach from=$allsubmittedviews item=view}
         <tr class="{cycle values='r0,r1'}">
-            <td>
-                <a href="{$WWWROOT}user/view.php?id={$view.owner}">
-                <span class="owner">{$view.sharedby}</span>
-                </a>
-            </td>
-            <td>
-                <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
-            </td>
-            <td>
-                {if $view.submittedtime}
-            	{$view.submittedtime|format_date}
-                {/if}
-            </td>
-            <td>
-                <div class="s">{$view.description|str_shorten_html:60:true|strip_tags|safe}</div>
-            </td>
+          <td>
+            <strong><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|str_shorten_text:60:true}</a></strong>
+            <div><a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a></div>
+          </td>
+          <td>
+            <div class="postedon nowrap">{$view.submittedtime|format_date}</div>
+          </td>
         </tr>
     {/foreach}
     </table>
