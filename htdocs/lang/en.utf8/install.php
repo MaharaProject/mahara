@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['aboutdefaultcontent'] = '<h1>About</h1>
-<p><i>Add text about your organization or the installation here</i></p>
+<p><i>Add text about your organisation or the installation here</i></p>
 
 <p>[<i>Name of your installation here</i>] is powered by <a href="http://mahara.org">Mahara</a>. Mahara is provided freely as Open Source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
 
