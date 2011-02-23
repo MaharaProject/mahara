@@ -315,7 +315,12 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  */
 function get_record_sql($sql, $values=null) {
     $limitfrom = 0;
-    $limitnum  = 2;
+    $limitnum  = 0;
+    # regex borrowed from htdocs/lib/adodb/adodb-lib.inc.php
+    if (!preg_match('/\sLIMIT\s+[0-9]+/i', $sql)) {
+        $limitfrom = 0;
+        $limitnum  = 2;
+    }
 
     if (!$rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum)) {
         return false;
