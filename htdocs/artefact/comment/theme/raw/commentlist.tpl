@@ -14,7 +14,7 @@
       <div class="details commentleft">
       {if $item->author}
         <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author->id}">
-          <img src="{profile_icon_url user=$item->author maxheight=50 maxwidth=50}" valign="middle" alt="{$item->author|display_name|escape}">
+          <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{$item->author|display_name|escape}">
         </a><br />
         <a href="{$WWWROOT}user/view.php?id={$item->author->id}" class="username">{$item->author|display_name|escape}</a></div>
       {else}

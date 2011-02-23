@@ -1839,7 +1839,7 @@ function install_system_dashboard_view() {
  * gravatar.
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
-    global $USER;
+    global $USER, $THEME;
     static $usercache   = array();
 
     if (is_array($user)) {
@@ -1863,13 +1863,22 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
     if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
         throw new SystemException('profile_icon_url requires a user with profileicon & email properties');
     }
+    if ($maxwidth != $maxheight || ($maxwidth != 20 && $maxwidth != 40 && $maxwidth != 60)) {
+        log_warn('profile_icon_url should specify maxwidth, maxheight of 20x20, 40x40 or 60x60');
+    }
+
     $thumb = get_config('wwwroot') . 'thumb.php';
     $sizeparams = 'maxwidth=' . $maxwidth . '&maxheight=' . $maxheight;
-    $notfound = $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=0';
+
     if (!empty($user->profileicon)) {
         return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
     }
-    else if (get_config('remoteavatars')) {
+
+    // Assume we have the right size available in docroot, so we don't
+    // have to call thumb.php
+    $notfound = $THEME->get_url('images/no_userphoto' . $maxwidth . '.png');
+
+    if (get_config('remoteavatars')) {
         return remote_avatar($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
     }
     return $notfound;
