@@ -82,7 +82,7 @@ $string['privacydefaultcontent'] = '<h1>Privacy Statement</h1>
 
 <p>We will take all reasonable steps to ensure that any personal information we hold is not subject to loss or misuse or unauthorised access, disclosure or alteration.</p>
 
-<p>In order to help protect your personal information, please do not disclose your Username or Password to person other than the Site Administrator.</p>
+<p>In order to help protect your personal information, please do not disclose your Username or Password to any person other than the Site Administrator.</p>
 
 <h2>Changes to this privacy statement</h2>
 
