@@ -393,9 +393,6 @@ class PluginAuthSaml extends PluginAuth {
             'institutionregex' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('institutionregex', 'auth.saml'),
-                'rules' => array(
-                'required' => false,
-                ),
                 'defaultvalue' => self::$default_config['institutionregex'],
                 'help' => true,
             ),
