@@ -2549,6 +2549,11 @@ function clean_html($text, $xhtml=false) {
     $config->set('HTML.SafeObject', true);
     $config->set('Output.FlashCompat', true);
 
+    // Allow namespaced IDs
+    // see http://htmlpurifier.org/docs/enduser-id.html
+    $config->set('Attr.EnableID', true);
+    $config->set('Attr.IDPrefix', 'user_');
+
     $customfilters = array();
     if (get_config('filters')) {
         foreach (unserialize(get_config('filters')) as $filter) {
