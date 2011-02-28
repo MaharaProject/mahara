@@ -179,7 +179,7 @@ function pieform_element_filebrowser_get_path($folder) {
         }
     }
 
-    $path[] = (object) array('title' => get_string('home'), 'id' => 0);
+    $path[] = (object) array('title' => get_string('home', 'artefact.file'), 'id' => 0);
     return $path;
 }
 
