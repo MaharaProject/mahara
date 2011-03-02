@@ -96,6 +96,10 @@ class AuthSaml extends Auth {
         $lastname        = $attributes[$this->config['surnamefield']][0];
         $email           = $attributes[$this->config['emailfield']][0];
         $institutionname = $this->institution;
+
+        if (!$firstname or !$lastname or !$email) {
+            throw new AuthInstanceException(get_string('errormissinguserattributes', 'auth.saml'));
+        }
         
         $create = false;
         $update = false;

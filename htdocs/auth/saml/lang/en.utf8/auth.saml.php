@@ -35,6 +35,7 @@ $string['errnosamluser'] = 'No User found';
 $string['errorbadlib'] = 'SimpleSAMLPHP lib directory %s is not correct.';
 $string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is in correct.';
 $string['errorbadcombo'] = 'You can only choose user auto creation if you have not selected remoteuser';
+$string['errormissinguserattributes'] = 'You seem to be authenticated but we did not receive the required user attributes. Please check that your Identity Provider releases these SSO fields for First Name, Surname, and Email to the Service Provider Mahara is running on or inform the webmaster of this server.';
 //$string['idpidentity'] = 'IdP Identity Service';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionvalue'] = 'Institution value to check against attribute';
