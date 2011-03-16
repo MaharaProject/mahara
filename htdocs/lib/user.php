@@ -1631,7 +1631,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
     }
 
-    if (!empty($remoteauth) && $remoteauth->authname != 'internal') {
+    if (!empty($remoteauth)) {
         if (isset($remotename) && strlen($remotename) > 0) {
             $un = $remotename;
         }

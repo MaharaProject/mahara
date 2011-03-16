@@ -41,6 +41,7 @@ ini_set('auto_detect_line_endings', 1);
 $FORMAT = array();
 $ALLOWEDKEYS = array(
     'username',
+    'remoteuser',
     'password',
     'email',
     'firstname',
@@ -292,14 +293,21 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->passwordchange = (int)$values['forcepasswordchange'];
 
         $profilefields = new StdClass;
+        $remoteuser = null;
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {
+                continue;
+            }
+            if ($field == 'remoteuser') {
+                if (!empty($record[$formatkeylookup[$field]])) {
+                    $remoteuser = $record[$formatkeylookup[$field]];
+                }
                 continue;
             }
             $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
-        $user->id = create_user($user, $profilefields, $institution, $authobj);
+        $user->id = create_user($user, $profilefields, $institution, $authobj, $remoteuser);
 
         if ($values['emailusers']) {
             $addedusers[] = $user;
@@ -363,7 +371,9 @@ function uploadcsv_submit(Pieform $form, $values) {
 // Get a list of all profile fields, to inform the user on what fields they can
 // put in their file.
 $fields = "<ul class=fieldslist>\n";
-foreach (array_keys(ArtefactTypeProfile::get_all_fields()) as $type) {
+$fieldlist = array_keys(ArtefactTypeProfile::get_all_fields());
+$fieldlist[]= 'remoteuser'; // is a special case
+foreach ($fieldlist as $type) {
     if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
         continue;
     }
