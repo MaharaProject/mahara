@@ -65,6 +65,9 @@ function pieform_rule_required_i18n() {/*{{{*/
         'cs.utf8' => array(
             'required' => 'Povinné pole'
         ),
+        'da.utf8' => array(
+            'required' => 'Dette felt er påkrævet'
+        ),
 
     );
 }/*}}}*/

@@ -66,6 +66,9 @@ function pieform_rule_regex_i18n() {/*{{{*/
         'cs.utf8' => array(
             'regex' => 'Neplatný formát'
         ),
+        'da.utf8' => array(
+            'regex' => 'Dette felt er ikke i gyldig form'
+        ),
 
     );
 }/*}}}*/

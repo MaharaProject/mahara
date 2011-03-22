@@ -65,6 +65,10 @@ function pieform_rule_integer_i18n() {/*{{{*/
         'cs.utf8' => array(
             'integer'   => 'Musíte zadat celé číslo'
         ),
+        'da.utf8' => array(
+            'integer'   => 'Dette felt skal være et heltal'
+        ),
+
 
     );
 }/*}}}*/

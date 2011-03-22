@@ -62,6 +62,9 @@ function pieform_rule_minlength_i18n() {/*{{{*/
         'cs.utf8' => array(
             'minlength' => 'Musíte zadat nejméně %d znaků',
         ),
+        'da.utf8' => array(
+            'minlength' => 'Dette felt skal mindst være %d karakterer lang', 
+        ),
 
     );
 }/*}}}*/

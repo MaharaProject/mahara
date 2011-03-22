@@ -181,6 +181,13 @@ function pieform_element_expiry_i18n() {/*{{{*/
             'years'     => 'roků',
             'noenddate' => 'nikdy'
         ),
+        'da.utf8' => array(
+            'days'      => 'Dage',
+            'weeks'     => 'Uger',
+            'months'    => 'Måneder',
+            'years'     => 'År',
+            'noenddate' => 'Ingen slutdato'
+        ),
 
     );
 }/*}}}*/

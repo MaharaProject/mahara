@@ -65,6 +65,9 @@ function pieform_rule_maxlength_i18n() {/*{{{*/
         'cs.utf8' => array(
             'maxlength' => 'Můžete zadat nejvýše %d znaků'
         ),
+        'da.utf8' => array(
+            'maxlength' => 'Dette felt må højest være %d karakterer lang'
+        ),
 
     );
 }/*}}}*/

@@ -176,6 +176,9 @@ function pieform_element_calendar_i18n() {/*{{{*/
         'cs.utf8' => array(
             'invalidvalue' => 'Neplatný datum/čas'
         ),
+        'da.utf8' => array(
+            'invalidvalue' => 'Forkert angivelse af dato/klokkeslæt'
+        ),
 
     );
 }/*}}}*/

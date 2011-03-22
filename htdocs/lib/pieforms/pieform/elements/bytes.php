@@ -180,6 +180,13 @@ function pieform_element_bytes_i18n() {/*{{{*/
             'gigabytes'    => 'GB',
             'invalidvalue' => 'Hodnota musí být číselná',
         ),
+        'da.utf8' => array(
+            'bytes'        => 'Bytes',
+            'kilobytes'    => 'Kilobytes',
+            'megabytes'    => 'Megabytes',
+            'gigabytes'    => 'Gigabytes',
+            'invalidvalue' => 'Værdi skal være et tal',
+        ),
 
     );
 }/*}}}*/

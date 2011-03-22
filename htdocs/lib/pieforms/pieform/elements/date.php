@@ -172,6 +172,11 @@ function pieform_element_date_i18n() {/*{{{*/
             'monthnames' => 'leden,únor,březen,duben,květen,červen,červenec,srpen,září,říjen,listopad,prosinec',
             'notspecified' => 'Neurčeno'
         ),
+        'da.utf8' => array(
+            'or' => 'eller',
+            'monthnames' => 'januar,februar,marts,april,maj,juni,juli,august,september,oktober,november,december',
+            'notspecified' => 'Ikke angivet'
+        ),
 
     );
 }/*}}}*/
