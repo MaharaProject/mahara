@@ -100,7 +100,7 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 
 // If you use LOG_TARGET_FILE, this is the file that errors will be logged to.
 // It's best to pick a path under dataroot, as we know we can write there.
-$cfg->log_file = $cfg->dataroot . '/error.log';
+$cfg->log_file = $CFG->dataroot . '/error.log';
 
 // The log levels that will generate backtraces. Useful for development,
 // but probably only warnings are useful on a live site.
