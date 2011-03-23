@@ -40,37 +40,3 @@ function pieform_rule_regex(Pieform $form, $value, $element, $regex) {/*{{{*/
     }
 }/*}}}*/
 
-function pieform_rule_regex_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'regex' => 'This field is not in valid form'
-        ),
-        'de.utf8' => array(
-            'regex' => 'Das Feld hat keine zulässige Form'
-        ),
-        'fr.utf8' => array(
-            'regex' => 'Ce champ n\'a pas une forme correcte'
-        ),
-        'ja.utf8' => array(
-            'regex' => 'このフィールドは正しい形式ではありません'
-        ),
-        'es.utf8' => array(
-            'regex' => 'Este campo no tiene un formato válido'
-        ),
-        'sl.utf8' => array(
-            'regex' => 'To polje ni v veljavni obliki'
-        ),
-        'nl.utf8' => array(
-            'regex' => 'Dit veld is niet in een geldige vorm'
-        ),
-        'cs.utf8' => array(
-            'regex' => 'Neplatný formát'
-        ),
-        'da.utf8' => array(
-            'regex' => 'Dette felt er ikke i gyldig form'
-        ),
-
-    );
-}/*}}}*/
-
-?>

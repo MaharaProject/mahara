@@ -39,37 +39,3 @@ function pieform_rule_required(Pieform $form, $value, $element, $check) {/*{{{*/
     }
 }/*}}}*/
 
-function pieform_rule_required_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'required' => 'This field is required'
-        ),
-        'de.utf8' => array(
-            'required' => 'Das Feld ist erforderlich'
-        ),
-        'fr.utf8' => array(
-            'required' => 'Ce champ est obligatoire'
-        ),
-        'ja.utf8' => array(
-            'required' => 'このフィールドは、必須入力フィールドです。'
-        ),
-        'es.utf8' => array(
-            'required' => 'Este campo es obligatorio'
-        ),
-        'sl.utf8' => array(
-            'required' => 'To polje je zahtevano'
-        ),
-        'nl.utf8' => array(
-            'required' => 'Dit veld is vereist'
-        ),
-        'cs.utf8' => array(
-            'required' => 'Povinné pole'
-        ),
-        'da.utf8' => array(
-            'required' => 'Dette felt er påkrævet'
-        ),
-
-    );
-}/*}}}*/
-
-?>

@@ -1182,23 +1182,8 @@ EOF;
             return $this->data['rulei18n'][$key];
         }
 
-        // Fall back to the default string
-        $this->include_plugin($plugin, $pluginname);
-        $function = 'pieform_' . $plugin . '_' . $pluginname . '_i18n';
-        if (function_exists($function)) {
-            $strings = $function();
-            if (isset($strings[$this->data['language']][$key])) {
-                return $strings[$this->data['language']][$key];
-            }
-            // If all else fails, try to get the string in the default language.
-            if (isset($strings[$this->defaults['language']][$key])) {
-                return $strings[$this->defaults['language']][$key];
-            }
-            return '[[' . $key . '/' . $this->data['language'] . ']]';
-        }
+        return get_raw_string($plugin . '.' . $pluginname . '.' . $key, 'pieforms');
 
-        // We don't recognise this string
-        return '[[' . $key . ']]';
     }/*}}}*/
 
     /**

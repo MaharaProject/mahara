@@ -39,37 +39,3 @@ function pieform_rule_minvalue(Pieform $form, $value, $element, $minvalue) {/*{{
     }
 }/*}}}*/
 
-function pieform_rule_minvalue_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'minvalue' => 'This value can not be smaller than %d'
-        ),
-        'de.utf8' => array(
-            'minvalue' => 'Dieser Wert kann nicht kleiner als %d sein'
-        ),
-        'fr.utf8' => array(
-            'minvalue' => 'Cette valeur ne peut pas être inférieure à %d'
-        ),
-        'ja.utf8' => array(
-            'minvalue' => 'この値は %d 以下にすることはできません'
-        ),
-        'es.utf8' => array(
-            'minvalue' => 'Este valor no puede ser inferior a %d'
-        ),
-        'sl.utf8' => array(
-            'minvalue' => 'Ta vrednost ne sme biti manjša od %d'
-        ),
-        'nl.utf8' => array(
-            'minvalue' => 'Deze waarde kan niet kleiner zijn dan %d'
-        ),
-        'cs.utf8' => array(
-            'minvalue' => 'Nemůžete zadat hodnotu menší než %d'
-        ),
-        'da.utf8' => array(
-            'minvalue' => 'Denne værdi kan ikke være mindre end %d'
-        ),
-
-    );
-}/*}}}*/
-
-?>

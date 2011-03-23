@@ -128,58 +128,6 @@ function pieform_element_date_get_value(Pieform $form, $element) {/*{{{*/
     return null;
 }/*}}}*/
 
-function pieform_element_date_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'or' => 'or',
-            'monthnames' => 'January,February,March,April,May,June,July,August,September,October,November,December',
-            'notspecified' => 'Not specified'
-        ),
-         'de.utf8' => array(
-            'or' => 'oder',
-            'monthnames' => 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember',
-            'notspecified' => 'Nicht festgelegt'
-        ),
-         'fr.utf8' => array(
-            'or' => 'ou',
-            'monthnames' => 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre',
-            'notspecified' => 'Non indiqué'
-        ),
-        'ja.utf8' => array(
-            'or' => 'or',
-            'monthnames' => '一月,二月,三月,四月,五月,六月,七月,八月,九月,十月,十一月,十二月',
-            'notspecified' => '指定なし'
-        ),
-        'es.utf8' => array(
-            'or' => 'o',
-            'monthnames' => 'enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre',
-            'notspecified' => 'Sin valor'
-        ),
-        'sl.utf8' => array(
-            'or' => 'ali',
-            'monthnames' => 'januar,febuar,marec,april,maj,junij,julij,avgust,september,oktober,november,december',
-            // standardized set of archaic Slovenian month names
-            //'monthnames' => 'prosinec,svečan,sušec,mali traven,veliki traven,rožnik,mali srpan,veliki srpan,kimovec,vinotok,listopad,gruden',
-            'notspecified' => 'Ni določeno'
-        ),
-        'nl.utf8' => array(
-            'or' => 'or',
-            'monthnames' => 'januari,februari,mart,april,mei,juni,juli,augustus,september,october,november,december',
-            'notspecified' => 'Niet gespecifiëerd'
-        ),
-        'cs.utf8' => array(
-            'or' => 'nebo',
-            'monthnames' => 'leden,únor,březen,duben,květen,červen,červenec,srpen,září,říjen,listopad,prosinec',
-            'notspecified' => 'Neurčeno'
-        ),
-        'da.utf8' => array(
-            'or' => 'eller',
-            'monthnames' => 'januar,februar,marts,april,maj,juni,juli,august,september,oktober,november,december',
-            'notspecified' => 'Ikke angivet'
-        ),
-
-    );
-}/*}}}*/
 
 /** helper: used when rendering the element, to get the value for it */
 function pieform_element_date_get_timeperiod_value($timeperiod, $min, $max, $element, Pieform $form) {/*{{{*/

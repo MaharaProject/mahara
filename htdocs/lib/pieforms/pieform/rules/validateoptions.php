@@ -47,37 +47,3 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
     }
 }/*}}}*/
 
-function pieform_rule_validateoptions_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'validateoptions' => 'The option "%s" is invalid'
-        ),
-        'de.utf8' => array(
-            'validateoptions' => 'Die Option "%s" ist ungültig'
-        ),
-        'fr.utf8' => array(
-            'validateoptions' => 'Cette option "%s" n\'est pas valide'
-        ),
-        'ja.utf8' => array(
-            'validateoptions' => 'オプション「 %s 」が正しくありません'
-        ),
-        'es.utf8' => array(
-            'validateoptions' => 'La opción "%s" no es válida'
-        ),
-        'sl.utf8' => array(
-            'validateoptions' => 'Možnost "%s" je neveljavna'
-        ),
-        'nl.utf8' => array(
-            'validateoptions' => 'De optie "%s" is niet geldig'
-        ),
-        'cs.utf8' => array(
-            'validateoptions' => 'Neplatný výběr "%s"'
-        ),
-        'da.utf8' => array(
-            'validateoptions' => 'Denne option "%s" er ikke valid'
-        ),
-
-    );
-}/*}}}*/
-
-?>

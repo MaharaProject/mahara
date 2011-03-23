@@ -39,38 +39,3 @@ function pieform_rule_integer(Pieform $form, $value, $element) {/*{{{*/
     }
 }/*}}}*/
 
-function pieform_rule_integer_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'integer'   => 'The field must be an integer'
-        ),
-        'de.utf8' => array(
-            'integer'   => 'Das Feld muss eine Zahl sein'
-        ),
-        'fr.utf8' => array(
-            'integer'   => 'Ce champ doit être un nombre entier'
-        ),
-        'ja.utf8' => array(
-            'integer'   => 'フィールドは整数にしてください'
-        ),
-        'es.utf8' => array(
-            'integer'   => 'Este campo debe ser un número entero'
-        ),
-        'sl.utf8' => array(
-            'integer'   => 'Vrednost polja mora biti število'
-        ),
-        'nl.utf8' => array(
-            'integer'   => 'Dit veld moet een geheel getal (integer) zijn'
-        ),
-        'cs.utf8' => array(
-            'integer'   => 'Musíte zadat celé číslo'
-        ),
-        'da.utf8' => array(
-            'integer'   => 'Dette felt skal være et heltal'
-        ),
-
-
-    );
-}/*}}}*/
-
-?>

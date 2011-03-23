@@ -39,34 +39,3 @@ function pieform_rule_minlength(Pieform $form, $value, $element, $minlength) {/*
     }
 }/*}}}*/
 
-function pieform_rule_minlength_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'minlength' => 'This field must be at least %d characters long', 
-        ),
-        'de.utf8' => array(
-            'minlength' => 'Das Feld muss zumindest %d Zeichen lang sein',
-        ),
-        'fr.utf8' => array(
-            'minlength' => 'Ce champ doit contenir au moins %d caractères',
-        ),
-        'es.utf8' => array(
-            'minlength' => 'Este campo debe tener como mínimo %d caracteres', 
-        ),
-        'sl.utf8' => array(
-            'minlength' => 'To polje mora biti dolgo vsaj %d znakov',
-        ),
-        'nl.utf8' => array(
-            'minlength' => 'Dit veld moet minstens %d tekens lang zijn',
-        ),
-        'cs.utf8' => array(
-            'minlength' => 'Musíte zadat nejméně %d znaků',
-        ),
-        'da.utf8' => array(
-            'minlength' => 'Dette felt skal mindst være %d karakterer lang', 
-        ),
-
-    );
-}/*}}}*/
-
-?>

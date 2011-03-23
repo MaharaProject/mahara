@@ -39,37 +39,3 @@ function pieform_rule_maxlength(Pieform $form, $value, $element, $maxlength) {/*
     }
 }/*}}}*/
 
-function pieform_rule_maxlength_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'maxlength' => 'This field must be at most %d characters long'
-        ),
-        'de.utf8' => array(
-            'maxlength' => 'Das Feld darf höchstens %d Zeichen lang sein'
-        ),
-        'fr.utf8' => array(
-            'maxlength' => 'Ce champ ne peut pas contenir plus de %d signes'
-        ),
-        'ja.utf8' => array(
-            'maxlength' => 'このフィールドは、最大半角 %d 文字にしてください'
-        ),
-        'es.utf8' => array(
-            'maxlength' => 'Este campo tiene que tener como máximo %d caracteres'
-        ),
-        'sl.utf8' => array(
-            'maxlength' => 'To polje mora biti dolgo največ %d znakov'
-        ),
-        'nl.utf8' => array(
-            'maxlength' => 'Dit veld moet minstens %d tekens lang zijn'
-        ),
-        'cs.utf8' => array(
-            'maxlength' => 'Můžete zadat nejvýše %d znaků'
-        ),
-        'da.utf8' => array(
-            'maxlength' => 'Dette felt må højest være %d karakterer lang'
-        ),
-
-    );
-}/*}}}*/
-
-?>

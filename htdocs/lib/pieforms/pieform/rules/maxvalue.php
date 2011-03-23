@@ -39,34 +39,3 @@ function pieform_rule_maxvalue(Pieform $form, $value, $element, $maxvalue) {/*{{
     }
 }/*}}}*/
 
-function pieform_rule_maxvalue_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'maxvalue' => 'This value can not be larger than %d'
-        ),
-        'de.utf8' => array(
-            'maxvalue' => 'Dieser Wert kann nicht größer als %d sein'
-        ),
-        'fr.utf8' => array(
-            'maxvalue' => 'Cette valeur ne peut pas supérieure à %d'
-        ),
-        'ja.utf8' => array(
-            'maxvalue' => 'この値は %d 以下にしてください'
-        ),
-        'es.utf8' => array(
-            'maxvalue' => 'Este valor no puede ser superior a %d'
-        ),
-        'sl.utf8' => array(
-            'maxvalue' => 'Ta vrednost ne sme biti večja od %d'
-        ),
-        'nl.utf8' => array(
-            'maxvalue' => 'Deze waarde kan niet groter zijn dan %d'
-        ),
-        'cs.utf8' => array(
-            'maxvalue' => 'Hodnota nemůže být větší než %d'
-        ),
-
-    );
-}/*}}}*/
-
-?>

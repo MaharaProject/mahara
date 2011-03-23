@@ -42,37 +42,3 @@ function pieform_rule_before(Pieform $form, $value, $element, $otherelement) {/*
         return sprintf($form->i18n('rule', 'before', 'before', $element), $otherelement['title']);
     }
 }/*}}}*/
-
-function pieform_rule_before_i18n() {/*{{{*/
-    return array(
-        'en.utf8' => array(
-            'before' => 'This can not be after the field "%s"'
-        ),
-        'de.utf8' => array(
-            'before' => 'Dies kann nicht nach dem Feld "%s" sein'
-        ),
-        'fr.utf8' => array(
-            'before' => 'Ceci ne peut pas être placé après le champ "%s"'
-        ),
-        'ja.utf8' => array(
-            'before' => 'フィールド「 %s 」の後に設定することはできません'
-        ),
-        'es.utf8' => array(
-            'before' => 'No puede ser posterior al campo "%s"'
-        ),
-        'sl.utf8' => array(
-            'before' => 'To ne sme biti za poljem "%s"'
-        ),
-        'nl.utf8' => array(
-            'before' => 'Dit kan niet na het veld "%s" zijn'
-        ),
-        'cs.utf8' => array(
-            'before' => 'Zadaná hodnota nemůže být větší než v poli "%s"'
-        ),
-        'da.utf8' => array(
-            'before' => 'Denne kan ikke være efter feltet "%s"'
-        ),
-    );
-}/*}}}*/
-
-?>
