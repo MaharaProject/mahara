@@ -159,10 +159,15 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
     private static function make_video_url($url) {
         static $embedsources = array(
-            // www.youtube.com
+            // www.youtube.com (old style)
             array(
                 'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
                 'url'   => 'http://www.youtube.com/$1/$4'
+            ),
+            // www.youtube.com (iframe)
+            array(
+                'match' => '#.*youtube\.com.*(embed\/)([a-zA-Z0-9_=-]+).*#',
+                'url' => 'http://www.youtube.com/v/$2'
             ),
             // video.google.com
             array(
