@@ -1274,7 +1274,11 @@ function handle_event($event, $data) {
     $plugintypes = plugin_types_installed();
     foreach ($plugintypes as $name) {
         if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
+            $pluginsinstalled = plugins_installed($name);
             foreach ($subs as $sub) {
+                if (!isset($pluginsinstalled[$sub->plugin])) {
+                    continue;
+                }
                 safe_require($name, $sub->plugin);
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
