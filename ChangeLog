@@ -1,3 +1,9 @@
+1.2.7 (2011-03-24)
+- Blogs get deleted without sesskey check (CVE 2011-0440)
+- XSS in select box validation (CVE 2011-0439)
+- Fix PHP 5.3 incompatibility
+- Add support for both Leap2A versions (2009-03 and 2010-07)
+
 1.2.6 (2010-09-01)
 - Better mimetype detection
 - New flash-based video player
