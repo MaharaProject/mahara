@@ -2246,5 +2246,17 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2011032500) {
+        // Uninstall solr plugin; it's moving to contrib until it's fixed up.
+        delete_records('search_cron', 'plugin', 'solr');
+        delete_records('search_event_subscription', 'plugin', 'solr');
+        delete_records('search_config', 'plugin', 'solr');
+        delete_records('search_installed', 'name', 'solr');
+        $searchplugin = get_config('searchplugin');
+        if ($searchplugin == 'solr') {
+            set_config('searchplugin', 'internal');
+        }
+    }
+
     return $status;
 }

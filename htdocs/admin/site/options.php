@@ -161,7 +161,7 @@ $siteoptionform = array(
                 ),
             ),
         ),
-        /* 'searchsettings' => array(
+        'searchsettings' => array(
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -178,7 +178,7 @@ $siteoptionform = array(
                     'disabled'     => in_array('searchplugin', $OVERRIDDEN),
                 ),
             ),
-        ),*/
+        ),
         'groupsettings' => array(
             'type'         => 'fieldset',
             'collapsible'  => true,
