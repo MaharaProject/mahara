@@ -471,7 +471,7 @@ function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name',
 function get_search_plugins() {
     $searchpluginoptions = array();
 
-    if ($searchplugins = get_records_array('search_installed')) {
+    if ($searchplugins = plugins_installed('search')) {
         foreach ($searchplugins as $plugin) {
             $searchpluginoptions[$plugin->name] = $plugin->name;
 
