@@ -813,12 +813,16 @@ function user_can_access_forum($forumid, $userid=null) {
  *
  * @returns boolean
  */
-function user_can_edit_post($poster, $posttime, $userid=null) {
+function user_can_edit_post($poster, $posttime, $userid=null, $verifydelay=true) {
 	if (empty($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }
-    return $poster == $userid && $posttime > (time() - get_config_plugin('interaction', 'forum', 'postdelay') * 60);
+    $permitted = true;
+    if ($verifydelay) {
+        $permitted = $posttime > (time() - get_config_plugin('interaction', 'forum', 'postdelay') * 60);
+    }
+    return $poster == $userid && $permitted;
 }
 
 /**

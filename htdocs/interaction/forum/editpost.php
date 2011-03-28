@@ -108,6 +108,10 @@ else { // edit post
     else if ($moderator) {
         $post->editrecord = true;
     }
+    else if (user_can_edit_post($post->poster, $post->ctime, $USER->get('id'), false)) {
+        $SESSION->add_error_msg(get_string('postaftertimeout', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')));
+        redirect('/interaction/forum/topic.php?id=' . $parent->topic);
+    }
     else {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }

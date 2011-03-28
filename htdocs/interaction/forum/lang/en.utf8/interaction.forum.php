@@ -117,6 +117,7 @@ $string['Open'] = 'Open';
 $string['Order'] = 'Order';
 $string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
 $string['Post'] = 'Post';
+$string['postaftertimeout'] = 'You have submitted your change after timeout of %s minutes. Your change has not been applied.';
 $string['postbyuserwasdeleted'] = 'A post by %s was deleted';
 $string['postdelay'] = 'Post Delay';
 $string['postdelaydescription'] = 'The minimum time (in minutes) that must pass before a new post can be mailed out to forum subscribers.  The author of a post may make edits during this time.';
