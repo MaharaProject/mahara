@@ -181,3 +181,5 @@ $string['closetopics'] = 'Close new topics';
 $string['closetopicsdescription'] = 'If checked, all new topics in this forum will be closed by default.  Only moderators and group administrators can reply to closed topics.';
 
 $string['activetopicsdescription'] = 'Recently updated topics in your groups.';
+
+$string['timeleftnotice'] = 'You have %s minutes left to finish editing';

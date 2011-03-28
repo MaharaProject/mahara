@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-
+{if $timeleft}<div class="fr timeleftnotice">{str tag="timeleftnotice" section="interaction.forum" args=$timeleft}</div>{/if}
 <h2><a href="{$WWWROOT}interaction/forum/topic.php?id={$parent->topic}">{$parent->topicsubject}</a> - {$action}</h2>
 
 {$editform|safe}

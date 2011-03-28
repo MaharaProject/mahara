@@ -195,3 +195,8 @@
 	padding: 0 0 0 10px;
 }
 
+/* Post and topic editing*/
+.timeleftnotice {
+    margin-top: 0.8em;
+    font-size: .9167em;
+}

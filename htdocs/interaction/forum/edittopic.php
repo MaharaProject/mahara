@@ -96,6 +96,7 @@ else { // edit topic
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {
         $topic->editrecord = false;
+        $timeleft = (int)get_config_plugin('interaction', 'forum', 'postdelay') - round((time() - $topic->ctime) / 60);
     }
     else if ($moderator) {
         $topic->editrecord = true;
@@ -268,6 +269,9 @@ $smarty = smarty();
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('editform', $editform);
+if (isset($timeleft)) {
+    $smarty->assign('timeleft', $timeleft);
+}
 $smarty->display('interaction:forum:edittopic.tpl');
 
 ?>
