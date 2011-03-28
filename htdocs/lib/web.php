@@ -2576,8 +2576,9 @@ function clean_html($text, $xhtml=false) {
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
     $config->set('HTML.DefinitionRev', 1);
 
-    $def =& $config->getHTMLDefinition(true);
-    $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
+    if ($def = $config->maybeGetRawHTMLDefinition()) {
+        $def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
+    }
     $purifier = new HTMLPurifier($config);
     return $purifier->purify($text);
 }
