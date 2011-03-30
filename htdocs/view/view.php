@@ -165,13 +165,17 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+
+if (!$view->is_public()) {
+    $headers[] = '<meta name="robots" content="noindex">';  // Tell search engines not to index non-public views
+}
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 
 $smarty = smarty(
     $javascript,
-    $stylesheets,
+    $headers,
     array(),
     array(
         'stylesheets' => $extrastylesheets,
