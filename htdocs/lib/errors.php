@@ -255,7 +255,9 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
 
     if (function_exists('get_config')) {
-        $logfilename = get_config('log_file');
+        if (!$logfilename = get_config('log_file')) {
+            $logfilename = get_config('dataroot') . 'error.log';
+        }
         if (($targets & LOG_TARGET_FILE) && $logfilename) {
             global $LOGFILE_FH;
             static $logfile_open_attempted = null;

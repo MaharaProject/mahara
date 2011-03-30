@@ -99,8 +99,10 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 //$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 
 // If you use LOG_TARGET_FILE, this is the file that errors will be logged to.
-// It's best to pick a path under dataroot, as we know we can write there.
-$cfg->log_file = $CFG->dataroot . '/error.log';
+// By default, it will write to the file 'error.log' under dataroot. If you
+// change this in config.php, make sure you use a folder which is writable by
+// the webserver.
+// $cfg->log_file = '/path/to/dataroot/error.log';
 
 // The log levels that will generate backtraces. Useful for development,
 // but probably only warnings are useful on a live site.
@@ -131,8 +133,9 @@ $cfg->developermode = false;
 $cfg->sendemail = true;
 // $cfg->sendallemailto = 'you@example.com';
 //
-// Log basic details of emails sent out by Mahara.  This will get big.
-// $cfg->emaillog = $cfg->dataroot . '/log/email.log';
+// Log basic details of emails sent out by Mahara.  Must be writable by the
+// webserver user.  This will get big.
+// $cfg->emaillog = '/path/to/dataroot/email.log';
 
 // capture performance information and print it
 // $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
