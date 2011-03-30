@@ -145,6 +145,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         }
 
         if (group_allows_submission($group->grouptype) && ($userviewdata = View::get_user_views())) {
+            require_once('pieforms/pieform.php');
             // A user can submit more than one view to the same group, but no view can be
             // submitted to more than one group.
 
