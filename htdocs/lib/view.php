@@ -3649,20 +3649,20 @@ class View {
                 if ($r->startdate && $r->stopdate) {
                     $data[$newkey]['access'] = get_string(
                         'accessbetweendates2', 'view',
-                        format_date(strtotime($viewdata[$i]->startdate), 'strftimedate'),
-                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate')
+                        format_date(strtotime($r->startdate), 'strftimedate'),
+                        format_date(strtotime($r->stopdate), 'strftimedate')
                     );
                 }
                 else if ($r->startdate) {
                     $data[$newkey] = get_string(
                         'accessfromdate2', 'view',
-                        format_date(strtotime($viewdata[$i]->startdate), 'strftimedate')
+                        format_date(strtotime($r->startdate), 'strftimedate')
                     );
                 }
                 else if ($r->stopdate) {
                     $data[$newkey]['access'] = get_string(
                         'accessuntildate2', 'view',
-                        format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate')
+                        format_date(strtotime($r->stopdate), 'strftimedate')
                     );
                 }
             }
