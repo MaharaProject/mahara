@@ -402,11 +402,13 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
     else {
         $usertoname = display_name($userto, $userto);
-        if (empty($userto->email)) {
-            throw new EmailException("Cannot send email to $usertoname with subject $subject.  User has no primary email address set.");
-        }
         $mail->AddAddress($userto->email, $usertoname );
         $to = $userto->email;
+    }
+
+    if ($mail->IsError()) {
+        // If there's a phpmailer error already, assume it's an invalid address
+        throw new InvalidEmailException("Cannot send email to $usertoname with subject $subject. Error from phpmailer was: " . $mail->ErrorInfo);
     }
 
     $mail->WordWrap = 79;   

@@ -798,6 +798,11 @@ class CryptException extends SystemException {}
 class EmailException extends SystemException {}
 
 /**
+ * Exception - Invalid address
+ */
+class InvalidEmailException extends EmailException {}
+
+/**
  * Exception - Email is disabled for this user
  */
 class EmailDisabledException extends EmailException {}
