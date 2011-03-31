@@ -2617,7 +2617,7 @@ class View {
             ';
             $where .= "
                 AND (v.startdate IS NULL OR v.startdate < current_timestamp)
-                AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
                 AND va.accesstype = 'public'
                 AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                 AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)";
@@ -2663,7 +2663,7 @@ class View {
                     v.owner = ?
                     OR vg.edit_views = 1
                     OR ((v.startdate IS NULL OR v.startdate < current_timestamp)
-                        AND (v.stopdate IS NULL OR v.stopdate < current_timestamp)
+                        AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
                         AND (va.accesstype = 'public'
                             OR va.accesstype = 'loggedin'
                             OR (va.accesstype = 'friends' AND f.usr2 = ?)
