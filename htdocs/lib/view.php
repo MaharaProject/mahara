@@ -3655,7 +3655,7 @@ class View {
                     );
                 }
                 else if ($r->startdate) {
-                    $data[$newkey] = get_string(
+                    $data[$newkey]['access'] = get_string(
                         'accessfromdate2', 'view',
                         format_date(strtotime($r->startdate), 'strftimedate')
                     );
