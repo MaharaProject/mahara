@@ -1625,12 +1625,22 @@ function can_view_view($view_id, $user_id=null) {
         return false;
     }
 
+    // Overriding start/stop dates are set by the owner to deny access
+    // to users who would otherwise be allowed to see the view.  However,
+    // for some kinds of access (e.g. objectionable content, submitted
+    // views), we have to override the override and let the logged in
+    // user see it anyway.  So we can't return false now, we have to wait
+    // till we find out what kind of view_access record is being used.
+    $overridestart = $view->get('startdate');
+    $overridestop = $view->get('stopdate');
+    $allowedbyoverride = (empty($overridestart) || $overridestart < $dbnow) && (empty($overridestop) || $overridestop > $dbnow);
+
     if ($SESSION->get('mnetuser')) {
         $mnettoken = get_cookie('mviewaccess:'.$view_id);
     }
 
     foreach ($access as &$a) {
-        if ($a->accesstype == 'public') {
+        if ($a->accesstype == 'public' && $allowedbyoverride) {
             if ($publicviews) {
                 return true;
             }
@@ -1638,7 +1648,7 @@ function can_view_view($view_id, $user_id=null) {
                 return true;
             }
         }
-        else if ($a->token) {
+        else if ($a->token && ($allowedbyoverride || !$a->visible)) {
             $usertoken = get_cookie('viewaccess:'.$view_id);
             if ($a->token == $usertoken && $publicviews) {
                 return true;
@@ -1680,6 +1690,9 @@ function can_view_view($view_id, $user_id=null) {
                 else if ($view->get('group') && $user->get('admin')) {
                     return true;
                 }
+                continue;
+            }
+            if (!$allowedbyoverride && $a->visible) {
                 continue;
             }
             // The view must have loggedin access, user access for the user
