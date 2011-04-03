@@ -2437,7 +2437,7 @@ class View {
 
     public static function views_by_owner($group=null, $institution=null) {
 
-        $limit  = param_integer('limit', 10);
+        $limit  = param_integer('limit', 25);
         $offset = param_integer('offset', 0);
         $query  = param_variable('query', null);
         $tag    = param_variable('tag', null);
