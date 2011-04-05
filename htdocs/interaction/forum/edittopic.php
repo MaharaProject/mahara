@@ -194,17 +194,21 @@ function addtopic_submit(Pieform $form, $values) {
             'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
         ), 'id', true
     );
-    $postid = insert_record(
-        'interaction_forum_post',
-        (object)array(
-            'topic' => $topicid,
-            'poster' => $USER->get('id'),
-            'subject' => $values['subject'],
-            'body' => $values['body'],
-            'ctime' =>  db_format_timestamp(time())
-        ),
-        'id', true
+    $post = (object)array(
+        'topic'   => $topicid,
+        'poster'  => $USER->get('id'),
+        'subject' => $values['subject'],
+        'body'    => $values['body'],
+        'ctime'   =>  db_format_timestamp(time())
     );
+    $postid = insert_record('interaction_forum_post', $post, 'id', true);
+
+    // Rewrite the post id into links in the body
+    $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
+    if (!empty($newbody) && $newbody != $post->body) {
+        set_field('interaction_forum_post', 'body', $newbody, 'id', $postid);
+    }
+
     if (!record_exists('interaction_forum_subscription_forum', 'user', $USER->get('id'), 'forum', $forumid)) {
         insert_record('interaction_forum_subscription_topic', (object)array(
             'user'  => $USER->get('id'),
@@ -234,7 +238,7 @@ function edittopic_submit(Pieform $form, $values) {
             'interaction_forum_post',
             array(
                 'subject' => $values['subject'],
-                'body' => $values['body']
+                'body' => PluginInteractionForum::prepare_post_body($values['body'], $values['post']),
             ),
             array('id' => $values['post'])
         );

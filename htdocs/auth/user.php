@@ -861,6 +861,20 @@ class User {
         return false;
     }
 
+    public function can_publish_artefact($a) {
+        if (($this->get('id') and $this->get('id') == $a->get('owner'))
+            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
+            return true;
+        }
+        $group = $a->get('group');
+        if ($group) {
+            return count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
+                INNER JOIN {group_member} g ON ar.role = g.role
+                WHERE ar.artefact = ? AND g.member = ? AND ar.can_publish = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $group));
+        }
+        return false;
+    }
+
     public function can_edit_view($v) {
         $owner = $v->get('owner');
         if ($owner == $this->get('id')) {

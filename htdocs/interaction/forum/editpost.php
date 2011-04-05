@@ -195,7 +195,7 @@ function editpost_submit(Pieform $form, $values) {
         'interaction_forum_post',
         array(
             'subject' => $values['subject'],
-            'body' => $values['body']
+            'body' => PluginInteractionForum::prepare_post_body($values['body'], $postid),
         ),
         array('id' => $postid)
     );
@@ -217,18 +217,22 @@ function editpost_submit(Pieform $form, $values) {
 function addpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $parentid = param_integer('parent');
-    $postid = insert_record(
-        'interaction_forum_post',
-        (object)array(
-            'topic' => $values['topic'],
-            'poster' => $USER->get('id'),
-            'parent' => $parentid,
-            'subject' => $values['subject'],
-            'body' => $values['body'],
-            'ctime' =>  db_format_timestamp(time())
-        ),
-        'id', true
+    $post = (object)array(
+        'topic'   => $values['topic'],
+        'poster'  => $USER->get('id'),
+        'parent'  => $parentid,
+        'subject' => $values['subject'],
+        'body'    => $values['body'],
+        'ctime'   =>  db_format_timestamp(time())
     );
+    $postid = insert_record('interaction_forum_post', $post, 'id', true);
+
+    // Rewrite the post id into links in the body
+    $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
+    if (!empty($newbody) && $newbody != $post->body) {
+        set_field('interaction_forum_post', 'body', $newbody, 'id', $postid);
+    }
+
     $delay = get_config_plugin('interaction', 'forum', 'postdelay');
     if (!is_null($delay) && $delay == 0) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));

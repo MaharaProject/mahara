@@ -620,6 +620,91 @@ EOF;
 
         return $result;
     }
+
+    // Rewrite download links in the post body to add a post id parameter.
+    // Used in download.php to determine permission to view the file.
+    static $replacement_postid;
+
+    public static function replace_download_link($matches) {
+        parse_str(html_entity_decode($matches[1]), $params);
+        if (empty($params['file'])) {
+            return $matches[0];
+        }
+        $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . (int) $params['file'];
+        unset($params['post']);
+        unset($params['file']);
+        if (!empty($params)) {
+            $url .= '&' . http_build_query($params);
+        }
+        return $url . '&post=' . (int) self::$replacement_postid;
+    }
+
+    public static function prepare_post_body($body, $postid) {
+        self::$replacement_postid = $postid;
+        return preg_replace_callback(
+            '#(?<=[\'"])' . get_config('wwwroot') . 'artefact/file/download\.php\?(file=\d+(?:(?:&amp;|&)(?:[a-z]+=[x0-9]+)+)*)#',
+            array('self', 'replace_download_link'),
+            $body
+        );
+    }
+
+    /**
+     * Given a post id & the id of an image artefact, check that the logged-in user
+     * has permission to see the image in the context of the post.
+     */
+    public static function can_see_attached_file($file, $postid) {
+        global $USER;
+        require_once('group.php');
+
+        if (!$file instanceof ArtefactTypeImage) {
+            return false;
+        }
+
+        $post = get_record_sql('
+            SELECT
+                p.body, p.poster, g.id AS groupid, g.public
+            FROM {interaction_forum_post} p
+            INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic AND t.deleted = 0)
+            INNER JOIN {interaction_forum_post} fp ON (fp.parent IS NULL AND fp.topic = t.id)
+            INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted = 0)
+            INNER JOIN {group} g ON (f.group = g.id AND g.deleted = 0)
+            WHERE p.id = ? AND p.deleted = 0',
+            array($postid)
+        );
+
+        if (!$post) {
+            return false;
+        }
+
+        if (!$post->public && !group_user_access($post->groupid, $USER->get('id'))) {
+            return false;
+        }
+
+        // Check that the author of the post is allowed to publish the file
+        $poster = new User();
+        $poster->find_by_id($post->poster);
+        if (!$poster->can_publish_artefact($file)) {
+            return false;
+        }
+
+        // Load the post as an html fragment & make sure it has the image in it
+        $page = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $success = $page->loadHTML($post->body);
+        libxml_use_internal_errors(false);
+        if (!$success) {
+            return false;
+        }
+        $xpath = new DOMXPath($page);
+        $srcstart = get_config('wwwroot') . 'artefact/file/download.php?file=' . $file->get('id') . '&';
+        $query = '//img[starts-with(@src,"' . $srcstart . '")]';
+        $elements = $xpath->query($query);
+        if ($elements->length < 1) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 class InteractionForumInstance extends InteractionInstance {

@@ -33,6 +33,7 @@ require_once('file.php');
 
 $fileid = param_integer('file');
 $viewid = param_integer('view', null);
+$postid = param_integer('post', null);
 $size   = get_imagesize_parameters();
 $forcedl = param_boolean('download');
 
@@ -96,7 +97,17 @@ else {
             // Alternatively, if you own the file or you are an admin, it should always work
 
             if (!$USER->can_view_artefact($file)) {
-                throw new AccessDeniedException(get_string('accessdenied', 'error'));
+
+                // Check for images sitting in visible forum posts
+                $visibleinpost = false;
+                if ($postid && $file instanceof ArtefactTypeImage) {
+                    safe_require('interaction', 'forum');
+                    $visibleinpost = PluginInteractionForum::can_see_attached_file($file, $postid);
+                }
+
+                if (!$visibleinpost) {
+                    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+                }
             }
         }
     }
