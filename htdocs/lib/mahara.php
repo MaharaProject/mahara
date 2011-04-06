@@ -2638,4 +2638,16 @@ function mahara_log($logname, $string) {
     error_log('[' . date("Y-m-d h:i:s") . "] $string\n", 3, get_config('dataroot') . 'log/' . $logname . '.log');
 }
 
+/**
+ * Check whether HTML editor can be used.
+ *
+ * @return bool
+ */
+
+function is_html_editor_enabled () {
+    global $USER;
+    return (!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
+        get_config('wysiwyg') == 'enable';
+}
+
 ?>

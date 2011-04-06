@@ -450,6 +450,18 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('allowmobileuploads'),
                     'disabled'     => in_array('allowmobileuploads', $OVERRIDDEN),
                 ),
+                'wysiwyg' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('wysiwyg', 'admin'),
+                    'description'  => get_string('wysiwygdescription', 'admin'),
+                    'defaultvalue' => get_config('wysiwyg'),
+                    'options'      => array(
+                                        '' => get_string('wysiwyguserdefined', 'admin'),
+                                        'disable' => get_string('disable'),
+                                        'enable' => get_string('enable'),
+                                    ),
+                    'help'         => true,
+                ),
             ),
         ),
     )
@@ -480,7 +492,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
-        'creategroups', 'createpublicgroups', 'allowgroupcategories',
+        'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

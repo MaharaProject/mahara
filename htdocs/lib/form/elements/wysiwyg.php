@@ -38,9 +38,9 @@ $_PIEFORM_WYSIWYGS = array();
  * @return string          The HTML for the element
  */
 function pieform_element_wysiwyg(Pieform $form, $element) {
-    global $USER, $_PIEFORM_WYSIWYGS;
+    global $_PIEFORM_WYSIWYGS;
     $_PIEFORM_WYSIWYGS[] = $form->get_name() . '_' . $element['name'];
-    if ($USER->get_account_preference('wysiwyg')) {
+    if (is_html_editor_enabled()) {
         if (!$form->get_property('elementclasses')) {
             $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
         }
@@ -69,7 +69,7 @@ function pieform_element_wysiwyg(Pieform $form, $element) {
     }
     $element['style'] = (isset($element['style'])) ? $style . $element['style'] : $style;
 
-    if ($USER->get_account_preference('wysiwyg')) {
+    if (is_html_editor_enabled()) {
         $value = Pieform::hsc($form->get_value($element));
     }
     else {
@@ -94,8 +94,8 @@ function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element, 
 }
 
 function pieform_element_wysiwyg_get_headdata() {
-    global $USER, $_PIEFORM_WYSIWYGS;
-    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+    global $_PIEFORM_WYSIWYGS;
+    if (is_html_editor_enabled()) {
         $result = '<script type="text/javascript">'
          . "\nvar editor_to_focus;"
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
@@ -117,14 +117,13 @@ function pieform_element_wysiwyg_get_headdata() {
 }
 
 function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
-    global $USER;
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($element['value'])) {
         return $element['value'];
     }
     else if (isset($global[$element['name']])) {
         $value = $global[$element['name']];
-        if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
+        if (!is_html_editor_enabled()) {
             $value = format_whitespace($value);
         }
         return $value;
@@ -146,8 +145,7 @@ function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
  * @param array   $element  The element
  */
 function pieform_element_wysiwyg_views_js(Pieform $form, $element) {
-    global $USER;
-    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+    if (is_html_editor_enabled()) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
         return "\ntinyMCE.idCounter=0;"
