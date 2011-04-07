@@ -1137,6 +1137,13 @@ class LiveUser extends User {
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
 
+        // If user has chosen a language while logged out, save it as their lang pref.
+        $sessionlang = $this->SESSION->get('lang');
+        if (!empty($sessionlang) && $sessionlang != 'default'
+            && (empty($this->accountprefs['lang']) || $sessionlang != $this->accountprefs['lang'])) {
+            $this->set_account_preference('lang', $sessionlang);
+        }
+
         // Set language for the current request
         if (!empty($this->accountprefs['lang'])) {
             current_language($this->accountprefs['lang']);
