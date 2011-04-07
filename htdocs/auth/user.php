@@ -1136,6 +1136,12 @@ class LiveUser extends User {
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
+
+        // Set language for the current request
+        if (!empty($this->accountprefs['lang'])) {
+            current_language($this->accountprefs['lang']);
+        }
+
         $this->reset_institutions();
         $this->reset_grouproles();
         $this->load_views();
