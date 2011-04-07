@@ -916,13 +916,19 @@ function print_object($mixed) {
  * This function returns the current 
  * language to use, either for a given user
  * or sitewide, or the default
+ *
+ * param @string $reset If passed, reset the current language to this
  * 
  * @return string
  */
-function current_language() {
+function current_language($reset=null) {
     global $USER, $CFG, $SESSION;
 
     static $lang;
+
+    if (!empty($reset)) {
+        $lang = $reset;  // Set the language for this request
+    }
 
     if (!empty($lang)) {
         return $lang;

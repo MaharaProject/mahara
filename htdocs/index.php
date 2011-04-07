@@ -36,11 +36,6 @@ require('init.php');
 if (!$USER->is_logged_in()) {
     define('TITLE', get_string('home'));
     $pagename = 'loggedouthome';
-    $lang = param_alphanumext('lang', null);
-    if (!empty($lang)) {
-        $SESSION->set('lang', $lang);
-        redirect();
-    }
 }
 else {
     define('TITLE', get_string('dashboard', 'view'));
