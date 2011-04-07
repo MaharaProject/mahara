@@ -241,7 +241,7 @@ function accountprefs_validate(Pieform $form, $values) {
 }
 
 function accountprefs_submit(Pieform $form, $values) {
-    global $USER;
+    global $USER, $SESSION;
 
     $authobj = AuthFactory::create($USER->authinstance);
 
@@ -266,6 +266,9 @@ function accountprefs_submit(Pieform $form, $values) {
         update_send_count($u,true);
     }
 
+    // Remember the user's language pref, so we can reload the page if they change it
+    $oldlang = $USER->get_account_preference('lang');
+
     foreach (array_keys($expectedprefs) as $pref) {
         if (isset($values[$pref])) {
             $USER->set_account_preference($pref, $values[$pref]);
@@ -281,6 +284,14 @@ function accountprefs_submit(Pieform $form, $values) {
     }
 
     db_commit();
+
+    if (isset($values['lang']) && $values['lang'] != $oldlang) {
+        // Use PIEFORM_CANCEL here to force a page reload and show the new language.
+        $returndata['location'] = get_config('wwwroot') . 'account/index.php';
+        $SESSION->add_ok_msg(get_string_from_language($values['lang'], 'prefssaved', 'account'));
+        $form->json_reply(PIEFORM_CANCEL, $returndata);
+    }
+
     $returndata['message'] = get_string('prefssaved', 'account');
     $form->json_reply(PIEFORM_OK, $returndata);
 }
