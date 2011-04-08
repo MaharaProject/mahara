@@ -74,7 +74,6 @@ function PieformTextarea(element) {//{{{
     setStyle(this.element, {
         'margin-bottom': '0',
         'width': '100%',
-        'height': this.dimensions.h + 'px'
     });
 
     // Wrap textarea
@@ -108,7 +107,7 @@ function PieformTextarea(element) {//{{{
         // Set new height
         var height = Math.max(32, y - this.dragOffset - this.heightOffset);
         setStyle(this.wrapper, {'height': height + this.grippie.dimensions.h + 1 + 'px'});
-        setStyle(this.element, {'height': height + 'px'});
+        setStyle(this.element, {'height': height - this.grippie.dimensions.h + 1 + 'px'});
 
         // Avoid text selection
         e.stop();
