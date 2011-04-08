@@ -2544,6 +2544,10 @@ function clean_html($text, $xhtml=false) {
     }
     $config->set('AutoFormat.Linkify', true);
 
+    if (get_config('disableexternalresources')) {
+        $config->set('URI.DisableExternalResources', true);
+    }
+
     // Permit embedding contents from other sites
     $config->set('HTML.SafeEmbed', true);
     $config->set('HTML.SafeObject', true);

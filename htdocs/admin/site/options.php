@@ -336,6 +336,14 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('surbl', $OVERRIDDEN),
                 ),
+                'disableexternalresources' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('disableexternalresources', 'admin'),
+                    'description'  => get_string('disableexternalresourcesdescription', 'admin'),
+                    'defaultvalue' => get_config('disableexternalresources'),
+                    'help'         => true,
+                    'disabled'     => in_array('disableexternalresources', $OVERRIDDEN),
+                ),
             ),
         ),
         # TODO: this should become "Network Settings" at some point
@@ -469,7 +477,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials',
         'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
         'creategroups', 'createpublicgroups', 'allowgroupcategories',
