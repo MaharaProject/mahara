@@ -162,7 +162,7 @@ function pieform_element_filebrowser_get_groupinfo($group) {
         'perm'  => array(),
     );
     foreach (current($groupinfo['perms']) as $k => $v) {
-        $groupinfo['perm'][$k] = get_string($k);
+        $groupinfo['perm'][$k] = get_string('filepermission.' . $k, 'artefact.file');
     }
     return $groupinfo;
 }

@@ -243,4 +243,8 @@ $string['pleasewaitwhileyourfilesarebeingunzipped'] = 'Please wait while your fi
 $string['spacerequired'] = 'Space Required';
 $string['Unzip'] = 'Unzip';
 $string['unzipprogress'] = '%s files/folders created.';
-?>
+
+// Group file permissions
+$string['filepermission.view'] = 'View';
+$string['filepermission.edit'] = 'Edit';
+$string['filepermission.republish'] = 'Publish';
