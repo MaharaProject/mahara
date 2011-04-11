@@ -666,21 +666,9 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
         }
         $data->institution = $institution;
     } else if ($group) {
-        require_once(get_config('libroot') . 'group.php');
         if (!$parentfolder) {
-            $role = group_user_access($group);
-            if (!$role) {
-                $result['error'] = true;
-                $result['message'] = get_string('usernotingroup', 'mahara');
-                return $result;
-            }
-            // Use default grouptype artefact permissions to check if the
-            // user can upload a file to the group's root directory
-            $permissions = group_get_default_artefact_permissions($group);
-            if (!$permissions[$role]->edit) {
-                $result['error'] = true;
-                $result['message'] = get_string('cannoteditfolder', 'artefact.file');
-                return $result;
+            if (!pieform_element_filebrowser_edit_group_folder($group, 0)) {
+                return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
             }
         }
         $data->group = $group;
@@ -798,16 +786,8 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
     if ($institution) {
         $data->institution = $institution;
     } else if ($group) {
-        require_once(get_config('libroot') . 'group.php');
         if (!$parentfolder) {
-            $role = group_user_access($group);
-            if (!$role) {
-                return array('error' => true, 'message' => get_string('usernotingroup', 'mahara'));
-            }
-            // Use default grouptype artefact permissions to check if the
-            // user can create a folder in the group's root directory
-            $permissions = group_get_default_artefact_permissions($group);
-            if (!$permissions[$role]->edit) {
+            if (!pieform_element_filebrowser_edit_group_folder($group, 0)) {
                 return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
             }
         }
@@ -1008,11 +988,7 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         }
         $group = $artefact->get('group');
         if ($group) {
-            // Use default grouptype artefact permissions to check if the
-            // user can move a file to the group's root directory
-            require_once(get_config('libroot') . 'group.php');
-            $permissions = group_get_default_artefact_permissions($group);
-            if (!$permissions[group_user_access($group)]->edit) {
+            if (!pieform_element_filebrowser_edit_group_folder($group, 0)) {
                 return array('error' => true, 'message' => get_string('movefailednotowner', 'artefact.file'));
             }
         }
@@ -1034,6 +1010,24 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
         );
     }
     return array('error' => true, 'message' => get_string('movefailed', 'artefact.file'));
+}
+
+
+function pieform_element_filebrowser_edit_group_folder($group, $folder) {
+    global $USER;
+    if ($folder) {
+        if (!$folder instanceof ArtefactTypeFolder) {
+            $folder = new ArtefactTypeFolder($folder);
+        }
+        return $USER->can_edit_artefact($folder);
+    }
+    require_once(get_config('libroot') . 'group.php');
+    // Group root directory: use default grouptype artefact permissions
+    if (!$role = group_user_access($group)) {
+        return false;
+    }
+    $permissions = group_get_default_artefact_permissions($group);
+    return $permissions[$role]->edit;
 }
 
 
