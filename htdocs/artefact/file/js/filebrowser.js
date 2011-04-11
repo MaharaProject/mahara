@@ -616,6 +616,22 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         addElementClass(self.id + '_upload_container', 'hidden');
                     }
                 }
+                if (self.config.upload) {
+                    if (data.disableedit && !hasElementClass(self.id + '_upload_container', 'hidden')) {
+                        addElementClass(self.id + '_upload_container', 'hidden');
+                        if ($('createfolder')) {
+                            addElementClass('createfolder', 'hidden');
+                        }
+                        removeElementClass(self.id + '_upload_disabled', 'hidden');
+                    }
+                    else if (hasElementClass(self.id + '_upload_container', 'hidden') && !data.disableedit) {
+                        removeElementClass(self.id + '_upload_container', 'hidden');
+                        if ($('createfolder')) {
+                            removeElementClass('createfolder', 'hidden');
+                        }
+                        addElementClass(self.id + '_upload_disabled', 'hidden');
+                    }
+                }
             }
             else if (data.uploaded && self.config.select && data.highlight) {
                 // Newly uploaded files should be automatically selected

@@ -35,7 +35,7 @@
   </div>
 {/if}
 
-<table id="{$prefix}_upload_container" class="fileupload{if $tabs && !$tabs.upload} hidden{/if}">
+<table id="{$prefix}_upload_container" class="fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
  <tbody>
 {if $config.upload}
   {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
@@ -73,6 +73,9 @@
 {/if}
  </tbody>
 </table>
+{if $config.upload}
+<div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} hidden{/if}">{str tag="cannoteditfolder" section=artefact.file}</div>
+{/if}
 
 {if $config.edit}
 <input type="hidden" name="{$prefix}_move" id="{$prefix}_move" value="" />
@@ -84,7 +87,7 @@
 </div>
 
 {if $config.createfolder}
-  <div id="createfolder"><div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
+  <div id="createfolder"{if $uploaddisabled} class="hidden"{/if}><div id="{$prefix}_createfolder_messages" class="createfolder-message"></div>
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
     <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
 {/if}

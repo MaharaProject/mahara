@@ -115,6 +115,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
         $smarty->assign('phpmaxfilesize', get_max_upload_size(false));
+        if ($group) {
+            $smarty->assign('uploaddisabled', !pieform_element_filebrowser_edit_group_folder($group, $folder));
+        }
     }
 
     if (!empty($element['browsehelp'])) {
@@ -1070,6 +1073,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
         'changedfolder' => true,
         'tabupload'     => $newtabdata['upload'],
         'folder'        => $folder,
+        'disableedit'   => $group && !pieform_element_filebrowser_edit_group_folder($group, $folder),
         'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $user, $group, $institution),
         'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $newtabdata['owner'], $newtabdata['ownerid']),
         'newtabs'       => $newtabhtml,
@@ -1100,10 +1104,16 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
         }
     }
     
+    // If changing to a group folder, check whether the user can edit it
+    if ($g = ($owner ? $group : $form->get_property('group'))) {
+        $editgroupfolder = pieform_element_filebrowser_edit_group_folder($g, $folder);
+    }
+
     return array(
         'error'         => false, 
         'changedfolder' => true,
         'folder'        => $folder,
+        'disableedit'   => isset($editgroupfolder) && $editgroupfolder == false,
         'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $user, $group, $institution),
         'newpath'       => pieform_element_filebrowser_build_path($form, $element, $folder, $owner, $ownerid),
     );
