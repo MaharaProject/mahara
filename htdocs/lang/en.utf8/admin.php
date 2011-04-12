@@ -118,6 +118,7 @@ $string['institutionfilesdescription'] = 'Upload and manage files for use in Ins
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
+$string['missingplugin'] = 'An installed plugin (%s) could not be found';
 
 $string['htmlfilters'] = 'HTML Filters';
 $string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
