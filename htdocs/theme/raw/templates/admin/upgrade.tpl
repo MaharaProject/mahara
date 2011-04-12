@@ -26,6 +26,6 @@
                 {/foreach}
                 </tbody>
             </table>
-            <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
+            <div id="finished" class="nojs-hidden-block">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}admin/upgrade.php?finished=1">{str section=admin tag=continue}</a></div>
 
 {include file='admin/upgradefooter.tpl'}
