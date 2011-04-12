@@ -107,6 +107,7 @@ $editview = array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $view->get('description'),
+            'rules'        => array('maxlength' => 65536),
         ),
         'tags'        => array(
             'type'         => 'tags',

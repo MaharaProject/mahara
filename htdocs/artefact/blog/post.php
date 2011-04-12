@@ -120,6 +120,7 @@ $form = pieform(array(
             'title' => get_string('postbody', 'artefact.blog'),
             'description' => get_string('postbodydesc', 'artefact.blog'),
             'rules' => array(
+                'maxlength' => 65536,
                 'required' => true
             ),
             'defaultvalue' => $description,

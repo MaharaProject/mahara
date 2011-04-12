@@ -60,6 +60,7 @@ $interestsform = pieform(array(
                     'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
                     'cols'  => 100,
                     'rows'  => 30,
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'save' => array(
                     'type' => 'submit',

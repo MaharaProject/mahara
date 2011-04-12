@@ -76,6 +76,7 @@ $gform = array(
                     'cols' => 80,
                     'defaultvalue' => $personal,
                     'title' => get_string('personalgoal', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'academicgoal' => array(
                     'type' => 'wysiwyg',
@@ -83,6 +84,7 @@ $gform = array(
                     'cols' => 80,
                     'defaultvalue' => $academic,
                     'title' => get_string('academicgoal', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'careergoal' => array(
                     'type' => 'wysiwyg',
@@ -90,6 +92,7 @@ $gform = array(
                     'cols' => 80,
                     'defaultvalue' => $career,
                     'title' => get_string('careergoal', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'submit' => array(
                     'type' => 'submit',

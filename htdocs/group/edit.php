@@ -54,6 +54,7 @@ $elements['name'] = array(
 $elements['description'] = array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
+            'rules'        => array('maxlength' => 65536),
             'rows'         => 10,
             'cols'         => 55,
             'defaultvalue' => $group_data->description);

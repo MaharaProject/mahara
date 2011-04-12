@@ -191,6 +191,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'defaultvalue' => (isset($configdata['introtext'])) ? $configdata['introtext'] : '',
             'width' => '100%',
             'height' => '150px',
+            'rules' => array('maxlength' => 65536),
         );
 
         return $form;

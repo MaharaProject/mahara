@@ -1131,6 +1131,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'rows'         => 10,
                     'cols'         => 80,
                     'defaultvalue' => get_field('site_content', 'content', 'name', 'uploadcopyright'),
+                    'rules'        => array('maxlength' => 65536),
                 ),
             ),
             'collapsible' => true

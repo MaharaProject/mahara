@@ -89,6 +89,7 @@ abstract class PluginInteraction extends Plugin {
                 'defaultvalue' => (isset($instance) ? $instance->get('description') : ''),
                 'rules'        => array(
                     'required' => true,
+                    'maxlength' => 65536,
                 )
             ),
         );

@@ -79,6 +79,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
                 'width' => '100%',
                 'height' => '150px',
                 'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
+                'rules' => array('maxlength' => 65536),
             ),
         );
     }

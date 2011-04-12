@@ -130,7 +130,10 @@ $editform = array(
             'rows'         => 18,
             'cols'         => 70,
             'defaultvalue' => isset($topic) ? $topic->body : null,
-            'rules'        => array( 'required' => true )
+            'rules'        => array(
+                'required'  => true,
+                'maxlength' => 65536,
+            ),
         ),
         'sticky' => array(
             'type'         => 'checkbox',

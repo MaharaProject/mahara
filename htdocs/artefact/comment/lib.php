@@ -559,6 +559,7 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('message'),
             'rows'  => 5,
             'cols'  => 80,
+            'rules' => array('maxlength' => 8192),
         );
         if (get_config_plugin('artefact', 'comment', 'commentratings')) {
             $form['elements']['rating'] = array(

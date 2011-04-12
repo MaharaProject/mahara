@@ -160,7 +160,10 @@ $editform = pieform(array(
             'rows'         => 18,
             'cols'         => 70,
             'defaultvalue' => isset($post) ? $post->body : null,
-            'rules'        => array( 'required' => true )
+            'rules'        => array(
+                'required'  => true,
+                'maxlength' => 65536,
+            ),
         ),
         'submit'   => array(
             'type'  => 'submitcancel',

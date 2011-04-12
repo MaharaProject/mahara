@@ -105,6 +105,7 @@ foreach ( $element_list as $element => $type ) {
     if ($type == 'wysiwyg') {
         $items[$element]['rows'] = 10;
         $items[$element]['cols'] = 50;
+        $items[$element]['rules'] = array('maxlength' => 65536);
     }
     if ($type == 'textarea') {
         $items[$element]['rows'] = 4;

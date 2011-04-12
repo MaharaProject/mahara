@@ -71,6 +71,7 @@ $sform = array(
                     'cols' => 80,
                     'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
                     'title' => get_string('personalskill', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'academicskill' => array(
                     'type' => 'wysiwyg',
@@ -78,6 +79,7 @@ $sform = array(
                     'cols' => 80,
                     'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
                     'title' => get_string('academicskill', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'workskill' => array(
                     'type' => 'wysiwyg',
@@ -85,6 +87,7 @@ $sform = array(
                     'cols' => 80,
                     'defaultvalue' => ((!empty($work)) ? $work->get('description') : null),
                     'title' => get_string('workskill', 'artefact.resume'),
+                    'rules' => array('maxlength' => 65536),
                 ),
                 'submit' => array(
                     'type' => 'submit',
