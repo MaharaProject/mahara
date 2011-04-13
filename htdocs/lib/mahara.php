@@ -2506,18 +2506,6 @@ function cron_site_data_daily() {
     $current = site_data_current();
     $time = db_format_timestamp(time());
 
-    require_once('function.dirsize.php');
-    if ($diskusage = dirsize(get_config('dataroot'))) {
-        // Currently there is no need to track disk usage
-        // over time, so delete old records first.
-        delete_records('site_data', 'type', 'disk-usage');
-        insert_record('site_data', (object) array(
-            'ctime' => $time,
-            'type'  => 'disk-usage',
-            'value' => $diskusage,
-        ));
-    }
-
     // Total users
     insert_record('site_data', (object) array(
         'ctime' => $time,
@@ -2580,6 +2568,18 @@ function cron_site_data_daily() {
         set_config('viewloglatest', $time);
 
         unlink($viewlog . '.temp');
+    }
+
+    require_once('function.dirsize.php');
+    if ($diskusage = dirsize(get_config('dataroot'))) {
+        // Currently there is no need to track disk usage
+        // over time, so delete old records first.
+        delete_records('site_data', 'type', 'disk-usage');
+        insert_record('site_data', (object) array(
+            'ctime' => $time,
+            'type'  => 'disk-usage',
+            'value' => $diskusage,
+        ));
     }
 
     graph_site_data_daily();
