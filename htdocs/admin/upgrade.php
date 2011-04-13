@@ -32,6 +32,16 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
+if (param_integer('finished', 0)) {
+    if ($missing = check_installed_plugins()) {
+        $message = get_string('installedpluginsmissing', 'admin') . ': ';
+        $message .= join(', ', $missing) . '.';
+        $message .= '  ' . get_string('ensurepluginsexist', 'admin', get_config('docroot'));
+        $SESSION->add_error_msg($message);
+    }
+    redirect();
+}
+
 $smarty = smarty();
 
 $upgrades = check_upgrades();
@@ -164,6 +174,26 @@ if (isset($upgrades['core'])) {
 }
 $smarty->display('admin/upgrade.tpl');
 
+function check_installed_plugins() {
+    $missing = array();
 
+    foreach (plugin_types() as $plugintype) {
+        if ($installed = plugins_installed($plugintype, true)) {
+            foreach ($installed as $i) {
+                $key = $i->name;
+                if ($plugintype == 'blocktype') {
+                    $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
+                }
+                try {
+                    safe_require($plugintype, $key);
+                }
+                catch (SystemException $e) {
+                    $missing[] = "$plugintype:$key";
+                }
+            }
+        }
+    }
 
-?>
+    return $missing;
+}
+

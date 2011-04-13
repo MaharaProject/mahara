@@ -55,7 +55,13 @@ foreach (array_keys($plugins) as $plugin) {
                 if ($plugin == 'blocktype') {
                     $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
                 }
-                safe_require($plugin, $key);
+                try {
+                    safe_require($plugin, $key);
+                }
+                catch (SystemException $e) {
+                    $message = get_string('missingplugin', 'admin', hsc("$plugin:$key")) . ':<br>' . $e->getMessage();
+                    die_info($message);
+                }
                 $plugins[$plugin]['installed'][$key] = array(
                     'active' => $i->active,
                     'disableable' => call_static_method(generate_class_name($plugin, $key), 'can_be_disabled'),
