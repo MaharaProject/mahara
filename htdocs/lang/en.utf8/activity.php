@@ -87,6 +87,46 @@ $string['ownedby'] = 'owned by';
 $string['objectionablecontentview'] = 'Objectionable content on Page "%s" reported by %s';
 $string['objectionablecontentviewartefact'] = 'Objectionable content on Page "%s" in "%s" reported by %s';
 
+$string['objectionablecontentviewhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" reported by %s<strong></strong><br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Complaint relates to: <a href="%s">%s</a></p>
+<p>Reported by: <a href="%s">%s</a></p>
+</div>';
+$string['objectionablecontentviewtext'] = 'Objectionable content on "%s" reported by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see the page, follow this link:
+%s
+To see the reporter\'s profile, follow this link:
+%s';
+
+$string['objectionablecontentviewartefacthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" in "%s" reported by %s<strong></strong><br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Complaint relates to: <a href="%s">%s</a></p>
+<p>Reported by: <a href="%s">%s</a></p>
+</div>';
+$string['objectionablecontentviewartefacttext'] = 'Objectionable content on "%s" in "%s" reported by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+To see the page, follow this link:
+%s
+To see the reporter\'s profile, follow this link:
+%s';
+
 $string['newgroupmembersubj'] = '%s is now a group member!';
 $string['removedgroupmembersubj'] = '%s is no longer a group member';
 

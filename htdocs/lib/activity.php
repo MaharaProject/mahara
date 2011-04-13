@@ -550,6 +550,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     protected $view;
     protected $artefact;
     protected $reporter;
+    protected $ctime;
 
     /**
      * @param array $data Parameters:
@@ -557,6 +558,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
      *                    - view (int)
      *                    - artefact (int) (optional)
      *                    - reporter (int)
+     *                    - ctime (int) (optional)
      */
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
@@ -584,6 +586,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
 
         if (empty($this->strings->subject)) {
+            $this->overridemessagecontents = true;
             $viewtitle = $this->view->get('title');
             if (empty($this->artefact)) {
                 $this->strings->subject = (object) array(
@@ -600,6 +603,49 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
                     'args'    => array($viewtitle, $title, display_default_name($this->reporter)),
                 );
             }
+        }
+    }
+
+    public function get_emailmessage($user) {
+        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
+        if (empty($this->artefact)) {
+            return get_string_from_language(
+                $user->lang, 'objectionablecontentviewtext', 'activity',
+                $this->view->get('title'), display_default_name($this->reporter), $ctime,
+                $this->message, $this->view->get_url(), $reporterurl
+            );
+        }
+        else {
+            return get_string_from_language(
+                $user->lang, 'objectionablecontentviewartefacttext', 'activity',
+                $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
+                $this->message, $this->view->get_url(), $reporterurl
+            );
+        }
+    }
+
+    public function get_htmlmessage($user) {
+        $viewtitle = hsc($this->view->get('title'));
+        $reportername = hsc(display_default_name($this->reporter));
+        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
+        $message = hsc($this->message);
+        if (empty($this->artefact)) {
+            return get_string_from_language(
+                $user->lang, 'objectionablecontentviewhtml', 'activity',
+                $viewtitle, $reportername, $ctime,
+                $message, $this->view->get_url(), $viewtitle,
+                $reporterurl, $reportername
+            );
+        }
+        else {
+            return get_string_from_language(
+                $user->lang, 'objectionablecontentviewartefacthtml', 'activity',
+                $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
+                $message, $this->view->get_url(), $viewtitle,
+                $reporterurl, $reportername
+            );
         }
     }
 
