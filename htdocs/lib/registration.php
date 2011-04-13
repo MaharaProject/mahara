@@ -608,7 +608,7 @@ function group_stats_table($limit, $offset) {
         WHERE
             g.deleted = 0
         ORDER BY
-            mc.members DESC, g.name, g.id",
+            mc.members IS NULL, mc.members DESC, g.name, g.id",
         array(),
         $offset,
         $limit
