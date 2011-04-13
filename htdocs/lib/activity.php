@@ -549,7 +549,6 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
 
     protected $view;
     protected $artefact;
-    protected $owner;
     protected $reporter;
 
     /**
@@ -562,21 +561,30 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
 
-        if ($this->owner) {
+        require_once('view.php');
+        $this->view = new View($this->view);
+
+        if (!empty($this->artefact)) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            $this->artefact = artefact_instance_from_id($this->artefact);
+        }
+
+        if ($owner = $this->view->get('owner')) {
             // Notify institutional admins of the view owner
-            if ($institutions = get_column('usr_institution', 'institution', 'usr', $this->owner)) {
+            if ($institutions = get_column('usr_institution', 'institution', 'usr', $owner)) {
                 $this->users = activity_get_users($this->get_id(), null, null, null, $institutions);
             }
         }
 
         if (empty($this->artefact)) {
-            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+            $this->url = $this->view->get_url();
         }
         else {
-            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact . '&view=' . $this->view;
+            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
         }
+
         if (empty($this->strings->subject)) {
-            $viewtitle = get_field('view', 'title', 'id', $this->view);
+            $viewtitle = $this->view->get('title');
             if (empty($this->artefact)) {
                 $this->strings->subject = (object) array(
                     'key'     => 'objectionablecontentview',
@@ -585,7 +593,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
                 );
             }
             else {
-                $title = get_field('artefact', 'title', 'id', $this->artefact);
+                $title = $this->artefact->get('title');
                 $this->strings->subject = (object) array(
                     'key'     => 'objectionablecontentviewartefact',
                     'section' => 'activity',
@@ -596,7 +604,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     }
 
     public function get_required_parameters() {
-        return array('message', 'view', 'owner', 'reporter');
+        return array('message', 'view', 'reporter');
     }
 
 }

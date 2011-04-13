@@ -3938,7 +3938,6 @@ function objection_form_submit(Pieform $form, $values) {
 
     $data = new StdClass;
     $data->view       = $view->get('id');
-    $data->owner      = $view->get('owner');
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');
     if ($artefact) {
@@ -3993,7 +3992,6 @@ function viewnotrude_submit(Pieform $form, $values) {
 
     $data = (object) array(
         'view'      => $view->get('id'),
-        'owner'     => $view->get('owner'),
         'reporter'  => $USER->get('id'),
         'subject'   => false,
         'message'   => false,
