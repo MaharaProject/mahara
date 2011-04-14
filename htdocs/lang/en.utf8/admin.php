@@ -291,6 +291,9 @@ $string['whocancreategroups'] = 'Who can create Groups';
 $string['whocancreategroupsdescription'] = 'Which users will be able to create new groups';
 $string['whocancreatepublicgroups'] = 'Who can create Public Groups';
 $string['whocancreatepublicgroupsdescription'] = 'Which users will be able to make groups that are viewable by the general public';
+$string['wysiwyg'] = 'HTML editor';
+$string['wysiwygdescription'] = 'Defines whether or not the HTML editor is enabled globally or whether users are allowed to enable/disable it themselves.';
+$string['wysiwyguserdefined'] = 'User defined';
 
 // Site content
 $string['about']               = 'About';

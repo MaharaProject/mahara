@@ -102,9 +102,10 @@ $elements['friendscontrol'] = array(
 );
 $elements['wysiwyg'] = array(
     'type' => 'checkbox',
-    'defaultvalue' => $prefs->wysiwyg,
+    'defaultvalue' => (get_config('wysiwyg')) ? get_config('wysiwyg') == 'enable' : $prefs->wysiwyg,
     'title' => get_string('wysiwygdescr', 'account'),
     'help' => true,
+    'disabled' => get_config('wysiwyg'),
 );
 $elements['maildisabled'] = array(
     'type' => 'checkbox',

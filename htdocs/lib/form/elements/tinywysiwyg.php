@@ -47,8 +47,7 @@ function pieform_element_tinywysiwyg_rule_required(Pieform $form, $value, $eleme
 }
 
 function pieform_element_tinywysiwyg_get_headdata() {
-    global $USER;
-    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+    if (is_html_editor_enabled()) {
         return array('tinytinymce');
     }
     return array();
@@ -69,8 +68,7 @@ function pieform_element_tinywysiwyg_get_value(Pieform $form, $element) {
  * @param array   $element  The element
  */
 function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
-    global $USER;
-    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+    if (is_html_editor_enabled()) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
         return "\ntinyMCE.idCounter=0;"
