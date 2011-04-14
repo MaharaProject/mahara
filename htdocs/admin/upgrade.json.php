@@ -94,6 +94,7 @@ if (!empty($upgrade)) {
             $data['install'] = $upgrade->install;
         }
         $data['error'] = false;
+        $data['feedback'] = $SESSION->render_messages();
         json_reply(false, $data);
         exit;
     } 

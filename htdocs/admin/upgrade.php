@@ -142,6 +142,11 @@ $js = <<< EOJS
                             message += data.newversion ? data.newversion : '?';
                         }
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        if (data.feedback) {
+                            var feedback_element = DIV();
+                            feedback_element.innerHTML = data.feedback;
+                            appendChildNodes('messages', feedback_element);
+                        }
                         processNext();
                     }
                     else {
