@@ -432,6 +432,7 @@ class BlockInstance {
     private $canmoveup;
     private $canmovedown;
     private $maxorderincolumn;
+    private $artefacts = array();
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -1074,6 +1075,10 @@ class BlockInstance {
      * Get an artefact instance, checking republish permissions
      */
     public function get_artefact_instance($id) {
+        if (isset($this->artefacts[$id])) {
+            return $this->artefacts[$id];
+        }
+
         require_once(get_config('docroot') . 'artefact/lib.php');
         $a = artefact_instance_from_id($id);
         $viewowner = $this->get_view()->get('owner');
@@ -1087,7 +1092,8 @@ class BlockInstance {
                 throw new ArtefactNotFoundException(get_string('artefactnotpublishable', 'mahara', $id, $this->get_view()->get('id')));
             }
         }
-        return $a;
+
+        return $this->artefacts[$id] = $a;
     }
 
 
