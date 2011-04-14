@@ -348,6 +348,15 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
             $mail->Password   = get_config('smtppass');
             $mail->SMTPSecure = get_config('smtpsecure');
             $mail->Port       = get_config('smtpport');
+            if (get_config('smtpsecure') && !get_config('smtpport')) {
+                // Encrypted connection with no port. Use default one.
+                if (get_config('smtpsecure') == 'ssl') {
+                    $mail->Port = 465;
+                }
+                elseif (get_config('smtpsecure') == 'tls') {
+                    $mail->Port = 587;
+                }
+            }
         }
     }
 
