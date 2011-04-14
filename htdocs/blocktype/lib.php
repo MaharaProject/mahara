@@ -433,6 +433,7 @@ class BlockInstance {
     private $canmovedown;
     private $maxorderincolumn;
     private $artefacts = array();
+    private $temp = array();
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -1204,7 +1205,14 @@ class BlockInstance {
         return true;
     }
 
+    public function get_data($key, $id) {
+        if (!isset($this->temp[$key][$id])) {
+            $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+            if (!isset($this->temp[$key])) {
+                $this->temp[$key] = array();
+            }
+            $this->temp[$key][$id] = call_static_method($blocktypeclass, 'get_instance_' . $key, $id);
+        }
+        return $this->temp[$key][$id];
+    }
 }
-
-
-?>
