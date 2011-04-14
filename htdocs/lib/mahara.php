@@ -2515,11 +2515,11 @@ function cron_site_data_daily() {
 
     // Logged-in users
     $interval = is_postgres() ? "'1 day'" : '1 day';
-    $where = "lastaccess >= CURRENT_DATE AND lastaccess < CURRENT_DATE + INTERVAL $interval";
+    $where = "lastaccess >= DATE(?) AND lastaccess < DATE(?)+ INTERVAL $interval";
     insert_record('site_data', (object) array(
         'ctime' => $time,
         'type'  => 'loggedin-users-daily',
-        'value' => count_records_select('usr', $where),
+        'value' => count_records_select('usr', $where, array($time, $time)),
     ));
 
     // Process log file containing view visits
