@@ -520,13 +520,6 @@ class BlockInstance {
         $title = (isset($values['title'])) ? $values['title'] : '';
         unset($values['title']);
         $this->set('configdata', $values);
-
-        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if (!$title && $title !== '0' && method_exists($blocktypeclass, 'get_instance_title')) {
-            // Get the default title for the block if one isn't set
-            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
-        }
-
         $this->set('title', $title);
 
         try {
@@ -556,6 +549,20 @@ class BlockInstance {
         }
         $result['goto'] = $redirect;
         $form->reply(PIEFORM_OK, $result);
+    }
+
+    public function get_title() {
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        if ($override = call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+            return $override;
+        }
+        if ($title = $this->get('title') and $title != '') {
+            return $title;
+        }
+        if (method_exists($blocktypeclass, 'get_instance_title')) {
+            return call_static_method($blocktypeclass, 'get_instance_title', $this);
+        }
+        return '';
     }
 
     /**
@@ -642,8 +649,7 @@ class BlockInstance {
 
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('viewid', $this->get('view'));
-        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
-        $smarty->assign('title', $title ? $title : $this->get('title'));
+        $smarty->assign('title',  $this->get_title());
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
 
@@ -681,13 +687,12 @@ class BlockInstance {
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $title = call_static_method($classname, 'override_instance_title', $this);
         // hide the title if required and no content is present
         if (call_static_method($classname, 'hide_title_on_empty_content')
             && !trim($content)) {
             return;
         }
-        $smarty->assign('title', $title ? $title : $this->get('title'));
+        $smarty->assign('title', $this->get_title());
 
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
