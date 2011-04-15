@@ -213,7 +213,7 @@ abstract class Auth {
      */
     public function user_exists($username) {
         $this->must_be_ready();
-        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
+        if (record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($username)))) {
             return true;
         }
         throw new AuthUnknownUserException("\"$username\" is not known to Auth");

@@ -400,12 +400,12 @@ class AuthXmlrpc extends Auth {
         // The user is likely to be associated with the parent instance
         if (is_numeric($this->config['parent']) && $this->config['parent'] > 0) {
             $_instanceid = $this->config['parent'];
-            $userrecord = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $_instanceid);
+            $userrecord = record_exists_select('usr', 'LOWER(username) = ? and authinstance = ?', array(strtolower($username), $_instanceid));
         }
 
         if (empty($userrecord)) {
             $_instanceid = $this->instanceid;
-            $userrecord = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $_instanceid);
+            $userrecord = record_exists_select('usr', 'LOWER(username) = ? and authinstance = ?', array(strtolower($username), $_instanceid));
         }
 
         if ($userrecord != false) {
