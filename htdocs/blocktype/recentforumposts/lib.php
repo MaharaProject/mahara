@@ -198,6 +198,10 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         }
     }
 
+    public static function get_instance_title(BlockInstance $instance) {
+        if ($instance->get_view()->get('type') == 'grouphomepage') {
+            return get_string('latestforumposts', 'interaction.forum');
+        }
+        return get_string('title', 'blocktype.recentforumposts');
+    }
 }
-
-?>

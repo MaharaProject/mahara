@@ -169,6 +169,8 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $data['group'] = $group;
         return $data;
     }
-}
 
-?>
+    public static function get_instance_title() {
+        return get_string('title', 'blocktype.groupviews');
+    }
+}
