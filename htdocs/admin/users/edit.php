@@ -188,13 +188,15 @@ function edituser_site_validate(Pieform $form, $values) {
 }
 
 function edituser_site_submit(Pieform $form, $values) {
-    global $USER;
+    global $USER, $authobj;
 
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
     }
 
-    $user->passwordchange = (int) ($values['passwordchange'] == 'on');
+    if (method_exists($authobj, 'change_password')) {
+        $user->passwordchange = (int) ($values['passwordchange'] == 'on');
+    }
     $user->quota = $values['quota'];
     $user->expiry = db_format_timestamp($values['expiry']);
 
