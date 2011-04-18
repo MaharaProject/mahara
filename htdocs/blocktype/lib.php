@@ -726,34 +726,30 @@ class BlockInstance {
         }
 
         safe_require('blocktype', $this->get('blocktype'));
-        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this, $this->get_view()->get('template'));
-
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if ($this->get('title') != call_static_method($blocktypeclass, 'get_title')) {
-            // If the title for this block has been set to something other than 
-            // the block title, use it unconditionally
-            $title = $this->get('title');
-        }
-        else if (method_exists($blocktypeclass, 'get_instance_title')) {
-            // Block types can specify a default title for a block
-            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
-        }
-        else {
-            // A block that doesn't have a method for setting an instance 
-            // title, and hasn't had its title changed (e.g. a new textbox)
-            $title = $this->get('title');
-        }
+        $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'));
 
+        // @todo: If we know the title is going to be overridden in override_instance_title(),
+        // hide or disable the title field in the form.  Currently not a problem, because the
+        // blocktypes that override the instance title don't have configurable instances.
+        // Maybe just remove or simplify title in the elements list below and make all the
+        // blocktype classes pass the title element in their instance_config_form().
+
+        // Block types may specify a method to generate a default title for a block
+        $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
+
+        $title = $this->get('title');
 
         $elements = array_merge(
             array(
                 'title' => array(
                     'type' => 'text',
                     'title' => get_string('blocktitle', 'view'),
-                    'description' => (method_exists($blocktypeclass, 'get_instance_title'))
-                        ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
+                    'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
                     'defaultvalue' => $title,
                     'rules' => array('maxlength' => 255),
+                    'hidewhenempty' => $hasdefault,
+                    'expandtext'    => get_string('setblocktitle'),
                 ),
                 'blockconfig' => array(
                     'type'  => 'hidden',

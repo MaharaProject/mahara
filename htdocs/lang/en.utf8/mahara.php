@@ -929,4 +929,6 @@ $string['findfriendslinked'] = 'Find <a href="%s">Friends</a>';
 $string['joingroups'] = 'Join <a href="%s">Groups</a>';
 $string['sharenetworkdescription'] = '<br>Control your privacy.';
 $string['howtodisable'] = 'You have hidden the information box.  You can control its visibility in <a href="%s">Settings</a>.';
-?>
+
+// Blocktype
+$string['setblocktitle'] = 'Set a block title';
