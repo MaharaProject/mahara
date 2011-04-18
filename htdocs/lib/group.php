@@ -1442,19 +1442,19 @@ function install_system_grouphomepage_view() {
         ),
         array(
             'blocktype' => 'recentforumposts',
-            'title' => get_string('latestforumposts', 'interaction.forum'),
+            'title' => '',
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'groupviews',
-            'title' => get_string('groupviews', 'view'),
+            'title' => '',
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'groupmembers',
-            'title' => get_string('Members', 'group'),
+            'title' => '',
             'column' => 1,
             'config' => null,
         ),

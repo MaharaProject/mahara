@@ -1439,10 +1439,13 @@ class View {
             }
         }
 
+        $blocktypeclass = generate_class_name('blocktype', $values['blocktype']);
+        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : call_static_method($blocktypeclass, 'get_title');
+
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => $values['blocktype'],
-                'title'      => call_static_method(generate_class_name('blocktype', $values['blocktype']), 'get_title'), 
+                'title'      => $newtitle,
                 'view'       => $this->get('id'),
                 'column'     => $values['column'],
                 'order'      => $values['order'],
