@@ -579,6 +579,9 @@ class BlockInstance {
         $js = '';
         $movecontrols = array();
 
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        $title = $this->get_title();
+
         if ($configure) {
             list($content, $js) = array_values($this->build_configure_form($new));
         }
@@ -603,9 +606,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockleft', 'view') :
-                                           get_string('moveblockleft', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
                         'arrow'  => '&larr;',
                         'dir'    => 'left',
                     );
@@ -614,9 +615,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockdown', 'view') :
-                                           get_string('moveblockdown', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
                         'arrow'  => '&darr;',
                         'dir'    => 'down',
                     );
@@ -625,9 +624,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockup', 'view') :
-                                           get_string('moveblockup', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
                         'arrow'  => '&uarr;',
                         'dir'    => 'up',
                     );
@@ -636,31 +633,33 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockright', 'view') :
-                                           get_string('moveblockright', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
                         'arrow'  => '&rarr;',
                         'dir'    => 'right',
                     );
                 }
             }
         }
+
+        $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
+
         $smarty = smarty_core();
 
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('viewid', $this->get('view'));
-        $smarty->assign('title',  $this->get_title());
+        $smarty->assign('title',  $title);
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
 
         $smarty->assign('movecontrols', $movecontrols);
-        $smarty->assign('configurable', call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'has_instance_config'));
+        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
+        $smarty->assign('configtitle',  $configtitle);
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
-        $smarty->assign('strconfigtitletext', trim($this->get('title')) == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'".$this->get('title')."'"));
-        $smarty->assign('strremovetitletext', trim($this->get('title')) == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'".$this->get('title')."'"));
+        $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'$title'"));
+        $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'$title'"));
 
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
     }
