@@ -130,6 +130,29 @@ class AuthInternal extends Auth {
         return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,30}$/', $username);
     }
 
+    /**
+     * Changes the user's username.
+     *
+     * This method is not strictly part of the authentication API, but if
+     * defined allows the method to change a user's username.
+     *
+     * @param object  $user     The user to change the password for
+     * @param string  $username The username to set for the user
+     * @return string The new username, or the original username if it could not be set
+     */
+    public function change_username(User $user, $username) {
+        $this->must_be_ready();
+
+        // proposed username must pass validation
+        if ($this->is_username_valid($username)) {
+            $user->username = $username;
+            $user->commit();
+        }
+
+        // return the new username, or the original one if it failed validation
+        return $user->username;
+    }
+
     /*
      The following two functions are inspired by Andrew McMillan's salted md5
      functions in AWL, adapted with his kind permission. Changed to use sha1
