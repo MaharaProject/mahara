@@ -121,26 +121,6 @@ else { // edit post
 
 $parent->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $parent->ctime);
 
-// Javascript to hide the subject box if it has nothing in it, with a link you 
-// click to expand it.
-$clicksetsubject = json_encode(get_string('clicksetsubject', 'interaction.forum'));
-$inlinejs = <<<EOF
-addLoadEvent(function() {
-    var subjectInput = $('editpost_subject');
-    if (subjectInput.value == '') {
-        hideElement(subjectInput);
-        var expandLink = A({'href': ''}, {$clicksetsubject});
-        connect(expandLink, 'onclick', function(e) {
-            showElement(subjectInput);
-            subjectInput.focus();
-            e.stop();
-            removeElement(expandLink);
-        });
-        insertSiblingNodesBefore(subjectInput, expandLink);
-    }
-});
-EOF;
-
 $editform = pieform(array(
     'name'     => 'editpost',
     'successcallback' => isset($post) ? 'editpost_submit' : 'addpost_submit',
@@ -152,7 +132,9 @@ $editform = pieform(array(
             'defaultvalue' => isset($post) ? $post->subject : null,
             'rules'        => array(
                 'maxlength' => 255
-            )
+            ),
+            'hidewhenempty' => true,
+            'expandtext'    => get_string('clicksetsubject', 'interaction.forum'),
         ),
         'body' => array(
             'type'         => 'wysiwyg',
