@@ -62,6 +62,7 @@ if ($install) {
         catch (SQLException $e) {
             json_reply('local', array('error' => true, 'key' => $name, 'errormessage' => $e->getMessage()));
         }
+        log_info('- ' . $data['key']);
         if ($name == 'localpostinst') {
             // Update local version
             $config = new StdClass;
@@ -71,6 +72,7 @@ if ($install) {
 
             // Installation is finished
             set_config('installed', true);
+            log_info('Installation complete.');
             $USER->login('admin', 'mahara');
         }
     }
@@ -92,6 +94,10 @@ if (!empty($upgrade)) {
         $funname($upgrade);
         if (isset($upgrade->install)) {
             $data['install'] = $upgrade->install;
+            log_info('- ' . str_pad($data['key'], 30, ' ') . ' ' . $data['newversion']);
+        }
+        else {
+            log_info('Upgraded ' . $data['key'] . ' to ' . $data['newversion']);
         }
         $data['error'] = false;
         $data['feedback'] = $SESSION->render_messages();

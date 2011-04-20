@@ -1038,7 +1038,6 @@ function install_view_column_widths() {
  */
 function reload_html_filters() {
     require_once('xmlize.php');
-    log_info('Reading HTML filters');
 
     $newlist = xmlize(file_get_contents(get_config('libroot') . 'htmlpurifiercustom/filters.xml'));
     $filters = $newlist['filters']['#']['filter'];
@@ -1047,9 +1046,9 @@ function reload_html_filters() {
             'site' => $f['#']['site'][0]['#'],
             'file' => $f['#']['filename'][0]['#']
         );
-        log_info('- ' . $f->file);
     }
     set_config('filters', serialize($filters));
+    log_info('Enabled ' . count($filters) . ' HTML filters.');
 }
 
 /**

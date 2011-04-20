@@ -48,6 +48,7 @@ $upgrades = check_upgrades();
 if (!empty($upgrades['core']->install)) {
     define('TITLE', get_string('installation', 'admin'));
     $smarty->assign('upgradeheading', get_string('performinginstallation', 'admin'));
+    log_info('Starting Mahara installation...');
 }
 else {
     define('TITLE', get_string('upgrades', 'admin'));

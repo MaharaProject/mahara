@@ -166,12 +166,13 @@ class PluginArtefactFile extends PluginArtefact {
     function resync_filetype_list() {
         require_once('xmlize.php');
         db_begin();
-        log_info('Beginning resync of filetype list');
 
         $currentlist = get_records_assoc('artefact_file_mime_types');
         $newlist     = xmlize(file_get_contents(get_config('docroot') . 'artefact/file/filetypes.xml'));
         $filetypes   = $newlist['filetypes']['#']['filetype'];
         $newtypes    = array();
+
+        $count = array('added' => 0, 'updated' => 0, 'removed' => 0);
 
         // Step one: if a mimetype is in the new list that is not in the current
         // list, add it to the current list.
@@ -180,12 +181,12 @@ class PluginArtefactFile extends PluginArtefact {
             foreach ($filetype['#']['mimetypes'][0]['#']['mimetype'] as $type) {
                 $mimetype = $type['#'];
                 if (!isset($currentlist[$mimetype])) {
-                    log_debug('Adding mimetype: ' . $mimetype . ' (' . $description . ')');
                     execute_sql("INSERT INTO {artefact_file_mime_types} (mimetype, description) VALUES (?,?)", array($mimetype, $description));
+                    $count['added']++;
                 }
                 else if ($currentlist[$mimetype]->description != $description) {
-                    log_debug('Updating mimetype: ' . $mimetype . ' (' . $description . ')');
                     execute_sql("UPDATE {artefact_file_mime_types} SET description = ? WHERE mimetype = ?", array($description, $mimetype));
+                    $count['updated']++;
                 }
                 $newtypes[$mimetype] = true;
                 $currentlist[$mimetype] = (object) array(
@@ -199,12 +200,19 @@ class PluginArtefactFile extends PluginArtefact {
         // new list, remove it from the current list.
         foreach ($currentlist as $mimetype => $type) {
             if (!isset($newtypes[$mimetype])) {
-                log_debug('Removing mimetype: ' . $mimetype);
                 delete_records('artefact_file_mime_types', 'mimetype', $mimetype);
+                $count['removed']++;
             }
         }
        
         db_commit();
+        $changes = array();
+        foreach (array_filter($count) as $k => $v) {
+            $changes[] = "$v $k";
+        }
+        if ($changes) {
+            log_info('Updated filetype list: ' . join(', ', $changes) . '.');
+        }
     }
 
     public static function get_mimetypes_from_description($description=null) {
