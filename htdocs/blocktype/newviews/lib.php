@@ -80,5 +80,8 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
         return 'shallow';
     }
 
+    public static function get_instance_title(BlockInstance $instance) {
+        return get_string('title', 'blocktype.newviews');
+    }
 }
 

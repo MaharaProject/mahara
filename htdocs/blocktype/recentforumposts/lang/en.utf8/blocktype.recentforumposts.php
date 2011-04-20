@@ -34,5 +34,5 @@ $string['nogroupstochoosefrom'] = 'Sorry, no groups to choose from';
 $string['poststoshow'] = 'Maximum number of posts to show';
 $string['poststoshowdescription'] = 'Between 1 and 100';
 $string['recentforumpostsforgroup'] = "Recent Forum Posts for %s";
+$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';
 
-?>

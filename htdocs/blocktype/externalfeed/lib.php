@@ -61,10 +61,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['feedid'])) {
-            $data = get_record(
-                'blocktype_externalfeed_data', 'id', $configdata['feedid'], null, null, null, null,
-                'id,url,link,title,description,content,' . db_format_tsfield('lastupdate') . ',image'
-            );
+
+            $data = $instance->get_data('feed', $configdata['feedid']);
 
             $data->content = unserialize($data->content);
             $data->image   = unserialize($data->image);
@@ -104,6 +102,14 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         return '';
     }
 
+    // Called by $instance->get_data('feed', ...).
+    public static function get_instance_feed($id) {
+        return get_record(
+            'blocktype_externalfeed_data', 'id', $id, null, null, null, null,
+            'id,url,link,title,description,content,' . db_format_tsfield('lastupdate') . ',image'
+        );
+    }
+
     public static function has_instance_config() {
         return true;
     }
@@ -112,7 +118,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $configdata = $instance->get('configdata');
 
         if (!empty($configdata['feedid'])) {
-            $url = get_field('blocktype_externalfeed_data', 'url', 'id', $configdata['feedid']);
+            $url = $instance->get_data('feed', $configdata['feedid'])->url;
         }
         else {
             $url = '';
@@ -163,7 +169,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['feedid'])) {
-            if ($title = get_field('blocktype_externalfeed_data', 'title', 'id', $configdata['feedid'])) {
+            if ($title = $bi->get_data('feed', $configdata['feedid'])->title) {
                 return $title;
             }
         }

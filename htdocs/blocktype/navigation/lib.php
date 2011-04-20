@@ -49,11 +49,7 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['collection'])) {
-            require_once('collection.php');
-            $data = get_record_select('collection', 'id = ?', array($configdata['collection']));
-            $collection = new Collection($configdata['collection'], (array)$data);
-            $title = $collection->get('name');
-            return $title;
+            return $bi->get_data('collection', $configdata['collection'])->get('name');
         }
         return '';
     }
@@ -63,19 +59,19 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $smarty = smarty_core();
 
         if (!empty($configdata['collection'])) {
-            $sql = "SELECT cv.*, v.title
-                    FROM {collection_view} cv
-                        LEFT JOIN {collection} c ON cv.collection = c.id
-                        LEFT JOIN {view} v ON cv.view = v.id
-                    WHERE c.id = ?
-                    ORDER BY cv.displayorder, v.title, v.ctime ASC";
-
-            if ($views = get_records_sql_array($sql, array($configdata['collection']))) {
-                $smarty->assign('views',$views);
+            $views = $instance->get_data('collection', $configdata['collection'])->views();
+            if (!empty($views)) {
+                $smarty->assign('views', $views['views']);
             }
         }
         $smarty->assign('currentview',$instance->get('view'));
         return $smarty->fetch('blocktype:navigation:navigation.tpl');
+    }
+
+    // Called by $instance->get_data('collection', ...).
+    public static function get_instance_collection($id) {
+        require_once('collection.php');
+        return new Collection($id);
     }
 
     public static function has_instance_config() {

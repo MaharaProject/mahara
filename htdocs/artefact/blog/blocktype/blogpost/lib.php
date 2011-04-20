@@ -41,9 +41,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['artefactid'])) {
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $blogpost = artefact_instance_from_id($configdata['artefactid']);
-            return $blogpost->get('title');
+            return $bi->get_artefact_instance($configdata['artefactid'])->get('title');
         }
         return '';
     }

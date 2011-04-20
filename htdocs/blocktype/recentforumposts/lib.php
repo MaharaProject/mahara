@@ -190,27 +190,6 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         return 'shallow';
     }
 
-    public static function override_instance_title(BlockInstance $instance) {
-        $groupid = $instance->get_view()->get('group');
-
-        if (!$groupid) {
-            $configdata = $instance->get('configdata');
-            if (isset($configdata['groupid'])) {
-                $groupid = intval($configdata['groupid']);
-            }
-        }
-
-        if (!empty($groupid)) {
-            return str_replace('<group>',
-                get_field('group', 'name', 'id', $groupid),
-                $instance->get('title')
-            );
-        }
-        else {
-            return $instance->get('title');
-        }
-    }
-
     public static function feed_url(BlockInstance $instance) {
         if ($group = self::get_group($instance)) {
             if ($group->public) {
@@ -219,6 +198,10 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
         }
     }
 
+    public static function get_instance_title(BlockInstance $instance) {
+        if ($instance->get_view()->get('type') == 'grouphomepage') {
+            return get_string('latestforumposts', 'interaction.forum');
+        }
+        return get_string('title', 'blocktype.recentforumposts');
+    }
 }
-
-?>

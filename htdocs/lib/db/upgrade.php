@@ -2258,5 +2258,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011041800) {
+        // Remove titles from system dashboard, group homepage blocks, so new users/groups
+        // get blocks with automatically generated, translatable default titles.
+        $systemdashboard = get_field('view', 'id', 'owner', 0, 'type', 'dashboard');
+        set_field_select(
+            'block_instance', 'title', '',
+            "view = ? AND blocktype IN ('newviews','myviews','inbox')",
+            array($systemdashboard)
+        );
+
+        $systemgrouphomepage = get_field('view', 'id', 'owner', 0, 'type', 'grouphomepage');
+        set_field_select(
+            'block_instance', 'title', '',
+            "view = ? AND blocktype IN ('recentforumposts','groupviews','groupmembers')",
+            array($systemgrouphomepage)
+        );
+    }
+
     return $status;
 }

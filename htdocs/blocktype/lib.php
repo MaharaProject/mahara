@@ -432,6 +432,8 @@ class BlockInstance {
     private $canmoveup;
     private $canmovedown;
     private $maxorderincolumn;
+    private $artefacts = array();
+    private $temp = array();
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -518,13 +520,6 @@ class BlockInstance {
         $title = (isset($values['title'])) ? $values['title'] : '';
         unset($values['title']);
         $this->set('configdata', $values);
-
-        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if (!$title && $title !== '0' && method_exists($blocktypeclass, 'get_instance_title')) {
-            // Get the default title for the block if one isn't set
-            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
-        }
-
         $this->set('title', $title);
 
         try {
@@ -556,6 +551,20 @@ class BlockInstance {
         $form->reply(PIEFORM_OK, $result);
     }
 
+    public function get_title() {
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        if ($override = call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+            return $override;
+        }
+        if ($title = $this->get('title') and $title != '') {
+            return $title;
+        }
+        if (method_exists($blocktypeclass, 'get_instance_title')) {
+            return call_static_method($blocktypeclass, 'get_instance_title', $this);
+        }
+        return '';
+    }
+
     /**
      * Builds the HTML for the block, inserting the blocktype content at the 
      * appropriate place
@@ -569,6 +578,9 @@ class BlockInstance {
         safe_require('blocktype', $this->get('blocktype'));
         $js = '';
         $movecontrols = array();
+
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        $title = $this->get_title();
 
         if ($configure) {
             list($content, $js) = array_values($this->build_configure_form($new));
@@ -594,9 +606,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockleft', 'view') :
-                                           get_string('moveblockleft', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
                         'arrow'  => '&larr;',
                         'dir'    => 'left',
                     );
@@ -605,9 +615,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockdown', 'view') :
-                                           get_string('moveblockdown', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
                         'arrow'  => '&darr;',
                         'dir'    => 'down',
                     );
@@ -616,9 +624,7 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockup', 'view') :
-                                           get_string('moveblockup', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
                         'arrow'  => '&uarr;',
                         'dir'    => 'up',
                     );
@@ -627,32 +633,33 @@ class BlockInstance {
                     $movecontrols[] = array(
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
-                        'title'  => trim($this->get('title')) == '' ?
-                                           get_string('movethisblockright', 'view') :
-                                           get_string('moveblockright', 'view', "'".$this->get('title')."'"),
+                        'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
                         'arrow'  => '&rarr;',
                         'dir'    => 'right',
                     );
                 }
             }
         }
+
+        $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
+
         $smarty = smarty_core();
 
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('viewid', $this->get('view'));
-        $title = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'override_instance_title', $this);
-        $smarty->assign('title', $title ? $title : $this->get('title'));
+        $smarty->assign('title',  $title);
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
 
         $smarty->assign('movecontrols', $movecontrols);
-        $smarty->assign('configurable', call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'has_instance_config'));
+        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
+        $smarty->assign('configtitle',  $configtitle);
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
-        $smarty->assign('strconfigtitletext', trim($this->get('title')) == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'".$this->get('title')."'"));
-        $smarty->assign('strremovetitletext', trim($this->get('title')) == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'".$this->get('title')."'"));
+        $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'$title'"));
+        $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'$title'"));
 
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
     }
@@ -679,13 +686,12 @@ class BlockInstance {
         $smarty = smarty_core();
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $title = call_static_method($classname, 'override_instance_title', $this);
         // hide the title if required and no content is present
         if (call_static_method($classname, 'hide_title_on_empty_content')
             && !trim($content)) {
             return;
         }
-        $smarty->assign('title', $title ? $title : $this->get('title'));
+        $smarty->assign('title', $this->get_title());
 
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
@@ -719,34 +725,30 @@ class BlockInstance {
         }
 
         safe_require('blocktype', $this->get('blocktype'));
-        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this, $this->get_view()->get('template'));
-
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if ($this->get('title') != call_static_method($blocktypeclass, 'get_title')) {
-            // If the title for this block has been set to something other than 
-            // the block title, use it unconditionally
-            $title = $this->get('title');
-        }
-        else if (method_exists($blocktypeclass, 'get_instance_title')) {
-            // Block types can specify a default title for a block
-            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
-        }
-        else {
-            // A block that doesn't have a method for setting an instance 
-            // title, and hasn't had its title changed (e.g. a new textbox)
-            $title = $this->get('title');
-        }
+        $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'));
 
+        // @todo: If we know the title is going to be overridden in override_instance_title(),
+        // hide or disable the title field in the form.  Currently not a problem, because the
+        // blocktypes that override the instance title don't have configurable instances.
+        // Maybe just remove or simplify title in the elements list below and make all the
+        // blocktype classes pass the title element in their instance_config_form().
+
+        // Block types may specify a method to generate a default title for a block
+        $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
+
+        $title = $this->get('title');
 
         $elements = array_merge(
             array(
                 'title' => array(
                     'type' => 'text',
                     'title' => get_string('blocktitle', 'view'),
-                    'description' => (method_exists($blocktypeclass, 'get_instance_title'))
-                        ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
+                    'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
                     'defaultvalue' => $title,
                     'rules' => array('maxlength' => 255),
+                    'hidewhenempty' => $hasdefault,
+                    'expandtext'    => get_string('setblocktitle'),
                 ),
                 'blockconfig' => array(
                     'type'  => 'hidden',
@@ -1074,6 +1076,10 @@ class BlockInstance {
      * Get an artefact instance, checking republish permissions
      */
     public function get_artefact_instance($id) {
+        if (isset($this->artefacts[$id])) {
+            return $this->artefacts[$id];
+        }
+
         require_once(get_config('docroot') . 'artefact/lib.php');
         $a = artefact_instance_from_id($id);
         $viewowner = $this->get_view()->get('owner');
@@ -1087,7 +1093,8 @@ class BlockInstance {
                 throw new ArtefactNotFoundException(get_string('artefactnotpublishable', 'mahara', $id, $this->get_view()->get('id')));
             }
         }
-        return $a;
+
+        return $this->artefacts[$id] = $a;
     }
 
 
@@ -1198,7 +1205,14 @@ class BlockInstance {
         return true;
     }
 
+    public function get_data($key, $id) {
+        if (!isset($this->temp[$key][$id])) {
+            $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+            if (!isset($this->temp[$key])) {
+                $this->temp[$key] = array();
+            }
+            $this->temp[$key][$id] = call_static_method($blocktypeclass, 'get_instance_' . $key, $id);
+        }
+        return $this->temp[$key][$id];
+    }
 }
-
-
-?>

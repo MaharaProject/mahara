@@ -121,4 +121,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         );
     }
 
+    public static function get_instance_title () {
+        return get_string('Members', 'group');
+    }
 }

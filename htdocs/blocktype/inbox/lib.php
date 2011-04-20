@@ -157,6 +157,27 @@ class PluginBlocktypeInbox extends SystemBlocktype {
     public static function allowed_in_view(View $view) {
         return $view->get('owner') != null;
     }
-}
 
-?>
+    /**
+     * We need a default title for this block, so that the inbox blocks
+     * on the dashboard are translatable.
+     *
+     * To maintain existing behaviour, use the 'recentactivity' string unless
+     * the block has only got forum post notifications in it, in which case
+     * use 'topicsimfollowing'
+     */
+    public static function get_instance_title(BlockInstance $instance) {
+        if ($configdata = $instance->get('configdata')) {
+            foreach ($configdata as $k => $v) {
+                if ($v && $k != 'newpost' && $k != 'maxitems') {
+                    return get_string('recentactivity');
+                }
+            }
+            if ($configdata['newpost']) {
+                return get_string('topicsimfollowing');
+            }
+        }
+        return get_string('recentactivity');
+    }
+
+}

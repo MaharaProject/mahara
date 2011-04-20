@@ -33,3 +33,4 @@ $string['displaygroupviews'] = 'Display Group pages?';
 $string['displaygroupviewsdesc'] = 'Group pages - pages created in the group';
 $string['displaysharedviews'] = 'Display Shared pages?';
 $string['displaysharedviewsdesc'] = 'Shared pages - pages shared by group members from their individual portfolio';
+$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';

@@ -49,10 +49,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['artefactid'])) {
-            safe_require('artefact','plans');
-            $plan = new ArtefactTypePlan($configdata['artefactid']);
-            $title = $plan->get('title');
-            return $title;
+            return $bi->get_artefact_instance($configdata['artefactid'])->get('title');
         }
         return '';
     }

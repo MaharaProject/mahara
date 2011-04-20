@@ -32,9 +32,18 @@
  * @return string           The HTML for the element
  */
 function pieform_element_text(Pieform $form, $element) {/*{{{*/
-    return '<input type="text"'
-        . $form->element_attributes($element)
-        . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
-}/*}}}*/
+    $value = Pieform::hsc($form->get_value($element));
+    $html = '';
 
-?>
+    // If hidewhenempty is set, the text box is hidden by a link which expands it.
+    if (!empty($element['hidewhenempty']) && $value == '') {
+        $inputid = hsc($form->get_name() . '_' . $element['name']);
+        $linktext = $element['expandtext'] ? hsc($element['expandtext']) : get_string('edit');
+        $html .= '<a href="" '
+            . "onclick=\"addElementClass('${inputid}_expand', 'hidden'); removeElementClass('{$inputid}', 'hidden'); return false;\""
+            . "id=\"${inputid}_expand\">" . $linktext . '</a>';
+        $element['class'] .= ' hidden';
+    }
+
+    return $html . '<input type="text"' . $form->element_attributes($element) . ' value="' . $value . '">';
+}/*}}}*/

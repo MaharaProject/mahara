@@ -1748,7 +1748,7 @@ function install_system_dashboard_view() {
     $blocktypes = array(
         array(
             'blocktype' => 'newviews',
-            'title' => get_string('title', 'blocktype.newviews'),
+            'title' => '',
             'column' => 1,
             'config' => array(
                 'limit' => 5,
@@ -1756,13 +1756,13 @@ function install_system_dashboard_view() {
         ),
         array(
             'blocktype' => 'myviews',
-            'title' => get_string('title', 'blocktype.myviews'),
+            'title' => '',
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'inbox',
-            'title' => get_string('recentactivity'),
+            'title' => '',
             'column' => 2,
             'config' => array(
                 'feedback' => true,
@@ -1777,7 +1777,7 @@ function install_system_dashboard_view() {
         ),
         array(
             'blocktype' => 'inbox',
-            'title' => get_string('topicsimfollowing'),
+            'title' => '',
             'column' => 2,
             'config' => array(
                 'newpost' => true,

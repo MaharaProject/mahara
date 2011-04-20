@@ -1,6 +1,6 @@
     <div class="blockinstance cb{if $configure} configure{/if}" id="blockinstance_{$id}{if $configure}_configure{/if}">
         <div class="blockinstance-header">
-            <h4>{$title|default:"[$strnotitle]"}{if $configure}: {str tag=Configure section=view}{/if}</h4>
+            <h4>{if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}</h4>
         </div>
         <div class="blockinstance-controls">
         {foreach from=$movecontrols item=item}
