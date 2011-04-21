@@ -804,7 +804,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $size = filesize($pathname);
         $f = self::new_file($pathname, $data);
         $f->set('size', $size);
-        // @todo: Set mime type! (and old extension)
+
+        // sometimes the filetype is actually set, assume it is correct
+        if (empty($data->filetype)) {
+            $f->set('filetype', file_mime_type($pathname));
+        }
+
+        // if an extension has been provided (only from self::extract() at this stage), use it
+        if (!empty($data->extension)) {
+            $f->set('oldextension', $data->extension);
+        }
+
         $f->commit();
         $id = $f->get('id');
 
@@ -1942,6 +1952,10 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                 $folder = dirname($name);
                 $this->data['template']->parent = $this->data['folderids'][$folder];
                 $this->data['template']->title = basename($name);
+
+                // set the file extension for later use (eg by flowplayer)
+                $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
+
                 if (substr($name, -1) == '/') {
                     $this->create_folder($folder);
                 }
@@ -1975,6 +1989,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                         if (!isset($this->data['folderids'][$child])) {
                             $this->data['template']->parent = $this->data['folderids'][$parent];
                             $this->data['template']->title = $path[$i];
+
                             $this->create_folder($parent);
                         }
                         $parent = $child;
@@ -1983,6 +1998,10 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
                 $this->data['template']->parent = $this->data['folderids'][$folder];
                 $this->data['template']->title = basename($name);
+
+                // set the file extension for later use (eg by flowplayer)
+                $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
+
                 if (substr($name, -1) == '/') {
                     $this->create_folder($folder);
                 }
