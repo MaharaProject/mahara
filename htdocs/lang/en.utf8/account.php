@@ -33,7 +33,9 @@ $string['oldpasswordincorrect'] = 'This is not your current password';
 
 $string['changeusernameheading'] = 'Change username';
 $string['changeusername'] = 'New username';
-$string['changeusernamedesc'] = 'The username you use to log into %s.  Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excuding spaces.';
+$string['changeusernamedesc'] = 'The username you use to log into %s.  Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excluding spaces.';
+
+$string['usernameexists'] = 'This username is taken, please choose another.';
 
 $string['accountoptionsdesc'] = 'General account options';
 $string['friendsnobody'] = 'Nobody may add me as a friend';

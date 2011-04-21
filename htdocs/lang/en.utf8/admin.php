@@ -487,6 +487,8 @@ $string['userunsuspended'] = 'User unsuspended';
 // User account settings
 $string['accountsettings'] = 'Account settings';
 $string['siteaccountsettings'] = 'Site account settings';
+$string['changeusername'] = 'Change username';
+$string['changeusernamedescription'] = 'Change this user\'s username. Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excluding spaces.';
 $string['resetpassword'] = 'Reset password';
 $string['resetpassworddescription'] = 'If you enter text here, it will replace the user\'s current password.';
 $string['forcepasswordchange'] = 'Force password change on next login';
@@ -516,6 +518,8 @@ $string['suspenddeleteuser'] = 'Suspend/Delete User';
 $string['suspenddeleteuserdescription'] = 'Here you may suspend or entirely delete a user account. Suspended users are unable to log in until their account is unsuspended. Please note that while a suspension can be undone, deletion <strong>cannot</strong> be undone.';
 $string['deleteusernote'] = 'Please note that this operation <strong>cannot be undone</strong>.';
 $string['youcannotadministerthisuser'] = 'You cannot administer this user';
+$string['usernamechangenotallowed'] = 'The chosen authentication method does not allow changes to the username.';
+$string['passwordchangenotallowed'] = 'The chosen authentication method does not allow changes to the password.';
 
 // Add User
 $string['adduser'] = 'Add User';

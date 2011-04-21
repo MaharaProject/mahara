@@ -55,6 +55,15 @@ $elements['id'] = array(
     'value'   => $id,
 );
 
+if (method_exists($authobj, 'change_username')) {
+    $elements['username'] = array(
+        'type'         => 'text',
+        'title'        => get_string('changeusername', 'admin'),
+        'description'  => get_string('changeusernamedescription', 'admin'),
+        'defaultvalue' => $user->username,
+    );
+}
+
 if (method_exists($authobj, 'change_password')) {
     // Only show the password options if the plugin allows for the functionality
     $elements['password'] = array(
@@ -188,15 +197,12 @@ function edituser_site_validate(Pieform $form, $values) {
 }
 
 function edituser_site_submit(Pieform $form, $values) {
-    global $USER, $authobj;
+    global $USER, $authobj, $SESSION;
 
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
     }
 
-    if (method_exists($authobj, 'change_password')) {
-        $user->passwordchange = (int) ($values['passwordchange'] == 'on');
-    }
     $user->quota = $values['quota'];
     $user->expiry = db_format_timestamp($values['expiry']);
 
@@ -253,24 +259,63 @@ function edituser_site_submit(Pieform $form, $values) {
                 ));
             }
             $user->authinstance = $values['authinstance'];
+
+            // update the global $authobj to match the new authinstance
+            // this is used by the password/username change methods
+            // if either/both has been requested at the same time
+            $authobj = AuthFactory::create($user->authinstance);
         }
     }
-    if (isset($values['password']) && $values['password'] !== '') {
-        $userobj = new User();
-        $userobj = $userobj->find_by_id($user->id);
-        $authobj = AuthFactory::create($user->authinstance);
 
-        if (method_exists($authobj, 'change_password')) {
-            // Only change the pw if the new auth instance allows for it
+    // Only change the pw if the new auth instance allows for it
+    if (method_exists($authobj, 'change_password')) {
+        $user->passwordchange = (int) ($values['passwordchange'] == 'on');
+
+        if (isset($values['password']) && $values['password'] !== '') {
+            $userobj = new User();
+            $userobj = $userobj->find_by_id($user->id);
+
             $user->password = $authobj->change_password($userobj, $values['password']);
             $user->salt = $userobj->salt;
-        } else {
+
+            unset($userobj);
+        }
+    } else {
+        // inform the user that the chosen auth instance doesn't allow password changes
+        // but only if they tried changing it
+        if (isset($values['password']) && $values['password'] !== '') {
+            $SESSION->add_error_msg(get_string('passwordchangenotallowed', 'admin'));
+
             // Set empty pw with salt
             $user->password = '';
             $user->salt = auth_get_random_salt();
         }
+    }
 
-        unset($userobj, $authobj);
+    if (isset($values['username']) && $values['username'] !== '') {
+        $userobj = new User();
+        $userobj = $userobj->find_by_id($user->id);
+
+        if ($userobj->username != $values['username']) {
+            // Only change the username if the auth instance allows for it
+            if (method_exists($authobj, 'change_username')) {
+                // check the existence of the chosen username
+                try {
+                    if ($authobj->user_exists($values['username'])) {
+                        // set an error message if it is already in use
+                        $SESSION->add_error_msg(get_string('usernameexists', 'account'));
+                    }
+                } catch (AuthUnknownUserException $e) {
+                    // update the username otherwise
+                    $user->username = $authobj->change_username($userobj, $values['username']);
+                }
+            } else {
+                // inform the user that the chosen auth instance doesn't allow username changes
+                $SESSION->add_error_msg(get_string('usernamechangenotallowed', 'admin'));
+            }
+        }
+
+        unset($userobj);
     }
 
     update_record('usr', $user);
