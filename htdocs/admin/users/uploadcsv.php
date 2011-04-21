@@ -309,9 +309,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
         $user->id = create_user($user, $profilefields, $institution, $authobj, $remoteuser);
 
-        if ($values['emailusers']) {
-            $addedusers[] = $user;
-        }
+        $addedusers[] = $user;
     }
     db_commit();
 
