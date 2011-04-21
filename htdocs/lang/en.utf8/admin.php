@@ -372,6 +372,20 @@ $string['proxyauthmodelset'] = 'Proxy authentication model has been set';
 $string['proxyauthcredentials'] = 'Proxy credentials';
 $string['proxyauthcredentialsdescription'] = 'Enter the credentials required for your proxy to authenticate your web server in <em>username:password</em> format';
 $string['proxyauthcredntialsset'] = 'Proxy authentication credentials set';
+$string['emailsettings'] = 'Email settings';
+$string['emailsmtphosts'] = 'SMTP Host';
+$string['emailsmtphostsdescription'] = 'SMTP server to be used for mail sending, e.g. <em>smtp1.example.com</em>';
+$string['emailsmtpport'] = 'SMTP Port';
+$string['emailsmtpportdescription'] = 'Specify port number if SMTP server uses port different from 25';
+$string['emailsmtpuser'] = 'User';
+$string['emailsmtpuserdescription'] = 'If SMTP server requires authentication, enter user credentials in the corresponding fields';
+$string['emailsmtppass'] = 'Pass';
+$string['emailsmtpsecure'] = 'SMTP Encryption';
+$string['emailsmtpsecuredescription'] = 'If the SMTP server supports encryption, enable it here.';
+$string['emailsmtpsecuressl'] = 'SSL';
+$string['emailsmtpsecuretls'] = 'TLS';
+
+
 
 
 // Upload CSV and CSV errors

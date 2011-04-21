@@ -28,6 +28,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
+    global $SESSION;
     ini_set('max_execution_time', 120); // Let's be safe
     raise_memory_limit('256M');
 
@@ -2274,6 +2275,16 @@ function xmldb_core_upgrade($oldversion=0) {
             "view = ? AND blocktype IN ('recentforumposts','groupviews','groupmembers')",
             array($systemgrouphomepage)
         );
+    }
+
+    if ($oldversion < 2011042000) {
+        // Create empty variables in database for email configuration
+        set_config('smtphosts', '');
+        set_config('smtpport', '');
+        set_config('smtpuser', '');
+        set_config('smtppass', '');
+        set_config('smtpsecure', '');
+        $SESSION->add_info_msg('Email settings now can be configured via Site settings, however they may be overriden by those set in the config file. If you have no specific reason to use config file email configuration, please consider moving them to Site settings area.');
     }
 
     return $status;

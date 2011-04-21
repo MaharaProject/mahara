@@ -573,6 +573,13 @@ function core_postinst() {
     set_config('installation_time', $now);
     set_config('stats_installation_time', $now);
 
+    // Pre-define SMTP settings
+    set_config('smtphosts', '');
+    set_config('smtpport', '');
+    set_config('smtpuser', '');
+    set_config('smtppass', '');
+    set_config('smtpsecure', '');
+
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // We make use if this if we can
     if (is_postgres()) {
