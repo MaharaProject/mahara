@@ -181,12 +181,7 @@ class AuthInternal extends Auth {
      *
      * @param string $theysent The password the user sent
      * @param string $wehave   The password we have in the database for them
-     * @param string $salt     The salt we have. If null, plaintext password
-     *                         checking is assumed. A null salt is not used
-     *                         by the application - instead, this gives
-     *                         administrators a way to set passwords inside the
-     *                         database manually without having to make up and
-     *                         encrypt a password using a salt.
+     * @param string $salt     The salt we have.
      */
     private function validate_password($theysent, $wehave, $salt) {
         $this->must_be_ready();
