@@ -185,6 +185,11 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
         $CFG->wwwroot = $wwwroot;
     }
 }
+if (isset($CFG->wwwroot)) {
+    if (substr($CFG->wwwroot, -1, 1) != '/') {
+        $CFG->wwwroot .= '/';
+    }
+}
 if (isset($CFG->httpswwwroot)) {
     if (substr($CFG->httpswwwroot, -1, 1) != '/') {
         $CFG->httpswwwroot .= '/';

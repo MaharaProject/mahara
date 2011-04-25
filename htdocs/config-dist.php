@@ -55,12 +55,14 @@ $cfg->dbprefix = '';
 // wwwroot - the web-visible path to your Mahara installation
 // Normally, this is automatically detected - if it doesn't work for you
 // then try specifying it here
+// This value must end with a /
 //$cfg->wwwroot = 'http://myhost.com/mahara/';
 
 // You will only need to specify this if you want to use HTTPS for
 // logins, but not for regular pages. If you want to serve all of your
 // Mahara content via HTTPS, just set $cfg->wwwroot to use HTTPS instead.
-//$cfg->httpswwwroot = 'https://myhost.com/mahara';
+// This value must end with a /
+//$cfg->httpswwwroot = 'https://myhost.com/mahara/';
 
 // dataroot - uploaded files are stored here
 // This is a ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
