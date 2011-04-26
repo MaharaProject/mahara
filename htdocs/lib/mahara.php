@@ -1450,8 +1450,15 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         $user_id = $USER->get('id');
     }
 
+    require_once(get_config('docroot') . 'lib/view.php');
+    $view = new View($view_id);
+
+    $overridestart = $view->get('startdate');
+    $overridestop = $view->get('stopdate');
+    $allowedbyoverride = (empty($overridestart) || $overridestart < $dbnow) && (empty($overridestop) || $overridestop > $dbnow);
+
     $publicviews = get_config('allowpublicviews');
-    if ($publicviews) {
+    if ($allowedbyoverride && $publicviews) {
         if (!$usertoken) {
             $usertoken = get_cookie('viewaccess:'.$view_id);
         }
@@ -1461,6 +1468,10 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
     }
 
     if (!$USER->is_logged_in()) {
+        if (!$allowedbyoverride) {
+            return false;
+        }
+
         // check public
         $publicprofiles = get_config('allowpublicprofiles');
         if ($publicviews || $publicprofiles) {
@@ -1508,9 +1519,6 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         }
     }
 
-    require_once(get_config('docroot') . 'lib/view.php');
-    $view = new View($view_id);
-
     if ($USER->can_edit_view($view)) {
         return true;
     }
@@ -1520,6 +1528,10 @@ function can_view_view($view_id, $user_id=null, $usertoken=null, $mnettoken=null
         if (group_user_can_assess_submitted_views($submitgroup, $user_id)) {
             return true;
         }
+    }
+
+    if (!$allowedbyoverride) {
+        return false;
     }
 
     // Check access for loggedin, friends, user, group
