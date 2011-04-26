@@ -636,11 +636,16 @@ function get_all_theme_objects() {
         }
         while (false !== ($subdir = readdir($themedir))) {
             if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
-                $config_path = $themebase . $subdir . '/themeconfig.php';
-                if (is_readable($config_path)) {
-                    require($config_path);
-                    if (empty($theme->disabled) || !$theme->disabled) {
-                        $themes[$subdir] = $theme;
+                // is the theme directory name valid?
+                if (!Theme::name_is_valid($subdir)) {
+                    log_warn(get_string('themenameinvalid', 'error', $subdir));
+                } else {
+                    $config_path = $themebase . $subdir . '/themeconfig.php';
+                    if (is_readable($config_path)) {
+                        require($config_path);
+                        if (empty($theme->disabled) || !$theme->disabled) {
+                            $themes[$subdir] = $theme;
+                        }
                     }
                 }
             }
