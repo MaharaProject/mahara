@@ -327,7 +327,7 @@ class PluginExportHtml extends PluginExport {
                 $title = $this->views[$viewid]->get('title');
                 $menus[$collectionid][] = array(
                     'id'   => $viewid,
-                    'url'  => self::text_to_path($title),
+                    'url'  => self::text_to_path($title) . '/index.html',
                     'text' => $title,
                 );
             }
