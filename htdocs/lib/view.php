@@ -3277,7 +3277,6 @@ class View {
             return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
         }
 
-        $wwwroot = get_config('wwwroot');
         $ownername = hsc($this->formatted_owner());
 
         if ($this->type == 'grouphomepage') {
@@ -3290,7 +3289,7 @@ class View {
         }
 
         if ($titlelink) {
-            $title = '<a href="' . $wwwroot . 'view/view.php?id=' . $this->id . '">' . hsc($this->title) . '</a>';
+            $title = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $this->id . '">' . hsc($this->title) . '</a>';
         }
         else {
             $title = '<strong>' . hsc($this->title) . '</strong>';
