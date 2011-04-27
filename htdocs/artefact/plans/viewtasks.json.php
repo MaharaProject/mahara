@@ -38,6 +38,9 @@ $limit = param_integer('limit', 10);
 
 if ($blockid = param_integer('block', null)) {
     $bi = new BlockInstance($blockid);
+    if (!can_view_view($bi->get('view'))) {
+        json_reply(true, get_string('accessdenied', 'error'));
+    }
     $options = $configdata = $bi->get('configdata');
 
     $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], $offset, $limit);
@@ -53,6 +56,9 @@ if ($blockid = param_integer('block', null)) {
 else {
     $planid = param_integer('artefact');
     $viewid = param_integer('view');
+    if (!can_view_view($viewid)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+    }
     $options = array('viewid' => $viewid);
     $tasks = ArtefactTypeTask::get_tasks($planid, $offset, $limit);
 
