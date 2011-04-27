@@ -2255,5 +2255,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $SESSION->add_info_msg('Email settings now can be configured via Site settings, however they may be overriden by those set in the config file. If you have no specific reason to use config file email configuration, please consider moving them to Site settings area.');
     }
 
+    if ($oldversion < 2011050300) {
+        if (get_config('httpswwwroot')) {
+            // Notify users about httpswwwroot removal if it is still set
+            $SESSION->add_info_msg('HTTPS logins have been deprecated, you need to remove the httpswwwroot variable from config file and switch your wwwroot to https so that the whole site is served over HTTPS.<br>See <a href="https://bugs.launchpad.net/mahara/+bug/646713">https://bugs.launchpad.net/mahara/+bug/646713</a> for more details.', 0);
+        }
+    }
+
     return $status;
 }
