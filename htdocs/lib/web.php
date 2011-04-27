@@ -2106,7 +2106,6 @@ function right_nav() {
     $menu = array(
         array(
             'path' => 'settings',
-            'wwwroot' => get_config('httpswwwroot'),
             'url' => 'account/',
             'title' => get_string('settings'),
             'icon' => $THEME->get_url('images/settings.png'),

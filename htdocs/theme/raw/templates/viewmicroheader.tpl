@@ -25,7 +25,7 @@
           <strong><a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true|escape}</a>:</strong> 
           {foreach from=$MAINNAV item=item}
             {if $item.path}
-              <a href="{if $item.url=='account/' && get_config('httpswwwroot')}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url}">{$item.title}</a> | 
+              <a href="{$WWWROOT}{$item.url}">{$item.title}</a> |
             {/if}
           {/foreach}
           {if $USER->get('admin')}

@@ -21,7 +21,7 @@
 {if $SELECTEDSUBNAV}
             <ul>{strip}
 {foreach from=$SELECTEDSUBNAV item=item}
-                <li{if $item.selected} class="selected"{/if}><a href="{if get_config('httpswwwroot') && $item.url=='account/'}{$HTTPSWWWROOT}{else}{$WWWROOT}{/if}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a></li>
+                <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a></li>
 {/foreach}
             {/strip}</ul>
 {/if}
