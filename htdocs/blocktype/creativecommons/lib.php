@@ -55,7 +55,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
             return '';
         }
 
-        $licensetype = $configdata['license'];
+        $licensetype = reset(preg_grep('/^([a-z\-]+)$/', array($configdata['license'])));
         $licenseurl = "http://creativecommons.org/licenses/$licensetype/3.0/";
         $licensename = get_string($licensetype, 'blocktype.creativecommons');
 
