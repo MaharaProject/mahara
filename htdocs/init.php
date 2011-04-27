@@ -239,7 +239,16 @@ header('Content-type: text/html; charset=UTF-8');
 require_once('auth/lib.php');
 $SESSION = Session::singleton();
 $USER    = new LiveUser();
-$THEME   = new Theme($USER);
+
+// try to set the theme, or catch the thrown exception (eg if the name is invalid)
+try {
+    $THEME   = new Theme($USER);
+} catch (SystemException $exception) {
+    // set the theme to 'default' and put up an error message
+    $THEME = new Theme('default');
+    $SESSION->add_error_msg($exception->getMessage());
+}
+
 // The installer does its own auth_setup checking, because some upgrades may
 // break logging in and so need to allow no logins.
 if (!defined('INSTALLER')) {

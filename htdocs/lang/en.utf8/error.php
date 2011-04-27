@@ -112,4 +112,6 @@ $string['missingparamblocktype'] = 'Try selecting a block type to add first';
 $string['missingparamcolumn'] = 'Missing column specification';
 $string['missingparamorder'] = 'Missing order specification';
 $string['missingparamid'] = 'Missing id';
+
+$string['themenameinvalid'] = "The name of the theme '%s' contains invalid characters.";
 ?>

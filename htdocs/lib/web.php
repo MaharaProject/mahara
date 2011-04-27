@@ -649,17 +649,27 @@ class Theme {
                 $themename = 'raw';
             }
         }
-        $this->init_theme($themename);
+
+        // check the validity of the name
+        if ($this->name_is_valid($themename)) {
+            $this->init_theme($themename);
+        } else {
+            throw new SystemException("Theme name is in invalid form: '$themename'");
+        }
+    }
+
+    /**
+     * Given a theme name, check that it is valid
+     */
+    public static function name_is_valid($themename) {
+        // preg_match returns 0 if invalid characters were found, 1 if not
+        return (preg_match('/^[a-zA-Z0-9_-]+$/', $themename) == 1);
     }
 
     /**
      * Given a theme name, reads in all config and sets fields on this object
      */
     private function init_theme($themename) {
-        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $themename)) {
-            throw new SystemException("Theme name is in invalid form: '$themename'");
-        }
-
         $this->basename = $themename;
 
         $themeconfigfile = get_config('docroot') . 'theme/' . $this->basename . '/themeconfig.php';
