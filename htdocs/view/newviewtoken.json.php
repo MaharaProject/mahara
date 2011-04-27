@@ -31,7 +31,13 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 
-if (!$data = View::new_token(param_integer('view'))) {
+$viewid = param_integer('view');
+$view = new View($viewid);
+
+if (!$USER->can_edit_view($view)) {
+    json_reply(true, get_string('accessdenied', 'error'));
+}
+if (!$data = View::new_token($viewid)) {
     json_reply(true, get_string('createviewtokenfailed', 'view'));
 }
 json_reply(false, array('message' => null, 'data' => $data));

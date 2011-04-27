@@ -27,24 +27,11 @@
 
 define('INTERNAL', 1);
 define('JSON', 1);
+define('INSTITUTIONALADMIN', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $action = param_variable('action');
-
-if ($action == 'suspend') {
-    $id = param_integer('id');
-    $reason = param_variable('reason');
-
-    try {
-        suspend_user($id, $reason);
-    }
-    catch (MaharaException $e) {
-        json_reply('local', get_string('suspendfailed', 'admin') . ': ' . $e->getMessage());
-    }
-
-    json_reply(false, get_string('usersuspended', 'admin'));
-}
 
 if ($action == 'search') {
     require_once('searchlib.php');
