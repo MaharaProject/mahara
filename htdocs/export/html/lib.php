@@ -628,6 +628,13 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Links to image artefacts
+        $html = preg_replace_callback(
+            '#<a[^>]+href="(' . $wwwroot . ')?/?view/artefact\.php\?artefact=(\d+)(&amp;view=\d+)?(&amp;offset=\d+)?"[^>]*>(<img[^>]+>)</a>#',
+            array($this, 'replace_artefact_link'),
+            $html
+        );
+
         // Links to download files
         $html = preg_replace_callback(
             '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/download\.php\?file=(\d+)(?:(?:&amp;|&|%26)([a-z]+=[x0-9]+)+)*#',
