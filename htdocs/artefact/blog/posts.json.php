@@ -37,6 +37,9 @@ $offset = param_integer('offset', 0);
 
 if ($blockid = param_integer('block', null)) {
     $bi = new BlockInstance($blockid);
+    if (!can_view_view($bi->get('view'))) {
+        json_reply(true, get_string('accessdenied', 'error'));
+    }
     $configdata = $bi->get('configdata');
     $limit  = isset($configdata['count']) ? $configdata['count'] : 5;
     $configdata['countcomments'] = true;
@@ -56,6 +59,9 @@ else {
     $limit  = param_integer('limit', ArtefactTypeBlog::pagination);
     $blogid = param_integer('artefact');
     $viewid = param_integer('view');
+    if (!can_view_view($viewid)) {
+        json_reply(true, get_string('accessdenied', 'error'));
+    }
     $options = array('viewid' => $viewid);
     $posts = ArtefactTypeBlogpost::get_posts($blogid, $limit, $offset, $options);
 
