@@ -3255,7 +3255,17 @@ class View {
         return false;
     }
 
-    public function display_title($long=true, $titlelink=true) {
+    public function owner_link() {
+        if ($this->owner) {
+            return get_config('wwwroot') . 'user/view.php?id=' . $this->owner;
+        }
+        else if ($this->group) {
+            return get_config('wwwroot') . 'group/view.php?id=' . $this->group;
+        }
+        return null;
+    }
+
+    public function display_title($long=true, $titlelink=true, $includeowner=true) {
         if ($this->type == 'profile') {
             $title = hsc(display_name($this->owner, null, true));
             if ($long) {
@@ -3274,11 +3284,9 @@ class View {
             return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
         }
 
-        if ($this->owner) {
-            $ownerlink = $wwwroot . 'user/view.php?id=' . $this->owner;
-        }
-        else if ($this->group) {
-            $ownerlink = $wwwroot . 'group/view.php?id=' . $this->group;
+        $ownerlink = null;
+        if ($includeowner) {
+            $ownerlink = $this->owner_link();
         }
 
         if ($titlelink) {
