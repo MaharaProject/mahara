@@ -36,6 +36,10 @@ $id = param_integer('id');
 $limit = param_integer('limit', 5);
 $offset = param_integer('offset', 0);
 
+if (!$USER->can_edit_artefact(new ArtefactTypeBlog($id))) {
+    json_reply(true, get_string('accessdenied', 'error'));
+}
+
 $posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset);
 $template = 'artefact:blog:posts.tpl';
 $pagination = array(
