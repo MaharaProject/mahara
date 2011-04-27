@@ -35,6 +35,10 @@ $plan = param_integer('id');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
+if (!$USER->can_edit_artefact(new ArtefactTypePlan($plan))) {
+    json_reply(true, get_string('accessdenied', 'error'));
+}
+
 $tasks = ArtefactTypeTask::get_tasks($plan, $offset, $limit);
 ArtefactTypeTask::build_tasks_list_html($tasks);
 
