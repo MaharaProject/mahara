@@ -142,14 +142,7 @@ function UserSearch() {
             if ($('searchresults')) {
                 self.rewritePaging();
                 self.rewriteSorting();
-                self.rewriteSuspendLinks();
             }
-        });
-    }
-
-    this.rewriteSuspendLinks = function() {
-        forEach(getElementsByTagAndClassName('a', 'suspend-user-link', 'searchresults'), function(i) {
-            connect(i, 'onclick', suspendDisplay);
         });
     }
 
