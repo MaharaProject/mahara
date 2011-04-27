@@ -30,7 +30,9 @@ $string['description'] = 'Attach a Creative Commons license to your page';
 $string['blockcontent'] = 'Block Content';
 
 $string['alttext'] = 'Creative Commons License';
-$string['licensestatement'] = "This work is licensed under a <a rel=\"license\" href=\"%s\">Creative Commons %s 3.0 Unported License</a>.";
+$string['cclicensename'] = 'Creative Commons %s 3.0 Unported';
+$string['cclicensestatement'] = "%s by %s is licensed under a %s license.";
+$string['otherpermissions'] = 'Permissions beyond the scope of this license may be available from %s.';
 $string['sealalttext'] = 'This license is acceptable for Free Cultural Works.';
 
 $string['config:noncommercial'] = 'Allow commercial uses of your work?';
@@ -43,5 +45,3 @@ $string['by-nd'] = 'Attribution-No Derivative Works';
 $string['by-nc'] = 'Attribution-Noncommercial';
 $string['by-nc-sa'] = 'Attribution-Noncommercial-Share Alike';
 $string['by-nc-nd'] = 'Attribution-Noncommercial-No Derivative Works';
-
-?>

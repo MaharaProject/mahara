@@ -57,16 +57,27 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
 
         $licensetype = reset(preg_grep('/^([a-z\-]+)$/', array($configdata['license'])));
         $licenseurl = "http://creativecommons.org/licenses/$licensetype/3.0/";
-        $licensename = get_string($licensetype, 'blocktype.creativecommons');
 
-        $html = '<div class="license"><a class="licenseicon" rel="license" href="http://creativecommons.org/licenses/'.$licensetype.'/3.0/"><img alt="'.
-            get_string('alttext', 'blocktype.creativecommons').
-            '" style="border-width:0" src="'.
-            $THEME->get_url('images/' . $licensetype . '-3_0.png', false, 'blocktype/creativecommons') . '" /></a>';
-        $html .= '<div class="licensedesc">';
-        $html .= get_string('licensestatement', 'blocktype.creativecommons', $licenseurl, $licensename);
-        $html .= '</div><div class="cb"></div></div>';
-        return $html;
+        $view = $instance->get_view();
+        $workname = '<span rel="dc:type" href="http://purl.org/dc/dcmitype/Text" property="dc:title">'
+            . $view->display_title(true, false, false) . '</span>';
+        $authorurl = $view->owner_link();
+        $authorname = hsc($view->formatted_owner());
+
+        $licensename = get_string('cclicensename', 'blocktype.creativecommons', get_string($licensetype, 'blocktype.creativecommons'));
+        $licenselink = '<a rel="license" href="' . $licenseurl . '">' . $licensename . '</a>';
+        $attributionlink = '<a rel="cc:attributionURL" property="cc:attributionName" href="' . $authorurl . '">' . $authorname . '</a>';
+        $licensestatement = get_string('cclicensestatement', 'blocktype.creativecommons', $workname, $attributionlink, $licenselink);
+
+        $permissionlink = '<a rel="cc:morePermissions" href="'. $authorurl .'">' . $authorname . '</a>';
+        $otherpermissions = get_string('otherpermissions', 'blocktype.creativecommons', $permissionlink);
+
+        $smarty = smarty_core();
+        $smarty->assign('licenseurl', $licenseurl);
+        $smarty->assign('licenselogo', $THEME->get_url('images/' . $licensetype . '-3_0.png', false, 'blocktype/creativecommons'));
+        $smarty->assign('licensestatement', $licensestatement);
+        $smarty->assign('otherpermissions', $otherpermissions);
+        return $smarty->fetch('blocktype:creativecommons:statement.tpl');
     }
 
     public static function has_instance_config() {
@@ -169,5 +180,3 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
     }
 
 }
-
-?>
