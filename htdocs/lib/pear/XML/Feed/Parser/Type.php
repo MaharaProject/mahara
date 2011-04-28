@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Type.php,v 1.25 2008/03/08 18:39:09 jystewart Exp $
+ * @version    CVS: $Id: Type.php 304308 2010-10-11 12:05:50Z clockwerx $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -27,7 +27,7 @@
  *
  * @package XML_Feed_Parser
  * @author  James Stewart <james@jystewart.net>
- * @version Release: 1.0.3
+ * @version Release: @package_version@
  */
 abstract class XML_Feed_Parser_Type
 {
@@ -461,6 +461,14 @@ abstract class XML_Feed_Parser_Type
         require_once 'PEAR/Config.php';
         $config = new PEAR_Config;
         return $config->get('data_dir') . '/XML_Feed_Parser/schemas';
+    }
+
+    public function relaxNGValidate() {
+        $dir = self::getSchemaDir();
+
+        $path = $dir . '/' . $this->relax;
+
+        return $this->model->relaxNGValidate($path);
     }
 }
 

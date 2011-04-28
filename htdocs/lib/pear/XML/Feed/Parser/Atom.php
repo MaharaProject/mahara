@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Atom.php,v 1.29 2008/03/30 22:00:36 jystewart Exp $
+ * @version    CVS: $Id: Atom.php 304308 2010-10-11 12:05:50Z clockwerx $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
 */
 
@@ -30,7 +30,7 @@
  *  person - defaults to name, but parameter based access
  *
  * @author    James Stewart <james@jystewart.net>
- * @version    Release: 1.0.3
+ * @version    Release: @package_version@
  * @package XML_Feed_Parser
  */
 class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
@@ -39,7 +39,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      * The URI of the RelaxNG schema used to (optionally) validate the feed 
      * @var string
      */
-    private $relax = 'atom.rnc';
+    protected $relax = 'atom.rng';
 
     /**
      * We're likely to use XPath, so let's keep it global 
@@ -117,7 +117,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         $this->model = $model;
 
         if ($strict) {
-            if (! $this->model->relaxNGValidateSource($this->relax)) {
+            if (! $this->relaxNGValidate()) {
                 throw new XML_Feed_Parser_Exception('Failed required validation');
             }
         }
