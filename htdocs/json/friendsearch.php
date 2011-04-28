@@ -47,6 +47,7 @@ if ($extradata = param_variable('extradata', null)) {
 $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 $data['query'] = $query;
 build_userlist_html($data, $page);
+unset($data['data']);
 
 json_reply(false, array('data' => $data));
 ?>
