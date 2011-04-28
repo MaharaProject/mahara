@@ -53,6 +53,9 @@ if (!empty($membershiptype)) {
 
 $results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
 if (!param_integer('html', 1)) {
+    foreach ($results['data'] as &$result) {
+        $result = array('id' => $result['id'], 'name' => $result['name']);
+    }
     json_reply(false, $results);
 }
 
