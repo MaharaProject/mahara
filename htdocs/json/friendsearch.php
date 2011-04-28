@@ -76,6 +76,7 @@ $admingroups->controlled = $controlledgroups;
 $admingroups->invite = $invite;
 
 build_userlist_html($data, $page, $admingroups);
+unset($data['data']);
 
 json_reply(false, array('data' => $data));
 ?>
