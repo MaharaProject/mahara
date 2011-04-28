@@ -321,7 +321,8 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
      */
     function getLink($offset, $attribute = 'href', $params = array())
     {
-        $links = $this->model->getElementsByTagName('link');
+        $xPath = new DOMXPath($this->model);
+        $links = $xPath->query('//link');
 
         if ($links->length <= $offset) {
             return false;
