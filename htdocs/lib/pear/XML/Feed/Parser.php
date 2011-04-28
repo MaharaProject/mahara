@@ -86,8 +86,13 @@ class XML_Feed_Parser implements Iterator
      */
     function __construct($feed, $strict = false, $suppressWarnings = false, $tidy = false)
     {
+        $options = 0;
+        if ($suppressWarnings) {
+            $options |= LIBXML_NOWARNING;
+            $options |= LIBXML_NOERROR;
+        }
         $this->model = new DOMDocument;
-        if (! $this->model->loadXML($feed)) {
+        if (! $this->model->loadXML($feed, $options)) {
             if (extension_loaded('tidy') && $tidy) {
                 $tidy = new tidy;
                 $tidy->parseString($feed, 
