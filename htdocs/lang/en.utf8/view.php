@@ -153,7 +153,7 @@ $string['cantsubmitviewtogroup'] = 'You cannot submit this page to this group fo
 $string['cantdeleteview'] = 'You cannot delete this page';
 $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this page? It cannot be undone.<br/>Please consider creating a backup of this page by <a href="%sexport/" target="_blank">exporting</a> it.';
-$string['deleteviewconfirmnote'] = '<strong>NOTE:</strong> All your files and blog entries that you linked in this page will still be available.<br/>However, any feedback placed on this page as well as text entered directly into text boxes will be deleted.';
+$string['deleteviewconfirmnote'] = '<strong>NOTE:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page as well as text entered directly into text boxes will be deleted.';
 
 $string['editaccesspagedescription3'] = 'By default, only you can see your Views. You can share views with others by adding access rules on this page.  Once you are done, scroll down and click Save to continue.';
 $string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of views and collections';
