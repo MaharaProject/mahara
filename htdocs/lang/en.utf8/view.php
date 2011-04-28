@@ -155,8 +155,8 @@ $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this page? It cannot be undone.<br/>Please consider creating a backup of this page by <a href="%sexport/" target="_blank">exporting</a> it.';
 $string['deleteviewconfirmnote'] = '<strong>NOTE:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page as well as text entered directly into text boxes will be deleted.';
 
-$string['editaccesspagedescription3'] = 'By default, only you can see your Views. You can share views with others by adding access rules on this page.  Once you are done, scroll down and click Save to continue.';
-$string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of views and collections';
+$string['editaccesspagedescription3'] = 'By default, only you can see your Pages. You can share pages with others by adding access rules.  Once you are done, scroll down and click Save to continue.';
+$string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of pages and collections';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
 $string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your page before the start date and after the end date, regardless of any other access you have granted.';
