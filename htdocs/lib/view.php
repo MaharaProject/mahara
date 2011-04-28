@@ -3145,6 +3145,8 @@ class View {
     public function copy_contents($template) {
         $this->set('numcolumns', $template->get('numcolumns'));
         $this->set('layout', $template->get('layout'));
+        $this->set('description', $template->get('description'));
+        $this->set('tags', $template->get('tags'));
         $blocks = get_records_array('block_instance', 'view', $template->get('id'));
         $numcopied = array('blocks' => 0, 'artefacts' => 0);
         if ($blocks) {
