@@ -20,13 +20,14 @@
  * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  * 02111-1307 USA
  *
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    CVS: $Id: PNG.php 287471 2009-08-18 23:12:01Z clockwerx $
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   SVN: $Id: PNG.php 292376 2009-12-20 21:21:29Z neufeind $
+ * @link      http://pear.php.net/package/Image_Canvas
  */
  
 /**
@@ -37,13 +38,14 @@ require_once 'Image/Canvas/GD.php';
 /**
  * PNG Canvas class.
  * 
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/Image_Canvas
  */
 class Image_Canvas_GD_PNG extends Image_Canvas_GD
 {
@@ -57,8 +59,8 @@ class Image_Canvas_GD_PNG extends Image_Canvas_GD
     {
         parent::Image_Canvas_GD($param);
 
-        if ((isset($param['transparent'])) && ($param['transparent']) &&
-            ($this->_gd2)
+        if ((isset($param['transparent'])) && ($param['transparent'])
+            && ($this->_gd2)
         ) {
             if ($param['transparent'] === true) {
                 $transparent = '#123ABD';
@@ -96,6 +98,8 @@ class Image_Canvas_GD_PNG extends Image_Canvas_GD
      * Output the result of the canvas
      *
      * @param array $param Parameter array
+     *
+     * @return void
      * @abstract
      */
     function show($param = false)
@@ -111,6 +115,8 @@ class Image_Canvas_GD_PNG extends Image_Canvas_GD
      * Output the result of the canvas
      *
      * @param array $param Parameter array
+     *
+     * @return void
      * @abstract
      */
     function save($param = false)
