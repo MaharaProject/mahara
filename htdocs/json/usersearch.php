@@ -60,6 +60,10 @@ else {
     $data = search_user($query, $limit, $offset, $options);
 }
 
+foreach ($data['data'] as &$result) {
+    $result = array('id' => $result['id'], 'name' => $result['name']);
+}
+
 json_headers();
 $data['error'] = false;
 $data['message'] = false;
