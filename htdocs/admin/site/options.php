@@ -425,6 +425,14 @@ $siteoptionform = array(
                         ),
                     'help'          => true,
                 ),
+                'noreplyaddress' => array(
+                    'type'          => 'text',
+                    'title'         => get_string('emailnoreplyaddress', 'admin'),
+                    'description'   => get_string('emailnoreplyaddressdescription', 'admin'),
+                    'defaultvalue'  => get_config('noreplyaddress'),
+                    'disabled'      => in_array('noreplyaddress', $OVERRIDDEN),
+                    'help'          => true,
+                ),
             ),
         ),
         'generalsettings' => array(
@@ -541,7 +549,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
-        'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
+        'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
         'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
     );
     $oldlanguage = get_config('lang');
