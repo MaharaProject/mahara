@@ -603,6 +603,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
         $htmlbody = $post->body;
         $this->message = strip_tags(str_shorten_html($htmlbody, 200, true)); // For internal notifications.
+        $htmlbody = clean_html($htmlbody);
 
         $textbody = trim(html2text($post->body));
         $postlink = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
@@ -636,8 +637,8 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
                 $unsubscribelink
             );
             $user->htmlmessage = get_string_from_language($lang, 'forumposthtmltemplate', 'interaction.forum',
-                $post->subject ? $post->subject : get_string_from_language($lang, 're', 'interaction.forum', $post->topicsubject),
-                display_name($post->poster, $user),
+                $post->subject ? hsc($post->subject) : get_string_from_language($lang, 're', 'interaction.forum', hsc($post->topicsubject)),
+                hsc(display_name($post->poster, $user)),
                 $posttime,
                 $htmlbody,
                 $postlink,
