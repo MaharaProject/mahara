@@ -20,26 +20,28 @@
  * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  * 02111-1307 USA
  *
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    CVS: $Id: ImageMap.php 287471 2009-08-18 23:12:01Z clockwerx $
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   SVN: $Id: ImageMap.php 291771 2009-12-06 17:38:31Z neufeind $
+ * @link      http://pear.php.net/package/Image_Canvas
  */
 
 /**
  * Class for handling output as a HTML imagemap
  * 
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/Image_Canvas
- * @since      version 0.2.0
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/Image_Canvas
+ * @since     version 0.2.0
  */
 class Image_Canvas_ImageMap extends Image_Canvas
 {
@@ -53,9 +55,12 @@ class Image_Canvas_ImageMap extends Image_Canvas
         
     /**
      * Add a map tag
-     * @param string $shape The shape, either rect, circle or polygon
+     *
+     * @param string $shape  The shape, either rect, circle or polygon
      * @param string $coords The list of coordinates for the shape
-     * @param array $params Parameter array
+     * @param array  $params Parameter array
+     *
+     * @return void
      */
     function _addMapTag($shape, $coords, $params)
     {
@@ -76,8 +81,7 @@ class Image_Canvas_ImageMap extends Image_Canvas
                 }
             }
             
-            $this->_map[] = 
-                '<area shape="' . $shape . '" coords="' . $coords . '" href="' . $url . '"' .
+            $this->_map[] =  '<area shape="' . $shape . '" coords="' . $coords . '" href="' . $url . '"' .
                     ($target ? ' target="' . $target . '"' : '') .
                     ($alt ? ' alt="' . $alt . '"' : '') .
                     (isset($params['id']) ? ' id="' . $params['id'] . '"' : '') .
@@ -96,7 +100,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 'y1': int Y end point
      * 'color': mixed [optional] The line color
      * 'mapsize': int [optional] The size of the image map (surrounding the line)
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function line($params)
     {
@@ -108,7 +115,7 @@ class Image_Canvas_ImageMap extends Image_Canvas
                 $this->_getY($params['y0'] - $mapsize) . ',' .
                 $this->_getX($params['x1'] + $mapsize) . ',' .
                 $this->_getY($params['y1'] - $mapsize) . ',' .
-                
+                //
                 $this->_getX($params['x1'] + $mapsize) . ',' . 
                 $this->_getY($params['y1'] + $mapsize) . ',' .
                 $this->_getX($params['x0'] - $mapsize) . ',' .
@@ -131,7 +138,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 'url': string [optional] URL to link the polygon as a whole to (also used for default in case 'map_vertices' is used)
      * 'alt': string [optional] Alternative text to show in the image map (also used for default in case 'map_vertices' is used)
      * 'target': string [optional] The link target on the image map (also used for default in case 'map_vertices' is used)
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function polygon($params)
     {
@@ -163,8 +173,7 @@ class Image_Canvas_ImageMap extends Image_Canvas
                     $vertex_param
                 );
             }
-        }
-        else if (isset($params['url'])) {
+        } else if (isset($params['url'])) {
             $points = '';
             foreach ($this->_polygon as $point) {
                 if ($points != '') {
@@ -187,7 +196,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 'y1': int Y end point
      * 'fill': mixed [optional] The fill color
      * 'line': mixed [optional] The line color
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function rectangle($params)
     {
@@ -214,7 +226,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 'ry': int Y radius
      * 'fill': mixed [optional] The fill color
      * 'line': mixed [optional] The line color
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function ellipse($params)
     {
@@ -261,7 +276,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 'sry': int [optional] Starting Y-radius of the pie slice (i.e. for a doughnut)
      * 'fill': mixed [optional] The fill color
      * 'line': mixed [optional] The line color
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function pieslice($params)
     {
@@ -277,13 +295,11 @@ class Image_Canvas_ImageMap extends Image_Canvas
             $srx = (isset($params['srx']) ? $params['srx'] : 0);
             $sry = (isset($params['sry']) ? $params['sry'] : 0);
             
-            $points = 
-                round(($x + $srx * cos(deg2rad($v1 % 360)))) . ',' .
+            $points = round(($x + $srx * cos(deg2rad($v1 % 360)))) . ',' .
                 round(($y + $sry * sin(deg2rad($v1 % 360)))) . ',';
                 
             for ($v = $v1; $v < $v2; $v += 30) {
-                $points .= 
-                    round(($x + $rx * cos(deg2rad($v % 360)))) . ',' .
+                $points .=  round(($x + $rx * cos(deg2rad($v % 360)))) . ',' .
                     round(($y + $ry * sin(deg2rad($v % 360)))) . ',';                
             }
             
@@ -310,6 +326,8 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * Output the result of the canvas to the browser
      *
      * @param array $params Parameter array, the contents and meaning depends on the actual Canvas
+     *
+     * @return void
      * @abstract
      */
     function show($params = false)
@@ -325,7 +343,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      *
      * Parameter array:
      * 'filename': string The file to output to
+     *
      * @param array $params Parameter array, the contents and meaning depends on the actual Canvas
+     *
+     * @return void
      * @abstract
      */
     function save($params = false)
@@ -341,6 +362,10 @@ class Image_Canvas_ImageMap extends Image_Canvas
      * 
      * Parameter array:
      * 'name': string The name of the image map
+     *
+     * @param array $params Parameter array
+     *
+     * @return void
      */
     function toHtml($params)
     {

@@ -24,13 +24,14 @@
  * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  * 02111-1307 USA
  *
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    CVS: $Id: GD.php 287471 2009-08-18 23:12:01Z clockwerx $
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   SVN: $Id: GD.php 292673 2009-12-26 20:11:28Z neufeind $
+ * @link      http://pear.php.net/package/Image_Canvas
  */
 
 /**
@@ -46,13 +47,14 @@ require_once 'Image/Canvas/Color.php';
 /**
  * Canvas class to output using PHP GD support.
  * 
- * @category   Images
- * @package    Image_Canvas
- * @author     Jesper Veggerby <pear.nosey@veggerby.dk>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Jesper Veggerby <pear.nosey@veggerby.dk>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/Image_Canvas
  * @abstract
  */
 class Image_Canvas_GD extends Image_Canvas_WithMap
@@ -78,6 +80,14 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * @access private
      */
     var $_gd2 = true;
+
+    /**
+     * Do we need a factor to convert size in pixels to points?
+     * GD2 uses "pt" for font-sizes
+     * @var float
+     * @access private
+     */
+    var $_pxToPtFactor = 1;
 
     /**
      * Antialiasing?
@@ -149,6 +159,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
         parent::Image_Canvas_WithMap($param);
         
         $this->_gd2 = ($this->_version() == 2);
+        $this->_pxToPtFactor = ($this->_gd2 ? (72/96) : 1);
         $this->_font = array('font' => 1, 'color' => 'black');
 
         if ((isset($param['gd'])) && (is_resource($param['gd']))) {
@@ -186,7 +197,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     /**
      * Get an GD image resource from a file
      *
-     * @param string $filename
+     * @param string $filename File to fetch image from
+     *
      * @return mixed The GD image resource
      * @access private
      */
@@ -215,6 +227,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * Get the color index for the RGB color
      *
      * @param int $color The color
+     *
      * @return int The GD image index of the color
      * @access private
      */
@@ -232,6 +245,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      *
      * @param mixed $lineStyle The line style to return, false if the one
      *   explicitly set
+     *
      * @return mixed A GD compatible linestyle
      * @access private
      */
@@ -267,6 +281,11 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      *
      * @param mixed $fillStyle The fillstyle to return, false if the one
      *   explicitly set
+     * @param int   $x0        ???
+     * @param int   $y0        ???
+     * @param int   $x1        ???
+     * @param int   $y1        ???
+     *
      * @return mixed A GD compatible fillstyle
      * @access private
      */
@@ -394,12 +413,18 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                         $color = $startColor;
                         unset($color[3]);
                     } else {
-                        $color[0] = round(($redIncrement * $i) +
-                            $redIncrement + $startColor[0]);
-                        $color[1] = round(($greenIncrement * $i) +
-                            $greenIncrement + $startColor[1]);
-                        $color[2] = round(($blueIncrement * $i) +
-                            $blueIncrement + $startColor[2]);
+                        $color[0] = round(
+                            ($redIncrement * $i) +
+                            $redIncrement + $startColor[0]
+                        );
+                        $color[1] = round(
+                            ($greenIncrement * $i) +
+                            $greenIncrement + $startColor[1]
+                        );
+                        $color[2] = round(
+                            ($blueIncrement * $i) +
+                            $blueIncrement + $startColor[2]
+                        );
                     }
                     $color = Image_Canvas_Color::allocateColor(
                         $this->_tileImage,
@@ -408,49 +433,61 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
 
                     switch ($this->_fillStyle['direction']) {
                     case 'horizontal':
-                        ImageLine($this->_tileImage,
+                        ImageLine(
+                            $this->_tileImage,
                             $x0 + $i,
                             $y0,
                             $x0 + $i,
-                            $y1, $color);
+                            $y1, $color
+                        );
                         break;
 
                     case 'vertical':
-                        ImageLine($this->_tileImage,
+                        ImageLine(
+                            $this->_tileImage,
                             $x0,
                             $y1 - $i,
                             $x1,
-                            $y1 - $i, $color);
+                            $y1 - $i, $color
+                        );
                         break;
 
                     case 'horizontal_mirror':
                         if (($x0 + $i) <= ($x1 - $i)) {
-                            ImageLine($this->_tileImage,
+                            ImageLine(
+                                $this->_tileImage,
                                 $x0 + $i,
                                 $y0,
                                 $x0 + $i,
-                                $y1, $color);
+                                $y1, $color
+                            );
 
-                            ImageLine($this->_tileImage,
+                            ImageLine(
+                                $this->_tileImage,
                                 $x1 - $i,
                                 $y0,
                                 $x1 - $i,
-                                $y1, $color);
+                                $y1, $color
+                            );
                         }
                         break;
 
                     case 'vertical_mirror':
                         if (($y0 + $i) <= ($y1 - $i)) {
-                            ImageLine($this->_tileImage,
+                            ImageLine(
+                                $this->_tileImage,
                                 $x0,
                                 $y0 + $i,
                                 $x1,
-                                $y0 + $i, $color);
-                            ImageLine($this->_tileImage,
+                                $y0 + $i, $color
+                            );
+                            ImageLine(
+                                $this->_tileImage,
                                 $x0,
                                 $y1 - $i,
                                 $x1,
-                                $y1 - $i, $color);
+                                $y1 - $i, $color
+                            );
                         }
                         break;
 
@@ -550,6 +587,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * Sets an image that should be used for filling
      *
      * @param string $filename The filename of the image to fill with
+     *
+     * @return void
      */
     function setFillImage($filename)
     {
@@ -568,7 +607,9 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      *
      * 'angle' = the angle with which to write the text
      *
-     * @param array $font The font options.
+     * @param array $fontOptions The font options.
+     *
+     * @return void
      */
     function setFont($fontOptions)
     {
@@ -593,11 +634,12 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * Calculate pixels on a line
      *
      * @param int $x0 X start point
-     * @param int $y0 X start point
+     * @param int $y0 Y start point
      * @param int $x1 X end point
      * @param int $y1 Y end point
+     *
      * @return array An associated array of x,y points with all pixels on the
-     * line    
+     *   line    
      * @access private
      */
     function &_linePixels($x0, $y0, $x1, $y1)
@@ -634,11 +676,13 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     /**
      * Draws an antialiased line
      *
-     * @param int $x0 X start point
-     * @param int $y0 X start point
-     * @param int $x1 X end point
-     * @param int $y1 Y end point
+     * @param int   $x0    X start point
+     * @param int   $y0    Y start point
+     * @param int   $x1    X end point
+     * @param int   $y1    Y end point
      * @param mixed $color The line color, can be omitted
+     *
+     * @return void
      * @access private
      */
     function _antialiasedLine($x0, $y0, $x1, $y1, $color = false)
@@ -659,9 +703,11 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     /**
      * Draws an antialiased pixel
      *
-     * @param int $x X point
-     * @param int $y Y point
+     * @param int   $x     X point
+     * @param int   $y     Y point
      * @param mixed $color The pixel color
+     *
+     * @return void
      * @access private
      */
     function _antialiasedPixel($x, $y, $color)
@@ -693,11 +739,13 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     /**
      * Antialias'es the pixel around x,y with weights a,b
      *
-     * @param int $x X point
-     * @param int $y Y point
-     * @param int $a The weight of the current color
-     * @param int $b The weight of the applied/wanted color
+     * @param int   $x     X point
+     * @param int   $y     Y point
+     * @param int   $a     The weight of the current color
+     * @param int   $b     The weight of the applied/wanted color
      * @param mixed $color The pixel color
+     *
+     * @return void
      * @access private
      */
     function _antialisedSubPixel($x, $y, $a, $b, $color)
@@ -740,6 +788,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'angle': int [optional] The angle with which to draw the end
      * 
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function drawEnd($params) 
     {        
@@ -853,6 +903,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'color': mixed [optional] The line color
      * 
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function line($params)
     {
@@ -883,7 +935,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'fill': mixed [optional] The fill color
      * 
      * 'line': mixed [optional] The line color
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function polygon($params)
     {
@@ -900,10 +955,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
 
         $lastPoint = false;
         foreach ($this->_polygon as $point) {
-            if (($lastPoint) && (isset($lastPoint['P1X'])) &&
-                (isset($lastPoint['P1Y'])) && (isset($lastPoint['P2X'])) &&
-                (isset($lastPoint['P2Y'])))
-            {
+            if (($lastPoint) && (isset($lastPoint['P1X']))
+                && (isset($lastPoint['P1Y'])) && (isset($lastPoint['P2X']))
+                && (isset($lastPoint['P2Y']))
+            ) {
                 $dx = abs($point['X'] - $lastPoint['X']);
                 $dy = abs($point['Y'] - $lastPoint['Y']);
                 $d = sqrt($dx * $dx + $dy * $dy);
@@ -1080,6 +1135,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'line': mixed [optional] The line color
      * 
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function rectangle($params)
     {
@@ -1119,6 +1176,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'line': mixed [optional] The line color
      * 
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function ellipse($params)
     {
@@ -1165,6 +1224,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'line': mixed [optional] The line color
      * 
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function pieslice($params)
     {
@@ -1224,6 +1285,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * Get the width of a text,
      *
      * @param string $text The text to get the width of
+     *
      * @return int The width of the text
      */
     function textWidth($text)
@@ -1238,7 +1300,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
             $lines = explode("\n", $text);
             foreach ($lines as $line) {
                 $bounds = ImageTTFBBox(
-                    $this->_font['size'],
+                    $this->_font['size']*$this->_pxToPtFactor,
                     $angle,
                     $this->_font['file'],
                     $text
@@ -1275,8 +1337,9 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * is actually smaller by exactly the number of pixels that the 'g' digs under the baseline.
      * Remove the 'g' from the text and they appear correct. 
      *
-     * @param string $text The text to get the height of
-     * @param bool $force Force the method to calculate the size
+     * @param string $text  The text to get the height of
+     * @param bool   $force Force the method to calculate the size
+     *
      * @return int The height of the text
      */
     function textHeight($text, $force = false)
@@ -1301,7 +1364,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
             $lines = explode("\n", $text);
             foreach ($lines as $line) {            
                 $bounds = ImageTTFBBox(
-                    $this->_font['size'],
+                    $this->_font['size']*$this->_pxToPtFactor,
                     $angle,
                     $this->_font['file'],
                     $line
@@ -1329,12 +1392,14 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     /**
      * Calculated the absolute bottom-left position of the text, by simulating
      * the calculation of the baseline drop.
-     * @param int $x The relative x position to write the text 
-     * @param int $y The relative y position to write the text
-     * @param string $text The text to write 
-     * @param array $align The alignment of the text relative to (x, y)
-     * @returns array An array containing the absolute x and y positions
-	 * @access private
+     *
+     * @param int    $x     The relative x position to write the text 
+     * @param int    $y     The relative y position to write the text
+     * @param string $text  The text to write 
+     * @param array  $align The alignment of the text relative to (x, y)
+     *
+     * @return array An array containing the absolute x and y positions
+     * @access private
      */
     function _getAbsolutePosition($x, $y, $text, $align) 
     {
@@ -1344,21 +1409,17 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
             
             if ($align['vertical'] == 'bottom') {
                 $dy = $y - $h0;
-            }
-            else if ($align['vertical'] == 'center') {
+            } else if ($align['vertical'] == 'center') {
                 $dy = $y - $h0 / 2;
-            }
-            else if ($align['vertical'] == 'top') {
+            } else if ($align['vertical'] == 'top') {
                 $dy = $y;
             }
 
             if ($align['horizontal'] == 'right') {
                 $dx = $x - $w0;
-            }
-            else if ($align['horizontal'] == 'center') {
+            } else if ($align['horizontal'] == 'center') {
                 $dx = $x - $w0 / 2;
-            }
-            else if ($align['horizontal'] == 'left') {
+            } else if ($align['horizontal'] == 'left') {
                 $dx = $x;
             }
             
@@ -1368,25 +1429,23 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
             if (($this->_font['angle'] >= 90) && ($this->_font['angle'] < 270)) {
                 $dx += $w0;
             }            
-        }
-        else {       
+        } else {
             // get the maximum size of normal text above base line - sampled by 'Al'
-            $size1 = imagettfbbox($this->_font['size'], 0, $this->_font['file'], 'Al');    
+            $size1 = imagettfbbox($this->_font['size']*$this->_pxToPtFactor, 0, $this->_font['file'], 'Al');    
             $height1 = abs($size1[7] - $size1[1]);
             
             // get the maximum size of all text above base and below line - sampled by 'AlgjpqyQ'
-            $size2 = imagettfbbox($this->_font['size'], 0, $this->_font['file'], 'AlgjpqyQ');
+            $size2 = imagettfbbox($this->_font['size']*$this->_pxToPtFactor, 0, $this->_font['file'], 'AlgjpqyQ');
             $height2 = abs($size2[7] - $size2[1]);
         
             // get the size of the text, simulating height above baseline beinh max, by sampling using 'Al'
-            $size = imagettfbbox($this->_font['size'], 0, $this->_font['file'], 'Al' . $text);
+            $size = imagettfbbox($this->_font['size']*$this->_pxToPtFactor, 0, $this->_font['file'], 'Al' . $text);
             $height = abs($size[7] - $size[1]);
             
             // if all text is above baseline, i.e. height of text compares to max height above (within 10%)     
             if (abs($height - $height1)/$height1 < 0.1) { 
                 $dHeight = 0;        
-            }
-            else {
+            } else {
                 $dHeight = abs($height2 - $height1);
             }
 
@@ -1396,26 +1455,22 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
 
             if ($align['vertical'] == 'top') {
                 $dy += $height;
-            }
-            else if ($align['vertical'] == 'center') {
+            } else if ($align['vertical'] == 'center') {
                 $dy += ($height + $dHeight) / 2;
-            }
-            else if ($align['vertical'] == 'bottom') {
+            } else if ($align['vertical'] == 'bottom') {
                 $dy += $dHeight;
             }
         
             if ($align['horizontal'] == 'center') {
                 $factor = 0.5;
-            }
-            else if ($align['horizontal'] == 'right') {
+            } else if ($align['horizontal'] == 'right') {
                 $factor = 1;
-            }
-            else {
+            } else {
                 $factor = 0;
             }
             
             if ($factor != 0) {
-                $size = imagettfbbox($this->_font['size'], 0, $this->_font['file'], $text);
+                $size = imagettfbbox($this->_font['size']*$this->_pxToPtFactor, 0, $this->_font['file'], $text);
                 $w0 = abs($size[2] - $size[0]);                
                 $dx -= cos(deg2rad($this->_font['angle'])) * $w0 * $factor;
                 $dy += sin(deg2rad($this->_font['angle'])) * $w0 * $factor;
@@ -1439,6 +1494,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'alignment': array [optional] Alignment
      * 
      * 'color': mixed [optional] The color of the text
+     *
+     * @param array $params Parameter array
+     *
+     * @return void
      */
     function addText($params)
     {
@@ -1464,8 +1523,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
 
         if (isset($this->_font['size'])) {            
             $textHeight = $this->_font['size'] + 2;
-        }
-        else {
+        } else {
             $textHeight = $this->textHeight('A');
         }
         $lines = explode("\n", $text);                
@@ -1484,7 +1542,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                     $result = $this->_getAbsolutePosition($x, $y, $line, $alignment);                    
                     ImageTTFText(
                         $this->_canvas,
-                        $this->_font['size'],
+                        $this->_font['size']*$this->_pxToPtFactor,
                         $this->_font['angle'],
                         $result['x'],
                         $result['y'],
@@ -1492,20 +1550,17 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                         $this->_font['file'],
                         $line
                     );
-
                 } else {
                     $width = $this->textWidth($line);
                     $height = $this->textHeight($line);
                     if ($alignment['horizontal'] == 'right') {
                         $x -= $width;
-                    }
-                    else if ($alignment['horizontal'] == 'center') {
+                    } else if ($alignment['horizontal'] == 'center') {
                         $x -= $width / 2;
                     }
                     if ($alignment['vertical'] == 'bottom') {
                         $y -= $height;
-                    }
-                    else if ($alignment['vertical'] == 'center') {
+                    } else if ($alignment['vertical'] == 'center') {
                         $y -= $height / 2;
                     }
                     if ((isset($this->_font['vertical'])) && ($this->_font['vertical'])) {                      
@@ -1549,6 +1604,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'height': int [optional] The height of the overlayed image (resizing if possible)
      * 
      * 'alignment': array [optional] Alignment
+     *
+     * @param array $params Parameter array
+     *
+     * @return void
      */
     function image($params)
     {
@@ -1598,9 +1657,9 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                 $y -= $outputHeight / 2;
             }
 
-            if ((($width !== false) && ($width != $imgWidth)) ||
-                (($height !== false) && ($height != $imgHeight)))
-            {
+            if ((($width !== false) && ($width != $imgWidth))
+                || (($height !== false) && ($height != $imgHeight))
+            ) {
                 if ($this->_gd2) {
                     ImageCopyResampled(
                         $this->_canvas,
@@ -1654,6 +1713,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'y0': int X point of Upper-left corner
      * 'x1': int X point of lower-right corner
      * 'y1': int Y point of lower-right corner
+     *
+     * @param array $params Parameter array
+     *
+     * @return void
      */
     function setClipping($params = false) 
     {
@@ -1675,8 +1738,7 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                 $this->_canvas = $canvas;
                 unset($this->_clipping[$index]);
             }
-        }
-        else {
+        } else {
             $params['canvas'] = $this->_canvas;
 
             if ($this->_gd2) {
@@ -1720,6 +1782,10 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * 'cssclass': string [optional] The CSS Stylesheet class
      * 
      * 'border': int [optional] The border width on the image 
+     *
+     * @param array $params Parameter array
+     *
+     * @return string HTML code
      */
     function toHtml($params)
     {
@@ -1736,6 +1802,8 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
      * Resets the canvas.
      *
      * Include fillstyle, linestyle, thickness and polygon
+     *
+     * @return void
      * @access private
      */
     function _reset()
@@ -1770,18 +1838,17 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
             $php_info = ob_get_contents();
             ob_end_clean();
 
-            if (ereg("<td[^>]*>GD Version *<\/td><td[^>]*>([^<]*)<\/td>",
-                $php_info, $result))
-            {
+            if (preg_match("/<td[^>]*>GD Version *<\/td><td[^>]*>([^<]*)<\/td>/", $php_info, $result)
+            ) {
                 $version = $result[1];
             } else {
                 $version = null;
             }
         }
 
-        if (ereg('1\.[0-9]{1,2}', $version)) {
+        if (preg_match('/1\.[0-9]{1,2}/', $version)) {
             return 1;
-        } elseif (ereg('2\.[0-9]{1,2}', $version)) {
+        } elseif (preg_match('/2\.[0-9]{1,2}/', $version)) {
             return 2;
         } else {
             return 0;

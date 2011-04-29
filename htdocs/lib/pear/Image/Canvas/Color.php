@@ -16,7 +16,7 @@
 // | Author: Stefan Neufeind <pear.neufeind@speedpartner.de>              |
 // +----------------------------------------------------------------------+
 //
-// $Id: Color.php 287471 2009-08-18 23:12:01Z clockwerx $
+// $Id: Color.php 291771 2009-12-06 17:38:31Z neufeind $
 
 /**
 * Class for color-handling
@@ -50,11 +50,12 @@ class Image_Canvas_Color extends Image_Color
     * Userdefined color specifications get translated into
     * an array of rgb values.
     *
-    * @param    resource        GD-resource
-    * @param    mixed           any color representation supported by color2RGB()
-    * @return   resource        Image color handle
-    * @see      color2RGB()
-    * @access   public
+    * @param resource &$img  GD-resource
+    * @param mixed    $color Any color representation supported by color2RGB()
+    *
+    * @return resource Image color handle
+    * @see color2RGB()
+    * @access public
     * @static
     */
     function allocateColor(&$img, $color)
@@ -74,9 +75,10 @@ class Image_Canvas_Color extends Image_Color
     * Userdefined color specifications get translated into
     * an array of rgb values.
     *
-    * @param    mixed         any color representation supported by Image_Canvas_Color::color2RGB()
-    * @return   array         Array of 4 ints (RGBA-representation)
-    * @access   public
+    * @param mixed $color Any color representation supported by Image_Canvas_Color::color2RGB()
+    *
+    * @return array Array of 4 ints (RGBA-representation)
+    * @access public
     * @static
     */
     function color2RGB($color)
@@ -120,7 +122,7 @@ class Image_Canvas_Color extends Image_Color
                              (int) $tempColor[2],
                              $alpha);
             }
-            if (strpos($color,'%') !== false) {
+            if (strpos($color, '%') !== false) {
                 $tempColor = parent::percentageColor2RGB($color);
                 return array((int) $tempColor[0],
                              (int) $tempColor[1],
@@ -143,9 +145,10 @@ class Image_Canvas_Color extends Image_Color
     *   Given a degree, you can get the range of colors between one color and
     *   another color.
     *
-    *   @access     public
-    *   @param      string    How much each 'step' between the colors we should take.
-    *   @return     array     Returns an array of all the colors, one element for each color.
+    *   @param string $degrees How much each 'step' between the colors we should take.
+    *
+    *   @return array Array of all the colors, one element for each color.
+    *   @access public
     */
     function getRange ($degrees)
     {
@@ -153,14 +156,14 @@ class Image_Canvas_Color extends Image_Color
 
         // now add alpha-channel information
         $steps = count($tempColors);
-        for($counter=0;$counter<$steps;$counter++) {
+        for ($counter=0;$counter<$steps;$counter++) {
             $tempColors[$counter] = parent::hex2rgb($tempColors[$counter]);
             unset($tempColors[$counter]['hex']);
             $tempColors[$counter][3] = (int) round(
-                                         (((float) $this->color1[3]*($steps-$counter))+
-                                          ((float) $this->color2[3]*($counter))
-                                         ) / $steps
-                                                  );
+                (((float) $this->color1[3]*($steps-$counter))+
+                 ((float) $this->color2[3]*($counter))
+                ) / $steps
+            );
         }
 
         return $tempColors;
@@ -169,8 +172,10 @@ class Image_Canvas_Color extends Image_Color
     /**
     * Internal method to correctly set the colors.
     *
-    * @param    mixed         color 1
-    * @param    mixed         color 2
+    * @param mixed $col1 color 1
+    * @param mixed $col2 color 2
+    *
+    * @return void
     * @access   private
     */
     function _setColors ( $col1, $col2 )

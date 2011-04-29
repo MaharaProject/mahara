@@ -18,13 +18,14 @@
  * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  * 02111-1307 USA
  *
- * @category   Images
- * @package    Image_Canvas
- * @author     Torsten Roehr <troehr@php.net>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    CVS: $Id: SWF.php 287471 2009-08-18 23:12:01Z clockwerx $
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Torsten Roehr <troehr@php.net>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   SVN: $Id: SWF.php 291771 2009-12-06 17:38:31Z neufeind $
+ * @link      http://pear.php.net/package/Image_Canvas
  */
 
 /**
@@ -40,13 +41,14 @@ require_once 'Image/Canvas/Color.php';
 /**
  * SVG Canvas class.
  *
- * @category   Images
- * @package    Image_Canvas
- * @author     Torsten Roehr <troehr@php.net>
- * @copyright  Copyright (C) 2003, 2004 Jesper Veggerby Hansen
- * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: @package_version@
- * @link       http://pear.php.net/package/Image_Canvas
+ * @category  Images
+ * @package   Image_Canvas
+ * @author    Torsten Roehr <troehr@php.net>
+ * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
+ * @copyright 2003-2009 The PHP Group
+ * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+ * @version   Release: @package_version@
+ * @link      http://pear.php.net/package/Image_Canvas
  */
 class Image_Canvas_SWF extends Image_Canvas
 {
@@ -83,7 +85,8 @@ class Image_Canvas_SWF extends Image_Canvas
      *              Either integers between 0 and 255 or hexadecimals
      *              between 0x00 and 0xFF
      *
-     * @param array $param Parameter array
+     * @param array $params Parameter array
+     *
      * @return Image_Canvas_SWF
      */
     function Image_Canvas_SWF($params)
@@ -108,8 +111,9 @@ class Image_Canvas_SWF extends Image_Canvas
      * Values can be specified either as integers between 0 and 255 or as hexadecimals between 0x00 and 0xFF
      *
      * @param mixed $color Color
-     * @access public
+     *
      * @return void
+     * @access public
      */
     function setBackground($color)
     {
@@ -121,6 +125,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * Add an object to the movie
      *
      * @param string $element The element
+     *
+     * @return void
      * @access public
      */
     function addElement($element)
@@ -132,6 +138,7 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the color index for the RGB color
      *
      * @param int $color The color
+     *
      * @return int A SVG compatible color
      * @access private
      */
@@ -148,6 +155,7 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the opacity for the RGB color
      *
      * @param int $color The color
+     *
      * @return int A SWF compatible opacity value
      * @access private
      */
@@ -169,7 +177,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the applicable linestyle
      *
      * @param mixed $lineStyle The line style to return, false if the one
-     *                         explicitly set
+     *   explicitly set
+     *
      * @return mixed A compatible linestyle
      * @access private
      */
@@ -186,7 +195,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the applicable fillstyle
      *
      * @param mixed $fillStyle The fillstyle to return, false if the one
-     *                         explicitly set
+     *   explicitly set
+     *
      * @return mixed A compatible fillstyle
      * @access private
      */
@@ -202,8 +212,10 @@ class Image_Canvas_SWF extends Image_Canvas
     /**
      * Sets an image that should be used for filling
      *
-     * @todo
      * @param string $filename The filename of the image to fill with
+     *
+     * @todo
+     * @return void
      */
     function setFillImage($filename)
     {
@@ -212,8 +224,10 @@ class Image_Canvas_SWF extends Image_Canvas
     /**
      * Sets a gradient fill
      *
-     * @todo
      * @param array $gradient Gradient fill options
+     *
+     * @todo
+     * @return void
      */
     function setGradientFill($gradient)
     {
@@ -229,7 +243,9 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'angle' : the angle with which to write the text
      * 'file'  : the .ttf file (either the basename, filename or full path)
      *
-     * @param array $font The font options.
+     * @param array $fontOptions The font options.
+     *
+     * @return void
      */
     function setFont($fontOptions)
     {
@@ -252,6 +268,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'url'   : string [optional] Target URL
      *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function drawEnd($params)
     {
@@ -382,7 +400,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'y1'    : int Y end point
      * 'color' : mixed [optional] The line color
      * 'url'   : string [optional] Target URL
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function line($params)
     {
@@ -420,7 +441,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'fill'   : mixed [optional] The fill color
      * 'line'   : mixed [optional] The line color
      * 'url'    : string [optional] Target URL
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function polygon($params = array())
     {
@@ -471,6 +495,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'url'  : string [optional] Target URL
      *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function rectangle($params)
     {
@@ -526,7 +552,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'fill' : mixed [optional] The fill color
      * 'line' : mixed [optional] The line color
      * 'url'  : string [optional] Target URL
+     *
      * @param array $params Parameter array
+     *
+     * @return void
      */
     function ellipse($params)
     {
@@ -595,8 +624,11 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'sry'  : int [optional] Starting Y-radius of the pie slice (i.e. for a doughnut)
      * 'fill' : mixed [optional] The fill color
      * 'line' : mixed [optional] The line color
+     *
      * @param array $params Parameter array
+     *
      * @todo
+     * @return void
      */
     function pieslice($params)
     {
@@ -606,6 +638,7 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the width of a text,
      *
      * @param string $text The text to get the width of
+     *
      * @return int The width of the text
      */
     function textWidth($text)
@@ -621,6 +654,7 @@ class Image_Canvas_SWF extends Image_Canvas
      * Get the height of a text,
      *
      * @param string $text The text to get the height of
+     *
      * @return int The height of the text
      */
     function textHeight($text)
@@ -641,7 +675,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'text'  : string The text to add
      * 'color' : mixed [optional] The color of the text
      *
+     * @param array $params Parameter array
+     *
      * @todo Vertical alignment
+     * @return void
      */
     function addText($params)
     {
@@ -720,6 +757,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'height'    : int [optional] The height of the overlayed image (resizing if possible)
      * 'alignment' : array [optional] Alignment
      * 'url'       : string [optional] Target URL
+     *
+     * @param array $params Parameter array
+     *
+     * @return void
      */
     function image($params)
     {
@@ -730,6 +771,8 @@ class Image_Canvas_SWF extends Image_Canvas
      * Display the SWF
      *
      * @param array $param Parameter array
+     *
+     * @return void
      */
     function show($param = false)
     {
@@ -747,6 +790,8 @@ class Image_Canvas_SWF extends Image_Canvas
      *              The compression level can be a value between 0 and 9,
      *              defining the SWF compression similar to gzip compression.
      *              This parameter is only available as of Flash MX (6).
+     *
+     * @return void
      */
     function save($param = false)
     {
@@ -766,7 +811,7 @@ class Image_Canvas_SWF extends Image_Canvas
     function getData()
     {
         return $this->_canvas;
-     }
+    }
 
     /**
      * Set clipping to occur
@@ -778,7 +823,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'x1' : int X point of lower-right corner
      * 'y1' : int Y point of lower-right corner
      *
+     * @param array $params Parameter array (x0, y0, x1, y1)
+     *
      * @todo
+     * @return void
      */
     function setClipping($params = false)
     {
@@ -799,6 +847,10 @@ class Image_Canvas_SWF extends Image_Canvas
      * 'quality'  : Flash quality
      * 'scale'    : Scale
      * 'menu'     : Whether to display the Flash menu on mouse right-click
+     *
+     * @param array $params Parameter array
+     *
+     * @return string HTML-output
      */
     function toHtml($params)
     {
