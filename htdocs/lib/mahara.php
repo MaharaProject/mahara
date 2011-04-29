@@ -1486,8 +1486,9 @@ function pieform_configure() {
         'helpcallback' => 'pieform_get_help',
         'elements'   => array(
             'sesskey' => array(
-                'type'  => 'hidden',
-                'value' => $USER->get('sesskey')
+                'type'    => 'hidden',
+                'sesskey' => true,
+                'value'   => $USER->get('sesskey')
             )
         )
     );

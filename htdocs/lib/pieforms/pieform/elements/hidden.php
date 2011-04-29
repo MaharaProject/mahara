@@ -35,6 +35,9 @@ function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
     if (!array_key_exists('value', $element)) {
         throw new PieformException('The hidden element "' . $element['name'] . '" must have a value set');
     }
+    if (!empty($element['sesskey']) && $form->get_property('method') != 'post') {
+        throw new PieformException('Sesskey values should be POSTed');
+    }
     $value = $form->get_value($element);
     if (is_array($value)) {
         $result = '';
@@ -59,9 +62,13 @@ function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
 
 /**
  * Returns the value for a hidden element. Hidden elements only listen to the
- * 'value' index, and not to GET/POST
+ * 'value' index, and not to GET/POST, unless the 'sesskey' property is set
+ * on the element.
  */
 function pieform_element_hidden_get_value(Pieform $form, $element) {/*{{{*/
+    if (!empty($element['sesskey']) && $form->is_submitted()) {
+        return isset($_POST[$element['name']]) ? $_POST[$element['name']] : null;
+    }
     return $element['value'];
 }/*}}}*/
 
