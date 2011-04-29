@@ -1122,7 +1122,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             // Email
             $this->users[0]->htmlmessage = get_string_from_language(
                 $lang, 'feedbackdeletedhtml', 'artefact.comment',
-                $title, $removedbyline, $body, $this->url, $title
+                hsc($title), $removedbyline, clean_html($body), $this->url, hsc($title)
             );
             $this->users[0]->emailmessage = get_string_from_language(
                 $lang, 'feedbackdeletedtext', 'artefact.comment',
@@ -1147,7 +1147,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         $this->users[0]->htmlmessage = get_string_from_language(
             $lang, 'feedbacknotificationhtml', 'artefact.comment',
-            $authorname, $title, $posttime, $body, $this->url
+            hsc($authorname), hsc($title), $posttime, clean_html($body), $this->url
         );
         $this->users[0]->emailmessage = get_string_from_language(
             $lang, 'feedbacknotificationtext', 'artefact.comment',

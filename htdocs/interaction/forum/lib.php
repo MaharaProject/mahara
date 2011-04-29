@@ -781,6 +781,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $this->message = strip_tags(str_shorten_html($post->body, 200, true)); // For internal notifications.
 
         $post->textbody = trim(html2text($post->body));
+        $post->htmlbody = clean_html($post->body);
         $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
         $this->add_urltext(array(
@@ -822,10 +823,10 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $unsubscribeid = $post->{$user->subscribetype . 'id'};
         $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
         return get_string_from_language($user->lang, 'forumposthtmltemplate', 'interaction.forum',
-            $post->subject ? $post->subject : get_string_from_language($user->lang, 're', 'interaction.forum', $post->topicsubject),
-            display_name($post->poster, $user),
+            $post->subject ? hsc($post->subject) : get_string_from_language($user->lang, 're', 'interaction.forum', hsc($post->topicsubject)),
+            hsc(display_name($post->poster, $user)),
             $post->posttime,
-            $post->body,
+            $post->htmlbody,
             $this->url,
             $unsubscribelink,
             $user->subscribetype
