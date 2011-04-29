@@ -384,6 +384,8 @@ $string['emailsmtpsecure'] = 'SMTP Encryption';
 $string['emailsmtpsecuredescription'] = 'If the SMTP server supports encryption, enable it here.';
 $string['emailsmtpsecuressl'] = 'SSL';
 $string['emailsmtpsecuretls'] = 'TLS';
+$string['emailnoreplyaddress'] = 'System Mail Address';
+$string['emailnoreplyaddressdescription'] = 'Emails come out as from this address';
 
 
 
