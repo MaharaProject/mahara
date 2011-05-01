@@ -207,7 +207,7 @@ EOF;
         }
         // Load jquery first, so that it doesn't break Mochikit
         if (($key = array_search('jquery', $check)) !== false) {
-            $jquery = (get_config('developermode') & DEVMODE_UNPACKEDJS) ? 'jquery-1.3.2.js' : 'jquery-1.3.2.min.js';
+            $jquery = (get_config('developermode') & DEVMODE_UNPACKEDJS) ? 'jquery-1.5.2.js' : 'jquery-1.5.2.min.js';
             array_unshift($javascript_array, $jsroot . 'jquery/' . $jquery);
             // Make jQuery accessible with $j (Mochikit has $)
             $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
