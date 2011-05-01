@@ -36,6 +36,11 @@ function available_spam_traps() {
             $results[strtolower($name[1])] = get_string($name[1], 'admin');
         }
     }
+
+    // Addition of new traps will involve updating this ordering array.
+    $order = array(1,3,2);
+    array_multisort($order, $results);
+
     return $results;
 }
 
