@@ -425,7 +425,21 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
-    redirect(); // @todo redirect to new share tab.
+    global $institution, $group;
+    if (!empty($institution)) {
+        if ($institution == 'mahara') {
+            $redirecturl = '/admin/site/shareviews.php';
+        } else {
+            $redirecturl = '/view/institutionshare.php';
+        }
+    }
+    else if (!empty($group)) {
+        $redirecturl = '/group/shareviews.php?group=' . $group;
+    }
+    else {
+        $redirecturl = '/view/share.php';
+    }
+    redirect($redirecturl);
 }
 
 
