@@ -1799,6 +1799,9 @@ class View {
         if ($theme = $values['theme']) {
             $themes = get_user_accessible_themes();
             if (isset($themes[$theme])) {
+                if($theme == 'sitedefault') {
+                    $theme = null;
+                }
                 $this->set('theme', $theme);
                 $this->commit();
             }
