@@ -45,7 +45,7 @@ class AuthLdap extends Auth {
         $this->config['search_sub'] = 'yes';  
         $this->config['bind_dn'] = '';
         $this->config['bind_pw'] = '';
-        $this->config['version'] = '2';
+        $this->config['version'] = 3;
         $this->config['starttls'] = 0;
         $this->config['updateuserinfoonlogin'] = 0;
         $this->config['weautocreateusers'] = 1;
@@ -417,7 +417,7 @@ class PluginAuthLdap extends PluginAuth {
         'search_sub'        => 'yes',
         'bind_dn'           => '',
         'bind_pw'           => '',
-        'version'           => 2,
+        'version'           => 3,
         'starttls'          => 0,
         'updateuserinfoonlogin' => 0,
         'weautocreateusers' => 1,
