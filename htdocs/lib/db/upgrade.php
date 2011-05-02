@@ -1376,38 +1376,6 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2010021600) {
-        // Set remoteavatars defaults
-        // Check if the site is using https
-        $urlprotocol = substr(get_config('wwwroot'), 0, 5);
-        if (strtolower($urlprotocol) == 'https') {
-            // Avoid mix of secure and insecure contents
-            set_config('remoteavatars', 0);
-        }
-        else {
-            // Check to see if we can reach gravatar.com
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_FAILONERROR, true);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_VERBOSE, false);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5); // timeout in seconds
-            curl_setopt($ch, CURLOPT_COOKIE, '');
-            curl_setopt($ch, CURLOPT_REFERER, ''); // for privacy
-            curl_setopt($ch, CURLOPT_URL, 'http://www.gravatar.com/');
-            if (curl_exec($ch)) {
-                // By default, turn it on
-                set_config('remoteavatars', 1);
-            }
-            else {
-                // Can't reach gravatar.com in a timely fashion
-                set_config('remoteavatars', 0);
-            }
-            curl_close($ch);
-        }
-    }
-
     if ($oldversion < 2010031000) {
         // For existing sites, preserve current user search behaviour:
         // Users are only searchable by their display names.
