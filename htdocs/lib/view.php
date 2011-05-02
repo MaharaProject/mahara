@@ -232,6 +232,24 @@ class View {
         }
 
         $view->commit();
+
+        $blocks = get_records_array('block_instance', 'view', $view->get('id'));
+        if ($blocks) {
+            foreach ($blocks as $b) {
+                $configdata = unserialize($b->configdata);
+                if (!isset($configdata['artefactid'])) {
+                    continue;
+                }
+                if (!isset($configdata['copytype']) || $configdata['copytype'] !== 'reference') {
+                    continue;
+                }
+                $va = new StdClass;
+                $va->view = $b->view;
+                $va->artefact = $configdata['artefactid'];
+                $va->block = $b->id;
+                insert_record('view_artefact', $va);
+            }
+        }
         db_commit();
 
         return array(
