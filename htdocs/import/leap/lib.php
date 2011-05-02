@@ -961,8 +961,9 @@ class PluginImportLeap extends PluginImport {
      * @return boolean Whether it's worth checking in more detail
      */
     private function artefact_reference_quickcheck($field) {
+        $ns = $this->namespaces[$this->leap2anamespace];
 
-        return (false !== strpos($field, 'rel="'.$this->leap2anamespace.':has_part"')
+        return (false !== strpos($field, 'rel="'.$ns.':has_part"')
                 || false !== strpos($field, 'rel="enclosure"'))
             && (
                 (false !== strpos($field, '<img'))
@@ -977,7 +978,9 @@ class PluginImportLeap extends PluginImport {
      * @return string The fixed field
      */
     private function fix_artefact_reference($field) {
-        $match = '#<((img)|a)([^>]+)rel="(?:'.$this->leap2anamespace.':has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
+        $ns = $this->namespaces[$this->leap2anamespace];
+
+        $match = '#<((img)|a)([^>]+)rel="(?:'.$ns.':has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
         $field = preg_replace_callback($match,
             array($this, '_fixref'),
             $field);
