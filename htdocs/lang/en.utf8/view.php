@@ -120,6 +120,7 @@ $string['attachedfileaddedtofolder'] = "The attached file %s has been added to y
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['notifysiteadministrator'] = 'Notify site administrator';
+$string['notifysiteadministratorconfirm'] = 'Are you sure you wish to report this page as containing objectional material?';
 $string['print'] = 'Print';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
