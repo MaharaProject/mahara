@@ -288,7 +288,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         throw new InvalidArgumentException("empty user given to email_user");
     }
 
-    if ($userto->id && empty($userto->ignoredisabled)) {
+    if (isset($userto->id) && empty($userto->ignoredisabled)) {
         $maildisabled = property_exists($userto, 'maildisabled') ? $userto->maildisabled : get_account_preference($userto->id, 'maildisabled') == 1;
         if ($maildisabled) {
             throw new EmailDisabledException("email for this user has been disabled");
