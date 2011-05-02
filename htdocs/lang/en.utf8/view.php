@@ -233,7 +233,7 @@ $string['viewlayoutpagedescription'] = 'Select how you would like the columns in
 $string['changeviewlayout'] = 'Change my page\'s column layout';
 $string['viewlayoutchanged'] = 'Page layout changed';
 $string['numberofcolumns'] = 'Number of columns';
-$string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time.';
+$string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time. Please try again later.';
 
 
 $string['by'] = 'by';
