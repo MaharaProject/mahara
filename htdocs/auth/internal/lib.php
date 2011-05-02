@@ -102,14 +102,17 @@ class AuthInternal extends Auth {
      *
      * @param object  $user     The user to change the password for
      * @param string  $password The password to set for the user
+     * @param boolean $resetpasswordchange Whether to reset the passwordchange variable or not
      * @return string The new password, or empty if the password could not be set
      */
-    public function change_password(User $user, $password) {
+    public function change_password(User $user, $password, $resetpasswordchange = true) {
         $this->must_be_ready();
         // Create a salted password and set it for the user
         $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         $user->password = $this->encrypt_password($password, $user->salt);
-        $user->passwordchange = 0;
+        if ($resetpasswordchange) {
+            $user->passwordchange = 0;
+        }
         $user->commit();
         return $user->password;
     }
