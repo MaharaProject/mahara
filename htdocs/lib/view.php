@@ -1167,11 +1167,17 @@ class View {
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
-                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=' . $this->get('id') . '&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true&sesskey=' . $USER->get('sesskey');
-                        $baselink = '/view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
+                        $yesform = '<form action="' . get_config('wwwroot') . '/view/blocks.php" class="inline">'
+                            . '<input type="hidden" name="id" value="' . $this->get('id') . '">'
+                            . '<input type="hidden" name="c" value="file">'
+                            . '<input type="hidden" name="action_' . $action . '_' .  $actionstring . '" value="1">'
+                            . '<input type="hidden" name="sure" value="1">'
+                            . '<input type="hidden" name="sesskey" value="' . $USER->get('sesskey') . '">'
+                            . '<input type="submit" class="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
+                            . '</form>';
+                        $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
-                            . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
-                            . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
+                            . '&nbsp;' . $yesform . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
                         redirect($baselink);
                         exit;
                     }
