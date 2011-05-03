@@ -84,7 +84,7 @@ foreach (array_keys($plugins) as $plugin) {
                 } 
                 else {
                     $classname = generate_class_name($plugin, $i->name);
-                    safe_require($plugin, $i->name);
+                    safe_require($plugin, $key);
                     if (call_static_method($classname, 'has_config')) {
                         $plugins[$plugin]['installed'][$key]['config'] = true;
                     }
