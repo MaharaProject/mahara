@@ -276,7 +276,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
             $data->parent = $parent;
         }
 
-        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        $pathname = $dir . '/' . $pathname;
 
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true)) {
