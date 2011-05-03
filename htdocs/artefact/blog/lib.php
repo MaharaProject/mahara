@@ -287,6 +287,12 @@ class ArtefactTypeBlog extends ArtefactType {
          ORDER BY b.title", array($USER->get('id')), $offset, $limit))
             || ($result = array());
 
+        foreach ($result as &$r) {
+            if (!$r->locked) {
+                $r->deleteform = ArtefactTypeBlog::delete_form($r->id);
+            }
+        }
+
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $USER->get('id'), 'artefacttype', 'blog');
 
         return array($count, $result);
@@ -384,6 +390,26 @@ class ArtefactTypeBlog extends ArtefactType {
             AND bp.published = 1", array($this->get('id')));
     }
 
+    public static function delete_form($id) {
+        global $THEME;
+        return pieform(array(
+            'name' => 'delete_' . $id,
+            'successcallback' => 'delete_blog_submit',
+            'renderer' => 'oneline',
+            'elements' => array(
+                'delete' => array(
+                    'type' => 'hidden',
+                    'value' => $id,
+                ),
+                'submit' => array(
+                    'type' => 'image',
+                    'src' => $THEME->get_url('images/icon_close.gif'),
+                    'elementtitle' => get_string('delete', 'artefact.blog'),
+                    'confirm' => get_string('deleteblog?', 'artefact.blog'),
+                ),
+            ),
+        ));
+    }
 }
 
 /**

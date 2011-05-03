@@ -1,10 +1,3 @@
-<script type="text/javascript">
-    function confirmdelete(id) {
-        if(confirm("{str tag=deleteblog? section=artefact.blog}")) {
-            window.location = "{$WWWROOT}artefact/blog/index.php?delete=" + id + '&sesskey=' + config.sesskey;
-        }
-    }
-</script>
   {foreach from=$blogs->data item=blog}
     <tr class="{cycle name=rows values='r0,r1'}">
       <td>
@@ -18,7 +11,7 @@
         	<span class="s dull">{str tag=submittedforassessment section=view}</span>
         {else}
         	<a href="{$WWWROOT}artefact/blog/settings/?id={$blog->id}" title="{str tag=settings}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=settings}"></a>
-        	<a href="#" onClick="confirmdelete({$blog->id});" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+            {$blog->deleteform|safe}
         {/if}
       </td>
     </tr>

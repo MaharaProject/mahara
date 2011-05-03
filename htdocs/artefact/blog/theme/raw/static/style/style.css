@@ -65,6 +65,8 @@ td a.btn-add{
 #postlist th.controls span.btn-big-del {
 	padding-bottom: 6px;
 }
+#bloglist td.buttonscell form,
+#bloglist td.buttonscell form div,
 #postlist th form,
 #postlist th form div {
   display: inline;
