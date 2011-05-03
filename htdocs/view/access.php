@@ -378,7 +378,7 @@ function editaccess_validate(Pieform $form, $values) {
         }
     }
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
-        $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
+        $form->set_error('startdate', get_string('newstartdatemustbebeforestopdate', 'view', 'Overriding'));
     }
     $loggedinaccess = false;
     if ($values['accesslist']) {
@@ -405,12 +405,12 @@ function editaccess_validate(Pieform $form, $values) {
             }
             $now = strptime(date('Y/m/d H:i'), $dateformat);
             if ($item['stopdate'] && ptimetotime($now) > ptimetotime($item['stopdate'])) {
-                $SESSION->add_error_msg(get_string('stopdatecannotbeinpast', 'view'));
+                $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', get_string($item['type'], 'view')));
                 $form->set_error('accesslist', '');
                 break;
             }
             if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
-                $SESSION->add_error_msg(get_string('startdatemustbebeforestopdate', 'view'));
+                $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', get_string($item['type'], 'view')));
                 $form->set_error('accesslist', '');
                 break;
             }
