@@ -176,7 +176,7 @@ function processingStop() {
 // End message related functions
 
 // Function to post a data object to a json script.
-function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet) {
+function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet, anon) {
     //log('sendjsonrequest(script=', script, ', data=', data, ', rtype=', rtype, ', success=', successcallback, ', error=', errorcallback, ', quiet=', quiet, ')');
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
@@ -186,7 +186,9 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         errorcallback = donothing;
     }
     processingStart();
-    data.sesskey = config.sesskey;
+    if (!anon) {
+        data.sesskey = config.sesskey;
+    }
 
     rtype = rtype.toLowerCase();
 
@@ -416,7 +418,6 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         if (contextualHelpDeferrable && contextualHelpDeferrable.cancel) {
             contextualHelpDeferrable.cancel();
         }
-
         badIE = true;
         sendjsonrequest(url, url_params, 'GET', function (data) {
             if (data.error) {
@@ -437,7 +438,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             processingStop();
             contextualHelpOpened = true;
         },
-        true);
+        true, true);
     }
     contextualHelpContainer.focus();
 }
