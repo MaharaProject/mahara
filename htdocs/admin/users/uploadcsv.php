@@ -208,8 +208,15 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         $authobj = AuthFactory::create($authinstance);
 
-        if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-            $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
+        if (method_exists($authobj, 'is_username_valid_admin')) {
+            if (!$authobj->is_username_valid_admin($username)) {
+                $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
+            }
+        }
+        else if (method_exists($authobj, 'is_username_valid')) {
+            if (!$authobj->is_username_valid($username)) {
+                $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
+            }
         }
         if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
             $CSVERRORS[] = get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username);
