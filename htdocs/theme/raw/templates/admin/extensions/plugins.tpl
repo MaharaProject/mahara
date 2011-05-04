@@ -1,6 +1,8 @@
 {include file='header.tpl'}
 
 <div id="adminplugin">
+<b>{str tag='pluginexplainaddremove'}
+<br/><br/>{str tag='pluginexplainartefactblocktypes'}<br/><br/></b>
 <ul class="adminpluginstypes">
 {foreach from=$plugins key='plugintype' item='plugins'}
     <li><h4>{str tag='plugintype'}: {$plugintype}</h4>
@@ -13,9 +15,9 @@
 	<li id="{$plugintype}.{$plugin}">{$plugin}
         {if $data.disableable}
             {if $data.active}
-                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;disable=1&amp;sesskey={$SESSKEY}">{str tag='disable'}</a>
+                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;disable=1&amp;sesskey={$SESSKEY}">{str tag='hide'}</a>
             {else}
-                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;enable=1&amp;sesskey={$SESSKEY}">{str tag='enable'}</a>
+                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;enable=1&amp;sesskey={$SESSKEY}">{str tag='show'}</a>
             {/if}
         {/if}
         {if $data.config}
