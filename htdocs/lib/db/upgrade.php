@@ -2262,5 +2262,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011050600) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('username');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        change_field_precision($table, $field);
+    }
+
     return $status;
 }

@@ -129,6 +129,26 @@ class AuthInternal extends Auth {
     public function is_username_valid($username) {
         return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,30}$/', $username);
     }
+    /**
+
+
+     * Internal authentication allows most standard us-keyboard-typable characters
+     * for username, as long as the username is between three and 236 
+     * characters in length.
+     *
+     * This method is NOT part of the authentication API. Other authentication
+     * methods never have to do anything regarding usernames being validated on
+     * the Mahara side, so they do not need this method.
+     *
+     * This method is meant to only be called for validation by an admin of the user
+     * and is able to set a password longer than thirty characters in length
+     *
+     * @param string $username The username to check
+     * @return bool            Whether the username is valid
+     */
+    public function is_username_valid_admin($username) {
+        return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,236}$/', $username);
+    }
 
     /**
      * Changes the user's username.
@@ -141,10 +161,19 @@ class AuthInternal extends Auth {
      * @return string The new username, or the original username if it could not be set
      */
     public function change_username(User $user, $username) {
+        global $USER;
+
         $this->must_be_ready();
 
         // proposed username must pass validation
-        if ($this->is_username_valid($username)) {
+        $valid = false;
+        if ($USER->is_admin_for_user($user)) {
+            $valid = $this->is_username_valid_admin($username);
+        } else {
+            $valid = $this->is_username_valid($username);
+        }
+
+        if ($valid) {
             $user->username = $username;
             $user->commit();
         }
