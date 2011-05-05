@@ -564,6 +564,9 @@ class MnetImporterTransport extends ImporterTransport {
 function import_cleanup_old_imports() {
     require_once('file.php');
     $basedir = get_config('dataroot') . 'import/';
+    if (!check_dir_exists($basedir, false)) {
+        return;
+    }
     $importdir = new DirectoryIterator($basedir);
     $mintime = time() - (12 * 60 * 60); // delete imports older than 12 hours
 
