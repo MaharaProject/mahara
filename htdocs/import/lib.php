@@ -416,6 +416,11 @@ abstract class ImporterTransport {
             return;
         }
 
+        // check that pathtounzip is valid
+        if (!is_executable(get_config('pathtounzip'))) {
+            throw new ImportException($this, get_string('unzipnotinstalled', 'admin'));
+        }
+
         $command = sprintf('%s %s %s %s',
             get_config('pathtounzip'),
             escapeshellarg($this->importfile),
