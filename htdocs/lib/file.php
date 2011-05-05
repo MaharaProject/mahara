@@ -720,7 +720,7 @@ function rmdirr($dirname)
         }
  
         // Recurse
-        rmdirr($dirname . DIRECTORY_SEPARATOR . $entry);
+        rmdirr($dirname . '/' . $entry);
     }
  
     // Clean up

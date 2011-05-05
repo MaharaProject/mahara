@@ -726,7 +726,7 @@ class Theme {
 
     private function _get_path($filename, $all, $plugindirectory, $returnprefix) {
         $list = array();
-        $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != DIRECTORY_SEPARATOR) ? $plugindirectory . DIRECTORY_SEPARATOR : $plugindirectory;
+        $plugindirectory = ($plugindirectory && substr($plugindirectory, -1) != '/') ? $plugindirectory . '/' : $plugindirectory;
 
         foreach ($this->inheritance as $themedir) {
             if (is_readable(get_config('docroot') . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename)) {

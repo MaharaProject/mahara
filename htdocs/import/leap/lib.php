@@ -1364,7 +1364,7 @@ class PluginImportLeap extends PluginImport {
         $this->trace($link);
         $pathname = urldecode((string)$link['href']);
         $dir = dirname($this->get('filename'));
-        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        $pathname = $dir . '/' . $pathname;
         if (!file_exists($pathname)) {
             return false;
         }

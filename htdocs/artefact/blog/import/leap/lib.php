@@ -231,7 +231,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         $importer->trace($blogpostlink);
         $pathname = urldecode((string)$blogpostlink['href']);
         $dir = dirname($importer->get('filename'));
-        $pathname = $dir . DIRECTORY_SEPARATOR . $pathname;
+        $pathname = $dir . '/' . $pathname;
         if (!file_exists($pathname)) {
             return false;
         }

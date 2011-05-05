@@ -15,8 +15,8 @@ function dirsize($path)
     $size = 0;
 
     // Trailing slash
-    if (substr($path, -1, 1) !== DIRECTORY_SEPARATOR) {
-        $path .= DIRECTORY_SEPARATOR;
+    if (substr($path, -1, 1) !== '/') {
+        $path .= '/';
     }
 
     // Sanity check
@@ -43,7 +43,7 @@ function dirsize($path)
                 // Get list of directories or filesizes
                 $path = $queue[$i] . $entry;
                 if (is_dir($path)) {
-                    $path .= DIRECTORY_SEPARATOR;
+                    $path .= '/';
                     $subdirs[] = $path;
                 } elseif (is_file($path)) {
                     $size += filesize($path);
