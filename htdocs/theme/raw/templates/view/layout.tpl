@@ -32,6 +32,7 @@
             <div class="cb">
                 <input type="hidden" name="pieform_viewlayout" value="">
                 <input type="submit" class="submit" name="submit" value="{str tag='save'}">
+                <input type="hidden" name="sesskey" value="{$USER->get('sesskey')}">
             </div>
         </form>
 

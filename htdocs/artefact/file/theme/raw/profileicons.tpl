@@ -18,6 +18,7 @@
                 </tfoot>
             </table>
             <input type="hidden" name="pieform_settings" value="">
+            <input type="hidden" name="sesskey" value="{$USER->get('sesskey')}">
             </form>
 
             <h3>{str tag="uploadprofileicon" section="artefact.file"}</h3>
