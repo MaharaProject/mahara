@@ -351,7 +351,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         $userobj = $userobj->find_by_id($user->id);
         $authobj_tmp = AuthFactory::create($user->authinstance);
         if (method_exists($authobj_tmp, 'change_password')) {
-            $authobj_tmp->change_password($userobj, $user->password);
+            $authobj_tmp->change_password($userobj, $user->password, false);
         } else {
             $userobj->password = '';
             $userobj->salt = auth_get_random_salt();
