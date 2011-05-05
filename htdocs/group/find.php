@@ -113,10 +113,10 @@ if ($groups['data']) {
             ) t ON t.id = g.id
             WHERE g.id IN (" . implode($groupids, ',') . ')
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.role, t.membershiptype
-            ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount',
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount
+        ORDER BY g1.name',
         array($USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
 }

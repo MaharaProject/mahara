@@ -1294,10 +1294,10 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             WHERE g.deleted = ?' .
             $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
-            ORDER BY g.name
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount';
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount
+        ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
     
@@ -1325,7 +1325,7 @@ function group_get_user_groups($userid=null, $roles=null) {
         JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
         WHERE gm.member = ?
         AND g.deleted = 0 " . (is_array($roles) ? (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')') : '') . "
-        ORDER BY gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
+        ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
         $groups = array();
     }
 
