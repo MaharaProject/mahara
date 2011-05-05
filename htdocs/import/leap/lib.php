@@ -615,7 +615,7 @@ class PluginImportLeap extends PluginImport {
             // from trace() itself
             global $CFG;
             $oldtargets = $CFG->log_dbg_targets;
-            $oldfile    = $CFG->log_file;
+            $oldfile = isset($CFG->log_file) ? $CFG->log_file : null;
             $CFG->log_dbg_targets = $this->logtargets;
             $CFG->log_file = $this->logfile;
             $file = $line = $trace = null;
