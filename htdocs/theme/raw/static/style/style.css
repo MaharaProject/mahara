@@ -234,6 +234,18 @@ table.fixwidth {
 	background-color: #f3f3f3;
 	border-bottom: 2px solid #FFF;
 }
+.d0 div {
+	background-color: #f9f9f9;
+	border-bottom: 2px solid #FFF;
+}
+.d1 div {
+	background-color: #f3f3f3;
+	border-bottom: 2px solid #FFF;
+}
+.friendcell, .friendcell div {
+    display: inline-block;
+    width: 64px;
+}
 tr.editrow, tr.editrow td {
 	background-color: #e7e7e7 !important;
 	border-bottom: 2px solid #FFF;
