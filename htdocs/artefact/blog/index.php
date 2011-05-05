@@ -37,18 +37,7 @@ safe_require('artefact', 'blog');
 define('TITLE', get_string('blogs','artefact.blog'));
 
 if ($delete = param_integer('delete', 0)) {
-    form_validate(param_alphanum('sesskey', null));
-    $blog = artefact_instance_from_id($delete);
-    if ($blog instanceof ArtefactTypeBlog) {
-        $blog->check_permission();
-        if ($blog->get('locked')) {
-            $SESSION->add_error_msg(get_string('submittedforassessment', 'view'));
-        }
-        else {
-            $blog->delete();
-            $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
-        }
-    }
+    ArtefactTypeBlog::delete_form($delete);
 }
 
 $blogs = (object) array(
@@ -66,4 +55,16 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $blogs->pagination_js . '});');
 $smarty->display('artefact:blog:index.tpl');
 
-?>
+function delete_blog_submit(Pieform $form, $values) {
+    global $SESSION;
+    $blog = new ArtefactTypeBlog($values['delete']);
+    $blog->check_permission();
+    if ($blog->get('locked')) {
+        $SESSION->add_error_msg(get_string('submittedforassessment', 'view'));
+    }
+    else {
+        $blog->delete();
+        $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
+    }
+    redirect('/artefact/blog/');
+}
