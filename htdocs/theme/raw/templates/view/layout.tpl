@@ -21,6 +21,7 @@
                 <input type="submit" class="submit submitcancel" name="cancel_submit" value="{str tag='back'}">
                 {/if}
                 <input type="submit" class="submit" name="submit" value="{str tag='changeviewlayout' section='view'}">
+                <input type="hidden" name="sesskey" value="{$USER->get('sesskey')}">
             </div>
         </form>
 

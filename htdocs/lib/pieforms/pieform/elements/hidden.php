@@ -62,6 +62,10 @@ function pieform_element_hidden(Pieform $form, $element) {/*{{{*/
  * 'value' index, and not to GET/POST
  */
 function pieform_element_hidden_get_value(Pieform $form, $element) {/*{{{*/
+    if ($element['name'] == 'sesskey' && $form->is_submitted()) {
+        $global = $form->get_property('method') == 'get' ? $_GET : $_POST;
+        return isset($global['sesskey']) ? $global['sesskey'] : null;
+    }
     return $element['value'];
 }/*}}}*/
 
