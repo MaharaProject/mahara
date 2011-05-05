@@ -166,7 +166,11 @@ tr.folderhover a {
     text-decoration: none;
 }
 .icon-drag {
-    cursor: move;
+	width: 1.5em;
+	height: 1.5em;
+	cursor: move;
+	display: table-cell;
+	vertical-align: middle;
 }
 /* File list edit box */
 #files_filebrowser_edit_row td.fileedittablewrap {
