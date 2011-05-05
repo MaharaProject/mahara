@@ -980,28 +980,76 @@ class PluginImportLeap extends PluginImport {
     private function fix_artefact_reference($field) {
         $ns = $this->namespaces[$this->leap2anamespace];
 
-        $match = '#<((img)|a)([^>]+)rel="(?:'.$ns.':has_part|enclosure)" (?:src|href)="([^"]+)"([^>]*)>#';
-        $field = preg_replace_callback($match,
-            array($this, '_fixref'),
-            $field);
-        return $field;
+        // load the field as XML
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->loadHTML($field);
+        $xml = simplexml_import_dom($dom);
+
+        // and search for <img> and <a> tags
+        $elements = $xml->xpath('//img|//a');
+
+        // loop through all elements found
+        foreach ($elements as $e) {
+            $rel  = (string)$e->attributes()->rel;
+            $name = (string)$e->getName();
+            $href = $e->attributes()->href;
+            $src  = $e->attributes()->src;
+
+            // identified as fixable?
+            if ($rel == $ns . ':has_part' || $rel == 'enclosure') {
+                // change the href / src attributes
+                if (isset($href)) {
+                    $value = $this->_fixref((string)$href);
+                }
+                else if (isset($src)) {
+                    $value = $this->_fixref((string)$src);
+                }
+
+                if (isset($value)) {
+                    switch ($name) {
+                        case 'a':
+                            if (isset($e->attributes()->href)) {
+                                $e->attributes()->href = $value;
+                            }
+                            else {
+                                $e->addAttribute('href', $value);
+                            }
+                            break;
+                        case 'img':
+                            if (isset($e->attributes()->src)) {
+                                $e->attributes()->src = $value;
+                            }
+                            else {
+                                $e->addAttribute('src', $value);
+                            }
+                            break;
+                    }
+
+                    // remove the 'rel' attribute
+                    unset($e->attributes()->rel);
+                }
+            }
+        }
+
+        // DOMDocument wraps the content with '<html><body></body></html>'
+        // so we call children() twice to remove it again
+        return $xml->children()->children()->asXML();
     }
 
-    private function _fixref($matches) {
+    private function _fixref($hrefsrc) {
         static $basepath;
         if (!$basepath) {
             $basepath = get_mahara_install_subdirectory();
         }
 
-        $artefacts = $this->get_artefactids_imported_by_entryid($matches[4]);
+        $artefacts = $this->get_artefactids_imported_by_entryid($hrefsrc);
         if (is_null($artefacts) || count($artefacts) != 1) {
             // This can happen if a Leap2A xml file is uploaded that refers to
             // files that (naturally) weren't uploaded with it.
-            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$matches[4]} but seems to have gotten " . count($artefacts));
-            return $matches[0];
+            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$hrefsrc} but seems to have gotten " . count($artefacts));
+            return $hrefsrc;
         }
-        return '<' . $matches[1] . $matches[3] . ($matches[1] == 'img' ? 'src' : 'href') . '="'
-            . $basepath . 'artefact/file/download.php?file=' . $artefacts[0] . '"' . $matches[5] . '>';
+        return $basepath . 'artefact/file/download.php?file=' . $artefacts[0];
     }
 
     /**
