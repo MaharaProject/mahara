@@ -52,7 +52,7 @@
       <div class="viewheader">
 
 {if $collection}
-        <div id="collection"><strong>{$microheadertitle|safe}:</strong> {include file=collectionnav.tpl}</div>
+        <div id="collection"><div class="collection-title">{$microheadertitle|safe}:</div>{include file=collectionnav.tpl}</div>
 {else}
         <div class="center title">{$microheadertitle|safe}</div>
 {/if}
