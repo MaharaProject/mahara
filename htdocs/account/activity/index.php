@@ -57,6 +57,9 @@ if ($USER->get('admin')) {
 }
 
 $type = param_variable('type', 'all');
+if ($type == '') {
+    $type = 'all';
+}
 if (!isset($options[$type])) {
     // Comma-separated list; filter out anything that's not an installed type
     $type = join(',', array_unique(array_filter(
@@ -128,6 +131,8 @@ function showHideMessage(id) {
 }
 
 function changeactivitytype() {
+    var delallform = document.forms['delete_all_notifications'];
+    delallform.elements['type'].value = this.options[this.selectedIndex].value;
     var params = {'type': this.options[this.selectedIndex].value};
     sendjsonrequest('index.json.php', params, 'GET', function(data) {
         paginator.updateResults(data);
@@ -168,6 +173,10 @@ $deleteall = pieform(array(
     'plugintype'  => 'core',
     'pluginname'  => 'account',
     'elements'    => array(
+        'type' => array(
+            'type' => 'hidden',
+            'value' => $type,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('deleteallnotifications', 'activity'),
@@ -178,25 +187,58 @@ $deleteall = pieform(array(
 
 function delete_all_notifications_submit() {
     global $USER, $SESSION;
+
+    $userid = $USER->get('id');
+
+    $type = param_variable('type', 'all');
+    $typesql = '';
+    if ($type != 'all') {
+        // Treat as comma-separated list of activity type names
+        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+        if ($types) {
+            $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
+            if (in_array('adminmessages', $types)) {
+                $typesql = '(' . $typesql . ' OR at.admin = 1)';
+            }
+            $typesql = ' AND ' . $typesql;
+        }
+    }
+
+    $from = "
+        FROM {notification_internal_activity} a
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? $typesql";
+    $values = array($userid);
+
     db_begin();
-    $count = count_records('notification_internal_activity', 'usr', $USER->get('id'));
-    // Remove parent pointers to messages we're about to delete
-    // Use temp table in subselect for Mysql compat.
-    execute_sql("
-        UPDATE {notification_internal_activity}
-        SET parent = NULL
-        WHERE parent IN (
-            SELECT id
-            FROM (
-               SELECT id FROM {notification_internal_activity} WHERE usr = ?
-            ) AS temp
-        )",
-        array($USER->get('id'))
-    );
-    delete_records('notification_internal_activity', 'usr', $USER->get('id'));
+    $count = 0;
+    $records = get_records_sql_array('SELECT a.id ' . $from, $values);
+    if ($records) {
+        $count = sizeof($records);
+        $ids = array();
+        foreach ($records as $row) {
+            $ids[] = $row->id;
+        }
+        // Remove parent pointers to messages we're about to delete
+        execute_sql('
+            UPDATE {notification_internal_activity}
+            SET parent = NULL
+            WHERE parent IN (
+                ' . join(',', array_map('db_quote', $ids)) . '
+            )'
+        );
+        // delete
+        execute_sql('
+            DELETE FROM {notification_internal_activity}
+            WHERE id IN (
+                ' . join(',', array_map('db_quote', $ids)) . '
+            )'
+        );
+    }
+
     db_commit();
     $SESSION->add_ok_msg(get_string('deletednotifications', 'activity', $count));
-    redirect(get_config('wwwroot') . 'account/activity/index.php');
+    redirect(get_config('wwwroot') . 'account/activity/index.php?type='.$type);
 }
 
 $smarty = smarty(array('paginator'));

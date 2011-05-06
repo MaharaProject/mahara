@@ -142,7 +142,7 @@ $string['institutioninvitesubject'] = 'You have been invited to join the institu
 $string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Institution Settings Page:';
 
 $string['deleteallnotifications'] = 'Delete all notifications';
-$string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications?';
+$string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications of this activity type?';
 
 $string['viewsubmittedsubject'] = 'Page submitted to %s';
 $string['viewsubmittedmessage'] = '%s has submitted their page "%s" to %s';
