@@ -101,7 +101,7 @@ function close_site_submit(Pieform $form, $values) {
     if (!$closed && $values['close']) {
         set_config('siteclosedbyadmin', 1);
         require_once(get_config('docroot') . 'auth/session.php');
-        remove_user_sessions();
+        remove_all_sessions();
     }
     else if ($closed && !$values['close']) {
         set_config('siteclosedbyadmin', 0);
