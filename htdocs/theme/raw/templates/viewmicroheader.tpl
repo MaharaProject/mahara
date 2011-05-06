@@ -13,8 +13,8 @@
             {foreach from=$microheaderlinks item=item}
               <a class="btn" href="{$item.url}">{$item.name}</a>
             {/foreach}
-          {elseif $backurl}<a class="btn" href="{$backurl}">{str tag=back}</a> 
           {/if}
+          <a class="btn nojs-hidden-inline" href="javascript:history.back()">{str tag=back}</a>
         </div>
         <div class="fl">
           <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>

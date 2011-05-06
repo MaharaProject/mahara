@@ -164,14 +164,6 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
-    if ($USER->is_logged_in()) {
-        if (!empty($_SERVER['HTTP_REFERER'])) {
-            $page = get_config('wwwroot') . 'view/artefact.php?id=' . $artefactid . '&view=' . $viewid;
-            if ($_SERVER['HTTP_REFERER'] != $page) {
-                $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
-            }
-        }
-    }
 }
 
 $smarty->assign('viewid', $viewid);
