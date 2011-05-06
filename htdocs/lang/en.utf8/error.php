@@ -114,4 +114,6 @@ $string['missingparamorder'] = 'Missing order specification';
 $string['missingparamid'] = 'Missing id';
 
 $string['themenameinvalid'] = "The name of the theme '%s' contains invalid characters.";
+
+$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the timezone identifier (%%z) - certain date formatting, such as the LEAP2A export, will be broken.';
 ?>

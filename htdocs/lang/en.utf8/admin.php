@@ -128,6 +128,8 @@ $string['newfiltersdescription'] = 'If you have downloaded a new set of HTML fil
 $string['filtersinstalled'] = 'Filters installed.';
 $string['nofiltersinstalled'] = 'No html filters installed.';
 
+// sanity check warnings
+$string['warnings'] = 'Warning';
 
 // Group management
 $string['groupcategories'] = 'Group Categories';
