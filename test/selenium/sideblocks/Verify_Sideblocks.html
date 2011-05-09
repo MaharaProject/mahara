@@ -33,12 +33,12 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='sb-onlineusers']/h3</td>
+	<td>//div[@id='sb-onlineusers']/div/h3</td>
 	<td>Online users</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='sb-profile']/h3/a</td>
+	<td>//div[@id='sb-profile']/div/h3/a</td>
 	<td>Admin User</td>
 </tr>
 <tr>
@@ -63,12 +63,12 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='sb-onlineusers']/h3</td>
+	<td>//div[@id='sb-onlineusers']/div/h3</td>
 	<td>Online users</td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='sb-profile']/h3/a</td>
+	<td>//div[@id='sb-profile']/div/h3/a</td>
 	<td>Admin User</td>
 </tr>
 <tr>
@@ -78,7 +78,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Profile Icons</td>
+	<td>link=Profile Pictures</td>
 	<td></td>
 </tr>
 <tr>
@@ -98,12 +98,17 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Views</td>
+	<td>link=Pages</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertElementNotPresent</td>
 	<td>//p[@id='quota_message']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Content</td>
 	<td></td>
 </tr>
 <tr>

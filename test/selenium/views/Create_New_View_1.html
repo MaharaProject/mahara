@@ -28,12 +28,12 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='main-column-container']/h1</td>
-	<td>Edit Content and Layout</td>
+	<td>//div[@id='main-column-container']/ul/li/a[@class='current-tab']</td>
+	<td>Edit Content</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Blogs</td>
+	<td>link=Journals</td>
 	<td></td>
 </tr>
 <tr>
@@ -63,12 +63,12 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//input[@value='Next: Edit Title and Description']</td>
+	<td>//a[text()='Edit Title and Description']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>//div[@id='main-column-container']/h1</td>
+	<td>//div[@id='main-column-container']/ul/li/a[@class='current-tab']</td>
 	<td>Edit Title and Description</td>
 </tr>
 <tr>
@@ -77,43 +77,13 @@
 	<td>Test view</td>
 </tr>
 <tr>
-	<td>chooseCancelOnNextConfirmation</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>cancel_editview_submit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>This View has not been completed. Do you really want to cancel?</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>//input[@value='Back']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertElementPresent</td>
-	<td>//input[@value='Next: Edit Access']</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>editview_submit</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>editaccess_submit</td>
-	<td></td>
-</tr>
-<tr>
 	<td>verifyTextPresent</td>
-	<td>View created successfully</td>
+	<td>Page saved successfully</td>
 	<td></td>
 </tr>
 
