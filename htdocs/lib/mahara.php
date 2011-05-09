@@ -1244,7 +1244,7 @@ function blocktype_name_to_namespaced($blocktype) {
 
 /* Get the name of the artefact plugin that provides a given blocktype */
 function blocktype_artefactplugin($blocktype) {
-    $installed = plugins_installed('blocktype');
+    $installed = plugins_installed('blocktype', true);
     if (isset($installed[$blocktype])) {
         return $installed[$blocktype]->artefactplugin;
     }
