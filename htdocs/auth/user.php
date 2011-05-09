@@ -877,7 +877,7 @@ class User {
 
     public function can_edit_view($v) {
         $owner = $v->get('owner');
-        if ($owner == $this->get('id')) {
+        if ($owner > 0 && $owner == $this->get('id')) {
             return true;
         }
         $institution = $v->get('institution');
