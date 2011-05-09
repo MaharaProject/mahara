@@ -88,7 +88,10 @@ $elements = array(
     'username' => array(
         'type' => 'text',
         'title' => get_string('username'),
-        'rules' => array('required' => true),
+        'rules' => array(
+            'required' => true,
+            'maxlength' => 236,
+        ),
     ),
     'password' => array(
         'type' => 'text',
@@ -172,8 +175,15 @@ function adduser_validate(Pieform $form, $values) {
     $email     = $values['email'];
     $password  = $values['password'];
 
-    if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
-        $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+    if (method_exists($authobj, 'is_username_valid_admin')) {
+        if (!$authobj->is_username_valid_admin($username)) {
+            $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
+        }
+    }
+    else if (method_exists($authobj, 'is_username_valid')) {
+        if (!$authobj->is_username_valid($username)) {
+            $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+        }
     }
     if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));

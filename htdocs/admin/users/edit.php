@@ -61,6 +61,9 @@ if (method_exists($authobj, 'change_username')) {
         'title'        => get_string('changeusername', 'admin'),
         'description'  => get_string('changeusernamedescription', 'admin'),
         'defaultvalue' => $user->username,
+        'rules' => array(
+            'maxlength' => 236,
+         ),
     );
 }
 
@@ -182,6 +185,40 @@ function edituser_site_validate(Pieform $form, $values) {
     if ($maxquotaenabled && $values['quota'] > $maxquota) {
         $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
         $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+    }
+
+    $userobj = new User();
+    $userobj = $userobj->find_by_id($user->id);
+
+    if (isset($values['username']) && !empty($values['username']) && $values['username'] != $userobj->username) {
+
+        if (!isset($values['authinstance'])) {
+            $authobj = AuthFactory::create($userobj->authinstance);
+        }
+        else {
+            $authobj = AuthFactory::create($values['authinstance']);
+        }
+
+        if (method_exists($authobj, 'change_username')) {
+
+            if (method_exists($authobj, 'is_username_valid_admin')) {
+                if (!$authobj->is_username_valid_admin($values['username'])) {
+                    $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
+                }
+            }
+            else if (method_exists($authobj, 'is_username_valid')) {
+                if (!$authobj->is_username_valid($values['username'])) {
+                    $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+                }
+            }
+
+            if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
+                $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+            }
+        }
+        else {
+            $form->set_error('username', get_string('usernamechangenotallowed', 'admin'));
+        }
     }
 
     // Check that the external username isn't already in use
