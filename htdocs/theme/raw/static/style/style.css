@@ -1893,7 +1893,7 @@ table.secreturls {
 }
 .checkboxes label {
 	clear: left;
-	display: block;
+	margin-right: 1em;
 	font-size: 1.1667em;
 	color: #1E6297;
 }
