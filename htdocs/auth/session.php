@@ -331,4 +331,22 @@ function remove_user_sessions($userid=null) {
     delete_records_select('usr_session', 'session IN (' . join(',', array_map('db_quote', $alive)) . ')');
 }
 
+/**
+ * Delete all session files except for the current one
+ */
+function remove_all_sessions() {
+    global $sessionpath, $USER;
+
+    $sid = $USER->get('sessionid');
+
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($sessionpath));
+    foreach ($iterator as $path) {
+        if ($path->isFile() && $path->getFilename() !== ('sess_' . $sid)) {
+            @unlink($path->getPathname());
+        }
+    }
+    clearstatcache();
+
+    delete_records_select('usr_session', 'session != ?', array($sid));
+}
 
