@@ -314,7 +314,9 @@ function clearPasswords(form, data) {
     }
     if (data.username) {
         var username = getFirstElementByTagAndClassName('a', null, 'profile-sideblock-username');
-        replaceChildNodes(username, data.username);
+        if (username) {
+            replaceChildNodes(username, data.username);
+        }
     }
 }
 ");
