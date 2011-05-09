@@ -273,15 +273,13 @@ function insert_messages() {
 }
 
 
-function remove_user_sessions($userid=null) {
+/**
+ * Delete all sessions belonging to a given user except for the current one
+ */
+function remove_user_sessions($userid) {
     global $sessionpath, $USER;
 
-    if (is_null($userid)) {
-        $sessionids = get_column('usr_session', 'session');
-    }
-    else {
-        $sessionids = get_column('usr_session', 'session', 'usr', $userid);
-    }
+    $sessionids = get_column('usr_session', 'session', 'usr', (int) $userid);
 
     if (empty($sessionids)) {
         return;
