@@ -1072,3 +1072,47 @@ function set_antispam_defaults() {
     set_config('spamhaus', 0);
     set_config('surbl', 0);
 }
+
+function activate_plugin_form($plugintype, $plugin) {
+    return pieform(array(
+        'name'            => 'activate_' . $plugintype . '_' . $plugin->name,
+        'renderer'        => 'oneline',
+        'elementclasses'  => false,
+        'successcallback' => 'activate_plugin_submit',
+        'class'           => 'oneline inline',
+        'jsform'          => false,
+        'action'          => get_config('wwwroot') . 'admin/extensions/pluginconfig.php',
+        'elements' => array(
+            'plugintype' => array('type' => 'hidden', 'value' => $plugintype),
+            'pluginname' => array('type' => 'hidden', 'value' => $plugin->name),
+            'disable'    => array('type' => 'hidden', 'value' => $plugin->active),
+            'enable'     => array('type' => 'hidden', 'value' => 1-$plugin->active),
+            'submit'     => array(
+                'type'  => 'submit',
+                'class' => 'linkbtn',
+                'value' => $plugin->active ? get_string('hide') : get_string('show')
+            ),
+        ),
+    ));
+}
+
+function activate_plugin_submit(Pieform $form, $values) {
+    global $SESSION;
+    if ($values['plugintype'] == 'blocktype') {
+        if (strpos($values['pluginname'], '/') !== false) {
+            list($artefact, $values['pluginname']) = split('/', $values['pluginname']);
+            // Don't enable blocktypes unless the artefact plugin that provides them is also enabled
+            if ($values['enable'] && !get_field('artefact_installed', 'active', 'name', $artefact)) {
+                $SESSION->add_error_msg(get_string('pluginnotenabled', 'mahara', $artefact));
+                redirect('/admin/extensions/plugins.php');
+            }
+        }
+    }
+    else if ($values['plugintype'] == 'artefact' && $values['disable']) {
+        // Disable all the artefact's blocktypes too
+        set_field('blocktype_installed', 'active', 0, 'artefactplugin', $values['pluginname']);
+    }
+    set_field($values['plugintype'] . '_installed', 'active', $values['enable'], 'name', $values['pluginname']);
+    $SESSION->add_ok_msg(get_string('plugin' . (($values['enable']) ? 'enabled' : 'disabled')));
+    redirect('/admin/extensions/plugins.php');
+}

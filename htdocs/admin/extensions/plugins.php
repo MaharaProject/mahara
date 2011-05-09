@@ -66,6 +66,9 @@ foreach (array_keys($plugins) as $plugin) {
                     'active' => $i->active,
                     'disableable' => call_static_method(generate_class_name($plugin, $key), 'can_be_disabled'),
                 );
+                if ($plugins[$plugin]['installed'][$key]['disableable']) {
+                    $plugins[$plugin]['installed'][$key]['activateform'] = activate_plugin_form($plugin, $i);
+                }
                 if ($plugin == 'artefact') {
                     $plugins[$plugin]['installed'][$key]['types'] = array();
                     safe_require('artefact', $key);
