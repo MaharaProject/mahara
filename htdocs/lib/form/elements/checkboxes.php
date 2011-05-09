@@ -33,9 +33,19 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
         $value = $global[$element['name']];
     }
 
+    $result = '';
+
+    if (count($element['elements']) > 1) {
+        $id = hsc($form->get_name() . '_' . $element['name']) . '_container';
+        $result .= '<a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('All') . '</a>'
+            . '&nbsp;'
+            . ' <a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('none') . '</a>';
+    }
+
+    $result .= '<div class="cl"></div>';
+
     $element['name'] .= '[]';
 
-    $result = '';
     foreach ($element['elements'] as $e) {
         $checked = ($submitted && (!empty($value[$e['value']]) || in_array($e['value'], $value))) || (!$submitted && !empty($e['defaultvalue']));
         $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
@@ -64,4 +74,19 @@ function pieform_element_checkboxes_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return $values;
+}/*}}}*/
+
+function pieform_element_checkboxes_js() {/*{{{*/
+    return <<<EOF
+function pieform_element_checkboxes_update(p, v) {
+    forEach(getElementsByTagAndClassName('input', 'checkboxes', p), function(e) {
+        e.checked = v;
+    });
+}
+EOF;
+}/*}}}*/
+
+function pieform_element_checkboxes_get_headdata() {/*{{{*/
+    $result = '<script type="text/javascript">' . pieform_element_checkboxes_js() . "\n</script>";
+    return array($result);
 }/*}}}*/
