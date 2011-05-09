@@ -40,11 +40,6 @@ define('SECTION_PLUGINNAME', $pluginname);
 define('SECTION_PAGE', 'pluginconfig');
 
 safe_require($plugintype, $pluginname);
-if ($sesskey = param_alphanum('sesskey', '')) {
-    if ($sesskey != $USER->get('sesskey')) {
-        throw new UserException('Invalid sesskey');
-    }
-}
 $enable  = param_integer('enable', 0);
 $disable = param_integer('disable', 0);
 
@@ -53,23 +48,8 @@ if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname
 }
 
 if ($enable || $disable) {
-    if ($plugintype == 'blocktype') {
-        if (strpos($pluginname, '/') !== false) {
-            list($artefact, $pluginname) = split('/', $pluginname);
-            // Don't enable blocktypes unless the artefact plugin that provides them is also enabled
-            if ($enable && !get_field('artefact_installed', 'active', 'name', $artefact)) {
-                $SESSION->add_error_msg(get_string('pluginnotenabled', 'mahara', $artefact));
-                redirect('/admin/extensions/plugins.php');
-            }
-        }
-    }
-    else if ($plugintype == 'artefact' && $disable) {
-        // Disable all the artefact's blocktypes too
-        set_field('blocktype_installed', 'active', 0, 'artefactplugin', $pluginname);
-    }
-    set_field($plugintype . '_installed', 'active', $enable, 'name', $pluginname);
-    $SESSION->add_ok_msg(get_string('plugin' . (($enable) ? 'enabled' : 'disabled')));
-    redirect('/admin/extensions/plugins.php');
+    require_once(get_config('libroot') . 'upgrade.php');
+    activate_plugin_form($plugintype, get_record($plugintype . '_installed', 'name', $pluginname));
 }
 
 if ($plugintype == 'artefact') {

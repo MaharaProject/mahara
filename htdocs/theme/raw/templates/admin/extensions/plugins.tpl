@@ -14,11 +14,7 @@
     {foreach from=$installed key='plugin' item='data'}
 	<li id="{$plugintype}.{$plugin}">{$plugin}
         {if $data.disableable}
-            {if $data.active}
-                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;disable=1&amp;sesskey={$SESSKEY}">{str tag='hide'}</a>
-            {else}
-                [ <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;enable=1&amp;sesskey={$SESSKEY}">{str tag='show'}</a>
-            {/if}
+            [ {$data.activateform|safe}
         {/if}
         {if $data.config}
             {if !$data.disableable} [ {else} | {/if}

@@ -112,6 +112,7 @@ p {
 .nowrap {
 	white-space: nowrap;
 }
+form.oneline.inline div,
 .inline {
 	display: inline;
 }
@@ -537,6 +538,9 @@ span.btn a.icon, a span.icon {
 	border: 0;
 	cursor: pointer;
 	color: #0000ee;
+	background: none;
+	padding: 0;
+	font-size: 100%;
 }
 /* bolding some buttons */
 #editgroup #editgroup_submit,
