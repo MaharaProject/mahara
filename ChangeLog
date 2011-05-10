@@ -1,3 +1,10 @@
+1.3.6 (2011-05-10)
+- Privilege escalations (CVE-2011-1402)
+- Fixes to session key validation (CVE-2011-1403)
+- Information disclosure in AJAX calls (CVE-2011-1404)
+- Sanitisation of HTML emails (CVE-2011-1405)
+- https to http downgrade (CVE-2011-1406)
+
 1.3.5 (2011-03-29)
 - Upgrade to HTML Purifier 4.3.0 (includes security fixes)
 
