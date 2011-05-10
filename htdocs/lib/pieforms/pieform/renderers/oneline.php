@@ -51,17 +51,8 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
     }
     $result .= '>';
 
-    if (isset($element['title']) && $element['title'] !== '' && $element['type'] != 'fieldset') {
-        if (!empty($element['nolabel'])) {
-            // Don't bother with a label for the element
-            $result .= Pieform::hsc($element['title']);
-        }
-        else {
-            $result .= '<label for="' . $element['id'] . '">' . Pieform::hsc($element['title']) . '</label>';
-        }
-        if ($form->get_property('requiredmarker') && !empty($element['rules']['required'])) {
-            $result .= ' <span class="requiredmarker">*</span>';
-        }
+    if (isset($element['labelhtml'])) {
+        $result .= $element['labelhtml'];
     }
 
     $result .= $element['html'];
