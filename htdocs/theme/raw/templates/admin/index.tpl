@@ -1,5 +1,16 @@
 {include file='header.tpl'}
 
+{if $warnings}
+<div class="admin-warning-box">
+<h3>{str tag="warnings" section=admin}</h3>
+<ul>
+{foreach from=$warnings key=key item=warning}
+    <li>{$warning}</li>
+{/foreach}
+</ul>
+</div>
+{/if}
+
 <div id="adminhome">
 {if $register}
 <div class="message" id="register-site">
