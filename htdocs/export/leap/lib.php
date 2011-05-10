@@ -563,11 +563,8 @@ class PluginExportLeap extends PluginExport {
     * @return filename string use this to pass to add_enclosure_link
     */
     public function add_attachment($filepath, $newname) {
-        if (!file_exists($filepath)) {
-            throw new ParamOutOfRangeException("Tried to add non existant file $filepath");
-        }
-        if (empty($newname)) {
-            throw new ParamOutOfRangeException("Tried to add non existant file $filepath");
+        if (!file_exists($filepath) || empty($newname)) {
+            throw new ParamOutOfRangeException(get_string('nonexistentfile', 'export', $newname));
         }
         $newname = substr(str_replace('/', '_', $newname), 0, 245);
         $this->attachments[] = (object)array('file' => $filepath, 'name' => $newname);
