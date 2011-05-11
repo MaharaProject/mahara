@@ -49,10 +49,13 @@ echo $form_tag;
 <?php foreach(array('username', 'password', 'staff', 'admin', 'quota', 'authinstance', 'institutionadmin') as $field) { ?>
                     <tr>
                         <th><?php echo $elements[$field]['labelhtml']; ?></th>
-                        <td><?php echo $elements[$field]['html'];
-if (isset($elements[$field]['error'])) { echo '<div class="errmsg">' . $elements[$field]['error'] . '</div>'; }
-?></td>
+                        <td><?php echo $elements[$field]['html']; ?></td>
                     </tr>
+<?php if (isset($elements[$field]['error'])) { ?>
+                    <tr>
+                        <td class="errmsg" colspan="2"><?php echo $elements[$field]['error']; ?></td>
+                    </tr>
+<?php } ?>
 <?php } ?>
                 </table>
             </td>
