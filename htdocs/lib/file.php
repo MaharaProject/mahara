@@ -316,12 +316,24 @@ function file_mime_type($file) {
     static $mimetypes = null;
 
     if (class_exists('finfo')) {
+        // upstream bug in php #54714
+        // http://bugs.php.net/bug.php?id=54714
+        //
+        // according to manual (http://www.php.net/manual/en/function.finfo-open.php)
+        // default option is /usr/share/misc/magic, then /usr/share/misc/magic.mgc
+        //
+        // if /usr/share/misc/magic is a directory then finfo still succeeds and 
+        // doesn't fall back onto the .mcg magic_file
+        // force /usr/share/misc/magic.mgc instead in this case
+
+        $magicfile = !is_file('/usr/share/misc/magic') ? '/usr/share/misc/magic.mgc' : null;
+
         if (defined('FILEINFO_MIME_TYPE')) {
-            if ($finfo = @new finfo(FILEINFO_MIME_TYPE)) {
+            if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
                 $type = @$finfo->file($file);
             }
         }
-        else if ($finfo = @new finfo(FILEINFO_MIME)) {
+        else if ($finfo = @new finfo(FILEINFO_MIME, $magicfile)) {
             if ($typecharset = @$finfo->file($file)) {
                 if ($bits = explode(';', $typecharset)) {
                     $type = $bits[0];
