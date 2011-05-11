@@ -34,20 +34,26 @@ defined('INTERNAL') || die();
 class HtmlExportFile extends HtmlExportArtefactPlugin {
 
     private $artefactdata = array();
+    private $owner;
 
     public function dump_export_data() {
+
+        $this->owner = $this->exporter->get('user')->get('id');
+
         foreach ($this->exporter->get('artefacts') as $artefact) {
             if (in_array($artefact->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
                 $this->artefactdata[$artefact->get('id')] = $artefact;
             }
         }
 
-        // Grab all parent folders of all artefacts selected so we can export 
+        // Grab all parent folders of all artefacts owned by the exporting user, so we can export
         // the files in their correct folder location
         if ($this->exporter->get('artefactexportmode') != PluginExport::EXPORT_ALL_ARTEFACTS && $this->artefactdata) {
             $folderids = array();
             foreach (array_keys($this->artefactdata) as $artefactid) {
-                $folderids = array_merge($folderids, array_keys(artefact_get_parents_for_cache($artefactid)));
+                if ($this->artefactdata[$artefactid]->get('owner') == $this->owner) {
+                    $folderids = array_merge($folderids, array_keys(artefact_get_parents_for_cache($artefactid)));
+                }
             }
             $folderids = array_unique($folderids);
 
@@ -130,7 +136,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      */
     private function populate_filedir($filesystemdirectory, $level, $parentid) {
         foreach ($this->artefactdata as $artefactid => $artefact) {
-            if ($artefact->get('parent') == $parentid) {
+            if ($artefact->get('parent') == $parentid && $artefact->get('owner') == $this->owner) {
                 if ($artefact->get('artefacttype') == 'folder') {
                     $directory = $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')) . '/';
                     check_dir_exists($directory);
@@ -191,8 +197,11 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $data = array();
         $equality = ($folders) ? '==' : '!=';
         $parent = (is_null($parent)) ? 'null': intval($parent);
-        $artefacts = array_filter($this->artefactdata,
-            create_function('$a', 'return $a->get("parent") == ' . $parent . ' && $a->get("artefacttype") ' . $equality . ' "folder";'));
+        $artefacts = array_filter($this->artefactdata, create_function('$a',
+            'return $a->get("parent") == ' . $parent
+            . ' && $a->get("artefacttype") ' . $equality . ' "folder"'
+            . ' && $a->get("owner") == ' . $this->owner . ';'
+        ));
         foreach ($artefacts as $artefact) {
             $size = '';
             if ($artefact->get('artefacttype') != 'folder') {
