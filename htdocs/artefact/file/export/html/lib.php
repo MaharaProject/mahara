@@ -139,8 +139,8 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                 }
                 else {
                     $artefact = artefact_instance_from_id($artefactid);
-                    if (!copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')))) {
-                        throw new SystemException("Unable to copy artefact $artefactid's file");
+                    if (!$artefact->get_path() || !copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')))) {
+                        throw new SystemException(get_string('nonexistentfile', 'export', $artefact->get('title')));
                     }
                 }
             }

@@ -48,6 +48,7 @@ $string['generateexport'] = 'Generate export';
 $string['noexportpluginsenabled'] = 'No export plugins have been enabled by the administrator, so you are unable to use this feature';
 $string['justsomecollections'] = 'Just some of my Collections';
 $string['justsomeviews'] = 'Just some of my pages';
+$string['nonexistentfile'] = "Tried to add non-existent file: '%s'";
 $string['pleasewaitwhileyourexportisbeinggenerated'] = 'Please wait while your export is being generated...';
 $string['reverseselection'] = 'Reverse selection';
 $string['selectall'] = 'Select all';

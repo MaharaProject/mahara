@@ -99,7 +99,11 @@ default:
     export_iframe_die(get_string('unabletoexportportfoliousingoptions', 'export'));
 }
 
-$zipfile = $exporter->export();
+try {
+    $zipfile = $exporter->export();
+} catch (SystemException $e) {
+    export_iframe_die($e->getMessage());
+}
 
 // Store the filename in the session, and redirect the iframe to it to trigger 
 // the download. Here it would be nice to trigger the download for everyone, 
