@@ -36,9 +36,4 @@ $result = array();
 
 $USER->set_account_preference('showhomeinfo', $showhomeinfo);
 
-$result['error'] = false;
-$result['message'] = false;
-
-json_headers();
-echo json_encode($result);
-?>
+json_reply(false, $result);

@@ -48,8 +48,4 @@ if (empty($data)) {
 }
 
 $json = array('error' => false, 'content' => $data);
-echo json_encode($json);
-exit;
-
-
-?>
+json_reply(false, $json);

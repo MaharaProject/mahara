@@ -116,6 +116,4 @@ elseif ($jointype == 'invite') {
     }
     $data['message'] = get_string('userinvited', 'group');
 }
-json_headers();
-echo json_encode($data);
-exit;
+json_reply(false, $data);

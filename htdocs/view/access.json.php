@@ -53,9 +53,6 @@ switch ($type) {
         break;
 }
 
-json_headers();
 $data['error'] = false;
 $data['message'] = '';
-echo json_encode($data);
-
-?>
+json_reply(false, $data);

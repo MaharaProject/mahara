@@ -64,9 +64,4 @@ foreach ($data['data'] as &$result) {
     $result = array('id' => $result['id'], 'name' => $result['name']);
 }
 
-json_headers();
-$data['error'] = false;
-$data['message'] = false;
-echo json_encode($data);
-
-?>
+json_reply(false, $data);
