@@ -14,12 +14,11 @@
 		<div class="cb"></div>
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
         <!-- This site is powered by Mahara, an Open Source
-             ePortfolio system. Mahara is (C) 2006-2009 Catalyst IT
-             Ltd. See http://mahara.org/ for more details.
+             ePortfolio system. See http://mahara.org/ for more
+             details.
              NOTE: this image and link are a way that you can
-             support the Mahara project. Support us and we'll
-             support you! If you remove this image and link, you
-             may not receive support in the Mahara forums -->
+             support the Mahara project. Please consider
+             displaying them on your site to spread the word! -->
         <div id="footernav">
         {foreach from=$FOOTERMENU item=item name=footermenu}
           {if !$.foreach.footermenu.first}| {/if}<a href="{$WWWROOT}{$item.url}">{$item.title}</a>
