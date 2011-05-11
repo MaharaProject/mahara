@@ -781,7 +781,6 @@ class HtmlExportOutputFilter {
                 if ($icon->get_plugin_name() != 'file') {
                     return '';
                 }
-                $folderpath = $this->get_folder_path_for_file($icon);
                 return $this->get_export_path_for_file($icon, $options, '/static/profileicons/');
             default:
                 return '';
