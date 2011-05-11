@@ -444,6 +444,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             switch ($maharaattributes['artefacttype']) {
             case 'studentid':
                 self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$item);
+                $importer->get('usrobj')->studentid = (string)$item;
+                $importer->get('usrobj')->commit();
                 return;
             }
         }
