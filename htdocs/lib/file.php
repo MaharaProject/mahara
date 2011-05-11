@@ -177,6 +177,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
     header('Content-Length: ' . $filesize);
     while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
     readfile_chunked($path);
+    perf_to_log();
     exit;
 }
 

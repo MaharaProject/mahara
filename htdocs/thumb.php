@@ -90,8 +90,7 @@ switch ($type) {
                     header('Cache-Control: max-age=' . $maxage);
                     header('Pragma: public');
 
-                    readfile($path);
-                    exit;
+                    readfile_exit($path);
                 }
             }
         }
@@ -119,8 +118,7 @@ switch ($type) {
         // below at the other get_config('theme') call!
         if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
             header('Content-type: ' . 'image/png');
-            readfile($path);
-            exit;
+            readfile_exit($path);
         }
 
         // If we couldn't find the no user photo picture, we put it into 
@@ -134,17 +132,14 @@ switch ($type) {
             // Now we can try and get the image in the correct size
             if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
                 header('Content-type: ' . 'image/png');
-                readfile($path);
-                exit;
+                readfile_exit($path);
             }
         }
 
 
         // Emergency fallback
         header('Content-type: ' . 'image/png');
-        readfile($THEME->get_path('images/no_userphoto.png'));
-        exit;
-        break;
+        readfile_exit($THEME->get_path('images/no_userphoto.png'));
 
     case 'blocktype':
         $bt = param_alpha('bt'); // blocktype
@@ -161,21 +156,22 @@ switch ($type) {
         header('Pragma: public');
         $path = get_config('docroot') . $basepath . '/thumb.png';
         if (is_readable($path)) {
-            readfile($path);
-            exit;
+            readfile_exit($path);
         }
-        readfile($THEME->get_path('images/no_thumbnail.png'));
-        break;
+        readfile_exit($THEME->get_path('images/no_thumbnail.png'));
     case 'viewlayout':
         header('Content-type: image/png');
         $vl = param_integer('vl');
         if ($widths = get_field('view_layout', 'widths', 'id', $vl)) {
             if ($path = $THEME->get_path('images/vl-' . str_replace(',', '-', $widths) . '.png')) {
-                readfile($path);
-                exit;
+                readfile_exit($path);
             }
         }
-        readfile($THEME->get_path('images/no_thumbnail.png'));
-        break;
+        readfile_exit($THEME->get_path('images/no_thumbnail.png'));
 }
 
+function readfile_exit($path) {
+    readfile($path);
+    perf_to_log();
+    exit;
+}

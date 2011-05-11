@@ -41,10 +41,7 @@ if(!$result) {
     $result = array();
 }
 
-json_headers();
 $data['error'] = false;
 $data['data'] = $result;
 $data['count'] = ($result) ? count($result) : 0;
-echo json_encode($data);
-
-?>
+json_reply(false, $data);

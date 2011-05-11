@@ -11,5 +11,6 @@
   <div>
     {$content|clean_html|safe}
   </div>
+  {mahara_performance_info}
 </body>
 </html>

@@ -120,7 +120,4 @@ $data['data'] = array(
 );
 $data['error'] = false;
 $data['message'] = null;
-
-json_headers();
-echo json_encode($data);
-exit;
+json_reply(false, $data);

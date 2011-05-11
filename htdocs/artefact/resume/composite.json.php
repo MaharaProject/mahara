@@ -54,11 +54,10 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
 
 $count = count_records('artefact', 'owner', $owner, 'artefacttype', $type);
 
-echo json_encode(array(
+json_reply(false, array(
     'data' => $data,
     'limit' => $limit,
     'offset' => $offset,
     'count' => $count,
-    'type' => $type));
-
-?>
+    'type' => $type,
+));
