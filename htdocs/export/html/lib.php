@@ -582,12 +582,17 @@ class HtmlExportOutputFilter {
     private $exporter = null;
 
     /**
+     */
+    private $owner = null;
+
+    /**
      * @param string $basepath The relative path to the root of the generated export
      */
     public function __construct($basepath, &$exporter=null) {
         $this->basepath = preg_replace('#/$#', '', $basepath);
         $this->htmlexportcopyproxy = HtmlExportCopyProxy::singleton();
         $this->exporter = $exporter;
+        $this->owner = $exporter->get('user')->get('id');
     }
 
     /**
@@ -705,8 +710,7 @@ class HtmlExportOutputFilter {
         case 'folder':
         case 'image':
         case 'archive':
-            $folderpath = $this->get_folder_path_for_file($artefact);
-            return '<a href="' . $this->basepath . '/files/file/' . $folderpath . PluginExportHtml::sanitise_path($artefact->get('title')) . '">' . $matches[5] . '</a>';
+            return '<a href="' . $this->get_export_path_for_file($artefact, array()) . '">' . $matches[5] . '</a>';
         default:
             return $matches[5];
         }
@@ -737,8 +741,7 @@ class HtmlExportOutputFilter {
             $options[$key] = $value;
         }
 
-        $folderpath = $this->get_folder_path_for_file($artefact);
-        return $this->get_export_path_for_file($artefact, $options, '/files/file/' . $folderpath);
+        return $this->get_export_path_for_file($artefact, $options);
     }
 
     /**
@@ -840,18 +843,32 @@ class HtmlExportOutputFilter {
      * @return string                    The relative path to where the file 
      *                                   will be placed
      */
-    private function get_export_path_for_file(ArtefactTypeFileBase $file, array $options, $basefolder) {
+    private function get_export_path_for_file(ArtefactTypeFileBase $file, array $options, $basefolder=null) {
+        if (is_null($basefolder)) {
+            if ($file->get('owner') == $this->owner) {
+                $basefolder = '/files/file/' . $this->get_folder_path_for_file($file);
+            }
+            else {
+                $basefolder = '/files/extra/';
+            }
+        }
+
         unset($options['view']);
         $prefix = '';
+        $title = PluginExportHtml::sanitise_path($file->get('title'));
+
         if ($options) {
             list($size, $prefix) = $this->get_size_from_options($options);
             $from = $file->get_path($size);
 
-            $to = $basefolder . $file->get('id') . '-' . $prefix . PluginExportHtml::sanitise_path($file->get('title'));
+            $to = $basefolder . $file->get('id') . '-' . $prefix . $title;
             $this->htmlexportcopyproxy->add($from, $to);
         }
         else {
-            $to = $basefolder . PluginExportHtml::sanitise_path($file->get('title'));
+            if ($basefolder == '/files/extra/') {
+                $title = $file->get('id') . '-' . $title;
+            }
+            $to = $basefolder . $title;
         }
 
         return $this->basepath . $to;
