@@ -169,6 +169,23 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     if (strpos(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])) === 0) {
         $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
     }
+    else {
+        $self = explode('/', $_SERVER['PHP_SELF']);
+        $dir = dirname(__FILE__);
+        $i = 0;
+        while (realpath($_SERVER['DOCUMENT_ROOT'].$path) != $dir) {
+            if ($i >= count($self) - 1) {
+                $path = '';
+                break;
+            }
+            if (empty($self[$i])) {
+                $i ++;
+                continue;
+            }
+            $path .= '/'.$self[$i];
+            $i ++;
+        }
+    }
     if ($path) {
         $path = str_replace('\\', '/', $path);  // windows
         if (substr($path, 0, 1) != '/') {
