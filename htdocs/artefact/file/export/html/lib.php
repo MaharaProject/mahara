@@ -36,13 +36,21 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     private $artefactdata = array();
     private $owner;
 
+    // Keep track of files not owned by the exporting user.  These should be included in the
+    // export tarball, but should not appear in the browseable folder structure.
+    private $otherfiles = array();
+
     public function dump_export_data() {
 
         $this->owner = $this->exporter->get('user')->get('id');
 
         foreach ($this->exporter->get('artefacts') as $artefact) {
             if (in_array($artefact->get('artefacttype'), PluginArtefactFile::get_artefact_types())) {
-                $this->artefactdata[$artefact->get('id')] = $artefact;
+                $id = $artefact->get('id');
+                $this->artefactdata[$id] = $artefact;
+                if ($artefact->get('owner') != $this->owner) {
+                    $this->otherfiles[$id] = $id;
+                }
             }
         }
 
@@ -51,7 +59,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         if ($this->exporter->get('artefactexportmode') != PluginExport::EXPORT_ALL_ARTEFACTS && $this->artefactdata) {
             $folderids = array();
             foreach (array_keys($this->artefactdata) as $artefactid) {
-                if ($this->artefactdata[$artefactid]->get('owner') == $this->owner) {
+                if (!isset($this->otherfiles[$artefactid])) {
                     $folderids = array_merge($folderids, array_keys(artefact_get_parents_for_cache($artefactid)));
                 }
             }
@@ -74,6 +82,16 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $this->create_index_for_directory($this->fileroot, 0, null);
         $this->populate_filedir($this->fileroot, 0, null);
 
+        // Copy other users' files into the extrafileroot directory
+        foreach ($this->otherfiles as $id) {
+            if (!$this->artefactdata[$id] instanceof ArtefactTypeFile) {
+                continue;
+            }
+            $dest = $this->extrafileroot . $id . '-' . PluginExportHtml::sanitise_path($this->artefactdata[$id]->get('title'));
+            if (!copy($this->artefactdata[$id]->get_path(), $dest)) {
+                throw new SystemException("Unable to copy artefact $id's file");
+            }
+        }
     }
 
     public function get_summary() {

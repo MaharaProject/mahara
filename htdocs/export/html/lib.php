@@ -495,6 +495,10 @@ abstract class HtmlExportArtefactPlugin {
         if (!check_dir_exists($this->fileroot)) {
             throw new SystemException("Could not create the temporary export directory $this->fileroot");
         }
+        $this->extrafileroot = $this->exporter->get('exportdir') . '/' . $this->exporter->get('rootdir') . '/files/extra/';
+        if (!check_dir_exists($this->extrafileroot)) {
+            throw new SystemException("Could not create the temporary export directory $this->extrafileroot");
+        }
     }
 
     abstract public function dump_export_data();
