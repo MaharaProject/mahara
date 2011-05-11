@@ -237,14 +237,6 @@ if (get_config('viewmicroheaders')) {
         $smarty->assign('microheaderlinks', $microheaderlinks);
     }
 
-    if ($USER->is_logged_in()) {
-        if (!empty($_SERVER['HTTP_REFERER'])) {
-            $page = get_config('wwwroot') . 'view/view.php?id=' . $viewid . ($new ? '&new=1' : '');
-            if ($_SERVER['HTTP_REFERER'] != $page) {
-                $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
-            }
-        }
-    }
 }
 else if ($can_edit) {
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));

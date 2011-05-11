@@ -298,9 +298,6 @@ if (get_config('viewmicroheaders')) {
         );
         $smarty->assign('microheaderlinks', $microheaderlinks);
     }
-    if (isset($_SERVER['HTTP_REFERER'])) {
-        $smarty->assign('backurl', $_SERVER['HTTP_REFERER']);
-    }
 }
 else {
     if ($loggedinid && $loggedinid == $userid) {
