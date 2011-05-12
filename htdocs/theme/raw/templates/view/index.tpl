@@ -45,7 +45,7 @@
                               <div class="videsc">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
 {/if}
                         </td>
-                        <td class="right buttonscell">
+                        <td class="right buttonscell btns2">
 {if !$view.submittedto}
                                 <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
 {/if}
