@@ -65,6 +65,18 @@ img {
 .main-column h6 {
 	font-size: .9167em; /* 10px */
 }
+/* Wrap un-spaced titles if they get too long for the containing object */
+.main-column h1:first-child, .main-column h2:first-child, .main-column h3:first-child, .main-column h4:first-child, .main-column h5:first-child, .main-column h6:first-child, td.filedescription {
+    word-break: break-all;
+    white-space: normal;
+    word-wrap: break-word;
+}
+/* For Browsers which do not support first-child */
+ * html .main-column h1, * html .main-column h2, * html .main-column h3, * html .main-column h4, * html .main-column h5, * html .main-column h6 {
+    word-break: break-all;
+    white-space: normal;
+    word-wrap:break-word;
+}
 p {
 	margin: 10px 0;
 }
@@ -626,6 +638,14 @@ div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.
 	position: relative;
 	float: left;
 }
+/* Add space for multiple icons. */
+.btns2 {
+    width: 36px; /* 2 16px with 4 pixels of padding. Icons*/
+}
+.btns3 {
+    width: 54px; /* 3 16px with 6 pixels of padding. Icons*/
+}
+
 /* Search buttons */
 #usf_submit {
 	border-color: #a3a3a3 #a3a3a3 #a3a3a3 #e3e3e3;

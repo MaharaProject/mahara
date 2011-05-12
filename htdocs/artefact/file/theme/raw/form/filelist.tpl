@@ -60,7 +60,8 @@
       {/if}
     </td>
     {/if}
-    <td class="right s">
+    <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
+    <td class="right s btns3">
     {if $editable && !$file->isparent}
       {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/unzip.gif"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
       {if $file->locked}
