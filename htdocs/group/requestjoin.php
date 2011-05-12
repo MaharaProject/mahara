@@ -112,4 +112,3 @@ function requestjoingroup_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
     redirect($goto);
 }
-?>

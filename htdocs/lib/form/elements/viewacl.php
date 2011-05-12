@@ -159,5 +159,3 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
     }
     return $values;
 }
-
-?>

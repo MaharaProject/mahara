@@ -89,5 +89,3 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
     }
 
 }
-
-?>

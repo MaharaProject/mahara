@@ -33,5 +33,3 @@ $string['description'] = 'A single image from your Files area';
 $string['showdescription'] = 'Show Description?';
 $string['width'] = 'Width';
 $string['widthdescription'] = 'Specify the width for your image (in pixels). The image will be scaled to this width. Leave it blank to use the original size of the image.';
-
-?>

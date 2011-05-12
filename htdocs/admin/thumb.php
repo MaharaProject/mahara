@@ -45,5 +45,3 @@ switch ($type) {
         readfile(get_config('dataroot') . 'images/' . $type . '.png');
         exit;
 }
-
-?>

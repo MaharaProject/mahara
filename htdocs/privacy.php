@@ -33,5 +33,3 @@ define('TITLE', get_string('privacystatement'));
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('privacy'));
 $smarty->display('sitepage.tpl');
-
-?>

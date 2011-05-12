@@ -192,5 +192,3 @@ $smarty->assign('notrudeform', $notrudeform);
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 $smarty->display('view/artefact.tpl');
-
-?>

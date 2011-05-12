@@ -937,6 +937,3 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return artefact_get_references_in_html($this->get('description'));
     }
 }
-
-
-?>

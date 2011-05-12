@@ -560,5 +560,3 @@ class XMLDBoci8po extends XMLDBgenerator {
         return $reserved_words;
     }
 }
-
-?>

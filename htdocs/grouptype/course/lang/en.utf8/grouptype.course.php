@@ -31,5 +31,3 @@ $string['name'] = 'Course';
 $string['admin'] = 'Admin';
 $string['tutor'] = 'Tutor';
 $string['member'] = 'Member';
-
-?>

@@ -322,5 +322,3 @@ function init_performance_info() {
         $PERF->startposixtimes = posix_times();  
     }
 }
-
-?>

@@ -39,4 +39,3 @@ function pieform_rule_regex(Pieform $form, $value, $element, $regex) {/*{{{*/
         return $form->i18n('rule', 'regex', 'regex', $element);
     }
 }/*}}}*/
-

@@ -164,5 +164,3 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
     }
 
 }
-
-?>

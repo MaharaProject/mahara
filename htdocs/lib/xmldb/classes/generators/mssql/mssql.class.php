@@ -502,5 +502,3 @@ class XMLDBmssql extends XMLDBgenerator {
         return $reserved_words;
     }
 }
-
-?>

@@ -120,5 +120,3 @@ if ($contenttype = $file->override_content_type()) {
 }
 $options['owner'] = $file->get('owner');
 serve_file($path, $title, $file->get('filetype'), $options);
-
-?>

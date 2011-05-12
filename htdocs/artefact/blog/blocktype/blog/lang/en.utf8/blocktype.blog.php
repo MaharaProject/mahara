@@ -32,5 +32,3 @@ $string['description'] = 'Display an entire journal';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
 $string['postsperpage'] = 'Entries per page';
-
-?>

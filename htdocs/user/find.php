@@ -96,5 +96,3 @@ $smarty->display('user/find.tpl');
 function search_submit(Pieform $form, $values) {
     redirect('/user/find.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
-
-?>

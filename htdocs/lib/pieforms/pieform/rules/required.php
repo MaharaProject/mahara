@@ -38,4 +38,3 @@ function pieform_rule_required(Pieform $form, $value, $element, $check) {/*{{{*/
         return $form->i18n('rule', 'required', 'required', $element);
     }
 }/*}}}*/
-

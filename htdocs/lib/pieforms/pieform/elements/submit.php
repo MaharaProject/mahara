@@ -45,5 +45,3 @@ function pieform_element_submit_set_attributes($element) {/*{{{*/
     $element['submitelement'] = true;
     return $element;
 }/*}}}*/
-
-?>

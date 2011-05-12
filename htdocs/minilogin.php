@@ -32,5 +32,3 @@ define('NOSESSKEY', 1);
 require('init.php');
 
 json_reply(false, $USER->get('sesskey'));
-
-?>

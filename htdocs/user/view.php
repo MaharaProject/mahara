@@ -357,6 +357,3 @@ function approve_deny_friendrequest_submit(Pieform $form, $values) {
         acceptfriend_submit($form, $values);
     }
 }
-
-
-?>

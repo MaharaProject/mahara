@@ -649,5 +649,3 @@ if ($id != $USER->get('id') || count_records('usr', 'admin', 1, 'deleted', 0) > 
 }
 
 $smarty->display('admin/users/edit.tpl');
-
-?>

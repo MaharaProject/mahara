@@ -71,5 +71,3 @@ function deleteplanform_submit(Pieform $form, $values) {
 
     redirect('/artefact/plans/');
 }
-
-?>

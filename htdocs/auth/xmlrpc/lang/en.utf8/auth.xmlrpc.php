@@ -33,5 +33,3 @@ $string['notusable'] = 'Please install the XMLRPC, Curl and OpenSSL PHP extensio
 $string['networkingdisabledonthissite'] = 'Networking is disabled on this site';
 $string['networkservers'] = 'Network Servers';
 $string['youhaveloggedinfrom'] = 'You have logged in from <a href="%s">%s</a>.';
-
-?>

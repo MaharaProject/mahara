@@ -60,5 +60,3 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
     $result .= "</span>";
     return $result;
 }/*}}}*/
-
-?>

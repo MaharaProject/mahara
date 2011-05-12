@@ -72,4 +72,3 @@ if (!function_exists('checkdnsrr')) {
         return false;
     }
 }
-

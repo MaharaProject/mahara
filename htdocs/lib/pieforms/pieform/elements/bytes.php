@@ -139,5 +139,3 @@ function pieform_element_bytes_get_bytes_from_bytes($bytes) {/*{{{*/
 
     return array('number' => $bytes, 'units' => 'bytes');
 }/*}}}*/
-
-?>

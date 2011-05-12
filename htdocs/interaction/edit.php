@@ -91,5 +91,3 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
 $smarty->display('interaction/edit.tpl');
-
-?>

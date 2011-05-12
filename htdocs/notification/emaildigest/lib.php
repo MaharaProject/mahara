@@ -147,5 +147,3 @@ class PluginNotificationEmaildigest extends PluginNotification {
     }
 
 }
-
-?>

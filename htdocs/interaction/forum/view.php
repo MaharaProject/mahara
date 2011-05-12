@@ -281,5 +281,3 @@ function setup_topics(&$topics) {
         }
     }
 }
-
-?>

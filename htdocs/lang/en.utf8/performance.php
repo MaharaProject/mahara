@@ -41,6 +41,3 @@ $string['user'] = 'user';
 $string['cuser'] = 'cuser';
 $string['csys'] = 'csys';
 $string['serverload'] = 'Server load';
-
-
-?>

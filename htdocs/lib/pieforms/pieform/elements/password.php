@@ -47,5 +47,3 @@ function pieform_element_password_get_value(Pieform $form, $element) {/*{{{*/
     }
     return null;
 }/*}}}*/
-
-?>

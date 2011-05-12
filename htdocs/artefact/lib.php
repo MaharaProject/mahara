@@ -1545,6 +1545,3 @@ function artefact_get_types_from_filter($filter) {
 
     return $contenttype_artefacttype[$filter];
 }
-
-
-?>

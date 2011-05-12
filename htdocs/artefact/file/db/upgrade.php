@@ -273,5 +273,3 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
     return $status;
 }
-
-?>

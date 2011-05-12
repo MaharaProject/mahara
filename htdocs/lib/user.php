@@ -1969,5 +1969,3 @@ function get_friends($userid, $limit=10, $offset=0) {
 
     return $result;
 }
-
-

@@ -50,5 +50,3 @@ if (!delete_records('group_category','id', $itemid)) {
 }
 
 json_reply(false, get_string('groupcategorydeleted','admin'));
-
-?>

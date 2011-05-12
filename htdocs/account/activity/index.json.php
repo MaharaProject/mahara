@@ -109,4 +109,3 @@ if ($message) {
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));
-

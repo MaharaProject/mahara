@@ -921,5 +921,3 @@ class HtmlExportCopyProxy {
         return $this->copy;
     }
 }
-
-?>

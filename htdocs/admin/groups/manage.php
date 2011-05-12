@@ -108,5 +108,3 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('managegroupform', $form);
 $smarty->display('admin/groups/manage.tpl');
-
-?>

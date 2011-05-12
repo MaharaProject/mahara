@@ -13,5 +13,3 @@ echo '<div class="makeprivate">' . $elements['private']['labelhtml'] . ' ' . $el
 echo '<div>' . $elements['submit']['html'] . '</div></div>';
 echo $hidden_elements;
 echo '</form>';
-
-?>

@@ -112,5 +112,3 @@ class XMLDBFile extends XMLDBObject {
         return $result;
     }
 }
-
-?>

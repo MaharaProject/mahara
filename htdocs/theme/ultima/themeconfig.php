@@ -29,5 +29,3 @@ $theme = new StdClass;
 $theme->displayname   = 'Ultima';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
-
-?>

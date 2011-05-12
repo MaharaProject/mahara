@@ -74,4 +74,3 @@ $result['message'] = false;
 
 json_headers();
 echo json_encode($result);
-?>

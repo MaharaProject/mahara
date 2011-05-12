@@ -129,4 +129,3 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return $view->get('owner') != null;
     }
 }
-

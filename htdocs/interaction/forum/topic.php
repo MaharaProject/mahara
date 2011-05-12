@@ -358,5 +358,3 @@ function subscribe_topic_submit(Pieform $form, $values) {
     }
     redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
-
-?>

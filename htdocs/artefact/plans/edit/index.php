@@ -49,5 +49,3 @@ $smarty = smarty();
 $smarty->assign('editform', $editform);
 $smarty->assign('PAGEHEADING', hsc(get_string("editingplan", "artefact.plans")));
 $smarty->display('artefact:plans:edit.tpl');
-
-?>

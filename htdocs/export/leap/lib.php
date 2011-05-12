@@ -1127,5 +1127,3 @@ class LeapExportOutputFilter {
     }
 
 }
-
-?>

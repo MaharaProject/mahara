@@ -33,5 +33,3 @@ define('TITLE', get_string('about'));
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('about'));
 $smarty->display('sitepage.tpl');
-
-?>

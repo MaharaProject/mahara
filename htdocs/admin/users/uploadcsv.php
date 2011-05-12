@@ -407,5 +407,3 @@ $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/uploadcsv.tpl');
-
-?>

@@ -33,4 +33,3 @@ $string['emailbodynoreply'] = "This is an auto generated notification from %s.  
 $string['emailbodyending'] = 'To update your notification preferences, visit %s';
 
 $string['name'] = 'Email digest';
-?>

@@ -986,5 +986,3 @@ function subscribe_forum_submit(Pieform $form, $values) {
         redirect('/interaction/forum/view.php?id=' . $values['forum'] . '&offset=' . $values['offset']);
     }
 }
-
-?>

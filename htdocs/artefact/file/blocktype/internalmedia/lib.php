@@ -441,5 +441,3 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     }
 
 }
-
-?>

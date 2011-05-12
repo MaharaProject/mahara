@@ -110,5 +110,3 @@ class PluginBlocktypeHtml extends PluginBlocktype {
     }
 
 }
-
-?>

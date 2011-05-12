@@ -175,5 +175,3 @@ function pieform_element_date_get_timeperiod_value($timeperiod, $min, $max, $ele
 
     return $value;
 }/*}}}*/
-
-?>

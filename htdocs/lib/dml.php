@@ -1678,5 +1678,3 @@ function db_replace($replacearray) {
         }
     }
 }
-
-?>

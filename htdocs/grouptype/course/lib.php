@@ -82,5 +82,3 @@ class GroupTypeCourse extends GroupType {
         );
     }
 }
-
-?>

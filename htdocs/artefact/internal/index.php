@@ -477,5 +477,3 @@ function locked_profile_fields() {
 
     return $locked;
 }
-
-?>

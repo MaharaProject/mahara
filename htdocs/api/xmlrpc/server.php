@@ -157,5 +157,3 @@ if ($xml->getName() == 'methodCall') {
 } else {
     throw new XmlrpcServerException('Unrecognized XML document form: ' . var_export($xml,1), 6009);
 }
-
-?>

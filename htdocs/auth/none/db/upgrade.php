@@ -30,5 +30,3 @@ defined('INTERNAL') || die();
 function xmldb_auth_none_upgrade($oldversion=0) {
     return true;
 }
-
-?>

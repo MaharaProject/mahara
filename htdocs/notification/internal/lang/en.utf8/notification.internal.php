@@ -28,4 +28,3 @@
 defined('INTERNAL') || die();
 
 $string['name'] = 'Inbox';
-?>

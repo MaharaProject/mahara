@@ -218,4 +218,3 @@ $smarty->assign('tag', $tag);
 $smarty->assign_by_ref('results', $data);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('tags.tpl');
-?>

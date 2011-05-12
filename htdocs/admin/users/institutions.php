@@ -649,5 +649,3 @@ function theme_sort($a, $b) {
     }
     return $a > $b;
 }
-
-?>

@@ -73,5 +73,3 @@ $smarty->assign('strnocollectionsaddone',
     get_string('nocollectionsaddone','collection','<a href="' . get_config('wwwroot') . 'collection/edit.php?new=1">', '</a>'));
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('collection/index.tpl');
-
-?>

@@ -157,4 +157,3 @@ function pieform_element_wysiwyg_views_js(Pieform $form, $element) {
     }
     return '';
 }
-?>

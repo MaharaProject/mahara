@@ -646,7 +646,3 @@ class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {}
 class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
-
-
-
-?>

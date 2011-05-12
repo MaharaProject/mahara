@@ -152,5 +152,3 @@ function {$id}_remove_all_errors() {
 EOF;
     return $result;
 }
-
-?>

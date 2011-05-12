@@ -419,5 +419,3 @@ class XMLDBStatement extends XMLDBObject {
     }
 
 }
-
-?>

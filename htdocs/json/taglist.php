@@ -50,5 +50,3 @@ if (empty($result)) {
 
 json_headers();
 print json_encode($result);
-
-?>

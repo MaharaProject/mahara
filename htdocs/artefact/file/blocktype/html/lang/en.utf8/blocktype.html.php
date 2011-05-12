@@ -29,6 +29,3 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Some HTML';
 $string['description'] = 'A single html file from your Files area';
-
-
-?>

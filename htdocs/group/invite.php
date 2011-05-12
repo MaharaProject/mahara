@@ -95,4 +95,3 @@ function invitetogroup_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('userinvited', 'group'));
     redirect('/user/view.php?id=' . $user->id);
 }
-

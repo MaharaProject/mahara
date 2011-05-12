@@ -4146,5 +4146,3 @@ define('FORMAT_NAME_STUDENTID', 5);
  * display format for author names in views - obeys display_name
  */
 define('FORMAT_NAME_DISPLAYNAME', 6);
-
-?>

@@ -341,5 +341,3 @@ function delete_attachment($attachmentid) {
         $blogpostobj->detach($attachmentid);
     }
 }
- 
-?>

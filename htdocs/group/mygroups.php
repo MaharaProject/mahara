@@ -107,5 +107,3 @@ $smarty->display('group/mygroups.tpl');
 function filter_submit(Pieform $form, $values) {
     redirect('/group/mygroups.php?filter=' . $values['options']. (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
-
-?>

@@ -102,5 +102,3 @@ function sendmessage_submit(Pieform $form, $values) {
             break;
     }
 }
-
-?>

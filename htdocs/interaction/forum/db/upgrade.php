@@ -95,5 +95,3 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
 
     return true;
 }
-
-?>

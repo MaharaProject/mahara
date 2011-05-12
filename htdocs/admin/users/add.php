@@ -355,5 +355,3 @@ $smarty = smarty(array('adminadduser'));
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/add.tpl');
-
-?>

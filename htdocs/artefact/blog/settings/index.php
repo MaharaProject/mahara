@@ -125,5 +125,3 @@ function editblog_cancel_submit() {
     $id = param_integer('id');
     redirect('/artefact/blog/view/?id=' . $id);
 }
-
-?>

@@ -39,4 +39,3 @@ $string['invalidurl'] = 'That URL is invalid. You can only view feeds for http a
 $string['invalidfeed'] = 'The feed appears to be invalid. The error reported was: %s';
 $string['lastupdatedon'] = 'Last updated on %s';
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the feed will be used';
-?>

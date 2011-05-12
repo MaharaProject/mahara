@@ -260,5 +260,3 @@ class Dispatcher {
         return $this->methodhelp[$methodname[0]];
     }
 }
-
-?>

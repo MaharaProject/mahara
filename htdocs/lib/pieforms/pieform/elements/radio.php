@@ -73,5 +73,3 @@ function pieform_element_radio_set_attributes($element) {/*{{{*/
     $element['rules']['validateoptions'] = true;
     return $element;
 }/*}}}*/
-
-?>

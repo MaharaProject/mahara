@@ -131,5 +131,3 @@ function close_site_submit(Pieform $form, $values) {
     }
     redirect(get_config('wwwroot') . 'admin/index.php');
 }
-
-?>

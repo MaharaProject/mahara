@@ -599,5 +599,3 @@ $smarty = smarty(array('adminsiteoptions'));
 $smarty->assign('siteoptionform', $siteoptionform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/options.tpl');
-
-?>

@@ -123,5 +123,3 @@ $smarty->display('user/myfriends.tpl');
 function filter_submit(Pieform $form, $values) {
     redirect('/user/myfriends.php?filter=' . $values['filter']);
 }
-
-?>

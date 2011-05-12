@@ -71,5 +71,3 @@ function deletetaskform_submit(Pieform $form, $values) {
 
     redirect('/artefact/plans/plan.php?id='.$todelete->get('parent'));
 }
-
-?>

@@ -51,4 +51,3 @@ $pagination = array(
 ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 
 json_reply(false, array('data' => $posts));
-?>

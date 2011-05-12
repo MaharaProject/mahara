@@ -506,4 +506,3 @@ function cron_lock($job, $start, $plugintype='core') {
 function cron_free($job, $start, $plugintype='core') {
     delete_records('config', 'field', '_cron_lock_' . cron_job_id($job, $plugintype), 'value', $start);
 }
-

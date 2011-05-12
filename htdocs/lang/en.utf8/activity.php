@@ -148,4 +148,3 @@ $string['viewsubmittedsubject'] = 'Page submitted to %s';
 $string['viewsubmittedmessage'] = '%s has submitted their page "%s" to %s';
 
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
-?>

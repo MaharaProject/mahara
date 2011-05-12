@@ -202,4 +202,3 @@ function check_installed_plugins() {
 
     return $missing;
 }
-

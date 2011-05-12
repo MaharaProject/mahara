@@ -85,4 +85,3 @@ $string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%
 // Error messages for external authentication usernames
 $string['duplicateremoteusername'] = 'This external authentication username is already in use by the user %s. External authentication usernames must be unique within an authentication method.';
 $string['duplicateremoteusernameformerror'] = 'External authentication usernames must be unique within an authentication method.';
-?>

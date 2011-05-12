@@ -72,5 +72,3 @@ if (empty($url)) {
     throw new XmlrpcClientException('DEBUG: Jump session was not started correctly or blank URL returned.'); // TODO: errors
 }
 redirect($url);
-
-?>

@@ -34,5 +34,3 @@ function xmldb_blocktype_wall_upgrade($oldversion=0) {
     }
     return true;
 }
-
-?>

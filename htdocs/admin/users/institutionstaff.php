@@ -106,5 +106,3 @@ $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 $smarty->assign('staffusersform', pieform($form));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/institutionstaff.tpl');
-
-?>

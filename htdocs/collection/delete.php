@@ -69,5 +69,3 @@ function deletecollection_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('collectiondeleted', 'collection'));
     redirect('/collection/');
 }
-
-?>

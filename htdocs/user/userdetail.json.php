@@ -44,5 +44,3 @@ json_reply(false, array(
     'message' => null,
     'html' => $html,
 ));
-
-?>

@@ -107,5 +107,3 @@ abstract class GroupType {
 
     public static abstract function default_artefact_rolepermissions();
 }
-
-?>

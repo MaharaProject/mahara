@@ -315,5 +315,3 @@ class XMLDBmysql extends XMLDBGenerator {
         return $reserved_words;
     }
 }
-
-?>

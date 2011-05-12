@@ -136,5 +136,3 @@ class PluginBlocktypeFolder extends PluginBlocktype {
     }
 
 }
-
-?>

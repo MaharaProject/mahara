@@ -176,5 +176,3 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
     }
 
 }
-
-?>

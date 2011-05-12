@@ -54,5 +54,3 @@ class LeapExportElementTask extends LeapExportElementPlan {
         );
     }
 }
-
-?>

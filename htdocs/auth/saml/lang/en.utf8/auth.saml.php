@@ -51,4 +51,3 @@ $string['simplesamlphplib'] = 'SimpleSAMLPHP lib directory';
 $string['simplesamlphpconfig'] = 'SimpleSAMLPHP config directory';
 $string['weautocreateusers'] = 'We auto-create users';
 $string['remoteuser'] = 'Match username attribute to Remote username';
-?>

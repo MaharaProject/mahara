@@ -80,4 +80,3 @@ else {
 
 
 json_reply(false, array('data' => $posts));
-?>

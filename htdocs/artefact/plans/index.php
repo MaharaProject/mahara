@@ -58,5 +58,3 @@ $smarty->assign('strnoplansaddone',
 $smarty->assign('PAGEHEADING', hsc(get_string("Plans", "artefact.plans")));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:plans:index.tpl');
-
-?>

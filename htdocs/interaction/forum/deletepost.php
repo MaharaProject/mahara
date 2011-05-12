@@ -124,5 +124,3 @@ $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);
 $smarty->assign('groupadmins', group_get_admin_ids($post->group));
 $smarty->display('interaction:forum:deletepost.tpl');
-
-?>

@@ -94,5 +94,3 @@ class LeapExportElementComment extends LeapExportElement {
     }
 
 }
-
-?>

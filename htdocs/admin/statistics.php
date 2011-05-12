@@ -74,4 +74,3 @@ $smarty->assign('subpages', $subpages);
 $smarty->assign('subpagedata', $data);
 
 $smarty->display('admin/statistics.tpl');
-?>

@@ -41,4 +41,3 @@ function pieform_rule_email(Pieform $form, $value, $element) {/*{{{*/
         return $form->i18n('rule', 'email', 'email', $element);
     }
 }/*}}}*/
-

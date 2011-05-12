@@ -73,5 +73,3 @@ if ($key || $USER->is_logged_in()) {
 
 // Not logged in and no key provided
 redirect('/');
-
-?>

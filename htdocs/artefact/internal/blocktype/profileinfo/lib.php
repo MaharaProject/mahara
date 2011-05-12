@@ -276,5 +276,3 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
 }
-
-?>

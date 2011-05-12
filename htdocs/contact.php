@@ -153,5 +153,3 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $contactform);
 $smarty->display('form.tpl');
-
-?>

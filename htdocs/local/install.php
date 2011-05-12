@@ -9,5 +9,3 @@ function localpreinst() {
 
 function localpostinst() {
 }
-
-?>

@@ -123,4 +123,3 @@ if ($rpcconfigured === false) {
 } else {
     throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcuser','auth'));
 }
-?>

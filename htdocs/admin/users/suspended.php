@@ -122,5 +122,3 @@ function get_user_ids_from_post() {
 
     return $ids;
 }
-
-?>

@@ -29,5 +29,3 @@ $theme = new StdClass;
 $theme->displayname   = 'Sunset';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
-
-?>

@@ -394,5 +394,3 @@ if ($registerterms) {
 }
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('register.tpl');
-
-?>

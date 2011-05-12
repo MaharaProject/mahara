@@ -46,5 +46,3 @@ $data['error'] = false;
 $data['data'] = $result;
 $data['count'] = ($result) ? count($result) : 0;
 echo json_encode($data);
-
-?>

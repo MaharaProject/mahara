@@ -556,5 +556,3 @@ class PluginAuthSaml extends PluginAuth {
         return $values;
     }
 }
-
-?>

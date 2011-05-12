@@ -48,5 +48,3 @@ if (!$USER->get('admin')) {
 $institution->addUserAsMember($id);
 $SESSION->add_ok_msg(get_string('useradded', 'admin'));
 redirect(get_config('wwwroot').'admin/users/edit.php?id='.$id);
-
-?>

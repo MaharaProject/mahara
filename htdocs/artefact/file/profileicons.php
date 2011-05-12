@@ -319,5 +319,3 @@ $smarty->assign('settingsformtag', $settingsform->get_form_tag());
 $smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('artefact:file:profileicons.tpl');
-
-?>

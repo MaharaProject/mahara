@@ -196,5 +196,3 @@ $smarty->assign('PAGEHEADING', hsc(get_string('groupcategories', 'admin')));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('optionform', $optionform);
 $smarty->display('admin/groups/groupcategories.tpl');
-
-?>

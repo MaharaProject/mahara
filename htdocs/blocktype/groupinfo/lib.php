@@ -109,5 +109,3 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
         return array('group'=>$group, 'filecounts'=>$filecounts);
     }
 }
-
-?>

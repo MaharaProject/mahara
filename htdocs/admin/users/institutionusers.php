@@ -235,5 +235,3 @@ $smarty->assign('instructions', get_string('institutionusersinstructions'.$usert
 $smarty->assign('institutionusersform', $userlistform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/institutionusers.tpl');
-
-?>

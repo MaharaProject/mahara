@@ -735,5 +735,3 @@ class XMLDBStructure extends XMLDBObject {
         return $results;
     }
 }
-
-?>

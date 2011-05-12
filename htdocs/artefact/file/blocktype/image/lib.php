@@ -140,5 +140,3 @@ class PluginBlocktypeImage extends PluginBlocktype {
     }
 
 }
-
-?>

@@ -284,5 +284,3 @@ if (isset($timeleft)) {
     $smarty->assign('timeleft', $timeleft);
 }
 $smarty->display('interaction:forum:edittopic.tpl');
-
-?>

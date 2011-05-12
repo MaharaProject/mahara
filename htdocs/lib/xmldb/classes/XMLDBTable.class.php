@@ -1069,5 +1069,3 @@ class XMLDBTable extends XMLDBObject {
         return $generator->getSequenceFromDB($this);
     }
 }
-
-?>

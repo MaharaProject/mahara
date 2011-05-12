@@ -319,5 +319,3 @@ $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') 
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('footerform', $footerform);
 $smarty->display('admin/site/menu.tpl');
-
-?>

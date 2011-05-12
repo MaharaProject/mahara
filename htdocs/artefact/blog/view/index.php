@@ -128,5 +128,3 @@ function delete_submit(Pieform $form, $values) {
         'id' => $values['delete'],
     ));
 }
-
-?>

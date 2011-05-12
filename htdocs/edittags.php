@@ -115,5 +115,3 @@ function delete_tag_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('tagdeletedsuccessfully'));
     redirect(get_config('wwwroot') . 'tags.php');
 }
-
-?>

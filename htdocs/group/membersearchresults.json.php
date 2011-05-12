@@ -73,5 +73,3 @@ json_reply(false, array(
         'membershiptype' => $membershiptype,
     )
 ));
-
-?>

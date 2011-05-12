@@ -90,5 +90,3 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('message', $message);
 $smarty->display('artefact:internal:validate.tpl');
-
-?>

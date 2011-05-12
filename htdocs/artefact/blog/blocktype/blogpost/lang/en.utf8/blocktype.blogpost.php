@@ -31,5 +31,3 @@ $string['title'] = 'Journal Entry';
 $string['description'] = 'Display one journal entry';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal entry will be used';
-
-?>

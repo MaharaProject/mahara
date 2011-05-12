@@ -111,5 +111,3 @@ function denyrequest_submit(Pieform $form, $values) {
             break;
     }
 }
-
-?>

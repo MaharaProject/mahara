@@ -28,5 +28,3 @@ $theme = new StdClass;
 
 $theme->displayname = 'Aqua';
 $theme->parent      = 'raw';
-
-?>

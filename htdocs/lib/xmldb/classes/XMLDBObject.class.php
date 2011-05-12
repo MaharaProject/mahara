@@ -391,5 +391,3 @@ class XMLDBObject {
         return $arr;
     }
 }
-
-?>

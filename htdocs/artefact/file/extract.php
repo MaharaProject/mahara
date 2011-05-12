@@ -150,5 +150,3 @@ function unzip_artefact_submit(Pieform $form, $values) {
     $redirect = $from . (strpos($from, '?') === false ? '?' : '&') . 'folder=' . $status['basefolderid'];
     redirect($redirect);
 }
-
-?>

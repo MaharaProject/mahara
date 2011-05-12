@@ -47,5 +47,3 @@ if (isset($register)) {
 }
 
 $smarty->display('admin/registersite.tpl');
-
-?>

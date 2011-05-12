@@ -1645,5 +1645,3 @@ function pieform_get_headdata() {/*{{{*/
 
     return array_unique($htmlelements);
 }/*}}}*/
-
-?>

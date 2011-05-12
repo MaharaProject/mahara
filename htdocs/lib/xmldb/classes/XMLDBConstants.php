@@ -71,4 +71,3 @@
     define ('XMLDB_LINEFEED', "\n");
     define ('XMLDB_PHP_HEADER', '    if ($status && $oldversion < XXXXXXXXXX) {' . XMLDB_LINEFEED);
     define ('XMLDB_PHP_FOOTER', '    }' . XMLDB_LINEFEED);
-?>

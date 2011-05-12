@@ -40,5 +40,3 @@ list($blogs->count, $blogs->data) = ArtefactTypeBlog::get_blog_list($blogs->limi
 ArtefactTypeBlog::build_blog_list_html($blogs);
 
 json_reply(false, array('data' => $blogs));
-
-?>

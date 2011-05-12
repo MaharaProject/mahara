@@ -72,5 +72,3 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
 
     return true;
 }
-
-?>

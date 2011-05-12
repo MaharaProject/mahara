@@ -123,5 +123,3 @@ echo $elements['submit']['html'];
 echo '</div>';
 echo $hidden_elements;
 echo '</form>';
-
-?>

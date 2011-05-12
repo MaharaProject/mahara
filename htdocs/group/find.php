@@ -153,5 +153,3 @@ $smarty->assign('form', $searchform);
 $smarty->assign('groups', $groups['data']);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->display('group/find.tpl');
-
-?>

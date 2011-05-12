@@ -121,5 +121,3 @@ function requestfriendship_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('friendformrequestsuccess', 'group', display_name($id)));
     redirect($goto);
 }
-
-?>

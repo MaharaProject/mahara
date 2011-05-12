@@ -121,4 +121,3 @@ function returnto() {
     }
     return $goto;
 }
-?>

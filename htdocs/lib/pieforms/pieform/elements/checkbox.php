@@ -74,5 +74,3 @@ function pieform_element_checkbox_get_value(Pieform $form, $element) {/*{{{*/
 
     return false;
 }/*}}}*/
-
-?>

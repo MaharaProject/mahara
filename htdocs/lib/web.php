@@ -3075,5 +3075,3 @@ function mahara_http_request($config) {
 
     return $result;
 }
-
-?>

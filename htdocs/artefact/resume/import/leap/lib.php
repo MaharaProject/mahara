@@ -566,5 +566,3 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     }
 
 }
-
-?>

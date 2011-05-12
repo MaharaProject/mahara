@@ -105,5 +105,3 @@ function pieform_element_submitcancel_get_value(Pieform $form, $element) {/*{{{*
         return $element['value'];
     }
 }/*}}}*/
-
-?>

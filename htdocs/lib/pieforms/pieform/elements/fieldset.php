@@ -158,4 +158,3 @@ function pieform_element_fieldset_views_js(Pieform $form, $element) {
 
     return $result;
 }
-?>

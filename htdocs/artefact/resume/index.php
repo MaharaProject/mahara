@@ -225,4 +225,3 @@ function personalinformation_submit(Pieform $form, $values) {
         $form->json_reply(PIEFORM_ERR, $message);
     }
 }
-

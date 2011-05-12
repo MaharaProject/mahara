@@ -53,5 +53,3 @@ function pieform_element_file_set_attributes($element) {/*{{{*/
     $element['needsmultipart'] = true;
     return $element;
 }/*}}}*/
-
-?>

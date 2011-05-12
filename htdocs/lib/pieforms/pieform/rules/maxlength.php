@@ -38,4 +38,3 @@ function pieform_rule_maxlength(Pieform $form, $value, $element, $maxlength) {/*
         return sprintf($form->i18n('rule', 'maxlength', 'maxlength', $element), $maxlength);
     }
 }/*}}}*/
-

@@ -31,4 +31,3 @@ $string['title'] = 'Your Entire Résumé';
 $string['description'] = 'A quick way to show your whole résumé';
 
 $string['History'] = 'History';
-?>

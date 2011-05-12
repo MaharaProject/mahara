@@ -288,5 +288,3 @@ class PluginAuthImap extends PluginAuth {
         return $values;
     }
 }
-
-?>

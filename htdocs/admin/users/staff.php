@@ -85,5 +85,3 @@ $smarty = smarty();
 $smarty->assign('staffusersform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/staff.tpl');
-
-?>

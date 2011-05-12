@@ -38,4 +38,3 @@ function pieform_rule_minvalue(Pieform $form, $value, $element, $minvalue) {/*{{
         return sprintf($form->i18n('rule', 'minvalue', 'minvalue', $element), $minvalue);
     }
 }/*}}}*/
-

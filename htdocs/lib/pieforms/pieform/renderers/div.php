@@ -67,5 +67,3 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     $result .= "</div>\n";
     return $result;
 }/*}}}*/
-
-?>

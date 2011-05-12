@@ -170,5 +170,3 @@ function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
 
     return $values;
 }/*}}}*/
-
-?>

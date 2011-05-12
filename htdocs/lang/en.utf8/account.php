@@ -87,4 +87,3 @@ $string['maildisableddescription'] = 'Sending of email to your account has been 
 $string['deleteaccount']  = 'Delete Account';
 $string['deleteaccountdescription']  = 'If you delete your account, your profile information and your pages will no longer be visible to other users.  The content of any forum posts you have written will still be visible, but the author\'s name will no longer be displayed.';
 $string['accountdeleted']  = 'Your account has been deleted.';
-?>

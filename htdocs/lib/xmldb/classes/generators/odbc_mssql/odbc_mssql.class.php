@@ -39,5 +39,3 @@ class XMLDBodbc_mssql extends XMLDBmssql {
         XMLDBmssql::XMLDBmssql();
     }
 }
-
-?>

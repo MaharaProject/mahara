@@ -463,5 +463,3 @@ EOF;
     }
     return $pagination_js;
 }
-
-?>

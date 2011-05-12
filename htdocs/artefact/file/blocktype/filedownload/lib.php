@@ -137,5 +137,3 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
 }
-
-?>

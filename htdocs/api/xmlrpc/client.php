@@ -253,4 +253,3 @@ class Client {
         return $max_time_difference;
     }
 }
-?>

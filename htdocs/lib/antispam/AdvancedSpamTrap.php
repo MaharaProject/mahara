@@ -95,4 +95,3 @@ class AdvancedSpamTrap extends SimpleSpamTrap {
         return false;
     }
 }
-

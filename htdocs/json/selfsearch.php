@@ -48,5 +48,3 @@ json_headers();
 $data['error'] = false;
 $data['message'] = false;
 echo json_encode($data);
-
-?>

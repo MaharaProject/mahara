@@ -686,5 +686,3 @@ class PluginAuthLdap extends PluginAuth {
 
 
 }
-
-?>

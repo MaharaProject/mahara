@@ -152,5 +152,3 @@ class PluginImportFile extends PluginImport {
         return array('folder' => $this->importdir, 'file' => (count($this->artefacts) == 1) ? $this->artefacts[0] : 0);
     }
 }
-
-?>

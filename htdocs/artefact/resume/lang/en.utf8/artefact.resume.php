@@ -96,5 +96,3 @@ $string['viewyourresume'] = 'View your Résumé';
 $string['resumeofuser'] = 'Résumé of %s';
 $string['employeraddress'] = 'Employer Address';
 $string['institutionaddress'] = 'Institution Address';
-
-?>

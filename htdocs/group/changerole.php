@@ -110,5 +110,3 @@ $smarty->assign('subheading', get_string('changeroleofuseringroup', 'group', dis
 $smarty->assign('changeform', $changeform);
 
 $smarty->display('group/changerole.tpl');
-
-?>

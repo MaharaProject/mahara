@@ -33,5 +33,3 @@ define('TITLE', get_string('termsandconditions'));
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('termsandconditions'));
 $smarty->display('sitepage.tpl');
-
-?>

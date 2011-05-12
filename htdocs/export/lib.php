@@ -401,5 +401,3 @@ function export_cleanup_old_exports() {
         }
     }
 }
-
-?>

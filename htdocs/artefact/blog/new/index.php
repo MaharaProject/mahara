@@ -102,5 +102,3 @@ function newblog_submit(Pieform $form, $values) {
 function newblog_cancel_submit() {
     redirect('/artefact/blog/');
 }
-
-?>

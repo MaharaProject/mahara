@@ -40,5 +40,3 @@ if (!delete_records('site_menu','id', $itemid)) {
 }
 
 json_reply(false, get_string('menuitemdeleted','admin'));
-
-?>

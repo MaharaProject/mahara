@@ -108,4 +108,3 @@ $smarty->assign('goalform', $goalform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goals.tpl');
-

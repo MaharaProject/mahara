@@ -326,4 +326,3 @@ $string['membersdescription:controlled'] = 'This is a controlled membership grou
 // View submission
 $string['submit'] = 'Submit';
 $string['allowssubmissions'] = 'Allows submissions';
-?>

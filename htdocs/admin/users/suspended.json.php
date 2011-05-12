@@ -99,5 +99,3 @@ echo json_encode(array(
     'offset'   => $offset,
     'data'     => $data
 ));
-
-?>

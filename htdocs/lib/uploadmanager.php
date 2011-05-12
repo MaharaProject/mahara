@@ -397,5 +397,3 @@ function clam_log_infected($oldfilepath='', $newfilepath='', $userid=0) {
 
     log_debug($errorstr);
 }
-
-?>

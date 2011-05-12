@@ -88,5 +88,3 @@ $smarty = smarty();
 $smarty->assign('adminusersform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/admin.tpl');
-
-?>

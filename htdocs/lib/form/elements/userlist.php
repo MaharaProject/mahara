@@ -126,5 +126,3 @@ function pieform_element_userlist_set_attributes($element) {
     }
     return $element;
 }
-
-?>

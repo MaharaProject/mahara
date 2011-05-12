@@ -137,5 +137,3 @@ function pieform_element_weight_renumber_existing_from_zero($existing) {
     }
     return $existing;
 }
-
-?>

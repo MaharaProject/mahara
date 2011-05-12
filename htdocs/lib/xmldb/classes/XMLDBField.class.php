@@ -900,5 +900,3 @@ class XMLDBField extends XMLDBObject {
         return $o;
     }
 }
-
-?>

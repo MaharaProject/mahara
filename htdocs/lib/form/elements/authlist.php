@@ -93,5 +93,3 @@ function pieform_element_authlist_get_value(Pieform $form, $element) {
 
     return $value;
 }
-
-?>

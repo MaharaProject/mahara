@@ -54,5 +54,3 @@ default:
 }
 
 json_reply(false, (object) array('message' => false, 'data' => $data));
-
-?>

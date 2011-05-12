@@ -35,4 +35,3 @@ $string['preparing'] = 'Preparing %s';
 $string['exportingdatafor'] = 'Exporting data for %s';
 $string['buildingindexpage'] = 'Building index page';
 $string['copyingextrafiles'] = 'Copying extra files';
-?>

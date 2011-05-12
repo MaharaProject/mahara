@@ -1275,5 +1275,3 @@ class Country {
     }
 
 }
-
-?>

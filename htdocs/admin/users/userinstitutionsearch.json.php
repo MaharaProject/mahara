@@ -45,5 +45,3 @@ $data['error'] = false;
 $data['message'] = null;
 echo json_encode($data);
 exit;
-
-?>

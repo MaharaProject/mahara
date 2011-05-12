@@ -53,5 +53,3 @@ $string['postsizelimitdescription'] = "You can limit the size of wall posts here
 $string['postsizelimitmaxcharacters'] = "Maximum number of characters";
 $string['postsizelimitinvalid'] = "This is not a valid number.";
 $string['postsizelimittoosmall'] = "This limit cannot be lower than zero.";
-
-?>

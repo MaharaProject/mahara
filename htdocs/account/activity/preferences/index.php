@@ -117,6 +117,3 @@ function activityprefs_submit(Pieform $form, $values) {
     }
     $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));
 }
-
-
-?>

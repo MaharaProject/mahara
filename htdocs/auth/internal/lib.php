@@ -252,5 +252,3 @@ class PluginAuthInternal extends PluginAuth {
         return array();
     }
 }
-
-?>

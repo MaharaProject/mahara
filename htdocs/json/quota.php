@@ -38,5 +38,3 @@ if ($USER->is_logged_in()) {
 
 json_headers();
 print json_encode($result);
-
-?>

@@ -205,5 +205,3 @@ $smarty->assign('plugins', $plugins);
 $smarty->assign('installlink', 'installplugin');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/extensions/plugins.tpl');
-
-?>

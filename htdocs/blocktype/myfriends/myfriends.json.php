@@ -45,4 +45,3 @@ PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid, $bi);
 unset($friends['data']);
 
 json_reply(false, array('data' => $friends));
-?>

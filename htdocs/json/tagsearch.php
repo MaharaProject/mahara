@@ -44,4 +44,3 @@ $data->tagdisplay = is_null($tag) ? get_string('alltags') : hsc(str_shorten_text
 $data->tagurl = urlencode($tag);
 
 json_reply(false, array('data' => $data));
-?>

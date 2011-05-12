@@ -2032,5 +2032,3 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
     }
 
 }
-
-?>

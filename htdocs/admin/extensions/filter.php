@@ -68,5 +68,3 @@ $smarty->assign('newfiltersdescription', get_string('newfiltersdescription', 'ad
 $smarty->assign('filters', $filters);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/extensions/filters.tpl');
-
-?>

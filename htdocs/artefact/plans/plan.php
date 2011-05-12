@@ -67,5 +67,3 @@ $smarty->assign('strnotasksaddone',
 $smarty->assign('PAGEHEADING', get_string("planstasks", "artefact.plans",$plan->get('title')));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:plans:plan.tpl');
-
-?>

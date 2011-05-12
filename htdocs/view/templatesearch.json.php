@@ -55,5 +55,3 @@ json_reply(false, array(
         'count'      => $views->count,
     )
 ));
-
-?>

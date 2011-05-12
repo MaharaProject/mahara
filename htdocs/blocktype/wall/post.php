@@ -37,5 +37,3 @@ $instance = new BlockInstance($wall);
 
 safe_require('blocktype', 'wall');
 PluginBlocktypeWall::wallpost_form($instance);
-
-?>

@@ -76,5 +76,3 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
     }
 
 }
-
-?>

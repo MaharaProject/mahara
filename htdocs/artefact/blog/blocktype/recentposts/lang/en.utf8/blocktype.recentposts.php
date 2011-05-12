@@ -32,5 +32,3 @@ $string['description'] = 'Display the most recent journal entries';
 $string['itemstoshow'] = 'Items to show';
 $string['postedin'] = 'in';
 $string['postedon'] = 'on';
-
-?>

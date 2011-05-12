@@ -38,5 +38,3 @@ $string['widthdescription'] = 'Specify the width for your images (in pixels). Th
 $string['style'] = 'Style';
 $string['stylethumbs'] = 'Thumbnails';
 $string['styleslideshow'] = 'Slideshow';
-
-?>

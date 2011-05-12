@@ -454,5 +454,3 @@ class LeapExportElementResumeCompositeSibling extends LeapExportElementResumeCom
         return true;
     }
 }
-
-?>

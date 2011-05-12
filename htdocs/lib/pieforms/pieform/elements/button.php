@@ -42,5 +42,3 @@ function pieform_element_button(Pieform $form, $element) {/*{{{*/
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($element['value']) . '">';
 }/*}}}*/
-
-?>

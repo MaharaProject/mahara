@@ -29,5 +29,3 @@ $theme = new StdClass;
 $theme->displayname   = 'Fresh';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
-
-?>

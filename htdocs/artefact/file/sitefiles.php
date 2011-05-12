@@ -46,5 +46,3 @@ $smarty->assign('institution', 'mahara');
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:file:files.tpl');
-
-?>

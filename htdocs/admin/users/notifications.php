@@ -91,6 +91,3 @@ $smarty->assign('users', $users);
 $smarty->assign('types', $types);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/notifications.tpl');
-
-
-?>

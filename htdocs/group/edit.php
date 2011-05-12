@@ -219,5 +219,3 @@ function editgroup_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('editgroup', $editgroup);
 $smarty->display('group/edit.tpl');
-
-?>

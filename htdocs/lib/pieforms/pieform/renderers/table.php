@@ -106,5 +106,3 @@ function pieform_renderer_table_header() {/*{{{*/
 function pieform_renderer_table_footer() {/*{{{*/
     return "</tbody></table>\n";
 }/*}}}*/
-
-?>

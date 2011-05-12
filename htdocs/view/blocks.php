@@ -240,5 +240,3 @@ else {
 }
 
 $smarty->display('view/blocks.tpl');
-
-?>

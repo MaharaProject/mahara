@@ -101,5 +101,3 @@ function pieform_element_textarea_get_headdata() {/*{{{*/
     $result .= "</script>";
     return array($result);
 }/*}}}*/
-
-?>

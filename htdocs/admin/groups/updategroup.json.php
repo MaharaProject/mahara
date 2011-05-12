@@ -66,5 +66,3 @@ else {
 }
 
 json_reply(false, null);
-
-?>

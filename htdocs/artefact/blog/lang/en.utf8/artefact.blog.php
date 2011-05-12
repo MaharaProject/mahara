@@ -143,4 +143,3 @@ $string['feedsnotavailable'] = 'Feeds are not available for this artefact type.'
 $string['feedrights'] = 'Copyright %s.';
 
 $string['enablemultipleblogstext'] = 'You have one journal. If you would like to start a second one, enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
-?>

@@ -112,5 +112,3 @@ function removefriend_submit(Pieform $form, $values) {
     }
 
 }
-
-?>

@@ -71,5 +71,3 @@ function pieform_element_hidden_get_value(Pieform $form, $element) {/*{{{*/
     }
     return $element['value'];
 }/*}}}*/
-
-?>

@@ -84,4 +84,3 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
         return get_string('title', 'blocktype.newviews');
     }
 }
-

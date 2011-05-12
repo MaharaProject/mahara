@@ -2661,5 +2661,3 @@ function is_html_editor_enabled () {
     return (!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
         get_config('wysiwyg') == 'enable';
 }
-
-?>

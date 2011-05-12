@@ -452,5 +452,3 @@ class XMLDBKey extends XMLDBObject {
         return $o;
     }
 }
-
-?>

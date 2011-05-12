@@ -96,5 +96,3 @@ class LeapExportElementProfileIcon extends LeapExportElementFile {
 }
 
 class LeapExportElementArchive extends LeapExportElementFile { }
-
-?>

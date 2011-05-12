@@ -240,5 +240,3 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     }
 
 }
-
-?>

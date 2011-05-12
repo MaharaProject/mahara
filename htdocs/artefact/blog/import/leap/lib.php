@@ -365,5 +365,3 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
     }
 
 }
-
-?>

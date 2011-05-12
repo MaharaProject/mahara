@@ -1194,5 +1194,3 @@ class XMLDBgenerator {
         return $tables;
     }
 }
-
-?>

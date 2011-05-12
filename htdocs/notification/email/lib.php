@@ -97,5 +97,3 @@ class PluginNotificationEmail extends PluginNotification {
         email_user($user, $userfrom, $subject, $messagebody, $messagehtml, !empty($data->customheaders) ? $data->customheaders : null);
     }
 }
-
-?>

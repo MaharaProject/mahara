@@ -606,4 +606,3 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
 
     return $data;
 }
-?>

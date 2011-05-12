@@ -44,5 +44,3 @@ $data = array(
     'message'  => false,
 );
 json_reply(false, $data);
-
-?>

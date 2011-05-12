@@ -51,4 +51,3 @@ $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
-

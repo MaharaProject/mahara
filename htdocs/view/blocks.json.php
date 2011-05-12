@@ -60,5 +60,3 @@ case 'blocktype_list':
 }
 
 json_reply(true, get_string('noviewcontrolaction', 'error', $action));
-
-?>

@@ -543,5 +543,3 @@ function validateFtpSyntax( $ftpaddr, $options="" ){
     return validateUrlSyntax( $ftpaddr, $newoptions);
 
 } // END Function validateFtpSyntax()
-
-?>

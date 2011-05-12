@@ -37,5 +37,3 @@ $string['useintroductioninstead'] = 'You can use your introduction profile field
 $string['dontshowprofileicon'] = "Don't show a profile picture";
 $string['dontshowemail'] = "Don't show email address";
 $string['uploadaprofileicon'] = "You have no profile pictures. <a href=\"%sartefact/file/profileicons.php\" target=\"_blank\">Upload one</a>";
-
-?>

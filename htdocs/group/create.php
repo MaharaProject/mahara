@@ -165,5 +165,3 @@ function creategroup_submit(Pieform $form, $values) {
 
     redirect('/group/view.php?id=' . $id);
 }
-
-?>

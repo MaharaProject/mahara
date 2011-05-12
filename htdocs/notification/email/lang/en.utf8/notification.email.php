@@ -33,4 +33,3 @@ $string['emailfooter'] = 'This is an auto generated notification from %s. To upd
 $string['referurl'] = 'See %s';
 
 $string['name'] = 'Email';
-?>

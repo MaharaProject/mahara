@@ -396,5 +396,3 @@ class LeapImportFile extends LeapImportArtefactPlugin {
     }
 
 }
-
-?>

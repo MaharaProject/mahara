@@ -31,5 +31,3 @@ $string['title'] = 'File(s) to Download';
 $string['description'] = 'Select files for people to download';
 
 $string['Files'] = 'Files';
-
-?>

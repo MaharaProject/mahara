@@ -142,5 +142,3 @@ $smarty->assign('admin', $membership == 'admin');
 $smarty->assign('groupadmins', group_get_admin_ids($groupid));
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');
-
-?>

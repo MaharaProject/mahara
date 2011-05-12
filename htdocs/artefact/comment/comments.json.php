@@ -54,5 +54,3 @@ $view = new View($extradata->view);
 $data = ArtefactTypeComment::get_comments($limit, $offset, null, $view, $artefact);
 
 json_reply(false, array('data' => $data));
-
-?>

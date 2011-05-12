@@ -59,5 +59,3 @@ if ($action == 'search') {
     echo json_encode($data);
     exit;
 }
-
-?>

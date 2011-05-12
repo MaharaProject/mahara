@@ -201,4 +201,3 @@ EOF;
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/users/addauthority.tpl');
-?>

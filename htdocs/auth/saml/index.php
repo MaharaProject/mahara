@@ -289,5 +289,3 @@ function simplesaml_init($saml_config, $valid_saml_session, $saml_attributes, $a
         }
     }
 }
-
-?>

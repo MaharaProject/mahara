@@ -140,5 +140,3 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
 }
-
-?>

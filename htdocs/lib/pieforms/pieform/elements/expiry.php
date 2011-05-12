@@ -162,5 +162,3 @@ function pieform_element_expiry_get_expiry_from_seconds($seconds) {/*{{{*/
     }
     return null;
 }/*}}}*/
-
-?>

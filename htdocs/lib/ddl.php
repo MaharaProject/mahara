@@ -1168,5 +1168,3 @@ function rename_index($table, $index, $newname, $continue=true, $feedback=true) 
 
     return execute_sql_arr($sqlarr, $continue, $feedback);
 }
-
-?>

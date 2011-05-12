@@ -49,4 +49,3 @@ function xmldb_auth_internal_upgrade($oldversion=0) {
 
     return true;
 }
-?>

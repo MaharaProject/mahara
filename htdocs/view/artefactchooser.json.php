@@ -51,5 +51,3 @@ json_reply(false, array(
         'offset' => $offset,
     )
 ));
-
-?>

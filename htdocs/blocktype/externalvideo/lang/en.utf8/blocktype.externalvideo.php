@@ -34,5 +34,3 @@ $string['videourldescription2'] = 'Paste the embed code or the URL of the page w
 $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['invalidurl'] = 'Invalid URL';
-
-?>

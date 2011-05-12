@@ -29,5 +29,3 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'None';
 $string['description'] = 'Anyone can log in. Use for testing only!';
-
-?>

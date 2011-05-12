@@ -192,5 +192,3 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
     }
 
 }
-
-?>

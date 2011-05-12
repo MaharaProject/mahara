@@ -124,5 +124,3 @@ $smarty->assign('topic', $topic);
 $smarty->assign('groupadmins', group_get_admin_ids($topic->group));
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletetopic.tpl');
-
-?>

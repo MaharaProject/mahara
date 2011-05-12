@@ -190,5 +190,3 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
     }
 
 }
-
-?>

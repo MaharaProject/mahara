@@ -160,5 +160,3 @@ $smarty = smarty();
 $smarty->assign('networkingform', $networkingform);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/networking.tpl');
-
-?>

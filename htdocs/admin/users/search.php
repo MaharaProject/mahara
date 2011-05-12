@@ -61,5 +61,3 @@ $smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/search.tpl');
-
-?>

@@ -247,5 +247,3 @@ class LeapExportElementInternalNonPerson extends LeapExportElement {
 
 class LeapExportElementIndustry extends LeapExportElementInternalNonPerson { }
 class LeapExportElementOccupation extends LeapExportElementInternalNonPerson { }
-
-?>

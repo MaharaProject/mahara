@@ -134,5 +134,3 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
     }
 
 }
-
-?>

@@ -347,4 +347,3 @@ function remove_all_sessions() {
 
     delete_records_select('usr_session', 'session != ?', array($sid));
 }
-

@@ -35,4 +35,3 @@ abstract class PluginNotification extends Plugin {
         return false;
     }
 }
-?>

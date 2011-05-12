@@ -41,5 +41,3 @@ function pieform_element_html_set_attributes($element) {/*{{{*/
     $element['nofocus'] = true;
     return $element;
 }/*}}}*/
-
-?>

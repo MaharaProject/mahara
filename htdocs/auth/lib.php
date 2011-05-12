@@ -1687,5 +1687,3 @@ class PluginAuth extends Plugin {
         return false;
     }
 }
-
-?>

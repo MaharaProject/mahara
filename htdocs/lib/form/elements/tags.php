@@ -82,5 +82,3 @@ function pieform_element_tags_get_value(Pieform $form, $element) {
 
     return $value;
 }
-
-?>

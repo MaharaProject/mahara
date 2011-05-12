@@ -735,5 +735,3 @@ $string['groupvisible'] = 'Visibility';
 $string['groupmanage'] = 'Manage';
 $string['groupdelete'] = 'Delete';
 $string['managegroupdescription'] = 'Use the form below to promote and demote admins for this group.  If you remove a group administrator they will remain a group member.';
-
-?>

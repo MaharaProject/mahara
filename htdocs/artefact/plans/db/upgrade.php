@@ -35,5 +35,3 @@ function xmldb_artefact_plans_upgrade($oldversion=0) {
 
     return true;
 }
-
-?>

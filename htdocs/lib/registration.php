@@ -967,5 +967,3 @@ function stats_graph_url($name) {
     }
     return '';
 }
-
-?>

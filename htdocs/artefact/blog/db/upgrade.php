@@ -156,5 +156,3 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
 
     return true;
 }
-
-?>

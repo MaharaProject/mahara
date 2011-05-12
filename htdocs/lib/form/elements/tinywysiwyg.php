@@ -80,5 +80,3 @@ function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
     }
     return '';
 }
-
-?>

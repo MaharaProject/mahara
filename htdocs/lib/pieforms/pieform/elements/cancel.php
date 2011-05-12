@@ -54,5 +54,3 @@ function pieform_element_cancel_set_attributes($element) {/*{{{*/
     $element['cancelelement'] = true;
     return $element;
 }/*}}}*/
-
-?>

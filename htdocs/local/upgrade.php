@@ -8,5 +8,3 @@ defined('INTERNAL') || die();
 
 function xmldb_local_upgrade($oldversion=0) {
 }
-
-?>

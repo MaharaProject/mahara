@@ -69,6 +69,3 @@ $string['task'] = 'task';
 $string['tasks'] = 'tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
 $string['tasksavedsuccessfully'] = 'Task saved successfully.';
-
-
-?>

@@ -92,5 +92,3 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
     }
 
 }
-
-?>

@@ -208,4 +208,3 @@ if ($postrecords) {
 }
 
 generate_feed($feed, $posts);
-?>

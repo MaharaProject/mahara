@@ -31,5 +31,3 @@ $config->release = '1.1.0';
 $config->name = 'saml';
 $config->requires_config = 1;
 $config->requires_parent = 0;
-
-?>

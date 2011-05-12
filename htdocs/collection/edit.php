@@ -97,5 +97,3 @@ function edit_cancel_submit() {
     }
     redirect('/collection/');
 }
-
-?>

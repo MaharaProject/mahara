@@ -99,5 +99,3 @@ function pieform_element_emaillist_get_value(Pieform $form, $element) {
 
     return $value;
 }
-
-?>

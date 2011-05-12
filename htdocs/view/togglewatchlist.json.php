@@ -57,5 +57,3 @@ if (!insert_record('usr_watchlist_view', $data)) {
 $result->message = get_string('addedtowatchlist', 'view');
 $result->newtext = get_string('removefromwatchlist', 'view');
 json_reply(false, $result);
-
-?>

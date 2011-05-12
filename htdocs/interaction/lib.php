@@ -310,5 +310,3 @@ function interaction_sideblock($groupid, $membership=true) {
         'data' => $data
     );
 }
-
-?>

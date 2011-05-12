@@ -38,4 +38,3 @@ function pieform_rule_integer(Pieform $form, $value, $element) {/*{{{*/
         return $form->i18n('rule', 'integer', 'integer', $element);
     }
 }/*}}}*/
-

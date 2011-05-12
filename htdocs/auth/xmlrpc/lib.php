@@ -1051,5 +1051,3 @@ function localurl_to_jumpurl($url) {
     }
     return $indirecturl;
 }
-
-?>

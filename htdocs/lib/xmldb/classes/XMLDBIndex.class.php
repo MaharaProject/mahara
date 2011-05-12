@@ -259,5 +259,3 @@ class XMLDBIndex extends XMLDBObject {
         return $o;
     }
 }
-
-?>

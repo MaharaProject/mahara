@@ -107,5 +107,3 @@ class PluginAuthNone extends PluginAuth {
         return array();
     }
 }
-
-?>

@@ -474,5 +474,3 @@ class XMLDBpostgres7 extends XMLDBgenerator {
         return $reserved_words;
     }
 }
-
-?>

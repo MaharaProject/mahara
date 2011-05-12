@@ -30,5 +30,3 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty_core();
 $smarty->display('artefact:blog:image_popup.tpl');
-
-?>

@@ -217,5 +217,3 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
 }
-
-?>

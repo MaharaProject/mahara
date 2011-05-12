@@ -237,5 +237,3 @@ $smarty = smarty();
 $smarty->assign('forgotpass_form', pieform($form));
 $smarty->assign('heading', get_string('forgotusernamepassword'));
 $smarty->display('forgotpass.tpl');
-
-?>

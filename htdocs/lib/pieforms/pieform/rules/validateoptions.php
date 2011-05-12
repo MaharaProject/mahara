@@ -46,4 +46,3 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
         }
     }
 }/*}}}*/
-

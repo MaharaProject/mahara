@@ -243,5 +243,3 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         }
     }
 }
-
-?>

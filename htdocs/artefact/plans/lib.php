@@ -616,5 +616,3 @@ class ArtefactTypeTask extends ArtefactType {
         }
     }
 }
-
-?>

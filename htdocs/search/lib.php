@@ -152,5 +152,3 @@ abstract class PluginSearch extends Plugin {
         }
     }
 }
-
-?>

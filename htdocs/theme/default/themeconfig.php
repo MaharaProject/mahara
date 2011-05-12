@@ -28,5 +28,3 @@ $theme = new StdClass;
 
 $theme->displayname = 'Default';
 $theme->parent      = 'raw';
-
-?>

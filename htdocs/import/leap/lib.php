@@ -1617,5 +1617,3 @@ abstract class LeapImportArtefactPlugin {
     }
 
 }
-
-?>

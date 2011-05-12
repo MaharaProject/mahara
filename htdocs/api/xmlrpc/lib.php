@@ -1445,4 +1445,3 @@ class PublicKey {
         return $this->{$name};
     }
 }
-?>

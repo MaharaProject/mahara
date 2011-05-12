@@ -133,4 +133,3 @@ function pluginconfig_validate(PieForm $form, $values) {
         call_static_method($classname, 'validate_config_options', $form, $values);
     }
 }
-?>

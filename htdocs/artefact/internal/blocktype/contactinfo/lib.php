@@ -200,5 +200,3 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
     }
 
 }
-
-?>

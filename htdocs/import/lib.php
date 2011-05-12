@@ -584,5 +584,3 @@ function import_cleanup_old_imports() {
         }
     }
 }
-
-?>

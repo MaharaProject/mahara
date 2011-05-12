@@ -613,5 +613,3 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
 }
-
-?>

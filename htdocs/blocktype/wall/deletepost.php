@@ -75,5 +75,3 @@ $smarty = smarty();
 $smarty->assign('deleteform', $form);
 $smarty->assign('PAGEHEADING', get_string('deletepost', 'blocktype.wall'));
 $smarty->display('blocktype:wall:deletepost.tpl');
-
-?>

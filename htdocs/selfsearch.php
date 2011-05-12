@@ -94,5 +94,3 @@ $smarty->assign('query', $query);
 $smarty->assign('artefacttype', $artefacttype);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('selfsearch.tpl');
-
-?>

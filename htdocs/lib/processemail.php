@@ -39,5 +39,3 @@ log_debug('-- mail from ' . $address );
 $email = process_email($address);
 
 log_debug('---------- finished processing email at ' . date('r', time()) . ' ----------');
-
-?>

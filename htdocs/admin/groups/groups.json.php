@@ -44,5 +44,3 @@ $data['offset'] = $offset;
 $data['query'] = $query;
 
 json_reply(false, array('data' => $data));
-
-?>

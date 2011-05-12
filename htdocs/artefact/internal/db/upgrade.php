@@ -45,5 +45,3 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
     // everything up to here we pre mysql support.
     return $status;
 }
-
-?>

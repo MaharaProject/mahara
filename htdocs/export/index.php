@@ -194,5 +194,3 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('pagedescription', get_string('exportpagedescription', 'export'));
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');
-
-?>

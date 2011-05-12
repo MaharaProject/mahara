@@ -41,5 +41,3 @@ if (param_integer('restore', 0)) {
 $id = param_integer('id');
 $USER->change_identity_to($id);  // Permissions checking is done in here
 redirect(get_config('wwwroot'));
-
-?>

@@ -89,4 +89,3 @@ function deleteview_submit(Pieform $form, $values) {
     }
     redirect('/view/');
 }
-?>
