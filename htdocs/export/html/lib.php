@@ -686,7 +686,12 @@ class HtmlExportOutputFilter {
      */
     private function replace_artefact_link($matches) {
         $artefactid = $matches[2];
-        $artefact = artefact_instance_from_id($artefactid);
+        try {
+            $artefact = artefact_instance_from_id($artefactid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            return $matches[5];
+        }
 
         $artefacttype = $artefact->get('artefacttype');
         switch ($artefacttype) {
@@ -713,7 +718,12 @@ class HtmlExportOutputFilter {
      */
     private function replace_download_link($matches) {
         $artefactid = $matches[2];
-        $artefact = artefact_instance_from_id($artefactid);
+        try {
+            $artefact = artefact_instance_from_id($artefactid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            return '';
+        }
 
         // If artefact type not something that would be served by download.php, 
         // replace link with nothing
@@ -762,7 +772,12 @@ class HtmlExportOutputFilter {
                     return $this->basepath . $to;
                 }
             case 'profileiconbyid':
-                $icon = artefact_instance_from_id($options['id']);
+                try {
+                    $icon = artefact_instance_from_id($options['id']);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    return '';
+                }
                 if ($icon->get_plugin_name() != 'file') {
                     return '';
                 }
