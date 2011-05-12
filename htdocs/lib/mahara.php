@@ -1638,6 +1638,11 @@ function can_view_view($view_id, $user_id=null) {
         return false;
     }
 
+    // If the view's owner is suspended, deny access to the view
+    if ((!$owner = $view->get_owner_object()) || $owner->suspendedcusr) {
+        return false;
+    }
+
     // Overriding start/stop dates are set by the owner to deny access
     // to users who would otherwise be allowed to see the view.  However,
     // for some kinds of access (e.g. objectionable content, submitted
