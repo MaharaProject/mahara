@@ -1712,9 +1712,6 @@ table.attachments td {
 	float: right;
 }
 /* Publish page */
-.accesslists th .secreturl {
-	width: 25%;
-}
 .accesslists .cv {
 	width: 50%;
 	padding-left: 0;
@@ -1736,16 +1733,12 @@ table.attachments td {
 	padding: 3px 5px;
 	border-bottom: 1px solid #FFF;
 }
-.accesslists .cv-listitem .cv-listitem-edit {
-	float: right;
-}
 .accesslists .cv-listitem .viewname {
 	font-weight: bold;
 }
-.secreturlcount {
-	float: left;
-}
-.secreturls {
+.accesslists .secreturls {
+	float: right;
+	text-align: center;
 	width: 20%;
 }
 /* Secret url */
