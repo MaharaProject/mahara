@@ -707,6 +707,10 @@ ul.artefactchooser-subtabs li.current a:active {
     margin: 0;
 	float: left;
 }
+#containerX div.colnav-showmore {
+    margin: 0;
+    float: left;
+}
 /* Collection navigation normal header */
 #collectionnavwrap {
 	background: #EEE;

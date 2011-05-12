@@ -59,6 +59,10 @@ else {
 }
 
 $new = param_boolean('new');
+$showmore = param_boolean('showmore');
+if (!$showmore) {
+    $showmore = 0;
+}
 
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
@@ -185,6 +189,7 @@ $smarty = smarty(
 
 $javascript = <<<EOF
 var viewid = {$viewid};
+var showmore = {$showmore};
 addLoadEvent(function () {
     paginator = {$feedback->pagination_js}
 });
