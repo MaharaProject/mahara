@@ -8,17 +8,45 @@
 <table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th>{str tag=accesslist section=view}</th>
-      <th class="center">{str tag=editaccess section=view}</th>
       <th>
         <span class="fl">{str tag=Views section=view} &amp; {str tag=collections section=collection}</span>
-        <span class="fr">{str tag=secreturls section=view}</span>
+        <span class="fr secreturl">{str tag=secreturls section=view}</span>
       </th>
+      <th>{str tag=accesslist section=view}</th>
+      <th class="center">{str tag=editaccess section=view}</th>
     </tr>
   </thead>
   <tbody>
 {foreach from=$accesslists item=accesslist name=als}
     <tr class="{cycle values='r0,r1'}">
+      <td class="cv">
+        {if $accesslist.views}
+          <div class="cb cv-listitem">{str tag=Views section=view}:</div>
+          {foreach from=$accesslist.views item=view name=v}
+          <div class="cv-listitem">
+            <div class="fr secreturls">
+              <span class="secreturlcount">{count($view.secreturls)}</span> <span class="cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></span>
+            </div>
+            <div class="viewname">
+              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
+            </div>
+          </div>
+          {/foreach}
+        {/if}
+        {if $accesslist.collections}
+          <div class="cb cv-listitem">{str tag=Collections section=collection}:</div>
+          {foreach from=$accesslist.collections item=collection name=c}
+          <div class="cb cv-listitem">
+            <div class="fr secreturls">
+              <span class="secreturlcount">{count($collection.secreturls)}</span> <span class="cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></span>
+            </div>
+            <div>
+              <strong><a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a></strong>
+            </div>
+          </div>
+          {/foreach}
+        {/if}
+      </td>
       <td class="al">
       {if $accesslist.access}
         <div class="videsc">{$accesslist.access}</div>
@@ -54,32 +82,6 @@
       </td>
       <td class="al-edit">
         <a href="{$WWWROOT}view/access.php?id={$accesslist.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
-      </td>
-      <td class="cv">
-        {if $accesslist.views}
-          {foreach from=$accesslist.views item=view name=v}
-          <div class="cv-listitem">
-            <div class="fr secreturls">
-              <span class="secreturlcount">{count($view.secreturls)}</span> <span class="cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$view.id}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></span>
-            </div>
-            <div class="viewname">
-              <a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.name|str_shorten_text:60:true}</a>
-            </div>
-          </div>
-          {/foreach}
-        {/if}
-        {if $accesslist.collections}
-          {foreach from=$accesslist.collections item=collection name=c}
-          <div class="cb cv-listitem">
-            <div class="fr secreturls">
-              <span class="secreturlcount">{count($collection.secreturls)}</span> <span class="cv-listitem-edit"><a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$collection.viewid}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a></span>
-            </div>
-            <div>
-              <strong><a href="{$WWWROOT}view/view.php?id={$collection.viewid}">{$collection.name|str_shorten_text:60:true}</a></strong>
-            </div>
-          </div>
-          {/foreach}
-        {/if}
       </td>
     </tr>
   {/foreach}
