@@ -1116,3 +1116,43 @@ function activate_plugin_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('plugin' . (($values['enable']) ? 'enabled' : 'disabled')));
     redirect('/admin/extensions/plugins.php');
 }
+
+// site warnings for the admin to consider
+function site_warnings() {
+
+    $warnings = array();
+
+    // Warn about nasty php settings that Mahara can still sort of deal with.
+    if (ini_get_bool('register_globals')) {
+        $warnings[] = get_string('registerglobals', 'error');
+    }
+    if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
+        $warnings[] = get_string('magicquotesgpc', 'error');
+    }
+    if (ini_get_bool('magic_quotes_runtime')) {
+        $warnings[] = get_string('magicquotesruntime', 'error');
+    }
+    if (ini_get_bool('magic_quotes_sybase')) {
+        $warnings[] = get_string('magicquotessybase', 'error');
+    }
+
+    // Check if the host returns a usable value for the timezone identifier %z
+    $tz_count = preg_match("/\+[0-9]{4}/", strftime("%z"));
+    if ($tz_count == 0 || $tz_count == FALSE) {
+        $warnings[] = get_string('timezoneidentifierunusable', 'error');
+    }
+
+    // Check file upload settings.
+    $postmax       = ini_get('post_max_size');
+    $uploadmax     = ini_get('upload_max_filesize');
+    $realpostmax   = get_real_size($postmax);
+    $realuploadmax = get_real_size($uploadmax);
+    if ($realpostmax && $realpostmax < $realuploadmax) {
+        $warnings[] = get_string('postmaxlessthanuploadmax', 'error', $postmax, $uploadmax, $postmax);
+    }
+    else if ($realpostmax && $realpostmax < 9000000) {
+        $warnings[] = get_string('smallpostmaxsize', 'error', $postmax, $postmax);
+    }
+
+    return $warnings;
+}
