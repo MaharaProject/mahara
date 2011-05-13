@@ -1,5 +1,6 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
     <script type="text/javascript">
     var config = {literal}{{/literal}

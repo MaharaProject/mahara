@@ -215,6 +215,8 @@ $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
 
+$smarty->assign('PAGEAUTHOR', $view->formatted_owner());
+
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $collection ? hsc($collection->get('name')) : $view->display_title(true, false));
