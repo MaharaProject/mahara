@@ -27,6 +27,8 @@
 
 defined('INTERNAL') || die();
 
+define('MAX_USERNAME_DISPLAY', 30);
+
 /** 
  * loads up activity preferences for a given user
  *
@@ -725,7 +727,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     if (empty($user->preferredname)) {
         $firstlast = full_name($user);
         if ($addusername) {
-            return $firstlast . ' (' . $user->username . ')';
+            return $firstlast . ' (' . display_username($user) . ')';
         }
         return $firstlast;
     }
@@ -758,12 +760,12 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     if ($addrealname) {
         $firstlast = full_name($user);
         if ($addusername) {
-            return $user->preferredname . ' (' . $firstlast . ' - ' . $user->username . ')';
+            return $user->preferredname . ' (' . $firstlast . ' - ' . display_username($user) . ')';
         }
         return $user->preferredname . ' (' . $firstlast . ')';
     }
     if ($addusername) {
-        return $user->preferredname . ' (' . $user->username . ')';
+        return $user->preferredname . ' (' . display_username($user) . ')';
     }
     return $user->preferredname;
 }
@@ -819,6 +821,30 @@ function full_name($user=null) {
     return isset($user->deleted) && $user->deleted ? get_string('deleteduser') : $user->firstname . ' ' . $user->lastname;
 }
 
+/**
+ * Creates a string containing a displayable username.
+ *
+ * If the username is longer than 30 characters (bug #548165), then print
+ * the first 30 characters followed by '...'
+ *
+ * @param object $user The user object to display the username of. If empty,
+ *                     the global $USER object is used
+ */
+function display_username($user=null) {
+    global $USER;
+
+    if ($user === null) {
+        $user = new StdClass;
+        $user->username = $USER->get('username');
+    }
+
+    if (strlen($user->username) > MAX_USERNAME_DISPLAY) {
+        return substr($user->username, 0, MAX_USERNAME_DISPLAY).'...';
+    }
+    else {
+        return $user->username;
+    }
+}
 
 /**
  * helper function to default to currently

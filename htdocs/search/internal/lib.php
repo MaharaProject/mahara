@@ -336,6 +336,7 @@ class PluginSearchInternal extends PluginSearch {
                     }
                 }
                 foreach ($data as &$item) {
+                    $item->username = display_username($item);
                     $item = (array)$item;
                 }
                 $data = array_values($data);
