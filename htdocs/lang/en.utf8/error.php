@@ -119,6 +119,6 @@ $string['missingparamid'] = 'Missing id';
 
 $string['themenameinvalid'] = "The name of the theme '%s' contains invalid characters.";
 
-$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the timezone identifier (%%z) - certain date formatting, such as the LEAP2A export, will be broken.';
+$string['timezoneidentifierunusable'] = 'PHP on your website host does not return a useful value for the timezone identifier (%%z) - certain date formatting, such as the LEAP2A export, will be broken. %%z is a PHP date formatting code. This problem is usually due to a limitation in running PHP on Windows.';
 $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is smaller than your upload_max_filesize setting (%s).  Uploads larger than %s will fail without displaying an error.  Usually, post_max_size should be much larger than upload_max_filesize.';
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small.  Uploads larger than %s will fail without displaying an error.';
