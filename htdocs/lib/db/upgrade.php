@@ -2269,5 +2269,10 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_precision($table, $field);
     }
 
+    if ($oldversion < 2011051300) {
+        // We do not store wwwroot in the database any more
+        delete_records('config','field','wwwroot');
+    }
+
     return $status;
 }
