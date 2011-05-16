@@ -157,8 +157,7 @@ catch (SQLException $e) {
     db_ignore_sql_exceptions(false);
 }
 
-// Make sure wwwroot is set and available, either in the database or in the
-// config file. Cron requires it for some purposes.
+// Make sure wwwroot is set. If it is not defined in the config, then determine it.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     $proto = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') ? 'https://' : 'http://';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
@@ -176,15 +175,9 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     } else {
         $path = '/';
     }
-    $wwwroot = $proto . $host . $path;
-    try {
-        set_config('wwwroot', $wwwroot);
-    }
-    catch (Exception $e) {
-        // Just set it directly. The system will most likely not be installed, so we don't care
-        $CFG->wwwroot = $wwwroot;
-    }
+    $CFG->wwwroot = $proto . $host . $path;
 }
+
 if (isset($CFG->wwwroot)) {
     if (substr($CFG->wwwroot, -1, 1) != '/') {
         $CFG->wwwroot .= '/';
