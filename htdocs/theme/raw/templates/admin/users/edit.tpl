@@ -18,7 +18,7 @@
 <tr><td class="center">
     <div id="profilepict">
         <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->id}" alt=""></a>
-        <div id="profilename"><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name|escape}</a></div>
+        <div id="profilename"><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name}</a></div>
     </div>
     {if $loginas}
        <div id="loginas"><a class="btn" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{str tag=loginas section=admin}</a></div>

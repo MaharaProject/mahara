@@ -15,7 +15,7 @@
 {foreach from=$users item='user' key='userid'}
                 <tr class="{cycle values="r0,r1"}">
                     <td class='center'><img src="{$WWWROOT}thumb.php?type=profileicon&maxwidth=40&maxheight=40&id={$userid}" alt="profile picture"/></td>
-                    <td>{$user.user|display_name|escape}</td>
+                    <td>{$user.user|display_name}</td>
                     <td>
                     {foreach from=$user.user->institutions item=i}
                         <div>{$i}</div>

@@ -14,7 +14,7 @@ function Dwoo_Plugin_display_name(Dwoo $dwoo, $user, $userto=null, $nameonly=fal
         return '';
     }
 
-    return display_name($user, $userto, $nameonly, $realname);
+    return hsc(display_name($user, $userto, $nameonly, $realname));
 }
 
 ?>
