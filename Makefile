@@ -25,4 +25,4 @@ checksignoff:
 	fi
 
 push: minaccept checksignoff
-	git push
+	git push gerrit HEAD:refs/for/master
