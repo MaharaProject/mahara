@@ -29,6 +29,8 @@ defined('INTERNAL') || die();
 
 class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
+    private static $default_numtoshow = 12;
+
     public static function get_title () {
         return get_string('title', 'blocktype.groupmembers');
     }
@@ -56,15 +58,15 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         $rows = isset($configdata['rows']) ? $configdata['rows'] : 1;
         $columns = isset($configdata['columns']) ? $configdata['columns'] : 6;
         $order = isset($configdata['order']) ? $configdata['order'] : 'latest';
+        $numtoshow = isset($configdata['numtoshow']) ? $configdata['numtoshow'] : $rows * $columns;
 
         $groupid = $instance->get_view()->get('group');
         require_once('searchlib.php');
-        $groupmembers = get_group_user_search_results($groupid, '', 0, $rows * $columns, '', $order);
+        $groupmembers = get_group_user_search_results($groupid, '', 0, $numtoshow, '', $order);
 
         if ($groupmembers['count']) {
-            $groupmembersarray = array_chunk($groupmembers['data'], $columns);
             $smarty = smarty_core();
-            $smarty->assign_by_ref('groupmembers', $groupmembersarray);
+            $smarty->assign_by_ref('groupmembers', $groupmembers['data']);
             $groupmembers['tablerows'] = $smarty->fetch('blocktype:groupmembers:row.tpl');
         } else {
             $groupmembers = false;
@@ -90,22 +92,15 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        $options = range(0,9);
+        $options = range(0,20);
         unset($options[0]);
 
         return array(
-            'rows' => array(
-                'type'  => 'select',
-                'title' => get_string('options_rows_title', 'blocktype.groupmembers'),
-                'description' => get_string('options_rows_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => isset($configdata['rows']) ? $configdata['rows'] : 1,
-                'options' => $options,
-            ),
-            'columns' => array(
-                'type'  => 'select',
-                'title' => get_string('options_columns_title', 'blocktype.groupmembers'),
-                'description' => get_string('options_columns_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => isset($configdata['columns']) ? $configdata['columns'] : 6,
+            'numtoshow' => array(
+                'type' => 'select',
+                'title' => get_string('options_numtoshow_title', 'blocktype.groupmembers'),
+                'description' => get_string('options_numtoshow_desc', 'blocktype.groupmembers'),
+                'defaultvalue' => !empty($configdata['numtoshow']) ? $configdata['numtoshow'] : self::default_numtoshow,
                 'options' => $options,
             ),
             'order' => array(

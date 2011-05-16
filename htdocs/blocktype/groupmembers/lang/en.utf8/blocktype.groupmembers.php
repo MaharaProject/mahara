@@ -31,11 +31,8 @@ $string['title'] = 'Group Members';
 $string['description'] = 'Display a list of Members in this Group';
 $string['show_all'] = 'View all Members of this Group…';
 
-$string['options_rows_title'] = 'Rows';
-$string['options_rows_desc'] = 'The amount of rows you want to display.';
-
-$string['options_columns_title'] = 'Columns';
-$string['options_columns_desc'] = 'The columns of columns you want to display.';
+$string['options_numtoshow_title'] = 'Shown Members';
+$string['options_numtoshow_desc'] = 'The number of members you want to display.';
 
 $string['options_order_title'] = 'Order';
 $string['options_order_desc'] = 'You can choose to display the latest group members or a random selection.';
