@@ -1733,33 +1733,26 @@ table.attachments td {
 }
 /* Publish page */
 .accesslists .cv {
-	width: 50%;
-	padding-left: 0;
-	padding-bottom: 0;
-}
-.accesslist .al-num {
-	width: 5%;
+    width: 30%;
+    font-weight: bold;
 }
 .accesslists .al-edit {
-	padding-top: 5px;
-	text-align: center;
+    width: 15%;
+    text-align: center;
+    vertical-align: middle;
 }
 .accesslists .al {
-	font-size: .9167em;
-	padding-top: 5px;
-}
-.accesslists .cv-listitem {
-	clear: both;
-	padding: 3px 5px;
-	border-bottom: 1px solid #FFF;
-}
-.accesslists .cv-listitem .viewname {
-	font-weight: bold;
+    width: 35%;
 }
 .accesslists .secreturls {
-	float: right;
-	text-align: center;
-	width: 20%;
+    width: 15%;
+    text-align: center;
+    vertical-align: middle;
+}
+.accesslists .secreturls div {
+    text-align: right;
+    width: 2.25em;
+    margin: 0 auto;
 }
 /* Secret url */
 table.secreturls {
