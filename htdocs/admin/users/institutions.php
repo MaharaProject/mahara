@@ -181,6 +181,7 @@ if ($institution || $add) {
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
         $data->showonlineusers = 2;
+        $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -317,6 +318,16 @@ if ($institution || $add) {
                 'disabled' => true,
             );
         }
+
+        $elements['allowinstitutionpublicviews'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowinstitutionpublicviews', 'admin'),
+            'description'  => get_string('allowinstitutionpublicviewsdescription','admin'),
+            'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
+            'disabled'     => get_config('allowpublicviews') == false,
+            'help'         => true,
+        );
+
         if ($USER->get('admin')) {
             $elements['maxuseraccounts'] = array(
                 'type'         => 'text',
@@ -469,6 +480,8 @@ function institution_submit(Pieform $form, $values) {
             $newinstitution->expiry               = db_format_timestamp($values['expiry']);
         }
     }
+
+    $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
 
     if (!empty($values['authplugin'])) {
         $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);

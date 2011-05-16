@@ -48,6 +48,7 @@
                 <FIELD NAME="priority" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="defaultquota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="showonlineusers" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="2"/>
+                <FIELD NAME="allowinstitutionpublicviews" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />

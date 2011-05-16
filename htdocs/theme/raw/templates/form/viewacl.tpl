@@ -127,11 +127,23 @@ function renderAccessListItem(item) {
     if (item.type == 'user') {
         icon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'});
     }
+
+    // if this item is 'public' and public pages are disabled
+    // change the background colour and add some contextual help
+    if (item.accesstype == 'public' && !item.publicallowed) {
+        cssClass += ' item-disabled';
+
+        var helpText = SPAN({'class': 'page-help-icon'}, SPAN({'class': 'help'}, contextualHelpIcon('', '', 'core', 'view', 'publicaccessrevoked', '')));
+        name.push(helpText);
+    }
+
+    var notpublicorallowed = (item.accesstype != 'public' || item.publicallowed);
+
     var row = TR({'class': cssClass, 'id': 'accesslistitem' + count},
         TD(null, icon),
         TH({'class': 'accesslistname'}, name),
-        TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start')),
-        TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop')),
+        TD(null, makeCalendarInput(item, 'start', notpublicorallowed), makeCalendarLink(item, 'start', notpublicorallowed)),
+        TD(null, makeCalendarInput(item, 'stop', notpublicorallowed), makeCalendarLink(item, 'stop', notpublicorallowed)),
         TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, allowfdbk),
         TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, approvefdbk),
         TD({'class': 'right removebutton'}, removeButton,
@@ -170,19 +182,25 @@ function renderAccessListItem(item) {
     appendChildNodes('accesslistitems', row);
     removeElementClass('accesslisttable', 'hidden');
 
-    setupCalendar(item, 'start');
-    setupCalendar(item, 'stop');
+    if (notpublicorallowed) {
+        setupCalendar(item, 'start');
+        setupCalendar(item, 'stop');
+    }
     count++;
 }
 
-function makeCalendarInput(item, type) {
-    return INPUT({
+function makeCalendarInput(item, type, disabled) {
+    input = INPUT({
         'type':'text',
         'name': 'accesslist[' + count + '][' + type + 'date]',
         'id'  :  type + 'date_' + count,
         'value': item[type + 'date'] ? item[type + 'date'] : '',
         'size': '15'
     });
+
+    input.disabled = (disabled == 0);
+
+    return input;
 }
 
 function makeCalendarLink(item, type) {
@@ -195,6 +213,7 @@ function makeCalendarLink(item, type) {
             'src': '{{theme_url filename='images/calendar.gif'}}',
             'alt': ''})
     );
+
     return link;
 }
 

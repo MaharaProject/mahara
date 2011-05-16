@@ -2400,6 +2400,11 @@ function xmldb_core_upgrade($oldversion=0) {
         $index = new XMLDBIndex('shortnameuk');
         $index->setAttributes(XMLDB_KEY_UNIQUE, array('institution', 'shortname'));
         add_index($table, $index);
+
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('allowinstitutionpublicviews');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
     }
 
     return $status;

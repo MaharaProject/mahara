@@ -1881,6 +1881,9 @@ table.secreturls {
 	height: 16px;
 	cursor: pointer;
 }
+#accesslistitems .item-disabled {
+    background: #666;
+}
 .accesslistname {
 	width: 220px;
 }
