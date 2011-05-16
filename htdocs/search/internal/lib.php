@@ -405,7 +405,7 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmr.group = ?';
             $values[] = $group;
-            $orderby = 'gmr.ctime, u.firstname, u.lastname, u.id';
+            $orderby = 'u.firstname, u.lastname, gmr.ctime, u.id';
         }
         else if ($membershiptype == 'invite') {
             $select = '
@@ -417,7 +417,7 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmi.group = ?';
             $values[] = $group;
-            $orderby = 'gmi.ctime, u.firstname, u.lastname, u.id';
+            $orderby = 'u.firstname, u.lastname, gmi.ctime, u.id';
         }
         else { // All group members
             $select = '
@@ -429,7 +429,7 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gm.group = ?';
             $values[] = $group;
-            $orderby = "gm.role = 'admin' DESC, gm.ctime, u.firstname, u.lastname, u.id";
+            $orderby = "gm.role = 'admin' DESC, u.firstname, u.lastname, gm.ctime, u.id";
             if ($order == 'latest') {
                 $orderby = 'gm.ctime DESC, u.firstname, u.lastname, u.id';
             }
