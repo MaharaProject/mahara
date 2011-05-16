@@ -3568,7 +3568,9 @@ class View {
     function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null) {
         $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
         $records = get_records_sql_array("
-            SELECT v.id AS vid, v.title AS vname, v.accessconf, c.id AS cid, c.name AS cname
+            SELECT v.id AS vid, v.title AS vname, v.accessconf,
+                v.startdate, v.stopdate, v.template,
+                c.id AS cid, c.name AS cname
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -3585,7 +3587,13 @@ class View {
         }
 
         foreach ($records as &$r) {
-            $v = array('id' => $r->vid, 'name' => $r->vname);
+            $v = array(
+                'id'        => $r->vid,
+                'name'      => $r->vname,
+                'startdate' => $r->startdate,
+                'stopdate'  => $r->stopdate,
+                'template'  => $r->template,
+            );
             if ($r->cid) {
                 if (!isset($collections[$r->cid])) {
                     $collections[$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'views' => array());
@@ -3607,6 +3615,30 @@ class View {
     }
 
 
+    // Returns a string describing the override access for a view record
+    public static function access_override_description($v) {
+        if ($v['startdate'] && $v['stopdate']) {
+            return get_string(
+                'accessbetweendates2', 'view',
+                format_date(strtotime($v['startdate']), 'strftimedate'),
+                format_date(strtotime($v['stopdate']), 'strftimedate')
+            );
+        }
+        if ($v['startdate']) {
+            return get_string(
+                'accessfromdate2', 'view',
+                format_date(strtotime($v['startdate']), 'strftimedate')
+            );
+        }
+        if ($v['stopdate']) {
+            return get_string(
+                'accessuntildate2', 'view',
+                format_date(strtotime($v['stopdate']), 'strftimedate')
+            );
+        }
+    }
+
+
     /**
      * Get all views & collections for a (user,group), grouped
      * by their accesslists as defined by the accessconf column
@@ -3617,158 +3649,76 @@ class View {
      * @return array
      */
     public static function get_accesslists($owner=null, $group=null, $institution=null) {
-        $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
-        $records = get_records_sql_assoc("
-            SELECT
-                v.id AS vid, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.description, v.template, v.type,
-                c.id AS cid, c.name AS cname
-            FROM {view} v
-                LEFT JOIN {collection_view} cv ON v.id = cv.view
-                LEFT JOIN {collection} c ON cv.collection = c.id
-            WHERE v.$ownersql AND v.type = 'portfolio'
-            ORDER BY cv.displayorder, v.title",
-            array()
-        );
-
-        if (!$records) {
-            return array();
-        }
-
-        // First group all views & collections by their access sets.  If no accessconf
-        // field exists on a view, put it (or its collection) in a group of one.
-
         $data = array();
-        $viewindex = array();      // Remember one viewid for each access set
-        $viewaccesslist = array(); // Remember access set for every view
+        list($data['collections'], $data['views']) = self::get_views_and_collections($owner, $group, $institution);
 
-        foreach ($records as &$r) {
-            $newkey = null;
-            if (empty($r->accessconf) && empty($r->cid)) {
-                // Singleton view
-                $newkey = 'v:' . $r->vid;
-                $data[$newkey] = array(
-                    'views'  => array($r->vid => array('id' => $r->vid, 'name' => $r->vname)),
-                    'viewid' => $r->vid,
-                );
-                $viewindex[$r->vid] = $newkey;
-                $viewaccesslist[$r->vid] = $newkey;
-            }
-            else if (empty($r->accessconf) && !empty($r->cid)) {
-                // Singleton collection; throw view data away
-                $key = 'c:'.$r->cid;
-                if (!isset($data[$key])) {
-                    $newkey = $key;
-                    $data[$newkey] = array(
-                        'collections' => array($r->cid => array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid)),
-                        'viewid'      => $r->vid,
-                    );
-                    $viewindex[$r->vid] = $newkey;
-                }
-                $viewaccesslist[$r->vid] = $key;
-            }
-            else if (!empty($r->accessconf)) {
-                if (!isset($data[$r->accessconf])) {
-                    $newkey = $r->accessconf;
-                    $data[$newkey] = array(
-                        'collections' => array(),
-                        'views'       => array(),
-                        'viewid'      => $r->vid,
-                    );
-                    $viewindex[$r->vid] = $newkey;
-                }
-                if (!empty($r->cid) && !isset($data[$r->accessconf]['collections'][$r->cid])) {
-                    $data[$r->accessconf]['collections'][$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'viewid' => $r->vid);
-                }
-                else if (empty($r->cid)) {
-                    $data[$r->accessconf]['views'][$r->vid] = array('id' => $r->vid, 'name' => $r->vname);
-                }
-                $viewaccesslist[$r->vid] = $r->accessconf;
-            }
-            if ($newkey) {
-                if ($r->startdate && $r->stopdate) {
-                    $data[$newkey]['access'] = get_string(
-                        'accessbetweendates2', 'view',
-                        format_date(strtotime($r->startdate), 'strftimedate'),
-                        format_date(strtotime($r->stopdate), 'strftimedate')
-                    );
-                }
-                else if ($r->startdate) {
-                    $data[$newkey]['access'] = get_string(
-                        'accessfromdate2', 'view',
-                        format_date(strtotime($r->startdate), 'strftimedate')
-                    );
-                }
-                else if ($r->stopdate) {
-                    $data[$newkey]['access'] = get_string(
-                        'accessuntildate2', 'view',
-                        format_date(strtotime($r->stopdate), 'strftimedate')
-                    );
-                }
-            }
+        // Remember one representative viewid in each collection
+        $viewindex = array();
+
+        // Add strings to describe startdate/stopdate access overrides
+        foreach ($data['collections'] as &$c) {
+            $view = current($c['views']);
+            $viewindex[$view['id']] = array('type' => 'collections', 'id' => $c['id']);
+            $c['access'] = self::access_override_description($view);
+            $c['viewid'] = $view['id'];
+        }
+        foreach ($data['views'] as &$v) {
+            $viewindex[$v['id']] = array('type' => 'views', 'id' => $v['id']);
+            $v['access'] = self::access_override_description($v);
+            $v['viewid'] = $v['id'];
         }
 
-        // Get view_access records, apart from those with visible = 0 (system access records),
-        // and token (secret url) records which go with individual views or collections.
+        if (empty($viewindex)) {
+            return $data;
+        }
 
+        // Get view_access records, apart from those with visible = 0 (system access records)
         $accessgroups = get_records_sql_array('
             SELECT va.*, g.grouptype, g.name
             FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
-            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1 AND va.token IS NULL
+            WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1
             ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
             array()
         );
 
-        if ($accessgroups) {
-            foreach ($accessgroups as $access) {
-                $key = null;
-                if ($access->usr) {
-                    $access->accesstype = 'user';
-                    $access->id = $access->usr;
-                }
-                else if ($access->group) {
-                    $access->accesstype = 'group';
-                    $access->id = $access->group;
-                    if ($access->role) {
-                        $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
-                    }
-                }
-                else {
-                    $key = $access->accesstype;
-                }
-                if ($key) {
-                    if (!isset($data[$viewindex[$access->view]]['accessgroups'][$key])) {
-                        $data[$viewindex[$access->view]]['accessgroups'][$key] = (array) $access;
-                    }
-                }
-                else {
-                    $data[$viewindex[$access->view]]['accessgroups'][] = (array) $access;
-                }
-            }
+        if (!$accessgroups) {
+            return $data;
         }
 
-        $tokenaccess = get_records_sql_array('
-            SELECT va.*, cv.collection
-            FROM {view_access} va LEFT JOIN {collection_view} cv ON va.view = cv.view
-            WHERE va.view IN (' . join(',', array_keys($viewaccesslist)) . ') AND va.visible = 1 AND NOT va.token IS NULL
-            ORDER BY va.view',
-            array()
-        );
+        foreach ($accessgroups as $access) {
+            $vi = $viewindex[$access->view];
 
-        if ($tokenaccess) {
-            foreach ($tokenaccess as &$access) {
-                $accesslist =& $data[$viewaccesslist[$access->view]];
-                if (isset($accesslist['views'][$access->view])) {
-                    unset($access->collection);
-                    $accesslist['views'][$access->view]['secreturls'][$access->token] = (array) $access;
+            // Just count secret urls.
+            if ($access->token) {
+                if (!isset($data[$vi['type']][$vi['id']]['secreturls'])) {
+                    $data[$vi['type']][$vi['id']]['secreturls'] = 0;
                 }
-                else if (isset($accesslist['collections'][(int)$access->collection])) {
-                    $collection = (int)$access->collection;
-                    unset($access->collection);
-                    if (!isset($accesslist['collections'][$collection]['secreturls'][$access->token])) {
-                        $accesslist['collections'][$collection]['secreturls'][$access->token] = (array) $access;
-                    }
+                $data[$vi['type']][$vi['id']]['secreturls']++;
+                continue;
+            }
+
+            $key = null;
+            if ($access->usr) {
+                $access->accesstype = 'user';
+                $access->id = $access->usr;
+            }
+            else if ($access->group) {
+                $access->accesstype = 'group';
+                $access->id = $access->group;
+                if ($access->role) {
+                    $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
                 }
+            }
+            else {
+                $key = $access->accesstype;
+            }
+            if ($key) {
+                if (!isset($data[$vi['type']][$vi['id']]['accessgroups'][$key])) {
+                    $data[$vi['type']][$vi['id']]['accessgroups'][$key] = (array) $access;
+                }
+            }
+            else {
+                $data[$vi['type']][$vi['id']]['accessgroups'][] = (array) $access;
             }
         }
 
