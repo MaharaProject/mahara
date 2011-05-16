@@ -166,7 +166,10 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
         list($host) = explode(',', $host);
         $host = trim($host);
     }
-    $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
+    $path = '';
+    if (strpos(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])) === 0) {
+        $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
+    }
     if ($path) {
         $path = str_replace('\\', '/', $path);  // windows
         if (substr($path, 0, 1) != '/') {
