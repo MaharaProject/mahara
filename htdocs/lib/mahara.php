@@ -86,7 +86,6 @@ function ensure_sanity() {
 
     // register globals workaround
     if (ini_get_bool('register_globals')) {
-        log_environ(get_string('registerglobals', 'error'));
         $massivearray = array_keys(array_merge($_POST, $_GET, $_COOKIE, $_SERVER, $_REQUEST, $_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
@@ -95,7 +94,6 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
-        log_environ(get_string('magicquotesgpc', 'error'));
         function stripslashes_deep($value) {
             $value = is_array($value) ?
                 array_map('stripslashes_deep', $value) :
@@ -118,13 +116,11 @@ function ensure_sanity() {
     if (ini_get_bool('magic_quotes_runtime')) {
         // Turn of magic_quotes_runtime. Anyone with this on deserves a slap in the face
         set_magic_quotes_runtime(0);
-        log_environ(get_string('magicquotesruntime', 'error'));
     }
 
     if (ini_get_bool('magic_quotes_sybase')) {
         // See above comment re. magic_quotes_runtime
         @ini_set('magic_quotes_sybase', 0);
-        log_environ(get_string('magicquotessybase', 'error'));
     }
 
     if (ini_get_bool('safe_mode')) {

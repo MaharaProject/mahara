@@ -33,6 +33,9 @@ require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
 if (param_integer('finished', 0)) {
+    foreach (site_warnings() as $w) {
+        $SESSION->add_error_msg($w);
+    }
     if ($missing = check_installed_plugins()) {
         $message = get_string('installedpluginsmissing', 'admin') . ': ';
         $message .= join(', ', $missing) . '.';

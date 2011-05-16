@@ -94,28 +94,7 @@ if (isset($register)) {
 $smarty->assign('closed', $closed);
 $smarty->assign('closeform', $closeform);
 
-// site warnings for the admin to consider
-$warnings = array();
-
-// Check if the host returns a usable value for the timezone identifier %z
-$tz_count = preg_match("/\+[0-9]{4}/", strftime("%z"));
-if ($tz_count == 0 || $tz_count == FALSE) {
-    $warnings[] = get_string('timezoneidentifierunusable', 'error');
-}
-
-// Check file upload settings.
-$postmax       = ini_get('post_max_size');
-$uploadmax     = ini_get('upload_max_filesize');
-$realpostmax   = get_real_size($postmax);
-$realuploadmax = get_real_size($uploadmax);
-if ($realpostmax && $realpostmax < $realuploadmax) {
-    $warnings[] = get_string('postmaxlessthanuploadmax', 'error', $postmax, $uploadmax, $postmax);
-}
-else if ($realpostmax && $realpostmax < 9000000) {
-    $warnings[] = get_string('smallpostmaxsize', 'error', $postmax, $postmax);
-}
-
-$smarty->assign('warnings', $warnings);
+$smarty->assign('warnings', site_warnings());
 
 $smarty->display('admin/index.tpl');
 
