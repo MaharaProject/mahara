@@ -324,8 +324,9 @@ function group_create($data) {
         ), $t->id, 0, false);
     }
     insert_record('view_access', (object) array(
-        'view' => $homepage->get('id'),
+        'view'       => $homepage->get('id'),
         'accesstype' => $data['public'] ? 'public' : 'loggedin',
+        'ctime'      => db_format_timestamp(time()),
     ));
     handle_event('creategroup', $data);
     db_commit();
@@ -1431,7 +1432,11 @@ function install_system_grouphomepage_view() {
         'mtime'       => $dbtime,
     );
     $id = insert_record('view', $viewdata, 'id', true);
-    $accessdata = (object) array('view' => $id, 'accesstype' => 'loggedin');
+    $accessdata = (object) array(
+        'view'       => $id,
+        'accesstype' => 'loggedin',
+        'ctime'      => db_format_timestamp(time()),
+    );
     insert_record('view_access', $accessdata);
     $blocktypes = array(
         array(

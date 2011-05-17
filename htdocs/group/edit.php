@@ -201,11 +201,19 @@ function editgroup_submit(Pieform $form, $values) {
         $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $group_data->id);
         if ($group_data->public && !$values['public']) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
-            insert_record('view_access', (object) array('view' => $homepageid, 'accesstype' => 'loggedin'));
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'loggedin',
+                'ctime'      => db_format_timestamp(time()),
+            ));
         }
         else if (!$group_data->public && $values['public']) {
             delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
-            insert_record('view_access', (object) array('view' => $homepageid, 'accesstype' => 'public'));
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'public',
+                'ctime'      => db_format_timestamp(time()),
+            ));
         }
     }
 
