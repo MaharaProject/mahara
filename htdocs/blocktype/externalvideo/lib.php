@@ -52,7 +52,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('fileimagevideo');
+        return array('external');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

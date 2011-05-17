@@ -40,7 +40,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('feeds');
+        return array('external');
     }
 
     public static function postinst($prevversion) {

@@ -955,7 +955,7 @@ function sort_upgrades($k1, $k2) {
 /** blocktype categories the system exports (including artefact categories)
 */
 function get_blocktype_categories() {
-    return array('general', 'internal', 'blog', 'resume', 'fileimagevideo', 'feeds');
+    return array('general', 'internal', 'blog', 'resume', 'fileimagevideo', 'external');
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {
