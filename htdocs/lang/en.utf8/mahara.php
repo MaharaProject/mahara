@@ -479,7 +479,7 @@ $string['mygroups']           = 'My Groups';
 $string['findgroups']         = 'Find Groups';
 $string['returntosite']       = 'Return to Site';
 $string['siteadministration'] = 'Site Administration';
-$string['institutionaladministration'] = 'Institutional Administration';
+$string['institutionadministration'] = 'Institution Administration';
 
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';

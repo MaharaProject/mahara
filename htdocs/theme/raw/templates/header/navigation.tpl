@@ -11,7 +11,7 @@
 {elseif $USER->get('admin')}
                 <li><a href="{$WWWROOT}admin/" accesskey="a">{str tag="siteadministration"}</a></li>
 {elseif $USER->is_institutional_admin()}
-                <li><a href="{$WWWROOT}admin/users/search.php" accesskey="a">{str tag="institutionaladministration"}</a></li>
+                <li><a href="{$WWWROOT}admin/users/search.php" accesskey="a">{str tag="institutionadministration"}</a></li>
 {/if}
             {/strip}</ul>
             
