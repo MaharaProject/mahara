@@ -25,4 +25,8 @@ checksignoff:
 	fi
 
 push: minaccept checksignoff
-	git push gerrit HEAD:refs/for/master
+	if test -z "$(TAG)"; then \
+		git push gerrit HEAD:refs/for/master; \
+	else \
+		git push gerrit HEAD:refs/for/master/$(TAG); \
+	fi
