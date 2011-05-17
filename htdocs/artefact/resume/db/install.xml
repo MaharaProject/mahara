@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="artefact/resume/db" VERSION="20060926" COMMENT="XMLDB file for resume tables"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
         <TABLE NAME="artefact_resume_personal_information">
@@ -99,4 +99,4 @@
             </KEYS>
         </TABLE>
     </TABLES>
-</XML>
+</XMLDB>
