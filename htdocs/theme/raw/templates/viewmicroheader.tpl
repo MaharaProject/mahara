@@ -31,7 +31,7 @@
           {if $USER->get('admin')}
             <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a> |
           {elseif $USER->is_institutional_admin()}
-            <a href="{$WWWROOT}admin/users/search.php">{str tag="institutionaladministration"}</a> |
+            <a href="{$WWWROOT}admin/users/search.php">{str tag="institutionadministration"}</a> |
           {/if}
 
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
