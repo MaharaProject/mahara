@@ -157,5 +157,17 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
             }
         }
     }
-    return $values;
+
+    /*
+        If the above foreach() loop removes any items, json_encode() converts
+        it into an object, which can't be iterated over - array_merge() with
+        only one argument effects a renumber of the array, which json_encode()
+        then handles with expected results.
+    */
+    if (is_array($values)) {
+        return array_values($values);
+    }
+    else {
+        return $values;
+    }
 }
