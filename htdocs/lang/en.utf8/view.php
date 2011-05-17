@@ -255,7 +255,7 @@ $string['noviewlayouts'] = 'There are no layouts for a %s column page';
 $string['cantaddcolumn'] = 'You cannot add any more columns to this page';
 $string['cantremovecolumn'] = 'You cannot remove the last column from this page';
 
-$string['blocktypecategory.feeds'] = 'External feeds';
+$string['blocktypecategory.external'] = 'External content';
 $string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
 $string['blocktypecategory.general'] = 'General';
 

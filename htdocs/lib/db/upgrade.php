@@ -2274,5 +2274,18 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('config','field','wwwroot');
     }
 
+    if ($oldversion < 2011051700) {
+        // Create new "external" category
+        insert_record('blocktype_category', (object) array('name' => 'external'));
+
+        // Migrate existing blocktypes to the new category
+        set_field('blocktype_installed_category', 'category', 'external', 'category', 'feeds');
+        set_field('blocktype_installed_category', 'category', 'external', 'blocktype', 'externalvideo');
+        set_field('blocktype_installed_category', 'category', 'external', 'blocktype', 'googleapps');
+
+        // Delete old "feeds" category
+        delete_records('blocktype_category', 'name', 'feeds');
+    }
+
     return $status;
 }
