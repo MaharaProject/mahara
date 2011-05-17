@@ -1,0 +1,213 @@
+1.3.6 (2011-05-10)
+- Privilege escalations (CVE-2011-1402)
+- Fixes to session key validation (CVE-2011-1403)
+- Information disclosure in AJAX calls (CVE-2011-1404)
+- Sanitisation of HTML emails (CVE-2011-1405)
+- https to http downgrade (CVE-2011-1406)
+
+1.3.5 (2011-03-29)
+- Upgrade to HTML Purifier 4.3.0 (includes security fixes)
+
+1.3.4 (2011-03-24)
+- Blogs get deleted without sesskey check (CVE 2011-0440)
+- XSS in select box validation (CVE 2011-0439)
+- Leap2A fixes
+- Fix for out of memory errors
+
+1.3.3 (2010-11-07)
+- Fix for XSS vulnerability (CVE-2010-3871)
+- Fixes to category namespaces and encoding in Leap2a import/export
+- Updates to selenium tests
+- Fixes to permissions in secret URL views and feedback attachments
+- Fixes in view creation wizard, embedded media block, js calendar
+
+1.3.2 (2010-10-08)
+- Bug fixes to group homepage, blogs, LDAP authentication, view themes, and embedded video.
+
+1.3.1 (2010-09-17)
+- Bug fixes in upgrade from 1.2.x
+- Browse user files while in group views
+- Reporting of max file size errors on upload
+- Fix missing logged out language selector
+- Minor fixes in UI workflow, themes & default language pack
+
+1.3.0 (2010-09-10)
+- User-configurable home page (Dashboard View)
+- Simpler main navigation
+- Basic Mahara information & help on home page
+- View/artefact feedback enhancements:
+- Collections (sets of Views that are linked to one another)
+- Plans (task lists)
+- Users can change the theme for individual views
+- Support for Gravatar profile icons
+- Configurable number of items in external feed, blog blocks
+- New block types: notifications, recently modified views, recent forum posts
+- More user-friendly notifications & help text
+- Show entire thread when replying to personal messages
+- External objects that have <embed> or <object> tags can be embedded into blog posts, text boxes or uploaded within an HTML file
+- Locking of blogposts and files in submitted views
+- Atom feeds for public blogs and forums
+- new flash-based video player with support for .mp4 files (H.264)
+- Moodle Repository plugin support (allows a user's Mahara files to be accessed from their Moodle account)
+- Portfolio API to allow import of artefacts from Moodle over MNET.
+- Configurable group home page (Group Homepage View)
+- Improved ways to add/invite users to invite only and "course membership" groups:
+- View submission from group page and from the view itself
+- Group categories for use in group searches
+- Admin group management page for group deletion/assignment of group admins
+- Groups can disable new view access notifictions
+- View access to group only notified when the view owner also belongs to the group
+- Bulk user import & export (experimental)
+- CAPTCHAs replaced with new anti-spam features to make form-filling difficult for bots & check urls in content against known spam blacklists
+- Site statistics & graphs in admin area
+- Admin page shows link to latest Mahara release & status of cron
+- Admin site options grouped into sections
+- Record number of page hits on views & display these to the owner
+- Facility to disable email addresses after receiving multiple bounces.
+- Footer links can be disabled/enabled
+- Online users can be disabled
+- Indenting of threads can be disabled per-forum
+- Active user sessions revoked on suspension
+- Full security review of all db queries & templates; automatic template escaping enabled
+- New version of HTMLPurifier allows safe <embed> and <object> tags in user html content
+- Search options to make users always searchable by their real names & usernames
+- Leap2a support updated to version 2010-07
+
+1.2.6 (2010-09-01)
+- Better mimetype detection
+- New flash-based video player
+- Bug fixes including upgrade from 1.0.x, blogpost image button
+- 
+
+1.2.5 (2010-07-02)
+- Multiple XSS vulnerabilities (CVE-2010-1667)
+- Multiple CSRF vulnerabilities (CVE-2010-1668)
+- SQL Injection (CVE-2010-1669)
+- Removal of dangerous auth plugin configuration options (CVE-2010-1670)
+- New version of HTML Purifier fixing an IE-only XSS (CVE-2010-2479)
+- Better handling of cron events to avoid sending duplicate emails
+- Fix problems when mime_content_type() is missing
+- Improved detection of https on Windows
+- Set the correct envolope sender for emails sent on cron
+- Set the locale in Mahara instead of in language packs
+
+1.2.4 (2010-04-06)
+- Bug fixes
+
+1.2.3 (2010-02-08)
+- New authentication plugin: SAML
+- Various Internet Explorer Fixes
+- Blog post deletion fixes
+
+1.2.2 (2009-12-08)
+- Fix for broken upgrade in 1.2.1
+
+1.2.1 (2009-12-08)
+- Bug fixes
+
+1.2.0 (2009-11-16)
+- Mahara now ships with six themes: Aqua, Default, Fresh, Raw, Sunset, Ultima
+- Site admins can now disable artefact and blocktype plugins
+- Files section rewritten: works without javascript, uploading is easier
+- Can extract .zip, .tar.gz and .tar.bz2 files in the files area
+- Full Import/Export system with LEAP2A suport, and static HTML export
+- Support for submitting views to MNET Peers for assessment (e.g. Moodle)
+- View interface sped up, files can be uploaded on the View screen
+- UTF8 database now required for new installs (old installs will continue to work)
+- Allow more group type/join type combinations, and more control over group creation
+- Simplifications to the blog (all users get one blog to start with)
+- Added a new blocktype for specifying a license for a View
+- RTL language pack support
+- Upgraded tinyMCE to version 3.2.5
+- Replaced Smarty with Dwoo
+
+1.1.7 (2009-10-29)
+- Upgraded HTMLPurifier to 4.0.0
+- Fix creation of duplicate user accounts when using LDAP and XMLRPC authentication
+- HTTPS logins supported
+- Improvements to MNET: windows profile icon importing & links in emails
+- Implemented "update user info on login" flag for LDAP
+- CVE-2009-3298: Privelege escalation vulnerability
+- CVE-2009-3299: Cross site scripting in resume
+- Several bug fixes and minor translation updates across Mahara
+
+1.1.6 (2009-08-04)
+- Forum e-mail notifications now have a cleaner format, and allow users to unsubscribe immediately.
+- Enforce UTF8 database upon installation.
+- Upgraded bundled XML feed reader to 1.0.3, multiple bug fixes to RSS handling.
+- Wall posts now have a configurable character limit.
+- Fixed a very slow query affecting My Groups and user profile pages.
+- Many bug fixes across all areas of Mahara.
+
+1.1.5 (2009-06-22)
+- Czech strings for Pieforms library
+- Bug fixes for embedded media block, multibyte character string handling,
+- public forums, email notifications
+- Security fixes: multiple xss bugs and information disclosure bug for user files.
+
+1.1.4 (2009-06-11)
+- Dutch and Slovenian translations of pieform strings.
+- Spanish translation of TinyMCE.
+- Increase number of users shown on the admin/staff pages, and sort listing.
+- List user institutions on profile page and search results.
+- Bugfixes to view feedback, embedded media mimetypes, SSO, and more.
+
+1.1.3 (2009-04-22)
+- Fixed XSS vulnerabilities in user views (CVE-2009-0664)
+- Prevent arbitrary code execution in html2text library (CVE-2008-5619)
+- Allow course groups with membership by request
+- Many minor improvements and bug fixes
+1.1.2 (2009-03-10)
+- Fixed multiple XSS vulnerabilities in user profile data and blogs
+  (CVE-2009-0660)
+- minor fixes to portfolio import, html validation, default theme and upgrade
+  path from 1.0
+- added support for embedding slideshare widgets
+1.1.1 (2009-02-27)
+- a few fixes to the upgrade path from 1.0
+1.1.0 (2009-02-26)
+- raft of new features over the 1.0 series of Mahara
+- ability to copy Views
+- many improvements to Groups
+- ability to import content from other systems (such as Moodle 2.0)
+- user profile pages such as Views
+- many other smaller improvements and bugfixes have been made.
+
+1.0.9 (2009-01-29)
+- small bugfixes and minor layout improvements
+- fixes the blank screens some people were seeing upon installation
+- filters HTML that is used in the forums
+
+1.0.8 (2009-01-07)
+- fixes a bug that prevented email from being sent
+- makes it much easier to install new language packs
+
+1.0.7 (2008-12-23)
+- increases the memory limit available to Mahara
+- adds a 'powered by mahara' icon and link to the footer
+- a few bugfixes
+
+1.0.6 (2008-11-04)
+- security fixes for vulnerabilities in 3rd party libraries
+
+1.0.5 (2008-09-25)
+- bug and stability fixes around user authentication and MNET
+
+1.0.4 (2008-06-25)
+- bug and stability fixes around the administration section
+
+1.0.3 (2008-06-13)
+- HTTP level performance improvements
+- some MySQL fixes
+- improvement to "login as" functionality
+- some other bugfixes
+
+1.0.2 (2007-04-28)
+- more usability work for the Views interface
+- bugfixes for videos in Views
+- RSS blocktype is greatly improved, with the ability to show the
+  feed icon and a full view of the feed
+- bugfixes for SSO, authentication, and search.
+
+1.0.1 (2008-04-09)
+- minor bugfixes to the Resume, SSO, and MySQL support
