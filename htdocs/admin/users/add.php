@@ -175,6 +175,12 @@ function adduser_validate(Pieform $form, $values) {
     $email     = $values['email'];
     $password  = $values['password'];
 
+    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+    if ($maxquotaenabled && $values['quota'] > $maxquota) {
+        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+    }
+
     if (method_exists($authobj, 'is_username_valid_admin')) {
         if (!$authobj->is_username_valid_admin($username)) {
             $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
