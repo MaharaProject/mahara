@@ -11,7 +11,7 @@
 	<td class="forumpostleft">
       <div class="author">
          <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=40&amp;id={$post->poster}" alt="" class="center">
-         <div class="poster"><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name|escape}</a></div>
+         <div class="poster"><a href="{$WWWROOT}user/view.php?id={$post->poster}"{if in_array($post->poster, $groupadmins)} class="groupadmin"{elseif $post->moderator} class="moderator"{/if}>{$post->poster|display_name}</a></div>
          {if $post->postcount}<div class="postcount">{$post->postcount}</div>{/if}
       </div>
     </td>
@@ -28,7 +28,7 @@
                 {/if}
                 >
                 <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$edit.editor}" alt="">
-                {$edit.editor|display_name|escape}
+                {$edit.editor|display_name}
                 </a>
                 {$edit.edittime}
             </li>

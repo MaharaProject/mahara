@@ -19,13 +19,13 @@
     </td>
     <td class="s">
         <a href="{$WWWROOT}user/view.php?id={$topic->poster}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt=""></a>
-        <a href="{$WWWROOT}user/view.php?id={$topic->poster}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">{$topic->poster|display_name:null:true|escape}</a>
+        <a href="{$WWWROOT}user/view.php?id={$topic->poster}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">{$topic->poster|display_name:null:true}</a>
     </td>
     <td class="center s">{$topic->postcount}</td>
     <td class="s">
     {if !$topic->lastpostdeleted}
     <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}#post{$topic->lastpost}">{$topic->lastposttime}</a> {str tag=by section=view}
-    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true|escape}</a>
+    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}</a>
     {/if}
     </td>
     {if $moderator}

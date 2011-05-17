@@ -14,7 +14,7 @@
           {elseif $accessgroup.accesstype == 'group'}
             <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
           {elseif $accessgroup.accesstype == 'user'}
-            <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>
+            <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name}</a>
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}
