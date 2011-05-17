@@ -17,62 +17,30 @@
  */
 
 function Dwoo_Plugin_mahara_pagelinks(Dwoo $dwoo, $offset, $limit, $count, $url, $assign='') {
-    $params = array(
-        'offset' => $offset,
-        'limit'  => $limit,
-        'count'  => $count,
-        'url'    => $url,
-        'assign' => $assign,
-    );
+    $offset = param_integer('offset', 0);
+    $limit  = intval($limit);
+    $count  = intval($count);
+    $url    = hsc($url);
 
     $id = substr(md5(microtime()), 0, 4);
     $output = '<div class="pagination" id="' . $id . '">';
 
-    $params['offsetname'] = (isset($params['offsetname'])) ? $params['offsetname'] : 'offset';
-    $params['offset'] = param_integer($params['offsetname'], 0);
-
-    $params['firsttext'] = (isset($params['firsttext'])) ? $params['firsttext'] : get_string('first');
-    $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
-    $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
-    $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
-
-    if (!isset($params['numbersincludefirstlast'])) {
-        $params['numbersincludefirstlast'] = true;
-    }
-    if (!isset($params['numbersincludeprevnext'])) {
-        $params['numbersincludeprevnext'] = true;
-    }
-
-    if ($params['limit'] <= $params['count']) {
-        $pages = ceil($params['count'] / $params['limit']);
-        $page = $params['offset'] / $params['limit'];
+    if ($limit <= $count) {
+        $pages = ceil($count / $limit);
+        $page = $offset / $limit;
 
         $last = $pages - 1;
         $next = min($last, $page + 1);
         $prev = max(0, $page - 1);
 
         // Build a list of what pagenumbers will be put between the previous/next links
-        $pagenumbers = array();
-        if ($params['numbersincludefirstlast']) {
-            $pagenumbers[] = 0;
-        }
-        if ($params['numbersincludeprevnext']) {
-            $pagenumbers[] = $prev;
-        }
-        $pagenumbers[] = $page;
-        if ($params['numbersincludeprevnext']) {
-            $pagenumbers[] = $next;
-        }
-        if ($params['numbersincludefirstlast']) {
-            $pagenumbers[] = $last;
-        }
+        $pagenumbers = array(0, $prev, $page, $next, $last);
         $pagenumbers = array_unique($pagenumbers);
 
         // Build the first/previous links
         $isfirst = $page == 0;
-        $output .= mahara_pagelink('first', $params['url'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
-        $output .= mahara_pagelink('prev', $params['url'], $params['limit'] * $prev, 
-            '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+        $output .= mahara_pagelink('first', $url, 0, '&laquo; ' . get_string('first'), get_string('firstpage'), $isfirst);
+        $output .= mahara_pagelink('prev', $url, $limit * $prev, '&larr; ' . get_string('previous'), get_string('prevpage'), $isfirst);
 
         // Build the pagenumbers in the middle
         foreach ($pagenumbers as $k => $i) {
@@ -83,37 +51,22 @@ function Dwoo_Plugin_mahara_pagelinks(Dwoo $dwoo, $offset, $limit, $count, $url,
                 $output .= '<span class="selected">' . ($i + 1) . '</span>';
             }
             else {
-                $output .= mahara_pagelink('', $params['url'],
-                    $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
+                $output .= mahara_pagelink('', $url, $limit * $i, $i + 1, '', false);
             }
             $prevpagenum = $i;
         }
 
         // Build the next/last links
         $islast = $page == $last;
-        $output .= mahara_pagelink('next', $params['url'], $params['limit'] * $next,
-            $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
-        $output .= mahara_pagelink('last', $params['url'], $params['limit'] * $last,
-            $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
-    }
-
-    if (isset($params['json_script']) && isset($params['datatable'])) {
-        $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
-        $datatable    = json_encode($params['datatable']);
-        $json_script  = json_encode($params['json_script']);
-        $output .= <<<EOF
-<script type="text/javascript" src="$paginator_js"></script>
-<script type="text/javascript">
-new Paginator("$id", $datatable, $json_script);
-</script>
-EOF;
+        $output .= mahara_pagelink('next', $url, $limit * $next, get_string('next') . ' &rarr;', get_string('nextpage'), $islast);
+        $output .= mahara_pagelink('last', $url, $limit * $last, get_string('last') . ' &raquo;', get_string('lastpage'), $islast);
     }
 
     // Close the container div
     $output .= '</div>';
 
-    if (!empty($params['assign'])) {
-        $dwoo->assignInScope($output, $params['assign']);
+    if (!empty($assign)) {
+        $dwoo->assignInScope($output, $assign);
         return;
     }
 
@@ -121,7 +74,7 @@ EOF;
 
 }
 
-function mahara_pagelink($class, $url, $offset, $text, $title, $disabled=false, $offsetname='offset') {
+function mahara_pagelink($class, $url, $offset, $text, $title, $disabled=false) {
     $return = '<span class="pagination';
     $return .= ($class) ? " $class" : '';
 
@@ -130,12 +83,9 @@ function mahara_pagelink($class, $url, $offset, $text, $title, $disabled=false, 
     }
     else {
         $return .= '">' 
-            . '<a href="' . $url . '&amp;' . $offsetname . '=' . $offset
+            . '<a href="' . $url . '&offset=' . $offset
             . '" title="' . $title . '">' . $text . '</a></span>';
     }
 
     return $return;
 }
-
-
-?>

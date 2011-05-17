@@ -283,8 +283,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
             $params[] = $k . '=' . $v;
         }
     }
-    $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
-        . '&amp;limit=' . $limit;
+    $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&', $params) . '&limit=' . $limit;
 
     $usernametemplate = '<a href="' . get_config('wwwroot')
         . '{if $USER->is_admin_for_user($r.id)}admin/users/edit.php?id={$r.id}{else}user/view.php?id={$r.id}{/if}">{$r.username}</a>';
