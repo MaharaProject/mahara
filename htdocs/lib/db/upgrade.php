@@ -2266,6 +2266,8 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('username');
         $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        // This drops the unique index on the username column in postgres.
+        // See upgrade 2011051800.
         change_field_precision($table, $field);
     }
 
@@ -2285,6 +2287,24 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Delete old "feeds" category
         delete_records('blocktype_category', 'name', 'feeds');
+    }
+
+    if ($oldversion < 2011051800) {
+        // Restore index that may be missing due to upgrade 2011050600.
+        $table = new XMLDBTable('usr');
+        $index = new XMLDBIndex('usr_use_uix');
+        if (!index_exists($table, $index)) {
+            if (is_postgres()) {
+                // For postgres, create the index on the lowercase username, the way it's
+                // done in core_postinst().
+                execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
+            }
+            else {
+                $index = new XMLDBIndex('usernameuk');
+                $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username'));
+                add_index($table, $index);
+            }
+        }
     }
 
     return $status;
