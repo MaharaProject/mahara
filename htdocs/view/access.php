@@ -494,12 +494,14 @@ function editaccess_submit(Pieform $form, $values) {
             }
         }
     
-        foreach ($values['views'] as $viewid) {
-            if (!isset($views[$viewid])) {
-                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+        if (isset($values['views'])) {
+            foreach ($values['views'] as $viewid) {
+                if (!isset($views[$viewid])) {
+                    throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+                }
+                $toupdate[] = $viewid;
             }
-            $toupdate[] = $viewid;
-        }
+       }
     }
 
     View::update_view_access($viewconfig, $toupdate);
