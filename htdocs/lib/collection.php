@@ -414,6 +414,7 @@ class Collection {
                 'startdate'       => $firstview->get('startdate'),
                 'stopdate'        => $firstview->get('stopdate'),
                 'template'        => $firstview->get('template'),
+                'retainview'      => $firstview->get('retainview'),
                 'allowcomments'   => $firstview->get('allowcomments'),
                 'approvecomments' => (int) ($firstview->get('allowcomments') && $firstview->get('approvecomments')),
                 'accesslist'      => $firstview->get_access(),

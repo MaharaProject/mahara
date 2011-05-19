@@ -61,6 +61,7 @@ class View {
     private $categorydata;
     private $editingroles;
     private $template;
+    private $retainview;
     private $copynewuser = 0;
     private $copynewgroups;
     private $type;
@@ -250,6 +251,16 @@ class View {
                 insert_record('view_artefact', $va);
             }
         }
+
+        if ($template->get('retainview') && !$template->get('institution')) {
+            $obj = new StdClass;
+            $obj->view  = $view->get('id');
+            $obj->ctime = db_format_timestamp(time());
+            $obj->usr   = $template->get('owner');
+            $obj->group = $template->get('group');
+            insert_record('view_access', $obj);
+        }
+
         db_commit();
 
         return array(
@@ -705,6 +716,7 @@ class View {
             $v->set('startdate', $config['startdate']);
             $v->set('stopdate', $config['stopdate']);
             $v->set('template', $config['template']);
+            $v->set('retainview', $config['retainview']);
             $v->set('allowcomments', $config['allowcomments']);
             $v->set('approvecomments', $config['approvecomments']);
             if (isset($config['copynewuser'])) {

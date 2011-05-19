@@ -246,6 +246,28 @@ addLoadEvent(function() {
 });
 EOF;
 } else {
+    $form['elements']['more']['elements']['retainview'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('retainviewrights', 'view'),
+        'description'  => $group ? get_string('retainviewrightsgroupdescription', 'view') : get_string('retainviewrightsdescription', 'view'),
+        'defaultvalue' => $view->get('template') && $view->get('retainview'),
+    );
+    $js .= <<< EOF
+function update_retainview() {
+    if ($('editaccess_template').checked) {
+        removeElementClass($('editaccess_retainview_container'), 'hidden');
+    }
+    else {
+        addElementClass($('editaccess_retainview_container'), 'hidden');
+        $('editaccess_retainview').checked = false;
+        update_loggedin_access();
+    }
+};
+addLoadEvent(function() {
+    update_retainview();
+    connect('editaccess_template', 'onclick', update_retainview);
+});
+EOF;
     $js .= "function update_loggedin_access() {}\n";
 }
 
@@ -377,6 +399,10 @@ function editaccess_validate(Pieform $form, $values) {
             $form->set_error('copyfornewgroups', get_string('viewscopiedfornewgroupsmustbecopyable', 'view'));
         }
     }
+    $retainview = $values['retainview'];
+    if ($retainview && !$values['template']) {
+        $form->set_error('retainview', get_string('viewswithretainviewrightsmustbecopyable', 'view'));
+    }
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('newstartdatemustbebeforestopdate', 'view', 'Overriding'));
     }
@@ -462,6 +488,7 @@ function editaccess_submit(Pieform $form, $values) {
         'startdate'       => $values['startdate'],
         'stopdate'        => $values['stopdate'],
         'template'        => (int) $values['template'],
+        'retainview'      => (int) $values['retainview'],
         'allowcomments'   => (int) $values['allowcomments'],
         'approvecomments' => (int) ($values['allowcomments'] && $values['approvecomments']),
         'accesslist'      => $values['accesslist'],

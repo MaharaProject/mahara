@@ -613,6 +613,7 @@
                 <FIELD NAME="layout" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
+                <FIELD NAME="retainview" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="visits" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
