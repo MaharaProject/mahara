@@ -3800,7 +3800,7 @@ function createview_submit(Pieform $form, $values) {
         $view = View::create($values);
     }
 
-    redirect(get_config('wwwroot') . 'view/blocks.php?new=1&id=' . $view->get('id'));
+    redirect(get_config('wwwroot') . 'view/edit.php?new=1&id=' . $view->get('id'));
 }
 
 function createview_cancel_submit(Pieform $form, $values) {
