@@ -41,8 +41,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $group = $form->get_property('group');
     $institution = $form->get_property('institution');
 
+
+    $formid = $form->get_name();
+    $prefix = $formid . '_' . $element['name'];
+
     if (!empty($element['tabs'])) {
-        $tabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
+        $tabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
         $smarty->assign('tabs', $tabdata);
         if (!$group && $tabdata['owner'] == 'group') {
             $group = $tabdata['ownerid'];
@@ -78,9 +82,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     if ($group && $config['edit']) {
         $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
     }
-
-    $formid = $form->get_name();
-    $prefix = $formid . '_' . $element['name'];
 
     if ($config['select']) {
         if (function_exists($element['selectlistcallback'])) {
@@ -269,7 +270,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 }
 
 
-function pieform_element_filebrowser_configure_tabs($viewowner) {
+function pieform_element_filebrowser_configure_tabs($viewowner, $prefix) {
     if ($viewowner['type'] == 'institution' && $viewowner['id'] == 'mahara') {
         // No filebrowser tabs for site views
         return null;
@@ -281,19 +282,19 @@ function pieform_element_filebrowser_configure_tabs($viewowner) {
     $upload = null;
     $selectedsubtab = null;
     if ($viewowner['type'] == 'institution') {
-        $selectedtab = param_variable('owner', 'institution');
+        $selectedtab = param_variable($prefix . '_owner', 'institution');
         $upload = $selectedtab == 'institution';
         $tabs['institution'] = get_string('institutionfiles', 'admin');
     }
     else if ($viewowner['type'] == 'group') {
-        $selectedtab = param_variable('owner', 'group');
+        $selectedtab = param_variable($prefix . '_owner', 'group');
         $upload = $selectedtab == 'group';
         $tabs['user'] = get_string('myfiles', 'artefact.file');
         $tabs['group'] = get_string('groupfiles', 'artefact.file');
     }
     else { // $viewowner['type'] == 'user'
         global $USER;
-        $selectedtab = param_variable('owner', 'user');
+        $selectedtab = param_variable($prefix . '_owner', 'user');
         $upload = $selectedtab == 'user';
         $tabs['user'] = get_string('myfiles', 'artefact.file');
         if ($groups = $USER->get('grouproles')) {
@@ -301,7 +302,7 @@ function pieform_element_filebrowser_configure_tabs($viewowner) {
             require_once(get_config('libroot') . 'group.php');
             $groups = group_get_user_groups($USER->get('id'));
             if ($selectedtab == 'group') {
-                if (!$selectedsubtab = (int) param_variable('ownerid', 0)) {
+                if (!$selectedsubtab = (int) param_variable($prefix . '_ownerid', 0)) {
                     $selectedsubtab = $groups[0]->id;
                 }
                 foreach ($groups as &$g) {
@@ -314,7 +315,7 @@ function pieform_element_filebrowser_configure_tabs($viewowner) {
             $institutions = get_records_select_array('institution', 'name IN (' 
                 . join(',', array_map('db_quote', array_keys($institutions))) . ')');
             if ($selectedtab == 'institution') {
-                if (!$selectedsubtab = param_variable('ownerid', '')) {
+                if (!$selectedsubtab = param_variable($prefix . '_ownerid', '')) {
                     $selectedsubtab = $institutions[0]->name;
                 }
                 $selectedsubtab = hsc($selectedsubtab);
@@ -1032,9 +1033,10 @@ function pieform_element_filebrowser_edit_group_folder($group, $folder) {
 
 
 function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
-    $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs']);
+    $prefix = $form->get_name() . '_' . $element['name'];
+    $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
     $smarty = smarty_core();
-    $smarty->assign('prefix', $form->get_name() . '_' . $element['name']);
+    $smarty->assign('prefix', $prefix);
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
     $smarty->assign('tabs', $newtabdata);
     $newtabhtml = $smarty->fetch('artefact:file:form/ownertabs.tpl');
@@ -1079,12 +1081,14 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
 function pieform_element_filebrowser_changefolder(Pieform $form, $element, $folder) {
     $owner = $ownerid = $group = $institution = $user = null;
 
+    $prefix = $form->get_name() . '_' . $element['name'];
+
     if (isset($element['tabs'])) {
-        if ($owner = param_variable('owner', null)) {
+        if ($owner = param_variable($prefix . '_owner', null)) {
             if ($owner == 'site') {
                 $owner = 'institution';
                 $institution = $ownerid = 'mahara';
-            } else if ($ownerid = param_variable('ownerid', null)) {
+            } else if ($ownerid = param_variable($prefix . '_ownerid', null)) {
                 if ($owner == 'group') {
                     $group = (int) $ownerid;
                 }
