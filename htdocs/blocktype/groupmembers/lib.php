@@ -100,7 +100,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
                 'type' => 'select',
                 'title' => get_string('options_numtoshow_title', 'blocktype.groupmembers'),
                 'description' => get_string('options_numtoshow_desc', 'blocktype.groupmembers'),
-                'defaultvalue' => !empty($configdata['numtoshow']) ? $configdata['numtoshow'] : self::default_numtoshow,
+                'defaultvalue' => !empty($configdata['numtoshow']) ? $configdata['numtoshow'] : self::$default_numtoshow,
                 'options' => $options,
             ),
             'order' => array(
