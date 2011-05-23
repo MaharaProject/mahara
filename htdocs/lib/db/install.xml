@@ -8,7 +8,7 @@
         <TABLE NAME="config">
             <FIELDS>
                 <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true"/>
-                <FIELD NAME="value" TYPE="text" LENGTH="small"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />
@@ -78,7 +78,7 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="username" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true"/>
-                <FIELD NAME="salt" TYPE="char" LENGTH="8"/>
+                <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="false"/>
                 <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
@@ -243,7 +243,7 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="data" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -571,7 +571,7 @@
         </TABLE>
         <TABLE NAME="view_type">
             <FIELDS>
-                <FIELD NAME="type" TYPE="char" LENGTH="50" />
+                <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="type" />
@@ -598,8 +598,8 @@
                 <FIELD NAME="ownerformat" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
-                <FIELD NAME="startdate" TYPE="datetime" />
-                <FIELD NAME="stopdate" TYPE="datetime" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
@@ -607,7 +607,7 @@
                 <FIELD NAME="submittedhost" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="submittedtime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
-                <FIELD NAME="layout" TYPE="int" LENGTH="10"/>
+                <FIELD NAME="layout" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="copynewuser" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
@@ -743,7 +743,7 @@
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="content" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNOT="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mauthor" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
@@ -770,8 +770,8 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="host" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="queue" TYPE="int" LENGTH="1" NOTNULL="true" default="1" />
-                <FIELD NAME="ready" TYPE="int" LENGTH="1" NOTNULL="true" default="0" />
+                <FIELD NAME="queue" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="ready" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="expirytime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="format" TYPE="char" LENGTH="50" NOTNULL="false" />
                 <FIELD NAME="data" TYPE="text" NOTNULL="false" />
@@ -787,7 +787,7 @@
             <FIELDS>
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="ctime,type" />

@@ -10,7 +10,7 @@
 
   <xs:simpleType name="tableName" >
     <xs:restriction base="xs:string" >
-     <xs:pattern value='[0-9a-z_]{1,28}'/>
+     <xs:pattern value='[0-9a-z_]{1,40}'/>
     </xs:restriction >
   </xs:simpleType >
 
@@ -66,7 +66,7 @@
   <xs:element name="FIELD">
     <xs:complexType>
       <xs:attribute name="NAME"       type="fieldName"   use="required" />
-      <xs:attribute name="SEQUENCE"   type="trueFalse"   use="required" />
+      <xs:attribute name="SEQUENCE"   type="trueFalse"   use="optional" />
       <xs:attribute name="TYPE"       type="fieldType"   use="required" />
       <xs:attribute name="LENGTH"     type="fieldLength" use="optional" />
       <xs:attribute name="NOTNULL"    type="trueFalse"   use="required" />

@@ -11,7 +11,9 @@ imageoptim:
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
 minaccept:
-	@echo "Running minimum acceptance test..."; find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	@echo "Running minimum acceptance test...";
+	find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
 
 push: minaccept
 	if test -z "$(TAG)"; then \
