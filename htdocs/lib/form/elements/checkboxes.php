@@ -29,8 +29,8 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
     $submitted = $form->is_submitted();
-    if ($submitted && isset($global[$element['name']])) {
-        $value = $global[$element['name']];
+    if ($submitted) {
+        $value = isset($global[$element['name']]) ? $global[$element['name']] : array();
     }
 
     $result = '';
