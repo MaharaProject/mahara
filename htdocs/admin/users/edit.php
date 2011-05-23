@@ -110,13 +110,24 @@ $elements['expiry'] = array(
     'maxyear'      => $currentdate['year'] + 20,
     'defaultvalue' => $user->expiry
 );
-$elements['quota'] = array(
-    'type'         => 'bytes',
-    'title'        => get_string('filequota','admin'),
-    'description'  => get_string('filequotadescription','admin'),
-    'rules'        => array('integer' => true),
-    'defaultvalue' => $user->quota,
-);
+if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+    $elements['quota'] = array(
+        'type'         => 'bytes',
+        'title'        => get_string('filequota','admin'),
+        'description'  => get_string('filequotadescription','admin'),
+        'rules'        => array('integer' => true),
+        'defaultvalue' => $user->quota,
+    );
+}
+else {
+    $elements['quota'] = array(
+        'type'         => 'text',
+        'disabled'     => true,
+        'title'        => get_string('filequota', 'admin'),
+        'description'  => get_string('filequotadescription', 'admin'),
+        'value'        => display_size($user->quota),
+    );
+}
 
 $authinstances = auth_get_auth_instances();
 if (count($authinstances) > 1) {

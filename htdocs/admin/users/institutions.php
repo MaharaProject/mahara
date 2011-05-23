@@ -290,6 +290,22 @@ if ($institution || $add) {
             'options'      => $themeoptions,
             'help'         => true,
         );
+        if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+            $elements['defaultquota'] = array(
+               'type'         => 'bytes',
+               'title'        => get_string('defaultquota', 'artefact.file'),
+               'description'  => get_string('defaultinstitutionquotadescription', 'admin'),
+               'defaultvalue' => !empty($data->defaultquota) ? $data->defaultquota : get_config_plugin('artefact', 'file', 'defaultquota'),
+            );
+        }
+        else {
+            $elements['defaultquota'] = array(
+                'type' => 'text',
+                'title' => get_string('defaultquota', 'artefact.file'),
+                'value' => display_size(!empty($data->defaultquota) ? $data->defaultquota : get_config_plugin('artefact', 'file', 'defaultquota')),
+                'disabled' => true,
+            );
+        }
         if ($USER->get('admin')) {
             $elements['maxuseraccounts'] = array(
                 'type'         => 'text',
@@ -403,6 +419,9 @@ function institution_validate(Pieform $form, $values) {
     if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
         $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
     }
+    if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {
+        $form->set_error('defaultquota', get_string('maxquotatoolow', 'artefact.file'));
+    }
 }
 
 function institution_submit(Pieform $form, $values) {
@@ -427,6 +446,10 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
+
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $newinstitution->defaultquota = $values['defaultquota'];
+    }
     if ($institution != 'mahara') {
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
         if ($USER->get('admin')) {

@@ -669,6 +669,8 @@ $string['noinstitutionsdescription'] = 'If you would like to associate users wit
 $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the institution settings for "%s".  These profile fields are locked at the site level and cannot be unlocked here.';
 
+$string['defaultinstitutionquotadescription'] = 'You can set the amount of disk space new users in this institution will have as their quota. Existing users quotas for this institution will not be changed.';
+
 // Suspend Institutions
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
 $string['institutionsuspended'] = 'Institution suspended';
