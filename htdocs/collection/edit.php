@@ -83,6 +83,7 @@ $smarty->display('collection/edit.tpl');
 
 function submit(Pieform $form, $values) {
     global $SESSION, $new;
+    $values['navigation'] = (int) $values['navigation'];
     $collection = Collection::save($values);
     if (!$new) {
         $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
