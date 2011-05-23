@@ -12,7 +12,7 @@
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}%</span>
     </p>
 {else}
-    <div id="quota_fill" style="display: none; width: {$QUOTA_PERCENTAGE*2}px;">&nbsp;</div>
+    <div id="quota_fill" style="display: none; width: 200px;">&nbsp;</div>
     <p id="quota_bar_100">
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}%</span>
     </p>

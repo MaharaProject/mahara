@@ -49,7 +49,20 @@ $pagebase = get_config('wwwroot') . 'artefact/file/groupfiles.php?group=' . $gro
 $form = pieform(ArtefactTypeFileBase::files_form($pagebase, $group->id));
 $js = ArtefactTypeFileBase::files_js();
 
-$smarty = smarty();
+$smarty = smarty(
+    array(),
+    array(),
+    array(),
+    array(
+        'sideblocks' => array(
+            array(
+                'name'   => 'groupquota',
+                'weight' => -10,
+                'data'   => array(),
+            ),
+        ),
+    )
+);
 $smarty->assign('heading', $group->name);
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);

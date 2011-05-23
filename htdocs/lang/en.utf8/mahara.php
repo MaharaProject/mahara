@@ -125,6 +125,7 @@ $string['selfsearch'] = 'Search My Portfolio';
 // Quota strings
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';
+$string['groupquota'] = 'Group Quota';
 
 $string['updatefailed'] = 'Update failed';
 

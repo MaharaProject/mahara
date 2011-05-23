@@ -689,13 +689,25 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     catch (QuotaExceededException $e) {
         prepare_upload_failed_message($result, $e, $parentfoldername, $originalname);
         // update the file listing
-        $result['quota'] = $USER->get('quota');
-        $result['quotaused'] = $USER->get('quotaused');
+        if (defined('GROUP')) {
+            $group = group_current_group();
+            $result['quota'] = $group->quota;
+            $result['quotaused'] = $group->quotaused;
+        }
+        else {
+            $result['quota'] = $USER->get('quota');
+            $result['quotaused'] = $USER->get('quotaused');
+        }
         $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder);
         return $result;
     }
     catch (UploadException $e) {
         prepare_upload_failed_message($result, $e, $parentfoldername, $originalname);
+        if (defined('GROUP')) {
+            $group = group_current_group();
+            $result['quota'] = $group->quota;
+            $result['quotaused'] = $group->quotaused;
+        }
         return $result;
     }
 
@@ -737,8 +749,15 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $result['highlight'] = $newid;
     $result['uploaded'] = true;
     $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
-    $result['quota'] = $USER->get('quota');
-    $result['quotaused'] = $USER->get('quotaused');
+    if (defined('GROUP')) {
+        $group = group_current_group();
+        $result['quota'] = $group->quota;
+        $result['quotaused'] = $group->quotaused;
+    }
+    else {
+        $result['quota'] = $USER->get('quota');
+        $result['quotaused'] = $USER->get('quotaused');
+    }
     $result['maxuploadsize'] = display_size(get_max_upload_size(!$institution && !$group));
     return $result;
 }
@@ -905,18 +924,27 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
     }
     $parentfolder = $artefact->get('parent');
     $artefact->delete();
-    return array(
+
+    $result = array(
         'error' => false,
         'deleted' => true,
         'message' => get_string('filethingdeleted', 'artefact.file',
                                 get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
-        'quotaused' => $USER->get('quotaused'),
-        'quota' => $USER->get('quota'),
         'maxuploadsize' => display_size(get_max_upload_size(!$institution && !$group)),
         'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder),
     );
-}
 
+    if (defined('GROUP')) {
+        $group = group_current_group();
+        $result['quota'] = $group->quota;
+        $result['quotaused'] = $group->quotaused;
+    }
+    else {
+        $result['quota'] = $USER->get('quota');
+        $result['quotaused'] = $USER->get('quotaused');
+    }
+    return $result;
+}
 
 function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
     global $USER;

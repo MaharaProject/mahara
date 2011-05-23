@@ -2343,5 +2343,15 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2011053101) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('quota');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+        $field = new XMLDBField('quotaused');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 }

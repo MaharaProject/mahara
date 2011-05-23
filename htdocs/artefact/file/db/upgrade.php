@@ -271,5 +271,10 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011052500) {
+        // Set default quota to 50MB
+        set_config_plugin('artefact', 'file', 'defaultgroupquota', 52428800);
+    }
+
     return $status;
 }

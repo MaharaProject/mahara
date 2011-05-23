@@ -89,7 +89,9 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
+            // Set default quotas to 50MB
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
+            set_config_plugin('artefact', 'file', 'defaultgroupquota', 52428800);
         }
         set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
@@ -896,6 +898,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
             }
         }
+        if (!empty($data->group)) {
+            require_once('group.php');
+            if (!group_quota_allowed($data->group, $size)) {
+                throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+            }
+        }
         $data->size = $size;
 
         if ($um->file['type'] == 'application/octet-stream') {
@@ -920,6 +928,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         else if (isset($owner)) {
             $owner->quota_add($size);
             $owner->commit();
+        }
+        else if (!empty($data->group)) {
+            group_quota_add($data->group, $size);
         }
         return $id;
     }
@@ -1013,6 +1024,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             if (!$this->institution && $USER->id == $this->get('owner')) {
                 $USER->quota_remove($size);
                 $USER->commit();
+            }
+            if (!empty($this->group)) {
+                require_once('group.php');
+                group_quota_remove($this->group, $size);
             }
         }
 
@@ -1153,6 +1168,26 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        $defaultgroupquota = get_config_plugin('artefact', 'file', 'defaultgroupquota');
+        if (empty($defaultgroupquota)) {
+            $defaultgroupquota = 1024 * 1024 * 10;
+        }
+        $elements['groupquotafieldset'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('defaultgroupquota', 'artefact.file'),
+            'elements' => array(
+                'defaultgroupquotadescription' => array(
+                    'value' => '<tr><td colspan="2">' . get_string('defaultgroupquotadescription', 'artefact.file') . '</td></tr>'
+                ),
+                'defaultgroupquota' => array(
+                    'title'        => get_string('defaultgroupquota', 'artefact.file'),
+                    'type'         => 'bytes',
+                    'defaultvalue' => $defaultgroupquota,
+                )
+            ),
+            'collapsible' => true
+        );
+
         // Require user agreement before uploading files
         // Rework this when/if we provide translatable agreements
         $uploadagreement = get_config_plugin('artefact', 'file', 'uploadagreement');
@@ -1265,6 +1300,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public static function save_config_options($values) {
         global $USER;
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
+        set_config_plugin('artefact', 'file', 'defaultgroupquota', $values['defaultgroupquota']);
         set_config_plugin('artefact', 'file', 'institutionaloverride', $values['institutionaloverride']);
         set_config_plugin('artefact', 'file', 'maxquota', $values['maxquota']);
         set_config_plugin('artefact', 'file', 'maxquotaenabled', $values['maxquotaenabled']);

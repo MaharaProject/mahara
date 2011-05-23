@@ -34,13 +34,46 @@ require_once('pieforms/pieform.php');
 
 $group = get_record_select('group', 'id = ? AND deleted = 0', array(param_integer('id')));
 
-define('TITLE', get_string('groupadminsforgroup', 'admin', $group->name));
+define('TITLE', get_string('administergroups', 'admin'));
+
+$quotasform = pieform(array(
+    'name'       => 'groupquotasform',
+    'elements'   => array(
+        'groupid' => array(
+            'type' => 'hidden',
+            'value' => $group->id,
+        ),
+        'quota'  => array(
+            'type' => 'bytes',
+            'title' => get_string('filequota', 'admin'),
+            'description' => get_string('groupfilequotadescription', 'admin'),
+            'defaultvalue' => $group->quota,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('save'),
+        ),
+    ),
+));
+
+function groupquotasform_submit(Pieform $form, $values) {
+    global $SESSION;
+
+    $group = new StdClass;
+    $group->id = $values['groupid'];
+    $group->quota = $values['quota'];
+    update_record('group', $group);
+
+    $SESSION->add_ok_msg(get_string('groupquotaupdated', 'admin'));
+    redirect(get_config('wwwroot').'admin/groups/groups.php');
+}
+
 
 $admins = get_column_sql(
     "SELECT gm.member FROM {group_member} gm WHERE gm.role = 'admin' AND gm.group = ?", array($group->id)
 );
 
-$form = pieform(array(
+$groupadminsform = pieform(array(
     'name'       => 'groupadminsform',
     'renderer'   => 'table',
     'plugintype' => 'core',
@@ -106,5 +139,7 @@ function groupadminsform_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('managegroupform', $form);
+$smarty->assign('quotasform', $quotasform);
+$smarty->assign('groupname', $group->name);
+$smarty->assign('managegroupform', $groupadminsform);
 $smarty->display('admin/groups/manage.tpl');

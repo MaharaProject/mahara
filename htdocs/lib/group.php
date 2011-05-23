@@ -255,6 +255,8 @@ function group_create($data) {
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
+    $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
+
     db_begin();
 
     $id = insert_record(
@@ -269,6 +271,7 @@ function group_create($data) {
             'mtime'          => $data['ctime'],
             'public'         => $data['public'],
             'usersautoadded' => $data['usersautoadded'],
+            'quota'          => $data['quota'],
         ),
         'id',
         true
@@ -1509,4 +1512,43 @@ function get_forum_list($groupid, $userid = 0) {
     }
 
     return $forums;
+}
+
+function group_quota_allowed($groupid, $bytes) {
+    if (!is_numeric($bytes) || $bytes < 0) {
+        throw new InvalidArgumentException('parameter must be a positive integer to add to the quota');
+    }
+    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+        throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    }
+    if ($group->quotaused + $bytes > $group->quota) {
+        return false;
+    }
+
+    return true;
+}
+
+function group_quota_add($groupid, $bytes) {
+    if (!group_quota_allowed($groupid, $bytes)) {
+        throw new QuotaExceededException('Adding ' . $bytes . ' bytes would exceed the group\'s quota');
+    }
+    $newquota = $group->quotaused + $bytes;
+    $group = new StdClass;
+    $group->id = $groupid;
+    $group->quotaused = $newquota;
+    update_record('group', $group);
+}
+
+function group_quota_remove($groupid, $bytes) {
+    if (!is_numeric($bytes) || $bytes < 0) {
+        throw new InvalidArgumentException('parameter must be a positive integer to add to the quota');
+    }
+    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+        throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    }
+    $newquota = max(0, $group->quotaused - $bytes);
+    $group = new StdClass;
+    $group->id = $groupid;
+    $group->quotaused = $newquota;
+    update_record('group', $group);
 }
