@@ -41,3 +41,4 @@ $string['scivee'] = 'SciVee';
 $string['youtube'] = 'YouTube';
 $string['teachertube'] = 'TeacherTube';
 $string['prezi'] = 'Prezi';
+$string['glogster'] = 'Glogster';

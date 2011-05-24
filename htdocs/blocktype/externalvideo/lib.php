@@ -202,6 +202,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*?prezi.com/([a-zA-Z0-9]+)/.*#',
                 'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
             ),
+            // www.glogster.com
+            array(
+                'match' => '#.*?glogster\.com/flash/flash_loader.swf\?ver=(\d+).*?flashvars="([^"]+)".*#',
+                'url'   => 'http://www.glogster.com/flash/flash_loader.swf?ver=$1&$2',
+            ),
         );
 
         foreach ($embedsources as $source) {
@@ -223,6 +228,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $lang_teachertube = get_string('teachertube', 'blocktype.externalvideo');
         $lang_scivee = get_string('scivee', 'blocktype.externalvideo');
         $lang_prezi = get_string('prezi', 'blocktype.externalvideo');
+        $lang_glogster = get_string('glogster', 'blocktype.externalvideo');
+
         return <<<EOF
 <ul style="list-style-type: none;" class="inlinelist">
     <li><a href="http://www.youtube.com/" target="_blank"><img src="{$wwwroot}blocktype/externalvideo/images/youtube.png" alt="${lang_youtube}" title="${lang_youtube}"></a></li>
@@ -230,6 +237,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="${lang_teachertube}" title="${lang_teachertube}"></a></li>
     <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="${lang_scivee}" title="${lang_scivee}"></a></li>
     <li><a href="http://prezi.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/prezi.png" alt="${lang_prezi}" title="${lang_prezi}"></a></li>
+    <li><a href="http://www.glogster.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/glogster.png" alt="${lang_glogster}" title="${lang_glogster}"></a></li>
 </ul>
 EOF;
     }
