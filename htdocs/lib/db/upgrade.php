@@ -2307,5 +2307,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011052300) {
+        if ($data = check_upgrades("blocktype.googleapps")) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
