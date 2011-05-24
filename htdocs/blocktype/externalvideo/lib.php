@@ -193,6 +193,15 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*scivee.tv.*id=([0-9]+).*#',
                 'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
             ),
+            // prezi.com
+            array(
+                'match' => '#.*?"preziEmbed_([a-zA-Z0-9]+)".*#',
+                'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
+            ),
+            array(
+                'match' => '#.*?prezi.com/([a-zA-Z0-9]+)/.*#',
+                'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
+            ),
         );
 
         foreach ($embedsources as $source) {
