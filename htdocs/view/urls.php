@@ -180,9 +180,9 @@ function editurl_submit(Pieform $form, $values) {
     }
 
     $access = (object) array(
-        'token'           => $values['token'],
-        'startdate'       => db_format_timestamp($values['startdate']),
-        'stopdate'        => db_format_timestamp($values['stopdate']),
+        'token'     => $values['token'],
+        'startdate' => db_format_timestamp($values['startdate']),
+        'stopdate'  => db_format_timestamp($values['stopdate']),
     );
     if (!$view->get('allowcomments')) {
         if ($access->allowcomments = (int) $values['allowcomments']) {
@@ -240,7 +240,8 @@ function newurl_submit(Pieform $form, $values) {
 
     $access = View::new_token($viewids[0]);
     for ($i = 1; $i < count($viewids); $i++) {
-        $access->view = $viewids[$i];
+        $access->view  = $viewids[$i];
+        $access->ctime = db_format_timestamp(time());
         insert_record('view_access', $access);
     }
 

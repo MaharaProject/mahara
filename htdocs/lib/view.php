@@ -363,6 +363,7 @@ class View {
             insert_record('view_access', (object) array(
                 'view'  => $view->get('id'),
                 'group' => $viewdata['group'],
+                'ctime' => db_format_timestamp(time()),
             ));
         }
 
@@ -774,15 +775,16 @@ class View {
                 }
 
                 $accessrecord = (object)array(
-                    'accesstype' => null,
-                    'group' => null,
-                    'role' => null,
-                    'usr' => null,
-                    'token' => null,
-                    'startdate' => null,
-                    'stopdate' => null,
-                    'allowcomments' => 0,
+                    'accesstype'      => null,
+                    'group'           => null,
+                    'role'            => null,
+                    'usr'             => null,
+                    'token'           => null,
+                    'startdate'       => null,
+                    'stopdate'        => null,
+                    'allowcomments'   => 0,
                     'approvecomments' => 1,
+                    'ctime'           => db_format_timestamp(time()),
                 );
 
                 switch ($item['type']) {
@@ -873,6 +875,7 @@ class View {
         foreach ($unique as &$a) {
             foreach ($viewids as $id) {
                 $a->view = $id;
+                $a->ctime = db_format_timestamp(time());
                 insert_record('view_access', $a);
             }
         }
@@ -915,6 +918,7 @@ class View {
             foreach ($toupdate as $id) {
                 foreach ($firstviewaccess as &$a) {
                     $a->view = $id;
+                    $a->ctime = db_format_timestamp(time());
                     insert_record('view_access', $a);
                 }
             }
@@ -3275,6 +3279,8 @@ class View {
         $data->view    = $viewid;
         $data->visible = (int) $visible;
         $data->token   = get_random_key(20);
+        $data->ctime   = db_format_timestamp(time());
+
         while (record_exists('view_access', 'token', $data->token)) {
             $data->token = get_random_key(20);
         }
@@ -3921,6 +3927,7 @@ function objection_form_submit(Pieform $form, $values) {
         'allowcomments'   => 1,
         'approvecomments' => 0,
         'visible'         => 0,
+        'ctime'           => db_format_timestamp(time()),
     );
 
     delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);
@@ -3966,6 +3973,7 @@ function viewnotrude_submit(Pieform $form, $values) {
         'approvecomments' => 0,
         'visible'         => 0,
         'stopdate'        => db_format_timestamp(time() + 60*60*24*7),
+        'ctime'           => db_format_timestamp(time()),
     );
 
     delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);

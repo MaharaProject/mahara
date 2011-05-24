@@ -2313,5 +2313,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011052400) {
+        $table = new XMLDBTable('view_access');
+        $field = new XMLDBField('ctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+        add_field($table, $field);
+    }
+
     return $status;
 }

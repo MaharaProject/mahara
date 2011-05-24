@@ -693,6 +693,7 @@
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
