@@ -109,7 +109,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         $sql .= "
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
-        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
+        $querydata = self::split_query_string(strtolower(trim($query_string)));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
 
@@ -191,6 +191,45 @@ class PluginSearchInternal extends PluginSearch {
         }
         return $alias . '.' . $field . ' ' . db_ilike() . " '%' || ? || '%'";
     }
+
+
+    /**
+     * Split a query string into search terms.
+     *
+     * Contents of double-quoted strings are counted as a single term,
+     * '"' can be entered as '\"', '\' as '\\'.
+     */
+    private static function split_query_string($query) {
+        $terms = array();
+
+        // Split string on unescaped double quotes
+        $quotesplit = preg_split('/(?<!\\\)(\")/', $query, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        $inphrase = false;
+
+        foreach ($quotesplit as $q) {
+            if ($q == '"') {
+                $inphrase = !$inphrase;
+                continue;
+            }
+
+            // Remove escaping
+            $q = preg_replace(array('/\x5C(?!\x5C)/u', '/\x5C\x5C/u'), array('','\\'), $q);
+            if ($inphrase) {
+                if ($trimmed = trim($q)) {
+                    $terms[] = $trimmed;
+                }
+            }
+            else {
+                // Split unquoted sequences on spaces
+                foreach (preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY) as $word) {
+                    $terms[] = $word;
+                }
+            }
+        }
+        return $terms;
+    }
+
 
     private static function prepare_search_user_options($options) {
         if (isset($options['group'])) {
