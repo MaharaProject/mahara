@@ -568,17 +568,26 @@ EOF;
                     GROUP BY topic';
         }
 
+        $values = array();
         $from = '
             FROM
                 {interaction_forum_topic} t
                 JOIN {interaction_instance} f ON t.forum = f.id
-                JOIN {group} g ON f.group = g.id
+                JOIN {group} g ON f.group = g.id';
+
+        // user is not anonymous
+        if ($USER->get('id') > 0) {
+            $from .= '
                 JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
+            ';
+
+            $values[] = $USER->get('id');
+        }
+
+        $from .= '
                 JOIN {interaction_forum_post} first ON (first.topic = t.id AND first.parent IS NULL)
                 JOIN (' . $lastposts . '
                 ) last ON last.topic = t.id';
-
-        $values = array($USER->get('id'));
 
         $where = '
             WHERE g.deleted = 0 AND f.deleted = 0 AND t.deleted = 0';
