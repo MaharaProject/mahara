@@ -218,13 +218,18 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
      */
     private static function get_html_of_supported_websites() {
         $wwwroot = get_config('wwwroot');
+        $lang_youtube = get_string('youtube', 'blocktype.externalvideo');
+        $lang_googlevideo = get_string('googlevideo', 'blocktype.externalvideo');
+        $lang_teachertube = get_string('teachertube', 'blocktype.externalvideo');
+        $lang_scivee = get_string('scivee', 'blocktype.externalvideo');
+        $lang_prezi = get_string('prezi', 'blocktype.externalvideo');
         return <<<EOF
 <ul style="list-style-type: none;" class="inlinelist">
-    <li><a href="http://www.youtube.com/" target="_blank"><img src="{$wwwroot}blocktype/externalvideo/images/youtube.png" alt="YouTube"></a></li>
-    <li><a href="http://video.google.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/googlevideo.png" alt="Google Video"></a></li>
-    <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="TeacherTube"></a></li>
-    <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="SciVee"></a></li>
-    <li><a href="http://prezi.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/prezi.png" alt="Prezi"></a></li>
+    <li><a href="http://www.youtube.com/" target="_blank"><img src="{$wwwroot}blocktype/externalvideo/images/youtube.png" alt="${lang_youtube}" title="${lang_youtube}"></a></li>
+    <li><a href="http://video.google.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/googlevideo.png" alt="${lang_googlevideo}" title="${lang_googlevideo}"></a></li>
+    <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="${lang_teachertube}" title="${lang_teachertube}"></a></li>
+    <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="${lang_scivee}" title="${lang_scivee}"></a></li>
+    <li><a href="http://prezi.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/prezi.png" alt="${lang_prezi}" title="${lang_prezi}"></a></li>
 </ul>
 EOF;
     }

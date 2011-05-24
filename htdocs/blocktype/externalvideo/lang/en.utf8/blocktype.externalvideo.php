@@ -34,3 +34,10 @@ $string['videourldescription2'] = 'Paste the embed code or the URL of the page w
 $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['invalidurl'] = 'Invalid URL';
+
+//Supported sites language strings
+$string['googlevideo'] = 'Google Video';
+$string['scivee'] = 'SciVee';
+$string['youtube'] = 'YouTube';
+$string['teachertube'] = 'TeacherTube';
+$string['prezi'] = 'Prezi';
