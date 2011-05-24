@@ -375,28 +375,6 @@ class ArtefactTypeProfile extends ArtefactType {
         );
     }
 
-    public static function get_public_fields() {
-        $all = self::get_all_fields();
-        $alwaysp = self::get_always_public_fields();
-        $p = array();
-        if ($pub = get_config_plugin('artefact', 'internal', 'profilepublic')) {
-            $public = explode(',', $pub);
-        }
-        else {
-            $public = array();
-        }
-        foreach ($public as $pf) {
-            $p[$pf] = $all[$pf];
-        }
-        return array_merge($p, $alwaysp);
-    }
-
-    public static function get_always_public_fields() {
-        return array(
-            'introduction' => 'wysiwyg'
-        );
-    }
-
     public static function get_all_searchable_fields() {
         return array(
             'firstname'       => 'text',

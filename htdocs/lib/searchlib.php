@@ -65,53 +65,12 @@ defined('INTERNAL') || die();
 function search_user($query_string, $limit, $offset = 0, $data = array()) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
-    safe_require('artefact', 'internal');
-
-    $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
-    if (empty($publicfields)) {
-        $publicfields = array('preferredname');
-    }
-    $fieldlist = "('" . join("','", $publicfields) . "')";
-
     $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset, $data);
 
     if ($results['data']) {
-        $userlist = '('.join(',', array_map(create_function('$u','return (int)$u[\'id\'];'), $results['data'])).')';
-
-        $public_fields = get_records_sql_array('
-            SELECT 
-                u.id, a.artefacttype, a.title
-            FROM
-                {usr} u
-                LEFT JOIN {artefact} a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
-            WHERE
-                u.id IN ' . $userlist . '
-            ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',
-            array()
-        );
-
-        $public_fields_byuser = array();
-        if (!empty($public_fields)) {
-            foreach ($public_fields as $field) {
-                // This will be null if the user does not have a field marked public
-                if ($field->artefacttype !== null) {
-                    $public_fields_byuser[$field->id][$field->artefacttype] = $field->title;
-                }
-            }
-        }
-        
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
-            if (isset($public_fields_byuser[$result['id']])) {
-                foreach ($public_fields_byuser[$result['id']] as $field => $value) {
-                    $result[$field] = $value;
-                }
-            }
-            if (isset($result['country'])) {
-                $result['country'] = get_string('country.' . $result['country']);
-            }
         }
-
     }
 
     return $results;
