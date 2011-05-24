@@ -20,4 +20,8 @@
         <filename>GlogsterIframe</filename>
         <site>http://www.glogster.com (iframe code)</site>
     </filter>
+    <filter>
+        <filename>SlideShareIframe</filename>
+        <site>http://www.slideshare.net (iframe code)</site>
+    </filter>
 </filters>
