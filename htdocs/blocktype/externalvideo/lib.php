@@ -150,7 +150,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
     public static function instance_config_validate(Pieform $form, $values) {
         if ($values['videoid']) {
-            $urlparts = parse_url($values['videoid']);
+            $url = self::make_video_url($values['videoid']);
+            $urlparts = parse_url($url);
             if (empty($urlparts['host'])) {
                 $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'));
             }
