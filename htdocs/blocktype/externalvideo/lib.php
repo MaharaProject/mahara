@@ -217,12 +217,13 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
      * which video sites are supported.
      */
     private static function get_html_of_supported_websites() {
+        $wwwroot = get_config('wwwroot');
         return <<<EOF
 <ul style="list-style-type: none;" class="inlinelist">
-    <li><a href="http://www.youtube.com/" target="_blank"><img src="http://www.youtube.com/favicon.ico" alt="YouTube"> youtube.com</a></li>
-    <li><a href="http://video.google.com/" target="_blank"><img src="http://video.google.com/favicon.ico" alt="Google Video"> video.google.com</a></li>
-    <li><a href="http://www.teachertube.com/" target="_blank"><img src="http://www.teachertube.com/favicon.ico" alt="TeacherTube"> teachertube.com</a></li>
-    <li><a href="http://www.scivee.tv/" target="_blank"><img src="http://www.scivee.tv/files/favicon.ico" alt="SciVee"> scivee.tv</a></li>
+    <li><a href="http://www.youtube.com/" target="_blank"><img src="{$wwwroot}blocktype/externalvideo/images/youtube.png" alt="YouTube"></a></li>
+    <li><a href="http://video.google.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/googlevideo.png" alt="Google Video"></a></li>
+    <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="TeacherTube"></a></li>
+    <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="SciVee"></a></li>
 </ul>
 EOF;
     }
