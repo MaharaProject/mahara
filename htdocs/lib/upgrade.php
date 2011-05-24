@@ -1137,7 +1137,7 @@ function site_warnings() {
     }
 
     // Check if the host returns a usable value for the timezone identifier %z
-    $tz_count = preg_match("/\+[0-9]{4}/", strftime("%z"));
+    $tz_count = preg_match("/[\+\-][0-9]{4}/", strftime("%z"));
     if ($tz_count == 0 || $tz_count == FALSE) {
         $warnings[] = get_string('timezoneidentifierunusable', 'error');
     }
