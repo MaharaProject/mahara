@@ -224,6 +224,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     <li><a href="http://video.google.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/googlevideo.png" alt="Google Video"></a></li>
     <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="TeacherTube"></a></li>
     <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="SciVee"></a></li>
+    <li><a href="http://prezi.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/prezi.png" alt="Prezi"></a></li>
 </ul>
 EOF;
     }
