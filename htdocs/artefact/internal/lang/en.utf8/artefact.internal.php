@@ -32,7 +32,9 @@ $string['pluginname'] = 'Profile';
 $string['profile'] = 'Profile';
 
 $string['mandatoryfields'] = 'Mandatory fields';
+$string['mandatoryfieldsdescription'] = 'Profile fields that must be filled in';
 $string['searchablefields'] = 'Searchable fields';
+$string['searchablefieldsdescription'] = 'Profile fields that can be searched on by others';
 
 $string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your display name.';
 $string['infoisprivate'] = 'This information is private until you include it in a page that is shared with others.';
