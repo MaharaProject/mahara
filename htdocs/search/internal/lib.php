@@ -80,18 +80,23 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         safe_require('artefact', 'internal');
-        $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
-        if (empty($publicfields)) {
-            $publicfields = array('preferredname');
+
+        // Get the list of searchable profile fields from the internal artefact
+        $required   = array_keys(ArtefactTypeProfile::get_always_searchable_fields());
+        $optional   = array_diff(array_keys(ArtefactTypeProfile::get_searchable_fields()), $required);
+        $required[] = 'username'; // Not a profile field, but used in the search query.
+
+        // Get a list of match expressions to use in the WHERE clause
+        $matches = new StdClass;
+        foreach (array_merge($required, $optional) as $f) {
+            $matches->{$f} = self::match_user_field_expression($f, 'u');
         }
-        $fieldlist = '(' . join(',', array_map('db_quote', $publicfields)) . ')';
-        $ilike = db_ilike();
+
         $data = self::prepare_search_user_options($data);
         $sql = '
             SELECT
-                COUNT(DISTINCT u.id)
-            FROM {artefact} a
-                INNER JOIN {usr} u ON u.id = a.owner';
+                COUNT(u.id)
+            FROM {usr} u';
         if (isset($data['group'])) {
             $groupadminsql = '';
             if (isset($data['includeadmins']) and !$data['includeadmins']) {
@@ -107,27 +112,39 @@ class PluginSearchInternal extends PluginSearch {
         $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query_string))));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
-        $namesql = "(u.preferredname $ilike '%' || ? || '%')
-                    OR ((u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value != '1')
-                        AND (u.firstname $ilike '%' || ? || '%' OR u.lastname $ilike '%' || ? || '%'))
-                    OR ($searchusernamesallowed AND u.username $ilike '%' || ? || '%')
-                    OR (a.artefacttype IN $fieldlist
-                        AND ( a.title $ilike '%' || ? || '%'))";
-        $namesql = join('
-                    OR ', array_fill(0, count($querydata), $namesql));
-        $values = array();
-        foreach ($querydata as $w) {
-            $values = array_pad($values, count($values) + 5, $w);
+
+        $termsql = "$matches->preferredname
+                    OR (
+                        (u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value != '1')
+                        AND ($matches->firstname OR $matches->lastname)
+                    )
+                    OR ($searchusernamesallowed AND $matches->username)";
+
+        if ($optional) {
+            foreach ($optional as $f) {
+                $termsql .= "
+                    OR {$matches->$f}";
+            }
         }
 
         $where = '
             WHERE
-                u.id <> 0 AND u.active = 1 AND u.deleted = 0
+                u.id != 0 AND u.active = 1 AND u.deleted = 0';
+
+        $values = array();
+        foreach ($querydata as $term) {
+            $where .= '
                 AND (
-                    ' . $namesql . '
-                )
-                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
-            ';
+                    ' . $termsql . '
+                )';
+            $values = array_pad($values, count($values) + 4 + count($optional), $term);
+        }
+
+        if (isset($data['exclude'])) {
+            $where .= '
+                AND u.id != ?';
+            $values[] = $data['exclude'];
+        }
 
         $sql .= $where;
         $count = count_records_sql($sql, $values);
@@ -143,28 +160,10 @@ class PluginSearchInternal extends PluginSearch {
             return $result;
         }
 
-        if (is_postgres()) {
-            $sql = '
-            SELECT DISTINCT ON (' . $data['orderby'] . ')
-                u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-            FROM {artefact} a
-                INNER JOIN {usr} u ON u.id = a.owner';
-        }
-        else if (is_mysql()) {
-            // @todo This is quite possibly not correct. See the postgres 
-            // query. It should be DISTINCT ON the fields as specified by the 
-            // postgres query. There is a workaround by using SELECT * followed 
-            // by GROUP BY 1, 2, 3, but it's not really valid SQL. The other 
-            // way is to rewrite the query using a self join on the usr table.
-            $sql = '
-            SELECT DISTINCT
-                u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-            FROM {artefact} a
-                INNER JOIN {usr} u ON u.id = a.owner';
-        }
-        else {
-            throw new SQLException('search_user() not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
+        $sql = '
+            SELECT
+                u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.studentid, u.staff
+            FROM {usr} u';
 
         if (isset($data['group'])) {
             $sql .= $groupjoin;
@@ -184,6 +183,13 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         return $result;
+    }
+
+    private static function match_user_field_expression($field, $alias) {
+        if (get_config_plugin('search', 'internal', 'exactusersearch')) {
+            return 'LOWER(' . $alias . '.' . $field . ') = ?';
+        }
+        return $alias . '.' . $field . ' ' . db_ilike() . " '%' || ? || '%'";
     }
 
     private static function prepare_search_user_options($options) {
