@@ -673,7 +673,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'folder'       => (int) param_variable('folder', 0),
             'highlight'    => null,
             'browse'       => true,
-            'page'         => '/view/blocks.php' . View::make_base_url(),
+            'page'         => get_config('wwwroot') . 'view/blocks.php' . View::make_base_url(),
             'config'       => array(
                 'upload'          => true,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),

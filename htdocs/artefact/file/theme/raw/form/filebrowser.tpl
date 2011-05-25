@@ -23,8 +23,8 @@
 {/if}
 
 {if $tabs}
-<input type="hidden" name="owner" id="{$prefix}_owner" value="{$tabs.owner}" />
-<input type="hidden" name="ownerid" id="{$prefix}_ownerid" value="{$tabs.ownerid}" />
+<input type="hidden" name="{$prefix}_owner" id="{$prefix}_owner" value="{$tabs.owner}" />
+<input type="hidden" name="{$prefix}_ownerid" id="{$prefix}_ownerid" value="{$tabs.ownerid}" />
 <input type="hidden" name="{$prefix}_changeowner" id="{$prefix}_changeowner" value="" />
 <div id="{$prefix}_ownertabs">
 {include file="artefact:file:form/ownertabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}
