@@ -5,6 +5,12 @@ class HTMLPurifier_Filter_WikiEducatorIframe extends HTMLPurifier_Filter
     private $default_width = '100%';
     private $default_height = '300';
 
+    private $max_width = 2000;
+    private $max_height = 2000;
+
+    private $max_percent_s = '100%';
+    private $max_percent = 100;
+
     public $name = 'WikiEducatorIframe';
 
     public function preFilter($html, $config, $context) {
@@ -12,7 +18,33 @@ class HTMLPurifier_Filter_WikiEducatorIframe extends HTMLPurifier_Filter
             foreach ($matches[1] as $match) {
                 $xml = simplexml_load_string($match);
                 $width = $xml['width'] ? $xml['width']: $this->default_width;
+
+                //if no percent, assume pixel value
+                if (strpos($width,'%') === false) {
+                    if ((int)$width > $this->max_width) {
+                        $width = $this->max_width;
+                    }
+                }
+                else {
+                    if ((int)$width > $this->max_percent) {
+                        $width = $this->max_percent_s;
+                    }
+                }
+
                 $height = $xml['height'] ? $xml['height'] : $this->default_height;
+
+                //if no percent, assume pixel value
+                if (strpos($height,'%') === false) {
+                    if ((int)$height > $this->max_height) {
+                        $height = $this->max_height;
+                    }
+                }
+                else {
+                    if ((int)$height > $this->max_percent) {
+                        $height = $this->max_percent_s;
+                    }
+                }
+
                 $query = parse_url($xml['src'], PHP_URL_QUERY);
                 parse_str($query, $parts);
                 $id = '';
