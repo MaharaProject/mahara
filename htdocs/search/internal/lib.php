@@ -37,6 +37,34 @@ class PluginSearchInternal extends PluginSearch {
         return false;
     }
 
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(
+            'elements'   => array(
+                'exactusersearch' =>  array(
+                    'title'        => get_string('exactusersearch', 'search.internal'),
+                    'description'  => get_string('exactusersearchdescription', 'search.internal'),
+                    'help'         => true,
+                    'type'         => 'checkbox',
+                    'defaultvalue' => get_config_plugin('search', 'internal', 'exactusersearch'),
+                ),
+            ),
+        );
+    }
+
+    public function save_config_options($values) {
+        set_config_plugin('search', 'internal', 'exactusersearch', (int) $values['exactusersearch']);
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('search', 'internal', 'exactusersearch', 1);
+        }
+    }
+
     /**
      * Implement user searching with SQL
      *
