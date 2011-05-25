@@ -147,7 +147,7 @@ class ArtefactTypePlan extends ArtefactType {
             $id = (int) $values['plan'];
             $artefact = new ArtefactTypePlan($id);
             if (!$USER->can_edit_artefact($artefact)) {
-                $form->set_error('submit', get_string('canteditdontown'));
+                $form->set_error('submit', get_string('canteditdontownplan', 'artefact.plans'));
             }
         }
     }
@@ -488,7 +488,7 @@ class ArtefactTypeTask extends ArtefactType {
             $id = (int) $values['task'];
             $artefact = new ArtefactTypeTask($id);
             if (!$USER->can_edit_artefact($artefact)) {
-                $form->set_error('submit', get_string('canteditdontown'));
+                $form->set_error('submit', get_string('canteditdontowntask', 'artefact.plans'));
             }
         }
     }
