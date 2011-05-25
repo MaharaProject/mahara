@@ -2358,6 +2358,16 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('retainview');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+
+        // Install a cron job to generate the sitemap
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_sitemap_daily';
+        $cron->minute       = '0';
+        $cron->hour         = '1';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
     }
 
     return $status;

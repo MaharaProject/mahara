@@ -190,6 +190,7 @@ $cfg->imagemaxwidth = 1024;
 $cfg->imagemaxheight = 1024;
 
 // paths and arguments for various system commands
+$cfg->pathtogzip = '/bin/gzip';
 $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->pathtozip   = '/usr/bin/zip';
 $cfg->ziprecursearg = '-r';

@@ -457,6 +457,14 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
                 ),
+                'generatesitemap' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('generatesitemap', 'admin'),
+                    'description'  => get_string('generatesitemapdescription', 'admin'),
+                    'defaultvalue' => get_config('generatesitemap'),
+                    'help'         => true,
+                    'disabled'     => in_array('generatesitemap', $OVERRIDDEN) || !get_config('allowpublicviews'),
+                ),
                 'showselfsearchsideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showselfsearchsideblock', 'admin'),
@@ -543,7 +551,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'pathtoclam',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'allowpublicviews', 'allowpublicprofiles',
+        'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
@@ -552,6 +560,12 @@ function siteoptions_submit(Pieform $form, $values) {
         'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
         'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
     );
+
+    // if public views are disabled, sitemap generation must also be disabled.
+    if ($values['allowpublicviews'] == false) {
+        $values['generatesitemap'] = false;
+    }
+
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {

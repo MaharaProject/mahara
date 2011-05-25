@@ -709,6 +709,7 @@ function core_install_firstcoredata_defaults() {
     set_config('createpublicgroups', 'all');
     set_config('allowpublicviews', 1);
     set_config('allowpublicprofiles', 1);
+    set_config('generatesitemap', 1);
     set_config('showselfsearchsideblock', 0);
     set_config('showtagssideblock', 1);
     set_config('tagssideblockmaxtags', 20);
@@ -823,6 +824,7 @@ function core_install_firstcoredata_defaults() {
         'cron_site_data_daily'                      => array('51', '23', '*', '*', '*'),
         'cron_check_for_updates'                    => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
         'cron_clean_internal_activity_notifications'=> array(45, 22, '*', '*', '*'),
+        'cron_sitemap_daily'                        => array(0, 1, '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

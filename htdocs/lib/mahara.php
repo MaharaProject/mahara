@@ -2606,6 +2606,21 @@ function cron_site_data_daily() {
     graph_site_data_daily();
 }
 
+/**
+ * A cronjob to generate a sitemap
+ */
+function cron_sitemap_daily() {
+    require_once(get_config('libroot') . 'searchlib.php');
+    require_once(get_config('libroot') . 'group.php');
+    require_once(get_config('libroot') . 'view.php');
+    require_once(get_config('libroot') . 'sitemap.php');
+
+    safe_require('interaction', 'forum');
+
+    $sitemap = new Sitemap();
+    $sitemap->generate();
+}
+
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');
