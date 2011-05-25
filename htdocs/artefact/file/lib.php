@@ -215,11 +215,31 @@ class PluginArtefactFile extends PluginArtefact {
         }
     }
 
-    public static function get_mimetypes_from_description($description=null) {
-        if (is_null($description)) {
-            return get_column('artefact_file_mime_types', 'mimetype');
+    public static function get_mimetypes_from_description($description=null, $getrecords=false) {
+        static $allmimetypes = null;
+
+        if (is_null($allmimetypes)) {
+            $allmimetypes = get_records_assoc('artefact_file_mime_types');
         }
-        return get_column('artefact_file_mime_types', 'mimetype', 'description', $description);
+
+        if (is_string($description)) {
+            $description = array($description);
+        }
+
+        $mimetypes = array();
+
+        foreach ($allmimetypes as $r) {
+            if (is_null($description) || in_array($r->description, $description)) {
+                if ($getrecords) {
+                    $mimetypes[$r->mimetype] = $r;
+                }
+                else {
+                    $mimetypes[] = $r->mimetype;
+                }
+            }
+        }
+
+        return $mimetypes;
     }
 
     public static function can_be_disabled() {
@@ -1788,7 +1808,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         static $mimetypes = null;
         if (is_null($mimetypes)) {
             $descriptions = self::archive_file_descriptions();
-            $mimetypes = get_records_select_assoc('artefact_file_mime_types', 'description IN (' . join(',', array_map('db_quote', array_keys($descriptions))) . ')');
+            $mimetypes = PluginArtefactFile::get_mimetypes_from_description(array_keys($descriptions), true);
         }
         return $mimetypes;
     }
