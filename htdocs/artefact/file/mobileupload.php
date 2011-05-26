@@ -48,7 +48,7 @@ if ($token == '') {
 
 $username = '';
 try {
-    $username = param_variable('username');
+    $username = trim(param_variable('username'));
 }
 catch (ParameterException $e) { }
 

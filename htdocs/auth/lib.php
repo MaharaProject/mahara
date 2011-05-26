@@ -1142,7 +1142,7 @@ class AuthFactory {
 function login_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
-    $username      = $values['login_username'];
+    $username      = trim($values['login_username']);
     $password      = $values['login_password'];
     $authenticated = false;
     $oldlastlogin  = 0;
