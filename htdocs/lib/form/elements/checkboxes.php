@@ -29,8 +29,8 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
     $submitted = $form->is_submitted();
-    if ($submitted && isset($global[$element['name']])) {
-        $value = $global[$element['name']];
+    if ($submitted) {
+        $value = isset($global[$element['name']]) ? $global[$element['name']] : array();
     }
 
     $result = '';
@@ -47,10 +47,16 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
     $element['name'] .= '[]';
 
     foreach ($element['elements'] as $e) {
-        $checked = ($submitted && (!empty($value[$e['value']]) || in_array($e['value'], $value))) || (!$submitted && !empty($e['defaultvalue']));
+        if (!$submitted || !empty($e['disabled'])) {
+            $checked = $e['defaultvalue'];
+        }
+        else {
+            $checked = !empty($value[$e['value']]) || in_array($e['value'], $value);
+        }
         $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
         . $form->element_attributes($element)
         . ($checked ? ' checked="checked"' : '')
+        . (!empty($e['disabled']) ? ' disabled' : '')
         . '>' . Pieform::hsc(str_shorten_text($e['title'], 17, true)) . '</div>';
     }
     $result .= '<div class="cl"></div>';
@@ -80,7 +86,9 @@ function pieform_element_checkboxes_js() {/*{{{*/
     return <<<EOF
 function pieform_element_checkboxes_update(p, v) {
     forEach(getElementsByTagAndClassName('input', 'checkboxes', p), function(e) {
-        e.checked = v;
+        if (!e.disabled) {
+            e.checked = v;
+        }
     });
 }
 EOF;

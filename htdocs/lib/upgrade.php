@@ -587,6 +587,15 @@ function core_postinst() {
         execute_sql('DROP INDEX {usr_use_uix}');
         execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr}(LOWER(username))');
 
+        // Add user search indexes
+        // Postgres only.  We could create non-lowercased indexes in MySQL, but
+        // they would not be useful, and would require a change to varchar columns.
+        execute_sql('CREATE INDEX {usr_fir_ix} ON {usr}(LOWER(firstname))');
+        execute_sql('CREATE INDEX {usr_las_ix} ON {usr}(LOWER(lastname))');
+        execute_sql('CREATE INDEX {usr_pre_ix} ON {usr}(LOWER(preferredname))');
+        execute_sql('CREATE INDEX {usr_ema_ix} ON {usr}(LOWER(email))');
+        execute_sql('CREATE INDEX {usr_stu_ix} ON {usr}(LOWER(studentid))');
+
         // Only one profile view per user
         execute_sql("CREATE UNIQUE INDEX {view_own_type_uix} ON {view}(owner) WHERE type = 'profile'");
     }

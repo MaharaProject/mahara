@@ -2320,5 +2320,21 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+
+    if ($oldversion < 2011052600) {
+        // Add more indexes to the usr table for user searches
+        if (is_postgres()) {
+            $table = new XMLDBTable('usr');
+            $index = new XMLDBIndex('usr_fir_ix');
+            if (!index_exists($table, $index)) {
+                execute_sql('CREATE INDEX {usr_fir_ix} ON {usr}(LOWER(firstname))');
+                execute_sql('CREATE INDEX {usr_las_ix} ON {usr}(LOWER(lastname))');
+                execute_sql('CREATE INDEX {usr_pre_ix} ON {usr}(LOWER(preferredname))');
+                execute_sql('CREATE INDEX {usr_stu_ix} ON {usr}(LOWER(studentid))');
+                execute_sql('CREATE INDEX {usr_ema_ix} ON {usr}(LOWER(email))');
+            }
+        }
+    }
+
     return $status;
 }

@@ -375,26 +375,42 @@ class ArtefactTypeProfile extends ArtefactType {
         );
     }
 
-    public static function get_public_fields() {
-        $all = self::get_all_fields();
-        $alwaysp = self::get_always_public_fields();
-        $p = array();
+    public static function get_all_searchable_fields() {
+        return array(
+            'firstname'       => 'text',
+            'lastname'        => 'text',
+            'studentid'       => 'text',
+            'preferredname'   => 'text',
+            'email'           => 'emaillist',
+        );
+    }
+
+    public static function get_always_searchable_fields() {
+        return array(
+            'firstname'       => 'text',
+            'lastname'        => 'text',
+            'preferredname'   => 'text',
+        );
+    }
+
+    public static function get_searchable_fields() {
         if ($pub = get_config_plugin('artefact', 'internal', 'profilepublic')) {
             $public = explode(',', $pub);
         }
         else {
             $public = array();
         }
-        foreach ($public as $pf) {
-            $p[$pf] = $all[$pf];
-        }
-        return array_merge($p, $alwaysp);
-    }
 
-    public static function get_always_public_fields() {
-        return array(
-            'introduction' => 'wysiwyg'
-        );
+        $all      = self::get_all_searchable_fields();
+        $selected = self::get_always_searchable_fields();
+
+        foreach ($public as $pf) {
+            if (isset($all[$pf])) {
+                $selected[$pf] = $all[$pf];
+            }
+        }
+
+        return $selected;
     }
 
     public static function has_config() {
@@ -402,69 +418,65 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_config_options() {
-        $mandatory = self::get_mandatory_fields();
-        $public = self::get_public_fields();
+        $allmandatory    = self::get_all_fields();
         $alwaysmandatory = self::get_always_mandatory_fields();
-        $alwayspublic = self::get_always_public_fields();
+        $mandatory       = self::get_mandatory_fields();
+
+        $mandatoryfields = array();
+        foreach (array_keys($allmandatory) as $field) {
+            $mandatoryfields[$field] = array(
+                'title'        => get_string($field, 'artefact.internal'),
+                'value'        => $field,
+                'defaultvalue' => isset($alwaysmandatory[$field]) || isset($mandatory[$field]),
+                'disabled'     => isset($alwaysmandatory[$field]),
+            );
+        }
+
+        $allsearchable    = self::get_all_searchable_fields();
+        $alwayssearchable = self::get_always_searchable_fields();
+        $searchable       = self::get_searchable_fields();
+
+        $searchablefields = array();
+        foreach (array_keys($allsearchable) as $field) {
+            $searchablefields[$field] = array(
+                'title'        => get_string($field, 'artefact.internal'),
+                'value'        => $field,
+                'defaultvalue' => isset($alwayssearchable[$field]) || isset($searchable[$field]),
+                'disabled'     => isset($alwayssearchable[$field]),
+            );
+        }
+
         $form = array(
-            'renderer'   => 'multicolumntable',
             'elements'   => array(
                 'mandatory' =>  array(
-                    'title' => ' ', 
-                    'type'  => 'html',
-                    'class' => 'header',
-                    'value' => get_string('mandatory', 'artefact.internal'),
+                    'title'        => get_string('mandatoryfields', 'artefact.internal'),
+                    'description'  => get_string('mandatoryfieldsdescription', 'artefact.internal'),
+                    'help'         => true,
+                    'type'         => 'checkboxes',
+                    'elements'     => $mandatoryfields,
+                    'options'      => $allmandatory, // Only the keys are used by validateoptions
+                    'rules'        => array('validateoptions' => true),
                 ),
-                'public' => array(
-                    'title' => ' ', 
-                    'class' => 'header',
-                    'type'  => 'html',
-                    'value' => get_string('public', 'artefact.internal'),
-                )
+                'searchable' =>  array(
+                    'title'        => get_string('searchablefields', 'artefact.internal'),
+                    'description'  => get_string('searchablefieldsdescription', 'artefact.internal'),
+                    'help'         => true,
+                    'type'         => 'checkboxes',
+                    'elements'     => $searchablefields,
+                    'options'      => $allsearchable, // Only the keys are used by validateoptions
+                    'rules'        => array('validateoptions' => true),
+                ),
             ),
         );
-
-        foreach (array_keys(self::get_all_fields()) as $field) {
-            $form['elements'][$field . '_mandatory'] = array(
-                'defaultvalue' => ((isset($mandatory[$field])) ? 'checked' : ''),
-                'title'        => get_string($field, 'artefact.internal'),
-                'type'         => 'checkbox',
-            );
-            if (isset($alwaysmandatory[$field])) {
-                $form['elements'][$field . '_mandatory']['value'] = 'checked';
-                $form['elements'][$field . '_mandatory']['disabled'] = true;
-            }
-            $form['elements'][$field . '_public'] = array(
-                'defaultvalue' => ((isset($public[$field])) ? 'checked' : ''),
-                'title'        => get_string($field, 'artefact.internal'),
-                'type'         => 'checkbox',
-
-            );
-            if (isset($alwayspublic[$field])) {
-                $form['elements'][$field . '_public']['value'] = 'checked';
-                $form['elements'][$field . '_public']['disabled'] = true;
-            }
-        }
 
         return $form;
     }
 
     public function save_config_options($values) {
-        $mandatory = '';
-        $public = '';
-        foreach ($values as $field => $value) {
-            if (($value == 'on' || $value == 'checked')
-                && preg_match('/([a-zA-Z]+)_(mandatory|public)/', $field, $matches)) {
-                if (empty($$matches[2])) {
-                    $$matches[2] = $matches[1];
-                } 
-                else {
-                    $$matches[2] .= ',' . $matches[1];
-                }
-            }
-        }
-        set_config_plugin('artefact', 'internal', 'profilepublic', $public);
-        set_config_plugin('artefact', 'internal', 'profilemandatory', $mandatory);
+        $mandatory = array_merge(array_keys(self::get_always_mandatory_fields()), $values['mandatory']);
+        set_config_plugin('artefact', 'internal', 'profilemandatory', join(',', $mandatory));
+        $searchable = array_merge(array_keys(self::get_always_searchable_fields()), $values['searchable']);
+        set_config_plugin('artefact', 'internal', 'profilepublic', join(',', $searchable));
     }
 
     public static function get_links($id) {

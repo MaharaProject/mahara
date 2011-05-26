@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage lang
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,9 +27,5 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2011052600;
-$config->release = '1.5.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$string['exactusersearch'] = 'Exact user searches';
+$string['exactusersearchdescription'] = 'If checked, results from the Search Users box and Find Friends page are only returned for users whose profile fields match entire search terms.';
