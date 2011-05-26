@@ -1072,7 +1072,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $elements = array();
         $defaultquota = get_config_plugin('artefact', 'file', 'defaultquota');
         if (empty($defaultquota)) {
-            $defaultquota = 1024 * 1024 * 10;
+            $defaultquota = 1024 * 1024 * 50;
         }
         $elements['quotafieldset'] = array(
             'type' => 'fieldset',
