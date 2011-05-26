@@ -38,10 +38,22 @@ define('SECTION_PAGE', 'find');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
+$filter = param_alpha('filter', 'myinstitutions');
 $limit  = 10;
 
-$data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
+$options = array('exclude' => $USER->get('id'));
+if ($filter == 'myinstitutions' && $USER->get('institutions')) {
+    $options['myinstitutions'] = true;
+}
+else {
+    $filter = 'all';
+}
+
+$data = search_user($query, $limit, $offset, $options);
 $data['query'] = $query;
+if (!empty($options['myinstitutions'])) {
+    $data['filter'] = $filter;
+}
 
 require_once(get_config('libroot').'group.php');
 $admingroups = false;
@@ -76,6 +88,9 @@ addLoadEvent(function () {
     connect('search_submit', 'onclick', function (event) {
         replaceChildNodes('messages');
         var params = {'query': $('search_query').value, 'extradata':serializeJSON({'page':'find'})};
+        if ($('search_filter')) {
+            params.filter = $('search_filter').value;
+        }
         p.sendQuery(params);
         event.stop();
     });
