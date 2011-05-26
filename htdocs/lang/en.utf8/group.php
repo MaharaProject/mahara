@@ -262,6 +262,8 @@ $string['friends'] = 'friends';
 $string['user'] = 'user';
 $string['users'] = 'users';
 $string['Friends'] = 'Friends';
+$string['Everyone'] = 'Everyone';
+$string['myinstitutions'] = 'My Institutions';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';

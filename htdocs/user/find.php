@@ -67,20 +67,33 @@ foreach (group_get_user_groups() as $g) {
 
 build_userlist_html($data, 'find', $admingroups);
 
-$searchform = pieform(array(
+$searchform = array(
     'name' => 'search',
     'renderer' => 'oneline',
-    'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'defaultvalue' => $query
+    'elements' => array(),
+);
+
+if ($USER->get('institutions')) {
+    $searchform['elements']['filter'] = array(
+        'type' => 'select',
+        'options' => array(
+            'all'            => get_string('Everyone', 'group'),
+            'myinstitutions' => get_string('myinstitutions', 'group'),
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('search')
-        )
-    )
-));
+        'defaultvalue' => $filter,
+    );
+}
+
+$searchform['elements']['query'] = array(
+    'type' => 'text',
+    'defaultvalue' => $query,
+);
+$searchform['elements']['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('search'),
+);
+
+$searchform = pieform($searchform);
 
 $js = <<< EOF
 addLoadEvent(function () {
