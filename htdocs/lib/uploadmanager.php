@@ -155,7 +155,7 @@ class upload_manager {
         }
 
         if (move_uploaded_file($this->file['tmp_name'], $destination . '/' . $newname)) {
-            chmod($destination . '/' . $newname, 0700);
+            chmod($destination . '/' . $newname, get_config('directorypermissions'));
             return false;
         }
         return get_string('failedmovingfiletodataroot');
