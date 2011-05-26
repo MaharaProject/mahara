@@ -91,7 +91,13 @@ if (count($authinstances) > 0) {
             $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
         }
     }
-    $default = key($options);
+    if ($USER->get('admin')) {
+        $definst = get_field('auth_instance', 'id', 'institution', 'mahara');
+        $default = $definst ? $definst : key($options);
+    }
+    else {
+        $default = key($options);
+    }
 
     $authinstanceelement = array(
         'type' => 'select',
