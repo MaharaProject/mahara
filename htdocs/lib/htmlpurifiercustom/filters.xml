@@ -16,4 +16,8 @@
         <filename>WikiEducatorIframe</filename>
         <site>http://wikieducator.org (iframe code)</site>
     </filter>
+    <filter>
+        <filename>GlogsterIframe</filename>
+        <site>http://www.glogster.com (iframe code)</site>
+    </filter>
 </filters>
