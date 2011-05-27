@@ -42,7 +42,7 @@ $group_data = get_record_sql("SELECT g.*
     AND g.deleted = 0", array($USER->get('id'), $id));
 
 if (!$group_data) {
-    $SESSION->add_error_msg(get_string('canteditdontown'));
+    $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
     redirect('/group/mygroups.php');
 }
 $elements = array();
