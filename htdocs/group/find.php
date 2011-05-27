@@ -99,9 +99,13 @@ if ($groups['data']) {
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)
             LEFT JOIN (
-                SELECT g.id, 'admin' AS membershiptype, CASE WHEN gm.role = 'admin' THEN 'admin' ELSE 'member' END AS role
+                SELECT g.id, 'admin' AS membershiptype, gm.role AS role
                 FROM {group} g
-                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
+                INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                UNION
+                SELECT g.id, 'member' AS membershiptype, gm.role AS role
+                FROM {group} g
+                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
                 UNION
                 SELECT g.id, 'invite' AS membershiptype, gmi.role
                 FROM {group} g
@@ -117,7 +121,7 @@ if ($groups['data']) {
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.role, g1.membershiptype, g1.membercount
         ORDER BY g1.name',
-        array($USER->get('id'), $USER->get('id'), $USER->get('id'))
+        array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
 }
 
