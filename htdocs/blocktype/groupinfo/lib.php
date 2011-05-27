@@ -35,6 +35,10 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
         return get_string('title', 'blocktype.groupinfo');
     }
 
+    public static function get_instance_title() {
+        return '';
+    }
+
     public static function get_description() {
         return get_string('description', 'blocktype.groupinfo');
     }
