@@ -502,7 +502,9 @@ function editaccess_submit(Pieform $form, $values) {
         }
     }
 
-    View::update_view_access($viewconfig, $toupdate);
+    if (!empty($toupdate)) {
+        View::update_view_access($viewconfig, $toupdate);
+    }
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));
 
