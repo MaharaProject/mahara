@@ -287,6 +287,9 @@ function accountprefs_submit(Pieform $form, $values) {
     db_commit();
 
     if (isset($values['lang']) && $values['lang'] != $oldlang) {
+        // The session language pref is used when the user has no user pref,
+        // and when logged out.
+        $SESSION->set('lang', $values['lang']);
         // Use PIEFORM_CANCEL here to force a page reload and show the new language.
         $returndata['location'] = get_config('wwwroot') . 'account/index.php';
         $SESSION->add_ok_msg(get_string_from_language($values['lang'], 'prefssaved', 'account'));
