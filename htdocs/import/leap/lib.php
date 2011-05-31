@@ -1072,6 +1072,9 @@ class PluginImportLeap extends PluginImport {
         // TODO: entryid injection? Probably not worth worrying about
         $matches = $this->xml->xpath("//a:feed/a:entry/a:id[.='$entryid']/..");
         // TODO: there had better be only one...
+        if (empty($matches)) {
+            return null;
+        }
         $entry = $matches[0];
         if ($entry) {
             $this->registerXpathNamespaces($entry);
