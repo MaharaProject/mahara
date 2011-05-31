@@ -38,10 +38,22 @@ define('SECTION_PAGE', 'find');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
+$filter = param_alpha('filter', 'myinstitutions');
 $limit  = 10;
 
-$data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
+$options = array('exclude' => $USER->get('id'));
+if ($filter == 'myinstitutions' && $USER->get('institutions')) {
+    $options['myinstitutions'] = true;
+}
+else {
+    $filter = 'all';
+}
+
+$data = search_user($query, $limit, $offset, $options);
 $data['query'] = $query;
+if (!empty($options['myinstitutions'])) {
+    $data['filter'] = $filter;
+}
 
 require_once(get_config('libroot').'group.php');
 $admingroups = false;
@@ -55,20 +67,33 @@ foreach (group_get_user_groups() as $g) {
 
 build_userlist_html($data, 'find', $admingroups);
 
-$searchform = pieform(array(
+$searchform = array(
     'name' => 'search',
     'renderer' => 'oneline',
-    'elements' => array(
-        'query' => array(
-            'type' => 'text',
-            'defaultvalue' => $query
+    'elements' => array(),
+);
+
+if ($USER->get('institutions')) {
+    $searchform['elements']['filter'] = array(
+        'type' => 'select',
+        'options' => array(
+            'all'            => get_string('Everyone', 'group'),
+            'myinstitutions' => get_string('myinstitutions', 'group'),
         ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('search')
-        )
-    )
-));
+        'defaultvalue' => $filter,
+    );
+}
+
+$searchform['elements']['query'] = array(
+    'type' => 'text',
+    'defaultvalue' => $query,
+);
+$searchform['elements']['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('search'),
+);
+
+$searchform = pieform($searchform);
 
 $js = <<< EOF
 addLoadEvent(function () {
@@ -76,6 +101,9 @@ addLoadEvent(function () {
     connect('search_submit', 'onclick', function (event) {
         replaceChildNodes('messages');
         var params = {'query': $('search_query').value, 'extradata':serializeJSON({'page':'find'})};
+        if ($('search_filter')) {
+            params.filter = $('search_filter').value;
+        }
         p.sendQuery(params);
         event.stop();
     });

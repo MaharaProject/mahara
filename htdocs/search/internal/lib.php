@@ -135,6 +135,19 @@ class PluginSearchInternal extends PluginSearch {
                     (gm.member = u.id AND gm.group = ' . (int)$data['group'] . $groupadminsql . ")\n";
             $sql .= $groupjoin;
         }
+
+        $where = '
+            WHERE
+                u.id != 0 AND u.active = 1 AND u.deleted = 0';
+
+        if (isset($data['institutions']) && !empty($data['institutions'])) {
+            $where .= '
+                AND u.id IN (
+                    SELECT usr FROM {usr_institution} WHERE institution IN ('
+                . join(',', array_map('db_quote', $data['institutions'])) . ')
+                )';
+        }
+
         $sql .= "
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
         $querydata = self::split_query_string(strtolower(trim($query_string)));
@@ -154,10 +167,6 @@ class PluginSearchInternal extends PluginSearch {
                     OR {$matches->$f}";
             }
         }
-
-        $where = '
-            WHERE
-                u.id != 0 AND u.active = 1 AND u.deleted = 0';
 
         $values = array();
         foreach ($querydata as $term) {
@@ -260,6 +269,7 @@ class PluginSearchInternal extends PluginSearch {
 
 
     private static function prepare_search_user_options($options) {
+        global $USER;
         if (isset($options['group'])) {
             $options['group'] = intval($options['group']);
         }
@@ -274,6 +284,11 @@ class PluginSearchInternal extends PluginSearch {
         }
         if (isset($options['exclude'])) {
             $options['exclude'] = intval($options['exclude']);
+        }
+        if (isset($options['myinstitutions'])) {
+            if ($institutions = array_keys($USER->get('institutions'))) {
+                $options['institutions'] = $institutions;
+            }
         }
         return $options;
     }

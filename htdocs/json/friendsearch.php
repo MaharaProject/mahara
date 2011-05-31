@@ -50,8 +50,15 @@ if ($page == 'myfriends') {
     $data['filter'] = $filter;
 }
 else {
-    $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
+    $options = array('exclude' => $USER->get('id'));
+    if ($filter == 'myinstitutions') {
+        $options['myinstitutions'] = true;
+    }
+    $data = search_user($query, $limit, $offset, $options);
     $data['query'] = $query;
+    if (!empty($options['myinstitutions'])) {
+        $data['filter'] = $filter;
+    }
 }
 
 $controlledgroups = count_records_sql("SELECT COUNT(g.id)

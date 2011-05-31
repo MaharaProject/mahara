@@ -1441,23 +1441,30 @@ function build_userlist_html(&$data, $page, $admingroups) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
+
+    $params = array();
     if (isset($data['query'])) {
-        $smarty->assign('query', $data['query']);
-        $params = '?query=' . $data['query'];
-        $resultcounttextsingular = get_string('user', 'group');
-        $resultcounttextplural = get_string('users', 'group');
+        $smarty->assign('query', 1);
+        $params['query'] = $data['query'];
     }
-    elseif (isset($data['filter'])) {
-        $smarty->assign('filter', $data['filter']);
-        $params = '?filter=' . $data['filter'];
+    if (isset($data['filter'])) {
+        $params['filter'] = $data['filter'];
+    }
+
+    if ($page == 'myfriends') {
         $resultcounttextsingular = get_string('friend', 'group');
         $resultcounttextplural = get_string('friends', 'group');
     }
+    else {
+        $resultcounttextsingular = get_string('user', 'group');
+        $resultcounttextplural = get_string('users', 'group');
+    }
+
     $smarty->assign('admingroups', $admingroups);
     $data['tablerows'] = $smarty->fetch('user/userresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'friendslist_pagination',
-        'url' => get_config('wwwroot') . 'user/' . $page . '.php' . $params,
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php?' . http_build_query($params),
         'jsonscript' => 'json/friendsearch.php',
         'datatable' => 'friendslist',
         'count' => $data['count'],
