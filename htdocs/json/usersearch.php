@@ -60,8 +60,10 @@ else {
     $data = search_user($query, $limit, $offset, $options);
 }
 
-foreach ($data['data'] as &$result) {
-    $result = array('id' => $result['id'], 'name' => $result['name']);
+if ($data['data']) {
+    foreach ($data['data'] as &$result) {
+        $result = array('id' => $result['id'], 'name' => $result['name']);
+    }
 }
 
 json_reply(false, $data);
