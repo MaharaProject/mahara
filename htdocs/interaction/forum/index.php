@@ -50,24 +50,7 @@ if (!$membership && !$group->public) {
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 
-$forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id) AS topiccount, s.forum AS subscribed
-    FROM {interaction_instance} f
-    LEFT JOIN (
-        SELECT m.forum, m.user
-        FROM {interaction_forum_moderator} m
-        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
-    ) m ON m.forum = f.id
-    LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
-    INNER JOIN {interaction_forum_instance_config} c ON (c.forum = f.id AND c.field = \'weight\')
-    LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
-    WHERE f.group = ?
-    AND f.deleted != 1
-    GROUP BY 1, 2, 3, 4, 6, c.value
-    ORDER BY c.value, m.user',
-    array($USER->get('id'), $groupid)
-);
-
+$forums = get_forum_list($group->id, $USER->get('id'));
 if ($forums) {
     // query gets a new forum object for every moderator of that forum
     // this combines all moderators together into one object per forum

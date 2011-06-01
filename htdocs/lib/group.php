@@ -1482,3 +1482,31 @@ function install_system_grouphomepage_view() {
 
     return $id;
 }
+
+function get_forum_list($groupid, $userid = 0) {
+    $forums = array();
+    if (
+        (is_numeric($groupid) && $groupid > 0)
+        && (is_numeric($userid) && $userid >= 0)
+    ) {
+        $forums = get_records_sql_array(
+            'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id) AS topiccount, s.forum AS subscribed
+            FROM {interaction_instance} f
+            LEFT JOIN (
+                SELECT m.forum, m.user
+                FROM {interaction_forum_moderator} m
+                INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
+            ) m ON m.forum = f.id
+            LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
+            INNER JOIN {interaction_forum_instance_config} c ON (c.forum = f.id AND c.field = \'weight\')
+            LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
+            WHERE f.group = ?
+            AND f.deleted != 1
+            GROUP BY 1, 2, 3, 4, 6, c.value
+            ORDER BY c.value, m.user',
+            array($userid, $groupid)
+        );
+    }
+
+    return $forums;
+}
