@@ -603,17 +603,18 @@ EOF;
             SELECT
                 t.id, t.forum AS forumid, f.title AS forumname, g.id AS groupid, g.name AS groupname,
                 first.subject AS topicname, first.poster AS firstpostby,
-                last.id AS postid, last.poster, last.subject, last.body, last.ctime,
+                last.id AS postid, last.poster, last.subject, last.body, last.ctime, edits.ctime as mtime,
                 COUNT(posts.id) AS postcount';
 
         $from .= '
-                LEFT JOIN {interaction_forum_post} posts ON posts.topic = t.id';
+                LEFT JOIN {interaction_forum_post} posts ON posts.topic = t.id
+                LEFT JOIN {interaction_forum_edit} edits ON edits.post = last.id';
 
         $sort = '
             GROUP BY
                 t.id, t.forum, f.title, g.id, g.name,
                 first.subject, first.poster,
-                last.id, last.poster, last.subject, last.body, last.ctime
+                last.id, last.poster, last.subject, last.body, last.ctime, edits.ctime
             ORDER BY last.ctime DESC';
 
         $result['data'] = get_records_sql_array($select . $from . $where . $sort, $values, $offset, $limit);
