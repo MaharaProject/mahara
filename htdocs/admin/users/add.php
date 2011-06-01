@@ -137,6 +137,16 @@ if (!$USER->get('admin')) {
     unset ($elements['authinstance']['defaultvalue']);
 }
 
+if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride'))) {
+    $elements['quota'] = array(
+        'type'         => 'text',
+        'disabled'     => true,
+        'title'        => get_string('filequota', 'admin'),
+        'description'  => get_string('filequotadescription', 'admin'),
+        'value'        => display_size(get_config_plugin('artefact', 'file', 'defaultquota')),
+    );
+}
+
 $form = pieform(array(
     'name'       => 'adduser',
     'autofocus'  => false,

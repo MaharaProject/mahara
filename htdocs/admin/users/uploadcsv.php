@@ -112,6 +112,13 @@ $form = array(
     'name' => 'uploadcsv',
     'elements' => array(
         'authinstance' => $authinstanceelement,
+        'quota' => array(
+            'type' => 'bytes',
+            'title' => get_string('filequota', 'admin'),
+            'description' => get_string('filequotadescription', 'admin'),
+            'rules' => array('integer' => true, 'minvalue' => 0),
+            'defaultvalue' => get_config_plugin('artefact', 'file', 'defaultquota'),
+        ),
         'file' => array(
             'type' => 'file',
             'title' => get_string('csvfile', 'admin'),
@@ -139,6 +146,16 @@ $form = array(
     )
 );
 
+if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride'))) {
+    $form['elements']['quota'] = array(
+        'type'         => 'text',
+        'disabled'     => true,
+        'title'        => get_string('filequota', 'admin'),
+        'description'  => get_string('filequotadescription', 'admin'),
+        'value'        => display_size(get_config_plugin('artefact', 'file', 'defaultquota')),
+    );
+}
+
 /**
  * The CSV file is parsed here so validation errors can be returned to the
  * user. The data from a successful parsing is stored in the <var>$CVSDATA</var>
@@ -158,6 +175,12 @@ function uploadcsv_validate(Pieform $form, $values) {
     if ($values['file']['size'] == 0) {
         $form->set_error('file', $form->i18n('rule', 'required', 'required', array()));
         return;
+    }
+
+    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+    if ($maxquotaenabled && $values['quota'] > $maxquota) {
+        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
     }
 
     require_once('csvfile.php');
@@ -296,6 +319,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->lastname     = $record[$formatkeylookup['lastname']];
         $user->password     = $record[$formatkeylookup['password']];
         $user->email        = $record[$formatkeylookup['email']];
+        $user->quota        = $values['quota'];
 
         if (isset($formatkeylookup['studentid'])) {
             $user->studentid = $record[$formatkeylookup['studentid']];
@@ -408,7 +432,7 @@ else {
 
 $form = pieform($form);
 
-$smarty = smarty();
+$smarty = smarty(array('adminuploadcsv'));
 $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);

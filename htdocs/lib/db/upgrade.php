@@ -2336,5 +2336,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011053100) {
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('defaultquota');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+    }
+
     return $status;
 }

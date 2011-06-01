@@ -34,6 +34,25 @@ function move_step(i) {
     }
 }
 
+function change_quota(i) {
+    var quota = document.getElementById('adduser_quota');
+    var quotaUnits = document.getElementById('adduser_quota_units');
+    var params = {};
+    params.instid = i.value;
+    if (quotaUnits == null) {
+        params.disabled = true;
+    }
+    sendjsonrequest('quota.json.php', params, 'POST', function(data) {
+        if (quotaUnits == null) {
+            quota.value = data.data;
+        }
+        else {
+            quota.value = data.data.number;
+            quotaUnits.value = data.data.units;
+        }
+    });
+}
+
 addLoadEvent(function() {
     var step1_spans = getElementsByTagAndClassName('span', 'requiredmarker', 'step1');
     var step1_inputs = getElementsByTagAndClassName('input', 'required', 'step1');
@@ -86,5 +105,14 @@ addLoadEvent(function() {
         connect(i, 'onfocus', partial(move_step, i));
         connect(i, 'onclick', partial(move_step, i));
     });
+
+    select = document.getElementById('adduser_authinstance');
+    if (select != null) {
+        connect(select, 'onchange', partial(change_quota, select));
+    }
+    else {
+        select = document.getElementsByName('authinstance')[0];
+    }
+    change_quota(select);
 });
 

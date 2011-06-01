@@ -46,7 +46,7 @@ echo $form_tag;
             <td class="filler">&raquo;</td>
             <td class="step step2">
                 <table>
-<?php foreach(array('username', 'password', 'staff', 'admin', 'quota', 'authinstance', 'institutionadmin') as $field) { ?>
+<?php foreach(array('username', 'password', 'staff', 'admin', 'authinstance', 'quota', 'institutionadmin') as $field) { ?>
                     <tr>
                         <th><?php echo $elements[$field]['labelhtml']; ?></th>
                         <td><?php echo $elements[$field]['html']; ?></td>

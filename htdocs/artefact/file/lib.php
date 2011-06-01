@@ -1110,6 +1110,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        $override = get_config_plugin('artefact', 'file', 'institutionaloverride');
+        $elements['overridefieldset'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('institutionoverride', 'artefact.file'),
+            'elements' => array(
+                'institutionaloverridedescription' => array(
+                    'value' => '<tr><td colspan="2">' . get_string('institutionoverridedescription', 'artefact.file') . '</td></tr>',
+                ),
+                'institutionaloverride' => array(
+                    'title'        => get_string('institutionoverride', 'artefact.file'),
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $override,
+                ),
+            ),
+            'collapsible' => true,
+        );
+
         $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
         $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
         if (empty($maxquota)) {
@@ -1248,6 +1265,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public static function save_config_options($values) {
         global $USER;
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
+        set_config_plugin('artefact', 'file', 'institutionaloverride', $values['institutionaloverride']);
         set_config_plugin('artefact', 'file', 'maxquota', $values['maxquota']);
         set_config_plugin('artefact', 'file', 'maxquotaenabled', $values['maxquotaenabled']);
         set_config_plugin('artefact', 'file', 'profileiconwidth', $values['profileiconwidth']);
