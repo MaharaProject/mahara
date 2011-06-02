@@ -132,7 +132,7 @@ class AuthLdap extends Auth {
                     // Match database and ldap entries and update in database if required
                     $fieldstoimport = array('firstname', 'lastname', 'email');
                     foreach ($fieldstoimport as $field) {
-                        if ($user->$field != $ldapdetails[$field]) {
+                        if (!empty($ldapdetails[$field]) && ($user->$field != $ldapdetails[$field])) {
                             $user->$field = $ldapdetails[$field];
                             set_profile_field($user->id, $field, $user->$field);
                         }
