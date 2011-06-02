@@ -2600,9 +2600,10 @@ class View {
      * @param bool     $extra       Return full set of properties on each view including an artefact list
      * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
      * @param array    $types       List of view types to filter by
+     * @param bool     $collection  Use query against collection names and descriptions
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null, $types=null) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null, $types=null, $collection=false) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -2636,8 +2637,13 @@ class View {
         $like = db_ilike();
         if ($query) {
             $where .= "
-                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' )";
-            $ph = array($query, $query);
+                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' ";
+            if ($collection) {
+                $where .= "
+                    OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
+            }
+            $where .= ")";
+            $ph = array($query, $query, $query, $query);
         }
         else {
             $ph = array();
@@ -2647,6 +2653,8 @@ class View {
             // Unreachable and not tested yet:
             $from = '
             FROM {view} v
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
                 INNER JOIN {view_access} va ON (va.view = v.id)
             ';
             $where .= "
@@ -2659,6 +2667,8 @@ class View {
         else {
             $from = '
             FROM {view} v
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
             LEFT OUTER JOIN {group} gd ON v.group = gd.id
             LEFT OUTER JOIN (
                 SELECT
@@ -2760,11 +2770,12 @@ class View {
             SELECT * FROM (
                 SELECT
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                    v.template, v.mtime, v.ctime
+                    v.template, v.mtime, v.ctime,
+                    c.id AS collid, c.name
                 ' . $from . $where . '
                 GROUP BY
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                    v.template, v.mtime, v.ctime
+                    v.template, v.mtime, v.ctime, c.id, c.name
             ) a
             ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit
@@ -3223,10 +3234,10 @@ class View {
 
     public static function get_templatesearch_data(&$search) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true);
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, true);
 
         foreach ($results->data as &$r) {
-            $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id']));
+            $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
         }
 
         $params = array();
@@ -3734,7 +3745,7 @@ class View {
 }
 
 
-function create_view_form($group=null, $institution=null, $template=null) {
+function create_view_form($group=null, $institution=null, $template=null, $collection=null) {
     global $USER;
     $form = array(
         'name'            => 'createview',
@@ -3747,6 +3758,10 @@ function create_view_form($group=null, $institution=null, $template=null) {
             'new' => array(
                 'type' => 'hidden',
                 'value' => true,
+            ),
+            'submitcollection' => array(
+                'type'  => 'hidden',
+                'value' => false,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -3772,6 +3787,16 @@ function create_view_form($group=null, $institution=null, $template=null) {
             'value' => $USER->get('id'),
         );
     }
+    if ($collection !== null) {
+        $form['elements']['copycollection'] = array(
+            'type'  => 'hidden',
+            'value' => $collection,
+        );
+        $form['elements']['submitcollection'] = array(
+            'type'  => 'submit',
+            'value' => get_string('copycollection', 'collection'),
+        );
+    }
     if ($template !== null) {
         $form['elements']['usetemplate'] = array(
             'type'  => 'hidden',
@@ -3788,7 +3813,26 @@ function createview_submit(Pieform $form, $values) {
 
     $values['template'] = !empty($values['istemplate']) ? 1 : 0; // Named 'istemplate' in the form to prevent confusion with 'usetemplate'
 
-    if (isset($values['usetemplate'])) {
+    if (!empty($values['submitcollection'])) {
+        require_once(get_config('libroot') . 'collection.php');
+        $templateid = $values['copycollection'];
+        unset($values['copycollection']);
+        unset($values['usetemplate']);
+        list($collection, $template, $copystatus) = Collection::create_from_template($values, $templateid);
+        if (isset($copystatus['quotaexceeded'])) {
+            $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
+            redirect(get_config('wwwroot') . 'collection/choosetemplate.php');
+        }
+        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
+            $copystatus['pages'],
+            $copystatus['blocks'],
+            $copystatus['artefacts'],
+            $template->get('name'))
+        );
+
+        redirect(get_config('wwwroot') . 'collection/edit.php?new=1&id=' . $collection->get('id'));
+    }
+    else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
         list($view, $template, $copystatus) = View::create_from_template($values, $templateid);

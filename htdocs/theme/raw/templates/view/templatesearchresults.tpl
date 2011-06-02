@@ -1,7 +1,8 @@
 <table class="templateresults tablerenderer fullwidth">
   <thead>
     <tr>
-      <th>{str tag=name}</th>
+      <th>{str tag=viewname section=view}</th>
+      <th>{str tag=collectiontitle section=collection}</th>
       <th>{str tag=Owner section=view}</th>
       <th></th>
     </tr>
@@ -12,6 +13,11 @@
     <tr class="{cycle values='r0,r1'}">
       <td>
         <strong><a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a></strong>
+      </td>
+      <td>
+{if $row.collid}
+        <strong><a class="collectionlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.name}</a></strong>
+{/if}
       </td>
 {if $row.institution}
       <td class="owner s">{$row.sharedby}</td>
