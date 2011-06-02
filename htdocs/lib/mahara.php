@@ -1840,7 +1840,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             v.*,
             ' . db_format_tsfield('atime') . ',
             ' . db_format_tsfield('mtime') . ',
-            ' . db_format_tsfield('ctime') . '
+            ' . db_format_tsfield('v.ctime', 'ctime') . '
         FROM 
             {view} v
             INNER JOIN {view_access} a ON
@@ -1881,7 +1881,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
             v.*,
             ' . db_format_tsfield('atime') . ',
             ' . db_format_tsfield('mtime') . ',
-            ' . db_format_tsfield('ctime') . '
+            ' . db_format_tsfield('v.ctime', 'ctime') . '
         FROM 
             {view} v
             INNER JOIN {view_access} a ON v.id=a.view AND a.usr=?
