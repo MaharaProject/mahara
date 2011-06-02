@@ -37,9 +37,10 @@ $instid = param_integer('instid');
 $disabled = param_boolean('disabled', false);
 $definst = get_field('auth_instance', 'id', 'institution', 'mahara');
 
-if (!$USER->is_institutional_admin($instid)) {
-    $data = array('data' => null, 'error' => true, 'message' => 'You are not an administrator for this institution');
-    json_reply($data);
+$record = get_record_sql('SELECT i.name, i.defaultquota FROM {institution} i JOIN {auth_instance} ai ON (i.name = ai.institution) WHERE ai.id = ?', $instid);
+
+if (!$USER->get('admin') && !$USER->is_institutional_admin($record->name)) {
+    json_reply(true, 'You are not an administrator for institution '.$record->name);
     return;
 }
 
@@ -47,7 +48,6 @@ if ($definst && $instid == $definst) {
     $quota = get_config_plugin('artefact', 'file', 'defaultquota');
 }
 else {
-    $record = get_record_sql('SELECT i.* from {institution} i JOIN {auth_instance} ai ON (i.name = ai.institution) WHERE ai.id = ?', array($instid));
     $quota = $record->defaultquota;
     if (!$quota) {
         $quota = get_config_plugin('artefact', 'file', 'defaultquota');
@@ -59,4 +59,4 @@ $data = array(
     'error' => false,
     'message' => null,
 );
-json_reply($data);
+json_reply(false, $data);
