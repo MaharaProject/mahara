@@ -152,6 +152,90 @@ class Collection {
     }
 
     /**
+     * Generates a name for a newly created Collection
+     */
+    private static function new_name($name, $ownerdata) {
+        $taken = get_column_sql('
+            SELECT name
+            FROM {collection}
+            WHERE ' . self::owner_sql($ownerdata) . "
+                AND name LIKE ? || '%'", array($name));
+        $ext = ''; $i = 0;
+        if ($taken) {
+            while (in_array($name . $ext, $taken)) {
+                $ext = ' (' . ++$i . ')';
+            }
+        }
+        return $name . $ext;
+    }
+
+    /**
+     * Creates a Collection for the given user, based off a given template and other
+     * Collection information supplied.
+     *
+     * Will set a default title of 'Copy of $collectiontitle' if title is not
+     * specified in $collectiondata.
+     *
+     * @param array $collectiondata Contains information of the old collection, submitted in form
+     * @param int $templateid The ID of the Collection to copy
+     * @param int $userid     The user who has issued the command to create the
+     *                        collection.
+     * @param int $checkaccess Whether to check that the user can see the collection before copying it
+     * @return array A list consisting of the new collection, the template collection and
+     *               information about the copy - i.e. how many blocks and
+     *               artefacts were copied
+     * @throws SystemException under various circumstances, see the source for
+     *                         more information
+     */
+    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true) {
+        require_once(get_config('libroot') . 'view.php');
+        global $SESSION;
+
+        if (is_null($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+
+        db_begin();
+
+        $colltemplate = new Collection($templateid);
+
+        $data = new StdClass;
+        $data->name = self::new_name(get_string('Copyof', 'mahara', $colltemplate->get('name')), (object)$collectiondata);
+        $data->description = $colltemplate->get('description');
+        $data->navigation = $colltemplate->get('navigation');
+
+        $collection = self::save($data);
+
+        $numcopied = array('pages' => 0, 'blocks' => 0, 'artefacts' => 0);
+
+        $views = $colltemplate->get('views');
+        $copyviews = array();
+        foreach ($views['views'] as $v) {
+            $values = array('new' => true, 'usetemplate' => $v->view);
+            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess);
+            if (isset($copystatus['quotaexceeded'])) {
+                $SESSION->clear('messages');
+                return array(null, $colltemplate, array('quotaexceeded' => true));
+            }
+            $copyviews['view_' . $view->get('id')] = true;
+            $numcopied['blocks'] += $copystatus['blocks'];
+            $numcopied['artefacts'] += $copystatus['artefacts'];
+        }
+        $numcopied['pages'] = count($views['views']);
+
+        $collection->add_views($copyviews);
+
+        db_commit();
+
+        return array(
+            $collection,
+            $colltemplate,
+            $numcopied,
+        );
+    }
+
+    /**
      * Returns a list of the current users collections
      *
      * @param offset current page to display
@@ -425,4 +509,24 @@ class Collection {
         return false;
     }
 
+    /**
+     * Returns an SQL snippet that can be used in a where clause to get views
+     * with the given owner.
+     *
+     * @param object $ownerobj An object that has view ownership information -
+     *                         either the institution, group or owner fields set
+     * @return string
+     */
+    private static function owner_sql($ownerobj) {
+        if (isset($ownerobj->institution)) {
+            return 'institution = ' . db_quote($ownerobj->institution);
+        }
+        if (isset($ownerobj->group) && is_numeric($ownerobj->group)) {
+            return '"group" = ' . (int)$ownerobj->group;
+        }
+        if (isset($ownerobj->owner) && is_numeric($ownerobj->owner)) {
+            return 'owner = ' . (int)$ownerobj->owner;
+        }
+        throw new SystemException("View::owner_sql: Passed object did not have an institution, group or owner field");
+    }
 }
