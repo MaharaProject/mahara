@@ -59,9 +59,7 @@ $invite = count_records_sql("SELECT COUNT(g.id)
         AND gm.role = 'admin'
         AND g.deleted = 0", array($USER->get('id')));
 
-$admingroups = new StdClass;
-$admingroups->controlled = $controlledgroups;
-$admingroups->invite = $invite;
+$admingroups = $controlledgroups || $invite;
 
 build_userlist_html($data, 'myfriends', $admingroups);
 
@@ -107,7 +105,7 @@ if (!$data['count']) {
 }
 
 $javascript = array('paginator');
-if ($admingroups->invite || $admingroups->controlled) {
+if ($admingroups) {
     array_push($javascript, 'groupbox');
 }
 $smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), array('sideblocks' => array(friends_control_sideblock())));
