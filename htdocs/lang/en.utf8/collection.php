@@ -94,3 +94,4 @@ $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every page i
 $string['viewsaddedtocollection'] = 'Pages added to collection. Collection updated to include access from new pages.';
 $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
+$string['by'] = 'by';
