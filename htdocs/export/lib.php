@@ -100,6 +100,11 @@ abstract class PluginExport extends Plugin {
     public $views = array();
 
     /**
+     * Whether the user requested to export feedback as well
+     */
+    public $includefeedback = false;
+
+    /**
      * User object for the user being exported.
      */
     protected $user;

@@ -84,7 +84,7 @@ class PluginExportHtml extends PluginExport {
 
         // Find what stylesheets need to be included
         $themedirs = $THEME->get_path('', true, 'export/html');
-        $stylesheets = array('style.css', 'print.css');
+        $stylesheets = array('style.css', 'print.css', 'jquery.rating.css');
         foreach ($themedirs as $theme => $themedir) {
             foreach ($stylesheets as $stylesheet) {
                 if (is_readable($themedir . 'style/' . $stylesheet)) {
@@ -339,6 +339,7 @@ class PluginExportHtml extends PluginExport {
      * Dumps all views into the HTML export
      */
     private function dump_view_export_data() {
+        safe_require('artefact', 'comment');
         $progressstart = 55;
         $progressend   = 75;
         $i = 0;
@@ -373,6 +374,17 @@ class PluginExportHtml extends PluginExport {
             }
 
             $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
+
+            // Include comments
+            if ($this->includefeedback) {
+                $feedback = null;
+                $artefact = null;
+                if ($feedback = ArtefactTypeComment::get_comments(0, 0, null, $view, $artefact, true)) {
+                    $feedback->tablerows = $outputfilter->filter($feedback->tablerows);
+                }
+                $smarty->assign('feedback', $feedback);
+            }
+
             $smarty->assign('view', $outputfilter->filter($view->build_columns()));
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {

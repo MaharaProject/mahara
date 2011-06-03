@@ -75,6 +75,18 @@ addLoadEvent(function() {
         }
     });
 
+    // Make the export format radio buttons show/hide the includefeedback checkbox
+    forEach(getElementsByTagAndClassName('input', 'radio', 'exportformat-buttons'), function(radio) {
+        connect(radio, 'onclick', function(e) {
+            hideElement($('includefeedback'));
+            if (radio.checked) {
+                if (radio.value == 'html') {
+                    showElement($('includefeedback'));
+                }
+            }
+        });
+    });
+
     // Hook up 'click to preview' links
     forEach(getElementsByTagAndClassName('a', 'viewlink', containers.views.container), function(i) {
         disconnectAll(i);
