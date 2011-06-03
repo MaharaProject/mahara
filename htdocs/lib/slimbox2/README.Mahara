@@ -1,0 +1,13 @@
+Slimbox in Mahara
+======================
+
+Website: http://www.digitalia.be/software/slimbox2
+Version: 2.0.4
+
+This library is used to overlay images on the page.
+It is a clone of Lightbox 2.
+(available at http://www.huddletogether.com/projects/lightbox2/)
+
+Changes:
+
+  * None
