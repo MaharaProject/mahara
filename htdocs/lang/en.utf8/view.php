@@ -50,6 +50,7 @@ $string['ownerformatdescription'] = 'How do you want people who look at your pag
 $string['profileviewtitle']       = 'Profile page';
 $string['dashboardviewtitle']     = 'Dashboard page';
 $string['grouphomepageviewtitle'] = 'Group Homepage';
+$string['viewname']               = 'Page Name';
 
 // my views
 $string['artefacts'] = 'Artefacts';
@@ -276,7 +277,7 @@ $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
 $string['templatedescription'] = 'Check this box if you would like the people who can see your page to be able to make their own copies of it, along with any files and folders it contains.';
 $string['templatedescriptionplural'] = 'Check this box if you would like the people who can see your pages to be able to make their own copies of them, along with any files and folders they contain.';
-$string['choosetemplatepagedescription'] = '<p>Here you can search through the pages that you are allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy Page" button to make a copy and begin customising it.</p>';
+$string['choosetemplatepagedescription'] = '<p>Here you can search through the pages that you are allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy Page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy Collection" button.</p>';
 $string['choosetemplategrouppagedescription'] = '<p>Here you can search through the pages that this group is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy Page" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Groups cannot currently make copies of Journals or Journal Entriess.</p>';
 $string['choosetemplateinstitutionpagedescription'] = '<p>Here you can search through the pages that this institution is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy Page" button to make a copy and begin customising it.</p><p><strong>Note:</strong> Institutions cannot currently make copies of Journals or Journal Entries.</p>';
 $string['copiedblocksandartefactsfromtemplate'] = 'Copied %d blocks and %d artefacts from %s';
@@ -287,7 +288,7 @@ $string['thisviewmaybecopied'] = 'Copying is allowed';
 $string['copythisview'] = 'Copy this page';
 $string['copyview'] = 'Copy page';
 $string['createemptyview'] = 'Create empty page';
-$string['copyaview'] = 'Copy a page';
+$string['copyaview'] = 'Copy a page or collection';
 $string['Untitled'] = 'Untitled';
 $string['copyfornewusers'] = 'Copy for new users';
 $string['copyfornewusersdescription'] = 'Whenever a new user is created, automatically make a personal copy of this page in the user\'s portfolio.';

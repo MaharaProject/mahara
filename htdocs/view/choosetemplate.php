@@ -38,7 +38,7 @@ View::set_nav($group, $institution);
 if ($usetemplate = param_integer('usetemplate', null)) {
     // If a form has been submitted, build it now and pieforms will
     // call the submit function straight away
-    pieform(create_view_form($group, $institution, $usetemplate));
+    pieform(create_view_form($group, $institution, $usetemplate, param_integer('copycollection', null)));
 }
 
 if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_edit_institution($institution)) {
@@ -100,6 +100,16 @@ addLoadEvent(function() {
         var href = getNodeAttribute(this, 'href');
         var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
         sendjsonrequest('viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
+      });
+    });
+    forEach(getElementsByTagAndClassName('a', 'collectionlink', 'templatesearch'), function(i) {
+      disconnectAll(i);
+      setNodeAttribute(i, 'title', {$strpreview});
+      connect(i, 'onclick', function (e) {
+        e.stop();
+        var href = getNodeAttribute(this, 'href');
+        var params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        sendjsonrequest('../collection/viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
       });
     });
   };
