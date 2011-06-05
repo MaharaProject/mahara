@@ -81,6 +81,8 @@ $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
+$string['staffofinstitutions'] = 'Staff of %s';
+$string['adminofinstitutions'] = 'Admin of %s';
 $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
@@ -305,6 +307,8 @@ $string['confirmpassword'] = 'Confirm password';
 $string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
 $string['institution'] = 'Institution';
+$string['institutioncontacts'] = '\'%s\' contacts';
+$string['institutionlink'] = '<a href="%s">%s</a>';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
@@ -522,6 +526,8 @@ $string['institutionmemberconfirmsubject'] = 'Institution membership confirmatio
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 $string['institutionmemberrejectsubject'] = 'Institution membership request declined';
 $string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
+$string['noinstitutionstafffound'] = 'No institution staff were found';
+$string['noinstitutionadminfound'] = 'No institution administrators were found';
 $string['Memberships'] = 'Memberships';
 $string['Requests'] = 'Requests';
 $string['Invitations'] = 'Invitations';

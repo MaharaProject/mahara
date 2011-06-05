@@ -48,6 +48,24 @@ if (!is_null($replytoid)) {
 }
 
 $returnto = param_alpha('returnto', 'myfriends');
+switch ($returnto) {
+    case 'find':
+        $goto = 'user/find.php';
+        break;
+    case 'view':
+        $goto = 'user/view.php?id=' . $id;
+        break;
+    case 'inbox':
+        $goto = 'account/activity';
+        break;
+    case 'institution':
+        $goto = ($inst = param_alpha('inst', null))
+            ? 'institution/index.php?institution=' . $inst
+            : 'account/activity';
+        break;
+    default:
+      $goto = 'user/myfriends.php';
+}
 
 $user = get_record('usr', 'id', $id, 'deleted', 0);
 
@@ -67,10 +85,14 @@ $form = pieform(array(
             'cols'  => 80,
             'rows'  => 10,
         ),
+        'goto' => array(
+            'type' => 'hidden',
+            'value' => $goto,
+        ),
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array($messages ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
+            'goto' => get_config('wwwroot') . $goto,
         )
     )
 ));
@@ -87,18 +109,5 @@ function sendmessage_submit(Pieform $form, $values) {
     $user = get_record('usr', 'id', $id);
     send_user_message($user, $values['message'], param_integer('replyto', null));
     $SESSION->add_ok_msg(get_string('messagesent', 'group'));
-    switch (param_alpha('returnto', 'myfriends')) {
-        case 'find':
-            redirect('/user/find.php');
-            break;
-        case 'view':
-            redirect('/user/view.php?id=' . $id);
-            break;
-        case 'inbox':
-            redirect('/account/activity');
-            break;
-        default:
-            redirect('/user/myfriends.php');
-            break;
-    }
+    redirect(get_config('wwwroot').$values['goto']);
 }

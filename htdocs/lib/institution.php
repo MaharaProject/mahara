@@ -402,6 +402,34 @@ class Institution {
     }
 
     /**
+     * Returns the current institution admin member records
+     *
+     * @return array  A data structure containing admins
+     */
+    public function admins() {
+        if ($results = get_records_sql_array('
+            SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0 AND i.admin = 1', array($this->name))) {
+            return array_map(create_function('$a', 'return $a->id;'), $results);
+        }
+        return array();
+    }
+
+    /**
+     * Returns the current institution staff member records
+     *
+     * @return array  A data structure containing staff
+     */
+    public function staff() {
+        if ($results = get_records_sql_array('
+            SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0 AND i.staff = 1', array($this->name))) {
+            return array_map(create_function('$a', 'return $a->id;'), $results);
+        }
+        return array();
+    }
+
+    /**
      * Returns the list of institutions, implements institution searching
      *
      * @param array   Limit the output to only institutions in this array (used for institution admins).

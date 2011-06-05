@@ -216,7 +216,9 @@ td.narrow {
 }
 /* table with gap between rows */
 #friendslist td,
-#onlinelist td {
+#onlinelist td,
+#adminlist td,
+#stafflist td {
 	border-bottom: 2px solid #FFF;
 }
 table.fixwidth {
@@ -2147,7 +2149,9 @@ ul.friendinfo li.approvefriend form input:hover {
 	cursor: pointer;
 }
 #friendslist ul.actionlist,
-#onlinelist ul.actionlist {
+#onlinelist ul.actionlist,
+#adminlist ul.actionlist,
+#stafflist ul.actionlist {
 	margin: 0 0 0 10px;
 	float: right;
 	width: 180px;
@@ -2178,7 +2182,9 @@ div.groupbox li.last {
 	margin-top: 5px;
 }
 #friendslist ul.actionlist li,
-#onlinelist ul.actionlist li {
+#onlinelist ul.actionlist li,
+#adminlist ul.actionlist li,
+#stafflist ul.actionlist li {
 	list-style: none;
 	margin: 0;
 	border-top: 1px solid #d1d1d1;
@@ -2186,7 +2192,9 @@ div.groupbox li.last {
 	line-height: 1.2em;
 }
 #friendslist ul.actionlist li:first-child,
-#onlinelist ul.actionlist li:first-child {
+#onlinelist ul.actionlist li:first-child,
+#adminlist ul.actionlist li:first-child,
+#stafflist ul.actionlist li:first-child {
 	border-top: none;
 }
 #editgroup th label {
@@ -2213,12 +2221,16 @@ form#search, form#filter, div.searchform, #searchviews {
 	background: url(../images/divider-dot.gif) no-repeat left;
 }
 #friendslist .leftdiv,
-#onlinelist .leftdiv {
+#onlinelist .leftdiv,
+#adminlist .leftdiv,
+#stafflist .leftdiv {
 	float: left;
 	width: 50px;
 }
 #friendslist .rightdiv,
-#onlinelist .rightdiv {
+#onlinelist .rightdiv,
+#adminlist .rightdiv,
+#stafflist .rightdiv {
 	min-height: 35px;
 	padding: 5px 0 0 0;
 	margin-left: 50px;
@@ -2558,4 +2570,15 @@ form#sendmessage #sendmessage_message,
 #editblog_description_tbl {
 	width: 98% !important;
 }
+}
+/* Institution contacts */
+#admin_left,
+#staff_left {
+    float: left;
+    width: 50% !important;
+}
+#admin_right,
+#staff_right {
+    float: right;
+    width: 50% !important;
 }

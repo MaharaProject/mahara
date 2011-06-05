@@ -1503,10 +1503,42 @@ function build_onlinelist_html(&$data, $page) {
     $data['pagination_js'] = $pagination['javascript'];
 }
 
+/**
+ * Build the html for a list of staff information
+ *
+ * @param object $data
+ * @param string $page
+ * @param string $listtype
+ * @param string $institution
+ */
+function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
+    global $USER;
+    if ($data) {
+        $data = get_users_data($data, $page);
+    }
+    $smarty = smarty_core();
+    $smarty->assign('page', $page);
+    $smarty->assign('listtype', $listtype);
+    $smarty->assign('inst', $inst);
+    $smarty->assign('USER', $USER);
+    if (count($data) > 5) {
+        $split = ceil(count($data) / 2);
+        $columns = array_chunk($data, $split);
+    }
+    if (isset($columns) && count($columns) == 2) {
+        $smarty->assign('columnleft', $columns[0]);
+        $smarty->assign('columnright', $columns[1]);
+    }
+    else {
+        $smarty->assign('data', isset($data) ? $data : null);
+    }
+    $data['tablerows'] = $smarty->fetch('institution/stafflist.tpl');
+}
+
 function get_institution_strings_for_users($userids) {
     $userlist = join(',', $userids);
     if (!$records = get_records_sql_array('
-        SELECT ui.usr, i.displayname
+        SELECT ui.usr, i.displayname, ui.staff, ui.admin, i.name
         FROM {usr_institution} ui JOIN {institution} i ON ui.institution = i.name
         WHERE ui.usr IN (' . $userlist . ')', array())) {
         return array();
@@ -1516,10 +1548,31 @@ function get_institution_strings_for_users($userids) {
         if (!isset($institutions[$ui->usr])) {
             $institutions[$ui->usr] = array();
         }
-        $institutions[$ui->usr][] = $ui->displayname;
+        $key = ($ui->admin ? 'admin' : ($ui->staff ? 'staff' : 'member'));
+        $institutions[$ui->usr][$key][$ui->name] = $ui->displayname;
     }
-    foreach ($institutions as &$u) {
-        $u = get_string('memberofinstitutions', 'mahara', join(', ', $u));
+    foreach ($institutions as &$userinst) {
+        foreach ($userinst as $key => &$value) {
+            $links = array();
+            foreach ($value as $k => $v) {
+                $url = get_config('wwwroot').'institution/index.php?institution='.$k;
+                $links[] = get_string('institutionlink', 'mahara', $url, $v);
+            }
+            switch ($key) {
+                case 'admin':
+                    $value = get_string('adminofinstitutions', 'mahara', join(', ', $links));
+                    break;
+                case 'staff':
+                    $value = get_string('staffofinstitutions', 'mahara', join(', ', $links));
+                    break;
+                default:
+                    $value = get_string('memberofinstitutions', 'mahara', join(', ', $links));
+                    break;
+            }
+        }
+    }
+    foreach ($institutions as &$userinst) {
+        $userinst = join('. ',$userinst);
     }
     return $institutions;
 }

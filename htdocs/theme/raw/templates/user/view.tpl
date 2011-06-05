@@ -18,7 +18,7 @@
 {/if}
                     <div id="userview">
                         <div class="user-icon">
-                            {$institutions}
+                            {$institutions|safe}
 {if $loginas}
 							<a href="{$WWWROOT}admin/users/changeuser.php?id={$USERID}" class="btn-login">{$loginas}</a>
     {if $USER->get('admin')}<a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit">{str tag=accountsettings section=admin}</a>{/if}
