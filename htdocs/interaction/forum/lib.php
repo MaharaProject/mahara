@@ -546,7 +546,7 @@ EOF;
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 
-    public static function get_active_topics($limit, $offset, $category) {
+    public static function get_active_topics($limit, $offset, $category, $forumids = array()) {
         global $USER;
 
         if (is_postgres()) {
@@ -595,6 +595,11 @@ EOF;
         if (!empty($category)) {
             $where .= ' AND g.category = ?';
             $values[] = (int) $category;
+        }
+
+        if (!empty($forumids)) {
+            $where .= ' AND f.id IN (?)';
+            $values[] = implode(',', $forumids);
         }
 
         $result = array(
