@@ -120,7 +120,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
-    plugins: "table,emotions,spellchecker,inlinepopups,paste,autoresize",
+    plugins: "table,emotions,spellchecker,inlinepopups,paste",
     theme_advanced_buttons1 : "{$adv_buttons[1]}",
     theme_advanced_buttons2 : "{$adv_buttons[2]}",
     theme_advanced_buttons3 : "{$adv_buttons[3]}",
