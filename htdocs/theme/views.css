@@ -242,6 +242,10 @@ html>body #column-container {
   width: 100%;
 }
 
+.blockinstance.configure .mceEditor {
+  width: 100%;
+}
+
 /* header */
 .blockinstance-header {
     width: 100%;
