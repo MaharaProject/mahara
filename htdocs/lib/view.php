@@ -2650,12 +2650,13 @@ class View {
         if ($query) {
             $where .= "
                 AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' ";
+            $ph = array($query, $query);
             if ($collection) {
                 $where .= "
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
+                array_push($ph, $query, $query);
             }
             $where .= ")";
-            $ph = array($query, $query, $query, $query);
         }
         else {
             $ph = array();
