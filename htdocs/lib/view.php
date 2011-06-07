@@ -3247,9 +3247,13 @@ class View {
 
     public static function get_templatesearch_data(&$search) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, true);
+        $isstandalone = isset($search->copyableby->owner) && $search->copyableby->owner;
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, $isstandalone);
 
         foreach ($results->data as &$r) {
+            if (!$isstandalone) {
+                $r['collid'] = null;
+            }
             $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
         }
 
@@ -3270,6 +3274,7 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
+        $smarty->assign('showcollection', $isstandalone ? 1 : 0);
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
 

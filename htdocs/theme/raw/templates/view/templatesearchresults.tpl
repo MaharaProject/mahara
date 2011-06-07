@@ -2,7 +2,9 @@
   <thead>
     <tr>
       <th>{str tag=viewname section=view}</th>
+{if $showcollection}
       <th>{str tag=collectiontitle section=collection}</th>
+{/if}
       <th>{str tag=Owner section=view}</th>
       <th></th>
     </tr>
@@ -14,11 +16,13 @@
       <td>
         <strong><a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a></strong>
       </td>
+{if $showcollection}
       <td>
 {if $row.collid}
         <strong><a class="collectionlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.name}</a></strong>
 {/if}
       </td>
+{/if}
 {if $row.institution}
       <td class="owner s">{$row.sharedby}</td>
 {elseif $row.group}

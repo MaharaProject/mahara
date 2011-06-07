@@ -63,7 +63,7 @@ else if ($institution) {
 }
 else {
     $views->copyableby->owner = $USER->get('id');
-    $helptext = get_string('choosetemplatepagedescription', 'view');
+    $helptext = get_string('choosetemplatepageandcollectiondescription', 'view');
 }
 View::get_templatesearch_data($views);
 

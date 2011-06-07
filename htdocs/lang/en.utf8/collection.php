@@ -57,6 +57,7 @@ $string['collectiondescription'] = 'A Collection is a set of pages that are link
 $string['collectiontitle'] = 'Collection Title';
 $string['confirmcancelcreatingcollection'] = 'This Collection has not been completed. Do you really want to cancel?';
 $string['collectionsaved'] = 'Collection saved successfully.';
+$string['copyacollection'] = 'Copy a collection';
 $string['created'] = 'Created';
 $string['deletecollection'] = 'Delete collection';
 $string['deletespecifiedcollection'] = 'Delete collection \'%s\'';

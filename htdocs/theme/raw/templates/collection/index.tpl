@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     <div class="rbuttons">
         <a class="btn" href="{$WWWROOT}collection/edit.php?new=1">{str section=collection tag=newcollection}</a>
-        <a class="btn" href="{$WWWROOT}view/choosetemplate.php">{str section=view tag=copyaview}</a>
+        <a class="btn" href="{$WWWROOT}view/choosetemplate.php">{str section=collection tag=copyacollection}</a>
     </div>
 <p class="intro">{str tag=collectiondescription section=collection}</p>
 {if $collections}
