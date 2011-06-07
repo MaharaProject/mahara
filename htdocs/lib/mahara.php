@@ -926,7 +926,13 @@ function print_object($mixed) {
 function current_language($reset=null) {
     global $USER, $CFG, $SESSION;
 
-    static $lang;
+    static $lang, $cfglang;
+
+    if (!isset($cfglang) && isset($CFG->lang) && !empty($CFG->lang) && is_null($reset)) {
+        // This is the first call to current_language after load_config, so ensure the
+        // language is reset.
+        $reset = $cfglang = $CFG->lang;
+    }
 
     if (!empty($reset)) {
         $lang = $reset;  // Set the language for this request
