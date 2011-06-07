@@ -6,5 +6,6 @@
             <li><a href="{$WWWROOT}user/view.php?id={$user->id}"><div class="profile-icon-container"><img src="{$user->profileiconurl}" alt=""></div>{$user|display_name}</a>{if $user->loggedinfrom} ({$user->loggedinfrom}){/if}</li>
 {/foreach}
         </ul>
+    <p id="allonline"><a href="{$WWWROOT}user/online.php">{str tag="allonline"}</a></p>
     </div>
 

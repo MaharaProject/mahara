@@ -2360,5 +2360,16 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2011060701) {
+        // site setting to limit online users count
+        set_config('onlineuserssideblockmaxusers', 10);
+
+        // instiutional setting to limit online users type
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('showonlineusers');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 2);
+        add_field($table, $field);
+    }
+
     return $status;
 }

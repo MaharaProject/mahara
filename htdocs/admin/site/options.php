@@ -494,6 +494,15 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('showonlineuserssideblock'),
                     'disabled'     => in_array('showonlineuserssideblock', $OVERRIDDEN),
                 ),
+                'onlineuserssideblockmaxusers' => array(
+                    'type'         => 'text',
+                    'size'         => 4,
+                    'title'        => get_string('onlineuserssideblockmaxusers', 'admin'),
+                    'description'  => get_string('onlineuserssideblockmaxusersdescription', 'admin'),
+                    'defaultvalue' => get_config('onlineuserssideblockmaxusers'),
+                    'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 100),
+                    'disabled'     => in_array('onlineuserssideblockmaxusers', $OVERRIDDEN),
+                ),
                 'registerterms' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('registerterms', 'admin'),
@@ -549,8 +558,8 @@ function siteoptions_submit(Pieform $form, $values) {
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
-        'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'registerterms', 'allowmobileuploads',
-        'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
+        'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers', 'registerterms',
+        'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
     );
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');

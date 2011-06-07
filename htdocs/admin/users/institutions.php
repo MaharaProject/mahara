@@ -179,6 +179,7 @@ if ($institution || $add) {
         }
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
+        $data->showonlineusers = 2;
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -187,6 +188,7 @@ if ($institution || $add) {
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
     uksort($themeoptions, 'theme_sort');
 
+    $showonlineusersoptions = array('0' => get_string('none'), '1' => get_string('institutiononly', 'admin'), '2' => get_string('All', 'admin'));
     $sitename = get_config('sitename');
 
     safe_require('artefact', 'internal');
@@ -289,6 +291,14 @@ if ($institution || $add) {
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
             'help'         => true,
+        );
+        $elements['showonlineusers'] = array(
+            'type'                  => 'select',
+            'title'                 => get_string('showonlineusers', 'admin'),
+            'description'           => get_string('showonlineusersdesc','admin'),
+            'defaultvalue'          => $data->showonlineusers,
+            'collapseifoneoption'   => true,
+            'options'               => $showonlineusersoptions,
         );
         if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
             $elements['defaultquota'] = array(
@@ -436,6 +446,7 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
+    $newinstitution->showonlineusers              = $values['showonlineusers'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
         // security risk. See the documentation for the usersuniquebyusername 

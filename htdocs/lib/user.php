@@ -1256,7 +1256,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed, i.showonlineusers
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ? ORDER BY i.priority DESC', array($userid))) {
         return $institutions;
@@ -1478,6 +1478,30 @@ function build_userlist_html(&$data, $page, $admingroups) {
     $data['pagination_js'] = $pagination['javascript'];
 }
 
+function build_onlinelist_html(&$data, $page) {
+    if ($data['data']) {
+        $userdata = get_users_data($data['data'], $page);
+    }
+    $smarty = smarty_core();
+    $smarty->assign('data', isset($userdata) ? $userdata : null);
+    $smarty->assign('page', $page);
+    $resultcounttextsingular = get_string('user', 'group');
+    $resultcounttextplural = get_string('users', 'group');
+    $data['tablerows'] = $smarty->fetch('user/onlineuserresults.tpl');
+    $pagination = build_pagination(array(
+        'id' => 'onlinelist_pagination',
+        'url' => get_config('wwwroot') . 'user/' . $page . '.php',
+        'datatable' => 'onlinelist',
+        'count' => $data['count'],
+        'limit' => $data['limit'],
+        'offset' => $data['offset'],
+        'resultcounttextsingular' => $resultcounttextsingular,
+        'resultcounttextplural' => $resultcounttextplural,
+        'extradata' => array('page' => $page),
+    ));
+    $data['pagination'] = $pagination['html'];
+    $data['pagination_js'] = $pagination['javascript'];
+}
 
 function get_institution_strings_for_users($userids) {
     $userlist = join(',', $userids);
@@ -1973,6 +1997,83 @@ function get_friends($userid, $limit=10, $offset=0) {
     else {
         $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
     }
+
+    return $result;
+}
+
+/**
+ * Get user records for online users page
+ *
+ * @param integer $limit
+ * @param integer $offset
+ *
+ * @returns array Total number of users, along with $limit or fewer user records.
+ */
+function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
+    global $USER;
+
+    // Determine what level of users to show
+    // 0 = none, 1 = institution/s only, 2 = all users
+    $showusers = 2;
+    $institutions = $USER->institutions;
+    if (!empty($institutions)) {
+        $showusers = 0;
+        foreach ($institutions as $i) {
+            if ($i->showonlineusers == 2) {
+                $showusers = 2;
+                break;
+            }
+            if ($i->showonlineusers == 1) {
+                $showusers = 1;
+            }
+        }
+    }
+
+    $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false);
+    switch ($showusers) {
+        case 0: // show none
+            return $result;
+        case 1: // show institution only
+            $sql = "SELECT * FROM usr JOIN usr_institution i ON id = i.usr
+                WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (" . join(',',array_map('db_quote', array_keys($institutions))) . ")
+                ORDER BY $orderby";
+            $countsql = 'SELECT count(id) FROM usr JOIN usr_institution i ON id = i.usr
+                WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (' . join(',',array_map('db_quote', array_keys($institutions))) . ')';
+            break;
+        case 2: // show all
+            $sql = "SELECT * FROM usr WHERE deleted = 0 AND lastaccess > ? ORDER BY $orderby";
+            $countsql = 'SELECT count(id) FROM usr WHERE deleted = 0 AND lastaccess > ?';
+            break;
+    }
+
+    $lastaccess = db_format_timestamp(time() - get_config('accessidletimeout'));
+    if (!$result['count'] = count_records_sql($countsql, array($lastaccess))) {
+        return $result;
+    }
+
+    $onlineusers = get_records_sql_array($sql, array($lastaccess), $offset, $limit);
+    if ($onlineusers) {
+        foreach ($onlineusers as &$user) {
+            if ($user->id == $USER->get('id')) {
+                // Use a shorter caching time for the current user, just in case they change their profile icon
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&maxheight=20&maxwidth=20&earlyexpiry=1';
+            }
+            else {
+                $user->profileiconurl = profile_icon_url($user, 20, 20);
+            }
+
+            // If the user is an MNET user, show where they've come from
+            $authobj = AuthFactory::create($user->authinstance);
+            if ($authobj->authname == 'xmlrpc') {
+                $peer = get_peer($authobj->wwwroot);
+                $user->loggedinfrom = $peer->name;
+            }
+        }
+    }
+    else {
+        $onlineusers = array();
+    }
+    $result['data'] = array_map(create_function('$a', 'return $a->id;'), $onlineusers);
 
     return $result;
 }
