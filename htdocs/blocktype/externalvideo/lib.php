@@ -38,10 +38,17 @@ defined('INTERNAL') || die();
  */
 class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
-    // Default width and height for video players
-    private static $default_width = 250;
-
-    private static $default_height = 250;
+    private static $media_sources = array(
+        'youtube',
+        'teachertube',
+        'scivee',
+        'googlevideo',
+        'glogster',
+        'slideshare',
+        'voicethread',
+        'wikieducator',
+        'prezi',
+    );
 
     public static function get_title() {
         return get_string('title', 'blocktype.externalvideo');
@@ -55,13 +62,30 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         return array('external');
     }
 
+    private static function load_media_sources() {
+        static $loaded_sources = array();
+
+        if (!empty($loaded_sources)) {
+            return $loaded_sources;
+        }
+
+        foreach (self::$media_sources as $source) {
+            include_once('media_sources/' . $source . '/mediasource.php');
+            $sourcename = 'Media_' . $source;
+            $loaded_sources[$source] = new $sourcename;
+        }
+        return $loaded_sources;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         $result = '';
-        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : self::$default_width;
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
+        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : 0;
+        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : 0;
 
         if (isset($configdata['videoid'])) {
+            $url = hsc($configdata['videoid']);
+
             // IE seems to wait for all elements on the page to load
             // fully before the onload event goes off.  This means the
             // view editor isn't initialised until all videos have
@@ -72,21 +96,27 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             // view editing page, keep the embed code out of the page
             // initially and add it in after the page has loaded.
 
-            $url     = hsc(self::make_video_url($configdata['videoid']));
+            $embed = '';
 
-            $embed = '<object width="' . $width . '" height="' . $height . '">';
-            $embed .= '<param name="movie" value="' . $url . '"></param>';
-            $embed .= '<param name="wmode" value="transparent"></param>';
-            $embed .= '<param name="allowscriptaccess" value="never"></param>';
-            $embed .= '<embed src="' . $url . '" ';
-            $embed .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
-            $embed .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+            if (isset($configdata['type']) && $configdata['type'] == 'embed') {
+                $embed  = '<object width="' . $width . '" height="' . $height . '">';
+                $embed .= '<param name="movie" value="' . $url . '"></param>';
+                $embed .= '<param name="wmode" value="transparent"></param>';
+                $embed .= '<param name="allowscriptaccess" value="never"></param>';
+                $embed .= '<embed src="' . $url . '" ';
+                $embed .= 'type="application/x-shockwave-flash" wmode="transparent" width="' . $width . '" ';
+                $embed .= 'height="' . $height . '" allowscriptaccess="never"></embed></object>';
+            }
+            else if (isset($configdata['type']) && $configdata['type'] == 'iframe') {
+                $embed  = '<iframe width="' . $width . '" height="' . $height . '" ';
+                $embed .= 'src="' . $url . '" frameborder=0></iframe>';
+            }
 
             $block = $instance->get('id');
             $configuring = $block == param_integer('blockconfig', 0);
 
             $result .= '<div class="mediaplayer-container center">';
-            $result .= '<div id="vid_' . $block . '" class="mediaplayer" style="width: {$width}px; height: {$height}px; margin: 0 auto;">';
+            $result .= '<div id="vid_' . $block . '" class="mediaplayer" style="width: ' . $width . 'px; height: ' . $height . 'px; margin: 0 auto;">';
 
             if (!$editing || $configuring) {
                 $result .= $embed;
@@ -100,7 +130,6 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 $result .= '</script>';
             }
         }
-
         return $result;
     }
 
@@ -110,6 +139,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
+
         return array(
             'videoid' => array(
                 'type'  => 'text',
@@ -118,7 +148,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'width' => '90%',
                 'defaultvalue' => isset($configdata['videoid']) ? $configdata['videoid'] : null,
                 'rules' => array(
-                    'required' => true
+                    'required' => true,
                 ),
             ),
             'width' => array(
@@ -126,120 +156,77 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'title' => get_string('width','blocktype.externalvideo'),
                 'size' => 3,
                 'rules' => array(
-                    'required' => true,
-                    'integer'  => true,
-                    'minvalue' => 100,
-                    'maxvalue' => 800,
+                    'regex'  => '#\d+%?#',
+                    'minvalue' => 0,
+                    'maxvalue' => 2000,
                 ),
-                'defaultvalue' => (!empty($configdata['width'])) ? $configdata['width'] : self::$default_width,
+                'defaultvalue' => (!empty($configdata['width'])) ? $configdata['width'] : 0,
             ),
             'height' => array(
                 'type' => 'text',
                 'title' => get_string('height','blocktype.externalvideo'),
                 'size' => 3,
                 'rules' => array(
-                    'required' => true,
-                    'integer'  => true,
-                    'minvalue' => 100,
-                    'maxvalue' => 800,
+                    'regex'  => '#\d+%?#',
+                    'minvalue' => 0,
+                    'maxvalue' => 2000,
                 ),
-                'defaultvalue' => (!empty($configdata['height'])) ? $configdata['height'] : self::$default_height,
+                'defaultvalue' => (!empty($configdata['height'])) ? $configdata['height'] : 0,
             ),
         );
     }
 
     public static function instance_config_validate(Pieform $form, $values) {
         if ($values['videoid']) {
-            $url = self::make_video_url($values['videoid']);
-            $urlparts = parse_url($url);
-            if (empty($urlparts['host'])) {
+            $sources = self::load_media_sources();
+
+            $valid = false;
+            foreach ($sources as $name => $source) {
+                if ($valid = $source->validate_url($values['videoid'])) {
+                    break;
+                }
+            }
+            if (!$valid) {
                 $form->set_error('videoid', get_string('invalidurl', 'blocktype.externalvideo'));
             }
         }
     }
 
-    private static function make_video_url($url) {
-        static $embedsources = array(
-            // www.youtube.com (old style)
-            array(
-                'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
-                'url'   => 'http://www.youtube.com/$1/$4'
-            ),
-            // www.youtube.com (iframe)
-            array(
-                'match' => '#.*youtube\.com.*(embed\/)([a-zA-Z0-9_=-]+).*#',
-                'url' => 'http://www.youtube.com/v/$2'
-            ),
-            // video.google.com
-            array(
-                'match' => '#.*video.google.com.*docid=(\-?[0-9]+).*#',
-                'url'   => 'http://video.google.com/googleplayer.swf?docId=$1',
-            ),
-            // www.teachertube.com
-            array(
-                'match' => '#.*teachertube.com/flvideo/([0-9]+)\.flv.*#',
-                'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$1.flv'
-            ),
-            array(
-                'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
-                'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1'
-            ),
-            // www.scivee.tv
-            array(
-                'match' => '#.*scivee.tv/node/([0-9]+).*#',
-                'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
-            ),
-            array(
-                'match' => '#.*scivee.tv.*id=([0-9]+).*#',
-                'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
-            ),
-            // prezi.com
-            array(
-                'match' => '#.*?"preziEmbed_([a-zA-Z0-9]+)".*#',
-                'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
-            ),
-            array(
-                'match' => '#.*?prezi.com/([a-zA-Z0-9]+)/.*#',
-                'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
-            ),
-            // www.glogster.com
-            array(
-                'match' => '#.*?glogster\.com/flash/flash_loader.swf\?ver=(\d+).*?flashvars="([^"]+)".*#',
-                'url'   => 'http://www.glogster.com/flash/flash_loader.swf?ver=$1&$2',
-            ),
-        );
+    public static function instance_config_save($values) {
+        $title = $values['title'];
+        $values = self::process_url($values['videoid'], $values['width'], $values['height']);
+        $values['title'] = $title;
+        return $values;
+    }
 
-        foreach ($embedsources as $source) {
-            if (preg_match($source['match'], $url)) {
-                return preg_replace($source['match'], $source['url'], $url);
+    private static function process_url($url, $width=0, $height=0) {
+        $sources = self::load_media_sources();
+
+        foreach ($sources as $name => $source) {
+            if ($result = $source->process_url($url, $width, $height)) {
+                return $result;
             }
         }
-        // TODO handle failure case
+        return false;
     }
 
     /**
-     * Returns a block of HTML that the external video block can use to list 
+     * Returns a block of HTML that the external video block can use to list
      * which video sites are supported.
      */
     private static function get_html_of_supported_websites() {
-        $wwwroot = get_config('wwwroot');
-        $lang_youtube = get_string('youtube', 'blocktype.externalvideo');
-        $lang_googlevideo = get_string('googlevideo', 'blocktype.externalvideo');
-        $lang_teachertube = get_string('teachertube', 'blocktype.externalvideo');
-        $lang_scivee = get_string('scivee', 'blocktype.externalvideo');
-        $lang_prezi = get_string('prezi', 'blocktype.externalvideo');
-        $lang_glogster = get_string('glogster', 'blocktype.externalvideo');
+        $source_instances = self::load_media_sources();
 
-        return <<<EOF
-<ul style="list-style-type: none;" class="inlinelist">
-    <li><a href="http://www.youtube.com/" target="_blank"><img src="{$wwwroot}blocktype/externalvideo/images/youtube.png" alt="${lang_youtube}" title="${lang_youtube}"></a></li>
-    <li><a href="http://video.google.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/googlevideo.png" alt="${lang_googlevideo}" title="${lang_googlevideo}"></a></li>
-    <li><a href="http://www.teachertube.com/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/teachertube.png" alt="${lang_teachertube}" title="${lang_teachertube}"></a></li>
-    <li><a href="http://www.scivee.tv/" target="_blank"><img src="${wwwroot}blocktype/externalvideo/images/scivee.png" alt="${lang_scivee}" title="${lang_scivee}"></a></li>
-    <li><a href="http://prezi.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/prezi.png" alt="${lang_prezi}" title="${lang_prezi}"></a></li>
-    <li><a href="http://www.glogster.com/" target="_black"><img src="${wwwroot}blocktype/externalvideo/images/glogster.png" alt="${lang_glogster}" title="${lang_glogster}"></a></li>
-</ul>
-EOF;
+        $wwwroot = get_config('wwwroot');
+        $html    = '<ul style="list-style-type: none;" class="inlinelist">';
+
+        foreach ($source_instances as $name => $source) {
+            $sourcestr = get_string($name, 'blocktype.externalvideo');
+            $html .= '<li><a href="' . $source->get_base_url() . '" target="_blank"><img src="' . $wwwroot . 'blocktype/externalvideo/media_sources/' . $name . '/favicon.png" alt="' . $sourcestr . '" title="' . $sourcestr . '"></a></li>';
+        }
+        $html .= '</ul>';
+
+        return $html;
     }
 
     public static function default_copy_type() {
