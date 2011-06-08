@@ -1240,6 +1240,7 @@ div.sideblock ul li {
 #login_login_username_container input, #login_login_password_container input {
 	width: 180px;
 	margin: 0 0 5px 0;
+	display: block;
 }
 /* Side Profile */
 #user-profileicon {
