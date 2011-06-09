@@ -1622,6 +1622,21 @@ function auth_get_random_salt() {
     return substr(md5(rand(1000000, 9999999)), 2, 8);
 }
 
+// Add salt and encrypt the pw for a user, if their auth instance allows for it
+function reset_password($user, $resetpasswordchange=true) {
+    $userobj = new User();
+    $userobj->find_by_id($user->id);
+    $authobj = AuthFactory::create($user->authinstance);
+    if (method_exists($authobj, 'change_password')) {
+        $authobj->change_password($userobj, $user->password, $resetpasswordchange);
+    }
+    else {
+        $userobj->password = '';
+        $userobj->salt = auth_get_random_salt();
+        $userobj->commit();
+    }
+}
+
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {
