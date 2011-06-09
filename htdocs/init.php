@@ -204,7 +204,7 @@ if (isset($CFG->wwwroot)) {
     }
 }
 // Make sure that we are using ssl if wwwroot expects us to do so
-if ((!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+if (isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
     parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https'){
     redirect(get_relative_script_path());
 }
