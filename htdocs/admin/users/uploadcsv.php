@@ -191,6 +191,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $authobj = AuthFactory::create($authinstance);
+
     $usernames = array();
     $emails = array();
 
@@ -233,8 +235,6 @@ function uploadcsv_validate(Pieform $form, $values) {
         $username = $line[$formatkeylookup['username']];
         $password = $line[$formatkeylookup['password']];
         $email    = $line[$formatkeylookup['email']];
-
-        $authobj = AuthFactory::create($authinstance);
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
             if (!$authobj->is_username_valid_admin($username)) {
