@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2011 Catalyst IT Ltd and others; see:
  *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,17 +19,27 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Stacey Walker
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('onlineusers'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'user');
+define('SECTION_PAGE', 'onlineusers');
 
-$config = new StdClass;
-$config->version = 2011060701;
-$config->release = '1.5.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$offset = param_integer('offset', 0);
+$limit  = 10;
+
+$data = get_onlineusers($limit, $offset);
+build_onlinelist_html($data, 'online');
+
+$smarty = smarty(array('paginator'));
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('lastminutes', floor(get_config('accessidletimeout') / 60));
+$smarty->assign('data', $data);
+$smarty->display('user/online.tpl');

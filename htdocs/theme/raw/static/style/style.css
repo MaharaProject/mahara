@@ -215,7 +215,8 @@ td.narrow {
 	border-top: 1px solid #ccc;
 }
 /* table with gap between rows */
-#friendslist td {
+#friendslist td,
+#onlinelist td {
 	border-bottom: 2px solid #FFF;
 }
 table.fixwidth {
@@ -2145,7 +2146,8 @@ ul.friendinfo li.approvefriend form input:hover {
 	padding-left: 10px;
 	cursor: pointer;
 }
-#friendslist ul.actionlist {
+#friendslist ul.actionlist,
+#onlinelist ul.actionlist {
 	margin: 0 0 0 10px;
 	float: right;
 	width: 180px;
@@ -2175,14 +2177,16 @@ div.groupbox ul {
 div.groupbox li.last {
 	margin-top: 5px;
 }
-#friendslist ul.actionlist li {
+#friendslist ul.actionlist li,
+#onlinelist ul.actionlist li {
 	list-style: none;
 	margin: 0;
 	border-top: 1px solid #d1d1d1;
 	padding: 2px 3px;
 	line-height: 1.2em;
 }
-#friendslist ul.actionlist li:first-child {
+#friendslist ul.actionlist li:first-child,
+#onlinelist ul.actionlist li:first-child {
 	border-top: none;
 }
 #editgroup th label {
@@ -2191,25 +2195,30 @@ div.groupbox li.last {
 form#search, form#filter, div.searchform, #searchviews {
 	margin-bottom: 10px;
 }
-#friendslist ul.viewlist {
+#friendslist ul.viewlist,
+#onlinelist ul.viewlist {
 	margin: 0;
 	font-size: .9167em;
 }
-#friendslist ul.viewlist li.label {
+#friendslist ul.viewlist li.label,
+#onlinelist ul.viewlist li.label {
 	background: none;
 	padding-left: 0;
 }
-#friendslist ul.viewlist li {
+#friendslist ul.viewlist li,
+#onlinelist ul.viewlist li {
 	display: inline;
 	margin: 0;
 	padding-left: 10px;
 	background: url(../images/divider-dot.gif) no-repeat left;
 }
-#friendslist .leftdiv {
+#friendslist .leftdiv,
+#onlinelist .leftdiv {
 	float: left;
 	width: 50px;
 }
-#friendslist .rightdiv {
+#friendslist .rightdiv,
+#onlinelist .rightdiv {
 	min-height: 35px;
 	padding: 5px 0 0 0;
 	margin-left: 50px;

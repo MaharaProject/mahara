@@ -143,6 +143,8 @@ $string['views'] = 'Pages';
 // Online users sideblock strings
 $string['onlineusers'] = 'Online users';
 $string['lastminutes'] = 'Last %s minutes';
+$string['allonline'] = 'Show all online users';
+$string['noonlineusersfound'] = 'No online users found';
 
 // Links and resources sideblock
 $string['linksandresources'] = 'Links and Resources';

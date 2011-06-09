@@ -242,6 +242,8 @@ $string['institutionexpirynotification'] = 'Warning time for institution expiry'
 $string['institutionexpirynotificationdescription'] = 'A notification message will be sent to site and institutional admins the long before a site expires';
 $string['language'] = 'Language';
 $string['none'] = 'None';
+$string['onlineuserssideblockmaxusers'] = 'Online users limit';
+$string['onlineuserssideblockmaxusersdescription'] = 'The maximum number of users to display in the online users side block.';
 $string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
@@ -580,12 +582,14 @@ $string['loginasoverridepasswordchange'] = 'As you are masquerading as another u
 
 // Institutions
 $string['Add'] = 'Add';
+$string['all'] = 'All';
 $string['admininstitutions'] = 'Administer Institutions';
 $string['adminauthorities'] = 'Administer Authorities';
 $string['addinstitution'] = 'Add Institution';
 $string['authplugin'] = 'Authentication plugin';
 $string['deleteinstitution'] = 'Delete Institution';
 $string['deleteinstitutionconfirm'] = 'Are you really sure you wish to delete this institution?';
+$string['institutiononly'] = 'Institution only';
 $string['institutionaddedsuccessfully2'] = 'Institution added successfully';
 $string['institutiondeletedsuccessfully'] = 'Institution deleted successfully';
 $string['noauthpluginforinstitution'] = 'Your site administrator has not configured an authentication plugin for this institution.';
@@ -600,6 +604,8 @@ $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form.  If registration is off, non-members cannot request membership of the institution, and members cannot leave the institution or delete their user accounts voluntarily.';
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
+$string['showonlineusers'] = 'Show online users';
+$string['showonlineusersdesc'] = 'The online users to show to members of this institution.  With different settings the most permissive institution settings will be used.';
 
 $string['authenticatedby'] = 'Authentication Method';
 $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';

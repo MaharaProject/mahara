@@ -2284,15 +2284,51 @@ function profile_sideblock() {
  * The time is configured by setting the 'accessidletimeout' configuration 
  * option.
  *
- * NOTE: currently returns all online users, this might not be desirable on a 
- * really busy site.
+ * Limits the number of users to display based on the 'onlineuserssideblockmaxusers'
+ * site configuration option and the Institution specific 'showonlineusers' setting.
+ * If the user belongs to no institution (other than the standard 'mahara' one) then
+ * the decision will be to show ALL users by default.
+ *
  */
 function onlineusers_sideblock() {
     global $USER;
 
-    $onlineusers = get_records_select_array('usr', 'deleted = 0 AND lastaccess > ?',
-        array(db_format_timestamp(time() - get_config('accessidletimeout'))), 'lastaccess DESC');
+    // Determine what level of users to show
+    // 0 = none, 1 = institution/s only, 2 = all users
+    $showusers = 2;
+    $institutions = $USER->institutions;
+    if (!empty($institutions)) {
+        $showusers = 0;
+        foreach ($institutions as $i) {
+            if ($i->showonlineusers == 2) {
+                $showusers = 2;
+                break;
+            }
+            if ($i->showonlineusers == 1) {
+                $showusers = 1;
+            }
+        }
+    }
 
+    $maxonlineusers = get_config('onlineuserssideblockmaxusers');
+    switch ($showusers) {
+        case 0: // show none
+            return array(
+                'users' => array(),
+                'count' => 0,
+                'lastminutes' => floor(get_config('accessidletimeout') / 60),
+            );
+        case 1: // show institution only
+            $sql = 'SELECT u.* FROM usr u JOIN usr_institution i ON u.id = i.usr
+                WHERE i.institution IN ('.join(',', array_map('db_quote', array_keys($institutions))).')
+                AND lastaccess > ? AND deleted = 0 ORDER BY lastaccess DESC';
+            break;
+        case 2: // show all
+            $sql = 'SELECT * FROM usr WHERE lastaccess > ? AND deleted = 0 ORDER BY lastaccess DESC';
+            break;
+    }
+
+    $onlineusers = get_records_sql_array($sql, array(db_format_timestamp(time() - get_config('accessidletimeout'))), 0, $maxonlineusers);
     if ($onlineusers) {
         foreach ($onlineusers as &$user) {
             if ($user->id == $USER->get('id')) {
