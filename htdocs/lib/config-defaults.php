@@ -143,6 +143,8 @@ $cfg->sendemail = true;
 // if neither are set, performance info wont be captured.
 
 // Mail handling
+// Unless you have a specific reason for having mail settings in the config file,
+// please use Configure Site -> Site options -> Email interface.
 // If you want mahara to use SMTP servers to send mail, enter one or more here
 // blank means mahara will use the default PHP method.
 // $cfg->smtphosts = 'smtp1.example.com;smtp2.example.com';
