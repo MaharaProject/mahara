@@ -289,7 +289,28 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         return $langfile;
     }
 
-    if ($plugintype != 'core') {
+    if ($plugintype == 'blocktype') { // these are a bit of a special case
+        $bits = explode('/', $pluginname);
+        if (count($bits) == 2) {
+           $location = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+        }
+        else {
+            try {
+                if ($artefactplugin = blocktype_artefactplugin($pluginname)) {
+                    $location = 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/lang/';
+                }
+                else {
+                    $location = 'blocktype/' . $pluginname . '/lang/';
+                }
+            }
+            catch (SQLException $e) {
+                if (get_config('installed')) {
+                    throw $e;
+                }
+            }
+        }
+    }
+    else if ($plugintype != 'core') {
         $location = $plugintype . '/' . $pluginname . '/lang/';
     }
     else {
