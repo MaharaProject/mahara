@@ -224,10 +224,15 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $formatkeylookup = array_flip($csvdata->format);
+
     // First pass validates usernames & passwords in the file, and builds
     // up a list indexed by username.
 
     $emails = array();
+    if (isset($formatkeylookup['remoteuser'])) {
+        $remoteusers = array();
+    }
 
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
@@ -247,10 +252,12 @@ function uploadcsv_validate(Pieform $form, $values) {
         // Note: This validation should really be methods on each profile class, that way
         // it can be used in the profile screen as well.
 
-        $formatkeylookup = array_flip($csvdata->format);
         $username = $line[$formatkeylookup['username']];
         $password = $line[$formatkeylookup['password']];
         $email    = $line[$formatkeylookup['email']];
+        if (isset($remoteusers)) {
+            $remoteuser = strlen($line[$formatkeylookup['remoteuser']]) ? $line[$formatkeylookup['remoteuser']] : null;
+        }
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
             if (!$authobj->is_username_valid_admin($username)) {
@@ -284,6 +291,18 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
         $emails[$email] = 1;
 
+        if (isset($remoteusers) && $remoteuser) {
+            if (isset($remoteusers[$remoteuser])) {
+                CSVErrors::add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+            }
+            else if (!$values['updateusers']) {
+                if (record_exists('auth_remote_user', 'remoteusername', $remoteuser, 'authinstance', $authinstance)) {
+                    CSVErrors::add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+                }
+            }
+            $remoteusers[$remoteuser] = true;
+        }
+
         if (isset($usernames[strtolower($username)])) {
             // Duplicate username within this file.
             CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
@@ -299,6 +318,9 @@ function uploadcsv_validate(Pieform $form, $values) {
                 'lineno'   => $i,
                 'raw'      => $line,
             );
+            if (!empty($remoteuser) && !empty($remoteusers[$remoteuser])) {
+                $usernames[strtolower($username)]['remoteuser'] = $remoteuser;
+            }
         }
     }
 
@@ -370,6 +392,20 @@ function uploadcsv_validate(Pieform $form, $values) {
                 else {
                     // If the other user is being updated in this file, but isn't changing their
                     // email address, it's ok, we've already notified duplicate emails within the file.
+                }
+            }
+
+            if (isset($remoteusers) && !empty($data['remoteuser'])) {
+                $remoteuser = $data['remoteuser'];
+                $remoteuserowner = get_field_sql('
+                    SELECT LOWER(u.username)
+                    FROM {usr} u JOIN {auth_remote_user} aru ON u.id = aru.localusr
+                    WHERE aru.remoteusername = ? AND aru.authinstance = ?',
+                    array($remoteuser, $authinstance)
+                );
+                if ($remoteuserowner && $remoteuserowner != $lowerusername && !isset($usernames[$remoteuserowner])) {
+                    // The remote username is owned by some other user who is not being updated in this file
+                    CSVErrors::add($line, get_string('uploadcsverrorremoteusertaken', 'admin', $line, $remoteuser, $remoteuserowner));
                 }
             }
         }
