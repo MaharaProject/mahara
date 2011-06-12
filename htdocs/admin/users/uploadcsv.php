@@ -70,6 +70,8 @@ $ALLOWEDKEYS = array(
     'industry',
     'authinstance'
 );
+$UPDATES         = array(); // During validation, remember which users already exist
+$INSTITUTIONNAME = array(); // Mapping from institution id to display name
 
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
@@ -88,6 +90,7 @@ if (count($authinstances) > 0) {
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
             $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+            $INSTITUTIONNAME[$authinstance->name] = $authinstance->displayname;
         }
     }
     if ($USER->get('admin')) {
@@ -138,6 +141,12 @@ $form = array(
             'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
             'defaultvalue' => true,
         ),
+        'updateusers' => array(
+            'type' => 'checkbox',
+            'title' => get_string('updateusers', 'admin'),
+            'description' => get_string('updateusersdescription', 'admin'),
+            'defaultvalue' => false,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadcsv', 'admin')
@@ -164,7 +173,7 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER, $INSTITUTIONNAME, $UPDATES;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -193,9 +202,6 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $authobj = AuthFactory::create($authinstance);
 
-    $usernames = array();
-    $emails = array();
-
     $csvusers = new CsvFile($values['file']['tmp_name']);
     $csvusers->set('allowedkeys', $ALLOWEDKEYS);
 
@@ -218,6 +224,11 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    // First pass validates usernames & passwords in the file, and builds
+    // up a list indexed by username.
+
+    $emails = array();
+
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvusers->get('headerExists')) ? ($key + 2) : ($key + 1);
@@ -225,6 +236,11 @@ function uploadcsv_validate(Pieform $form, $values) {
         // Trim non-breaking spaces -- they get left in place by File_CSV
         foreach ($line as &$field) {
             $field = preg_replace('/^(\s|\xc2\xa0)*(.*?)(\s|\xc2\xa0)*$/', '$2', $field);
+        }
+
+        if (count($line) != count($csvdata->format)) {
+            CSVErrors::add($i, get_string('uploadcsverrorwrongnumberoffields', 'admin', $i));
+            continue;
         }
 
         // We have a line with the correct number of fields, but should validate these fields
@@ -246,22 +262,117 @@ function uploadcsv_validate(Pieform $form, $values) {
                 CSVErrors::add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
-        if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
-            CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+
+        if (!$values['updateusers']) {
+            // Note: only checks for valid form are done here, none of the checks
+            // like whether the password is too easy. The user is going to have to
+            // change their password on first login anyway.
+            if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
+                CSVErrors::add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+            }
         }
-        if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email) || isset($emails[$email])) {
+
+        if (isset($emails[$email])) {
+            // Duplicate email within this file.
             CSVErrors::add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
         }
-
-        // Note: only checks for valid form are done here, none of the checks
-        // like whether the password is too easy. The user is going to have to
-        // change their password on first login anyway.
-        if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-            CSVErrors::add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+        else if (!$values['updateusers']) {
+            // The email address must be new
+            if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email, 'verified', 1)) {
+                CSVErrors::add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+            }
         }
-
-        $usernames[strtolower($username)] = 1;
         $emails[$email] = 1;
+
+        if (isset($usernames[strtolower($username)])) {
+            // Duplicate username within this file.
+            CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+        }
+        else {
+            if (!$values['updateusers'] && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
+                CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+            }
+            $usernames[strtolower($username)] = array(
+                'username' => $username,
+                'password' => $password,
+                'email'    => $email,
+                'lineno'   => $i,
+                'raw'      => $line,
+            );
+        }
+    }
+
+    // If the admin is trying to overwrite existing users, identified by username,
+    // this second pass performs some additional checks
+
+    if ($values['updateusers']) {
+
+        foreach ($usernames as $lowerusername => $data) {
+
+            $line      = $data['lineno'];
+            $username  = $data['username'];
+            $password  = $data['password'];
+            $email     = $data['email'];
+
+            // If the user already exists, they must already be in this institution.
+            $userinstitutions = get_records_sql_assoc("
+                SELECT COALESCE(ui.institution, 'mahara') AS institution, u.id
+                FROM {usr} u LEFT JOIN {usr_institution} ui ON u.id = ui.usr
+                WHERE LOWER(u.username) = ?",
+                array($lowerusername)
+            );
+            if ($userinstitutions) {
+                if (!isset($userinstitutions[$institution])) {
+                    if ($institution == 'mahara') {
+                        $institutiondisplay = array();
+                        foreach ($userinstitutions as $i) {
+                            $institutiondisplay[] = $INSTITUTIONNAME[$i->institution];
+                        }
+                        $institutiondisplay = join(', ', $institutiondisplay);
+                        $message = get_string('uploadcsverroruserinaninstitution', 'admin', $line, $username, $institutiondisplay);
+                    }
+                    else {
+                        $message = get_string('uploadcsverrorusernotininstitution', 'admin', $line, $username, $INSTITUTIONNAME[$institution]);
+                    }
+                    CSVErrors::add($line, $message);
+                }
+                else {
+                    // Remember that this user is being updated
+                    $UPDATES[$username] = 1;
+                }
+            }
+            else {
+                // New user, check the password
+                if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
+                    CSVErrors::add($line, get_string('uploadcsverrorinvalidpassword', 'admin', $line));
+                }
+            }
+
+            // It's okay if the email already exists and is owned by this user.
+            $emailowned = get_record_sql('
+                SELECT LOWER(u.username) AS lowerusername, ae.principal FROM {usr} u
+                LEFT JOIN {artefact_internal_profile_email} ae ON u.id = ae.owner AND ae.verified = 1 AND ae.email = ?
+                WHERE ae.owner IS NOT NULL OR u.email = ?',
+                array($email, $email)
+            );
+
+            // If the email is owned by someone else, it could still be okay provided
+            // that other user's email is also being changed in this csv file.
+            if ($emailowned && $emailowned->lowerusername != $lowerusername) {
+                if (!$emailowned->principal) {
+                    // However, only primary emails can be set in uploadcsv, so this is an error
+                    CSVErrors::add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                }
+                else if (!isset($usernames[$emailowned->lowerusername])) {
+                    // The other user is not being updated in this file
+                    CSVErrors::add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                }
+                else {
+                    // If the other user is being updated in this file, but isn't changing their
+                    // email address, it's ok, we've already notified duplicate emails within the file.
+                }
+            }
+        }
     }
 
     if ($errors = CSVErrors::process()) {
@@ -278,12 +389,13 @@ function uploadcsv_validate(Pieform $form, $values) {
  * password on next login also.
  */
 function uploadcsv_submit(Pieform $form, $values) {
-    global $SESSION, $CSVDATA, $FORMAT;
+    global $SESSION, $CSVDATA, $FORMAT, $UPDATES;
 
     $formatkeylookup = array_flip($FORMAT);
 
     $authinstance = (int) $values['authinstance'];
-    $authobj = get_record('auth_instance', 'id', $authinstance);
+    $authrecord   = get_record('auth_instance', 'id', $authinstance);
+    $authobj      = AuthFactory::create($authinstance);
 
     $institution = new Institution($authobj->institution);
 
@@ -298,7 +410,12 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
     }
 
-    log_info('Inserting users from the CSV file');
+    if ($values['updateusers']) {
+        log_info('Updating users from the CSV file');
+    }
+    else {
+        log_info('Inserting users from the CSV file');
+    }
     db_begin();
 
     $addedusers = array();
@@ -310,7 +427,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     }
 
     foreach ($CSVDATA as $record) {
-        log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
         $user->authinstance = $authinstance;
         $user->username     = $record[$formatkeylookup['username']];
@@ -326,7 +442,6 @@ function uploadcsv_submit(Pieform $form, $values) {
         if (isset($formatkeylookup['preferredname'])) {
             $user->preferredname = $record[$formatkeylookup['preferredname']];
         }
-        $user->passwordchange = (int)$values['forcepasswordchange'];
 
         $profilefields = new StdClass;
         $remoteuser = null;
@@ -343,9 +458,27 @@ function uploadcsv_submit(Pieform $form, $values) {
             $profilefields->{$field} = $record[$formatkeylookup[$field]];
         }
 
-        $user->id = create_user($user, $profilefields, $institution, $authobj, $remoteuser);
+        if (!$values['updateusers'] || !isset($UPDATES[$user->username])) {
+            $user->passwordchange = (int)$values['forcepasswordchange'];
 
-        $addedusers[] = $user;
+            $user->id = create_user($user, $profilefields, $institution, $authrecord, $remoteuser);
+            reset_password($user, false);
+
+            $addedusers[] = $user;
+            log_debug('added user ' . $user->username);
+        }
+        else if (isset($UPDATES[$user->username])) {
+            $updated = update_user($user, $profilefields, $remoteuser);
+
+            if (empty($updated)) {
+                // Nothing changed for this user
+                unset($UPDATES[$user->username]);
+            }
+            else {
+                $UPDATES[$user->username] = $updated;
+                log_debug('updated user ' . $user->username . ' (' . implode(', ', array_keys($updated)) . ')');
+            }
+        }
     }
     db_commit();
 
@@ -381,13 +514,18 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
     }
 
-    foreach ($addedusers as $user) {
-        reset_password($user, false);
+    log_info('Added ' . count($addedusers) . ' users, updated ' . count($UPDATES) . ' users.');
+
+    $SESSION->add_ok_msg(get_string('csvfileprocessedsuccessfully', 'admin'));
+    if ($UPDATES) {
+        $updatemsg = smarty_core();
+        $updatemsg->assign('added', count($addedusers));
+        $updatemsg->assign('updates', $UPDATES);
+        $SESSION->add_info_msg($updatemsg->fetch('admin/users/csvupdatemessage.tpl'), false);
     }
-
-    log_info('Inserted ' . count($CSVDATA) . ' records');
-
-    $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
+    else {
+        $SESSION->add_ok_msg(get_string('numbernewusersadded', 'admin', count($addedusers)));
+    }
     redirect('/admin/users/uploadcsv.php');
 }
 

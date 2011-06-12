@@ -1778,6 +1778,73 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     return $user->id;
 }
 
+/**
+ * Update user
+ *
+ * @param object $user stdclass for the usr table
+ * @param object $profile profile field/values to set
+ * @param string $remotename username on the remote site
+ * @return array list of updated fields
+ */
+function update_user($user, $profile, $remotename=null) {
+    require_once(get_config('docroot') . 'auth/session.php');
+
+    if (!empty($user->id)) {
+        $oldrecord = get_record('usr', 'id', $user->id);
+    }
+    else {
+        $oldrecord = get_record('usr', 'username', $user->username);
+    }
+    $userid = $oldrecord->id;
+
+    db_begin();
+
+    // Log the user out, otherwise they can overwrite all this on the next request
+    remove_user_sessions($userid);
+
+    $updated = array();
+    $newrecord = new StdClass;
+    foreach (get_object_vars($user) as $k => $v) {
+        if (!empty($v) && ($k == 'password' || empty($oldrecord->$k) || $oldrecord->$k != $v)) {
+            $newrecord->$k = $v;
+            $updated[$k] = $v;
+        }
+    }
+
+    if (count(get_object_vars($newrecord))) {
+        $newrecord->id = $userid;
+        update_record('usr', $newrecord);
+        if (!empty($newrecord->password)) {
+            $newrecord->authinstance = $user->authinstance;
+            reset_password($newrecord, false);
+        }
+    }
+
+    foreach (get_object_vars($profile) as $k => $v) {
+        if (get_profile_field($userid, $k) != $v) {
+            set_profile_field($userid, $k, $v);
+            $updated[$k] = $v;
+        }
+    }
+
+    if ($remotename) {
+        $oldremote = get_field('auth_remote_user', 'remoteusername', 'authinstance', $oldrecord->authinstance, 'localusr', $userid);
+        if ($remotename != $oldremote) {
+            $updated['remoteuser'] = $remotename;
+        }
+        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $userid);
+        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remotename);
+        insert_record('auth_remote_user', (object) array(
+            'authinstance'   => $user->authinstance,
+            'remoteusername' => $remotename,
+            'localusr'       => $userid,
+        ));
+    }
+
+    db_commit();
+
+    return $updated;
+}
 
 /**
  * Given a user, makes sure they have been added to all groups that are marked 

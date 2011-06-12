@@ -414,6 +414,7 @@ $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or 
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine)';
 $string['uploadcsverrorunspecifiedproblem'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format then this is a bug and you should <a href="https://eduforge.org/tracker/?func=add&group_id=176&atid=739">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file';
+$string['uploadcsverrorwrongnumberoffields'] = 'Error on line %s of your file: Incorrect number of fields';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields';
 $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: Passwords must be at least six characters long and contain at least one digit and two letters';
@@ -421,6 +422,8 @@ $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The u
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
 $string['uploadcsverroremailaddresstaken'] = 'Line %s of the file specifies the e-mail address "%s" that is already taken by another user';
+$string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
+$string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s.  You cannot update this user\'s authentication method to No Institution.';
 $string['uploadcsvpagedescription2'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
    
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
@@ -444,8 +447,14 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 
 %s';
 $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mailed. Their e-mail addresses may be invalid, or the server Mahara is running on might not be configured to send e-mail properly. The server error log has more details. For now, you may want to contact these people manually:';
-$string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
+$string['updateusers'] = 'Update Users';
+$string['updateusersdescription'] = 'If your CSV file contains the usernames of users who are already members of the institution you have specified, their details will be overwritten with data from the file. Use with care.';
+$string['csvfileprocessedsuccessfully'] = 'Your CSV file was processed successfully';
+$string['nousersadded'] = 'No users were added.';
+$string['numbernewusersadded'] = 'New users added: %s.';
+$string['numberusersupdated'] = 'Users updated: %d.';
+$string['showupdatedetails'] = 'Show update details';
 
 // Bulk Leap2A import
 $string['bulkleap2aimport'] = 'Import users from Leap2A files';
