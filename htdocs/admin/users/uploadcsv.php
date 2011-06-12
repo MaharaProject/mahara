@@ -70,7 +70,6 @@ $ALLOWEDKEYS = array(
     'industry',
     'authinstance'
 );
-$CSVERRORS = array();
 
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
@@ -165,7 +164,7 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER, $CSVERRORS;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -239,34 +238,34 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
             if (!$authobj->is_username_valid_admin($username)) {
-                $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
+                CSVErrors::add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
         else if (method_exists($authobj, 'is_username_valid')) {
             if (!$authobj->is_username_valid($username)) {
-                $CSVERRORS[] = get_string('uploadcsverrorinvalidusername', 'admin', $i);
+                CSVErrors::add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
         if (record_exists_select('usr', 'LOWER(username) = ?', strtolower($username)) || isset($usernames[strtolower($username)])) {
-            $CSVERRORS[] = get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username);
+            CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
         }
         if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email) || isset($emails[$email])) {
-            $CSVERRORS[] = get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email);
+            CSVErrors::add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
         }
 
         // Note: only checks for valid form are done here, none of the checks
         // like whether the password is too easy. The user is going to have to
         // change their password on first login anyway.
         if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-            $CSVERRORS[] = get_string('uploadcsverrorinvalidpassword', 'admin', $i);
+            CSVErrors::add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
         }
 
         $usernames[strtolower($username)] = 1;
         $emails[$email] = 1;
     }
 
-    if (!empty($CSVERRORS)) {
-        $form->set_error('file', implode("<br />\n", $CSVERRORS));
+    if ($errors = CSVErrors::process()) {
+        $form->set_error('file', clean_html($errors));
         return;
     }
 
@@ -437,3 +436,29 @@ $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/uploadcsv.tpl');
+
+
+class CSVErrors {
+
+    private static $csverrors = array();
+
+    function add($line, $msg) {
+        if (!isset(self::$csverrors[$line])) {
+            self::$csverrors[$line] = array();
+        }
+        self::$csverrors[$line][] = $msg;
+    }
+
+    function process() {
+        if (empty(self::$csverrors)) {
+            return;
+        }
+        ksort(self::$csverrors);
+        $errorstring = implode("<br>\n", array_shift(self::$csverrors));
+        while ($lineerrors = array_shift(self::$csverrors)) {
+            $errorstring .= "<br>\n" . implode("<br>\n", $lineerrors);
+        }
+        return $errorstring;
+    }
+
+}
