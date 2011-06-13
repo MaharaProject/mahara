@@ -2380,5 +2380,27 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011061400) {
+        // Add institution to group table
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        add_field($table, $field);
+
+        $key = new XMLDBKey('institutionfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
+
+        // Add shortname to group table
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('shortname');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('shortnameuk');
+        $index->setAttributes(XMLDB_KEY_UNIQUE, array('institution', 'shortname'));
+        add_index($table, $index);
+    }
+
     return $status;
 }
