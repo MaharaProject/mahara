@@ -633,7 +633,9 @@ WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
                 while ($row = $rs->FetchRow()) {
                         $columns = array();
                         foreach (explode(' ', $row[2]) as $col) {
+                            if (isset($col_names[$col])) {
                                 $columns[] = $col_names[$col];
+                            }
                         }
                         
                         $indexes[$row[0]] = array(
