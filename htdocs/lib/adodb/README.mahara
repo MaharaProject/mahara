@@ -9,3 +9,5 @@ Modifications:
 - drivers/adodb-mysql.inc.php (24465d23e2ccb3a89629e250a3caab1ee051e90d)
 - drivers/adodb-postgres7.inc.php (af59ab96086a319785ed682420d22dbfcbacb9bc)
 - adodb/drivers/adodb-postgres64.inc.php (d6d8884fabc598aec58e633a6a1e258cd07b3da1)
+- Add check for valid columns in MetaIndexes function of
+  adodb/drivers/adodb-postgres64.inc.php (see bug #796102)
