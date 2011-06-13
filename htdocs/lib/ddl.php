@@ -469,6 +469,10 @@ function find_index_name($table, $index) {
 /// Calculate the name of the table
     $tablename = $generator->getTableName($table, false);
 
+    if (empty($indcolumns)) {
+        $nocolumnindexname = $generator->getTableName($index);
+    }
+
 /// Get list of indexes in table
     $indexes = null;
     if ($indexes = $db->MetaIndexes($tablename)) {
@@ -477,6 +481,15 @@ function find_index_name($table, $index) {
 
 /// Iterate over them looking for columns coincidence
     if ($indexes) {
+
+        if (isset($nocolumnindexname)) {
+            log_debug("Function find_index_name called on an index $nocolumnindexname with no columns.  Attempting match on index names of all indexes on $tablename without columns.");
+            if (isset($indexes[$nocolumnindexname]) && empty($indexes[$nocolumnindexname]['columns'])) {
+                return $nocolumnindexname;
+            }
+            return false;
+        }
+
         foreach ($indexes as $indexname => $index) {
             $columns = $index['columns'];
         /// Lower case column names
