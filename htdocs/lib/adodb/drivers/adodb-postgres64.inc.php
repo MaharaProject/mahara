@@ -619,30 +619,26 @@ class ADODB_postgres64 extends ADOConnection{
 
 	function MetaIndexes ($table, $primary = FALSE, $owner = false)
 	{
-		global $ADODB_FETCH_MODE;
+		 global $ADODB_FETCH_MODE;
 
 		$schema = false;
 		$this->_findschema($table,$schema);
 
 		if ($schema) { // requires pgsql 7.3+ - pg_namespace used.
 			$sql = '
-				SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns"
+				SELECT c.relname AS "Name", i.indisunique AS "UNIQUE", i.indkey AS "Columns"
 				FROM pg_catalog.pg_class c
-				JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
-				JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
-					,pg_namespace n
-				WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))
-				and c.relnamespace=c2.relnamespace
-				and c.relnamespace=n.oid
-				and n.nspname=\'%s\'';
+					JOIN pg_catalog.pg_index i ON i.indexrelid = c.oid
+					JOIN pg_catalog.pg_class c2 ON c2.oid = i.indrelid, pg_namespace n
+				WHERE (c2.relname = \'%s\' or c2.relname=lower(\'%s\')) and c.relnamespace=c2.relnamespace and c.relnamespace=n.oid and n.nspname=\'%s\'';
 		} else {
 			$sql = '
 				SELECT c.relname as "Name", i.indisunique as "Unique", i.indkey as "Columns"
 				FROM pg_catalog.pg_class c
-				JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
-				JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
+					JOIN pg_catalog.pg_index i ON i.indexrelid=c.oid
+					JOIN pg_catalog.pg_class c2 ON c2.oid=i.indrelid
 				WHERE (c2.relname=\'%s\' or c2.relname=lower(\'%s\'))';
-		}
+			}
 
 		if ($primary == FALSE) {
 			$sql .= ' AND i.indisprimary=false;';
@@ -651,12 +647,12 @@ class ADODB_postgres64 extends ADOConnection{
 		$save = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 		if ($this->fetchMode !== FALSE) {
-			$savem = $this->SetFetchMode(FALSE);
+						$savem = $this->SetFetchMode(FALSE);
 		}
 
 		$rs = $this->Execute(sprintf($sql,$table,$table,$schema));
 		if (isset($savem)) {
-			$this->SetFetchMode($savem);
+						$this->SetFetchMode($savem);
 		}
 		$ADODB_FETCH_MODE = $save;
 
@@ -665,20 +661,22 @@ class ADODB_postgres64 extends ADOConnection{
 			return $false;
 		}
 
-		$col_names = $this->MetaColumnNames($table,true,true);
-		// 3rd param is use attnum,
-		// see https://sourceforge.net/p/adodb/bugs/45/
+		$col_names = $this->MetaColumnNames($table, true, true);
+		//3rd param is use attnum,
+		// see http://sourceforge.net/tracker/index.php?func=detail&aid=1451245&group_id=42718&atid=433976
 		$indexes = array();
 		while ($row = $rs->FetchRow()) {
-			$columns = array();
-			foreach (explode(' ', $row[2]) as $col) {
-				$columns[] = $col_names[$col];
-			}
-
-			$indexes[$row[0]] = array(
-				'unique' => ($row[1] == 't'),
-				'columns' => $columns
-			);
+				 $columns = array();
+				 foreach (explode(' ', $row[2]) as $col) {
+							if (isset($col_names[$col])) {
+									 $columns[] = $col_names[$col];
+							}
+				 }
+		
+				 $indexes[$row[0]] = array(
+							'unique' => ($row[1] == 't'),
+							'columns' => $columns
+				 );
 		}
 		return $indexes;
 	}
