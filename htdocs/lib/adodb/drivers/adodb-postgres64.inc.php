@@ -669,7 +669,9 @@ class ADODB_postgres64 extends ADOConnection{
 		while ($row = $rs->FetchRow()) {
 			$columns = array();
 			foreach (explode(' ', $row[2]) as $col) {
-				$columns[] = $col_names[$col];
+				if (isset($col_names[$col])) {
+						$columns[] = $col_names[$col];
+				}
 			}
 
 			$indexes[$row[0]] = array(
