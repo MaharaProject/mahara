@@ -354,6 +354,8 @@ function group_delete($groupid) {
         array(
             'deleted' => 1,
             'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+            'shortname' => null,
+            'institution' => null,
         ),
         array(
             'id' => $groupid,

@@ -105,6 +105,7 @@ if ($institution || $add) {
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
+            execute_sql("UPDATE {group} SET institution = NULL, shortname = NULL WHERE institution = ?", array($values['i']));
             delete_records('auth_instance', 'institution', $values['i']);
             delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
