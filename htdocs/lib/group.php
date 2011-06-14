@@ -498,11 +498,22 @@ function group_update($new, $create=false) {
  * simple. What is required to perform group deletion may change over time.
  *
  * @param int $groupid The group to delete
+ * @param string $shortname   shortname of the group
+ * @param string $institution institution of the group
  *
  * {{@internal Maybe later we can have a group_can_be_deleted function if 
  * necessary}}
  */
-function group_delete($groupid) {
+function group_delete($groupid, $shortname=null, $institution=null) {
+    if (empty($groupid) && !empty($institution) && !is_null($shortname) && strlen($shortname)) {
+        // External call to delete a group, check permission of $USER.
+        global $USER;
+        if (!$USER->can_edit_institution($institution)) {
+            throw new AccessDeniedException("group_delete: cannot delete a group in this institution");
+        }
+        $groupid = get_field('group', 'id', 'shortname', $shortname, 'institution', $institution);
+    }
+
     $groupid = group_param_groupid($groupid);
     update_record('group',
         array(
