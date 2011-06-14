@@ -251,7 +251,21 @@ class ArtefactTypeComment extends ArtefactType {
         return array('author', 'owner', 'admin');
     }
 
-    public static function get_comments($limit=10, $offset=0, $showcomment=null, &$view=null, &$artefact=null) {
+    /**
+     * Generates data object required for displaying comments on the page.
+     *
+     * @param  int $limit              The number of comments to display (set to
+     *                                 0 for disabling pagination and showing all comments)
+     * @param  int $offset             The offset of comments used for pagination
+     * @param  int|string $showcomment Optionally show page with particular comment
+     *                                 on it or the last page. $offset will be ignored.
+     *                                 Specify either comment_id or 'last' respectively.
+     *                                 Set to null to use $offset for pagination.
+     * @param  object $view            The view object
+     * @param  object $artefact        Optional artefact object
+     * @return object $result          Comments data object
+     */
+    public static function get_comments($limit=10, $offset=0, $showcomment, &$view, &$artefact=null) {
         global $USER;
         $userid = $USER->get('id');
         $viewid = $view->get('id');
@@ -295,24 +309,28 @@ class ArtefactTypeComment extends ArtefactType {
             WHERE ' . $where);
 
         if ($result->count > 0) {
-            if ($showcomment == 'last') { // Ignore $offset and just get the last page of feedback
-                $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
-            }
-            else if (is_numeric($showcomment)) {
-                // Ignore $offset and get the page that has the comment
-                // with id $showcomment on it.
-                // Fetch everything up to $showcomment to get its rank
-                // This will get ugly if there are 1000s of comments
-                $ids = get_column_sql('
-                SELECT a.id
-                FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
-                WHERE ' . $where . ' AND a.id <= ?
-                ORDER BY a.ctime', array($showcomment));
-                $last = end($ids);
-                if ($last == $showcomment) {
-                    $rank = key($ids);
-                    $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
-                    $result->showcomment = $showcomment;
+            // If pagination is in use, see if we want to get a page with particular comment
+            if ($limit) {
+                if ($showcomment == 'last') {
+                    // If we have limit (pagination is used) ignore $offset and just get the last page of feedback.
+                    $result->forceoffset = $offset = (ceil($result->count / $limit) - 1) * $limit;
+                }
+                else if (is_numeric($showcomment)) {
+                    // Ignore $offset and get the page that has the comment
+                    // with id $showcomment on it.
+                    // Fetch everything up to $showcomment to get its rank
+                    // This will get ugly if there are 1000s of comments
+                    $ids = get_column_sql('
+                    SELECT a.id
+                    FROM {artefact} a JOIN {artefact_comment_comment} c ON a.id = c.artefact
+                    WHERE ' . $where . ' AND a.id <= ?
+                    ORDER BY a.ctime', array($showcomment));
+                    $last = end($ids);
+                    if ($last == $showcomment) {
+                        $rank = key($ids);
+                        $result->forceoffset = $offset = ((ceil($rank / $limit) - 1) * $limit);
+                        $result->showcomment = $showcomment;
+                    }
                 }
             }
 

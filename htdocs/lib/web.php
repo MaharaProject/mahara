@@ -2905,7 +2905,9 @@ function build_pagination($params) {
     }
 
     // Correct for odd offsets
-    $params['offset'] -= $params['offset'] % $params['limit'];
+    if ($params['limit']) {
+        $params['offset'] -= $params['offset'] % $params['limit'];
+    }
 
     $params['firsttext'] = (isset($params['firsttext'])) ? $params['firsttext'] : get_string('first');
     $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
@@ -2932,7 +2934,7 @@ function build_pagination($params) {
     }
     $output .= '">';
 
-    if ($params['limit'] <= $params['count']) {
+    if ($params['limit'] && ($params['limit'] <= $params['count'])) {
         $pages = ceil($params['count'] / $params['limit']);
         $page = $params['offset'] / $params['limit'];
 
