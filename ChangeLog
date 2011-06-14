@@ -1,3 +1,24 @@
+1.4.0 (2011-06-14)
+- new Google Apps and Image Gallery blocks
+- star ratings with comments
+- easier page for sharing content with others
+- ability to add comments on file artefacts
+- support for SSL-based SMTP and LDAP servers
+- administration interace for mail server configuration
+- remote avatar (Gravatar) support for HTTPS sites
+- "views" are now "pages" and "blogs" are now "journals"
+- lots of small changes to make the interface more consistent
+- pages can now display more than one embedded video at a time
+- added a fullscreen button to the internal video player
+- added spellchecker and undo button to the WYSIWYG editor
+- spam checks now also performed on forum posts
+- support for new Youtube Iframe embed code
+- optional site-wide maximum quota
+- working start/stop overrides on pages
+- removal of the obsolete and broken Solr search plugin
+- removal of the httpswwwroot setting
+- removal of the .htaccess file
+
 1.3.6 (2011-05-10)
 - Privilege escalations (CVE-2011-1402)
 - Fixes to session key validation (CVE-2011-1403)
