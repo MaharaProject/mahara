@@ -446,7 +446,7 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
-    $newinstitution->showonlineusers              = $values['showonlineusers'];
+    $newinstitution->showonlineusers              = empty($values['showonlineusers']) ? 2 : $values['showonlineusers'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
         // security risk. See the documentation for the usersuniquebyusername 
@@ -459,7 +459,7 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
-        $newinstitution->defaultquota = $values['defaultquota'];
+        $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
     if ($institution != 'mahara') {
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
