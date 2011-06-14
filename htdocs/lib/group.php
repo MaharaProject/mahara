@@ -378,9 +378,51 @@ function group_create($data) {
 }
 
 
-function group_update($new) {
+/**
+ * Update details of an existing group.
+ *
+ * @param array $new New values for the group table.
+ * @param bool  $create Create the group if it doesn't exist yet
+ */
+function group_update($new, $create=false) {
 
-    $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
+    if (!empty($new->id)) {
+        $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
+    }
+    else if (!empty($new->institution) && isset($new->shortname) && strlen($new->shortname)) {
+        $old = get_record_select(
+            'group',
+            'shortname = ? AND institution = ? AND deleted = 0',
+            array($new->shortname, $new->institution)
+        );
+
+        if (!$old && $create) {
+            return group_create((array)$new);
+        }
+    }
+
+    if (!$old) {
+        throw new NotFoundException("group_update: group not found");
+    }
+
+    if (!empty($old->institution)) {
+        // Api-controlled group; check permissions.
+        global $USER;
+
+        if (!$USER->can_edit_institution($old->institution)) {
+            throw new AccessDeniedException("group_update: cannot update a group in this institution");
+        }
+    }
+
+    // Institution and shortname cannot be updated (yet)
+    unset($new->institution);
+    unset($new->shortname);
+
+    foreach (array('id', 'jointype', 'grouptype', 'public') as $f) {
+        if (!isset($new->$f)) {
+            $new->$f = $old->$f;
+        }
+    }
 
     db_begin();
 
