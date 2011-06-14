@@ -377,6 +377,78 @@ function group_create($data) {
     return $id;
 }
 
+
+function group_update($new) {
+
+    $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
+
+    db_begin();
+
+    update_record('group', $new, 'id');
+
+    // When jointype changes from invite/request to anything else,
+    // remove all open invitations/requests, ---
+    // Except for when jointype changes from request to open. Then
+    // we can just add group membership for everyone with an open
+    // request.
+
+    if ($old->jointype == 'invite' && $new->jointype != 'invite') {
+        delete_records('group_member_invite', 'group', $new->id);
+    }
+    else if ($old->jointype == 'request') {
+        if ($new->jointype == 'open') {
+            $userids = get_column_sql('
+                SELECT u.id
+                FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
+                WHERE r.group = ? AND u.deleted = 0',
+                array($new->id)
+            );
+            if ($userids) {
+                foreach ($userids as $uid) {
+                    group_add_user($new->id, $uid);
+                }
+            }
+        }
+        else if ($new->jointype != 'request') {
+            delete_records('group_member_request', 'group', $new->id);
+        }
+    }
+
+    // When group type changes from course to standard, make sure that tutors
+    // are demoted to members.
+    // @todo: avoid mentioning roles other than 'admin', 'member' except in grouptype
+    // classes, unless grouptypes disappear soon.
+    if ($old->grouptype == 'course' && $new->grouptype != 'course') {
+        set_field('group_member', 'role', 'member', 'group', $new->id, 'role', 'tutor');
+    }
+
+    // When a group changes from public -> private or vice versa, set the
+    // appropriate access permissions on the group homepage view.
+    if ($old->public != $new->public) {
+        $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $new->id);
+        if ($old->public && !$new->public) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'loggedin',
+                'ctime'      => db_format_timestamp(time()),
+            ));
+        }
+        else if (!$old->public && $new->public) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'public',
+                'ctime'      => db_format_timestamp(time()),
+            ));
+        }
+    }
+
+    db_commit();
+
+}
+
+
 /**
  * Deletes a group.
  *

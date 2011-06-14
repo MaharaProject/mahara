@@ -139,83 +139,23 @@ function editgroup_submit(Pieform $form, $values) {
 
     db_begin();
 
-    $now = db_format_timestamp(time());
-
     list($grouptype, $jointype) = explode('.', $values['grouptype']);
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
-    update_record(
-        'group',
-        (object) array(
-            'id'             => $values['id'],
-            'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
-            'description'    => $values['description'],
-            'grouptype'      => $grouptype,
-            'category'       => empty($values['category']) ? null : intval($values['category']),
-            'jointype'       => $jointype,
-            'mtime'          => $now,
-            'usersautoadded' => intval($values['usersautoadded']),
-            'public'         => intval($values['public']),
-            'viewnotify'     => intval($values['viewnotify']),
-        ),
-        'id'
+    $newvalues = (object) array(
+        'id'             => $group_data->id,
+        'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
+        'description'    => $values['description'],
+        'grouptype'      => $grouptype,
+        'category'       => empty($values['category']) ? null : intval($values['category']),
+        'jointype'       => $jointype,
+        'usersautoadded' => intval($values['usersautoadded']),
+        'public'         => intval($values['public']),
+        'viewnotify'     => intval($values['viewnotify']),
     );
 
-    // When jointype changes from invite/request to anything else,
-    // remove all open invitations/requests, ---
-    // Except for when jointype changes from request to open. Then
-    // we can just add group membership for everyone with an open
-    // request.
-
-    if ($group_data->jointype == 'invite' && $jointype != 'invite') {
-        delete_records('group_member_invite', 'group', $group_data->id);
-    }
-    else if ($group_data->jointype == 'request') {
-        if ($jointype == 'open') {
-            $userids = get_column_sql('
-                SELECT u.id
-                FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
-                WHERE r.group = ? AND u.deleted = 0',
-                array($group_data->id)
-            );
-            if ($userids) {
-                foreach ($userids as $uid) {
-                    group_add_user($group_data->id, $uid);
-                }
-            }
-        }
-        else if ($jointype != 'request') {
-            delete_records('group_member_request', 'group', $group_data->id);
-        }
-    }
-    // When group type changes from course to standard, make sure that tutors
-    // are demoted to members.
-    if ($group_data->grouptype == 'course' && $grouptype != 'course') {
-        set_field('group_member', 'role', 'member', 'group', $values['id'], 'role', 'tutor');
-    }
-
-    // When a group changes from public -> private or vice versa, set the
-    // appropriate access permissions on the group homepage view.
-    if ($group_data->public != $values['public']) {
-        $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $group_data->id);
-        if ($group_data->public && !$values['public']) {
-            delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
-            insert_record('view_access', (object) array(
-                'view'       => $homepageid,
-                'accesstype' => 'loggedin',
-                'ctime'      => db_format_timestamp(time()),
-            ));
-        }
-        else if (!$group_data->public && $values['public']) {
-            delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
-            insert_record('view_access', (object) array(
-                'view'       => $homepageid,
-                'accesstype' => 'public',
-                'ctime'      => db_format_timestamp(time()),
-            ));
-        }
-    }
+    group_update($newvalues);
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
