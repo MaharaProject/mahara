@@ -227,6 +227,9 @@ function group_create($data) {
     if (!isset($data['name'])) {
         throw new InvalidArgumentException("group_create: must specify a name for the group");
     }
+    if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($data['name']))))) {
+        throw new UserException(get_string('groupalreadyexists', 'group') . ': ' . $data['name']);
+    }
 
     if (!isset($data['grouptype']) || !in_array($data['grouptype'], group_get_grouptypes())) {
         throw new InvalidArgumentException("group_create: grouptype specified must be an installed grouptype");
@@ -248,14 +251,49 @@ function group_create($data) {
     }
     $data['ctime'] = db_format_timestamp($data['ctime']);
 
-    if (!is_array($data['members']) || count($data['members']) == 0) {
-        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
-    }
-
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
+
+    if (isset($data['shortname']) && strlen($data['shortname'])) {
+        // This is a group whose details and membership can be updated automatically, using a
+        // webservice api or possibly csv upload.
+
+        // On updates to this group, it will be identified using the institution and shortname
+        // which must be unique.
+
+        // The $USER object will be set to someone with at least institutional admin permission.
+        global $USER;
+
+        if (empty($data['institution'])) {
+            throw new SystemException("group_create: a group with a shortname must have an institution; shortname: " . $data['shortname']);
+        }
+        if (!$USER->can_edit_institution($data['institution'])) {
+            throw new AccessDeniedException("group_create: cannot create a group in this institution");
+        }
+        if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $data['shortname'])) {
+            $message = get_string('invalidshortname', 'group') . ': ' . $data['shortname'];
+            $message .= "\n" . get_string('shortnameformat', 'group');
+            throw new UserException($message);
+        }
+        if (record_exists('group', 'shortname', $data['shortname'], 'institution', $data['institution'])) {
+            throw new UserException('group_create: group with shortname ' . $data['shortname'] . ' and institution ' . $data['institution'] . ' already exists');
+        }
+        if (empty($data['members'])) {
+            $data['members'] = array($USER->get('id') => 'admin');
+        }
+    }
+    else {
+        if (!empty($data['institution'])) {
+            throw new SystemException("group_create: group institution only available for api-controlled groups");
+        }
+        $data['shortname'] = null;
+    }
+
+    if (!is_array($data['members']) || count($data['members']) == 0) {
+        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
+    }
 
     db_begin();
 
@@ -263,15 +301,17 @@ function group_create($data) {
         'group',
         (object) array(
             'name'           => $data['name'],
-            'description'    => $data['description'],
+            'description'    => isset($data['description']) ? $data['description'] : null,
             'grouptype'      => $data['grouptype'],
-            'category'       => $data['category'],
+            'category'       => isset($data['category']) ? intval($data['category']) : null,
             'jointype'       => $data['jointype'],
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
             'public'         => $data['public'],
             'usersautoadded' => $data['usersautoadded'],
             'quota'          => $data['quota'],
+            'institution'    => !empty($data['institution']) ? $data['institution'] : null,
+            'shortname'      => $data['shortname'],
         ),
         'id',
         true
