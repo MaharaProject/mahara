@@ -188,7 +188,7 @@ if ($institution || $add) {
     $themeoptions['sitedefault'] = '- ' . get_string('sitedefault', 'admin') . ' (' . $themeoptions[get_config('theme')] . ') -';
     uksort($themeoptions, 'theme_sort');
 
-    $showonlineusersoptions = array('0' => get_string('none'), '1' => get_string('institutiononly', 'admin'), '2' => get_string('All', 'admin'));
+    $showonlineusersoptions = array('0' => get_string('none'), '1' => get_string('institutiononly', 'admin'), '2' => get_string('all', 'admin'));
     $sitename = get_config('sitename');
 
     safe_require('artefact', 'internal');
