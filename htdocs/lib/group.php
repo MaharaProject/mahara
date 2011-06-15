@@ -616,6 +616,96 @@ function group_remove_user($groupid, $userid=null, $force=false) {
 }
 
 /**
+ * Completely update the membership of a group
+ *
+ * @param int $groupid ID of group
+ * @param array $members list of members and roles, structured like this:
+ *            array(
+ *                userid => role,
+ *                userid => role,
+ *                ...
+ *            )
+ */
+function group_update_members($groupid, $members) {
+    global $USER;
+
+    $groupid = group_param_groupid($groupid);
+
+    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+        throw new NotFoundException("group_update_members: group not found: $groupid");
+    }
+
+    if (($group->institution && !$USER->can_edit_institution($group->institution))
+        || (!$group->institution && !$USER->get('admin'))) {
+        throw new AccessDeniedException("group_update_members: access denied");
+    }
+
+    if (!is_array($members)) {
+        throw new SystemException("group_update_members: members must be an array");
+    }
+
+    $badroles = array_unique(array_diff($members, array_keys(group_get_role_info($groupid))));
+
+    if (!empty($badroles)) {
+        throw new UserException("group_update_members: invalid role(s) specified for group $group->name (id $groupid): " . join(', ', $badroles));
+    }
+
+    if (!in_array('admin', $members)) {
+        $groupname = get_field('group', 'name', 'id', $groupid);
+        throw new UserException("group_update_members: no group admins listed for group $group->name (id $groupid)");
+    }
+
+    // Check the new members list for invalid users
+
+    if (!empty($members)) {
+        $userids = array_map('intval', array_keys($members));
+        if ($group->institution) {
+            $gooduserids = get_column_sql('
+                SELECT usr
+                FROM {usr_institution}
+                WHERE usr IN (' . join(',', $userids) . ') AND institution = ?',
+                array($group->institution)
+            );
+            if ($baduserids = array_diff($userids, $gooduserids)) {
+                throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+            }
+        }
+        else {
+            $gooduserids = get_column_sql('
+                SELECT id FROM {usr} WHERE id IN (' . join(',', $userids) . ') AND deleted = 0',
+                array()
+            );
+            if ($baduserids = array_diff($userids, $gooduserids)) {
+                throw new UserException("group_update_members: some new members do not exist: " . join(',', $baduserids));
+            }
+        }
+    }
+
+    // Update group members
+
+    $oldmembers = get_records_assoc('group_member', 'group', $groupid, '', 'member,role');
+
+    db_begin();
+
+    foreach ($members as $userid => $role) {
+        if (!isset($oldmembers[$userid])) {
+            group_add_user($groupid, $userid, $role);
+        }
+        else if ($oldmembers[$userid]->role != $role) {
+            set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+        }
+    }
+
+    foreach (array_keys($oldmembers) as $userid) {
+        if (!isset($members[$userid])) {
+            group_remove_user($groupid, $userid, true);
+        }
+    }
+
+    db_commit();
+}
+
+/**
  * Invite a user to a group.
  *
  * @param object $group group
