@@ -1779,6 +1779,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     $userobj->find_by_id($user->id);
     $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1), $checkviewaccess);
 
+    reset_password($user, false);
+
     handle_event('createuser', $user);
     db_commit();
     return $user->id;

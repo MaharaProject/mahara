@@ -108,7 +108,6 @@ if (isset($key)) {
         $user->email            = $registration->email;
         $user->username         = get_new_username($user->firstname . $user->lastname);
         $user->passwordchange   = 1;
-        $user->salt             = substr(md5(rand(1000000, 9999999)), 2, 8);
 
         create_user($user, $profilefields);
 

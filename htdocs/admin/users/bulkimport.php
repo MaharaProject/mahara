@@ -367,10 +367,6 @@ function finish_import() {
         }
     }
 
-    foreach ($ADDEDUSERS as $user) {
-        reset_password($user);
-    }
-
     if (!empty($FAILEDUSERS)) {
         $message = get_string('importfailedfornusers', 'admin', count($FAILEDUSERS), $totalusers) . "\n<ul>\n";
         foreach ($FAILEDUSERS as $username => $error) {

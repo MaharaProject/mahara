@@ -350,8 +350,6 @@ function adduser_submit(Pieform $form, $values) {
         }
     }
 
-    reset_password($user);
-
     $SESSION->add_ok_msg(get_string('newusercreated', 'admin'));
     redirect('/admin/users/edit.php?id=' . $user->id);
 }
