@@ -87,6 +87,7 @@ function submitview_submit(Pieform $form, $values) {
             'visible'         => 0,
             'allowcomments'   => 1,
             'approvecomments' => 0,
+            'ctime'           => db_format_timestamp(time()),
         );
         ensure_record_exists('view_access', $accessrecord, $accessrecord);
     }
