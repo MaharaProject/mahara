@@ -2582,3 +2582,10 @@ form#sendmessage #sendmessage_message,
     float: right;
     width: 50% !important;
 }
+
+.frame {
+    padding:0.3em;
+    margin:0px;
+    border:1px solid #CCCCCC;
+    background:white;
+}

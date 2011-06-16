@@ -22,6 +22,7 @@
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2011 Gregor Anzelj <gregor.anzelj@gmail.com>
  *
  */
 
@@ -33,8 +34,47 @@ $string['description'] = 'A collection of images from your Files area';
 $string['select'] = 'Image Selection';
 $string['selectfolder'] = 'Display all images from one of my folders (will include images uploaded later)';
 $string['selectimages'] = 'I will choose individual images to display';
+$string['selectexternal'] = 'Display images from external gallery';
+$string['externalgalleryurl'] = 'Gallery URL or RSS';
+$string['externalgalleryurldesc'] = 'You can embed the following external galleries:';
 $string['width'] = 'Width';
 $string['widthdescription'] = 'Specify the width for your images (in pixels). The images will be scaled to this width.';
 $string['style'] = 'Style';
 $string['stylethumbs'] = 'Thumbnails';
+$string['stylesquares'] = 'Thumbnails (Square)';
 $string['styleslideshow'] = 'Slideshow';
+
+$string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
+
+$string['gallerysettings'] = 'Gallery Settings';
+$string['useslimbox2'] = 'Use Slimbox 2?';
+$string['useslimbox2desc'] = 'Slimbox 2 (visual clone of Lightbox 2) is a simple, unobtrusive script used to overlay images on the current page.';
+$string['photoframe'] = 'Use photo frame?';
+$string['photoframedesc'] = 'If enabled, than the frame will be rendered around the thumbnail of each photo in the gallery.';
+$string['previewwidth'] = 'Maximum photo width';
+$string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized, when viewed with Slimbox2.';
+
+// Flickr
+$string['flickrsettings'] = 'Flickr Settings';
+$string['flickrapikey'] = 'Flickr API key';
+$string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="http://www.flickr.com/services/api/keys/apply/" target="_blank">Apply for your key online</a>.';
+$string['flickrsets'] = 'Flickr Sets';
+
+// Photobucket
+$string['pbsettings'] = 'Photobucket Settings';
+$string['pbapikey'] = 'Photobucket API key';
+$string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a valid API key and API private key.<br>Go to the <a href="http://developer.photobucket.com/" target="_blank">Photobucket developer web site</a>, agree to the terms of service, sign up, and get the API keys.';
+$string['pbapiprivatekey'] = 'Photobucket API private key';
+$string['photobucketphotosandalbums'] = 'Photobucket user photos and albums';
+
+// Panoramio
+$string['Photo'] = 'Photo';
+$string['by'] = 'by';
+$string['panoramiocopyright'] = 'Photos provided by Panoramio are under the copyright of their owners.';
+$string['panoramiouserphotos'] = 'Panoramio user photos';
+
+$string['picasaalbums'] = 'Picasa Albums';
+
+$string['windowslivephotoalbums'] = 'Windows Live Photo Gallery albums';
+
+$string['externalnotsupported'] = 'The external URL you provided is not supported';
