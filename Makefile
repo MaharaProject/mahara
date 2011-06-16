@@ -15,7 +15,7 @@ ifeq (, $(branch))
 branch := $(shell bash -c "git branch | grep \* | sed -e 's/ *\* *//'" )
 endif
 
-ifeq ("(no branch)", $(branch))
+ifeq ("(no branch)", "$(branch)")
 remote := origin
 else
 remote := $(shell bash -c "git config --get branch.$(branch).remote" )
@@ -24,7 +24,7 @@ endif
 ifeq (., $(remote))
 remote := origin
 endif
-ifeq (, $(remote))
+ifeq ("", $(remote))
 remote := origin
 endif
 
