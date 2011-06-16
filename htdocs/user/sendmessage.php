@@ -37,14 +37,14 @@ $replytoid = param_integer('replyto', null);
 $messages = null;
 
 if (!is_null($replytoid)) {
+    // Let us validate what we are going to reply first. The message should exist,
+    // addressed to us and originated from user we are replying to.
+    $message = get_record('notification_internal_activity', 'id', $replytoid, 'usr', $USER->get('id'), 'from', $id);
+    if (!$message) {
+        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
+    }
+    // OK, now it safe to fetch the whole thread.
     $messages = get_message_thread($replytoid);
-    if (!$messages) {
-        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
-    }
-    // Make sure the thread was start by either the user being replied to, or the current user
-    if (empty($messages[0]->from) || ($messages[0]->from != $id && $messages[0]->from != $USER->get('id'))) {
-        throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
-    }
 }
 
 $returnto = param_alpha('returnto', 'myfriends');
