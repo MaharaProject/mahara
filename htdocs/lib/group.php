@@ -659,7 +659,7 @@ function group_update_members($groupid, $members) {
 
     if (!empty($members)) {
         $userids = array_map('intval', array_keys($members));
-        if ($group->institution) {
+        if ($group->institution && $group->institution != 'mahara') {
             $gooduserids = get_column_sql('
                 SELECT usr
                 FROM {usr_institution}
