@@ -708,6 +708,23 @@ class User {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
 
+    public function institution_allows_public_views($institution = null) {
+        $user_institutions = $this->get('institutions');
+        if (empty($user_institutions)) {
+            // user belongs to no institutions
+            return true;
+        }
+        else if (is_null($institution) || !isset($user_institutions[$institution->institution])) {
+            foreach ($user_institutions as $institution) {
+                if ($institution->allowinstitutionpublicviews == 1) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return $user_institutions[$institution->institution]->allowinstitutionpublicviews == 1;
+    }
+
     /**
      * Returns whether this user is allowed to perform administration type
      * actions on another user.

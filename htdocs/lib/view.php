@@ -3485,6 +3485,14 @@ class View {
         $publicviews = get_config('allowpublicviews');
         $publicprofiles = get_config('allowpublicprofiles');
 
+        // a group view won't have an 'owner'
+        if ($publicviews && $ownerobj = $this->get_owner_object()) {
+            $owner = new User();
+            $owner->find_by_id($ownerobj->id);
+
+            $publicviews = $owner->institution_allows_public_views();
+        }
+
         $allowcomments = false;
         $approvecomments = true;
 
@@ -3684,6 +3692,11 @@ class View {
      * @return array
      */
     public static function get_accesslists($owner=null, $group=null, $institution=null) {
+        if (!is_null($owner) && $owner > 0) {
+            $ownerobj = new User();
+            $ownerobj->find_by_id($owner);
+        }
+
         $data = array();
         list($data['collections'], $data['views']) = self::get_views_and_collections($owner, $group, $institution);
 
@@ -3721,6 +3734,14 @@ class View {
         }
 
         foreach ($accessgroups as $access) {
+            // remove 'Public' from the list if the owner isn't allowed to have them
+            if ($access->accesstype == 'public'
+                && (get_config('allowpublicviews') != 1
+                    || (isset($ownerobj) && !$ownerobj->institution_allows_public_views()))
+            ) {
+                continue;
+            }
+
             $vi = $viewindex[$access->view];
 
             // Just count secret urls.

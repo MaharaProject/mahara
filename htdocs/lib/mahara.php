@@ -1651,6 +1651,16 @@ function can_view_view($view_id, $user_id=null) {
     require_once(get_config('libroot') . 'view.php');
     $view = new View($view_id);
 
+    // group views and logged in users are not affected by
+    // the institution level config for public views
+    if (empty($user_id) && $ownerobj = $view->get_owner_object()) {
+        $owner = new User();
+        $owner->find_by_id($ownerobj->id);
+        if (!$owner->institution_allows_public_views()) {
+            return false;
+        }
+    }
+
     if ($user_id && $user->can_edit_view($view)) {
         return true;
     }

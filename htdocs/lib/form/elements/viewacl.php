@@ -33,7 +33,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
-    global $USER;
+    global $USER, $SESSION;
     $smarty = smarty_core();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
@@ -41,7 +41,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $value = $form->get_value($element);
 
     // Look for the presets and split them into two groups
-    $public = get_config('allowpublicviews') == '1';
+    $public = get_config('allowpublicviews') == '1' && $USER->institution_allows_public_views();
     $presets = array();
     $loggedinindex = 0;
     if ($public) {
@@ -56,6 +56,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
     if ($value) {
         foreach ($value as $key => &$item) {
             if (is_array($item)) {
+                if ($item['accesstype'] == 'public') {
+                    $item['publicallowed'] = (int)$public;
+                }
                 if (in_array($item['type'], $presets)) {
                     $item['name'] = get_string($item['type'], 'view');
                     $item['preset'] = true;
@@ -133,11 +136,10 @@ function pieform_render_viewacl_getvaluebytype($type, $id) {
             return get_field('group', 'name', 'id', $id);
             break;
     }
-    return "$type: $id";
+    return sprintf("%s: %s", ucfirst($type), $id);
 }
 
 function pieform_element_viewacl_get_value(Pieform $form, $element) {
-    global $USER;
     $values = null;
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($element['value'])) {
@@ -150,24 +152,5 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
     else if (isset($element['defaultvalue'])) {
         $values = $element['defaultvalue'];
     }
-    if (get_config('allowpublicviews') != '1' && $values) {
-        foreach ($values as $key => $value) {
-            if ($value['type'] == 'public' || $value['type'] == 'token') {
-                unset($values[$key]);
-            }
-        }
-    }
-
-    /*
-        If the above foreach() loop removes any items, json_encode() converts
-        it into an object, which can't be iterated over - array_merge() with
-        only one argument effects a renumber of the array, which json_encode()
-        then handles with expected results.
-    */
-    if (is_array($values)) {
-        return array_values($values);
-    }
-    else {
-        return $values;
-    }
+    return $values;
 }
