@@ -1075,6 +1075,12 @@ function delete_user($userid) {
         WHERE owner = ?
         OR requester = ?', array($userid, $userid));
 
+    // Delete the user from others' favourites lists
+    delete_records('favorite_usr', 'usr', $userid);
+    // Delete favourites lists owned by the user
+    execute_sql('DELETE FROM {favorite_usr} WHERE favorite IN (SELECT id FROM {favorite} WHERE owner = ?)', array($userid));
+    delete_records('favorite', 'owner', $userid);
+
     delete_records('artefact_access_usr', 'usr', $userid);
     delete_records('auth_remote_user', 'localusr', $userid);
     delete_records('import_queue', 'usr', $userid);

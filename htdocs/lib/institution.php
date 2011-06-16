@@ -343,6 +343,18 @@ class Institution {
             }
             update_record('usr', $user);
         }
+
+        // If this user has a favourites list which is updated by this institution, remove it
+        // from this institution's control.
+        // Don't delete it in case the user wants to keep it, but move it out of the way, so
+        // another institution can create a new faves list with the same name.
+        execute_sql("
+            UPDATE {favorite}
+            SET institution = NULL, shortname = substring(shortname from 1 for 100) || '.' || ?
+            WHERE owner = ? AND institution = ?",
+            array(substr($this->name, 0, 100) . '.' . get_random_key(), $user->id, $this->name)
+        );
+
         delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
         handle_event('updateuser', $user->id);
         db_commit();
