@@ -1,6 +1,6 @@
 {foreach from=$institutions item=institution}
         <tr class="{cycle values='r0,r1'}">
-                <td>{$institution->displayname}</td>
+                <td><a href="{$WWWROOT}institution/index.php?institution={$institution->name}">{$institution->displayname}</a></td>
                 <td class="center">
                   {if $institution->name != 'mahara'}
                         <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
