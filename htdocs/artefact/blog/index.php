@@ -34,6 +34,10 @@ define('SECTION_PAGE', 'index');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
+if (!$USER->get_account_preference('multipleblogs')) {
+    redirect(get_config('wwwroot') . 'artefact/blog/view/');
+}
+
 define('TITLE', get_string('blogs','artefact.blog'));
 
 if ($delete = param_integer('delete', 0)) {
