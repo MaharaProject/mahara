@@ -227,6 +227,9 @@ function group_create($data) {
     if (!isset($data['name'])) {
         throw new InvalidArgumentException("group_create: must specify a name for the group");
     }
+    if (get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($data['name']))))) {
+        throw new UserException(get_string('groupalreadyexists', 'group') . ': ' . $data['name']);
+    }
 
     if (!isset($data['grouptype']) || !in_array($data['grouptype'], group_get_grouptypes())) {
         throw new InvalidArgumentException("group_create: grouptype specified must be an installed grouptype");
@@ -248,14 +251,49 @@ function group_create($data) {
     }
     $data['ctime'] = db_format_timestamp($data['ctime']);
 
-    if (!is_array($data['members']) || count($data['members']) == 0) {
-        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
-    }
-
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
+
+    if (isset($data['shortname']) && strlen($data['shortname'])) {
+        // This is a group whose details and membership can be updated automatically, using a
+        // webservice api or possibly csv upload.
+
+        // On updates to this group, it will be identified using the institution and shortname
+        // which must be unique.
+
+        // The $USER object will be set to someone with at least institutional admin permission.
+        global $USER;
+
+        if (empty($data['institution'])) {
+            throw new SystemException("group_create: a group with a shortname must have an institution; shortname: " . $data['shortname']);
+        }
+        if (!$USER->can_edit_institution($data['institution'])) {
+            throw new AccessDeniedException("group_create: cannot create a group in this institution");
+        }
+        if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $data['shortname'])) {
+            $message = get_string('invalidshortname', 'group') . ': ' . $data['shortname'];
+            $message .= "\n" . get_string('shortnameformat', 'group');
+            throw new UserException($message);
+        }
+        if (record_exists('group', 'shortname', $data['shortname'], 'institution', $data['institution'])) {
+            throw new UserException('group_create: group with shortname ' . $data['shortname'] . ' and institution ' . $data['institution'] . ' already exists');
+        }
+        if (empty($data['members'])) {
+            $data['members'] = array($USER->get('id') => 'admin');
+        }
+    }
+    else {
+        if (!empty($data['institution'])) {
+            throw new SystemException("group_create: group institution only available for api-controlled groups");
+        }
+        $data['shortname'] = null;
+    }
+
+    if (!is_array($data['members']) || count($data['members']) == 0) {
+        throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
+    }
 
     db_begin();
 
@@ -263,15 +301,17 @@ function group_create($data) {
         'group',
         (object) array(
             'name'           => $data['name'],
-            'description'    => $data['description'],
+            'description'    => isset($data['description']) ? $data['description'] : null,
             'grouptype'      => $data['grouptype'],
-            'category'       => $data['category'],
+            'category'       => isset($data['category']) ? intval($data['category']) : null,
             'jointype'       => $data['jointype'],
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
             'public'         => $data['public'],
             'usersautoadded' => $data['usersautoadded'],
             'quota'          => $data['quota'],
+            'institution'    => !empty($data['institution']) ? $data['institution'] : null,
+            'shortname'      => $data['shortname'],
         ),
         'id',
         true
@@ -337,6 +377,120 @@ function group_create($data) {
     return $id;
 }
 
+
+/**
+ * Update details of an existing group.
+ *
+ * @param array $new New values for the group table.
+ * @param bool  $create Create the group if it doesn't exist yet
+ */
+function group_update($new, $create=false) {
+
+    if (!empty($new->id)) {
+        $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
+    }
+    else if (!empty($new->institution) && isset($new->shortname) && strlen($new->shortname)) {
+        $old = get_record_select(
+            'group',
+            'shortname = ? AND institution = ? AND deleted = 0',
+            array($new->shortname, $new->institution)
+        );
+
+        if (!$old && $create) {
+            return group_create((array)$new);
+        }
+    }
+
+    if (!$old) {
+        throw new NotFoundException("group_update: group not found");
+    }
+
+    if (!empty($old->institution)) {
+        // Api-controlled group; check permissions.
+        global $USER;
+
+        if (!$USER->can_edit_institution($old->institution)) {
+            throw new AccessDeniedException("group_update: cannot update a group in this institution");
+        }
+    }
+
+    // Institution and shortname cannot be updated (yet)
+    unset($new->institution);
+    unset($new->shortname);
+
+    foreach (array('id', 'jointype', 'grouptype', 'public') as $f) {
+        if (!isset($new->$f)) {
+            $new->$f = $old->$f;
+        }
+    }
+
+    db_begin();
+
+    update_record('group', $new, 'id');
+
+    // When jointype changes from invite/request to anything else,
+    // remove all open invitations/requests, ---
+    // Except for when jointype changes from request to open. Then
+    // we can just add group membership for everyone with an open
+    // request.
+
+    if ($old->jointype == 'invite' && $new->jointype != 'invite') {
+        delete_records('group_member_invite', 'group', $new->id);
+    }
+    else if ($old->jointype == 'request') {
+        if ($new->jointype == 'open') {
+            $userids = get_column_sql('
+                SELECT u.id
+                FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
+                WHERE r.group = ? AND u.deleted = 0',
+                array($new->id)
+            );
+            if ($userids) {
+                foreach ($userids as $uid) {
+                    group_add_user($new->id, $uid);
+                }
+            }
+        }
+        else if ($new->jointype != 'request') {
+            delete_records('group_member_request', 'group', $new->id);
+        }
+    }
+
+    // When group type changes from course to standard, make sure that tutors
+    // are demoted to members.
+    // @todo: avoid mentioning roles other than 'admin', 'member' except in grouptype
+    // classes, unless grouptypes disappear soon.
+    if ($old->grouptype == 'course' && $new->grouptype != 'course') {
+        set_field('group_member', 'role', 'member', 'group', $new->id, 'role', 'tutor');
+    }
+
+    // When a group changes from public -> private or vice versa, set the
+    // appropriate access permissions on the group homepage view.
+    if ($old->public != $new->public) {
+        $homepageid = get_field('view', 'id', 'type', 'grouphomepage', 'group', $new->id);
+        if ($old->public && !$new->public) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'public');
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'loggedin',
+                'ctime'      => db_format_timestamp(time()),
+            ));
+        }
+        else if (!$old->public && $new->public) {
+            delete_records('view_access', 'view', $homepageid, 'accesstype', 'loggedin');
+            insert_record('view_access', (object) array(
+                'view'       => $homepageid,
+                'accesstype' => 'public',
+                'ctime'      => db_format_timestamp(time()),
+            ));
+        }
+    }
+
+    db_commit();
+
+}
+
+
 /**
  * Deletes a group.
  *
@@ -344,16 +498,29 @@ function group_create($data) {
  * simple. What is required to perform group deletion may change over time.
  *
  * @param int $groupid The group to delete
+ * @param string $shortname   shortname of the group
+ * @param string $institution institution of the group
  *
  * {{@internal Maybe later we can have a group_can_be_deleted function if 
  * necessary}}
  */
-function group_delete($groupid) {
+function group_delete($groupid, $shortname=null, $institution=null) {
+    if (empty($groupid) && !empty($institution) && !is_null($shortname) && strlen($shortname)) {
+        // External call to delete a group, check permission of $USER.
+        global $USER;
+        if (!$USER->can_edit_institution($institution)) {
+            throw new AccessDeniedException("group_delete: cannot delete a group in this institution");
+        }
+        $groupid = get_field('group', 'id', 'shortname', $shortname, 'institution', $institution);
+    }
+
     $groupid = group_param_groupid($groupid);
     update_record('group',
         array(
             'deleted' => 1,
             'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+            'shortname' => null,
+            'institution' => null,
         ),
         array(
             'id' => $groupid,
@@ -446,6 +613,96 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     foreach ($interactions as $interaction) {
         interaction_instance_from_id($interaction)->interaction_remove_user($userid);
     }
+}
+
+/**
+ * Completely update the membership of a group
+ *
+ * @param int $groupid ID of group
+ * @param array $members list of members and roles, structured like this:
+ *            array(
+ *                userid => role,
+ *                userid => role,
+ *                ...
+ *            )
+ */
+function group_update_members($groupid, $members) {
+    global $USER;
+
+    $groupid = group_param_groupid($groupid);
+
+    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+        throw new NotFoundException("group_update_members: group not found: $groupid");
+    }
+
+    if (($group->institution && !$USER->can_edit_institution($group->institution))
+        || (!$group->institution && !$USER->get('admin'))) {
+        throw new AccessDeniedException("group_update_members: access denied");
+    }
+
+    if (!is_array($members)) {
+        throw new SystemException("group_update_members: members must be an array");
+    }
+
+    $badroles = array_unique(array_diff($members, array_keys(group_get_role_info($groupid))));
+
+    if (!empty($badroles)) {
+        throw new UserException("group_update_members: invalid role(s) specified for group $group->name (id $groupid): " . join(', ', $badroles));
+    }
+
+    if (!in_array('admin', $members)) {
+        $groupname = get_field('group', 'name', 'id', $groupid);
+        throw new UserException("group_update_members: no group admins listed for group $group->name (id $groupid)");
+    }
+
+    // Check the new members list for invalid users
+
+    if (!empty($members)) {
+        $userids = array_map('intval', array_keys($members));
+        if ($group->institution) {
+            $gooduserids = get_column_sql('
+                SELECT usr
+                FROM {usr_institution}
+                WHERE usr IN (' . join(',', $userids) . ') AND institution = ?',
+                array($group->institution)
+            );
+            if ($baduserids = array_diff($userids, $gooduserids)) {
+                throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+            }
+        }
+        else {
+            $gooduserids = get_column_sql('
+                SELECT id FROM {usr} WHERE id IN (' . join(',', $userids) . ') AND deleted = 0',
+                array()
+            );
+            if ($baduserids = array_diff($userids, $gooduserids)) {
+                throw new UserException("group_update_members: some new members do not exist: " . join(',', $baduserids));
+            }
+        }
+    }
+
+    // Update group members
+
+    $oldmembers = get_records_assoc('group_member', 'group', $groupid, '', 'member,role');
+
+    db_begin();
+
+    foreach ($members as $userid => $role) {
+        if (!isset($oldmembers[$userid])) {
+            group_add_user($groupid, $userid, $role);
+        }
+        else if ($oldmembers[$userid]->role != $role) {
+            set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+        }
+    }
+
+    foreach (array_keys($oldmembers) as $userid) {
+        if (!isset($members[$userid])) {
+            group_remove_user($groupid, $userid, true);
+        }
+    }
+
+    db_commit();
 }
 
 /**
