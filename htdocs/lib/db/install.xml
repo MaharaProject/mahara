@@ -729,6 +729,35 @@
                 <INDEX NAME="ctimeix" UNIQUE="false" FIELDS="ctime"/>
             </INDEXES>
         </TABLE>
+        <TABLE NAME="favorite">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="ownershortuk" UNIQUE="true" FIELDS="owner,shortname"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="favorite_usr">
+            <FIELDS>
+                <FIELD NAME="favorite" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+               <KEY NAME="primary" TYPE="primary" FIELDS="favorite,usr" />
+               <KEY NAME="favoritefk" TYPE="foreign" FIELDS="favorite" REFTABLE="favorite" REFFIELDS="id" />
+               <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <!-- site content stuff -->
         <!-- 
         <TABLE NAME="site_file">
