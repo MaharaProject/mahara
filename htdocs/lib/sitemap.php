@@ -74,6 +74,15 @@ class Sitemap {
         // on the first of the month, or if forced, generate the full sitemap
         if (date("d") == 1 || $forcefull === true) {
             $this->date_to_check = null;
+
+            // remove all content from the sitemaps directory so that
+            // only newly created sitemaps are added to the index
+            $sitemaps = glob(get_config('docroot') .'/sitemaps/sitemap_*.xml*');
+            foreach ($sitemaps as $sitemap) {
+                if (!unlink($sitemap)) {
+                    log_warn(sprintf("Failed to remove sitemap: %s, please check directory and file permissions.", basename($sitemap)));
+                }
+            }
         } // otherwise limit to 'yesterday'
         else {
             $this->date_to_check = date("Y-m-d", strtotime('yesterday'));
@@ -187,50 +196,50 @@ class Sitemap {
 
         // step through each sitemap we have generated
         foreach ($this->sitemaps as $key => $sitemap) {
-            $filename = sprintf("%ssitemaps/sitemap_%d.xml", get_config('docroot'), $key);
+            $filename = sprintf("%ssitemaps/sitemap_%s_%d.xml", get_config('docroot'), date("Ymd"), $key);
             // if the save succeeded, add it to the index
             if ($sitemap->save($filename) !== false) {
-                $gzip = '';
                 // try to gzip the xml file
                 if (is_executable(get_config('pathtogzip'))) {
                     $command = sprintf('%s %s', get_config('pathtogzip'), escapeshellarg($filename));
                     $output = array();
                     exec($command, $output, $returnvar);
-                    if ($returnvar == 0) {
-                        $gzip = '.gz';
-                    }
-                    else {
+                    if ($returnvar != 0) {
                         log_warn('gzip command failed.');
                     }
                 }
                 else {
                     log_info('Skipping compression of xml file - gzip command not found, or not executable.');
                 }
-
-                // create a <sitemap> node for each one we're adding
-                $sitemapelement = $doc->createElement('sitemap');
-
-                // create and encode the url
-                $sitemapurl = sprintf("%ssitemaps/sitemap_%d.xml%s", get_config('wwwroot'), $key, $gzip);
-                $sitemapurl = utf8_encode(htmlspecialchars($sitemapurl, ENT_QUOTES, 'UTF-8'));
-
-                // add it to the <sitemap> node
-                $loc = $doc->createElement('loc', $sitemapurl);
-                $sitemapelement->appendChild($loc);
-
-                // formatted date, assumption that today is when they're all created
-                $sitemaplastmod = format_date(time(), 'strftimew3cdate');
-
-                // add it to the <sitemap> node
-                $lastmod = $doc->createElement('lastmod', $sitemaplastmod);
-                $sitemapelement->appendChild($lastmod);
-
-                // add this <sitemap> node to the parent index
-                $sitemapindex->appendChild($sitemapelement);
             }
             else {
                 throw new SystemException(sprintf("Saving of this sitemap file failed: %s", $filename));
             }
+        }
+
+        // get a list of sitemaps in the sitemap directory
+        $sitemaps = glob(get_config('docroot') .'/sitemaps/sitemap_*.xml*');
+        foreach ($sitemaps as $sitemap) {
+            // create a <sitemap> node for each one we're adding
+            $sitemapelement = $doc->createElement('sitemap');
+
+            // create and encode the url
+            $sitemapurl = sprintf("%ssitemaps/%s", get_config('wwwroot'), basename($sitemap));
+            $sitemapurl = utf8_encode(htmlspecialchars($sitemapurl, ENT_QUOTES, 'UTF-8'));
+
+            // add it to the <sitemap> node
+            $loc = $doc->createElement('loc', $sitemapurl);
+            $sitemapelement->appendChild($loc);
+
+            // formatted date, uses the files modified date
+            $sitemaplastmod = format_date(filemtime($sitemap), 'strftimew3cdate');
+
+            // add it to the <sitemap> node
+            $lastmod = $doc->createElement('lastmod', $sitemaplastmod);
+            $sitemapelement->appendChild($lastmod);
+
+            // add this <sitemap> node to the parent index
+            $sitemapindex->appendChild($sitemapelement);
         }
 
         // add the index to the main doc and save it
