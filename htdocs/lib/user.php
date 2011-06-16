@@ -2197,3 +2197,22 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
 
     return $result;
 }
+
+/**
+ * Get a list of userids from a list of usernames
+ *
+ * @param $usernames array list of usernames
+ *
+ * @returns array list of userids
+ */
+function username_to_id($usernames) {
+    if (!empty($usernames)) {
+        $ids = get_records_sql_menu('
+            SELECT username, id FROM {usr}
+            WHERE deleted = 0
+            AND LOWER(username) IN (' . join(',', array_fill(0, count($usernames), '?')) . ')',
+            array_map('strtolower', $usernames)
+        );
+    }
+    return empty($ids) ? array() : $ids;
+}
