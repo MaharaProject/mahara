@@ -32,11 +32,16 @@
 # Note:
 # If the } is after a single line comment //
 # then skip
+# NOte:
+# If the braces only contains [0-9]*
+# then it is most likely just a
+# regular expression, skip
 
 /}/{
     /[^)]\s*{[^}]*}/{p;d}
     /{\s*}/{p;d}
     /\/\/.*}/{p;d}
+    /{[0-9]}/{p;d}
 
 # \1 = indent for closing block
 # \2 = extra indent + code for 1st line (4 spaces)

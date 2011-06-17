@@ -11,9 +11,14 @@
 # Note:
 # If the pattern is found after a
 # single line comment //, then skip
+# Note:
+# If the brace only contains [0-9]*
+# then it is most likely part of a
+# regular expression, skip
 
 /)\s*{\([^}].*\)$/{
     /\/\/.*)\s*{\([^}].*\)/{p;d}
+    /)\s*{[0-9]*}/{p;d}
 
 # \1 = index of original line
 # \2 = statement up to and including '{'
