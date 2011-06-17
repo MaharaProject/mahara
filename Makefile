@@ -31,13 +31,14 @@ endif
 commitid := $(shell bash -c "git merge-base $(remote)/master HEAD")
 
 minaccept:
-	@echo "Running minimum acceptance test...";
-	find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
-	find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
-	if git rev-parse --verify HEAD 2>/dev/null; then git diff-index -p -M --cached $(commitid) -- ; fi | test/coding-standard-check.pl
+	@echo "Running minimum acceptance test..."
+	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	@find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
+	@if git rev-parse --verify HEAD 2>/dev/null; then git diff-index -p -M --cached $(commitid) -- ; fi | test/coding-standard-check.pl
 
 push: minaccept
-	if test -z "$(TAG)"; then \
+	@echo "Pushing the change upstream..."
+	@if test -z "$(TAG)"; then \
 		git push gerrit HEAD:refs/for/master; \
 	else \
 		git push gerrit HEAD:refs/for/master/$(TAG); \
