@@ -281,6 +281,11 @@ if (myGroups) {
         i++;
     });
 }
+var faves = {{$faves|safe}};
+if (faves) {
+    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithusers section=view}}'));
+    forEach(faves, renderPotentialPresetItem);
+}
 var loggedinindex = {{$loggedinindex}};
 function ensure_loggedin_access() {
     var oldaccess = getFirstElementByTagAndClassName(null, 'loggedin-container', 'accesslistitems');

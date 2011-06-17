@@ -105,6 +105,12 @@ if ($institution || $add) {
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
+
+            // The institution should have been removed from favourites lists when the members were removed,
+            // but make sure it's gone.
+            execute_sql('DELETE FROM {favorite_usr} WHERE favorite IN (SELECT id FROM {favorite} WHERE institution = ?)', array($values['i']));
+            delete_records('favorite', 'institution', $values['i']);
+
             execute_sql("UPDATE {group} SET institution = NULL, shortname = NULL WHERE institution = ?", array($values['i']));
             delete_records('auth_instance', 'institution', $values['i']);
             delete_records('host', 'institution', $values['i']);

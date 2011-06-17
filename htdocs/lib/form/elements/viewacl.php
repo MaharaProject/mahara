@@ -115,6 +115,21 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
     }
     
+    $faves = array();
+    foreach (get_user_favorites($USER->get('id')) as $u) {
+        $faves[] = array(
+            'type'   => 'user',
+            'id'     => $u->id,
+            'start'  => null,
+            'end'    => null,
+            'name'   => $u->name,
+            'preset' => false
+        );
+        if (mb_strlen($u->name) > 30) {
+            $faves[key($faves)]['shortname'] = str_shorten_text($u->name, 30, true);
+        }
+    }
+
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($value));
@@ -123,6 +138,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('allowcomments', $element['allowcomments']);
     $smarty->assign('allgroups', json_encode($allgroups));
     $smarty->assign('mygroups', json_encode($mygroups));
+    $smarty->assign('faves', json_encode($faves));
     return $smarty->fetch('form/viewacl.tpl');
 }
 

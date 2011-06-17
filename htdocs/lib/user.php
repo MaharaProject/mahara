@@ -1075,6 +1075,12 @@ function delete_user($userid) {
         WHERE owner = ?
         OR requester = ?', array($userid, $userid));
 
+    // Delete the user from others' favourites lists
+    delete_records('favorite_usr', 'usr', $userid);
+    // Delete favourites lists owned by the user
+    execute_sql('DELETE FROM {favorite_usr} WHERE favorite IN (SELECT id FROM {favorite} WHERE owner = ?)', array($userid));
+    delete_records('favorite', 'owner', $userid);
+
     delete_records('artefact_access_usr', 'usr', $userid);
     delete_records('auth_remote_user', 'localusr', $userid);
     delete_records('import_queue', 'usr', $userid);
@@ -2215,4 +2221,139 @@ function username_to_id($usernames) {
         );
     }
     return empty($ids) ? array() : $ids;
+}
+
+/**
+ * Update or create a favourites list for a user
+ *
+ * @param $owner integer owner of the favorites list
+ * @param $shortname string name for the favorites list
+ * @param $institution string institution with permission to update the favorites list
+ * @param $userlist array array of userids to add to the list
+ */
+function update_favorites($owner, $shortname, $institution, $userlist) {
+    global $USER;
+
+    if (empty($institution)) {
+        // User-editable favorites lists are not implemented yet.
+        return;
+    }
+
+    if (!$USER->can_edit_institution($institution)) {
+        throw new AccessDeniedException("update_favorites: access denied");
+    }
+
+    $owner = (int) $owner;
+
+    if ($institution == 'mahara') {
+        if (!record_exists('usr', 'id', $owner, 'deleted', 0)) {
+            throw new NotFoundException("update_favorites: user $owner not found");
+        }
+    }
+    else {
+        $sql = '
+            SELECT u.id
+            FROM {usr} u JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?
+            WHERE u.id = ? AND u.deleted = 0';
+        if (!record_exists_sql($sql, array($institution, $owner))) {
+            throw new NotFoundException("update_favorites: user $owner not found in institution $institution");
+        }
+    }
+
+    $listdata = get_record('favorite', 'owner', $owner, 'shortname', $shortname);
+
+    if ($listdata && $listdata->institution != $institution) {
+        throw new AccessDeniedException("update_favorites: user $owner already has a favorites list called $shortname which is updated by another institution");
+    }
+
+    if (!is_array($userlist)) {
+        throw new SystemException("update_favorites: userlist is not an array");
+    }
+
+    if (!empty($userlist)) {
+        $idstr = join(',', array_map('intval', $userlist));
+        if ($institution == 'mahara') {
+            $userids = get_column_sql("SELECT id FROM {usr} WHERE id IN ($idstr) AND deleted = 0", array());
+        }
+        else {
+            // Remove anyone who is not in this institution
+            $userids = get_column_sql('
+                SELECT u.id
+                FROM {usr} u JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?
+                WHERE u.id IN (' . $idstr . ') AND u.deleted = 0',
+                array($institution)
+            );
+        }
+    }
+
+    if (empty($userids)) {
+        $userids = array();
+    }
+
+    db_begin();
+
+    $now = db_format_timestamp(time());
+
+    if ($listdata) {
+        delete_records('favorite_usr', 'favorite', $listdata->id);
+        $listdata->mtime = $now;
+        update_record('favorite', $listdata, 'id');
+    }
+    else {
+        $listdata = (object) array(
+            'owner'       => $owner,
+            'shortname'   => $shortname,
+            'institution' => $institution,
+            'ctime'       => $now,
+            'mtime'       => $now,
+        );
+        $listdata->id = insert_record('favorite', $listdata, 'id', true);
+    }
+
+    foreach ($userids as $userid) {
+        insert_record('favorite_usr', (object) array('favorite' => $listdata->id, 'usr' => $userid));
+    }
+
+    db_commit();
+}
+
+/**
+ * Returns a list of a user's favourite users for display, most recently
+ * updated users first.
+ *
+ * @param $userid integer id of a user to get favourites for
+ * @param $limit integer
+ * @param $offset integer
+ *
+ * @returns array of stdclass objects containing userids & names
+ */
+function get_user_favorites($userid, $limit=5, $offset=0) {
+    $users = get_records_sql_array('
+        SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname
+        FROM {usr} u JOIN (
+            SELECT fu.usr, MAX(f.mtime) AS mtime
+            FROM {favorite_usr} fu JOIN {favorite} f ON fu.favorite = f.id
+            WHERE f.owner = ?
+            GROUP BY fu.usr
+        ) uf ON uf.usr = u.id
+        WHERE u.deleted = 0
+        ORDER BY uf.mtime DESC, u.preferredname, u.firstname, u.lastname',
+        array($userid),
+        $offset,
+        $limit
+    );
+
+    if (empty($users)) {
+        return array();
+    }
+
+    foreach ($users as &$u) {
+        $u->name = display_name($u);
+        unset($u->username);
+        unset($u->preferredname);
+        unset($u->firstname);
+        unset($u->lastname);
+    }
+
+    return $users;
 }
