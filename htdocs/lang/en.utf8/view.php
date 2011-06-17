@@ -142,6 +142,7 @@ $string['share'] = 'Share';
 $string['sharewith'] = 'Share with';
 $string['accesslist'] = 'Access list';
 $string['sharewithmygroups'] = 'Share with My Groups';
+$string['sharewithusers'] = 'Share with users';
 $string['shareview'] = 'Share page';
 $string['otherusersandgroups'] = 'Share with other users and groups';
 $string['moreoptions'] = 'Advanced Options';

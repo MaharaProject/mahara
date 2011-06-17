@@ -2316,3 +2316,44 @@ function update_favorites($owner, $shortname, $institution, $userlist) {
 
     db_commit();
 }
+
+/**
+ * Returns a list of a user's favourite users for display, most recently
+ * updated users first.
+ *
+ * @param $userid integer id of a user to get favourites for
+ * @param $limit integer
+ * @param $offset integer
+ *
+ * @returns array of stdclass objects containing userids & names
+ */
+function get_user_favorites($userid, $limit=5, $offset=0) {
+    $users = get_records_sql_array('
+        SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname
+        FROM {usr} u JOIN (
+            SELECT fu.usr, MAX(f.mtime) AS mtime
+            FROM {favorite_usr} fu JOIN {favorite} f ON fu.favorite = f.id
+            WHERE f.owner = ?
+            GROUP BY fu.usr
+        ) uf ON uf.usr = u.id
+        WHERE u.deleted = 0
+        ORDER BY uf.mtime DESC, u.preferredname, u.firstname, u.lastname',
+        array($userid),
+        $offset,
+        $limit
+    );
+
+    if (empty($users)) {
+        return array();
+    }
+
+    foreach ($users as &$u) {
+        $u->name = display_name($u);
+        unset($u->username);
+        unset($u->preferredname);
+        unset($u->firstname);
+        unset($u->lastname);
+    }
+
+    return $users;
+}
