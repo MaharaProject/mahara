@@ -139,6 +139,12 @@ if ($usertype == 'requesters') {
         'value' => get_string('declinerequests', 'admin'),
     );
 }
+if ($usertype == 'nonmembers' && $USER->get('admin')) {
+    $userlistform['elements']['add'] = array(
+        'type' => 'submit',
+        'value' => get_string('addmembers', 'admin'),
+    );
+}
 
 $userlistform = pieform($userlistform);
 
@@ -177,7 +183,7 @@ function institutionusers_submit(Pieform $form, $values) {
     } else if ($values['usertype'] == 'requesters') {
         $action = !empty($values['reject']) ? 'declineRequestFromUser' : 'addUserAsMember';
     } else {
-        $action = 'inviteUser';
+        $action = (!empty($values['add']) && $USER->get('admin')) ? 'addUserAsMember' : 'inviteUser';
     }
 
 
