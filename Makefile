@@ -21,10 +21,10 @@ else
 remote := $(shell bash -c "git config --get branch.$(branch).remote" )
 endif
 
-ifeq (., $(remote))
+ifeq (".", "$(remote)")
 remote := origin
 endif
-ifeq ("", $(remote))
+ifeq ("", "$(remote)")
 remote := origin
 endif
 
