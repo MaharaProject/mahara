@@ -1,6 +1,6 @@
 <td class="friendinfo{if $user->pending} pending rel{/if}">
 	<ul class="actionlist">
-      {if $user->institutions}<li>{$user->institutions}</li>{/if}
+      {if $user->institutions}<li>{$user->institutions|safe}</li>{/if}
       {if $user->pending}
 		<li class="approvefriend">{$user->accept|safe}</li>
 		<li>
