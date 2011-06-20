@@ -150,38 +150,63 @@ function parse_name_query($text) {
 }
 
 function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
-    // In admin search, the search string is interpreted as either a
-    // name search or an email search depending on its contents
-    $queries = array();
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+
     $constraints = array();
-    if (!empty($search->query)) {
-        list($words, $fullnames) = parse_name_query($search->query);
-        foreach ($words as $word) {
-            if (strpos($word, '@') !== false) {
-                $queries[] = array('field' => 'email',
-                                   'type' => 'contains',
-                                   'string' => $word);
-            } else {
-                $queries[] = array('field' => 'firstname',
-                                   'type' => 'contains',
-                                   'string' => $word);
-                $queries[] = array('field' => 'lastname',
-                                   'type' => 'contains',
-                                   'string' => $word);
-                $queries[] = array('field' => 'username',
-                                   'type' => 'contains',
-                                   'string' => $word);
+
+    if ($plugin == 'internal') {
+        // For the internal plugin, just pass the raw query through as a string, it
+        // is parsed in the plugin.
+        $queries = $search->query;
+    }
+    else {
+        // In admin search, the search string is interpreted as either a
+        // name search or an email search depending on its contents
+        $queries = array();
+        if (!empty($search->query)) {
+            list($words, $fullnames) = parse_name_query($search->query);
+            foreach ($words as $word) {
+                if (strpos($word, '@') !== false) {
+                    $queries[] = array(
+                        'field' => 'email',
+                        'type' => 'contains',
+                        'string' => $word
+                    );
+                }
+                else {
+                    $queries[] = array(
+                        'field' => 'firstname',
+                        'type' => 'contains',
+                        'string' => $word
+                    );
+                    $queries[] = array(
+                        'field' => 'lastname',
+                        'type' => 'contains',
+                        'string' => $word
+                    );
+                    $queries[] = array(
+                        'field' => 'username',
+                        'type' => 'contains',
+                        'string' => $word
+                    );
+                }
+            }
+            foreach ($fullnames as $n) {
+                $constraints[] = array(
+                    'field' => 'firstname',
+                    'type' => 'contains',
+                    'string' => $n[0]
+                );
+                $constraints[] = array(
+                    'field' => 'lastname',
+                    'type' => 'contains',
+                    'string' => $n[1]
+                );
             }
         }
-        foreach ($fullnames as $n) {
-            $constraints[] = array('field' => 'firstname',
-                                   'type' => 'contains',
-                                   'string' => $n[0]);
-            $constraints[] = array('field' => 'lastname',
-                                   'type' => 'contains',
-                                   'string' => $n[1]);
-        }
     }
+
     if (!empty($search->f)) {
         $constraints[] = array('field' => 'firstname',
                                'type' => 'starts',
@@ -192,6 +217,7 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
                                'type' => 'starts',
                                'string' => $search->l);
     }
+
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin')) {
@@ -218,7 +244,11 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
                                'string' => $search->institution);
     }
     
-    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+    $results = call_static_method(
+        generate_class_name('search', $plugin), 'admin_search_user',
+        $queries, $constraints, $offset, $limit, $sortby, $sortdir
+    );
+
     if ($results['count']) {
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
@@ -227,6 +257,7 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
             }
         }
     }
+
     return $results;
 }
 
@@ -285,14 +316,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $smarty->assign('cols', $cols);
     $smarty->assign('ncols', count($cols));
     return $smarty->fetch('searchresulttable.tpl');
-}
-
-
-function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, $sortdir) {
-    $plugin = get_config('searchplugin');
-    safe_require('search', $plugin);
-    return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
-                              $queries, $constraints, $offset, $limit, $sortfield, $sortdir);
 }
 
 
