@@ -2271,19 +2271,10 @@ function update_favorites($owner, $shortname, $institution, $userlist) {
     }
 
     if (!empty($userlist)) {
-        $idstr = join(',', array_map('intval', $userlist));
-        if ($institution == 'mahara') {
-            $userids = get_column_sql("SELECT id FROM {usr} WHERE id IN ($idstr) AND deleted = 0", array());
-        }
-        else {
-            // Remove anyone who is not in this institution
-            $userids = get_column_sql('
-                SELECT u.id
-                FROM {usr} u JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?
-                WHERE u.id IN (' . $idstr . ') AND u.deleted = 0',
-                array($institution)
-            );
-        }
+        $userids = get_column_sql('
+            SELECT id FROM {usr} WHERE id IN (' . join(',', array_fill(0, count($userlist), '?')) . ') AND deleted = 0',
+            array_map('intval', $userlist)
+        );
     }
 
     if (empty($userids)) {
