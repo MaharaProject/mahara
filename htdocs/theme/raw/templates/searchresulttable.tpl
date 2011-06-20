@@ -14,6 +14,8 @@
           {foreach from=$cols key=f item=c}
           {if !$c.name}
             <th></th>
+          {elseif $c.nosort}
+            <th>{$c.name}</th>
           {else}
             <th class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}">
               <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{$c.name}</a>

@@ -301,6 +301,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         }
         $cols['institution'] = array(
             'name'     => get_string('institution'),
+            'nosort'   => get_config('usersallowedmultipleinstitutions'),
             'template' => $template,
         );
     }
