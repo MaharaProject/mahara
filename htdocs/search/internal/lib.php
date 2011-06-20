@@ -107,18 +107,6 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
-        safe_require('artefact', 'internal');
-
-        // Get the list of searchable profile fields from the internal artefact
-        $required   = array_keys(ArtefactTypeProfile::get_always_searchable_fields());
-        $optional   = array_diff(array_keys(ArtefactTypeProfile::get_searchable_fields()), $required);
-        $required[] = 'username'; // Not a profile field, but used in the search query.
-
-        // Get a list of match expressions to use in the WHERE clause
-        $matches = new StdClass;
-        foreach (array_merge($required, $optional) as $f) {
-            $matches->{$f} = self::match_user_field_expression($f, 'u');
-        }
 
         $data = self::prepare_search_user_options($data);
         $sql = '
@@ -150,32 +138,10 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql .= "
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
-        $querydata = self::split_query_string(strtolower(trim($query_string)));
-        $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
-        $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
 
-        $termsql = "$matches->preferredname
-                    OR (
-                        (u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value != '1')
-                        AND ($matches->firstname OR $matches->lastname)
-                    )
-                    OR ($searchusernamesallowed AND $matches->username)";
+        list($namesql, $values) = self::name_search_sql($query_string);
 
-        if ($optional) {
-            foreach ($optional as $f) {
-                $termsql .= "
-                    OR {$matches->$f}";
-            }
-        }
-
-        $values = array();
-        foreach ($querydata as $term) {
-            $where .= '
-                AND (
-                    ' . $termsql . '
-                )';
-            $values = array_pad($values, count($values) + 4 + count($optional), $term);
-        }
+        $where .= $namesql;
 
         if (isset($data['exclude'])) {
             $where .= '
@@ -221,6 +187,60 @@ class PluginSearchInternal extends PluginSearch {
 
         return $result;
     }
+
+
+
+    /**
+     * Returns a snippet of an sql WHERE clause to filter users whose (visible)
+     * names match the terms in a given query string.
+     */
+    function name_search_sql($query_string, $usralias='u', $usrprefalias='h') {
+
+        safe_require('artefact', 'internal');
+
+        // Get the list of searchable profile fields from the internal artefact
+        $required   = array_keys(ArtefactTypeProfile::get_always_searchable_fields());
+        $optional   = array_diff(array_keys(ArtefactTypeProfile::get_searchable_fields()), $required);
+        $required[] = 'username'; // Not a profile field, but used in the search query.
+
+        // Get a list of match expressions to use in the WHERE clause
+        $matches = new StdClass;
+        foreach (array_merge($required, $optional) as $f) {
+            $matches->{$f} = self::match_user_field_expression($f, $usralias);
+        }
+
+        $querydata = self::split_query_string(strtolower(trim($query_string)));
+        $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
+        $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
+
+        $termsql = "$matches->preferredname
+                    OR (
+                        ($usralias.preferredname IS NULL OR $usralias.preferredname = '' OR NOT $hidenameallowed OR $usrprefalias.value != '1')
+                        AND ($matches->firstname OR $matches->lastname)
+                    )
+                    OR ($searchusernamesallowed AND $matches->username)";
+
+        if ($optional) {
+            foreach ($optional as $f) {
+                $termsql .= "
+                    OR {$matches->$f}";
+            }
+        }
+
+        $where = '';
+        $values = array();
+        foreach ($querydata as $term) {
+            $where .= '
+                AND (
+                    ' . $termsql . '
+                )';
+            $values = array_pad($values, count($values) + 4 + count($optional), $term);
+        }
+
+        return array($where, $values);
+    }
+
+
 
     private static function match_user_field_expression($field, $alias) {
         if (get_config_plugin('search', 'internal', 'exactusersearch')) {
