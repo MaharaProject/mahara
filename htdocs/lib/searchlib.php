@@ -333,29 +333,51 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
  *
  */
 function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null) {
-    $queries = array();
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+
     $constraints = array();
-    if (!empty($query)) {
-        list($words, $fullnames) = parse_name_query($query);
-        foreach ($words as $word) {
-            $queries[] = array('field' => 'firstname',
-                               'type' => 'contains',
-                               'string' => $word);
-            $queries[] = array('field' => 'lastname',
-                               'type' => 'contains',
-                               'string' => $word);
-        }
-        foreach ($fullnames as $n) {
-            $constraints[] = array('field' => 'firstname',
-                                   'type' => 'contains',
-                                   'string' => $n[0]);
-            $constraints[] = array('field' => 'lastname',
-                                   'type' => 'contains',
-                                   'string' => $n[1]);
+    if ($plugin == 'internal') {
+        // Pass the raw query string through to group_search_user; parsing of the
+        // query depends on the plugin configuration.
+        $queries = $query;
+    }
+    else {
+        $queries = array();
+        if (!empty($query)) {
+            list($words, $fullnames) = parse_name_query($query);
+            foreach ($words as $word) {
+                $queries[] = array(
+                    'field'  => 'firstname',
+                    'type'   => 'contains',
+                    'string' => $word
+                );
+                $queries[] = array(
+                    'field'  => 'lastname',
+                    'type'   => 'contains',
+                    'string' => $word
+                );
+            }
+            foreach ($fullnames as $n) {
+                $constraints[] = array(
+                    'field'  => 'firstname',
+                    'type'   => 'contains',
+                    'string' => $n[0]
+                );
+                $constraints[] = array(
+                    'field'  => 'lastname',
+                    'type'   => 'contains',
+                    'string' => $n[1]
+                );
+            }
         }
     }
 
-    $results = group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $order);
+    $results = call_static_method(
+        generate_class_name('search', $plugin), 'group_search_user',
+        $group, $queries, $constraints, $offset, $limit, $membershiptype, $order
+    );
+
     if ($results['count']) {
         $userids = array_map(create_function('$a', 'return $a["id"];'), $results['data']);
         $introductions = get_records_sql_assoc("SELECT \"owner\", title
@@ -374,13 +396,6 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
     return $results;
 }
 
-
-function group_user_search($group, $queries, $constraints, $offset, $limit, $membershiptype, $order=null) {
-    $plugin = get_config('searchplugin');
-    safe_require('search', $plugin);
-    return call_static_method(generate_class_name('search', $plugin), 'group_search_user', 
-                              $group, $queries, $constraints, $offset, $limit, $membershiptype, $order);
-}
 
 /**
  * Given a query string and limits, return an array of matching groups using the

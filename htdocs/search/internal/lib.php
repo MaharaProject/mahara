@@ -467,29 +467,16 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype, $order=null) {
-        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
-        $searchsql = '';
-        $values = array();
-        if (!empty($queries)) {
-            $ilike = db_ilike();
-            $searchsql .= ' AND ( ';
-            $str = array();
-            foreach ($queries as $f) {
-                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
-                    continue; // skip this field as it fails validation
-                }
-                $str[] = 'u.' . $f['field'] 
-                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-            }
-            $searchsql .= join(' OR ', $str) . ') ';
-        }
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order=null) {
+
+        list($searchsql, $values) = self::name_search_sql($query_string);
 
         if ($membershiptype == 'nonmember') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
             $from = '
                 FROM {usr} u
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)';
             $values[] = $group;
@@ -500,6 +487,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
             $from = '
                 FROM {usr} u
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)
                     AND NOT u.id IN (SELECT member FROM {group_member_invite} gmi WHERE gmi.group = ?)';
@@ -514,6 +502,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_request} gmr ON (gmr.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmr.group = ?';
             $values[] = $group;
@@ -526,6 +515,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_invite} gmi ON (gmi.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmi.group = ?';
             $values[] = $group;
@@ -538,6 +528,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member} gm ON (gm.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gm.group = ?';
             $values[] = $group;
