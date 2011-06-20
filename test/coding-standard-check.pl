@@ -52,8 +52,8 @@ while (<>) {
         if (/^([<>])\1{6} |^={7}$/) {
             bad_line("unresolved merge conflict", $_);
         }
-        if (/\}\s*else/) {
-            bad_line("cuddled elses are against Mahara coding guidelines", $_);
+        if (/\}\s*(else|catch)/) {
+            bad_line("cuddled elses/catches are against Mahara coding guidelines", $_);
         }
         if (/elseif/) {
             bad_line("a single space is requred between an else and an if on the same line", $_);
