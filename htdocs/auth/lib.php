@@ -1014,6 +1014,9 @@ function auth_get_login_form() {
             'type'  => 'submit',
             'value' => get_string('login')
         ),
+        'register' => array(
+            'value' => '<div id="login-helplinks">' . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+        ),
         'login_submitted' => array(
             'type'  => 'hidden',
             'value' => 1
@@ -1054,6 +1057,7 @@ function auth_get_login_form() {
 
     $form = array(
         'name'           => 'login',
+        'renderer'       => 'div',
         'method'         => 'post',
         'action'         => $action,
         'plugintype'     => 'auth',
