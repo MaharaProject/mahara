@@ -1669,187 +1669,187 @@ function pieform_get_help(Pieform $form, $element) {
  */
 function admin_nav() {
     $menu = array(
-        array(
+        'adminhome' => array(
             'path'   => 'adminhome',
             'url'    => 'admin/',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configsite' => array(
             'path'   => 'configsite',
             'url'    => 'admin/site/options.php',
             'title'  => get_string('configsite', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'configsite/siteoptions' => array(
             'path'   => 'configsite/siteoptions',
             'url'    => 'admin/site/options.php',
             'title'  => get_string('siteoptions', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configsite/sitepages' => array(
             'path'   => 'configsite/sitepages',
             'url'    => 'admin/site/pages.php',
             'title'  => get_string('editsitepages', 'admin'),
             'weight' => 20
         ),
-        array(
+        'configsite/sitemenu' => array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
             'title'  => get_string('menus', 'admin'),
             'weight' => 30,
         ),
-        array(
+        'configsite/networking' => array(
             'path'   => 'configsite/networking',
             'url'    => 'admin/site/networking.php',
             'title'  => get_string('networking', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'configsite/siteviews' => array(
             'path'   => 'configsite/siteviews',
             'url'    => 'admin/site/views.php',
             'title'  => get_string('Views', 'view'),
             'weight' => 50,
         ),
-        array(
+        'configsite/share' => array(
             'path'   => 'configsite/share',
             'url'    => 'admin/site/shareviews.php',
             'title'  => get_string('share', 'view'),
             'weight' => 60,
         ),
-        array(
+        'configsite/sitefiles' => array(
             'path'   => 'configsite/sitefiles',
             'url'    => 'artefact/file/sitefiles.php',
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 70,
         ),
-        array(
+        'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
             'title'  => get_string('users'),
             'weight' => 30,
         ),
-        array(
+        'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configusers/suspendedusers' => array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
             'title'  => get_string('suspendedusers', 'admin'),
             'weight' => 15,
         ),
-        array(
+        'configusers/staffusers' => array(
             'path'   => 'configusers/staffusers',
             'url'    => 'admin/users/staff.php',
             'title'  => get_string('sitestaff', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'configusers/adminusers' => array(
             'path'   => 'configusers/adminusers',
             'url'    => 'admin/users/admins.php',
             'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
-        array(
+        'configusers/adminnotifications' => array(
             'path'   => 'configusers/adminnotifications',
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
             'weight' => 50,
         ),
-        array(
+        'configusers/uploadcsv' => array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
             'title'  => get_string('uploadcsv', 'admin'),
             'weight' => 60,
         ),
-        array(
+        'managegroups' => array(
             'path'   => 'managegroups',
             'url'    => 'admin/groups/groups.php',
             'title'  => get_string('groups', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'managegroups/groups' => array(
             'path'   => 'managegroups/groups',
             'url'    => 'admin/groups/groups.php',
             'title'  => get_string('administergroups', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'managegroups/categories' => array(
             'path'   => 'managegroups/categories',
             'url'    => 'admin/groups/groupcategories.php',
             'title'  => get_string('groupcategories', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'manageinstitutions' => array(
             'path'   => 'manageinstitutions',
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('institutions', 'admin'),
             'weight' => 50,
         ),
-        array(
+        'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('institutions', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
             'title'  => get_string('Members', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'manageinstitutions/institutionstaff' => array(
             'path'   => 'manageinstitutions/institutionstaff',
             'url'    => 'admin/users/institutionstaff.php',
             'title'  => get_string('institutionstaff', 'admin'),
             'weight' => 30,
         ),
-        array(
+        'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',
             'url'    => 'admin/users/institutionadmins.php',
             'title'  => get_string('institutionadmins', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
             'title'  => get_string('Views', 'view'),
             'weight' => 50,
         ),
-        array(
+        'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
             'url'    => 'view/institutionshare.php',
             'title'  => get_string('share', 'view'),
             'weight' => 60,
         ),
-        array(
+        'manageinstitutions/institutionfiles' => array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 70,
         ),
-        array(
+        'configextensions' => array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('Extensions', 'admin'),
             'weight' => 60,
         ),
-        array(
+        'configextensions/pluginadmin' => array(
             'path'   => 'configextensions/pluginadmin',
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configextensions/filters' => array(
             'path'   => 'configextensions/filters',
             'url'    => 'admin/extensions/filter.php',
             'title'  => get_string('htmlfilters', 'admin'),
@@ -1868,85 +1868,85 @@ function admin_nav() {
 function institutional_admin_nav() {
 
     return array(
-        array(
+        'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
             'title'  => get_string('configusers', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
         ),
-        array(
+        'configusers/suspendedusers' => array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
             'title'  => get_string('suspendedusers', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
             'weight' => 30,
         ),
-        array(
+        'configusers/uploadcsv' => array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
             'title'  => get_string('uploadcsv', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'manageinstitutions' => array(
             'path'   => 'manageinstitutions',
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('manageinstitutions', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('settings'),
             'weight' => 10,
         ),
-        array(
+        'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
             'title'  => get_string('Members', 'admin'),
             'weight' => 20,
         ),
-        array(
+        'manageinstitutions/institutionstaff' => array(
             'path'   => 'manageinstitutions/institutionstaff',
             'url'    => 'admin/users/institutionstaff.php',
             'title'  => get_string('institutionstaff', 'admin'),
             'weight' => 30,
         ),
-        array(
+        'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',
             'url'    => 'admin/users/institutionadmins.php',
             'title'  => get_string('institutionadmins', 'admin'),
             'weight' => 40,
         ),
-        array(
+        'manageinstitutions/adminnotifications' => array(
             'path'   => 'manageinstitutions/adminnotifications',
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 50,
         ),
-        array(
+        'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
             'title'  => get_string('Views', 'view'),
             'weight' => 60,
         ),
-        array(
+        'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
             'url'    => 'view/institutionshare.php',
             'title'  => get_string('share', 'view'),
             'weight' => 70,
         ),
-        array(
+        'manageinstitutions/institutionfiles' => array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
