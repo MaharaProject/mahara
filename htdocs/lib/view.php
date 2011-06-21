@@ -551,6 +551,9 @@ class View {
     }
 
     public function get_owner_object() {
+        if (is_null($this->owner)) {
+            return false;
+        }
         if (!isset($this->ownerobj)) {
             $this->ownerobj = get_record('usr', 'id', $this->get('owner'));
         }
