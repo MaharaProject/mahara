@@ -232,7 +232,7 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
 
 
 function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
-    global $USER;
+    global $USER, $THEME;
 
     $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
 
@@ -260,8 +260,18 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
-        $cols['institution'] = array('name'     => get_string('institution'),
-                                     'template' => '{if !$r.institutions}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !$r.requested}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !$r.invitedby}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}');
+        $template = '';
+        foreach ($THEME->inheritance as $themedir) {
+            $tpl = get_config('docroot') . 'theme/' . $themedir . '/templates/admin/users/searchinstitutioncolumn.tpl';
+            if (is_readable($tpl)) {
+                $template = file_get_contents($tpl);
+                break;
+            }
+        }
+        $cols['institution'] = array(
+            'name'     => get_string('institution'),
+            'template' => $template,
+        );
     }
 
     $smarty = smarty_core();
