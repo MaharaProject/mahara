@@ -173,6 +173,16 @@ if (count($authinstances) > 1) {
 
 }
 
+$tags = get_column('usr_tag', 'tag', 'usr', $user->id);
+
+$elements['tags'] = array(
+    'defaultvalue' => $tags,
+    'type'         => 'tags',
+    'title'        => get_string('tags'),
+    'description'  => get_string('tagsdesc'),
+    'help'         => true,
+);
+
 $elements['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('savechanges','admin'),
@@ -366,7 +376,25 @@ function edituser_site_submit(Pieform $form, $values) {
         unset($userobj);
     }
 
+    db_begin();
     update_record('usr', $user);
+
+    delete_records('usr_tag', 'usr', $user->id);
+    if (is_array($values['tags'])) {
+        foreach(array_unique($values['tags']) as $tag) {
+            if (empty($tag)) {
+                continue;
+            }
+            insert_record(
+                'usr_tag',
+                (object) array(
+                    'usr' => $user->id,
+                    'tag' => strtolower($tag),
+                )
+            );
+        }
+    }
+    db_commit();
 
     redirect('/admin/users/edit.php?id='.$user->id);
 }
