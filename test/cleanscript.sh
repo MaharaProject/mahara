@@ -13,15 +13,6 @@ CODEFILES="php\|js\|css"
 IMAGEFILES="png\|gif\|jpe?g"
 
 for DIR in $*; do
-    if test ! -d "${DIR}"; then
-        echo "${DIR} is not a directory"
-        continue;
-    fi
-# TODO: Accept files as arguments
-# Won't need the find command
-# Just need to test against IMAGEFILES or CODEFILES
-# and do what is needed
-# this will be useful for running against changed files in patches
 
     find "${DIR}" -type f -regex ".*\.\(${IMAGEFILES}\)" | xargs -r chmod ugo-x
 
