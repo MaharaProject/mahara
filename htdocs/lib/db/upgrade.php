@@ -2401,10 +2401,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $index->setAttributes(XMLDB_KEY_UNIQUE, array('institution', 'shortname'));
         add_index($table, $index);
 
-        $table = new XMLDBTable('institution');
-        $field = new XMLDBField('allowinstitutionpublicviews');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
-        add_field($table, $field);
     }
 
     if ($oldversion < 2011061500) {
@@ -2429,6 +2425,13 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('favoritefk', XMLDB_KEY_FOREIGN, array('favorite'), 'favorite', array('id'));
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         create_table($table);
+    }
+
+    if ($oldversion < 2011062100) {
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('allowinstitutionpublicviews');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
     }
 
     return $status;
