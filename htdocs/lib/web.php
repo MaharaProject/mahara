@@ -2049,24 +2049,6 @@ function mahara_standard_nav() {
         ),
     );
 
-    $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
-    
-    if ($plugins = plugins_installed('artefact')) {
-        foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
-        }
-    }
-
-    if ($plugins = plugins_installed('interaction')) {
-        foreach ($plugins as &$plugin) {
-            safe_require('interaction', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
-        }
-    }
-    
     return $menu;
 }
 
@@ -2087,6 +2069,24 @@ function main_nav() {
         //   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
         //   weight: Where in the menu the item should be inserted. Larger number are to the right.
         $menu = mahara_standard_nav();
+    }
+
+    $menu = array_filter($menu, create_function('$a', 'return empty($a["ignore"]);'));
+
+    if ($plugins = plugins_installed('artefact')) {
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+
+    if ($plugins = plugins_installed('interaction')) {
+        foreach ($plugins as &$plugin) {
+            safe_require('interaction', $plugin->name);
+            $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
+            $menu = array_merge($menu, $plugin_menu);
+        }
     }
 
     // local_main_nav_update allows sites to customise the menu by munging the $menu array.
