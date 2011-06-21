@@ -2,55 +2,61 @@
 
 BASEDIR=$(dirname $0)
 
-DIR=$1
-if test -z "${DIR}"; then
+if test -z "$1"; then
     # Test that PWD is above BASEDIR/..
-    DIR="${PWD}"
+    set -- "${PWD}"
 fi
 
-if test ! -d "${DIR}"; then
-    echo "${DIR} is not a directory"
-    exit 1;
-fi
 
 
 CODEFILES="php\|js\|css"
 IMAGEFILES="png\|gif\|jpe?g"
 
-find "${DIR}" -type f -regex ".*\.\(${IMAGEFILES}\)" | xargs -r chmod ugo-x
+for DIR in $*; do
+    if test ! -d "${DIR}"; then
+        echo "${DIR} is not a directory"
+        continue;
+    fi
+# TODO: Accept files as arguments
+# Won't need the find command
+# Just need to test against IMAGEFILES or CODEFILES
+# and do what is needed
+# this will be useful for running against changed files in patches
 
-# Replace indented TAB's with four (4) spaces
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\t/    /g"
+    find "${DIR}" -type f -regex ".*\.\(${IMAGEFILES}\)" | xargs -r chmod ugo-x
 
-# Remove trailing whitespace
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\s*$//"
+    # Replace indented TAB's with four (4) spaces
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\t/    /g"
 
-# Remove windows/mac file endings
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r dos2unix
+    # Remove trailing whitespace
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\s*$//"
 
-# Move opening braces at start of line to line previous
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/gnuopenbraces.sed"
+    # Remove windows/mac file endings
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r dos2unix
 
-# Move statements on the same line as an opening brace to the next line
-# Won't alter empty braces (ie { })
-# Will ignore SQL code with {name}
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/inlineopenbraces.sed"
+    # Move opening braces at start of line to line previous
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/gnuopenbraces.sed"
 
-# Make sure closing braces are on a line by themselves (with an optional comment)
-# Won't alter empty braces (ie { })
-# Will also deal with cuddled elses
-# Will ignore SQL code with {name}
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/closebraces.sed"
+    # Move statements on the same line as an opening brace to the next line
+    # Won't alter empty braces (ie { })
+    # Will ignore SQL code with {name}
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/inlineopenbraces.sed"
 
-# Change elseif to else if
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/elseif/else if/"
+    # Make sure closing braces are on a line by themselves (with an optional comment)
+    # Won't alter empty braces (ie { })
+    # Will also deal with cuddled elses
+    # Will ignore SQL code with {name}
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -f "${BASEDIR}/closebraces.sed"
 
-# Make sure there is a space between condition and looping statements and the bracket
-# Make sure there is only one...
-find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\(if\|while\|for\) *(/\1 (/"
+    # Change elseif to else if
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/elseif/else if/"
 
-# Make sure there is a opening brace after a conditional or looping condition
-# Have support for multiline conditions
-# Would need to have an awk script to match the brackets of the condition
-#find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r awk ...
+    # Make sure there is a space between condition and looping statements and the bracket
+    # Make sure there is only one...
+    find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r sed -i -e "s/\(if\|while\|for\) *(/\1 (/"
 
+    # Make sure there is a opening brace after a conditional or looping condition
+    # Have support for multiline conditions
+    # Would need to have an awk script to match the brackets of the condition
+    #find "${DIR}" -type f -regex ".*\.\(${CODEFILES}\)" | xargs -r awk ...
+done
