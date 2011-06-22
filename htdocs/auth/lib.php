@@ -1626,7 +1626,7 @@ function reset_password($user, $resetpasswordchange=true) {
     $userobj = new User();
     $userobj->find_by_id($user->id);
     $authobj = AuthFactory::create($user->authinstance);
-    if (method_exists($authobj, 'change_password')) {
+    if (isset($user->password) && $user->password != '' && method_exists($authobj, 'change_password')) {
         $authobj->change_password($userobj, $user->password, $resetpasswordchange);
     }
     else {
