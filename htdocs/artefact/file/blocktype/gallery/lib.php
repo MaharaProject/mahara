@@ -635,7 +635,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             $element['class'] = $class;
         }
         $element['rows'] = 5;
-        $element['cols'] = 80;
+        $element['cols'] = 76;
         $element['defaultvalue'] = $default;
         $element['description'] = '<tr id="externalgalleryhelp" class="'.($class ? $class : '').'"><td colspan="2" class="description">'.
                                   get_string('externalgalleryurldesc', 'blocktype.file/gallery') . self::get_supported_external_galleries() .
