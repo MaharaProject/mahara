@@ -2308,21 +2308,26 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2011052400) {
+    if ($oldversion < 2011061100) {
+        // This block fixes an issue of upgrading from 1.4_STABLE to master
+        // version number is date after 1.4_STABLE
+
+        // 2011052400
+        // add_field checks if field exists
         $table = new XMLDBTable('view_access');
         $field = new XMLDBField('ctime');
         $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
         add_field($table, $field);
-    }
 
-    if ($oldversion < 2011053100) {
+        // 2011053100
+        // add_field checks if field exists
         $table = new XMLDBTable('institution');
         $field = new XMLDBField('defaultquota');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
         add_field($table, $field);
-    }
 
-    if ($oldversion < 2011053101) {
+        // 2011053101
+        // add_field checks if field exists
         $table = new XMLDBTable('group');
         $field = new XMLDBField('quota');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
@@ -2330,19 +2335,22 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('quotaused');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
-    }
 
-    if ($oldversion < 2011060700) {
+        // 2011060700
+        // add_field checks if field exists
         $table = new XMLDBTable('view');
         $field = new XMLDBField('retainview');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
-    }
 
-    if ($oldversion < 2011060701) {
+        // 2011060701
         // site setting to limit online users count
-        set_config('onlineuserssideblockmaxusers', 10);
+        if (!get_config('onlineuserssideblockmaxusers')) {
+            set_config('onlineuserssideblockmaxusers', 10);
+        }
 
+        // 2011060701
+        // add_field checks if field exists
         // instiutional setting to limit online users type
         $table = new XMLDBTable('institution');
         $field = new XMLDBField('showonlineusers');
