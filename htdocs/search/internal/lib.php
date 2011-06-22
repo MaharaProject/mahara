@@ -107,18 +107,6 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
-        safe_require('artefact', 'internal');
-
-        // Get the list of searchable profile fields from the internal artefact
-        $required   = array_keys(ArtefactTypeProfile::get_always_searchable_fields());
-        $optional   = array_diff(array_keys(ArtefactTypeProfile::get_searchable_fields()), $required);
-        $required[] = 'username'; // Not a profile field, but used in the search query.
-
-        // Get a list of match expressions to use in the WHERE clause
-        $matches = new StdClass;
-        foreach (array_merge($required, $optional) as $f) {
-            $matches->{$f} = self::match_user_field_expression($f, 'u');
-        }
 
         $data = self::prepare_search_user_options($data);
         $sql = '
@@ -150,32 +138,10 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql .= "
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
-        $querydata = self::split_query_string(strtolower(trim($query_string)));
-        $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
-        $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
 
-        $termsql = "$matches->preferredname
-                    OR (
-                        (u.preferredname IS NULL OR u.preferredname = '' OR NOT $hidenameallowed OR h.value != '1')
-                        AND ($matches->firstname OR $matches->lastname)
-                    )
-                    OR ($searchusernamesallowed AND $matches->username)";
+        list($namesql, $values) = self::name_search_sql($query_string);
 
-        if ($optional) {
-            foreach ($optional as $f) {
-                $termsql .= "
-                    OR {$matches->$f}";
-            }
-        }
-
-        $values = array();
-        foreach ($querydata as $term) {
-            $where .= '
-                AND (
-                    ' . $termsql . '
-                )';
-            $values = array_pad($values, count($values) + 4 + count($optional), $term);
-        }
+        $where .= $namesql;
 
         if (isset($data['exclude'])) {
             $where .= '
@@ -221,6 +187,60 @@ class PluginSearchInternal extends PluginSearch {
 
         return $result;
     }
+
+
+
+    /**
+     * Returns a snippet of an sql WHERE clause to filter users whose (visible)
+     * names match the terms in a given query string.
+     */
+    function name_search_sql($query_string, $usralias='u', $usrprefalias='h') {
+
+        safe_require('artefact', 'internal');
+
+        // Get the list of searchable profile fields from the internal artefact
+        $required   = array_keys(ArtefactTypeProfile::get_always_searchable_fields());
+        $optional   = array_diff(array_keys(ArtefactTypeProfile::get_searchable_fields()), $required);
+        $required[] = 'username'; // Not a profile field, but used in the search query.
+
+        // Get a list of match expressions to use in the WHERE clause
+        $matches = new StdClass;
+        foreach (array_merge($required, $optional) as $f) {
+            $matches->{$f} = self::match_user_field_expression($f, $usralias);
+        }
+
+        $querydata = self::split_query_string(strtolower(trim($query_string)));
+        $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
+        $searchusernamesallowed = get_config('searchusernames') ? 'TRUE' : 'FALSE';
+
+        $termsql = "$matches->preferredname
+                    OR (
+                        ($usralias.preferredname IS NULL OR $usralias.preferredname = '' OR NOT $hidenameallowed OR $usrprefalias.value != '1')
+                        AND ($matches->firstname OR $matches->lastname)
+                    )
+                    OR ($searchusernamesallowed AND $matches->username)";
+
+        if ($optional) {
+            foreach ($optional as $f) {
+                $termsql .= "
+                    OR {$matches->$f}";
+            }
+        }
+
+        $where = '';
+        $values = array();
+        foreach ($querydata as $term) {
+            $where .= '
+                AND (
+                    ' . $termsql . '
+                )';
+            $values = array_pad($values, count($values) + 4 + count($optional), $term);
+        }
+
+        return array($where, $values);
+    }
+
+
 
     private static function match_user_field_expression($field, $alias) {
         if (get_config_plugin('search', 'internal', 'exactusersearch')) {
@@ -311,7 +331,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function admin_search_user($queries, $constraints, $offset, $limit, 
+    public static function admin_search_user($query_string, $constraints, $offset, $limit,
                                              $sortfield, $sortdir) {
         $sort = 'TRUE';
         if (preg_match('/^[a-zA-Z_0-9"]+$/', $sortfield)) {
@@ -329,20 +349,24 @@ class PluginSearchInternal extends PluginSearch {
         // Get the correct keyword for case insensitive LIKE
         $ilike = db_ilike();
 
-        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+        // Generate the part that matches the search term
+        $querydata = self::split_query_string(strtolower(trim($query_string)));
 
-        if (!empty($queries)) {
-            $where .= ' AND ( ';
-            $str = array();
-            foreach ($queries as $f) {
-                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
-                    continue; // skip this field as it fails validation
-                }
-                $str[] = 'u.' . $f['field'] 
-                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-            }
-            $where .= join(' OR ', $str) . ') ';
-        } 
+        $matches = array();
+        foreach (array('firstname', 'lastname', 'username', 'email') as $f) {
+            $matches[] = self::match_user_field_expression($f, 'u');
+        }
+
+        $termsql = join(" OR ", $matches);
+
+        $values = array();
+        foreach ($querydata as $term) {
+            $where .= '
+                AND (
+                    ' . $termsql . '
+                )';
+            $values = array_pad($values, count($values) + 4, $term);
+        }
 
         // @todo: Institution stuff is messy and will probably need to
         // be rewritten when we get multiple institutions per user
@@ -443,29 +467,16 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype, $order=null) {
-        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
-        $searchsql = '';
-        $values = array();
-        if (!empty($queries)) {
-            $ilike = db_ilike();
-            $searchsql .= ' AND ( ';
-            $str = array();
-            foreach ($queries as $f) {
-                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $f['field'])) {
-                    continue; // skip this field as it fails validation
-                }
-                $str[] = 'u.' . $f['field'] 
-                    . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-            }
-            $searchsql .= join(' OR ', $str) . ') ';
-        }
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order=null) {
+
+        list($searchsql, $values) = self::name_search_sql($query_string);
 
         if ($membershiptype == 'nonmember') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
             $from = '
                 FROM {usr} u
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)';
             $values[] = $group;
@@ -476,6 +487,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon, u.staff';
             $from = '
                 FROM {usr} u
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)
                     AND NOT u.id IN (SELECT member FROM {group_member_invite} gmi WHERE gmi.group = ?)';
@@ -490,6 +502,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_request} gmr ON (gmr.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmr.group = ?';
             $values[] = $group;
@@ -502,6 +515,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member_invite} gmi ON (gmi.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gmi.group = ?';
             $values[] = $group;
@@ -514,6 +528,7 @@ class PluginSearchInternal extends PluginSearch {
             $from = '
                 FROM {usr} u
                     INNER JOIN {group_member} gm ON (gm.member = u.id)
+                    LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gm.group = ?';
             $values[] = $group;
