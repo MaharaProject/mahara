@@ -940,42 +940,29 @@ function print_object($mixed) {
  * language to use, either for a given user
  * or sitewide, or the default
  *
- * param @string $reset If passed, reset the current language to this
- * 
  * @return string
  */
-function current_language($reset=null) {
+function current_language() {
     global $USER, $CFG, $SESSION;
 
-    static $lang, $cfglang;
+    static $userlang, $lastlang;
 
-    if (!isset($cfglang) && isset($CFG->lang) && !empty($CFG->lang) && is_null($reset)) {
-        // This is the first call to current_language after load_config, so ensure the
-        // language is reset.
-        $reset = $cfglang = $CFG->lang;
-    }
+    $loggedin = $USER instanceof User && $USER->is_logged_in();
 
-    if (!empty($reset)) {
-        $lang = $reset;  // Set the language for this request
-    }
-
-    if (!empty($lang)) {
-        return $lang;
-    }
-
-    if ($USER instanceof User) {
+    if (!isset($userlang) && $loggedin) {
         $userlang = $USER->get_account_preference('lang');
         if ($userlang !== null && $userlang != 'default') {
-            if (language_installed($userlang)) {
-                $lang = $userlang;
-            }
-            else {
+            if (!language_installed($userlang)) {
                 $USER->set_account_preference('lang', 'default');
+                $userlang = 'default';
             }
         }
     }
 
-    if (empty($lang) && is_a($SESSION, 'Session')) {
+    if (!empty($userlang) && $userlang != 'default') {
+        $lang = $userlang;
+    }
+    else if (!$loggedin && is_a($SESSION, 'Session')) {
         $sesslang = $SESSION->get('lang');
         if (!empty($sesslang) && $sesslang != 'default') {
             $lang = $sesslang;
@@ -986,6 +973,10 @@ function current_language($reset=null) {
         $lang = !empty($CFG->lang) ? $CFG->lang : 'en.utf8';
     }
 
+    if ($lang == $lastlang) {
+        return $lang;
+    }
+
     // Set locale.  We are probably being called from get_string_location.
     // $lang had better be non-empty, or it will call us again.
     if ($args = split(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
@@ -993,7 +984,7 @@ function current_language($reset=null) {
         call_user_func_array('setlocale', $args);
     }
 
-    return $lang;
+    return $lastlang = $lang;
 }
 
 /**
