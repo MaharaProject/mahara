@@ -41,6 +41,12 @@ if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
+// Make sure we can edit view title for this type.
+// If not, then we probably meant to edit blocks
+if (!$view->can_edit_title()) {
+    redirect('/view/blocks.php?id=' . $view->get('id'));
+}
+
 // If the view has been submitted, disallow editing
 if ($view->is_submitted()) {
     $submittedto = $view->submitted_to();
