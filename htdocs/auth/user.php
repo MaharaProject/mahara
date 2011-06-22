@@ -1175,11 +1175,6 @@ class LiveUser extends User {
             $this->set_account_preference('lang', $sessionlang);
         }
 
-        // Set language for the current request
-        if (!empty($this->accountprefs['lang'])) {
-            current_language($this->accountprefs['lang']);
-        }
-
         $this->reset_institutions();
         $this->reset_grouproles();
         $this->load_views();
