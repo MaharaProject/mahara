@@ -573,13 +573,15 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function institutional_admin_search_user($query, $institution, $limit) {
         $sql = '
-            FROM {usr} u ';
+            FROM {usr} u LEFT OUTER JOIN {usr_tag} t ON (t.usr = u.id) ';
 
         $where = '
             WHERE u.id <> 0 AND u.deleted = 0 ';
 
         $values = array();
         if (!empty($query)) {
+            $where .= 'AND (t.tag = LOWER(?) OR ';
+            $values[] = $query;
             $query = preg_replace('/\s\s+/', ' ', $query);
             $words = explode(' ', $query);
             foreach ($words as &$word) {
@@ -587,8 +589,7 @@ class PluginSearchInternal extends PluginSearch {
                 $values[] = $word;
                 $word = 'u.firstname ' . db_ilike() . ' \'%\' || ? || \'%\' OR u.lastname ' . db_ilike() . ' \'%\' || ? || \'%\'';
             }
-            $where .= '
-                AND (' . join(' OR ', $words) . ') ';
+            $where .= join(' OR ', $words) . ') ';
         }
 
         $studentid = '';
@@ -628,6 +629,7 @@ class PluginSearchInternal extends PluginSearch {
                 SELECT 
                     u.id, u.firstname, u.lastname, u.username, u.preferredname, 
                     u.admin, u.staff' . $studentid . $sql . $where . '
+                GROUP BY u.id, u.firstname, u.lastname, u.username, u.preferredname, u.admin, u.staff' . $studentid . '
                 ORDER BY u.firstname ASC',
                 $values,
                 0,
