@@ -2342,16 +2342,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('retainview');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
-
-        // Install a cron job to generate the sitemap
-        $cron = new StdClass;
-        $cron->callfunction = 'cron_sitemap_daily';
-        $cron->minute       = '0';
-        $cron->hour         = '1';
-        $cron->day          = '*';
-        $cron->month        = '*';
-        $cron->dayofweek    = '*';
-        insert_record('cron', $cron);
     }
 
     if ($oldversion < 2011060701) {
@@ -2441,6 +2431,20 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('usr', 'tag'));
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         create_table($table);
+    }
+
+    if ($oldversion < 2011062300) {
+        // Install a cron job to generate the sitemap
+        if (!record_exists('cron', 'callfunction', 'cron_sitemap_daily')) {
+            $cron = new StdClass;
+            $cron->callfunction = 'cron_sitemap_daily';
+            $cron->minute       = '0';
+            $cron->hour         = '1';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
     }
 
     return $status;
