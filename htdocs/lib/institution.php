@@ -422,6 +422,14 @@ class Institution {
                 log_debug('resetting pw for '.$user->id);
                 $this->removeMemberSetPassword($user);
             }
+            else if ($authinstances[$oldauth]->authname != 'internal') {
+                $sitename = get_config('sitename');
+                $fullname = display_name($user, null, true);
+                email_user($user, null,
+                    get_string('noinstitutionoldpassemailsubject', 'mahara', $sitename, $this->displayname),
+                    get_string('noinstitutionoldpassemailmessagetext', 'mahara', $fullname, $this->displayname, $sitename, $user->username, get_config('wwwroot'), get_config('wwwroot'), $sitename, get_config('wwwroot')),
+                    get_string('noinstitutionoldpassemailmessagehtml', 'mahara', hsc($fullname), hsc($this->displayname), hsc($sitename), hsc($user->username), get_config('wwwroot'), get_config('wwwroot'), get_config('wwwroot'), hsc($sitename), get_config('wwwroot'), get_config('wwwroot')));
+            }
             update_record('usr', $user);
         }
 
