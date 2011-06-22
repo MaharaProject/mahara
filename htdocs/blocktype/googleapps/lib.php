@@ -88,7 +88,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'title' => get_string('appscodeorurl','blocktype.googleapps'),
                 'description' => get_string('appscodeorurldesc','blocktype.googleapps') . self::get_html_of_supported_googleapps(),
                 'rows' => 5,
-                'cols' => 80,
+                'cols' => 76,
                 'defaultvalue' => (!empty($configdata['appsid']) ? $configdata['appsid'] : null),
                 'rules' => array(
                     'required' => true
