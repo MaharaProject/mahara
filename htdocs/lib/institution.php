@@ -215,6 +215,11 @@ class Institution {
         }
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
+        execute_sql("
+            DELETE FROM {usr_tag}
+            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array($user->id)
+        );
         // Copy institution views to the user's portfolio
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
         $userobj = new User();
@@ -353,6 +358,27 @@ class Institution {
             SET institution = NULL, shortname = substring(shortname from 1 for 100) || '.' || ?
             WHERE owner = ? AND institution = ?",
             array(substr($this->name, 0, 100) . '.' . get_random_key(), $user->id, $this->name)
+        );
+
+        execute_sql("
+            DELETE FROM {usr_tag}
+            WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
+            array($user->id)
+        );
+
+        insert_record(
+            'usr_tag',
+            (object) array(
+                'usr' => $user->id,
+                'tag' => 'lastinstitution:' . strtolower($this->displayname),
+            )
+        );
+        insert_record(
+            'usr_tag',
+            (object) array(
+                'usr' => $user->id,
+                'tag' => 'lastinstitution:' . strtolower($this->name),
+            )
         );
 
         delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
