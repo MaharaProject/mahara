@@ -614,6 +614,8 @@ $string['institutionexpirydescription'] = 'The date at which this institutions m
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully.';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription2'] = 'Whether users can register for your site for this institution using the registration form.  If registration is off, non-members cannot request membership of the institution, and members cannot leave the institution or delete their user accounts voluntarily.';
+$string['registrationconfirm'] = 'Confirm registration?';
+$string['registrationconfirmdescription'] = 'Registration must be approved by institutional adminstrators.';
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
 $string['showonlineusers'] = 'Show online users';
@@ -693,6 +695,27 @@ $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the institution settings for "%s".  These profile fields are locked at the site level and cannot be unlocked here.';
 
 $string['defaultinstitutionquotadescription'] = 'You can set the amount of disk space new users in this institution will have as their quota. Existing users quotas for this institution will not be changed.';
+
+// pending institution registrations
+$string['approve'] = 'Approve';
+$string['deny'] = 'Deny';
+$string['approveregistrationfor'] = 'Approve registration for \'%s %s\'';
+$string['approveregistrationmessage'] = 'This will approve the registration and add the user to the institution \'%s\'\'. Are you sure you want to approve this registration?';
+$string['denyregistrationfor'] = 'Deny registration for \'%s %s\'';
+$string['denyregistrationmessage'] = 'This will deny the registration for the user. Are you sure you want to deny this registration?';
+$string['nopendingregistrations'] = 'No pending registrations were found for this institution.';
+$string['pendingregistration'] = 'Pending registration';
+$string['pendingregistrations'] = 'Pending registrations';
+$string['pendingregistrationspagedescription'] = '<p>On this page you can see users who have self registered and requested membership of your institution and approve or deny their registration.<p>
+
+<p>On approving their registration you are also adding them as members of the institution and they will be notified with further instructions about activating their account.  On denying their registration they will be notified that their application was denied by an automated response email.</p>';
+$string['nosuchinstitution'] = 'No such institution.';
+$string['registrationapprovedsuccessfully'] = 'Registration approved successfully.';
+$string['registrationdeniedreason'] = 'Denial reason';
+$string['registrationdeniedreasondesc'] = 'Information as to why the application was denied that might help the user.';
+$string['registrationdeniedsuccessful'] = 'Registration denied successfully.';
+$string['registrationdeniedunsuccessful'] = 'The attempted registration denial failed.';
+$string['registrationreason'] = 'Registration Reason';
 
 // Suspend Institutions
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';

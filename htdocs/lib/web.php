@@ -1837,6 +1837,12 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 70,
         ),
+        'manageinstitutions/pendingregistrations' => array(
+            'path'   => 'manageinstitutions/pendingregistrations',
+            'url'    => 'admin/users/pendingregistrations.php',
+            'title'  => get_string('pendingregistrations', 'admin'),
+            'weight' => 80,
+        ),
         'configextensions' => array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
@@ -1951,6 +1957,12 @@ function institutional_admin_nav() {
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 80,
+        ),
+        'manageinstitutions/pendingregistrations' => array(
+            'path'   => 'manageinstitutions/pendingregistrations',
+            'url'    => 'admin/users/pendingregistrations.php',
+            'title'  => get_string('pendingregistrations', 'admin'),
+            'weight' => 90,
         ),
     );
 

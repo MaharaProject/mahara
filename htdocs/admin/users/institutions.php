@@ -183,6 +183,7 @@ if ($institution || $add) {
         $data->expiry = null;
         if (!get_config('usersuniquebyusername')) {
             $data->registerallowed = 1;
+            $data->registerconfirm = 1;
         }
         $data->theme = 'sitedefault';
         $data->defaultmembershipperiod = null;
@@ -280,6 +281,12 @@ if ($institution || $add) {
             'description'  => get_string('registrationalloweddescription2', 'admin'),
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
+        );
+        $elements['registerconfirm'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('registrationconfirm', 'admin'),
+            'description'  => get_string('registrationconfirmdescription', 'admin'),
+            'defaultvalue' => $data->registerconfirm,
         );
     }
 
@@ -473,6 +480,7 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
+        $newinstitution->registerconfirm              = ($values['registerconfirm']) ? 1 : 0;
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
 
