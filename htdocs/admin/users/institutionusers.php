@@ -201,15 +201,20 @@ function institutionusers_submit(Pieform $form, $values) {
             redirect($url);
         }
     }
-    db_begin();
+
     if ($action == 'removeMembers') {
         $institution->removeMembers($values['users']);
-    } else {
-        foreach ($values['users'] as $id) {
-            $institution->{$action}($id);
-        }
     }
-    db_commit();
+    else if ($action == 'addUserAsMember') {
+        $institution->add_members($values['users']);
+    }
+    else if ($action == 'inviteUser') {
+        $institution->invite_users($values['users']);
+    }
+    else if ($action == 'declineRequestFromUser') {
+        $institution->decline_requests($values['users']);
+    }
+
     $SESSION->add_ok_msg(get_string('institutionusersupdated_'.$action, 'admin'));
     if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
         redirect(get_config('wwwroot'));

@@ -330,6 +330,21 @@ class User {
     }
 
     /**
+     * Convert from a row object from the usr table
+     *
+     * @param  object $data  The row data
+     */
+    public function from_stdclass($data) {
+        foreach (array('expiry', 'lastlogin', 'lastlastlogin', 'lastaccess', 'suspendedctime', 'ctime') as $f) {
+            if (isset($data->$f) && !is_numeric($data->$f)) {
+                $data->$f = strtotime($data->$f);
+            }
+        }
+        $this->populate($data);
+        return $this;
+    }
+
+    /**
      * Gets the user property keyed by $key.
      *
      * @param string $key The key to get the value of
