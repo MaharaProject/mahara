@@ -2434,5 +2434,14 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2011062200) {
+        $table = new XMLDBTable('usr_tag');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('tag', XMLDB_TYPE_CHAR, 128, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('usr', 'tag'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        create_table($table);
+    }
+
     return $status;
 }

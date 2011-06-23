@@ -164,6 +164,16 @@
                 <INDEX NAME="usrix" UNIQUE="false" FIELDS="usr"/>
             </INDEXES>
         </TABLE>
+        <TABLE NAME="usr_tag">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="tag" TYPE="char" LENGTH="128" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,tag"/>
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
         <TABLE NAME="auth_remote_user">
             <FIELDS>
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" />
