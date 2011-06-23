@@ -226,6 +226,47 @@ class Institution {
         db_commit();
     }
 
+    public function add_members($userids) {
+        global $USER;
+
+        if (empty($userids)) {
+            return;
+        }
+
+        if (!$USER->can_edit_institution($this->name)) {
+            throw new AccessDeniedException("Institution::add_members: access denied");
+        }
+
+        $values = array_map('intval', $userids);
+        array_unshift($values, $this->name);
+        $users = get_records_sql_array('
+            SELECT u.*, r.confirmedusr
+            FROM {usr} u LEFT JOIN {usr_institution_request} r ON u.id = r.usr AND r.institution = ?
+            WHERE u.id IN (' . join(',', array_fill(0, count($values) - 1, '?')) . ') AND u.deleted = 0',
+            $values
+        );
+
+        if (empty($users)) {
+            return;
+        }
+
+        db_begin();
+        foreach ($users as $user) {
+            // If the user hasn't requested membership, allow them to be added to
+            // the institution anyway so long as the logged-in user is a site admin
+            // or institutional admin for the user (in some other institution).
+            if (!$user->confirmedusr) {
+                $userobj = new User;
+                $userobj->from_stdclass($user);
+                if (!$USER->is_admin_for_user($userobj)) {
+                    continue;
+                }
+            }
+            $this->addUserAsMember($user);
+        }
+        db_commit();
+    }
+
     public function addRequestFromUser($user, $studentid = null) {
         $request = get_record('usr_institution_request', 'usr', $user->id, 'institution', $this->name);
         if (!$request) {
@@ -272,6 +313,20 @@ class Institution {
         db_commit();
     }
 
+    public function decline_requests($userids) {
+        global $USER;
+
+        if (!$USER->can_edit_institution($this->name)) {
+            throw new AccessDeniedException("Institution::decline_requests: access denied");
+        }
+
+        db_begin();
+        foreach ($userids as $id) {
+            $this->declineRequestFromUser($id);
+        }
+        db_commit();
+    }
+
     public function inviteUser($user) {
         $userid = is_object($user) ? $user->id : $user;
         db_begin();
@@ -291,11 +346,31 @@ class Institution {
         db_commit();
     }
 
+    public function invite_users($userids) {
+        global $USER;
+
+        if (!$USER->can_edit_institution($this->name)) {
+            throw new AccessDeniedException("Institution::invite_users: access denied");
+        }
+
+        db_begin();
+        foreach ($userids as $id) {
+            $this->inviteUser($id);
+        }
+        db_commit();
+    }
+
     public function removeMembers($userids) {
         // Remove self last.
         global $USER;
+
+        if (!$USER->can_edit_institution($this->name)) {
+            throw new AccessDeniedException("Institution::removeMembers: access denied");
+        }
+
         $users = get_records_select_array('usr', 'id IN (' . join(',', array_map('intval', $userids)) . ')');
         $removeself = false;
+        db_begin();
         foreach ($users as $user) {
             if ($user->id == $USER->id) {
                 $removeself = true;
@@ -306,6 +381,7 @@ class Institution {
         if ($removeself) {
             $USER->leave_institution($this->name);
         }
+        db_commit();
     }
 
     public function removeMember($user) {
