@@ -201,11 +201,13 @@ function edituser_site_validate(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
     }
-    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
-    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
-    if ($maxquotaenabled && $values['quota'] > $maxquota) {
-        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
-        $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+        $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+        if ($maxquotaenabled && $values['quota'] > $maxquota) {
+            $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+            $SESSION->add_error_msg(get_string('maxquotaexceeded', 'artefact.file', display_size($maxquota)));
+        }
     }
 
     $userobj = new User();
@@ -261,7 +263,9 @@ function edituser_site_submit(Pieform $form, $values) {
         return false;
     }
 
-    $user->quota = $values['quota'];
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $user->quota = $values['quota'];
+    }
     $user->expiry = db_format_timestamp($values['expiry']);
 
 

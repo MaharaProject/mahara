@@ -185,10 +185,12 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
-    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
-    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
-    if ($maxquotaenabled && $values['quota'] > $maxquota) {
-        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+        $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+        if ($maxquotaenabled && $values['quota'] > $maxquota) {
+            $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+        }
     }
 
     require_once('csvfile.php');
@@ -470,7 +472,9 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->lastname     = $record[$formatkeylookup['lastname']];
         $user->password     = $record[$formatkeylookup['password']];
         $user->email        = $record[$formatkeylookup['email']];
-        $user->quota        = $values['quota'];
+        if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+            $user->quota        = $values['quota'];
+        }
 
         if (isset($formatkeylookup['studentid'])) {
             $user->studentid = $record[$formatkeylookup['studentid']];

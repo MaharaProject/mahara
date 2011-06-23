@@ -185,10 +185,12 @@ function adduser_validate(Pieform $form, $values) {
     $email     = $values['email'];
     $password  = $values['password'];
 
-    $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
-    $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
-    if ($maxquotaenabled && $values['quota'] > $maxquota) {
-        $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $maxquotaenabled = get_config_plugin('artefact', 'file', 'maxquotaenabled');
+        $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
+        if ($maxquotaenabled && $values['quota'] > $maxquota) {
+            $form->set_error('quota', get_string('maxquotaexceededform', 'artefact.file', display_size($maxquota)));
+        }
     }
 
     if (method_exists($authobj, 'is_username_valid_admin')) {
@@ -283,12 +285,14 @@ function adduser_submit(Pieform $form, $values) {
         'lastname'       => ($values['lastname']) ? $values['lastname'] : 'User',
         'email'          => $values['email'],
         'password'       => $values['password'],
-        'quota'          => $values['quota'],
         'passwordchange' => 1,
     );
     if ($USER->get('admin')) {  // Not editable by institutional admins
         $user->staff = (int) ($values['staff'] == 'on');
         $user->admin = (int) ($values['admin'] == 'on');
+    }
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        $user->quota = $values['quota'];
     }
 
     $authinstance = get_record('auth_instance', 'id', $values['authinstance']);

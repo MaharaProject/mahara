@@ -447,8 +447,10 @@ function institution_validate(Pieform $form, $values) {
     if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
         $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
     }
-    if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {
-        $form->set_error('defaultquota', get_string('maxquotatoolow', 'artefact.file'));
+    if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {
+            $form->set_error('defaultquota', get_string('maxquotatoolow', 'artefact.file'));
+        }
     }
 }
 
