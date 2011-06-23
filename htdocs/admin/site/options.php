@@ -100,6 +100,13 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('theme', $OVERRIDDEN),
                 ),
+                'dropdownmenu' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('dropdownmenu', 'admin'),
+                    'description'  => get_string('dropdownmenudescription', 'admin'),
+                    'defaultvalue' => get_config('dropdownmenu'),
+                    'disabled'     => in_array('dropdownmenu', $OVERRIDDEN),
+                ),
                 'homepageinfo' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('homepageinfo', 'admin'),
@@ -558,7 +565,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
-        'sitename','lang','theme', 'pathtoclam',
+        'sitename','lang','theme', 'pathtoclam', 'dropdownmenu',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',

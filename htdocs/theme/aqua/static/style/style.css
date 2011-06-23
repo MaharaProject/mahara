@@ -580,3 +580,27 @@ div.sideblock h3 a:hover {
 ul.colnav li a {
 	color: #FFF;
 }
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    background: #F3F3F3 !important;
+    top: 27px !important;
+    border-width:1px;
+    border-style:solid;
+    border-color: transparent #DDDDDD #DDDDDD #DDDDDD;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #0B1960;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+#main-nav .dropdown-sub li a:hover,
+#main-nav .dropdown-sub li.selected a:hover {
+    color: #1A428F !important;
+    text-decoration: underline !important;
+}

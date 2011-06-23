@@ -574,3 +574,25 @@ body#micro #footer-wrap {
 #containerX #top-wrapper a:active {
 	color: #ffffff;
 }
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    background: #F3F3F3 !important;
+    top: 33px !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #8E1901;
+    font-size: 85%;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+#main-nav .dropdown-sub li a:hover,
+#main-nav .dropdown-sub li.selected a:hover {
+    color: #8E1901 !important;
+    text-decoration: underline !important;
+}

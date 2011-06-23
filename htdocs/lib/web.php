@@ -365,6 +365,10 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
+    $dropdownmenu = get_config('dropdownmenu');
+    if ($dropdownmenu) {
+        $smarty->assign('DROPDOWNMENU', $dropdownmenu);
+    }
 
     $sitename = get_config('sitename');
     if (!$sitename) {

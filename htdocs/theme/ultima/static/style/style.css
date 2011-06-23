@@ -586,3 +586,27 @@ div.sideblock #friendscontrol label {
 ul.colnav li a {
 	color: #FFF;
 }
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    border-width:1px;
+    border-style:solid;
+    border-color: #5C0758 #F3D2F4 #F3D2F4 #F3D2F4;
+    background: #F3D2F4 !important;
+    top: 33px !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #5C0758;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+#main-nav .dropdown-sub li a:hover,
+#main-nav .dropdown-sub li.selected a:hover {
+    color: #5C0758 !important;
+    text-decoration: underline !important;
+}

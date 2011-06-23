@@ -1,0 +1,54 @@
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** MAIN NAVIGATION ********************/
+#top-wrapper {
+    height: 100px;
+    background-position: left bottom;
+}
+
+#main-nav.dropdown-main li {
+    position: relative;
+    height: auto;
+}
+/**************** SUB NAVIGATION *********************/
+#main-nav li {
+    z-index: 3000;
+}
+#main-nav .dropdown-sub {
+    display: none !important;
+    position: absolute;
+    top: 25px;
+    left:0;
+    z-index: 1000;
+    clear: both;
+    padding: 4px 20px 10px 10px !important;
+    margin: 0;
+    background: #FFFFFF;
+}
+#main-nav .dropdown-sub li {
+    display: block;
+    float: none !important;
+    margin: 0 !important;
+    list-style-type: none;
+    background: transparent !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    padding: 4px 0 !important;
+    background: transparent !important;
+    border: none;
+    float: none;
+    width: 150px;
+    white-space: normal;
+    line-height: 1.3em;
+    text-align: left;
+    height: auto;
+}
+#main-nav .dropdown-sub li.selected {
+    margin: 0;
+    background: transparent !important;
+}
+#main-nav li:hover .dropdown-sub {
+    display: block !important;
+}

@@ -745,3 +745,27 @@ tr.editrow, tr.editrow td {
 	background: #1C3740 !important;
 	border: 0 !important;
 }
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    background: #254E5C !important;
+    top: 30px !important;
+}
+#main-nav li.selected .dropdown-sub {
+    background: #2EBFF4 !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: none !important;
+}
+#main-nav .dropdown-sub li a:hover,
+#main-nav .dropdown-sub li.selected a:hover {
+    color: #FFFFFF !important;
+    text-decoration: underline !important;
+}

@@ -541,3 +541,22 @@ div.sideblock h3 a:hover {
 .attachments tbody th {
 	color: #333;
 }
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    background: #ECECEC !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #474220;
+    text-decoration: none !important;
+}
+#main-nav .dropdown-sub li a:hover,
+#main-nav .dropdown-sub li.selected a:hover {
+    color: #7E7327 !important;
+    text-decoration: none !important;
+}
