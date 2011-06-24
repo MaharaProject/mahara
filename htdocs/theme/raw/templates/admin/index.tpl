@@ -99,6 +99,7 @@
     <ul>
         <li><strong><a href="{$WWWROOT}admin/groups/groups.php">{str tag=administergroups section=admin}</a></strong> - {str tag=administergroupsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/groups/groupcategories.php">{str tag=groupcategories section=admin}</a></strong> - {str tag=groupcategoriesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/groups/uploadcsv.php">{str tag=uploadgroupcsv section=admin}</a></strong> - {str tag=uploadgroupcsvdescription section=admin}</li>
     </ul>
 
 <h3>{str tag=manageinstitutions section=admin}</h3>

@@ -424,7 +424,17 @@ function group_update($new, $create=false) {
         }
     }
 
+    $diff = array_diff_assoc((array)$new, (array)$old);
+    if (empty($diff)) {
+        return null;
+    }
+
     db_begin();
+
+    if (isset($new->members)) {
+        group_update_members($new->id, $new->members);
+        unset($new->members);
+    }
 
     update_record('group', $new, 'id');
 
@@ -488,6 +498,7 @@ function group_update($new, $create=false) {
 
     db_commit();
 
+    return $diff;
 }
 
 
@@ -666,8 +677,11 @@ function group_update_members($groupid, $members) {
                 WHERE usr IN (' . join(',', $userids) . ') AND institution = ?',
                 array($group->institution)
             );
+
             if ($baduserids = array_diff($userids, $gooduserids)) {
-                throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+                if (!(count($baduserids) == 1 && $baduserids[0] == $USER->id)) {
+                    throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+                }
             }
         }
         else {
