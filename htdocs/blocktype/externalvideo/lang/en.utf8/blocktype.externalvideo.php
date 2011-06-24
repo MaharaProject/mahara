@@ -42,3 +42,4 @@ $string['youtube'] = 'YouTube';
 $string['teachertube'] = 'TeacherTube';
 $string['prezi'] = 'Prezi';
 $string['glogster'] = 'Glogster';
+$string['vimeo'] = 'Vimeo';
