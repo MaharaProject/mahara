@@ -49,6 +49,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         'wikieducator',
         'prezi',
         'vimeo',
+        'voki',
     );
 
     public static function get_title() {
