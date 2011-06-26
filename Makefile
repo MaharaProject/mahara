@@ -10,8 +10,30 @@ imageoptim:
 	find . -iname '*.jpg' -exec jpegoptim -q -p --strip-all {} \;
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
+branch := $(GERRIT_REFSPEC)
+ifeq (, $(branch))
+branch := $(shell bash -c "git branch | grep \* | sed -e 's/ *\* *//'" )
+endif
+
+ifeq ("(no branch)", "$(branch)")
+remote := origin
+else
+remote := $(shell bash -c "git config --get branch.$(branch).remote" )
+endif
+
+ifeq (".", "$(remote)")
+remote := origin
+endif
+ifeq ("", "$(remote)")
+remote := origin
+endif
+
+commitid := $(shell bash -c "git merge-base $(remote)/1.4_STABLE HEAD")
+
 minaccept:
-	@echo "Running minimum acceptance test..."; find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	@echo "Running minimum acceptance test..."
+	@find htdocs/ -type f -name "*.php" | xargs -n 1 -P 2 php -l > /dev/null && echo All good!
+	@if git rev-parse --verify HEAD 2>/dev/null; then git diff-index -p -M --cached $(commitid) -- ; fi | test/coding-standard-check.pl
 
 checksignoff:
 	@branch=`git status | head -1 | sed 's/.* On branch //'`; \
