@@ -481,7 +481,7 @@ class Institution {
             email_user($user, null,
                 get_string('noinstitutionsetpassemailsubject', 'mahara', $sitename, $this->displayname),
                 get_string('noinstitutionsetpassemailmessagetext', 'mahara', $fullname, $this->displayname, $sitename, $user->username, get_config('wwwroot'), $pwrequest->key, get_config('wwwroot'), $sitename, get_config('wwwroot'), $pwrequest->key),
-                get_string('noinstitutionsetpassemailmessagehtml', 'mahara', $fullname, $this->displayname, $sitename, $user->username, get_config('wwwroot'), $pwrequest->key, get_config('wwwroot'), $pwrequest->key, get_config('wwwroot'), $sitename, get_config('wwwroot'), $pwrequest->key, get_config('wwwroot'), $pwrequest->key));
+                get_string('noinstitutionsetpassemailmessagehtml', 'mahara', hsc($fullname), hsc($this->displayname), hsc($sitename), hsc($user->username), get_config('wwwroot'), hsc($pwrequest->key), get_config('wwwroot'), hsc($pwrequest->key), get_config('wwwroot'), hsc($sitename), get_config('wwwroot'), hsc($pwrequest->key), get_config('wwwroot'), hsc($pwrequest->key)));
             insert_record('usr_password_request', $pwrequest);
         }
         catch (SQLException $e) {
