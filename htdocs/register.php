@@ -80,7 +80,7 @@ if (!empty($_SESSION['emailconfirmed'])) {
         if ($registration = get_record_select('usr_registration', '"key" = ? AND "pending" = ?', array($key, 1))) {
             $fullname = sprintf("%s %s", trim($registration->firstname), trim($registration->lastname));
             $institution = new Institution($registration->institution);
-            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php", get_config('wwwroot'));
+            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php?institution=%s", get_config('wwwroot'), $registration->institution);
 
             // list of admins for this institution
             if (count($institution->admins()) > 0) {
