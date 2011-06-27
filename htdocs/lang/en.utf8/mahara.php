@@ -301,6 +301,7 @@ $string['accountsuspended'] = 'Your account has been suspended as of %s. The rea
 $string['youraccounthasbeensuspended'] = 'Your account has been suspended';
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
+$string['chooseinstitution'] = 'Choose your institution';
 $string['chooseusernamepassword'] = 'Choose your username and password';
 $string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s.  Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';

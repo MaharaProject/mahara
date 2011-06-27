@@ -2450,5 +2450,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011062400) {
+        // self-registration per institution confrimation setting
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('registerconfirm');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('pending');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('reason');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }

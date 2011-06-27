@@ -33,6 +33,7 @@ define('SECTION_PAGE', 'register');
 require('init.php');
 require_once('pieforms/pieform.php');
 require_once('lib/antispam.php');
+require_once('lib/institution.php');
 define('TITLE', get_string('register'));
 $key = param_alphanum('key', null);
 
@@ -66,6 +67,53 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
+if (!empty($_SESSION['registrationcancelled'])) {
+    unset($_SESSION['registrationcancelled']);
+    die_info(get_string('registrationcancelledok', 'auth.internal'));
+}
+
+// email confirmed, show them a screen telling them this.
+if (!empty($_SESSION['emailconfirmed'])) {
+    // email institutional administrator(s) of new registration
+    if (isset($_SESSION['registrationkey'])) {
+        $key = $_SESSION['registrationkey'];
+        if ($registration = get_record_select('usr_registration', '"key" = ? AND "pending" = ?', array($key, 1))) {
+            $fullname = sprintf("%s %s", trim($registration->firstname), trim($registration->lastname));
+            $institution = new Institution($registration->institution);
+            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php", get_config('wwwroot'));
+
+            // list of admins for this institution
+            if (count($institution->admins()) > 0) {
+                $admins = $institution->admins();
+            }
+            else {
+                // use site admins if the institution doesn't have any
+                $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
+            }
+
+            // email each admin
+            foreach ($admins as $admin) {
+                $user = new User();
+                $user->find_by_id($admin);
+                email_user($user, null,
+                    get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
+                    get_string('pendingregistrationadminemailtext', 'auth.internal',
+                        $user->firstname, $institution->displayname, $pendingregistrationslink,
+                        $fullname, $registration->email, $registration->reason, get_config('sitename')),
+                    get_string('pendingregistrationadminemailhtml', 'auth.internal',
+                        $user->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
+                        $fullname, $registration->email, $registration->reason, get_config('sitename'))
+                    );
+            }
+        }
+
+        unset($_SESSION['registrationkey']);
+    }
+
+    unset($_SESSION['emailconfirmed']);
+    die_info(get_string('emailconfirmedok', 'auth.internal'));
+}
+
 // Step three of registration - given a key register the user
 if (isset($key)) {
 
@@ -80,8 +128,22 @@ if (isset($key)) {
         $SESSION->set('lang', $registration->lang);
     }
 
+    // check if institution requires admin approval for registration
+    // if so and !$registration->pending page hit was email confirmation
+    // update registration details + redirect to notify user
+    $confirm = get_field('institution', 'registerconfirm', 'name', $registration->institution);
+    if ($confirm && $registration->pending == 0) {
+        $values['key']   = get_random_key();
+        $values['pending'] = 1;
+        $values['expiry'] = db_format_timestamp(time() + (86400 * 7)); // now + 1 week
+        update_record('usr_registration', $values, array('email' => $registration->email));
+        $SESSION->set('emailconfirmed', true);
+        $SESSION->set('registrationkey', $values['key']);
+        redirect('/register.php');
+    }
+
     function create_registered_user($profilefields=array()) {
-        global $registration, $SESSION, $USER;
+        global $registration, $SESSION, $USER, $confirm;
         require_once(get_config('libroot') . 'user.php');
 
         db_begin();
@@ -121,7 +183,12 @@ if (isset($key)) {
             }
             // Else, since there are multiple, request to join
             else {
-                $user->add_institution_request($registration->institution);
+                if ($confirm && $registration->pending == 2) {
+                    $user->join_institution($registration->institution);
+                }
+                else {
+                    $user->add_institution_request($registration->institution);
+                }
             }
         }
 
@@ -190,6 +257,7 @@ if (count($institutions) > 1) {
         $options[$institution->name] = $institution->displayname;
     }
     natcasesort($options);
+    array_unshift($options, get_string('chooseinstitution', 'mahara'));
     $elements['institution'] = array(
         'type' => 'select',
         'title' => get_string('institution'),
@@ -331,7 +399,7 @@ function register_validate(Pieform $form, $values) {
         $form->set_error($hashed['institution'], get_string('institutionfull'));
     }
 
-    if (!$institution->registerallowed) {
+    if (!$institution || !$institution->registerallowed) {
         $form->set_error('institution', get_string('registrationnotallowed'));
     }
 
@@ -354,6 +422,14 @@ function register_submit(Pieform $form, $values) {
         }
         else {
             update_record('usr_registration', $values, array('email' => $values['email']));
+        }
+
+        // if the institution requires a registration workflow
+        // redirect to get more details
+        $confirm = get_field('institution', 'registerconfirm', 'name', $values['institution']);
+        if ($confirm) {
+            $id = get_field('usr_registration', 'id', 'email', $values['email']);
+            redirect('/register/reason.php?r='.$id);
         }
 
         $user =(object) $values;

@@ -218,7 +218,8 @@ td.narrow {
 #friendslist td,
 #onlinelist td,
 #adminlist td,
-#stafflist td {
+#stafflist td,
+#pendinglist td {
 	border-bottom: 2px solid #FFF;
 }
 table.fixwidth {
@@ -2226,14 +2227,16 @@ form#search, form#filter, div.searchform, #searchviews {
 #friendslist .leftdiv,
 #onlinelist .leftdiv,
 #adminlist .leftdiv,
-#stafflist .leftdiv {
+#stafflist .leftdiv,
+#pendinglist .leftdiv {
 	float: left;
 	width: 50px;
 }
 #friendslist .rightdiv,
 #onlinelist .rightdiv,
 #adminlist .rightdiv,
-#stafflist .rightdiv {
+#stafflist .rightdiv,
+#pendinglist .rightdiv {
 	min-height: 35px;
 	padding: 5px 0 0 0;
 	margin-left: 50px;

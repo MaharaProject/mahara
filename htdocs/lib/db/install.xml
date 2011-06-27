@@ -49,6 +49,7 @@
                 <FIELD NAME="defaultquota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="showonlineusers" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="2"/>
                 <FIELD NAME="allowinstitutionpublicviews" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="registerconfirm" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -551,6 +552,8 @@
                 <FIELD NAME="lang" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="true"/>
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="pending" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true"/>
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
