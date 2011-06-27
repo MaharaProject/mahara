@@ -117,7 +117,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
             ON (aic.instance = ai.id AND aic.field = \'wwwroot\')
         LEFT OUTER JOIN {host} h
             ON aic.value = h.wwwroot
-        WHERE TRUE';
+        WHERE u.deleted = 0';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
         $values = array_merge($values, array_to_fields($userobjs));
