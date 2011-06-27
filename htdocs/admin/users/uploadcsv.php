@@ -427,7 +427,7 @@ function uploadcsv_validate(Pieform $form, $values) {
  * password on next login also.
  */
 function uploadcsv_submit(Pieform $form, $values) {
-    global $SESSION, $CSVDATA, $FORMAT, $UPDATES;
+    global $USER, $SESSION, $CSVDATA, $FORMAT, $UPDATES;
 
     $formatkeylookup = array_flip($FORMAT);
 

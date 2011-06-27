@@ -444,6 +444,8 @@ EOF;
 }
 
 function institution_validate(Pieform $form, $values) {
+    global $USER;
+
     if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
         $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
     }
