@@ -30,6 +30,7 @@ function UserSearch() {
         self.rewriteQueryButton();
         self.rewritePaging();
         self.rewriteSorting();
+        self.rewriteSetLimit();
         self.params = {};
     }
 
@@ -142,8 +143,25 @@ function UserSearch() {
             if ($('searchresults')) {
                 self.rewritePaging();
                 self.rewriteSorting();
+                self.rewriteSetLimit();
             }
         });
+    }
+
+    this.rewriteSetLimit = function() {
+        if ($('setlimit')) {
+            forEach(getElementsByTagAndClassName('a', null, 'setlimit'), function(i) {
+                connect(i, 'onclick', function(e) {
+                    e.stop();
+                    if (!self.params.offset) {
+                        self.params.offset = 0;
+                    }
+                    self.params.limit = scrapeText(i);
+                    self.params.offset = Math.floor(self.params.offset / self.params.limit) * self.params.limit;
+                    self.doSearch();
+                });
+            });
+        }
     }
 
     addLoadEvent(self.init);

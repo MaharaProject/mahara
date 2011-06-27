@@ -123,6 +123,7 @@ $string['tagupdatedsuccessfully'] = 'Tag updated successfully';
 $string['tagdeletedsuccessfully'] = 'Tag deleted successfully';
 
 $string['selfsearch'] = 'Search My Portfolio';
+$string['resultsperpage'] = 'Results per page';
 
 // Quota strings
 $string['quota'] = 'Quota';

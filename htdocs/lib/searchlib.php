@@ -314,6 +314,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $smarty->assign('sortby', $sortby);
     $smarty->assign('sortdir', $sortdir);
     $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
     $smarty->assign('cols', $cols);
     $smarty->assign('ncols', count($cols));
     return $smarty->fetch('searchresulttable.tpl');

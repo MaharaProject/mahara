@@ -1,4 +1,10 @@
 {if $results.data}
+    <div id="setlimit" class="setlimit fr">
+      {str tag=resultsperpage}:
+    {foreach from=$limitoptions item=l}
+      <a href="?limit={$l}"{if $l == $results.limit} class="selected"{/if}>{$l}</a>
+    {/foreach}
+    </div>
     <h2>{str tag="Results"}</h2>
     <table id="searchresults" class="tablerenderer fullwidth listing">
         <thead>

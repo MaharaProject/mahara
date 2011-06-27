@@ -1404,7 +1404,7 @@ a.tag {
 	padding: 0 5px;
 	vertical-align: middle;
 }
-.tag-results .selected, .mytags .selected {
+.tag-results .selected, .mytags .selected, .setlimit a.selected {
 	font-weight: bold;
 	text-decoration: none;
 }
