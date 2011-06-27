@@ -418,7 +418,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.active, NOT u.suspendedcusr IS NULL as suspended
                 FROM
                     {usr} u ' . $institutionsearch . $where . '
-                ORDER BY ' . $sort,
+                ORDER BY ' . $sort . ', u.id',
                 $values,
                 $offset,
                 $limit);
