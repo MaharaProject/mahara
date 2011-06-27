@@ -173,7 +173,7 @@ if (count($authinstances) > 1) {
 
 }
 
-$tags = get_column('usr_tag', 'tag', 'usr', $user->id);
+$tags = get_column_sql('SELECT tag FROM {usr_tag} WHERE usr = ? AND NOT tag ' . db_ilike() . " 'lastinstitution:%'", array($user->id));
 
 $elements['tags'] = array(
     'defaultvalue' => $tags,

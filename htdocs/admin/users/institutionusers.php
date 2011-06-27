@@ -56,22 +56,37 @@ else if (!empty($institution)) {
 // Show either requesters, members, or nonmembers on the left hand side
 $usertype = param_alpha('usertype', 'requesters');
 
+$usertypeselectorelements = array(
+            'usertype' => array(
+                'type' => 'select',
+                'title' => get_string('userstodisplay', 'admin'),
+                'options' => array(
+                    'requesters' => get_string('institutionusersrequesters', 'admin'),
+                    'nonmembers' => get_string('institutionusersnonmembers', 'admin'),
+                    'lastinstitution' => get_string('institutionuserslastinstitution', 'admin'),
+                    'members' => get_string('institutionusersmembers', 'admin'),
+                    'invited' => get_string('institutionusersinvited', 'admin'),
+                ),
+                'defaultvalue' => $usertype,
+            ),
+);
+
+if ($usertype == 'lastinstitution') {
+    // Change intitution dropdown to show possible last insitutions
+    $lastinstitution = param_alphanum('lastinstitution', false);
+    $usertypeselectorelements['lastinstitution'] = get_institution_selector(false);
+    $usertypeselectorelements['lastinstitution']['title'] = get_string('lastinstitution', 'admin');
+    if ($lastinstitution) {
+        $usertypeselectorelements['lastinstitution']['defaultvalue'] = $lastinstitution;
+    }
+    else {
+        $lastinstitution = $usertypeselectorelements['lastinstitution']['defaultvalue'];
+    }
+}
+
 $usertypeselector = pieform(array(
     'name' => 'usertypeselect',
-    'elements' => array(
-        'usertype' => array(
-            'type' => 'select',
-            'title' => get_string('userstodisplay', 'admin'),
-            'options' => array(
-                'requesters' => get_string('institutionusersrequesters', 'admin'),
-                'nonmembers' => get_string('institutionusersnonmembers', 'admin'),
-                'members' => get_string('institutionusersmembers', 'admin'),
-                'invited' => get_string('institutionusersinvited', 'admin'),
-             ),
-            'defaultvalue' => $usertype
-        ),
-        'institution' => $institutionelement,
-    )
+    'elements' => $usertypeselectorelements,
 ));
 
 if ($usertype == 'requesters') {
@@ -92,6 +107,18 @@ if ($usertype == 'requesters') {
         'searchparams' => array('member' => 1),
     );
     $submittext = get_string('removeusers', 'admin');
+}
+else if ($usertype == 'lastinstitution') {
+    // LHS shows Users who have left institution "BLAH"
+    // RHS shows users to be invited
+    $lastinstitutionobj = new Institution($lastinstitution);
+    $userlistelement = array(
+        'title' => get_string('inviteuserstojoin', 'admin'),
+        'lefttitle' => get_string('userswhohaveleft', 'admin', $lastinstitutionobj->displayname),
+        'righttitle' => get_string('userstobeinvited', 'admin'),
+        'searchparams' => array('member' => 0, 'invitedby' => 0, 'requested' => 0, 'lastinstitution' => $lastinstitution),
+    );
+    $submittext = get_string('inviteusers', 'admin');
 }
 else if ($usertype == 'nonmembers') {
     // Behaviour depends on whether we allow users to have > 1 institution
@@ -127,16 +154,12 @@ $userlistelement['searchparams']['institution'] = $institution;
 $userlistform = array(
     'name' => 'institutionusers',
     'elements' => array(
+        'institution' => $institutionelement,
         'users' => $userlistelement,
         'usertype' => array(
             'type' => 'hidden',
             'value' => $usertype,
             'rules' => array('regex' => '/^[a-z]+$/')
-        ),
-        'institution' => array(
-            'type' => 'hidden',
-            'value' => $institution,
-            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
         ),
         'submit' => array(
             'type' => 'submit',
@@ -145,13 +168,21 @@ $userlistform = array(
     )
 );
 
+if ($usertype == 'lastinstitution') {
+    $userlistform['elements']['lastinstitution'] = array(
+        'type' => 'hidden',
+        'value' => $lastinstitution,
+        'rules' => array('regex' => '/^[a-zA-Z0-9]+$/'),
+    );
+}
+
 if ($usertype == 'requesters') {
     $userlistform['elements']['reject'] = array(
         'type' => 'submit',
         'value' => get_string('declinerequests', 'admin'),
     );
 }
-if ($usertype == 'nonmembers' && $USER->get('admin')) {
+if (($usertype == 'nonmembers' || $usertype == 'lastinstitution') && $USER->get('admin')) {
     $userlistform['elements']['add'] = array(
         'type' => 'submit',
         'value' => get_string('addmembers', 'admin'),
@@ -164,14 +195,14 @@ function institutionusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     $inst = $values['institution'];
-    $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'] . '&institution=' . $inst;
+    $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'] . (isset($values['lastinstitution']) ? '&lastinstitution=' . $values['lastinstitution'] : '') . '&institution=' . $inst;
     if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
         redirect($url);
     }
 
     $dataerror = false;
-    if (!in_array($values['usertype'], array('requesters', 'members', 'nonmembers', 'invited'))
+    if (!in_array($values['usertype'], array('requesters', 'members', 'lastinstitution', 'nonmembers', 'invited'))
         || !is_array($values['users'])) {
         $dataerror = true;
     } else {
@@ -244,16 +275,23 @@ function institutionusers_submit(Pieform $form, $values) {
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
 function reloadUsers() {
-    var inst = '';
-    if ($('usertypeselect_institution')) {
-        inst = '&institution=' + $('usertypeselect_institution').value;
+    var last = '';
+    if ($('usertypeselect_lastinstitution')) {
+        last = '&lastinstitution=' + $('usertypeselect_lastinstitution').value;
     }
-    window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+inst;
+    var inst = '';
+    if ($('institutionusers_institution')) {
+        inst = '&institution=' + $('institutionusers_institution').value;
+    }
+    window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+last+inst;
 }
 addLoadEvent(function() {
     connect($('usertypeselect_usertype'), 'onchange', reloadUsers);
-    if ($('usertypeselect_institution')) {
-        connect($('usertypeselect_institution'), 'onchange', reloadUsers);
+    if ($('usertypeselect_lastinstitution')) {
+        connect($('usertypeselect_lastinstitution'), 'onchange', reloadUsers);
+    }
+    if ($('institutionusers_institution')) {
+        connect($('institutionusers_institution'), 'onchange', reloadUsers);
     }
 });
 EOF;
