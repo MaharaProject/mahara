@@ -18,15 +18,14 @@
           {/if}
           <tr>
           {foreach from=$cols key=f item=c}
-          {if !$c.name}
-            <th></th>
-          {elseif $c.nosort}
-            <th>{$c.name}</th>
-          {else}
-            <th class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}">
+            <th{if $c.sort} class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}"{/if}>
+          {if $c.sort}
               <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{$c.name}</a>
-            </th>
+          {else}
+              {$c.name}
           {/if}
+          {if $c.headhtml}<div style="font-weight: normal;">{$c.headhtml|safe}</div>{/if}
+            </th>
           {/foreach}
           </tr>
         </thead>

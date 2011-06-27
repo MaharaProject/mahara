@@ -279,14 +279,27 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         . '{if $USER->is_admin_for_user($r.id)}admin/users/edit.php?id={$r.id}{else}user/view.php?id={$r.id}{/if}">{$r.username}</a>';
 
     $cols = array(
-        'icon'        => array('name'     => '',
-                               'template' => '<img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="' . get_string('profileimage') . '" />',
-                               'class'    => 'center'),
-        'firstname'   => array('name'     => get_string('firstname')),
-        'lastname'    => array('name'     => get_string('lastname')),
-        'username'    => array('name'     => get_string('username'),
-                               'template' => $usernametemplate),
-        'email'       => array('name'     => get_string('email')),
+        'icon' => array(
+            'template' => '<img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="' . get_string('profileimage') . '" />',
+            'class'    => 'center',
+        ),
+        'firstname' => array(
+            'name'     => get_string('firstname'),
+            'sort'     => true,
+        ),
+        'lastname' => array(
+            'name'     => get_string('lastname'),
+            'sort'     => true,
+        ),
+        'username' => array(
+            'name'     => get_string('username'),
+            'sort'     => true,
+            'template' => $usernametemplate,
+        ),
+        'email' => array(
+            'name'     => get_string('email'),
+            'sort'     => true,
+        ),
     );
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
@@ -301,7 +314,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         }
         $cols['institution'] = array(
             'name'     => get_string('institution'),
-            'nosort'   => get_config('usersallowedmultipleinstitutions'),
+            'sort'     => !get_config('usersallowedmultipleinstitutions'),
             'template' => $template,
         );
     }
