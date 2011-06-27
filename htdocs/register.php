@@ -171,6 +171,14 @@ if (isset($key)) {
         $user->username         = get_new_username($user->firstname . $user->lastname);
         $user->passwordchange   = 1;
 
+        if ($registration->institution != 'mahara') {
+            if (count_records_select('institution', "name != 'mahara'") == 1 || $registration->pending == 2) {
+                if (get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+                    $user->quota = get_field('institution', 'defaultquota', 'name', $registration->institution);
+                }
+            }
+        }
+
         create_user($user, $profilefields);
 
         // If the institution is 'mahara' then don't do anything
