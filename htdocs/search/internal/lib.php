@@ -368,33 +368,18 @@ class PluginSearchInternal extends PluginSearch {
             $values = array_pad($values, count($values) + 4, $term);
         }
 
-        // @todo: Institution stuff is messy and will probably need to
-        // be rewritten when we get multiple institutions per user
-
-        $requested = false;
-        $institutionsearch = '';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
-                if (strpos($f['field'], 'institution') === 0) {
-                    $institutionsearch .= ' 
-                        LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-                    if (strpos($f['field'], 'requested') > 0) {
-                        $institutionsearch .= ' 
-                            LEFT OUTER JOIN {usr_institution_request} ir ON ir.usr = u.id ';
+                if ($f['field'] == 'institution') {
+                    if ($f['string'] == 'mahara') {
+                        $where .= ' AND u.id NOT IN (SELECT usr FROM {usr_institution})';
                     }
-                    if ($f['field'] == 'institution_requested') {
-                        $where .= ' AND ( i.institution ' .
-                            PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) .
-                            ' OR ir.institution ' .
-                            PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . ')';
-                        $requested = true;
-                    } else {
-                        if ($f['string'] == 'mahara') {
-                            $where .= ' AND i.institution IS NULL';
-                        } else {
-                            $where .= ' AND i.institution'
-                                . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
-                        }
+                    else {
+                        $where .= '
+                            AND u.id IN (
+                                SELECT usr FROM {usr_institution} WHERE institution '
+                            . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . '
+                            )';
                     }
                 } else {
                     $where .= ' AND u.' . $f['field'] 
@@ -402,22 +387,15 @@ class PluginSearchInternal extends PluginSearch {
                 }
             }
         }
-        if (strpos($sort, 'institution') === 0) {
-            $sort = 'i.' . $sort;
-            if ($institutionsearch == '') {
-                $institutionsearch = ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-            }
-        }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $institutionsearch . $where, $values);
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);
 
         if ($count > 0) {
             $data = get_records_sql_assoc('
                 SELECT 
                     u.id, u.firstname, u.lastname, u.username, u.email, u.staff, u.profileicon,
                     u.active, NOT u.suspendedcusr IS NULL as suspended
-                FROM
-                    {usr} u ' . $institutionsearch . $where . '
+                FROM {usr} u ' . $where . '
                 ORDER BY ' . $sort . ', u.id',
                 $values,
                 $offset,
@@ -430,21 +408,6 @@ class PluginSearchInternal extends PluginSearch {
                 if ($inst) {
                     foreach ($inst as $i) {
                         $data[$i->usr]->institutions[] = $i->institution;
-                    }
-                }
-                if ($requested) {
-                    $inst = get_records_select_array('usr_institution_request', 
-                                                     'usr IN (' . join(',', array_keys($data)) . ')',
-                                                     null, '', 'usr,institution,confirmedusr,confirmedinstitution');
-                    if ($inst) {
-                        foreach ($inst as $i) {
-                            if ($i->confirmedusr) {
-                                $data[$i->usr]->requested[] = $i->institution;
-                            }
-                            if ($i->confirmedinstitution) {
-                                $data[$i->usr]->invitedby[] = $i->institution;
-                            }
-                        }
                     }
                 }
                 foreach ($data as &$item) {

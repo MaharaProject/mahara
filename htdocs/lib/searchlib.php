@@ -221,22 +221,23 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin')) {
-        if (empty($search->institution) && empty($search->institution_requested)) {
-            $search->institution_requested = 'all';
-        }
         $allowed = $USER->get('admininstitutions');
-        foreach (array('institution', 'institution_requested') as $p) {
-            if (!empty($search->{$p})) {
-                if ($search->{$p} == 'all' || !isset($allowed[$search->{$p}])) {
-                    $constraints[] = array('field' => $p,
-                                           'type' => 'in',
-                                           'string' => $allowed);
-                } else {
-                    $constraints[] = array('field' => $p,
-                                           'type' => 'equals',
-                                           'string' => $search->{$p});
-                }
-            }
+        if (empty($search->institution)) {
+            $search->institution = 'all';
+        }
+        if ($search->institution == 'all' || !isset($allowed[$search->institution])) {
+            $constraints[] = array(
+                'field'  => 'institution',
+                'type'   => 'in',
+                'string' => $allowed,
+            );
+        }
+        else {
+            $constraints[] = array(
+                'field'  => 'institution',
+                'type'   => 'equals',
+                'string' => $search->institution,
+            );
         }
     } else if (!empty($search->institution) && $search->institution != 'all') {
         $constraints[] = array('field' => 'institution',
@@ -303,7 +304,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     if (count($institutions) > 1) {
         $cols['institution'] = array(
             'name'     => get_string('institution'),
-            'sort'     => !get_config('usersallowedmultipleinstitutions'),
+            'sort'     => false,
             'template' => 'admin/users/searchinstitutioncolumn.tpl',
         );
     }

@@ -35,11 +35,7 @@
             {if count($institutions) > 1}
             <span class="institutions">
                 <label>{str tag='Institution' section='admin'}:</label>
-                    {if $USER->get('admin')}
                     <select name="institution" id="institution">
-                    {else}
-                    <select name="institution_requested" id="institution_requested">
-                    {/if}
                         <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
                         {foreach from=$institutions item=i}
                         <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>
