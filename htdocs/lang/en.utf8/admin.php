@@ -751,6 +751,7 @@ $string['invitedby'] = 'Invited by';
 $string['requestto'] = 'Request to';
 $string['useradded'] = 'User added';
 $string['invitationsent'] = 'Invitation sent';
+$string['editselectedusers'] = 'Edit selected users';
 
 // Bulk actions
 $string['bulkactions'] = 'Bulk actions';

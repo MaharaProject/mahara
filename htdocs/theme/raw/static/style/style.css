@@ -154,7 +154,7 @@ html>body .safe-hidden {
  *margin: 0;
  *padding: 0;
 }
-.nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table {
+.nojs-hidden-inline, .nojs-hidden-block, .nojs-hidden-table, .nojs-hidden-table-cell {
 	display: none;
 }
 .dull {

@@ -22,6 +22,11 @@
        </span>
        {/foreach}
     </div>
+    <form class="fr nojs-hidden-block" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
+      {str tag=editselectedusers section=admin}:
+      <input type="button" class="button" name="go" value="{str tag=go}">
+      <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
+    </form>
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">
             <label>{str tag='Search' section='admin'}:</label>

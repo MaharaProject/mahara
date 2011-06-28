@@ -18,7 +18,7 @@
           {/if}
           <tr>
           {foreach from=$cols key=f item=c}
-            <th{if $c.sort} class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}"{/if}>
+            <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
           {if $c.sort}
               <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{$c.name}</a>
           {else}
@@ -37,11 +37,7 @@
             {if !$c.template}
               {$r[$f]}
             {else}
-              {auto_escape off}
-              {* auto_escape off seems to be required to eval these templates without errors;
-                 somehow the variables output inside them are getting escaped anyway. *}
-              {eval var=$c.template}
-              {/auto_escape}
+              {include file=$c.template r=$r}
             {/if}
             </td>{/strip}
           {/foreach}

@@ -38,3 +38,7 @@
     display: table;
     *display: block;
 }
+.nojs-hidden-table-cell {
+    display: table-cell;
+    *display: block;
+}

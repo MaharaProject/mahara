@@ -275,12 +275,9 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     }
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&', $params) . '&limit=' . $limit;
 
-    $usernametemplate = '<a href="' . get_config('wwwroot')
-        . '{if $USER->is_admin_for_user($r.id)}admin/users/edit.php?id={$r.id}{else}user/view.php?id={$r.id}{/if}">{$r.username}</a>';
-
     $cols = array(
         'icon' => array(
-            'template' => '<img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="' . get_string('profileimage') . '" />',
+            'template' => 'admin/users/searchiconcolumn.tpl',
             'class'    => 'center',
         ),
         'firstname' => array(
@@ -294,7 +291,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         'username' => array(
             'name'     => get_string('username'),
             'sort'     => true,
-            'template' => $usernametemplate,
+            'template' => 'admin/users/searchusernamecolumn.tpl',
         ),
         'email' => array(
             'name'     => get_string('email'),
@@ -304,20 +301,18 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
-        $template = '';
-        foreach ($THEME->inheritance as $themedir) {
-            $tpl = get_config('docroot') . 'theme/' . $themedir . '/templates/admin/users/searchinstitutioncolumn.tpl';
-            if (is_readable($tpl)) {
-                $template = file_get_contents($tpl);
-                break;
-            }
-        }
         $cols['institution'] = array(
             'name'     => get_string('institution'),
             'sort'     => !get_config('usersallowedmultipleinstitutions'),
-            'template' => $template,
+            'template' => 'admin/users/searchinstitutioncolumn.tpl',
         );
     }
+
+    $cols['select'] = array(
+        'headhtml' => '<a href="" id="selectall">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnone">' . get_string('none') . '</a>',
+        'template' => 'admin/users/searchselectcolumn.tpl',
+        'class'    => 'center nojs-hidden-table-cell',
+    );
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);

@@ -31,6 +31,8 @@ function UserSearch() {
         self.rewritePaging();
         self.rewriteSorting();
         self.rewriteSetLimit();
+        self.selectusers = {};
+        self.rewriteCheckboxes();
         self.params = {};
     }
 
@@ -90,7 +92,9 @@ function UserSearch() {
         if (children.length == 1) {
             var href = getNodeAttribute(children[0], 'href');
             self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-            self.doSearch();
+            // Assume this is only changing the page or the order of results,
+            // so pass true here to avoid clearing the selected users.
+            self.doSearch(true);
         }
     }
 
@@ -136,16 +140,52 @@ function UserSearch() {
         e.stop();
     }
 
-    this.doSearch = function() {
+    this.doSearch = function(saveselected) {
         self.params.action = 'search';
         sendjsonrequest('search.json.php', self.params, 'POST', function(data) {
             $('results').innerHTML = data.data;
+            if (!saveselected) {
+                self.selectusers = {};
+            }
             if ($('searchresults')) {
                 self.rewritePaging();
                 self.rewriteSorting();
+                self.rewriteCheckboxes();
                 self.rewriteSetLimit();
             }
         });
+    }
+
+    this.rewriteCheckboxes = function() {
+        forEach(getElementsByTagAndClassName('input', 'selectusers', 'searchresults'), function(i) {
+            connect(i, 'onclick', function() {
+                if (i.checked) {
+                    self.selectusers[i.value] = 1;
+                }
+                else {
+                    delete self.selectusers[i.value];
+                }
+            });
+            if (self.selectusers[i.value]) {
+                i.checked = true;
+            }
+        });
+        if ($('selectall')) {
+            connect('selectall', 'onclick', function(e) {
+                e.stop();
+                forEach(getElementsByTagAndClassName('input', 'selectusers', 'searchresults'), function(i) {
+                    self.selectusers[i.value] = 1;
+                    i.checked = true;
+                });
+            });
+            connect('selectnone', 'onclick', function(e) {
+                e.stop();
+                forEach(getElementsByTagAndClassName('input', 'selectusers', 'searchresults'), function(i) {
+                    delete self.selectusers[i.value];
+                    i.checked = false;
+                });
+            });
+        }
     }
 
     this.rewriteSetLimit = function() {
@@ -158,7 +198,7 @@ function UserSearch() {
                     }
                     self.params.limit = scrapeText(i);
                     self.params.offset = Math.floor(self.params.offset / self.params.limit) * self.params.limit;
-                    self.doSearch();
+                    self.doSearch(true);
                 });
             });
         }
@@ -168,3 +208,37 @@ function UserSearch() {
 }
 
 userSearch = new UserSearch();
+
+addLoadEvent(function() {
+    forEach(getElementsByTagAndClassName('input', 'button', 'bulkactions'), function(input) {
+        connect(input, 'onclick', function() {
+            // Some of the selected users aren't on the page, so just add them all to the
+            // form now.
+            var count = 0;
+            if (userSearch.selectusers) {
+                for (j in userSearch.selectusers) {
+                    appendChildNodes('bulkactions', INPUT({
+                        'type': 'checkbox',
+                        'name': 'users[' + j + ']',
+                        'value': j,
+                        'class': 'hidden',
+                        'checked': 'checked'
+                    }));
+                    count++;
+                }
+            }
+            if (count) {
+                addElementClass('nousersselected', 'hidden');
+                appendChildNodes('bulkactions', INPUT({
+                    'type': 'hidden',
+                    'name': 'action',
+                    'value': input.name,
+                }));
+                $('bulkactions').submit();
+                return false;
+            }
+            removeElementClass('nousersselected', 'hidden');
+            return false;
+        })
+    });
+});
