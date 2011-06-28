@@ -614,7 +614,7 @@ class PluginSearchInternal extends PluginSearch {
                 $studentid = ', req.studentid';
             }
             if (!is_null($institution->invitedby)) {
-                if ($institution->requested == 1) {
+                if ($institution->invitedby == 1) {
                     $where .= ' AND req.confirmedinstitution = 1';
                 } else {
                     $where .= ' AND (req.confirmedinstitution = 0 OR req.confirmedinstitution IS NULL)';

@@ -365,6 +365,27 @@ class Institution {
         db_commit();
     }
 
+    public function uninvite_users($userids) {
+        global $USER;
+
+        if (!$USER->can_edit_institution($this->name)) {
+            throw new AccessDeniedException("Institution::uninvite_users: access denied");
+        }
+
+        if (!is_array($userids) || empty($userids)) {
+            return;
+        }
+
+        $ph = array_map('intval', $userids);
+        $ph[] = $this->name;
+
+        delete_records_select(
+            'usr_institution_request',
+            'usr IN (' . join(',', array_fill(0, count($userids), '?')) . ') AND institution = ? AND confirmedinstitution = 1',
+            $ph
+        );
+    }
+
     public function removeMembers($userids) {
         // Remove self last.
         global $USER;

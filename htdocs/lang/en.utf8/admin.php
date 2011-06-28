@@ -644,6 +644,7 @@ $string['institutionmemberspagedescription'] = 'On this page you can see users w
 $string['institutionusersinstructionsrequesters'] = 'The list of users on the left shows all users who have asked to join your institution.  You can use the search box to reduce the number of users displayed.  If you would like to add users to the institution, or decline their membership requests, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow.  The "Add members" button will add all the users on the right to the institution.  The "Decline requests" button will remove the membership requests of the users on the right.';
 $string['institutionusersinstructionsnonmembers'] = 'The list of users on the left shows all users who are not yet members of your institution.  You can use the search box to reduce the number of users displayed.  To invite users to join the institution, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow to move those users to the list on the right.  The "Invite Users" button will send invitations to all the users on the right.  These users will not be associated with the institution until they accept the invitation.';
 $string['institutionusersinstructionsmembers'] = 'The list of users on the left shows all members of the institution.  You can use the search box to reduce the number of users displayed.  To remove users from the institution, first move some users to the right hand side by selecting one or more users on the left and then clicking on the right arrow.  The users you selected will move to the right hand side.  The "Remove Users" button will remove all the users on the right from the institution.  The users on the left will remain in the institution.';
+$string['institutionusersinstructionsinvited'] = 'The list of users on the left shows all users who have been sent an invitation to join the institution and who have not yet accepted or declined.  You can use the search box to reduce the number of users displayed.  To revoke invitations to the institution, first move some users to the right hand side by selecting one or more users on the left and then clicking on the right arrow.  The users you selected will move to the right hand side.  The "Revoke Invitations" button will remove all invitations to the users on the right.  The users on the left will retain their invitations and will still be able to join at any time.';
 
 $string['editmembers'] = 'Edit Members';
 $string['editstaff'] = 'Edit Staff';
@@ -657,6 +658,7 @@ $string['userstodisplay'] = 'Users to display:';
 $string['institutionusersrequesters'] = 'People who have requested institution membership';
 $string['institutionusersnonmembers'] = 'People who have not requested membership yet';
 $string['institutionusersmembers'] = 'People who are already institution members';
+$string['institutionusersinvited'] = 'People who have been invited';
 
 $string['addnewmembers'] = 'Add new members';
 $string['usersrequested'] = 'Users who have requested membership';
@@ -673,11 +675,15 @@ $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove Users';
 $string['declinerequests'] = 'Decline requests';
 $string['nousersupdated'] = 'No users were updated';
+$string['revokeinvitations'] = 'Revoke invitations';
+$string['invitedusers'] = 'Invited users';
+$string['userstobeuninvited'] = 'Users to be uninvited';
 
 $string['institutionusersupdated_addUserAsMember'] = 'Users added';
 $string['institutionusersupdated_declineRequestFromUser'] = 'Requests declined';
 $string['institutionusersupdated_removeMembers'] = 'Users removed';
 $string['institutionusersupdated_inviteUser'] = 'Invitations sent';
+$string['institutionusersupdated_uninvite_users'] = 'Invitations removed';
 
 $string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
 $string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
