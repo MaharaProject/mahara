@@ -752,6 +752,22 @@ $string['requestto'] = 'Request to';
 $string['useradded'] = 'User added';
 $string['invitationsent'] = 'Invitation sent';
 
+// Bulk actions
+$string['bulkactions'] = 'Bulk actions';
+$string['editselectedusersdescription'] = 'Suspend, delete, change authentication method, or download a CSV file of the users you have selected on the search page.';
+$string['exportusersascsv'] = 'Export users in CSV format';
+$string['Download'] = 'Download';
+$string['suspendusers'] = 'Suspend users';
+$string['Suspend'] = 'Suspend';
+$string['bulksuspenduserssuccess'] = 'Suspended %d user(s)';
+$string['changeauthmethod'] = 'Change authentication method';
+$string['someusersnotinauthinstanceinstitution'] = 'Some of the users you have selected are not in the institution associated with this authentication method.';
+$string['bulkchangeauthmethodsuccess'] = 'Reset authentication method for %d user(s)';
+$string['bulkchangeauthmethodresetpassword'] = 'You have chosen an authentication method that requires a password.  %d user(s) do not have a password, and will be unable to log in until their passwords are reset.';
+$string['bulkdeleteuserssuccess'] = 'Deleted %d user(s)';
+$string['selectedusers'] = 'Selected users';
+$string['remoteuser'] = 'Remote username';
+
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
 $string['onlyshowingfirst'] = 'Only showing first';

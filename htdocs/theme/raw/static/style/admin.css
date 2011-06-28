@@ -675,3 +675,13 @@ form#uploadcsv {
 .admin-warning-box h3 {
     color: #CA0000;
 }
+
+.bulkactionform {
+    margin: .25em 0;
+    float: left;
+    width: 49%;
+}
+.bulkaction-title {
+    font-weight: bold;
+    margin: 0 .25em 0 0;
+}

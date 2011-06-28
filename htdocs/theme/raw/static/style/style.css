@@ -532,6 +532,10 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
   * overflow: visible;
   * width: 1;
 }
+form.delete input.submit {
+	color: #dd0221;
+	border: 1px solid #DBA0A9;
+}
 /** hover for buttons **/
 .btn:hover, input.submit:hover, input.cancel:hover, button:hover, .buttondk:hover, input.button:hover, input.select:hover, input#files_filebrowser_edit_artefact:hover {
 	background: #FFF url(../images/btn-bkgd-hover.gif) repeat-x left top;

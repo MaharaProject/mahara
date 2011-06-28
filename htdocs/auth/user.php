@@ -1325,4 +1325,26 @@ class LiveUser extends User {
         ));
     }
 
+   /**
+    * Writes a file to dataroot and saves details in the session,
+    * for later download by the user
+    *
+    * @param $content string file contents
+    * @param $name string filename to be used when downloading the file
+    * @param $mimetype string
+    */
+    public function set_download_file($content, $name, $mimetype) {
+        global $SESSION;
+
+        $filename = get_random_key();
+        $dir = get_config('dataroot') . 'export/' . $this->id . '/';
+        check_dir_exists($dir);
+        file_put_contents($dir . $filename, $content);
+
+        $SESSION->set('downloadfile', array(
+            'file'     => $filename,
+            'name'     => $name,
+            'mimetype' => $mimetype,
+        ));
+    }
 }
