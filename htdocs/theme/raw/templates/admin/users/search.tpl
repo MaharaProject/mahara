@@ -22,6 +22,11 @@
        </span>
        {/foreach}
     </div>
+    <form class="fr nojs-hidden-block" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
+      {str tag=editselectedusers section=admin}:
+      <input type="button" class="button" name="go" value="{str tag=go}">
+      <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
+    </form>
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">
             <label>{str tag='Search' section='admin'}:</label>
@@ -30,11 +35,7 @@
             {if count($institutions) > 1}
             <span class="institutions">
                 <label>{str tag='Institution' section='admin'}:</label>
-                    {if $USER->get('admin')}
                     <select name="institution" id="institution">
-                    {else}
-                    <select name="institution_requested" id="institution_requested">
-                    {/if}
                         <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
                         {foreach from=$institutions item=i}
                         <option value="{$i->name}"{if $i->name == $.request.institution}" selected="selected"{/if}>{$i->displayname}</option>

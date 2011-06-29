@@ -947,3 +947,6 @@ $string['howtodisable'] = 'You have hidden the information box.  You can control
 
 // Blocktype
 $string['setblocktitle'] = 'Set a block title';
+
+// Download
+$string['filenotfound'] = 'File not found';

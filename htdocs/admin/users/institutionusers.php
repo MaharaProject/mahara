@@ -66,6 +66,7 @@ $usertypeselector = pieform(array(
                 'requesters' => get_string('institutionusersrequesters', 'admin'),
                 'nonmembers' => get_string('institutionusersnonmembers', 'admin'),
                 'members' => get_string('institutionusersmembers', 'admin'),
+                'invited' => get_string('institutionusersinvited', 'admin'),
              ),
             'defaultvalue' => $usertype
         ),
@@ -91,7 +92,8 @@ if ($usertype == 'requesters') {
         'searchparams' => array('member' => 1),
     );
     $submittext = get_string('removeusers', 'admin');
-} else { // $usertype == nonmembers
+}
+else if ($usertype == 'nonmembers') {
     // Behaviour depends on whether we allow users to have > 1 institution
     // LHS either shows all nonmembers or just users with no institution
     // RHS shows users to be invited
@@ -102,6 +104,16 @@ if ($usertype == 'requesters') {
         'searchparams' => array('member' => 0, 'invitedby' => 0, 'requested' => 0)
     );
     $submittext = get_string('inviteusers', 'admin');
+}
+else if ($usertype == 'invited') {
+    // Allow invitations to be revoked
+    $userlistelement = array(
+        'title' => get_string('revokeinvitations', 'admin'),
+        'lefttitle' => get_string('invitedusers', 'admin'),
+        'righttitle' => get_string('userstobeuninvited', 'admin'),
+        'searchparams' => array('member' => 0, 'invitedby' => 1),
+    );
+    $submittext = get_string('revokeinvitations', 'admin');
 }
 
 $userlistelement['type'] = 'userlist';
@@ -159,7 +171,7 @@ function institutionusers_submit(Pieform $form, $values) {
     }
 
     $dataerror = false;
-    if (!in_array($values['usertype'], array('requesters', 'members', 'nonmembers'))
+    if (!in_array($values['usertype'], array('requesters', 'members', 'nonmembers', 'invited'))
         || !is_array($values['users'])) {
         $dataerror = true;
     } else {
@@ -182,8 +194,12 @@ function institutionusers_submit(Pieform $form, $values) {
         $action = 'removeMembers';
     } else if ($values['usertype'] == 'requesters') {
         $action = !empty($values['reject']) ? 'declineRequestFromUser' : 'addUserAsMember';
-    } else {
+    }
+    else if ($values['usertype'] == 'nonmembers') {
         $action = (!empty($values['add']) && $USER->get('admin')) ? 'addUserAsMember' : 'inviteUser';
+    }
+    else {
+        $action = 'uninvite_users';
     }
 
 
@@ -213,6 +229,9 @@ function institutionusers_submit(Pieform $form, $values) {
     }
     else if ($action == 'declineRequestFromUser') {
         $institution->decline_requests($values['users']);
+    }
+    else if ($action == 'uninvite_users') {
+        $institution->uninvite_users($values['users']);
     }
 
     $SESSION->add_ok_msg(get_string('institutionusersupdated_'.$action, 'admin'));
