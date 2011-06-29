@@ -79,7 +79,7 @@ $view = new View($viewid);
 if (param_variable('make_public_submit', null)) {
     pieform(ArtefactTypeComment::make_public_form(param_integer('comment')));
 }
-else if (param_variable('delete_comment_submit', null)) {
+else if (param_variable('delete_comment_submit_x', null)) {
     pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
 }
 
