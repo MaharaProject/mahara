@@ -6,6 +6,8 @@ my $found_bad = 0;
 my $filename;
 my $reported_filename = "";
 my $lineno;
+my $stack;
+my $stackage;
 sub bad_line {
     my ($why, $line) = @_;
 
@@ -62,13 +64,27 @@ while (<>) {
             bad_line("conditional and looping statements should have a space between keywords ".
                      "and the condition brackets", $_);
         }
-        if (/^\s*{/) {
-            bad_line("opening curly braces are do no need their own line.", $_);
+        if (/\)$/) {#Note no trailing semicolon
+            $stack = $_;
+        }
+        if (/^\s*{/ && $stack ne "") {
+            bad_line("opening curly braces do not need their own line.", "$stack\n$_");
+            $stack = "";
         }
         if (/require_once\s+\(?/) {
             bad_line("a require_once statement should look like a function call, ".
                      "without a space between the keyword and the bracket.", $_);
         }
+    }
+
+    #Implement aging of the stack to prevent
+    #erroneous matches of seccond condition
+    if ($stackage > 0) {
+        $stackage = 0;
+        $stack = "";
+    }
+    if ($stack ne "") {
+        $stackage++;
     }
 }
 
