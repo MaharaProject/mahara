@@ -414,7 +414,7 @@ function editaccess_validate(Pieform $form, $values) {
                 $item['startdate'] = null;
             }
             else if (!$item['startdate'] = strptime($item['startdate'], $dateformat)) {
-                $SESSION->add_error_msg(get_string('unrecogniseddateformat', 'view'));
+                $SESSION->add_error_msg(get_string('datetimeformatguide'));
                 $form->set_error('accesslist', '');
                 break;
             }
@@ -422,7 +422,7 @@ function editaccess_validate(Pieform $form, $values) {
                 $item['stopdate'] = null;
             }
             else if (!$item['stopdate'] = strptime($item['stopdate'], $dateformat)) {
-                $SESSION->add_error_msg(get_string('unrecogniseddateformat', 'view'));
+                $SESSION->add_error_msg(get_string('datetimeformatguide'));
                 $form->set_error('accesslist', '');
                 break;
             }
