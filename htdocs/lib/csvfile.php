@@ -157,3 +157,28 @@ class CsvFile {
     }
 
 }
+
+class CSVErrors {
+
+    private $csverrors = array();
+
+    function add($line, $msg) {
+        if (!isset($this->csverrors[$line])) {
+            $this->csverrors[$line] = array();
+        }
+        $this->csverrors[$line][] = $msg;
+    }
+
+    function process() {
+        if (empty($this->csverrors)) {
+            return;
+        }
+        ksort($this->csverrors);
+        $errorstring = implode("<br>\n", array_shift($this->csverrors));
+        while ($lineerrors = array_shift($this->csverrors)) {
+            $errorstring .= "<br>\n" . implode("<br>\n", $lineerrors);
+        }
+        return $errorstring;
+    }
+
+}
