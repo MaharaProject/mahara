@@ -2950,7 +2950,7 @@ function build_pagination($params) {
     }
     $output .= '">';
 
-    if ($params['limit'] && ($params['limit'] <= $params['count'])) {
+    if ($params['limit'] && ($params['limit'] < $params['count'])) {
         $pages = ceil($params['count'] / $params['limit']);
         $page = $params['offset'] / $params['limit'];
 
