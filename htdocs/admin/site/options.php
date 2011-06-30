@@ -48,7 +48,6 @@ $searchpluginoptions = get_search_plugins();
 $countries = getoptions_country();
 
 $spamtraps = available_spam_traps();
-
 $siteoptionform = array(
     'name'       => 'siteoptions',
     'jsform'     => true,
@@ -202,6 +201,7 @@ $siteoptionform = array(
                         'staff'  => get_string('adminsandstaffonly', 'admin'),
                         'all'    => get_string('Everyone', 'admin'),
                     ),
+                    'disabled'     => in_array('creategroups', $OVERRIDDEN),
                 ),
                 'createpublicgroups' => array(
                     'type'         => 'select',
@@ -213,12 +213,14 @@ $siteoptionform = array(
                         'all' => get_string('Everyone', 'admin'),
                     ),
                     'help'         => true,
+                    'disabled'     => in_array('createpublicgroups', $OVERRIDDEN),
                 ),
                 'allowgroupcategories' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('allowgroupcategories', 'admin'),
                     'description'  => get_string('allowgroupcategoriesdescription', 'admin'),
                     'defaultvalue' => get_config('allowgroupcategories'),
+                    'disabled'     => in_array('allowgroupcategories', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -365,6 +367,7 @@ $siteoptionform = array(
                    'title'         => get_string('proxyaddress', 'admin'),
                    'description'   => get_string('proxyaddressdescription', 'admin'),
                    'defaultvalue'  => get_config('proxyaddress'),
+                   'disabled'      => in_array('proxyaddress', $OVERRIDDEN),
                 ),
                 'proxyauthmodel' => array(
                     'type'          => 'select',
@@ -375,12 +378,14 @@ $siteoptionform = array(
                                         '' => get_string('none', 'admin'),
                                         'basic' => get_string('proxyauthmodelbasic', 'admin'),
                                     ),
+                    'disabled'      => in_array('proxyauthmodel', $OVERRIDDEN),
                 ),
                 'proxyauthcredentials' => array(
                     'type'          => 'text',
                     'title'         => get_string('proxyauthcredentials', 'admin'),
                     'description'   => get_string('proxyauthcredentialsdescription', 'admin'),
                     'defaultvalue'  => get_config('proxyauthcredentials'),
+                    'disabled'      => in_array('proxyauthcredentials', $OVERRIDDEN),
                 ),
             ),
         ),
@@ -543,6 +548,7 @@ $siteoptionform = array(
                                         'enable' => get_string('enable'),
                                     ),
                     'help'         => true,
+                    'disabled'     => in_array('wysiwyg', $OVERRIDDEN),
                 ),
             ),
         ),
