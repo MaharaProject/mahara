@@ -103,11 +103,11 @@ function denyregistration_submit(Pieform $form, $values) {
 
     if (isset($values['message']) && !empty($values['message'])) {
         $message = get_string('registrationdeniedmessagereason', 'auth.internal',
-            $values['firstname'], get_config('sitename'), $values['message'], display_name($USER), get_config('sitename'));
+            $values['firstname'], get_config('sitename'), $values['message'], display_name($USER));
     }
     else {
         $message = get_string('registrationdeniedmessage', 'auth.internal',
-            $values['firstname'], get_config('sitename'), display_name($USER), get_config('sitename'));
+            $values['firstname'], get_config('sitename'), display_name($USER));
     }
     try {
         delete_records('usr_registration', 'email', $values['email']);

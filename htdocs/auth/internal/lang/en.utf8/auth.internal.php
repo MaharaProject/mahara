@@ -71,9 +71,10 @@ $string['confirmcancelregistration'] = 'Are you sure you want to cancel this reg
 $string['confirmemailsubject'] = 'Confirm email for registration at %s';
 $string['confirmemailmessagetext'] = 'Hi %s,
 
-Thank you for registering an account on %s. Please select the following link to confirm your email address.
-The institution adminstrator will be notified and your application will be considered for approval and you
-will be notified of the outcome.
+Thank you for requesting to register an account on %s. Please select the
+following link to confirm your email address. The institution administrator
+will then be notified of your application. You will receive an email whether
+your registration was approved or not.
 
 %sregister.php?key=%s
 
@@ -95,28 +96,30 @@ The %s Team</pre>';
 $string['emailconfirmedok'] = '<p>You have successfully confirmed your email. You will be notified with further registration details soon.</p>';
 $string['registrationcancelledok'] = 'You have successfully cancelled your registration application.';
 $string['registrationconfirm'] = 'Confirm registration?';
-$string['registrationconfirmdescription'] = 'Registration must be approved by institutional adminstrators.';
+$string['registrationconfirmdescription'] = 'Registration must be approved by institution adminstrators.';
 $string['registrationdeniedemailsubject'] = 'Registration attempt at %s denied.';
-$string['registrationdeniedmessage'] = 'Hi %s,
+$string['registrationdeniedmessage'] = 'Hello %s,
 
-Your registration attempt at %s has been denied.
+We have received your application for joining our institution on %s and
+decided not to grant you access.
 
---
-Regards,
+If you think that this decision was incorrect, please get in touch with me
+via email.
+
+Regards
+%s';
+$string['registrationdeniedmessagereason'] = 'Hello %s,
+
+We have received your application for joining our institution on %s and decided
+not to grant you access for the following reason:
+
 %s
-The %s Team';
-$string['registrationdeniedmessagereason'] = 'Hi %s,
 
-Your registration attempt at %s has been denied.
+If you think that this decision was incorrect, please get in touch with me
+via email.
 
-Reason:
-
-"%s"
-
---
-Regards,
-%s
-The %s Team';
+Regards
+%s';
 $string['registeredokawaitingemail'] = 'You have successfully submitted your application for registration.  An email should have been sent to you in order to confirm your email and continue the process.';
 $string['registrationreason'] = 'Registration Reason';
 $string['registrationreasondesc'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.  The registration cannot be completed without this information.';
@@ -128,7 +131,7 @@ A new user has requested to join the institution '%s'.
 
 Because you are listed as an admin of this institution you need to approve or deny this registration request. To do this, select the following link: %s
 
-Details of the registration request follows:
+Details of the registration request follow:
 
 Name: %s
 Email: %s
