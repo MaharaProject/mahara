@@ -699,24 +699,37 @@ function group_update_members($groupid, $members) {
 
     $oldmembers = get_records_assoc('group_member', 'group', $groupid, '', 'member,role');
 
+    $added = 0;
+    $removed = 0;
+    $updated = 0;
+
     db_begin();
 
     foreach ($members as $userid => $role) {
         if (!isset($oldmembers[$userid])) {
             group_add_user($groupid, $userid, $role);
+            $added ++;
         }
         else if ($oldmembers[$userid]->role != $role) {
             set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+            $updated ++;
         }
     }
 
     foreach (array_keys($oldmembers) as $userid) {
         if (!isset($members[$userid])) {
             group_remove_user($groupid, $userid, true);
+            $removed ++;
         }
     }
 
     db_commit();
+
+    if ($added == 0 && $removed == 0 && $updated == 0) {
+        return null;
+    }
+
+    return array('added' => $added, 'removed' => $removed, 'updated' => $updated);
 }
 
 /**

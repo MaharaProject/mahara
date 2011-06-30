@@ -1795,6 +1795,12 @@ function admin_nav() {
             'title'  => get_string('uploadgroupcsv', 'admin'),
             'weight' => 30,
         ),
+        'managegroups/uploadmemberscsv' => array(
+            'path'   => 'managegroups/uploadmemberscsv',
+            'url'    => 'admin/groups/uploadmemberscsv.php',
+            'title'  => get_string('uploadgroupmemberscsv', 'admin'),
+            'weight' => 40,
+        ),
         'manageinstitutions' => array(
             'path'   => 'manageinstitutions',
             'url'    => 'admin/users/institutions.php',
@@ -1921,6 +1927,12 @@ function institutional_admin_nav() {
             'url'    => 'admin/groups/uploadcsv.php',
             'title'  => get_string('uploadgroupcsv', 'admin'),
             'weight' => 10,
+        ),
+        'managegroups/uploadmemberscsv' => array(
+            'path'   => 'managegroups/uploadmemberscsv',
+            'url'    => 'admin/groups/uploadmemberscsv.php',
+            'title'  => get_string('uploadgroupmemberscsv', 'admin'),
+            'weight' => 20,
         ),
         'manageinstitutions' => array(
             'path'   => 'manageinstitutions',
