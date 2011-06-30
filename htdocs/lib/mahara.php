@@ -480,6 +480,7 @@ function get_languages() {
                     }
                 }
                 closedir($langdir);
+                asort($langs);
             }
             else {
                 log_warn('Unable to read language directory ' . $langbase);
