@@ -695,7 +695,7 @@ function auth_get_available_auth_types($institution=null) {
             $row->description = get_string('notusable', 'auth.' . $row->name);
         }
     }
-    usort($result, create_function('$a, $b', 'return strnatcasecmp($a->title, $b->title);'));
+    usort($result, create_function('$a, $b', 'if ($a->is_usable != $b->is_usable) return $b->is_usable; return strnatcasecmp($a->title, $b->title);'));
 
     return $result;
 }
