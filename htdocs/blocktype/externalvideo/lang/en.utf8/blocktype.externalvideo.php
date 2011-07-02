@@ -27,10 +27,10 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'External Video';
-$string['description'] = 'Embed external videos';
-$string['videourl'] = 'Video URL';
-$string['videourldescription2'] = 'Paste the embed code or the URL of the page where the video is located. You can embed videos from the following sites:';
+$string['title'] = 'External Content';
+$string['description'] = 'Embed external content';
+$string['videourl'] = 'Content URL';
+$string['videourldescription2'] = 'Paste the embed code or the URL of the page where the content is located. You can embed content from the following sites:';
 $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['invalidurl'] = 'Invalid URL';
