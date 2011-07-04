@@ -236,7 +236,7 @@ abstract class PluginExport extends Plugin {
         $typestoplugins = get_records_assoc('artefact_installed_type');
         foreach ($tmpartefacts as $a) {
             $artefact = null;
-            if ($a instanceof ArefactType) {
+            if ($a instanceof ArtefactType) {
                 $artefact = $a;
             }
             else if (is_object($a) && isset($a->id)) {
