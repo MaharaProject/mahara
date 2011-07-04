@@ -112,11 +112,7 @@ switch ($type) {
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
 
-        // NOTE: the institutional admin branch allows the theme to be locked 
-        // down. This means that $USER->get('theme') should be used here 
-        // instead, when that branch is merged. And don't forget to change it 
-        // below at the other get_config('theme') call!
-        if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+        if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . $THEME->basename, 0, $size)) {
             header('Content-type: ' . 'image/png');
             readfile_exit($path);
         }
@@ -126,11 +122,11 @@ switch ($type) {
         $nouserphotopic = $THEME->get_path('images/no_userphoto.png');
         if ($nouserphotopic) {
             // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/file/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
+            $directory = get_config('dataroot') . 'artefact/file/profileicons/no_userphoto/' . $THEME->basename . '/originals/0/';
             check_dir_exists($directory);
             copy($nouserphotopic, $directory . '0');
             // Now we can try and get the image in the correct size
-            if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . $THEME->basename, 0, $size)) {
                 header('Content-type: ' . 'image/png');
                 readfile_exit($path);
             }
