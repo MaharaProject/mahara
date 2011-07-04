@@ -1,4 +1,3 @@
-{auto_escape on}
 {include file="header.tpl"}
 <div id="planswrap">
     <div class="rbuttons">
@@ -26,4 +25,3 @@
 {/if}
 </div>
 {include file="footer.tpl"}
-{/auto_escape}
