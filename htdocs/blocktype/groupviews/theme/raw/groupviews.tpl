@@ -6,7 +6,7 @@
         <tr class="{cycle values='r0,r1'}">
             <td>
                 {if $view.template}
-                <div class="s fr valign"><a href="" class="btn">{str tag=copythisview section=view}</a></div>
+                <div class="s fr valign">{$view.form|safe}</div>
                 {/if}
                 <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
                 <div class="s">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
@@ -26,7 +26,7 @@
         <tr class="{cycle values='r0,r1'}">
             <td>
                 {if $view.template}
-                <div class="s fr valign"><a href="" class="btn">{str tag=copythisview section=view}</a></div>
+                <div class="s fr valign">{$view.form|safe}</div>
                 {/if}
                 <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
                 {if $view.sharedby}
