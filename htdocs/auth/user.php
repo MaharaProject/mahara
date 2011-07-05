@@ -86,6 +86,7 @@ class User {
             'institutions'     => array(),
             'grouproles'       => array(),
             'theme'            => null,
+            'headerlogo'       => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
             'parentuser'       => null,
@@ -820,28 +821,41 @@ class User {
         $admininstitutions = array();
         $staffinstitutions = array();
         $this->theme = get_config('theme');
-        foreach ($institutions as $i) {
+        $this->headerlogo = null;
+        $themeinstitution = null;
+        foreach ($institutions as $name => $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
             }
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
-            if (!empty($i->theme) && $this->theme == get_config('theme') && $i->theme != $this->theme) {
-                $this->theme = $i->theme;
+            if (is_null($themeinstitution)) {
+                $themeinstitution = $name;
             }
         }
         if ($this->authinstance) {
             $authobj = AuthFactory::create($this->authinstance);
             if (isset($institutions[$authobj->institution])) {
-                if ($t = $institutions[$authobj->institution]->theme) {
-                    $this->theme = $t;
+                if ($institutions[$authobj->institution]->theme) {
+                    $themeinstitution = $authobj->institution;
                 }
             }
+        }
+        if (!is_null($themeinstitution)) {
+            $this->theme      = $institutions[$themeinstitution]->theme;
+            $this->headerlogo = $institutions[$themeinstitution]->logo;
         }
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
+    }
+
+    public function get_themedata() {
+        return (object) array(
+            'basename'   => $this->theme,
+            'headerlogo' => $this->headerlogo,
+        );
     }
 
     public function reset_grouproles() {
@@ -1310,8 +1324,8 @@ class LiveUser extends User {
     public function reset_institutions() {
         global $THEME;
         parent::reset_institutions();
-        if (isset($THEME->basename) && $this->theme != $THEME->basename && !defined('INSTALLER')) {
-            $THEME = new Theme($this->theme);
+        if (!defined('INSTALLER')) {
+            $THEME = new Theme($this);
         }
     }
 
