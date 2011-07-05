@@ -2472,5 +2472,16 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('dropdownmenu', 0);
     }
 
+    if ($oldversion < 2011070500) {
+        // Add profileicon foreign key to artefact table, first clearing any bad profileicon
+        // values out of usr.
+        execute_sql("UPDATE {usr} SET profileicon = NULL WHERE NOT profileicon IN (SELECT id FROM {artefact})");
+
+        $table = new XMLDBTable('usr');
+        $key = new XMLDBKey('profileiconfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('profileicon'), 'artefact', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }
