@@ -943,6 +943,27 @@ class User {
     }
 
     /**
+     * Function to check if user can moderate (ie; delete) comments in a view
+     */
+    public function can_moderate_view($v) {
+        $owner = $v->get('owner');
+        if ($owner > 0 && $owner == $this->get('id')) {
+            return true;
+        }
+        $institution = $v->get('institution');
+        if ($institution && $this->can_edit_institution($institution)) {
+            return true;
+        }
+        $group = $v->get('group');
+        if ($group) {
+            $moderatingroles = $v->get('moderatingroles');
+            $this->reset_grouproles();
+            return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $moderatingroles);
+        }
+        return false;
+    }
+
+    /**
      * Function to check current user can edit collection
      *
      * This is fairly straightforward at the moment but it might require more

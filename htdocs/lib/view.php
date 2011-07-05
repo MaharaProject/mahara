@@ -60,6 +60,7 @@ class View {
     private $tags;
     private $categorydata;
     private $editingroles;
+    private $moderatingroles;
     private $template;
     private $retainview;
     private $copynewuser = 0;
@@ -152,6 +153,7 @@ class View {
             }
             safe_require('grouptype', $group->grouptype);
             $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
+            $this->moderatingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_moderating_roles');
         }
     }
 

@@ -99,6 +99,8 @@ abstract class GroupType {
 
     public static abstract function get_view_editing_roles();
 
+    public static abstract function get_view_moderating_roles();
+
     public static abstract function get_view_assessing_roles();
 
     public static function get_group_artefact_plugins() {
