@@ -623,6 +623,9 @@ $string['defaultmembershipperioddescription'] = 'How long new members remain ass
 $string['showonlineusers'] = 'Show online users';
 $string['showonlineusersdesc'] = 'The online users to show to members of this institution.  With different settings the most permissive institution settings will be used.';
 
+$string['Logo'] = 'Logo';
+$string['logodescription'] = 'You can upload an image here that will be displayed to your institution\'s members in place of the standard header logo.  For best results this image should have the same dimensions as the site logo in your institution\'s theme.';
+
 $string['authenticatedby'] = 'Authentication Method';
 $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';
 $string['remoteusername'] = 'Username for external authentication';
