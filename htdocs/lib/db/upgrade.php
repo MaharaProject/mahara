@@ -2483,5 +2483,17 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2011070501) {
+        // Add logo to institution table
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('logo');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('logofk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('logo'), 'artefact', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }

@@ -50,6 +50,11 @@
                 <FIELD NAME="showonlineusers" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="2"/>
                 <FIELD NAME="allowinstitutionpublicviews" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="registerconfirm" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+                <!-- This field should be foreign keyed to the artefact table, however the
+                artefact table already has a key to this table, and XMLDB isn't smart enough
+                to create the tables first, then the keys. The foreign key will be created
+                during the postinst phase. -->
+                <FIELD NAME="logo" TYPE="int" LENGTH="10" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />

@@ -589,6 +589,11 @@ function core_postinst() {
     $key->setAttributes(XMLDB_KEY_FOREIGN, array('profileicon'), 'artefact', array('id'));
     add_key($table, $key);
 
+    $table = new XMLDBTable('institution');
+    $key = new XMLDBKey('logofk');
+    $key->setAttributes(XMLDB_KEY_FOREIGN, array('logo'), 'artefact', array('id'));
+    add_key($table, $key);
+
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // We make use if this if we can
     if (is_postgres()) {
