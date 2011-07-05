@@ -484,7 +484,6 @@ function auth_setup () {
         if (defined('PUBLIC') && !isset($_GET['login'])) {
             if ($lang = param_alphanumext('lang', null)) {
                 $SESSION->set('lang', $lang);
-                current_language($lang);
             }
             return;
         }
