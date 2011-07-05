@@ -580,6 +580,15 @@ function core_postinst() {
     set_config('smtppass', '');
     set_config('smtpsecure', '');
 
+    // XMLDB adds a table's keys immediately after creating the table.  Some
+    // foreign keys therefore cannot be created during the XMLDB installation,
+    // because they refer to tables created later in the installation.  These
+    // missing keys can be created now that all the core tables exist.
+    $table = new XMLDBTable('usr');
+    $key = new XMLDBKey('profileiconfk');
+    $key->setAttributes(XMLDB_KEY_FOREIGN, array('profileicon'), 'artefact', array('id'));
+    add_key($table, $key);
+
     // PostgreSQL supports indexes over functions of columns, MySQL does not. 
     // We make use if this if we can
     if (is_postgres()) {
