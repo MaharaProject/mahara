@@ -1,4 +1,3 @@
-{auto_escape on}
 {foreach from=$tasks.data item=task}
     {if $task->completed == -1}
         <tr class="incomplete">
@@ -22,4 +21,3 @@
             <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a></td>
         </tr>
 {/foreach}
-{/auto_escape}
