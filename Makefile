@@ -15,17 +15,22 @@ ifeq (, $(branch))
 branch := $(shell bash -c "git branch | grep \* | sed -e 's/ *\* *//'" )
 endif
 
+upstream_remote := $(shell git remote -v | grep gitorious.org/mahara/mahara.git | grep fetch | awk '{ print $$1 }')
+ifeq (, $(upstream_remote))
+upstream_remote := origin
+endif
+
 ifeq ("(no branch)", "$(branch)")
-remote := origin
+remote := $(upstream_remote)
 else
 remote := $(shell bash -c "git config --get branch.$(branch).remote" )
 endif
 
 ifeq (".", "$(remote)")
-remote := origin
+remote := $(upstream_remote)
 endif
 ifeq ("", "$(remote)")
-remote := origin
+remote := $(upstream_remote)
 endif
 
 commitid := $(shell bash -c "git merge-base $(remote)/master HEAD")
