@@ -298,6 +298,19 @@ if ($institution || $add) {
             'defaultvalue' => $data->defaultmembershipperiod,
             'help'   => true,
         );
+        $elements['logo'] = array(
+            'type'        => 'file',
+            'title'       => get_string('Logo', 'admin'),
+            'description' => get_string('logodescription', 'admin'),
+            'maxfilesize' => get_max_upload_size(false),
+        );
+        if (!empty($data->logo)) {
+            $logourl = get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $data->logo;
+            $elements['logohtml'] = array(
+                'type'        => 'html',
+                'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
+            );
+        }
         $elements['theme'] = array(
             'type'         => 'select',
             'title'        => get_string('theme'),
@@ -461,6 +474,32 @@ function institution_validate(Pieform $form, $values) {
             $form->set_error('defaultquota', get_string('maxquotatoolow', 'artefact.file'));
         }
     }
+
+    // Check uploaded logo
+    if (!empty($values['logo'])) {
+        require_once('file.php');
+        require_once('uploadmanager.php');
+        $um = new upload_manager('logo');
+        if ($error = $um->preprocess_file()) {
+            $form->set_error('logo', $error);
+            return false;
+        }
+
+        $imageinfo = getimagesize($values['logo']['tmp_name']);
+        if (!$imageinfo || !is_image_type($imageinfo[2])) {
+            $form->set_error('logo', get_string('filenotimage'));
+            return false;
+        }
+
+        // Check the file isn't greater than the max allowable size
+        $width          = $imageinfo[0];
+        $height         = $imageinfo[1];
+        $imagemaxwidth  = get_config('imagemaxwidth');
+        $imagemaxheight = get_config('imagemaxheight');
+        if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+            $form->set_error('logo', get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight));
+        }
+    }
 }
 
 function institution_submit(Pieform $form, $values) {
@@ -471,6 +510,9 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution = new StdClass;
     if ($add) {
         $institution = $newinstitution->name = strtolower($values['name']);
+    }
+    else {
+        $oldinstitution = get_record('institution', 'name', $institution);
     }
 
     $newinstitution->displayname                  = $values['displayname'];
@@ -562,8 +604,47 @@ function institution_submit(Pieform $form, $values) {
     else {
         $where = new StdClass;
         $where->name = $institution;
-        $oldtheme = get_field('institution', 'theme', 'name', $institution);
         update_record('institution', $newinstitution, $where);
+    }
+
+    // Set the logo after updating the institution, because the institution
+    // needs to exist before it can own the logo artefact.
+    if ($values['logo']) {
+        safe_require('artefact', 'file');
+
+        // Entry in artefact table
+        $data = (object) array(
+            'institution' => $institution,
+            'title'       => 'logo',
+            'description' => 'Institution logo',
+            'note'        => $values['logo']['name'],
+            'size'        => $values['logo']['size'],
+        );
+
+        $imageinfo      = getimagesize($values['logo']['tmp_name']);
+        $data->width    = $imageinfo[0];
+        $data->height   = $imageinfo[1];
+        $data->filetype = $imageinfo['mime'];
+        $artefact = new ArtefactTypeProfileIcon(0, $data);
+        if (preg_match("/\.([^\.]+)$/", $values['logo']['name'], $saved)) {
+            $artefact->set('oldextension', $saved[1]);
+        }
+        $artefact->commit();
+
+        $id = $artefact->get('id');
+
+        // Move the file into the correct place.
+        $directory = get_config('dataroot') . 'artefact/file/profileicons/originals/' . ($id % 256) . '/';
+        check_dir_exists($directory);
+        move_uploaded_file($values['logo']['tmp_name'], $directory . $id);
+
+        // Delete the old logo
+        if (!empty($oldinstitution->logo)) {
+            $oldlogo = new ArtefactTypeProfileIcon($oldinstitution->logo);
+            $oldlogo->delete();
+        }
+
+        set_field('institution', 'logo', $id, 'name', $institution);
     }
 
     delete_records('institution_locked_profile_field', 'name', $institution);
@@ -588,8 +669,8 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $message = get_string('institutionupdatedsuccessfully', 'admin');
-        if (isset($values['theme']) && $oldtheme != $values['theme']
-            && (!empty($oldtheme) || $values['theme'] != 'sitedefault')) {
+        if (isset($values['theme']) && $oldinstitution->theme != $values['theme']
+            && (!empty($oldinstitution->theme) || $values['theme'] != 'sitedefault')) {
             $USER->update_theme();
             $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }

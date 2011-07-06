@@ -7,7 +7,7 @@
 <div id="container">
     {if $SITETOP}{$SITETOP|safe}{/if}
     <div id="loading-box"></div>
-    <div id="top-wrapper"><h1 id="site-logo"><a href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo.png'}" alt="{$sitename}"></a></h1>
+    <div id="top-wrapper"><h1 id="site-logo"><a href="{$WWWROOT}"><img src="{$sitelogo}" alt="{$sitename}"></a></h1>
 {include file="header/topright.tpl"}
 {if $DROPDOWNMENU}
 {include file="header/dropdown.tpl"}

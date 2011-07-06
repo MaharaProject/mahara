@@ -137,6 +137,24 @@ switch ($type) {
         header('Content-type: ' . 'image/png');
         readfile_exit($THEME->get_path('images/no_userphoto.png'));
 
+    case 'logobyid':
+        $filedata = get_record('artefact_file_files', 'artefact', param_integer('id'));
+        if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {
+            if ($filedata->filetype) {
+                header('Content-type: ' . $filedata->filetype);
+                $maxage = 604800;
+                header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                header('Cache-Control: max-age=' . $maxage);
+                header('Pragma: public');
+
+                readfile_exit($path);
+            }
+        }
+
+        // Nothing found, use the site logo.
+        header('Content-type: ' . 'image/png');
+        readfile_exit($THEME->get_path('images/site-logo.png'));
+
     case 'blocktype':
         $bt = param_alpha('bt'); // blocktype
         $ap = param_alpha('ap', null); // artefact plugin (optional)

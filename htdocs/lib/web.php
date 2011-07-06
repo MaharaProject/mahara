@@ -375,6 +375,7 @@ EOF;
        $sitename = 'Mahara';
     }
     $smarty->assign('sitename', $sitename);
+    $smarty->assign('sitelogo', $THEME->header_logo());
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
@@ -568,6 +569,11 @@ class Theme {
     public $basename = '';
 
     /**
+     * A user may have had the header logo overridden by an institution
+     */
+    public $headerlogo;
+
+    /**
      * A human-readable version of the theme name
      */
     public $displayname = '';
@@ -636,15 +642,19 @@ class Theme {
             $themename = $arg;
         }
         else if ($arg instanceof User) {
-            $themename = $arg->get('theme');
+            $themedata = $arg->get_themedata();
         }
         else if (is_int($arg)) {
             $user = new User();
             $user->find_by_id($arg);
-            $themename = $user->get('theme');
+            $themedata = $user->get_themedata();
         }
         else {
             throw new SystemException("Argument to Theme::__construct was not a theme name, user object or user ID");
+        }
+
+        if (isset($themedata)) {
+            $themename = $themedata->basename;
         }
 
         if (!$themename) {
@@ -655,11 +665,11 @@ class Theme {
         }
 
         // check the validity of the name
-        if ($this->name_is_valid($themename)) {
-            $this->init_theme($themename);
-        } else {
+        if (!$this->name_is_valid($themename)) {
             throw new SystemException("Theme name is in invalid form: '$themename'");
         }
+
+        $this->init_theme($themename, $themedata);
     }
 
     /**
@@ -673,7 +683,7 @@ class Theme {
     /**
      * Given a theme name, reads in all config and sets fields on this object
      */
-    private function init_theme($themename) {
+    private function init_theme($themename, $themedata) {
         $this->basename = $themename;
 
         $themeconfigfile = get_config('docroot') . 'theme/' . $this->basename . '/themeconfig.php';
@@ -715,6 +725,10 @@ class Theme {
             $this->templatedirs[] = get_config('docroot') . 'theme/' . $currenttheme . '/templates/';
             $this->inheritance[]  = $currenttheme;
         }
+
+        if (!empty($themedata->headerlogo)) {
+            $this->headerlogo = $themedata->headerlogo;
+        }
     }
 
     /**
@@ -754,6 +768,12 @@ class Theme {
         return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
     }
 
+    public function header_logo() {
+        if (!empty($this->headerlogo)) {
+            return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogo;
+        }
+        return $this->get_url('images/site-logo.png');
+    }
 }
 
 

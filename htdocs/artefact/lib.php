@@ -628,6 +628,7 @@ abstract class ArtefactType {
         delete_records_select('artefact_access_role', "artefact IN $idstr");
         delete_records_select('artefact_access_usr', "artefact IN $idstr");
         execute_sql("UPDATE {usr} SET profileicon = NULL WHERE profileicon IN $idstr");
+        execute_sql("UPDATE {institution} SET logo = NULL WHERE logo IN $idstr");
 
         delete_records_select('artefact', "id IN $idstr");
 
