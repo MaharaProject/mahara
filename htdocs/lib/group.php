@@ -424,7 +424,17 @@ function group_update($new, $create=false) {
         }
     }
 
+    $diff = array_diff_assoc((array)$new, (array)$old);
+    if (empty($diff)) {
+        return null;
+    }
+
     db_begin();
+
+    if (isset($new->members)) {
+        group_update_members($new->id, $new->members);
+        unset($new->members);
+    }
 
     update_record('group', $new, 'id');
 
@@ -488,6 +498,7 @@ function group_update($new, $create=false) {
 
     db_commit();
 
+    return $diff;
 }
 
 
@@ -666,8 +677,11 @@ function group_update_members($groupid, $members) {
                 WHERE usr IN (' . join(',', $userids) . ') AND institution = ?',
                 array($group->institution)
             );
+
             if ($baduserids = array_diff($userids, $gooduserids)) {
-                throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+                if (!(count($baduserids) == 1 && $baduserids[0] == $USER->id)) {
+                    throw new UserException("group_update_members: some members are not in the institution $group->institution: " . join(',', $baduserids));
+                }
             }
         }
         else {
@@ -685,24 +699,37 @@ function group_update_members($groupid, $members) {
 
     $oldmembers = get_records_assoc('group_member', 'group', $groupid, '', 'member,role');
 
+    $added = 0;
+    $removed = 0;
+    $updated = 0;
+
     db_begin();
 
     foreach ($members as $userid => $role) {
         if (!isset($oldmembers[$userid])) {
             group_add_user($groupid, $userid, $role);
+            $added ++;
         }
         else if ($oldmembers[$userid]->role != $role) {
             set_field('group_member', 'role', $role, 'group', $groupid, 'member', $userid);
+            $updated ++;
         }
     }
 
     foreach (array_keys($oldmembers) as $userid) {
         if (!isset($members[$userid])) {
             group_remove_user($groupid, $userid, true);
+            $removed ++;
         }
     }
 
     db_commit();
+
+    if ($added == 0 && $removed == 0 && $updated == 0) {
+        return null;
+    }
+
+    return array('added' => $added, 'removed' => $removed, 'updated' => $updated);
 }
 
 /**

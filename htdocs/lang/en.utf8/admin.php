@@ -100,6 +100,8 @@ $string['adminnotifications'] = 'Admin Notifications';
 $string['adminnotificationsdescription'] = 'Overview of how administrators receive system notifications';
 $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
+$string['uploadgroupcsv'] = 'Add Groups by CSV';
+$string['uploadgroupmemberscsv'] = 'Update Group Members by CSV';
 $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 $string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
@@ -107,6 +109,8 @@ $string['usersearchinstructions'] = 'You can search for users by clicking on the
 $string['administergroups'] = 'Administer Groups';
 $string['administergroupsdescription'] = 'Appoint group administrators and delete groups';
 $string['groupcategoriesdescription'] = 'Add and edit group categories';
+$string['uploadgroupcsvdescription'] = 'Upload a CSV file containing new groups';
+$string['uploadgroupmemberscsvdescription'] = 'Upload a CSV file containing members for groups';
 
 $string['institutionmembersdescription'] = 'Associate users with institutions';
 $string['institutionstaffdescription'] = 'Assign users Staff permissions';
@@ -412,6 +416,8 @@ $string['forceuserstochangepassworddescription'] = 'Whether users should be forc
 $string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
 $string['configureauthplugin'] = 'You must configure an authentication plugin before you can add users';
 $string['csvfiledescription'] = 'The file containing users to add';
+$string['groupcsvfiledescription'] = 'The file containing groups to add';
+$string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
 $string['csverroremptyfile'] = 'The csv file is empty.';
 $string['invalidfilename'] = 'The file "%s" does not exist';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies';
@@ -451,14 +457,56 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 <p>Your CSV file may include any other profile fields as you require. The full list of fields is:</p>
 
 %s';
+$string['uploadgroupcsverrorgroupnamealreadyexists'] = 'Error on line %s of your file: The groupname "%s" already exists';
+$string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid';
+$string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid';
+$string['uploadgroupcsverrorshortnamealreadytaken'] = 'Error on line %s of your file: The shortname "%s" is already taken';
+$string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header';
+$string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upload new groups via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+
+<p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
+
+<pre>shortname,displayname,grouptype</pre>
+
+<p>This row must include the <tt>shortname</tt>, <tt>displayname</tt>, and <tt>grouptype</tt> fields</p>
+
+<p>The grouptype field can have any of the following: %s</p>
+
+%s
+
+<p>Your CSV file may include any other fields as you require. The full list of fields is:</p>
+
+%s';
+$string['uploadgroupmemberscsverrorduplicateusername'] = 'Error on line %s of your file: The shortname "%s" and username "%s" have already been specified in this file';
+$string['uploadgroupmemberscsverrorinvalidrole'] = 'Error on line %s of your file: The role "%s" is invalid for the specified group';
+$string['uploadgroupmemberscsverrornoadminlisted'] = 'Error on line %s of your file: The group shortname "%s" did not have any users with the "admin" role specified';
+$string['uploadgroupmemberscsverrornosuchshortname'] = 'Error on line %s of your file: The group shortname "%s" does not exist, or is not part of the institution "%s"';
+$string['uploadgroupmemberscsverrornosuchusername'] = 'Error on line %s of your file: The username "%s" does not exist';
+$string['uploadgroupmemberscsverrorusernotininstitution'] = 'Error on line %s of your file: The username "%s" is not part of the institution "%s"';
+$string['uploadgroupmemberscsvpagedescription2'] = '<p>You may use this facility to update group members in groups controlled by this institution. You can upload new members via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+
+<p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
+
+<pre>shortname,username,role</pre>
+
+<p>This row must include all the fields mentioned above, but can be in any order</p>
+
+<p>The shortname field must be the same as the shortname you used to create the group <a href="%s" title="%s">here</a>.</p>
+
+<p>The role field can have any of the following, depending on the type of group <tt>admin</tt>, <tt>member</tt>, or <tt>tutor</tt></p>';
 $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be e-mailed. Their e-mail addresses may be invalid, or the server Mahara is running on might not be configured to send e-mail properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 $string['updateusers'] = 'Update Users';
 $string['updateusersdescription'] = 'If your CSV file contains the usernames of users who are already members of the institution you have specified, their details will be overwritten with data from the file. Use with care.';
+$string['updategroups'] = 'Update Groups';
+$string['updategroupsdescription'] = 'If your CSV file contains the group shortname of groups who are already in the Mahara system, their details will be overwritten with data from the file. Use with care.';
 $string['csvfileprocessedsuccessfully'] = 'Your CSV file was processed successfully';
 $string['nousersadded'] = 'No users were added.';
+$string['nogroupsadded'] = 'No groups were added.';
 $string['numbernewusersadded'] = 'New users added: %s.';
+$string['numbernewgroupsadded'] = 'New groups added: %s.';
 $string['numberusersupdated'] = 'Users updated: %d.';
+$string['numbergroupsupdated'] = 'Groups updated: %d.';
 $string['showupdatedetails'] = 'Show update details';
 
 // Bulk Leap2A import
