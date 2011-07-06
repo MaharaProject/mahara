@@ -256,6 +256,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
         self.hide_edit_form();
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
+        var descriptionrow = getFirstParentByTagAndClassName($(self.id + '_edit_description'), 'tr');
+        if (self.filedata[id].artefacttype == 'profileicon') {
+            addElementClass(descriptionrow, 'hidden');
+        }
+        else {
+            removeElementClass(descriptionrow, 'hidden');
+        }
         $(self.id + '_edit_title').value = self.filedata[id].title;
         $(self.id + '_edit_description').value = self.filedata[id].description == null ? '' : self.filedata[id].description;
         $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
@@ -311,6 +318,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                             }
                             if (self.filedata[id].childcount > 0) {
                                 warn += get_string('foldernotempty') + ' ';
+                                if (self.filedata[id].profileiconcount > 0) {
+                                    warn += get_string('foldercontainsprofileicons', self.filedata[id].profileiconcount) + ' ';
+                                }
                                 warn += get_string('confirmdeletefolderandcontents');
                             }
                             else if (warn != '') {
@@ -318,6 +328,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                             }
                         }
                         else {
+                            if (self.filedata[id].defaultprofileicon == id) {
+                                warn += get_string('defaultprofileicon') + ' ';
+                            }
                             if (self.filedata[id].attachcount > 0) {
                                 warn += get_string('fileattached', self.filedata[id].attachcount) + ' ';
                             }

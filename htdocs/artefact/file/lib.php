@@ -124,12 +124,14 @@ class PluginArtefactFile extends PluginArtefact {
                     'confirmdeletefile',
                     'confirmdeletefolder',
                     'confirmdeletefolderandcontents',
+                    'defaultprofileicon',
                     'editfile',
                     'editfolder',
                     'fileappearsinviews',
                     'fileattached',
                     'filewithnameexists',
                     'folderappearsinviews',
+                    'foldercontainsprofileicons',
                     'foldernamerequired',
                     'foldernotempty',
                     'maxuploadsize',
@@ -252,7 +254,7 @@ class PluginArtefactFile extends PluginArtefact {
         return array(
             'file'        => array('file'),
             'image'       => array('file', 'image'),
-            'profileicon' => array('image'),
+            'profileicon' => array('file', 'image'),
             'archive'     => array('file'),
         );
     }
@@ -307,7 +309,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
     public static function file_exists($title, $owner, $folder, $institution=null, $group=null) {
-        $filetypesql = "('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')";
+        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $ownersql = artefact_owner_sql($owner, $group, $institution);
         return get_field_sql('SELECT a.id FROM {artefact} a
             LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
@@ -340,21 +342,24 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments,
-                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount';
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
+                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount,
+                COUNT(DISTINCT api.id) AS profileiconcount';
         $from = '
             FROM {artefact} a
                 LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
-                LEFT OUTER JOIN {artefact} c ON c.parent = a.id 
+                LEFT OUTER JOIN {artefact} c ON c.parent = a.id
+                LEFT OUTER JOIN {artefact} api ON api.parent = a.id AND api.artefacttype = \'profileicon\'
                 LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
-                LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id';
+                LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id
+                LEFT OUTER JOIN {usr} u ON a.id = u.profileicon AND a.owner = u.id';
 
         if (!empty($filters['artefacttype'])) {
             $artefacttypes = $filters['artefacttype'];
             $artefacttypes[] = 'folder';
         }
         else {
-            $artefacttypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+            $artefacttypes = PluginArtefactFile::get_artefact_types();
         }
         $where = "
             WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', $artefacttypes)) . ")";
@@ -365,7 +370,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $groupby = '
             GROUP BY
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments';
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments,
+                u.profileicon';
 
         $phvals = array();
 
@@ -522,7 +528,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function count_user_files($owner=null, $group=null, $institution=null) {
-        $filetypes = array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'));
+        $filetypes = PluginArtefactFile::get_artefact_types();
         foreach ($filetypes as $k => $v) {
             if ($v == 'folder') {
                 unset($filetypes[$k]);
@@ -674,7 +680,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $taken = get_column_sql("
             SELECT title FROM {artefact}
-            WHERE artefacttype IN ('" . join("','", array_diff(PluginArtefactFile::get_artefact_types(), array('profileicon'))) . "')
+            WHERE artefacttype IN ('" . join("','", PluginArtefactFile::get_artefact_types()) . "')
             AND title LIKE ? || '%' || ? AND " . $where, array($start, $end));
         $taken = array_flip($taken);
 

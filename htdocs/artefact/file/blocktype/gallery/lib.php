@@ -606,7 +606,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         }
         $element['config']['selectone'] = false;
         $element['filters'] = array(
-            'artefacttype'    => array('image'),
+            'artefacttype'    => array('image', 'profileicon'),
         );
         return $element;
     }

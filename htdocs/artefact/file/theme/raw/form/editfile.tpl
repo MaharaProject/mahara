@@ -12,10 +12,12 @@
             <th><label>{str tag=name}</label></th>
             <td><input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
           </tr>
+          {if $fileinfo->artefacttype != 'profileicon'}
           <tr>
             <th><label>{str tag=description}</label></th>
             <td><input type="text" class="text" name="{$prefix}_edit_description" id="{$prefix}_edit_description" value="{$fileinfo->description}" size="40" /></td>
           </tr>
+          {/if}
           <tr class="tags">
             <th><label>{str tag=tags}</label></th>
             <td>

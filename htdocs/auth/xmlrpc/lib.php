@@ -337,8 +337,11 @@ class AuthXmlrpc extends Auth {
                         // Entry in artefact table
                         $artefact = new ArtefactTypeProfileIcon();
                         $artefact->set('owner', $user->id);
-                        $artefact->set('title', 'Profile Icon');
-                        $artefact->set('note', 'Profile Icon');
+                        $artefact->set('parent', ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'),
+                            get_string('imagesdirdesc', 'artefact.file'), null, true, $user->id));
+                        $artefact->set('title', ArtefactTypeFileBase::get_new_file_title(get_string('profileicon', 'artefact.file'), (int)$artefact->get('parent'), $user->id));  // unique title
+                        $artefact->set('description', get_string('uploadedprofileicon', 'artefact.file'));
+                        $artefact->set('note', get_string('profileicon', 'artefact.file'));
                         $artefact->set('size', $filesize);
                         $artefact->set('filetype', $mime);
                         $artefact->set('width', $width);

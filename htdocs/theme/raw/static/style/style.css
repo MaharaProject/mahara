@@ -294,6 +294,9 @@ tr.highlight td {
 div.listing {
 	padding: 5px;
 }
+tr.profileicon td.filename {
+    font-style: italic;
+}
 /**************************** Pagination ****************************/
 div.pagination {
 	font-size: .9167em;

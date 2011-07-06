@@ -196,7 +196,7 @@ function attachedImageList() {
     var images = [];
     var attachments = editpost_filebrowser.selecteddata;
     for (var a in attachments) {
-        if (attachments[a].artefacttype == 'image') {
+        if (attachments[a].artefacttype == 'image' || attachments[a].artefacttype == 'profileicon') {
             images.push({
                 'id': attachments[a].id,
                 'name': attachments[a].title,
