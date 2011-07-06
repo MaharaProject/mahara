@@ -226,6 +226,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $csverrors = new CSVErrors();
+
     $formatkeylookup = array_flip($csvdata->format);
 
     // First pass validates usernames & passwords in the file, and builds
@@ -246,7 +248,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
 
         if (count($line) != count($csvdata->format)) {
-            CSVErrors::add($i, get_string('uploadcsverrorwrongnumberoffields', 'admin', $i));
+            $csverrors->add($i, get_string('uploadcsverrorwrongnumberoffields', 'admin', $i));
             continue;
         }
 
@@ -263,12 +265,12 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
             if (!$authobj->is_username_valid_admin($username)) {
-                CSVErrors::add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
+                $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
         else if (method_exists($authobj, 'is_username_valid')) {
             if (!$authobj->is_username_valid($username)) {
-                CSVErrors::add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
+                $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
 
@@ -277,29 +279,29 @@ function uploadcsv_validate(Pieform $form, $values) {
             // like whether the password is too easy. The user is going to have to
             // change their password on first login anyway.
             if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-                CSVErrors::add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+                $csverrors->add($i, get_string('uploadcsverrorinvalidpassword', 'admin', $i));
             }
         }
 
         if (isset($emails[$email])) {
             // Duplicate email within this file.
-            CSVErrors::add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+            $csverrors->add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
         }
         else if (!$values['updateusers']) {
             // The email address must be new
             if (record_exists('usr', 'email', $email) || record_exists('artefact_internal_profile_email', 'email', $email, 'verified', 1)) {
-                CSVErrors::add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+                $csverrors->add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
             }
         }
         $emails[$email] = 1;
 
         if (isset($remoteusers) && $remoteuser) {
             if (isset($remoteusers[$remoteuser])) {
-                CSVErrors::add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+                $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
             }
             else if (!$values['updateusers']) {
                 if (record_exists('auth_remote_user', 'remoteusername', $remoteuser, 'authinstance', $authinstance)) {
-                    CSVErrors::add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+                    $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
                 }
             }
             $remoteusers[$remoteuser] = true;
@@ -307,11 +309,11 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         if (isset($usernames[strtolower($username)])) {
             // Duplicate username within this file.
-            CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+            $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
         }
         else {
             if (!$values['updateusers'] && record_exists_select('usr', 'LOWER(username) = ?', strtolower($username))) {
-                CSVErrors::add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+                $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
             }
             $usernames[strtolower($username)] = array(
                 'username' => $username,
@@ -358,7 +360,7 @@ function uploadcsv_validate(Pieform $form, $values) {
                     else {
                         $message = get_string('uploadcsverrorusernotininstitution', 'admin', $line, $username, $INSTITUTIONNAME[$institution]);
                     }
-                    CSVErrors::add($line, $message);
+                    $csverrors->add($line, $message);
                 }
                 else {
                     // Remember that this user is being updated
@@ -368,7 +370,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             else {
                 // New user, check the password
                 if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
-                    CSVErrors::add($line, get_string('uploadcsverrorinvalidpassword', 'admin', $line));
+                    $csverrors->add($line, get_string('uploadcsverrorinvalidpassword', 'admin', $line));
                 }
             }
 
@@ -385,11 +387,11 @@ function uploadcsv_validate(Pieform $form, $values) {
             if ($emailowned && $emailowned->lowerusername != $lowerusername) {
                 if (!$emailowned->principal) {
                     // However, only primary emails can be set in uploadcsv, so this is an error
-                    CSVErrors::add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                    $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
                 }
                 else if (!isset($usernames[$emailowned->lowerusername])) {
                     // The other user is not being updated in this file
-                    CSVErrors::add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                    $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
                 }
                 else {
                     // If the other user is being updated in this file, but isn't changing their
@@ -407,13 +409,13 @@ function uploadcsv_validate(Pieform $form, $values) {
                 );
                 if ($remoteuserowner && $remoteuserowner != $lowerusername && !isset($usernames[$remoteuserowner])) {
                     // The remote username is owned by some other user who is not being updated in this file
-                    CSVErrors::add($line, get_string('uploadcsverrorremoteusertaken', 'admin', $line, $remoteuser, $remoteuserowner));
+                    $csverrors->add($line, get_string('uploadcsverrorremoteusertaken', 'admin', $line, $remoteuser, $remoteuserowner));
                 }
             }
         }
     }
 
-    if ($errors = CSVErrors::process()) {
+    if ($errors = $csverrors->process()) {
         $form->set_error('file', clean_html($errors));
         return;
     }
@@ -602,29 +604,3 @@ $smarty->assign('uploadcsvpagedescription', $uploadcsvpagedescription);
 $smarty->assign('uploadcsvform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/uploadcsv.tpl');
-
-
-class CSVErrors {
-
-    private static $csverrors = array();
-
-    function add($line, $msg) {
-        if (!isset(self::$csverrors[$line])) {
-            self::$csverrors[$line] = array();
-        }
-        self::$csverrors[$line][] = $msg;
-    }
-
-    function process() {
-        if (empty(self::$csverrors)) {
-            return;
-        }
-        ksort(self::$csverrors);
-        $errorstring = implode("<br>\n", array_shift(self::$csverrors));
-        while ($lineerrors = array_shift(self::$csverrors)) {
-            $errorstring .= "<br>\n" . implode("<br>\n", $lineerrors);
-        }
-        return $errorstring;
-    }
-
-}
