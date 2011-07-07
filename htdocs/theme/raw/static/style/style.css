@@ -1589,6 +1589,9 @@ table.attachments td {
 	border-bottom: 2px solid #ddd;
 }
 /* User/view */
+.user-icon-name td {
+    vertical-align: middle;
+}
 #userview {
 	margin: 0 0 20px 0;
 }

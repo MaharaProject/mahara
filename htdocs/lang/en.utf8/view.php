@@ -132,6 +132,7 @@ $string['viewunobjectionablebody'] = '%s has looked at %s by %s and marked it as
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 $string['viewvisitcount'] = '%d page visit(s) from %s to %s';
+$string['profilenotshared'] = 'Full access to this user profile is restricted.';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Picture';
