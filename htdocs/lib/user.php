@@ -2038,10 +2038,10 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
     }
 
     $thumb = get_config('wwwroot') . 'thumb.php';
-    $sizeparams = 'maxwidth=' . $maxwidth . '&amp;maxheight=' . $maxheight;
+    $sizeparams = 'maxwidth=' . $maxwidth . '&maxheight=' . $maxheight;
 
     if (!empty($user->profileicon)) {
-        return $thumb . '?type=profileiconbyid&amp;' . $sizeparams . '&amp;id=' . $user->profileicon;
+        return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
     }
 
     // Assume we have the right size available in docroot, so we don't
