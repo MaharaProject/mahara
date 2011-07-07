@@ -110,8 +110,12 @@ if (count($authinstances) > 0) {
     );
 }
 
+$prefs = (object) expected_account_preferences();
+
 $form = array(
     'name' => 'uploadcsv',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
     'elements' => array(
         'authinstance' => $authinstanceelement,
         'quota' => array(
@@ -147,12 +151,21 @@ $form = array(
             'description' => get_string('updateusersdescription', 'admin'),
             'defaultvalue' => false,
         ),
+        'accountprefs' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('accountoptionsdesc', 'account'),
+            'collapsible' => true,
+            'collapsed' => true,
+            'elements' => general_account_prefs_form_elements($prefs),
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('uploadcsv', 'admin')
         )
     )
 );
+
+unset($prefs);
 
 if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride'))) {
     $form['elements']['quota'] = array(
@@ -503,13 +516,13 @@ function uploadcsv_submit(Pieform $form, $values) {
         if (!$values['updateusers'] || !isset($UPDATES[$user->username])) {
             $user->passwordchange = (int)$values['forcepasswordchange'];
 
-            $user->id = create_user($user, $profilefields, $institution, $authrecord, $remoteuser);
+            $user->id = create_user($user, $profilefields, $institution, $authrecord, $remoteuser, $values);
 
             $addedusers[] = $user;
             log_debug('added user ' . $user->username);
         }
         else if (isset($UPDATES[$user->username])) {
-            $updated = update_user($user, $profilefields, $remoteuser);
+            $updated = update_user($user, $profilefields, $remoteuser, $values);
 
             if (empty($updated)) {
                 // Nothing changed for this user

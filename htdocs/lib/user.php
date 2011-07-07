@@ -212,6 +212,105 @@ function expected_account_preferences() {
                  );
 }
 
+function general_account_prefs_form_elements($prefs) {
+    $elements = array();
+    $elements['friendscontrol'] = array(
+        'type' => 'radio',
+        'defaultvalue' => $prefs->friendscontrol,
+        'title'  => get_string('friendsdescr', 'account'),
+        'separator' => '<br>',
+        'options' => array(
+            'nobody' => get_string('friendsnobody', 'account'),
+            'auth'   => get_string('friendsauth', 'account'),
+            'auto'   => get_string('friendsauto', 'account')
+        ),
+        'help' => true
+    );
+    $elements['wysiwyg'] = array(
+        'type' => 'checkbox',
+        'defaultvalue' => (get_config('wysiwyg')) ? get_config('wysiwyg') == 'enable' : $prefs->wysiwyg,
+        'title' => get_string('wysiwygdescr', 'account'),
+        'help' => true,
+        'disabled' => get_config('wysiwyg'),
+    );
+    $elements['maildisabled'] = array(
+        'type' => 'checkbox',
+        'defaultvalue' => $prefs->maildisabled,
+        'title' => get_string('email'),
+        'help' => true,
+    );
+    $elements['messages'] = array(
+        'type' => 'radio',
+        'defaultvalue' => $prefs->messages,
+        'title' => get_string('messagesdescr', 'account'),
+        'separator' => '<br>',
+        'options' => array(
+            'nobody' => get_string('messagesnobody', 'account'),
+            'friends' => get_string('messagesfriends', 'account'),
+            'allow' => get_string('messagesallow', 'account'),
+        ),
+        'help' => true,
+    );
+    $languages = get_languages();
+    $elements['lang'] = array(
+        'type' => 'select',
+        'defaultvalue' => $prefs->lang,
+        'title' => get_string('language', 'account'),
+        'options' => array_merge(array('default' => get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')'), $languages),
+        'help' => true,
+        'ignore' => count($languages) < 2,
+    );
+    $elements['addremovecolumns'] = array(
+        'type' => 'checkbox',
+        'defaultvalue' => $prefs->addremovecolumns,
+        'title' => get_string('showviewcolumns', 'account'),
+        'help' => 'true'
+    );
+    // TODO: add a way for plugins (like blog!) to have account preferences
+    $elements['multipleblogs'] = array(
+        'type' => 'checkbox',
+        'title'=> get_string('enablemultipleblogs' ,'account'),
+        'description' => get_string('enablemultipleblogsdescription', 'account'),
+        'defaultvalue' => $prefs->multipleblogs,
+    );
+    if (get_config('showtagssideblock')) {
+        $elements['tagssideblockmaxtags'] = array(
+            'type'         => 'text',
+            'size'         => 4,
+            'title'        => get_string('tagssideblockmaxtags', 'account'),
+            'description'  => get_string('tagssideblockmaxtagsdescription', 'account'),
+            'defaultvalue' => isset($prefs->tagssideblockmaxtags) ? $prefs->tagssideblockmaxtags : get_config('tagssideblockmaxtags'),
+            'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 1000),
+        );
+    }
+    if (get_config('userscanhiderealnames')) {
+        $elements['hiderealname'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('hiderealname', 'account'),
+            'description'  => get_string('hiderealnamedescription', 'account'),
+            'defaultvalue' => $prefs->hiderealname,
+        );
+    }
+    if (get_config('homepageinfo')) {
+        $elements['showhomeinfo'] = array(
+            'type' => 'checkbox',
+            'defaultvalue' => $prefs->showhomeinfo,
+            'title' => get_string('showhomeinfo', 'account'),
+            'help' => 'true'
+        );
+    }
+    if (get_config('allowmobileuploads')) {
+        $elements['mobileuploadtoken'] = array(
+            'type'         => 'text',
+            'title'        => get_string('mobileuploadtoken', 'account'),
+            'description'  => get_string('mobileuploadtokendescription', 'account'),
+            'defaultvalue' => isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken')
+        );
+    }
+
+    return $elements;
+}
+
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
 
@@ -1712,9 +1811,10 @@ function addfriend_submit(Pieform $form, $values) {
  * @param string $institution Institution the user should joined to
  * @param stdclass $remoteauth authinstance record for a remote authinstance
  * @param string $remotename username on the remote site
+ * @param array $accountprefs user account preferences to set
  * @return integer id of the new user
  */
-function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null) {
+function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array()) {
     db_begin();
 
     if ($user instanceof User) {
@@ -1773,6 +1873,16 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         ));
     }
 
+    // Set account preferences
+    if (!empty($accountprefs)) {
+        $expectedprefs = expected_account_preferences();
+        foreach ($expectedprefs as $eprefkey => $epref) {
+            if (isset($accountprefs[$eprefkey]) && $accountprefs[$eprefkey] != $epref) {
+                set_account_preference($user->id, $eprefkey, $accountprefs[$eprefkey]);
+            }
+        }
+    }
+
     // Copy site views to the new user's profile
     $checkviewaccess = !$user->newuser;
     $userobj = new User();
@@ -1792,9 +1902,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
  * @param object $user stdclass for the usr table
  * @param object $profile profile field/values to set
  * @param string $remotename username on the remote site
+ * @param array $accountprefs user account preferences to set
  * @return array list of updated fields
  */
-function update_user($user, $profile, $remotename=null) {
+function update_user($user, $profile, $remotename=null, $accountprefs=array()) {
     require_once(get_config('docroot') . 'auth/session.php');
 
     if (!empty($user->id)) {
@@ -1847,6 +1958,17 @@ function update_user($user, $profile, $remotename=null) {
             'remoteusername' => $remotename,
             'localusr'       => $userid,
         ));
+    }
+
+    // Update account preferences
+    if (!empty($accountprefs)) {
+        $expectedprefs = expected_account_preferences();
+        foreach ($expectedprefs as $eprefkey => $epref) {
+            if (isset($accountprefs[$eprefkey]) && $accountprefs[$eprefkey] != get_account_preference($userid, $eprefkey)) {
+                set_account_preference($userid, $eprefkey, $accountprefs[$eprefkey]);
+                $updated[$eprefkey] = $accountprefs[$eprefkey];
+            }
+        }
     }
 
     db_commit();
