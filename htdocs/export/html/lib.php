@@ -654,7 +654,7 @@ class HtmlExportOutputFilter {
         // Thumbnails
         require_once('file.php');
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?thumb\.php\?type=([a-z]+)((&amp;[a-z]+=[x0-9]+)+)*#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?thumb\.php\?type=([a-z]+)((?:(?:&amp;|&|%26)[a-z]+=[x0-9]+)+)*#',
             array($this, 'replace_thumbnail_link'),
             $html
         );
@@ -753,7 +753,8 @@ class HtmlExportOutputFilter {
         if (isset($matches[3])) {
             $type = $matches[2];
 
-            $parts = explode('&amp;', substr($matches[3], 5));
+            $parts = preg_split('/(&amp;|&|%26)/', $matches[3]);
+            array_shift($parts);
             foreach ($parts as $part) {
                 list($key, $value) = explode('=', $part);
                 $options[$key] = $value;
