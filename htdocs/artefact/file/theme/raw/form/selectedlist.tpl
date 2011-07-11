@@ -1,4 +1,4 @@
-<p id="{$prefix}_empty_selectlist"{if !$selectedlist} class="hidden"{/if}>{str tag=nofilesfound section=artefact.file}</p>
+<p id="{$prefix}_empty_selectlist"{if $selectedlist} class="hidden"{/if}>{if !$selectfolders}{str tag=nofilesfound section=artefact.file}{/if}</p>
 <table id="{$prefix}_selectlist"  class="fullwidth {if !$selectedlist} hidden{/if}">
  <thead>
   <tr>
@@ -16,7 +16,7 @@
       <img src="{if $file->artefacttype == 'image'}{$WWWROOT}artefact/file/download.php?file={$file->id}&size=20x20{else}{theme_url filename=images/`$file->artefacttype`.gif}{/if}">
     </td>
     <td class="valign">
-      <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
+      {if $selectfolders}{$displaytitle}{else}<a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>{/if}
     </td>
     <td class="valign">{$file->description}</td>
     <td>

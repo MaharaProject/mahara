@@ -545,9 +545,16 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
         connect(remove, 'onclick', self.unselect);
+        filelink = ''
+        if (self.filedata[id].artefacttype == 'folder') {
+            filelink = self.filedata[id].title;
+        }
+        else {
+            filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
+        }
         appendChildNodes(tbody, TR({'class': 'r' + rows.length % 2 + (highlight ? ' highlight-file' : '')},
                                    TD(null, IMG({'src':self.filedata[id].icon})),
-                                   TD(null, A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title)),
+                                   TD(null, filelink),
                                    TD(null, self.filedata[id].description),
                                    TD(null, remove, INPUT({'type':'hidden', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                                   ));

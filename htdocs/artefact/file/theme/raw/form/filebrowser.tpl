@@ -1,5 +1,5 @@
 {if $config.select}
-{include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight}
+{include file="artefact:file:form/selectedlist.tpl" selectedlist=$selectedlist prefix=$prefix highlight=$highlight selectfolders=$config.selectfolders}
 {/if}
 
 <script type="text/javascript">
