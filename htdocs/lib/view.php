@@ -646,6 +646,7 @@ class View {
 
         foreach ($data as &$item) {
             $item = (array)$item;
+            $item['locked'] = false; // Indicate if item is editable
             if ($item['usr']) {
                 $item['type'] = 'user';
                 $item['id'] = $item['usr'];

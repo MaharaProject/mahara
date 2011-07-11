@@ -186,6 +186,16 @@ function renderAccessListItem(item) {
         setupCalendar(item, 'start');
         setupCalendar(item, 'stop');
     }
+
+    if (item.locked) {
+        // Remove buttons
+        $j(row).find('button').remove();
+
+        // Disable date inputs
+        $j(row).find("input[name*='startdate']").attr('disabled', 'disabled');
+        $j(row).find("input[name*='stopdate']").attr('disabled', 'disabled');
+        $j(row).find('.pieform-calendar-toggle').hide();
+    }
     count++;
 }
 

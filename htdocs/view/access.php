@@ -546,7 +546,7 @@ function editaccess_submit(Pieform $form, $values) {
 $form = pieform($form);
 
 $smarty = smarty(
-    array('tablerenderer'),
+    array('tablerenderer', 'jquery'),
     array(),
     array(
         'mahara' => array('From', 'To', 'datetimeformatguide'),
