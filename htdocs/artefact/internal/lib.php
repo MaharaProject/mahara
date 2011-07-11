@@ -56,6 +56,37 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
             'occupation',
             'industry',
+            'html',
+        );
+    }
+
+    public static function get_profile_artefact_types() {
+        return array(
+            'firstname',
+            'lastname',
+            'studentid',
+            'preferredname',
+            'introduction',
+            'email',
+            'officialwebsite',
+            'personalwebsite',
+            'blogaddress',
+            'address',
+            'town',
+            'city',
+            'country',
+            'homenumber',
+            'businessnumber',
+            'mobilenumber',
+            'faxnumber',
+            'icqnumber',
+            'msnnumber',
+            'aimscreenname',
+            'yahoochat',
+            'skypeusername',
+            'jabberusername',
+            'occupation',
+            'industry',
         );
     }
 
@@ -126,6 +157,7 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function get_artefact_type_content_types() {
         return array(
             'introduction' => array('text'),
+            'html'         => array('text'),
         );
     }
 
@@ -658,3 +690,20 @@ class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {}
 class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
+
+/* Artefact type for generic html fragments */
+class ArtefactTypeHtml extends ArtefactType {
+    public static function get_icon($options=null) {
+
+    }
+
+    public static function is_singular() {
+        return false;
+    }
+
+    public static function get_links($id) {
+        return array(
+            '_default' => get_config('wwwroot'),
+        );
+    }
+}
