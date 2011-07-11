@@ -613,13 +613,13 @@ class View {
 
     public function get_access_records() {
         $data = get_records_sql_array("
-            SELECT accesstype, va.group, role, usr, startdate, stopdate, allowcomments, approvecomments
+            SELECT accesstype, va.group, institution, role, usr, startdate, stopdate, allowcomments, approvecomments
             FROM {view_access} va
             WHERE view = ? AND visible = 1 AND token IS NULL
             ORDER BY
                 accesstype IS NULL, accesstype DESC,
                 va.group, role IS NOT NULL, role,
-                usr,
+                institution, usr,
                 startdate IS NOT NULL, startdate, stopdate IS NOT NULL, stopdate,
                 allowcomments, approvecomments",
             array($this->id)
@@ -654,6 +654,10 @@ class View {
                 $item['type'] = 'group';
                 $item['id'] = $item['group'];
             }
+            else if ($item['institution']) {
+                $item['type'] = 'institution';
+                $item['id'] = $item['institution'];
+            }
             else {
                 $item['type'] = $item['accesstype'];
                 $item['id'] = null;
@@ -682,6 +686,8 @@ class View {
             || ($c = $a->group - $b->group)
             || ($c = !empty($a->role) - !empty($b->role))
             || ($c = strcmp($a->role, $b->role))
+            || ($c = !empty($a->institution) - !empty($b->institution))
+            || ($c = strcmp($a->institution, $b->institution))
             || ($c = $a->usr - $b->usr)
             || ($c = !empty($a->startdate) - !empty($b->startdate))
             || ($c = strcmp($a->startdate, $b->startdate))
@@ -755,6 +761,7 @@ class View {
         global $USER;
         require_once('activity.php');
         require_once('group.php');
+        require_once('institution.php');
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
 
@@ -795,6 +802,7 @@ class View {
                     'accesstype'      => null,
                     'group'           => null,
                     'role'            => null,
+                    'institution'     => null,
                     'usr'             => null,
                     'token'           => null,
                     'startdate'       => null,
@@ -818,6 +826,9 @@ class View {
                         }
                         $accessrecord->role = $item['role'];
                     }
+                    break;
+                case 'institution':
+                    $accessrecord->institution = $item['id'];
                     break;
                 case 'friends':
                     if (!$this->owner) {
@@ -2639,6 +2650,7 @@ class View {
      * - v is publically visible at t (in view_access)
      * - v is visible to logged in users at t (in view_access)
      * - v is visible to friends at t, and u is a friend of the view owner (in view_access)
+     * - v is visible to institution at t, and u is a member of the institution (in view_access)
      * - v is visible to u at t (in view_access_usr)
      * - v is visible to all roles of group g at t, and u is a member of g (view_access_group)
      * - v is visible to users with role r of group g at t, and u is a member of g with role r (view_access_group)
@@ -2754,6 +2766,13 @@ class View {
                     AND vagm.member = ?
             ) AS ag ON (
                 ag.view = v.id
+            )
+            LEFT OUTER JOIN (
+                SELECT vai.view, ui.usr
+                FROM {view_access} vai
+                INNER JOIN {usr_institution} ui ON (vai.institution = ui.institution AND ui.usr = ?)
+            ) AS vaui ON (
+                vaui.view = v.id
             )';
             $where .= "
                 AND (
@@ -2766,13 +2785,14 @@ class View {
                             OR (va.accesstype = 'friends' AND f.usr2 = ?)
                             OR (vau.usr = ?)
                             OR (ag.member = ?)
+                            OR (vaui.usr = ?)
                         )
                     )
                 )
                 AND (
                     v.group IS NULL OR gd.deleted = 0
                 )";
-            $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid));
+            $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid, $viewerid));
         }
 
         if (!$ownedby && $ownerquery) {
@@ -2886,9 +2906,10 @@ class View {
         $select .= "
                 LEFT JOIN {usr_friend} f1 ON (v.owner = f1.usr1 AND f1.usr2 = ?)
                 LEFT JOIN {usr_friend} f2 ON (v.owner = f2.usr2 AND f2.usr1 = ?)
-                LEFT JOIN {group_member} gm ON (va.group = gm.group AND (va.role IS NULL OR va.role = gm.role) AND gm.member = ?)";
+                LEFT JOIN {group_member} gm ON (va.group = gm.group AND (va.role IS NULL OR va.role = gm.role) AND gm.member = ?)
+                LEFT JOIN {usr_institution} ui ON (va.institution = ui.institution AND ui.usr = ?)";
 
-        array_push($values, $viewerid, $viewerid, $viewerid);
+        array_push($values, $viewerid, $viewerid, $viewerid, $viewerid);
 
         $where = "
             WHERE
@@ -2901,6 +2922,7 @@ class View {
                 AND (va.usr = ?
                     OR (va.accesstype = 'friends' AND (f1.usr2 IS NOT NULL OR f2.usr1 IS NOT NULL))
                     OR gm.member IS NOT NULL
+                    OR ui.institution IS NOT NULL
                 )";
 
         array_push($values, $viewerid, $viewerid);
@@ -3486,7 +3508,7 @@ class View {
                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                     AND (va.accesstype IN ('public', 'loggedin', 'friends', 'objectionable')
-                         OR va.usr = ? OR va.token IS NOT NULL OR gm.member IS NOT NULL)
+                         OR va.usr = ? OR va.token IS NOT NULL OR gm.member IS NOT NULL OR va.institution IS NOT NULL)
                 ORDER BY va.token IS NULL DESC, va.accesstype != 'friends' DESC",
                 array($userid, $viewid, $userid)
             );
@@ -3734,6 +3756,8 @@ class View {
      * @return array
      */
     public static function get_accesslists($owner=null, $group=null, $institution=null) {
+        require_once('institution.php');
+
         if (!is_null($owner) && $owner > 0) {
             $ownerobj = new User();
             $ownerobj->find_by_id($owner);
@@ -3806,6 +3830,11 @@ class View {
                 if ($access->role) {
                     $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
                 }
+            }
+            else if ($access->institution) {
+                $access->accesstype = 'institution';
+                $access->id = $access->institution;
+                $access->name = institution_display_name($access->institution);
             }
             else {
                 $key = $access->accesstype;

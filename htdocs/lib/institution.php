@@ -771,3 +771,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
 
     return $data;
 }
+
+function institution_display_name($name) {
+    return get_field('institution', 'displayname', 'name', $name);
+}

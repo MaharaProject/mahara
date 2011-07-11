@@ -80,6 +80,18 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
     }
     
+    $myinstitutions = array();
+    foreach ($USER->get('institutions') as $i) {
+        $myinstitutions[] = array(
+            'type' => 'institution',
+            'id'   => $i->institution,
+            'start' => null,
+            'end'   => null,
+            'name' => hsc($i->displayname),
+            'preset' => false
+        );
+    }
+
     $potentialpresets = $presets;
     foreach ($potentialpresets as &$preset) {
         $preset = array(
@@ -135,6 +147,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('accesslist', json_encode($value));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
+    $smarty->assign('myinstitutions', json_encode($myinstitutions));
     $smarty->assign('allowcomments', $element['allowcomments']);
     $smarty->assign('allgroups', json_encode($allgroups));
     $smarty->assign('mygroups', json_encode($mygroups));
@@ -150,6 +163,9 @@ function pieform_render_viewacl_getvaluebytype($type, $id) {
             break;
         case 'group':
             return get_field('group', 'name', 'id', $id);
+            break;
+        case 'institution':
+            return get_string('institution', 'admin') . ': ' . get_field('institution', 'displayname', 'name', $id);
             break;
     }
     return sprintf("%s: %s", ucfirst($type), $id);

@@ -131,6 +131,7 @@ if ($institution || $add) {
             delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
             delete_records('usr_institution_request', 'institution', $values['i']);
+            delete_records('view_access', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 

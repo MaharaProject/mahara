@@ -2585,5 +2585,35 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011082300) {
+        // Add institution to view_access table
+        $table = new XMLDBTable('view_access');
+
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+
+            // Add foreign key
+            $key = new XMLDBKey('institutionfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+            add_key($table, $key);
+
+            if (is_postgres()) {
+                // Update constraint checks
+                execute_sql('ALTER TABLE {view_access} DROP CONSTRAINT {view_access_check}');
+                execute_sql('ALTER TABLE {view_access} ADD CHECK (
+                    (accesstype IS NOT NULL AND "group" IS NULL     AND usr IS NULL     AND token IS NULL     AND institution IS NULL    ) OR
+                    (accesstype IS NULL     AND "group" IS NOT NULL AND usr IS NULL     AND token IS NULL     AND institution IS NULL    ) OR
+                    (accesstype IS NULL     AND "group" IS NULL     AND usr IS NOT NULL AND token IS NULL     AND institution IS NULL    ) OR
+                    (accesstype IS NULL     AND "group" IS NULL     AND usr IS NULL     AND token IS NOT NULL AND institution IS NULL    ) OR
+                    (accesstype IS NULL     AND "group" IS NULL     AND usr IS NULL     AND token IS NULL     AND institution IS NOT NULL))');
+            }
+            else {
+                // MySQL doesn't support these types of constraints
+            }
+        }
+    }
+
     return $status;
 }
