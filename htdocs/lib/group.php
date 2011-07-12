@@ -1742,7 +1742,7 @@ function install_system_grouphomepage_view() {
             'blocktype' => 'groupviews',
             'title' => '',
             'column' => 1,
-            'config' => null,
+            'config' => array('showgroupviews' => 1, 'showsharedviews' => 1),
         ),
         array(
             'blocktype' => 'groupmembers',

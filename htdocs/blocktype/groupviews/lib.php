@@ -60,6 +60,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // If not set, use default
             $configdata['showgroupviews'] = 1;
         }
+        if (!isset($configdata['showsharedviews'])) {
+            $configdata['showsharedviews'] = 1;
+        }
         $groupid = $instance->get_view()->get('group');
         if (!$groupid) {
             return '';
@@ -116,7 +119,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                     0 => get_string('no'),
                 ),
                 'separator' => '<br>',
-                'defaultvalue' => isset($configdata['showsharedviews']) ? $configdata['showsharedviews'] : 0,
+                'defaultvalue' => isset($configdata['showsharedviews']) ? $configdata['showsharedviews'] : 1,
             ),
         );
     }
