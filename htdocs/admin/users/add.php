@@ -147,6 +147,12 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
     );
 }
 
+// Add general account options
+$prefs = (object) expected_account_preferences();
+$elements = array_merge($elements, general_account_prefs_form_elements($prefs));
+unset($prefs);
+
+
 $form = pieform(array(
     'name'       => 'adduser',
     'autofocus'  => false,
@@ -300,7 +306,7 @@ function adduser_submit(Pieform $form, $values) {
         $values['remoteusername'] = null;
     }
 
-    $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername']);
+    $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername'], $values);
 
     if (isset($user->admin) && $user->admin) {
         require_once('activity.php');

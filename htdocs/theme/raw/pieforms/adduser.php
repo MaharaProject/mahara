@@ -67,7 +67,31 @@ echo $form_tag;
         </tr>
     </tbody>
 </table>
+<br>
 <?php
+
+// Render account preferences with a renderer (inside this template :D)
+$accountprefs = (object) expected_account_preferences();
+$accountprefs = array_keys(general_account_prefs_form_elements($accountprefs));
+$fieldset_elements = array();
+foreach ($accountprefs as $p) {
+    $fieldset_elements[] = $elements[$p];
+}
+
+$accountoptions_fieldset = array(
+    'type' => 'fieldset',
+    'legend' => get_string('accountoptionsdesc', 'account'),
+    'collapsible' => true,
+    'collapsed' => true,
+    'elements' => $fieldset_elements,
+);
+
+$this->include_plugin('renderer', $this->data['renderer']);
+$this->include_plugin('element', 'fieldset');
+$this->build_element_html($accountoptions_fieldset);
+
+echo pieform_render_element($this, $accountoptions_fieldset);
+
 echo $hidden_elements;
 echo '</form>';
 ?>
