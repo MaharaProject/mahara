@@ -27,14 +27,14 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeTextbox extends SystemBlocktype {
+class PluginBlocktypeTextbox extends PluginBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.textbox');
+        return get_string('title', 'blocktype.internal/textbox');
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.textbox');
+        return get_string('description', 'blocktype.internal/textbox');
     }
 
     public static function get_categories() {
@@ -45,15 +45,15 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         $text = (isset($configdata['text'])) ? $configdata['text'] : '';
         safe_require('artefact', 'file');
-        $text = ArtefactTypeFolder::append_view_url($text,$instance->get('view'));
+        $text = ArtefactTypeFolder::append_view_url($text, $instance->get('view'));
         return clean_html($text);
     }
 
     /**
      * Returns a list of artefact IDs that are in this blockinstance.
      *
-     * People may embed artefacts as images etc. They show up as links to the 
-     * download script, which isn't much to go on, but should be enough for us 
+     * People may embed artefacts as images etc. They show up as links to the
+     * download script, which isn't much to go on, but should be enough for us
      * to detect that the artefacts are therefore 'in' this blocktype.
      */
     public static function get_artefacts(BlockInstance $instance) {
@@ -64,6 +64,19 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
             $artefacts = artefact_get_references_in_html($configdata['text']);
         }
         return $artefacts;
+    }
+
+    // Not used, but function definition required by base class
+    public static function artefactchooser_element($default=null) {
+        return array(
+            'name'          => 'artefactid',
+            'type'          => 'artefactchooser',
+            'title'         => get_string('blockcontent', 'blocktype.internal/textbox'),
+            'defaultvalue'  => $default,
+            'blocktype'     => 'textbox',
+            'limit'         => 10,
+            'selectone'     => true,
+        );
     }
 
     public static function has_instance_config() {
@@ -79,7 +92,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
         return array(
             'text' => array(
                 'type' => 'wysiwyg',
-                'title' => get_string('blockcontent', 'blocktype.textbox'),
+                'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'height' => $height . 'px',
                 'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
