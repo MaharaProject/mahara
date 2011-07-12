@@ -56,7 +56,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-        if (!isset($configdata['showgroupview'])) {
+        if (!isset($configdata['showgroupviews'])) {
             // If not set, use default
             $configdata['showgroupviews'] = 1;
         }
