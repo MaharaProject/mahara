@@ -575,7 +575,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
-        'showselfsearchsideblock', 'searchusernames', 'showtagssideblock',
+        'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
