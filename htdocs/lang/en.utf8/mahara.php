@@ -906,7 +906,6 @@ $string['Copyof'] = 'Copy of %s';
 // Profile views
 $string['loggedinusersonly'] = 'Allow logged in users only';
 $string['allowpublicaccess'] = 'Allow public access';
-$string['thisistheprofilepagefor'] = 'This is the profile page for %s';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
