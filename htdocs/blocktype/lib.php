@@ -1110,6 +1110,9 @@ class BlockInstance {
         return $this->artefacts[$id] = $a;
     }
 
+    public function save_artefact_instance($artefact) {
+        $this->artefacts[$artefact->get('id')] = $artefact;
+    }
 
     /**
      * Builds a new block instance as a copy of this one, taking into account 

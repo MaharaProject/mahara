@@ -43,7 +43,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
-        $text = (isset($configdata['text'])) ? $configdata['text'] : '';
+        $text = !empty($configdata['artefactid']) ? $instance->get_artefact_instance($configdata['artefactid'])->get('description') : '';
         safe_require('artefact', 'file');
         $text = ArtefactTypeFolder::append_view_url($text, $instance->get('view'));
         return clean_html($text);
@@ -57,11 +57,14 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
      * to detect that the artefacts are therefore 'in' this blocktype.
      */
     public static function get_artefacts(BlockInstance $instance) {
-        $artefacts = array();
         $configdata = $instance->get('configdata');
-        if (isset($configdata['text'])) {
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $artefacts = artefact_get_references_in_html($configdata['text']);
+        $artefacts = array();
+        if (isset($configdata['artefactid'])) {
+            $artefacts[] = $configdata['artefactid'];
+
+            // Add all artefacts found in the text
+            $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+            $artefacts = array_unique(array_merge($artefacts, artefact_get_references_in_html($text)));
         }
         return $artefacts;
     }
@@ -89,16 +92,47 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             $cfheight = param_integer('cfheight', 0);
             $height = $cfheight ? $cfheight * 0.7 : 150;
         }
-        return array(
+        if (!empty($configdata['artefactid'])) {
+            $artefactid = $configdata['artefactid'];
+            $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+        }
+        $elements = array(
+            'artefactid' => array(
+                'type' => 'hidden', // @todo change to artefactchooser
+                'value' => isset($artefactid) ? $artefactid : null,
+            ),
             'text' => array(
                 'type' => 'wysiwyg',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'height' => $height . 'px',
-                'defaultvalue' => isset($configdata['text']) ? $configdata['text'] : '',
+                'defaultvalue' => isset($text) ? $text : '',
                 'rules' => array('maxlength' => 65536),
             ),
         );
+        return $elements;
+    }
+
+    public static function instance_config_save($values, $instance) {
+        $data = array();
+
+        if (empty($values['artefactid'])) {
+            $view = $instance->get_view();
+            foreach (array('owner', 'group', 'institution') as $f) {
+                $data[$f] = $view->get($f);
+            }
+        }
+
+        $artefact = new ArtefactTypeHtml((int)$values['artefactid'], $data);
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['text']);
+        $artefact->commit();
+
+        $values['artefactid'] = $artefact->get('id');
+        $instance->save_artefact_instance($artefact);
+
+        unset($values['text']);
+        return $values;
     }
 
     public static function default_copy_type() {
