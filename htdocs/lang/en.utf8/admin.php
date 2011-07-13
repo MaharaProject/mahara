@@ -358,6 +358,7 @@ $string['type']                = 'Type';
 $string['footermenu']          = 'Footer Menu';
 $string['footermenudescription'] = 'Enable or disable the links in the footer.';
 $string['footerupdated']       = 'Footer updated';
+$string['footercustomlink'] = 'You can override the default page, <em>%s</em>, by entering a URL here or leave it empty to use the default value.';
 
 // Admin Files
 $string['adminfilespagedescription'] = 'Here you can upload files that can be included in the %sLinks and Resources Menu%s. Files in the home directory will be able to be added to the logged in menu, while files in the public directory will be able to be added to the public menu.';

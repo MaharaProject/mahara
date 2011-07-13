@@ -2245,21 +2245,23 @@ function right_nav() {
 
 
 function footer_menu($all=false) {
+    $wwwroot = get_config('wwwroot');
+
     $menu = array(
         'termsandconditions' => array(
-            'url' => 'terms.php',
+            'url'   => $wwwroot . 'terms.php',
             'title' => get_string('termsandconditions'),
         ),
         'privacystatement' => array(
-            'url' => 'privacy.php',
+            'url'   => $wwwroot . 'privacy.php',
             'title' => get_string('privacystatement'),
         ),
         'about' => array(
-            'url' => 'about.php',
+            'url'   => $wwwroot . 'about.php',
             'title' => get_string('about'),
         ),
         'contactus' => array(
-            'url' => 'contact.php',
+            'url'   => $wwwroot . 'contact.php',
             'title' => get_string('contactus'),
         ),
     );
@@ -2271,6 +2273,14 @@ function footer_menu($all=false) {
         foreach ($menu as $k => $v) {
             if (!in_array($k, $enabled)) {
                 unset($menu[$k]);
+            }
+        }
+    }
+    if ($customlinks = get_config('footercustomlinks')) {
+        $customlinks = unserialize($customlinks);
+        foreach ($customlinks as $k => $v) {
+            if (!empty($menu[$k])) {
+                $menu[$k]['url'] = $v;
             }
         }
     }
