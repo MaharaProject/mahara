@@ -276,7 +276,7 @@ class ArtefactTypeComment extends ArtefactType {
             $artefactid = $artefact->get('id');
         }
         else {
-            $canedit = $USER->can_edit_view($view);
+            $canedit = $USER->can_moderate_view($view);
             $owner = $view->get('owner');
             $isowner = $userid && $userid == $owner;
             $artefactid = null;
