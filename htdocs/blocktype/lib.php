@@ -514,7 +514,7 @@ class BlockInstance {
         unset($values['new']);
 
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
-            $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
+            $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values, $this);
         }
 
         $title = (isset($values['title'])) ? $values['title'] : '';
