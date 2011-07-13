@@ -736,14 +736,16 @@ function ini_get_bool($ini_get_arg) {
  */
 function load_config() {
    global $CFG;
-   global $OVERRIDDEN;    // array containing the database config fields overridden by $CFG
+   global $OVERRIDDEN;    // array containing the config fields overridden by $CFG
+
+   // Get a full list of overridden fields
+   foreach ($CFG as $field => $value) {
+        $OVERRIDDEN[] = $field;
+   }
 
    $dbconfig = get_records_array('config', '', '', '', 'field, value');
-
    foreach ($dbconfig as $cfg) {
-       if (isset($CFG->{$cfg->field})) {
-           $OVERRIDDEN[] = $cfg->field;
-       } else {
+       if (!isset($CFG->{$cfg->field})) {
            $CFG->{$cfg->field} = $cfg->value;
        }
    }
