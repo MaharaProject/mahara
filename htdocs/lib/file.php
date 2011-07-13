@@ -326,8 +326,11 @@ function file_mime_type($file) {
         // if /usr/share/misc/magic is a directory then finfo still succeeds and 
         // doesn't fall back onto the .mcg magic_file
         // force /usr/share/misc/magic.mgc instead in this case
-
-        $magicfile = !is_file('/usr/share/misc/magic') ? '/usr/share/misc/magic.mgc' : null;
+        $MAGICPATH = '/usr/share/misc/magic';
+        $magicfile = null;
+        if (is_dir($MAGICPATH) or is_link($MAGICPATH)) {
+            $magicfile = '/usr/share/misc/magic.mgc';
+        }
 
         if (defined('FILEINFO_MIME_TYPE')) {
             if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
