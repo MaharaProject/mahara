@@ -139,4 +139,61 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         return 'full';
     }
 
+    /**
+     * The content of this block is now stored as an html artefact, but older versions stored
+     * the content directly in the 'text' property of the block config.  If this config has
+     * 'text' but not 'artefactid', create an artefact.
+     *
+     * @param array $biconfig   The block instance config
+     * @param array $viewconfig The view config
+     * @return BlockInstance The newly made block instance
+     */
+    public static function import_create_blockinstance_leap(array $biconfig, array $viewconfig) {
+        $configdata = $biconfig['config'];
+
+        if (isset($configdata['text']) && !isset($configdata['artefactid'])) {
+            $data = array(
+                'title'       => $biconfig['title'],
+                'description' => $configdata['text'],
+                'owner'       => $viewconfig['owner'],
+            );
+            $artefact = new ArtefactTypeHtml(0, $data);
+            $artefact->commit();
+            $configdata['artefactid'] = $artefact->get('id');
+            unset($configdata['text']);
+        }
+
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $biconfig['type'],
+                'configdata' => $configdata,
+            )
+        );
+
+        return $bi;
+    }
+
+    /**
+     * Set the text property of the block config so that exports can be imported
+     * into older versions.
+     *
+     * @param BlockInstance $bi The blockinstance to export the config for.
+     * @return array The config for the blockinstance
+     */
+    public static function export_blockinstance_config_leap(BlockInstance $bi) {
+        $configdata = $bi->get('configdata');
+
+        $result = array();
+
+        $text = '';
+
+        if (!empty($configdata['artefactid'])) {
+            $result['artefactid'] = json_encode(array($configdata['artefactid']));
+            $text = $bi->get_artefact_instance($configdata['artefactid'])->get('description');
+        }
+
+        $result['text'] = json_encode(array($text));
+
+        return $result;
+    }
 }
