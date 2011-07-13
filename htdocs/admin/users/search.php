@@ -39,10 +39,10 @@ $search = (object) array(
     'query'       => trim(param_variable('query', '')),
     'f'           => param_alpha('f', null), // first initial
     'l'           => param_alpha('l', null), // last initial
+    'sortby'      => param_alpha('sortby', 'firstname'),
+    'sortdir'     => param_alpha('sortdir', 'asc'),
 );
 
-$sortby  = param_alpha('sortby', 'firstname');
-$sortdir = param_alpha('sortdir', 'asc');
 $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);
 
@@ -57,6 +57,6 @@ $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', $institutions);
-$smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
+$smarty->assign('results', build_admin_user_search_results($search, $offset, $limit));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/search.tpl');

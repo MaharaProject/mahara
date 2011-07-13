@@ -41,14 +41,14 @@ if ($action == 'search') {
     $params->institution = param_alphanum('institution', null);
     $params->f           = param_alpha('f', null);
     $params->l           = param_alpha('l', null);
+    $params->sortby      = param_alpha('sortby', 'firstname');
+    $params->sortdir     = param_alpha('sortdir', 'asc');
 
     $offset  = param_integer('offset', 0);
     $limit   = param_integer('limit', 10);
-    $sortby  = param_alpha('sortby', 'firstname');
-    $sortdir = param_alpha('sortdir', 'asc');
 
     $data = array();
-    $data['data'] = build_admin_user_search_results($params, $offset, $limit, $sortby, $sortdir);
+    $data['data'] = build_admin_user_search_results($params, $offset, $limit);
     $data['error'] = false;
     $data['message'] = null;
     json_reply(false, $data);
