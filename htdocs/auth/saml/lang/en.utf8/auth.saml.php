@@ -40,6 +40,7 @@ $string['errormissinguserattributes'] = 'You seem to be authenticated but we did
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionvalue'] = 'Institution value to check against attribute';
 $string['institutionregex'] = 'Do partial string match with institution shortname';
+$string['login'] = 'SSO Login';
 $string['notusable'] = 'Please install the SimpleSAMLPHP SP libraries';
 $string['samlfieldforemail'] = 'SSO field for Email';
 $string['samlfieldforfirstname'] = 'SSO field for First Name';
