@@ -136,7 +136,8 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         $role = group_user_access($group->id);
         if ($role) {
             // Get all views created in the group
-            $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id));
+            $sort = array(array('column' => 'type=\'grouphomepage\'', 'desc' => true));
+            $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, null, 0, true, $sort);
 
             // For group members, display a list of views that others have
             // shared to the group

@@ -2390,6 +2390,9 @@ class View {
         if ($groupid && group_user_access($groupid) != 'admin') {
             $where .=  " AND v.type != 'grouphomepage'";
         }
+        else if ($groupid && group_user_access($groupid) == 'admin') {
+             $sort = ' ORDER BY v.type = \'grouphomepage\' desc, v.title, v.id';
+        }
         if ($userid) {
             $select .= ',v.submittedtime,
                 g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname';
@@ -2768,7 +2771,7 @@ class View {
         if (!empty($sort)) {
             $orderby = '';
             foreach ($sort as $item) {
-                if (!preg_match('/^[a-zA-Z_0-9"]+$/', $item['column'])) {
+                if (!preg_match('/^[a-zA-Z_0-9\'="]+$/', $item['column'])) {
                     continue; // skip this item (it fails validation)
                 }
 
@@ -2784,16 +2787,17 @@ class View {
                 }
             }
         }
+
         $viewdata = get_records_sql_assoc('
             SELECT * FROM (
                 SELECT
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
                     v.template, v.mtime, v.ctime,
-                    c.id AS collid, c.name
+                    c.id AS collid, c.name, v.type
                 ' . $from . $where . '
                 GROUP BY
                     v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                    v.template, v.mtime, v.ctime, c.id, c.name
+                    v.template, v.mtime, v.ctime, c.id, c.name, v.type
             ) a
             ORDER BY a.' . $orderby . ', a.id ASC',
             $ph, $offset, $limit
