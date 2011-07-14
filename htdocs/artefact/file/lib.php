@@ -1734,6 +1734,24 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
+    public function delete() {
+        global $USER;
+        parent::delete();
+        if ($USER->get('profileicon') == $this->id) {
+            $USER->profileicon = null;
+            $USER->commit();
+        }
+    }
+
+    public static function bulk_delete($artefactids) {
+        global $USER;
+        parent::bulk_delete($artefactids);
+        if (in_array($USER->get('profileicon'), $artefactids)) {
+            $USER->profileicon = null;
+            $USER->commit();
+        }
+    }
+
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
