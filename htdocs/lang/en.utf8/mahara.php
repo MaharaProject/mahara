@@ -932,7 +932,7 @@ $string['createcollect'] = 'Create and Collect';
 $string['createcollectsubtitle'] = 'Develop your portfolio';
 $string['updateyourprofile'] = 'Update your <a href="%s">Profile</a>';
 $string['uploadyourfiles'] = 'Upload your <a href="%s">Files</a>';
-$string['createyourresume'] = 'Create your <a href="%s">Resume</a>';
+$string['createyourresume'] = 'Create your <a href="%s">Résumé</a>';
 $string['publishablog'] = 'Publish a <a href="%s">Journal</a>';
 $string['Organise'] = 'Organise';
 $string['organisesubtitle'] = 'Showcase your portfolio';
