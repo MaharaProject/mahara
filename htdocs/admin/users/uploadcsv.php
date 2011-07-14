@@ -522,7 +522,7 @@ function uploadcsv_submit(Pieform $form, $values) {
             log_debug('added user ' . $user->username);
         }
         else if (isset($UPDATES[$user->username])) {
-            $updated = update_user($user, $profilefields, $remoteuser, $values);
+            $updated = update_user($user, $profilefields, $remoteuser, $values, true);
 
             if (empty($updated)) {
                 // Nothing changed for this user

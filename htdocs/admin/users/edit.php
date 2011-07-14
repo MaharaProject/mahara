@@ -244,15 +244,42 @@ function edituser_site_validate(Pieform $form, $values) {
         }
     }
 
-    // Check that the external username isn't already in use
-    if (isset($values['remoteusername']) &&
-        $usedby = get_record_select('auth_remote_user',
-        'authinstance = ? AND remoteusername = ? AND localusr != ?',
-        array($values['authinstance'], $values['remoteusername'], $values['id']))
-    ) {
-        $usedbyuser = get_field('usr', 'username', 'id', $usedby->localusr);
-        $SESSION->add_error_msg(get_string('duplicateremoteusername', 'auth', $usedbyuser));
-        $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
+    // Check that the external username isn't already in use by someone else
+    if (isset($values['authinstance']) && isset($values['remoteusername'])) {
+        // there are 4 cases for changes on the page
+        // 1) ai and remoteuser have changed
+        // 2) just ai has changed
+        // 3) just remoteuser has changed
+        // 4) the ai changes and the remoteuser is wiped - this is a delete of the old ai-remoteuser
+
+        // determine the current remoteuser
+        $current_remotename = get_field('auth_remote_user', 'remoteusername',
+                                        'authinstance', $user->authinstance, 'localusr', $user->id);
+        if (!$current_remotename) {
+            $current_remotename = $user->username;
+        }
+        // what should the new remoteuser be
+        $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
+                                    'authinstance', $values['authinstance'], 'localusr', $user->id);
+        if (!$new_remoteuser) {
+            $new_remoteuser = $user->username;
+        }
+        if (strlen(trim($values['remoteusername'])) > 0) {
+            // value changed on page - use it
+            if ($values['remoteusername'] != $current_remotename) {
+                $new_remoteuser = $values['remoteusername'];
+            }
+        }
+
+        // what really counts is who owns the target remoteuser slot
+        $target_owner = get_field('auth_remote_user', 'localusr',
+                                  'authinstance', $values['authinstance'], 'remoteusername', $new_remoteuser);
+        // target remoteuser is owned by someone else
+        if ($target_owner && $target_owner != $user->id) {
+            $usedbyuser = get_field('usr', 'username', 'id', $target_owner);
+            $SESSION->add_error_msg(get_string('duplicateremoteusername', 'auth', $usedbyuser));
+            $form->set_error('remoteusername', get_string('duplicateremoteusernameformerror', 'auth'));
+        }
     }
 }
 
@@ -292,34 +319,55 @@ function edituser_site_submit(Pieform $form, $values) {
     }
     set_account_preference($user->id, 'maildisabled', $values['maildisabled']);
 
-    // Authinstance can be changed by institutional admins if both the
-    // old and new authinstances belong to the admin's institutions
-    $remotename = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
-    if (!$remotename) {
-        $remotename = $user->username;
-    }
-    if (isset($values['authinstance'])
-        && ($values['authinstance'] != $user->authinstance
-            || (isset($values['remoteusername']) && $values['remoteusername'] != $remotename))) {
-        $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?', 
+    // process the change of the authinstance and or the remoteuser
+    if (isset($values['authinstance']) && isset($values['remoteusername'])) {
+        // Authinstance can be changed by institutional admins if both the
+        // old and new authinstances belong to the admin's institutions
+        $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?',
                                              array($values['authinstance'], $user->authinstance));
         if ($USER->get('admin') || 
             ($USER->is_institutional_admin($authinst[$values['authinstance']]->institution) &&
              $USER->is_institutional_admin($authinst[$user->authinstance]->institution))) {
-            delete_records('auth_remote_user', 'localusr', $user->id);
-            if ($authinst[$values['authinstance']]->authname != 'internal') {
-                if (isset($values['remoteusername']) && strlen($values['remoteusername']) > 0) {
-                    $un = $values['remoteusername'];
-                }
-                else {
-                    $un = $remotename;
-                }
-                insert_record('auth_remote_user', (object) array(
-                    'authinstance'   => $values['authinstance'],
-                    'remoteusername' => $un,
-                    'localusr'       => $user->id,
-                ));
+            // determine the current remoteuser
+            $current_remotename = get_field('auth_remote_user', 'remoteusername',
+                                            'authinstance', $user->authinstance, 'localusr', $user->id);
+            if (!$current_remotename) {
+                $current_remotename = $user->username;
             }
+            // if the remoteuser is empty and the ai has changed - delete the old remoteuser record
+            if (strlen(trim($values['remoteusername'])) == 0 &&
+                $values['authinstance'] != $user->authinstance) {
+                delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
+            }
+            // we do not create a remoteuser record for internal ai's
+            if ($authinst[$values['authinstance']]->authname != 'internal') {
+                // what should the new remoteuser be
+                $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
+                                            'authinstance', $values['authinstance'], 'localusr', $user->id);
+                // save the remotename for the target existence check
+                $target_remotename = $new_remoteuser;
+                if (!$new_remoteuser) {
+                    $new_remoteuser = $user->username;
+                }
+                if (strlen(trim($values['remoteusername'])) > 0) {
+                    // value changed on page - use it
+                    if ($values['remoteusername'] != $current_remotename) {
+                        $new_remoteuser = $values['remoteusername'];
+                    }
+                }
+                // only update remote name if the input actually changed on the page  or it doesn't yet exist
+                if ($current_remotename != $new_remoteuser || !$target_remotename) {
+                    // only remove the ones related to this traget authinstance as we now allow multiple
+                    // for dual login mechanisms
+                    delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
+                    insert_record('auth_remote_user', (object) array(
+                        'authinstance'   => $values['authinstance'],
+                        'remoteusername' => $new_remoteuser,
+                        'localusr'       => $user->id,
+                    ));
+                }
+            }
+            // update the ai on the user master
             $user->authinstance = $values['authinstance'];
 
             // update the global $authobj to match the new authinstance
@@ -331,7 +379,7 @@ function edituser_site_submit(Pieform $form, $values) {
 
     // Only change the pw if the new auth instance allows for it
     if (method_exists($authobj, 'change_password')) {
-        $user->passwordchange = (int) ($values['passwordchange'] == 'on');
+        $user->passwordchange = (int) (isset($values['passwordchange']) && $values['passwordchange'] == 'on' ? 1 : 0);
 
         if (isset($values['password']) && $values['password'] !== '') {
             $userobj = new User();
