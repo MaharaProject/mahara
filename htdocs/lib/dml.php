@@ -1109,15 +1109,11 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  */
 function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=false, $returnpk=false) {
     $columns = (array)$whereobject;
-    $field = '*';
     $where = array();
     $values = array();
     $toreturn = false;
 
     foreach ($columns as $key => $value) {
-        if ($field == '*') {
-            $field = $key;
-        }
         if (is_null($value)) {
             $where[] = db_quote_identifier($key) . ' IS NULL ';
             continue;
