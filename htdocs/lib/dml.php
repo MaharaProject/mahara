@@ -1111,14 +1111,19 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
     $columns = (array)$whereobject;
     $field = '*';
     $where = array();
+    $values = array();
     $toreturn = false;
 
     foreach ($columns as $key => $value) {
         if ($field == '*') {
             $field = $key;
         }
-
-        $where[] = db_quote_identifier($key) . ' = ' . db_quote($value);
+        if (is_null($value)) {
+            $where[] = db_quote_identifier($key) . ' IS NULL ';
+            continue;
+        }
+        $where[] = db_quote_identifier($key) . ' = ? ';
+        $values[] = $value;
     }
 
     $where = implode(' AND ', $where);
@@ -1131,7 +1136,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
     }
         
     db_begin();
-    if ($exists = get_record_select($table, $where)) {
+    if ($exists = get_record_select($table, $where, $values)) {
         if ($returnpk) {
             $toreturn = $exists->{$primarykey};
         }
