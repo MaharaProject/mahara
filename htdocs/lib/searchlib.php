@@ -149,7 +149,7 @@ function parse_name_query($text) {
 
 }
 
-function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+function get_admin_user_search_results($search, $offset, $limit) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
@@ -247,7 +247,7 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     
     $results = call_static_method(
         generate_class_name('search', $plugin), 'admin_search_user',
-        $queries, $constraints, $offset, $limit, $sortby, $sortdir
+        $queries, $constraints, $offset, $limit, $search->sortby, $search->sortdir
     );
 
     if ($results['count']) {
@@ -263,10 +263,8 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
 }
 
 
-function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
-
-    $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
 
     $params = array();
     foreach ($search as $k => $v) {
@@ -275,6 +273,19 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         }
     }
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&', $params) . '&limit=' . $limit;
+
+    $results = get_admin_user_search_results($search, $offset, $limit);
+
+    $results['pagination'] = build_pagination(array(
+            'id' => 'admin_usersearch_pagination',
+            'class' => 'center',
+            'url' => $searchurl,
+            'count' => $results['count'],
+            'limit' => $limit,
+            'offset' => $offset,
+            'datatable' => 'searchresults',
+            'jsonscript' => 'admin/users/search.json.php',
+    ));
 
     $cols = array(
         'icon' => array(
@@ -320,9 +331,8 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $smarty->assign_by_ref('institutions', $institutions);
     $smarty->assign('USER', $USER);
     $smarty->assign('searchurl', $searchurl);
-    $smarty->assign('sortby', $sortby);
-    $smarty->assign('sortdir', $sortdir);
-    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('sortby', $search->sortby);
+    $smarty->assign('sortdir', $search->sortdir);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
     $smarty->assign('cols', $cols);
     $smarty->assign('ncols', count($cols));

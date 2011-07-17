@@ -8,14 +8,11 @@
     <h2>{str tag="Results"}</h2>
     <table id="searchresults" class="tablerenderer fullwidth listing">
         <thead>
-          {mahara_pagelinks offset=$results.offset limit=$results.limit count=$results.count url=$pagebaseurl assign=pagelinks}
-          {if ($pagelinks)}
           <tr class="search-results-pages">
             <td colspan="{$ncols}">
-            {$pagelinks|safe}
+            {$results.pagination.html|safe}
             </td>
           </tr>
-          {/if}
           <tr>
           {foreach from=$cols key=f item=c}
             <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
@@ -44,15 +41,13 @@
           </tr>
         {/foreach}
         </tbody>
-          {if $pagelinks}
         <tfoot>
           <tr class="search-results-pages">
             <td colspan={$ncols}>
-            {$pagelinks|safe}
+            {$results.pagination.html|safe}
             </td>
           </tr>
         </tfoot>
-          {/if}
     </table>
 {else}
     <div>{str tag="noresultsfound"}</div>
