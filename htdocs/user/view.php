@@ -66,9 +66,12 @@ else {
 
 $viewid = $view->get('id');
 # access will either be logged in (always) or public as well
-if (!$view || !can_view_view($viewid)) {
+if (!$view) {
+    // No access, so restrict profile view
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
+
+$restrictedview = !can_view_view($viewid);
 
 $javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
@@ -91,6 +94,7 @@ $smarty = smarty(
         'sidebars'    => false,
     )
 );
+$smarty->assign('restrictedview', $restrictedview);
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (
 SELECT gm.group, 'invite' AS type
@@ -286,6 +290,7 @@ $smarty->assign('USERID', $userid);
 $smarty->assign('viewtitle', get_string('usersprofile', 'mahara', display_name($user, null, true)));
 $smarty->assign('viewtype', 'profile');
 
+$smarty->assign('user', $user);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
@@ -306,7 +311,10 @@ else {
     $smarty->assign('pageheadinghtml', $view->display_title(false));
 }
 
-$smarty->assign('viewcontent', $view->build_columns());
+if (!$restrictedview) {
+    $smarty->assign('viewcontent', $view->build_columns());
+}
+
 $smarty->display('user/view.tpl');
 
 mahara_log('views', "$viewid"); // Log view visits

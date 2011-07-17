@@ -1,7 +1,13 @@
 {if $microheaders}
   {include file="viewmicroheader.tpl"}
 {else}
-  {include file="header.tpl"}{if $pageheadinghtml}<h1>{$pageheadinghtml|safe}</h1>{/if}
+  {include file="header.tpl"}
+  <table class="user-icon-name"><tr>
+  <td><img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="" /></td>
+  {if $pageheadinghtml}
+    <td><h1>{$pageheadinghtml|safe}</h1></td>
+  {/if}
+  </tr></table>
   {if $ownprofile}
   <div class="rbuttons">
     <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn">{str tag=editthisview section=view}</a>
@@ -53,7 +59,11 @@
                 	<div id="view" class="cl">
                     	<div id="bottom-pane">
                     	    <div id="column-container">
-                                {$viewcontent|safe}
+                                {if $restrictedview}
+                                    <strong>{str tag=profilenotshared section=view}</strong>
+                                {else}
+                                    {$viewcontent|safe}
+                                {/if}
                         	    <div class="cb"></div>
                         	</div>
                     	</div>
