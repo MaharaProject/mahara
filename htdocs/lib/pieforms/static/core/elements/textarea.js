@@ -73,7 +73,7 @@ function PieformTextarea(element) {//{{{
     setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1, 'w': this.dimensions.w});
     setStyle(this.element, {
         'margin-bottom': '0',
-        'width': '100%',
+        'width': '100%'
     });
 
     // Wrap textarea
