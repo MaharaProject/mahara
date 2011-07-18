@@ -494,15 +494,11 @@ class ArtefactTypeComment extends ArtefactType {
             }
 
             if (get_config_plugin('artefact', 'comment', 'commentratings') and $item->rating) {
-                $item->rating = valid_rating($item->rating);
-                $item->ratingimage = '';
-                for ($i = MIN_RATING; $i <= MAX_RATING; $i++) {
-                    $checked = '';
-                    if ($i === $item->rating) {
-                        $checked = 'checked="checked"';
-                    }
-                    $item->ratingimage .= '<input name="star'.$item->id.'" type="radio" class="star" '.$checked.' disabled="disabled"/>';
-                }
+                $item->ratingdata = (object) array(
+                    'value' => valid_rating($item->rating),
+                    'min_rating' => MIN_RATING,
+                    'max_rating' => MAX_RATING,
+                );
             }
         }
 
