@@ -3299,7 +3299,6 @@ class View {
             'previoustext' => '',
             'nexttext' => '',
             'lasttext' => '',
-            'numbersincludefirstlast' => false,
             'resultcounttextsingular' => get_string('view', 'view'),
             'resultcounttextplural' => get_string('views', 'view'),
         ));
