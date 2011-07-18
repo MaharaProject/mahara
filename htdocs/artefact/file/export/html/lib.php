@@ -132,10 +132,6 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                 }
             }
         }
-
-        foreach ($removekeys as $key) {
-            unset($this->artefactdata[$key]);
-        }
     }
 
     /**

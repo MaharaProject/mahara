@@ -276,5 +276,20 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         set_config_plugin('artefact', 'file', 'defaultgroupquota', 52428800);
     }
 
+    if ($oldversion < 2011070700) {
+        // Update profileicons' description and location
+        safe_require('artefact', 'file');
+
+        if ($pics = get_records_array('artefact', 'artefacttype', 'profileicon')) {
+            foreach ($pics as $p) {
+                $p->parent = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'),
+                    get_string('imagesdirdesc', 'artefact.file'), null, true, $p->owner);
+                $p->description = empty($p->description) ? get_string('uploadedprofileicon', 'artefact.file') : $p->description;
+
+                update_record('artefact', $p);
+            }
+        }
+    }
+
     return $status;
 }

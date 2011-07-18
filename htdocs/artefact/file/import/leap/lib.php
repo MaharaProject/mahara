@@ -306,9 +306,12 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         $artefact->set('mtime', strtotime((string)$entry->updated));
         if ($isprofileicon) {
             $artefact->set('artefacttype', 'profileicon');
-            $artefact->set('parent', null);
 
-            // Sadly the process for creating a profile icon is a bit dumb. To 
+            // Put profile pic in 'profile pics' folder
+            $artefact->set('parent', ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'),
+                get_string('imagesdirdesc', 'artefact.file'), null, true, $importer->get('usr')));
+
+            // Sadly the process for creating a profile icon is a bit dumb. To
             // be honest, it shouldn't even be a separate artefact type
             $basedir = get_config('dataroot') . 'artefact/file/';
             $olddir  = 'originals/' . ($id % 256) . '/';

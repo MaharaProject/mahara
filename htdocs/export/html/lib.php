@@ -709,6 +709,7 @@ class HtmlExportOutputFilter {
         case 'file':
         case 'folder':
         case 'image':
+        case 'profileicon':
         case 'archive':
             return '<a href="' . $this->get_export_path_for_file($artefact, array()) . '">' . $matches[5] . '</a>';
         default:
