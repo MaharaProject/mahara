@@ -445,6 +445,41 @@ $string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
 <p>Regards, %s Site Administrator</p>
 
 <p><a href="%sforgotpass.php?key=%s">%sforgotpass.php?key=%s</a></p>';
+
+// Send information about username and how to reset password
+// when moving from external to internal auth with a password already set
+$string['noinstitutionoldpassemailsubject'] = '%s: Membership of %s';
+$string['noinstitutionoldpassemailmessagetext'] = 'Dear %s,
+
+You are no longer a member of %s.
+You may continue to use %s with your current username %s, and the password that you have already set for your account.
+
+If you have forgotten your password, you can reset it by going to the following page and entering in your username.
+
+%sforgotpass.php
+
+If you have any questions regarding the above, please feel free to contact
+us.
+
+%scontact.php
+
+Regards, %s Site Administrator
+
+%sforgotpass.php';
+$string['noinstitutionoldpassemailmessagehtml'] = '<p>Dear %s,</p>
+
+<p>You are no longer a member of %s.</p>
+<p>You may continue to use %s with your current username %s, and the password that you have already set for your account.</p>
+
+<p>If you have forgotten your password, you can reset it by going to the following page and entering in your username.</p>
+
+<p><a href="%sforgotpass.php">%sforgotpass.php</a></p>
+
+<p>If you have any questions regarding the above, please feel free to <a href="%scontact.php">contact us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>
+
+<p><a href="%sforgotpass.php">%sforgotpass.php</a></p>';
 $string['debugemail'] = 'NOTICE: This e-mail was intended for %s <%s> but has been sent to you as per the "sendallemailto" configuration setting.';
 $string['divertingemailto'] = 'Diverting email to %s';
 
