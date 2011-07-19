@@ -935,13 +935,22 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Takes the name of a file input.
      * Returns false for no errors, or a string describing the error.
      */
-    public static function save_uploaded_file($inputname, $data) {
+    public static function save_uploaded_file($inputname, $data, $inputindex=null) {
         require_once('uploadmanager.php');
-        $um = new upload_manager($inputname);
+        $um = new upload_manager($inputname, false, $inputindex);
         if ($error = $um->preprocess_file()) {
             throw new UploadException($error);
         }
-        $size = $um->file['size'];
+        if (isset($inputindex)) {
+            $size = $um->file['size'][$inputindex];
+            $tmpname = $um->file['tmp_name'][$inputindex];
+            $filetype = $um->file['type'][$inputindex];
+        }
+        else {
+            $size = $um->file['size'];
+            $tmpname = $um->file['tmp_name'];
+            $filetype = $um->file['type'];
+        }
         if (!empty($data->owner)) {
             global $USER;
             if ($data->owner == $USER->get('id')) {
@@ -964,17 +973,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $data->size = $size;
 
-        if ($um->file['type'] == 'application/octet-stream') {
+        if ($filetype == 'application/octet-stream') {
             // the browser wasn't sure, so use file_mime_type to guess
             require_once('file.php');
-            $data->filetype = file_mime_type($um->file['tmp_name']);
+            $data->filetype = file_mime_type($tmpname);
         }
         else {
-            $data->filetype = $um->file['type'];
+            $data->filetype = $filetype;
         }
 
         $data->oldextension = $um->original_filename_extension();
-        $f = self::new_file($um->file['tmp_name'], $data);
+        $f = self::new_file($tmpname, $data);
         $f->commit();
         $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo

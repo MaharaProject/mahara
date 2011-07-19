@@ -117,14 +117,18 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.upload_presubmit = function (e) {
         // Display upload status
-        self.nextupload++;
-        var localname = basename($(self.id + '_userfile').value);
-        var message = makeMessage(DIV(null,
-            IMG({'src':get_themeurl('images/loading.gif')}), ' ',
-            get_string('uploadingfiletofolder',localname,self.foldername)
-        ), 'info');
-        setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
-        appendChildNodes(self.id + '_upload_messages', message);
+        if ($(self.id + '_userfile').files) {
+            for (var i = 0; i < $(self.id + '_userfile').files.length; ++ i) {
+                self.nextupload++;
+                var localname = $(self.id + '_userfile').files[i].fileName;
+                var message = makeMessage(DIV(null,
+                    IMG({'src':get_themeurl('images/loading.gif')}), ' ',
+                    get_string('uploadingfiletofolder',localname,self.foldername)
+                    ), 'info');
+                setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
+                appendChildNodes(self.id + '_upload_messages', message);
+            }
+        }
         $(self.id+'_uploadnumber').value = self.nextupload;
         return true;
     }
@@ -144,7 +148,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'type':'file',
             'class':'file',
             'id':self.id+'_userfile',
-            'name':'userfile',
+            'name':'userfile[]',
+            'multiple':'',
             'size':40
         }));
         if (!$(self.id + '_uploadsubmit')) {
@@ -608,6 +613,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.callback = function (form, data) {
+        if (data.multiuploads) {
+            for (var i in data.multiuploads) {
+                self.callback(form, data.multiuploads[i]);
+            }
+            return;
+        }
         self.form = form; // ????
         if (data.uploaded || data.error || data.deleted) {
             self.callback_feedback(data);  // add/update message

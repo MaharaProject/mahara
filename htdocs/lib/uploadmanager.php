@@ -51,9 +51,10 @@ class upload_manager {
      *
      * @param string $inputname Name in $_FILES.
      */
-    function upload_manager($inputname, $handlecollisions=false) {
+    function upload_manager($inputname, $handlecollisions=false, $inputindex=null) {
         $this->inputname = $inputname;
         $this->handlecollisions = $handlecollisions;
+        $this->inputindex = $inputindex;
     }
 
     /** 
@@ -71,14 +72,23 @@ class upload_manager {
         $file = $_FILES[$name];
 
         $maxsize = get_config('maxuploadsize');
-        if ($maxsize && $file['size'] > $maxsize) {
+        if (isset($this->inputindex)) {
+            $size = $file['size'][$this->inputindex];
+            $error = $file['error'][$this->inputindex];
+            $tmpname = $file['tmp_name'][$this->inputindex];
+        }
+        else {
+            $size = $file['size'];
+            $error = $file['error'];
+            $tmpname = $file['tmp_name'];
+        }
+        if ($maxsize && $size > $maxsize) {
             return get_string('uploadedfiletoobig');
         }
 
-        if ($file['error'] != UPLOAD_ERR_OK) {
-            $errormsg = get_string('phpuploaderror', 'mahara', get_string('phpuploaderror_' . $file['error']), $file['error']);
-            log_debug($errormsg);
-            if ($file['error'] == UPLOAD_ERR_NO_TMP_DIR || $file['error'] == UPLOAD_ERR_CANT_WRITE) {
+        if ($error != UPLOAD_ERR_OK) {
+            $errormsg = get_string('phpuploaderror', 'mahara', get_string('phpuploaderror_' . $error), $error);
+            if ($error == UPLOAD_ERR_NO_TMP_DIR || $error == UPLOAD_ERR_CANT_WRITE) {
                 // The admin probably needs to fix this; notify them
                 // @TODO: Create a new activity type for general admin messages.
                 $message = (object) array(
@@ -89,19 +99,19 @@ class upload_manager {
                 require_once('activity.php');
                 activity_occurred('maharamessage', $message);
             }
-            else if ($file['error'] == UPLOAD_ERR_INI_SIZE || $file['error'] == UPLOAD_ERR_FORM_SIZE) {
+            else if ($error == UPLOAD_ERR_INI_SIZE || $error == UPLOAD_ERR_FORM_SIZE) {
                 return get_string('uploadedfiletoobig');
             }
         }
 
-        if (!is_uploaded_file($file['tmp_name'])) {
+        if (!is_uploaded_file($tmpname)) {
             return get_string('notphpuploadedfile');
         }
 
         if (get_config('viruschecking')) {
             $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
             if ($pathtoclam && file_exists($pathtoclam) && is_executable($pathtoclam)) {
-                if ($errormsg = mahara_clam_scan_file($file)) {
+                if ($errormsg = mahara_clam_scan_file($file, $this->inputindex)) {
                     return $errormsg;
                 }
             }
@@ -154,7 +164,13 @@ class upload_manager {
             $newname = $this->rename_duplicate_file($destination, $newname);
         }
 
-        if (move_uploaded_file($this->file['tmp_name'], $destination . '/' . $newname)) {
+        if (isset($this->inputindex)) {
+            $tmpname = $this->file['tmp_name'][$this->inputindex];
+        }
+        else {
+            $tmpname = $this->file['tmp_name'];
+        }
+        if (move_uploaded_file($tmpname, $destination . '/' . $newname)) {
             chmod($destination . '/' . $newname, get_config('directorypermissions'));
             return false;
         }
@@ -197,9 +213,17 @@ class upload_manager {
     }
 
     public function original_filename_extension() {
-        if (isset($this->file)
-            && !empty($this->file['name']) 
-            && preg_match("/\.([^\.]+)$/", $this->file['name'], $m)) {
+        if (isset($this->file)) {
+            if (isset($this->inputindex)) {
+                $filename = $this->file['name'][$this->inputindex];
+            }
+            else {
+                $filename = $this->file['name'];
+            }
+        }
+        if (isset($filename)
+            && !empty($filename)
+            && preg_match("/\.([^\.]+)$/", $filename, $m)) {
             return strtolower($m[1]);
         }
         return null;
@@ -256,9 +280,15 @@ function clam_handle_infected_file($file) {
  * @param mixed $file The file to scan from $files. or an absolute path to a file.
  * @return false if no errors, or a string if there's an error.
  */ 
-function mahara_clam_scan_file($file) {
+function mahara_clam_scan_file($file, $inputindex=null) {
 
-    if (is_array($file) && is_uploaded_file($file['tmp_name'])) { // it's from $_FILES
+    if (isset($inputindex)) {
+        $tmpname = $file['tmp_name'][$inputindex];
+    }
+    else if (is_array($file)) {
+        $tmpname = $file['tmp_name'];
+    }
+    if (is_array($file) && is_uploaded_file($tmpname)) { // it's from $_FILES
         $fullpath = $file['tmp_name'];
     }
     else if (file_exists($file)) {
