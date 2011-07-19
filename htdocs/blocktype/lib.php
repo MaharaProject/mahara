@@ -580,7 +580,13 @@ class BlockInstance {
         $movecontrols = array();
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        $title = $this->get_title();
+        try {
+            $title = $this->get_title();
+        }
+        catch (NotFoundException $e) {
+            log_debug('Cannot render block title. Original error follows: ' . $e->getMessage());
+            $title = get_string('notitle', 'view');
+        }
 
         if ($configure) {
             list($content, $js) = array_values($this->build_configure_form($new));
@@ -589,7 +595,7 @@ class BlockInstance {
             try {
                 $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
             }
-            catch (ArtefactNotFoundException $e) {
+            catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug 
                 // somewhere else that meant that this blockinstance wasn't 
                 // told that the image was previously deleted. But the block 
@@ -671,7 +677,7 @@ class BlockInstance {
         try {
             $content = call_static_method($classname, 'render_instance', $this);
         }
-        catch (ArtefactNotFoundException $e) {
+        catch (NotFoundException $e) {
             // Whoops - where did the image go? There is possibly a bug
             // somewhere else that meant that this blockinstance wasn't
             // told that the image was previously deleted. But the block
@@ -691,7 +697,14 @@ class BlockInstance {
             && !trim($content)) {
             return;
         }
-        $smarty->assign('title', $this->get_title());
+        try {
+            $title = $this->get_title();
+        }
+        catch (NotFoundException $e) {
+            log_debug('Cannot render block title. Original error follows: ' . $e->getMessage());
+            $title = get_string('notitle', 'view');
+        }
+        $smarty->assign('title', $title);
 
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
