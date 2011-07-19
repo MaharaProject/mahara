@@ -584,6 +584,10 @@ class PluginSearchInternal extends PluginSearch {
                 }
             }
         }
+        if (!is_null($institution->lastinstitution)) {
+            $where .= " AND t.tag = ?";
+            $values[] = 'lastinstitution:' . $institution->lastinstitution;
+        }
 
         $count = get_field_sql('SELECT COUNT(*) ' . $sql . $where, $values);
 

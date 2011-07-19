@@ -475,13 +475,6 @@ class Institution {
             'usr_tag',
             (object) array(
                 'usr' => $user->id,
-                'tag' => 'lastinstitution:' . strtolower($this->displayname),
-            )
-        );
-        insert_record(
-            'usr_tag',
-            (object) array(
-                'usr' => $user->id,
                 'tag' => 'lastinstitution:' . strtolower($this->name),
             )
         );

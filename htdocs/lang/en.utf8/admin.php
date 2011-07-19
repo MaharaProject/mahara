@@ -96,6 +96,7 @@ $string['institutions']   = 'Institutions';
 $string['institutiondetails']   = 'Institution Details';
 $string['institutionauth']   = 'Institution Authorities';
 $string['institutionsdescription'] = 'Install and manage installed institutions';
+$string['lastinstitution'] = 'Previous Institution';
 $string['adminnotifications'] = 'Admin Notifications';
 $string['adminnotificationsdescription'] = 'Overview of how administrators receive system notifications';
 $string['uploadcsv'] = 'Add Users by CSV';
@@ -694,6 +695,7 @@ $string['institutionmemberspagedescription'] = 'On this page you can see users w
 
 $string['institutionusersinstructionsrequesters'] = 'The list of users on the left shows all users who have asked to join your institution.  You can use the search box to reduce the number of users displayed.  If you would like to add users to the institution, or decline their membership requests, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow.  The "Add members" button will add all the users on the right to the institution.  The "Decline requests" button will remove the membership requests of the users on the right.';
 $string['institutionusersinstructionsnonmembers'] = 'The list of users on the left shows all users who are not yet members of your institution.  You can use the search box to reduce the number of users displayed.  To invite users to join the institution, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow to move those users to the list on the right.  The "Invite Users" button will send invitations to all the users on the right.  These users will not be associated with the institution until they accept the invitation.';
+$string['institutionusersinstructionslastinstitution'] = 'The list of users on the left shows all users who are not yet members of your institution and who have left the selected institution.  You can use the search box to reduce the number of users displayed.  To invite users to join the institution, first move some users to the right hand side by selecting one or more users and then clicking on the right arrow to move those users to the list on the right.  The "Invite Users" button will send invitations to all the users on the right.  These users will not be associated with the institution until they accept the invitation.';
 $string['institutionusersinstructionsmembers'] = 'The list of users on the left shows all members of the institution.  You can use the search box to reduce the number of users displayed.  To remove users from the institution, first move some users to the right hand side by selecting one or more users on the left and then clicking on the right arrow.  The users you selected will move to the right hand side.  The "Remove Users" button will remove all the users on the right from the institution.  The users on the left will remain in the institution.';
 $string['institutionusersinstructionsinvited'] = 'The list of users on the left shows all users who have been sent an invitation to join the institution and who have not yet accepted or declined.  You can use the search box to reduce the number of users displayed.  To revoke invitations to the institution, first move some users to the right hand side by selecting one or more users on the left and then clicking on the right arrow.  The users you selected will move to the right hand side.  The "Revoke Invitations" button will remove all invitations to the users on the right.  The users on the left will retain their invitations and will still be able to join at any time.';
 
@@ -708,6 +710,7 @@ $string['institutionstudentiddescription'] = 'An optional identifier specific to
 $string['userstodisplay'] = 'Users to display:';
 $string['institutionusersrequesters'] = 'People who have requested institution membership';
 $string['institutionusersnonmembers'] = 'People who have not requested membership yet';
+$string['institutionuserslastinstitution'] = 'People who have left a given institution';
 $string['institutionusersmembers'] = 'People who are already institution members';
 $string['institutionusersinvited'] = 'People who have been invited';
 
@@ -717,6 +720,7 @@ $string['userstobeadded'] = 'Users to be added as members';
 $string['userstoaddorreject'] = 'Users to be added/rejected';
 $string['addmembers'] = 'Add members';
 $string['inviteuserstojoin'] = 'Invite users to join the institution';
+$string['userswhohaveleft'] = 'Users who have left institution %s';
 $string['Non-members'] = 'Non-members';
 $string['userstobeinvited'] = 'Users to be invited';
 $string['inviteusers'] = 'Invite Users';

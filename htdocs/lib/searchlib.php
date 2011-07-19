@@ -90,7 +90,7 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
 function get_institutional_admin_search_results($search, $limit) {
     $institution = new StdClass;
     $institution->name = $search->institution;
-    foreach (array('member', 'requested', 'invitedby') as $p) {
+    foreach (array('member', 'requested', 'invitedby', 'lastinstitution') as $p) {
         $institution->{$p} = $search->{$p};
     }
     $results = institutional_admin_user_search($search->query, $institution, $limit);
