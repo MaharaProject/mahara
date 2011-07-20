@@ -2615,5 +2615,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011082400) {
+        // Add cron entry for cache cleanup
+        $cron = new StdClass;
+        $cron->callfunction = 'file_cleanup_old_cached_files';
+        $cron->minute       = '0';
+        $cron->hour         = '1';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }

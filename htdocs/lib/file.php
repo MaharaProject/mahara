@@ -787,3 +787,59 @@ function copyr($source, $dest)
     $dir->close();
     return true;
 }
+
+function file_cleanup_old_cached_files() {
+    global $THEME;
+    $dirs = array('', '/profileicons');
+    foreach (get_all_theme_objects() as $basename => $theme) {
+        $dirs[] = '/profileicons/no_userphoto/' . $basename;
+    }
+    foreach ($dirs as $dir) {
+        $basedir = get_config('dataroot') . 'artefact/file' . $dir . '/resized/';
+        if (!check_dir_exists($basedir, false)) {
+            continue;
+        }
+
+        $mintime = time() - (7 * 24 * 60 * 60); // delete caches older than 1 week
+
+        // Cached files are stored in a three tier md5sum layout
+        // The actual files are stored in the third directory
+        // This loops through all three directories, then checks the files for age
+        // It cleans up any empty directories on the way down again
+
+        $iter1 = new DirectoryIterator($basedir);
+        foreach ($iter1 as $dir1) {
+            if ($dir1->isDot()) continue;
+            $dir1path = $dir1->getPath() . '/' . $dir1->getFilename();
+            $iter2 = new DirectoryIterator($dir1path);
+            foreach ($iter2 as $dir2) {
+                if ($dir2->isDot()) continue;
+                $dir2path = $dir2->getPath() . '/' . $dir2->getFilename();
+                $iter3 = new DirectoryIterator($dir2path);
+                foreach ($iter3 as $dir3) {
+                    if ($dir3->isDot()) continue;
+                    $dir3path = $dir3->getPath() . '/' . $dir3->getFilename();
+                    $fileiter = new DirectoryIterator($dir3path);
+                    foreach ($fileiter as $file) {
+                        if ($file->isFile() && $file->getCTime() < $mintime) {
+                            log_debug('Deleting stale cache file ' . $file->getPath() . '/' . $file->getFilename());
+                            unlink($file->getPath() . '/' . $file->getFilename());
+                        }
+                    }
+                    if (sizeof(scandir($dir3path)) <= 2) {   // first 2 entries are . and ..
+                        log_debug('Deleting empty folder ' . $dir3path);
+                        rmdir($dir3path);
+                    }
+                }
+                if (sizeof(scandir($dir2path)) <= 2) {   // first 2 entries are . and ..
+                    log_debug('Deleting empty folder ' . $dir2path);
+                    rmdir($dir2path);
+                }
+            }
+            if (sizeof(scandir($dir1path)) <= 2) {   // first 2 entries are . and ..
+                log_debug('Deleting empty folder ' . $dir1path);
+                rmdir($dir1path);
+            }
+        }
+    }
+}
