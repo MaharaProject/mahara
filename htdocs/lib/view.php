@@ -2550,6 +2550,8 @@ class View {
             'count'  => $data->count,
             'limit'  => $limit,
             'offset' => $offset,
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
         ));
 
         return array($searchform, $data, $pagination);
@@ -3294,6 +3296,8 @@ class View {
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
+            'jumplinks' => 6,
+            'numbersincludeprevnext' => 2,
             'offsetname' => 'viewoffset',
             'firsttext' => '',
             'previoustext' => '',

@@ -1575,6 +1575,8 @@ function build_userlist_html(&$data, $page, $admingroups) {
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],
+        'jumplinks' => 6,
+        'numbersincludeprevnext' => 2,
         'resultcounttextsingular' => $resultcounttextsingular,
         'resultcounttextplural' => $resultcounttextplural,
         'extradata' => array('page' => $page),

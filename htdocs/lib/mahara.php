@@ -2723,6 +2723,8 @@ function build_portfolio_search_html(&$data) {
         'count' => $data->count,
         'limit' => $data->limit,
         'offset' => $data->offset,
+        'jumplinks' => 6,
+        'numbersincludeprevnext' => 2,
         'numbersincludefirstlast' => false,
         'resultcounttextsingular' => get_string('result'),
         'resultcounttextplural' => get_string('results'),

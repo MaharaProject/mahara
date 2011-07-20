@@ -282,6 +282,8 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'url' => $searchurl,
             'count' => $results['count'],
             'limit' => $limit,
+            'jumplinks' => 8,
+            'numbersincludeprevnext' => 2,
             'offset' => $offset,
             'datatable' => 'searchresults',
             'jsonscript' => 'admin/users/search.json.php',
