@@ -167,6 +167,7 @@ if (count($authinstances) > 1) {
                 'title'        => get_string('remoteusername', 'admin'),
                 'description'  => get_string('remoteusernamedescription', 'admin', hsc(get_config('sitename'))),
                 'defaultvalue' => $un ? $un : $user->username,
+                'help'         => true,
             );
         }
     }
