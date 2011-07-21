@@ -40,6 +40,8 @@ define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
 $themeoptions = get_all_themes();
+unset($themeoptions['custom']); // Only available for institution configurable themes
+
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 

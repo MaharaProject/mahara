@@ -614,6 +614,8 @@ function get_user_accessible_themes() {
 
     }
     $themes = array_merge(array('sitedefault' => '- ' . get_string('sitedefault', 'admin') . ' (' . $themes[get_config('theme')] . ') -'), $themes);
+    unset($themes['custom']);
+
     return $themes;
 }
 

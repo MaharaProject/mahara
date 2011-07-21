@@ -337,7 +337,7 @@ class View {
                     $owner->find_by_id($viewdata['owner']);
                 }
                 $ownertheme = $owner->get('theme');
-                if ($ownertheme && $ownertheme != get_config('theme')) {
+                if ($ownertheme && $ownertheme != get_config('theme') && $ownertheme != 'custom') {
                     $viewdata['theme'] = $ownertheme;
                 }
             }
