@@ -2517,5 +2517,33 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2011072600) {
+        // Add tables to store custom institution styles
+        // Currently only institutions can use them, but merge this with skin tables later...
+        $table = new XMLDBTable('style');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('css', XMLDB_TYPE_TEXT);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $table = new XMLDBTable('style_property');
+        $table->addFieldInfo('style', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('style', 'field'));
+        $table->addKeyInfo('stylefk', XMLDB_KEY_FOREIGN, array('style'), 'style', array('id'));
+        create_table($table);
+
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('style');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10');
+        add_field($table, $field);
+
+        $key = new XMLDBKey('stylefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('style'), 'style', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }
