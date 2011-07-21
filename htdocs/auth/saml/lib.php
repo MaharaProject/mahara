@@ -35,7 +35,7 @@ class AuthSaml extends Auth {
     public function __construct($id = null) {
         $this->type = 'saml';
         $this->has_instance_config = true;
-        
+
         $this->config['simplesamlphplib'] = get_config_plugin('auth', 'saml', 'simplesamlphplib');
         $this->config['simplesamlphpconfig'] = get_config_plugin('auth', 'saml', 'simplesamlphpconfig');
         $this->config['user_attribute'] = '';
@@ -48,8 +48,9 @@ class AuthSaml extends Auth {
         $this->config['institutionvalue'] = '';
         $this->config['updateuserinfoonlogin'] = 1;
         $this->config['remoteuser'] = false;
+        $this->config['loginlink'] = false;
         $this->instanceid = $id;
-        
+
         if (!empty($id)) {
             return $this->init($id);
         }
@@ -75,7 +76,7 @@ class AuthSaml extends Auth {
      * in weautocreateusers
      */
     public function can_auto_create_users() {
-        return (bool)$this->config['weautocreateusers'];    
+        return (bool)$this->config['weautocreateusers'];
     }
 
 
@@ -85,12 +86,12 @@ class AuthSaml extends Auth {
     public function request_user_authorise($attributes) {
         global $USER, $SESSION;
         $this->must_be_ready();
-        
+
         if (empty($attributes) or !array_key_exists($this->config['user_attribute'], $attributes)
                                or !array_key_exists($this->config['institutionattribute'], $attributes)) {
             throw new AccessDeniedException();
         }
-        
+
         $remoteuser      = $attributes[$this->config['user_attribute']][0];
         $firstname       = $attributes[$this->config['firstnamefield']][0];
         $lastname        = $attributes[$this->config['surnamefield']][0];
@@ -100,7 +101,7 @@ class AuthSaml extends Auth {
         if (!$firstname or !$lastname or !$email) {
             throw new AuthInstanceException(get_string('errormissinguserattributes', 'auth.saml'));
         }
-        
+
         $create = false;
         $update = false;
 
@@ -108,20 +109,20 @@ class AuthSaml extends Auth {
         try {
             $user = new User;
             if (get_config('usersuniquebyusername')) {
-                // When turned on, this setting means that it doesn't matter 
-                // which other application the user SSOs from, they will be 
+                // When turned on, this setting means that it doesn't matter
+                // which other application the user SSOs from, they will be
                 // given the same account in Mahara.
                 //
-                // This setting is one that has security implications unless 
-                // only turned on by people who know what they're doing. In 
-                // particular, every system linked to Mahara should be making 
-                // sure that same username == same person.  This happens for 
-                // example if two Moodles are using the same LDAP server for 
+                // This setting is one that has security implications unless
+                // only turned on by people who know what they're doing. In
+                // particular, every system linked to Mahara should be making
+                // sure that same username == same person.  This happens for
+                // example if two Moodles are using the same LDAP server for
                 // authentication.
                 //
-                // If this setting is on, it must NOT be possible to self 
-                // register on the site for ANY institution - otherwise users 
-                // could simply pick usernames of people's accounts they wished 
+                // If this setting is on, it must NOT be possible to self
+                // register on the site for ANY institution - otherwise users
+                // could simply pick usernames of people's accounts they wished
                 // to steal.
                 if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
                     log_warn("usersuniquebyusername is turned on but registration is allowed for an institution. "
@@ -180,7 +181,7 @@ class AuthSaml extends Auth {
             $user->expiry             = null;
             $user->expirymailsent     = 0;
             $user->lastlogin          = time();
-    
+
             $user->firstname          = $firstname;
             $user->lastname           = $lastname;
             $user->email              = $email;
@@ -207,10 +208,15 @@ class AuthSaml extends Auth {
             $userarray = (array)$userobj;
             db_commit();
 
-            // Now we have fired the create event, we need to re-get the data 
+            // Now we have fired the create event, we need to re-get the data
             // for this user
             $user = new User;
             $user->find_by_id($userobj->id);
+
+            if (get_config('usersuniquebyusername')) {
+                // Add them to the institution they have SSOed in by
+                $user->join_institution($institutionname);
+            }
 
         } elseif ($update) {
             set_profile_field($user->id, 'firstname', $firstname);
@@ -219,45 +225,39 @@ class AuthSaml extends Auth {
             $user->lastname = $lastname;
             set_profile_field($user->id, 'email', $email);
             $user->email = $email;
-            
+
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
 
             $user->commit();
         }
 
-        if (get_config('usersuniquebyusername')) {
-            // Add them to the institution they have SSOed in by
-            $user->join_institution($institutionname);
-        }
-
 
         /*******************************************/
 
         // We know who our user is now. Bring em back to life.
-//        ensure_session();
-        log_debug("remote user '$remoteuser' ");
         $result = $USER->reanimate($user->id, $this->instanceid);
+        log_debug("remote user '$remoteuser' is now reanimated as '{$USER->username}' ");
         $SESSION->set('authinstance', $this->instanceid);
 
         return true;
     }
-    
+
     // ensure that a user is logged out of mahara and the SAML 2.0 IdP
     public function logout() {
         global $CFG, $USER, $SESSION;
-        
+
         // logout of mahara
         $USER->logout();
-        
+
         // tidy up the session for retries
-        $SESSION->set('retry', 0);
         $SESSION->set('messages', array());
+        $SESSION->set('wantsurl', null);
         
         // redirect for logout of SAML 2.0 IdP
         redirect($CFG->wwwroot.'/auth/saml/?logout=1');
     }
-        
+
     public function after_auth_setup_page_hook() {
         return;
     }
@@ -283,7 +283,12 @@ class PluginAuthSaml extends PluginAuth {
         'institutionvalue'      => '',
         'institutionregex'      => 0,
         'remoteuser'            => 0,
+        'loginlink'             => 0,
             );
+
+    public static function can_be_disabled() {
+        return true;
+    }
 
     public static function has_config() {
         return true;
@@ -368,6 +373,10 @@ class PluginAuthSaml extends PluginAuth {
                 'type'  => 'hidden',
                 'value' => $instance,
             ),
+            'instancename' => array(
+                'type'  => 'hidden',
+                'value' => 'SAML',
+            ),
             'institution' => array(
                 'type'  => 'hidden',
                 'value' => $institution,
@@ -413,6 +422,13 @@ class PluginAuthSaml extends PluginAuth {
                 'type'  => 'checkbox',
                 'title' => get_string('remoteuser', 'auth.saml'),
                 'defaultvalue' => self::$default_config['remoteuser'],
+                'help'  => true,
+            ),
+            'loginlink' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('loginlink', 'auth.saml'),
+                'defaultvalue' => self::$default_config['loginlink'],
+                'disabled' => (self::$default_config['remoteuser'] ? false : true),
                 'help'  => true,
             ),
             'updateuserinfoonlogin' => array(
@@ -477,13 +493,27 @@ class PluginAuthSaml extends PluginAuth {
                 $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
             }
         }
+        $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
+                                          WHERE ((field = \'institutionattribute\' AND value = ?) OR
+                                                 (field = \'institutionvalue\' AND value = ?)) AND
+                                                 instance IN (SELECT id FROM {auth_instance} WHERE authname = \'saml\' AND id != ?)
+                                          GROUP BY instance
+                                          ORDER BY instance',
+                                      array($values['institutionattribute'], $values['institutionvalue'], $values['instance']));
+        foreach ($dup as $instance) {
+            if ($instance->instance >= 2) {
+                // we already have an authinstance with these same values
+                $form->set_error('institutionattribute', get_string('errorbadinstitution', 'auth.saml'));
+                break;
+            }
+        }
     }
-    
-    
+
+
     public static function save_config_options($values, $form) {
 
         $configs = array('simplesamlphplib', 'simplesamlphpconfig');
-        
+
         if (isset($values['authglobalconfig'])) {
             foreach ($configs as $config) {
                 set_config_plugin('auth', 'saml', $config, $values[$config]);
@@ -491,7 +521,7 @@ class PluginAuthSaml extends PluginAuth {
         }
         else {
             $authinstance = new stdClass();
-    
+
             if ($values['instance'] > 0) {
                 $values['create'] = false;
                 $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
@@ -500,7 +530,7 @@ class PluginAuthSaml extends PluginAuth {
             else {
                 $values['create'] = true;
                 $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
-    
+
                 if ($lastinstance == false) {
                     $authinstance->priority = 0;
                 }
@@ -508,24 +538,25 @@ class PluginAuthSaml extends PluginAuth {
                     $authinstance->priority = $lastinstance[0]->priority + 1;
                 }
             }
-    
+
             $authinstance->institution  = $values['institution'];
             $authinstance->authname     = $values['authname'];
             $authinstance->instancename = $values['authname'];
-            
+
             if ($values['create']) {
                 $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
             }
             else {
                 update_record('auth_instance', $authinstance, array('id' => $values['instance']));
             }
-    
+
             if (empty($current)) {
                 $current = array();
             }
-    
+
             self::$default_config =   array('user_attribute' => $values['user_attribute'],
                                             'weautocreateusers' => $values['weautocreateusers'],
+                                            'loginlink' => $values['loginlink'],
                                             'remoteuser' => $values['remoteuser'],
                                             'firstnamefield' => $values['firstnamefield'],
                                             'surnamefield' => $values['surnamefield'],
@@ -535,13 +566,13 @@ class PluginAuthSaml extends PluginAuth {
                                             'institutionvalue' => $values['institutionvalue'],
                                             'institutionregex' => $values['institutionregex'],
                                             );
-    
+
             foreach(self::$default_config as $field => $value) {
                 $record = new stdClass();
                 $record->instance = $values['instance'];
                 $record->field    = $field;
                 $record->value    = $value;
-    
+
                 if ($values['create'] || !array_key_exists($field, $current)) {
                     insert_record('auth_instance_config', $record);
                 }

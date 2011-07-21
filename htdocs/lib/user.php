@@ -1865,7 +1865,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         else {
             $un = $user->username;
         }
-        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $un);
+        // remote username must not allready exist
+        if (record_exists('auth_remote_user', 'remoteusername', $un, 'authinstance', $user->authinstance)) {
+            throw new InvalidArgumentException("user_create: remoteusername allready exists: ".$un);
+        }
         insert_record('auth_remote_user', (object) array(
             'authinstance'   => $user->authinstance,
             'remoteusername' => $un,
@@ -1903,9 +1906,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
  * @param object $profile profile field/values to set
  * @param string $remotename username on the remote site
  * @param array $accountprefs user account preferences to set
+ * @param bool $forceupdateremote force delete of remotename before update attempted
  * @return array list of updated fields
  */
-function update_user($user, $profile, $remotename=null, $accountprefs=array()) {
+function update_user($user, $profile, $remotename=null, $accountprefs=array(), $forceupdateremote=false) {
     require_once(get_config('docroot') . 'auth/session.php');
 
     if (!empty($user->id)) {
@@ -1952,7 +1956,16 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array()) {
             $updated['remoteuser'] = $remotename;
         }
         delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $userid);
-        delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remotename);
+        // force the update of the remoteuser - for the case of a series of user updates swapping the remoteuser name
+        if ($forceupdateremote) {
+            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remotename);
+        }
+        else {
+            // remote username must not allready exist
+            if (record_exists('auth_remote_user', 'remoteusername', $remotename, 'authinstance', $user->authinstance)) {
+                throw new InvalidArgumentException("user_update: remoteusername allready in use: ".$remotename);
+            }
+        }
         insert_record('auth_remote_user', (object) array(
             'authinstance'   => $user->authinstance,
             'remoteusername' => $remotename,
