@@ -1,0 +1,15 @@
+/* ADMIN HOME */
+#close_site_submit, #suspenddelete #delete #edituser_delete_submit, #institution_suspend_submit {
+    color: #FFFFFF !important;
+}
+
+/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
+#menuitemlist table td {
+    background-color: #f5f8fa;
+}
+#menuitemlist #rownew td {
+	background-color: #e9eef4;
+}
+#menuitemlist tr.edit td {
+    background-color: #f3f7ec;
+}

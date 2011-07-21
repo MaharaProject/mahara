@@ -1,0 +1,616 @@
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author     Paul Walker <paul.walker@catalyst-eu.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
+ */
+
+/* General rules */
+body,
+body#micro {
+    background: #182768;
+	color: #333333;
+}
+a, a:visited, a:link, a:active {
+    color: #d66800;
+    text-decoration: none;
+}
+a:hover, a:focus {
+    text-decoration: underline;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #182768;
+}
+.description,
+.unvalidated,
+.postdetails,
+.postedon {
+    color: #838383;
+}
+
+/**************************** Tables ****************************/
+.main-column thead th {
+    color: #414141;
+	border-bottom: 1px solid #888888;
+}
+.main-column tbody th {
+    color: #414141;
+	border-bottom: none;
+}
+/* table with th border-bottom */
+#searchresults thead th,
+.filelist,
+.tag-results #results {
+	border-bottom: 1px solid #888888;
+}
+/* table with tfoot border-top */
+#searchresults tfoot td,
+#adminstitutionslist tfoot td,
+#profileicons tfoot td,
+#activitylist tfoot td {
+	border-top: 1px solid #888888;
+}
+.main-column table h3 a,
+.main-column table h3 a:visited,
+.main-column table h3 a:link,
+.listing div h3 a,
+.listing div h3 a:visited,
+.listing div h3 a:link {
+	color: #182768 !important;
+}
+.tablerenderer-loading {
+    border: 1px solid #888888;
+	background-color: #000000;
+    color: #FFFFFF;
+}
+/* table with th border-bottom */
+#searchresults thead th {
+	border-bottom: 1px solid #888888;
+}
+/* table with border-bottom */
+#searchresults tfoot td {
+	border-top: 1px solid #888888;
+}
+/* Alternative row background colours */
+.r0,
+.r0 td,
+.d0 {
+    background-color: #fff4ea;
+}
+.r1,
+.r1 td,
+.d1 {
+    background-color: #fff4ea;
+}
+tr.folder td {
+	background: #cfcfcf url(../images/btn-bkgd.png) repeat-x top !important;
+}
+
+/**************************** Pagination ****************************/
+div.pagination a {
+	background-color: #ececec;
+	border: 0;
+}
+
+/**************************** Forms ****************************/
+/* Label */
+label {
+    color: #414141;
+}
+/* required */
+.required th, .required label, .requiredmarker, #register_tandc_container th {
+    color: #c81511;
+}
+/* override required colour to normal colour */
+.required label.plain, .required.radio td label, .required.emaillist td label {
+	color: #414141;
+}
+
+/* Legend */
+legend {
+	color: #414141;
+	font-size: 15px;
+}
+legend a,
+legend a:link,
+legend a:visited,
+legend a:active,
+legend a:hover {
+	color: #d66800 !important;
+}
+
+/* Select */
+select {
+    border: 1px solid #d1d1d1;
+}
+
+/* Fieldset */
+fieldset {
+    border: 1px solid #d1d1d1;
+}
+
+
+/****************************** Buttons ****************************/
+/** input buttons **/
+.btn,
+input.submit,
+input.cancel,
+button,
+.buttondk,
+input.button,
+input.select,
+input#files_filebrowser_edit_artefact,
+ul.groupuserstatus li a {
+	background: #cfcfcf url(../images/btn-bkgd.png) repeat-x top;
+	border-color: #626262 #000000 #000000 #626262;
+	color: #000000 !important;
+}
+/** hover for buttons **/
+.btn:hover,
+input.submit:hover,
+input.cancel:hover,
+button:hover,
+.buttondk:hover,
+input.button:hover,
+input.select:hover,
+input#files_filebrowser_edit_artefact:hover,
+ul.groupuserstatus li a:hover {
+	background: #a7d9f5 url(../images/btn-bkgd-hover.png) repeat-x top;
+	border-color: #626262 #000000 #000000 #626262;
+	color: #000000;
+}
+/** Depress for buttons **/
+.btn:active,
+input.submit:active,
+input.cancel:active,
+button:active,
+.buttondk:active,
+input.button:active,
+input.select:active,
+input#files_filebrowser_edit_artefact:active,
+ul.groupuserstatus li a:active {
+	background: #a7d9f5 url(../images/btn-bkgd-hover.png) repeat-x 1px;
+	border-color: #000000 #626262 #626262 #000000;
+	color: #000000;
+}
+/* buttons that look like links with icons */
+.icon {
+	color: #182768;
+}
+/* except those that shouldn't */
+span.btn a.icon, a span.icon {
+	color: #000000;
+}
+/* buttons that look like links */
+.linkbtn {
+	color: #182768;
+}
+
+/* Search buttons */
+#usf {
+	background: #FFF;
+}
+#usf_submit,
+#usf_submit:hover {
+	background: #FFFFFF url(../images/btn-search.png) no-repeat center !important;
+	border: 0;
+	color: #FFFFFF;
+	text-indent: -999px;
+	font-size: 1%;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 23px;
+	width: 23px;
+	margin-left: 0;
+}
+#selfsearch button,
+.query-button,
+#moderator_search_btn,
+#search_search,
+#selfsearch button,
+#search_submit,
+.btn-search,
+#searchviews_submit,
+#selfsearch button:hover,
+.query-button:hover,
+#moderator_search_btn:hover,
+#search_search:hover,
+#selfsearch button:hover,
+#search_submit:hover,
+.btn-search:hover,
+#searchviews_submit:hover {
+	background: #FFFFFF url(../images/btn-search.png) no-repeat center !important;
+	border: 0;
+	color: #FFFFFF;
+	text-indent: -999px;
+	font-size: 1%;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 22px;
+	width: 22px;
+	margin-left: 0px;
+}
+input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact, .btn, div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.submit.btn-add, button.btn-add, div.btn-msg input.submit, div.btn-edit input.submit, .btn-reply, .btn-subscribe input.submit, .rbuttons, .rbuttons a {
+ * filter:chroma(color=#FFFFFF);
+}
+
+
+/**************************** Top of page elements ****************************/
+#container, #containerX {
+    background: none;
+    margin-top:0px;
+    padding-top:0px;
+    min-width: 970px;
+    width: 90%;
+}
+#top-wrapper {
+    background: transparent;
+    border: none;
+}
+#containerX #top-wrapper {
+	height: auto;
+    background: transparent;
+}
+#loading-box {
+    background-color: #000000 !important;
+	color: #FFFFFF;
+}
+#site-logo {
+	padding: 10px 10px 10px 0;
+}
+#top-wrapper ul,
+#top-wrapper li {
+    text-align: right;
+    display: inline;
+}
+#header-right {
+	padding: 5px 0 0 10px;
+}
+#language-select label {
+    color: #FFFFFF;
+}
+/* Search and language bar */
+#usf_query_container input {
+    color: #888888;
+	width: 205px;
+	border: #888888;
+}
+
+/**************** TOP NAVIGATION ****************/
+#right-nav ul {
+  margin: 1.5em 1em 1em 0;
+  min-width: 20em;
+}
+#right-nav li {
+  padding: 0;
+}
+#right-nav li a {
+  color: #fff;
+}
+#right-nav li.selected a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+#main-nav {
+    padding: 0;
+    margin: 0;
+	height: 32px;
+	background: #f6871f;
+	border-left: 2px solid #FFFFFF;
+	border-top: 2px solid #FFFFFF;
+	border-right: 2px solid #FFFFFF;
+	border-bottom: 0;
+}
+#main-nav ul {
+	float: left;
+}
+#main-nav li {
+    float: left;
+    color: #FFFFFF;
+    text-decoration: none;
+    line-height: 32px;
+    font-weight: bold;
+	font-size: 15px;
+	margin: 0;
+	padding: 0;
+	background-color: none;
+}
+#main-nav li a,
+#main-nav li a:link,
+#main-nav li a:visited,
+#main-nav li a:active {
+	margin: 0;
+	padding: 0px 15px 0px;
+	background-color: none;
+    color: #FFFFFF;
+	width:auto;
+	display:block;
+}
+#main-nav li a:hover {
+    text-decoration: underline;
+	background: none;
+}
+#main-nav li.selected a,
+#main-nav li.selected a:link,
+#main-nav li.selected a:visited,
+#main-nav li.selected a:active {
+    color: #333333;
+	background: #fff4ea;
+	padding: 0px 15px 0px;
+}
+/**************** SUB NAVIGATION ****************/
+#sub-nav {
+    padding: 0 0 12px 0;
+    margin: 0;
+    font-size: 13px;
+	line-height: 29px;
+    font-weight: bold;
+    text-align: left;
+    height: 29px;
+	border-left: 2px solid #FFFFFF;
+	border-top: 0;
+	border-right: 2px solid #FFFFFF;
+	border-bottom: 0;
+	background: #fff4ea url(../images/subnav-bkgd.png) repeat-x bottom left;
+}
+#sub-nav ul {
+	line-height: 29px;
+	padding: 0;
+	background: none;
+}
+#sub-nav li {
+    height: 29px;
+    margin: 0 !important;
+}
+#sub-nav li a,
+#sub-nav li a:link,
+#sub-nav li a:visited,
+#sub-nav li a:active {
+    color: #14336F;
+	font-weight: normal;
+}
+#sub-nav li a:hover {
+    text-decoration: underline;
+}
+#sub-nav li.selected {
+	background: transparent;
+}
+#sub-nav li.selected a,
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
+	font-weight: bold;
+}
+
+/**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs,
+ul.edit-view-tabs {
+  font-size: 12px;
+	height: 28px;
+	line-height: 28px;
+}
+ul.in-page-tabs li,
+ul.edit-view-tab li {
+  margin: 0 5px 0 0 !important;
+}
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
+  text-decoration: none;
+  background: none;
+  color: #d66800;
+	height: 28px;
+	line-height: 28px;
+}
+ul.in-page-tabs li a:hover,
+ul.edit-view-tabs li a:hover {
+  color: #d66800;
+}
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
+  color: #000000;
+  background: #eeeeee;
+  border: 0;
+}
+
+.subpage {
+	border: 10px solid #eeeeee;
+	background: #FFFFFF;
+}
+
+/**************** MAIN CONTENT *****************/
+#main-wrapper {
+	background: #FFF;
+}
+
+/**************** SIDEBAR ******************/
+#left-column,
+#right-column {
+	background: none;
+    padding: 15px 0 0 0;
+	width: 240px;
+	min-width: 240px;
+	margin-right: 10px;
+}
+div.sideblock {
+	background: #182768 url(../images/sidebar-bottom.png) no-repeat bottom left;
+	margin-bottom: 15px;
+	padding: 0 0 20px 0;
+	width: 240px;
+}
+div.sideblock .sidebar-header {
+	background: transparent url(../images/sidebar-top.png) no-repeat top left;
+	padding: 10px 7px 5px 7px;
+}
+div.sideblock .sidebar-content {
+	padding: 5px 7px 5px 7px;
+	background: #f1f2f8;
+}
+div.sideblock h3 {
+	font-size: 15px;
+	color: #FFFFFF;
+}
+div.sideblock h3 a,
+div.sideblock h3 a:link,
+div.sideblock h3 a:visited,
+div.sideblock h3 a:active,
+div.sideblock h3 a:hover {
+	color: #FFFFFF;
+}
+div.sideblock #lastminutes {
+	color: #FFFFFF;
+}
+
+div.sideblock .sidebar-content a,
+div.sideblock .sidebar-content a:link,
+div.sideblock .sidebar-content a:visited,
+div.sideblock .sidebar-content a:active,
+div.sideblock .sidebar-content a:hover,
+#quota_used,
+#quota_total {
+	color: #182768;
+}
+
+#sb-profile .sidebar-header {
+	min-height:	57px;
+}
+#sb-profile #user-profileicon {
+	padding-top: 0;
+}
+#login_login_username_container input,
+#login_login_password_container input {
+	width: 210px;
+}
+#quota_message {
+	margin: 0;
+}
+
+/******************** FOOTER ****************************/
+#footer-wrap {
+    border: 0;
+	padding: .5em 0 1.5em 0;
+  color: #FFFFFF;
+}
+#footernav  {
+  color: #FFFFFF;
+  margin: 18px 10px 10px 10px;
+}
+#footernav a,
+#footernav a:link,
+#footernav a:active,
+#footernav a:visited,
+#footernav a:hover {
+    color: #FFFFFF;
+}
+#performance-info {
+    color: #fff;
+}
+#performance-info span {
+	color: #fff;
+}
+#version  {
+  color: #FFFFFF;
+}
+#powered-by {
+	margin: 5px;
+}
+
+
+/****************************** PAGE BY PAGE STYLES **********************************/
+/* Group: about */
+
+/* Settings > Preferences */
+#accountprefs table h3 {
+	border-bottom: 1px dotted #888888
+}
+
+
+/* Home page info boxes */
+.home-info {
+    border: solid 2px #cccccc;
+    background: #eeeeee;
+}
+.home-info p.subtitle {
+    border-top: solid 1px #cccccc;
+    border-bottom: solid 1px #cccccc;
+}
+.home-info-table {
+	border: 0;
+}
+
+#micro #footer-wrap {
+	background: transparent;
+}
+.viewheader a {
+	color: #FFF;
+}
+.viewheader .title {
+	color: #FFF;
+}
+
+
+#containerX #top-wrapper a,
+#containerX #top-wrapper a:hover,
+#containerX #top-wrapper a:active {
+	color: #ffffff;
+}
+
+/* collection */
+ul.colnav li a {
+	color: #FFF !important;
+	background: #F6871F !important;
+}
+
+/**************** DROPDOWN NAVIGATION ****************/
+/**************** SUB NAVIGATION *********************/
+
+#main-nav .dropdown-sub {
+    top: 32px !important;
+}
+#main-nav .dropdown-sub li a,
+#main-nav .dropdown-sub li a:link,
+#main-nav .dropdown-sub li a:visited,
+#main-nav .dropdown-sub li a:active {
+    color: #FFFFFF !important;
+    background: #f6871f !important;
+	font-size: .9167em !important;
+	padding: 4px 15px !important;
+}
+#main-nav .dropdown-sub li a:hover{
+    color: #1A428F !important;
+    text-decoration: none !important;
+	background: #fff4ea !important;
+}
+
+
+.group-info {
+    border: 0;
+}
+
+.morelinkwrap {
+	text-transform: uppercase;
+	font-size: .9167em;
+}
+#allonline {
+	text-transform: uppercase;
+}
