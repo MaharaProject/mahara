@@ -28,3 +28,7 @@ form .blockinstance-header {
 #bottom-pane {
     display: none;
 }
+
+#blocktype-list li {
+    width: 90px !important;
+}

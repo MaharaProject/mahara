@@ -26,6 +26,7 @@
                 <div id="blocktype-list">
                     {$blocktype_list|safe}
                 </div>
+                <div class="nojs-hidden-block" id="current_bt_description"></div>
                 <div class="cb"></div>
             </div>
 

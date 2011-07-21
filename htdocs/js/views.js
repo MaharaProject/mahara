@@ -76,6 +76,9 @@ function ViewManager() {
             // Make the block types draggable
             self.makeBlockTypesDraggable();
 
+            // Display block type description on hover
+            self.showBlockTypeDescription();
+
             // Change the intruction to be for ajax
             self.ajaxInstructions();
 
@@ -262,6 +265,7 @@ function ViewManager() {
                     setNodeAttribute('category', 'value', queryString['c']);
                     $('blocktype-list').innerHTML = data.data;
                     self.makeBlockTypesDraggable();
+                    self.showBlockTypeDescription();
                 });
                 e.stop();
             });
@@ -798,6 +802,17 @@ function ViewManager() {
                         {x: 0, y: 0, duration: 0});
 
                 }
+            });
+        });
+    }
+
+    this.showBlockTypeDescription = function() {
+        forEach(getElementsByTagAndClassName('li', null, 'blocktype-list'), function(i) {
+            connect(i, 'onmouseenter', function() {
+                $('current_bt_description').innerHTML = '<strong>' + scrapeText(getFirstElementByTagAndClassName('h4', 'blocktype-title', i)) + ':</strong> ' + scrapeText(getFirstElementByTagAndClassName('div', 'blocktype-description', i));
+            });
+            connect(i, 'onmouseleave', function() {
+                $('current_bt_description').innerHTML = '';
             });
         });
     }

@@ -76,7 +76,6 @@
 #blocktype-list {
 	clear: left;
     min-height: 95px;
-    padding: 5px 5px 10px 5px;
     font-size: .9167em;
 }
 #blocktype-list ul {
@@ -90,7 +89,6 @@
 	* z-index: 100;
 	line-height: 1.4em;
 	white-space: normal;
-	min-height: 110px;
 }
 * html #blocktype-list li {
 	position: relative;
@@ -105,6 +103,10 @@
 }
 #blocktype-list .blocktype h4 {
     margin: 0;
+}
+#current_bt_description {
+    height: 1.4em;
+    padding: .25em 0 0 .25em;
 }
 #noblocks {
     font-size: larger;
