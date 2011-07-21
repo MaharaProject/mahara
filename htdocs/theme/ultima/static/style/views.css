@@ -1,4 +1,7 @@
 /*  Views  */
+#top-pane {
+	background: none;
+}
 /********************** Top pane of Edit View *************************/
 /* The tabs that allow you to select a blocktype category */
 #category-list li {
@@ -11,7 +14,6 @@
   color: #ffffff;
   font-weight: normal;
   background-color: #5c0758;
-  padding: 4px 10px;
 }
 #category-list li a:hover {
   color: #ffffff;
@@ -29,14 +31,18 @@
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-	border: 2px solid #5C0758 !important;
-	background: #fbebfc;
+    border: 0;
+    background: #841C7F;
+}
+#middle-pane {
+    background: #5C0758;
+    color: #fbebfc;
 }
 
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-	border-color: #5C0758 !important;
+	background-color: #FAEEFB !important;
 }
 
 /**************** Blockinstance **********************/
@@ -54,4 +60,5 @@
 }
 ul.colnav li a {
 	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x top center;
+	color: #FFFFFF;
 }

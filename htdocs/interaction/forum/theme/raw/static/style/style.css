@@ -16,7 +16,6 @@
 	right: 30px;
 }
 #forumbtns a.btn {
-	* padding: 3px 5px 4px 5px;
 	* display: block;
 	* float: left;
 }
@@ -89,6 +88,9 @@
 #forumtopicstable h4 {
 	margin: 0;
 }
+#forumtopicstable td.narrow {
+	width: 15px;
+}
 @media screen and (-webkit-min-device-pixel-ratio:0){
 #forumtopicstable td div.btn-spacer {
 	width: 50px;
@@ -152,7 +154,7 @@
 	border-right: 2px solid #eee;
 	text-align: center;
     font-size: .9167em;
-	background: #eaeeed;
+	background: #eeeeee;
 }
 .postedits .posttime {
 	color: #888;

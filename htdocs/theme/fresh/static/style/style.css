@@ -21,8 +21,7 @@
  */
 
 /* styles based on elements */
-body,
-body#micro {
+body {
     background: #10171A url(../images/bg.gif) repeat top center;	
 	color: #BEE3F1;
 }
@@ -52,7 +51,6 @@ h6 {
 .postedon {
 	color: #c7c7c7;
 }
-
 
 /**************************** Tables ****************************/
 .main-column thead th {
@@ -102,13 +100,11 @@ h6 {
 	border-color: #080D0F;
 }
 /* Alternative row background colours */
-.r0,
-.r0 td {
+.r0, .r0 td, .d0  {
     border-bottom: 1px solid #080D0F;
     background: #1C3740;
 }
-.r1,
-.r1 td {
+.r1, .r1 td, .d1 {
     border-bottom: 1px solid #080D0F;
     background-color: #1A292F;
 }
@@ -162,20 +158,12 @@ legend a:hover {
 	color: #00AEF1 !important;
 }
 
-/* Select */
-select {
-    border: 1px solid #b2b2b2;
-}
 
 /* Fieldset */
 fieldset {
     border: 1px solid #1C3740;
 }
 
-/* Text fields and such */
-input.text.required {
-	border: 1px solid #f45e5e;
-}
 
 /****************************** Buttons ****************************/
 /** input buttons **/
@@ -248,9 +236,6 @@ span.btn a.icon, a span.icon {
 	width: 24px;
 	margin-left: 2px;
 }
-* html #usf_submit {
-	height: 22px;
-}
 #selfsearch button,
 .query-button,
 #moderator_search_btn,
@@ -258,13 +243,15 @@ span.btn a.icon, a span.icon {
 #selfsearch button,
 #search_submit,
 .btn-search,
+#searchviews_submit,
 #selfsearch button:hover,
 .query-button:hover,
 #moderator_search_btn:hover,
 #search_search:hover,
 #selfsearch button:hover,
 #search_submit:hover,
-.btn-search:hover {
+.btn-search:hover,
+#searchviews_submit:hover {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
 	border: 0;
 	color: #7EF000;
@@ -311,8 +298,10 @@ span.btn a.icon, a span.icon {
 /* Search and language bar */
 #usf_query_container input {
     color: #333333;
-	background-color: #FFFFFF;
 	width: 205px;
+}
+#header-right label {
+	color: #FFFFFF;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -333,8 +322,10 @@ span.btn a.icon, a span.icon {
 }
 #main-nav {
     padding: 0;
-    margin: 0;
+    margin: 0 5px 0 7px;
     background: transparent;
+    border-bottom: 0;
+    height: 30px;
 }
 #main-nav ul {
     padding-right: 5px;
@@ -416,61 +407,51 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
-  line-height: 25px;
-  height: 25px;
-  font-size: 12px;
+ul.in-page-tabs,
+ul.edit-view-tabs {
   display: block;
 }
-ul.in-page-tabs li {
+ul.in-page-tabs li,
+ul.edit-view-tabs li {
   margin: 0 3px 0 0 !important;
-  float: left;
-  height: 25px;
   background: none;
-  line-height: 25px;
 }
-ul.in-page-tabs li a,
-ul.in-page-tabs li a:link,
-ul.in-page-tabs li a:visited,
-ul.in-page-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #FFF;
   font-weight: normal;
-  padding: 5px 10px 6px 10px;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 }
-ul.in-page-tabs li a:hover {
+ul.in-page-tabs li a:hover,
+ul.edit-view-tabs li a:hover {
   color: #FFF;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
   text-decoration: underline;
 }
-ul.in-page-tabs li a.current-tab,
-ul.in-page-tabs li a.current-tab:link,
-ul.in-page-tabs li a.current-tab:visited,
-ul.in-page-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
   color: #FFF;
   font-weight: bold;
-  padding: 5px 10px 6px 10px;
   background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
 }
 
 .subpage {
   border: 1px solid #1C3740;
+  border-top: 10px solid #009ad5;
 }
 
 
 /**************** MAIN CONTENT *****************/
-/* system messages between nav and main content */
-#main-column {
-    display: block;
-    margin: 0 5px;
+#mainmiddle {
+	background: #0C2839;
+	padding: 0 10px;
 }
-.main-column {
+#main-wrapper {
 	background: #080D0F;
-	width: 96%;
+		overflow-x: hidden;
 }
-
 .main-column-narrow {
-	width: 67%;
+	width: 69%;
 }
 
 /* system messages between nav and main content */
@@ -502,9 +483,10 @@ div.error {
 /**************** SIDEBAR *********/
 #left-column,
 #right-column {
-    min-width: 271px;
+    min-width: 260px;
 	background: transparent;
     padding: 0px;
+    margin-top: 10px;
 }
 div.sideblock {
     background: #080D0F;
@@ -512,7 +494,7 @@ div.sideblock {
     padding: 0;
 }
 div.sideblock h3 {
-    padding: 6px 15px;
+    padding: 6px 10px;
     margin: 0 0 10px 0;
     color: #FFFFFF;
     background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
@@ -542,8 +524,8 @@ div.sideblock ul ul {
 }
 
 /* Side Profile */
-#user-profileicon {
-	padding-top: 5px;
+#sb-profile #user-profileicon {
+	padding-top: 35px;
 	padding-right: 5px;
 }
 /* Side Online Users */
@@ -714,9 +696,6 @@ table.attachments td {
 #collectionnavwrap {
 	background: #0C2839;
 }
-ul.colnav li a {
-	color: #FFF;
-}
 
 #feedback_pagination {
 	background: #080D0F !important;
@@ -746,26 +725,29 @@ tr.editrow, tr.editrow td {
 	border: 0 !important;
 }
 
+#viewforum {
+	border: 0 !important;
+}
+
 /**************** DROPDOWN NAVIGATION ****************/
 /**************** SUB NAVIGATION *********************/
-
 #main-nav .dropdown-sub {
-    background: #254E5C !important;
     top: 30px !important;
 }
-#main-nav li.selected .dropdown-sub {
-    background: #2EBFF4 !important;
+#main-nav .dropdown-sub li {
+	height: 22px !important;
+	line-height: 22px !important;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,
 #main-nav .dropdown-sub li a:visited,
 #main-nav .dropdown-sub li a:active {
-    color: #FFFFFF;
-    font-weight: bold;
-    text-decoration: none !important;
+    padding: 4px 13px !important;
+    background: #1b3b46 !important;
+    color: #FFF !important;
 }
-#main-nav .dropdown-sub li a:hover,
-#main-nav .dropdown-sub li.selected a:hover {
-    color: #FFFFFF !important;
-    text-decoration: underline !important;
+#main-nav .dropdown-sub li a:hover {
+    background: #00aef1 !important;
+    color: #FFF !important;
+    text-decoration: none !important;
 }

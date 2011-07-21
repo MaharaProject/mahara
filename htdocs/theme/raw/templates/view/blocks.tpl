@@ -6,7 +6,7 @@
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='content' new=$new}
-<div class="subpage rel">
+<div class="subpage rel cl">
 
 {if $columns}
     {if $togglepublic}<div class="fr">{$togglepublic|safe}</div>{/if}
@@ -26,20 +26,21 @@
                 <div id="blocktype-list">
                     {$blocktype_list|safe}
                 </div>
-                <div class="nojs-hidden-block" id="current_bt_description"></div>
-                <div class="cb"></div>
             </div>
-
+            <div id="middle-pane">
 {if $viewthemes}
-            <div id="middle-pane" class="center">
-                    <label for="viewtheme-select">{str tag=theme}: </label>
-                    <select id="viewtheme-select" name="viewtheme">
+              <div id="themeselect">
+                  <label for="viewtheme-select">{str tag=theme}: </label>
+                  <select id="viewtheme-select" name="viewtheme">
 {foreach from=$viewthemes key=themeid item=themename}
-                        <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
+                      <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
 {/foreach}
-                    </select>
-            </div>
+                  </select>
+              </div>
 {/if}
+              <div class="nojs-hidden-block" id="current_bt_description"></div>
+              <div class="cb"></div>
+            </div>
 
             <div id="bottom-pane">
                 <div id="column-container">

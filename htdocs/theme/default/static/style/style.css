@@ -73,12 +73,10 @@ h6 {
 .tablerenderer-loading {
 }
 /* Alternative row background colours */
-.r0,
-.r0 td {
+.r0, .r0 td, .d0 {
     background-color: #fafbf7;
 }
-.r1,
-.r1 td {
+.r1, .r1 td, .d1 {
     background-color: #f3f7ec;
 }
 tr.folder td {
@@ -114,11 +112,6 @@ legend {
 	color: #1e6297;
 }
 
-/* Select */
-select {
-    border: 1px solid #D1D1D1;
-}
-
 /* Fieldset */
 fieldset {
     border: 1px solid #95a8b7;
@@ -132,7 +125,6 @@ textarea,
 input[type=text],
 input[type=password],
 input[type=file] {
-    border: 1px solid #D1D1D1;
 }
 
 /****************************** Buttons ****************************/
@@ -212,13 +204,15 @@ span.btn a.icon, a span.icon {
 #selfsearch button,
 #search_submit,
 .btn-search,
+#searchviews_submit,
 #selfsearch button:hover,
 .query-button:hover,
 #moderator_search_btn:hover,
 #search_search:hover,
 #selfsearch button:hover,
 #search_submit:hover,
-.btn-search:hover {
+.btn-search:hover,
+#searchviews_submit:hover {
 	background: transparent url(../images/btn-search.gif) no-repeat !important;
 	border: 0;
 	color: #6e8e00;
@@ -233,13 +227,14 @@ span.btn a.icon, a span.icon {
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
-	width: 90%;
-	min-width: 950px;
+	background: none;
+	* overflow: hidden;
 }
 #top-wrapper {
     background: url(../images/top-wrapper-bkgd.png) repeat-x left top;
 	border: 0;
-	height: 125px;
+	width: 90%;
+	min-width: 950px;
 }
 #containerX #top-wrapper {
 	height: auto;
@@ -249,6 +244,7 @@ span.btn a.icon, a span.icon {
 }
 #site-logo {
     padding: 0;
+    margin: 0;
 }
 #top-wrapper ul,
 #top-wrapper li {
@@ -265,10 +261,18 @@ span.btn a.icon, a span.icon {
     color: #767676;
 	background-color: #ecf3d4;
 	width: 205px;
+	padding: 2px 5px;
+	border: 1px solid #d1d1d1;
+	margin-right: 3px;
+	margin-top: 1px;
 }
 
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
+}
+#main-nav {
+	height: 25px;
+	border-bottom: 0;
 }
 #main-nav li {
     color: #e6c560;
@@ -337,49 +341,51 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
+ul.in-page-tabs,
+ul.edit-view-tabs {
   line-height: 25px;
   height: 25px;
   font-size: 12px;
-  background: url(../images/tabs-bg.gif) repeat-x left top;
+  background: #d1d1d1 url(../images/tabs-bg.gif) repeat-x left top;
   display: block;
   padding-left: 1px;
 }
-ul.in-page-tabs li {
+ul.in-page-tabs li,
+ul.edit-view-tabs li {
   float: left;
   height: 25px;
   margin: 0 !important;
   background: none;
   line-height: 25px;
 }
-ul.in-page-tabs li a,
-ul.in-page-tabs li a:link,
-ul.in-page-tabs li a:visited,
-ul.in-page-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #1E6297;
-  padding: 5px 12px 4px 10px;
+  padding: 0 12px 0 10px;
   text-decoration: none;
   background: transparent url(../images/tabs-divider.gif) no-repeat right top;
   border-right: 1px solid #d1d1d1;
   border-bottom: 1px solid #d1d1d1;
 }
-ul.in-page-tabs li a:hover {
+ul.in-page-tabs li a:hover,
+ul.edit-view-tabs li a:hover {
   color: #7E7327;
 }
-ul.in-page-tabs li a.current-tab,
-ul.in-page-tabs li a.current-tab:link,
-ul.in-page-tabs li a.current-tab:visited,
-ul.in-page-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
   background: transparent url(../images/tabs-over-bg.gif) no-repeat right bottom;
   color: #000;
   border-bottom: 1px solid #FFF;
-  padding: 5px 12px 4px 10px;
 }
 .subpage {
 	display: block;
 	border-top: 0;
 }
 
+#mainmiddle {
+	width: 90%;
+	min-width: 950px;
+}
 
 /**************** SIDEBAR *********/
 #left-column,
@@ -446,6 +452,11 @@ div.sideblock h3 a:hover {
     background: #939393;
 	border: 0;
     color: #bababa;
+    width: 90%;
+    min-width: 950px;
+}
+#footer {
+	padding: 10px;
 }
 #micro #footer-wrap {
 	background: #939393;
@@ -520,18 +531,8 @@ div.sideblock h3 a:hover {
 #collectionviews {
 	background: #f6f6f6;
 }
-#collectionviews table {
-    width: 100%;
-}
-* html #collectionviews table,
-* html #collectionviews {
-	width: 96%;
-}
-#collectionviews td.displayordercontrols div {
-	padding-top: 5px;
-}
-#collectionviews td.displayordercontrols div.justdown {
-    padding-left: 19px;
+#collectionnavwrap {
+	background: #F3F7EC;
 }
 
 .inbox-message {
@@ -542,21 +543,44 @@ div.sideblock h3 a:hover {
 	color: #333;
 }
 
+/* Edit Access boxes */
+#editaccess #editaccess_collections_container,
+#editaccess #editaccess_views_container,
+#editaccess #editaccess_accesslist_container,
+#editaccess #editaccess_more_container {
+	background: #FAFBF7;
+	border: 1px solid #F3F7EC;
+}
+
+.group-info {
+	background: #F5F9FC;
+	border: 1px solid #DDEBF5;
+}
+.memberssearch {
+	background: #F5F9FC;
+}
+
 /**************** DROPDOWN NAVIGATION ****************/
 /**************** SUB NAVIGATION *********************/
 
 #main-nav .dropdown-sub {
-    background: #ECECEC !important;
+    top: 25px !important;
+}
+#main-nav .dropdown-sub li span {
+	border-top: 1px solid #dfdfdf !important;
+	border-bottom: 1px solid #9c9c9c !important;
+	display: block !important;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,
 #main-nav .dropdown-sub li a:visited,
 #main-nav .dropdown-sub li a:active {
-    color: #474220;
+    background: #cbcbcb !important;
+    color: #474220 !important;
     text-decoration: none !important;
 }
-#main-nav .dropdown-sub li a:hover,
-#main-nav .dropdown-sub li.selected a:hover {
+#main-nav .dropdown-sub li a:hover {
     color: #7E7327 !important;
     text-decoration: none !important;
+		background: #d5d5d5 !important;
 }

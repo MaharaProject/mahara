@@ -1,10 +1,9 @@
 <div class="friends">
 {if $friends}
-    <table id="userfriendstable" class="center fullwidth">
-      <tbody>
+    <div id="userfriendstable" class="center fullwidth">
       {$friends.tablerows|safe}
-      </tbody>
-    </table>
+      <div class="cl"></div>
+    </div>
 	<div id="myfriends_page_container" class="hidden">{$friends.pagination|safe}</div>
 <script>
 addLoadEvent(function() {literal}{{/literal}

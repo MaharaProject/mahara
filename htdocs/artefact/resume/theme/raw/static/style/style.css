@@ -52,14 +52,6 @@
 	width: auto;
 }
 
-#addemploymenthistory th,
-#addeducationhistory th,
-#addcertification th,
-#addbook th,
-#addmembership th {
-	text-align: left;
-	padding: 3px;
-}
 
 #resumewrap #addemploymenthistory table td,
 #resumewrap #addeducationhistory table td,

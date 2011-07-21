@@ -86,6 +86,23 @@
 	width: 35%;
 	min-height: 160px;
 }
+#register-site-full {
+	width: 98%;
+	text-align: left;
+	padding: 10px 15px;
+}
+#register-site-full #register table {
+	width: 98%;
+	margin-top: 0;
+}
+#register-site-full #register table table table td {
+	text-align: left;
+	border-bottom: 1px dotted #d1d1d1;
+}
+#register-site-full #register_sendweeklyupdates_container th,
+#register-site-full #register_sendweeklyupdates_container td {
+	float: left;
+}
 #register-site form fieldset.collapsed {
 	border: 0;
 	font-size: .9167em;
@@ -191,7 +208,7 @@ input#register_register {
   margin: 0 3px 10px 3px;
 }
 .site-stats-left {
-	width: 300px;
+	width: 34%;
 }
 .site-stats-right {
 	width: 62%;
@@ -210,10 +227,10 @@ input#register_register {
 	padding: 0;
 }
 .statistics-subpage-left-column {
-  width: 40%;
+  width: 25%;
 }
 .statistics-subpage-right-column {
-  width: 59%;
+  width: 73%;
 }
 
 .admin-home-column {
@@ -286,6 +303,14 @@ input#register_register {
 }
 .searchform .institutions {
 	margin-left: 10px;
+}
+#bulkactions {
+	position: relative;
+	top: 68px;
+	font-weight: bold;
+}
+#results h2 {
+	margin: 0 0 5px 0;
 }
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
@@ -404,6 +429,15 @@ table.tablerenderer th.desc {
 #edituser_site_passwordchange_container th label {
 	white-space: nowrap;
 }
+#edituser_site th,
+#networkingform_pubkey_container th,
+#institution_authplugin_container th {
+	vertical-align: top;
+	padding-top: 8px !important;
+}
+#edituser_site td {
+	vertical-align: top;
+}
 
 /* USERS > SUSPENDED USERS */
 #suspendedlist {
@@ -510,12 +544,18 @@ table.tablerenderer th.desc {
 /* USERS > ADD USERS BY CSV */
 ul.fieldslist li {
 	float: left;
-	width: 15%;
+	width: 150px;
 }
 form#uploadcsv {
 	clear: both;
 }
-
+#institution table fieldset {
+	width: 50%;
+}
+#institutionselect_institution_container td,
+#usertypeselect_institution_container td {
+	vertical-align: inherit;
+}
 
 /* GROUPS */
 #editmenus #menuitemlist table {
@@ -649,6 +689,7 @@ form#uploadcsv {
 	margin: 0;
 	padding: 0;
 }
+#adminplugin ul.adminpluginstypes ul li,
 #adminplugin ul.adminpluginstypes ul ul li {
 	float: none;
 	list-style: none;

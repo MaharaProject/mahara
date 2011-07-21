@@ -4,19 +4,19 @@
 {strip}
 {foreach from=$MAINNAV item=item}
 {if $item.weight == 10}
-                <li class="{if $item.selected}selected{/if} dropdown-nav-home"{if $item.accesskey} id="{$item.accesskey}"{/if}>
-                    <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a>
+                <li class="{if $item.selected}selected{/if} dropdown-nav-home"{if $item.accesskey} id="{$item.accesskey}"{/if}><span>
+                    <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
 {else}
-                <li{if $item.accesskey} id="{$item.accesskey}"{/if} {if $item.selected} class="selected"{/if} >
-                    <a href="{if $INSTITUTIONALADMIN}{$WWWROOT}{$item.url}{else}#{/if}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if}>{$item.title}</a>
+                <li{if $item.accesskey} id="{$item.accesskey}"{/if} {if $item.selected} class="selected"{/if}><span>
+                    <a href="{if $INSTITUTIONALADMIN}{$WWWROOT}{$item.url}{else}#{/if}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
 {/if}
 {if $item.submenu}
                     <ul class="dropdown-sub">
 {strip}
 {foreach from=$item.submenu item=subitem}
-                        <li>
+                        <li><span>
                             <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>{$subitem.title}</a>
-                        </li>
+                        </span></li>
 {/foreach}
 {/strip}
                     </ul>
@@ -24,11 +24,11 @@
                 </li>
 {/foreach}
 {if $ADMIN || $INSTITUTIONALADMIN}
-                <li><a href="{$WWWROOT}" accesskey="h">{str tag="returntosite"}</a></li>
+                <li><span><a href="{$WWWROOT}" accesskey="h" class="return-site">{str tag="returntosite"}</a></span></li>
 {elseif $USER->get('admin')}
-                <li><a href="{$WWWROOT}admin/" accesskey="a">{str tag="siteadministration"}</a></li>
+                <li><span><a href="{$WWWROOT}admin/" accesskey="a" class="admin-site">{str tag="siteadministration"}</a></span></li>
 {elseif $USER->is_institutional_admin()}
-                <li><a href="{$WWWROOT}admin/users/search.php" accesskey="a">{str tag="institutionadministration"}</a></li>
+                <li><span><a href="{$WWWROOT}admin/users/search.php" accesskey="a" class="admin-user">{str tag="institutionadministration"}</a></span></li>
 {/if}
 {/strip}
             </ul>

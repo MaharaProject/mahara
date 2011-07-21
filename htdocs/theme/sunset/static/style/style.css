@@ -21,8 +21,7 @@
  */
 
 /* General rules */
-body,
-body#micro {
+body {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
 }
@@ -103,12 +102,10 @@ h6 {
 	border-top: 1px solid #8E1901;
 }
 /* Alternative row background colours */
-.r0,
-.r0 td {
+.r0, .r0 td, .d0 {
     background-color: #fff9ea;
 }
-.r1,
-.r1 td {
+.r1, .r1 td, .d1 {
     background-color: #f0e8e0;
 }
 tr.folder td {
@@ -148,30 +145,10 @@ legend a:hover {
 	color: #8E1901 !important;
 }
 
-/* Select */
-select {
-    border: 1px solid #b2b2b2;
-}
-
 /* Fieldset */
 fieldset {
     border: 1px solid #8E1901;
 }
-
-/* Text fields and such */
-input.text,
-input.password,
-input.file,
-textarea,
-input[type=text],
-input[type=password],
-input[type=file] {
-    border: 1px solid #aaaaaa;
-}
-input.text.required {
-    border: 1px solid #cc0000;
-}
-
 
 /****************************** Buttons ****************************/
 /** input buttons **/
@@ -244,9 +221,6 @@ span.btn a.icon, a span.icon {
 	width: 24px;
 	margin-left: 2px;
 }
-* html #usf_submit {
-	height: 22px;
-}
 #selfsearch button,
 .query-button,
 #moderator_search_btn,
@@ -254,13 +228,15 @@ span.btn a.icon, a span.icon {
 #selfsearch button,
 #search_submit,
 .btn-search,
+#searchviews_submit,
 #selfsearch button:hover,
 .query-button:hover,
 #moderator_search_btn:hover,
 #search_search:hover,
 #selfsearch button:hover,
 #search_submit:hover,
-.btn-search:hover {
+.btn-search:hover,
+#searchviews_submit:hover {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
 	border: 0;
 	color: #9a4c01;
@@ -280,6 +256,7 @@ span.btn a.icon, a span.icon {
     margin-top:0px;
     padding-top:0px;
     width: 90%;
+	min-width: 960px;
 }
 #top-wrapper {
     border: none;
@@ -300,6 +277,10 @@ span.btn a.icon, a span.icon {
 }
 #usf_query_container input {
     color: #8E1901;
+    width: 200px;
+}
+#header-right label {
+    color: #FFFFFF;
 }
 
 /**************** TOP NAVIGATION ****************/
@@ -342,6 +323,7 @@ span.btn a.icon, a span.icon {
 #main-nav li a:hover {
     color: #FFFFFF;
     text-decoration: underline;
+	background: none;
 }
 #main-nav li.selected a,
 #main-nav li.selected a:link,
@@ -398,39 +380,36 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs li a,
-ul.in-page-tabs li a:link,
-ul.in-page-tabs li a:visited,
-ul.in-page-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #fadc8a;
   background-color: #c66c14;
-  padding: 4px 10px;
 }
-ul.in-page-tabs li a.current-tab,
-ul.in-page-tabs li a.current-tab:link,
-ul.in-page-tabs li a.current-tab:visited,
-ul.in-page-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
   color: #ffffff;
   background-color: #8E1901;
 }
 
 .subpage {
   border: 1px solid #8E1901;
+  border-top: 10px solid #8E1901;
 }
 
 
 /**************** MAIN CONTENT *****************/
-#containerX #main-wrapper {
-	background: #FFF;
+#mainmiddle {
+	background: none;
+}
+#main-wrapper {
+	margin-top: 15px;
+	background: none;
 }
 #main-column {
-    display: block;
-    margin: 15px 0;
-    padding: 15px 15px 20px 15px;
-	background: #fff;
+	background: #FFF;
 }
 .main-column-narrow {
-	width: 69%;
+		width: 69%;
 }
 
 /* system messages between nav and main content */
@@ -444,14 +423,14 @@ ul.in-page-tabs li a.current-tab:active {
 /**************** SIDEBAR *********/
 #left-column,
 #right-column {
-    min-width: 270px;
+    min-width: 260px;
 	background: transparent;
     padding: 0px;
 }
 div.sideblock {
 	color: #000000;
     background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x 0px 10px;
-	margin: 15px 0 0 15px;
+	margin: 0 15px 15px 15px;
     padding: 8px 15px 15px 15px;
 }
 div.sideblock h3 {
@@ -521,6 +500,9 @@ div#sb-profile h3 {
     background-color: transparent;
     border: 0;
 }
+#footer {
+		padding: 10px;
+}
 #footernav {
   color: #8E1901;
 } 
@@ -546,12 +528,12 @@ div#sb-profile h3 {
 /* Home page info boxes */
 
 .home-info {
-    border: solid 2px #cccccc;
-    background: #eeeeee;
+    border: solid 2px #FFF9EA;
+    background: #F0E8E0;
 }
 .home-info p.subtitle {
-    border-top: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
+    border-top: solid 1px #FFF9EA;
+    border-bottom: solid 1px #FFF9EA;
 }
 .home-info-table {
 	border: 0;
@@ -575,24 +557,28 @@ body#micro #footer-wrap {
 	color: #ffffff;
 }
 
+.group-info {
+	border: 0;
+	background: #ffeebf;
+}
+
 /**************** DROPDOWN NAVIGATION ****************/
 /**************** SUB NAVIGATION *********************/
 
 #main-nav .dropdown-sub {
-    background: #F3F3F3 !important;
     top: 33px !important;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,
 #main-nav .dropdown-sub li a:visited,
 #main-nav .dropdown-sub li a:active {
-    color: #8E1901;
-    font-size: 85%;
-    font-weight: bold;
-    text-decoration: none !important;
-}
-#main-nav .dropdown-sub li a:hover,
-#main-nav .dropdown-sub li.selected a:hover {
     color: #8E1901 !important;
+    background: #e1cfa1 !important;
+    font-size: .9167em !important;
+    padding: 3px 15px !important;
+}
+#main-nav .dropdown-sub li a:hover {
+    color: #FFFFFF !important;
+    background: #c66c14 !important;
     text-decoration: underline !important;
 }

@@ -7,7 +7,6 @@
 #category-list li a:active {
   color: #fadc8a;
   background-color: #c66c14;
-  padding: 4px 10px;
 }
 #category-list li.current a,
 #category-list li.current a:link,
@@ -19,8 +18,21 @@
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-  border: 1px solid #C66C14;
-  background: #f7ece2;
+  border: 0;
+  background: #8E1901;
+}
+#top-pane {
+    background: none;
+}
+#middle-pane {
+    background: #6b1200;
+    color: #FFF;
+}
+#middle-pane label {
+	color: #FFF;
+}
+#page #bottom-pane {
+	background-color: #dcc695;
 }
 
 /**************** Blockinstance **********************/
@@ -34,8 +46,9 @@
 }
 
 ul.colnav li a {
-    background: transparent url(../images/transparency.png) repeat center center;	
+    background: #8e1901;
+    color: #FFF;
 }
-#collection {
-	color: #eba61b;
+#collectionnavwrap {
+	background-color: #6b1200;
 }

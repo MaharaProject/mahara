@@ -8,7 +8,7 @@
 #upload,
 .fileupload {
     background-color: #ebf0f4;
-    border: 1px solid #95a8b7;
+    border: 0;
 }
 /* File list */
 .filelist td.right input.btn-del {
@@ -33,5 +33,5 @@ tr.folderhover td {
 
 #createfolder {
     background-color: #ebf0f4;
-    border: 1px solid #95a8b7;
+    border: 0;
 }

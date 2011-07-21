@@ -2,6 +2,7 @@
                         </div><!--end subpage rel-->
 {/if}
                     </div>
+                    <div class="cl"></div>
                 </div>
 {if $SIDEBARS && $SIDEBLOCKS.right}
                 <div id="right-column" class="sidebar">
@@ -9,8 +10,10 @@
                 </div>
 {/if}
 				<div class="cb"></div>
-            </div>
+        </div><!-- main-wrapper -->
+    </div><!-- mainmiddle -->
     <div id="footer-wrap">
+      <div id="footer">
 		<div class="cb"></div>
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
         <!-- This site is powered by Mahara, an Open Source
@@ -27,7 +30,8 @@
 		<!-- there is a div id="performance-info" wrapping this -->{mahara_performance_info}
 		<div id="version">{mahara_version}</div>
 		<div class="cb"></div>
-    </div>
-</div>
+      </div><!-- footer -->
+    </div><!-- footer-wrap -->
+</div><!-- container -->
 </body>
 </html>

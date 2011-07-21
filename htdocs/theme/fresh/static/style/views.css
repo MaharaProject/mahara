@@ -1,9 +1,14 @@
 /*  Views  */
 /********************** Top pane of Edit View *************************/
-#top-pane,
-#middle-pane,
-#page #bottom-pane,
-#blocksinstruction {
+#page #bottom-pane {
+    background: none;
+    padding: 0 0 10px 0;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: #1C3740;
+}
+#top-pane {
+    padding: 10px 10px 0 10px;
     background: #1C3740;
 }
 /* The tabs that allow you to select a blocktype category */
@@ -12,10 +17,7 @@
 }
 #category-list li {
   margin: 0 3px 0 0 !important;
-  float: left;
-  height: 25px;
   background: none;
-  line-height: 25px;
 }
 #category-list li a,
 #category-list li a:link,
@@ -23,7 +25,6 @@
 #category-list li a:active {
   color: #FFF;
   font-weight: normal;
-  padding: 5px 10px 6px 10px;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 }
 #category-list li a:hover {
@@ -37,14 +38,13 @@
 #category-list li.current a:active {
   color: #FFF;
   font-weight: bold;
-  padding: 5px 10px 6px 10px;
   background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
 }
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-    border: 1px solid #28353b;
-    background-color: #10171A;
+    border: 0;
+    background-color: #009ad5;
     color: #1C3740 !important;
 }
 .blocktype div {
@@ -54,13 +54,23 @@
 	background: #080D0F;
 }
 
+#middle-pane {
+    background: #00aef1;
+    color: #FFF;
+		border-style: solid;
+    border-width: 0 10px;
+		border-color: #1C3740;
+}
+#current_bt_description strong {
+	color: #7EF000;
+}
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-	border-color: #1C3740 !important;
+	border-color: #1C3740;
 }
 #blocksinstruction {
-    background: #1C3740;
+    background: #080D0F;
     color: #BEE3F1;
 }
 
@@ -130,7 +140,6 @@ ul.artefactchooser-subtabs li a:link,
 ul.artefactchooser-subtabs li a:visited,
 ul.artefactchooser-subtabs li a:active {
   color: #BEE3F1;
-  padding: 5px 10px;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
@@ -181,11 +190,12 @@ ul.artefactchooser-subtabs li.current a:active {
 
 /* Collection navigation */
 ul.colnav li a {
+  color: #FFF;
 	background: #10171A;
 }
-ul.colnav li.selected a {
-    color: #FFF;
-	background: #080D0F;
+ul.colnav li.selected span {
+	background: #00aef1;
+	color: #FFFFFF;
 }
 
 .submissionform {

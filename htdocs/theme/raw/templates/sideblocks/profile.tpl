@@ -1,5 +1,10 @@
-    <div class="sidebar-header"><h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3></div>
-    <div class="sidebar-content"><div id="user-profileicon"><a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a></div>
+    <div class="sidebar-header">
+      <div id="user-profileicon">
+        <a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.id}&amp;earlyexpiry=1" alt=""></a>
+      </div>
+      <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
+    </div>
+    <div class="sidebar-content">
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
 {/if}
         <ul>

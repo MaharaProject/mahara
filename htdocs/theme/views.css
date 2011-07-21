@@ -26,10 +26,11 @@
 /* just the bottom pane when not editing */
 #bottom-pane {
     margin: 0 0 5px 0;
+  * padding-top: 10px;
 }
 /********************** Top pane of Edit View *************************/
 #page {
-	margin: 20px 0 10px 0;
+	margin: 20px 0 0 0;
 	clear: both;
 }
 #page #top-pane {
@@ -44,23 +45,26 @@
   	position: relative;
   	z-index: 0;
 	height: 1%;
+	line-height: 25px;
+	height: 25px;
 }
 #category-list li {
-    display: inline;
-    line-height: 1.8em;
+    float: left;
     padding: 0;
 	position: static;
-	z-index:5;
+	z-index: 5;
     margin: 0 2px 0 0;
-    float: left;
 }
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-  padding: 3px 10px;
-  background: #EEEEEE;
-  text-decoration: none;
+    padding: 0 10px;
+    display: block;
+    background: #EEEEEE;
+    text-decoration: none;
+    line-height: 25px;
+    height: 25px;
 }
 #category-list li.current a,
 #category-list li.current a:link,
@@ -70,22 +74,21 @@
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
-  padding: 4px 10px 3px 10px;
 }
 /* The panel that contains the blocktype icons */
 #blocktype-list {
 	clear: left;
-    min-height: 95px;
     font-size: .9167em;
 }
 #blocktype-list ul {
     list-style-type: none;
+    margin: 0;
 }
 #blocktype-list li {
     float: left;
     text-align: center;
-    margin: 10px 10px 0;
-    width: 200px;
+    margin: 10px 5px 5px 5px;
+    width: 90px;
 	* z-index: 100;
 	line-height: 1.4em;
 	white-space: normal;
@@ -95,7 +98,7 @@
 }
 #blocktype-list li div.blocktype div {
 	white-space: normal;
-    width: 200px;
+    width: 90px;
 }
 #blocktype-list .blocktype-radio {
     border: none;
@@ -105,8 +108,10 @@
     margin: 0;
 }
 #current_bt_description {
-    height: 1.4em;
-    padding: .25em 0 0 .25em;
+    height: 1.8em;
+    line-height: 1.8em;
+    padding: 3px 10px;
+    margin: 0;
 }
 #noblocks {
     font-size: larger;
@@ -115,11 +120,9 @@
 }
 
 /* Between top and bottom pane */
-#middle-pane {
-    width: 100%;
-}
-#middle-pane td {
-    width: 33%;
+#middle-pane #themeselect {
+	float: right;
+	padding: 3px 10px;
 }
 
 /********************** Bottom pane of Edit View *************************/
@@ -168,7 +171,7 @@ html>body #column-container {
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9% 10px 0.9%;
+    padding: 10px 0.9% 10px 0.9%;
 	position: relative;
 }
 * html .column {
@@ -438,6 +441,17 @@ html>body #column-container {
 .grouphomepage .bt-groupviews .groupviewsection {
   margin: 5px 0 10px 0;
 }
+.main-column .groupviewsection td h3 {
+	display: inline;
+}
+.main-column .groupviewsection h5 {
+	font-size: 1.1667em;
+	margin: 0 3px 3px 3px;
+}
+.groupviewsection td h3 {
+	font-size: 1em !important;
+	font-weight: normal;
+}
 
 /* Slideshow */
 .slideshow {
@@ -479,12 +493,11 @@ ul.artefactchooser-tabs {
   font-weight: bold;
   list-style: none;
   font-size: 1em;
-  height: 1%;
+  height: 25px;
+  line-height: 25px;
 }
 ul.artefactchooser-tabs li {
-  display: inline;
   padding: 0;
-  line-height: 1.9em;
   margin: 0 2px 0 0 !important;
   float: left;
 }
@@ -492,9 +505,12 @@ ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  padding: 3px 10px;
+  padding: 0 10px;
   text-decoration: none;
   background: #EEEEEE;
+  display: block;
+  height: 25px;
+  line-height: 25px;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
@@ -503,7 +519,6 @@ ul.artefactchooser-tabs li.current a:active {
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
-  padding: 4px 10px 3px 10px;
   cursor: default;
 }
 ul.artefactchooser-subtabs {
@@ -679,10 +694,11 @@ ul.artefactchooser-subtabs li.current a:active {
     float: left;
     display: inline;
     font-weight: bold;
-    padding: 5px 7px 0px 2px;
+    padding: 0;
 }
-#collectionnavwrap {
+#containerX #collectionnavwrap {
 	background: none;
+	padding: 0 5px;
 }
 #containerX div.colnav1 {
 	margin: 0;
@@ -690,17 +706,16 @@ ul.artefactchooser-subtabs li.current a:active {
 	display: block;
 	background: none;
 	clear: none;
-	float: left;
 }
 #containerX ul.colnav {
     list-style: none;
     padding: 0;
     margin: 0;
-	float: left;
+	float: none;
 }
 #containerX ul.colnav li {
     padding: 0;
-    margin: 0 !important;
+    margin: 5px 0 0 0 !important;
 	float: left;
 }
 #containerX ul.colnav li a,
@@ -711,16 +726,16 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #containerX div.colnav-extra {
     margin: 0;
-	float: left;
+	float: none;
 }
 #containerX div.colnav-showmore {
     margin: 0;
-    float: left;
+    float: none;
 }
 /* Collection navigation normal header */
 #collectionnavwrap {
+	padding: 0 5px;
 	background: #EEE;
-	padding: 5px 5px 0 5px;
 }
 div.colnav1 {
 	clear: both;
@@ -730,12 +745,11 @@ div.colnav1 {
 ul.colnav {
     list-style: none;
     padding: 0;
-    margin: 5px 0 0 0 !important;
-	float: left;
+    margin: 0 !important;
 }
 ul.colnav li {
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 5px 0 !important;
 	float: left;
 }
 ul.colnav li a,
@@ -743,10 +757,10 @@ ul.colnav li.selected span {
 	padding: 5px 7px !important;
 	margin: 0 5px 0 0 !important;
 	display: block;
+	white-space: nowrap;
 }
 div.colnav-extra {
     margin: 0;
-	float: left;
 }
 
 .submissionform {

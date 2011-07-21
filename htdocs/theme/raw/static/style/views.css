@@ -2,10 +2,13 @@
 #views-loading {
     color: #666;
 }
+#page {
+	padding: 0 10px 10px 10px;
+}
 /********************** Top pane of Edit View *************************/
 #top-pane {
 	background: #EEE;
-	padding: 10px;
+	padding: 1px 0 0 0;
 }
 
 /* The tabs that allow you to select a blocktype category */
@@ -25,7 +28,7 @@
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-	border: 1px solid #D1D1D1;
+	background: #D1D1D1;
 }
 #noblocks {
     color: #666;
@@ -46,18 +49,17 @@
 	text-decoration: none;
 }
 #middle-pane {
-	background: #EEE;
+	background: #dddddd;
 }
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-    padding: 0 10px 10px 10px;
-	background: #EEE;
+    padding: 20px 10px 10px 10px;
+    background: #EEE url(../images/bottompane-shad.png) repeat-x top left;
 }
 #blocksinstruction {
-    background: #EEE;
     color: #888;
-	padding-bottom: 10px;
+    padding: 5px;
 }
 #column-container {
 	background: #FFF;
@@ -67,7 +69,6 @@
 }
 
 .column-content .add-button input {
-	border: 1px solid #d1d1d1;
 }
 
 #block-placeholder {
@@ -142,17 +143,14 @@ ul.artefactchooser-subtabs li.current a:active {
 /* todo: test this */
 .column-content .add-button {
     margin: 5px 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7d99ae #003c74 #003c74 #7d99ae;
 }
-.add-button .newblockhere {
-    background: url(../images/btn-addblock.gif) repeat-x;
+.add-button input.newblockhere {
     font-weight: normal;
-    height: 16px;
-    padding: 1px 5px 2px 5px;
-    color: #FFF;
     width: 100%;
     margin: 0;
-	border-left: 1px solid #5d5d5d;
-	border-right: 1px solid #5d5d5d;
 }
 /* this rule compresses and centers the buttons better in konqueror and safari */
 body:last-child:not(:root:root) .newblockhere {

@@ -4,8 +4,8 @@
 <body>
 {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/icon_problem.gif'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
 {if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
+{if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
 <div id="container">
-    {if $SITETOP}{$SITETOP|safe}{/if}
     <div id="loading-box"></div>
     <div id="top-wrapper"><h1 id="site-logo"><a href="{$WWWROOT}"><img src="{$sitelogo}" alt="{$sitename}"></a></h1>
 {include file="header/topright.tpl"}
@@ -16,7 +16,8 @@
 {/if}
 		<div class="cb"></div>
     </div>
-    <div id="main-wrapper">
+    <div id="mainmiddle">
+        <div id="main-wrapper">
 {if $SIDEBARS && $SIDEBLOCKS.left}
                 <div id="left-column" class="sidebar">
 {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
@@ -31,10 +32,10 @@
 
 {if $SUBPAGENAV}
   {if $SUBPAGETOP}{include file=$SUBPAGETOP}{/if}
-{* Tabs and beginning of page container for group info pages *}                        <ul class="in-page-tabs">
+{* Tabs and beginning of page container for group info pages *}                        <div class="tabswrap"><ul class="in-page-tabs">
 {foreach from=$SUBPAGENAV item=item}
-                            <li><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}</a></li>
+                            <li {if $item.selected}class="current-tab"{/if}><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}</a></li>
 {/foreach}
-                        </ul>
+                        </ul></div>
                         <div class="subpage rel">
 {/if}

@@ -33,9 +33,9 @@
         </td>
         <td class="center" width="15%">{$forum->topiccount}</td>
         <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe|safe}{/if}</td>
-        <td>
+        <td class="right">
         {if $admin}
-            <div class="fr btn-spacer s">
+            <div class="btn-spacer s">
                 <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-edit" title="{str tag=edit}"></a>
                 <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-del" title="{str tag=delete}"></a>
             </div>

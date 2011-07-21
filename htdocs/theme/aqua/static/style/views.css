@@ -1,27 +1,23 @@
 
 /********************** Top pane of Edit View *************************/
-#top-pane,
-#middle-pane,
-#page #bottom-pane,
-#blocksinstruction {
+
+#page #bottom-pane {
+    background-color: #FFFFFF;
+	padding: 20px 0 10px 0;
+	border-width: 0 10px 10px 10px;
+	border-style: solid;
+	border-color: #1D499F;
+}
+#top-pane {
+    padding: 10px 10px 0 10px;
     background: #1D499F;
-}
-#middle-pane label {
-	color: #FFFFFF;
-}
-#blocksinstruction {
-    font-weight: normal;
-	font-style: italic;
-	color: #FFFFFF;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
-    height: 25px;
     padding-left: 1em;
 }
 #category-list li {
     margin: 0;
-    float: left;
     color: #1E6297;
 }
 #category-list li a,
@@ -30,9 +26,6 @@
 #category-list li a:active {
     background: none;
 	color: #FFF;
-	line-height: 25px;
-    padding: 5px 10px 7px 10px;
-    * padding: 7px 10px 7px 10px;
 }
 #category-list li a:hover {
 	text-decoration: underline;
@@ -43,17 +36,17 @@
 #category-list li.current a:active {
     background-color: #f4f7f9;
 	color: #1e6297;
-    padding: 5px 10px 7px 10px;
-    * padding: 7px 10px 7px 10px;
 }
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
   color: #1D499F !important;
   background-color: #f4f7f9;
+  border: 0;
 }
 #current_bt_description {
-  color: #FFF;
+    background: #e1ecf4;
+    color: #333;
 }
 
 
@@ -69,17 +62,13 @@
 }
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
-    line-height: 25px;
     font-weight: bold;
     font-size: 12px !important;
-    height: 25px;
     padding-left: 1em !important;
     background: none;
 }
 ul.artefactchooser-tabs li {
-    line-height: 25px;
     margin: 0 3px 0 0 !important;
-    float: left;
     color: #FFF !important;
 }
 ul.artefactchooser-tabs li a,
@@ -87,8 +76,6 @@ ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
     color: #FFF !important;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
     background: #1D499F;
 }
 ul.artefactchooser-tabs li.current a,
@@ -97,12 +84,6 @@ ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
     color: #000 !important;
     background: #F5F9FC;
-	border-left: 1px solid #d1d1d1;
-	border-top: 1px solid #d1d1d1;
-	border-right: 1px solid #d1d1d1;
-	border-bottom: 0;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
 }
 ul.artefactchooser-subtabs {
   margin: 0 !important;
@@ -118,7 +99,6 @@ ul.artefactchooser-subtabs li a:link,
 ul.artefactchooser-subtabs li a:visited,
 ul.artefactchooser-subtabs li a:active {
   text-decoration: none;
-  padding: .25em .5em;
   background: #FFF;
 }
 ul.artefactchooser-subtabs li a:hover {
@@ -138,6 +118,7 @@ ul.artefactchooser-subtabs li.current a:hover {
 
 #artefactchooser-body {
     background: #F5F9FC;
+    border: 0;
 }
 
 

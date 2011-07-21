@@ -29,8 +29,8 @@
     {/if}
     </td>
     {if $moderator}
-	<td>
-    	<div class="s btn-spacer fr">
+    <td class="right">
+        <div class="s btn-spacer">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-edit" title="{str tag="edit"}"></a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-del" title="{str tag="delete"}"></a>
         </div>

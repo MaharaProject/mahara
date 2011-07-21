@@ -1,13 +1,16 @@
 /*  Views  */
-
+#top-pane {
+	padding: 0;
+}
+#page #bottom-pane {
+	background-color: #F3F7EC;
+}
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
     background: url(../images/tabs-bg.gif) repeat-x left top;
-    height: 25px;
     padding-left: 10px;
 }
 #category-list li {
-    line-height: 25px;
     margin: 0 !important;
     float: left;
     color: #1E6297;
@@ -18,8 +21,7 @@
 #category-list li a:active {
     background: transparent url(../images/tabs-divider.gif) no-repeat right top;
     color: #474220;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
+    padding: 0 12px 0 10px;
 }
 #category-list li a:hover {
     color: #7E7327;
@@ -28,15 +30,19 @@
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-    background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
+    background: #F5F9FC;
 }
 
 /* The panel that contains the blocktype icons */
 #blocktype-list {
     background-color: #f5f9fc;
-    border-top: 0;
+    border: 0;
+}
+#middle-pane {
+	background: #ddebf5;
+}
+#current_bt_description strong {
+	color: #1E6297;
 }
 
 /* header*/
@@ -69,17 +75,11 @@
 
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
-    line-height: 25px;
     font-weight: bold;
-    font-size: 12px !important;
-    background: url(../images/tabs-bg.gif) repeat-x left top;
-    height: 25px;
+    background: #d1d1d1 url(../images/tabs-bg.gif) repeat-x left top;
     padding-left: 10px !important;
 }
 ul.artefactchooser-tabs li {
-    line-height: 25px;
-    margin: 0 !important;
-    float: left;
     color: #1E6297 !important;
 }
 ul.artefactchooser-tabs li a,
@@ -88,8 +88,7 @@ ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
     background: transparent url(../images/tabs-divider.gif) no-repeat right top;
     color: #474220 !important;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
+    padding: 0 12px 0 10px;
 }
 ul.artefactchooser-tabs li a:hover {
     color: #7E7327 !important;
@@ -100,8 +99,6 @@ ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
     background: transparent url(../images/tabs-over-bg.gif) no-repeat right top;
     color: #1E6297 !important;
-    padding: 5px 12px 6px 10px;
-    height: 25px;
 }
 ul.artefactchooser-tabs li.current a:hover {
 }
