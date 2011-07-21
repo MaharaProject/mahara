@@ -1,0 +1,10 @@
+JSColor
+=======
+
+Name   :	JavaScript Color Picker (Chooser)
+Website:	http://jscolor.com/
+Author :	©2008-2010 Jan Odvárko
+Version:	1.3.1
+Licence:	jscolor is LGPL licensed (see: http://www.gnu.org/copyleft/lesser.html)
+
+This color picker is used by Pieforms' color element.
