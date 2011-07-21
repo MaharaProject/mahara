@@ -273,6 +273,7 @@ $string['access'] = 'Access';
 $string['noaccesstoview'] = 'You do not have permission to access this page';
 
 $string['changeviewtheme'] = 'The theme you have chosen for this page is no longer available to you.  Please select a different theme.';
+$string['nothemeselected'] = 'No theme selected';
 
 // Templates
 $string['Template'] = 'Template';
