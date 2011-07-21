@@ -2495,5 +2495,27 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2011072200) {
+        // Set group quotas for existing groups
+        $sql = 'SELECT g.id AS id, SUM(aff.size) AS quotaused
+                    FROM {group} g
+                    LEFT OUTER JOIN {artefact} a ON (g.id = a.group)
+                    LEFT OUTER JOIN {artefact_file_files} aff ON (a.id = aff.artefact)
+                WHERE g.quota IS NULL AND g.quotaused = 0
+                GROUP BY g.id';
+        $records = get_records_sql_array($sql, array());
+        $default = 52428800; // 50MB
+        foreach ($records as $record) {
+            if (empty($record->quotaused)) {
+                $record->quotaused = 0;
+            }
+            // Set quota as 50MB for current usage below 50MB, and current + 50MB for usage above 50MB
+            execute_sql('UPDATE {group} SET quotaused = ?, quota = ? WHERE id = ?',
+                        array($record->quotaused,
+                              $record->quotaused < $default ? $default : $record->quotaused + $default,
+                              $record->id));
+        }
+    }
+
     return $status;
 }

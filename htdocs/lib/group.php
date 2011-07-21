@@ -1816,6 +1816,9 @@ function group_quota_add($groupid, $bytes) {
     if (!group_quota_allowed($groupid, $bytes)) {
         throw new QuotaExceededException('Adding ' . $bytes . ' bytes would exceed the group\'s quota');
     }
+    if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+        throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    }
     $newquota = $group->quotaused + $bytes;
     $group = new StdClass;
     $group->id = $groupid;
