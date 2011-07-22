@@ -348,6 +348,9 @@ EOF;
             }
         }
     }
+    if ($sheets = $THEME->additional_stylesheets()) {
+        $stylesheets = array_merge($stylesheets, $sheets);
+    }
 
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
@@ -574,6 +577,11 @@ class Theme {
     public $headerlogo;
 
     /**
+     * Additional stylesheets to display after the basename theme's stylesheets
+     */
+    public $addedstylesheets;
+
+    /**
      * A human-readable version of the theme name
      */
     public $displayname = '';
@@ -730,6 +738,9 @@ class Theme {
         if (!empty($themedata->headerlogo)) {
             $this->headerlogo = $themedata->headerlogo;
         }
+        if (!empty($themedata->stylesheets)) {
+            $this->addedstylesheets = $themedata->stylesheets;
+        }
     }
 
     /**
@@ -774,6 +785,10 @@ class Theme {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogo;
         }
         return $this->get_url('images/site-logo.png');
+    }
+
+    public function additional_stylesheets() {
+        return $this->addedstylesheets;
     }
 }
 
