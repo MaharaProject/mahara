@@ -674,6 +674,20 @@ $string['showonlineusersdesc'] = 'The online users to show to members of this in
 
 $string['Logo'] = 'Logo';
 $string['logodescription'] = 'You can upload an image here that will be displayed to your institution\'s members in place of the standard header logo.  For best results this image should have the same dimensions as the site logo in your institution\'s theme.';
+$string['customtheme'] = 'Custom theme configuration';
+$string['customtheme.background'] = 'Background';
+$string['customtheme.backgroundfg'] = 'Text on Background';
+$string['customtheme.link'] = 'Link';
+$string['customtheme.headings'] = 'Headings';
+$string['customtheme.navbg'] = 'Navigation background';
+$string['customtheme.navfg'] = 'Navigation text';
+$string['customtheme.subbg'] = 'Sub navigation background';
+$string['customtheme.subfg'] = 'Sub navigation text';
+$string['customtheme.sidebarbg'] = 'Side block background';
+$string['customtheme.sidebarfg'] = 'Side block content background';
+$string['customtheme.sidebarlink'] = 'Side block link';
+$string['customtheme.rowbg'] = 'Row background';
+$string['customstylesforinstitution'] = 'Custom styles for %s';
 
 $string['authenticatedby'] = 'Authentication Method';
 $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';

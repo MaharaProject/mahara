@@ -584,6 +584,9 @@ form#uploadcsv {
 #adminstitutionslist .controls form {
     display: inline;
 }
+.customtheme {
+    margin: 0 auto 1em;
+}
 
 /* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
 #usertypeselect table td,

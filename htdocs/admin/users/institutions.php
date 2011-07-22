@@ -43,6 +43,21 @@ $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
 $limit  = 20;
 
+$customthemedefaults = array(
+    'background'   => array('type' => 'color', 'value' => '#182768'),
+    'backgroundfg' => array('type' => 'color', 'value' => '#FFFFFF'),
+    'link'         => array('type' => 'color', 'value' => '#d66800'),
+    'headings'     => array('type' => 'color', 'value' => '#182768'),
+    'sidebarbg'    => array('type' => 'color', 'value' => '#182768'),
+    'sidebarfg'    => array('type' => 'color', 'value' => '#f1f2f8'),
+    'sidebarlink'  => array('type' => 'color', 'value' => '#182768'),
+    'navbg'        => array('type' => 'color', 'value' => '#f6871f'),
+    'navfg'        => array('type' => 'color', 'value' => '#FFFFFF'),
+    'subbg'        => array('type' => 'color', 'value' => '#fff4ea'),
+    'subfg'        => array('type' => 'color', 'value' => '#14336F'),
+    'rowbg'        => array('type' => 'color', 'value' => '#fff4ea'),
+);
+
 if (!$USER->get('admin')) {
     // Institutional admins with only 1 institution go straight to the edit page for that institution
     // They cannot add or delete institutions, or edit an institution they don't administer
@@ -311,6 +326,9 @@ if ($institution || $add) {
                 'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
             );
         }
+        if (!empty($data->style)) {
+            $customtheme = get_records_menu('style_property', 'style', $data->style, '', 'field,value');
+        }
         $elements['theme'] = array(
             'type'         => 'select',
             'title'        => get_string('theme'),
@@ -320,6 +338,19 @@ if ($institution || $add) {
             'options'      => $themeoptions,
             'help'         => true,
         );
+        $elements['customthemefs'] = array(
+            'type'         => 'fieldset',
+            'class'        => 'customtheme' . ($elements['theme']['defaultvalue'] != 'custom' ? ' js-hidden' : ''),
+            'legend'       => get_string('customtheme', 'admin'),
+            'elements'     => array(),
+        );
+        foreach ($customthemedefaults as $name => $styledata) {
+            $elements['customthemefs']['elements'][$name] = array(
+                'type'         => $styledata['type'],
+                'title'        => get_string('customtheme.' . $name, 'admin'),
+                'defaultvalue' => isset($customtheme[$name]) ? $customtheme[$name] : $styledata['value'],
+            );
+        }
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
             'title'                 => get_string('showonlineusers', 'admin'),
@@ -503,7 +534,7 @@ function institution_validate(Pieform $form, $values) {
 }
 
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add, $instancearray, $USER, $authinstances;
+    global $SESSION, $institution, $add, $instancearray, $USER, $authinstances, $customthemedefaults;
 
     db_begin();
     // Update the basic institution record...
@@ -529,6 +560,36 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->registerconfirm              = ($values['registerconfirm']) ? 1 : 0;
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
+
+    if ($newinstitution->theme == 'custom') {
+        if (!empty($oldinstitution->style)) {
+            $styleid = $oldinstitution->style;
+            delete_records('style_property', 'style', $styleid);
+        }
+        else {
+            $record = (object) array('title' => get_string('customstylesforinstitution', 'admin', $newinstitution->displayname));
+            $styleid = insert_record('style', $record, 'id', true);
+        }
+
+        $properties = array();
+        $record = (object) array('style' => $styleid);
+        foreach (array_keys($customthemedefaults) as $name) {
+            $record->field = $name;
+            $record->value = $values[$name];
+            insert_record('style_property', $record);
+            $properties[$name] = $values[$name];
+        }
+
+        // Cache the css
+        $smarty = smarty_core();
+        $smarty->assign('data', $properties);
+        set_field('style', 'css', $smarty->fetch('customcss.tpl'), 'id', $styleid);
+
+        $newinstitution->style = $styleid;
+    }
+    else {
+        $newinstitution->style = null;
+    }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
@@ -767,7 +828,22 @@ function search_submit(Pieform $form, $values) {
     redirect('/admin/users/institutions.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
 
-$smarty = smarty();
+// Hide custom colour boxes unless theme selector is on 'custom'
+$customthemejs = '
+$j(function() {
+    $j("#institution_theme").change(function() {
+        if ($(this).value == "custom") {
+            $j(".customtheme").removeClass("js-hidden");
+        }
+        else {
+            $j(".customtheme").addClass("js-hidden");
+        }
+    });
+});
+';
+
+$smarty = smarty(array('jquery'));
+$smarty->assign('INLINEJAVASCRIPT', $customthemejs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);
 $smarty->assign('add', $add);
