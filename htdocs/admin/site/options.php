@@ -467,7 +467,7 @@ $siteoptionform = array(
                     'description'  => get_string('allowpublicprofilesdescription', 'admin'),
                     'defaultvalue' => get_config('allowpublicprofiles'),
                     'help'         => true,
-                    'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN),
+                    'disabled'     => in_array('allowpublicprofiles', $OVERRIDDEN) || get_config('allowpublicviews'),
                 ),
                 'generatesitemap' => array(
                     'type'         => 'checkbox',
@@ -586,6 +586,10 @@ function siteoptions_submit(Pieform $form, $values) {
     // if public views are disabled, sitemap generation must also be disabled.
     if ($values['allowpublicviews'] == false) {
         $values['generatesitemap'] = false;
+    }
+    else {
+        // Ensure allowpublicprofiles is set as well
+        $values['allowpublicprofiles'] = 1;
     }
 
     $oldlanguage = get_config('lang');

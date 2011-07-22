@@ -42,13 +42,27 @@ function connectElements() {
             connect('siteoptions_' + element, 'onchange', reloadRequired);
         }
     });
+
+    connect('siteoptions_allowpublicviews', 'onclick', update_allowpublicprofiles);
 }
 
 // Javascript success handler for the form. Re-wires up the elements
 function checkReload(form, data) {
+    update_allowpublicprofiles();
+
     isReloadRequired = false;
     connectElements();
     formSuccess(form, data);
+}
+
+function update_allowpublicprofiles() {
+    if ($('siteoptions_allowpublicviews').checked) {
+        $('siteoptions_allowpublicprofiles').checked = true;
+        $('siteoptions_allowpublicprofiles').setAttribute('disabled', 'disabled');
+    }
+    else {
+        $('siteoptions_allowpublicprofiles').removeAttribute('disabled');
+    }
 }
 
 addLoadEvent(connectElements);
