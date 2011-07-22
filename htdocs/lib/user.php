@@ -1371,7 +1371,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed, i.showonlineusers,i.allowinstitutionpublicviews, i.logo
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.theme,i.registerallowed, i.showonlineusers,i.allowinstitutionpublicviews, i.logo, i.style
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ? ORDER BY i.priority DESC', array($userid))) {
         return $institutions;

@@ -87,6 +87,7 @@ class User {
             'grouproles'       => array(),
             'theme'            => null,
             'headerlogo'       => null,
+            'stylesheets'      => array(),
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
             'parentuser'       => null,
@@ -822,6 +823,7 @@ class User {
         $staffinstitutions = array();
         $this->theme = get_config('theme');
         $this->headerlogo = null;
+        $stylesheets = array();
         $themeinstitution = null;
         foreach ($institutions as $name => $i) {
             if ($i->admin) {
@@ -845,7 +847,11 @@ class User {
         if (!is_null($themeinstitution)) {
             $this->theme      = $institutions[$themeinstitution]->theme;
             $this->headerlogo = $institutions[$themeinstitution]->logo;
+            if ($institutions[$themeinstitution]->style) {
+                $stylesheets[] = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
+            }
         }
+        $this->stylesheets        = $stylesheets;
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
@@ -853,8 +859,9 @@ class User {
 
     public function get_themedata() {
         return (object) array(
-            'basename'   => $this->theme,
-            'headerlogo' => $this->headerlogo,
+            'basename'    => $this->theme,
+            'headerlogo'  => $this->headerlogo,
+            'stylesheets' => $this->stylesheets,
         );
     }
 
