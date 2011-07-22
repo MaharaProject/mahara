@@ -348,9 +348,238 @@ function auth_saml_login_screen($remoteuser) {
     require_once('pieforms/pieform.php');
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
     $smarty->assign('pagedescriptionhtml', get_string('logintolinkdesc', 'auth.saml', $remoteuser, get_config('sitename')));
-    $smarty->assign('form', '<div id="loginform_container"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>'.auth_generate_login_form());
+    $smarty->assign('form', '<div id="loginform_container"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>'.saml_auth_generate_login_form());
     $smarty->assign('PAGEHEADING', get_string('logintolink', 'auth.saml', get_config('sitename')));
     $smarty->assign('LOGINPAGE', true);
     $smarty->display('form.tpl');
     exit;
+}
+
+
+/**
+ * Generates the login form specifically independent of the core Mahara one
+ * we want a custom submit callback here - which PHP doesn't let you do via overloading (sigh)
+ * so - the only thing that is different here is the form name and the successcallback, and submit = true
+ *
+ */
+function saml_auth_generate_login_form() {
+    if (!get_config('installed')) {
+        return;
+    }
+    require_once('pieforms/pieform.php');
+    if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
+        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
+    }
+    else {
+        $registerlink = '';
+    }
+    $loginform = get_login_form_js(pieform(array(
+        'name'       => 'auth_saml_login',
+        'renderer'   => 'div',
+        'submit'     => true,
+        'successcallback'  => 'auth_saml_login_submit',
+        'plugintype' => 'auth',
+        'pluginname' => 'internal',
+        'autofocus'  => false,
+        'elements'   => array(
+            'login_username' => array(
+                'type'        => 'text',
+                'title'       => get_string('username') . ':',
+                'description' => get_string('usernamedescription'),
+                'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
+                'rules' => array(
+                    'required'    => true
+                )
+            ),
+            'login_password' => array(
+                'type'        => 'password',
+                'title'       => get_string('password') . ':',
+                'description' => get_string('passworddescription'),
+                'defaultvalue'       => '',
+                'rules' => array(
+                    'required'    => true
+                )
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('login')
+            ),
+            'register' => array(
+                'value' => '<div id="login-helplinks">' . $registerlink
+                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+            ),
+            'loginsaml' => array(
+                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
+            ),
+        )
+    )));
+
+    return $loginform;
+}
+
+
+/**
+ * Take a username and password and try to authenticate the
+ * user
+ *
+ * Copied and modified from core LiveUser->login()
+ *
+ * @param  string $username
+ * @param  string $password
+ * @return bool
+ */
+function login_test_all_user_authinstance($username, $password) {
+    global $USER;
+
+    // do the normal user lookup
+    $sql = 'SELECT
+                *,
+                ' . db_format_tsfield('expiry') . ',
+                ' . db_format_tsfield('lastlogin') . ',
+                ' . db_format_tsfield('lastlastlogin') . ',
+                ' . db_format_tsfield('lastaccess') . ',
+                ' . db_format_tsfield('suspendedctime') . ',
+                ' . db_format_tsfield('ctime') . '
+            FROM
+                {usr}
+            WHERE
+                LOWER(username) = ?';
+    $user = get_record_sql($sql, array(strtolower($username)));
+
+    // throw out unknown users
+    if ($user == false) {
+        throw new AuthUnknownUserException("\"$username\" is not known");
+    }
+
+    // stop right here if the site is closed for any reason
+    $siteclosedforupgrade = get_config('siteclosed');
+    if ($siteclosedforupgrade && get_config('disablelogin')) {
+        global $SESSION;
+        $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
+        return false;
+    }
+    if ($siteclosedforupgrade || get_config('siteclosedbyadmin')) {
+        global $SESSION;
+        $SESSION->add_error_msg(get_string('siteclosed'));
+        return false;
+    }
+
+    // Build up a list of authinstance that can be tried for this user - typically
+    // internal, or ldap - definitely NOT none, saml, or xmlrpc
+    $instances = array();
+
+    // all other candidtate auth_instances
+    $sql = 'SELECT ai.* from {auth_instance} ai INNER JOIN {auth_remote_user} aru
+                ON ai.id = aru.authinstance
+                WHERE ai.authname NOT IN(\'saml\', \'xmlrpc\', \'none\') AND aru.localusr = ?';
+    $authinstances = get_records_sql_array($sql, array($user->id));
+    foreach ($authinstances as $authinstance) {
+        $instances[]= $authinstance->id;
+    }
+
+    // determine the internal authinstance ID associated with the base 'mahara'
+    // 'no institution' - use this is a default fallback login attempt
+    $authinstance = get_record('auth_instance', 'institution', 'mahara', 'authname', 'internal');
+    $instances[]= $authinstance->id;
+
+    // test each auth_instance candidate associated with this user
+    foreach ($instances as $authinstanceid) {
+        $auth = AuthFactory::create($authinstanceid);
+        // catch the AuthInstanceException that allows authentication plugins to
+        // fail but pass onto the next possible plugin
+        try {
+            if ($auth->authenticate_user_account($user, $password)) {
+                $USER->reanimate($user->id, $auth->instanceid);
+                // Check for a suspended institution - should never be for 'mahara'
+                $authinstance = get_record_sql('
+                    SELECT i.suspended, i.displayname
+                    FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                    WHERE a.id = ?', array($authinstanceid));
+                if ($authinstance->suspended) {
+                    continue;
+                }
+                // we havea winner
+                return true;
+            }
+        }
+        catch (AuthInstanceException $e) {
+            // auth fail - try the next one
+            continue;
+        }
+    }
+    // all fail
+    return false;
+}
+
+
+/**
+ * Called when the auth_saml_login form is submitted. Validates the user and password, and
+ * if they are valid, starts a new session for the user.
+ *
+ * Copied and modified from core login_submit
+ *
+ * @param object $form   The Pieform form object
+ * @param array  $values The submitted values
+ */
+function auth_saml_login_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+
+    $username      = trim($values['login_username']);
+    $password      = $values['login_password'];
+    $authenticated = false;
+    $oldlastlogin  = 0;
+
+    try {
+        $authenticated = login_test_all_user_authinstance($username, $password);
+        if (empty($authenticated)) {
+            $SESSION->add_error_msg(get_string('loginfailed'));
+            redirect('/auth/saml/');
+        }
+
+    }
+    catch (AuthUnknownUserException $e) {
+        $SESSION->add_error_msg(get_string('loginfailed'));
+        redirect('/auth/saml/');
+    }
+
+    // Only admins in the admin section!
+    if (!$USER->get('admin') &&
+        (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
+        $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
+        redirect();
+    }
+
+    // Check if the user's account has been deleted
+    if ($USER->deleted) {
+        $USER->logout();
+        die_info(get_string('accountdeleted'));
+    }
+
+    // Check if the user's account has expired
+    if ($USER->expiry > 0 && time() > $USER->expiry) {
+        $USER->logout();
+        die_info(get_string('accountexpired'));
+    }
+
+    // Check if the user's account has become inactive
+    $inactivetime = get_config('defaultaccountinactiveexpire');
+    if ($inactivetime && $oldlastlogin > 0
+        && $oldlastlogin + $inactivetime < time()) {
+        $USER->logout();
+        die_info(get_string('accountinactive'));
+    }
+
+    // Check if the user's account has been suspended
+    if ($USER->suspendedcusr) {
+        $suspendedctime  = strftime(get_string('strftimedaydate'), $USER->suspendedctime);
+        $suspendedreason = $USER->suspendedreason;
+        $USER->logout();
+        die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
+    }
+
+    // User is allowed to log in
+    auth_check_required_fields();
+
+    // all happy - carry on now
+    redirect('/auth/saml/');
 }
