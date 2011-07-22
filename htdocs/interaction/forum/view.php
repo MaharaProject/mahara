@@ -224,6 +224,8 @@ $pagination = build_pagination(array(
     'count' => $forum->topiccount,
     'limit' => $topicsperpage,
     'offset' => $offset,
+    'jumplinks' => 6,
+    'numbersincludeprevnext' => 2,
     'resultcounttextsingular' => get_string('topiclower', 'interaction.forum'),
     'resultcounttextplural' => get_string('topicslower', 'interaction.forum')
 ));

@@ -1098,6 +1098,8 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
         'count'      => $count,
         'limit'      => $limit,
         'offset'     => $offset,
+        'jumplinks'  =>  6,
+        'numbersincludeprevnext' => 2,
     ));
 
     $result = array(

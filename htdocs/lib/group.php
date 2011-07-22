@@ -1168,6 +1168,8 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
                 'count' => $count,
                 'limit' => $limit,
                 'offset' => $offset,
+                'jumplinks' => 6,
+                'numbersincludeprevnext' => 2,
                 'resultcounttextsingular' => get_string('group', 'group'),
                 'resultcounttextplural' => get_string('groups', 'group'),
             ));
@@ -1238,6 +1240,8 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype) 
         'count' => $results['count'],
         'limit' => $results['limit'],
         'offset' => $results['offset'],
+        'jumplinks' => 8,
+        'numbersincludeprevnext' => 2,
         'datatable' => 'membersearchresults',
         'jsonscript' => 'group/membersearchresults.json.php',
         'firsttext' => '',

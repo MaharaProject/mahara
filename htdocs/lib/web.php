@@ -2933,6 +2933,10 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  * - lasttext: The text to use for the 'last page' link
  * - numbersincludefirstlast: Whether the page numbering should include links 
  *   for the first and last pages
+ * - numbersincludeprevnext: The number of pagelinks, adjacent the the current page,
+ *   to include per side
+ * - jumplinks: The maximum number of page jump links to have between first- and current-,
+     and current- and last page
  * - resultcounttextsingular: The text to use for 'result'
  * - resultcounttextplural: The text to use for 'results'
  *
@@ -2986,7 +2990,10 @@ function build_pagination($params) {
         $params['numbersincludefirstlast'] = true;
     }
     if (!isset($params['numbersincludeprevnext'])) {
-        $params['numbersincludeprevnext'] = true;
+        $params['numbersincludeprevnext'] = 1;
+    }
+    else {
+        $params['numbersincludeprevnext'] = (int) $params['numbersincludeprevnext'];
     }
 
     if (!isset($params['extradata'])) {
@@ -3008,8 +3015,8 @@ function build_pagination($params) {
         if (!empty($params['lastpage'])) {
             $page = $last;
         }
-        $next = min($last, $page + 1);
         $prev = max(0, $page - 1);
+        $next = min($last, $page + 1);
 
         // Build a list of what pagenumbers will be put between the previous/next links
         $pagenumbers = array();
@@ -3019,44 +3026,58 @@ function build_pagination($params) {
             $pagenumbers[] = 0;
         }
 
-        $maxjumplinks = 8;
-        $betweenpages = $pages - 2;  // pages between first and last page
+        $maxjumplinks = isset($params['jumplinks']) ? (int) $params['jumplinks'] : 0;
 
-        // Pages between first page and current page
-        $betweencount = $prev;
-        $jumplinks = $betweenpages ? $maxjumplinks * ($betweencount / $betweenpages) : 0;
-        $jumpcount = $jumplinks ? $betweencount / $jumplinks : 0;
-        $jumpcount = $jumpcount < $jumplinks ? $jumplinks : $jumpcount;
+        // Jump pages between first page and current page
+        $betweencount = $page;
+        $jumplinks = $pages ? round($maxjumplinks * ($betweencount / $pages)) : 0;
+        $jumpcount = $jumplinks ? round($betweencount / ($jumplinks + 1)) : 0;
         $gapcount = 1;
-        for ($bc = 0; $bc < $betweencount; $bc++) {
-            if ($gapcount > $jumpcount) {
-                $pagenumbers[] = $bc;
-                $gapcount = 0;
+        if ($jumpcount > 1) {
+            for ($bc = 1; $bc < $betweencount; $bc++) {
+                if ($gapcount > $jumpcount) {
+                    $pagenumbers[] = $bc;
+                    $gapcount = 1;
+                }
+                $gapcount++;
             }
-            $gapcount++;
         }
 
         // Current page with adjacent prev and next pages
-        if ($params['numbersincludeprevnext']) {
-            $pagenumbers[] = $prev;
+        if ($params['numbersincludeprevnext'] > 0) {
+            for ($i=$params['numbersincludeprevnext']; $i > 0; $i--) {
+                $prevlink = $page - $i;
+                if ($prevlink < 0) {
+                    break;
+                }
+                $pagenumbers[] = $prevlink;
+            }
+            unset($prevlink);
         }
         $pagenumbers[] = $page;
-        if ($params['numbersincludeprevnext']) {
-            $pagenumbers[] = $next;
+        if ($params['numbersincludeprevnext'] > 0) {
+            for ($i = 1; $i <= $params['numbersincludeprevnext']; $i++) {
+                $nextlink = $page + $i;
+                if ($nextlink > $last) {
+                    break;
+                }
+                $pagenumbers[] = $nextlink;
+            }
         }
 
-        // Pages between current and last
-        $betweencount = $last - $next;
-        $jumplinks = $betweenpages ? $maxjumplinks * ($betweencount / $betweenpages) : 0;
-        $jumpcount = $jumplinks ? $betweencount / $jumplinks : 0;
-        $jumpcount = $jumpcount < $jumplinks ? $jumplinks : $jumpcount;
+        // Jump pages between current and last
+        $betweencount = $pages - $page;
+        $jumplinks = $pages ? round($maxjumplinks * ($betweencount / $pages)) : 0;
+        $jumpcount = $jumplinks ? round($betweencount / ($jumplinks + 1)) : 0;
         $gapcount = 1;
-        for ($bc = $next; $bc < $last; $bc++) {
-            if ($gapcount > $jumpcount) {
-                $pagenumbers[] = $bc;
-                $gapcount = 0;
+        if ($jumpcount > 1) {
+            for ($bc = $page; $bc < $last; $bc++) {
+                if ($gapcount > $jumpcount) {
+                    $pagenumbers[] = $bc;
+                    $gapcount = 1;
+                }
+                $gapcount++;
             }
-            $gapcount++;
         }
 
         // Last page
@@ -3064,6 +3085,7 @@ function build_pagination($params) {
             $pagenumbers[] = $last;
         }
         $pagenumbers = array_unique($pagenumbers);
+        sort($pagenumbers);
 
         // Build the first/previous links
         $isfirst = $page == 0;

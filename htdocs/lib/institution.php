@@ -761,6 +761,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
                 'count' => $count,
                 'limit' => $limit,
                 'offset' => $offset,
+                'jumplinks' => 4,
                 'resultcounttextsingular' => get_string('institution', 'admin'),
                 'resultcounttextplural' => get_string('institutions', 'admin'),
             ));

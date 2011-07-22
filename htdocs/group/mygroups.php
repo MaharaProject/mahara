@@ -88,6 +88,8 @@ $pagination = build_pagination(array(
     'count' => $results['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
+    'jumplinks' => 6,
+    'numbersincludeprevnext' => 2,
     'resultcounttextsingular' => get_string('group', 'group'),
     'resultcounttextplural' => get_string('groups', 'group'),
 ));
