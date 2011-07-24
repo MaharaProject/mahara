@@ -1,9 +1,5 @@
 /**************** DROPDOWN NAVIGATION ****************/
 /**************** MAIN NAVIGATION ********************/
-#top-wrapper {
-    height: 100px;
-    background-position: left bottom;
-}
 
 #main-nav.dropdown-main li {
 	position: relative;
