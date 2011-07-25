@@ -2108,8 +2108,8 @@ function mahara_standard_nav() {
             'title' => get_string('findfriends'),
             'weight' => 40,
         ),
-        'groups/views' => array(
-            'path' => 'groups/views',
+        'groups/sharedviews' => array(
+            'path' => 'groups/sharedviews',
             'url' => 'view/sharedviews.php',
             'title' => get_string('sharedviews', 'view'),
             'weight' => 50,
