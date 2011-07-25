@@ -168,6 +168,10 @@ switch ($type) {
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
         header('Cache-Control: max-age=' . $maxage);
         header('Pragma: public');
+        $path = $THEME->get_path('images/thumb.png', false, $basepath);
+        if (is_readable($path)) {
+            readfile_exit($path);
+        }
         $path = get_config('docroot') . $basepath . '/thumb.png';
         if (is_readable($path)) {
             readfile_exit($path);
