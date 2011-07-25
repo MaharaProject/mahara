@@ -640,6 +640,7 @@ class Theme {
     public function __construct($arg) {
         if (is_string($arg)) {
             $themename = $arg;
+            $themedata = null;
         }
         else if ($arg instanceof User) {
             $themedata = $arg->get_themedata();
