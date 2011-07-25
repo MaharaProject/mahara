@@ -53,30 +53,25 @@ class Client {
         $this->response = '';
         $URL = $this->peer->wwwroot . $this->peer->application->xmlrpcserverurl;
 
-        $ch = curl_init( $URL );
-
         $this->requesttext = xmlrpc_encode_request($this->method, $this->params, array("encoding" => "utf-8"));
         $this->signedrequest = xmldsig_envelope($this->requesttext);
         $this->encryptedrequest = xmlenc_envelope($this->signedrequest, $this->peer->certificate);
 
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mahara');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8", 'Expect: '));
-
-        if (strpos($URL, 'https://') === 0) {
-            if ($cainfo = get_config('cacertinfo')) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                curl_setopt($ch, CURLOPT_CAINFO, $cainfo);
-            }
-        }
+        $config = array(
+            CURLOPT_URL            => $URL,
+            CURLOPT_TIMEOUT        => $this->timeout,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_USERAGENT      => 'Mahara',
+            CURLOPT_POSTFIELDS     => $this->encryptedrequest,
+            CURLOPT_HTTPHEADER     => array("Content-Type: text/xml charset=UTF-8", 'Expect: '),
+        );
+        $result = mahara_http_request($config);
 
         $timestamp_send    = time();
-        $this->rawresponse = curl_exec($ch);
+        $this->rawresponse = $result->data;
 
-        $response_code        = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response_code        = $result->info['http_code'];
         $response_code_prefix = substr($response_code, 0, 1);
     
         if ('2' != $response_code_prefix) {
@@ -91,9 +86,9 @@ class Client {
         $timestamp_receive = time();
         $remote_timestamp  = null;
 
-        $curl_errno = curl_errno($ch);
+        $curl_errno = $result->errno;
         if ($curl_errno || $this->rawresponse == false) {
-            throw new XmlrpcClientException('Curl error: ' . $curl_errno . ': ' . curl_error($ch));
+            throw new XmlrpcClientException('Curl error: ' . $curl_errno . ': ' . $result->error);
             return false;
         }
 
