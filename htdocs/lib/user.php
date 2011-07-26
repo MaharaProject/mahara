@@ -1217,6 +1217,16 @@ function delete_user($userid) {
         }
     }
 
+    // Remove the user's collections
+    $collectionids = get_column('collection', 'id', 'owner', $userid);
+    if ($collectionids) {
+        require_once(get_config('libroot') . 'collection.php');
+        foreach ($collectionids as $collectionid) {
+            $collection = new Collection($collectionid);
+            $collection->delete();
+        }
+    }
+
     db_commit();
 
     handle_event('deleteuser', $userid);
