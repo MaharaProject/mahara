@@ -69,6 +69,12 @@ var Paginator = function(id, datatable, script, extradata) {
                 tbody.innerHTML = data['data']['tablerows'];
             }
 
+            // In Chrome, tbody remains set to the value before tbody.innerHTML was modified
+            //  to fix that, we re-initialize tbody using getFirstElementByTagAndClassName
+            if (/chrome/.test( navigator.userAgent.toLowerCase())){
+                tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+            }
+
             // Pieforms should probably separate its js from its html. For
             // now, be evil: scrape it out of the script elements and eval
             // it every time the page changes.
