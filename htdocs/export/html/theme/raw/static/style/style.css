@@ -54,6 +54,10 @@ div.pagination span.selected,
 span.pagination {
     padding: 5px;
 }
+.date {
+	color: #888;
+	font-style: italic;
+}
 
 /* Headings */
 h1 {
@@ -70,6 +74,18 @@ h1 a {
 h2, h3, h4, h5, h6 {
     font-family: Arial, sans-serif;
     margin: .5em 0 .25em;
+}
+
+/* Tables */
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+th {
+	padding: 3px 0;
+	text-align: left;
+	vertical-align: top;
+	line-height: 1.8em;
 }
 
 /* Main content */
@@ -157,6 +173,23 @@ h2, h3, h4, h5, h6 {
 .blockinstance-content {
     padding: .5em .25em;
     font-size: smaller;
+}
+
+/* views footer */
+.viewfooter {
+	border: 1px solid #eee;
+}
+#feedbacktable .fr {
+	margin-top: 3px;
+}
+#feedbacktable th {
+    color: #303030;
+}
+#feedbacktable .details {
+	color: #d1d1d1;
+}
+#feedbacktable .details span {
+	color: #9e9e9e;
 }
 
 /* Footer */

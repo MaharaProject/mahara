@@ -99,6 +99,8 @@ default:
     export_iframe_die(get_string('unabletoexportportfoliousingoptions', 'export'));
 }
 
+$exporter->includefeedback = $exportdata['includefeedback'];
+
 try {
     $zipfile = $exporter->export();
 } catch (SystemException $e) {

@@ -71,6 +71,13 @@ $elements = array(
         'separator' => '</div><div>',
         'defaultvalue' => 'all',
     ),
+    'includefeedback' => array(
+        'type' => 'checkbox',
+        'title' => get_string('includefeedback', 'export'),
+        'description' => get_string('includefeedbackdescription', 'export'),
+        'separator' => '</div><div>',
+        'defaultvalue' => 1,
+    ),
 );
 
 if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'portfolio')) {
@@ -172,9 +179,10 @@ function export_submit(Pieform $form, $values) {
     }
 
     $exportdata = array(
-        'format' => $values['format'],
-        'what'   => $values['what'],
-        'views'  => $views,
+        'format'          => $values['format'],
+        'what'            => $values['what'],
+        'views'           => $views,
+        'includefeedback' => $values['includefeedback'],
     );
     $SESSION->set('exportdata', $exportdata);
 

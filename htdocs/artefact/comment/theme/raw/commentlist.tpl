@@ -29,7 +29,17 @@
       {else}
       <div class="commentright">
         {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
-        {if $item->ratingimage}<div class="commentrating">{$item->ratingimage|safe}</div><br />{/if}
+        {if $item->ratingdata}
+        <div class="commentrating">
+          {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
+            {if !$item->ratingdata->export}
+          <input name="star{$item->id}" type="radio" class="star" {if $i === $item->ratingdata->value} checked="checked" {/if} disabled="disabled" />
+            {else}
+          <div class="star-rating star star-rating-applied star-rating-readonly{if $i <= $item->ratingdata->value} star-rating-on{/if}"><a>&nbsp;</a></div>
+            {/if}
+          {/for}
+        </div><br />
+        {/if}
         {$item->description|safe|clean_html}
         {if $item->attachmessage}<div class="attachmessage">{$item->attachmessage}</div>{/if}
       </div>

@@ -263,9 +263,10 @@ class ArtefactTypeComment extends ArtefactType {
      *                                 Set to null to use $offset for pagination.
      * @param  object $view            The view object
      * @param  object $artefact        Optional artefact object
+     * @param  bool   $export          Determines if comments are fetched for html export purposes
      * @return object $result          Comments data object
      */
-    public static function get_comments($limit=10, $offset=0, $showcomment, &$view, &$artefact=null) {
+    public static function get_comments($limit=10, $offset=0, $showcomment, &$view, &$artefact=null, $export=false) {
         global $USER;
         $userid = $USER->get('id');
         $viewid = $view->get('id');
@@ -290,6 +291,7 @@ class ArtefactTypeComment extends ArtefactType {
             'canedit'  => $canedit,
             'owner'    => $owner,
             'isowner'  => $isowner,
+            'export'   => $export,
             'data'     => array(),
         );
 
@@ -494,15 +496,12 @@ class ArtefactTypeComment extends ArtefactType {
             }
 
             if (get_config_plugin('artefact', 'comment', 'commentratings') and $item->rating) {
-                $item->rating = valid_rating($item->rating);
-                $item->ratingimage = '';
-                for ($i = MIN_RATING; $i <= MAX_RATING; $i++) {
-                    $checked = '';
-                    if ($i === $item->rating) {
-                        $checked = 'checked="checked"';
-                    }
-                    $item->ratingimage .= '<input name="star'.$item->id.'" type="radio" class="star" '.$checked.' disabled="disabled"/>';
-                }
+                $item->ratingdata = (object) array(
+                    'value' => valid_rating($item->rating),
+                    'min_rating' => MIN_RATING,
+                    'max_rating' => MAX_RATING,
+                    'export' => $data->export,
+                );
             }
         }
 

@@ -17,7 +17,7 @@ EOF;
 
 echo $form_tag;
 echo '<h3>' . get_string('chooseanexportformat', 'export') . '</h3>';
-echo '<div class="element">';
+echo '<div class="element" id="exportformat-buttons">';
 echo '<div>' . $elements['format']['html'] . '</div>';
 echo '</div>';
 echo '<h3>' . get_string('whatdoyouwanttoexport', 'export') . '</h3>';
@@ -118,6 +118,10 @@ if ($body) {
     echo '</fieldset></div>';
 }
 
+echo '<div id="includefeedback">';
+echo $elements['includefeedback']['html'] . ' ' . $elements['includefeedback']['labelhtml'];
+echo '<div class="radio-description">' . $elements['includefeedback']['description'] . '</div>';
+echo '</div>';
 echo '<div id="export_submit_container">';
 echo $elements['submit']['html'];
 echo '</div>';
