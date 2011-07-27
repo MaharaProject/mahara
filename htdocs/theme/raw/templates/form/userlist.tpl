@@ -125,6 +125,11 @@
 
         $('{{$name}}').value=members.join(',');
     };
+
+    addLoadEvent(function () {
+        connect('{{$name}}_potential', 'ondblclick', function (event) { {{$name}}_moveopts('potential','members') });
+        connect('{{$name}}_members', 'ondblclick', function (event) { {{$name}}_moveopts('members','potential') });
+    });
 </script>
 <table class="userlisttable fullwidth">
     <tr>
