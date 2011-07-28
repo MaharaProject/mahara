@@ -238,7 +238,7 @@ function upload_submit(Pieform $form, $values) {
 
     $USER->commit();
 
-    $form->json_reply(PIEFORM_OK, get_string('uploadedprofileiconsuccessfully', 'artefact.file'));
+    $form->json_reply(PIEFORM_OK, get_string('profileiconaddedtoimagesfolder', 'artefact.file', get_string('imagesdir', 'artefact.file')));
 }
 
 function settings_submit_default(Pieform $form, $values) {
