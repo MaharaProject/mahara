@@ -277,16 +277,55 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2011070700) {
-        // Update profileicons' description and location
-        safe_require('artefact', 'file');
 
-        if ($pics = get_records_array('artefact', 'artefacttype', 'profileicon')) {
-            foreach ($pics as $p) {
-                $p->parent = ArtefactTypeFolder::get_folder_id(get_string('imagesdir', 'artefact.file'),
-                    get_string('imagesdirdesc', 'artefact.file'), null, true, $p->owner);
-                $p->description = empty($p->description) ? get_string('uploadedprofileicon', 'artefact.file') : $p->description;
+        // Create an images folder for everyone with a profile icon
+        $imagesdir = get_string('imagesdir', 'artefact.file');
+        $imagesdirdesc = get_string('imagesdirdesc', 'artefact.file');
 
-                update_record('artefact', $p);
+        execute_sql("
+            INSERT INTO {artefact} (artefacttype, container, owner, ctime, mtime, atime, title, description, author)
+            SELECT 'folder', 1, owner, current_timestamp, current_timestamp, current_timestamp, ?, ?, owner
+            FROM {artefact} WHERE owner IS NOT NULL AND artefacttype = 'profileicon'
+            GROUP BY owner",
+            array($imagesdir, $imagesdirdesc)
+        );
+
+        // Put profileicons into the images folder and update the description
+        $profileicondesc = get_string('uploadedprofileicon', 'artefact.file');
+
+        if (is_postgres()) {
+            execute_sql("
+                UPDATE {artefact}
+                SET parent = f.folderid, description = ?
+                FROM (
+                    SELECT owner, MAX(id) AS folderid
+                    FROM {artefact}
+                    WHERE artefacttype = 'folder' AND title = ? AND description = ?
+                    GROUP BY owner
+                ) f
+                WHERE artefacttype = 'profileicon' AND {artefact}.owner = f.owner",
+                array($profileicondesc, $imagesdir, $imagesdirdesc)
+            );
+        }
+        else {
+            $folders = get_records_select_array(
+                'artefact',
+                'artefacttype = ? AND title = ? AND description = ?',
+                array('folder', $imagesdir, $imagesdirdesc),
+                'owner ASC'
+            );
+            if ($folders) {
+                $lastowner = null;
+                foreach ($folders as $f) {
+                    if ($f->owner != $lastowner) {
+                        execute_sql("
+                            UPDATE {artefact} SET parent = ?, description = ?
+                            WHERE owner = ? AND artefacttype = 'profileicon'",
+                            array($f->id, $profileicondesc, $f->owner)
+                        );
+                    }
+                    $lastowner = $f->owner;
+                }
             }
         }
     }

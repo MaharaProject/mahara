@@ -2475,7 +2475,10 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2011070500) {
         // Add profileicon foreign key to artefact table, first clearing any bad profileicon
         // values out of usr.
-        execute_sql("UPDATE {usr} SET profileicon = NULL WHERE NOT profileicon IN (SELECT id FROM {artefact})");
+        execute_sql("
+            UPDATE {usr} SET profileicon = NULL
+            WHERE NOT profileicon IN (SELECT id FROM {artefact} WHERE artefacttype = 'profileicon')"
+        );
 
         $table = new XMLDBTable('usr');
         $key = new XMLDBKey('profileiconfk');
@@ -2496,24 +2499,50 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2011072200) {
-        // Set group quotas for existing groups
-        $sql = 'SELECT g.id AS id, SUM(aff.size) AS quotaused
+        if (is_postgres()) {
+            execute_sql("
+                UPDATE {group}
+                SET quota = CASE WHEN f.quotaused < 52428800 THEN 52428800 ELSE f.quotaused + 52428800 END,
+                    quotaused = f.quotaused
+                FROM (
+                    SELECT g.id AS id, COALESCE(gf.quotaused, 0) AS quotaused
                     FROM {group} g
-                    LEFT OUTER JOIN {artefact} a ON (g.id = a.group)
-                    LEFT OUTER JOIN {artefact_file_files} aff ON (a.id = aff.artefact)
-                WHERE g.quota IS NULL AND g.quotaused = 0
-                GROUP BY g.id';
-        $records = get_records_sql_array($sql, array());
-        $default = 52428800; // 50MB
-        foreach ($records as $record) {
-            if (empty($record->quotaused)) {
-                $record->quotaused = 0;
+                        LEFT OUTER JOIN (
+                            SELECT a.group, SUM(aff.size) AS quotaused
+                            FROM {artefact} a JOIN {artefact_file_files} aff ON a.id = aff.artefact
+                            WHERE NOT a.group IS NULL
+                            GROUP BY a.group
+                        ) gf ON gf.group = g.id
+                    WHERE g.quota IS NULL AND g.quotaused = 0 AND g.deleted = 0
+                ) f
+                WHERE {group}.id = f.id"
+            );
+        }
+        else {
+            // Set group quotas for existing groups
+            $sql = 'SELECT g.id AS id, SUM(aff.size) AS quotaused
+                        FROM {group} g
+                        LEFT OUTER JOIN {artefact} a ON (g.id = a.group)
+                        LEFT OUTER JOIN {artefact_file_files} aff ON (a.id = aff.artefact)
+                    WHERE g.quota IS NULL AND g.quotaused = 0
+                    GROUP BY g.id';
+            if ($records = get_records_sql_array($sql, array())) {
+                $default = 52428800; // 50MB
+                foreach ($records as $record) {
+                    if (empty($record->quotaused)) {
+                        $record->quotaused = 0;
+                    }
+                    // Set quota as 50MB for current usage below 50MB, and current + 50MB for usage above 50MB
+                    execute_sql(
+                        'UPDATE {group} SET quotaused = ?, quota = ? WHERE id = ?',
+                        array(
+                            $record->quotaused,
+                            $record->quotaused < $default ? $default : $record->quotaused + $default,
+                            $record->id
+                        )
+                    );
+                }
             }
-            // Set quota as 50MB for current usage below 50MB, and current + 50MB for usage above 50MB
-            execute_sql('UPDATE {group} SET quotaused = ?, quota = ? WHERE id = ?',
-                        array($record->quotaused,
-                              $record->quotaused < $default ? $default : $record->quotaused + $default,
-                              $record->id));
         }
     }
 
