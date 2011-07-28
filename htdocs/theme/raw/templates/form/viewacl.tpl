@@ -53,7 +53,7 @@ var count = 0;
 
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
-    var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
+    var addButton = BUTTON({'type': 'button'}, {{jstr tag=add}});
     var attribs = {};
     if (item.preset) {
         attribs = {'class': 'preset'};
@@ -84,7 +84,7 @@ function renderPotentialPresetItem(item) {
 
 // Given a row, render it on the right hand side
 function renderAccessListItem(item) {
-    var removeButton = BUTTON({'type': 'button', 'title': '{{str tag=remove}}'});
+    var removeButton = BUTTON({'type': 'button', 'title': {{jstr tag=remove}}});
     var allowfdbk = INPUT({
                         'type': 'checkbox',
                         'name': 'accesslist[' + count + '][allowcomments]',
@@ -241,8 +241,8 @@ function setupCalendar(item, type) {
         return;
     }
     Calendar.setup({
-        "ifFormat"  :"{{str tag=strftimedatetimeshort}}",
-        "daFormat"  :"{{str tag=strftimedatetimeshort}}",
+        "ifFormat"  :{{jstr tag=strftimedatetimeshort}},
+        "daFormat"  :{{jstr tag=strftimedatetimeshort}},
         "inputField": type + 'date_' + count,
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,
@@ -261,13 +261,13 @@ forEach(potentialPresets, function(preset) {
 var allGroups = {{$allgroups|safe}};
 var myGroups = {{$mygroups|safe}};
 if (myGroups) {
-    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmygroups section=view}}'));
+    appendChildNodes('potentialpresetitems', H6(null, {{jstr tag=sharewithmygroups section=view}}));
     renderPotentialPresetItem(allGroups);
     var i = 0;
     var maxGroups = 10;
     forEach(myGroups, function(preset) {
         if (i == maxGroups) {
-            var more = A({'href':''}, '{{str tag=moregroups section=group}} »');
+            var more = A({'href':''}, {{jstr tag=moregroups section=group}} + ' »');
             connect(more, 'onclick', function(e) {
                 e.stop();
                 forEach(getElementsByTagAndClassName('div', 'moregroups', 'potentialpresetitems'), partial(toggleElementClass, 'hidden'));
@@ -283,7 +283,7 @@ if (myGroups) {
 }
 var faves = {{$faves|safe}};
 if (faves) {
-    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithusers section=view}}'));
+    appendChildNodes('potentialpresetitems', H6(null, {{jstr tag=sharewithusers section=view}}));
     forEach(faves, renderPotentialPresetItem);
 }
 var loggedinindex = {{$loggedinindex}};
@@ -343,7 +343,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     rowdata.type = searchTable.type;
     var buttonTD = TD({'style': 'white-space:nowrap;'});
 
-    var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
+    var addButton = BUTTON({'type': 'button', 'class': 'button'}, {{jstr tag=add}});
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
@@ -356,7 +356,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     }
     else if (rowdata.type == 'group') {
         rowdata.role = null;
-        var options = [OPTION({'value':null, 'selected':true}, '{{str tag=everyoneingroup section=view}}')];
+        var options = [OPTION({'value':null, 'selected':true}, {{jstr tag=everyoneingroup section=view}})];
         for (r in globaldata.roles[rowdata.grouptype]) {
             options.push(OPTION({'value':globaldata.roles[rowdata.grouptype][r].name}, globaldata.roles[rowdata.grouptype][r].display));
         }
