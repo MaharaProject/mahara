@@ -103,6 +103,9 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                 $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
                 $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
+                if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
+                    $language = 'en';
+                }
                 $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
                 $adv_buttons = array(
