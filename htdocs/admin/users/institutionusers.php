@@ -229,6 +229,9 @@ function institutionusers_submit(Pieform $form, $values) {
     else if ($values['usertype'] == 'nonmembers') {
         $action = (!empty($values['add']) && $USER->get('admin')) ? 'addUserAsMember' : 'inviteUser';
     }
+    else if ($values['usertype'] == 'lastinstitution') {
+        $action = (!empty($values['add']) && $USER->get('admin')) ? 'addUserAsMember' : 'inviteUser';
+    }
     else {
         $action = 'uninvite_users';
     }
