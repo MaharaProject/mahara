@@ -1520,9 +1520,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $parentclause = ($parentfolderid && is_int($parentfolderid)) ? 'parent = ' . $parentfolderid : 'parent IS NULL';
         $ownerclause = artefact_owner_sql($userid, $groupid, $institution);
         $ignoreclause = $artefactstoignore ? ' AND id NOT IN(' . implode(', ', array_map('db_quote', $artefactstoignore)) . ')' : '';
-        return get_record_sql('SELECT * FROM {artefact}
+        $records = get_records_sql_array('
+           SELECT * FROM {artefact}
            WHERE title = ? AND ' . $parentclause . ' AND ' . $ownerclause . "
-           AND artefacttype = 'folder'" . $ignoreclause, array($name));
+           AND artefacttype = 'folder'" . $ignoreclause,
+           array($name), 0, 1
+        );
+        return $records ? $records[0] : false;
     }
 
     /**
