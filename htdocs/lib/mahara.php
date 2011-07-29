@@ -2464,6 +2464,7 @@ function recalculate_quota() {
     $plugins = plugins_installed('artefact', true);
 
     $userquotas = array();
+    $groupquotas = array();
 
     foreach ($plugins as $plugin) {
         safe_require('artefact', $plugin->name);
@@ -2479,6 +2480,17 @@ function recalculate_quota() {
                 }
             }
         }
+        if (is_callable($classname . '::recalculate_group_quota')) {
+            $plugingroupquotas = call_static_method($classname, 'recalculate_group_quota');
+            foreach ($plugingroupquotas as $groupid => $usage) {
+                if (!isset($groupquotas[$groupid])) {
+                    $groupquotas[$groupid] = $usage;
+                }
+                else {
+                    $groupquotas[$groupid] += $usage;
+                }
+            }
+        }
     }
 
     foreach ($userquotas as $user => $quota) {
@@ -2489,6 +2501,16 @@ function recalculate_quota() {
             'id' => $user
         );
         update_record('usr', $data, $where);
+    }
+
+    foreach ($groupquotas as $group => $quota) {
+        $data = (object) array(
+            'quotaused' => $quota
+        );
+        $where = (object) array(
+            'id' => $group
+        );
+        update_record('group', $data, $where);
     }
 }
 
