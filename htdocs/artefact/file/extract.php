@@ -71,7 +71,18 @@ catch (SystemException $e) {
 }
 
 if ($zipinfo) {
-    if (!$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
+    $quotaallowed = false;
+    if ($file->get('owner')) {
+        $quotaallowed = $USER->quota_allowed($zipinfo->totalsize);
+    }
+    else if ($file->get('group')) {
+        $quotaallowed = group_quota_allowed($file->get('group'), $zipinfo->totalsize);
+    }
+    else {
+        // no institution quotas yet
+        $quotaallowed = true;
+    }
+    if ($quotaallowed) {
         $name = $file->unzip_directory_name();
         $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
 
