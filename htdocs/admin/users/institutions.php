@@ -745,10 +745,13 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $message = get_string('institutionupdatedsuccessfully', 'admin');
-        if (isset($values['theme']) && $oldinstitution->theme != $values['theme']
-            && (!empty($oldinstitution->theme) || $values['theme'] != 'sitedefault')) {
+        if (isset($values['theme'])) {
+            $changedtheme = $oldinstitution->theme != $values['theme']
+                && (!empty($oldinstitution->theme) || $values['theme'] != 'sitedefault');
+            if ($changedtheme || $values['theme'] == 'custom') {
+                $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
+            }
             $USER->update_theme();
-            $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }
         $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';
