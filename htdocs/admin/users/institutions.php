@@ -548,7 +548,7 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
-    $newinstitution->showonlineusers              = empty($values['showonlineusers']) ? 2 : $values['showonlineusers'];
+    $newinstitution->showonlineusers              = !isset($values['showonlineusers']) ? 2 : $values['showonlineusers'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
         // security risk. See the documentation for the usersuniquebyusername 

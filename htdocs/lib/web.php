@@ -483,7 +483,21 @@ EOF;
                 'weight' => -20,
                 'data'   => profile_sideblock()
             );
-            if (get_config('showonlineuserssideblock')) {
+            $showusers = 2;
+            $institutions = $USER->institutions;
+            if (!empty($institutions)) {
+                $showusers = 0;
+                foreach ($institutions as $i) {
+                    if ($i->showonlineusers == 2) {
+                        $showusers = 2;
+                        break;
+                    }
+                    if ($i->showonlineusers == 1) {
+                        $showusers = 1;
+                    }
+                }
+            }
+            if (get_config('showonlineuserssideblock') && $showusers > 0) {
                 $SIDEBLOCKS[] = array(
                     'name'   => 'onlineusers',
                     'id'     => 'sb-onlineusers',
