@@ -2346,7 +2346,7 @@ function onlineusers_sideblock() {
                 'lastminutes' => floor(get_config('accessidletimeout') / 60),
             );
         case 1: // show institution only
-            $sql = 'SELECT u.* FROM {usr} u JOIN {usr_institution} i ON u.id = i.usr
+            $sql = 'SELECT DISTINCT u.* FROM {usr} u JOIN {usr_institution} i ON u.id = i.usr
                 WHERE i.institution IN ('.join(',', array_map('db_quote', array_keys($institutions))).')
                 AND lastaccess > ? AND deleted = 0 ORDER BY lastaccess DESC';
             break;
