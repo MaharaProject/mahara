@@ -55,30 +55,39 @@ var Paginator = function(id, datatable, script, extradata) {
     }
 
     this.updateResults = function (data) {
-        var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
-        if (tbody) {
+        var container = self.datatable;
+        if (self.datatable.tagName == 'TABLE') {
+            container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+        }
+        if (container) {
             // You can't write to table nodes innerHTML in IE and
             // konqueror, so this workaround detects them and does
             // things differently
             if ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
                 var temp = DIV({'id':'ie-workaround'});
-                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
-                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                if (container.tagName == 'TBODY') {
+                    temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                    swapDOM(container, temp.childNodes[0].childNodes[0]);
+                }
+                else {
+                    temp.innerHTML = data.data.tablerows;
+                    replaceChildNodes(container, temp.childNodes);
+                }
             }
             else {
-                tbody.innerHTML = data['data']['tablerows'];
+                container.innerHTML = data['data']['tablerows'];
             }
 
             // In Chrome, tbody remains set to the value before tbody.innerHTML was modified
             //  to fix that, we re-initialize tbody using getFirstElementByTagAndClassName
-            if (/chrome/.test( navigator.userAgent.toLowerCase())){
-                tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+            if (/chrome/.test(navigator.userAgent.toLowerCase()) && container.tagName == 'TBODY') {
+                container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
             }
 
             // Pieforms should probably separate its js from its html. For
             // now, be evil: scrape it out of the script elements and eval
             // it every time the page changes.
-            forEach(getElementsByTagAndClassName('script', null, tbody), function(s) {
+            forEach(getElementsByTagAndClassName('script', null, container), function(s) {
                 var m = scrapeText(s).match(new RegExp('^(new Pieform\\\(.*?\\\);)$'));
                 if (m && m[1]) {
                     eval('var pf = ' + m[1] + ' pf.init();');

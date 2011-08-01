@@ -8,3 +8,4 @@
             </div>
         {/foreach}
     {/foreach}
+    <div class="cl"></div>
