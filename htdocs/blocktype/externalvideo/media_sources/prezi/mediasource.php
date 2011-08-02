@@ -29,9 +29,7 @@ class Media_prezi implements MediaBase {
         $height = $height ? (int)$height : self::$default_height;
 
         foreach (self::$embed_sources as $source) {
-            log_debug("Trying to match ". $input ." against ". $source['match']);
             if (preg_match($source['match'], $input)) {
-                log_debug("Success");
                 $output = preg_replace($source['match'], $source['url'], $input);
                 $result = array(
                     'videoid' => $output,
@@ -47,9 +45,7 @@ class Media_prezi implements MediaBase {
 
     public function validate_url($input) {
         foreach (self::$embed_sources as $source) {
-            log_debug("Trying to validate ". $input ." against ". $source['match']);
             if (preg_match($source['match'], $input)) {
-                log_debug("Success");
                 return true;
             }
         }
