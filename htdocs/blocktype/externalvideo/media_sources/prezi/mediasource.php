@@ -11,15 +11,15 @@ class Media_prezi implements MediaBase {
 
     private static $embed_sources  = array(
         array(
-            'match' => '#.*https?://(www\.)?prezi\.com/bin/preziloader\.swf\?prezi_id=([a-zA-Z0-9]+).*#',
+            'match' => '#.*https?://(www\.)?prezi\.com/bin/preziloader\.swf\?prezi_id=([a-zA-Z0-9\-_]+).*#',
             'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$2',
         ),
         array(
-            'match' => '#.*?"preziEmbed_([a-zA-Z0-9]+)".*#',
+            'match' => '#.*?"preziEmbed_([a-zA-Z0-9\-_]+)".*#',
             'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
         ),
         array(
-            'match' => '#.*?prezi.com/([a-zA-Z0-9]+)/.*#',
+            'match' => '#.*?prezi.com/([a-zA-Z0-9\-_]+)/.*#',
             'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
         ),
     );
@@ -29,7 +29,9 @@ class Media_prezi implements MediaBase {
         $height = $height ? (int)$height : self::$default_height;
 
         foreach (self::$embed_sources as $source) {
+            log_debug("Trying to match ". $input ." against ". $source['match']);
             if (preg_match($source['match'], $input)) {
+                log_debug("Success");
                 $output = preg_replace($source['match'], $source['url'], $input);
                 $result = array(
                     'videoid' => $output,
@@ -45,7 +47,9 @@ class Media_prezi implements MediaBase {
 
     public function validate_url($input) {
         foreach (self::$embed_sources as $source) {
+            log_debug("Trying to validate ". $input ." against ". $source['match']);
             if (preg_match($source['match'], $input)) {
+                log_debug("Success");
                 return true;
             }
         }
