@@ -2309,10 +2309,10 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
         case 0: // show none
             return $result;
         case 1: // show institution only
-            $sql = "SELECT * FROM {usr} JOIN {usr_institution} i ON id = i.usr
+            $sql = "SELECT DISTINCT u.* FROM {usr} u JOIN {usr_institution} i ON id = i.usr
                 WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (" . join(',',array_map('db_quote', array_keys($institutions))) . ")
                 ORDER BY $orderby";
-            $countsql = 'SELECT count(id) FROM {usr} JOIN {usr_institution} i ON id = i.usr
+            $countsql = 'SELECT count(DISTINCT id) FROM {usr} JOIN {usr_institution} i ON id = i.usr
                 WHERE deleted = 0 AND lastaccess > ? AND i.institution IN (' . join(',',array_map('db_quote', array_keys($institutions))) . ')';
             break;
         case 2: // show all
