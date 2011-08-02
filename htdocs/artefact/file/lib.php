@@ -830,6 +830,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * future version. So think twice before using it :)
      */
     public static function save_file($pathname, $data, User &$user=null, $outsidedataroot=false) {
+        global $USER;
+
         $dataroot = get_config('dataroot');
         if (!$outsidedataroot) {
             $pathname = $dataroot . $pathname;
@@ -861,13 +863,27 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             return false;
         }
-        if (empty($user)) {
-            global $USER;
-            $user = $USER;
+        $owner = null;
+        if ($user) {
+            $owner = $user;
+        }
+        else if ($data->owner == $USER->get('id')) {
+            $owner = $USER;
+            $owner->quota_refresh();
+        }
+        else if (!empty($data->owner)) {
+            $owner = new User;
+            $owner->find_by_id($data->owner);
         }
         try {
-            $user->quota_add($size);
-            $user->commit();
+            if ($owner) {
+                $owner->quota_add($size);
+                $owner->commit();
+            }
+            else if (!empty($data->group)) {
+                require_once('group.php');
+                group_quota_add($data->group, $size);
+            }
             return $id;
         }
         catch (QuotaExceededException $e) {
@@ -1045,6 +1061,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function bulk_delete($artefactids) {
         global $USER;
+        require_once('group.php');
 
         if (empty($artefactids)) {
             return;
@@ -1055,12 +1072,22 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         db_begin();
         // Get the size of all the files we're about to delete that belong to
         // the user.
-        $totalsize = get_field_sql('
-            SELECT SUM(size)
-            FROM {artefact_file_files} f JOIN {artefact} a ON f.artefact = a.id
-            WHERE a.owner = ? AND f.artefact IN (' . $idstr . ')',
-            array($USER->get('id'))
-        );
+        if ($group = group_current_group()) {
+            $totalsize = get_field_sql('
+                SELECT SUM(size)
+                FROM {artefact_file_files} f JOIN {artefact} a ON f.artefact = a.id
+                WHERE a.group = ? AND f.artefact IN (' . $idstr . ')',
+                array($group->id)
+            );
+        }
+        else {
+            $totalsize = get_field_sql('
+                SELECT SUM(size)
+                FROM {artefact_file_files} f JOIN {artefact} a ON f.artefact = a.id
+                WHERE a.owner = ? AND f.artefact IN (' . $idstr . ')',
+                array($USER->get('id'))
+            );
+        }
 
         // Get all fileids so that we can delete the files on disk
         $fileids = get_records_select_assoc('artefact_file_files', 'artefact IN (' . $idstr . ')', array());
@@ -1094,8 +1121,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         if ($totalsize) {
-            $USER->quota_remove($totalsize);
-            $USER->commit();
+            if ($group) {
+                group_quota_remove($group->id, $totalsize);
+            }
+            else {
+                $USER->quota_remove($totalsize);
+                $USER->commit();
+            }
         }
         db_commit();
     }
