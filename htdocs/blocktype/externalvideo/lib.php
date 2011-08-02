@@ -86,6 +86,16 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : 0;
 
         if (isset($configdata['videoid'])) {
+            if (!isset($configdata['type'])) {
+                $configdata = self::process_url($configdata['videoid'], $configdata['width'], $configdata['height']);
+                $instance->set('configdata', $configdata);
+                $instance->commit();
+                if (!$configdata) {
+                    // The video link doesn't work
+                    return $result;
+                }
+            }
+
             $url = hsc($configdata['videoid']);
 
             // IE seems to wait for all elements on the page to load
