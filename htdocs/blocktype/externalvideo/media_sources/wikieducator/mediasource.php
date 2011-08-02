@@ -20,7 +20,7 @@ class Media_wikieducator implements MediaBase {
 
     private static $scrape_sources = array(
         array(
-            'match' => '#.*?https?://(www\.)?wikieducator\.org/([a-zA-Z0-9_\-+:%]+).*#',
+            'match' => '#.*?https?://(www\.)?wikieducator\.org/([a-zA-Z0-9_\-+:%/]+).*#',
             'url'   => 'http://wikieducator.org/$2',
         ),
     );
