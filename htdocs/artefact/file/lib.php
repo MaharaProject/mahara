@@ -1323,6 +1323,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             update_record('site_content', $data, 'name');
         }
         else {
+            $data->ctime = db_format_timestamp(time());
             insert_record('site_content', $data);
         }
         foreach(PluginArtefactFile::get_artefact_types() as $at) {
