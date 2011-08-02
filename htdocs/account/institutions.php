@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/institutions');
+define('MENUITEM', 'groups/institutions');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('institutionmembership'));
