@@ -215,7 +215,7 @@ class PluginSearchInternal extends PluginSearch {
 
         $termsql = "$matches->preferredname
                     OR (
-                        ($usralias.preferredname IS NULL OR $usralias.preferredname = '' OR NOT $hidenameallowed OR $usrprefalias.value != '1')
+                        ($usralias.preferredname IS NULL OR $usralias.preferredname = '' OR NOT $hidenameallowed OR $usrprefalias.value != '1' OR $usrprefalias.value IS NULL)
                         AND ($matches->firstname OR $matches->lastname)
                     )
                     OR ($searchusernamesallowed AND $matches->username)";
