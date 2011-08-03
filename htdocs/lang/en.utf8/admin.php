@@ -674,6 +674,8 @@ $string['showonlineusersdesc'] = 'The online users to show to members of this in
 
 $string['Logo'] = 'Logo';
 $string['logodescription'] = 'You can upload an image here that will be displayed to your institution\'s members in place of the standard header logo.  For best results this image should have the same dimensions as the site logo in your institution\'s theme.';
+$string['deletelogo'] = 'Delete Logo';
+$string['deletelogodescription'] = 'Revert to the standard header logo for your institution\'s theme.';
 $string['customtheme'] = 'Custom theme configuration';
 $string['customtheme.background'] = 'Background';
 $string['customtheme.backgroundfg'] = 'Text on Background';

@@ -325,6 +325,11 @@ if ($institution || $add) {
                 'type'        => 'html',
                 'value'       => '<img src="' . $logourl . '" alt="' . get_string('Logo', 'admin') . '">',
             );
+            $elements['deletelogo'] = array(
+                'type'        => 'checkbox',
+                'title'       => get_string('deletelogo', 'admin'),
+                'description' => get_string('deletelogodescription', 'admin'),
+            );
         }
         if (!empty($data->style)) {
             $customtheme = get_records_menu('style_property', 'style', $data->style, '', 'field,value');
@@ -706,6 +711,10 @@ function institution_submit(Pieform $form, $values) {
         }
 
         set_field('institution', 'logo', $id, 'name', $institution);
+    }
+
+    if (!empty($values['deletelogo'])) {
+        execute_sql("UPDATE {institution} SET logo = NULL WHERE name = ?", array($institution));
     }
 
     delete_records('institution_locked_profile_field', 'name', $institution);
