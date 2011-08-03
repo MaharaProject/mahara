@@ -2,7 +2,6 @@
 {if $friends}
     <div id="userfriendstable" class="center fullwidth">
       {$friends.tablerows|safe}
-      <div class="cl"></div>
     </div>
 	<div id="myfriends_page_container" class="hidden">{$friends.pagination|safe}</div>
 <script>
