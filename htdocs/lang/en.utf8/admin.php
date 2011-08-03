@@ -690,6 +690,8 @@ $string['customtheme.sidebarfg'] = 'Side block content background';
 $string['customtheme.sidebarlink'] = 'Side block link';
 $string['customtheme.rowbg'] = 'Row background';
 $string['customstylesforinstitution'] = 'Custom styles for %s';
+$string['resetcolours'] = 'Reset colours';
+$string['resetcoloursdesc'] = 'Restore default colours';
 
 $string['authenticatedby'] = 'Authentication Method';
 $string['authenticatedbydescription'] = 'How this user authenticates to Mahara';

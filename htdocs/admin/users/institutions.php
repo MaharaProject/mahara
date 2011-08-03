@@ -356,6 +356,12 @@ if ($institution || $add) {
                 'defaultvalue' => isset($customtheme[$name]) ? $customtheme[$name] : $styledata['value'],
             );
         }
+        $elements['customthemefs']['elements']['resetcustom'] = array(
+            'type'         => 'checkbox',
+            'class'        => 'nojs-hidden-inline',
+            'title'        => get_string('resetcolours', 'admin'),
+            'description'  => get_string('resetcoloursdesc', 'admin'),
+        );
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
             'title'                 => get_string('showonlineusers', 'admin'),
@@ -596,6 +602,10 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->style = null;
     }
 
+    if (!empty($values['resetcustom']) && !empty($oldinstitution->style)) {
+        $newinstitution->style = null;
+    }
+
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
@@ -673,6 +683,11 @@ function institution_submit(Pieform $form, $values) {
         update_record('institution', $newinstitution, $where);
     }
 
+    if (is_null($newinstitution->style) && !empty($oldinstitution->style)) {
+        delete_records('style_property', 'style', $oldinstitution->style);
+        delete_records('style', 'id', $oldinstitution->style);
+    }
+
     // Set the logo after updating the institution, because the institution
     // needs to exist before it can own the logo artefact.
     if ($values['logo']) {
@@ -739,10 +754,13 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $message = get_string('institutionupdatedsuccessfully', 'admin');
-        if (isset($values['theme']) && $oldinstitution->theme != $values['theme']
-            && (!empty($oldinstitution->theme) || $values['theme'] != 'sitedefault')) {
+        if (isset($values['theme'])) {
+            $changedtheme = $oldinstitution->theme != $values['theme']
+                && (!empty($oldinstitution->theme) || $values['theme'] != 'sitedefault');
+            if ($changedtheme || $values['theme'] == 'custom') {
+                $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
+            }
             $USER->update_theme();
-            $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         }
         $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';

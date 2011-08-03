@@ -817,7 +817,7 @@ class User {
         $institution->addRequestFromUser($this, $studentid);
     }
 
-    public function reset_institutions() {
+    public function reset_institutions($nocachecss=false) {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
         $staffinstitutions = array();
@@ -848,7 +848,11 @@ class User {
             $this->theme      = $institutions[$themeinstitution]->theme;
             $this->headerlogo = $institutions[$themeinstitution]->logo;
             if ($institutions[$themeinstitution]->style) {
-                $stylesheets[] = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
+                $stylesheet = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
+                if ($nocachecss) {
+                    $stylesheet .= '&time=' . time();
+                }
+                $stylesheets[] = $stylesheet;
             }
         }
         $this->stylesheets        = $stylesheets;
@@ -1345,13 +1349,13 @@ class LiveUser extends User {
     }
 
     public function update_theme() {
-        $this->reset_institutions();
+        $this->reset_institutions(true);
         $this->commit();
     }
 
-    public function reset_institutions() {
+    public function reset_institutions($nocachecss=false) {
         global $THEME;
-        parent::reset_institutions();
+        parent::reset_institutions($nocachecss);
         if (!defined('INSTALLER')) {
             $THEME = new Theme($this);
         }
