@@ -628,15 +628,17 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
-        static $folderid;
+        static $folderids;
 
-        if (!empty($folderid)) {
-            return $folderid;
+        $viewid = $view->get('id');
+
+        if (isset($folderids[$viewid])) {
+            return $folderids[$viewid];
         }
 
         $viewfilesfolder = ArtefactTypeFolder::get_folder_id(get_string('viewfilesdirname', 'view'), get_string('viewfilesdirdesc', 'view'),
                                                              null, true, $view->get('owner'), $view->get('group'), $view->get('institution'), $artefactstoignore);
-        $foldername = $view->get('id');
+        $foldername = $viewid;
         $existing = get_column_sql("
             SELECT title
             FROM {artefact}
@@ -660,9 +662,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $folder = new ArtefactTypeFolder(0, $data);
         $folder->commit();
 
-        $folderid = $folder->get('id');
+        $folderids[$viewid] = $folder->get('id');
 
-        return $folderid;
+        return $folderids[$viewid];
     }
 
     /**
