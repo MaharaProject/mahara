@@ -276,6 +276,20 @@ class PluginArtefactFile extends PluginArtefact {
         }
         return array();
     }
+
+    public static function recalculate_group_quota() {
+        $data = get_records_sql_assoc("
+            SELECT a.group, SUM(f.size) AS bytes
+            FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
+            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
+            AND a.group IS NOT NULL
+            GROUP BY a.group", array()
+        );
+        if ($data) {
+            return array_map(create_function('$a', 'return $a->bytes;'), $data);
+        }
+        return array();
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {

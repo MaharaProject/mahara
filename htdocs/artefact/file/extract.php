@@ -33,83 +33,91 @@ safe_require('artefact', 'file');
 
 $fileid = param_integer('file');
 // @todo provide upload form when fileid not set.
+$file = artefact_instance_from_id($fileid);
 
 $smartyconfig = array(
     'sideblocks' => array(
         array(
-            'name'   => 'quota',
+            'name'   => ($file->get('group') ? 'groupquota' : 'quota'),
             'weight' => -10,
             'data'   => array(),
         ),
     ),
 );
 
-if ($fileid) {
-    $file = artefact_instance_from_id($fileid);
+if ($group = $file->get('group')) {
+    require_once(get_config('libroot') . 'group.php');
+    define('GROUP', $group);
+    $group = group_current_group();
+    define('TITLE', $group->name);
+}
+else {
+    define('TITLE', get_string('Unzip', 'artefact.file'));
+}
 
-    if ($group = $file->get('group')) {
-        require_once(get_config('libroot') . 'group.php');
-        define('GROUP', $group);
-        $group = group_current_group();
-        define('TITLE', $group->name);
+if (!($file instanceof ArtefactTypeArchive)) {
+    throw new NotFoundException();
+}
+
+if (!$USER->can_edit_artefact($file)) {
+    throw new AccessDeniedException();
+}
+
+try {
+    $zipinfo = $file->read_archive();
+}
+catch (SystemException $e) {
+    $message = get_string('invalidarchive', 'artefact.file');
+}
+
+if ($zipinfo) {
+    $quotaallowed = false;
+    if ($file->get('owner')) {
+        $quotaallowed = $USER->quota_allowed($zipinfo->totalsize);
+    }
+    else if ($file->get('group')) {
+        $quotaallowed = group_quota_allowed($file->get('group'), $zipinfo->totalsize);
     }
     else {
-        define('TITLE', get_string('Unzip', 'artefact.file'));
+        // no institution quotas yet
+        $quotaallowed = true;
     }
+    if ($quotaallowed) {
+        $name = $file->unzip_directory_name();
+        $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
 
-    if (!($file instanceof ArtefactTypeArchive)) {
-        throw new NotFoundException();
-    }
+        $goto = files_page($file);
+        if ($parent = $file->get('parent')) {
+            $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
+        }
 
-    if (!$USER->can_edit_artefact($file)) {
-        throw new AccessDeniedException();
-    }
-
-    try {
-        $zipinfo = $file->read_archive();
-    }
-    catch (SystemException $e) {
-        $message = get_string('invalidarchive', 'artefact.file');
-    }
-
-    if ($zipinfo) {
-        if (!$file->get('owner') || $USER->quota_allowed($zipinfo->totalsize)) {
-            $name = $file->unzip_directory_name();
-            $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
-
-            $goto = files_page($file);
-            if ($parent = $file->get('parent')) {
-                $goto .= (strpos($goto, '?') === false ? '?' : '&') . 'folder=' . $parent;
-            }
-
-            $form = pieform(array(
-                'name' => 'unzip_artefact',
-                'elements' => array(
-                    'fileid' => array(
-                        'type' => 'hidden',
-                        'value' => $fileid,
-                    ),
-                    'submit' => array(
-                        'type' => 'submitcancel',
-                        'value' => array(get_string('Unzip', 'artefact.file'), get_string('cancel')),
-                        'goto' => $goto,
-                    )
+        $form = pieform(array(
+            'name' => 'unzip_artefact',
+            'elements' => array(
+                'fileid' => array(
+                    'type' => 'hidden',
+                    'value' => $fileid,
                 ),
-            ));
-        }
-        else {
-            $message = get_string('insufficientquotaforunzip', 'artefact.file');
-        }
+                'submit' => array(
+                    'type' => 'submitcancel',
+                    'value' => array(get_string('Unzip', 'artefact.file'), get_string('cancel')),
+                    'goto' => $goto,
+                )
+            ),
+        ));
     }
-
-    $smarty = smarty(array(), array(), array(), $smartyconfig);
-    $smarty->assign('file', $file);
-    $smarty->assign('zipinfo', $zipinfo);
-    $smarty->assign('message', $message);
-    $smarty->assign('form', $form);
-    $smarty->assign('PAGEHEADING', TITLE);
-    $smarty->display('artefact:file:extract.tpl');
+    else {
+        $message = get_string('insufficientquotaforunzip', 'artefact.file');
+    }
 }
+
+$smarty = smarty(array(), array(), array(), $smartyconfig);
+$smarty->assign('file', $file);
+$smarty->assign('zipinfo', $zipinfo);
+$smarty->assign('message', $message);
+$smarty->assign('form', $form);
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->display('artefact:file:extract.tpl');
 
 function files_page($file) {
     $url = get_config('wwwroot') . 'artefact/file/';
