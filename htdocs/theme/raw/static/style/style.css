@@ -2333,6 +2333,9 @@ form#search, form#filter, div.searchform, #searchviews {
 	margin-top: 10px;
 	border-bottom: 1px dotted #d1d1d1;
 }
+#accountprefs table th label {
+    white-space: normal; /* Other languages' labels too long for nowrap */
+}
 #accountprefs_oldpassword_container th {
 	vertical-align: top;
 	padding-top: 8px !important;
