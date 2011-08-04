@@ -377,6 +377,11 @@ if ($institution || $add) {
                'description'  => get_string('defaultinstitutionquotadescription', 'admin'),
                'defaultvalue' => !empty($data->defaultquota) ? $data->defaultquota : get_config_plugin('artefact', 'file', 'defaultquota'),
             );
+            $elements['updateuserquotas'] = array(
+                'title'        => get_string('updateuserquotas', 'artefact.file'),
+                'description'  => get_string('updateinstitutionuserquotasdesc', 'admin'),
+                'type'         => 'checkbox',
+            );
         }
         else {
             $elements['defaultquota'] = array(
@@ -607,6 +612,12 @@ function institution_submit(Pieform $form, $values) {
     }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
+        if (!empty($values['updateuserquotas']) && !empty($values['defaultquota'])) {
+            execute_sql(
+                "UPDATE {usr} SET quota = ? WHERE id IN (SELECT usr FROM {usr_institution} WHERE institution = ?)",
+                array($values['defaultquota'], $institution)
+            );
+        }
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
     if ($institution != 'mahara') {
