@@ -133,10 +133,20 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         if ($role) {
             // Get all views created in the group
             $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id));
+            foreach ($data['groupviews']->data as &$view) {
+                if ($view['template']) {
+                    $view['form'] = pieform(create_view_form($group->id, null, $view['id']));
+                }
+            }
 
             // For group members, display a list of views that others have
             // shared to the group
             $data['sharedviews'] = View::get_sharedviews_data(null, 0, $group->id);
+            foreach ($data['sharedviews']->data as &$view) {
+                if ($view->template) {
+                    $view->form = pieform(create_view_form($group, null, $view->id));
+                }
+            }
 
             if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
                 // Display a list of views submitted to the group
