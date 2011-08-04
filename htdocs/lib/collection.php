@@ -110,6 +110,27 @@ class Collection {
     public function delete() {
         $viewids = get_column('collection_view', 'view', 'collection', $this->id);
         db_begin();
+
+        // Delete navigation blocks within the collection's views which point at this collection.
+        if ($viewids) {
+            $values = $viewids;
+            $values[] = 'navigation';
+            $navigationblocks = get_records_select_assoc(
+                'block_instance', 'view IN (' . join(',', array_fill(0, count($viewids), '?')) . ') AND blocktype = ?',
+                $values
+            );
+            if ($navigationblocks) {
+                safe_require('blocktype', 'navigation');
+                foreach ($navigationblocks as $b) {
+                    $bi = new BlockInstance($b->id, $b);
+                    $configdata = $bi->get('configdata');
+                    if (isset($configdata['collection']) && $configdata['collection'] == $this->id) {
+                        $bi->delete();
+                    }
+                }
+            }
+        }
+
         delete_records('collection_view','collection',$this->id);
         delete_records('collection','id',$this->id);
 
