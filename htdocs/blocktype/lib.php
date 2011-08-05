@@ -876,22 +876,27 @@ class BlockInstance {
         }
 
         $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
-        foreach($configjs as &$jsfile) {
-            if(strpos($jsfile, 'http://') === false) {
-                if($this->artefactplugin) {
-                    $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
-                        $this->blocktype . '/' . $jsfile;
+        if (is_array($configjs)) {
+            foreach ($configjs as &$jsfile) {
+                if (strpos($jsfile, 'http://') === false) {
+                    if ($this->artefactplugin) {
+                        $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
+                            $this->blocktype . '/' . $jsfile;
+                    }
+                    else {
+                        $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
+                    }
+                    $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
                 }
                 else {
-                    $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
+                    $jsfile = '$j.getScript("' . $jsfile . '");';
                 }
-                $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
             }
-            else {
-                $jsfile = '$j.getScript("' . $jsfile . '");';
-            }
+            $js .= implode('', $configjs);
         }
-        $js .= implode('', $configjs);
+        else if (is_string($configjs)) {
+            $js .= $configjs;
+        }
 
         $renderedform = array('html' => $html, 'javascript' => $js);
         return $renderedform;
