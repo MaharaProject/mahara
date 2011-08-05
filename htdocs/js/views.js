@@ -368,7 +368,9 @@ function ViewManager() {
             removeElementClass(e.previousSibling, 'hidden');
             removeElement(e);
         });
-        removeElement('overlay');
+        if ($('overlay')) {
+            removeElement('overlay');
+        }
     }
 
 
@@ -1219,6 +1221,9 @@ function blockConfigSuccess(form, data) {
             document.location.href = config['wwwroot'] + 'view/blocks.php?id=' + data.viewid;
         }
         viewManager.replaceConfigureBlock(data);
+    }
+    if (data.otherblocks) {
+        forEach(data.otherblocks, viewManager.replaceConfigureBlock);
     }
 }
 

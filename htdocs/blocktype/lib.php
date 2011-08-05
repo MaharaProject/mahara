@@ -519,6 +519,12 @@ class BlockInstance {
 
         $title = (isset($values['title'])) ? $values['title'] : '';
         unset($values['title']);
+
+        // A block may return a list of other blocks that need to be
+        // redrawn after configuration of this block.
+        $torender = !empty($values['_redrawblocks']) && $form->submitted_by_js() ? $values['_redrawblocks'] : array();
+        unset($values['_redrawblocks']);
+
         $this->set('configdata', $values);
         $this->set('title', $title);
 
@@ -539,6 +545,18 @@ class BlockInstance {
             'blockid' => $this->get('id'),
             'viewid'  => $this->get('view'),
         );
+
+        // Render all the other blocks in the torender list
+        $result['otherblocks'] = array();
+        foreach ($torender as $blockid) {
+            if ($blockid != $result['blockid']) {
+                $otherblock = new BlockInstance($blockid);
+                $result['otherblocks'][] = array(
+                    'blockid' => $blockid,
+                    'data'    => $otherblock->render_editing(false, false, true),
+                );
+            }
+        }
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
         if (param_boolean('new', false)) {
