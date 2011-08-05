@@ -513,8 +513,27 @@ class BlockInstance {
         unset($values['change']);
         unset($values['new']);
 
+        $redirect = '/view/blocks.php?id=' . $this->get('view');
+        if (param_boolean('new', false)) {
+            $redirect .= '&new=1';
+        }
+        if ($category = param_alpha('c', '')) {
+            $redirect .= '&c='. $category;
+        }
+
+        $result = array(
+            'goto' => $redirect,
+        );
+
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
-            $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values, $this);
+            try {
+                $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values, $this);
+            }
+            catch (MaharaException $e) {
+                $result['message'] = $e instanceof UserException ? $e->getMessage() : get_string('unrecoverableerror', 'error');
+                $form->set_error(null, $result['message']);
+                $form->reply(PIEFORM_ERR, $result);
+            }
         }
 
         $title = (isset($values['title'])) ? $values['title'] : '';
@@ -544,6 +563,7 @@ class BlockInstance {
             'data'    => $rendered,
             'blockid' => $this->get('id'),
             'viewid'  => $this->get('view'),
+            'goto'    => $redirect,
         );
 
         // Render all the other blocks in the torender list
@@ -558,14 +578,6 @@ class BlockInstance {
             }
         }
 
-        $redirect = '/view/blocks.php?id=' . $this->get('view');
-        if (param_boolean('new', false)) {
-            $redirect .= '&new=1';
-        }
-        if ($category = param_alpha('c', '')) {
-            $redirect .= '&c='. $category;
-        }
-        $result['goto'] = $redirect;
         $form->reply(PIEFORM_OK, $result);
     }
 
