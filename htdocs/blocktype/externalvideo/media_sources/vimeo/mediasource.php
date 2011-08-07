@@ -4,25 +4,33 @@ require_once(dirname(__FILE__) . '/../Media_base.php');
 
 class Media_vimeo implements MediaBase {
 
-    private static $base_url = 'http://vimeo.com/';
+    private $httpstr;
+    private static $base_url;
     private static $default_width  = 400;
     private static $default_height = 225;
 
-    private static $iframe_sources = array(
-        array(
-                'match' => '#.*http://vimeo\.com/moogaloop\.swf\?clip_id=([0-9]+).*#',
-                'url'   => 'http://player.vimeo.com/video/$1'
-        ),
-        array(
-                'match' => '#.*http://player\.vimeo\.com/video/([0-9]+).*#',
-                'url'   => 'http://player.vimeo.com/video/$1'
-        ),
-        array(
-                'match' => '#https?://(www\.|secure\.)?vimeo\.com/([0-9]+)#',
-                'url'   => 'http://player.vimeo.com/video/$2'
-        ),
-    );
+    private static $iframe_sources;
 
+    function __construct() {
+        $this->httpstr = is_https() ? 'https' : 'http';
+
+        self::$base_url = $this->httpstr . '://vimeo.com/';
+
+        self::$iframe_sources = array(
+            array(
+                    'match' => '#.*http://vimeo\.com/moogaloop\.swf\?clip_id=([0-9]+).*#',
+                    'url'   => $this->httpstr . '://player.vimeo.com/video/$1'
+            ),
+            array(
+                    'match' => '#.*http://player\.vimeo\.com/video/([0-9]+).*#',
+                    'url'   => $this->httpstr . '://player.vimeo.com/video/$1'
+            ),
+            array(
+                    'match' => '#https?://(www\.|secure\.)?vimeo\.com/([0-9]+)#',
+                    'url'   => $this->httpstr . '://player.vimeo.com/video/$2'
+            ),
+        );
+    }
 
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;

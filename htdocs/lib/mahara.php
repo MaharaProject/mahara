@@ -2776,3 +2776,12 @@ function is_html_editor_enabled () {
     return (!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
         get_config('wysiwyg') == 'enable';
 }
+
+/**
+ * Determine if site is running with https
+ *
+ * @return bool
+ */
+function is_https() {
+    return stripos(get_config('wwwroot'), 'https://') !== false;
+}

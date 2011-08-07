@@ -4,25 +4,34 @@ require_once(dirname(__FILE__) . '/../Media_base.php');
 
 class Media_prezi implements MediaBase {
 
-    private static $base_url = 'http://www.prezi.com/';
+    private $httpstr;
+    private static $base_url;
 
     private static $default_width  = 550;
     private static $default_height = 400;
 
-    private static $embed_sources  = array(
-        array(
-            'match' => '#.*https?://(www\.)?prezi\.com/bin/preziloader\.swf\?prezi_id=([a-zA-Z0-9\-_]+).*#',
-            'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$2',
-        ),
-        array(
-            'match' => '#.*?"preziEmbed_([a-zA-Z0-9\-_]+)".*#',
-            'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
-        ),
-        array(
-            'match' => '#.*?prezi.com/([a-zA-Z0-9\-_]+)/.*#',
-            'url'   => 'http://prezi.com/bin/preziloader.swf?prezi_id=$1',
-        ),
-    );
+    private static $embed_sources;
+
+    function __construct() {
+        $this->httpstr = is_https() ? 'https' : 'http';
+
+        self::$base_url = $this->httpstr . '://www.prezi.com/';
+
+        self::$embed_sources = array(
+            array(
+                'match' => '#.*https?://(www\.)?prezi\.com/bin/preziloader\.swf\?prezi_id=([a-zA-Z0-9\-_]+).*#',
+                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$2',
+            ),
+            array(
+                'match' => '#.*?"preziEmbed_([a-zA-Z0-9\-_]+)".*#',
+                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$1',
+            ),
+            array(
+                'match' => '#.*?prezi.com/([a-zA-Z0-9\-_]+)/.*#',
+                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$1',
+            ),
+        );
+    }
 
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;

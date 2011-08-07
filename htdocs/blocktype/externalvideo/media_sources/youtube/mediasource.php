@@ -4,25 +4,34 @@ require_once(dirname(__FILE__) . '/../Media_base.php');
 
 class Media_youtube implements MediaBase {
 
-    private static $base_url = 'http://youtube.com/';
+    private $httpstr;
+    private static $base_url;
 
     private static $default_width  = 560;
     private static $default_height = 349;
 
-    private static $iframe_sources = array(
-        array(
-            'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
-            'url'   => 'http://www.youtube.com/embed/$4'
-        ),
-        array(
-            'match' => '#.*https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*).*#',
-            'url'   => 'http://www.youtube.com/embed/$2',
-        ),
-        array(
-            'match' => '#https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
-            'url'   => 'http://www.youtube.com/embed/$2',
-        ),
-    );
+    private static $iframe_sources;
+
+    function __construct() {
+        $this->httpstr = is_https() ? 'https' : 'http';
+
+        self::$base_url = $this->httpstr . '://youtube.com/';
+
+        self::$iframe_sources = array(
+            array(
+                'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$4'
+            ),
+            array(
+                'match' => '#.*https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*).*#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
+            ),
+            array(
+                'match' => '#https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
+            ),
+        );
+    }
 
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;

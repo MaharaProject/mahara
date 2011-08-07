@@ -109,13 +109,15 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
     }
 
     private static function make_apps_url($url) {
-        static $embedsources = array(
+        $httpstr = is_https() ? 'https' : 'http';
+
+        $embedsources = array(
             // docs.google.com/leaf - Google collections
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the collection
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)leaf\?id=([a-zA-Z0-9]+).*#',
-                'url'   => 'http://docs.google.com/$1leaf?id=$2',
+                'url'   => $httpstr . '://docs.google.com/$1leaf?id=$2',
                 'type'  => 'spanicon',
             ),
             // docs.google.com/present - Google presentation incl. custom domain presentation
@@ -124,7 +126,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $3 - id, key, etc. of the presentation
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)present/([a-z]+).*id=([a-zA-Z0-9\_\-\&\=]+).*#',
-                'url'   => 'http://docs.google.com/$1present/embed?id=$3',
+                'url'   => $httpstr . '://docs.google.com/$1present/embed?id=$3',
                 'type'  => 'iframe',
             ),
             // docs.google.com/drawings - Google drawing incl. custom domain drawing
@@ -132,7 +134,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the drawing
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)drawings.*id=([a-zA-Z0-9\_\-\&\=]+).*#',
-                'url'   => 'http://docs.google.com/$1drawings/pub?id=$2',
+                'url'   => $httpstr . '://docs.google.com/$1drawings/pub?id=$2',
                 'type'  => 'image',
             ),
             // docs.google.com - Google document (before July 2010) incl. custom domain document
@@ -140,7 +142,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the document
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)View.*id=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => 'http://docs.google.com/$1View?id=$2',
+                'url'   => $httpstr . '://docs.google.com/$1View?id=$2',
                 'type'  => 'iframe',
             ),
             // docs.google.com - Google document (after July 2010) incl. custom domain document
@@ -148,7 +150,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the document
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)document/pub.*id=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => 'http://docs.google.com/$1document/pub?id=$2',
+                'url'   => $httpstr . '://docs.google.com/$1document/pub?id=$2',
                 'type'  => 'iframe',
             ),
             // spreadsheets.google.com/viewform - Google form incl. custom domain form
@@ -156,7 +158,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the form
             array(
                 'match' => '#.*spreadsheets[0-9]?.google.com/([a-zA-Z0-9\_\-\.\/]*)viewform.*formkey=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => 'https://spreadsheets.google.com/$1embeddedform?formkey=$2',
+                'url'   => $httpstr . '://spreadsheets.google.com/$1embeddedform?formkey=$2',
                 'type'  => 'iframe',
             ),
             // spreadsheets.google.com/embeddedform - Google form incl. custom domain form
@@ -164,7 +166,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the form
             array(
                 'match' => '#.*spreadsheets[0-9]?.google.com/([a-zA-Z0-9\_\-\.\/]*)embeddedform.*formkey=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => 'https://spreadsheets.google.com/$1embeddedform?formkey=$2',
+                'url'   => $httpstr . '://spreadsheets.google.com/$1embeddedform?formkey=$2',
                 'type'  => 'iframe',
             ),
             // spreadsheets.google.com - Google spreadsheet incl. custom domain spreadsheet
@@ -172,25 +174,25 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $2 - id, key, etc. of the spreadsheet
             array(
                 'match' => '#.*spreadsheets[0-9]?.google.com/([a-zA-Z0-9\_\-\.\/]*)pub.*key=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => 'http://spreadsheets.google.com/$1pub?key=$2',
+                'url'   => $httpstr . '://spreadsheets.google.com/$1pub?key=$2',
                 'type'  => 'iframe',
             ),
             // www.google.com/calendar - Google calendar
             array(
                 'match' => '#.*www.google.com/calendar.*src=([a-zA-Z0-9\.\_\-\&\%\=/]+).*#',
-                'url'   => 'http://www.google.com/calendar/embed?src=$1',
+                'url'   => $httpstr . '://www.google.com/calendar/embed?src=$1',
                 'type'  => 'iframe',
             ),
             // maps.google.com - Google My Maps (IMPORTANT: this is ONLY for My Maps)
             array(
                 'match' => '#.*maps.google.[^/]*/maps/ms\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/]+).*#',
-                'url'   => 'http://maps.google.com/maps/ms?$1',
+                'url'   => $httpstr . '://maps.google.com/maps/ms?$1',
                 'type'  => 'iframe',
             ),
             // maps.google.com - Google Maps (IMPORTANT: this is for ANY Maps EXCEPT My Maps)
             array(
                 'match' => '#.*maps.google.[^/]*/(maps)?\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/]+).*#',
-                'url'   => 'http://maps.google.com/maps?$2',
+                'url'   => $httpstr . '://maps.google.com/maps?$2',
                 'type'  => 'iframe',
             ),
             // books.google.com - Google Books
@@ -203,7 +205,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // Google Docs Viewer supported files: PDF, TIFF, PPT, DOC, DOCX
             array(
                 'match' => '#http([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/\:]+)\.(pdf|tif|tiff|ppt|doc|docx)#',
-                'url'   => 'http://docs.google.com/gview?url=http$1.$2&embedded=true',
+                'url'   => $httpstr . '://docs.google.com/gview?url=http$1.$2&embedded=true',
                 'type'  => 'iframe',
             ),
         );
