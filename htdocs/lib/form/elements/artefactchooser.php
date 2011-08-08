@@ -54,6 +54,7 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
     // messy, but can't be helped until Pieforms goes to a more OO way of 
     // managing stuff.
     $pagination_js = $pagination['javascript'];
+    $pagination_js .= "\nvar acSelectArtefacts = " . json_encode($artefactdata) . "\n";
 
     $baseurl = View::make_base_url();
     $smarty->assign('browseurl', $baseurl);
@@ -151,9 +152,11 @@ function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
 
     if (!empty($element['selectone'])) {
         $artefactchooserdata = '';
+        $artefactchooserselect = empty($element['selectjscallback']) ? '' : 'new ArtefactChooserSelect(data.data.artefactdata);';
     }
     else {
         $artefactchooserdata = 'new ArtefactChooserData();';
+        $artefactchooserselect = '';
     }
     $pagination_js .= <<<EOF
 var ul = getFirstElementByTagAndClassName('ul', 'artefactchooser-tabs', '{$form->get_name()}_{$element['name']}_container');
@@ -240,6 +243,7 @@ if (ul) {
                     }
 
                     {$artefactchooserdata}
+                    {$artefactchooserselect}
 
                     // Update the pagination
                     if ($(p.id)) {
@@ -262,6 +266,55 @@ if (ul) {
     });
 }
 EOF;
+    if (!empty($element['selectone']) && !empty($element['selectjscallback'])) {
+        $datatable = $element['name'] . '_data';
+        $pagination_js .=<<<EOF
+/**
+ * Call the selectjscallback function whenever a radio button is clicked
+ */
+function ArtefactChooserSelect(artefacts) {
+    var self = this;
+
+    this.artefacts = artefacts;
+
+    this.init = function() {
+        self.connectPagination();
+        self.connectRadios();
+    }
+
+    /**
+     * Connects pagination so that when a page is changed, we are told about it
+     */
+    this.connectPagination = function() {
+        paginatorProxy.addObserver(self);
+        connect(self, 'pagechanged', self.pageChanged);
+    }
+
+    /**
+     * Update artefact data & connect radios to the selectjscallback
+     */
+    this.pageChanged = function(data) {
+        self.artefacts = data.artefactdata;
+        self.connectRadios(data);
+    }
+
+    this.connectRadios = function(data) {
+        forEach(getElementsByTagAndClassName('input', null, '{$datatable}'), function(radio) {
+            connect(radio, 'onclick', function() {
+                if (self.artefacts[radio.value]) {
+                    {$element['selectjscallback']}(self.artefacts[radio.value]);
+                }
+            });
+        });
+    }
+
+    self.init();
+}
+
+new ArtefactChooserSelect(acSelectArtefacts);
+
+EOF;
+    }
     if (empty($element['selectone'])) {
         $pagination_js .=<<<EOF
 /**
