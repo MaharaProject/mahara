@@ -69,17 +69,57 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         return $artefacts;
     }
 
-    // Not used, but function definition required by base class
     public static function artefactchooser_element($default=null) {
         return array(
-            'name'          => 'artefactid',
-            'type'          => 'artefactchooser',
-            'title'         => get_string('blockcontent', 'blocktype.internal/textbox'),
-            'defaultvalue'  => $default,
-            'blocktype'     => 'textbox',
-            'limit'         => 10,
-            'selectone'     => true,
+            'name'             => 'artefactid',
+            'type'             => 'artefactchooser',
+            'class'            => 'hidden',
+            'defaultvalue'     => $default,
+            'blocktype'        => 'textbox',
+            'limit'            => 5,
+            'selectone'        => true,
+            'selectjscallback' => 'updateTextContent',
+            'getblocks'        => true,
+            'returnfields'     => array('id', 'title', 'description'),
+            'artefacttypes'    => array('html'),
+            'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
         );
+    }
+
+    public static function get_instance_config_javascript($instance) {
+        // When an artefact is selected in the artefactchooser, update the
+        // contents of the wysiwyg editor and the message about the number
+        // of blocks containing the new artefact.
+        $blockid = $instance->get('id');
+        return <<<EOF
+function updateTextContent(a) {
+    tinyMCE.activeEditor.setContent(a.description);
+    setNodeAttribute('instconf_title', 'value', a.title);
+    var blockcountmsg = $('instconf_otherblocksmsg_container');
+    if (blockcountmsg && $('textbox_blockcount')) {
+        var otherblockcount = 0;
+        if (a.blocks && a.blocks.length > 0) {
+            for (var i = 0; i < a.blocks.length; i++) {
+                if (a.blocks[i] != {$blockid}) {
+                    otherblockcount++;
+                }
+            }
+        }
+        if (otherblockcount) {
+            replaceChildNodes('textbox_blockcount', otherblockcount);
+            removeElementClass(blockcountmsg, 'hidden');
+        }
+        else {
+            addElementClass(blockcountmsg, 'hidden');
+        }
+    }
+}
+connect('chooseartefactlink', 'onclick', function(e) {
+    e.stop();
+    toggleElementClass('hidden', 'instconf_artefactid_container');
+    toggleElementClass('hidden', 'instconf_managenotes_container');
+});
+EOF;
     }
 
     public static function has_instance_config() {
@@ -87,19 +127,40 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance) {
+        $instance->set('artefactplugin', 'internal');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
             $cfheight = param_integer('cfheight', 0);
             $height = $cfheight ? $cfheight * 0.7 : 150;
         }
+        $otherblockcount = 0;
         if (!empty($configdata['artefactid'])) {
+            if ($blocks = get_column('view_artefact', 'block', 'artefact', $configdata['artefactid'])) {
+                $blocks = array_unique($blocks);
+                $otherblockcount = count($blocks) - 1;
+            }
             $artefactid = $configdata['artefactid'];
             $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
         }
+
+        $otherblocksmsg = '<span id="textbox_blockcount">' . $otherblockcount . '</span>';
+        $otherblocksmsg = get_string('textusedinotherblocks', 'blocktype.internal/textbox', $otherblocksmsg);
+
+        $view = $instance->get_view();
+        $manageurl = get_config('wwwroot') . 'artefact/internal/notes.php';
+        if ($group = $view->get('group')) {
+            $manageurl .= '?group=' . $group;
+        }
+        else if ($institution = $view->get('institution')) {
+            $manageurl .= '?institution=' . $institution;
+        }
+
         $elements = array(
-            'artefactid' => array(
-                'type' => 'hidden', // @todo change to artefactchooser
-                'value' => isset($artefactid) ? $artefactid : null,
+            // Add a message whenever this text appears in some other block
+            'otherblocksmsg' => array(
+                'type' => 'html',
+                'class' => $otherblockcount ? '' : 'hidden',
+                'value' => '<div class="message info">' . $otherblocksmsg . '</div>',
             ),
             'text' => array(
                 'type' => 'wysiwyg',
@@ -109,11 +170,25 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
                 'defaultvalue' => isset($text) ? $text : '',
                 'rules' => array('maxlength' => 65536),
             ),
+            'chooseartefact' => array(
+                'type'  => 'html',
+                'class' => 'nojs-hidden-block',
+                'value' => '<a id="chooseartefactlink" href="">'
+                    . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
+            ),
+            'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
+            'managenotes' => array(
+                'type'  => 'html',
+                'class' => 'right hidden',
+                'value' => '<a href="' . $manageurl . '" target="_blank">'
+                    . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
+            ),
         );
         return $elements;
     }
 
     public static function instance_config_save($values, $instance) {
+        global $USER;
         $data = array();
 
         if (empty($values['artefactid'])) {
@@ -124,6 +199,10 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         }
 
         $artefact = new ArtefactTypeHtml((int)$values['artefactid'], $data);
+        if (!$USER->can_edit_artefact($artefact)) {
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        }
+
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['text']);
         $artefact->commit();
@@ -132,6 +211,17 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         $instance->save_artefact_instance($artefact);
 
         unset($values['text']);
+        unset($values['otherblocksmsg']);
+        unset($values['chooseartefact']);
+
+        // Pass back a list of any other blocks that need to be rendered
+        // due to this change.
+        $values['_redrawblocks'] = array_unique(get_column(
+            'view_artefact', 'block',
+            'artefact', $values['artefactid'],
+            'view', $instance->get('view')
+        ));
+
         return $values;
     }
 
