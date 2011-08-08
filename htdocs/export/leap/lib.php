@@ -526,9 +526,17 @@ class PluginExportLeap extends PluginExport {
                 if (!$element->is_leap()) {
                     continue;
                 }
-                $element->add_attachments();
-                $element->assign_smarty_vars();
-                $this->xml .= $element->get_export_xml();
+                try {
+                    $element->add_attachments();
+                    $element->assign_smarty_vars();
+                    $this->xml .= $element->get_export_xml();
+                }
+                catch (FileNotFoundException $e) {
+                    // If we don't find a file on disk, just continue the export,
+                    // but leave this artefact out.
+                    $this->messages[] = $e->getMessage();
+                    log_debug('Missing file in leap2a export for artefact ' . $artefact->get('id'));
+                }
             }
         }
     }
@@ -564,7 +572,7 @@ class PluginExportLeap extends PluginExport {
     */
     public function add_attachment($filepath, $newname) {
         if (!file_exists($filepath) || empty($newname)) {
-            throw new ParamOutOfRangeException(get_string('nonexistentfile', 'export', $newname));
+            throw new FileNotFoundException(get_string('nonexistentfile', 'export', $newname));
         }
         $newname = substr(str_replace('/', '_', $newname), 0, 245);
         $this->attachments[] = (object)array('file' => $filepath, 'name' => $newname);
