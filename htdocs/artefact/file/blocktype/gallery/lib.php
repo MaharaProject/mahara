@@ -45,7 +45,8 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
     public static function get_instance_javascript(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-        switch ($configdata['style']) {
+        $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
+        switch ($style) {
             case 0: // thumbnails
             case 2: // squarethumbs
                 return array();
