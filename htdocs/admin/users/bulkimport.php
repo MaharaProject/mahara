@@ -113,6 +113,12 @@ $form = array(
  * Work-around the redirection limit of Firefox (http://kb.mozillazine.org/Network.http.redirection-limit)
  */
 function meta_redirect() {
+    global $SESSION, $LEAP2AFILES, $ADDEDUSERS, $FAILEDUSERS;
+
+    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
+    $SESSION->set('bulkimport_addedusers', $ADDEDUSERS);
+    $SESSION->set('bulkimport_failedusers', $FAILEDUSERS);
+
     $url = get_config('wwwroot') . '/admin/users/bulkimport.php';
     print_meta_redirect($url);
     exit;
@@ -250,14 +256,14 @@ function import_next_user() {
     if ($returnvar != 0) {
         $FAILEDUSERS[$username] = get_string('unzipfailed', 'admin', hsc($filename));
         log_debug("unzip command failed with return value $returnvar");
-        continue;
+        meta_redirect();
     }
 
     $leap2afilename = $uploaddir . 'leap2a.xml';
     if (!is_file($leap2afilename)) {
         $FAILEDUSERS[$username] = get_string('noleap2axmlfiledetected', 'admin');
         log_debug($FAILEDUSERS[$username]);
-        continue;
+        meta_redirect();
     }
 
     // If the username is already taken, append something to the end
@@ -321,10 +327,6 @@ function import_next_user() {
         // importer when importing (e.g. firstname/lastname)
         $ADDEDUSERS[] = get_record('usr', 'id', $user->id);
     }
-
-    $SESSION->set('bulkimport_leap2afiles', $LEAP2AFILES);
-    $SESSION->set('bulkimport_addedusers', $ADDEDUSERS);
-    $SESSION->set('bulkimport_failedusers', $FAILEDUSERS);
 
     meta_redirect();
 }
