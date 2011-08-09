@@ -32,7 +32,7 @@ var count = 0;
 
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
-    var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
+    var addButton = BUTTON({'type': 'button'}, {{jstr tag=add}});
     var row = DIV(null, addButton, ' ', item.name);
     item.preset = true;
 
@@ -57,7 +57,7 @@ function renderPotentialPresetItem(item) {
 
 // Given a row, render it on the right hand side
 function renderAccessListItem(item) {
-    var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
+    var removeButton = BUTTON({'type': 'button'}, {{jstr tag=remove}});
     var allowfdbk = INPUT({
                         'type': 'checkbox',
                         'name': 'accesslist[' + count + '][allowcomments]',
@@ -213,8 +213,8 @@ function setupCalendar(item, type) {
         return;
     }
     Calendar.setup({
-        "ifFormat"  :"{{str tag=strftimedatetimeshort}}",
-        "daFormat"  :"{{str tag=strftimedatetimeshort}}",
+        "ifFormat"  :{{jstr tag=strftimedatetimeshort}},
+        "daFormat"  :{{jstr tag=strftimedatetimeshort}},
         "inputField": type + 'date_' + count,
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,
@@ -287,7 +287,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     rowdata.type = searchTable.type;
     var buttonTD = TD({'style': 'white-space:nowrap;'});
 
-    var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
+    var addButton = BUTTON({'type': 'button', 'class': 'button'}, {{jstr tag=add}});
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
@@ -300,7 +300,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     }
     else if (rowdata.type == 'group') {
         rowdata.role = null;
-        var options = [OPTION({'value':null, 'selected':true}, '{{str tag=everyoneingroup section=view}}')];
+        var options = [OPTION({'value':null, 'selected':true}, {{jstr tag=everyoneingroup section=view}})];
         for (r in globaldata.roles[rowdata.grouptype]) {
             options.push(OPTION({'value':globaldata.roles[rowdata.grouptype][r].name}, globaldata.roles[rowdata.grouptype][r].display));
         }

@@ -39,5 +39,6 @@ function Dwoo_Plugin_str(Dwoo $dwoo, $tag, $section = 'mahara', $args = null, $a
 
     return $ret;
 }
-
-?>
+function Dwoo_Plugin_jstr(Dwoo $dwoo, $tag, $section = 'mahara', $args = null, $arg1 = null, $arg2 = null, $arg3 = null, $assign = null) {
+    return json_encode(Dwoo_Plugin_str($dwoo, $tag, $section, $args, $arg1, $arg2, $arg3, $assign));
+}
