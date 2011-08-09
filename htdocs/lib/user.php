@@ -421,7 +421,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
 
     require_once('phpmailer/class.phpmailer.php');
 
-    $mail = new phpmailer();
+    $mail = new phpmailer(true);
 
     // Leaving this commented out - there's no reason for people to know this
     //$mail->Version = 'Mahara ' . get_config('release');
@@ -493,30 +493,30 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         }
     }
 
-    if (!$replytoset) {
-        $mail->AddReplyTo($mail->From, $mail->FromName);
-    }
-
     $mail->Subject = substr(stripslashes($subject), 0, 900);
 
-    if ($to = get_config('sendallemailto')) {
-        // Admins can configure the system to send all email to a given address 
-        // instead of whoever would receive it, useful for debugging.
-        $mail->addAddress($to);
-        $notice = get_string('debugemail', 'mahara', display_name($userto, $userto), $userto->email);
-        $messagetext =  $notice . "\n\n" . $messagetext;
-        if ($messagehtml) {
-            $messagehtml = '<p>' . hsc($notice) . '</p>' . $messagehtml;
+    try {
+        if ($to = get_config('sendallemailto')) {
+            // Admins can configure the system to send all email to a given address
+            // instead of whoever would receive it, useful for debugging.
+            $usertoname = display_name($userto, $userto, true) . ' (' . get_string('divertingemailto', 'mahara', $to) . ')';
+            $mail->addAddress($to);
+            $notice = get_string('debugemail', 'mahara', display_name($userto, $userto), $userto->email);
+            $messagetext =  $notice . "\n\n" . $messagetext;
+            if ($messagehtml) {
+                $messagehtml = '<p>' . hsc($notice) . '</p>' . $messagehtml;
+            }
         }
-        $usertoname = display_name($userto, $userto, true) . ' (' . get_string('divertingemailto', 'mahara', $to) . ')';
+        else {
+            $usertoname = display_name($userto, $userto);
+            $mail->AddAddress($userto->email, $usertoname );
+            $to = $userto->email;
+        }
+        if (!$replytoset) {
+            $mail->AddReplyTo($mail->From, $mail->FromName);
+        }
     }
-    else {
-        $usertoname = display_name($userto, $userto);
-        $mail->AddAddress($userto->email, $usertoname );
-        $to = $userto->email;
-    }
-
-    if ($mail->IsError()) {
+    catch (phpmailerException $e) {
         // If there's a phpmailer error already, assume it's an invalid address
         throw new InvalidEmailException("Cannot send email to $usertoname with subject $subject. Error from phpmailer was: " . $mail->ErrorInfo);
     }
@@ -534,7 +534,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         $mail->Body =  $messagetext;
     }
 
-    if ($mail->Send()) {
+    try {
+        $sent = $mail->Send();
+    }
+    catch (phpmailerException $e) {
+        $sent = false;
+    }
+
+    if ($sent) {
         if ($logfile = get_config('emaillog')) {
             $docroot = get_config('docroot');
             @$client = (string) $_SERVER['REMOTE_ADDR'];
