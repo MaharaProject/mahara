@@ -325,7 +325,9 @@ function import_next_user() {
     if (empty($FAILEDUSERS[$username])) {
         // Reload the user details, as various fields are changed by the
         // importer when importing (e.g. firstname/lastname)
-        $ADDEDUSERS[] = get_record('usr', 'id', $user->id);
+        $newuser = get_record('usr', 'id', $user->id);
+        $newuser->clearpasswd = $user->password;
+        $ADDEDUSERS[] = $newuser;
     }
 
     meta_redirect();
@@ -349,8 +351,8 @@ function finish_import() {
             $noemailusers = array();
             try {
                 email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
-                    get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('sitename')),
-                    get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
+                    get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('sitename')),
+                    get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
                 );
             }
             catch (EmailException $e) {
