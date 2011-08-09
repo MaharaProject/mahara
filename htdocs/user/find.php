@@ -38,7 +38,7 @@ define('SECTION_PAGE', 'find');
 
 $query = param_variable('query', '');
 $offset = param_integer('offset', 0);
-$filter = param_alpha('filter', 'myinstitutions');
+$filter = param_alpha('filter', $USER->get('admin') ? 'all' : 'myinstitutions');
 $limit  = 10;
 
 $options = array('exclude' => $USER->get('id'));
