@@ -129,6 +129,12 @@ class PluginArtefactInternal extends PluginArtefact {
                 'title' => get_string('profile', 'artefact.internal'),
                 'weight' => 10,
             ),
+            'content/notes' => array(
+                'path' => 'content/notes',
+                'url' => 'artefact/internal/notes.php',
+                'title' => get_string('Notes', 'artefact.internal'),
+                'weight' => 60,
+            ),
         );
     }
 
