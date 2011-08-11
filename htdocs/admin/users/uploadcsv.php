@@ -32,6 +32,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
 require_once('institution.php');
+require_once('phpmailer/class.phpmailer.php');
 safe_require('artefact', 'internal');
 raise_memory_limit("512M");
 
@@ -299,6 +300,9 @@ function uploadcsv_validate(Pieform $form, $values) {
         if (isset($emails[$email])) {
             // Duplicate email within this file.
             $csverrors->add($i, get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+        }
+        else if (!PHPMailer::ValidateAddress($email)) {
+            $csverrors->add($i, get_string('uploadcsverrorinvalidemail', 'admin', $i, $email));
         }
         else if (!$values['updateusers']) {
             // The email address must be new
