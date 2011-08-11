@@ -63,7 +63,7 @@ function print_iframe_progress_handler($percent, $status) {
     echo '<p class="progress-text">' . hsc($status) . "</p>\n";
 }
 
-function print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs) {
+function print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, $jsmessages=array()) {
 ?>
         <script type="text/javascript">
             document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgeneratedsuccessfullyjs; ?></p></div>');
@@ -71,6 +71,10 @@ function print_export_footer($strexportgeneratedsuccessfully, $strexportgenerate
                 // Opera can't handle this for some reason - it vomits out the
                 // download inline in the iframe
                 document.location = 'download.php';
+            }
+            var messages = <?php echo json_encode(join('; ', $jsmessages)); ?>;
+            if (messages) {
+                parent.displayMessage(messages);
             }
         </script>
         <div class="progress-bar" style="width: 100%;">

@@ -293,6 +293,8 @@ abstract class PluginExport extends Plugin {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
 
+        $this->messages = array();
+
         $this->notify_progress_callback(10, 'Setup');
     }
 

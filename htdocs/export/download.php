@@ -114,4 +114,4 @@ $SESSION->set('exportfile', $exporter->get('exportdir') . $zipfile);
 $wwwroot = get_config('wwwroot');
 $strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 'export', '<a href="' . $wwwroot . 'export/" target="_top">', '</a>');
 $strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="download.php" target="_top">', '</a>');
-print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs);
+print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, $exporter->get('messages'));
