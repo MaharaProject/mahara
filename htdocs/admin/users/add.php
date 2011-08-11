@@ -351,8 +351,8 @@ function adduser_submit(Pieform $form, $values) {
     if (!empty($user->email)) {
         try {
             email_user($user, $USER, get_string('accountcreated', 'mahara', get_config('sitename')),
-                get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('sitename')),
-                get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
+                get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $values['password'], get_config('wwwroot'), get_config('sitename')),
+                get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $values['password'], get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
             );
         }
         catch (EmailException $e) {
