@@ -190,7 +190,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // maps.google.com - Google Maps (IMPORTANT: this is for ANY Maps EXCEPT My Maps)
             array(
                 'match' => '#.*maps.google.[^/]*/(maps)?\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/]+).*#',
-                'url'   => 'http://maps.google.com/maps?$1',
+                'url'   => 'http://maps.google.com/maps?$2',
                 'type'  => 'iframe',
             ),
             // books.google.com - Google Books
