@@ -55,18 +55,17 @@ foreach (array_keys($plugins) as $plugin) {
                 if ($plugin == 'blocktype') {
                     $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
                 }
-                try {
-                    safe_require($plugin, $key);
-                }
-                catch (SystemException $e) {
-                    $message = get_string('missingplugin', 'admin', hsc("$plugin:$key")) . ':<br>' . $e->getMessage();
-                    die_info($message);
+                if (!safe_require_plugin($plugin, $key)) {
+                    if ($i->active) {
+                        $SESSION->add_error_msg(get_string('missingplugindisabled', 'admin', hsc("$plugin:$key")));
+                    }
+                    continue;
                 }
                 $plugins[$plugin]['installed'][$key] = array(
                     'active' => $i->active,
                     'disableable' => call_static_method(generate_class_name($plugin, $key), 'can_be_disabled'),
                 );
-                if ($plugins[$plugin]['installed'][$key]['disableable']) {
+                if ($plugins[$plugin]['installed'][$key]['disableable'] || !$i->active) {
                     $plugins[$plugin]['installed'][$key]['activateform'] = activate_plugin_form($plugin, $i);
                 }
                 if ($plugin == 'artefact') {

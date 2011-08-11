@@ -13,13 +13,13 @@
         <ul id="{$plugintype}.installed">
     {foreach from=$installed key='plugin' item='data'}
 	<li id="{$plugintype}.{$plugin}">{$plugin}
-        {if $data.disableable}
+        {if $data.activateform}
             [ {$data.activateform|safe}
         {/if}
         {if $data.config}
-            {if !$data.disableable} [ {else} | {/if}
+            {if !$data.activateform} [ {else} | {/if}
             <a href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">{str tag='config'}</a>
-        {/if} {if $data.config || $data.disableable} ] {/if} </li>
+        {/if} {if $data.config || $data.activateform} ] {/if} </li>
         {if $data.types} 
 	    <li><ul>
 	    {foreach from=$data.types key='type' item='config'}

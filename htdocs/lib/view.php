@@ -1075,7 +1075,9 @@ class View {
             if (isset($localallowed) && is_array($localallowed) && !in_array($blocktypecategory->category, $localallowed)) {
                 continue;
             }
-            safe_require('blocktype', $blocktypecategory->blocktype);
+            if (!safe_require_plugin('blocktype', $blocktypecategory->blocktype)) {
+                continue;
+            }
             if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
                 if (!isset($categories[$blocktypecategory->category])) {
                     $categories[$blocktypecategory->category] = array(
@@ -1630,7 +1632,9 @@ class View {
         foreach($view_data as $column) {
             foreach($column['blockinstances'] as $blockinstance) {
                 $pluginname = $blockinstance->get('blocktype');
-                safe_require('blocktype', $pluginname);
+                if (!safe_require_plugin('blocktype', $pluginname)) {
+                    continue;
+                }
                 $instancejs = call_static_method(
                     generate_class_name('blocktype', $pluginname),
                     'get_instance_javascript',

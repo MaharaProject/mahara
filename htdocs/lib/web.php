@@ -2157,17 +2157,19 @@ function main_nav() {
 
     if ($plugins = plugins_installed('artefact')) {
         foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
+            if (safe_require_plugin('artefact', $plugin->name)) {
+                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
+                $menu = array_merge($menu, $plugin_menu);
+            }
         }
     }
 
     if ($plugins = plugins_installed('interaction')) {
         foreach ($plugins as &$plugin) {
-            safe_require('interaction', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
-            $menu = array_merge($menu, $plugin_menu);
+            if (safe_require_plugin('interaction', $plugin->name)) {
+                $plugin_menu = call_static_method(generate_class_name('interaction',$plugin->name), 'menu_items');
+                $menu = array_merge($menu, $plugin_menu);
+            }
         }
     }
 
