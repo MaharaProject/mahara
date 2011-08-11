@@ -2173,6 +2173,10 @@ function get_real_size($size=0) {
     else if (is_numeric($size)) return (int)$size;
 
     $scan = array(
+        'GB' => 1073741824,
+        'Gb' => 1073741824,
+        'G'  => 1073741824,
+        'g'  => 1073741824,
         'MB' => 1048576,
         'Mb' => 1048576,
         'M'  => 1048576,
