@@ -373,7 +373,7 @@ function finish_import() {
         $userobj = $userobj->find_by_id($user->id);
         $authobj = AuthFactory::create($user->authinstance);
         if (method_exists($authobj, 'change_password')) {
-            $authobj->change_password($userobj, $user->password);
+            $authobj->change_password($userobj, $user->password, false);
         } else {
             $userobj->password = '';
             $userobj->salt = auth_get_random_salt();
