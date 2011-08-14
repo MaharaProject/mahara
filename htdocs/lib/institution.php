@@ -655,10 +655,10 @@ class Institution {
     }
 }
 
-function get_institution_selector($includedefault = true) {
+function get_institution_selector($includedefault = true, $assumesiteadmin=false) {
     global $USER;
 
-    if ($USER->get('admin')) {
+    if ($assumesiteadmin || $USER->get('admin')) {
         if ($includedefault) {
             $institutions = get_records_array('institution', '', '', 'displayname');
         }

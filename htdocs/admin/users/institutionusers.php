@@ -74,7 +74,7 @@ $usertypeselectorelements = array(
 if ($usertype == 'lastinstitution') {
     // Change intitution dropdown to show possible last insitutions
     $lastinstitution = param_alphanum('lastinstitution', false);
-    $usertypeselectorelements['lastinstitution'] = get_institution_selector(false);
+    $usertypeselectorelements['lastinstitution'] = get_institution_selector(false, true);
     $usertypeselectorelements['lastinstitution']['title'] = get_string('lastinstitution', 'admin');
     if ($lastinstitution) {
         $usertypeselectorelements['lastinstitution']['defaultvalue'] = $lastinstitution;
