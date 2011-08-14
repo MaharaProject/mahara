@@ -55,9 +55,15 @@ $form = pieform(array(
     'elements' => array(
         'description' => array(
             'type'         => 'wysiwyg',
+            'title'        => get_string('Note', 'artefact.internal'),
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $artefact->get('description'),
+        ),
+        'allowcomments' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('allowcomments', 'artefact.comment'),
+            'defaultvalue' => $artefact->get('allowcomments'),
         ),
         'submit' => array(
             'type'         => 'submitcancel',
@@ -75,6 +81,7 @@ $smarty->display('form.tpl');
 function editnote_submit(Pieform $form, array $values) {
     global $SESSION, $artefact, $goto;
     $artefact->set('description', $values['description']);
+    $artefact->set('allowcomments', (int) $values['allowcomments']);
     $artefact->commit();
     $SESSION->add_ok_msg(get_string('noteupdated', 'artefact.internal'));
     redirect($goto);
