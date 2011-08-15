@@ -70,6 +70,11 @@ abstract class PluginExport extends Plugin {
      */
     const EXPORT_LIST_OF_ARTEFACTS = -5;
 
+    /*
+     * Export only certain collections and their artefacts
+     */
+    const EXPORT_COLLECTIONS = -6;
+
     /**
      * Maximum filename length in UTF-8 encoding characters
      * Most file systems (FAT, FAT32, NTFS, ext2, ext3, ext4) support the filename length of 255 bytes
@@ -158,6 +163,7 @@ abstract class PluginExport extends Plugin {
      * @param mixed $artefacts can be:
      *                         - PluginExport::EXPORT_ALL_ARTEFACTS
      *                         - PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS
+     *                         - PluginExport::EXPORT_COLLECTIONS
      *                         - array, containing:
      *                             - int - artefact ids
      *                             - stdclass objects - db rows
@@ -185,6 +191,10 @@ abstract class PluginExport extends Plugin {
         if ($views == self::EXPORT_ALL_VIEWS) {
             $tmpviews = get_column_sql('SELECT id FROM {view} WHERE owner = ? ORDER BY id', array($userid));
             $this->viewexportmode = $views;
+        }
+        else if (is_array($views) && $artefacts == self::EXPORT_COLLECTIONS) {
+            $tmpviews = $views;
+            $this->viewexportmode = self::EXPORT_COLLECTIONS;
         }
         else if (is_array($views)) {
             $tmpviews = $views;
@@ -239,6 +249,9 @@ abstract class PluginExport extends Plugin {
             }
             if ($artefacts == self::EXPORT_ARTEFACTS_FOR_VIEWS) {
                 $this->artefactexportmode = $artefacts;
+            }
+            else if ($artefacts == self::EXPORT_COLLECTIONS) {
+                $this->artefactexportmode = self::EXPORT_ARTEFACTS_FOR_VIEWS;
             }
             else {
                 $tmpartefacts = array_unique(array_merge($tmpartefacts, $artefacts));

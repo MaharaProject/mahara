@@ -175,7 +175,6 @@ function export_submit(Pieform $form, $values) {
                 $views = array_merge($views, get_column('collection_view', 'view', 'collection', $collection));
             }
         }
-        $values['what'] = 'views';
     }
 
     $exportdata = array(

@@ -95,6 +95,9 @@ case 'all':
 case 'views':
     $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS, 'export_iframe_progress_handler');
     break;
+case 'collections':
+    $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_COLLECTIONS, 'export_iframe_progress_handler');
+    break;
 default:
     export_iframe_die(get_string('unabletoexportportfoliousingoptions', 'export'));
 }

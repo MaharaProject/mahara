@@ -172,7 +172,8 @@ class PluginExportHtml extends PluginExport {
             $artefactexporter = new $classname($this);
             $artefactexporter->dump_export_data();
             // If just exporting a list of views, we don't care about the summaries for each artefact plugin
-            if (!($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
+            if (!(($this->viewexportmode == PluginExport::EXPORT_LIST_OF_VIEWS || $this->viewexportmode == PluginExport::EXPORT_COLLECTIONS)
+                && $this->artefactexportmode == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS)) {
                 $summaries[$plugin] = array($artefactexporter->get_summary_weight(), $artefactexporter->get_summary());
             }
         }
@@ -386,7 +387,7 @@ class PluginExportHtml extends PluginExport {
             }
 
             // Collection menu data
-            if (isset($this->viewcollection[$viewid])) {
+            if (isset($this->viewcollection[$viewid]) && $this->viewexportmode == PluginExport::EXPORT_COLLECTIONS) {
                 $smarty->assign_by_ref('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
                 $smarty->assign_by_ref('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
                 $smarty->assign('viewid', $viewid);
@@ -423,6 +424,7 @@ class PluginExportHtml extends PluginExport {
             );
         }
 
+        $ncollections = count($this->collections);
         $nviews = 0;
         foreach ($this->views as $id => $view) {
             if ($view->get('type') != 'profile') {
@@ -449,9 +451,22 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('list', $list);
 
         if ($list) {
-            $stryouhaveviews = ($nviews == 1)
-                ? get_string('youhaveoneview', 'view')
-                : get_string('youhaveviews', 'view', $nviews);
+            if ($this->viewexportmode != PluginExport::EXPORT_COLLECTIONS) {
+                $stryouhaveviews = ($nviews == 1)
+                    ? get_string('youhaveoneview', 'view')
+                    : get_string('youhaveviews', 'view', $nviews);
+            }
+            else {
+                $stryouhavecollections = ($ncollections == 1)
+                    ? get_string('youhaveonecollection', 'collection')
+                    : get_string('youhavecollections', 'collection', $ncollections);
+
+                $smarty->assign('stryouhavecollections', $stryouhavecollections);
+                return array(
+                    'title' => get_string('Collections', 'collection'),
+                    'description' => $smarty->fetch('export:html:collectionsummary.tpl'),
+                );
+            }
         }
         else {
             $stryouhaveviews = get_string('youhavenoviews', 'view');

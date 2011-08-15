@@ -112,3 +112,5 @@ $string['copiedpagesblocksandartefactsfromtemplate'] = 'Copied %d pages, %d bloc
 $string['copiedblogpoststonewjournal'] = 'Copied journal posts have been put into a new separate journal.';
 $string['by'] = 'by';
 $string['copycollection'] = 'Copy collection';
+$string['youhaveonecollection'] = 'You have 1 collection.';
+$string['youhavecollections']   = 'You have %s collections.';
