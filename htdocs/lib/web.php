@@ -2140,11 +2140,17 @@ function mahara_standard_nav() {
             'title' => get_string('findfriends'),
             'weight' => 40,
         ),
+        'groups/institutionmembership' => array(
+            'path' => 'groups/institutions',
+            'url' => 'account/institutions.php',
+            'title' => get_string('institutionmembership'),
+            'weight' => 50,
+        ),
         'groups/sharedviews' => array(
             'path' => 'groups/sharedviews',
             'url' => 'view/sharedviews.php',
             'title' => get_string('sharedviews', 'view'),
-            'weight' => 50,
+            'weight' => 60,
         ),
     );
 
@@ -2231,12 +2237,6 @@ function right_nav() {
             'url' => 'account/activity/preferences/',
             'title' => get_string('notifications'),
             'weight' => 30,
-        ),
-        array(
-            'path' => 'settings/institutions',
-            'url' => 'account/institutions.php',
-            'title' => get_string('institutionmembership'),
-            'weight' => 40,
         ),
     );
     $menu_structure = find_menu_children($menu, '');

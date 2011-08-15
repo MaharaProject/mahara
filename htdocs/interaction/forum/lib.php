@@ -379,7 +379,7 @@ EOF;
                 'path' => 'groups/topics',
                 'url' => 'group/topics.php',
                 'title' => get_string('Topics', 'interaction.forum'),
-                'weight' => 60,
+                'weight' => 70,
             ),
         );
     }
