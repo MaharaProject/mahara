@@ -232,7 +232,6 @@ if (ul) {
                             var temp = DIV({'id':'ie-workaround'});
                             temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
                             swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                            removeElement(temp);
                         }
                         else {
                             // This does not work in IE and Konqueror, the tbody 
