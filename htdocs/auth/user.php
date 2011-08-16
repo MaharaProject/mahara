@@ -1172,6 +1172,25 @@ class LiveUser extends User {
         $this->changed = false;
     }
 
+    public function commit() {
+        if ($this->changed == false) {
+            return;
+        }
+        // Fields which can't be changed in the session, but which may have
+        // changed in the db.  They should be reloaded.
+        $reload = array(
+            'active', 'deleted', 'expiry', 'expirymailsent', 'inactivemailsent',
+            'suspendedctime', 'suspendedreason', 'suspendedcusr', 'quota',
+        );
+        $r = get_record('usr', 'id', $this->id);
+        foreach ($reload as $k) {
+            if ($r->$k != $this->$k) {
+                $this->$k = $r->$k;
+            }
+        }
+        parent::commit();
+    }
+
     /**
      * Updates information in a users' session once we know their session is 
      * continuing
