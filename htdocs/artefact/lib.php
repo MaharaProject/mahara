@@ -1244,52 +1244,88 @@ function rebuild_artefact_parent_cache_dirty() {
 }
 
 function rebuild_artefact_parent_cache_complete() {
+
+    // The artefact table may get too big to read in all at once.  Because
+    // all artefacts' parents have the same owner (or group, institution) as
+    // the child artefact, we can read the table in chunks as long as all
+    // artefacts with the same owner are processed in one go.
+
+    // Attachment relationships also get records in artefact_parent_cache,
+    // but these are fetched separately in a per-artefact query inside
+    // rebuild_artefact_parent_cache_partial, and there is no assumption
+    // that attachments have the same owner as the artefact they're attached
+    // to.
+
     db_begin();
     delete_records('artefact_parent_cache');
 
-    $artefacts = get_records_sql_assoc('
-        SELECT id, parent, COUNT(aa.artefact) AS attached
-        FROM {artefact} a LEFT JOIN {artefact_attachment} aa ON a.id = aa.attachment
-        GROUP BY id, parent
-        HAVING parent IS NOT NULL OR COUNT(aa.artefact) > 0',
-        array()
-    );
+    foreach (array('owner', 'group', 'institution') as $f) {
+        $select = '
+            SELECT id, parent, COUNT(aa.artefact) AS attached
+            FROM {artefact} a LEFT JOIN {artefact_attachment} aa ON a.id = aa.attachment';
+        $where = "
+            WHERE a.$f IS NOT NULL";
+        $groupby = "
+            GROUP BY id, parent
+            HAVING parent IS NOT NULL OR COUNT(aa.artefact) > 0";
 
-    if ($artefacts) {
-
-        foreach ($artefacts as &$artefact) {
-
-            // Nothing that can be a parent can be an attachment, so it's good
-            // enough to first get everything this artefact is attached to, and
-            // then find all its ancestors and the ancestors of everything it's
-            // attached to.
-
-            $ancestors = array();
-            if ($artefact->attached) {
-                $ancestors = get_column('artefact_attachment', 'artefact', 'attachment', $artefact->id);
+        if ($f == 'group' || $f == 'institution') {
+            $sql = $select . $where . $groupby;
+            if ($artefacts = get_records_sql_assoc($sql, array())) {
+                rebuild_artefact_parent_cache_partial($artefacts);
             }
+            continue;
+        }
 
-            $tocheck = $ancestors;
-            $tocheck[] = $artefact->id;
+        // Individual user artefacts
+        // Process artefacts in chunks with $userlimit owners
+        $userlimit = 5000;
+        $maxuser = get_field('artefact', 'MAX(owner)');
+        $sql = $select . $where . ' AND owner >= ? AND owner < ?' . $groupby;
 
-            foreach ($tocheck as $id) {
-                $p = isset($artefacts[$id]) ? $artefacts[$id]->parent : null;
-                while (!empty($p)) {
-                    $ancestors[] = $p;
-                    $p = isset($artefacts[$p]) ? $artefacts[$p]->parent : null;
-                }
-            }
-
-            foreach (array_unique($ancestors) as $p) {
-                insert_record('artefact_parent_cache', (object) array(
-                    'artefact' => $artefact->id,
-                    'parent'   => $p,
-                    'dirty'    => 0,
-                ));
+        for ($i = 0; $i <= $maxuser; $i += $userlimit) {
+            if ($artefacts = get_records_sql_assoc($sql, array($i, $i + $userlimit))) {
+                rebuild_artefact_parent_cache_partial($artefacts);
             }
         }
     }
+
     db_commit();
+}
+
+function rebuild_artefact_parent_cache_partial($artefacts) {
+
+    foreach ($artefacts as &$artefact) {
+
+        // Nothing that can be a parent can be an attachment, so it's good
+        // enough to first get everything this artefact is attached to, and
+        // then find all its ancestors and the ancestors of everything it's
+        // attached to.
+
+        $ancestors = array();
+        if ($artefact->attached) {
+            $ancestors = get_column('artefact_attachment', 'artefact', 'attachment', $artefact->id);
+        }
+
+        $tocheck = $ancestors;
+        $tocheck[] = $artefact->id;
+
+        foreach ($tocheck as $id) {
+            $p = isset($artefacts[$id]) ? $artefacts[$id]->parent : null;
+            while (!empty($p)) {
+                $ancestors[] = $p;
+                $p = isset($artefacts[$p]) ? $artefacts[$p]->parent : null;
+            }
+        }
+
+        foreach (array_unique($ancestors) as $p) {
+            insert_record('artefact_parent_cache', (object) array(
+                'artefact' => $artefact->id,
+                'parent'   => $p,
+                'dirty'    => 0,
+            ));
+        }
+    }
 }
 
 function artefact_get_attachment_types() {
