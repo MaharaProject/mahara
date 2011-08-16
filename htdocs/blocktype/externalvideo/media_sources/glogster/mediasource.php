@@ -19,15 +19,15 @@ class Media_glogster implements MediaBase {
 
     private static $iframe_sources = array(
         array(
-            'match' => '#.*?https?://(www\.)?glogster\.com/glog\.php\?glog_id=([0-9]*).*#',
-            'url'   => 'http://www.glogster.com/glog.php?glog_id=$2&scale=',
+            'match' => '#.*?https?://((www|edu)\.)?glogster\.com/glog\.php\?glog_id=([0-9]*).*#',
+            'url'   => 'http://www.glogster.com/glog.php?glog_id=$3&scale=',
         ),
     );
 
     private static $scrape_sources = array(
         array(
-            'match' => '#https?://([^.]*)\.glogster\.com/([^/]*)/.*#',
-            'url'   => 'http://$1.glogster.com/$2/',
+            'match' => '#https?://([^.]*(\.edu)?)\.glogster\.com/([^/]*)/.*#',
+            'url'   => 'http://$1.glogster.com/$3/',
         ),
     );
 
