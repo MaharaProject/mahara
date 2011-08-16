@@ -1172,6 +1172,11 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'title'        => get_string('defaultquota', 'artefact.file'), 
                     'type'         => 'bytes',
                     'defaultvalue' => $defaultquota,
+                ),
+                'updateuserquotas' => array(
+                    'title'        => get_string('updateuserquotas', 'artefact.file'),
+                    'description'  => get_string('updateuserquotasdesc', 'artefact.file'),
+                    'type'         => 'checkbox',
                 )
             ),
             'collapsible' => true
@@ -1235,6 +1240,11 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'title'        => get_string('defaultgroupquota', 'artefact.file'),
                     'type'         => 'bytes',
                     'defaultvalue' => $defaultgroupquota,
+                ),
+                'updategroupquotas' => array(
+                    'title'        => get_string('updategroupquotas', 'artefact.file'),
+                    'description'  => get_string('updategroupquotasdesc', 'artefact.file'),
+                    'type'         => 'checkbox',
                 )
             ),
             'collapsible' => true
@@ -1351,6 +1361,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function save_config_options($values) {
         global $USER;
+        if ($values['updateuserquotas'] && $values['defaultquota']) {
+            set_field('usr', 'quota', $values['defaultquota'], 'deleted', 0);
+        }
+        if ($values['updategroupquotas'] && $values['defaultgroupquota']) {
+            set_field('group', 'quota', $values['defaultgroupquota'], 'deleted', 0);
+        }
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
         set_config_plugin('artefact', 'file', 'defaultgroupquota', $values['defaultgroupquota']);
         set_config_plugin('artefact', 'file', 'institutionaloverride', $values['institutionaloverride']);
