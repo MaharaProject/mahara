@@ -907,13 +907,15 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * blog to hold the copied posts.
      */
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
-        static $blogid;
+        static $blogids;
 
-        if (!empty($blogid)) {
-            return $blogid;
+        $viewid = $view->get('id');
+
+        if (isset($blogids[$viewid])) {
+            return $blogids[$viewid];
         }
 
-        $blogname = get_string('viewposts', 'artefact.blog', $view->get('id'));
+        $blogname = get_string('viewposts', 'artefact.blog', $viewid);
         $data = (object) array(
             'title'       => $blogname,
             'description' => get_string('postscopiedfromview', 'artefact.blog', $template->get('title')),
@@ -924,9 +926,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blog = new ArtefactTypeBlog(0, $data);
         $blog->commit();
 
-        $blogid = $blog->get('id');
+        $blogids[$viewid] = $blog->get('id');
 
-        return $blogid;
+        return $blogids[$viewid];
     }
 
     /**
