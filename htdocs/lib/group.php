@@ -466,13 +466,13 @@ function group_update($new, $create=false) {
         }
     }
 
-    // When group type changes from course to standard, make sure that tutors
-    // are demoted to members.
-    // @todo: avoid mentioning roles other than 'admin', 'member' except in grouptype
-    // classes, unless grouptypes disappear soon.
-    if ($old->grouptype == 'course' && $new->grouptype != 'course') {
-        set_field('group_member', 'role', 'member', 'group', $new->id, 'role', 'tutor');
-    }
+    // When the group type changes, make sure everyone has a valid role.
+    $allowedroles = call_static_method('GroupType' . $new->grouptype, 'get_roles');
+    set_field_select(
+        'group_member', 'role', 'member',
+        '"group" = ? AND NOT role IN (' . join(',', array_fill(0, count($allowedroles), '?')) . ')',
+        array_merge(array($new->id), $allowedroles)
+    );
 
     // When a group changes from public -> private or vice versa, set the
     // appropriate access permissions on the group homepage view.

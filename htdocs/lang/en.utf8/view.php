@@ -93,7 +93,6 @@ $string['loggedin'] = 'Logged In Users';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
 $string['users'] = 'Users';
-$string['tutors'] = 'tutors';
 $string['everyoneingroup'] = 'Everyone in Group';
 
 // secret url
@@ -177,7 +176,6 @@ $string['canteditsubmitted'] = 'You can\'t edit this page because it has been su
 $string['Submitted'] = 'Submitted';
 $string['submittedforassessment'] = 'Submitted for assessment';
 
-$string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
 $string['viewsavedsuccessfully'] = 'Page saved successfully';

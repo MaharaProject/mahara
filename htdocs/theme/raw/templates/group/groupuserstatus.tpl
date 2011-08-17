@@ -1,7 +1,11 @@
 <ul class="groupuserstatus">
 {if $group->membershiptype == 'member'}
 	<li class="member">
-            {str tag="youaregroup$group->role" section="group"}
+    {if $group->role == 'member' || $group->role == 'admin'}
+      {str tag="youaregroup$group->role" section="group"}
+    {else}
+      {str tag="youaregroup$group->role" section="grouptype.$group->grouptype"}
+    {/if}
         </li>
 {if $group->canleave}
     <li class="leavegroup"><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup"><span class="icon">{str tag="leavegroup" section="group"}</span></a></li>
