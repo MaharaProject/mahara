@@ -106,13 +106,6 @@ function group_can_change_role($groupid, $userid, $role) {
         return false;
     }
 
-    // admin role permissions check
-    if ($role == 'admin') {
-        $group = group_current_group();
-        safe_require('grouptype', $group->grouptype);
-        return call_static_method('GroupType' . $group->grouptype, 'can_become_admin', $userid);
-    }
-
     return true;
 }
 
