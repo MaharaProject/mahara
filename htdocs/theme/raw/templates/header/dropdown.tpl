@@ -8,7 +8,7 @@
                     <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
 {else}
                 <li{if $item.accesskey} id="{$item.accesskey}"{/if} {if $item.selected} class="selected"{/if}><span>
-                    <a href="{if $INSTITUTIONALADMIN}{$WWWROOT}{$item.url}{else}#{/if}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
+                    <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
 {/if}
 {if $item.submenu}
                     <ul class="dropdown-sub">
