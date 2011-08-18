@@ -15,9 +15,12 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 		fontSizes = tinymce.explode(settings.font_size_style_values);
 
 		function replaceWithSpan(node, styles) {
-			dom.replace(dom.create('span', {
-				style : styles
-			}), node, 1);
+			tinymce.each(styles, function(value, name) {
+				if (value)
+					dom.setStyle(node, name, value);
+			});
+
+			dom.rename(node, 'span');
 		};
 
 		filters = {
@@ -54,6 +57,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 		};
 
 		ed.onPreProcess.add(convert);
+		ed.onSetContent.add(convert);
 
 		ed.onInit.add(function() {
 			ed.selection.onSetContent.add(convert);
