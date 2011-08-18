@@ -60,8 +60,12 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $result = self::get_js_source();
         require_once(get_config('docroot') . 'artefact/lib.php');
         $artefact = $instance->get_artefact_instance($configdata['artefactid']);
-        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : '300';
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '300';
+        $defaultwidth = get_config_plugin('blocktype', 'internalmedia', 'width') ?
+                get_config_plugin('blocktype', 'internalmedia', 'width') : 300;
+        $defaultheight = get_config_plugin('blocktype', 'internalmedia', 'height') ?
+                get_config_plugin('blocktype', 'internalmedia', 'height') : 300;
+        $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : $defaultwidth;
+        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : $defaultheight;
         $mimetype = $artefact->get('filetype');
         $mimetypefiletypes = self::get_allowed_mimetype_filetypes();
         if (!isset($mimetypefiletypes[$mimetype])) {
@@ -141,6 +145,8 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             }
         }
         set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($enabledtypes));
+        set_config_plugin('blocktype', 'internalmedia', 'height', $values['height']);
+        set_config_plugin('blocktype', 'internalmedia', 'width',  $values['width']);
     }
 
     public static function get_config_options() {
@@ -157,7 +163,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             );
         }
         uasort($filetypes, create_function('$a, $b', 'return $a["title"] > $b["title"];'));
-        $filetypes = array_merge(
+        $options = array_merge(
             array(
                 'description' => array(
                     'value' => get_string('configdesc', 'blocktype.file/internalmedia'),
@@ -165,9 +171,23 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             ),
             $filetypes
         );
+        $options['height'] = array(
+            'type'          => 'text',
+            'title'         => get_string('height'),
+            'rules'        => array('integer' => true, 'minvalue' => 120, 'maxvalue' => 3072),
+            'defaultvalue'  => get_config_plugin('blocktype', 'internalmedia', 'height')
+                ? get_config_plugin('blocktype', 'internalmedia', 'height') : 240,
+        );
+        $options['width'] = array(
+            'type'          => 'text',
+            'title'         => get_string('width'),
+            'rules'        => array('integer' => true, 'minvalue' => 160, 'maxvalue' => 4096),
+            'defaultvalue'  => get_config_plugin('blocktype', 'internalmedia', 'width')
+                ? get_config_plugin('blocktype', 'internalmedia', 'width') : 320,
+        );
 
         return array(
-            'elements' => $filetypes,
+            'elements' => $options,
             'renderer' => 'table'
         );
     }
