@@ -30,21 +30,43 @@ define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('group.php');
-define('TITLE', get_string('editgroup', 'group'));
 
-$id = param_integer('id');
-define('GROUP', $id);
+if ($id = param_integer('id', null)) {
+    define('TITLE', get_string('editgroup', 'group'));
+    define('GROUP', $id);
 
-$group_data = get_record_sql("SELECT g.*
-    FROM {group} g
-    INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
-    WHERE g.id = ?
-    AND g.deleted = 0", array($USER->get('id'), $id));
+    $group_data = get_record_sql("
+        SELECT g.*
+        FROM {group} g INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+        WHERE g.id = ? AND g.deleted = 0",
+        array($USER->get('id'), $id)
+    );
 
-if (!$group_data) {
-    $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
-    redirect('/group/mygroups.php');
+    if (!$group_data) {
+        $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
+        redirect('/group/mygroups.php');
+    }
 }
+else {
+    define('TITLE', get_string('creategroup', 'group'));
+
+    if (!group_can_create_groups()) {
+        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    }
+
+    $group_data = (object) array(
+        'id'             => null,
+        'name'           => null,
+        'description'    => null,
+        'grouptype'      => 'standard',
+        'jointype'       => 'open',
+        'category'       => 0,
+        'public'         => 0,
+        'usersautoadded' => 0,
+        'viewnotify'     => 1,
+    );
+}
+
 $elements = array();
 $elements['name'] = array(
             'type'         => 'text',
@@ -75,6 +97,18 @@ $elements['grouptype'] = array(
     'defaultvalue' => $currenttype,
     'help'         => true
 );
+
+// If it's a new group and a grouptype was passed in as a parameter, hide it in the form.
+if (!$id) {
+    $grouptypeparam = param_alphanumext('grouptype', 0);
+    if (isset($grouptypeoptions[$grouptypeparam])) {
+        $elements['grouptype'] = array(
+            'type'         => 'hidden',
+            'value'        => $grouptypeparam,
+        );
+    }
+}
+
 if (get_config('allowgroupcategories')
     && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
 ) {
@@ -83,14 +117,31 @@ if (get_config('allowgroupcategories')
                 'title'        => get_string('groupcategory', 'group'),
                 'options'      => array('0'=>get_string('nocategoryselected', 'group')) + $groupcategories,
                 'defaultvalue' => $group_data->category);
+
+    // If it's a new group & the category was passed as a parameter, hide it in the form.
+    $groupcategoryparam = param_integer('category', 0);
+    if (!$id && isset($groupcategories[$groupcategoryparam])) {
+        $elements['category'] = array(
+            'type'  => 'hidden',
+            'value' => $groupcategoryparam,
+        );
+    }
 }
+
+$publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
+
+if (!$id && !param_variable('editgroup_submit', null)) {
+    // If 'public=0' param is passed on first page load, hide the public checkbox.
+    $publicparam = param_integer('public', null);
+}
+
 $elements['public'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('publiclyviewablegroup', 'group'),
             'description'  => get_string('publiclyviewablegroupdescription', 'group'),
             'defaultvalue' => $group_data->public,
             'help'         => true,
-            'ignore'       => !(get_config('createpublicgroups') == 'all' || get_config('createpublicgroups') == 'admins' && $USER->get('admin')));
+            'ignore'       => !$publicallowed || (isset($publicparam) && $publicparam === 0));
 $elements['usersautoadded'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('usersautoadded', 'group'),
@@ -104,9 +155,7 @@ $elements['viewnotify'] = array(
     'description' => get_string('viewnotifydescription', 'group'),
     'defaultvalue' => $group_data->viewnotify
 );
-$elements['id'] = array(
-            'type'         => 'hidden',
-            'value'        => $id);
+
 $elements['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
@@ -143,8 +192,7 @@ function editgroup_submit(Pieform $form, $values) {
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
-    $newvalues = (object) array(
-        'id'             => $group_data->id,
+    $newvalues = array(
         'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
         'description'    => $values['description'],
         'grouptype'      => $grouptype,
@@ -155,15 +203,24 @@ function editgroup_submit(Pieform $form, $values) {
         'viewnotify'     => intval($values['viewnotify']),
     );
 
-    group_update($newvalues);
+    if ($group_data->id) {
+        $newvalues['id'] = $group_data->id;
+        group_update((object)$newvalues);
+    }
+    else {
+        $newvalues['members'] = array($USER->get('id') => 'admin');
+        $group_data->id = group_create($newvalues);
+        $USER->reset_grouproles();
+    }
 
     $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
     db_commit();
 
-    redirect('/group/view.php?id=' . $values['id']);
+    redirect('/group/view.php?id=' . $group_data->id);
 }
 
 $smarty = smarty();
-$smarty->assign('editgroup', $editgroup);
-$smarty->display('group/edit.tpl');
+$smarty->assign('form', $editgroup);
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->display('form.tpl');
