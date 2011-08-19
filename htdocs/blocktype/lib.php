@@ -513,12 +513,37 @@ class BlockInstance {
         unset($values['change']);
         unset($values['new']);
 
+        $redirect = '/view/blocks.php?id=' . $this->get('view');
+        if (param_boolean('new', false)) {
+            $redirect .= '&new=1';
+        }
+        if ($category = param_alpha('c', '')) {
+            $redirect .= '&c='. $category;
+        }
+
+        $result = array(
+            'goto' => $redirect,
+        );
+
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
-            $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
+            try {
+                $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values, $this);
+            }
+            catch (MaharaException $e) {
+                $result['message'] = $e instanceof UserException ? $e->getMessage() : get_string('unrecoverableerror', 'error');
+                $form->set_error(null, $result['message']);
+                $form->reply(PIEFORM_ERR, $result);
+            }
         }
 
         $title = (isset($values['title'])) ? $values['title'] : '';
         unset($values['title']);
+
+        // A block may return a list of other blocks that need to be
+        // redrawn after configuration of this block.
+        $torender = !empty($values['_redrawblocks']) && $form->submitted_by_js() ? $values['_redrawblocks'] : array();
+        unset($values['_redrawblocks']);
+
         $this->set('configdata', $values);
         $this->set('title', $title);
 
@@ -538,16 +563,21 @@ class BlockInstance {
             'data'    => $rendered,
             'blockid' => $this->get('id'),
             'viewid'  => $this->get('view'),
+            'goto'    => $redirect,
         );
 
-        $redirect = '/view/blocks.php?id=' . $this->get('view');
-        if (param_boolean('new', false)) {
-            $redirect .= '&new=1';
+        // Render all the other blocks in the torender list
+        $result['otherblocks'] = array();
+        foreach ($torender as $blockid) {
+            if ($blockid != $result['blockid']) {
+                $otherblock = new BlockInstance($blockid);
+                $result['otherblocks'][] = array(
+                    'blockid' => $blockid,
+                    'data'    => $otherblock->render_editing(false, false, true),
+                );
+            }
         }
-        if ($category = param_alpha('c', '')) {
-            $redirect .= '&c='. $category;
-        }
-        $result['goto'] = $redirect;
+
         $form->reply(PIEFORM_OK, $result);
     }
 
@@ -858,22 +888,27 @@ class BlockInstance {
         }
 
         $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
-        foreach($configjs as &$jsfile) {
-            if(strpos($jsfile, 'http://') === false) {
-                if($this->artefactplugin) {
-                    $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
-                        $this->blocktype . '/' . $jsfile;
+        if (is_array($configjs)) {
+            foreach ($configjs as &$jsfile) {
+                if (strpos($jsfile, 'http://') === false) {
+                    if ($this->artefactplugin) {
+                        $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
+                            $this->blocktype . '/' . $jsfile;
+                    }
+                    else {
+                        $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
+                    }
+                    $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
                 }
                 else {
-                    $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
+                    $jsfile = '$j.getScript("' . $jsfile . '");';
                 }
-                $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
             }
-            else {
-                $jsfile = '$j.getScript("' . $jsfile . '");';
-            }
+            $js .= implode('', $configjs);
         }
-        $js .= implode('', $configjs);
+        else if (is_string($configjs)) {
+            $js .= $configjs;
+        }
 
         $renderedform = array('html' => $html, 'javascript' => $js);
         return $renderedform;
@@ -1110,6 +1145,9 @@ class BlockInstance {
         return $this->artefacts[$id] = $a;
     }
 
+    public function save_artefact_instance($artefact) {
+        $this->artefacts[$artefact->get('id')] = $artefact;
+    }
 
     /**
      * Builds a new block instance as a copy of this one, taking into account 

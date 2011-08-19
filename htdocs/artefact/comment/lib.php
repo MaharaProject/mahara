@@ -364,7 +364,7 @@ class ArtefactTypeComment extends ArtefactType {
         return $result;
     }
 
-    public static function count_comments(&$viewids=null, &$artefactids=null) {
+    public static function count_comments($viewids=null, $artefactids=null) {
         if (!empty($viewids)) {
             return get_records_sql_assoc('
                 SELECT c.onview, COUNT(c.artefact) AS comments

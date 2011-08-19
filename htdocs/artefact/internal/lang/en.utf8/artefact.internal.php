@@ -130,3 +130,14 @@ $string['profileinformation'] = 'Profile Information';
 $string['profilepage'] = 'Profile Page';
 $string['viewprofilepage'] = 'View profile page';
 $string['viewallprofileinformation'] = 'View all profile information';
+
+$string['Note'] = 'Note';
+$string['Notes'] = 'Notes';
+$string['mynotes'] = 'My Notes';
+$string['notesfor'] = "Notes for %s";
+$string['containedin'] = "Contained in:";
+$string['notesdescription'] = 'These are the html notes you have created inside Text Box blocks on your pages.';
+$string['editnote'] = 'Edit Note';
+$string['confirmdeletenote'] = 'This note is used in %d blocks and %d pages.  If you delete it, all the blocks which currently contain the text will appear empty.';
+$string['notedeleted'] = 'Note deleted';
+$string['noteupdated'] = 'Note updated';

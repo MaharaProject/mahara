@@ -30,3 +30,6 @@ defined('INTERNAL') || die();
 $string['title'] = 'Text Box';
 $string['description'] = 'Add notes to your page';
 $string['blockcontent'] = 'Block Content';
+$string['usecontentfromanothertextbox'] = 'Use content from another text box';
+$string['textusedinotherblocks'] = 'If you edit the text of this block, it will also be changed in %s other block(s) where it appears.';
+$string['managealltextboxcontent'] = 'Manage all textbox content';

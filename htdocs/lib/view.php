@@ -2068,6 +2068,7 @@ class View {
      * - HTML containing table rows
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
+     * - Artefact fields to return
      */
     public static function build_artefactchooser_data($data, $group=null, $institution=null) {
         global $USER;
@@ -2098,7 +2099,9 @@ class View {
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+        $returnfields  = isset($data['returnfields']) ? $data['returnfields'] : null;
 
+        $returnartefacts = array();
         $result = '';
         if ($artefacts) {
             foreach ($artefacts as &$artefact) {
@@ -2132,6 +2135,33 @@ class View {
                 $smarty->assign('elementname', $elementname);
                 $smarty->assign('formcontrols', $formcontrols);
                 $result .= $smarty->fetch($template) . "\n";
+
+                if ($returnfields) {
+                    $returnartefacts[$artefact->id] = array();
+                    foreach ($returnfields as $f) {
+                        $returnartefacts[$artefact->id][$f] = $artefact->$f;
+                    }
+                }
+            }
+
+            if ($returnfields && !empty($data['getblocks'])) {
+                // Get ids of the blocks containing these artefacts
+                $blocks = get_records_select_array(
+                    'view_artefact',
+                    'artefact IN (' . join(',', array_fill(0, count($artefacts), '?')) . ')',
+                    array_keys($artefacts)
+                );
+
+                if (!empty($blocks)) {
+                    // For each artefact, attach a list of block ids of all the blocks
+                    // that contain it.
+                    foreach ($blocks as $block) {
+                        if (empty($returnartefacts[$block->artefact]['blocks'])) {
+                            $returnartefacts[$block->artefact]['blocks'] = array();
+                        }
+                        $returnartefacts[$block->artefact]['blocks'][] = $block->block;
+                    }
+                }
             }
         }
 
@@ -2157,7 +2187,7 @@ class View {
             ),
         ));
 
-        return array($result, $pagination, $totalartefacts, $data['offset']);
+        return array($result, $pagination, $totalartefacts, $data['offset'], $returnartefacts);
     }
 
     /**

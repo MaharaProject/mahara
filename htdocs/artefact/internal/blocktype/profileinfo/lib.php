@@ -208,7 +208,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
             'search'    => false,
-            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('email')),
+            'artefacttypes' => array_diff(PluginArtefactInternal::get_profile_artefact_types(), array('email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }
@@ -224,7 +224,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
     public static function rewrite_blockinstance_config(View $view, $configdata) {
         if ($view->get('owner') !== null) {
-            $artefacttypes = array_diff(PluginArtefactInternal::get_artefact_types(), array('email'));
+            $artefacttypes = array_diff(PluginArtefactInternal::get_profile_artefact_types(), array('email'));
             $artefactids = get_column_sql('
                 SELECT a.id FROM {artefact} a
                 WHERE a.owner = ? AND a.artefacttype IN (' . join(',', array_map('db_quote', $artefacttypes)) . ')', array($view->get('owner')));
