@@ -16,6 +16,9 @@ minaccept:
 	@find htdocs/ -type f -name "install.xml" -path "*/db/install.xml" | xargs -n 1 -P 2 xmllint --schema htdocs/lib/xmldb/xmldb.xsd --noout
 	@if git rev-parse --verify HEAD 2>/dev/null; then git show HEAD ; fi | test/coding-standard-check.pl
 
+jenkinsaccept: minaccept
+	@find ./ ! -path './.git/*' -type f | xargs clamscan > /dev/null && echo All good!
+
 push: minaccept
 	@echo "Pushing the change upstream..."
 	@if test -z "$(TAG)"; then \
