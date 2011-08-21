@@ -2574,9 +2574,15 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
-    if ($oldversion < 2011081100) {
+    if ($oldversion < 2011082200) {
+        if ($data = check_upgrades("artefact.internal")) {
+            upgrade_plugin($data);
+        }
         // Move the textbox blocktype into artefact/internal
         set_field('blocktype_installed', 'artefactplugin', 'internal', 'name', 'textbox');
+        if ($data = check_upgrades("blocktype.internal/textbox")) {
+            upgrade_plugin($data);
+        }
     }
 
     return $status;

@@ -42,45 +42,5 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
         execute_sql("DROP TABLE {artefact_internal_profile_icon}");
     }
 
-    if ($oldversion < 2011071200) {
-        // Convert all textbox html content to artefacts
-        $sql = '
-            SELECT b.id, b.title, b.configdata, b.view,
-                v.owner, v.group, v.institution, v.ctime, v.mtime, v.atime
-            FROM {block_instance} b JOIN {view} v ON b.view = v.id
-            WHERE b.id > ? AND b.blocktype = ?
-            ORDER BY b.id';
-        $lastid = 0;
-        $limit = 500;
-        while ($records = get_records_sql_array($sql, array($lastid, 'textbox'), 0, $limit)) {
-            foreach ($records as $r) {
-                $configdata = unserialize($r->configdata);
-                $artefact = (object) array(
-                    'artefacttype' => 'html',
-                    'ctime'        => $r->ctime,
-                    'mtime'        => $r->mtime,
-                    'atime'        => $r->atime,
-                    'title'        => $r->title,
-                    'description'  => isset($configdata['text']) ? $configdata['text'] : '',
-                    'owner'        => $r->owner,
-                    'group'        => $r->group,
-                    'institution'  => $r->institution,
-                );
-                if ($r->owner > 0) {
-                    $artefact->author = $r->owner;
-                }
-                else {
-                    $artefact->authorname = '?';
-                }
-                $artefactid = insert_record('artefact', $artefact, 'id', true);
-                unset($configdata['text']);
-                $configdata['artefactid'] = $artefactid;
-                set_field('block_instance', 'configdata', serialize($configdata), 'id', $r->id);
-                insert_record('view_artefact', (object) array('view' => $r->view, 'block' => $r->id, 'artefact' => $artefactid));
-            }
-            $lastid = $r->id;
-        }
-    }
-
     return $status;
 }
