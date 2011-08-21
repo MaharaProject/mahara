@@ -353,9 +353,14 @@ function upgrade_plugin($upgrade) {
 
     if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
         list($artefactplugin, $blocktypename) = explode('/', $pluginname);
+        $location = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $blocktypename . '/db/';
+        $function = 'xmldb_' . $plugintype . '_' . $blocktypename . '_upgrade';
+    }
+    else {
+        $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
+        $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
     }
 
-    $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
     db_begin();
 
     if (!empty($upgrade->install)) {
@@ -366,7 +371,6 @@ function upgrade_plugin($upgrade) {
     else {
         if (is_readable($location .  'upgrade.php')) {
             require_once($location . 'upgrade.php');
-            $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
             if (!$function($upgrade->from)) {
                 throw new InstallationException("Failed to run " . $function . " (check logs for errors)");
             }
