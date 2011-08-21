@@ -179,7 +179,14 @@ class AuthLdap extends Auth {
                 continue;
             }
 
-            $connresult = ldap_connect($server);
+            $lastcolon = strrpos($server, ":");
+            if ($lastcolon !== FALSE && preg_match('/^([0-9]+)$/', $port = substr($server, $lastcolon + 1))) {
+                $server = substr($server, 0, $lastcolon);
+                $connresult = ldap_connect($server, $port);
+            }
+            else {
+                $connresult = ldap_connect($server);
+            }
             // ldap_connect returns ALWAYS true
 
             if (!empty($this->config['version'])) {
