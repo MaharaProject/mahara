@@ -67,46 +67,105 @@ else {
     );
 }
 
-$elements = array();
-$elements['name'] = array(
+$form = array(
+    'name'       => 'editgroup',
+    'plugintype' => 'core',
+    'pluginname' => 'groups',
+    'elements'   => array(
+        'name' => array(
             'type'         => 'text',
             'title'        => get_string('groupname', 'group'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
-            'defaultvalue' => $group_data->name);
-$elements['description'] = array(
+            'defaultvalue' => $group_data->name,
+        ),
+        'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription', 'group'),
             'rules'        => array('maxlength' => 65536),
             'rows'         => 10,
             'cols'         => 55,
-            'defaultvalue' => $group_data->description);
+            'defaultvalue' => $group_data->description,
+        ),
+        'settings' => array(
+            'type'         => 'fieldset',
+            'collapsible'  => true,
+            'collapsed'    => false,
+            'legend'       => get_string('settings'),
+            'elements'     => array(),
+        ),
+        'submit' => array(
+            'type'         => 'submitcancel',
+            'value'        => array(get_string('savegroup', 'group'), get_string('cancel'))
+        ),
+    ),
+);
 
-$grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
-$currenttype = $group_data->grouptype . '.' . $group_data->jointype;
-if (!isset($grouptypeoptions[$currenttype])) {
-    // The user can't create groups of this type.  Probably a non-staff user
-    // who's been promoted to admin of a controlled group.  Just don't let
-    // them change it.
-    $grouptypeoptions = array($currenttype => get_string('membershiptype.' . $group_data->jointype, 'group'));
+$elements = array();
+
+$cancreatecontrolled = $USER->get('admin') || $USER->get('staff')
+    || $USER->is_institutional_admin() || $USER->is_institutional_staff();
+
+$elements['open'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('Open', 'group'),
+    'description'  => get_string('opendescription', 'group'),
+    'defaultvalue' => $group_data->jointype == 'open',
+    'disabled'     => !$cancreatecontrolled && $group_data->jointype == 'controlled',
+);
+if ($cancreatecontrolled || $group_data->jointype == 'controlled') {
+    $elements['controlled'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('Controlled', 'group'),
+        'description'  => get_string('controlleddescription', 'group'),
+        'defaultvalue' => $group_data->jointype == 'controlled',
+        'disabled'     => !$cancreatecontrolled,
+    );
 }
+else {
+    $form['elements']['controlled'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->jointype == 'controlled',
+    );
+}
+$elements['request'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('request', 'group'),
+    'description'  => get_string('requestdescription', 'group'),
+    'defaultvalue' => $group_data->jointype != 'open' && $group_data->request,
+    'disabled'     => $group_data->jointype == 'open',
+);
+
+// The grouptype determines the allowed roles
+$grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
 
 $elements['grouptype'] = array(
     'type'         => 'select',
-    'title'        => get_string('grouptype', 'group'),
+    'title'        => get_string('Roles', 'group'),
     'options'      => $grouptypeoptions,
-    'defaultvalue' => $currenttype,
+    'defaultvalue' => $group_data->grouptype,
     'help'         => true
 );
 
-// If it's a new group and a grouptype was passed in as a parameter, hide it in the form.
+// Hide the grouptype option if it was passed in as a parameter, if the user
+// isn't allowed to change it, or if there's only one option.
 if (!$id) {
     $grouptypeparam = param_alphanumext('grouptype', 0);
     if (isset($grouptypeoptions[$grouptypeparam])) {
-        $elements['grouptype'] = array(
-            'type'         => 'hidden',
-            'value'        => $grouptypeparam,
-        );
+        $group_data->grouptype = $grouptypeparam;
+        $forcegrouptype = true;
     }
+}
+else if (!isset($grouptypeoptions[$group_data->grouptype])) {
+    // The user can't create groups of this type.  Probably a non-staff user
+    // who's been promoted to admin of a controlled group.
+    $forcegrouptype = true;
+}
+
+if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
+    $form['elements']['grouptype'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->grouptype,
+    );
 }
 
 if (get_config('allowgroupcategories')
@@ -121,7 +180,7 @@ if (get_config('allowgroupcategories')
     // If it's a new group & the category was passed as a parameter, hide it in the form.
     $groupcategoryparam = param_integer('category', 0);
     if (!$id && isset($groupcategories[$groupcategoryparam])) {
-        $elements['category'] = array(
+        $form['elements']['category'] = array(
             'type'  => 'hidden',
             'value' => $groupcategoryparam,
         );
@@ -156,16 +215,8 @@ $elements['viewnotify'] = array(
     'defaultvalue' => $group_data->viewnotify
 );
 
-$elements['submit'] = array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('savegroup', 'group'), get_string('cancel')));
-
-$editgroup = pieform(array(
-    'name'     => 'editgroup',
-    'method'   => 'post',
-    'plugintype' => 'core',
-    'pluginname' => 'groups',
-    'elements' => $elements));
+$form['elements']['settings']['elements'] = $elements;
+$editgroup = pieform($form);
 
 function editgroup_validate(Pieform $form, $values) {
     global $group_data;
@@ -177,6 +228,14 @@ function editgroup_validate(Pieform $form, $values) {
             }
         }
     }
+    if (!empty($values['open'])) {
+        if (!empty($values['controlled'])) {
+            $form->set_error('open', get_string('membershipopencontrolled', 'group'));
+        }
+        if (!empty($values['request'])) {
+            $form->set_error('request', get_string('membershipopenrequest', 'group'));
+        }
+    }
 }
 
 function editgroup_cancel_submit() {
@@ -186,22 +245,23 @@ function editgroup_cancel_submit() {
 function editgroup_submit(Pieform $form, $values) {
     global $USER, $SESSION, $group_data;
 
-    db_begin();
-
-    list($grouptype, $jointype) = explode('.', $values['grouptype']);
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
 
     $newvalues = array(
         'name'           => $group_data->name == $values['name'] ? $values['name'] : trim($values['name']),
         'description'    => $values['description'],
-        'grouptype'      => $grouptype,
+        'grouptype'      => $values['grouptype'],
         'category'       => empty($values['category']) ? null : intval($values['category']),
-        'jointype'       => $jointype,
+        'open'           => intval($values['open']),
+        'controlled'     => intval($values['controlled']),
+        'request'        => intval($values['request']),
         'usersautoadded' => intval($values['usersautoadded']),
         'public'         => intval($values['public']),
         'viewnotify'     => intval($values['viewnotify']),
     );
+
+    db_begin();
 
     if ($group_data->id) {
         $newvalues['id'] = $group_data->id;
@@ -220,7 +280,29 @@ function editgroup_submit(Pieform $form, $values) {
     redirect('/group/view.php?id=' . $group_data->id);
 }
 
-$smarty = smarty();
+$js = '
+$j(function() {
+    $j("#editgroup_controlled").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_request").removeAttr("disabled");
+            $j("#editgroup_open").removeAttr("checked");
+        }
+    });
+    $j("#editgroup_open").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_controlled").removeAttr("checked");
+            $j("#editgroup_request").removeAttr("checked");
+            $j("#editgroup_request").attr("disabled", true);
+        }
+        else {
+            $j("#editgroup_request").removeAttr("disabled");
+        }
+    });
+});
+';
+
+$smarty = smarty(array('jquery'));
 $smarty->assign('form', $editgroup);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('form.tpl');

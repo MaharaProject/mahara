@@ -58,17 +58,16 @@ if ($USER->is_logged_in()) {
         }
         $group->canleave = group_user_can_leave($group->id);
     }
-    else if ($group->jointype == 'invite'
-             and $invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
+    else if ($invite = get_record('group_member_invite', 'group', $group->id, 'member', $USER->get('id'))) {
         $group->membershiptype = 'invite';
         $group->invite = group_get_accept_form('invite', $group->id, $afterjoin);
     }
-    else if ($group->jointype == 'request'
-             and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
-        $group->membershiptype = 'request';
-    }
     else if ($group->jointype == 'open') {
         $group->groupjoin = group_get_join_form('joingroup', $group->id, $afterjoin);
+    }
+    else if ($group->request
+             and $request = get_record('group_member_request', 'group', $group->id, 'member', $USER->get('id'))) {
+        $group->membershiptype = 'request';
     }
 }
 

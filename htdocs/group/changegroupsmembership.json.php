@@ -39,7 +39,7 @@ $data['message'] = null;
 $initialgroups = param_integer_list('initialgroups', array());
 $resultgroups = param_integer_list('resultgroups', array());
 $userid = param_integer('userid');
-$jointype = param_variable('jointype');
+$addtype = param_variable('addtype');
 
 // Prevent group membership changing done by ordinary members, Tutors can only
 // add members to group and cannot remove anyone. Group admins can do anything.
@@ -71,7 +71,7 @@ foreach ($allgroups as $groupid) {
     }
 }
 
-if ($jointype == 'controlled') {
+if ($addtype == 'add') {
     db_begin();
     //remove group membership
     if ($groupstoremove = array_diff($initialgroups, $resultgroups)) {
@@ -111,7 +111,7 @@ if ($jointype == 'controlled') {
     activity_occurred('maharamessage', $n);
     $data['message'] = get_string('changedgroupmembership', 'group');
 }
-elseif ($jointype == 'invite') {
+else if ($addtype == 'invite') {
     if ($groupstoadd = array_diff($resultgroups, $initialgroups)) {
         foreach ($groupstoadd as $groupid) {
             group_invite_user($groupdata[$groupid], $userid, $USER->get('id'));

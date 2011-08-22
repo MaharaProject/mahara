@@ -2632,5 +2632,37 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('loggedinprofileviewaccess', 1);
     }
 
+    if ($oldversion < 2011083000) {
+        // Jointype changes
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('request');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        set_field('group', 'request', 1, 'jointype', 'request');
+
+        // Turn all request & invite groups into the 'approve' type
+        $field = new XMLDBField('jointype');
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('open', 'controlled', 'request', 'invite', 'approve'), 'open'
+        );
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {group} DROP CONSTRAINT {grou_joi_ck}');
+        }
+        change_field_enum($table, $field);
+
+        set_field('group', 'jointype', 'approve', 'jointype', 'request');
+        set_field('group', 'jointype', 'approve', 'jointype', 'invite');
+
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('open', 'controlled', 'approve'), 'open'
+        );
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {group} DROP CONSTRAINT {grou_joi_ck}');
+        }
+        change_field_enum($table, $field);
+    }
+
     return $status;
 }

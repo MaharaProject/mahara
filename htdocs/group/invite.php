@@ -41,8 +41,7 @@ if (!$user) {
     throw new UserNotFoundException(get_string('usernotfound', 'group', $userid));
 }
 
-if ($group->jointype != 'invite'
-    || group_user_access($groupid) != 'admin') {
+if (group_user_access($groupid) != 'admin') {
     throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
 }
 

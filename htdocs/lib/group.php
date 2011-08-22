@@ -199,8 +199,9 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  * - name: The group name [required, must be unique]
  * - description: The group description [optional, defaults to empty string]
  * - grouptype: The grouptype for the new group. Must be an installed grouptype.
- * - jointype: The jointype for the new group. One of 'open', 'invite', 
- *             'request' or 'controlled'
+ * - open (jointype): anyone can join the group
+ * - controlled (jointype): admin adds members; members cannot leave the group
+ * - request: allows membership requests
  * - ctime: The unix timestamp of the time the group will be recorded as having 
  *          been created. Defaults to the current time.
  * - members: Array of users who should be in the group, structured like this:
@@ -230,13 +231,24 @@ function group_create($data) {
 
     safe_require('grouptype', $data['grouptype']);
 
-    if (isset($data['jointype'])) {
-        if (!in_array($data['jointype'], call_static_method('GroupType' . $data['grouptype'], 'allowed_join_types'))) {
-            throw new InvalidArgumentException("group_create: jointype specified is not allowed by the grouptype specified");
+    if (!empty($data['open'])) {
+        if (!empty($data['controlled'])) {
+            throw new InvalidArgumentException("group_create: a group cannot have both open and controlled membership");
         }
+        if (!empty($data['request'])) {
+            throw new InvalidArgumentException("group_create: open-membership groups don't accept membership requests");
+        }
+        $jointype = 'open';
+    }
+    else if (!empty($data['controlled'])) {
+        $jointype = 'controlled';
     }
     else {
-        throw new InvalidArgumentException("group_create: jointype specified must be one of the valid join types");
+        $jointype = 'approve';
+    }
+
+    if (isset($data['jointype'])) {
+        log_warn("group_create: ignoring supplied jointype");
     }
 
     if (!isset($data['ctime'])) {
@@ -297,7 +309,7 @@ function group_create($data) {
             'description'    => isset($data['description']) ? $data['description'] : null,
             'grouptype'      => $data['grouptype'],
             'category'       => isset($data['category']) ? intval($data['category']) : null,
-            'jointype'       => $data['jointype'],
+            'jointype'       => $jointype,
             'ctime'          => $data['ctime'],
             'mtime'          => $data['ctime'],
             'public'         => $data['public'],
@@ -305,6 +317,7 @@ function group_create($data) {
             'quota'          => $data['quota'],
             'institution'    => !empty($data['institution']) ? $data['institution'] : null,
             'shortname'      => $data['shortname'],
+            'request'        => isset($data['request']) ? intval($data['request']) : 0,
         ),
         'id',
         true
@@ -411,11 +424,41 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'jointype', 'grouptype', 'public') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
     }
+
+    if (isset($new->jointype)) {
+        log_warn("group_update: ignoring supplied jointype");
+        unset($new->jointype);
+    }
+
+    // If the caller isn't trying to enable open/controlled, use the old values
+    if (!isset($new->open)) {
+        $new->open = empty($new->controlled) && $old->jointype == 'open';
+    }
+    if (!isset($new->controlled)) {
+        $new->controlled = empty($new->open) && $old->jointype == 'controlled';
+    }
+
+    if ($new->open) {
+        if ($new->controlled) {
+            throw new InvalidArgumentException("group_update: a group cannot have both open and controlled membership");
+        }
+        $new->request = 0;
+        $new->jointype = 'open';
+    }
+    else if ($new->controlled) {
+        $new->jointype = 'controlled';
+    }
+    else {
+        $new->jointype = 'approve';
+    }
+
+    unset($new->open);
+    unset($new->controlled);
 
     $diff = array_diff_assoc((array)$new, (array)$old);
     if (empty($diff)) {
@@ -431,32 +474,32 @@ function group_update($new, $create=false) {
 
     update_record('group', $new, 'id');
 
-    // When jointype changes from invite/request to anything else,
-    // remove all open invitations/requests, ---
-    // Except for when jointype changes from request to open. Then
-    // we can just add group membership for everyone with an open
-    // request.
-
-    if ($old->jointype == 'invite' && $new->jointype != 'invite') {
-        delete_records('group_member_invite', 'group', $new->id);
-    }
-    else if ($old->jointype == 'request') {
-        if ($new->jointype == 'open') {
-            $userids = get_column_sql('
-                SELECT u.id
-                FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
-                WHERE r.group = ? AND u.deleted = 0',
-                array($new->id)
-            );
-            if ($userids) {
-                foreach ($userids as $uid) {
-                    group_add_user($new->id, $uid);
-                }
+    // Add users who have requested membership of a group that's becoming
+    // open
+    if ($old->jointype != 'open' && $new->jointype == 'open') {
+        $userids = get_column_sql('
+            SELECT u.id
+            FROM {usr} u JOIN {group_member_request} r ON u.id = r.member
+            WHERE r.group = ? AND u.deleted = 0',
+            array($new->id)
+        );
+        if ($userids) {
+            foreach ($userids as $uid) {
+                group_add_user($new->id, $uid);
             }
         }
-        else if ($new->jointype != 'request') {
-            delete_records('group_member_request', 'group', $new->id);
-        }
+    }
+
+    // Invitations to controlled groups are allowed, but if the admin is
+    // changing a group to controlled membership, we'll assume they want
+    // want to revoke all the existing invitations.
+    if ($old->jointype != 'controlled' && $new->jointype == 'controlled') {
+        delete_records('group_member_invite', 'group', $new->id);
+    }
+
+    // Remove requests
+    if ($old->request && !$new->request) {
+        delete_records('group_member_request', 'group', $new->id);
     }
 
     // When the group type changes, make sure everyone has a valid role.
@@ -559,6 +602,7 @@ function group_add_user($groupid, $userid, $role=null) {
     db_begin();
     insert_record('group_member', $gm);
     delete_records('group_member_request', 'group', $groupid, 'member', $userid);
+    delete_records('group_member_invite', 'group', $groupid, 'member', $userid);
     handle_event('userjoinsgroup', $gm);
     db_commit();
 }
@@ -862,7 +906,7 @@ function group_get_removeuser_form($userid, $groupid) {
 }
 
 /**
- * Form for denying request (request jointype group)
+ * Form for denying request (request group)
  */
 function group_get_denyuser_form($userid, $groupid) {
     require_once('pieforms/pieform.php');
@@ -941,7 +985,7 @@ function group_adduser_submit(Pieform $form, $values) {
 }
 
 /**
- * Denying request (request jointype group)
+ * Denying request (request group)
  */
 function group_denyuser_submit(Pieform $form, $values) {
     global $SESSION;
@@ -1104,11 +1148,11 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         if ($group->membershiptype == 'member') {
             $group->canleave = group_user_can_leave($group->id);
         }
-        else if ($group->jointype == 'open') {
-            $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
-        }
         else if ($group->membershiptype == 'invite') {
             $group->invite = group_get_accept_form('invite' . $i++, $group->id, $returnto);
+        }
+        else if ($group->jointype == 'open') {
+            $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
         $group->settingsdescription = group_display_settings($group);
     }
@@ -1267,15 +1311,11 @@ function group_get_grouptypes() {
 
 
 /**
- * Returns a list of grouptype & jointype options to be used in create
- * group/edit group drop-downs.
- * 
- * If there is more than one group type with the same join type,
- * prefix the join types with the group type for display.
+ * Returns a list of grouptype options to be used in the edit
+ * group drop-down.
  */
 function group_get_grouptype_options($currentgrouptype=null) {
     $groupoptions = array();
-    $jointypecount = array('open' => 0, 'invite' => 0, 'request' => 0, 'controlled' => 0);
     $grouptypes = group_get_grouptypes();
     $enabled = array_map(create_function('$a', 'return $a->name;'), plugins_installed('grouptype'));
     if (is_null($currentgrouptype) || in_array($currentgrouptype, $enabled)) {
@@ -1284,19 +1324,14 @@ function group_get_grouptype_options($currentgrouptype=null) {
     foreach ($grouptypes as $grouptype) {
         safe_require('grouptype', $grouptype);
         if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
-            $grouptypename = get_string('name', 'grouptype.' . $grouptype);
-            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types') as $jointype) {
-                $jointypecount[$jointype]++;
-                $groupoptions['jointype']["$grouptype.$jointype"] = get_string('membershiptype.'.$jointype, 'group');
-                $groupoptions['grouptype']["$grouptype.$jointype"] = $grouptypename . ': ' . get_string('membershiptype.'.$jointype, 'group');
+            $roles = array();
+            foreach (call_static_method('GroupType' . $grouptype, 'get_roles') as $role) {
+                $roles[] = get_string($role, 'grouptype.' . $grouptype);
             }
+            $groupoptions[$grouptype] = get_string('name', 'grouptype.' . $grouptype) . ': ' . join(', ', $roles);
         }
     }
-    $duplicates = array_reduce($jointypecount, create_function('$a, $b', 'return $a || $b > 1;'));
-    if ($duplicates) {
-        return $groupoptions['grouptype'];
-    }
-    return $groupoptions['jointype'];
+    return $groupoptions;
 }
 
 /**
@@ -1570,18 +1605,23 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     // gets the groups filtered by above
     // and the first three members by id
     
-    $sql = 'SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+    $sql = '
+        SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.membershiptype,
+            g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-        SELECT g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
+            SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, t.membershiptype,
+                t.reason, t.role, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?' .
             $catsql . '
-            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.grouptype, t.membershiptype, t.reason, t.role
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, t.membershiptype,
+                t.reason, t.role
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.grouptype, g1.membershiptype, g1.reason, g1.role, g1.membercount
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.membershiptype,
+            g1.reason, g1.role, g1.membercount
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -1604,7 +1644,7 @@ function group_get_user_groups($userid=null, $roles=null) {
     }
 
     if (!$groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role, g.jointype, g.grouptype, gtr.see_submitted_views, g.category
+        "SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
@@ -1672,14 +1712,17 @@ function group_allows_submission($grouptype) {
 }
 
 function group_display_settings($group) {
-    $string = get_string('membershiptype.'.$group->jointype, 'group');
+    $settings = array();
+    if ($group->jointype != 'approve') {
+        $settings[] = get_string('membershiptype.abbrev.'.$group->jointype, 'group');
+    }
     if (group_allows_submission($group->grouptype)) {
-        $string .= ', ' . get_string('allowssubmissions', 'group');
+        $settings[] = get_string('allowssubmissions', 'group');
     }
     if ($group->public) {
-        $string .= ', ' . get_string('publiclyvisible', 'group');
+        $settings[] = get_string('publiclyvisible', 'group');
     }
-    return $string;
+    return join(', ', $settings);
 }
 
 /**

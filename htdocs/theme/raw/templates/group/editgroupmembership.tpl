@@ -3,17 +3,17 @@
 <p>{str tag=nogroups section=group}</p>
 {else}
 <div class="fullwidth center">
-  {foreach from=$data key=type item=groups}
+  {foreach from=$data key=addtype item=groups}
     {if $groups}
 <div class="{cycle values='fl,fr'} jointype">
-  <div><strong>{str tag=membershiptype.$type section=group}</strong></div>
+  <div><strong>{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</strong></div>
   <ul>
       {foreach from=$groups item=group}
     <li>
-      <input type="checkbox" class="checkbox" name="{$type}group_{$userid}" value="{$group->id}"{if $group->checked} checked{/if}{if $group->disabled} disabled{/if}> {$group->name} 
+      <input type="checkbox" class="checkbox" name="{$addtype}group_{$userid}" value="{$group->id}"{if $group->checked} checked{/if}{if $group->disabled} disabled{/if}> {$group->name} 
     </li>
       {/foreach}
-    <li class="last"><a class="btn" href="" onclick="changemembership(event, {$userid}, '{$type}');">{str tag=applychanges}</a></li>
+    <li class="last"><a class="btn" href="" onclick="changemembership(event, {$userid}, '{$addtype}');">{str tag=applychanges}</a></li>
     {/if}
   </ul>
 </div>

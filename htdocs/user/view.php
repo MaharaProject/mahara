@@ -122,7 +122,6 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?
-        AND g.jointype = 'invite'
         AND gm.role = 'admin'
         AND g.deleted = 0", array($loggedinid))) {
         $invitelist = array();
@@ -174,7 +173,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
           JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
           LEFT JOIN {group_member_request} gmr ON (gmr.member = ? AND gmr.group = g.id)
           WHERE gm.member = ?
-          AND (g.jointype = 'controlled' OR (g.jointype = 'request' AND gmr.member = ?))
+          AND (g.jointype = 'controlled' OR (g.request = 1 AND gmr.member = ?))
           AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
           AND g.deleted = 0", array($userid,$loggedinid,$userid))) {
         $controlledlist = array();
@@ -182,10 +181,10 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
             if (array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
-            if ($group->jointype == 'request') {
+            if ($group->request) {
                 $requestedlist[$group->id] = $group->name;
             }
-            else {
+            if ($group->jointype == 'controlled') {
                 $controlledlist[$group->id] = $group->name;
             }
         }

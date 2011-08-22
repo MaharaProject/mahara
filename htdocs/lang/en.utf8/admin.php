@@ -466,15 +466,17 @@ $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file:
 $string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid';
 $string['uploadgroupcsverrorshortnamealreadytaken'] = 'Error on line %s of your file: The shortname "%s" is already taken';
 $string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header';
+$string['uploadgroupcsverroropencontrolled'] = 'Line %s: Groups cannot have both open and controlled membership';
+$string['uploadgroupcsverroropenrequest'] = 'Line %s: Groups with open membership cannot allow membership requests';
 $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upload new groups via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
-<pre>shortname,displayname,grouptype</pre>
+<pre>shortname,displayname,roles</pre>
 
 <p>This row must include the <tt>shortname</tt>, <tt>displayname</tt>, and <tt>grouptype</tt> fields</p>
 
-<p>The grouptype field can have any of the following: %s</p>
+<p>The roles field can have any of the following: %s</p>
 
 %s
 

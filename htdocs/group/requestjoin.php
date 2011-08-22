@@ -36,7 +36,7 @@ $returnto = param_alpha('returnto', 'mygroups');
 define('GROUP', $groupid);
 $group = group_current_group();
 
-if ($group->jointype != 'request'
+if (!$group->request
     || record_exists('group_member', 'group', $groupid, 'member', $USER->get('id'))
     || record_exists('group_member_request', 'group', $groupid, 'member', $USER->get('id'))) {
     throw new AccessDeniedException(get_string('cannotrequestjoingroup', 'group'));

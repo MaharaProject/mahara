@@ -39,19 +39,6 @@ class PluginGrouptypeCourse extends PluginGrouptype {
 
 class GroupTypeCourse extends GroupType {
 
-    public static function allowed_join_types($all=false) {
-        global $USER;
-        return self::user_allowed_join_types($USER, $all);
-    }
-
-    public static function user_allowed_join_types($user, $all=false) {
-        $jointypes = array();
-        if (defined('INSTALLER') || defined('CRON') || $all || $user->get('admin') || $user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
-            $jointypes = array_merge($jointypes, array('controlled', 'request'));
-        }
-        return $jointypes;
-    }
-
     public static function can_be_created_by_user() {
         global $USER;
         return $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin()
