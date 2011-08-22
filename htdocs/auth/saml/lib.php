@@ -93,14 +93,10 @@ class AuthSaml extends Auth {
         }
 
         $remoteuser      = $attributes[$this->config['user_attribute']][0];
-        $firstname       = $attributes[$this->config['firstnamefield']][0];
-        $lastname        = $attributes[$this->config['surnamefield']][0];
-        $email           = $attributes[$this->config['emailfield']][0];
+        $firstname       = isset($attributes[$this->config['firstnamefield']][0]) ? $attributes[$this->config['firstnamefield']][0] : null;
+        $lastname        = isset($attributes[$this->config['surnamefield']][0]) ? $attributes[$this->config['surnamefield']][0] : null;
+        $email           = isset($attributes[$this->config['emailfield']][0]) ? $attributes[$this->config['emailfield']][0] : null;
         $institutionname = $this->institution;
-
-        if (!$firstname or !$lastname or !$email) {
-            throw new AuthInstanceException(get_string('errormissinguserattributes', 'auth.saml'));
-        }
 
         $create = false;
         $update = false;
@@ -188,7 +184,7 @@ class AuthSaml extends Auth {
 
             // must have these values
             if (empty($firstname) || empty($lastname) || empty($email)) {
-                throw new AccessDeniedException();
+                throw new AccessDeniedException(get_string('errormissinguserattributes', 'auth.saml'));
             }
 
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
@@ -219,6 +215,9 @@ class AuthSaml extends Auth {
             }
 
         } elseif ($update) {
+            if (empty($firstname) || empty($lastname) || empty($email)) {
+                throw new AuthInstanceException(get_string('errormissinguserattributes', 'auth.saml'));
+            }
             set_profile_field($user->id, 'firstname', $firstname);
             $user->firstname = $firstname;
             set_profile_field($user->id, 'lastname', $lastname);
