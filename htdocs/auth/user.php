@@ -899,6 +899,7 @@ class User {
     public function can_edit_artefact($a) {
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
+            || ($a->get('group') && group_user_access($a->get('group'), $this->get('id')) && $this->get('id') and $this->get('id') == $a->get('author'))
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
         }

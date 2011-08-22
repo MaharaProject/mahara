@@ -405,7 +405,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         }
         else if ($group) {
             $select .= ',
-                r.can_edit, r.can_view, r.can_republish';
+                r.can_edit, r.can_view, r.can_republish, a.author';
             $from .= '
                 LEFT OUTER JOIN (
                     SELECT ar.artefact, ar.can_edit, ar.can_view, ar.can_republish
@@ -416,9 +416,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $phvals[] = $group;
             $phvals[] = $USER->get('id');
             $where .= '
-            AND a.group = ? AND a.owner IS NULL AND r.can_view = 1';
+            AND a.group = ? AND a.owner IS NULL AND (r.can_view = 1 OR a.author = ?)';
             $phvals[] = $group;
-            $groupby .= ', r.can_edit, r.can_view, r.can_republish';
+            $phvals[] = $USER->get('id');
+            $groupby .= ', r.can_edit, r.can_view, r.can_republish, a.author';
         }
         else {
             $where .= '
@@ -448,6 +449,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
+                }
+                if ($group && $item->author == $USER->get('id')) {
+                    $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
                 }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
