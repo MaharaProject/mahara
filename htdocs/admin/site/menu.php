@@ -279,12 +279,22 @@ foreach ($menulist as &$menu) {
 $all = footer_menu(true);
 $active = get_config('footerlinks');
 $active = $active ? unserialize($active) : array_keys($all);
+$activeurls = get_config('footercustomlinks');
+$activeurls = $activeurls ? unserialize($activeurls) : null;
 $footerelements = array();
 foreach ($all as $k => $v) {
     $footerelements[$k] = array(
         'type' => 'checkbox',
         'title' => $v['title'],
         'defaultvalue' => in_array($k, $active),
+        'onclick' => "getElement('footerlinks_{$k}_link').disabled = !this.checked;",
+    );
+    $footerelements[$k . '_link'] = array(
+        'type' => 'text',
+        'size' => 60,
+        'description' => get_string('footercustomlink', 'admin', $v['url']),
+        'defaultvalue' => isset($activeurls[$k]) ? $activeurls[$k] : '',
+        'disabled' => !in_array($k, $active),
     );
 }
 $footerelements['submit'] = array(
@@ -297,16 +307,28 @@ $footerform = pieform(array(
 ));
 
 function footerlinks_submit(Pieform $form, $values) {
-    global $active, $all, $SESSION;
+    global $active, $activeurls, $all, $SESSION;
     $new = array();
+    $newurls = array();
     foreach (array_keys($all) as $k) {
         if (!empty($values[$k])) {
             $new[] = $k;
+        }
+        if (!empty($values[$k.'_link']) &&
+            ($values[$k.'_link'] != $all[$k]['url'])) {
+                $newurls[$k] = $values[$k.'_link'];
         }
     }
     if ($new != $active) {
         set_config('footerlinks', serialize($new));
         $SESSION->add_ok_msg(get_string('footerupdated', 'admin'));
+    }
+    if ($newurls != $activeurls) {
+        set_config('footercustomlinks', serialize($newurls));
+        if ($new == $active) {
+            // record message in session only if we haven't done so yet.
+            $SESSION->add_ok_msg(get_string('footerupdated', 'admin'));
+        }
     }
     redirect(get_config('wwwroot') . 'admin/site/menu.php');
 }
