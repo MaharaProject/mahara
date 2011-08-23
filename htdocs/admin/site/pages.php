@@ -35,6 +35,7 @@ define('SECTION_PAGE', 'sitepages');
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('editsitepages', 'admin'));
+define('DEFAULTPAGE', 'home');
 
 $sitepages = array();
 $sitepagenames = site_content_pages();
@@ -44,6 +45,7 @@ if ($sitepagenames) {
 $pageoptions = array();
 foreach ($sitepages as $page) {
     $pageoptions[$page->name] = get_string($page->name, 'admin');
+    $pagecontents[$page->name] = $page->content;
 }
 asort($pageoptions);
 
@@ -57,7 +59,7 @@ $form = pieform(array(
         'pagename'    => array(
             'type'    => 'select',
             'title'   => get_string('pagename', 'admin'),
-            'defaultvalue' => 'home',
+            'defaultvalue' => DEFAULTPAGE,
             'options' => $pageoptions
         ),
         'pagetext' => array(
@@ -66,6 +68,7 @@ $form = pieform(array(
             'rows'        => 25,
             'cols'        => 100,
             'title'       => get_string('pagetext', 'admin'),
+            'defaultvalue' => $pagecontents[DEFAULTPAGE],
             'rules'       => array(
                 'maxlength' => 65536,
                 'required' => true
