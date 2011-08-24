@@ -78,6 +78,7 @@ $smarty->assign('form', $layoutform);
 $smarty->assign('form_start_tag', $layoutform->get_form_tag());
 $smarty->assign('options', $options);
 $smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());

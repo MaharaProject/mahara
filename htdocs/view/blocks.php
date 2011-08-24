@@ -194,9 +194,6 @@ $viewtitle = $view->get('title');
 $owner = $view->get('owner');
 if ($owner &&  $viewtype == 'profile') {
     $viewtitle = get_string('usersprofile', 'mahara', display_name($view->get('owner'), null, true));
-    if (get_config('allowpublicprofiles')) {
-        $smarty->assign('togglepublic', togglepublic_form($viewid));
-    }
 }
 
 if (get_config('viewmicroheaders')) {

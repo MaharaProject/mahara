@@ -41,7 +41,13 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $value = $form->get_value($element);
 
     // Look for the presets and split them into two groups
-    $public = get_config('allowpublicviews') == '1' && $USER->institution_allows_public_views();
+    $public = false;
+    if (get_config('allowpublicviews') && $USER->institution_allows_public_views()) {
+        $public = true;
+    }
+    else if (get_config('allowpublicprofiles') && $element['viewtype'] == 'profile') {
+        $public = true;
+    }
     $presets = array();
     $loggedinindex = 0;
     if ($public) {

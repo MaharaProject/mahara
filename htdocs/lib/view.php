@@ -3716,22 +3716,23 @@ class View {
      * @param integer $group
      * @param string  $institution
      * @param string  $matchconfig record all matches with given config hash (see set_access)
+     * @param boolean $includeprofile include profile view
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null) {
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true) {
         $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
-        $records = get_records_sql_array("
-            SELECT v.id AS vid, v.title AS vname, v.accessconf,
+        $sql = "
+            SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
                 v.startdate, v.stopdate, v.template,
                 c.id AS cid, c.name AS cname
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
-            WHERE v.$ownersql AND v.type = 'portfolio'
-            ORDER BY c.name, v.title",
-            array()
-        );
+            WHERE v.$ownersql AND v.type IN ('portfolio'";
+        $sql .= $includeprofile ? ", 'profile') " : ') ';
+        $sql .= 'ORDER BY c.name, v.title';
+        $records = get_records_sql_array($sql, array());
 
         $collections = array();
         $views = array();
@@ -3743,6 +3744,7 @@ class View {
         foreach ($records as &$r) {
             $v = array(
                 'id'        => $r->vid,
+                'type'      => $r->vtype,
                 'name'      => $r->vname,
                 'startdate' => $r->startdate,
                 'stopdate'  => $r->stopdate,
@@ -4227,54 +4229,6 @@ function objection_form_cancel_submit(Pieform $form) {
     ));
 }
 
-function togglepublic_form($viewid) {
-    $view = new View($viewid);
-    $public = $view->is_public();
-    $togglepublic = pieform(array(
-        'name'      => 'togglepublic',
-        'autofocus' => false,
-        'renderer'  => 'div',
-        'elements'  => array(
-            'changeto' => array(
-                'type'  => 'hidden',
-                'value' => ($public) ? 'loggedin' : 'public'
-            ),
-            'id' => array(
-                'type' => 'hidden',
-                'value' => $viewid
-            ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => ($public) ? get_string('loggedinusersonly') : get_string('allowpublicaccess'),
-            ),
-        ),
-    ));
-    return $togglepublic;
-}
-
-function togglepublic_submit(Pieform $form, $values) {
-    global $SESSION, $userid;
-    $access = array(
-        array(
-            'type'      => 'loggedin',
-            'startdate' => null,
-            'stopdate'  => null,
-        ),
-    );
-
-    if ($values['changeto'] == 'public') {
-        $access[] = array(
-            'type'      => 'public',
-            'startdate' => null,
-            'stopdate'  => null,
-        );
-    }
-    $view = new View($values['id']);
-    $view->set_access($access);
-    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully', 'view'));
-
-    redirect('/view/blocks.php?id=' . $view->get('id'));
-}
 
 /**
  * display format for author names in views - firstname

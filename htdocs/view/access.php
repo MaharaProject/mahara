@@ -88,9 +88,9 @@ $form = array(
 // For institution views, force edit access of one view at a time for now.  Editing multiple
 // institution views requires doing some tricky stuff with the 'copy for new users/groups'
 // options, and there's not much room for the 'Share' tab in the admin area anyway
-if (!$institution) {
+if (!$institution && $view->get('type') != 'profile') {
     list($collections, $views) = View::get_views_and_collections(
-        $view->get('owner'), $group, $institution, $view->get('accessconf')
+        $view->get('owner'), $group, $institution, $view->get('accessconf'), false
     );
 }
 
@@ -153,6 +153,7 @@ $form['elements']['accesslist'] = array(
 
 $form['elements']['more'] = array(
     'type' => 'fieldset',
+    'class' => $view->get('type') == 'profile' ? 'hidden' : '',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -545,7 +546,20 @@ function editaccess_submit(Pieform $form, $values) {
                 }
                 $toupdate[] = $viewid;
             }
-       }
+        }
+        else if ($view->get('type') == 'profile') {
+            // Force default Advanced options
+            $felements = $form->get_property('elements');
+            if (!empty($felements['more']['elements'])) {
+                foreach (array_keys($felements['more']['elements']) as $ename) {
+                    if (property_exists($view, $ename)) {
+                        $viewconfig[$ename] = $view->get($ename);
+                    }
+                }
+            }
+
+            $toupdate[] = $view->get('id');
+        }
     }
 
     if (!empty($toupdate)) {
