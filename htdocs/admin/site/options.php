@@ -167,6 +167,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('anonymouscomments'),
                     'disabled'     => in_array('anonymouscomments', $OVERRIDDEN),
                 ),
+                'loggedinprofileviewaccess' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('loggedinprofileviewaccess', 'admin'),
+                    'description'  => get_string('loggedinprofileviewaccessdescription', 'admin'),
+                    'defaultvalue' => get_config('loggedinprofileviewaccess'),
+                    'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -579,7 +586,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'disableexternalresources',
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers', 'registerterms',
         'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',

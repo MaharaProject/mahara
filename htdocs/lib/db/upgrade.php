@@ -2627,5 +2627,10 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2011082401) {
+        // Set config value for logged-in profile view access
+        set_config('loggedinprofileviewaccess', 1);
+    }
+
     return $status;
 }

@@ -158,6 +158,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
 
 function pieform_render_viewacl_getvaluebytype($type, $id) {
     switch ($type) {
+        case 'loggedin':
+            return get_string('loggedin', 'view');
+            break;
         case 'user':
             $user = get_record('usr', 'id', $id);
             return display_name($user);

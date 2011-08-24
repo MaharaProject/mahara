@@ -540,13 +540,15 @@ class User {
 
         // Set view access
         $access = array();
-        $access[] = array(
-            array(
-                'type'      => 'loggedin',
-                'startdate' => null,
-                'stopdate'  => null,
-            ),
-        );
+        if (get_config('loggedinprofileviewaccess')) {
+            $access[] = array(
+                array(
+                    'type'      => 'loggedin',
+                    'startdate' => null,
+                    'stopdate'  => null,
+                ),
+            );
+        }
         if ($institutions = $this->get('institutions')) {
             foreach ($institutions as $i) {
                 $access[] = array(

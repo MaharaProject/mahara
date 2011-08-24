@@ -128,6 +128,17 @@ if (!empty($views)) {
 if ($view->get('type') == 'profile') {
     // Make sure all the user's institutions have access to profile view
     $view->add_owner_institution_access();
+
+    if (get_config('loggedinprofileviewaccess')) {
+        // Force logged-in user access
+        $viewaccess = new stdClass;
+        $viewaccess->accesstype = 'loggedin';
+        $viewaccess->startdate = null;
+        $viewaccess->stopdate = null;
+        $viewaccess->allowcomments = 0;
+        $viewaccess->approvecomments = 1;
+        $view->add_access($viewaccess);
+    }
 }
 
 $allowcomments = $view->get('allowcomments');
@@ -543,6 +554,13 @@ function editaccess_submit(Pieform $form, $values) {
         if ($view->get('type') == 'profile') {
             // Ensure the user's institutions are still added to the access list
             $view->add_owner_institution_access();
+
+            if (get_config('loggedinprofileviewaccess')) {
+                // Force logged-in user access
+                $viewaccess = new stdClass;
+                $viewaccess->accesstype = 'loggedin';
+                $view->add_access($viewaccess);
+            }
         }
     }
 

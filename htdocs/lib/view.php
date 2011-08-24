@@ -671,6 +671,10 @@ class View {
                 $item['id'] = null;
             }
 
+            if ($this->type == 'profile' && $item['type'] == 'loggedin' && get_config('loggedinprofileviewaccess')) {
+                $item['locked'] = true;
+            }
+
             if ($item['role']) {
                 $item['roledisplay'] = get_string($item['role'], 'grouptype.'.$grouptypes[$item['group']]->grouptype);
             }
@@ -960,6 +964,17 @@ class View {
             }
         }
         db_commit();
+    }
+
+    public function add_access($access) {
+        if (!$this->id) {
+            return false;
+        }
+
+        // Ensure view is correct
+        $access->view = $this->id;
+
+        ensure_record_exists('view_access', $access, $access);
     }
 
     public function add_owner_institution_access($instnames=array()) {
