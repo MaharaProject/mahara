@@ -125,12 +125,18 @@ if (!empty($views)) {
     );
 }
 
+if ($view->get('type') == 'profile') {
+    // Make sure all the user's institutions have access to profile view
+    $view->add_owner_institution_access();
+}
+
 $allowcomments = $view->get('allowcomments');
 
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
     'allowcomments' => $allowcomments,
     'defaultvalue'  => $view->get_access(get_string('strftimedatetimeshort')),
+    'viewtype'      => $view->get('type'),
 );
 
 
@@ -533,6 +539,11 @@ function editaccess_submit(Pieform $form, $values) {
 
     if (!empty($toupdate)) {
         View::update_view_access($viewconfig, $toupdate);
+
+        if ($view->get('type') == 'profile') {
+            // Ensure the user's institutions are still added to the access list
+            $view->add_owner_institution_access();
+        }
     }
 
     $SESSION->add_ok_msg(get_string('updatedaccessfornumviews', 'view', count($toupdate)));

@@ -142,6 +142,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
         }
     }
 
+    $smarty->assign('viewtype', $element['viewtype']);
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($value));

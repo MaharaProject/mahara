@@ -606,7 +606,7 @@ class View {
      */
     public function get_access($timeformat=null) {
         if ($data = $this->get_access_records()) {
-            return self::process_access_records($data, $timeformat);
+            return $this->process_access_records($data, $timeformat);
         }
         return array();
     }
@@ -627,7 +627,7 @@ class View {
         return $data ? $data : array();
     }
 
-    public static function process_access_records($data=array(), $timeformat=null) {
+    public function process_access_records($data=array(), $timeformat=null) {
         $rolegroups = array();
         foreach ($data as &$item) {
             if ($item->role && !isset($roledata[$item->group])) {
@@ -658,6 +658,13 @@ class View {
             else if ($item['institution']) {
                 $item['type'] = 'institution';
                 $item['id'] = $item['institution'];
+
+                if ($this->type == 'profile') {
+                    $myinstitutions = array_keys(load_user_institutions($this->owner));
+                    if (in_array($item['id'], $myinstitutions) && empty($item['startdate']) && empty($item['stopdate'])) {
+                        $item['locked'] = true;
+                    }
+                }
             }
             else {
                 $item['type'] = $item['accesstype'];
@@ -955,6 +962,30 @@ class View {
         db_commit();
     }
 
+    public function add_owner_institution_access($instnames=array()) {
+        if (!$this->id) {
+            return false;
+        }
+
+        $institutions = empty($instnames) ? array_keys(load_user_institutions($this->owner)) : $instnames;
+        if (!empty($institutions)) {
+            db_begin();
+            foreach ($institutions as $i) {
+                $vaccess = new stdClass;
+                $vaccess->view = $this->id;
+                $vaccess->institution = $i;
+                $vaccess->startdate = null;
+                $vaccess->stopdate = null;
+                $vaccess->allowcomments = 0;
+                $vaccess->approvecomments = 1;
+
+                ensure_record_exists('view_access', $vaccess, $vaccess);
+            }
+            db_commit();
+        }
+
+        return true;
+    }
 
     public function get_autocreate_grouptypes() {
         if (!isset($this->copynewgroups)) {

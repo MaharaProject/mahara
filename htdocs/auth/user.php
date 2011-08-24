@@ -538,13 +538,27 @@ class User {
         $aboutme->set('configdata', $configdata);
         $view->addblockinstance($aboutme);
 
-        $view->set_access(array(
+        // Set view access
+        $access = array();
+        $access[] = array(
             array(
                 'type'      => 'loggedin',
                 'startdate' => null,
                 'stopdate'  => null,
             ),
-        ));
+        );
+        if ($institutions = $this->get('institutions')) {
+            foreach ($institutions as $i) {
+                $access[] = array(
+                    'type'      => 'institution',
+                    'id'        => $i->institution,
+                    'startdate' => null,
+                    'stopdate'  => null,
+                );
+            }
+        }
+        $view->set_access($access);
+
         db_commit();
 
         return $view;

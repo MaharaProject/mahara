@@ -228,6 +228,12 @@ class Institution {
         require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
+
+        // Give institution members access to user's profile page
+        require_once('view.php');
+        $profileview = $userobj->get_profile_view();
+        $profileview->add_owner_institution_access(array($this->name));
+
         db_commit();
     }
 
