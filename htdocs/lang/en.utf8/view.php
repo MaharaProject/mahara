@@ -143,10 +143,12 @@ $string['share'] = 'Share';
 $string['sharewith'] = 'Share with';
 $string['accesslist'] = 'Access list';
 $string['sharewithmygroups'] = 'Share with My Groups';
+$string['sharewithmyinstitutions'] = 'Share with my institutions';
 $string['sharewithusers'] = 'Share with users';
 $string['shareview'] = 'Share page';
 $string['otherusersandgroups'] = 'Share with other users and groups';
 $string['moreoptions'] = 'Advanced Options';
+$string['moreinstitutions'] = 'More Institutions';
 $string['allviews'] = 'All pages';
 
 $string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the page until your tutor has finished marking it.  Are you sure you want to submit this page now?';

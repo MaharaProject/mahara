@@ -1730,6 +1730,12 @@ function can_view_view($view_id, $user_id=null) {
                     continue;
                 }
             }
+            else if ($a->institution) {
+                // Check if user belongs to the allowed institution
+                if (!in_array($a->institution, array_keys($user->get('institutions')))) {
+                    continue;
+                }
+            }
             else if ($a->accesstype == 'objectionable') {
                 if ($owner = $view->get('owner')) {
                     if ($user->is_admin_for_user($owner)) {

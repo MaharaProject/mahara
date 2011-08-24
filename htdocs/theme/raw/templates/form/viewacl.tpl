@@ -258,6 +258,28 @@ var potentialPresets = {{$potentialpresets|safe}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
 });
+var myInstitutions = {{$myinstitutions|safe}};
+if (myInstitutions.length) {
+    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmyinstitutions section=view}}'));
+    var i = 0;
+    var maxInstitutions = 5;
+    forEach(myInstitutions, function(preset) {
+        if (i == maxInstitutions) {
+            var more = A({'href':''}, '{{str tag=moreinstitutions section=view}} »');
+            connect(more, 'onclick', function(e) {
+                e.stop();
+                forEach(getElementsByTagAndClassName('div', 'moreinstitutions', 'potentialpresetitems'), partial(toggleElementClass, 'hidden'));
+            });
+            appendChildNodes('potentialpresetitems', DIV(null, ' ', more));
+        }
+        if (i >= maxInstitutions) {
+            preset['class'] = 'hidden moreinstitutions';
+        }
+        renderPotentialPresetItem(preset);
+        i++;
+    });
+
+}
 var allGroups = {{$allgroups|safe}};
 var myGroups = {{$mygroups|safe}};
 if (myGroups) {
