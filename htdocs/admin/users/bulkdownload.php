@@ -227,4 +227,4 @@ $SESSION->set('exportfile', $zipfile);
 $wwwroot = get_config('wwwroot');
 $strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 'export', '<a href="' . $wwwroot . '" target="_top">', '</a>');
 $strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="bulkdownload.php" target="_top">', '</a>');
-print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs);
+print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, 'bulkdownload.php');
