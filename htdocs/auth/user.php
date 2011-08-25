@@ -542,11 +542,9 @@ class User {
         $access = array();
         if (get_config('loggedinprofileviewaccess')) {
             $access[] = array(
-                array(
-                    'type'      => 'loggedin',
-                    'startdate' => null,
-                    'stopdate'  => null,
-                ),
+                'type'      => 'loggedin',
+                'startdate' => null,
+                'stopdate'  => null,
             );
         }
         if ($institutions = $this->get('institutions')) {
