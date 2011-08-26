@@ -26,6 +26,7 @@
  */
 
 defined('INTERNAL') || die();
+require_once(get_config('libroot') . 'group.php');
 
 /**
  * Base artefact plugin class
@@ -813,7 +814,6 @@ abstract class ArtefactType {
         if (!$this->group) {
             return;
         }
-        require_once(get_config('libroot') . 'group.php');
         if (!isset($this->rolepermissions)) {
             $this->rolepermissions = group_get_default_artefact_permissions($this->group);
         }
