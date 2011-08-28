@@ -128,7 +128,7 @@ if (isset($_SESSION['wantsurl'])) {
 }
 
 $saml_attributes = $as->getAttributes();
-session_write_close();
+@session_write_close();
 
 // now - let's continue with the session handling that would normally be done
 // by Maharas init.php
@@ -191,7 +191,7 @@ if ($can_login) {
         $wantsurl = $SESSION->get('wantsurl');
         $SESSION->set('wantsurl', null);
     }
-    session_write_close();
+    @session_write_close();
     redirect($wantsurl);
 }
 
@@ -239,7 +239,7 @@ function auth_saml_loginlink_submit(Pieform $form, $values) {
         'localusr'       => $USER->id,
     ));
     db_commit();
-    session_write_close();
+    @session_write_close();
     redirect('/auth/saml/');
 }
 

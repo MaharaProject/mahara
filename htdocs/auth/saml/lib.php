@@ -227,9 +227,8 @@ class AuthSaml extends Auth {
 
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
-
-            $user->commit();
         }
+        $user->commit();
 
 
         /*******************************************/
