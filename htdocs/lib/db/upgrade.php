@@ -2662,6 +2662,19 @@ function xmldb_core_upgrade($oldversion=0) {
             execute_sql('ALTER TABLE {group} DROP CONSTRAINT {grou_joi_ck}');
         }
         change_field_enum($table, $field);
+
+        // Move view submission from grouptype to group
+        $field = new XMLDBField('submittableto');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        execute_sql("UPDATE {group} SET submittableto = 1 WHERE grouptype IN (SELECT name FROM {grouptype} WHERE submittableto = 1)");
+
+        $table = new XMLDBTable('grouptype');
+        $field = new XMLDBField('submittableto');
+        drop_field($table, $field);
+
+        // Any group can potentially take submissions, so make sure someone can assess them
+        set_field('grouptype_roles', 'see_submitted_views', 1, 'role', 'admin');
     }
 
     return $status;

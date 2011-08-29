@@ -49,6 +49,7 @@ $ALLOWEDKEYS = array(
     'request',
     'roles',
     'public',
+    'submitpages',
 );
 if ($USER->get('admin')) {
     $ALLOWEDKEYS[] = 'usersautoadded';
@@ -155,6 +156,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         $open = isset($formatkeylookup['open']) && !empty($line[$formatkeylookup['open']]);
         $controlled = isset($formatkeylookup['controlled']) && !empty($line[$formatkeylookup['controlled']]);
         $request = isset($formatkeylookup['request']) && !empty($line[$formatkeylookup['request']]);
+        $submitpages = isset($formatkeylookup['submitpages']) && !empty($line[$formatkeylookup['submitpages']]);
 
         if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $shortname)) {
             $csverrors->add($i, get_string('uploadgroupcsverrorinvalidshortname', 'admin', $i, $shortname));
@@ -268,6 +270,10 @@ function uploadcsv_submit(Pieform $form, $values) {
 
         foreach ($FORMAT as $field) {
             if ($field == 'displayname' || $field == 'shortname' || $field == 'roles') {
+                continue;
+            }
+            if ($field == 'submitpages') {
+                $group->submittableto = $record[$formatkeylookup[$field]];
                 continue;
             }
             $group->{$field} = $record[$formatkeylookup[$field]];

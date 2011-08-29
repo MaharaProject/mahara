@@ -300,6 +300,10 @@ function group_create($data) {
         throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
     }
 
+    if (!isset($data['submittableto'])) {
+        $data['submittableto'] = $data['grouptype'] != 'standard';
+    }
+
     db_begin();
 
     $id = insert_record(
@@ -318,6 +322,7 @@ function group_create($data) {
             'institution'    => !empty($data['institution']) ? $data['institution'] : null,
             'shortname'      => $data['shortname'],
             'request'        => isset($data['request']) ? intval($data['request']) : 0,
+            'submittableto'  => intval($data['submittableto']),
         ),
         'id',
         true
@@ -424,7 +429,7 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -1606,22 +1611,22 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     // and the first three members by id
     
     $sql = '
-        SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.membershiptype,
-            g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+        SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-            SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, t.membershiptype,
-                t.reason, t.role, COUNT(gm.member) AS membercount
+            SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?' .
             $catsql . '
-            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, t.membershiptype,
-                t.reason, t.role
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                t.membershiptype, t.reason, t.role
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.membershiptype,
-            g1.reason, g1.role, g1.membercount
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.membershiptype, g1.reason, g1.role, g1.membercount
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -1684,6 +1689,7 @@ function group_can_create_groups() {
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());
 }
 
+/* Returns groups containing a given member which accept view submissions */
 function group_get_user_course_groups($userid=null) {
     if (is_null($userid)) {
         global $USER;
@@ -1693,9 +1699,8 @@ function group_get_user_course_groups($userid=null) {
         "SELECT g.id, g.name
         FROM {group_member} u
         INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
-        INNER JOIN {grouptype} t ON t.name = g.grouptype
         WHERE u.member = ?
-        AND t.submittableto = 1
+        AND g.submittableto = 1
         ORDER BY g.name
         ", array($userid))) {
         return $groups;
@@ -1703,20 +1708,12 @@ function group_get_user_course_groups($userid=null) {
     return array();
 }
 
-function group_allows_submission($grouptype) {
-    static $grouptypes = null;
-    if (is_null($grouptypes)) {
-        $grouptypes = get_records_assoc('grouptype');
-    }
-    return (bool) $grouptypes[$grouptype]->submittableto;
-}
-
 function group_display_settings($group) {
     $settings = array();
     if ($group->jointype != 'approve') {
         $settings[] = get_string('membershiptype.abbrev.'.$group->jointype, 'group');
     }
-    if (group_allows_submission($group->grouptype)) {
+    if ($group->submittableto) {
         $settings[] = get_string('allowssubmissions', 'group');
     }
     if ($group->public) {

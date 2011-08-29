@@ -56,7 +56,7 @@ class GroupTypeStandard extends GroupType {
     }
 
     public static function get_view_assessing_roles() {
-        return array();
+        return array('admin');
     }
 
     public static function default_role() {

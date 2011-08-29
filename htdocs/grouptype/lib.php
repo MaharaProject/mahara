@@ -53,10 +53,8 @@ abstract class GroupType {
             return;
         }
 
-        $assessingroles = $this->get_view_assessing_roles();
         insert_record('grouptype', (object) array(
             'name' => $type,
-            'submittableto' => (int)!empty($assessingroles),
             'defaultrole' => $this->default_role(),
         ));
         $roles = $this->get_roles();
@@ -64,6 +62,7 @@ abstract class GroupType {
             $roles[] = 'admin';
         }
         $editingroles = $this->get_view_editing_roles();
+        $assessingroles = $this->get_view_assessing_roles();
         foreach ($roles as $r) {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
