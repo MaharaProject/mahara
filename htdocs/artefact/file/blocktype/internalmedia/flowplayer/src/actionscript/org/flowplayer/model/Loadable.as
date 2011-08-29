@@ -47,6 +47,7 @@ package org.flowplayer.model {
 		public function createDisplayPlugin(disp:DisplayObject):DisplayPluginModel {
 			if (!_plugin) {
 				_plugin = _playerConfig.getPlugin(disp, _name, _config);
+                _plugin.url = _url;
 			}
 			return _plugin as DisplayPluginModel;
 		}
@@ -54,6 +55,7 @@ package org.flowplayer.model {
 		public function createProvider(provider:Object):ProviderModel {
 			if (!_plugin) {
 				_plugin = (new PropertyBinder(new ProviderModel(provider, _name), "config")).copyProperties(_config) as PluginModel;
+                _plugin.url = _url;
 			}
 			return _plugin as ProviderModel;
 		}
@@ -61,6 +63,7 @@ package org.flowplayer.model {
 		public function createPlugin(plugin:Object):PluginModel {
 			if (!_plugin) {
 				_plugin = (new PropertyBinder(new PluginModelImpl(plugin, _name), "config")).copyProperties(_config) as PluginModel;
+                _plugin.url = _url;
 			}
 			return _plugin as PluginModel;
 		}

@@ -1,6 +1,5 @@
 /*    
- *    Copyright 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of FlowPlayer.
  *
  *    FlowPlayer is free software: you can redistribute it and/or modify
@@ -24,12 +23,13 @@ package org.flowplayer.controller {
 	import org.flowplayer.model.Clip;	
 
 	/**
-	 * @author api
+	 * @author  api
 	 */
 	public dynamic class NetConnectionClient implements ConnectionCallbacks {
 		private var log:Log = new Log(this);
 		private var _clip:Clip;
-//
+
+
 //		public function onBWCheck(...rest):void {
 //			log.debug("received onBWCheck " + _clip);
 //			_clip.dispatch(ClipEventType.CONNECTION_EVENT, "onBWCheck");

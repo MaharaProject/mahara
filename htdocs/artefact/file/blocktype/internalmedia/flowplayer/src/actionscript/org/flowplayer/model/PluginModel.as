@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -25,6 +24,10 @@ package org.flowplayer.model {
 	 * @author api
 	 */
 	public interface PluginModel extends Identifiable, Callable, Cloneable {
+
+        function get url():String;
+
+        function set url(url:String):void;
 
         function get isBuiltIn():Boolean;
 

@@ -1,7 +1,7 @@
 /*    
  *    Author: Anssi Piirainen, <api@iki.fi>
  *
- *    Copyright (c) 2009 Flowplayer Oy
+ *    Copyright (c) 2009-2011 Flowplayer Oy
  *
  *    This file is part of Flowplayer.
  *

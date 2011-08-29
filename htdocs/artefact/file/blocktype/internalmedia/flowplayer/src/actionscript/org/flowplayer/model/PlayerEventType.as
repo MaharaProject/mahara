@@ -6,7 +6,8 @@ package org.flowplayer.model {
 	 * @author anssi
 	 */
 	public class PlayerEventType extends EventType {
-		public static const LOAD:PlayerEventType = new PlayerEventType("onLoad");
+        public static const LOAD:PlayerEventType = new PlayerEventType("onLoad");
+        public static const UNLOAD:PlayerEventType = new PlayerEventType("onUnload");
 		public static const KEYPRESS:PlayerEventType = new PlayerEventType("onKeyPress");
 				
 		public static const MUTE:PlayerEventType = new PlayerEventType("onMute");
