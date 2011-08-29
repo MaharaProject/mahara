@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -49,9 +48,18 @@ package org.flowplayer.view {
 			_overlay.graphics.endFill();
 		}
 
-		override protected function onResize():void {
-			Arrange.sameSize(_overlay, this);
+		public function get overlay():Sprite {
+			return _overlay;
 		}
+
+		override protected function onResize():void {
+			_overlay.width = this.width;
+			_overlay.height = this.height;
+		}
+
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false):void {
+             _overlay.addEventListener(type, listener, useCapture, priority, useWeakReference);
+         }
 
 		override public function set alpha(value:Number):void {
 		}
@@ -70,6 +78,7 @@ package org.flowplayer.view {
 			video.width = this.width;
 			video.height = this.height;
 			addChild(video);
+			swapChildren(_overlay, video);
 		}
 		
 		public function hasContent():Boolean {

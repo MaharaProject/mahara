@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -47,6 +46,10 @@ package org.flowplayer.view {
 			_overlay.graphics.drawRect(0, 0, 10, 10);
 			_overlay.graphics.endFill();
 		}
+
+		public function get overlay():Sprite {
+            return _overlay;
+        }
 
 		override protected function onResize():void {
 			Arrange.sameSize(_overlay, this);

@@ -1,5 +1,5 @@
 /** 
- * flowplayer.js 3.2.4. The Flowplayer API
+ * flowplayer.js 3.2.6. The Flowplayer API
  * 
  * Copyright 2009 Flowplayer Oy
  * 
@@ -19,7 +19,7 @@
  * along with Flowplayer.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * Date: 2010-08-25 12:48:46 +0000 (Wed, 25 Aug 2010)
- * Revision: 551 
+ * Revision: 575
  */
 (function() {
  
@@ -720,7 +720,7 @@ function Player(wrapper, params, conf) {
 		},
 		
 		getVersion: function() {
-			var js = "flowplayer.js 3.2.4";
+			var js = "flowplayer.js 3.2.6";
 			if (self.isLoaded()) {
 				var ver = api.fp_getVersion();
 				ver.push(js);
@@ -1178,7 +1178,7 @@ window.flowplayer = window.$f = function() {
 			bgcolor: "#000000",
 			version: [9, 0],
 			expressInstall: "http://static.flowplayer.org/swf/expressinstall.swf",
-			cachebusting: true
+			cachebusting: false
 			
 		}, params);		
 		
@@ -1270,7 +1270,7 @@ if (typeof jQuery == 'function') {
 })();
 /**
  * @license 
- * jQuery Tools 3.2.4 / Flashembed - New wave Flash embedding
+ * jQuery Tools 3.2.6 / Flashembed - New wave Flash embedding
  * 
  * NO COPYRIGHTS OR LICENSES. DO WHAT YOU LIKE.
  * 
@@ -1554,7 +1554,7 @@ if (typeof jQuery == 'function') {
 	if (JQUERY) {
 		
 		// tools version number
-		jQuery.tools = jQuery.tools || {version: '3.2.4'};
+		jQuery.tools = jQuery.tools || {version: '3.2.6'};
 		
 		jQuery.tools.flashembed = {  
 			conf: GLOBAL_OPTS
@@ -1562,7 +1562,7 @@ if (typeof jQuery == 'function') {
 		
 		jQuery.fn.flashembed = function(opts, conf) {		
 			return this.each(function() { 
-				$(this).data("flashembed", flashembed(this, opts, conf));
+				jQuery(this).data("flashembed", flashembed(this, opts, conf));
 			});
 		}; 
 	} 

@@ -311,13 +311,16 @@ import flash.system.Security;
 			_allPlugins.forEach(function(loadable:Loadable, index:int, array:Array):void {
                 if (! loadable.loadFailed) {
                     var pluginInstance:Object = plugins[loadable];
-                    log.info(index + ": setting config to " + pluginInstance + ", " + loadable);
-                    if (pluginInstance is NetStreamControllingStreamProvider) {
-                        log.debug("NetStreamControllingStreamProvider(pluginInstance).config = " +loadable.plugin);
+                    // we don't have a plugin instance for all of these (dock for example)
+                    if (pluginInstance) {
+                        log.info(index + ": setting config to " + pluginInstance + ", " + loadable);
+                        if (pluginInstance is NetStreamControllingStreamProvider) {
+                            log.debug("NetStreamControllingStreamProvider(pluginInstance).config = " +loadable.plugin);
                             NetStreamControllingStreamProvider(pluginInstance).model = ProviderModel(loadable.plugin);
-                    } else {
-                        if (pluginInstance.hasOwnProperty("onConfig")) {
-                            pluginInstance.onConfig(loadable.plugin);
+                        } else {
+                            if (pluginInstance.hasOwnProperty("onConfig")) {
+                                pluginInstance.onConfig(loadable.plugin);
+                            }
                         }
                     }
                 }

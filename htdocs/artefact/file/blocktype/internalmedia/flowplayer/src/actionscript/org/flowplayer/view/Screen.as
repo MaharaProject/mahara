@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -17,12 +16,15 @@
  *    along with Flowplayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.flowplayer.view {
-	import org.flowplayer.controller.MediaController;
+    import flash.events.MouseEvent;
+
+    import org.flowplayer.controller.MediaController;
 	import org.flowplayer.flow_internal;
 	import org.flowplayer.model.Clip;
 	import org.flowplayer.model.ClipEvent;
 	import org.flowplayer.model.ClipEventSupport;
 	import org.flowplayer.model.ClipType;
+	import org.flowplayer.model.ClipEventType;
 	import org.flowplayer.model.DisplayProperties;
 	import org.flowplayer.model.MediaSize;
 	import org.flowplayer.model.PlayButtonOverlay;
@@ -62,6 +64,20 @@ package org.flowplayer.view {
 			_pluginRegistry = pluginRegistry;
 		}
 
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false):void {
+            addEventListenerToDisplays(_playList.clips.concat(_playList.childClips), type, listener);
+         }
+
+	     private function addEventListenerToDisplays(clips:Array, type:String, listener:Function):void {
+            for (var i:Number = 0; i < clips.length; i++) {
+                var clip:Clip = clips[i];
+                if (! clip.isNullClip) {
+                    var display:DisplayObject = _displays[clip];
+                    display.addEventListener(type, listener);
+                }
+            }
+         }
+
 		private function createDisplays(clips:Array):void {
 			for (var i:Number = 0; i < clips.length; i++) {
 				var clip:Clip = clips[i];
@@ -79,6 +95,12 @@ package org.flowplayer.view {
             addChild(display);
             log.debug("created display " + display);
             _displays[clip] = display;
+        }
+
+        public function setVideoApiOverlaySize(width:Number, height:Number):void {
+            var display:Object = _displays[_playList.current];
+           display.overlay.width = width;
+           display.overlay.height = height;
         }
 
 		public function set fullscreenManager(manager:FullscreenManager):void {
@@ -133,6 +155,7 @@ package org.flowplayer.view {
 			var disp:DisplayObject = _displays[clip];
             disp.width = clip.width;
 			disp.height = clip.height;
+
 			if (clip.accelerated && _fullscreenManaer.isFullscreen) {
 				log.debug("in hardware accelerated fullscreen, will not center the clip");
 				disp.x = 0;
@@ -141,6 +164,9 @@ package org.flowplayer.view {
 			}
 			
 			Arrange.center(disp, width, height);
+
+			//dispatch resized noticed for plugins to manage
+            clip.dispatchEvent(new ClipEvent(ClipEventType.CLIP_RESIZED));
 		}
 
 		public function getDisplayBounds():Rectangle {
@@ -189,9 +215,11 @@ package org.flowplayer.view {
 				disp.visible = true;
 				//disp.alpha = 0; // fix for #84
 				log.debug("starting fadeIn for " + disp);
+                _animationEngine.cancel(disp);
 				_animationEngine.animateProperty(disp, "alpha", 1, clipNow.fadeInSpeed);
 				Arrange.center(disp, width, height);
 			} else if (disp.visible) {
+                _animationEngine.cancel(disp);
 				_animationEngine.animateProperty(disp, "alpha", 0, clipNow.fadeOutSpeed, function():void { disp.visible = false; });
 				return;
 			}
@@ -285,7 +313,8 @@ package org.flowplayer.view {
                 return;
             }
 
-            if (_playList.previousClip && clip.type == ClipType.AUDIO) {
+			//only show the image playlist for mp3 clips with no display
+            if (_playList.previousClip && clip.type == ClipType.AUDIO && !clip.getContent()) {
 
                 // TODO: remove this playlist based cover image thing completely, just relay on coverImage property of audio clips
                 if (onAudioWithRelatedImage(clip)) {

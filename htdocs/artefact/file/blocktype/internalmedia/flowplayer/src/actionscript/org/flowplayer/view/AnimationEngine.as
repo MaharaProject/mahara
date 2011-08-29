@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -86,7 +85,7 @@ package org.flowplayer.view {
 		 * @see #animate()
 		 * @see PluginRegistry
 		 */
-		public function animate(disp:DisplayObject, props:Object, durationMillis:int = 400, endCallback:Function = null, easeFunc:Function = null):DisplayProperties {
+		public function animate(disp:DisplayObject, props:Object, durationMillis:int = 400, endCallback:Function = null, updateCallback:Function = null, easeFunc:Function = null):DisplayProperties {
 			var currentProps:DisplayProperties = _pluginRegistry.getPluginByDisplay(disp);
 			var isPlugin:Boolean = currentProps != null;
 			if (isPlugin) {
@@ -107,16 +106,16 @@ package org.flowplayer.view {
 				}
 				_pluginRegistry.updateDisplayProperties(newProps);
 			} else {
-				startTweens(disp, alpha(props), props.width, props.height, props.x, props.y, durationMillis, endCallback, easeFunc);
+				startTweens(disp, alpha(props), props.width, props.height, props.x, props.y, durationMillis, endCallback, updateCallback, easeFunc);
 			}
 			return newProps;
 		}
 
-		flow_internal function animateNonPanel(parent:DisplayObject, disp:DisplayObject, props:Object, durationMillis:int = 400, endCallback:Function = null):DisplayProperties {
+		flow_internal function animateNonPanel(parent:DisplayObject, disp:DisplayObject, props:Object, durationMillis:int = 400, endCallback:Function = null, updateCallback:Function = null):DisplayProperties {
 			log.debug("animateNonPanel", props);
 			var currentProps:DisplayProperties = _pluginRegistry.getPluginByDisplay(disp);
 			var newProps:DisplayProperties = props is DisplayProperties ? props as DisplayProperties : LengthMath.sum(currentProps, props, parent);
-			startTweens(disp, alpha(props), props.width, props.height, props.x, props.y, durationMillis, endCallback);
+			startTweens(disp, alpha(props), props.width, props.height, props.x, props.y, durationMillis, endCallback, updateCallback);
 			return newProps;
 		}
 		
@@ -134,31 +133,31 @@ package org.flowplayer.view {
          * @durationMillis the duration of the animation
          * @easeFunc the easing function to use, the default is mx.effects.easing.Quadratic.easeOut 
 		 */
-		public function animateProperty(view:DisplayObject, propertyName:String, target:Number, durationMillis:int = 500, callback:Function = null, easeFunc:Function = null):void {
+		public function animateProperty(view:DisplayObject, propertyName:String, target:Number, durationMillis:int = 500, completeCallback:Function = null, updateCallback:Function = null, easeFunc:Function = null):void {
 			var props:Object = new Object();
 			props[propertyName] = target;
-			animate(view, props, durationMillis, callback, easeFunc);
+			animate(view, props, durationMillis, completeCallback, updateCallback, easeFunc);
 		}
 
 		/**
 		 * Fades in a DisplayObject.
 		 */
-		public function fadeIn(view:DisplayObject, durationMillis:Number = 500, callback:Function = null, updatePanel:Boolean = true):Animation {
-			return animateAlpha(view, 1, durationMillis, callback, updatePanel);
+		public function fadeIn(view:DisplayObject, durationMillis:Number = 500, completeCallback:Function = null, updatePanel:Boolean = true):Animation {
+			return animateAlpha(view, 1, durationMillis, completeCallback, updatePanel);
 		}
 
 		/**
 		 * Fades a DisplayObject to a specified alpha value.
 		 */
-		public function fadeTo(view:DisplayObject, alpha:Number, durationMillis:Number = 500, callback:Function = null, updatePanel:Boolean = true):Animation {
-			return animateAlpha(view, alpha, durationMillis, callback, updatePanel);
+		public function fadeTo(view:DisplayObject, alpha:Number, durationMillis:Number = 500, completeCallback:Function = null, updatePanel:Boolean = true):Animation {
+			return animateAlpha(view, alpha, durationMillis, completeCallback, updatePanel);
 		}
 
 		/**
 		 * Fades out a DisplayObject.
 		 */
-		public function fadeOut(view:DisplayObject, durationMillis:Number = 500, callback:Function = null, updatePanel:Boolean = true):Animation {
-			return animateAlpha(view, 0, durationMillis, callback, updatePanel);
+		public function fadeOut(view:DisplayObject, durationMillis:Number = 500, completeCallback:Function = null, updatePanel:Boolean = true):Animation {
+			return animateAlpha(view, 0, durationMillis, completeCallback, updatePanel);
 		}
 
 		/**
@@ -167,24 +166,50 @@ package org.flowplayer.view {
 		 * @param currentAnimation if specified all other animations except the specified one will be canceled
 		 */
 		public function cancel(view:DisplayObject, currentAnimation:Animation = null):void {
-			log.debug("cancel() cancelling animation for " + view);
-			for (var viewObj:Object in _runningPlayablesByView) {
-                log.debug("cancel(), currently running animation for " + viewObj);
-				var viewWithRunningAnimation:DisplayObject = viewObj as DisplayObject;
-				if (viewWithRunningAnimation == view) {
-					var anim:Animation = _runningPlayablesByView[viewWithRunningAnimation] as Animation;
-					
-					if (anim && (currentAnimation && anim != currentAnimation || ! currentAnimation)) {
-						if (currentAnimation && currentAnimation.tweenProperty == anim.tweenProperty || ! currentAnimation) {
-							log.info("tween for property " + anim.tweenProperty + " was canceled on view " + view);
-							_canceledByPlayable[anim] = true;
-                            delete _runningPlayablesByView[view];
-							anim.stop();
-						}
-					}
-				}
-			}
+            log.debug("cancel() cancelling animation for " + view);
+            var action:Function = function(myAnim:Animation):void {
+                _canceledByPlayable[myAnim] = true;
+                delete _runningPlayablesByView[view];
+                myAnim.stop();
+                log.info("tween for property " + myAnim.tweenProperty + " was canceled on view " + view);
+            };
+            processAction(action, view, currentAnimation);
 		}
+
+
+        public function pause(view:DisplayObject, currentAnimation:Animation = null):void {
+            log.debug("pause() pausing animation for " + view);
+            var action:Function = function(myAnim:Animation):void {
+                myAnim.pause();
+                log.info("tween for property " + myAnim.tweenProperty + " was paused on view " + view);
+            };
+            processAction(action, view, currentAnimation);
+        }
+
+        public function resume(view:DisplayObject, currentAnimation:Animation = null):void {
+            log.debug("resume() resuming animation for " + view);
+            var action:Function = function(myAnim:Animation):void {
+                myAnim.resume();
+                log.info("tween for property " + myAnim.tweenProperty + " was resumed on view " + view);
+            };
+            processAction(action, view, currentAnimation);
+        }
+
+        private function processAction(action:Function, view:DisplayObject, currentAnimation:Animation = null):void {
+            for (var viewObj:Object in _runningPlayablesByView) {
+                log.debug("cancel(), currently running animation for " + viewObj);
+                var viewWithRunningAnimation:DisplayObject = viewObj as DisplayObject;
+                if (viewWithRunningAnimation == view) {
+                    var anim:Animation = _runningPlayablesByView[viewWithRunningAnimation] as Animation;
+
+                    if (anim && (currentAnimation && anim != currentAnimation || ! currentAnimation)) {
+                        if (currentAnimation && currentAnimation.tweenProperty == anim.tweenProperty || ! currentAnimation) {
+                            action(anim);
+                        }
+                    }
+                }
+            }
+        }
 
         public function hasAnimationRunning(view:DisplayObject):Boolean {
             for (var viewObj:Object in _runningPlayablesByView) {
@@ -203,12 +228,12 @@ package org.flowplayer.view {
             }
         }
 
-		private function animateAlpha(view:DisplayObject, target:Number, durationMillis:Number = 500, callback:Function = null, updatePanel:Boolean = true):Animation {
+		private function animateAlpha(view:DisplayObject, target:Number, durationMillis:Number = 500, completeCallback:Function = null, updatePanel:Boolean = true):Animation {
 			Assert.notNull(view, "animateAlpha: view cannot be null");
 			var playable:Animation = createTween("alpha", view, target, durationMillis);
 			if (! playable) {
-				if (callback != null) {
-					callback();
+				if (completeCallback != null) {
+					completeCallback();
 				}
 				return null;
 			}
@@ -237,7 +262,7 @@ package org.flowplayer.view {
 				log.debug("animateAlpha, view is not added/removed from panel");
 			}
 			 
-			var tween:Animation = start(view, playable, callback) as Animation;
+			var tween:Animation = start(view, playable, completeCallback) as Animation;
 			if (tween) {
 				_pluginRegistry.updateDisplayPropertiesForDisplay(view, { alpha: target, display: (target == 0 ? "none" : "block") });
 			}
@@ -260,7 +285,7 @@ package org.flowplayer.view {
 			}
 		}
 		
-		private function startTweens(view:DisplayObject, alpha: Number, width:Number, height:Number, x:Number, y:Number, durationMillis:int, callback:Function, easeFunc:Function = null):Array {
+		private function startTweens(view:DisplayObject, alpha: Number, width:Number, height:Number, x:Number, y:Number, durationMillis:int, completeCallback:Function, updateCallback:Function, easeFunc:Function = null):Array {
 			var tweens:Array = new Array();
 			
 			var alphaTween:Animation = createTween("alpha", view, alpha, durationMillis);
@@ -275,13 +300,13 @@ package org.flowplayer.view {
 			addTween(tweens, createTween("y", view, y, durationMillis, easeFunc));
 			if (tweens.length == 0) {
 				// call the callback also when not animating anything
-				if (callback != null) {
-					callback();
+				if (completeCallback != null) {
+					completeCallback();
 				}
 				return tweens;
 			}
 			var playable:IPlayable = tweens.length > 1 ? new PlayableGroup(tweens) : tweens[0];
-			start(view, playable, callback);
+			start(view, playable, completeCallback, updateCallback);
 			return tweens;
 		}
 
@@ -291,7 +316,7 @@ package org.flowplayer.view {
 			tweens.push(tween);
 		}
 
-		private function start(view:DisplayObject, playable:IPlayable, callback:Function = null):IPlayable {
+		private function start(view:DisplayObject, playable:IPlayable, completeCallback:Function = null, updateCallback:Function = null):IPlayable {
 			if (playable == null) return null;
             logRunningAnimations("start", view);
             
@@ -300,8 +325,14 @@ package org.flowplayer.view {
 
 			playable.addEventListener(GoEvent.COMPLETE, 
 				function(event:GoEvent):void {
-					onComplete(view, playable, callback); 
+					onComplete(view, playable, completeCallback);
 			});
+            if (updateCallback != null) {
+                playable.addEventListener(GoEvent.UPDATE,
+                    function(event:GoEvent):void {
+                        updateCallback(view);
+                });
+            }
 
 			playable.start();
 			return playable;

@@ -149,6 +149,10 @@ package org.flowplayer.model {
             setListener(ClipEventType.CLIP_ADD, listener, null, false, addToFront);
         }
 
+        public function onResized(listener:Function, addToFront:Boolean = false):void {
+            setListener(ClipEventType.CLIP_RESIZED, listener, null, false, addToFront);
+        }
+
 		override protected function get cancellableEvents():Dictionary {
 			return ClipEventType.cancellable;
 		}

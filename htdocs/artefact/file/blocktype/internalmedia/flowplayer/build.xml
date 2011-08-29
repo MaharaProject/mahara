@@ -4,11 +4,11 @@
 
     <property name="version-1" value="3"/>
     <property name="version-2" value="2"/>
-    <property name="version-3" value="4"/>
+    <property name="version-3" value="7"/>
     <property name="version-status" value=""/>
-    <property name="controls-version-info" value="3.2.2"/>
-    <property name="audio-version-info" value="3.2.1"/>
-    <property name="flowplayer-js-version-info" value="3.2.4"/>
+    <property name="controls-version-info" value="3.2.5"/>
+    <property name="audio-version-info" value="3.2.2"/>
+    <property name="flowplayer-js-version-info" value="3.2.6"/>
     <property name="source-dist-root-folder" value="flowplayer"/>
 
     <property name="version-status-quoted" value="&quot;&#39;${version-status}&#39;&quot;"/>
@@ -48,7 +48,7 @@
 
     <property name="libs-path" value="${flex3libsdir} ${lib-dir}/thunderbolt ${plugin-libs} ${plugin-swc}"/>
     <property name="classes-for-lib"
-              value="org.flowplayer.view.Flowplayer org.flowplayer.util.PropertyBinder org.flowplayer.util.Arrange org.flowplayer.util.Assert org.flowplayer.model.PluginEvent org.flowplayer.util.TextUtil org.flowplayer.view.AbstractSprite org.flowplayer.view.AnimationEngine org.flowplayer.controller.NetStreamControllingStreamProvider"/>
+              value="org.flowplayer.view.Flowplayer org.flowplayer.util.PropertyBinder org.flowplayer.util.Arrange org.flowplayer.util.Assert org.flowplayer.model.PluginEvent org.flowplayer.util.TextUtil org.flowplayer.view.AbstractSprite org.flowplayer.view.AnimationEngine org.flowplayer.controller.NetStreamControllingStreamProvider org.flowplayer.controller.NetStreamClient org.flowplayer.controller.NetConnectionClient"/>
     <property name="doc-classes"
               value="${classes-for-lib} org.flowplayer.view.FlowplayerBase org.flowplayer.view.StyleableSprite org.flowplayer.model.Plugin org.flowplayer.model.PluginModel org.flowplayer.model.DisplayPluginModel org.flowplayer.model.ProviderModel org.flowplayer.model.Cloneable org.flowplayer.model.DisplayProperties org.flowplayer.model.Identifiable org.flowplayer.model.Callable org.flowplayer.model.Clip org.flowplayer.model.Playlist org.flowplayer.model.AbstractEvent org.flowplayer.model.ClipEvent org.flowplayer.model.PlayerEvent org.flowplayer.model.PluginEvent org.flowplayer.model.ClipEventDispatcher org.flowplayer.model.ClipEventSupport org.flowplayer.model.EventType org.flowplayer.model.ClipEventType org.flowplayer.model.PlayerEventType org.flowplayer.model.PluginEventType org.flowplayer.view.Styleable org.flowplayer.controller.StreamProvider org.flowplayer.model.PluginFactory org.flowplayer.controller.ClipURLResolver org.flowplayer.controller.ConnectionProvider org.flowplayer.util.Log"/>
 
@@ -192,7 +192,8 @@
                 <arg line="-define+=CONFIG::audioVersion,${audio-version-info-quoted}"/>
                 <arg line="-define+=CONFIG::skin,true"/>
                 <arg line="-define+=CONFIG::hasSlowMotion,'${has-slowmotion-buttons}'"/>
-				<arg line="-define+=CONFIG::debug,'@{debug}'"/>
+                <arg line="-define+=CONFIG::debug,'@{debug}'"/>
+                <arg line="-define+=CONFIG::enableByteRange,'false'"/>
                 <arg line="-keep-as3-metadata=Value,External"/>
                 <arg line="-source-path ${src-as} ${src-as-commercial} ${classpath} ${plugin-libs}"/>
                 <arg line="-static-link-runtime-shared-libraries=true" />
@@ -225,7 +226,6 @@
     <target name="compile-lib">
         <exec executable="${compc_bin}" failonerror="true">
             <arg line="-source-path ${src-as} ${src-as-commercial} ${classpath}"/>
-            <!-- arg line="-include-classes ${classes-for-lib}" -->
             <arg line="-compute-digest=false"/>
             <arg line="-output '${build-dir}/${library-binary}'"/>
             <arg line="-namespace http://flowplayer.org/flowplayer/2008 ${basedir}/manifest.xml -include-namespaces http://flowplayer.org/flowplayer/2008"/>
@@ -359,16 +359,16 @@
     </target>
 
     <target name="doc" description="generates the apidocs">
-        <exec executable="${asdoc_bin}" failonerror="true">
-            <arg line="-source-path ${src-as} ${classpath}"/>
-            <arg line="-library-path ${libs-path} ${src-flash}"/>
-            <arg line="-doc-classes ${doc-classes}"/>
-            <arg line="-exclude-dependencies"/>
-            <arg line="-output ${apidoc-dir}"/>
-            <arg line="-main-title 'FlowPlayer ${version-1}.${version-2}.${version-3} API documentation'"/>
-            <arg line="-window-title 'FlowPlayer ${version-1}.${version-2}.${version-3} API documentation'"/>
-            <arg line="-define+=CONFIG::debug,'false'"/>
-        </exec>
+        <!--<exec executable="${asdoc_bin}" failonerror="true">-->
+            <!--<arg line="-source-path ${src-as} ${classpath}"/>-->
+            <!--<arg line="-library-path ${libs-path} ${src-flash}"/>-->
+            <!--<arg line="-doc-classes ${doc-classes}"/>-->
+            <!--<arg line="-exclude-dependencies"/>-->
+            <!--<arg line="-output ${apidoc-dir}"/>-->
+            <!--<arg line="-main-title 'FlowPlayer ${version-1}.${version-2}.${version-3} API documentation'"/>-->
+            <!--<arg line="-window-title 'FlowPlayer ${version-1}.${version-2}.${version-3} API documentation'"/>-->
+            <!--<arg line="-define+=CONFIG::debug,'false'"/>-->
+        <!--</exec>-->
     </target>
 
     <target name="zip" description="creates a distribution zip package" depends="build">

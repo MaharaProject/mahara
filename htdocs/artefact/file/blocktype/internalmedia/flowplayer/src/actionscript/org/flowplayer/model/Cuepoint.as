@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -20,10 +19,13 @@
 package org.flowplayer.model {
 import flash.utils.Dictionary;
 
-	/**
+    import org.flowplayer.util.Log;
+
+    /**
 	 * @author api
 	 */
 	public class Cuepoint implements Cloneable {
+        protected var log:Log = new Log(this);
 		private var _time:int;
         private var _callbackId:String;
         private var _lastFireTime:int = -1;
@@ -79,7 +81,8 @@ import flash.utils.Dictionary;
 		
 		protected function onClone(clone:Cuepoint):void {
 		}
-		
+
+        [Value]
 		public function get lastFireTime():int {
 			return _lastFireTime;
 		}

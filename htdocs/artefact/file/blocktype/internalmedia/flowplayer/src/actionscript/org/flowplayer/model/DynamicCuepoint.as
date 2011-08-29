@@ -31,8 +31,12 @@ package org.flowplayer.model {
 		override protected function onClone(clone:Cuepoint):void {
 			// copy dynamic properties
 			for (var prop:String in this) {
-				clone[prop] = this[prop];
-			}
+                try {
+                    clone[prop] = this[prop];
+                } catch (e:Error) {
+                    log.error("Error when cloning cuepoint " + e);
+                }
+            }
 		}
 	}
 }

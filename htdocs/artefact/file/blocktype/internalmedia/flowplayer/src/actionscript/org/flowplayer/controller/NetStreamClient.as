@@ -66,9 +66,9 @@ import org.flowplayer.model.ClipEventType;
             }
 
             _previousUrl = _clip.url;
-            log.info("metaData parsed and injected to the clip");
             _clip.dispatch(ClipEventType.METADATA);
-		}
+            log.info("metaData parsed and injected to the clip");
+        }
 
         private function isNewFile():Boolean {
             if (! _previousUrl) return true;

@@ -89,11 +89,9 @@ package org.flowplayer.config {
             	parseClipProperties(item.fp::clip, clip);
             }
             
-            //add custom clip properties from default rss items with no namespace
+            //add custom clip properties from rss elements
             for each (var childItem:XML in item.children()) {
-            	if (childItem.namespace().toString() == "") {
-            		addClipCustomProperty(clip, childItem, childItem.text().toString());
-            	}
+                addClipCustomProperty(clip, childItem, parseCustomProperty(childItem));
             }
 
             log.debug("created clip " + clip);
@@ -109,7 +107,7 @@ package org.flowplayer.config {
         }
 
         private function parseClipProperties(elem:XMLList, clip:Clip):void {
-            var binder:PropertyBinder = new PropertyBinder(clip);
+            var binder:PropertyBinder = new PropertyBinder(clip, "customProperties");
             for each (var attr:XML in elem.attributes()) {
                 log.debug("parseClipProperties(), initializing clip property '" + attr.name() + "' to value " + attr.toString());
                 binder.copyProperty(attr.name().toString(), attr.toString(), true);
@@ -172,12 +170,14 @@ package org.flowplayer.config {
 		        	clipAdded = true;
 		        }
              } else {
-             	//there are no default items obtain the first content item
-             	 var noDefaultItem:XML = XMLList(group.ym::content)[0];
-             	 if (parseMediaItem(noDefaultItem, clip)) {
-		         	log.debug("adding item");
-		         	clipAdded = true;
-		         }
+		//there are no default items obtain the first content that is streamable
+                for each (var itm:XML in group.ym::content) {
+                  if (parseMediaItem(itm, clip)) {
+                    trace("adding item");
+                    clipAdded = true;
+                    break;
+                  }
+                }
              }
              
              //add bitrate items

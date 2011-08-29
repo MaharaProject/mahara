@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -17,7 +16,9 @@
  *    along with Flowplayer.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.flowplayer.view {
-	import org.flowplayer.config.Config;
+    import flash.external.ExternalInterface;
+
+    import org.flowplayer.config.Config;
 	import org.flowplayer.config.ConfigParser;
 	import org.flowplayer.config.ExternalInterfaceHelper;
 	import org.flowplayer.config.VersionInfo;
@@ -87,7 +88,6 @@ import org.flowplayer.model.DisplayPluginModel;
 		private var _pluginLoader:PluginLoader;
 		private var _error:TextField;
 		private var _pluginsInitialized:Number = 0;
-		private var _numLoadablePlugins:int = -1;
 		private var _enteringFullscreen:Boolean;
 		private var _copyrightNotice:TextField;
         private var _playlistLoader:ResourceLoader;
@@ -447,7 +447,7 @@ import org.flowplayer.model.DisplayPluginModel;
 				Logger.error(message);
 			}
 			showError(message);
-			if (throwError && Capabilities.isDebugger) {
+			if (throwError && Capabilities.isDebugger && _config.showErrors) {
 				throw new Error(message);
 			}
 		}
@@ -763,8 +763,13 @@ import org.flowplayer.model.DisplayPluginModel;
 		private function addPlayListListeners():void {
 			var playlist:Playlist = _config.getPlaylist();
 			playlist.onError(onClipError);
+            playlist.onBegin(onBegin);
 		}
-		
+
+        private function onBegin(event:ClipEvent):void {
+            this.buttonMode = Boolean(Clip(event.target).linkUrl);
+        }
+
 		private function onClipError(event:ClipEvent):void {
             if (event.isDefaultPrevented()) return;
 			doHandleError(event.error.code + ", " + event.error.message + ", " + event.info2 + ", clip: '" + Clip(event.target) + "'");
@@ -785,13 +790,6 @@ import org.flowplayer.model.DisplayPluginModel;
         private function onSingleClick(event:MouseEvent):void {
             if (isParent(DisplayObject(event.target), _screen)) {
                 log.debug("screen clicked");
-                var clip:Clip = _flowplayer.playlist.current;
-                if (clip.linkUrl) {
-                    log.debug("opening linked page");
-                    _flowplayer.pause();
-                    navigateToURL(new URLRequest(clip.linkUrl), clip.linkWindow);
-                    return;
-                }
                 _flowplayer.toggle();
             }
         }
@@ -804,14 +802,20 @@ import org.flowplayer.model.DisplayPluginModel;
             if (_playButtonOverlay && isParent(DisplayObject(event.target), _playButtonOverlay.getDisplayObject())) {
                 _flowplayer.toggle();
                 return;
-            }
-
-            if (_clickCount == 0) {
-                _clickEvent = event;
+            } else {
+                // if using linkUrl, no doubleclick to fullscreen
+                var clip:Clip = _flowplayer.playlist.current;
+                if (clip.linkUrl) {
+                    log.debug("opening linked page " + clip.linkUrl);
+                    _flowplayer.pause();
+                    URLUtil.openPage(clip.linkUrl, clip.linkWindow);
+                    return;
+                }
             }
             if (++_clickCount == 2) {
                 onDoubleClick(event);
             } else {
+                _clickEvent = event;
                 _clickTimer.start();
             }
         }
@@ -871,14 +875,6 @@ import org.flowplayer.model.DisplayPluginModel;
                 new ClipEventType(callbacks[i], true);
             }
         }
-//
-//        private function get stageWidth():Number {
-//            return Math.max(Arrange.parentWidth, Preloader.stageWidth);
-//        }
-//
-//        private function get stageHeight():Number {
-//            return Math.max(Arrange.parentHeight, Preloader.stageHeight);
-//        }
 
         private function callAndHandleError(func:Function, error:PlayerError):void {
             try {

@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -86,6 +85,7 @@ import org.flowplayer.flow_internal;
         private var _startDispatched:Boolean;
         private var _currentTime:Number = 0;
         private var _endLimit:Number = 0.5;
+        private var _encoding:Boolean = false;
 
         public function Clip() {
             _childPlaylist = new TimedPlaylist();
@@ -385,9 +385,12 @@ import org.flowplayer.flow_internal;
             _urlsByResolver = [];
         }
 
+		/*
+		 * If the encoding is set property, uri encode for ut8 urls
+		 */
 		[Value]
 		public function get completeUrl():String {
-			return URLUtil.completeURL(_baseUrl, url);
+			return urlEncoding ? encodeURI(URLUtil.completeURL(_baseUrl, url)) : URLUtil.completeURL(_baseUrl, url);
 		}
 
 		public function get type():ClipType {
@@ -546,6 +549,7 @@ import org.flowplayer.flow_internal;
 
 		[Value(name="scaling")]
 		public function get scalingStr():String {
+            if (! _scaling) return MediaSize.FILLED_TO_AVAILABLE_SPACE.value;
 			return this._scaling.value;
 		}
 
@@ -980,6 +984,15 @@ import org.flowplayer.flow_internal;
 
         public function set endLimit(value:Number):void {
             _endLimit = value;
+        }
+
+        public function set urlEncoding(value:Boolean):void {
+		_encoding = value;
+        }
+
+        [Value]
+        public function get urlEncoding():Boolean {
+		return _encoding;
         }
     }
 }
