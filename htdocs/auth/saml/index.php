@@ -191,6 +191,14 @@ if ($can_login) {
         $wantsurl = $SESSION->get('wantsurl');
         $SESSION->set('wantsurl', null);
     }
+    // sanity check the redirect - we don't want to loop
+    if (preg_match('/\/auth\/saml\//', $wantsurl)) {
+        $wantsurl = $CFG->wwwroot;
+    }
+    // must be within this domain
+    if (!preg_match('/'.$_SERVER['HTTP_HOST'].'/', $wantsurl)) {
+        $wantsurl = $CFG->wwwroot;
+    }
     @session_write_close();
     redirect($wantsurl);
 }
