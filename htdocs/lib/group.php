@@ -131,11 +131,11 @@ function group_change_role($groupid, $userid, $role) {
 /**
  * Returns whether a user is allowed to edit views in a given group
  *
- * @param int $groupid The ID of the group
+ * @param mixed $group The ID of the group
  * @param int $userid The ID of the user
  * @returns boolean
  */
-function group_user_can_edit_views($groupid, $userid=null) {
+function group_user_can_edit_views($group, $userid=null) {
     // root user can always do whatever it wants
     $sysuser = get_record('usr', 'username', 'root');
     if ($sysuser->id == $userid) {
@@ -146,19 +146,36 @@ function group_user_can_edit_views($groupid, $userid=null) {
         return false;
     }
 
-    $groupid = group_param_groupid($groupid);
+    $groupid = is_numeric($group) ? group_param_groupid($group) : intval($group->id);
     $userid  = group_param_userid($userid);
 
-    return get_field_sql('
-        SELECT
-            r.edit_views
-        FROM
-            {group_member} m
-            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
-            INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND m.role = r.role)
-        WHERE
-            m.group = ?
-            AND m.member = ?', array($groupid, $userid));
+    if ($role = group_user_access($groupid, $userid)) {
+        return group_role_can_edit_views($group, $role);
+    }
+    return false;
+}
+
+function group_role_can_edit_views($group, $role) {
+
+    if ($role == 'admin') {
+        return true;
+    }
+
+    if (is_numeric($group)) {
+        $editroles = get_field('group', 'editroles', 'id', $group);
+    }
+    else if (!isset($group->editroles)) {
+        $editroles = get_field('group', 'editroles', 'id', $group->id);
+    }
+    else {
+        $editroles = $group->editroles;
+    }
+
+    if ($role == 'member') {
+        return $editroles == 'all';
+    }
+
+    return $editroles != 'admin';
 }
 
 /**
@@ -304,6 +321,13 @@ function group_create($data) {
         $data['submittableto'] = $data['grouptype'] != 'standard';
     }
 
+    if (!isset($data['editroles'])) {
+        $data['editroles'] = $data['grouptype'] == 'standard' ? 'all' : 'notmember';
+    }
+    else if (!in_array($data['editroles'], array_keys(group_get_editroles_options()))) {
+        throw new InvalidArgumentException("group_create: invalid option for page editroles setting");
+    }
+
     db_begin();
 
     $id = insert_record(
@@ -323,6 +347,7 @@ function group_create($data) {
             'shortname'      => $data['shortname'],
             'request'        => isset($data['request']) ? intval($data['request']) : 0,
             'submittableto'  => intval($data['submittableto']),
+            'editroles'      => $data['editroles'],
         ),
         'id',
         true
@@ -429,7 +454,7 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -1100,7 +1125,7 @@ function group_get_admin_ids($groupid) {
  * @return array
  */
 function group_get_role_info($groupid) {
-    $roles = get_records_sql_assoc('SELECT "role", edit_views, see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
+    $roles = get_records_sql_assoc('SELECT "role", see_submitted_views, gr.grouptype FROM {grouptype_roles} gr
         INNER JOIN {group} g ON g.grouptype = gr.grouptype
         WHERE g.id = ?', array($groupid));
     foreach ($roles as $role) {
@@ -1111,9 +1136,22 @@ function group_get_role_info($groupid) {
 }
 
 function group_get_default_artefact_permissions($groupid) {
-    $type = get_field('group', 'grouptype', 'id', $groupid);
-    safe_require('grouptype', $type);
-    return call_static_method('GroupType' . $type, 'default_artefact_rolepermissions');
+    $permissions = array();
+    $records = get_records_sql_array('
+        SELECT g.editroles, r.role
+        FROM {grouptype_roles} r, {group} g
+        WHERE g.grouptype = r.grouptype AND g.id = ?',
+        array($groupid)
+    );
+    foreach ($records as $r) {
+        $canedit = $r->role == 'admin' || $r->editroles == 'all' || ($r->role != 'member' && $r->editroles != 'admin');
+        $permissions[$r->role] = (object) array(
+            'view'      => true,
+            'edit'      => $canedit,
+            'republish' => $canedit,
+        );
+    }
+    return $permissions;
 }
 
 /**
@@ -1339,6 +1377,14 @@ function group_get_grouptype_options($currentgrouptype=null) {
     return $groupoptions;
 }
 
+function group_get_editroles_options() {
+    return array(
+        'all'       => get_string('allgroupmembers', 'group'),
+        'notmember' => get_string('allexceptmember', 'group'),
+        'admin'     => get_string('groupadmins', 'group'),
+    );
+}
+
 /**
  * Returns a datastructure describing the tabs that appear on a group page
  *
@@ -1381,7 +1427,7 @@ function group_get_menu_tabs() {
         'weight' => 50,
     );
 
-    if (group_user_can_edit_views($group->id)) {
+    if (group_user_can_edit_views($group)) {
         $menu['share'] = array(
             'path' => 'groups/share',
             'url' => 'group/shareviews.php?group='.$group->id,

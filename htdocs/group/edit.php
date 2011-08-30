@@ -65,6 +65,7 @@ else {
         'usersautoadded' => 0,
         'viewnotify'     => 1,
         'submittableto'  => 0,
+        'editroles'      => 'all',
     );
 }
 
@@ -176,12 +177,22 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
     );
 }
 
+$elements['pages'] = array(
+    'type'         => 'html',
+    'title'        => get_string('views'),
+    'value'        => '',
+);
+
+$elements['editroles'] = array(
+    'type'         => 'select',
+    'options'      => group_get_editroles_options(),
+    'title'        => get_string('editroles', 'group'),
+    'description'  => get_string('editrolesdescription', 'group'),
+    'defaultvalue' => $group_data->editroles,
+    'help'         => true,
+);
+
 if ($cancreatecontrolled) {
-    $elements['pages'] = array(
-        'type'         => 'html',
-        'title'        => get_string('views'),
-        'value'        => '',
-    );
     $elements['submittableto'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('allowssubmissions', 'group'),
@@ -296,6 +307,7 @@ function editgroup_submit(Pieform $form, $values) {
         'public'         => intval($values['public']),
         'viewnotify'     => intval($values['viewnotify']),
         'submittableto'  => intval($values['submittableto']),
+        'editroles'      => $values['editroles'],
     );
 
     db_begin();

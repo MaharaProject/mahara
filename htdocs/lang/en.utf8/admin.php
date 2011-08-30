@@ -464,6 +464,7 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 $string['uploadgroupcsverrorgroupnamealreadyexists'] = 'Error on line %s of your file: The groupname "%s" already exists';
 $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid';
 $string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid';
+$string['uploadgroupcsverrorinvalideditroles'] = 'Error on line %s of your file: The value for editroles "%s" is invalid';
 $string['uploadgroupcsverrorshortnamealreadytaken'] = 'Error on line %s of your file: The shortname "%s" is already taken';
 $string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header';
 $string['uploadgroupcsverroropencontrolled'] = 'Line %s: Groups cannot have both open and controlled membership';
@@ -482,6 +483,8 @@ $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upl
 
 <p>Your CSV file may include any other fields as you require. The full list of fields is:</p>
 
+%s';
+$string['uploadgroupcsveditrolesdescription'] = '<p>The editroles field can have any of the following: %s</p>
 %s';
 $string['uploadgroupmemberscsverrorduplicateusername'] = 'Error on line %s of your file: The shortname "%s" and username "%s" have already been specified in this file';
 $string['uploadgroupmemberscsverrorinvalidrole'] = 'Error on line %s of your file: The role "%s" is invalid for the specified group';

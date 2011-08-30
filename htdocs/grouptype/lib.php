@@ -61,13 +61,11 @@ abstract class GroupType {
         if (!in_array('admin', $roles)) {
             $roles[] = 'admin';
         }
-        $editingroles = $this->get_view_editing_roles();
         $assessingroles = $this->get_view_assessing_roles();
         foreach ($roles as $r) {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
                 'role' => $r,
-                'edit_views' => (int)in_array($r, $editingroles),
                 'see_submitted_views' => (int)in_array($r, $assessingroles),
             ));
         }
@@ -86,8 +84,6 @@ abstract class GroupType {
      */
     public static abstract function get_roles();
 
-    public static abstract function get_view_editing_roles();
-
     public static abstract function get_view_moderating_roles();
 
     public static abstract function get_view_assessing_roles();
@@ -95,6 +91,4 @@ abstract class GroupType {
     public static function get_group_artefact_plugins() {
         return array('file');
     }
-
-    public static abstract function default_artefact_rolepermissions();
 }

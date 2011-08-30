@@ -47,10 +47,6 @@ class GroupTypeStandard extends GroupType {
         return array('member', 'admin');
     }
 
-    public static function get_view_editing_roles() {
-        return array('member', 'admin');
-    }
-
     public static function get_view_moderating_roles() {
         return array('admin');
     }
@@ -62,12 +58,4 @@ class GroupTypeStandard extends GroupType {
     public static function default_role() {
         return 'member';
     }
-
-    public static function default_artefact_rolepermissions() {
-        return array(
-            'member' => (object) array('view' => true, 'edit' => true, 'republish' => true),
-            'admin'  => (object) array('view' => true, 'edit' => true, 'republish' => true),
-        );
-    }
-
 }

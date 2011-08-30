@@ -958,12 +958,14 @@ class User {
         }
         $group = $v->get('group');
         if ($group) {
-            $editroles = $v->get('editingroles');
             $this->reset_grouproles();
             if ($v->get('type') == 'grouphomepage' && $this->grouproles[$group] != 'admin') {
                 return false;
             }
-            return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $editroles);
+            if (!isset($this->grouproles[$group])) {
+                return false;
+            }
+            return group_role_can_edit_views($group, $this->grouproles[$group]);
         }
         return false;
     }

@@ -2675,6 +2675,24 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Any group can potentially take submissions, so make sure someone can assess them
         set_field('grouptype_roles', 'see_submitted_views', 1, 'role', 'admin');
+
+        // Move group view editing permission from grouptype_roles to the group table
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('editroles');
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('all', 'notmember', 'admin'), 'all'
+        );
+        add_field($table, $field);
+        execute_sql("
+            UPDATE {group} SET editroles = 'notmember' WHERE grouptype IN (
+                SELECT grouptype FROM {grouptype_roles} WHERE role = 'member' AND edit_views = 0
+            )"
+        );
+
+        $table = new XMLDBTable('grouptype_roles');
+        $field = new XMLDBField('edit_views');
+        drop_field($table, $field);
     }
 
     return $status;
