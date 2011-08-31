@@ -1056,6 +1056,8 @@ function param_integer($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
+    $value = trim($value);
+
     if ($defaultused) {
         return $value;
     }
@@ -1087,11 +1089,13 @@ function param_signed_integer($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
+    $value = trim($value);
+
     if ($defaultused) {
         return $value;
     }
 
-    if (preg_match('#[+-]?[0-9]+#', $value)) {
+    if (preg_match('/^[+-]?[0-9]+$/', $value)) {
         return (int)$value;
     }
     else if ($value == '' && isset($args[1])) {
@@ -1119,6 +1123,8 @@ function param_alpha($name) {
     $args = func_get_args();
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    $value = trim($value);
 
     if ($defaultused) {
         return $value;
@@ -1150,6 +1156,8 @@ function param_alphanum($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
+    $value = trim($value);
+
     if ($defaultused) {
         return $value;
     }
@@ -1179,6 +1187,8 @@ function param_alphanumext($name) {
     $args = func_get_args();
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    $value = trim($value);
 
     if ($defaultused) {
         return $value;
@@ -1211,6 +1221,8 @@ function param_integer_list($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
+    $value = trim($value);
+
     if ($defaultused) {
         return $value;
     }
@@ -1219,7 +1231,7 @@ function param_integer_list($name) {
         return array();
     }
 
-    if (preg_match('/^(\d+(,\d+)*)$/',$value)) {
+    if (preg_match('/^(\d+(\s*,\s*\d+)*)$/',$value)) {
         return array_map('intval', explode(',', $value));
     }
 
@@ -1237,6 +1249,8 @@ function param_integer_list($name) {
 function param_boolean($name) {
     
     list ($value) = _param_retrieve($name, false);
+
+    $value = trim($value);
 
     if (empty($value) || $value == 'off' || $value == 'no' || $value == 'false') {
         return false;
@@ -1260,6 +1274,8 @@ function param_imagesize($name) {
     $args = func_get_args();
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    $value = trim($value);
 
     if ($defaultused) {
         return $value;
