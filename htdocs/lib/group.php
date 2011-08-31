@@ -567,6 +567,38 @@ function group_update($new, $create=false) {
     return $diff;
 }
 
+/**
+ * Fetch group records from the db and convert them to a format suitable
+ * for passing into group_update().
+ *
+ * @param array $ids List of group ids
+ *
+ * @return array of stdclass objects
+ */
+function group_get_groups_for_editing($ids=null) {
+    if (empty($ids)) {
+        return array();
+    }
+
+    $ids = array_map('intval', $ids);
+    $groups = get_records_select_array(
+        'group',
+        'id IN (' . join(',', array_fill(0, count($ids), '?')) . ') AND deleted = 0',
+        $ids
+    );
+
+    if (!$groups) {
+        return array();
+    }
+
+    foreach ($groups as &$g) {
+        $g->open       = (int) ($g->jointype == 'open');
+        $g->controlled = (int) ($g->jointype == 'controlled');
+        unset($g->jointype);
+    }
+
+    return $groups;
+}
 
 /**
  * Deletes a group.

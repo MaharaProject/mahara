@@ -35,17 +35,18 @@ if ($id = param_integer('id', null)) {
     define('TITLE', get_string('editgroup', 'group'));
     define('GROUP', $id);
 
-    $group_data = get_record_sql("
-        SELECT g.*
-        FROM {group} g INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
-        WHERE g.id = ? AND g.deleted = 0",
-        array($USER->get('id'), $id)
-    );
-
-    if (!$group_data) {
+    if (!group_user_access($id)) {
         $SESSION->add_error_msg(get_string('canteditdontown', 'group'));
         redirect('/group/mygroups.php');
     }
+
+    $group_data = group_get_groups_for_editing(array($id));
+
+    if (count($group_data) != 1) {
+        throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
+    }
+
+    $group_data = $group_data[0];
 }
 else {
     define('TITLE', get_string('creategroup', 'group'));
@@ -59,7 +60,8 @@ else {
         'name'           => null,
         'description'    => null,
         'grouptype'      => 'standard',
-        'jointype'       => 'open',
+        'open'           => 1,
+        'controlled'     => 0,
         'category'       => 0,
         'public'         => 0,
         'usersautoadded' => 0,
@@ -118,30 +120,30 @@ $elements['open'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('Open', 'group'),
     'description'  => get_string('opendescription', 'group'),
-    'defaultvalue' => $group_data->jointype == 'open',
-    'disabled'     => !$cancreatecontrolled && $group_data->jointype == 'controlled',
+    'defaultvalue' => $group_data->open,
+    'disabled'     => !$cancreatecontrolled && $group_data->controlled,
 );
-if ($cancreatecontrolled || $group_data->jointype == 'controlled') {
+if ($cancreatecontrolled || $group_data->controlled) {
     $elements['controlled'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('Controlled', 'group'),
         'description'  => get_string('controlleddescription', 'group'),
-        'defaultvalue' => $group_data->jointype == 'controlled',
+        'defaultvalue' => $group_data->controlled,
         'disabled'     => !$cancreatecontrolled,
     );
 }
 else {
     $form['elements']['controlled'] = array(
         'type'         => 'hidden',
-        'value'        => $group_data->jointype == 'controlled',
+        'value'        => $group_data->controlled,
     );
 }
 $elements['request'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('request', 'group'),
     'description'  => get_string('requestdescription', 'group'),
-    'defaultvalue' => $group_data->jointype != 'open' && $group_data->request,
-    'disabled'     => $group_data->jointype == 'open',
+    'defaultvalue' => !$group_data->open && $group_data->request,
+    'disabled'     => $group_data->open,
 );
 
 // The grouptype determines the allowed roles
