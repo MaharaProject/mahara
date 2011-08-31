@@ -378,6 +378,9 @@ label {
 .pieform th label {
 	font-weight: bold;
 }
+.pieform .sectioned th label {
+	font-weight: normal;
+}
 .pieform tr.checkbox label {
 	white-space: nowrap;
 }

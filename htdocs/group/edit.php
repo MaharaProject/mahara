@@ -90,6 +90,7 @@ $form = array(
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => false,
+            'class'        => 'sectioned',
             'legend'       => get_string('settings'),
             'elements'     => array(),
         ),
@@ -101,6 +102,12 @@ $form = array(
 );
 
 $elements = array();
+
+$elements['membership'] = array(
+    'type'         => 'html',
+    'title'        => get_string('Membership', 'group'),
+    'value'        => '',
+);
 
 $cancreatecontrolled = $USER->get('admin') || $USER->get('staff')
     || $USER->is_institutional_admin() || $USER->is_institutional_staff();
@@ -168,6 +175,28 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
     );
 }
 
+$elements['general'] = array(
+    'type'         => 'html',
+    'title'        => get_string('general'),
+    'value'        => '',
+);
+
+$publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
+
+if (!$id && !param_variable('editgroup_submit', null)) {
+    // If 'public=0' param is passed on first page load, hide the public checkbox.
+    $publicparam = param_integer('public', null);
+}
+
+$elements['public'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('publiclyviewablegroup', 'group'),
+    'description'  => get_string('publiclyviewablegroupdescription', 'group'),
+    'defaultvalue' => $group_data->public,
+    'help'         => true,
+    'ignore'       => !$publicallowed || (isset($publicparam) && $publicparam === 0),
+);
+
 if (get_config('allowgroupcategories')
     && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
 ) {
@@ -187,20 +216,6 @@ if (get_config('allowgroupcategories')
     }
 }
 
-$publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
-
-if (!$id && !param_variable('editgroup_submit', null)) {
-    // If 'public=0' param is passed on first page load, hide the public checkbox.
-    $publicparam = param_integer('public', null);
-}
-
-$elements['public'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('publiclyviewablegroup', 'group'),
-            'description'  => get_string('publiclyviewablegroupdescription', 'group'),
-            'defaultvalue' => $group_data->public,
-            'help'         => true,
-            'ignore'       => !$publicallowed || (isset($publicparam) && $publicparam === 0));
 $elements['usersautoadded'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('usersautoadded', 'group'),
