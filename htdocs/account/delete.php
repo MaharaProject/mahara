@@ -43,7 +43,7 @@ $deleteform = pieform(array(
     'elements'   => array(
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('delete'),
+            'value' => get_string('deleteaccount', 'mahara', display_username($USER), full_name($USER)),
         ),
     ),
 ));

@@ -306,6 +306,7 @@ $string['chooseinstitution'] = 'Choose your institution';
 $string['chooseusernamepassword'] = 'Choose your username and password';
 $string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s.  Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';
+$string['deleteaccount'] = 'Delete Account of: %s / %s';
 $string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
 $string['institution'] = 'Institution';
