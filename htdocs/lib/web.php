@@ -412,9 +412,7 @@ EOF;
         $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
     }
     else {
-        $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
-                        get_string_from_language(get_config('lang'), 'thislanguage') . ')');
-        $smarty->assign('LANGUAGES', get_languages());
+        $smarty->assign('languageform', language_select_form());
     }
     $smarty->assign('FOOTERMENU', footer_menu());
 
@@ -3266,4 +3264,43 @@ function mahara_http_request($config) {
     curl_close($ch);
 
     return $result;
+}
+
+/**
+ * Returns a language select form
+ *
+ * @return string      HTML of language select form
+ */
+function language_select_form() {
+    global $SESSION;
+
+    $languageform = '';
+    $languages = get_languages();
+
+    if (count($languages) > 1) {
+
+        $languages = array_merge(array('default' => get_string('sitedefault', 'admin') . ' (' .
+            get_string_from_language(get_config('lang'), 'thislanguage') . ')'), $languages);
+
+        require_once('pieforms/pieform.php');
+        $languageform = pieform(array(
+            'name'                => 'languageselect',
+            'renderer'            => 'oneline',
+            'validate'            => false,
+            'presubmitcallback'   => '',
+            'elements'            => array(
+                'lang' => array(
+                    'type' => 'select',
+                    'title' => get_string('language') . ':',
+                    'options' => $languages,
+                    'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
+                ),
+                'changelang' => array(
+                    'type' => 'submit',
+                    'value' => get_string('change'),
+                )
+            )
+        ));
+    }
+    return $languageform;
 }

@@ -286,7 +286,7 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 #header-right {
 	padding: 5px 0 0 10px;
 }
-#language-select label {
+#languageselect label {
     color: #FFFFFF;
 }
 /* Search and language bar */

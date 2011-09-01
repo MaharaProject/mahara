@@ -254,7 +254,7 @@ span.btn a.icon, a span.icon {
     display: inline;
 }
 /* Search and language bar */
-#language-select, #usf {
+#languageselect, #usf {
 	font-size: .8333em !important;
 }
 #usf_query_container input {
