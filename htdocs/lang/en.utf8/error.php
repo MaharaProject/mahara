@@ -56,6 +56,9 @@ $string['apcstatoff'] = 'Your server appears to be running APC with apc.stat=0. 
 If you are on shared hosting, it is likely that there is little you can do to get apc.stat turned on, other than ask your hosting provider. Perhaps you could consider moving to a different host.';
 $string['datarootinsidedocroot'] = 'You have set up your data root to be inside your document root. This is a large security problem, as then anyone can directly request session data (in order to hijack other peoples\' sessions), or files that they are not allowed to access that other people have uploaded. Please configure the data root to be outside of the document root.';
 $string['datarootnotwritable'] = 'Your defined data root directory, %s, is not writable. This means that neither session data, user files nor anything else that needs to be uploaded can be saved on your server. Please make the directory if it does not exist, or give ownership of the directory to the web server user if it does.';
+$string['wwwrootnothttps'] = 'Your defined wwwroot, %s, is not HTTPS. However other settings (such as sslproxy) for your installation require that your wwwroot is a HTTPS address.
+
+Please update your wwwroot setting to be a HTTPS address, or fix the incorrect setting.';
 $string['couldnotmakedatadirectories'] = 'For some reason some of the core data directories could not be created. This should not happen, as Mahara previously detected that the dataroot directory was writable. Please check the permissions on the dataroot directory.';
 
 $string['dbconnfailed'] = 'Mahara could not connect to the application database.

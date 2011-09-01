@@ -210,8 +210,14 @@ if (isset($CFG->wwwroot)) {
         $CFG->wwwroot .= '/';
     }
 }
+
+// If we're forcing an ssl proxy, make sure the wwwroot is correct
+if ($CFG->sslproxy == true && parse_url($CFG->wwwroot, PHP_URL_SCHEME) !== 'https') {
+    throw new ConfigSanityException(get_string('wwwrootnothttps', 'error', get_config('wwwroot')));
+}
+
 // Make sure that we are using ssl if wwwroot expects us to do so
-if (isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+if ($CFG->sslproxy === false && isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
     parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https'){
     redirect(get_relative_script_path());
 }

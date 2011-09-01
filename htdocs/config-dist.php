@@ -61,6 +61,11 @@ $cfg->dbprefix = '';
 // $cfg->wwwroot to use HTTPS.
 //$cfg->wwwroot = 'https://myhost.com/mahara/';
 
+// If you are using a proxy to force HTTPS connections, you will need to
+// enable the next line. If you have set this to true, ensure your wwwroot
+// is a HTTPS address.
+//$cfg->sslproxy = true;
+
 // dataroot - uploaded files are stored here
 // This is a ABSOLUTE FILESYSTEM PATH. This is NOT a URL.
 // For example, valid paths are:
