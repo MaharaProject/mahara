@@ -2,9 +2,10 @@ TinyMCE
 ========
 
 Website: http://tinymce.moxiecode.com/
-Version: 3.3.8
+Version: 3.4.4
 
 Changes:
 
  * Additional files in the eu and zh language packs
  * Removed unused media plugin to fix Debian bug #591200
+ * Removed the standard spellchecker plugin and replace with the php spellchecker plugin
