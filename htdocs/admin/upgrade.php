@@ -72,6 +72,34 @@ if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));
 }
 
+$start = time();
+if (empty($upgrades['core']->install)) {
+    // Insert a record into config before the upgrade starts, to prevent subsequent hits
+    // on this page from starting a second simultaneous upgrade.
+
+    // But let the admin run a second one if they really want to.
+    if (param_integer('rerun', 0)) {
+        delete_records('config', 'field', '_upgrade');
+    }
+
+    if (!$lastupgrade = get_field('config', 'value', 'field', '_upgrade')) {
+        try {
+            insert_record('config', (object) array('field' => '_upgrade', 'value' => $start));
+        }
+        catch (SQLException $e) {
+            if (!$lastupgrade = get_field('config', 'value', 'field', '_upgrade')) {
+                $lastupgrade = '???';
+            }
+        }
+    }
+
+    if (!empty($lastupgrade)) {
+        $laststart = format_date($lastupgrade, 'strftimedatetimeshort');
+        log_debug('Not upgrading; unfinished upgrade from ' . $laststart . ' still in progress');
+        die_info(get_string('upgradeinprogress', 'admin', $laststart));
+    }
+}
+
 $loadingicon = $THEME->get_url('images/loading.gif');
 $successicon = $THEME->get_url('images/success.gif');
 $failureicon = $THEME->get_url('images/failure.gif');
@@ -127,7 +155,7 @@ $js = <<< EOJS
 
                 $(element).innerHTML = '<img src="{$loadingicon}" alt="' + {$loadingstring} + '" />';
 
-                sendjsonrequest('upgrade.json.php', { 'name': element }, 'GET', function (data) {
+                sendjsonrequest('upgrade.json.php', { 'name': element, 'last': todo.length == 0 }, 'GET', function (data) {
                     if ( !data.error ) {
                         var message;
                         if (data.coredata) {
