@@ -965,6 +965,7 @@ class User {
             if (!isset($this->grouproles[$group])) {
                 return false;
             }
+            require_once('group.php');
             return group_role_can_edit_views($group, $this->grouproles[$group]);
         }
         return false;
