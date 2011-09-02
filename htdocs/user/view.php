@@ -64,13 +64,13 @@ else {
     $view = $userobj->get_profile_view();
 }
 
-$viewid = $view->get('id');
 # access will either be logged in (always) or public as well
 if (!$view) {
     // No access, so restrict profile view
     throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
 }
 
+$viewid = $view->get('id');
 $restrictedview = !can_view_view($viewid);
 
 $javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
