@@ -231,7 +231,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
     private static function get_html_of_supported_googleapps() {
         $smarty = smarty_core();
         $smarty->assign('lang', substr(get_config('lang'), 0, 2));
-        if (stripos(get_config('wwwroot'), 'https') === 0) {
+        if (is_https() === true) {
             $smarty->assign('protocol', 'https');
         }
         else {

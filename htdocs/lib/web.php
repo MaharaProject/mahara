@@ -2545,10 +2545,8 @@ function get_full_script_path() {
         }
     }
 
-    if (isset($_SERVER['HTTPS'])) {
-        $protocol = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-    } else if (isset($_SERVER['SERVER_PORT'])) { # Apache2 does not export $_SERVER['HTTPS']
-        $protocol = ($_SERVER['SERVER_PORT'] == '443') ? 'https://' : 'http://';
+    if (is_https() === true || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' )) {
+        $protocol = 'https://';
     } else {
         $protocol = 'http://';
     }
