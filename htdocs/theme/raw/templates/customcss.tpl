@@ -54,7 +54,7 @@ legend a:hover {
     color: {$data.link};
 }
 
-#language-select label {
+#languageselect label {
     color: {$data.backgroundfg};
 }
 
