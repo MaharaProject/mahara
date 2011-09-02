@@ -46,7 +46,7 @@ if (!is_logged_in() && !$group->public) {
 
 define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$can_edit = group_user_can_edit_views($group->id);
+$can_edit = group_user_can_edit_views($group);
 
 // If the user can edit group views, show a page similar to the my views
 // page, otherwise just show a list of the views owned by this group that

@@ -200,15 +200,10 @@ if ($institution) {
         $copyoptions = array('copynewuser', 'copyfornewgroups', 'copyfornewgroupsdescription');
         $needsaccess = array('copynewuser');
         $createfor = $view->get_autocreate_grouptypes();
-        foreach (group_get_grouptypes() as $grouptype) {
-            safe_require('grouptype', $grouptype);
-            $jointypestrings = array();
-            foreach (call_static_method('GroupType' . $grouptype, 'allowed_join_types', true) as $jointype) {
-                $jointypestrings[] = get_string('membershiptype.'.$jointype, 'group');
-            }
+        foreach (group_get_grouptype_options() as $grouptype => $grouptypedesc) {
             $form['elements']['more']['elements']['copyfornewgroups_'.$grouptype] = array(
                 'type'         => 'checkbox',
-                'title'        => get_string('name', 'grouptype.' . $grouptype) . ' (' . join(', ', $jointypestrings) . ')',
+                'title'        => $grouptypedesc,
                 'defaultvalue' => $view->get('template') && in_array($grouptype, $createfor),
             );
             $copyoptions[] = 'copyfornewgroups_'.$grouptype;

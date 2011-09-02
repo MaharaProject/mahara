@@ -44,8 +44,13 @@ $ALLOWEDKEYS = array(
     'shortname',
     'displayname',
     'description',
-    'grouptype',
+    'open',
+    'controlled',
+    'request',
+    'roles',
     'public',
+    'submitpages',
+    'editroles',
 );
 if ($USER->get('admin')) {
     $ALLOWEDKEYS[] = 'usersautoadded';
@@ -54,15 +59,11 @@ if ($USER->get('admin')) {
 $MANDATORYFIELDS = array(
     'shortname',
     'displayname',
-    'grouptype',
+    'roles',
 );
 $UPDATES         = array(); // During validation, remember which group already exist
-$JOINTYPES = array();
-foreach (group_get_grouptypes() as $type) {
-    safe_require('grouptype', $type);
-    $JOINTYPES[$type] = call_static_method('GroupType' . $type, 'allowed_join_types');
-}
-
+$GROUPTYPES = group_get_grouptype_options();
+$EDITROLES  = group_get_editroles_options();
 
 $form = array(
     'name' => 'uploadcsv',
@@ -99,7 +100,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $MANDATORYFIELDS, $JOINTYPES, $FORMAT, $USER, $UPDATES;
+    global $CSVDATA, $ALLOWEDKEYS, $MANDATORYFIELDS, $GROUPTYPES, $FORMAT, $USER, $UPDATES, $EDITROLES;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -153,7 +154,14 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         $shortname = $line[$formatkeylookup['shortname']];
         $displayname = $line[$formatkeylookup['displayname']];
-        $grouptype = $line[$formatkeylookup['grouptype']];
+        $grouptype = $line[$formatkeylookup['roles']];
+        $open = isset($formatkeylookup['open']) && !empty($line[$formatkeylookup['open']]);
+        $controlled = isset($formatkeylookup['controlled']) && !empty($line[$formatkeylookup['controlled']]);
+        $request = isset($formatkeylookup['request']) && !empty($line[$formatkeylookup['request']]);
+        $submitpages = isset($formatkeylookup['submitpages']) && !empty($line[$formatkeylookup['submitpages']]);
+        if (isset($formatkeylookup['editroles'])) {
+            $editroles = $line[$formatkeylookup['editroles']];
+        }
 
         if (!preg_match('/^[a-zA-Z0-9_.-]{2,255}$/', $shortname)) {
             $csverrors->add($i, get_string('uploadgroupcsverrorinvalidshortname', 'admin', $i, $shortname));
@@ -172,7 +180,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         $shortnames[$shortname] = array(
                 'shortname'   => $shortname,
                 'displayname' => $displayname,
-                'grouptype'   => $grouptype,
+                'roles'       => $grouptype,
                 'lineno'      => $i,
                 'raw'         => $line,
         );
@@ -203,16 +211,20 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
         $displaynames[strtolower($displayname)] = 1;
 
-        $groupjointype = split('/', $grouptype);
-        if (count($groupjointype) != 2) {
+        if (!isset($GROUPTYPES[$grouptype])) {
             $csverrors->add($i, get_string('uploadgroupcsverrorinvalidgrouptype', 'admin', $i, $grouptype));
         }
-        else {
-            if (!isset($JOINTYPES[$groupjointype[0]]) || !in_array($groupjointype[1], $JOINTYPES[$groupjointype[0]])) {
-                $csverrors->add($i, get_string('uploadgroupcsverrorinvalidgrouptype', 'admin', $i, $grouptype));
-            }
+
+        if (isset($editroles) && !isset($EDITROLES[$editroles])) {
+            $csverrors->add($i, get_string('uploadgroupcsverrorinvalideditroles', 'admin', $i, $editroles));
         }
 
+        if ($open && $controlled) {
+            $csverrors->add($i, get_string('uploadgroupcsverroropencontrolled', 'admin', $i));
+        }
+        if ($open && $request) {
+            $csverrors->add($i, get_string('uploadgroupcsverroropenrequest', 'admin', $i));
+        }
 
         if ($values['updategroups']) {
 
@@ -259,16 +271,18 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     foreach ($CSVDATA as $record) {
 
-        $groupjointype = split('/', $record[$formatkeylookup['grouptype']]);
         $group = new StdClass;
         $group->name        = $record[$formatkeylookup['displayname']];
         $group->shortname   = $record[$formatkeylookup['shortname']];
         $group->institution = $institution;
-        $group->grouptype   = $groupjointype[0];
-        $group->jointype    = $groupjointype[1];
+        $group->grouptype   = $record[$formatkeylookup['roles']];
 
         foreach ($FORMAT as $field) {
-            if ($field == 'displayname' || $field == 'shortname' || $field == 'grouptype') {
+            if ($field == 'displayname' || $field == 'shortname' || $field == 'roles') {
+                continue;
+            }
+            if ($field == 'submitpages') {
+                $group->submittableto = $record[$formatkeylookup[$field]];
                 continue;
             }
             $group->{$field} = $record[$formatkeylookup[$field]];
@@ -316,23 +330,29 @@ function uploadcsv_submit(Pieform $form, $values) {
 }
 
 $grouptypes = "<ul class=fieldslist>\n";
-foreach ($JOINTYPES as $grouptype => $jointypes) {
-    foreach ($jointypes as $type) {
-        $grouptypes .= '<li>' . hsc($grouptype) . '/' . hsc($type) . "</li>\n";
-    }
+foreach (array_keys($GROUPTYPES) as $grouptype) {
+    $grouptypes .= '<li>' . hsc($grouptype) . "</li>\n";
 }
 $grouptypes .= "<div class=cl></div></ul>\n";
+
+$editroles = "<ul class=fieldslist>\n";
+foreach (array_keys($EDITROLES) as $editrole) {
+    $editroles .= '<li>' . hsc($editrole) . "</li>\n";
+}
+$editroles .= "<div class=cl></div></ul>\n";
+
+$grouptypes .= get_string('uploadgroupcsveditrolesdescription', 'admin', get_help_icon('core', 'groups', 'editgroup', 'editroles'), $editroles);
 
 $fields = "<ul class=fieldslist>\n";
 foreach ($ALLOWEDKEYS as $type) {
     $helplink = '';
-    if ($type == 'grouptype' || $type == 'public' || $type == 'usersautoadded') {
-        $helplink = get_help_icon('core', 'groups', 'creategroup', $type);
+    if ($type == 'public' || $type == 'usersautoadded') {
+        $helplink = get_help_icon('core', 'groups', 'editgroup', $type);
     }
     $fields .= '<li>' . hsc($type) . $helplink . "</li>\n";
 }
 $fields .= "<div class=cl></div></ul>\n";
-$uploadcsvpagedescription = get_string('uploadgroupcsvpagedescription2', 'admin', get_help_icon('core', 'groups', 'creategroup', 'grouptype'), $grouptypes, $fields);
+$uploadcsvpagedescription = get_string('uploadgroupcsvpagedescription2', 'admin', get_help_icon('core', 'groups', 'editgroup', 'grouptype'), $grouptypes, $fields);
 
 $form = pieform($form);
 

@@ -34,7 +34,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $userid = param_integer('userid');
 $groupdata = array();
-$initialgroups = array('controlled' => array(), 'invite' => array());
+$initialgroups = array('add' => array(), 'invite' => array());
 
   /* Get (a) controlled membership groups,
      (b) request membership groups where the displayed user has requested membership,
@@ -60,7 +60,7 @@ $controlled = get_records_sql_array("SELECT g.*, gm.role,
           JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
           LEFT JOIN {group_member_request} gmr ON (gmr.member = ? AND gmr.group = g.id)
           WHERE gm.member = ?
-          AND (g.jointype = 'controlled' OR (g.jointype = 'request' AND gmr.member = ?))
+          AND (g.jointype = 'controlled' OR (g.request = 1 AND gmr.member = ?))
           AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
           AND g.deleted = 0", array($userid, $userid, $userid, $USER->get('id'), $userid));
 
@@ -68,16 +68,16 @@ if ($controlled) {
     foreach ($controlled as &$g) {
         if ($g->member) {
             $g->checked = true;
-            $initialgroups['controlled'][] = $g->id;
+            $initialgroups['add'][] = $g->id;
             if ($g->role != 'admin') {
                 $g->disabled = true;
             }
         }
     }
-    $groupdata['controlled'] = $controlled;
+    $groupdata['add'] = $controlled;
 }
 
-  /* Get 'Invite olny' groups where the logged in user is a group admin.
+  /* Get groups where the logged in user is a group admin.
      @return array  A data structure containing results looking like ...
      *         $results = array(
      *                   array(
@@ -95,7 +95,6 @@ $invite = get_records_sql_array("SELECT g.*, gm.role,
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?
-        AND g.jointype = 'invite'
         AND gm.role = 'admin'
         AND g.deleted = 0", array($userid, $userid, $USER->get('id')));
 

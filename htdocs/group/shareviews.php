@@ -34,7 +34,7 @@ define('MENUITEM', 'groups/share');
 
 define('GROUP', param_integer('group'));
 $group = group_current_group();
-if (!group_user_can_edit_views($group->id)) {
+if (!group_user_can_edit_views($group)) {
     throw new AccessDeniedException();
 }
 

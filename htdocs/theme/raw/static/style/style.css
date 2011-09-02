@@ -378,6 +378,9 @@ label {
 .pieform th label {
 	font-weight: bold;
 }
+.pieform .sectioned th label {
+	font-weight: normal;
+}
 .pieform tr.checkbox label {
 	white-space: nowrap;
 }
@@ -2483,7 +2486,7 @@ ul.viewlist li {
 img.feedicon {
 	margin-left: 5px;
 }
-#editpost_allowcomments_container th label, #edit_interaction th label, #creategroup_public_container th label, #goalform_academicgoal_container th label, #skillform_academicskill_container th label {
+#editpost_allowcomments_container th label, #edit_interaction th label, #goalform_academicgoal_container th label, #skillform_academicskill_container th label {
 	white-space: nowrap;
 }
 /* to get user picts to align with text */

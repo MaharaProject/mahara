@@ -75,13 +75,11 @@ list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersea
 // Type-specific instructions
 $instructions = '';
 if ('admin' == $role) {
-    if ('invite' == $group->jointype) {
-        $url = get_config('wwwroot') . 'group/inviteusers.php?id=' . GROUP;
-        $instructions = get_string('membersdescription:invite', 'group', $url);
-    }
-    else if ('controlled' == $group->jointype) {
+    $url = get_config('wwwroot') . 'group/inviteusers.php?id=' . GROUP;
+    $instructions = get_string('invitemembersdescription', 'group', $url);
+    if ('controlled' == $group->jointype) {
         $url = get_config('wwwroot') . 'group/addmembers.php?id=' . GROUP;
-        $instructions = get_string('membersdescription:controlled', 'group', $url);
+        $instructions .= ' ' . get_string('membersdescription:controlled', 'group', $url);
     }
 }
 
@@ -128,13 +126,13 @@ if ($role == 'admin') {
         'name' => get_string('current', 'group'),
         'link' => empty($membershiptype) ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id
         );
-    if ($group->jointype == 'request' && count_records('group_member_request', 'group', $group->id)) {
+    if ($group->request && count_records('group_member_request', 'group', $group->id)) {
         $membershiptypes[] = array(
             'name' => get_string('requests', 'group'),
             'link' => $membershiptype == 'request' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=request'
             );
     }
-    if ($group->jointype == 'invite' && count_records('group_member_invite', 'group', $group->id)) {
+    if (count_records('group_member_invite', 'group', $group->id)) {
         $membershiptypes[] = array(
             'name' => get_string('invites', 'group'),
             'link' => $membershiptype == 'invite' ? '' : $CFG->wwwroot.'group/members.php?id='.$group->id.'&membershiptype=invite'

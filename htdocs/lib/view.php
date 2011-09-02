@@ -59,7 +59,6 @@ class View {
     private $dirtycolumns; // for when we change stuff
     private $tags;
     private $categorydata;
-    private $editingroles;
     private $moderatingroles;
     private $template;
     private $retainview;
@@ -152,7 +151,6 @@ class View {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
             safe_require('grouptype', $group->grouptype);
-            $this->editingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_editing_roles');
             $this->moderatingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_moderating_roles');
         }
     }
@@ -2777,17 +2775,17 @@ class View {
                 AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)";
         }
         else {
-            $from = '
+            $from = "
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
             LEFT OUTER JOIN {group} gd ON v.group = gd.id
             LEFT OUTER JOIN (
                 SELECT
-                    gtr.edit_views, gm.group AS groupid
+                    1 AS edit_views, gm.group AS groupid
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-                INNER JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gtr.role = gm.role)
+                WHERE gm.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND gm.role != 'member')
             ) AS vg ON (vg.groupid = v.group)
             LEFT OUTER JOIN {view_access} va ON (
                 va.view = v.id
@@ -2820,7 +2818,7 @@ class View {
                 INNER JOIN {usr_institution} ui ON (vai.institution = ui.institution AND ui.usr = ?)
             ) AS vaui ON (
                 vaui.view = v.id
-            )';
+            )";
             $where .= "
                 AND (
                     v.owner = ?

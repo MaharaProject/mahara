@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {if $cancreate}
             <div class="rbuttons">
-                <a href="{$WWWROOT}group/create.php" class="btn creategroup">{str tag="creategroup" section="group"}</a>
+                <a href="{$WWWROOT}group/edit.php" class="btn creategroup">{str tag="creategroup" section="group"}</a>
             </div>
 {/if}
 {$form|safe}

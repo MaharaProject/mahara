@@ -909,12 +909,12 @@ class GroupAccessDeniedException extends AccessDeniedException {
             if (!isset($roles[GROUP])) {
                 $group = group_current_group();
                 if ($group->jointype == 'open'
-                    || $group->jointype == 'invite' && get_record('group_member_invite', 'group', GROUP, 'member', $USER->get('id'))) {
+                    || get_record('group_member_invite', 'group', GROUP, 'member', $USER->get('id'))) {
                     $SESSION->add_error_msg(get_string('notmembermayjoin', 'group', $group->name));
                     $next = substr($_SERVER['REQUEST_URI'], strlen(get_mahara_install_subdirectory()) - 1);
                     redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP . '&next=' . urlencode($next));
                 }
-                if ($group->jointype == 'request' && !get_record('group_member_request', 'group', GROUP, 'member', $USER->get('id'))) {
+                if ($group->request && !get_record('group_member_request', 'group', GROUP, 'member', $USER->get('id'))) {
                     $SESSION->add_error_msg(get_string('notamember', 'group'));
                     redirect(get_config('wwwroot') . 'group/requestjoin.php?id=' . GROUP . '&returnto=view');
                 }

@@ -53,42 +53,29 @@ abstract class GroupType {
             return;
         }
 
-        $assessingroles = $this->get_view_assessing_roles();
         insert_record('grouptype', (object) array(
             'name' => $type,
-            'submittableto' => (int)!empty($assessingroles),
             'defaultrole' => $this->default_role(),
         ));
         $roles = $this->get_roles();
         if (!in_array('admin', $roles)) {
             $roles[] = 'admin';
         }
-        $editingroles = $this->get_view_editing_roles();
+        $assessingroles = $this->get_view_assessing_roles();
         foreach ($roles as $r) {
             insert_record('grouptype_roles', (object) array(
                 'grouptype' => $type,
                 'role' => $r,
-                'edit_views' => (int)in_array($r, $editingroles),
                 'see_submitted_views' => (int)in_array($r, $assessingroles),
             ));
         }
     }
 
-    public static abstract function allowed_join_types();
-
-    public static abstract function user_allowed_join_types($user);
     /**
      * Returns whether the currently logged in user can create a group of this 
      * grouptype
      */
     public static function can_be_created_by_user() {
-        return true;
-    }
-    /**
-     * Returns whether a user can be promoted to admin of a group of this
-     * grouptype (by an existing group admin, on the 'change role' page)
-     */
-    public static function can_become_admin($userid) {
         return true;
     }
 
@@ -97,8 +84,6 @@ abstract class GroupType {
      */
     public static abstract function get_roles();
 
-    public static abstract function get_view_editing_roles();
-
     public static abstract function get_view_moderating_roles();
 
     public static abstract function get_view_assessing_roles();
@@ -106,6 +91,4 @@ abstract class GroupType {
     public static function get_group_artefact_plugins() {
         return array('file');
     }
-
-    public static abstract function default_artefact_rolepermissions();
 }

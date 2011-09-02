@@ -44,10 +44,6 @@ if ($role != 'admin') {
     throw new AccessDeniedException();
 }
 
-if ($group->jointype != 'invite') {
-    redirect(get_config('wwwroot') . 'group/members.php?id=' . GROUP);
-}
-
 define('TITLE', $group->name . ' - ' . get_string('sendinvitations', 'group'));
 
 $form = pieform(array(

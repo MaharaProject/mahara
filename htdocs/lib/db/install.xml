@@ -296,7 +296,6 @@
         <TABLE NAME="grouptype">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
-                <FIELD NAME="submittableto" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="defaultrole" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
@@ -307,7 +306,6 @@
             <FIELDS>
                 <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true" />
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="edit_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="see_submitted_views" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
@@ -331,7 +329,7 @@
                 <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="grouptype" TYPE="char" LENGTH="20" NOTNULL="true"/>
-                <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'controlled', 'invite', 'request', 'open'"  DEFAULT="open" />
+                <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'open', 'controlled', 'approve'"  DEFAULT="open" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="public" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -343,6 +341,9 @@
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="request" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="submittableto" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="editroles" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'all', 'notmember', 'admin'" DEFAULT="all" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

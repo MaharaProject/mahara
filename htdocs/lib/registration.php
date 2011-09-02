@@ -635,8 +635,8 @@ function group_type_graph() {
         $dataarray = array();
         foreach ($grouptypes as &$t) {
             $strtype = get_string('name', 'grouptype.' . $t->grouptype);
-            $strjoin = get_string('membershiptype.abbrev.' . $t->jointype, 'group');
-            $dataarray[$strtype . '/' . $strjoin] = $t->groups;
+            $strtype .= ' (' . get_string('membershiptype.abbrev.' . $t->jointype, 'group') . ')';
+            $dataarray[$strtype] = $t->groups;
         }
         ksort($dataarray);
         arsort($dataarray);

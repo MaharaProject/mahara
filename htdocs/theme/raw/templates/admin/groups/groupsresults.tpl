@@ -3,7 +3,11 @@
     <td>{$group->name}</td>
     <td class="center">{$group->members}</td>
     <td class="center">{$group->admins}</td>
-    <td>{str tag=name section=grouptype.$group->grouptype}: {str tag=membershiptype.$group->jointype section=group}</td>
+    <td>{strip}
+      {str tag=name section=grouptype.$group->grouptype}
+      {if $group->jointype != 'approve'}, {str tag=membershiptype.abbrev.$group->jointype section=group}{/if}
+      {if $group->request}, {str tag=request section=group}{/if}
+    {/strip}</td>
     {if get_config('allowgroupcategories')}
         <td>{$group->categorytitle}</td>
     {/if}

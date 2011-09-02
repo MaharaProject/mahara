@@ -39,36 +39,39 @@ $data['message'] = null;
 $initialgroups = param_integer_list('initialgroups', array());
 $resultgroups = param_integer_list('resultgroups', array());
 $userid = param_integer('userid');
-$jointype = param_variable('jointype');
+$addtype = param_variable('addtype');
 
 // Prevent group membership changing done by ordinary members, Tutors can only
 // add members to group and cannot remove anyone. Group admins can do anything.
 // With regard to invitation, both admins and tutors can invite people.
 
-foreach (array_unique(array_merge($initialgroups, $resultgroups)) as $groupid) {
-    if (!group_user_access($groupid)) {
+$allgroups = array_unique(array_merge($initialgroups, $resultgroups));
+$groupdata = get_records_select_assoc(
+    'group',
+    'id IN (' . join(',', array_fill(0, count($allgroups), '?')) . ')',
+    $allgroups
+);
+
+foreach (group_get_grouptypes() as $grouptype) {
+    safe_require('grouptype', $grouptype);
+}
+
+foreach ($allgroups as $groupid) {
+    if (!$loggedinrole = group_user_access($groupid)) {
         json_reply('local', get_string('accessdenied', 'error'));
-        break;
     }
-    switch (group_user_access($groupid)) {
-        case 'member':
-            json_reply('local', get_string('accessdenied', 'error'));
-            break;
-        case 'tutor':
-            if ($usertype = group_user_access($groupid, $userid)) {
-                if (($usertype == 'member') && in_array($groupid, array_diff($initialgroups, $resultgroups))) {
-                    json_reply('local', get_string('cantremovemember', 'group'));
-                }
-                elseif ($usertype != 'member' && in_array($groupid, array_diff($initialgroups, $resultgroups))) {
-                    json_reply('local', get_string('cantremoveuserisadmin', 'group'));
-                }
-            }
+    if ($loggedinrole == 'admin') {
+        continue;
+    }
+    if (!in_array($loggedinrole, call_static_method('GroupType' . $groupdata[$groupid]->grouptype, 'get_view_assessing_roles'))) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
+    if (group_user_access($groupid, $userid) && in_array($groupid, array_diff($initialgroups, $resultgroups))) {
+        json_reply('local', get_string('cantremovememberfromgroup', 'group', hsc($groupdata[$groupid]->name)));
     }
 }
 
-$groupdata = get_records_select_assoc('group', 'id IN (' . join(',', array_unique(array_merge($initialgroups, $resultgroups))) . ')');
-
-if ($jointype == 'controlled') {
+if ($addtype == 'add') {
     db_begin();
     //remove group membership
     if ($groupstoremove = array_diff($initialgroups, $resultgroups)) {
@@ -108,7 +111,7 @@ if ($jointype == 'controlled') {
     activity_occurred('maharamessage', $n);
     $data['message'] = get_string('changedgroupmembership', 'group');
 }
-elseif ($jointype == 'invite') {
+else if ($addtype == 'invite') {
     if ($groupstoadd = array_diff($resultgroups, $initialgroups)) {
         foreach ($groupstoadd as $groupid) {
             group_invite_user($groupdata[$groupid], $userid, $USER->get('id'));

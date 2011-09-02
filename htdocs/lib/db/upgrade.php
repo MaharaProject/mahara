@@ -2632,5 +2632,68 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('loggedinprofileviewaccess', 1);
     }
 
+    if ($oldversion < 2011083000) {
+        // Jointype changes
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('request');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        set_field('group', 'request', 1, 'jointype', 'request');
+
+        // Turn all request & invite groups into the 'approve' type
+        $field = new XMLDBField('jointype');
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('open', 'controlled', 'request', 'invite', 'approve'), 'open'
+        );
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {group} DROP CONSTRAINT {grou_joi_ck}');
+        }
+        change_field_enum($table, $field);
+
+        set_field('group', 'jointype', 'approve', 'jointype', 'request');
+        set_field('group', 'jointype', 'approve', 'jointype', 'invite');
+
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('open', 'controlled', 'approve'), 'open'
+        );
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {group} DROP CONSTRAINT {grou_joi_ck}');
+        }
+        change_field_enum($table, $field);
+
+        // Move view submission from grouptype to group
+        $field = new XMLDBField('submittableto');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        execute_sql("UPDATE {group} SET submittableto = 1 WHERE grouptype IN (SELECT name FROM {grouptype} WHERE submittableto = 1)");
+
+        $table = new XMLDBTable('grouptype');
+        $field = new XMLDBField('submittableto');
+        drop_field($table, $field);
+
+        // Any group can potentially take submissions, so make sure someone can assess them
+        set_field('grouptype_roles', 'see_submitted_views', 1, 'role', 'admin');
+
+        // Move group view editing permission from grouptype_roles to the group table
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('editroles');
+        $field->setAttributes(
+            XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL, null, XMLDB_ENUM,
+            array('all', 'notmember', 'admin'), 'all'
+        );
+        add_field($table, $field);
+        execute_sql("
+            UPDATE {group} SET editroles = 'notmember' WHERE grouptype IN (
+                SELECT grouptype FROM {grouptype_roles} WHERE role = 'member' AND edit_views = 0
+            )"
+        );
+
+        $table = new XMLDBTable('grouptype_roles');
+        $field = new XMLDBField('edit_views');
+        drop_field($table, $field);
+    }
+
     return $status;
 }

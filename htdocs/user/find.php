@@ -58,8 +58,7 @@ if (!empty($options['myinstitutions'])) {
 require_once(get_config('libroot').'group.php');
 $admingroups = false;
 foreach (group_get_user_groups() as $g) {
-    if (($g->jointype == 'invite' && $g->role == 'admin')
-        || ($g->jointype == 'controlled' && ($g->role == 'admin' || $g->see_submitted_views))) {
+    if ($g->role == 'admin' || $g->see_submitted_views) {
         $admingroups = true;
         break;
     }

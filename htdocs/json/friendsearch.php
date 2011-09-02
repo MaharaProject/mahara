@@ -61,6 +61,10 @@ else {
     }
 }
 
+// @todo I'm not sure we actually need to distinguish the controlled
+// & invite groups at this stage.  Investigate whether we can just use
+// group_get_user_groups to fetch all the user's groups, and work out
+// whether the user has invite or add power for any of them.
 $controlledgroups = count_records_sql("SELECT COUNT(g.id)
           FROM {group} g
           JOIN {group_member} gm ON (gm.group = g.id)
@@ -74,7 +78,6 @@ $invite = count_records_sql("SELECT COUNT(g.id)
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?
-        AND g.jointype = 'invite'
         AND gm.role = 'admin'
         AND g.deleted = 0", array($USER->get('id')));
 

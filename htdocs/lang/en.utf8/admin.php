@@ -464,22 +464,27 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 $string['uploadgroupcsverrorgroupnamealreadyexists'] = 'Error on line %s of your file: The groupname "%s" already exists';
 $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid';
 $string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid';
+$string['uploadgroupcsverrorinvalideditroles'] = 'Error on line %s of your file: The value for editroles "%s" is invalid';
 $string['uploadgroupcsverrorshortnamealreadytaken'] = 'Error on line %s of your file: The shortname "%s" is already taken';
 $string['uploadgroupcsverrorusernamesnotlastfield'] = 'The "usernames" field must be the last field in the header';
+$string['uploadgroupcsverroropencontrolled'] = 'Line %s: Groups cannot have both open and controlled membership';
+$string['uploadgroupcsverroropenrequest'] = 'Line %s: Groups with open membership cannot allow membership requests';
 $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upload new groups via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
-<pre>shortname,displayname,grouptype</pre>
+<pre>shortname,displayname,roles</pre>
 
 <p>This row must include the <tt>shortname</tt>, <tt>displayname</tt>, and <tt>grouptype</tt> fields</p>
 
-<p>The grouptype field can have any of the following: %s</p>
+<p>The roles field can have any of the following: %s</p>
 
 %s
 
 <p>Your CSV file may include any other fields as you require. The full list of fields is:</p>
 
+%s';
+$string['uploadgroupcsveditrolesdescription'] = '<p>The editroles field can have any of the following: %s</p>
 %s';
 $string['uploadgroupmemberscsverrorduplicateusername'] = 'Error on line %s of your file: The shortname "%s" and username "%s" have already been specified in this file';
 $string['uploadgroupmemberscsverrorinvalidrole'] = 'Error on line %s of your file: The role "%s" is invalid for the specified group';

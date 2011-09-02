@@ -171,7 +171,7 @@ $elements = array(
     ),
     'general' => array(
         'type' => 'fieldset',
-        'legend' => get_string('general', 'artefact.internal'),
+        'legend' => get_string('general'),
         'class' => $fieldset != 'general' ? 'collapsed' : '',
         'elements' => $items
     ),

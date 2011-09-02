@@ -65,7 +65,7 @@ function showGroupBox(event, user_id) {
     return false;
 }
 
-function changemembership(event, user_id, type) {
+function changemembership(event, user_id, addtype) {
     replaceChildNodes('messages');
 
     if (event.preventDefault) {
@@ -74,7 +74,7 @@ function changemembership(event, user_id, type) {
         event.returnValue = false;
     }
 
-    var groups = document.getElementsByName(type+'group_'+user_id);
+    var groups = document.getElementsByName(addtype+'group_'+user_id);
     var resultgroups = new Array();
 
     forEach(groups, function(group) {
@@ -83,13 +83,13 @@ function changemembership(event, user_id, type) {
         }
     });
     // apply changes only if something has been changed
-    if (!initialgroups[type].compare(resultgroups)){
+    if (!initialgroups[addtype].compare(resultgroups)){
         sendjsonrequest('../group/changegroupsmembership.json.php',
         {
-            'jointype':type,
+            'addtype':addtype,
             'userid':user_id,
             'resultgroups':resultgroups.join(','),
-            'initialgroups':initialgroups[type].join(',')
+            'initialgroups':initialgroups[addtype].join(',')
             }, 'POST',
         function() {
             addElementClass('groupbox', 'hidden');
