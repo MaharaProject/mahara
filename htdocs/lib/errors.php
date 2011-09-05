@@ -553,7 +553,11 @@ class MaharaException extends Exception {
             echo json_encode(array('error' => true, 'message' => $this->render_exception()));
             exit;
         }
-        
+
+        if (defined('TESTSRUNNING')) {
+            exit; // let it be caught by phpunit
+        }
+
         if (defined('CRON')) {
             echo $this->render_exception();
             exit;
@@ -741,7 +745,7 @@ class SQLException extends SystemException {
         }
         parent::__construct($message, $code);
 
-        if (empty($DB_IGNORE_SQL_EXCEPTIONS)) {
+        if (empty($DB_IGNORE_SQL_EXCEPTIONS) && !defined('TESTSRUNNING')) {
             log_warn($this->getMessage());
         }
     }

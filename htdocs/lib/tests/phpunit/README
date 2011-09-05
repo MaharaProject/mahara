@@ -1,0 +1,12 @@
+This requires phpunit 3.3 or later.
+
+It needs to be run like:
+
+php -c  /etc/php5/apache2/php.ini  /usr/bin/phpunit  .
+
+Or if you've configured your cli php.ini properly, you can just do
+
+phpunit .
+
+
+From the main directory of mahara (eg, outside htdocs)

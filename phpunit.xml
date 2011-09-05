@@ -1,0 +1,16 @@
+<phpunit bootstrap="htdocs/lib/tests/phpunit/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="true">
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true"> <!-- code coverage -->
+            <directory suffix=".php">htdocs</directory>
+        </whitelist>
+    </filter>
+    <php>
+        <var name="TESTDBPREFIX" value="tst_" />
+        <var name="TESTDROPSTALEDB" value="true" />
+    </php>
+</phpunit>
