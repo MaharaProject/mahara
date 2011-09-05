@@ -274,6 +274,7 @@ function group_create($data) {
     $data['ctime'] = db_format_timestamp($data['ctime']);
 
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
+    $data['hidden'] = (isset($data['hidden'])) ? intval($data['hidden']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -348,6 +349,7 @@ function group_create($data) {
             'request'        => isset($data['request']) ? intval($data['request']) : 0,
             'submittableto'  => intval($data['submittableto']),
             'editroles'      => $data['editroles'],
+            'hidden'         => $data['hidden'],
         ),
         'id',
         true
@@ -454,7 +456,7 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles', 'hidden') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }

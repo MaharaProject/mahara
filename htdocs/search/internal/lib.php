@@ -682,12 +682,21 @@ class PluginSearchInternal extends PluginSearch {
             $grouproles = '-1';
         }
 
+        $canseehidden = $USER->get('admin') || $USER->get('staff');
+
        if ($type == 'member') {
             $sql .=  'AND id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
+            if (!$canseehidden) {
+                $sql .= ' AND hidden = 0';
+            }
         }
+        else if (!$canseehidden) {
+            $sql .= ' AND (hidden = 0 OR id IN (' . $grouproles . '))';
+        }
+
         if (!empty($category)) {
             if ($category == -1) { //find unassigned groups
                 $sql .= " AND category IS NULL";

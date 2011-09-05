@@ -2709,6 +2709,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
         set_field('view', 'locked', 1, 'type', 'grouphomepage');
+
+        // Setting to hide groups from the "Find Groups" listing
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('hidden');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
     }
 
     return $status;

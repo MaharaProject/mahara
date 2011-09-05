@@ -68,6 +68,7 @@ else {
         'viewnotify'     => 1,
         'submittableto'  => 0,
         'editroles'      => 'all',
+        'hidden'         => 0,
     );
 }
 
@@ -209,17 +210,21 @@ else {
     );
 }
 
-$elements['general'] = array(
-    'type'         => 'html',
-    'title'        => get_string('general'),
-    'value'        => '',
-);
-
 $publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
 
 if (!$id && !param_variable('editgroup_submit', null)) {
     // If 'public=0' param is passed on first page load, hide the public checkbox.
     $publicparam = param_integer('public', null);
+}
+
+$ignorepublic = !$publicallowed || (isset($publicparam) && $publicparam === 0);
+
+if ($cancreatecontrolled || !$ignorepublic) {
+    $elements['visibility'] = array(
+        'type'         => 'html',
+        'title'        => get_string('Visibility'),
+        'value'        => '',
+    );
 }
 
 $elements['public'] = array(
@@ -228,7 +233,28 @@ $elements['public'] = array(
     'description'  => get_string('publiclyviewablegroupdescription', 'group'),
     'defaultvalue' => $group_data->public,
     'help'         => true,
-    'ignore'       => !$publicallowed || (isset($publicparam) && $publicparam === 0),
+    'ignore'       => $ignorepublic,
+);
+
+if ($cancreatecontrolled) {
+    $elements['hidden'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hiddengroup', 'group'),
+        'description'  => get_string('hiddengroupdescription', 'group'),
+        'defaultvalue' => $group_data->hidden,
+    );
+}
+else {
+    $form['elements']['hidden'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->hidden,
+    );
+}
+
+$elements['general'] = array(
+    'type'         => 'html',
+    'title'        => get_string('general'),
+    'value'        => '',
 );
 
 if (get_config('allowgroupcategories')
@@ -310,6 +336,7 @@ function editgroup_submit(Pieform $form, $values) {
         'viewnotify'     => intval($values['viewnotify']),
         'submittableto'  => intval($values['submittableto']),
         'editroles'      => $values['editroles'],
+        'hidden'         => intval($values['hidden']),
     );
 
     db_begin();

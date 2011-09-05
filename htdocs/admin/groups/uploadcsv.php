@@ -51,6 +51,7 @@ $ALLOWEDKEYS = array(
     'public',
     'submitpages',
     'editroles',
+    'hidden',
 );
 if ($USER->get('admin')) {
     $ALLOWEDKEYS[] = 'usersautoadded';
