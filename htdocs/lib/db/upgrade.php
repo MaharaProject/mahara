@@ -2702,5 +2702,14 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_type($table, $field, true, true);
     }
 
+    if ($oldversion < 2011091200) {
+        // Locked group views (only editable by group admins)
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('locked');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+        set_field('view', 'locked', 1, 'type', 'grouphomepage');
+    }
+
     return $status;
 }
