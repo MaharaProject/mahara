@@ -98,6 +98,8 @@ $string['viewnotify'] = 'Shared page notifications';
 $string['viewnotifydescription'] = 'If checked, a notification will be sent to every group member whenever a member shares one of their pages with the group.  Enabling this setting in very large groups can produce a lot of notifications.';
 $string['hiddengroup'] = 'Hidden group';
 $string['hiddengroupdescription'] = 'Do not list this group on the Find Groups page.';
+$string['hidemembers'] = 'Hide membership';
+$string['hidemembersdescription'] = 'Hide the group\'s membership listing from non-members.';
 
 $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';

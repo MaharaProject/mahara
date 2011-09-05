@@ -69,6 +69,7 @@ else {
         'submittableto'  => 0,
         'editroles'      => 'all',
         'hidden'         => 0,
+        'hidemembers'    => 0,
     );
 }
 
@@ -243,11 +244,21 @@ if ($cancreatecontrolled) {
         'description'  => get_string('hiddengroupdescription', 'group'),
         'defaultvalue' => $group_data->hidden,
     );
+    $elements['hidemembers'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hidemembers', 'group'),
+        'description'  => get_string('hidemembersdescription', 'group'),
+        'defaultvalue' => $group_data->hidemembers,
+    );
 }
 else {
     $form['elements']['hidden'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->hidden,
+    );
+    $form['elements']['hidemembers'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->hidemembers,
     );
 }
 
@@ -337,6 +348,7 @@ function editgroup_submit(Pieform $form, $values) {
         'submittableto'  => intval($values['submittableto']),
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
+        'hidemembers'    => intval($values['hidemembers']),
     );
 
     db_begin();

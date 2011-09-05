@@ -157,6 +157,10 @@ function group_user_can_edit_views($group, $userid=null) {
 
 function group_role_can_edit_views($group, $role) {
 
+    if (empty($role)) {
+        return false;
+    }
+
     if ($role == 'admin') {
         return true;
     }
@@ -275,6 +279,7 @@ function group_create($data) {
 
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['hidden'] = (isset($data['hidden'])) ? intval($data['hidden']) : 0;
+    $data['hidemembers'] = (isset($data['hidemembers'])) ? intval($data['hidemembers']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -350,6 +355,7 @@ function group_create($data) {
             'submittableto'  => intval($data['submittableto']),
             'editroles'      => $data['editroles'],
             'hidden'         => $data['hidden'],
+            'hidemembers'    => $data['hidemembers'],
         ),
         'id',
         true
@@ -456,7 +462,7 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles', 'hidden') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles', 'hidden', 'hidemembers') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -1446,6 +1452,9 @@ function group_get_menu_tabs() {
     if (!$group) {
         return null;
     }
+
+    $role = group_user_access($group->id);
+
     $menu = array(
         'info' => array(
             'path' => 'groups/info',
@@ -1453,14 +1462,18 @@ function group_get_menu_tabs() {
             'title' => get_string('About', 'group'),
             'weight' => 20
         ),
-        'members' => array(
+    );
+
+    if ($role || !$group->hidemembers) {
+        $menu['members'] = array(
             'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
             'title' => get_string('Members', 'group'),
             'weight' => 30
-        ),
-    );
-    if ($group->public || group_user_access($group->id)) {
+        );
+    }
+
+    if ($group->public || $role) {
         $menu['forums'] = array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
             'path' => 'groups/forums',
             'url' => 'interaction/forum/index.php?group='.$group->id,
@@ -1475,7 +1488,7 @@ function group_get_menu_tabs() {
         'weight' => 50,
     );
 
-    if (group_user_can_edit_views($group)) {
+    if (group_role_can_edit_views($group, $role)) {
         $menu['share'] = array(
             'path' => 'groups/share',
             'url' => 'group/shareviews.php?group='.$group->id,
@@ -1484,7 +1497,7 @@ function group_get_menu_tabs() {
         );
     }
 
-    if (group_user_access($group->id)) {
+    if ($role) {
         safe_require('grouptype', $group->grouptype);
         $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
@@ -1731,35 +1744,42 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
 
 function group_get_user_groups($userid=null, $roles=null) {
+    global $USER;
+
     static $usergroups = array();
 
+    $loggedinid = $USER->get('id');
+
     if (is_null($userid)) {
-        global $USER;
-        $userid = $USER->get('id');
+        $userid = $loggedinid;
     }
 
     if (!isset($usergroups[$userid])) {
         $groups = get_records_sql_array("
-            SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category
+            SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
+                g.hidemembers, gm1.role AS loggedinrole
             FROM {group} g
-                JOIN {group_member} gm ON (gm.group = g.id)
-                JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
+                JOIN {group_member} gm ON gm.group = g.id
+                JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
+                LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
             WHERE gm.member = ?
                 AND g.deleted = 0
             ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
-            array($userid)
+            array($loggedinid, $userid)
         );
         $usergroups[$userid] = $groups ? $groups : array();
     }
 
-    if (empty($roles)) {
+    if (empty($roles) && $userid == $loggedinid) {
         return $usergroups[$userid];
     }
 
     $filtered = array();
 
     foreach ($usergroups[$userid] as $g) {
-        if (in_array($g->role, $roles)) {
+        $goodrole = empty($roles) || in_array($g->role, $roles);
+        $visible = !$g->hidemembers || $g->loggedinrole || $USER->get('admin') || $USER->get('staff');
+        if ($goodrole && $visible) {
             $filtered[] = $g;
         }
     }
