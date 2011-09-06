@@ -29,19 +29,11 @@ define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'group.php');
-safe_require('artefact', 'file');
 
 $id = param_integer('id');
 $group = get_record('group', 'id', $id);
 
-$group->admins = get_column_sql("SELECT member
-    FROM {group_member}
-    WHERE \"group\" = ?
-    AND \"role\" = 'admin'", array($group->id));
-
-$filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
-
-$group->settingsdescription = group_display_settings($group);
+list($group, $filecounts) = group_get_groupinfo_data($group);
 
 $smarty = smarty_core();
 $smarty->assign('group', $group);

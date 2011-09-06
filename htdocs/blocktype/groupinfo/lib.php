@@ -28,7 +28,6 @@
 defined('INTERNAL') || die();
 
 require_once('group.php');
-safe_require('artefact', 'file');
 class PluginBlocktypeGroupInfo extends SystemBlocktype {
 
     public static function get_title() {
@@ -97,18 +96,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
             throw new AccessDeniedException();
         }
 
-        // find the group administrators
-        $group->admins = get_column_sql("SELECT \"member\"
-            FROM {group_member}
-            WHERE \"group\" = ?
-            AND \"role\" = 'admin'", array($group->id));
-
-        $group->settingsdescription = group_display_settings($group);
-        if (get_config('allowgroupcategories')) {
-            $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
-        }
-
-        $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+        list($group, $filecounts) = group_get_groupinfo_data($group);
 
         return array('group'=>$group, 'filecounts'=>$filecounts);
     }

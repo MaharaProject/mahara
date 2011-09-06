@@ -1825,6 +1825,20 @@ function group_display_settings($group) {
     return join(', ', $settings);
 }
 
+function group_get_groupinfo_data($group) {
+    safe_require('artefact', 'file');
+
+    $group->admins = group_get_admins(array($group->id));
+    $group->settingsdescription = group_display_settings($group);
+    if (get_config('allowgroupcategories')) {
+        $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
+    }
+
+    $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+
+    return array($group, $filecounts);
+}
+
 /**
  * Return the view object for this group's homepage view
  *
