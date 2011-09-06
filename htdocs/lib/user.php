@@ -853,7 +853,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
                 SELECT s.member
                 FROM {group_member} s
                 JOIN {group_member} t ON s.group = t.group
-                JOIN {group} g ON (g.id = s.group AND g.deleted = 0)
+                JOIN {group} g ON (g.id = s.group AND g.deleted = 0 AND g.submittableto = 1)
                 JOIN {grouptype_roles} gtr
                     ON (g.grouptype = gtr.grouptype AND gtr.role = t.role AND gtr.see_submitted_views = 1)
                 WHERE s.member = ? AND t.member = ?',
