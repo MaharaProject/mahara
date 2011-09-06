@@ -74,7 +74,7 @@ $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $viewid, $groupid, $group;
+    global $SESSION, $USER, $viewid, $view, $groupid, $group;
     db_begin();
     update_record('view', array('submittedgroup' => $groupid, 'submittedtime' => db_format_timestamp(time())), array('id' => $viewid));
     $roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
@@ -92,14 +92,27 @@ function submitview_submit(Pieform $form, $values) {
     }
     ArtefactType::update_locked($USER->get('id'));
     activity_occurred('groupmessage', array(
-        'subject'       => get_string('viewsubmitted', 'view'), // will be overwritten
-        'message'       => get_string('viewsubmitted', 'view'), // will be overwritten
         'submittedview' => $viewid,
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
         'roles'         => $roles,
+        'url'           => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
         'strings'       => (object) array(
             'urltext' => (object) array('key' => 'view'),
+            'subject' => (object) array(
+                'key'     => 'viewsubmittedsubject',
+                'section' => 'activity',
+                'args'    => array(hsc($group->name)),
+            ),
+            'message' => (object) array(
+                'key'     => 'viewsubmittedmessage',
+                'section' => 'activity',
+                'args'    => array(
+                    hsc(display_name($USER, null, false, true)),
+                    hsc($view->title),
+                    hsc($group->name),
+                ),
+            ),
         ),
     ));
     db_commit();
