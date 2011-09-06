@@ -75,6 +75,7 @@ class PluginSearchInternal extends PluginSearch {
      * @param integer What result to start at (0 == first result)
      * @param data    Filters the users searched by
      *                can contain:
+     *             'friends' => boolean     // only return $USER's friends
      *             'group' => integer, // only users in this group
      *             'owner' => boolean  // include the group ownwer (only if group is set)
      *             'exclude'=> int     // excludes a user
@@ -107,6 +108,7 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
+        global $USER;
 
         $data = self::prepare_search_user_options($data);
         $sql = '
@@ -127,6 +129,13 @@ class PluginSearchInternal extends PluginSearch {
         $where = '
             WHERE
                 u.id != 0 AND u.active = 1 AND u.deleted = 0';
+
+        if (!empty($data['friends'])) {
+            // Only include friends in search
+            $where .= ' AND u.id IN (
+                SELECT usr1 FROM {usr_friend} f1 WHERE f1.usr2 = ' . $USER->get('id')
+                . ' UNION SELECT usr2 FROM {usr_friend} f2 WHERE f2.usr1 = ' . $USER->get('id') . ')';
+        }
 
         if (isset($data['institutions']) && !empty($data['institutions'])) {
             $where .= '

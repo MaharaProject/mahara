@@ -32,8 +32,9 @@
     <div class="fl viewacl-advanced-search">
       <label>{{str tag=search}}</label>
       <select name="type" id="type">
+        <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
         <option value="group">{{str tag=groups}}</option>
-        <option value="user" selected="selected">{{str tag=users}}</option>
+        <option value="user">{{str tag=users}}</option>
       </select>
       <input type="text" name="search" id="search">
       <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
@@ -359,7 +360,7 @@ var searchTable = new TableRenderer(
 );
 searchTable.statevars.push('type');
 searchTable.statevars.push('query');
-searchTable.type = 'user';
+searchTable.type = 'friend';
 searchTable.pagerOptions = {
     'firstPageString': '\u00AB',
     'previousPageString': '<',
@@ -373,6 +374,8 @@ searchTable.pagerOptions = {
 searchTable.query = '';
 searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     rowdata.type = searchTable.type;
+    rowdata.type = rowdata.type == 'friend' ? 'user' : rowdata.type;
+
     var buttonTD = TD({'style': 'white-space:nowrap;'});
 
     var addButton = BUTTON({'type': 'button', 'class': 'button'}, {{jstr tag=add}});
