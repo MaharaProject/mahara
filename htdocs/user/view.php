@@ -120,14 +120,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     // Get all groups that the logged in user is an admin of, or where the logged in user
     // has a role in the list of roles who are allowed to assess submitted views for the
     // group's grouptype
-    if ($groups = get_records_sql_array("SELECT g.*
-        FROM {group} g
-        JOIN {group_member} gm ON (gm.group = g.id)
-        JOIN {grouptype_roles} gtr ON gtr.grouptype = g.grouptype AND gtr.role = gm.role
-        WHERE gm.member = ?
-        AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
-        AND g.deleted = 0", array($loggedinid))) {
-
+    if ($groups = group_get_user_admintutor_groups()) {
         $invitelist     = array(); // List of groups the displayed user can be invited to join
         $controlledlist = array(); // List of groups the displayed user can be directly added to
 
