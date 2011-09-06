@@ -190,6 +190,11 @@ function get_admin_user_search_results($search, $offset, $limit) {
                         'type' => 'contains',
                         'string' => $word
                     );
+                    $queries[] = array(
+                        'field' => 'preferredname',
+                        'type' => 'contains',
+                        'string' => $word
+                    );
                 }
             }
             foreach ($fullnames as $n) {
@@ -300,6 +305,10 @@ function build_admin_user_search_results($search, $offset, $limit) {
         ),
         'lastname' => array(
             'name'     => get_string('lastname'),
+            'sort'     => true,
+        ),
+        'preferredname' => array(
+            'name'     => get_string('displayname'),
             'sort'     => true,
         ),
         'username' => array(
