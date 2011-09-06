@@ -1187,6 +1187,29 @@ function group_get_default_artefact_permissions($groupid) {
     return $permissions;
 }
 
+// Retrieve a list of group admins
+function group_get_admins($groupids) {
+    $groupids = array_map('intval', $groupids);
+
+    if (empty($groupids)) {
+        return array();
+    }
+
+    $groupadmins = get_records_sql_array('
+        SELECT m.group, m.member, u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.profileicon
+        FROM {group_member} m JOIN {usr} u ON u.id = m.member
+        WHERE m.group IN (' . implode(',', db_array_to_ph($groupids)) . ")
+        AND m.role = 'admin'",
+        $groupids
+    );
+
+    if (!$groupadmins) {
+        $groupadmins = array();
+    }
+
+    return $groupadmins;
+}
+
 /**
  * Sets up groups for display in mygroups.php and find.php
  *
@@ -1200,25 +1223,15 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         return;
     }
 
-    // Retrieve a list of all the group admins, for placing in each $group object
-    $groupadmins = array();
     $groupids = array_map(create_function('$a', 'return $a->id;'), $groups);
-    if ($groupids) {
-        $groupadmins = get_records_sql_array('SELECT "group", "member"
-            FROM {group_member}
-            WHERE "group" IN (' . implode(',', db_array_to_ph($groupids)) . ")
-            AND \"role\" = 'admin'", $groupids);
-        if (!$groupadmins) {
-            $groupadmins = array();
-        }
-    }
+    $groupadmins = group_get_admins($groupids);
 
     $i = 0;
     foreach ($groups as $group) {
         $group->admins = array();
         foreach ($groupadmins as $admin) {
             if ($admin->group == $group->id) {
-                $group->admins[] = $admin->member;
+                $group->admins[] = $admin;
             }
         }
         if ($group->membershiptype == 'member') {
