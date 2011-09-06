@@ -982,6 +982,7 @@ class ActivityTypeGroupMessage extends ActivityType {
 
     protected $group;
     protected $roles;
+    protected $deletedgroup;
 
     /**
      * @param array $data Parameters:
@@ -992,9 +993,10 @@ class ActivityTypeGroupMessage extends ActivityType {
         require_once('group.php');
 
         parent::__construct($data, $cron);
-
-        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null);
-        $this->users = activity_get_users($this->get_id(), $members);
+        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null, $this->deletedgroup);
+        if (!empty($members)) {
+            $this->users = activity_get_users($this->get_id(), $members);
+        }
     }
 
     public function get_required_parameters() {

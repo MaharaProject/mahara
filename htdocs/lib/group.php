@@ -644,26 +644,50 @@ function group_get_groups_for_editing($ids=null) {
  * {{@internal Maybe later we can have a group_can_be_deleted function if 
  * necessary}}
  */
-function group_delete($groupid, $shortname=null, $institution=null) {
+function group_delete($groupid, $shortname=null, $institution=null, $notifymembers=true) {
     if (empty($groupid) && !empty($institution) && !is_null($shortname) && strlen($shortname)) {
         // External call to delete a group, check permission of $USER.
         global $USER;
         if (!$USER->can_edit_institution($institution)) {
             throw new AccessDeniedException("group_delete: cannot delete a group in this institution");
         }
-        $groupid = get_field('group', 'id', 'shortname', $shortname, 'institution', $institution);
+
+        $group = get_record('group', 'shortname', $shortname, 'institution', $institution);
+    }
+    else {
+        $groupid = group_param_groupid($groupid);
+        $group = get_record('group', 'id', $groupid);
     }
 
-    $groupid = group_param_groupid($groupid);
+    if ($notifymembers) {
+        require_once('activity.php');
+        activity_occurred('groupmessage', array(
+            'group'         => $group->id,
+            'deletedgroup'  => true,
+            'strings'       => (object) array(
+                'subject' => (object) array(
+                    'key'     => 'deletegroupnotificationsubject',
+                    'section' => 'group',
+                    'args'    => array(hsc($group->name)),
+                ),
+                'message' => (object) array(
+                    'key'     => 'deletegroupnotificationmessage',
+                    'section' => 'group',
+                    'args'    => array(hsc($group->name), get_config('sitename')),
+                ),
+            ),
+        ));
+    }
+
     update_record('group',
         array(
             'deleted' => 1,
-            'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+            'name' => $group->name . '.deleted.' . time(),
             'shortname' => null,
             'institution' => null,
         ),
         array(
-            'id' => $groupid,
+            'id' => $group->id,
         )
     );
 }
@@ -1825,12 +1849,12 @@ function group_get_user_admintutor_groups() {
     return $groups;
 }
 
-function group_get_member_ids($group, $roles=null) {
+function group_get_member_ids($group, $roles=null, $includedeleted=false) {
     $rolesql = is_null($roles) ? '' : (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')');
     return get_column_sql('
         SELECT gm.member
         FROM {group_member} gm INNER JOIN {group} g ON gm.group = g.id
-        WHERE g.deleted = 0 AND g.id = ?' . $rolesql,
+        WHERE g.id = ? ' . ($includedeleted ? '' : ' AND g.deleted = 0') . $rolesql,
         array($group)
     );
 }

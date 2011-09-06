@@ -201,6 +201,8 @@ $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.'
 $string['declinerequestsuccess'] = 'Group membership request has been declined sucessfully.';
 $string['notpublic'] = 'This group is not public.';
 $string['moregroups'] = 'More groups';
+$string['deletegroupnotificationsubject'] = 'The group "%s" was deleted';
+$string['deletegroupnotificationmessage'] = 'You were a member of the group %s on %s.  This group has now been deleted.';
 
 // Bulk add, invite
 $string['addmembers'] = 'Add members';
