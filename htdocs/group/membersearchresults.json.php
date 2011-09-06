@@ -45,8 +45,13 @@ if (!is_logged_in() && !$group->public) {
 
 $role = group_user_access($group->id);
 
-if ($group->hidemembers && !$role && !$USER->get('admin') && !$USER->get('staff')) {
-    json_reply('local', get_string('accessdenied', 'error'));
+if (!$USER->get('admin') && !$USER->get('staff')) {
+    if (!$role && ($group->hidemembers || $group->hidemembersfrommembers)) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
+    if ($role != 'admin' && $group->hidemembersfrommembers) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
 }
 
 $membershiptype = param_variable('membershiptype', '');

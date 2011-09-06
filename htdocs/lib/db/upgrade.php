@@ -2720,6 +2720,11 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('hidemembers');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+
+        // Setting to hide group members from members
+        $field = new XMLDBField('hidemembersfrommembers');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
     }
 
     return $status;

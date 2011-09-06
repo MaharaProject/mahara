@@ -45,8 +45,13 @@ define('TITLE', $group->name . ' - ' . get_string('Members', 'group'));
 
 $role = group_user_access($group->id);
 
-if ($group->hidemembers && !$role && !$USER->get('admin') && !$USER->get('staff')) {
-    throw new AccessDeniedException();
+if (!$USER->get('admin') && !$USER->get('staff')) {
+    if (!$role && ($group->hidemembers || $group->hidemembersfrommembers)) {
+        throw new AccessDeniedException();
+    }
+    if ($role != 'admin' && $group->hidemembersfrommembers) {
+        throw new AccessDeniedException();
+    }
 }
 
 if (!empty($membershiptype) && $role != 'admin') {

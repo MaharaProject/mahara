@@ -280,6 +280,7 @@ function group_create($data) {
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['hidden'] = (isset($data['hidden'])) ? intval($data['hidden']) : 0;
     $data['hidemembers'] = (isset($data['hidemembers'])) ? intval($data['hidemembers']) : 0;
+    $data['hidemembersfrommembers'] = (isset($data['hidemembersfrommembers'])) ? intval($data['hidemembersfrommembers']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -356,6 +357,7 @@ function group_create($data) {
             'editroles'      => $data['editroles'],
             'hidden'         => $data['hidden'],
             'hidemembers'    => $data['hidemembers'],
+            'hidemembersfrommembers' => $data['hidemembersfrommembers'],
         ),
         'id',
         true
@@ -462,7 +464,8 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles', 'hidden', 'hidemembers') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles',
+        'hidden', 'hidemembers', 'hidemembersfrommembers') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -1464,7 +1467,11 @@ function group_get_menu_tabs() {
         ),
     );
 
-    if ($role || !$group->hidemembers) {
+    $memberstab = !$group->hidemembersfrommembers && !$group->hidemembers
+        || $role && !$group->hidemembersfrommembers
+        || $role == 'admin';
+
+    if ($memberstab) {
         $menu['members'] = array(
             'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,

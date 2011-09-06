@@ -70,6 +70,7 @@ else {
         'editroles'      => 'all',
         'hidden'         => 0,
         'hidemembers'    => 0,
+        'hidemembersfrommembers' => 0,
     );
 }
 
@@ -250,6 +251,12 @@ if ($cancreatecontrolled) {
         'description'  => get_string('hidemembersdescription', 'group'),
         'defaultvalue' => $group_data->hidemembers,
     );
+    $elements['hidemembersfrommembers'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hidemembersfrommembers', 'group'),
+        'description'  => get_string('hidemembersfrommembersdescription', 'group'),
+        'defaultvalue' => $group_data->hidemembersfrommembers,
+    );
 }
 else {
     $form['elements']['hidden'] = array(
@@ -259,6 +266,10 @@ else {
     $form['elements']['hidemembers'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->hidemembers,
+    );
+    $form['elements']['hidemembersfrommembers'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->hidemembersfrommembers,
     );
 }
 
@@ -349,6 +360,7 @@ function editgroup_submit(Pieform $form, $values) {
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
         'hidemembers'    => intval($values['hidemembers']),
+        'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
     );
 
     db_begin();

@@ -53,6 +53,7 @@ $ALLOWEDKEYS = array(
     'editroles',
     'hidden',
     'hidemembers',
+    'hidemembersfrommembers',
 );
 if ($USER->get('admin')) {
     $ALLOWEDKEYS[] = 'usersautoadded';

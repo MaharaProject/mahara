@@ -100,6 +100,8 @@ $string['hiddengroup'] = 'Hidden group';
 $string['hiddengroupdescription'] = 'Do not list this group on the Find Groups page.';
 $string['hidemembers'] = 'Hide membership';
 $string['hidemembersdescription'] = 'Hide the group\'s membership listing from non-members.';
+$string['hidemembersfrommembers'] = 'Hide membership from members';
+$string['hidemembersfrommembersdescription'] = 'Members cannot be listed except by group admins.  Admins will still be listed on the group home page.';
 
 $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';
