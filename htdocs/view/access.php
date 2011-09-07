@@ -30,6 +30,8 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
+global $CFG;
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
@@ -595,4 +597,5 @@ $smarty = smarty(
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('wwwroot', $CFG->wwwroot);
 $smarty->display('view/access.tpl');

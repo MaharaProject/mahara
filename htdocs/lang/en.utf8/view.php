@@ -160,7 +160,8 @@ $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this page? It cannot be undone.<br/>Please consider creating a backup of this page by <a href="%sexport/" target="_blank">exporting</a> it.';
 $string['deleteviewconfirmnote'] = '<strong>NOTE:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page as well as text entered directly into text boxes will be deleted.';
 
-$string['editaccesspagedescription3'] = 'By default, only you can see your Pages. You can share pages with others by adding access rules.  Once you are done, scroll down and click Save to continue.';
+$string['editaccesspagedescription3'] = 'By default, only you can see your Collections and Pages. You can share pages with others by adding access rules below. You may set multiple items to have identical settings by choosing them from the checkboxes. Once you are done, scroll down and click Save to continue.';
+$string['editsecreturlsintable'] = '<b>Secret URLs</b> can not be set on this page as they must be done individually. To set Secret URLs, please return to the <a href="%sview/share.php">list of Collections and Pages</a>.';
 $string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of pages and collections';
 
 $string['overridingstartstopdate'] = 'Overriding Start/Stop Dates';
