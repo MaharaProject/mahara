@@ -410,6 +410,35 @@ class ArtefactTypeBlog extends ArtefactType {
             ),
         ));
     }
+
+    /**
+     * During the copying of a view, we might be allowed to copy
+     * blogs. Users need to have multipleblogs enabled for these
+     * to be visible.
+     */
+    public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
+        global $USER, $SESSION;
+
+        $viewid = $view->get('id');
+
+        try {
+            $user = get_user($view->get('owner'));
+            set_account_preference($user->id, 'multipleblogs', 1);
+            $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+        }
+        catch (Exception $e) {
+            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/'), false);
+        }
+
+        try {
+            $USER->accountprefs = load_account_preferences($user->id);
+        }
+        catch (Exception $e) {
+            $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+        }
+
+        return null;
+    }
 }
 
 /**
@@ -908,6 +937,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public function default_parent_for_copy(&$view, &$template, $artefactstoignore) {
         static $blogids;
+        global $USER, $SESSION;
 
         $viewid = $view->get('id');
 
@@ -927,6 +957,22 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blog->commit();
 
         $blogids[$viewid] = $blog->get('id');
+
+        try {
+            $user = get_user($view->get('owner'));
+            set_account_preference($user->id, 'multipleblogs', 1);
+            $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
+        }
+        catch (Exception $e) {
+            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/'), false);
+        }
+
+        try {
+            $USER->accountprefs = load_account_preferences($user->id);
+        }
+        catch (Exception $e) {
+            $SESSION->add_error_msg(get_string('pleaseloginforjournals', 'error'));
+        }
 
         return $blogids[$viewid];
     }

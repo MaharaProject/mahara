@@ -98,5 +98,6 @@ $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
 $string['collectioncopywouldexceedquota'] = 'Copying this collection would exceed your file quota.';
 $string['copiedpagesblocksandartefactsfromtemplate'] = 'Copied %d pages, %d blocks and %d artefacts from %s';
+$string['copiedblogpoststonewjournal'] = 'Copied journal posts have been put into a new separate journal.';
 $string['by'] = 'by';
 $string['copycollection'] = 'Copy collection';
