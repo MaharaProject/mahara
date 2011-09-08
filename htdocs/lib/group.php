@@ -1744,6 +1744,17 @@ function group_get_user_groups($userid=null, $roles=null) {
     return $groups;
 }
 
+function group_get_user_admintutor_groups() {
+    $groups = array();
+
+    foreach (group_get_user_groups() as $g) {
+        if ($g->role == 'admin' || $g->see_submitted_views) {
+            $groups[] = $g;
+        }
+    }
+
+    return $groups;
+}
 
 function group_get_member_ids($group, $roles=null) {
     $rolesql = is_null($roles) ? '' : (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')');

@@ -42,28 +42,8 @@ $limit = 10;
 $data = search_friend($filter, $limit, $offset);
 $data['filter'] = $filter;
 
-// @todo I'm not sure we actually need to distinguish the controlled
-// & invite groups at this stage.  Investigate whether we can just use
-// group_get_user_groups to fetch all the user's groups, and work out
-// whether the user has invite or add power for any of them.
-$controlledgroups = count_records_sql("SELECT COUNT(g.id)
-          FROM {group} g
-          JOIN {group_member} gm ON (gm.group = g.id)
-          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
-          WHERE gm.member = ?
-          AND g.jointype = 'controlled'
-          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
-          AND g.deleted = 0", array($USER->get('id')));
-
-$invite = count_records_sql("SELECT COUNT(g.id)
-        FROM {group} g
-        JOIN {group_member} gm ON (gm.group = g.id)
-        WHERE gm.member = ?
-        AND gm.role = 'admin'
-        AND g.deleted = 0", array($USER->get('id')));
-
-$admingroups = $controlledgroups || $invite;
-
+require_once('group.php');
+$admingroups = (bool) group_get_user_admintutor_groups();
 build_userlist_html($data, 'myfriends', $admingroups);
 
 $filterform = pieform(array(

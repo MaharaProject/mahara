@@ -56,14 +56,7 @@ if (!empty($options['myinstitutions'])) {
 }
 
 require_once(get_config('libroot').'group.php');
-$admingroups = false;
-foreach (group_get_user_groups() as $g) {
-    if ($g->role == 'admin' || $g->see_submitted_views) {
-        $admingroups = true;
-        break;
-    }
-}
-
+$admingroups = (bool) group_get_user_admintutor_groups();
 build_userlist_html($data, 'find', $admingroups);
 
 $searchform = array(
