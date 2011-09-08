@@ -1807,7 +1807,7 @@ function group_get_user_groups($userid=null, $roles=null) {
     if (!isset($usergroups[$userid])) {
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
-                g.hidemembers, gm1.role AS loggedinrole
+                g.hidemembers, g.invitefriends, gm1.role AS loggedinrole
             FROM {group} g
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role

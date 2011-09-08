@@ -41,8 +41,12 @@ if (!$user) {
     throw new UserNotFoundException(get_string('usernotfound', 'group', $userid));
 }
 
-if (group_user_access($groupid) != 'admin') {
-    throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
+$role = group_user_access($groupid);
+
+if ($role != 'admin' && !group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
+    if (!$group->invitefriends || !is_friend($user->id, $USER->get('id'))) {
+        throw new AccessDeniedException(get_string('cannotinvitetogroup', 'group'));
+    }
 }
 
 if (record_exists('group_member', 'group', $groupid, 'member', $userid)
@@ -74,6 +78,7 @@ $form = pieform(array(
             'options' => $roles,
             'title'   => get_string('Role', 'group'),
             'defaultvalue' => call_static_method('GroupType' . $group->grouptype, 'default_role'),
+            'ignore'  => $role != 'admin',
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -90,7 +95,7 @@ $smarty->display('group/invite.tpl');
 
 function invitetogroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $user;
-    group_invite_user($group, $user->id, $USER, $values['role']);
+    group_invite_user($group, $user->id, $USER, isset($values['role']) ? $values['role'] : null);
     $SESSION->add_ok_msg(get_string('userinvited', 'group'));
     redirect('/user/view.php?id=' . $user->id);
 }

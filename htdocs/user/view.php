@@ -117,10 +117,17 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
     $requestedlist = array(); // Groups admin'ed by the logged in user that the displayed user has requested membership of
 
-    // Get all groups that the logged in user is an admin of, or where the logged in user
-    // has a role in the list of roles who are allowed to assess submitted views for the
-    // group's grouptype
-    if ($groups = group_get_user_admintutor_groups()) {
+    // Get all groups where either:
+    // - the logged in user is an admin, or
+    // - the logged in user has a role which is allowed to assess submitted views, or
+    // - the logged in user is a member & is allowed to invite friends (when the displayed user is a friend)
+    $groups = array();
+    foreach (group_get_user_groups() as $g) {
+        if ($g->role == 'admin' || $g->see_submitted_views || ($is_friend && $g->invitefriends)) {
+            $groups[] = $g;
+        }
+    }
+    if ($groups) {
         $invitelist     = array(); // List of groups the displayed user can be invited to join
         $controlledlist = array(); // List of groups the displayed user can be directly added to
 
@@ -138,7 +145,8 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                     continue; // Already a member
                 }
             }
-            if ($group->jointype == 'controlled') {
+            $canadd = $group->role == 'admin' || $group->see_submitted_views;
+            if ($canadd && $group->jointype == 'controlled') {
                 $controlledlist[$group->id] = $group->name;
             }
             if (!isset($invitedlist[$group->id])) {
