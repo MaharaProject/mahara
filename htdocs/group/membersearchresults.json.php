@@ -58,7 +58,11 @@ $membershiptype = param_variable('membershiptype', '');
 $friends = param_integer('friends', 0);
 if (!empty($membershiptype)) {
     if ($role != 'admin') {
-        json_reply('local', get_string('accessdenied', 'error'));
+        // Non-admins are allowed to find the 'notinvited' users, but only if 'invitefriends'
+        // or 'suggestfriends' is enabled, and they're filtering by their friends list
+        if ($membershiptype != 'notinvited' || !$role || !($group->invitefriends || $group->suggestfriends) || !$friends) {
+            json_reply('local', get_string('accessdenied', 'error'));
+        }
     }
 }
 

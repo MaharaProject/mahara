@@ -1,8 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
+ * Copyright (C) 2011 Catalyst IT Ltd and others; see:
+ *                    http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Richard Mansfield
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -39,18 +38,14 @@ if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
 }
 
-$friends = param_integer('friends', 0);
 $role = group_user_access($group->id);
 
-if ($role != 'admin') {
-    // Allow non-admins to get to this page when invitefriends is
-    // enabled and they're filtering by their friends.
-    if (!$friends || !$role || !$group->invitefriends) {
-        throw new AccessDeniedException();
-    }
+if (!$role || !$group->suggestfriends) {
+    throw new AccessDeniedException();
 }
 
-define('TITLE', $group->name . ' - ' . get_string('sendinvitations', 'group'));
+$subheading = get_string('suggesttofriends', 'group');
+define('TITLE', $group->name . ' - ' . $subheading);
 
 $form = pieform(array(
     'name' => 'addmembers',
@@ -58,7 +53,7 @@ $form = pieform(array(
         'users' => array(
             'type' => 'userlist',
             'lefttitle' => get_string('potentialmembers', 'group'),
-            'righttitle' => get_string('userstobeinvited', 'group'),
+            'righttitle' => get_string('userstosendrecommendationsto', 'group'),
             'searchscript' => 'group/membersearchresults.json.php',
             'defaultvalue' => array(),
             'filter' => false,
@@ -67,7 +62,7 @@ $form = pieform(array(
                 'limit' => 100,
                 'html' => 0,
                 'membershiptype' => 'notinvited',
-                'friends' => $friends,
+                'friends' => 1,
             ),
         ),
         'submit' => array(
@@ -78,27 +73,39 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('subheading', get_string('sendinvitations', 'group'));
+$smarty->assign('subheading', $subheading);
 $smarty->assign('form', $form);
 $smarty->display('group/form.tpl');
 exit;
 
 function addmembers_submit(Pieform $form, $values) {
-    global $SESSION, $group, $USER, $friends;
+    global $SESSION, $group, $USER;
 
     if (empty($values['users'])) {
-        redirect(get_config('wwwroot') . 'group/inviteusers.php?id=' . GROUP . ($friends ? '&friends=1' : ''));
+        redirect(get_config('wwwroot') . 'group/suggest.php?id=' . GROUP);
     }
 
-    db_begin();
-    foreach ($values['users'] as $userid) {
-        group_invite_user($group, $userid, $USER->get('id'), 'member', true);
-    }
-    db_commit();
+    require_once('activity.php');
+    activity_occurred('maharamessage', array(
+        'users'   => $values['users'],
+        'subject' => '',
+        'message' => '',
+        'strings'       => (object) array(
+            'subject' => (object) array(
+                'key'     => 'suggestgroupnotificationsubject',
+                'section' => 'group',
+                'args'    => array(display_name($USER)),
+            ),
+            'message' => (object) array(
+                'key'     => 'suggestgroupnotificationmessage',
+                'section' => 'group',
+                'args'    => array(display_name($USER), hsc($group->name), get_config('sitename')),
+            ),
+        ),
+        'url'     => get_config('wwwroot') . 'group/view.php?id=' . GROUP,
+        'urltext' => hsc($group->name),
+    ));
 
-    $SESSION->add_ok_msg(get_string('invitationssent', 'group', count($values['users'])));
-    if ($friends) {
-        redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP);
-    }
-    redirect(get_config('wwwroot') . 'group/members.php?id=' . GROUP);
+    $SESSION->add_ok_msg(get_string('recommendationssent', 'group', count($values['users'])));
+    redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP);
 }

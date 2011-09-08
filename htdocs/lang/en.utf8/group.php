@@ -102,6 +102,17 @@ $string['hidemembers'] = 'Hide membership';
 $string['hidemembersdescription'] = 'Hide the group\'s membership listing from non-members.';
 $string['hidemembersfrommembers'] = 'Hide membership from members';
 $string['hidemembersfrommembersdescription'] = 'Members cannot be listed except by group admins.  Admins will still be listed on the group home page.';
+$string['friendinvitations'] = 'Friend invitations';
+$string['invitefriendsdescription'] = 'If checked, members will be allowed to invite friends to join the group.  Regardless of this setting, group admins can always send invitations to anyone.';
+$string['invitefriends'] = 'Invite friends';
+$string['Recommendations'] = 'Recommendations';
+$string['suggestfriendsdescription'] = 'If checked, members can easily send a recommendation about this group to their friends from a button on the group homepage.';
+$string['suggesttofriends'] = 'Suggest to friends';
+$string['userstosendrecommendationsto'] = 'Users who will be sent a recommendation';
+$string['suggestgroupnotificationsubject'] = '%s suggested you join a group';
+$string['suggestgroupnotificationmessage'] = '%s suggested that you join the group "%s" on %s';
+$string['recommendationssent'] = '%d recommendation(s) sent';
+$string['suggestinvitefriends'] = 'You cannot enable both friend invitations and recommendations.';
 
 $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';

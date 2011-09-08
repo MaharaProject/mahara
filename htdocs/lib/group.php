@@ -285,6 +285,12 @@ function group_create($data) {
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
 
+    if (!empty($data['invitefriends']) && !empty($data['suggestfriends'])) {
+        throw new InvalidArgumentException("group_create: a group cannot enable both invitefriends and suggestfriends");
+    }
+    $data['invitefriends'] = (isset($data['invitefriends'])) ? intval($data['invitefriends']) : 0;
+    $data['suggestfriends'] = (isset($data['suggestfriends'])) ? intval($data['suggestfriends']) : 0;
+
     if (isset($data['shortname']) && strlen($data['shortname'])) {
         // This is a group whose details and membership can be updated automatically, using a
         // webservice api or possibly csv upload.
@@ -358,6 +364,8 @@ function group_create($data) {
             'hidden'         => $data['hidden'],
             'hidemembers'    => $data['hidemembers'],
             'hidemembersfrommembers' => $data['hidemembersfrommembers'],
+            'invitefriends'  => $data['invitefriends'],
+            'suggestfriends' => $data['suggestfriends'],
         ),
         'id',
         true
@@ -500,6 +508,17 @@ function group_update($new, $create=false) {
 
     unset($new->open);
     unset($new->controlled);
+
+    // Ensure only one of invitefriends,suggestfriends gets enabled.
+    if (!empty($new->invitefriends)) {
+        $new->suggestfriends = 0;
+    }
+    else if (!isset($new->invitefriends)) {
+        $new->invitefriends = (int) ($old->invitefriends && empty($new->suggestfriends));
+    }
+    if (!isset($new->suggestfriends)) {
+        $new->suggestfriends = $old->suggestfriends;
+    }
 
     $diff = array_diff_assoc((array)$new, (array)$old);
     if (empty($diff)) {

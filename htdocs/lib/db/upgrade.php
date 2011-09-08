@@ -2725,6 +2725,16 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('hidemembersfrommembers');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+
+        // Allow group members to invite friends
+        $field = new XMLDBField('invitefriends');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Allow group members to recommend the group to friends
+        $field = new XMLDBField('suggestfriends');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
     }
 
     return $status;

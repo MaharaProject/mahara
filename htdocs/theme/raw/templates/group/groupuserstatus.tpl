@@ -7,9 +7,16 @@
       {str tag="youaregroup$group->role" section="grouptype.$group->grouptype"}
     {/if}
         </li>
-{if $group->canleave}
-    <li class="leavegroup"><a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup"><span class="icon">{str tag="leavegroup" section="group"}</span></a></li>
-{/if}
+    <li class="leavegroup">
+    {if $group->canleave}
+      <a href ="{$WWWROOT}group/leave.php?id={$group->id}&amp;returnto={$returnto}" class="btn-leavegroup"><span class="icon">{str tag="leavegroup" section="group"}</span></a>
+    {/if}
+    {if $group->invitefriends}
+      <a href ="{$WWWROOT}group/inviteusers.php?id={$group->id}&friends=1" class="btn"><span class="icon">{str tag="invitefriends" section="group"}</span></a>
+    {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
+      <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn"><span class="icon">{str tag="suggesttofriends" section="group"}</span></a>
+    {/if}
+    </li>
 {elseif $group->membershiptype == 'admin'}
 	<li class="admincontrol"><a href="{$WWWROOT}group/edit.php?id={$group->id}" title="{str tag=edit}" class="btn-editgroup"><span class="icon">{str tag=edit}</span></a>
 	<a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str tag=delete}" class="btn-deletegroup"><span class="icon">{str tag=delete}</span></a></li>
