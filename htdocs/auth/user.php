@@ -1167,6 +1167,8 @@ class LiveUser extends User {
      * Logs the current user out
      */
     public function logout () {
+        require_once(get_config('libroot') . 'ddl.php');
+
         if ($this->changed == true) {
             log_debug('Destroying user with un-committed changes');
         }
@@ -1178,7 +1180,7 @@ class LiveUser extends User {
         // Unset session variables related to authentication
         $this->SESSION->set('authinstance', null);
         if (get_config('installed') && !defined('INSTALLER') && $this->get('sessionid')
-            && function_exists('table_exists') && table_exists('usr_session')) {
+            && table_exists(new XMLDBTable('usr_session'))) {
             delete_records('usr_session', 'session', $this->get('sessionid'));
         }
 
