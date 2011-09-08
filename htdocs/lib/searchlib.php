@@ -362,9 +362,10 @@ function build_admin_user_search_results($search, $offset, $limit) {
  * @param int    $limit             How many results to show
  * @param array  $membershiptype    User membershiptype
  * @param bool   $random            Set to true if you want the result to be ordered by random, default false
+ * @param int    $friendof          Only return friends of this user
  *
  */
-function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null) {
+function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null, $friendof=null) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
@@ -407,7 +408,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
 
     $results = call_static_method(
         generate_class_name('search', $plugin), 'group_search_user',
-        $group, $queries, $constraints, $offset, $limit, $membershiptype, $order
+        $group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof
     );
 
     if ($results['count']) {

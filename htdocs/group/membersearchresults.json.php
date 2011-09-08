@@ -55,14 +55,17 @@ if (!$USER->get('admin') && !$USER->get('staff')) {
 }
 
 $membershiptype = param_variable('membershiptype', '');
-
+$friends = param_integer('friends', 0);
 if (!empty($membershiptype)) {
     if ($role != 'admin') {
         json_reply('local', get_string('accessdenied', 'error'));
     }
 }
 
-$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
+$results = get_group_user_search_results(
+    $group->id, $query, $offset, $limit, $membershiptype, null,
+    $friends ? $USER->get('id') : null
+);
 if (!param_integer('html', 1)) {
     foreach ($results['data'] as &$result) {
         $result = array('id' => $result['id'], 'name' => $result['name']);
