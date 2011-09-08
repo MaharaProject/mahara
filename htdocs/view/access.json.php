@@ -40,6 +40,9 @@ $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 switch ($type) {
+    case 'friend':
+        $data = search_user($query, $limit, $offset,  array('exclude' => $USER->get('id'), 'friends' => true));
+        break;
     case 'user':
         $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
         break;
