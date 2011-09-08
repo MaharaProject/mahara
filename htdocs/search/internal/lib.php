@@ -362,7 +362,7 @@ class PluginSearchInternal extends PluginSearch {
         $querydata = self::split_query_string(strtolower(trim($query_string)));
 
         $matches = array();
-        foreach (array('firstname', 'lastname', 'username', 'email') as $f) {
+        foreach (array('firstname', 'lastname', 'preferredname', 'username', 'email') as $f) {
             $matches[] = self::match_user_field_expression($f, 'u');
         }
 
@@ -374,7 +374,7 @@ class PluginSearchInternal extends PluginSearch {
                 AND (
                     ' . $termsql . '
                 )';
-            $values = array_pad($values, count($values) + 4, $term);
+            $values = array_pad($values, count($values) + 5, $term);
         }
 
         if (!empty($constraints)) {
@@ -402,7 +402,7 @@ class PluginSearchInternal extends PluginSearch {
         if ($count > 0) {
             $data = get_records_sql_assoc('
                 SELECT 
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff, u.profileicon,
+                    u.id, u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
                     u.active, NOT u.suspendedcusr IS NULL as suspended
                 FROM {usr} u ' . $where . '
                 ORDER BY ' . $sort . ', u.id',
