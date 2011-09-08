@@ -117,20 +117,40 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
     $requestedlist = array(); // Groups admin'ed by the logged in user that the displayed user has requested membership of
 
-    // Get the logged in user's "invite only" groups
+    // Get all groups that the logged in user is an admin of, or where the logged in user
+    // has a role in the list of roles who are allowed to assess submitted views for the
+    // group's grouptype
     if ($groups = get_records_sql_array("SELECT g.*
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
+        JOIN {grouptype_roles} gtr ON gtr.grouptype = g.grouptype AND gtr.role = gm.role
         WHERE gm.member = ?
-        AND gm.role = 'admin'
+        AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
         AND g.deleted = 0", array($loggedinid))) {
-        $invitelist = array();
+
+        $invitelist     = array(); // List of groups the displayed user can be invited to join
+        $controlledlist = array(); // List of groups the displayed user can be directly added to
+
         foreach ($groups as $group) {
             if (array_key_exists($group->id, $allusergroups)) {
-                $invitedlist[$group->id] = $group->name;
-                continue;
+                if ($allusergroups[$group->id]->type == 'invite') {
+                    $invitedlist[$group->id] = $group->name;
+                }
+                else if ($allusergroups[$group->id]->type == 'request') {
+                    $requestedlist[$group->id] = $group->name;
+                    $controlledlist[$group->id] = $group->name;
+                    continue;
+                }
+                else {
+                    continue; // Already a member
+                }
             }
-            $invitelist[$group->id] = $group->name;
+            if ($group->jointype == 'controlled') {
+                $controlledlist[$group->id] = $group->name;
+            }
+            if (!isset($invitedlist[$group->id])) {
+                $invitelist[$group->id] = $group->name;
+            }
         }
         $smarty->assign('invitedlist', join(', ', $invitedlist));
         if (count($invitelist) > 0) {
@@ -160,34 +180,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
             ));
             $smarty->assign('inviteform',$inviteform);
         }
-    }
 
-    // Get (a) controlled membership groups,
-    //     (b) request membership groups where the displayed user has requested membership,
-    // where the logged in user either:
-    // 1. is a group admin, or;
-    // 2. has a role in the list of roles who are allowed to assess submitted views for the given grouptype
-    if ($groups = get_records_sql_array("SELECT g.*, gm.ctime
-          FROM {group} g
-          JOIN {group_member} gm ON (gm.group = g.id)
-          JOIN {grouptype_roles} gtr ON (gtr.grouptype = g.grouptype AND gtr.role = gm.role)
-          LEFT JOIN {group_member_request} gmr ON (gmr.member = ? AND gmr.group = g.id)
-          WHERE gm.member = ?
-          AND (g.jointype = 'controlled' OR (g.request = 1 AND gmr.member = ?))
-          AND (gm.role = 'admin' OR gtr.see_submitted_views = 1)
-          AND g.deleted = 0", array($userid,$loggedinid,$userid))) {
-        $controlledlist = array();
-        foreach ($groups as $group) {
-            if (array_key_exists($group->id, $allusergroups)) {
-                continue;
-            }
-            if ($group->request) {
-                $requestedlist[$group->id] = $group->name;
-            }
-            if ($group->jointype == 'controlled') {
-                $controlledlist[$group->id] = $group->name;
-            }
-        }
         $smarty->assign('requestedlist', join(', ', $requestedlist));
         if (count($controlledlist) > 0) {
             $default = array_keys($controlledlist);
