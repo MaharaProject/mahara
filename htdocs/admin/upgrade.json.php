@@ -101,6 +101,9 @@ if (!empty($upgrade)) {
         }
         $data['error'] = false;
         $data['feedback'] = $SESSION->render_messages();
+        if (param_boolean('last', false)) {
+            delete_records('config', 'field', '_upgrade');
+        }
         json_reply(false, $data);
         exit;
     } 
@@ -108,6 +111,9 @@ if (!empty($upgrade)) {
         list($texttrace, $htmltrace) = log_build_backtrace($e->getTrace());
         $data['errormessage'] = $e->getMessage() . '<br>' . $htmltrace;
         $data['error'] = true;
+        if (table_exists(new XMLDBTable('config'))) {
+            delete_records('config', 'field', '_upgrade');
+        }
         json_reply('local', $data);
         exit;
     }
@@ -122,6 +128,9 @@ else {
     // time the core upgrade was written.
     $data['error'] = false;
     $data['message'] = get_string('nothingtoupgrade','admin');
+    if (param_boolean('last', false)) {
+        delete_records('config', 'field', '_upgrade');
+    }
     json_reply(false, $data);
     exit;
 }

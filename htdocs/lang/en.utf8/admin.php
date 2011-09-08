@@ -58,6 +58,7 @@ $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
+$string['upgradeinprogress'] = 'An upgrade began at %s and did not complete. <a href="?rerun=1">Run this upgrade anyway.</a>';
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable javascript to perform an install or upgrade.';
 $string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. You may still attempt this upgrade but it is recommended that you convert your database to UTF-8.';
