@@ -2232,7 +2232,7 @@ function remote_avatar($email, $size, $notfound) {
     }
 
     $baseurl = 'http://www.gravatar.com/avatar/';
-    if (stripos(get_config('wwwroot'), 'https://') === 0) {
+    if (is_https() === true) {
         $baseurl = 'https://secure.gravatar.com/avatar/';
     }
     if (get_config('remoteavatarbaseurl')) {

@@ -149,7 +149,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         }
     }
     else { // Do not cache files in proxies and browsers
-        if (strpos(get_config('wwwroot'), 'https://') === 0) { //https sites - watch out for IE! KB812935 and KB316431
+        if (is_https() === true) { //https sites - watch out for IE! KB812935 and KB316431
             header('Cache-Control: max-age=10');
             header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
             header('Pragma: ');

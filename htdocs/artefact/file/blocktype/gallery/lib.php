@@ -742,7 +742,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     private static function get_supported_external_galleries() {
         $smarty = smarty_core();
         $smarty->assign('wwwroot', get_config('wwwroot'));
-        if (stripos(get_config('wwwroot'), 'https') === 0) {
+        if (is_https() === true) {
             $smarty->assign('protocol', 'https');
         }
         else {
