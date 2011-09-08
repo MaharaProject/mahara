@@ -533,7 +533,8 @@ function group_update($new, $create=false) {
     }
 
     // When the group type changes, make sure everyone has a valid role.
-    $allowedroles = call_static_method('GroupType' . $new->grouptype, 'get_roles');
+    safe_require('grouptype', $new->grouptype);
+    $allowedroles = call_static_method('GroupType' . ucfirst($new->grouptype), 'get_roles');
     set_field_select(
         'group_member', 'role', 'member',
         '"group" = ? AND NOT role IN (' . join(',', array_fill(0, count($allowedroles), '?')) . ')',
