@@ -56,6 +56,9 @@
 #forumslist td .inlinelist span {
 	font-weight: bold;
 }
+#forumslist td.right {
+	width: 60px;
+}
 
 /* Topic list */
 #viewforum {
@@ -96,6 +99,12 @@
 	width: 50px;
 	text-align: right;
 }
+}
+#forumtopicstable td br {
+	line-height: .3333em;
+}
+#forumtopicstable td.right {
+	width: 60px;
 }
 
 /* Forum Pagination */

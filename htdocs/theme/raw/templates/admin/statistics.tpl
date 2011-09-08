@@ -5,11 +5,11 @@
   {include file='admin/stats.tpl' cron=1}
 </div>
 <div class="site-stats-right fr">
-<ul class="in-page-tabs">
+<div class="tabswrap"><ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
-  <li><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
+  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
 {/foreach}
-</ul>
+</ul></div>
 
 <div class="subpage rel">
   <div class="statistics-subpage-left-column fl">

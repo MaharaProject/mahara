@@ -410,8 +410,12 @@ div.grippie {
 	height: 14px;
 	padding: 3px 0 0 3px;
 }
-.memberssearch {
+.memberswrap {
+	padding: 5px 0 5px 4px;
 	margin-top: 10px;
+	border: 1px solid #EEEEEE;
+}
+.memberssearch {
 	padding: 5px 10px;
 	background: #eee;
 	border-right: 4px solid #FFF;
@@ -426,6 +430,15 @@ div.grippie {
 #membersearchresults .membericon {
 	width: 50px;
 }
+#membersearchresults .removemember {
+	padding: 2px 0 5px 0;
+}
+.grouppageswrap {
+	border: 1px solid #EEEEEE;
+	margin: 0;
+	padding: 10px;
+}
+
 /* Legend */
 legend {
 	font-weight: bold;
@@ -1709,6 +1722,10 @@ table.attachments td {
 	padding: 5px 0 0 0;
 }
 /* My Views */
+#searchviews {
+	padding: 5px 0;
+	margin-bottom: 3px;
+}
 #searchviews #searchviews_query {
 	margin-right: 3px;
 }
@@ -2222,7 +2239,7 @@ div.groupbox li.last {
 #editgroup th label {
 	white-space: nowrap;
 }
-form#search, form#filter, div.searchform, #searchviews {
+form#search, form#filter, div.searchform {
 	margin-bottom: 10px;
 }
 #friendslist ul.viewlist, #onlinelist ul.viewlist {

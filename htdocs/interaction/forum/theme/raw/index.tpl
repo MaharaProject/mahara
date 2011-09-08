@@ -7,7 +7,7 @@
 </div>
 {/if}
 {if $forums}
-<table id="forumslist" class="fullwidth nohead">
+<div id="viewforum"><table id="forumslist" class="fullwidth nohead">
 	<tr>
 		<th>{str tag="name" section="interaction.forum"}</th>
 		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
@@ -43,7 +43,7 @@
         </td>
 	</tr>
     {/foreach}
-</table>
+</table></div>
 {else}
 <div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}
