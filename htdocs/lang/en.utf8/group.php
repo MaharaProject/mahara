@@ -222,7 +222,6 @@ $string['requestedfriendlistmessagereason'] = '%s has requested that you add the
 
 $string['removefromfriendslist'] = 'Remove from friends';
 $string['removefromfriends'] = 'Remove %s from friends';
-$string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
@@ -246,7 +245,6 @@ $string['backtofriendslist'] = 'Back to Friends List';
 $string['findnewfriends'] = 'Find New Friends';
 $string['Views']          = 'Pages';
 $string['Files']          = 'Files';
-$string['seeallviews']    = 'See all %s pages...';
 $string['noviewstosee']   = 'None that you can see :(';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
 $string['approverequest'] = 'Approve Request!';
