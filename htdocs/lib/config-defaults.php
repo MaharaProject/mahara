@@ -237,3 +237,6 @@ $cfg->leapovermnetloglevel = 0;
 // Set a fixed height in pixels for the tinymce editor (currently only
 // affects the textbox blocktype):
 // $cfg->blockeditorheight = 550;
+
+// This needs to be true when forcing https with an ssl proxy such as nginx.
+$cfg->sslproxy = false;
