@@ -1738,26 +1738,33 @@ function group_get_user_groups($userid=null, $roles=null) {
         $userid = $USER->get('id');
     }
 
-    if (empty($roles) && isset($usergroups[$userid])) {
-        return $usergroups[$userid];
-    }
-
-    if (!$groups = get_records_sql_array(
-        "SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category
-        FROM {group} g
-        JOIN {group_member} gm ON (gm.group = g.id)
-        JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
-        WHERE gm.member = ?
-        AND g.deleted = 0 " . (is_array($roles) ? (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')') : '') . "
-        ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id", array($userid))) {
-        $groups = array();
+    if (!isset($usergroups[$userid])) {
+        $groups = get_records_sql_array("
+            SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category
+            FROM {group} g
+                JOIN {group_member} gm ON (gm.group = g.id)
+                JOIN {grouptype_roles} gtr ON (g.grouptype = gtr.grouptype AND gm.role = gtr.role)
+            WHERE gm.member = ?
+                AND g.deleted = 0
+            ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
+            array($userid)
+        );
+        $usergroups[$userid] = $groups ? $groups : array();
     }
 
     if (empty($roles)) {
-        $usergroups[$userid] = $groups;
+        return $usergroups[$userid];
     }
 
-    return $groups;
+    $filtered = array();
+
+    foreach ($usergroups[$userid] as $g) {
+        if (in_array($g->role, $roles)) {
+            $filtered[] = $g;
+        }
+    }
+
+    return $filtered;
 }
 
 function group_get_user_admintutor_groups() {
