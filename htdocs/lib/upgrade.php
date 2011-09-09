@@ -848,6 +848,7 @@ function core_install_firstcoredata_defaults() {
         'cron_clean_internal_activity_notifications'=> array(45, 22, '*', '*', '*'),
         'cron_sitemap_daily'                        => array(0, 1, '*', '*', '*'),
         'file_cleanup_old_cached_files'             => array(0, 1, '*', '*', '*'),
+        'user_login_tries_to_zero'                  => array('*/5', '*', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

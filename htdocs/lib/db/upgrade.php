@@ -2758,5 +2758,22 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('blocktype_installed', 'artefactplugin', 'blog', 'name', 'taggedposts');
     }
 
+    if ($oldversion < 2011102700) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('logintries');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        // Every 5 minutes, reset everyone's login attempts to 0
+        $cron = new StdClass;
+        $cron->callfunction = 'user_login_tries_to_zero';
+        $cron->minute       = '*/5';
+        $cron->hour         = '*';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }
