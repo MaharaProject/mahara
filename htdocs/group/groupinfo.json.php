@@ -33,14 +33,10 @@ require_once(get_config('libroot') . 'group.php');
 $id = param_integer('id');
 $group = get_record('group', 'id', $id);
 
-list($group, $filecounts) = group_get_groupinfo_data($group);
+$group = group_get_groupinfo_data($group);
 
 $smarty = smarty_core();
 $smarty->assign('group', $group);
-$smarty->assign('membercount', count_records('group_member', 'group', $group->id));
-$smarty->assign('viewcount', count_records('view', 'group', $group->id));
-$smarty->assign('filecount', $filecounts->files);
-$smarty->assign('foldercount', $filecounts->folders);
 ob_start();
 $smarty->display('group/groupdata.tpl');
 $html = ob_get_contents();

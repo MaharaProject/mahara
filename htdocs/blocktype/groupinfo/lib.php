@@ -63,13 +63,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
         $data = self::get_data($groupid);
 
         $dwoo = smarty_core();
-        $dwoo->assign('group', $data['group']);
-        $dwoo->assign('groupid', $data['group']->id);
-        $dwoo->assign('membercount', count_records('group_member', 'group', $data['group']->id));
-        $dwoo->assign('viewcount', count_records('view', 'group', $data['group']->id));
-        $dwoo->assign('filecount', $data['filecounts']->files);
-        $dwoo->assign('foldercount', $data['filecounts']->folders);
-
+        $dwoo->assign('group', $data);
         return $dwoo->fetch('blocktype:groupinfo:groupinfo.tpl');
     }
 
@@ -96,8 +90,6 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
             throw new AccessDeniedException();
         }
 
-        list($group, $filecounts) = group_get_groupinfo_data($group);
-
-        return array('group'=>$group, 'filecounts'=>$filecounts);
+        return group_get_groupinfo_data($group);
     }
 }

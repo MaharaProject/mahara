@@ -1297,6 +1297,15 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->jointype == 'open') {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
+
+        $showmembercount = !$group->hidemembersfrommembers && !$group->hidemembers
+            || $group->membershiptype == 'member' && !$group->hidemembersfrommembers
+            || $group->membershiptype == 'admin';
+
+        if (!$showmembercount) {
+            unset($group->membercount);
+        }
+
         $group->settingsdescription = group_display_settings($group);
     }
 }
@@ -1485,6 +1494,12 @@ function group_get_editroles_options() {
     );
 }
 
+function group_can_list_members($group, $role) {
+    return !$group->hidemembersfrommembers && !$group->hidemembers
+        || $role && !$group->hidemembersfrommembers
+        || $role == 'admin';
+}
+
 /**
  * Returns a datastructure describing the tabs that appear on a group page
  *
@@ -1510,11 +1525,7 @@ function group_get_menu_tabs() {
         ),
     );
 
-    $memberstab = !$group->hidemembersfrommembers && !$group->hidemembers
-        || $role && !$group->hidemembersfrommembers
-        || $role == 'admin';
-
-    if ($memberstab) {
+    if (group_can_list_members($group, $role)) {
         $menu['members'] = array(
             'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
@@ -1769,21 +1780,23 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount,
+            COUNT(gmr.member) AS requests
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
+                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role,
+                COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?' .
             $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                t.membershiptype, t.reason, t.role
+                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.membershiptype, g1.reason, g1.role, g1.membercount
+            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -1913,9 +1926,15 @@ function group_get_groupinfo_data($group) {
         $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
     }
 
-    $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+    if (group_can_list_members($group, group_user_access($group->id))) {
+        $group->membercount = count_records('group_member', 'group', $group->id);
+    }
 
-    return array($group, $filecounts);
+    $group->viewcount = count_records('view', 'group', $group->id);
+
+    $group->filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+
+    return $group;
 }
 
 /**
