@@ -22,7 +22,7 @@
                     {/foreach}
                     </td>
 {foreach from=$types key='type' item='name'}
-                    <td>{if $user.methods.$type}{$user.methods.$type}{else}{str tag='none'}{/if}</td> 
+                    <td class="center">{if $user.methods.$type}{$user.methods.$type}{else}{str tag='none'}{/if}</td>
 {/foreach} 
                 </tr>
 {/foreach} 

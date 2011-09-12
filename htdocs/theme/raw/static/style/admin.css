@@ -232,7 +232,9 @@ input#register_register {
 .statistics-subpage-right-column {
   width: 73%;
 }
-
+.statistics-subpage-left-column p {
+	margin: 0 0 10px 0;
+}
 .admin-home-column {
   width: 49%;
   margin: 10px 1px 0 1px;
@@ -305,8 +307,6 @@ input#register_register {
 	margin-left: 10px;
 }
 #bulkactions {
-	position: relative;
-	top: 68px;
 	font-weight: bold;
 }
 #results h2 {
@@ -326,6 +326,13 @@ table.tablerenderer th.desc {
 }
 #searchresults td {
 	vertical-align: middle;
+}
+#searchresults thead tr.search-results-pages div.pagination {
+	margin: 10px 0 5px 0;
+	padding: 0;
+}
+#searchresults thead tr.search-results-pages div.pagination .results {
+	display: inline;
 }
 
 

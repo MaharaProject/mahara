@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
     <div>{$instructions|clean_html|safe}</div>
-    <div class="memberssearch">
+    <div class="memberswrap"><div class="memberssearch">
     {if $membershiptypes}
     	<div class="membershiptypes">
         {foreach from=$membershiptypes item=item implode="&nbsp;|&nbsp;"}
@@ -25,5 +25,6 @@
         </table>
     </div>
     {$pagination|safe}
+    </div>
 
 {include file="footer.tpl"}

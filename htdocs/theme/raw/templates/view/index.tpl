@@ -14,7 +14,7 @@
                 </form>
             </div>
 {if $institution}                {$institutionselector|safe}{/if}
-
+            <div class="grouppageswrap">
 {$searchform|safe}
 
 {if $views}
@@ -58,7 +58,9 @@
                 </tbody>
             </table>
 {$pagination|safe}
+            </div>
 {else}
             <div class="message">{if $GROUP}{str tag="noviewstosee" section="group"}{elseif $institution}{str tag="noviews" section="view"}{else}{str tag="youhavenoviews" section="view"}{/if}</div>
+            </div>
 {/if}
 {include file="footer.tpl"}
