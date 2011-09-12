@@ -337,7 +337,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                                 warn += get_string('defaultprofileicon') + ' ';
                             }
                             if (self.filedata[id].attachcount > 0) {
-                                warn += get_string('fileattached', self.filedata[id].attachcount) + ' ';
+                                warn += get_string('fileattachedtoportfolioitems', self.filedata[id].attachcount) + ' ';
                             }
                             if (self.filedata[id].viewcount > 0) {
                                 warn += get_string('fileappearsinviews') + ' ';

@@ -70,6 +70,9 @@ $next .= (strpos($next, '?') === false ? '?' : '&') . 'folder=' . $status['basef
 
 $SESSION->set('unzip', false);
 
-$message = get_string('extractfilessuccess', 'artefact.file', $status['folderscreated'], $status['filescreated']);
+$message = get_string('createdtwothings', 'artefact.file',
+    get_string('nfolders', 'artefact.file', $status['folderscreated']),
+    get_string('nfiles', 'artefact.file', $status['filescreated'])
+);
 
 print_extractprogress_footer($message, $next);

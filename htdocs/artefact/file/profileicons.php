@@ -283,7 +283,9 @@ function settings_submit_delete(Pieform $form, $values) {
 
         db_commit();
 
-        $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.file'));
+        $SESSION->add_ok_msg(
+            get_string('filethingdeleted', 'artefact.file', get_string('nprofilepictures', 'artefact.file', count($icons)))
+        );
     }
     else {
         $SESSION->add_info_msg(get_string('profileiconsnoneselected', 'artefact.file'));

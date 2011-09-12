@@ -154,7 +154,11 @@ function unzip_artefact_submit(Pieform $form, $values) {
 
     $status = $file->extract();
 
-    $SESSION->add_ok_msg(get_string('extractfilessuccess', 'artefact.file', $status['folderscreated'], $status['filescreated']));
+    $message = get_string('createdtwothings', 'artefact.file',
+        get_string('nfolders', 'artefact.file', $status['folderscreated']),
+        get_string('nfiles', 'artefact.file', $status['filescreated'])
+    );
+    $SESSION->add_ok_msg($message);
     $redirect = $from . (strpos($from, '?') === false ? '?' : '&') . 'folder=' . $status['basefolderid'];
     redirect($redirect);
 }

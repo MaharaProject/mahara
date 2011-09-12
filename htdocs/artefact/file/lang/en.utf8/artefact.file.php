@@ -83,7 +83,10 @@ $string['File'] = 'File';
 $string['fileadded'] = 'File selected';
 $string['filealreadyindestination'] = 'The file you moved is already in that folder';
 $string['fileappearsinviews'] = 'This file appears in one or more of your pages.';
-$string['fileattached'] = 'This file is attached to %s other item(s) in your portfolio.';
+$string['fileattachedtoportfolioitems'] = array(
+    0 => 'This file is attached to %s other item in your portfolio.',
+    1 => 'This file is attached to %s other items in your portfolio.',
+);
 $string['fileremoved'] = 'File removed';
 $string['files'] = 'files';
 $string['Files'] = 'Files';
@@ -228,7 +231,10 @@ $string['noimagesfound'] = 'No images found';
 $string['profileiconaddedtoimagesfolder'] = "Your profile picture has been uploaded to your '%s' folder.";
 $string['profileiconsetdefaultnotvalid'] = 'Could not set the default profile picture, the choice was not valid';
 $string['profileiconsdefaultsetsuccessfully'] = 'Default profile picture set successfully';
-$string['profileiconsdeletedsuccessfully'] = 'Profile picture(s) deleted successfully';
+$string['nprofilepictures'] = array(
+    'Profile picture',
+    'Profile pictures',
+);
 $string['profileiconsnoneselected'] = 'No profile pictures were selected to be deleted';
 $string['onlyfiveprofileicons'] = 'You may upload only five profile pictures';
 $string['or'] = 'or';
@@ -248,7 +254,15 @@ $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct ty
 // Unzip
 $string['Contents'] = 'Contents';
 $string['Continue'] = 'Continue';
-$string['extractfilessuccess'] = 'Created %s folders and %s files.';
+$string['nfolders'] = array(
+    '%s folder',
+    '%s folders',
+);
+$string['nfiles'] = array(
+    '%s file',
+    '%s files',
+);
+$string['createdtwothings'] = 'Created %s and %s.';
 $string['filesextractedfromarchive'] = 'Files extracted from archive';
 $string['filesextractedfromziparchive'] = 'Files extracted from Zip archive';
 $string['fileswillbeextractedintofolder'] = 'Files will be extracted into %s';
