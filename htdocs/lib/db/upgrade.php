@@ -2695,5 +2695,12 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2011090900) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('password');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        change_field_type($table, $field, true, true);
+    }
+
     return $status;
 }

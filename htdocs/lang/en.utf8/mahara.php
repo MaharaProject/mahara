@@ -336,7 +336,8 @@ $string['preferredname'] = 'Display Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
-$string['yournewpassword'] = 'Your new password. Passwords must be at least six characters long and contain at least one digit and two letters';
+$string['yournewpassword'] = 'Your new password. Passwords must be at least six characters long. Passwords are case sensitive and must be different to your username.<br/>
+For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cannotremovedefaultemail'] = 'You cannot remove your primary email address';
