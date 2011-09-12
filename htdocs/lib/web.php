@@ -2543,8 +2543,10 @@ function get_full_script_path() {
         }
     }
 
-    if (is_https() === true || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' )) {
-        $protocol = 'https://';
+    if (isset($_SERVER['HTTPS'])) {
+        $protocol = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+    } else if (isset($_SERVER['SERVER_PORT'])) { # Apache2 does not export $_SERVER['HTTPS']
+        $protocol = ($_SERVER['SERVER_PORT'] == '443') ? 'https://' : 'http://';
     } else {
         $protocol = 'http://';
     }

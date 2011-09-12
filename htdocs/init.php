@@ -160,7 +160,7 @@ catch (SQLException $e) {
 // Make sure wwwroot is set and available, either in the database or in the
 // config file. Cron requires it when sending out forums emails.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
-    $proto = is_https() === true ? 'https://' : 'http://';
+    $proto = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') ? 'https://' : 'http://';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
     if (false !== strpos($host, ',')) {
         list($host) = explode(',', $host);
@@ -212,12 +212,13 @@ if (isset($CFG->wwwroot)) {
 }
 
 // If we're forcing an ssl proxy, make sure the wwwroot is correct
-if ($CFG->sslproxy === true && is_https() === false) {
+if ($CFG->sslproxy == true && parse_url($CFG->wwwroot, PHP_URL_SCHEME) !== 'https') {
     throw new ConfigSanityException(get_string('wwwrootnothttps', 'error', get_config('wwwroot')));
 }
 
 // Make sure that we are using ssl if wwwroot expects us to do so
-if ($CFG->sslproxy === false && isset($_SERVER['REMOTE_ADDR']) && is_https() === true){
+if ($CFG->sslproxy === false && isset($_SERVER['REMOTE_ADDR']) && (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') &&
+    parse_url($CFG->wwwroot, PHP_URL_SCHEME) === 'https'){
     redirect(get_relative_script_path());
 }
 if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
