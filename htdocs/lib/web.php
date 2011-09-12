@@ -326,6 +326,7 @@ EOF;
 
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
+    $stringjs .= "\nfunction plural(n) { return " . get_string('pluralrule', 'langconfig') . "; }\n";
     $stringjs .= '</script>';
 
     // stylesheet set up - if we're in a plugin also get its stylesheet

@@ -469,7 +469,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     // First check all the normal locations for the string in the current language
     $result = get_string_local($langstringroot . $langdirectory, $lang . '/' . $section . '.php', $identifier);
     if ($result !== false) {
-        return $replacefunc($result, $variables);
+        return $replacefunc($result, $variables, $lang);
     }
 
     // If the preferred language was English (utf8) we can abort now
@@ -484,7 +484,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             $result = get_string_local(get_language_root($parentlang) . 'lang/', $parentlang . '/' . $section . '.php', $identifier);
             if ($result !== false) {
-                return $replacefunc($result, $variables);
+                return $replacefunc($result, $variables, $parentlang);
             }
         }
     }
@@ -1057,10 +1057,20 @@ function current_language() {
  * Helper function to sprintf language strings
  * with a variable number of arguments
  * 
- * @param string $string raw string to use
+ * @param mixed $string raw string to use, or an array of strings, one for each plural form
  * @param array $args arguments to sprintf
+ * @param string $lang The language
  */
-function format_langstring($string,$args) {
+function format_langstring($string, $args, $lang='en.utf8') {
+    if (is_array($string) && isset($args[0]) && is_numeric($args[0])) {
+        // If there are multiple strings here, there must be one for each plural
+        // form in the language.  The first argument is passed into the plural
+        // function, which returns an index into the array of strings.
+        $pluralfunction = get_string_location('pluralfunction', 'langconfig', array(), 'raw_langstring', $lang);
+        $index = function_exists($pluralfunction) ? $pluralfunction($args[0]) : 0;
+        $string = isset($string[$index]) ? $string[$index] : current($string);
+    }
+
     return call_user_func_array('sprintf',array_merge(array($string),$args));
 }
 
