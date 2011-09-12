@@ -2287,7 +2287,6 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function new_audio($data) {
-        $descriptions = self::audio_file_descriptions();
         $validtypes = self::audio_mime_types();
         if (isset($validtypes[$data->filetype])) {
             return new ArtefactTypeAudio(0, $data);
@@ -2316,7 +2315,7 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
         static $mimetypes = null;
         if (is_null($mimetypes)) {
             $descriptions = self::audio_file_descriptions();
-            $mimetypes = PluginArtefactFile::get_mimetypes_from_description(array_keys($descriptions), true);
+            $mimetypes = PluginArtefactFile::get_mimetypes_from_description($descriptions, true);
         }
         return $mimetypes;
     }
