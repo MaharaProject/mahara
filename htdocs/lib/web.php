@@ -819,14 +819,11 @@ function jsstrings() {
             'mahara' => array(                   // section
                 'namedfieldempty',               // string name
                 'processing',
-                'requiredfieldempty',
                 'unknownerror',
                 'loading',
                 'showtags',
                 'unreadmessages',
                 'unreadmessage',
-                'pendingfriend',
-                'pendingfriends',
                 'couldnotgethelp',
                 'password',
                 'username',
@@ -845,45 +842,10 @@ function jsstrings() {
                 'lastpage',
             )
         ),
-        'friends' => array(
-            'group' => array(
-                'confirmremovefriend',
-                'seeallviews',
-                'noviewstosee',
-                'sendmessage',
-                'whymakemeyourfriend',
-                'approverequest',
-                'denyrequest',
-                'pending',
-                'removefromfriendslist',
-                'views',
-                'trysearchingforfriends',
-                'nobodyawaitsfriendapproval',
-                'sendfriendrequest',
-                'addtomyfriends',
-                'friendshiprequested',
-                'userdoesntwantfriends',
-                'existingfriend',
-                'nosearchresultsfound',
-                'reason',
-                'requestfriendship',
-                'cancel',
-            ),
-        ),
         'views' => array(
             'view' => array(
                 'confirmdeleteblockinstance',
                 'blocksinstructionajax',
-                'Configure',
-            ),
-        ),
-        'adminusersearch' => array(
-            'admin' => array(
-                'suspenduser',
-                'suspensionreason',
-            ),
-            'mahara' => array(
-                'cancel',
             ),
         ),
     );
