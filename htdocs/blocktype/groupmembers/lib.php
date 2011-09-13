@@ -66,13 +66,14 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
 
         $groupid = $instance->get_view()->get('group');
 
-        // If the group has hidden membership, display nothing to non-members
+        // If the group has hidden membership, display nothing
         $usergroups = $USER->get('grouproles');
-        if (!isset($usergroups[$groupid])) {
-            $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_record('group', 'id', $groupid);
-            if ($group->hidemembers) {
-                return '';
-            }
+        $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_record('group', 'id', $groupid);
+        if ($group->hidemembersfrommembers && (!isset($usergroups[$groupid]) || $usergroups[$groupid] != 'admin')) {
+            return '';
+        }
+        if ($group->hidemembers && !isset($usergroups[$groupid])) {
+            return '';
         }
 
         require_once('searchlib.php');

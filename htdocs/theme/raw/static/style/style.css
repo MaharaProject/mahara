@@ -2237,7 +2237,7 @@ div.groupbox li.last {
 	border-top: none;
 }
 #editgroup th label {
-	white-space: nowrap;
+	white-space: normal;
 }
 form#search, form#filter, div.searchform {
 	margin-bottom: 10px;

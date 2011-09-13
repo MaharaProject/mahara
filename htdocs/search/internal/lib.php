@@ -448,7 +448,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order=null) {
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof) {
 
         list($searchsql, $values) = self::name_search_sql($query_string);
 
@@ -521,6 +521,14 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($order == 'random') {
             $orderby = db_random();
+        }
+
+        if ($friendof) {
+            $from .= '
+                    AND u.id IN (
+                        SELECT usr1 FROM {usr_friend} WHERE usr2 = ? UNION SELECT usr2 FROM {usr_friend} WHERE usr1 = ?
+                    )';
+            array_push($values, $friendof, $friendof);
         }
 
         $count = get_field_sql('SELECT COUNT(*)' . $from, $values);

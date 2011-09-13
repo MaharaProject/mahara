@@ -280,9 +280,16 @@ function group_create($data) {
     $data['public'] = (isset($data['public'])) ? intval($data['public']) : 0;
     $data['hidden'] = (isset($data['hidden'])) ? intval($data['hidden']) : 0;
     $data['hidemembers'] = (isset($data['hidemembers'])) ? intval($data['hidemembers']) : 0;
+    $data['hidemembersfrommembers'] = (isset($data['hidemembersfrommembers'])) ? intval($data['hidemembersfrommembers']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
+
+    if (!empty($data['invitefriends']) && !empty($data['suggestfriends'])) {
+        throw new InvalidArgumentException("group_create: a group cannot enable both invitefriends and suggestfriends");
+    }
+    $data['invitefriends'] = (isset($data['invitefriends'])) ? intval($data['invitefriends']) : 0;
+    $data['suggestfriends'] = (isset($data['suggestfriends'])) ? intval($data['suggestfriends']) : 0;
 
     if (isset($data['shortname']) && strlen($data['shortname'])) {
         // This is a group whose details and membership can be updated automatically, using a
@@ -356,6 +363,9 @@ function group_create($data) {
             'editroles'      => $data['editroles'],
             'hidden'         => $data['hidden'],
             'hidemembers'    => $data['hidemembers'],
+            'hidemembersfrommembers' => $data['hidemembersfrommembers'],
+            'invitefriends'  => $data['invitefriends'],
+            'suggestfriends' => $data['suggestfriends'],
         ),
         'id',
         true
@@ -462,7 +472,8 @@ function group_update($new, $create=false) {
     unset($new->institution);
     unset($new->shortname);
 
-    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles', 'hidden', 'hidemembers') as $f) {
+    foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'editroles',
+        'hidden', 'hidemembers', 'hidemembersfrommembers') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -497,6 +508,17 @@ function group_update($new, $create=false) {
 
     unset($new->open);
     unset($new->controlled);
+
+    // Ensure only one of invitefriends,suggestfriends gets enabled.
+    if (!empty($new->invitefriends)) {
+        $new->suggestfriends = 0;
+    }
+    else if (!isset($new->invitefriends)) {
+        $new->invitefriends = (int) ($old->invitefriends && empty($new->suggestfriends));
+    }
+    if (!isset($new->suggestfriends)) {
+        $new->suggestfriends = $old->suggestfriends;
+    }
 
     $diff = array_diff_assoc((array)$new, (array)$old);
     if (empty($diff)) {
@@ -622,26 +644,50 @@ function group_get_groups_for_editing($ids=null) {
  * {{@internal Maybe later we can have a group_can_be_deleted function if 
  * necessary}}
  */
-function group_delete($groupid, $shortname=null, $institution=null) {
+function group_delete($groupid, $shortname=null, $institution=null, $notifymembers=true) {
     if (empty($groupid) && !empty($institution) && !is_null($shortname) && strlen($shortname)) {
         // External call to delete a group, check permission of $USER.
         global $USER;
         if (!$USER->can_edit_institution($institution)) {
             throw new AccessDeniedException("group_delete: cannot delete a group in this institution");
         }
-        $groupid = get_field('group', 'id', 'shortname', $shortname, 'institution', $institution);
+
+        $group = get_record('group', 'shortname', $shortname, 'institution', $institution);
+    }
+    else {
+        $groupid = group_param_groupid($groupid);
+        $group = get_record('group', 'id', $groupid);
     }
 
-    $groupid = group_param_groupid($groupid);
+    if ($notifymembers) {
+        require_once('activity.php');
+        activity_occurred('groupmessage', array(
+            'group'         => $group->id,
+            'deletedgroup'  => true,
+            'strings'       => (object) array(
+                'subject' => (object) array(
+                    'key'     => 'deletegroupnotificationsubject',
+                    'section' => 'group',
+                    'args'    => array(hsc($group->name)),
+                ),
+                'message' => (object) array(
+                    'key'     => 'deletegroupnotificationmessage',
+                    'section' => 'group',
+                    'args'    => array(hsc($group->name), get_config('sitename')),
+                ),
+            ),
+        ));
+    }
+
     update_record('group',
         array(
             'deleted' => 1,
-            'name' => get_field('group', 'name', 'id', $groupid) . '.deleted.' . time(),
+            'name' => $group->name . '.deleted.' . time(),
             'shortname' => null,
             'institution' => null,
         ),
         array(
-            'id' => $groupid,
+            'id' => $group->id,
         )
     );
 }
@@ -1251,6 +1297,15 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
         else if ($group->jointype == 'open') {
             $group->groupjoin = group_get_join_form('joingroup' . $i++, $group->id);
         }
+
+        $showmembercount = !$group->hidemembersfrommembers && !$group->hidemembers
+            || $group->membershiptype == 'member' && !$group->hidemembersfrommembers
+            || $group->membershiptype == 'admin';
+
+        if (!$showmembercount) {
+            unset($group->membercount);
+        }
+
         $group->settingsdescription = group_display_settings($group);
     }
 }
@@ -1439,6 +1494,12 @@ function group_get_editroles_options() {
     );
 }
 
+function group_can_list_members($group, $role) {
+    return !$group->hidemembersfrommembers && !$group->hidemembers
+        || $role && !$group->hidemembersfrommembers
+        || $role == 'admin';
+}
+
 /**
  * Returns a datastructure describing the tabs that appear on a group page
  *
@@ -1464,7 +1525,7 @@ function group_get_menu_tabs() {
         ),
     );
 
-    if ($role || !$group->hidemembers) {
+    if (group_can_list_members($group, $role)) {
         $menu['members'] = array(
             'path' => 'groups/members',
             'url' => 'group/members.php?id='.$group->id,
@@ -1719,21 +1780,23 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.membershiptype, g1.reason, g1.role, g1.membercount, COUNT(gmr.member) AS requests
+            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount,
+            COUNT(gmr.member) AS requests
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                t.membershiptype, t.reason, t.role, COUNT(gm.member) AS membercount
+                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role,
+                COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ?' .
             $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                t.membershiptype, t.reason, t.role
+                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.membershiptype, g1.reason, g1.role, g1.membercount
+            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -1757,7 +1820,7 @@ function group_get_user_groups($userid=null, $roles=null) {
     if (!isset($usergroups[$userid])) {
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
-                g.hidemembers, gm1.role AS loggedinrole
+                g.hidemembers, g.invitefriends, gm1.role AS loggedinrole
             FROM {group} g
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
@@ -1799,12 +1862,12 @@ function group_get_user_admintutor_groups() {
     return $groups;
 }
 
-function group_get_member_ids($group, $roles=null) {
+function group_get_member_ids($group, $roles=null, $includedeleted=false) {
     $rolesql = is_null($roles) ? '' : (' AND gm.role IN (' . join(',', array_map('db_quote', $roles)) . ')');
     return get_column_sql('
         SELECT gm.member
         FROM {group_member} gm INNER JOIN {group} g ON gm.group = g.id
-        WHERE g.deleted = 0 AND g.id = ?' . $rolesql,
+        WHERE g.id = ? ' . ($includedeleted ? '' : ' AND g.deleted = 0') . $rolesql,
         array($group)
     );
 }
@@ -1863,9 +1926,15 @@ function group_get_groupinfo_data($group) {
         $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
     }
 
-    $filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+    if (group_can_list_members($group, group_user_access($group->id))) {
+        $group->membercount = count_records('group_member', 'group', $group->id);
+    }
 
-    return array($group, $filecounts);
+    $group->viewcount = count_records('view', 'group', $group->id);
+
+    $group->filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+
+    return $group;
 }
 
 /**

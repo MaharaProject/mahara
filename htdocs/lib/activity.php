@@ -982,14 +982,10 @@ class ActivityTypeGroupMessage extends ActivityType {
 
     protected $group;
     protected $roles;
-    protected $submittedview;
-    private $viewinfo;
-    private $groupinfo;
+    protected $deletedgroup;
 
     /**
      * @param array $data Parameters:
-     *                    - subject (string)
-     *                    - message (string)
      *                    - group (integer)
      *                    - roles (list of roles)
      */
@@ -997,35 +993,14 @@ class ActivityTypeGroupMessage extends ActivityType {
         require_once('group.php');
 
         parent::__construct($data, $cron);
-
-        $this->groupinfo = get_record('group', 'id', $this->group);
-
-        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null);
-        $this->users = activity_get_users($this->get_id(), $members);
-
-        if ($this->submittedview) {
-            $this->viewinfo = get_record('view', 'id', $this->submittedview);
-            $this->viewinfo->ownername = display_name($this->viewinfo->owner);
-            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->submittedview;
+        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null, $this->deletedgroup);
+        if (!empty($members)) {
+            $this->users = activity_get_users($this->get_id(), $members);
         }
-    }
-
-    public function get_subject($user) {
-        if ($this->submittedview) {
-            return get_string_from_language($user->lang, 'viewsubmittedsubject', 'activity', $this->groupinfo->name);
-        }
-        return $this->subject;
-    }
-
-    public function get_message($user) {
-        if ($this->submittedview) {
-            return get_string_from_language($user->lang, 'viewsubmittedmessage', 'activity', $this->viewinfo->ownername, $this->viewinfo->title, $this->groupinfo->name);
-        }
-        return $this->subject;
     }
 
     public function get_required_parameters() {
-        return array('message', 'subject', 'group');
+        return array('group');
     }
 }
 

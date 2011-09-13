@@ -92,12 +92,12 @@ if ($groups['data']) {
     foreach ($groups['data'] as $group) {
         $groupids[] = $group->id;
     }
-    $groups['data'] =  get_records_sql_array(
-        "SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.role, g1.membershiptype,
-            g1.submittableto, g1.membercount, COUNT(gmr.member) AS requests
+    $groups['data'] =  get_records_sql_array("
+        SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests
         FROM (
-            SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto, t.role,
-                t.membershiptype, COUNT(gm.member) AS membercount
+            SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                g.hidemembers, g.hidemembersfrommembers, t.role, t.membershiptype, COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)
             LEFT JOIN (
@@ -118,12 +118,12 @@ if ($groups['data']) {
                 INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
             ) t ON t.id = g.id
             WHERE g.id IN (" . implode($groupids, ',') . ')
-            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto, t.role,
-                t.membershiptype
+            GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                g.hidemembers, g.hidemembersfrommembers, t.role, t.membershiptype
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
-        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.role, g1.membershiptype,
-            g1.submittableto, g1.membercount
+        GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.role, g1.membershiptype, g1.membercount
         ORDER BY g1.name',
         array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );

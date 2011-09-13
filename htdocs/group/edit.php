@@ -70,6 +70,9 @@ else {
         'editroles'      => 'all',
         'hidden'         => 0,
         'hidemembers'    => 0,
+        'hidemembersfrommembers' => 0,
+        'invitefriends'  => 0,
+        'suggestfriends' => 0,
     );
 }
 
@@ -181,6 +184,20 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
     );
 }
 
+$elements['invitefriends'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('friendinvitations', 'group'),
+    'description'  => get_string('invitefriendsdescription', 'group'),
+    'defaultvalue' => $group_data->invitefriends,
+);
+
+$elements['suggestfriends'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('Recommendations', 'group'),
+    'description'  => get_string('suggestfriendsdescription', 'group'),
+    'defaultvalue' => $group_data->suggestfriends,
+);
+
 $elements['pages'] = array(
     'type'         => 'html',
     'title'        => get_string('views'),
@@ -250,6 +267,12 @@ if ($cancreatecontrolled) {
         'description'  => get_string('hidemembersdescription', 'group'),
         'defaultvalue' => $group_data->hidemembers,
     );
+    $elements['hidemembersfrommembers'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('hidemembersfrommembers', 'group'),
+        'description'  => get_string('hidemembersfrommembersdescription', 'group'),
+        'defaultvalue' => $group_data->hidemembersfrommembers,
+    );
 }
 else {
     $form['elements']['hidden'] = array(
@@ -259,6 +282,10 @@ else {
     $form['elements']['hidemembers'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->hidemembers,
+    );
+    $form['elements']['hidemembersfrommembers'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->hidemembersfrommembers,
     );
 }
 
@@ -322,6 +349,9 @@ function editgroup_validate(Pieform $form, $values) {
             $form->set_error('request', get_string('membershipopenrequest', 'group'));
         }
     }
+    if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
+        $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
+    }
 }
 
 function editgroup_cancel_submit() {
@@ -349,6 +379,9 @@ function editgroup_submit(Pieform $form, $values) {
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
         'hidemembers'    => intval($values['hidemembers']),
+        'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
+        'invitefriends'  => intval($values['invitefriends']),
+        'suggestfriends' => intval($values['suggestfriends']),
     );
 
     db_begin();
@@ -386,6 +419,16 @@ $j(function() {
         }
         else {
             $j("#editgroup_request").removeAttr("disabled");
+        }
+    });
+    $j("#editgroup_invitefriends").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_suggestfriends").removeAttr("checked");
+        }
+    });
+    $j("#editgroup_suggestfriends").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_invitefriends").removeAttr("checked");
         }
     });
 });

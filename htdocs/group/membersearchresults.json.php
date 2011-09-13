@@ -45,19 +45,31 @@ if (!is_logged_in() && !$group->public) {
 
 $role = group_user_access($group->id);
 
-if ($group->hidemembers && !$role && !$USER->get('admin') && !$USER->get('staff')) {
-    json_reply('local', get_string('accessdenied', 'error'));
-}
-
-$membershiptype = param_variable('membershiptype', '');
-
-if (!empty($membershiptype)) {
-    if ($role != 'admin') {
+if (!$USER->get('admin') && !$USER->get('staff')) {
+    if (!$role && ($group->hidemembers || $group->hidemembersfrommembers)) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
+    if ($role != 'admin' && $group->hidemembersfrommembers) {
         json_reply('local', get_string('accessdenied', 'error'));
     }
 }
 
-$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
+$membershiptype = param_variable('membershiptype', '');
+$friends = param_integer('friends', 0);
+if (!empty($membershiptype)) {
+    if ($role != 'admin') {
+        // Non-admins are allowed to find the 'notinvited' users, but only if 'invitefriends'
+        // or 'suggestfriends' is enabled, and they're filtering by their friends list
+        if ($membershiptype != 'notinvited' || !$role || !($group->invitefriends || $group->suggestfriends) || !$friends) {
+            json_reply('local', get_string('accessdenied', 'error'));
+        }
+    }
+}
+
+$results = get_group_user_search_results(
+    $group->id, $query, $offset, $limit, $membershiptype, null,
+    $friends ? $USER->get('id') : null
+);
 if (!param_integer('html', 1)) {
     foreach ($results['data'] as &$result) {
         $result = array('id' => $result['id'], 'name' => $result['name']);
