@@ -2737,5 +2737,21 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2011091300) {
+        $table = new XMLDBTable('blocktype_category');
+        $field = new XMLDBField('sort');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, null);
+        add_field($table, $field);
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('0', 'fileimagevideo'));
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('1', 'blog'));
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('2', 'general'));
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('3', 'internal'));
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('4', 'resume'));
+        execute_sql("UPDATE {blocktype_category} SET sort = ? WHERE name = ?", array('5', 'external'));
+        $index = new XMLDBIndex('sortuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE,array('sort'));
+        add_index($table, $index, false);
+    }
+
     return $status;
 }
