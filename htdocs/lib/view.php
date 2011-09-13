@@ -1122,30 +1122,29 @@ class View {
 
         require_once(get_config('docroot') . '/blocktype/lib.php');
         $categories = array();
-        $sql = 'SELECT bic.* FROM {blocktype_installed_category} bic
+        $sql = 'SELECT bic.*, bc.sort FROM {blocktype_installed_category} bic
             JOIN {blocktype_installed} bi ON (bic.blocktype = bi.name AND bi.active = 1)
-            JOIN {blocktype_installed_viewtype} biv ON (bi.name = biv.blocktype AND biv.viewtype = ?)';
+            JOIN {blocktype_installed_viewtype} biv ON (bi.name = biv.blocktype AND biv.viewtype = ?)
+            JOIN {blocktype_category} bc ON (bic.category = bc.name)
+            ORDER BY bc.sort';
         if (function_exists('local_get_allowed_blocktype_categories')) {
             $localallowed = local_get_allowed_blocktype_categories($this);
         }
-        foreach (get_records_sql_array($sql, array($this->get('type'))) as $blocktypecategory) {
+        $blockcategories = get_records_sql_array($sql, array($this->get('type')));
+        foreach ($blockcategories as $blocktypecategory) {
             if (isset($localallowed) && is_array($localallowed) && !in_array($blocktypecategory->category, $localallowed)) {
                 continue;
             }
             safe_require('blocktype', $blocktypecategory->blocktype);
             if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
-                if (!isset($categories[$blocktypecategory->category])) {
-                    $categories[$blocktypecategory->category] = array(
+                if (!isset($categories[$blocktypecategory->sort])) {
+                    $categories[$blocktypecategory->sort] = array(
                         'name'  => $blocktypecategory->category,
                         'title' => call_static_method("PluginBlocktype", "category_title_from_name", $blocktypecategory->category),
                     );
                 }
             }
         }
-
-        // The 'internal' plugin is known to the outside world as 'profile', so 
-        // we need to sort on the actual name
-        usort($categories, create_function('$a, $b', 'return strnatcasecmp($a[\'title\'], $b[\'title\']);'));
 
         return $this->category_data = $categories;
     }

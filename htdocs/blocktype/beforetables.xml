@@ -1,8 +1,12 @@
         <TABLE NAME="blocktype_category">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="sort" TYPE="int" LENGTH="2" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="sortuk" UNIQUE="true" FIELDS="sort"/>
+            </INDEXES>
         </TABLE>

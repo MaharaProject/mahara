@@ -989,7 +989,7 @@ function sort_upgrades($k1, $k2) {
 /** blocktype categories the system exports (including artefact categories)
 */
 function get_blocktype_categories() {
-    return array('general', 'internal', 'blog', 'resume', 'fileimagevideo', 'external');
+    return array('fileimagevideo', 'blog', 'general', 'internal', 'resume', 'external');
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {
@@ -1035,10 +1035,11 @@ function install_blocktype_extras() {
 
     $categories = get_blocktype_categories();
     $installedcategories = get_column('blocktype_category', 'name');
+    $sort = empty($installedcategories) ? -1 : get_record_sql('SELECT MAX(sort) AS maxsort FROM {blocktype_category}')->maxsort;
 
     if ($toinstall = array_diff($categories, $installedcategories)) {
         foreach ($toinstall as $i) {
-            insert_record('blocktype_category', (object)array('name' => $i));
+            insert_record('blocktype_category', (object)array('name' => $i, 'sort' => (++$sort)));
         }
     }
 
