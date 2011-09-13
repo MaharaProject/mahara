@@ -465,24 +465,26 @@ function editaccess_validate(Pieform $form, $values) {
     }
 }
 
-function editaccess_cancel_submit() {
-    global $institution, $group;
-    if (!empty($institution)) {
-        if ($institution == 'mahara') {
-            $redirecturl = '/admin/site/shareviews.php';
-        } else {
-            $redirecturl = '/view/institutionshare.php';
-        }
-    }
-    else if (!empty($group)) {
-        $redirecturl = '/group/shareviews.php?group=' . $group;
+if (!empty($institution)) {
+    if ($institution == 'mahara') {
+        $shareurl = 'admin/site/shareviews.php';
     }
     else {
-        $redirecturl = '/view/share.php';
+        $shareurl = 'view/institutionshare.php';
     }
-    redirect($redirecturl);
 }
+else if (!empty($group)) {
+    $shareurl = 'group/shareviews.php?group=' . $group;
+}
+else {
+    $shareurl = 'view/share.php';
+}
+$shareurl = get_config('wwwroot') . $shareurl;
 
+function editaccess_cancel_submit() {
+    global $shareurl;
+    redirect($shareurl);
+}
 
 function editaccess_submit(Pieform $form, $values) {
     global $SESSION, $institution, $collections, $views, $view;
@@ -597,5 +599,5 @@ $smarty = smarty(
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
-$smarty->assign('wwwroot', $CFG->wwwroot);
+$smarty->assign('shareurl', $shareurl);
 $smarty->display('view/access.tpl');
