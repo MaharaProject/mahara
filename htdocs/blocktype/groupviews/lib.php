@@ -142,7 +142,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             $sort = array(array('column' => 'type=\'grouphomepage\'', 'desc' => true));
             $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, null, 0, true, $sort);
             foreach ($data['groupviews']->data as &$view) {
-                if ($view['template']) {
+                if (isset($view['template']) && $view['template']) {
                     $view['form'] = pieform(create_view_form($group->id, null, $view['id']));
                 }
             }
@@ -151,8 +151,8 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // shared to the group
             $data['sharedviews'] = View::get_sharedviews_data(null, 0, $group->id);
             foreach ($data['sharedviews']->data as &$view) {
-                if ($view->template) {
-                    $view->form = pieform(create_view_form($group, null, $view->id));
+                if (isset($view['template']) && $view['template']) {
+                    $view['form'] = pieform(create_view_form($group, null, $view->id));
                 }
             }
 
