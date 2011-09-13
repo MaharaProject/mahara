@@ -308,7 +308,9 @@ if (!get_config('installed')) {
     $scriptfilename = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
     if (false === strpos($scriptfilename, 'admin/index.php')
     && false === strpos($scriptfilename, 'admin/upgrade.php')
-    && false === strpos($scriptfilename, 'admin/upgrade.json.php')) {
+    && false === strpos($scriptfilename, 'admin/upgrade.json.php')
+    && false === strpos($scriptfilename, 'admin/cli/install.php')
+    && false === strpos($scriptfilename, 'admin/cli/upgrade.php')) {
         redirect('/admin/');
     }
 }

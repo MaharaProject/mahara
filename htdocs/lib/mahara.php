@@ -189,6 +189,59 @@ function ensure_upgrade_sanity() {
 }
 
 /**
+ * Upgrade/Install the specified mahara components
+ *
+ * @param array $upgrades The list of components to install or upgrade
+ * @return void
+ */
+function upgrade_mahara($upgrades) {
+    if (isset($upgrades['firstcoredata']) && $upgrades['firstcoredata']) {
+        $install = true;
+    }
+    uksort($upgrades, 'sort_upgrades');
+    foreach ($upgrades as $name => $data) {
+        if ($name == 'disablelogin') {
+            continue;
+        }
+        if ($install) {
+            log_info(get_string('installingplugin', 'admin', $name));
+        }
+        else {
+            log_info(get_string('upgradingplugin', 'admin', $name));
+        }
+        if ($name == 'firstcoredata' || $name == 'lastcoredata') {
+            $funname = 'core_install_' . $name . '_defaults';
+            $funname();
+            continue;
+        }
+        else if ($install && $name == 'localpreinst') {
+            $name(array('localdata' => true));
+        }
+        else if ($install && $name == 'localpostinst') {
+            // Update local version
+            $config = new StdClass;
+            require(get_config('docroot') . 'local/version.php');
+            set_config('localversion', $config->version);
+            set_config('localrelease', $config->release);
+
+            // Installation is finished
+            set_config('installed', true);
+            log_info('Installation complete.');
+        }
+        else {
+            if ($name == 'core') {
+                $funname = 'upgrade_core';
+            }
+            else {
+                $funname = 'upgrade_plugin';
+            }
+            $data->name = $name;
+            $funname($data);
+        }
+    }
+}
+
+/**
  * Check to see if the internal plugins are installed. Die if they are not.
  */
 function ensure_internal_plugins_exist() {
