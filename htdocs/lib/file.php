@@ -519,7 +519,7 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
-        if (is_readable($originalimage)) {
+        if (is_readable($originalimage) && filesize($originalimage)) {
 
             $imageinfo = getimagesize($originalimage);
             $originalmimetype = $imageinfo['mime'];
