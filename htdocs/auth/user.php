@@ -959,10 +959,10 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if ($v->get('type') == 'grouphomepage' && $this->grouproles[$group] != 'admin') {
+            if (!isset($this->grouproles[$group])) {
                 return false;
             }
-            if (!isset($this->grouproles[$group])) {
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');

@@ -300,7 +300,16 @@ class PluginSearchInternal extends PluginSearch {
     private static function prepare_search_user_options($options) {
         global $USER;
         if (isset($options['group'])) {
-            $options['group'] = intval($options['group']);
+            // This option should only be used by group admins, so just ensure that the caller is
+            // using it correctly.
+            $roles = $USER->get('grouproles');
+            if ($USER->get('admin') || $USER->get('staff')
+                || (isset($roles[$options['group']]) && $roles[$options['group']] == 'admin')) {
+                $options['group'] = intval($options['group']);
+            }
+            else {
+                unset($options['group']);
+            }
         }
         if (isset($options['includeadmins'])) {
             $options['includeadmins'] = (bool)$options['includeadmins'];
@@ -682,12 +691,21 @@ class PluginSearchInternal extends PluginSearch {
             $grouproles = '-1';
         }
 
+        $canseehidden = $USER->get('admin') || $USER->get('staff');
+
        if ($type == 'member') {
             $sql .=  'AND id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
+            if (!$canseehidden) {
+                $sql .= ' AND hidden = 0';
+            }
         }
+        else if (!$canseehidden) {
+            $sql .= ' AND (hidden = 0 OR id IN (' . $grouproles . '))';
+        }
+
         if (!empty($category)) {
             if ($category == -1) { //find unassigned groups
                 $sql .= " AND category IS NULL";

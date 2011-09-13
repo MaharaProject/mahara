@@ -477,7 +477,7 @@ $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upl
 
 <pre>shortname,displayname,roles</pre>
 
-<p>This row must include the <tt>shortname</tt>, <tt>displayname</tt>, and <tt>grouptype</tt> fields</p>
+<p>This row must include the <tt>shortname</tt>, <tt>displayname</tt>, and <tt>roles</tt> fields</p>
 
 <p>The roles field can have any of the following: %s</p>
 

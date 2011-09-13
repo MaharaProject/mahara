@@ -46,7 +46,8 @@ if (!is_logged_in() && !$group->public) {
 
 define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
 
-$can_edit = group_user_can_edit_views($group);
+$role = group_user_access($group->id);
+$can_edit = $role && group_role_can_edit_views($group, $role);
 
 // If the user can edit group views, show a page similar to the my views
 // page, otherwise just show a list of the views owned by this group that
@@ -85,6 +86,7 @@ list($searchform, $data, $pagination) = View::views_by_owner($group->id);
 $createviewform = pieform(create_view_form($group->id));
 
 $smarty = smarty();
+$smarty->assign('editlocked', $role == 'admin');
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('searchform', $searchform);

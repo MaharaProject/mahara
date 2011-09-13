@@ -43,10 +43,16 @@ if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
+$role = group_user_access($group->id);
+
+if ($group->hidemembers && !$role && !$USER->get('admin') && !$USER->get('staff')) {
+    json_reply('local', get_string('accessdenied', 'error'));
+}
+
 $membershiptype = param_variable('membershiptype', '');
 
 if (!empty($membershiptype)) {
-    if (group_user_access($id) != 'admin') {
+    if ($role != 'admin') {
         json_reply('local', get_string('accessdenied', 'error'));
     }
 }

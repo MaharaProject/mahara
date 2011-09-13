@@ -125,6 +125,19 @@ $editview = array(
     ),
 );
 
+if ($group) {
+    $grouproles = $USER->get('grouproles');
+    if ($grouproles[$group] == 'admin') {
+        $editview['elements']['locked'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('Locked', 'view'),
+            'description'  => get_string('lockedgroupviewdesc', 'view'),
+            'defaultvalue' => $view->get('locked'),
+            'disabled'     => $view->get('type') == 'grouphomepage', // This page unreachable for grouphomepage anyway
+        );
+    }
+}
+
 if (!($group || $institution)) {
     $default = $view->get('ownerformat');
     if (!$default) {
@@ -154,6 +167,9 @@ function editview_submit(Pieform $form, $values) {
     $view->set('title', $values['title']);
     $view->set('description', $values['description']);
     $view->set('tags', $values['tags']);
+    if (isset($values['locked'])) {
+        $view->set('locked', (int)$values['locked']);
+    }
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
     }

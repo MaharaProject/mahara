@@ -58,12 +58,12 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         $smarty = smarty_core();
         require_once('group.php');
         // Group stuff
-        $results = group_get_associated_groups($userid, 'member');
+        $usergroups = group_get_user_groups($userid);
 
-        foreach ($results['groups'] as $group) {
+        foreach ($usergroups as $group) {
             $group->roledisplay = get_string($group->role, 'grouptype.'.$group->grouptype);
         }
-        $smarty->assign('USERGROUPS',$results['groups']);
+        $smarty->assign('USERGROUPS', $usergroups);
         return $smarty->fetch('blocktype:mygroups:mygroups.tpl');
     }
 

@@ -46,10 +46,10 @@
 {/if}
                         </td>
                         <td class="right buttonscell btns2">
-{if !$view.submittedto}
+{if !$view.submittedto && (!$view.locked || $editlocked)}
                                 <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
 {/if}
-{if !$view.submittedto && $view.removable}
+{if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
                                 <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
 {/if}
                         </td>{* rbuttons *}

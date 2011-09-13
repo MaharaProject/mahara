@@ -70,6 +70,7 @@ class View {
     private $approvecomments;
     private $collection;
     private $accessconf;
+    private $locked;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -2450,7 +2451,7 @@ class View {
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
         $select = '
-            SELECT v.id,v.title,v.description,v.type,v.mtime';
+            SELECT v.id,v.title,v.description,v.type,v.mtime,v.locked';
         $from = '
             FROM {view} v';
         $where = '
@@ -2500,6 +2501,7 @@ class View {
                 $data[$i]['type'] = $viewdata[$i]->type;
                 $data[$i]['title'] = $viewdata[$i]->title;
                 $data[$i]['mtime'] = $viewdata[$i]->mtime;
+                $data[$i]['locked'] = $viewdata[$i]->locked;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
                 $data[$i]['description'] = $viewdata[$i]->description;
                 if (!empty($viewdata[$i]->submitgroupid)) {
@@ -3719,6 +3721,7 @@ class View {
      * @return array, array
      */
     function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true) {
+        $excludelocked = $group && group_user_access($group) != 'admin';
         $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
         $sql = "
             SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
@@ -3729,6 +3732,7 @@ class View {
                 LEFT JOIN {collection} c ON cv.collection = c.id
             WHERE v.$ownersql AND v.type IN ('portfolio'";
         $sql .= $includeprofile ? ", 'profile') " : ') ';
+        $sql .= $excludelocked ? 'AND v.locked != 1 ' : '';
         $sql .= 'ORDER BY c.name, v.title';
         $records = get_records_sql_array($sql, array());
 

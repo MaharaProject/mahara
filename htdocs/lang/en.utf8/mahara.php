@@ -932,6 +932,7 @@ $string['Total'] = 'Total';
 $string['Visits'] = 'Visits';
 $string['after'] = 'after';
 $string['before'] = 'before';
+$string['Visibility'] = 'Visibility';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

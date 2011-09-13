@@ -51,6 +51,10 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         return array('grouphomepage');
     }
 
+    public static function hide_title_on_empty_content() {
+        return true;
+    }
+
     public static function render_instance (BlockInstance $instance, $editing = false) {
         global $USER;
 
@@ -61,6 +65,16 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
         $numtoshow = isset($configdata['numtoshow']) ? $configdata['numtoshow'] : $rows * $columns;
 
         $groupid = $instance->get_view()->get('group');
+
+        // If the group has hidden membership, display nothing to non-members
+        $usergroups = $USER->get('grouproles');
+        if (!isset($usergroups[$groupid])) {
+            $group = defined('GROUP') && $groupid == GROUP ? group_current_group() : get_record('group', 'id', $groupid);
+            if ($group->hidemembers) {
+                return '';
+            }
+        }
+
         require_once('searchlib.php');
         $groupmembers = get_group_user_search_results($groupid, '', 0, $numtoshow, '', $order);
 
