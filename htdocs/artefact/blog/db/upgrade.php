@@ -154,5 +154,9 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         ensure_record_exists('artefact_event_subscription', $subscription, $subscription);
     }
 
+    if ($oldversion < 2011091400) {
+        delete_records('artefact_cron', 'plugin', 'blog', 'callfunction', 'clean_post_files');
+    }
+
     return true;
 }
