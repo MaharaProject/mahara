@@ -1140,7 +1140,7 @@ function delete_user($userid) {
     // We want to append 'deleted.timestamp' to some unique fields in the usr 
     // table, so they can be reused by new accounts
     $fieldstomunge = array('username', 'email');
-    $datasuffix = '.deleted.' . time();
+    $datasuffix = '.deleted.' . microtime(true);
 
     $user = get_record('usr', 'id', $userid, null, null, null, null, implode(', ', $fieldstomunge));
 

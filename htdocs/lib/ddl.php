@@ -548,6 +548,57 @@ function find_sequence_name($table) {
 /**
  * This function will load one entire XMLDB file, generating all the needed
  * SQL statements, specific for each RDBMS ($CFG->dbtype) and, finally, it
+ * will execute all those statements against the DB, to drop all tables.
+ *
+ * @param $file full path to the XML file to be used
+ * @return boolean (true on success, false on error)
+ */
+function uninstall_from_xmldb_file($file) {
+    global $CFG, $db;
+
+    $status = true;
+    $xmldb_file = new XMLDBFile($file);
+
+    if (!$xmldb_file->fileExists()) {
+        throw new InstallationException($xmldb_file->path . " doesn't exist.");
+    }
+
+    $loaded = $xmldb_file->loadXMLStructure();
+    if (!$loaded || !$xmldb_file->isLoaded()) {
+        throw new InstallationException("Could not load " . $xmldb_file->path);
+    }
+
+    $structure = $xmldb_file->getStructure();
+
+    if ($tables = array_reverse($structure->getTables())) {
+        foreach ($tables as $table) {
+            if ($indexes = $table->getIndexes()) {
+                foreach (array_reverse($indexes) as $index) {
+                    if ($index->getName() == 'usernameuk' && is_postgres()) {
+                        // this is a giant hack, but adodb cannot handle resolving
+                        // the column for indexes that include lower() or something similar
+                        // and i can't find a nice way to do it.
+                        execute_sql('DROP INDEX {usr_use_uix}');
+                        continue;
+                    }
+                    drop_index($table, $index);
+                }
+            }
+            if ($keys = $table->getKeys()) {
+                foreach (array_reverse($keys) as $key) {
+                    drop_key($table, $key);
+                }
+            }
+            drop_table($table);
+        }
+    }
+
+    return true;
+}
+
+/**
+ * This function will load one entire XMLDB file, generating all the needed
+ * SQL statements, specific for each RDBMS ($CFG->dbtype) and, finally, it
  * will execute all those statements against the DB.
  *
  * @uses $CFG, $db

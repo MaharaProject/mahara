@@ -11,3 +11,4 @@ Modifications:
 - adodb/drivers/adodb-postgres64.inc.php (d6d8884fabc598aec58e633a6a1e258cd07b3da1)
 - Add check for valid columns in MetaIndexes function of
   adodb/drivers/adodb-postgres64.inc.php (see bug #796102)
+- adodb/adodb.inc.php add wakeup suppport (see bug #841711)
