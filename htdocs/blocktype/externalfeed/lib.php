@@ -313,7 +313,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             CURLOPT_USERAGENT => '',
         );
 
-        $result = mahara_http_request($config);
+        $result = mahara_http_request($config, true);
 
         if ($result->error) {
             throw new XML_Feed_Parser_Exception($result->error);

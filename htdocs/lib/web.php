@@ -3186,7 +3186,7 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     return $return;
 }
 
-function mahara_http_request($config) {
+function mahara_http_request($config, $quiet=false) {
     $ch = curl_init();
 
     // standard curl_setopt stuff; configs passed to the function can override these
@@ -3220,7 +3220,17 @@ function mahara_http_request($config) {
     $result->errno = curl_errno($ch);
 
     if ($result->errno) {
-        log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
+        if ($quiet) {
+            // When doing something unimportant like fetching rss feeds, some errors should not pollute the logs.
+            $dontcare = array(
+                CURLE_COULDNT_RESOLVE_HOST, CURLE_COULDNT_CONNECT, CURLE_PARTIAL_FILE, CURLE_OPERATION_TIMEOUTED,
+                CURLE_GOT_NOTHING,
+            );
+            $quiet = in_array($result->errno, $dontcare);
+        }
+        if (!$quiet) {
+            log_warn('Curl error: ' . $result->errno . ': ' . $result->error);
+        }
     }
 
     curl_close($ch);
