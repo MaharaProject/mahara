@@ -106,7 +106,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function get_instance_feed($id) {
         return get_record(
             'blocktype_externalfeed_data', 'id', $id, null, null, null, null,
-            'id,url,link,title,description,content,authuser,authpassword,' . db_format_tsfield('lastupdate') . ',image'
+            'id,url,link,title,description,content,authuser,authpassword,insecuresslmode,' . db_format_tsfield('lastupdate') . ',image'
         );
     }
 
@@ -120,11 +120,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         if (!empty($configdata['feedid'])) {
             $instancedata = $instance->get_data('feed', $configdata['feedid']);
             $url = $instancedata->url;
+            $insecuresslmode = $instancedata->insecuresslmode;
             $authuser = $instancedata->authuser;
             $authpassword = $instancedata->authpassword;
         }
         else {
             $url = '';
+            $insecuresslmode = 0;
             $authuser = '';
             $authpassword = '';
         }
@@ -147,6 +149,12 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     'required' => true,
                     'maxlength' => 2048, // See install.xml for this plugin - MySQL can only safely handle up to 255 chars
                 ),
+            ),
+            'insecuresslmode' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('insecuresslmode', 'blocktype.externalfeed'),
+                'description' => get_string('insecuresslmodedesc', 'blocktype.externalfeed'),
+                'defaultvalue' => (bool)$insecuresslmode,
             ),
             'authuser' => array(
                 'type' => 'text',
@@ -208,7 +216,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
         if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url'])) {
             try {
-                self::parse_feed($values['url'], $values['authuser'], $values['authpassword']);
+                self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $values['authpassword']);
                 return;
             }
             catch (XML_Feed_Parser_Exception $e) {
@@ -225,7 +233,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
         // We know this is safe because self::parse_feed caches its result and
         // the validate method would have failed if the feed was invalid
-        $data = self::parse_feed($values['url'], $values['authuser'], $values['authpassword']);
+        $data = self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $values['authpassword']);
         $data->content  = serialize($data->content);
         $data->image    = serialize($data->image);
         $data->lastupdate = db_format_timestamp(time());
@@ -255,7 +263,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function refresh_feeds() {
         if (!$feeds = get_records_select_array('blocktype_externalfeed_data', 
             'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))),
-            '', 'id,url,authuser,authpassword,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
+            '', 'id,url,authuser,authpassword,insecuresslmode,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
             return;
         }
         $yesterday = time() - 60*60*24;
@@ -270,7 +278,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 }
             }
             try {
-                $data = self::parse_feed($feed->url, $feed->authuser, $feed->authpassword);
+                $data = self::parse_feed($feed->url, $feed->insecuresslmode, $feed->authuser, $feed->authpassword);
                 $data->id = $feed->id;
                 $data->lastupdate = db_format_timestamp(time());
                 $data->content = serialize($data->content);
@@ -310,11 +318,12 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      * isn't able to be parsed
      *
      * @param string $source The URI for the feed
+     * @param bool $insecuresslmode Skip certificate checking
      * @param string $authuser HTTP basic auth username to use
      * @param string $authpassword HTTP basic auth password to use
      * @throws XML_Feed_Parser_Exception
      */
-    public static function parse_feed($source, $authuser='', $authpassword='') {
+    public static function parse_feed($source, $insecuresslmode=false, $authuser='', $authpassword='') {
 
         static $cache;
         if (empty($cache)) {
@@ -332,6 +341,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
         if (!empty($authuser) || !empty($authpassword)) {
             $config[CURLOPT_USERPWD] = $authuser . ':' . $authpassword;
+        }
+
+        if ($insecuresslmode) {
+            $config[CURLOPT_SSL_VERIFYPEER] = false;
         }
 
         $result = mahara_http_request($config, true);
@@ -359,6 +372,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $data->url = $source;
         $data->authuser = $authuser;
         $data->authpassword = $authpassword;
+        $data->insecuresslmode = (int)$insecuresslmode;
         $data->link = $feed->link;
         $data->description = $feed->description;
 
@@ -446,16 +460,19 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $config = $bi->get('configdata');
 
         $url = $authuser = $authpassword = '';
+        $insecuresslmode = false;
         if (!empty($config['feedid']) and $record = get_record('blocktype_externalfeed_data', 'id', $config['feedid'])) {
             $url =  $record->url;
             $authuser = $record->authuser;
             $authpassword = $record->authpassword;
+            $insecuresslmode = (bool)$record->insecuresslmode;
         }
 
         return array(
             'url' => $url,
             'authuser' => $authuser,
             'authpassword' => $authpassword,
+            'insecuresslmode' => $insecuresslmode ? 1 : 0,
             'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,
         );
     }
@@ -473,6 +490,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $urloptions = array('url' => $config['config']['url'],
                                     'authuser' => !empty($config['config']['authuser']) ? $config['config']['authuser'] : '',
                                     'authpassword' => !empty($config['config']['authpassword']) ? $config['config']['authpassword'] : '',
+                                    'insecuresslmode' => !empty($config['config']['insecuresslmode']) ? (bool)$config['config']['insecuresslmode'] : false,
                                     );
                 $values = self::instance_config_save($urloptions);
             }

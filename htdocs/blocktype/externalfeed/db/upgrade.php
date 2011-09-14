@@ -98,5 +98,13 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2011091401) {
+        // Add columns for insecure SSL mode
+        $table = new XMLDBTable('blocktype_externalfeed_data');
+        $field = new XMLDBField('insecuresslmode');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return true;
 }
