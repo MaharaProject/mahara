@@ -197,6 +197,12 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
         $images = $this->xpath->query("//image");
         if ($images->length > 0) {
             $image = $images->item(0);
+            $title = $image->getElementsByTagName('title');
+            $link = $image->getElementsByTagName('link');
+            $url = $image->getElementsByTagName('url');
+            if (!$title->length || !$link->length || !$url->length) {
+                return false;
+            }
             $desc = $image->getElementsByTagName('description');
             $description = $desc->length ? $desc->item(0)->nodeValue : false;
             $heigh = $image->getElementsByTagName('height'); 
@@ -204,9 +210,9 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
             $widt = $image->getElementsByTagName('width'); 
             $width = $widt->length ? $widt->item(0)->nodeValue : false;
             return array(
-                'title' => $image->getElementsByTagName('title')->item(0)->nodeValue,
-                'link' => $image->getElementsByTagName('link')->item(0)->nodeValue,
-                'url' => $image->getElementsByTagName('url')->item(0)->nodeValue,
+                'title' => $title->item(0)->nodeValue,
+                'link' => $link->item(0)->nodeValue,
+                'url' => $url->item(0)->nodeValue,
                 'description' => $description,
                 'height' => $height,
                 'width' => $width);

@@ -10,4 +10,5 @@ Changes:
 
  * Patch to make the parser respect its own $suppressWarnings flag (commit 86876df5beae591aef169cc52690b3c18a87b195)
  * Patch to make the parser pick the correct <link> from the feed (commit 64fd0805d937b338c82d9ef40c5d7e1e3411ca42)
+ * Avoid warnings when image element has no title, link, or url attribute
 
