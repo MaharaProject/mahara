@@ -573,7 +573,12 @@ function uninstall_from_xmldb_file($file) {
     if ($tables = array_reverse($structure->getTables())) {
         foreach ($tables as $table) {
             if ($indexes = $table->getIndexes()) {
-                foreach (array_reverse($indexes) as $index) {
+                $sortindexes = array();
+                foreach ($indexes as $index) {
+                    $sortindexes[] = find_index_name($table, $index);
+                }
+                array_multisort($indexes, SORT_DESC, $sortindexes);
+                foreach ($indexes as $index) {
                     if ($index->getName() == 'usernameuk' && is_postgres()) {
                         // this is a giant hack, but adodb cannot handle resolving
                         // the column for indexes that include lower() or something similar
@@ -585,7 +590,17 @@ function uninstall_from_xmldb_file($file) {
                 }
             }
             if ($keys = $table->getKeys()) {
-                foreach (array_reverse($keys) as $key) {
+                $sortkeys = array();
+                foreach ($keys as $key) {
+                    $sortkeys[] = find_key_name($table, $key);
+                }
+                array_multisort($keys, SORT_DESC, $sortkeys);
+                foreach ($keys as $key) {
+                    if (!is_postgres() && $key->type != XMLDB_KEY_FOREIGN && $key->type != XMLDB_KEY_FOREIGN_UNIQUE) {
+                        // Skip keys for MySQL because these will be
+                        // dropped when the table is dropped
+                        continue;
+                    }
                     drop_key($table, $key);
                 }
             }
