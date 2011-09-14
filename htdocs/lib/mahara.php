@@ -198,6 +198,9 @@ function upgrade_mahara($upgrades) {
     if (isset($upgrades['firstcoredata']) && $upgrades['firstcoredata']) {
         $install = true;
     }
+    else {
+        $install = false;
+    }
     uksort($upgrades, 'sort_upgrades');
     foreach ($upgrades as $name => $data) {
         if ($name == 'disablelogin') {
