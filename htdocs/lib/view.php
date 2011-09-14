@@ -1367,7 +1367,7 @@ class View {
         // Set column widths
         $layout = $this->get_layout();
         $i = 0;
-        $is_ie6 = (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0'));
+        $is_ie6 = isset($_SERVER['HTTP_USER_AGENT']) && (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0'));
         foreach (explode(',', $layout->widths) as $width) {
             // IE6 has interesting padding issues that mean we have to tell
             // porkies so all the columns stay beside each other
