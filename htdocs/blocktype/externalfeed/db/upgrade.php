@@ -70,5 +70,33 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2011091400) {
+        // Add columns for HTTP basic auth
+        $table = new XMLDBTable('blocktype_externalfeed_data');
+        $field1 = new XMLDBField('authuser');
+        $field1->setAttributes(XMLDB_TYPE_TEXT);
+        $field2 = new XMLDBField('authpassword');
+        $field2->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field1);
+        add_field($table, $field2);
+
+        // Change unique constraint that's no longer valid
+        $table = new XMLDBTable('blocktype_externalfeed_data');
+        $index = new XMLDBIndex('url_uix');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('url'));
+        drop_index($table, $index);
+        if (is_postgres()) {
+            $index = new XMLDBIndex('urlautautix');
+            $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('url', 'authuser', 'authpassword'));
+            add_index($table, $index);
+        }
+        else if (is_mysql()) {
+            // MySQL needs size limits when indexing text fields
+            execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
+                           {blocextedata_urlautaut_ix} (url(255), authuser(255), authpassword(255))');
+        }
+
+    }
+
     return true;
 }

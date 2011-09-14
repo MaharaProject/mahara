@@ -42,18 +42,18 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function get_categories() {
         return array('external');
     }
-
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            // MySQL can't handle uniqueness of > 255 chars
             if (is_postgres()) {
-                execute_sql('CREATE UNIQUE INDEX {blocextedata_url_uix} ON {blocktype_externalfeed_data}(url);');
+                $table = new XMLDBTable('blocktype_externalfeed_data');
+                $index = new XMLDBIndex('urlautautix');
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('url', 'authuser', 'authpassword'));
+                add_index($table, $index);
             }
             else if (is_mysql()) {
-                execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD UNIQUE {blocextedata_url_uix} (url(255))');
-            }
-            else {
-                // TODO: support other databases
+                // MySQL needs size limits when indexing text fields
+                execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
+                               {blocextedata_urlautaut_ix} (url(255), authuser(255), authpassword(255))');
             }
         }
     }
@@ -106,7 +106,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function get_instance_feed($id) {
         return get_record(
             'blocktype_externalfeed_data', 'id', $id, null, null, null, null,
-            'id,url,link,title,description,content,' . db_format_tsfield('lastupdate') . ',image'
+            'id,url,link,title,description,content,authuser,authpassword,' . db_format_tsfield('lastupdate') . ',image'
         );
     }
 
@@ -118,10 +118,15 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $configdata = $instance->get('configdata');
 
         if (!empty($configdata['feedid'])) {
-            $url = $instance->get_data('feed', $configdata['feedid'])->url;
+            $instancedata = $instance->get_data('feed', $configdata['feedid']);
+            $url = $instancedata->url;
+            $authuser = $instancedata->authuser;
+            $authpassword = $instancedata->authpassword;
         }
         else {
             $url = '';
+            $authuser = '';
+            $authpassword = '';
         }
 
         if (isset($configdata['full'])) {
@@ -142,6 +147,20 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     'required' => true,
                     'maxlength' => 2048, // See install.xml for this plugin - MySQL can only safely handle up to 255 chars
                 ),
+            ),
+            'authuser' => array(
+                'type' => 'text',
+                'title' => get_string('authuser', 'blocktype.externalfeed'),
+                'description' => get_string('authuserdesc', 'blocktype.externalfeed'),
+                'width' => '90%',
+                'defaultvalue' => $authuser,
+            ),
+            'authpassword' => array(
+                'type' => 'text',
+                'title' => get_string('authpassword', 'blocktype.externalfeed'),
+                'description' => get_string('authpassworddesc', 'blocktype.externalfeed'),
+                'width' => '90%',
+                'defaultvalue' => $authpassword,
             ),
             'count' => array(
                 'type' => 'text',
@@ -189,7 +208,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
         if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url'])) {
             try {
-                self::parse_feed($values['url']);
+                self::parse_feed($values['url'], $values['authuser'], $values['authpassword']);
                 return;
             }
             catch (XML_Feed_Parser_Exception $e) {
@@ -204,18 +223,14 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             // try add on http://
             $values['url'] = 'http://' . $values['url'];
         }
-        if ($exists = get_record('blocktype_externalfeed_data', 'url', $values['url'])) {
-            $values['feedid'] = $exists->id;
-            unset($values['url']);
-            return $values;
-        }
-        // We know this is safe because self::parse_feed caches its result and 
+        // We know this is safe because self::parse_feed caches its result and
         // the validate method would have failed if the feed was invalid
-        $data = self::parse_feed($values['url']);
+        $data = self::parse_feed($values['url'], $values['authuser'], $values['authpassword']);
         $data->content  = serialize($data->content);
         $data->image    = serialize($data->image);
         $data->lastupdate = db_format_timestamp(time());
-        $id = ensure_record_exists('blocktype_externalfeed_data', array('url' => $values['url']), $data, 'id', true);
+        $wheredata = array('url' => $values['url'], 'authuser' => $values['authuser'], 'authpassword' => $values['authpassword']);
+        $id = ensure_record_exists('blocktype_externalfeed_data', $wheredata, $data, 'id', true);
         $values['feedid'] = $id;
         unset($values['url']);
         return $values;
@@ -240,7 +255,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
     public static function refresh_feeds() {
         if (!$feeds = get_records_select_array('blocktype_externalfeed_data', 
             'lastupdate < ?', array(db_format_timestamp(strtotime('-30 minutes'))),
-            '', 'id,url,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
+            '', 'id,url,authuser,authpassword,' . db_format_tsfield('lastupdate', 'tslastupdate'))) {
             return;
         }
         $yesterday = time() - 60*60*24;
@@ -255,7 +270,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 }
             }
             try {
-                $data = self::parse_feed($feed->url);
+                $data = self::parse_feed($feed->url, $feed->authuser, $feed->authpassword);
                 $data->id = $feed->id;
                 $data->lastupdate = db_format_timestamp(time());
                 $data->content = serialize($data->content);
@@ -295,9 +310,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      * isn't able to be parsed
      *
      * @param string $source The URI for the feed
+     * @param string $authuser HTTP basic auth username to use
+     * @param string $authpassword HTTP basic auth password to use
      * @throws XML_Feed_Parser_Exception
      */
-    public static function parse_feed($source) {
+    public static function parse_feed($source, $authuser='', $authpassword='') {
 
         static $cache;
         if (empty($cache)) {
@@ -312,6 +329,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             CURLOPT_TIMEOUT => 15,
             CURLOPT_USERAGENT => '',
         );
+
+        if (!empty($authuser) || !empty($authpassword)) {
+            $config[CURLOPT_USERPWD] = $authuser . ':' . $authpassword;
+        }
 
         $result = mahara_http_request($config, true);
 
@@ -336,6 +357,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $data = new StdClass;
         $data->title = $feed->title;
         $data->url = $source;
+        $data->authuser = $authuser;
+        $data->authpassword = $authpassword;
         $data->link = $feed->link;
         $data->description = $feed->description;
 
@@ -421,9 +444,18 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
      */
     public static function export_blockinstance_config(BlockInstance $bi) {
         $config = $bi->get('configdata');
-        $url = !empty($config['feedid']) ? get_field('blocktype_externalfeed_data', 'url', 'id', $config['feedid']) : '';
+
+        $url = $authuser = $authpassword = '';
+        if (!empty($config['feedid']) and $record = get_record('blocktype_externalfeed_data', 'id', $config['feedid'])) {
+            $url =  $record->url;
+            $authuser = $record->authuser;
+            $authpassword = $record->authpassword;
+        }
+
         return array(
             'url' => $url,
+            'authuser' => $authuser,
+            'authpassword' => $authpassword,
             'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,
         );
     }
@@ -438,7 +470,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         // slow. This plugin will need a bit of re-working for this to be possible
         if (!empty($config['config']['url'])) {
             try {
-                $values = self::instance_config_save(array('url' => $config['config']['url']));
+                $urloptions = array('url' => $config['config']['url'],
+                                    'authuser' => !empty($config['config']['authuser']) ? $config['config']['authuser'] : '',
+                                    'authpassword' => !empty($config['config']['authpassword']) ? $config['config']['authpassword'] : '',
+                                    );
+                $values = self::instance_config_save($urloptions);
             }
             catch (XML_Feed_Parser_Exception $e) {
                 log_info("Note: was unable to parse RSS feed for new blockinstance. URL was {$config['config']['url']}");

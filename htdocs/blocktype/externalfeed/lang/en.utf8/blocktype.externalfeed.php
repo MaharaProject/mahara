@@ -29,6 +29,11 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'External Feed';
 $string['description'] = 'Embed an external RSS or ATOM feed';
+
+$string['authuser'] = 'HTTP username';
+$string['authuserdesc'] = 'Username (HTTP basic auth) needed to access this feed (if required)';
+$string['authpassword'] = 'HTTP password';
+$string['authpassworddesc'] = 'Password (HTTP basic auth) needed to access this feed (if required)';
 $string['feedlocation'] = 'Feed location';
 $string['feedlocationdesc'] = 'URL of a valid RSS or ATOM feed';
 $string['itemstoshow'] = 'Items to show';

@@ -8,6 +8,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="url" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="authuser" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="authpassword" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="link" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
