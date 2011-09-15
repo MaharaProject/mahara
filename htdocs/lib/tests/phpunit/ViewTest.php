@@ -55,6 +55,7 @@ class ViewTest extends MaharaUnitTest {
      * create a view to test with
      */
     public function setUp() {
+        parent::setUp();
         $this->require_test_user();
         // set the owner of the view to the test user we created
         $this->fields['owner'] = array($this->users['test'], $this->users['test']);

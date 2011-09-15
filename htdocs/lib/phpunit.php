@@ -195,6 +195,21 @@ class MaharaUnitTest extends PHPUnit_Framework_TestCase {
     private static $userdata = array('username', 'email', 'firstname', 'lastname');
 
     /**
+     * Superclass setUp method
+     *
+     * Takes care of setting up the database correctly as this doesn't
+     * happen in unit test through init.php properly.
+     *
+     * parent::setUp() must always be called if it is overriden in
+     * subclasses
+     *
+     * @return void
+     */
+    protected function setUp() {
+        configure_dbconnection();
+    }
+
+    /**
      * require a user to be created in order for the tests to run
      *
      * @param stdclass $userdata data about the user to create
