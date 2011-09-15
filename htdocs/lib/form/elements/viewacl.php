@@ -34,6 +34,9 @@
  */
 function pieform_element_viewacl(Pieform $form, $element) {
     global $USER, $SESSION;
+
+    $strlen = function_exists('mb_strlen') ? 'mb_strlen' : 'strlen';
+
     $smarty = smarty_core();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
@@ -72,7 +75,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
                 else {
                     $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
                 }
-                if (mb_strlen($item['name']) > 30) {
+                if ($strlen($item['name']) > 30) {
                     $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
                 // only show access that is still current. Expired access will be deleted if the form is saved
@@ -128,7 +131,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'name' => $g->name,
             'preset' => false
         );
-        if (mb_strlen($g->name) > 30) {
+        if ($strlen($g->name) > 30) {
             $group['shortname'] = str_shorten_text($g->name, 30, true);
         }
         $mygroups[] = $group;
@@ -144,7 +147,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'name'   => $u->name,
             'preset' => false
         );
-        if (mb_strlen($u->name) > 30) {
+        if ($strlen($u->name) > 30) {
             $fave['shortname'] = str_shorten_text($u->name, 30, true);
         }
         $faves[] = $fave;
