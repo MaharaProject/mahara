@@ -78,6 +78,7 @@ $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 
 $string['maildisabled'] = 'E-mail disabled';
+$string['disableemail'] = 'Disable email';
 $string['maildisabledbounce'] =<<< EOF
 Sending of e-mail to your e-mail address has been disabled as too many messages have been returned to the server.
 Please check that your e-mail account is working as expected before you re-enable e-mail on the account preferences at %s.

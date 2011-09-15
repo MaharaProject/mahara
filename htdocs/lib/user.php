@@ -236,7 +236,7 @@ function general_account_prefs_form_elements($prefs) {
     $elements['maildisabled'] = array(
         'type' => 'checkbox',
         'defaultvalue' => $prefs->maildisabled,
-        'title' => get_string('email'),
+        'title' => get_string('disableemail', 'account'),
         'help' => true,
     );
     $elements['messages'] = array(
