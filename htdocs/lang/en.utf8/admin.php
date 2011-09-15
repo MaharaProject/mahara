@@ -629,6 +629,7 @@ $string['deleteusernote'] = 'Please note that this operation <strong>cannot be u
 $string['youcannotadministerthisuser'] = 'You cannot administer this user';
 $string['usernamechangenotallowed'] = 'The chosen authentication method does not allow changes to the username.';
 $string['passwordchangenotallowed'] = 'The chosen authentication method does not allow changes to the password.';
+$string['thisuserdeleted'] = 'This user has been deleted.';
 
 // Add User
 $string['adduser'] = 'Add User';

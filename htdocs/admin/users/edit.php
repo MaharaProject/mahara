@@ -45,6 +45,13 @@ if (!$USER->is_admin_for_user($user)) {
     redirect('/user/view.php?id=' . $id);
 }
 
+if ($user->deleted) {
+    $smarty = smarty();
+    $smarty->assign('PAGEHEADING', TITLE . ': ' . display_name($user));
+    $smarty->assign('message', get_string('thisuserdeleted', 'admin'));
+    $smarty->display('message.tpl');
+    exit;
+}
 
 // Site-wide account settings
 $currentdate = getdate();
