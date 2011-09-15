@@ -776,6 +776,7 @@ function rmdirr($dirname)
  */
 function copyr($source, $dest)
 {
+    $dest = trim($dest);
     // Check for symlinks
     if (is_link($source)) {
         return symlink(readlink($source), $dest);

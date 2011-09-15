@@ -1090,6 +1090,7 @@ function is_hash($array) {
 function check_dir_exists($dir, $create=true, $recursive=true) {
 
     $status = true;
+    $dir = trim($dir);
 
     if(!is_dir($dir)) {
         if (!$create) {
