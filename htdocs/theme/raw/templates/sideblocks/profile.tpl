@@ -8,12 +8,6 @@
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
 {/if}
         <ul>
-{if $sbdata.unreadnotifications}
-            <li id="unreadmessages"><a class="btn-message" href="{$WWWROOT}account/activity/">
-                <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$sbdata.unreadnotifications}</span> 
-                <span class="unreadmessages">{$sbdata.unreadnotificationsmessage}</span></span>
-            </a></li>
-{/if}
 {if $sbdata.invitedgroups}
             <li id="invitedgroups"><a href="{$WWWROOT}group/mygroups.php?filter=invite">
                 <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>

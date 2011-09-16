@@ -2380,8 +2380,6 @@ function profile_sideblock() {
             }
         }
     }
-    $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
-    $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
     $invitedgroups = get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
              FROM {group} g
              JOIN {group_member_invite} gmi ON gmi.group = g.id
