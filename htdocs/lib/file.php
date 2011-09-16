@@ -750,6 +750,7 @@ function rmdirr($dirname)
  * @author      Aidan Lister <aidan@php.net>
  * @version     1.0.1
  * @link        http://aidanlister.com/repos/v/function.copyr.php
+ * @license     Public Domain
  * @param       string   $source    Source path
  * @param       string   $dest      Destination path
  * @return      bool     Returns TRUE on success, FALSE on failure
