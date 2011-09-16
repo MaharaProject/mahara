@@ -210,6 +210,13 @@ foreach (array('alpha', 'freq') as $option) {
     $tagsortoptions[$option] = $option == $tagsort;
 }
 
+if (substr($data->baseurl, -8, 8) == "tags.php") {
+    $data->queryprefix = '?';
+}
+else {
+    $data->queryprefix = '&';
+}
+
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('tags', $tags);
