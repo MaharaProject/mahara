@@ -627,6 +627,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 replaceChildNodes(self.id + '_userfile_maxuploadsize', '(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
             }
         }
+        // Clear the create folder form
+        if (data.foldercreated && $(self.id + '_createfolder_name')) {
+            $(self.id + '_createfolder_name').value = '';
+        }
         // Only update the file listing if the user hasn't changed folders yet
         if (data.newlist && (data.folder == self.folderid || data.changedfolder)) {
             self.filedata = data.newlist.data;

@@ -888,6 +888,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
         'message'   => get_string('foldercreated', 'artefact.file'),
         'highlight' => $f->get('id'),
         'newlist'   => pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $f->get('id')),
+        'foldercreated' => true,
     );
 }
 
