@@ -407,7 +407,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
 
         if (is_string($image)) {
-            // Easy!
+            if (is_https() and stripos($image, 'http://') !== false) {
+                // HTTPS sites should not display HTTP images
+                return '';
+            }
             return '<img src="' . hsc($image) . '">';
         }
 
@@ -421,6 +424,11 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         // can't even get the basics right...
         if (substr($url, 0, 1) == '/' && !empty($image['link'])) {
             $url = $image['link'] . $image['url'];
+        }
+
+        if (is_https() and stripos($url, 'http://') !== false) {
+            // HTTPS sites should not display HTTP images
+            return '';
         }
 
         $result .= '<img src="' . hsc($url) . '"';
