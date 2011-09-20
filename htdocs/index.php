@@ -59,7 +59,7 @@ if ($USER->is_logged_in()) {
         )
     );
 
-    if ($USER->get_account_preference('showhomeinfo')) {
+    if (get_config('homepageinfo') && $USER->get_account_preference('showhomeinfo')) {
         // allow the user to choose never to see the info boxes again
         $strhowtodisable = json_encode(get_string('howtodisable', 'mahara', get_config('wwwroot') . 'account'));
         $js = <<<JAVASCRIPT
