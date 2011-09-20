@@ -326,7 +326,13 @@ function pieform_element_filebrowser_configure_tabs($viewowner, $prefix) {
         }
     }
     $tabs['site'] = get_string('sitefiles', 'admin');
-    return array('tabs' => $tabs, 'subtabs' => $subtabs, 'owner' => $selectedtab, 'ownerid' => $selectedsubtab, 'upload' => $upload);
+    return array(
+        'tabs'    => $tabs,
+        'subtabs' => $subtabs,
+        'owner'   => $selectedtab,
+        'ownerid' => $viewowner['type'] == 'group' ? $viewowner['id'] : $selectedsubtab,
+        'upload'  => $upload
+    );
 }
 
 
