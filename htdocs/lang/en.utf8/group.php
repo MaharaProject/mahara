@@ -43,7 +43,7 @@ $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
 $string['editgroup'] = 'Edit Group';
 $string['savegroup'] = 'Save Group';
-$string['groupsaved'] = 'Group Saved Successfully';
+$string['groupsaved'] = 'Group saved successfully';
 $string['invalidgroup'] = 'The group doesn\'t exist';
 $string['canteditdontown'] = 'You can\'t edit this group because you don\'t own it';
 $string['groupdescription'] = 'Group Description';
@@ -53,7 +53,7 @@ $string['Open'] = 'Open';
 $string['opendescription'] = 'Users can join the group without approval from group administrators.';
 $string['requestdescription'] = 'Users can send membership requests to group administrators.';
 $string['Controlled'] = 'Controlled';
-$string['controlleddescription'] = 'Group administrators can add users to the group without their consent, and members cannot choose to leave.';
+$string['controlleddescription'] = 'Group administrators can add users to the group without their consent, and members cannot leave the group.';
 $string['membershiptype'] = 'Group Membership Type';
 $string['membershiptype.controlled'] = 'Controlled Membership';
 $string['membershiptype.approve']    = 'Approved Membership';
@@ -61,30 +61,30 @@ $string['membershiptype.open']       = 'Open Membership';
 $string['membershiptype.abbrev.controlled'] = 'Controlled';
 $string['membershiptype.abbrev.approve']    = 'Normal';
 $string['membershiptype.abbrev.open']       = 'Open';
-$string['membershipopencontrolled']  = 'Membership cannot be both open and controlled';
-$string['membershipopenrequest']     = "Open Membership groups don't accept membership requests";
+$string['membershipopencontrolled']  = 'Membership cannot be both open and controlled.';
+$string['membershipopenrequest']     = "Open membership groups don't accept membership requests.";
 $string['requestmembership']         = 'Request Membership';
 $string['pendingmembers']            = 'Pending Members';
 $string['reason']                    = 'Reason';
 $string['approve']                   = 'Approve';
 $string['reject']                    = 'Reject';
-$string['groupalreadyexists'] = 'A Group by this name already exists';
+$string['groupalreadyexists'] = 'A group by this name already exists.';
 $string['invalidshortname'] = 'Invalid group short name';
 $string['shortnameformat'] = 'Group short names can be from 2 to 255 characters in length and contain only alphanumeric characters, ".", "-", and "_"';
 $string['Created'] = 'Created';
-$string['groupadmins'] = 'Group admins';
-$string['editroles'] = 'Who can edit pages';
+$string['groupadmins'] = 'Group admininistrators';
+$string['editroles'] = 'Create and edit pages';
 $string['editrolesdescription'] = 'Roles with permission to create and edit group pages.';
 $string['allexceptmember'] = 'Everyone except ordinary members';
 $string['Admin'] = 'Admin';
 $string['grouptype'] = 'Group type';
-$string['publiclyviewablegroup'] = 'Publicly Viewable Group?';
-$string['publiclyviewablegroupdescription'] = 'Allow people who are not logged-in to view this group, including the forums?';
+$string['publiclyviewablegroup'] = 'Publicly viewable group';
+$string['publiclyviewablegroupdescription'] = 'Allow people who are not logged-in to view this group, including the forums.';
 $string['Type'] = 'Type';
 $string['publiclyvisible'] = 'Publicly visible';
 $string['Public'] = 'Public';
-$string['usersautoadded'] = 'Users auto-added?';
-$string['usersautoaddeddescription'] = 'Automatically put all new users into this group?';
+$string['usersautoadded'] = 'Auto-add users';
+$string['usersautoaddeddescription'] = 'Automatically put all new users into this group.';
 $string['groupcategory'] = 'Group category';
 $string['allcategories'] = 'All categories';
 $string['groupoptionsset'] = 'Group options have been updated.';
@@ -96,17 +96,17 @@ $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
 $string['viewnotify'] = 'Shared page notifications';
 $string['viewnotifydescription'] = 'If checked, a notification will be sent to every group member whenever a member shares one of their pages with the group.  Enabling this setting in very large groups can produce a lot of notifications.';
-$string['hiddengroup'] = 'Hidden group';
+$string['hiddengroup'] = 'Hide group';
 $string['hiddengroupdescription'] = 'Do not list this group on the Find Groups page.';
 $string['hidemembers'] = 'Hide membership';
 $string['hidemembersdescription'] = 'Hide the group\'s membership listing from non-members.';
 $string['hidemembersfrommembers'] = 'Hide membership from members';
-$string['hidemembersfrommembersdescription'] = 'Members cannot be listed except by group admins.  Admins will still be listed on the group home page.';
+$string['hidemembersfrommembersdescription'] = 'Members are not listed. Only group administrators can see the members listed. Administrators will still be shown on the group homepage.';
 $string['friendinvitations'] = 'Friend invitations';
-$string['invitefriendsdescription'] = 'If checked, members will be allowed to invite friends to join the group.  Regardless of this setting, group admins can always send invitations to anyone.';
+$string['invitefriendsdescription'] = 'If checked, members are allowed to invite friends to join the group.  Regardless of this setting, group administrators can always send invitations to anyone.';
 $string['invitefriends'] = 'Invite friends';
 $string['Recommendations'] = 'Recommendations';
-$string['suggestfriendsdescription'] = 'If checked, members can easily send a recommendation about this group to their friends from a button on the group homepage.';
+$string['suggestfriendsdescription'] = 'If checked, members can easily send a recommendation for joining this group to their friends from a button on the group homepage.';
 $string['suggesttofriends'] = 'Suggest to friends';
 $string['userstosendrecommendationsto'] = 'Users who will be sent a recommendation';
 $string['suggestgroupnotificationsubject'] = '%s suggested you join a group';
@@ -167,7 +167,7 @@ $string['grouprequestmessage'] = '%s would like to join your group %s';
 $string['grouprequestmessagereason'] = "%s would like to join your group %s. Their reason for wanting to join is:\n\n%s";
 $string['cantdeletegroup'] = 'You cannot delete this group';
 $string['groupconfirmdelete'] = "This will delete all pages, files, and forums contained within the group.  Are you sure you wish to fully delete this group and all its content?";
-$string['deletegroup'] = 'Group Deleted Successfully';
+$string['deletegroup'] = 'Group deleted successfully';
 $string['deletegroup1'] = 'Delete Group';
 $string['allmygroups'] = 'All My Groups';
 $string['groupsimin']  = 'Groups I\'m In';
@@ -227,15 +227,15 @@ $string['addtofriendslist'] = 'Add to friends';
 $string['requestfriendship'] = 'Request friendship';
 
 $string['addedtofriendslistsubject'] = '%s has added you as a friend';
-$string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
+$string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is on your friend list now, too. '
     . ' Click on the link below to see their profile page';
 
 $string['requestedfriendlistsubject'] = 'New friend request';
 $string['requestedfriendlistmessage'] = '%s has requested that you add them as a friend.  '
-    .' You can either do this from the link below, or from your friends list page';
+    .' You can either do this from the link below or from your friends list page';
 
 $string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
-    . ' You can either do this from the link below, or from your friends list page.'
+    . ' You can either do this from the link below or from your friends list page.'
     . ' Their reason was:
     ';
 
@@ -266,14 +266,14 @@ $string['Views']          = 'Pages';
 $string['Files']          = 'Files';
 $string['noviewstosee']   = 'None that you can see :(';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
-$string['approverequest'] = 'Approve Request!';
+$string['approverequest'] = 'Approve Request';
 $string['denyrequest']    = 'Deny Request';
 $string['pending']        = 'pending';
 $string['trysearchingforfriends'] = 'Try %ssearching for new friends%s to grow your network!';
 $string['nobodyawaitsfriendapproval'] = 'Nobody is awaiting your approval to become your friend';
-$string['sendfriendrequest'] = 'Send Friend Request!';
-$string['addtomyfriends'] = 'Add to My Friends!';
-$string['friendshiprequested'] = 'Friendship requested!';
+$string['sendfriendrequest'] = 'Send Friend Request';
+$string['addtomyfriends'] = 'Add to My Friends';
+$string['friendshiprequested'] = 'Friendship requested';
 $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found :(';
 $string['friend'] = 'friend';
@@ -286,13 +286,13 @@ $string['myinstitutions'] = 'My Institutions';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
-$string['cannotrequestfriendshipwithself'] = 'You cannot request a friendship with yourself';
+$string['cannotrequestfriendshipwithself'] = 'You cannot request friendship with yourself';
 $string['cantrequestfriendship'] = 'You cannot request friendship with this user';
 
 // Messaging between users
 $string['messagebody'] = 'Send message'; // wtf
 $string['sendmessage'] = 'Send message';
-$string['messagesent'] = 'Message sent!';
+$string['messagesent'] = 'Message sent';
 $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
 $string['newusermessageemailbody'] = '%s has sent you a message.  To view this message, visit
