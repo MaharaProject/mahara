@@ -157,7 +157,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the document
             array(
-                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)spreadsheet/pub.*key=([a-zA-Z0-9\_\-]+).*#',
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)spreadsheet/.*key=([a-zA-Z0-9\_\-]+).*#',
                 'url'   => $httpstr . '://docs.google.com/$1spreadsheet/pub?key=$2',
                 'type'  => 'iframe',
             ),
