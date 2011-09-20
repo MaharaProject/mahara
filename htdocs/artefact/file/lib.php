@@ -277,7 +277,7 @@ class PluginArtefactFile extends PluginArtefact {
         $data = get_records_sql_assoc("
             SELECT a.owner, SUM(f.size) AS bytes
             FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive', 'video', 'audio')
+            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', PluginArtefactFile::get_artefact_types())) . ")
             AND a.owner IS NOT NULL
             GROUP BY a.owner", array()
         );
@@ -288,10 +288,11 @@ class PluginArtefactFile extends PluginArtefact {
     }
 
     public static function recalculate_group_quota() {
+
         $data = get_records_sql_assoc("
             SELECT a.group, SUM(f.size) AS bytes
             FROM {artefact} a JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE a.artefacttype IN ('file', 'image', 'profileicon', 'archive')
+            WHERE a.artefacttype IN (" . join(',',  array_map('db_quote', PluginArtefactFile::get_artefact_types())) . ")
             AND a.group IS NOT NULL
             GROUP BY a.group", array()
         );
