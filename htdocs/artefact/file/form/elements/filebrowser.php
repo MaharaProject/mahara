@@ -147,6 +147,10 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $initjs .= "{$prefix}.selecteddata = {$selectedliststr};";
     }
 
+    if (isset($tabdata)) {
+        $initjs .= "{$prefix}.tabdata = " . json_encode($tabdata) . ';';
+    }
+
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
     $initjs .= "addLoadEvent({$prefix}.init);";
@@ -1154,7 +1158,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
         'error'         => false, 
         'changedowner'  => true,
         'changedfolder' => true,
-        'tabupload'     => $newtabdata['upload'],
+        'newtabdata'    => $newtabdata,
         'folder'        => $folder,
         'disableedit'   => $group && !pieform_element_filebrowser_edit_group_folder($group, $folder),
         'newlist'       => pieform_element_filebrowser_build_filelist($form, $element, $folder, null, $user, $group, $institution),

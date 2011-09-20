@@ -638,10 +638,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 $(self.id+'_folder').value = self.folderid = data.folder;
                 $(self.id+'_foldername').value = self.foldername = data.newpath.foldername;
                 $(self.id+'_foldernav').innerHTML = data.newpath.html;
-                if (data.changedowner && data.newtabs) {
+                if (data.changedowner && data.newtabs && data.newtabdata) {
+                    self.tabdata = data.newtabdata;
                     $(self.id+'_ownertabs').innerHTML = data.newtabs;
                     $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
-                    if (data.tabupload) {
+                    if (data.newtabdata.upload) {
                         removeElementClass(self.id + '_upload_container', 'hidden');
                     } else {
                         addElementClass(self.id + '_upload_container', 'hidden');
@@ -656,7 +657,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                         removeElementClass(self.id + '_upload_disabled', 'hidden');
                     }
                     else if (hasElementClass(self.id + '_upload_container', 'hidden') && !data.disableedit) {
-                        removeElementClass(self.id + '_upload_container', 'hidden');
+                        if (!self.tabdata || self.tabdata.upload) {
+                            removeElementClass(self.id + '_upload_container', 'hidden');
+                        }
                         if ($('createfolder')) {
                             removeElementClass('createfolder', 'hidden');
                         }
