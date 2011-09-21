@@ -109,7 +109,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
         $element['filters'] = array(
-            'artefacttype'    => array('file'),
+            'artefacttype'    => array('file', 'audio', 'video'),
             'filetype'        => self::get_allowed_mimetypes(),
         );
         return $element;
@@ -124,7 +124,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'blocktype' => 'internalmedia',
             'limit' => 5,
             'selectone' => true,
-            'artefacttypes' => array('file'),
+            'artefacttypes' => array('file', 'audio', 'video'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
     }
