@@ -142,11 +142,13 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 function activity_default_notification_method() {
     static $method = null;
     if (is_null($method)) {
-        if (in_array('email', array_map(create_function('$a', 'return $a->name;'), plugins_installed('notification')))) {
-            $method = 'email';
-        }
-        else {
-            $method = 'internal';
+        if (!$method = get_config('defaultnotificationmethod')) {
+            if (in_array('email', array_keys(plugins_installed('notification')))) {
+                $method = 'email';
+            }
+            else {
+                $method = 'internal';
+            }
         }
     }
     return $method;
