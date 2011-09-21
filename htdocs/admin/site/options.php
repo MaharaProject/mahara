@@ -49,6 +49,14 @@ $searchpluginoptions = get_search_plugins();
 
 $countries = getoptions_country();
 
+$notificationmethods = array();
+foreach (array_keys(plugins_installed('notification')) as $n) {
+    $notificationmethods[$n] = get_string('name', 'notification.' . $n);
+}
+if (!$notificationdefault = get_config('defaultnotificationmethod')) {
+    $notificationdefault = isset($notificationmethods['email']) ? 'email' : 'internal';
+}
+
 $spamtraps = available_spam_traps();
 $siteoptionform = array(
     'name'       => 'siteoptions',
@@ -454,6 +462,15 @@ $siteoptionform = array(
                     'disabled'      => in_array('noreplyaddress', $OVERRIDDEN),
                     'help'          => true,
                 ),
+                'defaultnotificationmethod' => array(
+                    'type'          => 'select',
+                    'title'         => get_string('defaultnotificationmethod', 'admin'),
+                    'description'   => get_string('defaultnotificationmethoddescription', 'admin'),
+                    'defaultvalue'  => $notificationdefault,
+                    'disabled'      => in_array('defaultnotificationmethod', $OVERRIDDEN),
+                    'options'       => $notificationmethods,
+                    'help'          => true,
+                ),
             ),
         ),
         'generalsettings' => array(
@@ -588,8 +605,8 @@ function siteoptions_submit(Pieform $form, $values) {
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
-        'noreplyaddress', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers', 'registerterms',
-        'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
+        'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
+        'registerterms', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
     );
 
     // if public views are disabled, sitemap generation must also be disabled.
