@@ -41,6 +41,7 @@ $string['strftimerecent'] = '%%d %%b, %%k:%%M';
 $string['strftimerecentfull'] = '%%a, %%d %%b %%Y, %%l:%%M %%p';
 $string['strftimetime'] = '%%l:%%M %%p';
 $string['strfdaymonthyearshort'] = '%%d/%%m/%%Y';
+$string['strfdateofbirth'] = '%%Y/%%m/%%d';
 $string['strftimew3cdatetime'] = '%%Y-%%m-%%dT%%H:%%M:%%S%%z';
 $string['strftimew3cdate'] = '%%Y-%%m-%%d';
 $string['thislanguage'] = 'English';

@@ -118,6 +118,7 @@ $string['sortfreq'] = 'Sort tags by frequency';
 $string['sortresultsby'] = 'Sort results by:';
 $string['date'] = 'Date';
 $string['dateformatguide'] = 'Use the format YYYY/MM/DD';
+$string['dateofbirthformatguide'] = 'Use the format YYYY/MM/DD';
 $string['datetimeformatguide'] = 'Use the format YYYY/MM/DD HH:MM';
 $string['filterresultsby'] = 'Filter results by:';
 $string['tagfilter_all'] = 'All';
