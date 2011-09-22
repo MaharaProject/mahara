@@ -985,15 +985,24 @@ class View {
         if (!empty($institutions)) {
             db_begin();
             foreach ($institutions as $i) {
-                $vaccess = new stdClass;
-                $vaccess->view = $this->id;
-                $vaccess->institution = $i;
-                $vaccess->startdate = null;
-                $vaccess->stopdate = null;
-                $vaccess->allowcomments = 0;
-                $vaccess->approvecomments = 1;
+                $exists = record_exists_select(
+                    'view_access',
+                    'view = ? AND institution = ? AND startdate IS NULL AND stopdate IS NULL',
+                    array($this->id, $i)
+                );
 
-                ensure_record_exists('view_access', $vaccess, $vaccess);
+                if (!$exists) {
+                    $vaccess = new stdClass;
+                    $vaccess->view = $this->id;
+                    $vaccess->institution = $i;
+                    $vaccess->startdate = null;
+                    $vaccess->stopdate = null;
+                    $vaccess->allowcomments = 0;
+                    $vaccess->approvecomments = 1;
+                    $vaccess->ctime = db_format_timestamp(time());
+
+                    insert_record('view_access', $vaccess);
+                }
             }
             db_commit();
         }
