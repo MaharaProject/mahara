@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -29,6 +28,7 @@ package org.flowplayer.model {
 		private var _config:Object;
 		private var _methods:Array = new Array();
         private var _builtIn:Boolean;
+        private var _url:String;
 
 		public function DisplayPluginModelImpl(disp:DisplayObject, name:String, setDefaults:Boolean = true):void {
 			super(disp, name, setDefaults);
@@ -87,7 +87,7 @@ package org.flowplayer.model {
 		public function get pluginObject():Object {
 			return getDisplayObject();
 		}
-		
+
 		public function set pluginObject(pluginObject:Object):void {
 			setDisplayObject(pluginObject as DisplayObject);
 		}
@@ -100,5 +100,15 @@ package org.flowplayer.model {
         public function set isBuiltIn(value:Boolean):void {
             _builtIn = value;
         }
+
+        [Value]
+        public function get url():String {
+            return _url;
+        }
+
+        public function set url(url:String):void {
+            _url = url;
+        }
+
     }
 }

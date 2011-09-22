@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -216,12 +215,6 @@ package org.flowplayer.controller {
 			}
 		}
 
-		internal function dispatchPlayEvent(eventType:ClipEventType):void {
-			var clip:Clip = playList.current;
-			log.debug("dispatching " + eventType);
-			clip.dispatch(eventType);
-		}
-		
 		internal function getMediaController():MediaController {
 			var myclip:Clip = playList.current;
 			return _controllerFactory.getMediaController(myclip, playList);
@@ -239,6 +232,13 @@ package org.flowplayer.controller {
             var clip:Clip = event.target as Clip;
             log.info(this + " onClipDone " + clip);
             clip.dispatchEvent(event);
+
+            // check if this is still the active state after dispatching the event. The state might have changed if
+            // there is a JS onFinish listener (for example) that calls play()
+            if (! _active) {
+                log.debug("I'm not the active state any more, returning.");
+                return;
+            }
 
             if (clip.isMidroll) {
                 log.debug("midroll clip finished");
@@ -265,6 +265,7 @@ package org.flowplayer.controller {
 				// #111, check if this is a post roll image so we can rewind
 //                if (defaultAction && ! isLastSplashImage) {
                 if (defaultAction) {
+                    log.debug("onClipDone(), calling stop(closeStream = false, silent = true)");
                     stop(false, true);
                     changeState(waitingState);
                 } else {

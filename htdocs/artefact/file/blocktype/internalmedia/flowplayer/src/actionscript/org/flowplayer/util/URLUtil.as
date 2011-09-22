@@ -1,6 +1,5 @@
 /*    
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -20,9 +19,11 @@
 package org.flowplayer.util {
     import com.adobe.utils.StringUtil;
 import flash.display.LoaderInfo;
-	import flash.external.ExternalInterface;		
+	import flash.external.ExternalInterface;
+    import flash.net.URLRequest;
+    import flash.net.navigateToURL;
 
-	/**
+    /**
 	 * @author anssi
 	 */
 	public class URLUtil {
@@ -126,6 +127,23 @@ import flash.display.LoaderInfo;
 
         public static function set loaderInfo(value:LoaderInfo):void {
             _loaderInfo = value;
+        }
+
+        public static function openPage(url:String, linkWindow:String = "_blank", popUpDimensions:Array = null):void {
+            if (linkWindow == "_popup" && ExternalInterface.available) {
+                _log.debug("openPage(), opening popup");
+                var dimensions:Array = popUpDimensions || [800,600];
+                ExternalInterface.call("window.open('" + url + "','PopUpWindow','width=" + dimensions[0] + ",height=" + dimensions[1] + ",toolbar=yes,scrollbars=yes')");
+            } else {
+                // Use JS to bypass popup blockers if ExternalInterface is available
+                var window:String = linkWindow == "_popup" ? "_blank" : linkWindow;
+                if (ExternalInterface.available) {
+                    ExternalInterface.call('window.open("' + url + '","' + window + '")');
+                } else {
+                    //request a blank page
+                    navigateToURL(new URLRequest(url), window);
+                }
+            }
         }
     }
 }

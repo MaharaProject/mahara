@@ -1,6 +1,5 @@
 /**
- *    Copyright (c) 2008, 2009 Flowplayer Oy
- *
+ *    Copyright (c) 2008-2011 Flowplayer Oy *
  *    This file is part of Flowplayer.
  *
  *    Flowplayer is free software: you can redistribute it and/or modify
@@ -25,6 +24,7 @@ package org.flowplayer.view {
     import flash.utils.getDefinitionByName;
 
     import org.flowplayer.config.Config;
+    import org.flowplayer.controller.NetConnectionClient;
     import org.flowplayer.controller.PlayListController;
     import org.flowplayer.controller.ResourceLoader;
     import org.flowplayer.controller.ResourceLoaderImpl;
@@ -40,6 +40,7 @@ package org.flowplayer.view {
     import org.flowplayer.model.Loadable;
     import org.flowplayer.model.PlayerError;
     import org.flowplayer.model.PlayerEvent;
+    import org.flowplayer.model.PlayerEventType;
     import org.flowplayer.model.Playlist;
     import org.flowplayer.model.Plugin;
     import org.flowplayer.model.PluginFactory;
@@ -97,8 +98,9 @@ package org.flowplayer.view {
 			var style:FlowStyleSheet;
 			var styleable:StyleableSprite;
 			var animation:Animation;
-			var version:VersionUtil;
-			
+            var version:VersionUtil;
+            var client:NetConnectionClient;
+
 			if (_instance) {
 				log.error("Flowplayer already instantiated");
 				throw new Error("Flowplayer already instantiated");
@@ -247,6 +249,7 @@ package org.flowplayer.view {
 		 */
 		public function close():FlowplayerBase {
 			log.debug("close()");
+            dispatch(PlayerEventType.UNLOAD, null, false);
 			_playListController.close(true);
 			return this;
 		}
@@ -708,6 +711,9 @@ package org.flowplayer.view {
         }
 
         private function createInfo(infoObj:Object):Object {
+            if (infoObj is Number || infoObj is String || infoObj is Boolean) {
+                return infoObj;
+            }
             var result:Object = {};
             for (var prop:String in infoObj) {
                 result[prop] = infoObj[prop];
@@ -746,6 +752,10 @@ package org.flowplayer.view {
          */
         public function get streamProvider():StreamProvider {
             return _playListController.streamProvider;
+        }
+
+        public function get panel():Panel {
+            return _panel;
         }
     }
 }

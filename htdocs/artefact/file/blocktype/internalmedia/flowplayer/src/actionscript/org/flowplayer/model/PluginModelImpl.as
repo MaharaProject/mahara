@@ -31,6 +31,7 @@ package org.flowplayer.model {
 		private var _name:String;
 		private var _config:Object;
         private var _builtIn:Boolean;
+        private var _url:String;
 
 		public function PluginModelImpl(pluginObject:Object, name:String) {
 			_pluginObject = pluginObject;
@@ -102,6 +103,15 @@ package org.flowplayer.model {
 
         public function set isBuiltIn(value:Boolean):void {
             _builtIn = value;
+        }
+
+        [Value]
+        public function get url():String {
+            return _url;
+        }
+
+        public function set url(url:String):void {
+            _url = url;
         }
     }
 }
