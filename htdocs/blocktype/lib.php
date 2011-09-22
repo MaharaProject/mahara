@@ -702,7 +702,9 @@ class BlockInstance {
 
     public function render_viewing() {
 
-        safe_require('blocktype', $this->get('blocktype'));
+        if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
+            return;
+        }
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
         try {
             $content = call_static_method($classname, 'render_instance', $this);

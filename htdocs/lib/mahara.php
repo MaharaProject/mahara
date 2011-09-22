@@ -1190,6 +1190,43 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 }
 
 /**
+ * This function is a wrapper around safe_require which will attempt to
+ * handle missing plugins more gracefully.
+ *
+ * If a missing plugin is detected, then that plugin will be disabled, and
+ * an e-mail will be sent to site administrators to inform them of the
+ * issue.
+ *
+ * See @safe_require for further information on that function.
+ *
+ * @param string $plugintype the type of plugin (eg artefact)
+ * @param string $pluginname the name of the plugin (eg blog)
+ * @param string $filename the name of the file to include within the plugin structure
+ * @param string $function (optional, defaults to require) the require/include function to use
+ * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
+ */
+function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
+    try {
+        safe_require($plugintype, $pluginname, $filename, $function, $nonfatal);
+        return true;
+    }
+    catch (SystemException $e) {
+        if (get_field($plugintype . '_installed', 'active', 'name', $pluginname) == 1) {
+            set_field($plugintype . '_installed', 'active', 0, 'name', $pluginname);
+            // Alert site admins that the plugin is broken so was disabled
+            $message = new stdClass();
+            $message->users = get_column('usr', 'id', 'admin', 1);
+            $message->subject = get_string('pluginbrokenanddisabledtitle', 'mahara', $pluginname);
+            $message->message = get_string('pluginbrokenanddisabled', 'mahara', $pluginname, $e->getMessage());
+
+            require_once('activity.php');
+            activity_occurred('maharamessage', $message);
+        }
+        return false;
+    }
+}
+
+/**
  * This function returns the list of plugintypes we currently care about.
  *
  * NOTE: use plugin_types_installed if you just want the installed ones.

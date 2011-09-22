@@ -135,6 +135,7 @@ $string['institutionfilesdescription'] = 'Upload and manage files for use in Ins
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
 $string['missingplugin'] = 'An installed plugin (%s) could not be found';
+$string['missingplugindisabled'] = 'An installed plugin (%s) could not be found and has been disabled';
 $string['installedpluginsmissing'] = 'The following plugins are installed but can no longer be found';
 $string['ensurepluginsexist'] = 'Please make sure all your installed plugins are available under %s, and readable by the webserver.';
 
