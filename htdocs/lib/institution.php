@@ -231,8 +231,9 @@ class Institution {
 
         // Give institution members access to user's profile page
         require_once('view.php');
-        $profileview = $userobj->get_profile_view();
-        $profileview->add_owner_institution_access(array($this->name));
+        if ($profileview = $userobj->get_profile_view()) {
+            $profileview->add_owner_institution_access(array($this->name));
+        }
 
         db_commit();
     }
