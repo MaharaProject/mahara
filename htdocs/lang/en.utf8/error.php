@@ -79,7 +79,7 @@ $string['classmissing'] = "class %s for type %s in plugin %s was missing";
 $string['artefacttypeclassmissing'] = "Artefact types must all implement a class.  Missing %s";
 $string['artefactpluginmethodmissing'] =  "Artefact plugin %s must implement %s and doesn't";
 $string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugin %s';
-$string['unabletosetmultipleblogs'] = 'Enabling multiple blogs for the user %s when copying view %s has failed. This can be set manually on the <a href="%s">account</a> page.';
+$string['unabletosetmultipleblogs'] = 'Enabling multiple journals for the user %s when copying view %s has failed. This can be set manually on the <a href="%s">account</a> page.';
 $string['pleaseloginforjournals'] = 'You need to log out and log back in before you will see all your journals and posts.';
 $string['blocktypemissingconfigform'] = 'Block type %s must implement instance_config_form';
 $string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
