@@ -1504,6 +1504,21 @@ function artefact_owner_sql($userid=null, $groupid=null, $institution=null) {
     return null;
 }
 
+function artefact_new_title($title, $artefacttype, $owner, $group, $institution) {
+    $taken = get_column_sql('
+        SELECT title
+        FROM {artefact}
+        WHERE ' . artefact_owner_sql($owner, $group, $institution) . "
+            AND title LIKE ? || '%'", array($title));
+    $ext = ''; $i = 0;
+    if ($taken) {
+        while (in_array($title . $ext, $taken)) {
+            $ext = ' (' . ++$i . ')';
+        }
+    }
+    return $title . $ext;
+}
+
 /**
  * Given a string of html, look for references to artefacts in it and return a 
  * list of artefact IDs found

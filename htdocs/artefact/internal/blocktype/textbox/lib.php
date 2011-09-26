@@ -216,6 +216,19 @@ EOF;
             foreach (array('owner', 'group', 'institution') as $f) {
                 $data[$f] = $view->get($f);
             }
+            // The artefact title will be the same as the block title when the
+            // artefact is first created, or, if there's no block title, generate
+            // 'Note (1)', 'Note (2)', etc.  After that, the artefact title can't
+            // be edited inside the block, but can be changed in the Notes area.
+            if (empty($values['title'])) {
+                $title = artefact_new_title(
+                    get_string('Note', 'artefact.internal'), 'html',
+                    $data['owner'], $data['group'], $data['institution']
+                );
+            }
+            else {
+                $title = $values['title'];
+            }
         }
 
         $artefact = new ArtefactTypeHtml((int)$values['artefactid'], $data);
@@ -223,7 +236,9 @@ EOF;
             throw new AccessDeniedException(get_string('accessdenied', 'error'));
         }
 
-        $artefact->set('title', $values['title']);
+        if (isset($title)) {
+            $artefact->set('title', $title);
+        }
         $artefact->set('description', $values['text']);
         $artefact->commit();
 
