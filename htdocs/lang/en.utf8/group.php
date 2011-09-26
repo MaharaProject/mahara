@@ -113,6 +113,7 @@ $string['suggestgroupnotificationsubject'] = '%s suggested you join a group';
 $string['suggestgroupnotificationmessage'] = '%s suggested that you join the group "%s" on %s';
 $string['recommendationssent'] = '%d recommendation(s) sent';
 $string['suggestinvitefriends'] = 'You cannot enable both friend invitations and recommendations.';
+$string['suggestfriendsrequesterror'] = 'You can only enable friend recommendations on open or request groups.';
 
 $string['editgroupmembership'] = 'Edit group membership';
 $string['editmembershipforuser'] = 'Edit membership for %s';

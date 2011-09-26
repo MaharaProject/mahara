@@ -195,7 +195,7 @@ $elements['suggestfriends'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('Recommendations', 'group'),
     'description'  => get_string('suggestfriendsdescription', 'group'),
-    'defaultvalue' => $group_data->suggestfriends,
+    'defaultvalue' => $group_data->suggestfriends && ($group_data->open || $group_data->request),
 );
 
 $elements['pages'] = array(
@@ -352,6 +352,9 @@ function editgroup_validate(Pieform $form, $values) {
     }
     if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
         $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
+    }
+    if (!empty($values['suggestfriends']) && empty($values['open']) && empty($values['request'])) {
+        $form->set_error('suggestfriends', get_string('suggestfriendsrequesterror', 'group'));
     }
 }
 
