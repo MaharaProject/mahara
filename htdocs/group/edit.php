@@ -265,7 +265,8 @@ if ($cancreatecontrolled) {
         'type'         => 'checkbox',
         'title'        => get_string('hidemembers', 'group'),
         'description'  => get_string('hidemembersdescription', 'group'),
-        'defaultvalue' => $group_data->hidemembers,
+        'defaultvalue' => $group_data->hidemembers || $group_data->hidemembersfrommembers,
+        'disabled'     => $group_data->hidemembersfrommembers,
     );
     $elements['hidemembersfrommembers'] = array(
         'type'         => 'checkbox',
@@ -281,7 +282,7 @@ else {
     );
     $form['elements']['hidemembers'] = array(
         'type'         => 'hidden',
-        'value'        => $group_data->hidemembers,
+        'value'        => $group_data->hidemembers || $group_data->hidemembersfrommembers,
     );
     $form['elements']['hidemembersfrommembers'] = array(
         'type'         => 'hidden',
@@ -378,7 +379,7 @@ function editgroup_submit(Pieform $form, $values) {
         'submittableto'  => intval($values['submittableto']),
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
-        'hidemembers'    => intval($values['hidemembers']),
+        'hidemembers'    => intval(!empty($values['hidemembersfrommembers']) || !empty($values['hidemembers'])),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
@@ -429,6 +430,15 @@ $j(function() {
     $j("#editgroup_suggestfriends").click(function() {
         if ($(this).checked) {
             $j("#editgroup_invitefriends").removeAttr("checked");
+        }
+    });
+    $j("#editgroup_hidemembersfrommembers").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_hidemembers").attr("checked", true);
+            $j("#editgroup_hidemembers").attr("disabled", true);
+        }
+        else {
+            $j("#editgroup_hidemembers").removeAttr("disabled");
         }
     });
 });
