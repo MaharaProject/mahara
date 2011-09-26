@@ -4,7 +4,6 @@ admin_institution_one_create
 user_institution_one_create
 Logout_User
 admin_institution_one_login
-admin_institution_one_setpassword
 admin_institution_one_resetpassword
 generic_logout
 user_institution_one_login

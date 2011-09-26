@@ -8,7 +8,6 @@ admin_institution_two_setpassword
 admin_institution_two_resetpassword
 generic_logout
 user_institution_two_login
-user_institution_two_setpassword
 user_institution_two_resetpassword
 generic_logout
 Login_Admin
