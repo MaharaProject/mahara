@@ -110,7 +110,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         LEFT OUTER JOIN {usr_account_preference} ap
             ON (ap.usr = u.id AND ap.field = \'lang\')
         LEFT OUTER JOIN {usr_account_preference} apm
-            ON (apm.usr = u.id AND ap.field = \'maildisabled\')
+            ON (apm.usr = u.id AND apm.field = \'maildisabled\')
         LEFT OUTER JOIN {auth_instance} ai
             ON (ai.id = u.authinstance AND ai.authname = \'xmlrpc\')
         LEFT OUTER JOIN {auth_instance_config} aic
