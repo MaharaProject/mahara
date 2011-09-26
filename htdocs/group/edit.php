@@ -154,14 +154,6 @@ $elements['request'] = array(
 // The grouptype determines the allowed roles
 $grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
 
-$elements['grouptype'] = array(
-    'type'         => 'select',
-    'title'        => get_string('Roles', 'group'),
-    'options'      => $grouptypeoptions,
-    'defaultvalue' => $group_data->grouptype,
-    'help'         => true
-);
-
 // Hide the grouptype option if it was passed in as a parameter, if the user
 // isn't allowed to change it, or if there's only one option.
 if (!$id) {
@@ -181,6 +173,15 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
     $form['elements']['grouptype'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->grouptype,
+    );
+}
+else {
+    $elements['grouptype'] = array(
+        'type'         => 'select',
+        'title'        => get_string('Roles', 'group'),
+        'options'      => $grouptypeoptions,
+        'defaultvalue' => $group_data->grouptype,
+        'help'         => true
     );
 }
 
