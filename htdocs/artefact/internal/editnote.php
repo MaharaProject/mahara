@@ -53,6 +53,11 @@ else {
 $form = pieform(array(
     'name' => 'editnote',
     'elements' => array(
+        'title' => array(
+            'type'         => 'text',
+            'title'        => get_string('Title', 'artefact.internal'),
+            'defaultvalue' => $artefact->get('title'),
+        ),
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('Note', 'artefact.internal'),
@@ -80,6 +85,7 @@ $smarty->display('form.tpl');
 
 function editnote_submit(Pieform $form, array $values) {
     global $SESSION, $artefact, $goto;
+    $artefact->set('title', $values['title']);
     $artefact->set('description', $values['description']);
     $artefact->set('allowcomments', (int) $values['allowcomments']);
     $artefact->commit();
