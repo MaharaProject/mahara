@@ -196,6 +196,7 @@ $elements['suggestfriends'] = array(
     'title'        => get_string('Recommendations', 'group'),
     'description'  => get_string('suggestfriendsdescription', 'group'),
     'defaultvalue' => $group_data->suggestfriends && ($group_data->open || $group_data->request),
+    'disabled'     => !$group_data->open && !$group_data->request,
 );
 
 $elements['pages'] = array(
@@ -413,6 +414,10 @@ $j(function() {
         if ($(this).checked) {
             $j("#editgroup_request").removeAttr("disabled");
             $j("#editgroup_open").removeAttr("checked");
+            if (!$j("#editgroup_request").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
         }
     });
     $j("#editgroup_open").click(function() {
@@ -420,13 +425,32 @@ $j(function() {
             $j("#editgroup_controlled").removeAttr("checked");
             $j("#editgroup_request").removeAttr("checked");
             $j("#editgroup_request").attr("disabled", true);
+            $j("#editgroup_suggestfriends").removeAttr("disabled");
         }
         else {
             $j("#editgroup_request").removeAttr("disabled");
+            if (!$j("#editgroup_request").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
+        }
+    });
+    $j("#editgroup_request").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_suggestfriends").removeAttr("disabled");
+        }
+        else {
+            if (!$j("#editgroup_open").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
         }
     });
     $j("#editgroup_invitefriends").click(function() {
         if ($(this).checked) {
+            if ($j("#editgroup_request").attr("checked") || $j("#editgroup_open").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("disabled");
+            }
             $j("#editgroup_suggestfriends").removeAttr("checked");
         }
     });
