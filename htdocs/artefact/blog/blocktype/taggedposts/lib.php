@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage blocktype-taggedposts
+ * @subpackage blocktype.blog/taggedposts
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
@@ -30,11 +30,11 @@ defined('INTERNAL') || die();
 class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.taggedposts');
+        return get_string('title', 'blocktype.blog/taggedposts');
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.taggedposts');
+        return get_string('description', 'blocktype.blog/taggedposts');
     }
 
     public static function get_categories() {
@@ -69,6 +69,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 LIMIT ?';
 
             $results = get_records_sql_array($sql, array($view, $tagselect, $limit));
+
 
             // if posts are not found with the selected tag, notify the user
             if (!$results) {
@@ -120,7 +121,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        $tags = get_my_tags(null, false);
+        $tags = get_my_tags(null, false, 'alpha');
 
         $options = array();
         if (!empty($tags)) {
@@ -129,16 +130,15 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             }
             return array(
                 'tagselect' => array(
-                    'type'          => 'radio',
-                    'title'         => get_string('taglist','blocktype.taggedposts'),
+                    'type'          => 'select',
+                    'title'         => get_string('taglist','blocktype.blog/taggedposts'),
                     'options'       => $options,
-                    'separator'     => '<br>',
                     'defaultvalue'  => !empty($configdata['tagselect']) ? $configdata['tagselect'] : $tags[0]->tag,
                     'required'      => true,
                 ),
                 'count'     => array(
                     'type'          => 'text',
-                    'title'         => get_string('itemstoshow', 'blocktype.taggedposts'),
+                    'title'         => get_string('itemstoshow', 'blocktype.blog/taggedposts'),
                     'defaultvalue'  => isset($configdata['count']) ? $configdata['count'] : 10,
                     'size'          => 3,
                     'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 999),
@@ -149,8 +149,8 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             return array(
                 'notags'    => array(
                     'type'          => 'html',
-                    'title'         => get_string('taglist', 'blocktype.taggedposts'),
-                    'value'         => get_string('notagsavailable', 'blocktype.taggedposts'),
+                    'title'         => get_string('taglist', 'blocktype.blog/taggedposts'),
+                    'value'         => get_string('notagsavailable', 'blocktype.blog/taggedposts'),
                 ),
             );
         }

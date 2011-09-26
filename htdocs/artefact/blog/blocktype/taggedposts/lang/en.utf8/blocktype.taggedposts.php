@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage blocktype-taggedposts
+ * @subpackage blocktype.blog/taggedposts
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,6 +27,14 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2011072800;
-$config->release = '1.0.0';
+$string['title'] = 'Tagged Journal Entries';
+$string['description'] = 'Display Journal entries with a particular tag';
+$string['blockheading'] = 'Journal entries tagged';
+$string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
+$string['postsperpage'] = 'Entries per page';
+$string['taglist'] = 'My Tags';
+$string['notags'] = 'There are no posts tagged "%s"';
+$string['notagsavailable'] = 'You have not created any tags';
+$string['postedin'] = 'in';
+$string['itemstoshow'] = 'Items to show';
+$string['configerror'] = 'Error during block configuration';

@@ -1,9 +1,9 @@
 {if $configerror}
-    {str tag='configerror' section='blocktype.taggedposts'}
-{else if $badtag}
-    {str tag='notags' section='blocktype.taggedposts' arg1=$badtag}
+    {str tag='configerror' section='blocktype.blog/taggedposts'}
+{elseif $badtag}
+    {str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}
 {else}
-    {str tag='blockheading' section='blocktype.taggedposts'}
+    {str tag='blockheading' section='blocktype.blog/taggedposts'}
     {if $viewowner}
     {$viewowner = $viewowner[0]}
         <strong>{$tag}</strong> by <strong><a href="{$WWWROOT}user/view.php?id={$viewowner->id}">{$viewowner->firstname} {$viewowner->lastname}</a></strong>
@@ -14,7 +14,7 @@
     {foreach from=$results item=post}
         <li>
             <strong><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a></strong>
-            {str tag='postedin' section='blocktype.taggedposts'}
+            {str tag='postedin' section='blocktype.blog/taggedposts'}
             {if $viewowner}
                 {$post->parenttitle}
             {else}

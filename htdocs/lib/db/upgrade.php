@@ -2753,5 +2753,10 @@ function xmldb_core_upgrade($oldversion=0) {
         add_index($table, $index, false);
     }
 
+    if ($oldversion < 2011092600) {
+        // Move the taggedposts blocktype into artefact/blog/blocktype
+        set_field('blocktype_installed', 'artefactplugin', 'blog', 'name', 'taggedposts');
+    }
+
     return $status;
 }
