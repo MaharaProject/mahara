@@ -154,14 +154,6 @@ $elements['request'] = array(
 // The grouptype determines the allowed roles
 $grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
 
-$elements['grouptype'] = array(
-    'type'         => 'select',
-    'title'        => get_string('Roles', 'group'),
-    'options'      => $grouptypeoptions,
-    'defaultvalue' => $group_data->grouptype,
-    'help'         => true
-);
-
 // Hide the grouptype option if it was passed in as a parameter, if the user
 // isn't allowed to change it, or if there's only one option.
 if (!$id) {
@@ -183,6 +175,15 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
         'value'        => $group_data->grouptype,
     );
 }
+else {
+    $elements['grouptype'] = array(
+        'type'         => 'select',
+        'title'        => get_string('Roles', 'group'),
+        'options'      => $grouptypeoptions,
+        'defaultvalue' => $group_data->grouptype,
+        'help'         => true
+    );
+}
 
 $elements['invitefriends'] = array(
     'type'         => 'checkbox',
@@ -195,7 +196,8 @@ $elements['suggestfriends'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('Recommendations', 'group'),
     'description'  => get_string('suggestfriendsdescription', 'group'),
-    'defaultvalue' => $group_data->suggestfriends,
+    'defaultvalue' => $group_data->suggestfriends && ($group_data->open || $group_data->request),
+    'disabled'     => !$group_data->open && !$group_data->request,
 );
 
 $elements['pages'] = array(
@@ -265,7 +267,8 @@ if ($cancreatecontrolled) {
         'type'         => 'checkbox',
         'title'        => get_string('hidemembers', 'group'),
         'description'  => get_string('hidemembersdescription', 'group'),
-        'defaultvalue' => $group_data->hidemembers,
+        'defaultvalue' => $group_data->hidemembers || $group_data->hidemembersfrommembers,
+        'disabled'     => $group_data->hidemembersfrommembers,
     );
     $elements['hidemembersfrommembers'] = array(
         'type'         => 'checkbox',
@@ -281,7 +284,7 @@ else {
     );
     $form['elements']['hidemembers'] = array(
         'type'         => 'hidden',
-        'value'        => $group_data->hidemembers,
+        'value'        => $group_data->hidemembers || $group_data->hidemembersfrommembers,
     );
     $form['elements']['hidemembersfrommembers'] = array(
         'type'         => 'hidden',
@@ -352,6 +355,9 @@ function editgroup_validate(Pieform $form, $values) {
     if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
         $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
     }
+    if (!empty($values['suggestfriends']) && empty($values['open']) && empty($values['request'])) {
+        $form->set_error('suggestfriends', get_string('suggestfriendsrequesterror', 'group'));
+    }
 }
 
 function editgroup_cancel_submit() {
@@ -378,7 +384,7 @@ function editgroup_submit(Pieform $form, $values) {
         'submittableto'  => intval($values['submittableto']),
         'editroles'      => $values['editroles'],
         'hidden'         => intval($values['hidden']),
-        'hidemembers'    => intval($values['hidemembers']),
+        'hidemembers'    => intval(!empty($values['hidemembersfrommembers']) || !empty($values['hidemembers'])),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
@@ -409,6 +415,10 @@ $j(function() {
         if ($(this).checked) {
             $j("#editgroup_request").removeAttr("disabled");
             $j("#editgroup_open").removeAttr("checked");
+            if (!$j("#editgroup_request").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
         }
     });
     $j("#editgroup_open").click(function() {
@@ -416,19 +426,47 @@ $j(function() {
             $j("#editgroup_controlled").removeAttr("checked");
             $j("#editgroup_request").removeAttr("checked");
             $j("#editgroup_request").attr("disabled", true);
+            $j("#editgroup_suggestfriends").removeAttr("disabled");
         }
         else {
             $j("#editgroup_request").removeAttr("disabled");
+            if (!$j("#editgroup_request").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
+        }
+    });
+    $j("#editgroup_request").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_suggestfriends").removeAttr("disabled");
+        }
+        else {
+            if (!$j("#editgroup_open").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("checked");
+                $j("#editgroup_suggestfriends").attr("disabled", true);
+            }
         }
     });
     $j("#editgroup_invitefriends").click(function() {
         if ($(this).checked) {
+            if ($j("#editgroup_request").attr("checked") || $j("#editgroup_open").attr("checked")) {
+                $j("#editgroup_suggestfriends").removeAttr("disabled");
+            }
             $j("#editgroup_suggestfriends").removeAttr("checked");
         }
     });
     $j("#editgroup_suggestfriends").click(function() {
         if ($(this).checked) {
             $j("#editgroup_invitefriends").removeAttr("checked");
+        }
+    });
+    $j("#editgroup_hidemembersfrommembers").click(function() {
+        if ($(this).checked) {
+            $j("#editgroup_hidemembers").attr("checked", true);
+            $j("#editgroup_hidemembers").attr("disabled", true);
+        }
+        else {
+            $j("#editgroup_hidemembers").removeAttr("disabled");
         }
     });
 });
