@@ -59,7 +59,6 @@ class View {
     private $dirtycolumns; // for when we change stuff
     private $tags;
     private $categorydata;
-    private $moderatingroles;
     private $template;
     private $retainview;
     private $copynewuser = 0;
@@ -151,8 +150,6 @@ class View {
             if ($group->deleted) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
-            safe_require('grouptype', $group->grouptype);
-            $this->moderatingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_moderating_roles');
         }
     }
 
