@@ -6,7 +6,7 @@
         <div class="blocktype">
             {* The width and height are required so that the javascript that places the clones knows how
                big it should make itself. Talk to Nigel before changing this *}
-            <img src="{$blocktype.thumbnail_path}" alt="{str tag='Preview' section='view'}" width="70" height="58">
+            <img src="{$blocktype.thumbnail_path}" alt="{str tag='Preview' section='view'}" width="73" height="61">
             <h4 class="blocktype-title js-hidden">{$blocktype.title}</h4>
             <div class="blocktype-description js-hidden">{$blocktype.description}</div>
             <input type="{if $javascript}hidden{else}radio{/if}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
