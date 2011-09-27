@@ -807,11 +807,6 @@ a.btn-big-del {
 	background: url(../images/icon-view.gif) no-repeat left top;
 	padding-left: 15px;
 }
-.artefacts {
-	background: url(../images/icon-artefact.gif) no-repeat left 1px;
-	padding-left: 15px;
-	line-height: 1.4em;
-}
 .viewaccess {
 	background: url(../images/icon-access.gif) no-repeat left 3px;
 	padding-left: 15px;
@@ -1297,6 +1292,7 @@ div.sideblock ul li {
 }
 #sb-profile ul li {
 	padding-bottom: 5px;
+	background: none;
 }
 #sb-profile ul ul {
 	font-size: 1em;
