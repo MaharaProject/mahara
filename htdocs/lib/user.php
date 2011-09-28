@@ -1423,31 +1423,18 @@ function get_users_data($userids, $getviews=true) {
     $userlist = join(',', $userids);
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
                 u.profileicon, u.email,
-                0 AS pending, ap.value AS hidenamepref,
+                fp.requester AS pending,
+                ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
                 (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
                 (SELECT 1 FROM {usr_friend_request} fr WHERE fr.requester = ? AND fr.owner = u.id) AS requestedfriendship,
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
-                NULL AS message
+                fp.message
                 FROM {usr} u
                 LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
-                WHERE u.id IN (' . $userlist . ')
-            UNION
-            SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
-                u.profileicon, u.email,
-                1 AS pending, ap.value AS hidenamepref,
-                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
-                NULL AS friendscontrol,
-                NULL AS friend,
-                NULL AS requestedfriendship,
-                (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
-                message
-                FROM {usr} u
-                LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
-                JOIN {usr_friend_request} fr ON fr.requester = u.id
-                WHERE fr.owner = ?
-                AND u.id IN (' . $userlist . ')';
+                LEFT JOIN {usr_friend_request} fp ON fp.owner = ? AND fp.requester = u.id
+                WHERE u.id IN (' . $userlist . ')';
     $userid = $USER->get('id');
     $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
     $allowhidename = get_config('userscanhiderealnames');
