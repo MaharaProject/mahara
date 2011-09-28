@@ -181,6 +181,7 @@ $siteoptionform = array(
                     'description'  => get_string('loggedinprofileviewaccessdescription', 'admin'),
                     'defaultvalue' => get_config('loggedinprofileviewaccess'),
                     'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN),
+                    'help'         => true,
                 ),
             ),
         ),

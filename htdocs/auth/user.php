@@ -539,14 +539,13 @@ class User {
         $view->addblockinstance($aboutme);
 
         // Set view access
-        $access = array();
-        if (get_config('loggedinprofileviewaccess')) {
-            $access[] = array(
+        $access = array(
+            array(
                 'type'      => 'loggedin',
                 'startdate' => null,
                 'stopdate'  => null,
-            );
-        }
+            ),
+        );
         if ($institutions = $this->get('institutions')) {
             foreach ($institutions as $i) {
                 $access[] = array(
