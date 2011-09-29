@@ -34,77 +34,25 @@ define('RESUME_SUBPAGE', 'goals');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+safe_require('artefact', 'resume');
 define('TITLE', get_string('resume', 'artefact.resume'));
-require_once(get_config('docroot') . 'artefact/lib.php');
 
-try {
-    $personal = artefact_instance_from_type('personalgoal');
-    $personal = $personal->get('description');
-}
-catch (Exception $e) {
-    $personal = get_string('defaultpersonalgoal', 'artefact.resume');
-}
-try {
-    $academic = artefact_instance_from_type('academicgoal');
-    $academic = $academic->get('description');
-}
-catch (Exception $e) {
-    $academic = get_string('defaultacademicgoal', 'artefact.resume');
-}
-try {
-    $career = artefact_instance_from_type('careergoal');
-    $career = $career->get('description');
-}
-catch (Exception $e) {
-    $career = get_string('defaultcareergoal', 'artefact.resume');
-}
-$gform = array(
-    'name' => 'goalform',
-    'jsform' => true,
-    'plugintype' => 'artefact',
-    'pluginname' => 'resume',
-    'successcallback' => 'goalandskillform_submit',
-    'elements' => array(
-        'mygoals' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('mygoals', 'artefact.resume'),
-            'help' => true,
-            'elements' => array(
-                'personalgoal' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => $personal,
-                    'title' => get_string('personalgoal', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'academicgoal' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => $academic,
-                    'title' => get_string('academicgoal', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'careergoal' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => $career,
-                    'title' => get_string('careergoal', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'value' => get_string('save'),
-                ),
-            ),
-        ),
+$defaults = array(
+    'personalgoal' => array(
+        'default' => get_string('defaultpersonalgoal', 'artefact.resume'),
+    ),
+    'academicgoal' => array(
+        'default' => get_string('defaultacademicgoal', 'artefact.resume'),
+    ),
+    'careergoal' => array(
+        'default' => get_string('defaultcareergoal', 'artefact.resume'),
     ),
 );
-$goalform = pieform($gform);
-$smarty = smarty();
-$smarty->assign('goalform', $goalform);
+$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/goals.php'));
+
+$smarty = smarty(array('jquery', 'artefact/resume/js/simpleresumefield.js'));
+$smarty->assign('goalform', $form);
+$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:goals.tpl');

@@ -34,72 +34,25 @@ define('RESUME_SUBPAGE', 'skills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+safe_require('artefact', 'resume');
 define('TITLE', get_string('resume', 'artefact.resume'));
-require_once(get_config('docroot') . 'artefact/lib.php');
 
-$personal = null;
-$academic = null;
-$work = null;
-
-try {
-   $personal = artefact_instance_from_type('personalskill'); 
-}
-catch (Exception $e) {}
-try {
-    $academic = artefact_instance_from_type('academicskill');
-}
-catch (Exception $e) {}
-try {
-    $work = artefact_instance_from_type('workskill');
-}
-catch (Exception $e) {}
-$sform = array(
-    'name' => 'skillform',
-    'jsform' => true,
-    'plugintype' => 'artefact',
-    'pluginname' => 'resume',
-    'successcallback' => 'goalandskillform_submit',
-    'elements' => array(
-        'myskills' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('myskills', 'artefact.resume'),
-            'help' => true,
-            'elements' => array(
-                'personalskill' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
-                    'title' => get_string('personalskill', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'academicskill' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
-                    'title' => get_string('academicskill', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'workskill' => array(
-                    'type' => 'wysiwyg',
-                    'rows' => 20,
-                    'cols' => 80,
-                    'defaultvalue' => ((!empty($work)) ? $work->get('description') : null),
-                    'title' => get_string('workskill', 'artefact.resume'),
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'submit' => array(
-                    'type' => 'submit',
-                    'value' => get_string('save'),
-                ),
-            ),
-        ),
+$defaults = array(
+    'personalskill' => array(
+        'default' => '',
+    ),
+    'academicskill' => array(
+        'default' => '',
+    ),
+    'workskill' => array(
+        'default' => '',
     ),
 );
-$skillform = pieform($sform);
-$smarty = smarty();
-$smarty->assign('skillform', $skillform);
+$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/skills.php'));
+
+$smarty = smarty(array('jquery', 'artefact/resume/js/simpleresumefield.js'));
+$smarty->assign('skillform', $form);
+$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:skills.tpl');

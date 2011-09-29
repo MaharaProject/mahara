@@ -37,46 +37,20 @@ define('TITLE', get_string('resume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'resume');
 
+$defaults = array(
+    'coverletter' => array(
+        'default' => '',
+        'fshelp' => true,
+    ),
+);
+$coverletterform = pieform(simple_resumefield_form($defaults, 'artefact/resume/index.php'));
+
 // load up all the artefacts this user already has....
-$coverletter = null;
-try {
-    $coverletter = artefact_instance_from_type('coverletter');
-}
-catch (Exception $e) { }
 $personalinformation = null;
 try {
     $personalinformation = artefact_instance_from_type('personalinformation');
 }
 catch (Exception $e) { }
-
-$coverletterform = pieform(array(
-    'name'        => 'coverletter',
-    'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'resume',
-    'jsform'      => true,
-    'method'      => 'post',
-    'elements'    => array(
-        'coverletterfs' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('coverletter', 'artefact.resume'),
-            'elements' => array(
-                'coverletter' => array(
-                    'type'  => 'wysiwyg',
-                    'cols'  => 100,
-                    'rows'  => 30,
-                    'rules' => array('maxlength' => 65536),
-                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
-                ),
-                'save' => array(
-                    'type' => 'submit',
-                    'value' => get_string('save'),
-                ),
-            ),
-            'help' => true,
-        )
-    )
-));
 
 $personalinformationform = pieform(array(
     'name'        => 'personalinformation',
@@ -149,49 +123,13 @@ $personalinformationform = pieform(array(
     ),
 ));
 
-$smarty = smarty();
+$smarty = smarty(array('jquery', 'artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('coverletterform', $coverletterform);
 $smarty->assign('personalinformationform',$personalinformationform);
+$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:index.tpl');
-
-function coverletter_submit(Pieform $form, $values) {
-    global $coverletter, $personalinformation, $interest, $USER;
-
-    $userid = $USER->get('id');
-    $errors = array();
-
-    try {
-        if (empty($coverletter) && !empty($values['coverletter'])) {
-            $coverletter = new ArtefactTypeCoverletter(0, array( 
-                'owner' => $userid, 
-                'description' => $values['coverletter']
-            ));
-            $coverletter->commit();
-        }
-        else if (!empty($coverletter) && !empty($values['coverletter'])) {
-            $coverletter->set('description', $values['coverletter']);
-            $coverletter->commit();
-        }
-        else if (!empty($coverletter) && empty($values['coverletter'])) {
-            $coverletter->delete();
-        }
-    }
-    catch (Exception $e) {
-        $errors['coverletter'] = true;
-    }
-    if (empty($errors)) {
-        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
-    }
-    else {
-        $message = '';
-        foreach (array_keys($errors) as $key) {
-            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
-        }
-        $form->json_reply(PIEFORM_ERR, $message);
-    }
-}
 
 function personalinformation_submit(Pieform $form, $values) {
     global $personalinformation, $USER;
