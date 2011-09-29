@@ -38,6 +38,9 @@ define('SECTION_PAGE', 'myfriends');
 if (param_variable('acceptfriend_submit', null)) {
     acceptfriend_form(param_integer('id'));
 }
+else if (param_variable('addfriend_submit', null)) {
+    addfriend_form(param_integer('id'));
+}
 
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 0);

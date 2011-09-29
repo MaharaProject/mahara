@@ -1482,40 +1482,7 @@ function get_users_data($userids, $getviews=true) {
             $friend->accept = acceptfriend_form($friend->id);
         }
         if (!$friend->friend && !$friend->pending && !$friend->requestedfriendship && $friend->friendscontrol == 'auto') {
-            $friend->makefriend = pieform(array(
-                'name' => 'addfriend' . $friend->id,
-                'successcallback' => 'addfriend_submit',
-                'renderer' => 'div',
-                'autofocus' => 'false',
-                'elements' => array(
-                    'submit' => array(
-                        'type' => 'submit',
-                        'value' => get_string('addtofriendslist', 'group'),
-                    ),
-                    'id' => array(
-                        'type' => 'hidden',
-                        'value' => $friend->id,
-                    ),
-                    // These two fields pass on any query that was running on a 
-                    // user search screen. This is so when the form is 
-                    // submitted, the correct user search is run again and so 
-                    // this pieform will definitely be created and ready to be 
-                    // submitted.
-                    //
-                    // A bit of a hack caused by having one form for each user. 
-                    // It would be nice at some point to put the entire 'find 
-                    // friends' page into one form and toggle on the submit 
-                    // button to work out which friend to add.
-                    'query' => array(
-                        'type' => 'hidden',
-                        'value' => param_variable('query', ''),
-                    ),
-                    'offset' => array(
-                        'type' => 'hidden',
-                        'value' => param_integer('offset', 0),
-                    ),
-                )
-            ));
+            $friend->makefriend = addfriend_form($friend->id);
         }
     }
 
@@ -1802,13 +1769,55 @@ function acceptfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
+// Form to add someone who has friendscontrol set to 'auto'
+function addfriend_form($friendid) {
+    return pieform(array(
+        'name' => 'addfriend' . (int) $friendid,
+        'validatecallback' => 'addfriend_validate',
+        'successcallback'  => 'addfriend_submit',
+        'renderer' => 'div',
+        'autofocus' => 'false',
+        'elements' => array(
+            'addfriend_submit' => array(
+                'type' => 'submit',
+                'value' => get_string('addtofriendslist', 'group'),
+            ),
+            'id' => array(
+                'type' => 'hidden',
+                'value' => (int) $friendid,
+            ),
+        ),
+    ));
+}
+
+function addfriend_validate(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $friendid = (int) $values['id'];
+
+    if (get_account_preference($friendid, 'friendscontrol') != 'auto') {
+        if (!is_friend($USER->get('id'), $friendid) && !get_record('usr_friend_request', 'owner', $USER->get('id'), 'requester', $friendid)) {
+            // Because friendscontrol has changed, this form won't be redrawn in the new list of users.  So
+            // the error message is added to the $SESSION messages area, and a dummy error message is set on
+            // the form to stop submission from continuing.
+            $SESSION->add_error_msg(get_string('addtofriendsfailed', 'group', display_name($friendid)));
+            $form->set_error(null, -1);
+        }
+    }
+}
+
 // Called when a user adds someone who has friendscontrol set to 'auto'
 function addfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $user = get_record('usr', 'id', $values['id']);
 
     $loggedinid = $USER->get('id');
-    $userid = $user->id;
+
+    if (is_friend($loggedinid, $user->id)) {
+        $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
+        delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $user->id);
+        redirect('/user/view.php?id=' . $user->id);
+    }
 
     // friend db record
     $f = new StdClass;
@@ -1824,7 +1833,12 @@ function addfriend_submit(Pieform $form, $values) {
 
     $f->usr1 = $values['id'];
     $f->usr2 = $loggedinid;
+
+    db_begin();
+    delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $user->id);
     insert_record('usr_friend', $f);
+    db_commit();
+
     $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group', $displayname);
     $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
 
