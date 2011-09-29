@@ -89,7 +89,8 @@ $as = new SimpleSAML_Auth_Simple($sp);
 // Check the SimpleSAMLphp config is compatible
 $saml_config = SimpleSAML_Configuration::getInstance();
 $session_handler = $saml_config->getString('session.handler', false);
-if (!$session_handler || $session_handler == 'phpsession') {
+$store_type = $saml_config->getString('store.type', false);
+if ($store_type == 'phpsession' || $session_handler == 'phpsession' || (empty($store_type) && empty($session_handler))) {
     throw new AuthInstanceException(get_string('errorbadssphp','auth.saml'));
 }
 

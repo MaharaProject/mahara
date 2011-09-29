@@ -501,7 +501,7 @@ class PluginAuthSaml extends PluginAuth {
         foreach ($dup as $instance) {
             if ($instance->instance >= 2) {
                 // we already have an authinstance with these same values
-                $form->set_error('institutionattribute', get_string('errorbadinstitution', 'auth.saml'));
+                $form->set_error('institutionattribute', get_string('errorbadinstitutioncombo', 'auth.saml'));
                 break;
             }
         }
