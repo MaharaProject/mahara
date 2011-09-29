@@ -1479,22 +1479,7 @@ function get_users_data($userids, $getviews=true) {
             $friend->views = $cleanviews[$friend->id];
         }
         if ($friend->pending) {
-            $friend->accept = pieform(array(
-                'name' => 'acceptfriend' . $friend->id,
-                'successcallback' => 'acceptfriend_submit',
-                'renderer' => 'div',
-                'autofocus' => 'false',
-                'elements' => array(
-                    'submit' => array(
-                        'type' => 'submit',
-                        'value' => get_string('approverequest', 'group')
-                    ),
-                    'id' => array(
-                        'type' => 'hidden',
-                        'value' => $friend->id
-                    )
-                )
-            ));
+            $friend->accept = acceptfriend_form($friend->id);
         }
         if (!$friend->friend && !$friend->pending && !$friend->requestedfriendship && $friend->friendscontrol == 'auto') {
             $friend->makefriend = pieform(array(
@@ -1743,10 +1728,52 @@ function friendscontrol_submit(Pieform $form, $values) {
     redirect($values['returnto'] == 'find' ? '/user/find.php' : '/user/myfriends.php');
 }
 
+function acceptfriend_form($friendid) {
+    return pieform(array(
+        'name' => 'acceptfriend' . (int) $friendid,
+        'validatecallback' => 'acceptfriend_validate',
+        'successcallback'  => 'acceptfriend_submit',
+        'renderer' => 'div',
+        'autofocus' => 'false',
+        'elements' => array(
+            'acceptfriend_submit' => array(
+                'type' => 'submit',
+                'value' => get_string('approverequest', 'group'),
+            ),
+            'id' => array(
+                'type' => 'hidden',
+                'value' => (int) $friendid,
+            ),
+        ),
+    ));
+}
+
+function acceptfriend_validate(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $friendid = (int) $values['id'];
+
+    if (!get_record('usr_friend_request', 'owner', $USER->get('id'), 'requester', $friendid)) {
+        if (!is_friend($USER->get('id'), $friendid) && get_account_preference($friendid, 'friendscontrol') != 'auto') {
+            // Because the request is no longer valid, this form won't be redrawn in the new list of users.  So
+            // the error message is added to the $SESSION messages area, and a dummy error message is set on the
+            // form to stop submission from continuing.
+            $SESSION->add_error_msg(get_string('acceptfriendshiprequestfailed', 'group'));
+            $form->set_error(null, -1);
+        }
+    }
+}
+
 function acceptfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
     $user = get_record('usr', 'id', $values['id']);
+
+    if (is_friend($USER->get('id'), $user->id)) {
+        $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
+        delete_records('usr_friend_request', 'owner', $USER->get('id'), 'requester', $user->id);
+        redirect('/user/view.php?id=' . $user->id);
+    }
 
     // friend db record
     $f = new StdClass;

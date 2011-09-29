@@ -257,6 +257,7 @@ $string['friendrequestacceptedmessage'] = '%s has accepted your friend request a
 $string['friendrequestrejectedsubject'] = 'Friend request rejected';
 $string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
 $string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
+$string['acceptfriendshiprequestfailed'] = 'Failed to accept friendship request.';
 
 $string['allfriends']     = 'All Friends';
 $string['currentfriends'] = 'Current Friends';
