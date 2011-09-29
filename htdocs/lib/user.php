@@ -1419,8 +1419,9 @@ function get_new_username($desired) {
  */
 function get_users_data($userids, $getviews=true) {
 	global $USER;
-    // $userids is only used by build_userlist_html() in this file and is sanitised there
-    $userlist = join(',', $userids);
+
+    $userids = array_map('intval', $userids);
+
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
                 u.profileicon, u.email,
                 fp.requester AS pending,
@@ -1434,9 +1435,9 @@ function get_users_data($userids, $getviews=true) {
                 FROM {usr} u
                 LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
                 LEFT JOIN {usr_friend_request} fp ON fp.owner = ? AND fp.requester = u.id
-                WHERE u.id IN (' . $userlist . ')';
+                WHERE u.id IN (' . join(',', array_fill(0, count($userids), '?')) . ')';
     $userid = $USER->get('id');
-    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+    $data = get_records_sql_assoc($sql, array_merge(array($userid, $userid, $userid, $userid), $userids));
     $allowhidename = get_config('userscanhiderealnames');
     $showusername = get_config('searchusernames');
 
@@ -1532,9 +1533,9 @@ function get_users_data($userids, $getviews=true) {
             ));
         }
     }
-    $order = explode(',', $userlist);
+
     $ordereddata = array();
-    foreach ($order as $id) {
+    foreach ($userids as $id) {
         if (isset($data[$id])) {
             $ordereddata[] = $data[$id];
         }
