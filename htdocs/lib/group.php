@@ -43,7 +43,7 @@ defined('INTERNAL') || die();
 function group_user_access($groupid, $userid=null, $refresh=null) {
     static $result;
 
-    if (!is_logged_in()) {
+    if (empty($userid) && !is_logged_in()) {
         return false;
     }
 
