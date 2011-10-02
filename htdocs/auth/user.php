@@ -912,24 +912,26 @@ class User {
     public function can_edit_artefact($a) {
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
-            || ($a->get('group') && group_user_access($a->get('group'), $this->get('id')) && $this->get('id') and $this->get('id') == $a->get('author'))
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
         }
-        $group = $a->get('group');
-        if ($group) {
-            return count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
-                INNER JOIN {group_member} g ON ar.role = g.role
-                WHERE ar.artefact = ? AND g.member = ? AND ar.can_edit = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $group));
-            /*
-            require_once(get_config('docroot') . 'lib/group.php');
-            $role = group_user_access($group, $this->get('id'));
-            if ($role) {
-                $aperms = $a->get('rolepermissions');
-                return $aperms->{$role}->edit;
-            } */
+
+        if (!$group = $a->get('group')) {
+            return false;
         }
-        return false;
+
+        require_once('group.php');
+        if (!$role = group_user_access($group, $this->id)) {
+            return false;
+        }
+        if ($role == 'admin') {
+            return true;
+        }
+        if ($this->id == $a->get('author')) {
+            return true;
+        }
+
+        return $a->role_has_permission($role, 'edit');
     }
 
     public function can_publish_artefact($a) {
@@ -937,13 +939,23 @@ class User {
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
         }
-        $group = $a->get('group');
-        if ($group) {
-            return count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
-                INNER JOIN {group_member} g ON ar.role = g.role
-                WHERE ar.artefact = ? AND g.member = ? AND ar.can_publish = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $group));
+
+        if (!$group = $a->get('group')) {
+            return false;
         }
-        return false;
+
+        require_once('group.php');
+        if (!$role = group_user_access($group, $this->id)) {
+            return false;
+        }
+        if ($role == 'admin') {
+            return true;
+        }
+        if ($this->id == $a->get('author')) {
+            return true;
+        }
+
+        return $a->role_has_permission($role, 'republish');
     }
 
     public function can_edit_view($v) {

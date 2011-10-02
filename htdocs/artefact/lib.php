@@ -852,6 +852,10 @@ abstract class ArtefactType {
         }
     }
 
+    public function role_has_permission($role, $permission) {
+        return $this->rolepermissions[$role]->{$permission};
+    }
+
     public function copy_data() {
         $ignore = array(
             'dirty' => 1,
