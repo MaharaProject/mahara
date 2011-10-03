@@ -160,7 +160,14 @@ EOF;
                 $otherblockcount = count($blocks) - 1;
             }
             $artefactid = $configdata['artefactid'];
-            $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+            try {
+                $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+            }
+            catch (ArtefactNotFoundException $e) {
+                unset($artefactid);
+                unset($blocks);
+                $otherblockcount = 0;
+            }
         }
 
         $otherblocksmsg = '<span id="textbox_blockcount">' . $otherblockcount . '</span>';
