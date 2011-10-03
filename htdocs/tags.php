@@ -210,7 +210,7 @@ foreach (array('alpha', 'freq') as $option) {
     $tagsortoptions[$option] = $option == $tagsort;
 }
 
-if (substr($data->baseurl, -8, 8) == "tags.php") {
+if (strpos($data->baseurl, 'tags.php?') !== 0) {
     $data->queryprefix = '?';
 }
 else {
