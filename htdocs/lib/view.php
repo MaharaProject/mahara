@@ -2208,6 +2208,10 @@ class View {
                 if ($returnfields) {
                     $returnartefacts[$artefact->id] = array();
                     foreach ($returnfields as $f) {
+                        if ($f == 'safedescription') {
+                            $returnartefacts[$artefact->id]['safedescription'] = clean_html($artefact->description);
+                            continue;
+                        }
                         $returnartefacts[$artefact->id][$f] = $artefact->$f;
                     }
                 }
