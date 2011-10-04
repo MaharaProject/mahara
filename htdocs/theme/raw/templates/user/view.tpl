@@ -19,7 +19,10 @@
 {if $relationship == 'pending'}
                     	<div class="message">
                             {str tag='whymakemeyourfriend' section='group'} {$message}
-                            {$requestform|safe}
+                            <div>
+                              {$acceptform|safe}
+                              <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">{str tag=denyrequest section=group}</a>
+                            </div>
                     	</div>
 {/if}
                     <div id="userview">

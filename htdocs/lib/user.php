@@ -1700,7 +1700,8 @@ function acceptfriend_form($friendid) {
         'name' => 'acceptfriend' . (int) $friendid,
         'validatecallback' => 'acceptfriend_validate',
         'successcallback'  => 'acceptfriend_submit',
-        'renderer' => 'div',
+        'renderer' => 'oneline',
+        'class' => 'oneline inline',
         'autofocus' => 'false',
         'elements' => array(
             'acceptfriend_submit' => array(

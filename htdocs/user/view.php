@@ -37,6 +37,13 @@ require_once('group.php');
 require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'view.php');
 
+if (param_variable('acceptfriend_submit', null)) {
+    acceptfriend_form(param_integer('id'));
+}
+else if (param_variable('addfriend_submit', null)) {
+    addfriend_form(param_integer('id'));
+}
+
 $loggedinid = $USER->get('id');
 if (!empty($loggedinid)) {
     $userid = param_integer('id', $loggedinid);
@@ -221,48 +228,14 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     }
     else if ($record = get_record('usr_friend_request', 'requester', $userid, 'owner', $loggedinid)) {
         $relationship = 'pending';
-        $requestform = pieform(array(
-            'name' =>'approve_deny_friendrequest',
-            'renderer' => 'oneline',
-            'autofocus' => false,
-            'elements' => array(
-                'approve' => array(
-                    'type' => 'submit',
-                    'value' => get_string('approverequest', 'group'),
-                ),
-                'deny' => array(
-                    'type' => 'submit',
-                    'value' => get_string('denyrequest', 'group')
-                ),
-                'id' => array(
-                    'type' => 'hidden',
-                    'value' => $userid
-                )
-            )
-        ));
         $smarty->assign('message', $record->message);
-        $smarty->assign('requestform', $requestform);
+        $smarty->assign('acceptform', acceptfriend_form($userid));
     }
     else {
         $relationship = 'none';
         $friendscontrol = get_account_preference($userid, 'friendscontrol');
         if ($friendscontrol == 'auto') {
-            $newfriendform = pieform(array(
-                'name' => 'addfriend',
-                'autofocus' => false,
-                'renderer' => 'div',
-                'elements' => array(
-                    'add' => array(
-                        'type' => 'submit',
-                        'value' => get_string('addtomyfriends', 'group')
-                    ),
-                    'id' => array(
-                        'type' => 'hidden',
-                        'value' => $userid
-                    )
-                )
-            ));
-            $smarty->assign('newfriendform', $newfriendform);
+            $smarty->assign('newfriendform', addfriend_form($userid));
         }
         $smarty->assign('friendscontrol', $friendscontrol);
     }
@@ -348,13 +321,4 @@ function addmember_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('adduserfailed', 'group'));
     }
     redirect('/user/view.php?id=' . $userid);
-}
-
-function approve_deny_friendrequest_submit(Pieform $form, $values) {
-    if (isset($values['deny'])) {
-        redirect('/user/denyrequest.php?id=' . $values['id'] . '&returnto=view');
-    }
-    else {
-        acceptfriend_submit($form, $values);
-    }
 }
