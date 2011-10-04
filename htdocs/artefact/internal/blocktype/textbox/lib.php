@@ -116,6 +116,7 @@ function updateTextContent(a) {
     setNodeAttribute('instconf_title', 'value', a.title);
     tinyMCE.activeEditor.setContent(a.description);
     $('instconf_textreadonly_display').innerHTML = a.safedescription;
+    $('instconf_makecopy').checked = false;
     if (a.editable == 1) {
         addElementClass('instconf_textreadonly_container', 'hidden');
         addElementClass('instconf_readonlymsg_container', 'hidden');
@@ -150,6 +151,21 @@ connect('chooseartefactlink', 'onclick', function(e) {
     e.stop();
     toggleElementClass('hidden', 'instconf_artefactid_container');
     toggleElementClass('hidden', 'instconf_managenotes_container');
+});
+forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), function(link) {
+    connect(link, 'onclick', function(e) {
+        e.stop();
+        forEach(getElementsByTagAndClassName('input', 'radio', 'artefactid_data'), function(i) {
+            if (i.checked) {
+                i.checked = false;
+            }
+        });
+        $('instconf_makecopy').checked = true;
+        addElementClass('instconf_textreadonly_container', 'hidden');
+        addElementClass('instconf_readonlymsg_container', 'hidden');
+        addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        removeElementClass('instconf_text_container', 'hidden');
+    });
 });
 EOF;
     }
@@ -210,14 +226,16 @@ EOF;
             'otherblocksmsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . (($otherblockcount && !$readonly) ? '' : ' hidden'),
-                'value' => $otherblocksmsg,
+                'value' => $otherblocksmsg
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
                 'help' => true,
             ),
             // Add a message whenever this text cannot be edited here
             'readonlymsg' => array(
                 'type' => 'html',
                 'class' => 'message info' . ($readonly ? '' : ' hidden'),
-                'value' => get_string('readonlymessage', 'blocktype.internal/textbox'),
+                'value' => get_string('readonlymessage', 'blocktype.internal/textbox')
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
                 'help' => true,
             ),
             'text' => array(
@@ -234,6 +252,11 @@ EOF;
                 'class' => $readonly ? '' : 'hidden',
                 'width' => '100%',
                 'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+            ),
+            'makecopy' => array(
+                'type' => 'checkbox',
+                'class' => 'hidden',
+                'defaultvalue' => false,
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
@@ -260,7 +283,7 @@ EOF;
             $data[$f] = $view->get($f);
         }
 
-        if (empty($values['artefactid'])) {
+        if (empty($values['artefactid']) || $values['makecopy']) {
             // The artefact title will be the same as the block title when the
             // artefact is first created, or, if there's no block title, generate
             // 'Note (1)', 'Note (2)', etc.  After that, the artefact title can't
@@ -307,6 +330,7 @@ EOF;
         unset($values['otherblocksmsg']);
         unset($values['readonlymsg']);
         unset($values['textreadonly']);
+        unset($values['makecopy']);
         unset($values['chooseartefact']);
         unset($values['managenotes']);
 
