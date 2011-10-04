@@ -1602,3 +1602,49 @@ function artefact_get_types_from_filter($filter) {
 
     return $contenttype_artefacttype[$filter];
 }
+
+/**
+ * Given a list of artefact ids, return a name and url for the thing that
+ * owns each artefact, suitable for display.
+ *
+ * @param array $ids list of artefact ids
+ *
+ * @return array list of StdClass objects, each containing a name & url property
+ */
+function artefact_get_owner_info($ids) {
+    $data = get_records_sql_assoc('
+        SELECT
+            a.id AS aid, a.owner, a.group, a.institution,
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email,
+            g.name AS groupname,
+            i.displayname
+        FROM
+            {artefact} a
+            LEFT JOIN {usr} u ON a.owner = u.id
+            LEFT JOIN {group} g ON a.group = g.id
+            LEFT JOIN {institution} i ON a.institution = i.name
+        WHERE
+            a.id IN (' . join(',', array_fill(0, count($ids), '?')) . ')',
+        $ids
+    );
+    $wwwroot = get_config('wwwroot');
+    foreach ($data as &$d) {
+        if ($d->institution == 'mahara') {
+            $name = get_config('sitename');
+        }
+        else if ($d->institution) {
+            $name = $d->displayname;;
+            $url  = 'institution/index.php?institution=' . $d->institution;
+        }
+        else if ($d->group) {
+            $name = $d->groupname;;
+            $url  = 'group/view.php?id=' . $d->group;
+        }
+        else {
+            $name = display_name($d);
+            $url  = 'user/view.php?id=' . $d->id;
+        }
+        $d = (object) array('name' => $name, 'url' => $wwwroot . $url);
+    }
+    return $data;
+}

@@ -100,6 +100,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'selectone'        => true,
             'selectjscallback' => 'updateTextContent',
             'getblocks'        => true,
+            'ownerinfo'        => true,
             'returnfields'     => array('id', 'title', 'description', 'safedescription', 'editable'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',

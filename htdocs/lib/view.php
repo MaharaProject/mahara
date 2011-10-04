@@ -2173,6 +2173,20 @@ class View {
         $returnartefacts = array();
         $result = '';
         if ($artefacts) {
+
+            if (!empty($data['ownerinfo'])) {
+                require_once(get_config('docroot') . 'artefact/lib.php');
+                $userid = ($group || $institution) ? null : $USER->get('id');
+                foreach (artefact_get_owner_info(array_keys($artefacts)) as $k => $v) {
+                    if ($artefacts[$k]->owner !== $userid
+                        || $artefacts[$k]->group !== $group
+                        || $artefacts[$k]->institution !== $institution) {
+                        $artefacts[$k]->ownername = $v->name;
+                        $artefacts[$k]->ownerurl  = $v->url;
+                    }
+                }
+            }
+
             foreach ($artefacts as &$artefact) {
                 safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
