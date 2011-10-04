@@ -217,12 +217,12 @@ EOF;
     public static function instance_config_save($values, $instance) {
         global $USER;
         $data = array();
+        $view = $instance->get_view();
+        foreach (array('owner', 'group', 'institution') as $f) {
+            $data[$f] = $view->get($f);
+        }
 
         if (empty($values['artefactid'])) {
-            $view = $instance->get_view();
-            foreach (array('owner', 'group', 'institution') as $f) {
-                $data[$f] = $view->get($f);
-            }
             // The artefact title will be the same as the block title when the
             // artefact is first created, or, if there's no block title, generate
             // 'Note (1)', 'Note (2)', etc.  After that, the artefact title can't
@@ -236,17 +236,30 @@ EOF;
             else {
                 $title = $values['title'];
             }
-        }
-
-        $artefact = new ArtefactTypeHtml((int)$values['artefactid'], $data);
-        if (!$USER->can_edit_artefact($artefact)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
-        }
-
-        if (isset($title)) {
+            $artefact = new ArtefactTypeHtml(0, $data);
             $artefact->set('title', $title);
+            $artefact->set('description', $values['text']);
         }
-        $artefact->set('description', $values['text']);
+        else {
+            $artefact = new ArtefactTypeHtml((int)$values['artefactid']);
+
+            if (!$USER->can_publish_artefact($artefact)) {
+                throw new AccessDeniedException(get_string('nopublishpermissiononartefact', 'mahara', hsc($artefact->get('title'))));
+            }
+
+            // Stop users from editing html artefacts whose owner is not the same as the
+            // view owner, even if they would normally be allowed to edit the artefact.
+            // It's too confusing.  Html artefacts with other owners *can* be included in
+            // the view read-only, provided the artefact has the correct republish
+            // permission.
+            if ($artefact->get('owner') === $data['owner']
+                && $artefact->get('group') === $data['group']
+                && $artefact->get('institution') === $data['institution']
+                && $USER->can_edit_artefact($artefact)) {
+                $artefact->set('description', $values['text']);
+            }
+        }
+
         $artefact->commit();
 
         $values['artefactid'] = $artefact->get('id');
