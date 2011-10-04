@@ -33,3 +33,4 @@ $string['blockcontent'] = 'Block Content';
 $string['usecontentfromanothertextbox'] = 'Use content from another text box';
 $string['textusedinotherblocks'] = 'If you edit the text of this block, it will also be changed in %s other block(s) where it appears.';
 $string['managealltextboxcontent'] = 'Manage all textbox content';
+$string['readonlymessage'] = 'The text you have selected is not editable on this page.';

@@ -604,6 +604,14 @@ ul.artefactchooser-subtabs li.current a:active {
 #instconf_artefactids_selectlist td input.button {
 	font-size: .9167em;
 }
+#instconf_textreadonly_display {
+    background: #eee;
+    border: 1px solid #888;
+    margin: .5em 0;
+    padding: .5em;
+    height: 10em;
+    overflow-y: auto;
+}
 
 /* pagination */
 .ac-pagination {

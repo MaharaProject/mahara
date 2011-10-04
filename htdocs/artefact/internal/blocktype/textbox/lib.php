@@ -113,25 +113,37 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         $blockid = $instance->get('id');
         return <<<EOF
 function updateTextContent(a) {
-    tinyMCE.activeEditor.setContent(a.description);
     setNodeAttribute('instconf_title', 'value', a.title);
-    var blockcountmsg = $('instconf_otherblocksmsg_container');
-    if (blockcountmsg && $('textbox_blockcount')) {
-        var otherblockcount = 0;
-        if (a.blocks && a.blocks.length > 0) {
-            for (var i = 0; i < a.blocks.length; i++) {
-                if (a.blocks[i] != {$blockid}) {
-                    otherblockcount++;
+    tinyMCE.activeEditor.setContent(a.description);
+    $('instconf_textreadonly_display').innerHTML = a.safedescription;
+    if (a.editable == 1) {
+        addElementClass('instconf_textreadonly_container', 'hidden');
+        addElementClass('instconf_readonlymsg_container', 'hidden');
+        removeElementClass('instconf_text_container', 'hidden');
+        var blockcountmsg = $('instconf_otherblocksmsg_container');
+        if (blockcountmsg && $('textbox_blockcount')) {
+            var otherblockcount = 0;
+            if (a.blocks && a.blocks.length > 0) {
+                for (var i = 0; i < a.blocks.length; i++) {
+                    if (a.blocks[i] != {$blockid}) {
+                        otherblockcount++;
+                    }
                 }
             }
+            if (otherblockcount) {
+                replaceChildNodes('textbox_blockcount', otherblockcount);
+                removeElementClass(blockcountmsg, 'hidden');
+            }
+            else {
+                addElementClass(blockcountmsg, 'hidden');
+            }
         }
-        if (otherblockcount) {
-            replaceChildNodes('textbox_blockcount', otherblockcount);
-            removeElementClass(blockcountmsg, 'hidden');
-        }
-        else {
-            addElementClass(blockcountmsg, 'hidden');
-        }
+    }
+    else {
+        addElementClass('instconf_text_container', 'hidden');
+        addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        removeElementClass('instconf_textreadonly_container', 'hidden');
+        removeElementClass('instconf_readonlymsg_container', 'hidden');
     }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
@@ -147,33 +159,44 @@ EOF;
     }
 
     public static function instance_config_form($instance) {
+        global $USER;
         $instance->set('artefactplugin', 'internal');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
             $cfheight = param_integer('cfheight', 0);
             $height = $cfheight ? $cfheight * 0.7 : 150;
         }
+
         $otherblockcount = 0;
+        $readonly = false;
+        $text = '';
+        $view = $instance->get_view();
+
         if (!empty($configdata['artefactid'])) {
-            if ($blocks = get_column('view_artefact', 'block', 'artefact', $configdata['artefactid'])) {
-                $blocks = array_unique($blocks);
-                $otherblockcount = count($blocks) - 1;
-            }
             $artefactid = $configdata['artefactid'];
             try {
-                $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+                $artefact = $instance->get_artefact_instance($artefactid);
+
+                $readonly = $artefact->get('owner') !== $view->get('owner')
+                    || $artefact->get('group') !== $view->get('group')
+                    || $artefact->get('institution') !== $view->get('institution')
+                    || !$USER->can_edit_artefact($artefact);
+
+                $text = $artefact->get('description');
+
+                if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefactid)) {
+                    $blocks = array_unique($blocks);
+                    $otherblockcount = count($blocks) - 1;
+                }
             }
             catch (ArtefactNotFoundException $e) {
                 unset($artefactid);
-                unset($blocks);
-                $otherblockcount = 0;
             }
         }
 
         $otherblocksmsg = '<span id="textbox_blockcount">' . $otherblockcount . '</span>';
         $otherblocksmsg = get_string('textusedinotherblocks', 'blocktype.internal/textbox', $otherblocksmsg);
 
-        $view = $instance->get_view();
         $manageurl = get_config('wwwroot') . 'artefact/internal/notes.php';
         if ($group = $view->get('group')) {
             $manageurl .= '?group=' . $group;
@@ -186,16 +209,31 @@ EOF;
             // Add a message whenever this text appears in some other block
             'otherblocksmsg' => array(
                 'type' => 'html',
-                'class' => $otherblockcount ? '' : 'hidden',
-                'value' => '<div class="message info">' . $otherblocksmsg . '</div>',
+                'class' => 'message info' . (($otherblockcount && !$readonly) ? '' : ' hidden'),
+                'value' => $otherblocksmsg,
+                'help' => true,
+            ),
+            // Add a message whenever this text cannot be edited here
+            'readonlymsg' => array(
+                'type' => 'html',
+                'class' => 'message info' . ($readonly ? '' : ' hidden'),
+                'value' => get_string('readonlymessage', 'blocktype.internal/textbox'),
+                'help' => true,
             ),
             'text' => array(
                 'type' => 'wysiwyg',
+                'class' => $readonly ? 'hidden' : '',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'height' => $height . 'px',
-                'defaultvalue' => isset($text) ? $text : '',
+                'defaultvalue' => $text,
                 'rules' => array('maxlength' => 65536),
+            ),
+            'textreadonly' => array(
+                'type' => 'html',
+                'class' => $readonly ? '' : 'hidden',
+                'width' => '100%',
+                'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
@@ -267,7 +305,10 @@ EOF;
 
         unset($values['text']);
         unset($values['otherblocksmsg']);
+        unset($values['readonlymsg']);
+        unset($values['textreadonly']);
         unset($values['chooseartefact']);
+        unset($values['managenotes']);
 
         // Pass back a list of any other blocks that need to be rendered
         // due to this change.
