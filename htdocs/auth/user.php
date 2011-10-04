@@ -935,9 +935,15 @@ class User {
     }
 
     public function can_publish_artefact($a) {
-        if (($this->get('id') and $this->get('id') == $a->get('owner'))
-            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
+        if (($this->get('id') and $this->get('id') == $a->get('owner'))) {
             return true;
+        }
+
+        if ($i = $a->get('institution')) {
+            if ($i == 'mahara') {
+                return $this->get('admin');
+            }
+            return $this->in_institution($i);
         }
 
         if (!$group = $a->get('group')) {
