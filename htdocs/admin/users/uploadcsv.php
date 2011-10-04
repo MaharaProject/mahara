@@ -391,8 +391,11 @@ function uploadcsv_validate(Pieform $form, $values) {
                 }
             }
 
-            // It's okay if the email already exists and is owned by this user.
-            $emailowned = get_record_sql('
+            // Check if the email already exists and if it's owned by this user.  This query can return more
+            // than one row when there are duplicate emails already on the site.  If that happens, things are
+            // already a bit out of hand, and we'll just allow an update if this user is one of the users who
+            // owns the email.
+            $emailowned = get_records_sql_assoc('
                 SELECT LOWER(u.username) AS lowerusername, ae.principal FROM {usr} u
                 LEFT JOIN {artefact_internal_profile_email} ae ON u.id = ae.owner AND ae.verified = 1 AND ae.email = ?
                 WHERE ae.owner IS NOT NULL OR u.email = ?',
@@ -401,16 +404,19 @@ function uploadcsv_validate(Pieform $form, $values) {
 
             // If the email is owned by someone else, it could still be okay provided
             // that other user's email is also being changed in this csv file.
-            if ($emailowned && $emailowned->lowerusername != $lowerusername) {
-                if (!$emailowned->principal) {
-                    // However, only primary emails can be set in uploadcsv, so this is an error
-                    $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
-                }
-                else if (!isset($usernames[$emailowned->lowerusername])) {
-                    // The other user is not being updated in this file
-                    $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
-                }
-                else {
+            if ($emailowned && !isset($emailowned[$lowerusername])) {
+                foreach ($emailowned as $e) {
+                    // Only primary emails can be set in uploadcsv, so it's an error when someone else
+                    // owns the email as a secondary.
+                    if (!$e->principal) {
+                        $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                        break;
+                    }
+                    // It's also an error if the email owner is not being updated in this file
+                    if (!isset($usernames[$e->lowerusername])) {
+                        $csverrors->add($line, get_string('uploadcsverroremailaddresstaken', 'admin', $line, $email));
+                        break;
+                    }
                     // If the other user is being updated in this file, but isn't changing their
                     // email address, it's ok, we've already notified duplicate emails within the file.
                 }
