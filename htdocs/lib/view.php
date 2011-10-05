@@ -1390,6 +1390,7 @@ class View {
 
         foreach ($data as $block) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
+            $block->view_obj = $this;
             $b = new BlockInstance($block->id, (array)$block);
             $this->columns[$block->column]['blockinstances'][] = $b;
         }
@@ -1559,6 +1560,7 @@ class View {
                 'blocktype'  => $values['blocktype'],
                 'title'      => $newtitle,
                 'view'       => $this->get('id'),
+                'view_obj'   => $this,
                 'column'     => $values['column'],
                 'order'      => $values['order'],
             )

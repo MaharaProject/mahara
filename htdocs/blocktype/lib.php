@@ -1196,6 +1196,7 @@ class BlockInstance {
             'blocktype'  => $this->get('blocktype'),
             'title'      => $this->get('title'),
             'view'       => $view->get('id'),
+            'view_obj'   => $view,
             'column'     => $this->get('column'),
             'order'      => $this->get('order'),
         ));
