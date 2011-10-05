@@ -116,7 +116,12 @@ class View {
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
-            $tempdata = get_record('view','id',$id);
+            $tempdata = get_record_sql('
+                SELECT v.*
+                FROM {view} v LEFT JOIN {group} g ON v.group = g.id
+                WHERE v.id = ? AND (v.group IS NULL OR g.deleted = 0)',
+                array($id)
+            );
             if (empty($tempdata)) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
@@ -145,12 +150,6 @@ class View {
         $this->atime = time();
         $this->columns = array();
         $this->dirtycolumns = array();
-        if ($this->group) {
-            $group = get_record('group', 'id', $this->group);
-            if ($group->deleted) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
-            }
-        }
     }
 
     /**
