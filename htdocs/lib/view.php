@@ -3531,6 +3531,19 @@ class View {
         return $title;
     }
 
+    public function display_title_editing() {
+        if ($this->type == 'profile') {
+            return get_string('profileviewtitle', 'view');
+        }
+        if ($this->type == 'dashboard') {
+            return get_string('dashboardviewtitle', 'view');
+        }
+        if ($this->type == 'grouphomepage') {
+            return get_string('grouphomepage', 'view');
+        }
+        return $this->title;
+    }
+
     public function visit_message() {
         $visitcountstart = max(get_config('stats_installation_time'), $this->ctime);
         $visitcountend = get_config('viewloglatest');
@@ -3798,10 +3811,20 @@ class View {
         }
 
         foreach ($records as &$r) {
+            // Construct a View object temporarily just so we can use display_title_editing, get_url
+            $view = new View(0, array(
+                'id'    => $r->vid,
+                'title' => $r->vname,
+                'type'  => $r->vtype,
+                'owner' => $owner,
+                'group' => $group,
+            ));
+            $view->set('dirty', false);
             $v = array(
                 'id'        => $r->vid,
                 'type'      => $r->vtype,
-                'name'      => $r->vname,
+                'name'      => $view->display_title_editing(),
+                'url'       => $view->get_url(),
                 'startdate' => $r->startdate,
                 'stopdate'  => $r->stopdate,
                 'template'  => $r->template,
