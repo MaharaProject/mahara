@@ -70,6 +70,13 @@ $form = pieform(array(
             'title'        => get_string('allowcomments', 'artefact.comment'),
             'defaultvalue' => $artefact->get('allowcomments'),
         ),
+        'perms' => array(
+            'type'         => 'rolepermissions',
+            'title'        => get_string('Permissions'),
+            'defaultvalue' => $artefact->get('rolepermissions'),
+            'group'        => $group,
+            'ignore'       => !$group,
+        ),
         'submit' => array(
             'type'         => 'submitcancel',
             'value'        => array(get_string('save'), get_string('cancel')),
@@ -88,6 +95,10 @@ function editnote_submit(Pieform $form, array $values) {
     $artefact->set('title', $values['title']);
     $artefact->set('description', $values['description']);
     $artefact->set('allowcomments', (int) $values['allowcomments']);
+    if (isset($values['perms'])) {
+        $artefact->set('rolepermissions', $values['perms']);
+        $artefact->set('dirty', true);
+    }
     $artefact->commit();
     $SESSION->add_ok_msg(get_string('noteupdated', 'artefact.internal'));
     redirect($goto);
