@@ -2173,6 +2173,20 @@ class View {
         $returnartefacts = array();
         $result = '';
         if ($artefacts) {
+
+            if (!empty($data['ownerinfo'])) {
+                require_once(get_config('docroot') . 'artefact/lib.php');
+                $userid = ($group || $institution) ? null : $USER->get('id');
+                foreach (artefact_get_owner_info(array_keys($artefacts)) as $k => $v) {
+                    if ($artefacts[$k]->owner !== $userid
+                        || $artefacts[$k]->group !== $group
+                        || $artefacts[$k]->institution !== $institution) {
+                        $artefacts[$k]->ownername = $v->name;
+                        $artefacts[$k]->ownerurl  = $v->url;
+                    }
+                }
+            }
+
             foreach ($artefacts as &$artefact) {
                 safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
@@ -2208,6 +2222,10 @@ class View {
                 if ($returnfields) {
                     $returnartefacts[$artefact->id] = array();
                     foreach ($returnfields as $f) {
+                        if ($f == 'safedescription') {
+                            $returnartefacts[$artefact->id]['safedescription'] = clean_html($artefact->description);
+                            continue;
+                        }
                         $returnartefacts[$artefact->id][$f] = $artefact->$f;
                     }
                 }
@@ -2345,7 +2363,7 @@ class View {
             $from .= '
             LEFT OUTER JOIN (
                 SELECT
-                    r.artefact, r.can_view, m.group
+                    r.artefact, r.can_view, r.can_edit, m.group
                 FROM
                     {artefact_access_role} r
                     INNER JOIN {group_member} m ON r.role = m.role
@@ -2412,11 +2430,39 @@ class View {
 
         $select .= $extraselect;
 
-        $cols = $short ? 'a.id, a.id AS b' : 'a.*'; // get_records_sql_assoc wants > 1 column
+        if ($short) {
+            // We just want to know which artefact ids are allowed for inclusion in a view,
+            // but get_records_sql_assoc wants > 1 column
+            $cols = 'a.id, a.id AS b';
+            $ph = array();
+        }
+        else {
+            $cols = 'a.*';
+
+            // We also want to know which artefacts can be edited by the logged-in user within
+            // the context of the view.  For an institution view, all artefacts from the same
+            // institution are editable.  For an individual view, artefacts with the same 'owner'
+            // are editable.  For group views, only those artefacts with the can_edit permission
+            // out of artefact_access_role are editable.
+
+            if ($group) {
+                $expr = 'ga.can_edit IS NOT NULL AND ga.can_edit = 1';
+                $ph = array();
+            }
+            else if ($institution) {
+                $expr = 'a.institution = ?';
+                $ph = array($institution);
+            }
+            else {
+                $expr = 'a.owner IS NOT NULL AND a.owner = ?';
+                $ph = array($user->get('id'));
+            }
+            $type = is_mysql() ? 'UNSIGNED' : 'INTEGER';
+            $cols .= ", CAST($expr AS $type) AS editable";
+        }
 
         $artefacts = get_records_sql_assoc(
-            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder,
-            null, $offset, $limit
+            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder, $ph, $offset, $limit
         );
         $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select);
 

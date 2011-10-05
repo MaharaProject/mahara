@@ -1154,6 +1154,7 @@ div.ok, div.error {
 	padding: 2px 5px 2px 25px;
 }
 /* upload file message */
+.message.info,
 div.info {
 	padding: 2px 5px;
 	background: #e7f1c3;

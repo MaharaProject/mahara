@@ -100,7 +100,8 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'selectone'        => true,
             'selectjscallback' => 'updateTextContent',
             'getblocks'        => true,
-            'returnfields'     => array('id', 'title', 'description'),
+            'ownerinfo'        => true,
+            'returnfields'     => array('id', 'title', 'description', 'safedescription', 'editable'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
         );
@@ -113,31 +114,59 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         $blockid = $instance->get('id');
         return <<<EOF
 function updateTextContent(a) {
-    tinyMCE.activeEditor.setContent(a.description);
     setNodeAttribute('instconf_title', 'value', a.title);
-    var blockcountmsg = $('instconf_otherblocksmsg_container');
-    if (blockcountmsg && $('textbox_blockcount')) {
-        var otherblockcount = 0;
-        if (a.blocks && a.blocks.length > 0) {
-            for (var i = 0; i < a.blocks.length; i++) {
-                if (a.blocks[i] != {$blockid}) {
-                    otherblockcount++;
+    tinyMCE.activeEditor.setContent(a.description);
+    $('instconf_textreadonly_display').innerHTML = a.safedescription;
+    $('instconf_makecopy').checked = false;
+    if (a.editable == 1) {
+        addElementClass('instconf_textreadonly_container', 'hidden');
+        addElementClass('instconf_readonlymsg_container', 'hidden');
+        removeElementClass('instconf_text_container', 'hidden');
+        var blockcountmsg = $('instconf_otherblocksmsg_container');
+        if (blockcountmsg && $('textbox_blockcount')) {
+            var otherblockcount = 0;
+            if (a.blocks && a.blocks.length > 0) {
+                for (var i = 0; i < a.blocks.length; i++) {
+                    if (a.blocks[i] != {$blockid}) {
+                        otherblockcount++;
+                    }
                 }
             }
+            if (otherblockcount) {
+                replaceChildNodes('textbox_blockcount', otherblockcount);
+                removeElementClass(blockcountmsg, 'hidden');
+            }
+            else {
+                addElementClass(blockcountmsg, 'hidden');
+            }
         }
-        if (otherblockcount) {
-            replaceChildNodes('textbox_blockcount', otherblockcount);
-            removeElementClass(blockcountmsg, 'hidden');
-        }
-        else {
-            addElementClass(blockcountmsg, 'hidden');
-        }
+    }
+    else {
+        addElementClass('instconf_text_container', 'hidden');
+        addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        removeElementClass('instconf_textreadonly_container', 'hidden');
+        removeElementClass('instconf_readonlymsg_container', 'hidden');
     }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
     e.stop();
     toggleElementClass('hidden', 'instconf_artefactid_container');
     toggleElementClass('hidden', 'instconf_managenotes_container');
+});
+forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), function(link) {
+    connect(link, 'onclick', function(e) {
+        e.stop();
+        forEach(getElementsByTagAndClassName('input', 'radio', 'artefactid_data'), function(i) {
+            if (i.checked) {
+                i.checked = false;
+            }
+        });
+        $('instconf_makecopy').checked = true;
+        addElementClass('instconf_textreadonly_container', 'hidden');
+        addElementClass('instconf_readonlymsg_container', 'hidden');
+        addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        removeElementClass('instconf_text_container', 'hidden');
+    });
 });
 EOF;
     }
@@ -147,26 +176,44 @@ EOF;
     }
 
     public static function instance_config_form($instance) {
+        global $USER;
         $instance->set('artefactplugin', 'internal');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
             $cfheight = param_integer('cfheight', 0);
             $height = $cfheight ? $cfheight * 0.7 : 150;
         }
+
         $otherblockcount = 0;
+        $readonly = false;
+        $text = '';
+        $view = $instance->get_view();
+
         if (!empty($configdata['artefactid'])) {
-            if ($blocks = get_column('view_artefact', 'block', 'artefact', $configdata['artefactid'])) {
-                $blocks = array_unique($blocks);
-                $otherblockcount = count($blocks) - 1;
-            }
             $artefactid = $configdata['artefactid'];
-            $text = $instance->get_artefact_instance($configdata['artefactid'])->get('description');
+            try {
+                $artefact = $instance->get_artefact_instance($artefactid);
+
+                $readonly = $artefact->get('owner') !== $view->get('owner')
+                    || $artefact->get('group') !== $view->get('group')
+                    || $artefact->get('institution') !== $view->get('institution')
+                    || !$USER->can_edit_artefact($artefact);
+
+                $text = $artefact->get('description');
+
+                if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefactid)) {
+                    $blocks = array_unique($blocks);
+                    $otherblockcount = count($blocks) - 1;
+                }
+            }
+            catch (ArtefactNotFoundException $e) {
+                unset($artefactid);
+            }
         }
 
         $otherblocksmsg = '<span id="textbox_blockcount">' . $otherblockcount . '</span>';
         $otherblocksmsg = get_string('textusedinotherblocks', 'blocktype.internal/textbox', $otherblocksmsg);
 
-        $view = $instance->get_view();
         $manageurl = get_config('wwwroot') . 'artefact/internal/notes.php';
         if ($group = $view->get('group')) {
             $manageurl .= '?group=' . $group;
@@ -179,16 +226,38 @@ EOF;
             // Add a message whenever this text appears in some other block
             'otherblocksmsg' => array(
                 'type' => 'html',
-                'class' => $otherblockcount ? '' : 'hidden',
-                'value' => '<div class="message info">' . $otherblocksmsg . '</div>',
+                'class' => 'message info' . (($otherblockcount && !$readonly) ? '' : ' hidden'),
+                'value' => $otherblocksmsg
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
+                'help' => true,
+            ),
+            // Add a message whenever this text cannot be edited here
+            'readonlymsg' => array(
+                'type' => 'html',
+                'class' => 'message info' . ($readonly ? '' : ' hidden'),
+                'value' => get_string('readonlymessage', 'blocktype.internal/textbox')
+                    . ' <a class="copytextboxnote nojs-hidden-inline" href="">' . get_string('makeacopy', 'blocktype.internal/textbox') . '</a>',
+                'help' => true,
             ),
             'text' => array(
                 'type' => 'wysiwyg',
+                'class' => $readonly ? 'hidden' : '',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'height' => $height . 'px',
-                'defaultvalue' => isset($text) ? $text : '',
+                'defaultvalue' => $text,
                 'rules' => array('maxlength' => 65536),
+            ),
+            'textreadonly' => array(
+                'type' => 'html',
+                'class' => $readonly ? '' : 'hidden',
+                'width' => '100%',
+                'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+            ),
+            'makecopy' => array(
+                'type' => 'checkbox',
+                'class' => 'hidden',
+                'defaultvalue' => false,
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
@@ -210,12 +279,12 @@ EOF;
     public static function instance_config_save($values, $instance) {
         global $USER;
         $data = array();
+        $view = $instance->get_view();
+        foreach (array('owner', 'group', 'institution') as $f) {
+            $data[$f] = $view->get($f);
+        }
 
-        if (empty($values['artefactid'])) {
-            $view = $instance->get_view();
-            foreach (array('owner', 'group', 'institution') as $f) {
-                $data[$f] = $view->get($f);
-            }
+        if (empty($values['artefactid']) || $values['makecopy']) {
             // The artefact title will be the same as the block title when the
             // artefact is first created, or, if there's no block title, generate
             // 'Note (1)', 'Note (2)', etc.  After that, the artefact title can't
@@ -229,17 +298,30 @@ EOF;
             else {
                 $title = $values['title'];
             }
-        }
-
-        $artefact = new ArtefactTypeHtml((int)$values['artefactid'], $data);
-        if (!$USER->can_edit_artefact($artefact)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
-        }
-
-        if (isset($title)) {
+            $artefact = new ArtefactTypeHtml(0, $data);
             $artefact->set('title', $title);
+            $artefact->set('description', $values['text']);
         }
-        $artefact->set('description', $values['text']);
+        else {
+            $artefact = new ArtefactTypeHtml((int)$values['artefactid']);
+
+            if (!$USER->can_publish_artefact($artefact)) {
+                throw new AccessDeniedException(get_string('nopublishpermissiononartefact', 'mahara', hsc($artefact->get('title'))));
+            }
+
+            // Stop users from editing html artefacts whose owner is not the same as the
+            // view owner, even if they would normally be allowed to edit the artefact.
+            // It's too confusing.  Html artefacts with other owners *can* be included in
+            // the view read-only, provided the artefact has the correct republish
+            // permission.
+            if ($artefact->get('owner') === $data['owner']
+                && $artefact->get('group') === $data['group']
+                && $artefact->get('institution') === $data['institution']
+                && $USER->can_edit_artefact($artefact)) {
+                $artefact->set('description', $values['text']);
+            }
+        }
+
         $artefact->commit();
 
         $values['artefactid'] = $artefact->get('id');
@@ -247,7 +329,11 @@ EOF;
 
         unset($values['text']);
         unset($values['otherblocksmsg']);
+        unset($values['readonlymsg']);
+        unset($values['textreadonly']);
+        unset($values['makecopy']);
         unset($values['chooseartefact']);
+        unset($values['managenotes']);
 
         // Pass back a list of any other blocks that need to be rendered
         // due to this change.

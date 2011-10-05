@@ -639,6 +639,7 @@ $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
 $string['view'] = 'Page';
 $string['artefactnotpublishable'] = 'Artefact %s is not publishable in page %s';
+$string['nopublishpermissiononartefact'] = 'You don\'t have permission to publish %s';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
