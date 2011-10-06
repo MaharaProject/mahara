@@ -182,6 +182,26 @@ function group_role_can_edit_views($group, $role) {
     return $editroles != 'admin';
 }
 
+function group_role_can_moderate_views($group, $role) {
+    static $moderatingroles = array();
+
+    if (empty($role)) {
+        return false;
+    }
+
+    if ($role == 'admin') {
+        return true;
+    }
+
+    if (!isset($moderatingroles[$group])) {
+        $grouptype = get_field('group', 'grouptype', 'id', $group);
+        safe_require('grouptype', $grouptype);
+        $moderatingroles[$group] = call_static_method('GroupType' . ucfirst($grouptype), 'get_view_moderating_roles');
+    }
+
+    return in_array($role, $moderatingroles[$group]);
+}
+
 /**
  * Returns whether a user is allowed to assess views that have been submitted 
  * to the given group.

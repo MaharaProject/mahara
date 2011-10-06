@@ -1002,9 +1002,15 @@ class User {
         }
         $group = $v->get('group');
         if ($group) {
-            $moderatingroles = $v->get('moderatingroles');
             $this->reset_grouproles();
-            return isset($this->grouproles[$group]) && in_array($this->grouproles[$group], $moderatingroles);
+            if (!isset($this->grouproles[$group])) {
+                return false;
+            }
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
+                return false;
+            }
+            require_once('group.php');
+            return group_role_can_moderate_views($group, $this->grouproles[$group]);
         }
         return false;
     }

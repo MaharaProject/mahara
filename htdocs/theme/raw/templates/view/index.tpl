@@ -23,16 +23,7 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td>
-{if $view.type == 'profile'}
-                            <h3><a href="{$WWWROOT}user/view.php">{str tag=profileviewtitle section=view}</a></h3>
-{elseif $view.type == 'dashboard'}
-                            <h3><a href="{$WWWROOT}">{str tag=dashboardviewtitle section=view}</a></h3>
-{elseif $view.type == 'grouphomepage'}
-                            <h3><a href="{$WWWROOT}group/view.php?id={$GROUP->id}">{str tag=grouphomepage section=view}</a></h3>
-{else}
-                            <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h3>
-{/if}
-
+                            <h3><a href="{$view.url}">{$view.displaytitle}</a></h3>
 {if $view.submittedto}
                               <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {elseif $view.type == 'profile'}

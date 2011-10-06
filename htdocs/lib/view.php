@@ -59,7 +59,6 @@ class View {
     private $dirtycolumns; // for when we change stuff
     private $tags;
     private $categorydata;
-    private $moderatingroles;
     private $template;
     private $retainview;
     private $copynewuser = 0;
@@ -117,7 +116,12 @@ class View {
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
-            $tempdata = get_record('view','id',$id);
+            $tempdata = get_record_sql('
+                SELECT v.*
+                FROM {view} v LEFT JOIN {group} g ON v.group = g.id
+                WHERE v.id = ? AND (v.group IS NULL OR g.deleted = 0)',
+                array($id)
+            );
             if (empty($tempdata)) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
@@ -146,14 +150,6 @@ class View {
         $this->atime = time();
         $this->columns = array();
         $this->dirtycolumns = array();
-        if ($this->group) {
-            $group = get_record('group', 'id', $this->group);
-            if ($group->deleted) {
-                throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
-            }
-            safe_require('grouptype', $group->grouptype);
-            $this->moderatingroles = call_static_method('GroupType' . ucfirst($group->grouptype), 'get_view_moderating_roles');
-        }
     }
 
     /**
@@ -2511,7 +2507,7 @@ class View {
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
         $select = '
-            SELECT v.id,v.title,v.description,v.type,v.mtime,v.locked';
+            SELECT v.id, v.title, v.description, v.type, v.mtime, v.owner, v.group, v.institution, v.locked';
         $from = '
             FROM {view} v';
         $where = '
@@ -2556,10 +2552,13 @@ class View {
         $data = array();
         if ($viewdata) {
             for ($i = 0; $i < count($viewdata); $i++) {
+                $view = new View(0, $viewdata[$i]);
+                $view->set('dirty', false);
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['type'] = $viewdata[$i]->type;
-                $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['displaytitle'] = $view->display_title_editing();
+                $data[$i]['url'] = $view->get_url();
                 $data[$i]['mtime'] = $viewdata[$i]->mtime;
                 $data[$i]['locked'] = $viewdata[$i]->locked;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
@@ -3537,6 +3536,19 @@ class View {
         return $title;
     }
 
+    public function display_title_editing() {
+        if ($this->type == 'profile') {
+            return get_string('profileviewtitle', 'view');
+        }
+        if ($this->type == 'dashboard') {
+            return get_string('dashboardviewtitle', 'view');
+        }
+        if ($this->type == 'grouphomepage') {
+            return get_string('grouphomepage', 'view');
+        }
+        return $this->title;
+    }
+
     public function visit_message() {
         $visitcountstart = max(get_config('stats_installation_time'), $this->ctime);
         $visitcountend = get_config('viewloglatest');
@@ -3804,10 +3816,20 @@ class View {
         }
 
         foreach ($records as &$r) {
+            // Construct a View object temporarily just so we can use display_title_editing, get_url
+            $view = new View(0, array(
+                'id'    => $r->vid,
+                'title' => $r->vname,
+                'type'  => $r->vtype,
+                'owner' => $owner,
+                'group' => $group,
+            ));
+            $view->set('dirty', false);
             $v = array(
                 'id'        => $r->vid,
                 'type'      => $r->vtype,
-                'name'      => $r->vname,
+                'name'      => $view->display_title_editing(),
+                'url'       => $view->get_url(),
                 'startdate' => $r->startdate,
                 'stopdate'  => $r->stopdate,
                 'template'  => $r->template,
