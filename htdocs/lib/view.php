@@ -2505,7 +2505,7 @@ class View {
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
         $select = '
-            SELECT v.id,v.title,v.description,v.type,v.mtime,v.locked';
+            SELECT v.id, v.title, v.description, v.type, v.mtime, v.owner, v.group, v.institution, v.locked';
         $from = '
             FROM {view} v';
         $where = '
@@ -2550,10 +2550,13 @@ class View {
         $data = array();
         if ($viewdata) {
             for ($i = 0; $i < count($viewdata); $i++) {
+                $view = new View(0, $viewdata[$i]);
+                $view->set('dirty', false);
                 $index[$viewdata[$i]->id] = $i;
                 $data[$i]['id'] = $viewdata[$i]->id;
                 $data[$i]['type'] = $viewdata[$i]->type;
-                $data[$i]['title'] = $viewdata[$i]->title;
+                $data[$i]['displaytitle'] = $view->display_title_editing();
+                $data[$i]['url'] = $view->get_url();
                 $data[$i]['mtime'] = $viewdata[$i]->mtime;
                 $data[$i]['locked'] = $viewdata[$i]->locked;
                 $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
