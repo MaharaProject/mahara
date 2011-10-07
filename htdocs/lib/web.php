@@ -129,6 +129,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     theme_advanced_buttons3 : "{$adv_buttons[3]}",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "{$toolbar_align}",
+    fix_list_elements: true,
     //width: '512',
 EOF;
                 }
