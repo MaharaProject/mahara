@@ -712,7 +712,7 @@ function get_all_theme_objects() {
             throw new SystemException('Unable to read theme directory '.$themebase);
         }
         while (false !== ($subdir = readdir($themedir))) {
-            if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
+            if (substr($subdir, 0, 1) != "." && is_dir($themebase . $subdir)) {
                 // is the theme directory name valid?
                 if (!Theme::name_is_valid($subdir)) {
                     log_warn(get_string('themenameinvalid', 'error', $subdir));
