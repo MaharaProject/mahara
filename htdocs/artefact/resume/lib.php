@@ -1200,12 +1200,6 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
     public static function is_singular() {
         return true;
     }
-
-    public static function get_goalandskill_artefact_types() {
-        return array('personalgoal', 'academicgoal', 'careergoal',
-            'personalskill', 'academicskill', 'workskill');
-    }
-
 }
 
 class ArtefactTypePersonalgoal extends ArtefactTypeResumeGoalAndSkill { }
@@ -1247,25 +1241,97 @@ function compositeformedit_submit(Pieform $form, $values) {
     redirect($goto);
 }
 
-function goalandskillform_submit(Pieform $form, $values) {
-    foreach ($values as $key => $value) {
-        if (!in_array($key, ArtefactTypeResumeGoalAndSkill::get_goalandskill_artefact_types())) {
-            continue;
-        }
+function simple_resumefield_form($defaults, $goto) {
+    global $simple_resume_artefacts, $simple_resume_types;
+    $simple_resume_artefacts = array();
+    $simple_resume_types = array_keys($defaults);
+
+    $form = array(
+        'name'              => 'resumefieldform',
+        'plugintype'        => 'artefact',
+        'pluginname'        => 'resume',
+        'jsform'            => true,
+        'successcallback'   => 'simple_resumefield_submit',
+        'jssuccesscallback' => 'simple_resumefield_success',
+        'jserrorcallback'   => 'simple_resumefield_error',
+        'elements'          => array(),
+    );
+
+    foreach ($simple_resume_types as $t) {
         try {
-            $a = artefact_instance_from_type($key);
-            $a->set('description', $value);
+            $simple_resume_artefacts[$t] = artefact_instance_from_type($t);
+            $content = $simple_resume_artefacts[$t]->get('description');
         }
         catch (Exception $e) {
-            global $USER;
-            $classname = generate_artefact_class_name($key);
-            $a = new $classname(0, array(
-                'owner' => $USER->get('id'),
-                'title' => get_string($key),
-                'description' => $value,
-           )); 
+            $content = $defaults[$t]['default'];
         }
-        $a->commit();
+        $fieldset = $t . 'fs';
+        $form['elements'][$fieldset] = array(
+            'type' => 'fieldset',
+            'legend' => get_string($t, 'artefact.resume'),
+            'elements' => array(
+                $t => array(
+                    'type' => 'wysiwyg',
+                    'class' => 'js-hidden',
+                    'rows' => 20,
+                    'cols' => 80,
+                    'defaultvalue' => $content,
+                    'rules' => array('maxlength' => 65536),
+                ),
+                $t . 'submit' => array(
+                    'type' => 'submitcancel',
+                    'class' => 'js-hidden',
+                    'value' => array(get_string('save'), get_string('cancel')),
+                    'goto' => get_config('wwwroot') . $goto,
+                ),
+                $t . 'display' => array(
+                    'type' => 'html',
+                    'class' => 'nojs-hidden-block',
+                    'value' => $content,
+                ),
+                $t . 'edit' => array(
+                    'type' => 'button',
+                    'class' => 'nojs-hidden-block openedit',
+                    'value' => get_string('edit'),
+                ),
+            ),
+        );
+        if (!empty($defaults[$t]['fshelp'])) {
+            $form['elements'][$fieldset]['help'] = true;
+        }
     }
-    $form->json_reply(PIEFORM_OK, get_string('goalandskillsaved', 'artefact.resume'));
-}   
+
+    $form['elements']['goto'] = array(
+        'type'  => 'hidden',
+        'value' => $goto,
+    );
+
+    return $form;
+}
+
+function simple_resumefield_submit(Pieform $form, $values) {
+    global $simple_resume_types, $simple_resume_artefacts, $USER;
+
+    foreach ($simple_resume_types as $t) {
+        if (isset($values[$t . 'submit']) && isset($values[$t])) {
+            if (!isset($simple_resume_artefacts[$t])) {
+                $classname = generate_artefact_class_name($t);
+                $simple_resume_artefacts[$t] = new $classname(0, array(
+                    'owner' => $USER->get('id'),
+                    'title' => get_string($t),
+                ));
+            }
+            $simple_resume_artefacts[$t]->set('description', $values[$t]);
+            $simple_resume_artefacts[$t]->commit();
+            $data = array(
+                'message' => get_string('goalandskillsaved', 'artefact.resume'),
+                'update'  => $t,
+                'content' => clean_html($values[$t]),
+                'goto'    => get_config('wwwroot') . $values['goto'],
+            );
+            $form->reply(PIEFORM_OK, $data);
+        }
+    }
+
+    $form->reply(PIEFORM_OK, array('goto' => get_config('wwwroot') . $values['goto']));
+}

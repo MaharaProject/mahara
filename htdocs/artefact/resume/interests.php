@@ -37,81 +37,17 @@ define('TITLE', get_string('resume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'resume');
 
-$interest = null;
-try {
-    $interest = artefact_instance_from_type('interest');
-}
-catch (Exception $e) { }
+$defaults = array(
+    'interest' => array(
+        'default' => '',
+        'fshelp' => true,
+    ),
+);
+$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/skills.php'));
 
-$interestsform = pieform(array(
-    'name'        => 'interests',
-    'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'resume',
-    'jsform'      => true,
-    'method'      => 'post',
-    'elements'    => array(
-        'interestsfs' => array(
-            'type' => 'fieldset',
-            'legend' => get_string('interest', 'artefact.resume'),
-            'elements' => array(
-                'interest' => array(
-                    'type' => 'wysiwyg',
-                    'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
-                    'cols'  => 100,
-                    'rows'  => 30,
-                    'rules' => array('maxlength' => 65536),
-                ),
-                'save' => array(
-                    'type' => 'submit',
-                    'value' => get_string('save'),
-                ),
-            ),
-            'help' => true,
-        )
-    )
-));
-
-$smarty = smarty();
-$smarty->assign('interestsform', $interestsform);
+$smarty = smarty(array('jquery', 'artefact/resume/js/simpleresumefield.js'));
+$smarty->assign('interestsform', $form);
+$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
 $smarty->display('artefact:resume:interests.tpl');
-
-function interests_submit(Pieform $form, $values) {
-    global $coverletter, $personalinformation, $interest, $USER;
-
-    $userid = $USER->get('id');
-    $errors = array();
-
-    try {
-        if (empty($interest) && !empty($values['interest'])) {
-            $interest = new ArtefactTypeInterest(0, array( 
-                'owner' => $userid, 
-                'description' => $values['interest']
-            ));
-            $interest->commit();
-        }
-        else if (!empty($interest) && !empty($values['interest'])) {
-            $interest->set('description', $values['interest']);
-            $interest->commit();
-        }
-        else if (!empty($interest) && empty($values['interest'])) {
-            $interest->delete();
-        }
-    }
-    catch (Exception $e) {
-        $errors['interest'] = true;
-    }   
-
-    if (empty($errors)) {
-        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
-    }
-    else {
-        $message = '';
-        foreach (array_keys($errors) as $key) {
-            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
-        }
-        $form->json_reply(PIEFORM_ERR, $message);
-    }
-}
