@@ -2366,26 +2366,32 @@ class View {
                     {artefact_access_role} r
                     INNER JOIN {group_member} m ON r.role = m.role
                 WHERE
-                    m."group" = ' . (int)$group . '
-                    AND m.member = ' . $user->get('id') . '
+                    m.group = ?
+                    AND m.member = ?
                     AND r.can_view = 1
             ) ga ON (ga.group = a.group AND a.id = ga.artefact)';
+
             $select = "(a.institution = 'mahara' OR ga.can_view = 1";
+
+            $ph = array((int)$group, $user->get('id'));
+
             if (!empty($data['userartefactsallowed'])) {
-                $select .= ' OR "owner" = ' . $user->get('id');
+                $select .= ' OR a.owner = ?';
+                $ph[] = $user->get('id');
             }
             $select .= ')';
         }
         else if ($institution) {
             // Site artefacts & artefacts owned by this institution
-            $select = "(a.institution = 'mahara' OR a.institution = '$institution')";
+            $select = "(a.institution = 'mahara' OR a.institution = ?)";
+            $ph = array($institution);
         }
         else { // The view is owned by a normal user
             // Get artefacts owned by the user, group-owned artefacts
             // the user has republish permission on, artefacts owned
             // by the user's institutions.
             $from .= '
-            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ' . $user->get('id') . ')
+            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ?)
             LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
             LEFT OUTER JOIN (
                 SELECT
@@ -2394,31 +2400,42 @@ class View {
                     {artefact_access_role} aar
                     INNER JOIN {group_member} m ON aar.role = m.role
                 WHERE
-                    m.member = ' . $user->get('id') . '
+                    m.member = ?
                     AND aar.can_republish = 1
             ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
-            $institutions = array_keys($user->get('institutions'));
+
             $select = '(
-                "owner" = ' . $user->get('id') . '
+                a.owner = ?
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
+
+            $ph = array($user->get('id'), $user->get('id'), $user->get('id'));
+
+            $institutions = array_keys($user->get('institutions'));
+
             if ($user->get('admin')) {
                 $institutions[] = 'mahara';
             }
             else {
                 safe_require('artefact', 'file');
                 $select .= "
-                OR ( a.institution = 'mahara' AND apc.parent = " . (int)ArtefactTypeFolder::admin_public_folder_id() . ')';
+                OR (a.institution = 'mahara' AND apc.parent = ?)";
+                $ph[] = (int) ArtefactTypeFolder::admin_public_folder_id();
             }
+
             if ($institutions) {
-              $select .= '
-                OR a.institution IN (' . join(',', array_map('db_quote', $institutions)) . ')';
+                $select .= '
+                OR a.institution IN (' . join(',', array_fill(0, count($institutions), '?')) . ')';
+                $ph = array_merge($ph, $institutions);
             }
+
             $select .= "
             )";
         }
+
         if (!empty($data['artefacttypes']) && is_array($data['artefacttypes'])) {
-            $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $data['artefacttypes'])) . ')';
+            $select .= ' AND artefacttype IN(' . join(',', array_fill(0, count($data['artefacttypes']), '?')) . ')';
+            $ph = array_merge($ph, $data['artefacttypes']);
         }
 
         if (!empty($data['search'])) {
@@ -2428,11 +2445,12 @@ class View {
 
         $select .= $extraselect;
 
+        $selectph = $countph = $ph;
+
         if ($short) {
             // We just want to know which artefact ids are allowed for inclusion in a view,
             // but get_records_sql_assoc wants > 1 column
             $cols = 'a.id, a.id AS b';
-            $ph = array();
         }
         else {
             $cols = 'a.*';
@@ -2445,24 +2463,23 @@ class View {
 
             if ($group) {
                 $expr = 'ga.can_edit IS NOT NULL AND ga.can_edit = 1';
-                $ph = array();
             }
             else if ($institution) {
                 $expr = 'a.institution = ?';
-                $ph = array($institution);
+                array_unshift($selectph, $institution);
             }
             else {
                 $expr = 'a.owner IS NOT NULL AND a.owner = ?';
-                $ph = array($user->get('id'));
+                array_unshift($selectph, $user->get('id'));
             }
             $type = is_mysql() ? 'UNSIGNED' : 'INTEGER';
             $cols .= ", CAST($expr AS $type) AS editable";
         }
 
         $artefacts = get_records_sql_assoc(
-            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder, $ph, $offset, $limit
+            'SELECT ' . $cols . $from . ' WHERE ' . $select . $sortorder, $selectph, $offset, $limit
         );
-        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select);
+        $totalartefacts = count_records_sql('SELECT COUNT(*) ' . $from . ' WHERE ' . $select, $countph);
 
         return array($artefacts, $totalartefacts);
     }
