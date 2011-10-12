@@ -34,17 +34,21 @@ safe_require('blocktype', 'wall');
 $postid = param_integer('postid');
 $return = param_variable('return');
 
-$wallpost = get_record('blocktype_wall_post', 'id', $postid);
-$instance = new BlockInstance($wallpost->instance);
-$view = new View($instance->get('view'));
-if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $view->get('owner'))) {
+if (!$wallpost = get_record('blocktype_wall_post', 'id', $postid)) {
+    throw new NotFoundException();
+}
+if (!$instance = new BlockInstance($wallpost->instance)) {
+    throw new NotFoundException();
+}
+$owner = $instance->get_view()->get('owner');
+if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $owner)) {
     throw new AccessDeniedException();
 }
 
 $goto = get_config('wwwroot');
 $goto .= ($return == 'wall')
     ? '/blocktype/wall/wall.php?id=' . $instance->get('id')
-    : '/user/view.php?id=' . $view->get('owner');
+    : '/user/view.php?id=' . $owner;
 
 $form = pieform(array(
     'name'     => 'deletepost',
