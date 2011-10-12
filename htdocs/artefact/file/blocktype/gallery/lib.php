@@ -345,6 +345,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
             }
         }
         else {
+            safe_require('artefact', 'file');
             $artefactids = array();
             if (isset($configdata['select']) && $configdata['select'] == 1 && is_array($configdata['artefactids'])) {
                 $artefactids = $configdata['artefactids'];
