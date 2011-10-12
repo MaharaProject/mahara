@@ -98,6 +98,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     $n = new StdClass;
     $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
     $n->users = array($user->id);
+    $n->fromuser = $loggedinid;
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
     $n->strings->urltext = (object) array('key' => 'Requests');

@@ -84,6 +84,13 @@ class PluginNotificationInternal extends PluginNotification {
 
     public static function deleteuser($event, $user) {
         delete_records('notification_internal_activity', 'usr', $user['id']);
+        // Delete system messages from this user where the url points to their
+        // missing profile.  They're mostly friend requests, which are now useless.
+        delete_records_select(
+            'notification_internal_activity',
+            '"from" = ? AND type = (SELECT id FROM {activity_type} WHERE name = ?) AND url = ?',
+            array($user['id'], 'maharamessage', get_config('wwwroot') . 'user/view.php?id=' . $user['id'])
+        );
     }
 
     /**
