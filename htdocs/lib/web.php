@@ -1017,11 +1017,11 @@ function param_integer($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (preg_match('/^\d+$/',$value)) {
         return (int)$value;
@@ -1050,11 +1050,11 @@ function param_signed_integer($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (preg_match('/^[+-]?[0-9]+$/', $value)) {
         return (int)$value;
@@ -1085,11 +1085,12 @@ function param_alpha($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
 
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (preg_match('/^[a-zA-Z]+$/',$value)) {
         return $value;
@@ -1117,11 +1118,11 @@ function param_alphanum($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (preg_match('/^[a-zA-Z0-9]+$/',$value)) {
         return $value;
@@ -1149,11 +1150,11 @@ function param_alphanumext($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (preg_match('/^[a-zA-Z0-9_.-]+$/',$value)) {
         return $value;
@@ -1182,11 +1183,11 @@ function param_integer_list($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if ($value == '') {
         return array();
@@ -1211,7 +1212,9 @@ function param_boolean($name) {
     
     list ($value) = _param_retrieve($name, false);
 
-    $value = trim($value);
+    if (!is_null($value)) {
+        $value = trim($value);
+    }
 
     if (empty($value) || $value == 'off' || $value == 'no' || $value == 'false') {
         return false;
@@ -1236,11 +1239,11 @@ function param_imagesize($name) {
 
     list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
 
-    $value = trim($value);
-
     if ($defaultused) {
         return $value;
     }
+
+    $value = trim($value);
 
     if (!preg_match('/\d+x\d+/', $value)) {
         throw new ParameterException('Invalid size for image specified');
