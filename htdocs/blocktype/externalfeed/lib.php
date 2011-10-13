@@ -68,8 +68,10 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $data->image   = unserialize($data->image);
 
             // only keep the number of entries the user asked for
-            $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
-            $data->content = $chunks[0];
+            if (count($data->content)) {
+                $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
+                $data->content = $chunks[0];
+            }
 
             // Attempt to fix relative URLs in the feeds
             if (!empty($data->image['link'])) {
