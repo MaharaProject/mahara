@@ -2363,8 +2363,9 @@ class View {
                 SELECT
                     r.artefact, r.can_view, r.can_edit, m.group
                 FROM
-                    {artefact_access_role} r
-                    INNER JOIN {group_member} m ON r.role = m.role
+                    {group_member} m
+                    JOIN {artefact} aa ON aa.group = m.group
+                    JOIN {artefact_access_role} r ON aa.id = r.artefact AND r.role = m.role
                 WHERE
                     m.group = ?
                     AND m.member = ?
@@ -2393,25 +2394,20 @@ class View {
             safe_require('artefact', 'file');
 
             $from .= "
-            LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ?)
-            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact AND a.institution = 'mahara' AND apc.parent = ?)
-            LEFT OUTER JOIN (
-                SELECT
-                    aar.artefact, aar.can_republish, m.group
-                FROM
-                    {artefact_access_role} aar
-                    INNER JOIN {group_member} m ON aar.role = m.role
-                WHERE
-                    m.member = ?
-                    AND aar.can_republish = 1
-            ) ra ON (a.id = ra.artefact AND a.group = ra.group)";
+            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact AND a.institution = 'mahara' AND apc.parent = ?)";
 
             $select = '(
                 a.owner = ?
-                OR ra.can_republish = 1
-                OR aau.can_republish = 1';
+                OR a.id IN (
+                    SELECT aar.artefact
+                    FROM {group_member} m
+                        JOIN {artefact} aa ON m.group = aa.group
+                        JOIN {artefact_access_role} aar ON aar.role = m.role AND aar.artefact = aa.id
+                    WHERE m.member = ? AND aar.can_republish = 1
+                )
+                OR a.id IN (SELECT artefact FROM {artefact_access_usr} WHERE usr = ? AND can_republish = 1)';
 
-            $ph = array($user->get('id'), (int) ArtefactTypeFolder::admin_public_folder_id(), $user->get('id'), $user->get('id'));
+            $ph = array((int) ArtefactTypeFolder::admin_public_folder_id(), $user->get('id'), $user->get('id'), $user->get('id'));
 
             $institutions = array_keys($user->get('institutions'));
 
