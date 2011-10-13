@@ -2390,9 +2390,11 @@ class View {
             // Get artefacts owned by the user, group-owned artefacts
             // the user has republish permission on, artefacts owned
             // by the user's institutions.
-            $from .= '
+            safe_require('artefact', 'file');
+
+            $from .= "
             LEFT OUTER JOIN {artefact_access_usr} aau ON (a.id = aau.artefact AND aau.usr = ?)
-            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact)
+            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact AND a.institution = 'mahara' AND apc.parent = ?)
             LEFT OUTER JOIN (
                 SELECT
                     aar.artefact, aar.can_republish, m.group
@@ -2402,14 +2404,14 @@ class View {
                 WHERE
                     m.member = ?
                     AND aar.can_republish = 1
-            ) ra ON (a.id = ra.artefact AND a.group = ra.group)';
+            ) ra ON (a.id = ra.artefact AND a.group = ra.group)";
 
             $select = '(
                 a.owner = ?
                 OR ra.can_republish = 1
                 OR aau.can_republish = 1';
 
-            $ph = array($user->get('id'), $user->get('id'), $user->get('id'));
+            $ph = array($user->get('id'), (int) ArtefactTypeFolder::admin_public_folder_id(), $user->get('id'), $user->get('id'));
 
             $institutions = array_keys($user->get('institutions'));
 
@@ -2417,10 +2419,8 @@ class View {
                 $institutions[] = 'mahara';
             }
             else {
-                safe_require('artefact', 'file');
                 $select .= "
-                OR (a.institution = 'mahara' AND apc.parent = ?)";
-                $ph[] = (int) ArtefactTypeFolder::admin_public_folder_id();
+                OR (apc.parent IS NOT NULL)";
             }
 
             if ($institutions) {
