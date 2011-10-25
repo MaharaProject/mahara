@@ -576,7 +576,6 @@ class BlockInstance {
      */
     public function render_editing($configure=false, $new=false, $jsreply=false) {
         safe_require('blocktype', $this->get('blocktype'));
-        $js = '';
         $movecontrols = array();
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
@@ -594,6 +593,8 @@ class BlockInstance {
         else {
             try {
                 $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
+                $jsfiles = call_static_method($blocktypeclass, 'get_instance_javascript', $this);
+                $js = $this->get_get_javascript_javascript($jsfiles);
             }
             catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug 
@@ -605,6 +606,7 @@ class BlockInstance {
                     . 'Original error follows:');
                 log_debug($e->getMessage());
                 $content = '';
+                $js = '';
             }
 
             if (!defined('JSON') && !$jsreply) {

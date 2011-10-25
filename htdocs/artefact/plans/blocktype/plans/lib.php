@@ -54,6 +54,16 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return '';
     }
 
+    public static function get_instance_javascript(BlockInstance $bi) {
+        $blockid = $bi->get('id');
+        return array(
+            array(
+                'file'   => 'js/plansblock.js',
+                'initjs' => "rewriteTaskTitles($blockid);",
+            )
+        );
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $exporter;
 
@@ -100,6 +110,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance) {
+        $instance->set('artefactplugin', 'plans');
         $configdata = $instance->get('configdata');
 
         $form = array();
