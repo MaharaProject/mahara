@@ -1269,7 +1269,7 @@ class BlockInstance {
      */
     public function get_get_javascript_javascript($jsfiles) {
         foreach ($jsfiles as &$jsfile) {
-            if (strpos($jsfile, 'http://') === false) {
+            if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
                 if ($this->artefactplugin) {
                     $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
                         $this->blocktype . '/' . $jsfile;
