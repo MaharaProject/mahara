@@ -99,7 +99,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     );
     $mygroups = array();
     foreach (group_get_user_groups($USER->get('id')) as $g) {
-        $mygroups[] = array(
+        $group = array(
             'type' => 'group',
             'id'   => $g->id,
             'start' => null,
@@ -108,8 +108,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'preset' => false
         );
         if (mb_strlen($g->name) > 30) {
-            $mygroups[key($mygroups)]['shortname'] = str_shorten_text($g->name, 30, true);
+            $group['shortname'] = str_shorten_text($g->name, 30, true);
         }
+        $mygroups[] = $group;
     }
     
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
