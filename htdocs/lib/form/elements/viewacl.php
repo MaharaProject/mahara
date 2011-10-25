@@ -120,7 +120,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     );
     $mygroups = array();
     foreach (group_get_user_groups($USER->get('id')) as $g) {
-        $mygroups[] = array(
+        $group = array(
             'type' => 'group',
             'id'   => $g->id,
             'start' => null,
@@ -129,13 +129,14 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'preset' => false
         );
         if (mb_strlen($g->name) > 30) {
-            $mygroups[key($mygroups)]['shortname'] = str_shorten_text($g->name, 30, true);
+            $group['shortname'] = str_shorten_text($g->name, 30, true);
         }
+        $mygroups[] = $group;
     }
     
     $faves = array();
     foreach (get_user_favorites($USER->get('id')) as $u) {
-        $faves[] = array(
+        $fave = array(
             'type'   => 'user',
             'id'     => $u->id,
             'start'  => null,
@@ -144,8 +145,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'preset' => false
         );
         if (mb_strlen($u->name) > 30) {
-            $faves[key($faves)]['shortname'] = str_shorten_text($u->name, 30, true);
+            $fave['shortname'] = str_shorten_text($u->name, 30, true);
         }
+        $faves[] = $fave;
     }
 
     $smarty->assign('viewtype', $element['viewtype']);
