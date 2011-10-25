@@ -93,6 +93,12 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     /**
+     * Inline js to be executed when a block is rendered.
+     */
+    public static function get_instance_inline_javascript(BlockInstance $instance) {
+    }
+
+    /**
      * If this blocktype contains artefacts, and uses the artefactchooser 
      * Pieform element to choose them, this method must return the definition 
      * for the element.
@@ -606,7 +612,6 @@ class BlockInstance {
      */
     public function render_editing($configure=false, $new=false, $jsreply=false) {
         safe_require('blocktype', $this->get('blocktype'));
-        $js = '';
         $movecontrols = array();
 
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
@@ -624,6 +629,9 @@ class BlockInstance {
         else {
             try {
                 $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
+                $jsfiles = call_static_method($blocktypeclass, 'get_instance_javascript', $this);
+                $inlinejs = call_static_method($blocktypeclass, 'get_instance_inline_javascript', $this);
+                $js = $this->get_get_javascript_javascript($jsfiles) . $inlinejs;
             }
             catch (NotFoundException $e) {
                 // Whoops - where did the image go? There is possibly a bug 
@@ -635,6 +643,7 @@ class BlockInstance {
                     . 'Original error follows:');
                 log_debug($e->getMessage());
                 $content = '';
+                $js = '';
             }
 
             if (!defined('JSON') && !$jsreply) {

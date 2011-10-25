@@ -54,6 +54,14 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return '';
     }
 
+    public static function get_instance_javascript(BlockInstance $bi) {
+        return array('js/plansblock.js');
+    }
+
+    public static function get_instance_inline_javascript(BlockInstance $bi) {
+        return 'rewriteTaskTitles(' . $bi->get('id') . ');';
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $exporter;
 
