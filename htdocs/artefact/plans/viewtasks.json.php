@@ -46,8 +46,10 @@ if ($blockid = param_integer('block', null)) {
     $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid'], $offset, $limit);
 
     $template = 'artefact:plans:taskrows.tpl';
+    $baseurl = $bi->get_view()->get_url();
+    $baseurl .= ((false === strpos($baseurl, '?')) ? '?' : '&') . 'block=' . $blockid;
     $pagination = array(
-        'baseurl'   => $bi->get_view()->get_url() . '&block=' . $blockid,
+        'baseurl'   => $baseurl,
         'id'        => 'block' . $blockid . '_pagination',
         'datatable' => 'tasktable_' . $blockid,
         'jsonscript' => 'artefact/plans/viewtasks.json.php',
