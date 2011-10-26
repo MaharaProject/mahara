@@ -67,7 +67,7 @@ else {
     $pagination = array(
         'baseurl' => $baseurl,
         'id' => 'task_pagination',
-        'datatable' => 'tasklist',
+        'datatable' => 'tasktable',
         'jsonscript' => 'artefact/plans/viewtasks.json.php',
     );
 
