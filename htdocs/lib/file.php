@@ -460,6 +460,7 @@ function is_image_file($path) {
  *                if an appropriate file could not be located or generated
  */
 function get_dataroot_image_path($path, $id, $size=null) {
+    global $THEME;
     $dataroot = get_config('dataroot');
     $imagepath = $dataroot . $path;
     if (substr($imagepath, -1) == '/') {
@@ -507,6 +508,24 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
             $imageinfo = getimagesize($originalimage);
             $originalmimetype = $imageinfo['mime'];
+
+            // gd can eat a lot of memory shrinking large images, so use a placeholder image
+            // here if necessary
+            if (isset($imageinfo[0]) && isset($imageinfo[1]) && isset($imageinfo['bits'])) {
+                $approxmem = $imageinfo[0] * $imageinfo[1] * ($imageinfo['bits'] / 8)
+                    * (isset($imageinfo['channels']) ? $imageinfo['channels'] : 3);
+            }
+            if (empty($approxmem) || $approxmem > get_config('maximageresizememory')) {
+                log_debug("Refusing to resize large image $originalimage $originalmimetype "
+                    . $imageinfo[0] . 'x' .  $imageinfo[1] . ' ' . $imageinfo['bits'] . '-bit');
+                $originalimage = $THEME->get_path('images/no_thumbnail.png');
+                if (empty($originalimage) || !is_readable($originalimage)) {
+                    return false;
+                }
+                $imageinfo = getimagesize($originalimage);
+                $originalmimetype = $imageinfo['mime'];
+            }
+
             $format = 'png';
             switch ($originalmimetype) {
                 case 'image/jpeg':
