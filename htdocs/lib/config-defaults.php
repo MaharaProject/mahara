@@ -188,6 +188,8 @@ $cfg->bounceprefix    = 'AAA-';
 // NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
 $cfg->imagemaxwidth = 1024;
 $cfg->imagemaxheight = 1024;
+// Maximum allowed memory usage for thumbnail generation (approximate)
+$cfg->maximageresizememory = 104857600;
 
 // paths and arguments for various system commands
 $cfg->pathtounzip = '/usr/bin/unzip';
