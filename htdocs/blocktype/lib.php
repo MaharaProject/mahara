@@ -900,7 +900,7 @@ class BlockInstance {
 
         $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
         if (is_array($configjs)) {
-            $js = $this->get_get_javascript_javascript($configjs);
+            $js .= $this->get_get_javascript_javascript($configjs);
         }
         else if (is_string($configjs)) {
             $js .= $configjs;
