@@ -79,8 +79,10 @@ class PluginBlocktypePlans extends PluginBlocktype {
                 $pagination = false;
             }
             else {
+                $baseurl = $instance->get_view()->get_url();
+                $baseurl .= ((false === strpos($baseurl, '?')) ? '?' : '&') . 'block=' . $blockid;
                 $pagination = array(
-                    'baseurl'   => $instance->get_view()->get_url() . '&block=' . $blockid,
+                    'baseurl'   => $baseurl,
                     'id'        => 'block' . $blockid . '_pagination',
                     'datatable' => 'tasktable_' . $blockid,
                     'jsonscript' => 'artefact/plans/viewtasks.json.php',
