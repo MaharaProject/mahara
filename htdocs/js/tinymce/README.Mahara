@@ -9,3 +9,5 @@ Changes:
  * Additional files in the eu and zh language packs
  * Removed unused media plugin to fix Debian bug #591200
  * Removed the standard spellchecker plugin and replace with the php spellchecker plugin
+ * Edited spellchecker config.php to check if a path for aspell is set
+ * Renamed error function in plugins/spellchecker/includes/general.php to mceError

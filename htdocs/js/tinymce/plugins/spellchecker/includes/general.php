@@ -74,7 +74,7 @@ function info($msg) {
 	$log->info(implode(', ', $args));
 }
 
-function error($msg) {
+function mceError($msg) {
 	$args = func_get_args();
 
 	$log = getLogger();

@@ -197,6 +197,7 @@ $cfg->maximageresizememory = 104857600;
 $cfg->pathtogzip = '/bin/gzip';
 $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->pathtozip   = '/usr/bin/zip';
+$cfg->pathtoaspell = '/usr/bin/aspell';
 $cfg->ziprecursearg = '-r';
 $cfg->unzipdirarg = '-d';
 $cfg->unziplistarg = '-l';
