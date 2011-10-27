@@ -1647,6 +1647,10 @@ function reset_password($user, $resetpasswordchange=true) {
     }
 }
 
+function user_login_tries_to_zero() {
+    execute_sql('UPDATE {usr} SET logintries = 0 WHERE logintries > 0');
+}
+
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {

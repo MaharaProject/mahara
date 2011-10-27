@@ -26,6 +26,7 @@
  */
 
 defined('INTERNAL') || die();
+define('MAXLOGINTRIES', 5);
 $put = array();
 
 
@@ -1124,6 +1125,12 @@ class LiveUser extends User {
             throw new AuthUnknownUserException("\"$username\" is not known");
         }
 
+        if (isset($user->logintries) && $user->logintries >= MAXLOGINTRIES) {
+           global $SESSION;
+           $SESSION->add_error_msg(get_string('toomanytries', 'auth'));
+           return false;
+        }
+
         $siteclosedforupgrade = get_config('siteclosed');
         if ($siteclosedforupgrade && get_config('disablelogin')) {
             global $SESSION;
@@ -1181,6 +1188,16 @@ class LiveUser extends User {
         if ($auth->authloginmsg != '') {
             global $SESSION;
             $SESSION->add_info_msg(clean_html($auth->authloginmsg), false);
+        }
+
+        if (empty($user->logintries)) {
+            $user->logintries = 0;
+        }
+
+        if ($user->logintries < MAXLOGINTRIES) {
+            $record =get_record('usr', 'id', $user->id, null, null, null, null, 'id, logintries');
+            $record->logintries = ($user->logintries + 1);
+            update_record('usr', $record, false);
         }
 
         return false;
