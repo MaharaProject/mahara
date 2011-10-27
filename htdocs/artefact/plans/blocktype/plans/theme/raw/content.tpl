@@ -14,14 +14,14 @@
     </tbody>
 </table>
 {if $tasks.pagination}
-<div id="plans_page_container">{$tasks.pagination|safe}</div>
+<div id="plans_page_container_{$blockid}" class="hidden">{$tasks.pagination|safe}</div>
 {/if}
 {if $tasks.pagination_js}
 <script>
 {literal}
 addLoadEvent(function() {{/literal}
     {$tasks.pagination_js|safe}
-    removeElementClass('plans_page_container', 'hidden');
+    removeElementClass('plans_page_container_{$blockid}', 'hidden');
 {literal}}{/literal});
 
 var taskPager_{$blockid} = new TaskPager({$blockid});

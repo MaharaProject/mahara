@@ -1266,23 +1266,38 @@ class BlockInstance {
 
     /**
      * Returns javascript to grab & eval javascript from files on the web
+     *
+     * @param array $jsfiles Each element of $jsfiles is either a url, a local filename,
+     *                       or an array of the form
+     *                       array(
+     *                           'file'   => string   // url or local js filename
+     *                           'initjs' => string   // js to be executed once the file's
+     *                                                // contents have been loaded
+     *                       )
+     *
+     * @return string
      */
     public function get_get_javascript_javascript($jsfiles) {
-        foreach ($jsfiles as &$jsfile) {
-            if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
+        $js = '';
+        foreach ($jsfiles as $jsfile) {
+
+            $file = (is_array($jsfile) && isset($jsfile['file'])) ? $jsfile['file'] : $jsfile;
+
+            if (stripos($file, 'http://') === false && stripos($file, 'https://') === false) {
+                $file = 'blocktype/' . $this->blocktype . '/' . $file;
                 if ($this->artefactplugin) {
-                    $jsfile = 'artefact/' . $this->artefactplugin . '/blocktype/' .
-                        $this->blocktype . '/' . $jsfile;
+                    $file = 'artefact/' . $this->artefactplugin . '/' . $file;
                 }
-                else {
-                    $jsfile = 'blocktype/' . $this->blocktype . '/' . $jsfile;
-                }
-                $jsfile = '$j.getScript("' . get_config('wwwroot') . $jsfile . '");';
+                $file = get_config('wwwroot') . $file;
             }
-            else {
-                $jsfile = '$j.getScript("' . $jsfile . '");';
+
+            $js .= '$j.getScript("' . $file . '"';
+            if (is_array($jsfile) && !empty($jsfile['initjs'])) {
+                // Pass success callback to getScript
+                $js .= ', function(data) {' . $jsfile['initjs'] . '}';
             }
+            $js .= ");\n";
         }
-        return implode('', $jsfiles);
+        return $js;
     }
 }
