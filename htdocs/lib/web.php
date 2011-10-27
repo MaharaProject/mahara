@@ -3298,3 +3298,24 @@ function language_select_form() {
     }
     return $languageform;
 }
+
+/**
+ * Sanitises URIs provided before displaying them to the world, as well as checking they are of
+ * appropriate protocols and complete.
+ *
+ *  @return string    Either an empty string if supplied URI fails tests, or the supplied URI verbatim
+ */
+function sanitize_url($url) {
+
+    $parsedurl = parse_url($url);
+    if (!isset($parsedurl['scheme'])) {
+        return '';
+    }
+    if (!in_array($parsedurl['scheme'], array('https', 'http', 'ftp'))) {
+        return '';
+    }
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return '';
+    }
+    return $url;
+}

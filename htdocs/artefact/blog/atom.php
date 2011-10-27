@@ -112,7 +112,7 @@ else {
 
     $author = array(
         'name' => implode(' ', array($owner[0]->firstname, $owner[0]->lastname)),
-        'uri' => $personal_site,
+        'uri' => sanitize_url($personal_site),
     );
     $link = get_config('wwwroot') . 'view/artefact.php?artefact=' .
         $artefactid . '&view=' . $viewid;
