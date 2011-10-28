@@ -588,6 +588,107 @@ function get_views_for_user($username, $query=null) {
     return $data;
 }
 
+function get_groups_for_user($username) {
+    global $REMOTEWWWROOT, $USER;
+
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        return false;
+    }
+
+    require_once('group.php');
+    $USER->reanimate($user->id, $authinstance->instanceid);
+    $groupdata = group_get_associated_groups($USER->get('id'), 'all', null, null);
+    $data = new stdclass();
+    $data->data = array();
+    $data->count = $groupdata['count'];
+    $data->displayname = display_name($user);
+    if ($data->count) {
+        foreach ($groupdata['groups'] as $g) {
+            $record = array();
+            $record['id'] = $g->id;
+            $record['name'] = $g->name;
+            $record['description'] = $g->description;
+            $record['public'] = $g->public;
+            $record['jointype'] = $g->jointype;
+            $record['grouptype'] = $g->grouptype;
+            $record['membershiptype'] = $g->membershiptype;
+            $record['role'] = $g->role;
+            $record['url'] = '/group/view.php?id=' . $g->id;
+            $record['fullurl'] = get_config('wwwroot') . 'group/view.php?id=' . $g->id;
+            $data->data[] = $record;
+        }
+    }
+    return $data;
+}
+
+function get_notifications_for_user($username, $notificationtypes, $maxitems) {
+    global $REMOTEWWWROOT, $USER;
+
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        return false;
+    }
+
+    $USER->reanimate($user->id, $authinstance->instanceid);
+
+    $sql = "SELECT n.id, n.subject, n.message, n.url, n.urltext, n.read, t.name AS type
+              FROM {notification_internal_activity} n JOIN {activity_type} t ON n.type = t.id
+             WHERE n.usr = ? AND t.name IN (" . join(',', array_fill(0, count($notificationtypes), '?')) . ")
+          ORDER BY n.ctime DESC
+             LIMIT ?";
+
+    $params = array($USER->get('id'));
+    $params = array_merge($params, $notificationtypes);
+    $params[] = $maxitems;
+    $records = get_records_sql_array($sql, $params);
+
+    $data = new stdclass;
+    $data->data = $records;
+    $data->count = count($records);
+    $data->displayname = display_name($user);
+    return $data;
+}
+
+function get_watchlist_for_user($username, $maxitems) {
+
+    global $REMOTEWWWROOT, $USER;
+
+    list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
+    if (!$user) {
+        return false;
+    }
+
+    $USER->reanimate($user->id, $authinstance->instanceid);
+
+    $sql = 'SELECT v.title AS viewtitle, v.id AS viewid, g.name AS groupname, u.*
+              FROM {view} v
+              JOIN {usr_watchlist_view} wv ON wv.view = v.id
+         LEFT JOIN {usr} u ON u.id = v.owner
+         LEFT JOIN {group} g ON g.id = v.group
+             WHERE wv.usr = ?
+          ORDER BY v.title
+             LIMIT ?';
+
+    $records = get_records_sql_array($sql, array($USER->get('id'), $maxitems));
+
+    $data = new stdclass;
+    $data->data = array();
+    $data->count = count($records);
+    $data->displayname = display_name($user);
+    foreach ($records as $r) {
+        $v = array();
+        $v['id'] = $r->viewid;
+        $v['title'] = $r->viewtitle;
+        $v['group'] = $r->groupname;
+        $v['author'] = $r->id ? display_name($r) : '';
+        $v['url'] = '/view/view.php?id=' . $r->viewid;
+        $v['fullurl'] = get_config('wwwroot') . 'view/view.php?id=' . $r->viewid;
+        $data->data[] = $v;
+    }
+    return $data;
+}
+
 function submit_view_for_assessment($username, $viewid) {
     global $REMOTEWWWROOT;
 
