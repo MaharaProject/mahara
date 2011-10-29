@@ -44,6 +44,7 @@ if ($blockid = param_integer('block', null)) {
     $configdata = $bi->get('configdata');
     $limit  = isset($configdata['count']) ? $configdata['count'] : 5;
     $configdata['countcomments'] = true;
+    $configdata['viewid'] = $bi->get('view');
     $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
     $pagination = array(
@@ -52,7 +53,6 @@ if ($blockid = param_integer('block', null)) {
         'datatable' => 'postlist_' . $blockid,
         'jsonscript' => 'artefact/blog/posts.json.php',
     );
-    $configdata['viewid'] = $bi->get('view');
     ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
 }
 else {
