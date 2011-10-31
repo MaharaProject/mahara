@@ -3078,3 +3078,18 @@ function mahara_http_request($config) {
 
     return $result;
 }
+
+function sanitize_url($url) {
+
+    $parsedurl = parse_url($url);
+    if (!isset($parsedurl['scheme'])) {
+        return '';
+    }
+    if (in_array($parsedurl['scheme'], array('https', 'http', 'ftp')) === false) {
+        return '';
+    }
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return '';
+    }
+    return $url;
+}
