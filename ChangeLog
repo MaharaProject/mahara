@@ -1,3 +1,16 @@
+1.4.1 (2011-11-01)
+- XSS in unvalidated URI attributes (CVE-2011-2771)
+- Information disclosure exposing private messages (CVE-2011-2774)
+- DoS via invalid or excessively large images (CVE-2011-2773)
+- CSRF to trick admins into adding a user to an institution (CVE-2011-2773)
+- Fix broken links on export page
+- Fix problems with blog, plan and comment pagination, and comment deletion
+- Fix embedding issues with google docs and multimedia content
+- Fix issues preventing tinymce and pieforms javascript loading for text areas
+- Fix fatal errors for collections and image galleries
+- Fix issues with settings for search plugin and mail preferences
+- Ensure that bulk imported users are forced to change passwords
+
 1.4.0 (2011-06-14)
 - new Google Apps and Image Gallery blocks
 - star ratings with comments
