@@ -64,6 +64,11 @@ function generate_token() {
 function start_jump_session($peer, $instanceid, $wantsurl="") {
     global $USER;
 
+    if ($USER->get('parentuser')) {
+        // Prevent masquerading users from jumping
+        throw new AccessTotallyDeniedException(get_string('cannotjumpasmasqueradeduser', 'auth'));
+    }
+
     $rpc_negotiation_timeout = 15;
     $providers = get_service_providers($USER->authinstance);
 
