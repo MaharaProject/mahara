@@ -1400,7 +1400,7 @@ class LiveUser extends User {
 
         $olduser = new StdClass;
         $olduser->id = $this->get('id');
-        $olduser->name = $this->firstname . ' ' . $this->lastname;
+        $olduser->name = display_name($this, null, true);
 
         $this->reloadLiveUser($userid);
 
