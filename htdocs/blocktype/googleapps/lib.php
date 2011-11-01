@@ -51,7 +51,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
         $apps = self::make_apps_url($configdata['appsid']);
         $url    = hsc($apps['url']);
         $type   = hsc($apps['type']);
-        $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : self::$default_height;
+        $height = (!empty($configdata['height'])) ? intval($configdata['height']) : self::$default_height;
 
         if (isset($configdata['appsid'])) {
             $smarty = smarty_core();
