@@ -1,3 +1,11 @@
+1.3.7 (2011-11-01)
+- XSS in unvalidated URI attributes (CVE-2011-2771)
+- Information disclosure exposing private messages (CVE-2011-2774)
+- DoS via invalid or excessively large images (CVE-2011-2773)
+- CSRF to trick admins into adding a user to an institution (CVE-2011-2773)
+- Fix for cron not running
+- Fix broken links on export page
+
 1.3.6 (2011-05-10)
 - Privilege escalations (CVE-2011-1402)
 - Fixes to session key validation (CVE-2011-1403)
