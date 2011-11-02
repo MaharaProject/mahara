@@ -976,6 +976,13 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
 
     }
 
+    $externallogin = get_config('externallogin');
+    if ($externallogin) {
+        $externallogin = preg_replace('/{shorturlencoded}/', urlencode(get_relative_script_path()), $externallogin);
+        $externallogin = preg_replace('/{wwwroot}/', get_config('wwwroot'), $externallogin);
+        redirect($externallogin);
+    }
+
     if ($message) {
         $SESSION->add_info_msg($message);
     }
