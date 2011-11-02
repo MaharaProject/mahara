@@ -381,7 +381,9 @@ class AuthXmlrpc extends Auth {
         // the session object.
         $SESSION->set('mnetuser', $user->id);
         $SESSION->set('authinstance', $this->instanceid);
-        $SESSION->set('mnetuserfrom', $_SERVER['HTTP_REFERER']);
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $SESSION->set('mnetuserfrom', $_SERVER['HTTP_REFERER']);
+        }
 
         if ($update && isset($locked)) {
             $SESSION->set('lockedfields', $locked);
