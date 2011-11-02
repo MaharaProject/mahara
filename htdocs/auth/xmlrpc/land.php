@@ -114,6 +114,7 @@ if ($res == true) {
     if ($remoteurl) {
         redirect($remotewwwroot . $wantsurl);
     }
+    $wantsurl = ltrim($wantsurl, '/');  // wwwroot ends with / so don't bother having extra slashes
     redirect(get_config('wwwroot') . $wantsurl);
     // Redirect exits
 }
