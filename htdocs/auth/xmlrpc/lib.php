@@ -527,6 +527,8 @@ class AuthXmlrpc extends Auth {
     public function logout() {
         global $USER, $SESSION;
 
+        $sessionlogouttime = $USER->get('logout_time');
+
         if (get_config('usersuniquebyusername')) {
             // The auth_remote_user will have a row for the institution in 
             // which the user SSOed into first. However, they could have 
@@ -556,12 +558,14 @@ class AuthXmlrpc extends Auth {
         }
         elseif (!$this->parent) {
             $this->kill_parent($remoteusername);
-            // Redirect back to their IDP if they don't have a parent auth method set 
-            // (aka: they can't log in at Mahara's log in form)
-            $peer = get_peer($this->wwwroot);
-            // TODO: This should be stored in the application config table
-            $jumpurl = str_replace('land', 'jump', $peer->application->ssolandurl);
-            redirect($this->wwwroot . $jumpurl . '?hostwwwroot=' . dropslash(get_config('wwwroot')) . '&wantsurl=' . urlencode($_SERVER['REQUEST_URI']));
+            if ($sessionlogouttime == 0 || $sessionlogouttime > time()) {
+                // Redirect back to their IDP if they don't have a parent auth method set
+                // (aka: they can't log in at Mahara's log in form)
+                $peer = get_peer($this->wwwroot);
+                // TODO: This should be stored in the application config table
+                $jumpurl = str_replace('land', 'jump', $peer->application->ssolandurl);
+                redirect($this->wwwroot . $jumpurl . '?hostwwwroot=' . dropslash(get_config('wwwroot')) . '&wantsurl=' . urlencode($_SERVER['REQUEST_URI']));
+            }
         }
 
         // Anything else is a session timeout
