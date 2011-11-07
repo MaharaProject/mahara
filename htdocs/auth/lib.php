@@ -2150,6 +2150,10 @@ function auth_register_submit(Pieform $form, $values) {
         $values['expiry'] = db_format_timestamp(time() + 86400);
     }
 
+    if (function_exists('local_register_submit')) {
+        local_register_submit($values);
+    }
+
     try {
         if (!record_exists('usr_registration', 'email', $values['email'])) {
             insert_record('usr_registration', $values);
