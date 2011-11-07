@@ -1647,16 +1647,13 @@ function group_param_userid($userid) {
 function group_current_group() {
     static $group;
 
-    // This function sometimes gets called by the smarty function
-    // during the execution of a GroupNotFound exception.  This
-    // variable prevents a 2nd exception from being thrown.  Perhaps
-    // better achieved with a global in the exception handler?
-    static $dying;
+    if (isset($group)) {
+        return $group;
+    }
 
-    if (defined('GROUP') && !$dying) {
+    if (defined('GROUP')) {
         $group = get_record_select('group', 'id = ? AND deleted = 0', array(GROUP), '*, ' . db_format_tsfield('ctime'));
         if (!$group) {
-            $dying = 1;
             throw new GroupNotFoundException(get_string('groupnotfound', 'group', GROUP));
         }
     }

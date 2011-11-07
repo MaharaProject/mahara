@@ -436,11 +436,12 @@ EOF;
     }
     if (defined('GROUP')) {
         require_once('group.php');
-        $group = group_current_group();
-        $smarty->assign('GROUP', $group);
-        if (!defined('NOGROUPMENU')) {
-            $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
-            $smarty->assign('PAGEHEADING', $group->name);
+        if ($group = group_current_group()) {
+            $smarty->assign('GROUP', $group);
+            if (!defined('NOGROUPMENU')) {
+                $smarty->assign('SUBPAGENAV', group_get_menu_tabs());
+                $smarty->assign('PAGEHEADING', $group->name);
+            }
         }
     }
 
