@@ -30,6 +30,11 @@ td a.btn-add{
 	margin-left:10px;
 	margin-right:10px;
 }
+
+td a.btn {
+    white-space: nowrap;
+}
+
 /* Post list */
 #postlist th {
 	border-bottom: 1px dotted #d1d1d1;
