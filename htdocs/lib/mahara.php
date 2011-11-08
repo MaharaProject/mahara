@@ -877,11 +877,11 @@ function get_config_plugin($plugintype, $pluginname, $key) {
         return $value;
     }
 
-    $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field', 'field, value');
+    $records = get_records_array($plugintype . '_config');
     if (!empty($records)) {
         foreach($records as $record) {
-            $CFG->plugin->{$plugintype}->{$pluginname}->{$record->field} = $record->value;
-            if ($record->field == $key) {
+            $CFG->plugin->{$plugintype}->{$record->plugin}->{$record->field} = $record->value;
+            if ($record->field == $key && $record->plugin == $pluginname) {
                 $value = $record->value;
             }
         }
