@@ -873,9 +873,11 @@ function get_config_plugin($plugintype, $pluginname, $key) {
 
     // Suppress NOTICE with @ in case $key is not yet cached
     @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
-    if (isset($value)) {
+    if (isset($CFG->plugin->{$plugintype})) {
         return $value;
     }
+
+    $CFG->plugin->{$plugintype} = new StdClass;
 
     $records = get_records_array($plugintype . '_config');
     if (!empty($records)) {
