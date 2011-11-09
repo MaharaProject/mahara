@@ -3320,3 +3320,16 @@ function sanitize_url($url) {
     }
     return $url;
 }
+
+/**
+ * Sanitises header text per rfc5322
+ *
+ *  @return string    A string with undesired characters filtered out
+ */
+function clean_email_headers($headertext) {
+
+    $decoloned = str_replace(':', '', $headertext);
+    $filtered = filter_var($decoloned, FILTER_SANITIZE_STRING, array(FILTER_FLAG_STRIP_LOW, FILTER_FLAG_STRIP_HIGH));
+    return substr($filtered, 0, 100);
+
+}
