@@ -65,6 +65,8 @@ class Client {
             CURLOPT_USERAGENT      => 'Mahara',
             CURLOPT_POSTFIELDS     => $this->encryptedrequest,
             CURLOPT_HTTPHEADER     => array("Content-Type: text/xml charset=UTF-8", 'Expect: '),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         );
         $result = mahara_http_request($config);
 
