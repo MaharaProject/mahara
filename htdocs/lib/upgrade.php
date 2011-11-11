@@ -1178,6 +1178,11 @@ function site_warnings() {
         $warnings[] = get_string('timezoneidentifierunusable', 'error');
     }
 
+    // Check for low security (i.e. not random enough) session IDs
+    if ((int)ini_get('session.entropy_length') < 16) {
+        $warnings[] = get_string('notenoughsessionentropy', 'error');
+    }
+
     // Check file upload settings.
     $postmax       = ini_get('post_max_size');
     $uploadmax     = ini_get('upload_max_filesize');
