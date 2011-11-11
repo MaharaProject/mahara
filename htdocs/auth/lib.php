@@ -1225,13 +1225,13 @@ function login_submit(Pieform $form, $values) {
                 // We have the data - create the user
                 $USER->lastlogin = db_format_timestamp(time());
                 if (isset($userdata->firstname)) {
-                    $USER->firstname = $userdata->firstname;
+                    $USER->firstname = sanitize_firstname($userdata->firstname);
                 }
                 if (isset($userdata->lastname)) {
-                    $USER->lastname = $userdata->lastname;
+                    $USER->lastname = sanitize_firstname($userdata->lastname);
                 }
                 if (isset($userdata->email)) {
-                    $USER->email = $userdata->email;
+                    $USER->email = sanitize_email($userdata->email);
                 }
                 else {
                     // The user will be asked to populate this when they log in.
