@@ -145,6 +145,11 @@ tr.parentfolder td {
 	background-color: #ddd !important;
 	font-style: italic;
 }
+tr.parentfolder td.filename a.changefolder {
+    height: 16px;
+    display: block;
+    background: url(../images/parentfolder.png) no-repeat left top;
+}
 /* new row */
 .filelist tr.highlight-file td {
     background-color: #fffcd8 !important;
