@@ -40,6 +40,9 @@ ini_set('session.cookie_path', get_mahara_install_subdirectory());
 ini_set('session.cookie_httponly', 1);
 ini_set('session.hash_bits_per_character', 4);
 ini_set('session.hash_function', 0);
+if (is_https()) {
+    ini_set('session.cookie_secure', true);
+}
 
 /**
  * The session class handles session data and messages.
