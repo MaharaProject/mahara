@@ -77,7 +77,7 @@ class AuthLdap extends Auth {
     /**
      * Attempt to authenticate user
      *
-     * @param string $user The username to authenticate with
+     * @param string $user     The user record to authenticate with
      * @param string $password The password being used for authentication
      * @return bool            True/False based on whether the user
      *                         authenticated successfully
