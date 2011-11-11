@@ -72,7 +72,7 @@ $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum Name';
-$string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s by %s</strong><br>%s</div>
+$string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>Forum: %s (%s)</strong></div>
 
 <div style=\"margin: 1em 0;\">%s</div>
 
@@ -80,8 +80,7 @@ $string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom
 <p><a href=\"%s\">Reply to this post online</a></p>
 <p><a href=\"%s\">Unsubscribe from this %s</a></p>
 </div>";
-$string['forumposttemplate'] = "%s by %s
-%s
+$string['forumposttemplate'] = "Forum: %s (%s)
 ------------------------------------------------------------------------
 
 %s
