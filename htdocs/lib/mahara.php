@@ -2886,3 +2886,24 @@ function is_html_editor_enabled () {
 function is_https() {
     return stripos(get_config('wwwroot'), 'https://') !== false;
 }
+
+function sanitize_email($value) {
+    if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        return '';
+    }
+    return $value;
+}
+
+function sanitize_firstname($value) {
+    if (!preg_match('/\S/', $value)) {
+        return '';
+    }
+    return $value;
+}
+
+function sanitize_lastname($value) {
+    if (!preg_match('/\S/', $value)) {
+        return '';
+    }
+    return $value;
+}

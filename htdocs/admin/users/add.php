@@ -186,9 +186,9 @@ function adduser_validate(Pieform $form, $values) {
     }
 
     $username  = $values['username'];
-    $firstname = $values['firstname'];
-    $lastname  = $values['lastname'];
-    $email     = $values['email'];
+    $firstname = sanitize_firstname($values['firstname']);
+    $lastname  = sanitize_lastname($values['lastname']);
+    $email     = sanitize_email($values['email']);
     $password  = $values['password'];
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
@@ -256,16 +256,15 @@ function adduser_validate(Pieform $form, $values) {
         }
     }
     else {
-        if (!$form->get_error('firstname') && !preg_match('/\S/', $firstname)) {
+        if (!$form->get_error('firstname') && empty($firstname)) {
             $form->set_error('firstname', $form->i18n('rule', 'required', 'required'));
         }
-        if (!$form->get_error('lastname') && !preg_match('/\S/', $lastname)) {
+        if (!$form->get_error('lastname') && empty($lastname)) {
             $form->set_error('lastname', $form->i18n('rule', 'required', 'required'));
         }
 
         if (!$form->get_error('email')) {
-            require_once('phpmailer/class.phpmailer.php');
-            if (!$form->get_error('email') && !PHPMailer::ValidateAddress($email)) {
+            if (!$form->get_error('email') && empty($email)) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
             }
 
