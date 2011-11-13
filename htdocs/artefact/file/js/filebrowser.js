@@ -374,6 +374,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     self.make_icon_draggable(elem);
                 });
                 forEach(getElementsByTagAndClassName('tr', 'folder', self.id + '_filelist'), self.make_row_droppable);
+                forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_foldernav'), self.make_folderlink_droppable);
             }
         }
         forEach(getElementsByTagAndClassName('a', 'changeowner', self.id + '_upload_browse'), function (elem) {
@@ -443,6 +444,25 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // 'static' and see if this causes any problems...
         // setStyle(row, {'position': 'static'});
         undoPositioned(row);
+    };
+
+    this.make_folderlink_droppable = function(link) {
+        new Droppable(link, {
+            accept: ['icon-drag-current'],
+            hoverclass: 'folderhover',
+            ondrop: function (dragged, dropped) {
+                var dragid = dragged.id.replace(/^.*drag:(\d+)$/, '$1');
+                var dropid = dropped.href.replace(/^.*\?folder=(\d+)$/, '$1');
+                if (dragid == dropid) {
+                    return;
+                }
+                $(self.id + '_move').value = dragid;
+                $(self.id + '_moveto').value = dropid;
+                self.submitform();
+                $(self.id + '_move').value = '';
+                $(self.id + '_moveto').value = '';
+            }
+        });
     };
 
     this.drag = {};

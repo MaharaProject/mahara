@@ -161,7 +161,7 @@ tr.folder td.filename {
 tr.folderhover td {
     background-color: #ffc;
 }
-tr.folderhover a {
+tr.folderhover a, .foldernav a.folderhover {
     text-decoration: none;
 }
 .icon-drag {
