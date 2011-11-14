@@ -25,18 +25,20 @@
     {if !$publishing || !$file->permissions || $file->can_republish}{assign var=publishable value=1}{else}{assign var=publishable value=0}{/if}
   <tr id="file:{$file->id}" class="{cycle values='r0,r1'} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{elseif $file->artefacttype == 'profileicon'} profileicon{/if}{if $highlight && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
     <td class="filethumb">
+    {if !$file->isparent}
       {if $editable}
-      <div{if !$file->isparent} class="icon-drag" id="drag:{$file->id}"{/if}>
-        <img src="{$file->icon}"{if !$file->isparent} title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}"{/if}>
+      <div class="icon-drag" id="drag:{$file->id}">
+        <img src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}">
       </div>
       {else}
         <img src="{$file->icon}">
       {/if}
+    {/if}
     </td>
     <td class="filename">
     {assign var=displaytitle value=$file->title|str_shorten_text:34|safe}
     {if $file->artefacttype == 'folder'}
-      <a href="{$querybase}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>
+      <a href="{$querybase}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{if !$file->isparent}{$displaytitle}{/if}</a>
     {elseif !$publishable}
       {$displaytitle}
     {else}
