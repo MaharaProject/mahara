@@ -694,7 +694,8 @@ function core_install_lastcoredata_defaults() {
     $user = new StdClass;
     $user->username = 'admin';
     $user->salt = auth_get_random_salt();
-    $user->password = sha1($user->salt . 'mahara');
+    $user->password = crypt('mahara', '$2a$' . get_config('bcrypt_cost') . '$' . substr(md5($user->salt), 0, 22));
+    $user->password = substr($user->password, 0, 7) . substr($user->password, 7+22);
     $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;

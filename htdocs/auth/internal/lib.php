@@ -59,7 +59,19 @@ class AuthInternal extends Auth {
      */
     public function authenticate_user_account($user, $password) {
         $this->must_be_ready();
-        return $this->validate_password($password, $user->password, $user->salt);
+        $result = $this->validate_password($password, $user->password, $user->salt);
+        // If result == 1, password is correct
+        // If result > 1, password is correct but using old settings, should be changed
+        if ($result > 1 ) {
+            if ($user->passwordchange != 1) {
+                $userobj = new User();
+                $userobj->find_by_id($user->id);
+                $this->change_password($userobj, $password);
+                $user->password = $userobj->password;
+                $user->salt = $userobj->salt;
+            }
+        }
+        return $result > 0;
     }
 
     /**
@@ -96,11 +108,18 @@ class AuthInternal extends Auth {
      * @param boolean $resetpasswordchange Whether to reset the passwordchange variable or not
      * @return string The new password, or empty if the password could not be set
      */
-    public function change_password(User $user, $password, $resetpasswordchange = true) {
+    public function change_password(User $user, $password, $resetpasswordchange = true, $quickhash = false) {
         $this->must_be_ready();
         // Create a salted password and set it for the user
         $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
-        $user->password = $this->encrypt_password($password, $user->salt);
+        if ($quickhash) {
+            $user->password = $this->encrypt_password($password, $user->salt);
+        }
+        else {
+            // $2a$ is bcrypt hash. See http://php.net/manual/en/function.crypt.php
+            // It requires a cost, a 2 digit number in the range 04-31
+            $user->password = $this->encrypt_password($password, $user->salt, '$2a$' . get_config('bcrypt_cost') . '$');
+        }
         if ($resetpasswordchange) {
             $user->passwordchange = 0;
         }
@@ -189,13 +208,28 @@ class AuthInternal extends Auth {
     *
     * @param string $password The password to encrypt
     * @param string $salt     The salt to use to encrypt the password
+    * @param string $alg      The algorithm to use, defaults to $6$ which is SHA512
     * @todo salt mandatory
     */
-    public function encrypt_password($password, $salt='') {
+    public function encrypt_password($password, $salt='', $alg='$6$') {
         if ($salt == '') {
             $salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         }
-        return sha1($salt . $password);
+        if ($alg == '$6$') { // $6$ is the identifier for the SHA512 algorithm
+            // Return a hash which is sha512(originalHash, salt), where original is sha1(salt + password)
+            $password = sha1($salt . $password);
+            // Generate a salt based on a supplied salt
+            $fullsalt = substr(md5($salt), 0, 16); // SHA512 expects 16 chars of salt
+        }
+        else { // This is most likely bcrypt $2a$, but any other algorithm can take up to 22 chars of salt
+            // Generate a salt based on a supplied salt
+            $fullsalt = substr(md5($salt), 0, 22); // bcrypt expects 22 chars of salt
+        }
+        $hash = crypt($password, $alg . $fullsalt);
+        // Strip out the computed salt
+        // We strip out the salt hide the computed salt (in case the sitesalt was used which isn't in the database)
+        $hash = substr($hash, 0, strlen($alg)) . substr($hash, strlen($alg)+strlen($fullsalt));
+        return $hash;
     }
 
     /**
@@ -203,8 +237,9 @@ class AuthInternal extends Auth {
      * and the salt we have, see if the password they sent is correct.
      *
      * @param string $theysent The password the user sent
-     * @param string $wehave   The password we have in the database for them
+     * @param string $wehave   The salted and hashed password we have in the database for them
      * @param string $salt     The salt we have.
+     * @returns int     0 means not validated, 1 means validated, 2 means validated but needs updating
      */
     private function validate_password($theysent, $wehave, $salt) {
         $this->must_be_ready();
@@ -215,9 +250,24 @@ class AuthInternal extends Auth {
             return false;
         }
 
-        // The main type - a salted sha1
-        $sha1sent = $this->encrypt_password($theysent, $salt);
-        return $sha1sent == $wehave;
+        $bcrypt = substr($wehave, 0, 4) == '$2a$';
+        if ($bcrypt) {
+            $alg = substr($wehave, 0, 7);
+            $hash = $this->encrypt_password($theysent, $salt, $alg);
+        }
+        else {
+            $hash = $this->encrypt_password($theysent, $salt);
+        }
+        if ($hash == $wehave) {
+            if (!$bcrypt || substr($alg, 4, 2) != get_config('bcrypt_cost')) {
+                // Either not using bcrypt yet, or the cost parameter has changed, update the hash
+                return 2;
+            }
+            // Using bcrypt with the correct cost parameter, leave as is.
+            return 1;
+        }
+        // Nothing works, fail
+        return 0;
     }
 
 }

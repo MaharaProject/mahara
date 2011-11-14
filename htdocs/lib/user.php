@@ -1866,7 +1866,7 @@ function addfriend_submit(Pieform $form, $values) {
  * @param array $accountprefs user account preferences to set
  * @return integer id of the new user
  */
-function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array()) {
+function create_user($user, $profile=array(), $institution=null, $remoteauth=null, $remotename=null, $accountprefs=array(), $quickhash=false) {
     db_begin();
 
     if ($user instanceof User) {
@@ -1944,7 +1944,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     $userobj->find_by_id($user->id);
     $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1), $checkviewaccess);
 
-    reset_password($user, false);
+    reset_password($user, false, $quickhash);
 
     handle_event('createuser', $user);
     db_commit();
@@ -1961,7 +1961,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
  * @param bool $forceupdateremote force delete of remotename before update attempted
  * @return array list of updated fields
  */
-function update_user($user, $profile, $remotename=null, $accountprefs=array(), $forceupdateremote=false) {
+function update_user($user, $profile, $remotename=null, $accountprefs=array(), $forceupdateremote=false, $quickhash=false) {
     require_once(get_config('docroot') . 'auth/session.php');
 
     if (!empty($user->id)) {
@@ -1991,7 +1991,7 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
         update_record('usr', $newrecord);
         if (!empty($newrecord->password)) {
             $newrecord->authinstance = $user->authinstance;
-            reset_password($newrecord, false);
+            reset_password($newrecord, false, $quickhash);
         }
     }
 
