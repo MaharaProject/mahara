@@ -59,6 +59,36 @@ class PluginNotificationInternal extends PluginNotification {
         return insert_record('notification_internal_activity', $toinsert, 'id', true);
     }
     
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            // Add triggers to update user unread message count when updating
+            // notification_internal_activity
+            db_create_trigger(
+                'update_unread_insert',
+                'AFTER', 'INSERT', 'notification_internal_activity', '
+                IF NEW.read = 0 THEN
+                    UPDATE {usr} SET unread = unread + 1 WHERE id = NEW.usr;
+                END IF;'
+            );
+            db_create_trigger(
+                'update_unread_update',
+                'AFTER', 'UPDATE', 'notification_internal_activity', '
+                IF OLD.read = 0 AND NEW.read = 1 THEN
+                    UPDATE {usr} SET unread = unread - 1 WHERE id = NEW.usr;
+                ELSEIF OLD.read = 1 AND NEW.read = 0 THEN
+                    UPDATE {usr} SET unread = unread + 1 WHERE id = NEW.usr;
+                END IF;'
+            );
+            db_create_trigger(
+                'update_unread_delete',
+                'AFTER', 'DELETE', 'notification_internal_activity', '
+                IF OLD.read = 0 THEN
+                    UPDATE {usr} SET unread = unread - 1 WHERE id = OLD.usr;
+                END IF;'
+            );
+        }
+    }
+
     /** 
      * this method is only implemented in internal & is used for the header
      */
