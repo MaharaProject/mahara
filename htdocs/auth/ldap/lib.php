@@ -77,7 +77,7 @@ class AuthLdap extends Auth {
     /**
      * Attempt to authenticate user
      *
-     * @param string $user The username to authenticate with
+     * @param string $user     The user record to authenticate with
      * @param string $password The password being used for authentication
      * @return bool            True/False based on whether the user
      *                         authenticated successfully
@@ -132,9 +132,11 @@ class AuthLdap extends Auth {
                     // Match database and ldap entries and update in database if required
                     $fieldstoimport = array('firstname', 'lastname', 'email');
                     foreach ($fieldstoimport as $field) {
+                        $sanitizer = "sanitize_$field";
+                        $ldapdetails[$field] = $sanitizer($ldapdetails[$field]);
                         if (!empty($ldapdetails[$field]) && ($user->$field != $ldapdetails[$field])) {
                             $user->$field = $ldapdetails[$field];
-                            set_profile_field($user->id, $field, $user->$field);
+                            set_profile_field($user->id, $field, $ldapdetails[$field]);
                         }
                     }
                }
