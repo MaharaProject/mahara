@@ -845,8 +845,6 @@ function jsstrings() {
                 'unknownerror',
                 'loading',
                 'showtags',
-                'unreadmessages',
-                'unreadmessage',
                 'couldnotgethelp',
                 'password',
                 'username',
@@ -2245,7 +2243,7 @@ function right_nav() {
     global $USER, $THEME;
 
     safe_require('notification', 'internal');
-    $unread = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+    $unread = $USER->get('unread');
 
     $menu = array(
         'settings' => array(
@@ -2259,7 +2257,7 @@ function right_nav() {
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity',
-            'icon' => $THEME->get_url('images/email.gif'),
+            'icon' => $THEME->get_url($unread ? 'images/newemail.gif' : 'images/email.gif'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',

@@ -35,6 +35,10 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('inbox'));
 
+// Make sure the unread message count is up to date whenever the
+// user hits this page.
+$USER->reload_background_fields();
+
 $installedtypes = get_records_assoc(
     'activity_type', '', '',
     'plugintype,pluginname,name',
@@ -90,6 +94,11 @@ function markread(form, action) {
     if (action == 'read') {
         pd['markasread'] = 1;
     } else if (action == 'del') {
+        // If deleting, also pass the ids of unread messages, so we can update
+        // the unread message count as accurately as possible.
+        forEach(getElementsByTagAndClassName('input', 'tocheckread', form), function(cb) {
+            pd[cb.name] = 0;
+        });
         pd['delete'] = 1;
     }
 
@@ -101,9 +110,7 @@ function markread(form, action) {
     
     sendjsonrequest('index.json.php', pd, 'GET', function (data) {
         paginator.updateResults(data);
-        if (data.newunreadcount && typeof(data.newunreadcount) != 'undefined') {
-            updateUnreadCount(data.newunreadcount, 'reset');
-        }
+        updateUnreadCount(data);
     });
 }
 
@@ -120,7 +127,7 @@ function showHideMessage(id) {
             var pd = {'readone':id};
             sendjsonrequest('index.json.php', pd, 'GET', function(data) {
                 swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
-                updateUnreadCount(1, 'decrement');
+                updateUnreadCount(data);
             });
         }
         removeElementClass(message, 'hidden');
@@ -234,6 +241,8 @@ function delete_all_notifications_submit() {
                 ' . join(',', array_map('db_quote', $ids)) . '
             )'
         );
+        // The update_unread_delete db trigger on notification_internal_activity
+        // will update the unread column on the usr table.
     }
 
     db_commit();

@@ -36,7 +36,12 @@ $delete     = param_integer('delete', 0);
 
 if ($readone) {
     set_field('notification_internal_activity', 'read', 1, 'id', $readone, 'usr', $USER->get('id'));
-    json_reply(false, null);
+    $unread = $USER->add_unread(-1);
+    $data = array(
+        'newunreadcount' => $unread,
+        'newimage' => $THEME->get_url($unread ? 'images/newemail.gif' : 'images/email.gif'),
+    );
+    json_reply(false, array('data' => $data));
 }
 
 require_once(get_config('libroot') . 'activity.php');
@@ -60,14 +65,19 @@ if ($markasread) {
             'id IN (' . join(',', $ids) . ') AND usr = ?',
             array($USER->get('id'))
         );
+        $newunread = $USER->add_unread(-count($ids));
     }
     $message = get_string('markedasread', 'activity');
 }
 else if ($delete) {
     $ids = array();
+    $deleteunread = 0; // Remember the number of unread messages being deleted
     foreach ($_GET as $k => $v) {
         if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
             $ids[] = $m[1];
+            if (isset($_GET['unread-' . $m[1]])) {
+                $deleteunread++;
+            }
         }
     }
     if ($ids) {
@@ -92,6 +102,9 @@ else if ($delete) {
             "id IN ($strids) AND usr = ?",
             array($userid)
         );
+        if ($deleteunread) {
+            $newunread = $USER->add_unread(-$deleteunread);
+        }
         db_commit();
     }
     $message = get_string('deletednotifications', 'activity', count($ids));
@@ -99,13 +112,9 @@ else if ($delete) {
 
 $newhtml = activitylist_html($type, $limit, $offset);
 
-if ($message) {
-    safe_require('notification', 'internal');
-    $newhtml['newunreadcount'] = call_static_method(
-        generate_class_name('notification', 'internal'),
-        'unread_count',
-        $USER->get('id')
-    );
+if (isset($newunread)) {
+    $newhtml['newunreadcount'] = $newunread;
+    $newhtml['newimage'] = $THEME->get_url($newunread ? 'images/newemail.gif' : 'images/email.gif');
 }
 
 json_reply(false, (object) array('message' => $message, 'data' => $newhtml));

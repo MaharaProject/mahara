@@ -43,7 +43,7 @@ addLoadEvent(function() {
                 var pd = {'readone':id};
                 sendjsonrequest(config.wwwroot + 'account/activity/index.json.php', pd, 'GET', function(data) {
                     removeElementClass(element, 'unread');
-                    updateUnreadCount(1, 'decrement');
+                    updateUnreadCount(data);
                 });
             }
         });
