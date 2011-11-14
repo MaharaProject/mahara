@@ -113,12 +113,13 @@ class AuthInternal extends Auth {
         // Create a salted password and set it for the user
         $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         if ($quickhash) {
-            $user->password = $this->encrypt_password($password, $user->salt);
+            // $6$ is SHA512, used as a quick hash instead of bcrypt for now.
+            $user->password = $this->encrypt_password($password, $user->salt, '$6$', get_config('passwordsaltmain'));
         }
         else {
             // $2a$ is bcrypt hash. See http://php.net/manual/en/function.crypt.php
             // It requires a cost, a 2 digit number in the range 04-31
-            $user->password = $this->encrypt_password($password, $user->salt, '$2a$' . get_config('bcrypt_cost') . '$');
+            $user->password = $this->encrypt_password($password, $user->salt, '$2a$' . get_config('bcrypt_cost') . '$', get_config('passwordsaltmain'));
         }
         if ($resetpasswordchange) {
             $user->passwordchange = 0;
@@ -209,21 +210,22 @@ class AuthInternal extends Auth {
     * @param string $password The password to encrypt
     * @param string $salt     The salt to use to encrypt the password
     * @param string $alg      The algorithm to use, defaults to $6$ which is SHA512
+    * @param string $sitesalt A salt to combine with the user's salt to add an extra layer or salting
     * @todo salt mandatory
     */
-    public function encrypt_password($password, $salt='', $alg='$6$') {
+    public function encrypt_password($password, $salt='', $alg='$6$', $sitesalt='') {
         if ($salt == '') {
             $salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         }
         if ($alg == '$6$') { // $6$ is the identifier for the SHA512 algorithm
             // Return a hash which is sha512(originalHash, salt), where original is sha1(salt + password)
             $password = sha1($salt . $password);
-            // Generate a salt based on a supplied salt
-            $fullsalt = substr(md5($salt), 0, 16); // SHA512 expects 16 chars of salt
+            // Generate a salt based on a supplied salt and the passwordsaltmain
+            $fullsalt = substr(md5($sitesalt . $salt), 0, 16); // SHA512 expects 16 chars of salt
         }
         else { // This is most likely bcrypt $2a$, but any other algorithm can take up to 22 chars of salt
-            // Generate a salt based on a supplied salt
-            $fullsalt = substr(md5($salt), 0, 22); // bcrypt expects 22 chars of salt
+            // Generate a salt based on a supplied salt and the passwordsaltmain
+            $fullsalt = substr(md5($sitesalt . $salt), 0, 22); // bcrypt expects 22 chars of salt
         }
         $hash = crypt($password, $alg . $fullsalt);
         // Strip out the computed salt
@@ -250,13 +252,15 @@ class AuthInternal extends Auth {
             return false;
         }
 
+        $sitesalt = get_config('passwordsaltmain');
         $bcrypt = substr($wehave, 0, 4) == '$2a$';
         if ($bcrypt) {
             $alg = substr($wehave, 0, 7);
-            $hash = $this->encrypt_password($theysent, $salt, $alg);
+            $hash = $this->encrypt_password($theysent, $salt, $alg, $sitesalt);
         }
         else {
-            $hash = $this->encrypt_password($theysent, $salt);
+            $alg = substr($wehave, 0, 3);
+            $hash = $this->encrypt_password($theysent, $salt, $alg, $sitesalt);
         }
         if ($hash == $wehave) {
             if (!$bcrypt || substr($alg, 4, 2) != get_config('bcrypt_cost')) {
@@ -265,6 +269,24 @@ class AuthInternal extends Auth {
             }
             // Using bcrypt with the correct cost parameter, leave as is.
             return 1;
+        }
+        // See http://docs.moodle.org/20/en/Password_salting#Changing_the_salt
+        if (!empty($sitesalt)) {
+            // There is a sitesalt set, try without it, and update if passes
+            $hash = $this->encrypt_password($theysent, $salt, $alg, '');
+            if ($hash == $wehave) {
+                return 2;
+            }
+        }
+        for ($i = 1; $i <= 20; ++ $i) {
+            // Try 20 alternate sitesalts
+            $alt = get_config('passwordsaltalt' . $i);
+            if (!empty($alt)) {
+                $hash = $this->encrypt_password($theysent, $salt, $alg, $alt);
+                if ($hash == $wehave) {
+                    return 2;
+                }
+            }
         }
         // Nothing works, fail
         return 0;

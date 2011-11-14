@@ -2804,7 +2804,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 continue;
             }
             // Wrap the old hashed password inside a SHA512 hash ($6$ is the identifier for SHA512)
-            $user->password = crypt($user->password, '$6$' . substr(md5($user->salt), 0, 16));
+            $user->password = crypt($user->password, '$6$' . substr(md5(get_config('passwordsaltmain') . $user->salt), 0, 16));
 
             // Drop the salt from the password as it may contain secrets that are not stored in the db
             // for example, the passwordsaltmain value

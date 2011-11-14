@@ -139,3 +139,5 @@ $string['gdlibrarylacksgifsupport'] = 'The installed PHP GD Library does not sup
 $string['gdlibrarylacksjpegsupport'] = 'The installed PHP GD Library does not support JPEG/JPG images. Full support is needed to upload JPEG/JPG images.';
 $string['gdlibrarylackspngsupport'] = 'The installed PHP GD Library does not support PNG images. Full support is needed to upload PNG images.';
 
+$string['nopasswordsaltset'] = 'No site-wide password salt has been set. Edit your config.php and set the "passwordsaltmain" parameter to a reasonable secret phrase.';
+$string['passwordsaltweak'] = 'Your site-wide password salt is not strong enough. Edit your config.php and set the "passwordsaltmain" parameter to a longer secret phrase.';
