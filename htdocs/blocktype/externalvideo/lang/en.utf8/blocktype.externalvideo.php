@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'External Content';
+$string['title'] = 'External Media';
 $string['description'] = 'Embed external content';
 $string['videourl'] = 'Content URL';
 $string['videourldescription2'] = 'Paste the embed code or the URL of the page where the content is located. You can embed content from the following sites:';
