@@ -4,6 +4,7 @@
                 <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="true" />
             </FIELDS>
             <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="blocktype" />
                 <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name"  />
                 <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="blocktype_category" REFFIELDS="name"  />
             </KEYS>
