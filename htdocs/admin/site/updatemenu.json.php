@@ -43,9 +43,11 @@ $data = new StdClass;
 if ($type == 'sitefile') {
     // Get file id.
     $data->file = $linkedto;
+    $data->url = null;
 }
 else if ($type == 'externallink') {
     $data->url = $linkedto;
+    $data->file = null;
 }
 else { // Bad menu item type
     json_reply('local',get_string('badmenuitemtype','admin'));
