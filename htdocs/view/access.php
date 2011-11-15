@@ -414,7 +414,7 @@ function editaccess_validate(Pieform $form, $values) {
             $form->set_error('copyfornewgroups', get_string('viewscopiedfornewgroupsmustbecopyable', 'view'));
         }
     }
-    $retainview = $values['retainview'];
+    $retainview = isset($values['retainview']) ? $values['retainview'] : false;
     if ($retainview && !$values['template']) {
         $form->set_error('retainview', get_string('viewswithretainviewrightsmustbecopyable', 'view'));
     }
@@ -505,7 +505,7 @@ function editaccess_submit(Pieform $form, $values) {
         'startdate'       => $values['startdate'],
         'stopdate'        => $values['stopdate'],
         'template'        => (int) $values['template'],
-        'retainview'      => (int) $values['retainview'],
+        'retainview'      => isset($values['retainview']) ? (int) $values['retainview'] : 0,
         'allowcomments'   => (int) $values['allowcomments'],
         'approvecomments' => (int) ($values['allowcomments'] && $values['approvecomments']),
         'accesslist'      => $values['accesslist'],
