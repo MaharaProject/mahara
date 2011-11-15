@@ -107,6 +107,11 @@ $networkingform = pieform(
             'submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('savechanges','admin')
+            ),
+            'deletesubmit' => array(
+                'type'  => 'submit',
+                'title' => get_string('deletekey', 'admin'),
+                'value' => get_string('delete')
             )
         )
     )
@@ -121,6 +126,17 @@ function networkingform_fail(Pieform $form) {
 
 function networkingform_submit(Pieform $form, $values) {
     $reply = '';
+
+    if (isset($values['deletesubmit'])) {
+        global $SESSION;
+        $openssl = OpenSslRepo::singleton();
+        $openssl->get_keypair(true);
+        $SESSION->add_info_msg(get_string('keydeleted', 'admin'));
+        // Using cancel here as a hack to get it to redirect so it shows the new keys
+        $form->reply(PIEFORM_CANCEL, array(
+            'location'    => get_config('wwwroot') . 'admin/site/networking.php'
+        ));
+    }
 
     if (get_config('enablenetworking') != $values['enablenetworking']) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
