@@ -62,6 +62,9 @@ class Dispatcher {
             'mod/mahara/rpclib.php/get_views_for_user' => 'get_views_for_user',
             'mod/mahara/rpclib.php/submit_view_for_assessment' => 'submit_view_for_assessment',
             'mod/mahara/rpclib.php/release_submitted_view' => 'release_submitted_view',
+            'mod/mahara/rpclib.php/get_groups_for_user' => 'get_groups_for_user',
+            'mod/mahara/rpclib.php/get_notifications_for_user' => 'get_notifications_for_user',
+            'mod/mahara/rpclib.php/get_watchlist_for_user' => 'get_watchlist_for_user',
             ),
         'portfolio_in' => array(
             'portfolio/mahara/lib.php/send_content_intent' => 'send_content_intent',
