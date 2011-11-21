@@ -409,8 +409,17 @@ EOF;
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());
+        $mainnavsubnav = $SELECTEDSUBNAV;
         $smarty->assign('RIGHTNAV', right_nav());
-        $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
+        if (!$mainnavsubnav && $dropdownmenu) {
+            // In drop-down navigation, the submenu is only usable if its parent is one of the top-level menu
+            // items.  But if the submenu comes from something in right_nav (settings), it's unreachable.
+            // Turning the submenu into SUBPAGENAV group-style tabs makes it usable.
+            $smarty->assign('SUBPAGENAV', $SELECTEDSUBNAV);
+        }
+        else {
+            $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
+        }
     }
     else {
         $smarty->assign('languageform', language_select_form());
@@ -2212,7 +2221,7 @@ function right_nav() {
         array(
             'path' => 'settings/account',
             'url' => 'account/',
-            'title' => get_string('account'),
+            'title' => get_config('dropdownmenu') ? get_string('general') : get_string('account'),
             'weight' => 10,
         ),
         array(
