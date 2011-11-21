@@ -2192,7 +2192,7 @@ function right_nav() {
     $unread = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
 
     $menu = array(
-        array(
+        'settings' => array(
             'path' => 'settings',
             'url' => 'account/',
             'title' => get_string('settings'),
@@ -2200,7 +2200,7 @@ function right_nav() {
             'alt' => get_string('settings'),
             'weight' => 10,
         ),
-        array(
+        'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity',
             'icon' => $THEME->get_url('images/email.gif'),
@@ -2209,13 +2209,13 @@ function right_nav() {
             'countclass' => 'unreadmessagecount',
             'weight' => 20,
         ),
-        array(
+        'settings/account' => array(
             'path' => 'settings/account',
             'url' => 'account/',
             'title' => get_string('account'),
             'weight' => 10,
         ),
-        array(
+        'settings/notifications' => array(
             'path' => 'settings/notifications',
             'url' => 'account/activity/preferences/',
             'title' => get_string('notifications'),
