@@ -84,6 +84,7 @@ $form = pieform(array(
             'title' => $messages ? get_string('Reply', 'group') : get_string('message'),
             'cols'  => 80,
             'rows'  => 10,
+            'rules' => array('maxlength' => 65536),
         ),
         'goto' => array(
             'type' => 'hidden',
