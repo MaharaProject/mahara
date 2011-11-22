@@ -106,6 +106,12 @@ function ViewManager() {
                 });
         }
 
+        if (self.isIE7) {
+            // Disable IE's default image dragging function, otherwise blocktypes being dragged
+            // sometimes freeze and then stick to the cursor on mouseup
+            document.ondragstart = function () { return false; };
+        }
+
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
         showElement(self.bottomPane);
