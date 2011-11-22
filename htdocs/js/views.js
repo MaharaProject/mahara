@@ -33,6 +33,10 @@ function ViewManager() {
             // base for positioned elements inside it
             self.columnContainer = $('column-container');
             makePositioned(self.columnContainer);
+            if (self.isIE7) {
+                // Stop blocktypes being dragged from disappearing underneath the content area
+                setStyle('top-pane', {'z-index': 1});
+            }
 
             // Hide 'new block here' buttons
             forEach(getElementsByTagAndClassName('div', 'add-button', self.bottomPane), function(i) {
