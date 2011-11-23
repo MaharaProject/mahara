@@ -299,7 +299,7 @@ function basename(path) {
 // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
 // Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {
-    var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body)
+    var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body);
 
     if ( element && typeof(element.focus) == 'function' ) {
         element.focus();
@@ -685,7 +685,7 @@ function quotaUpdate(quotaused, quota) {
         $('quota_total').innerHTML = data.quota_display;
         $('quota_percentage').innerHTML = percentage + '%';
         $('quota_fill').style.width = (percentage * 2) + 'px';
-    }
+    };
 
     if ((typeof(quotaused) == 'number' || typeof(quotaused) == 'string') && quota) {
         var data = { 'quotaused': quotaused, 'quota': quota };

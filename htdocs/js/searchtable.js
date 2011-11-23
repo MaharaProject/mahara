@@ -29,7 +29,7 @@ function SearchTable(id) {
         self.rewriteQueryButtons();
         self.rewritePaging();
         self.params = {};
-    }
+    };
 
     this.searchByChildLink = function (element) {
         var children = getElementsByTagAndClassName('a', null, element);
@@ -38,26 +38,26 @@ function SearchTable(id) {
             self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
             self.doSearch();
         }
-    }
+    };
 
     this.changePage = function(e) {
         e.stop();
         self.searchByChildLink(this);
-    }
+    };
 
     this.rewritePaging = function() {
         forEach(getElementsByTagAndClassName('span', 'pagination', self.id), function(i) {
             connect(i, 'onclick', self.changePage);
         });
-    }
+    };
 
     this.rewriteQueryButtons = function() {
         forEach(getElementsByTagAndClassName('button', 'query-button', self.id), function(i) {
             connect(i, 'onclick', self.newQuery);
         });
-    }
+    };
 
-    this.rewriteOther = function () {} // Override
+    this.rewriteOther = function () {}; // Override
 
     this.newQuery = function(e) {
         self.params = {};
@@ -66,7 +66,7 @@ function SearchTable(id) {
         });
         self.doSearch();
         e.stop();
-    }
+    };
 
     this.doSearch = function() {
         sendjsonrequest(self.id + '.json.php', self.params, 'POST', function(data) {
@@ -77,7 +77,7 @@ function SearchTable(id) {
                 self.rewriteOther();
             }
         });
-    }
+    };
 
     addLoadEvent(self.init);
 }

@@ -33,7 +33,7 @@ Array.prototype.compare = function(testArr) {
         if (this[i] !== testArr[i]) return false;
     }
     return true;
-}
+};
 
 var ul = null;
 var initialgroups = new Array();

@@ -42,7 +42,7 @@ MochiKit.Pagination.VERSION = '0.1';
 MochiKit.Pagination.__repr__ = function () { return '[' + this.NAME + ' ' + this.VERSION + ']'; };
 MochiKit.Pagination.toString = function () { return this.__repr__(); };
 MochiKit.Pagination.EXPORT = [
-    'Pager',
+    'Pager'
 ];
 
 MochiKit.Pagination.Pager = function (count, limit, options) {
