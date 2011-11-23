@@ -2793,7 +2793,9 @@ class View {
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
-        $where = 'WHERE (v.owner IS NULL OR v.owner > 0)';
+        $where = '
+            WHERE (v.owner IS NULL OR v.owner > 0)
+                AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))';
 
         if (is_array($types) && !empty($types)) {
             $where .= ' AND v.type IN (';
@@ -2840,79 +2842,79 @@ class View {
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
-                INNER JOIN {view_access} va ON (va.view = v.id)
             ';
             $where .= "
                 AND (v.startdate IS NULL OR v.startdate < current_timestamp)
                 AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                AND va.accesstype = 'public'
-                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
-                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)";
+                AND (v.id IN ( -- public access
+                    SELECT va.view
+                    FROM {view_access} va
+                    WHERE va.accesstype = 'public'
+                        AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                        AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                ))";
         }
         else {
             $from = "
             FROM {view} v
-            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
-            LEFT OUTER JOIN {group} gd ON v.group = gd.id
-            LEFT OUTER JOIN (
-                SELECT
-                    1 AS edit_views, gm.group AS groupid
-                FROM {group} g
-                INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-                WHERE gm.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND gm.role != 'member')
-            ) AS vg ON (vg.groupid = v.group)
-            LEFT OUTER JOIN {view_access} va ON (
-                va.view = v.id
-                AND va.accesstype IS NOT NULL
-                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
-                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-            )
-            LEFT OUTER JOIN {usr_friend} f ON (usr1 = v.owner AND usr2 = ?)
-            LEFT OUTER JOIN {view_access} vau ON (
-                vau.view = v.id
-                AND (vau.startdate IS NULL OR vau.startdate < current_timestamp)
-                AND (vau.stopdate IS NULL OR vau.stopdate > current_timestamp)
-                AND vau.usr = ?
-            )
-            LEFT OUTER JOIN (
-                SELECT
-                    vag.view, vagm.member
-                FROM {view_access} vag
-                INNER JOIN {group_member} vagm ON (vag.group = vagm.group AND (vag.role = vagm.role OR vag.role IS NULL))
-                WHERE
-                    (vag.startdate IS NULL OR vag.startdate < current_timestamp)
-                    AND (vag.stopdate IS NULL OR vag.stopdate > current_timestamp)
-                    AND vagm.member = ?
-            ) AS ag ON (
-                ag.view = v.id
-            )
-            LEFT OUTER JOIN (
-                SELECT vai.view, ui.usr
-                FROM {view_access} vai
-                INNER JOIN {usr_institution} ui ON (vai.institution = ui.institution AND ui.usr = ?)
-            ) AS vaui ON (
-                vaui.view = v.id
-            )";
+                LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
+                LEFT OUTER JOIN {collection} c ON cv.collection = c.id";
             $where .= "
-                AND (
-                    v.owner = ?
-                    OR vg.edit_views = 1
-                    OR ((v.startdate IS NULL OR v.startdate < current_timestamp)
+                AND (v.owner = ?      -- user owns the view
+                    OR (v.group IN (  -- group view, editable by the user
+                        SELECT m.group
+                        FROM {group_member} m JOIN {group} g ON m.member = ? AND m.group = g.id
+                        WHERE m.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND m.role != 'member')
+                    ))
+                    OR ( -- user has permission to see the view
+                        (v.startdate IS NULL OR v.startdate < current_timestamp)
                         AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                        AND (va.accesstype = 'public'
-                            OR va.accesstype = 'loggedin'
-                            OR (va.accesstype = 'friends' AND f.usr2 = ?)
-                            OR (vau.usr = ?)
-                            OR (ag.member = ?)
-                            OR (vaui.usr = ?)
+                        AND ((v.id IN ( -- public or loggedin access
+                                SELECT va.view
+                                FROM {view_access} va
+                                WHERE (va.accesstype = 'public' OR va.accesstype = 'loggedin')
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            ))
+                            OR (v.id IN ( -- friend access
+                                SELECT va.view
+                                FROM {view_access} va
+                                    JOIN {view} vf ON va.view = vf.id AND vf.owner IS NOT NULL
+                                    JOIN {usr_friend} f ON ((f.usr1 = ? AND f.usr2 = vf.owner) OR (f.usr1 = vf.owner AND f.usr2 = ?))
+                                WHERE va.accesstype = 'friends'
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            ))
+                            OR (v.id IN ( -- user access
+                                SELECT va.view
+                                FROM {view_access} va
+                                WHERE va.usr = ?
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            ))
+                            OR (v.id IN ( -- group access
+                                SELECT va.view
+                                FROM {view_access} va
+                                    JOIN {group_member} m ON va.group = m.group AND (va.role = m.role OR va.role IS NULL)
+                                WHERE
+                                    m.member = ?
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            ))
+                            OR (v.id IN ( -- institution access
+                                SELECT va.view
+                                FROM {view_access} va
+                                    JOIN {usr_institution} ui ON va.institution = ui.institution
+                                WHERE
+                                    ui.usr = ?
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            ))
                         )
                     )
-                )
-                AND (
-                    v.group IS NULL OR gd.deleted = 0
                 )";
-            $ph = array_merge(array($viewerid,$viewerid,$viewerid,$viewerid,$viewerid), $ph, array($viewerid,$viewerid,$viewerid,$viewerid, $viewerid));
+
+            $ph = array_merge($ph, array($viewerid,$viewerid,$viewerid,$viewerid,$viewerid,$viewerid,$viewerid));
         }
 
         if (!$ownedby && $ownerquery) {
@@ -2938,7 +2940,7 @@ class View {
             $ph = array_merge($ph, array($ownerquery,$ownerquery,$ownerquery,$ownerquery,$ownerquery));
         }
 
-        $count = count_records_sql('SELECT COUNT (DISTINCT v.id) ' . $from . $where, $ph);
+        $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
         $orderby = 'title ASC';
         if (!empty($sort)) {
             $orderby = '';
@@ -2961,17 +2963,12 @@ class View {
         }
 
         $viewdata = get_records_sql_assoc('
-            SELECT * FROM (
-                SELECT
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                    v.template, v.mtime, v.ctime,
-                    c.id AS collid, c.name, v.type
-                ' . $from . $where . '
-                GROUP BY
-                    v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
-                    v.template, v.mtime, v.ctime, c.id, c.name, v.type
-            ) a
-            ORDER BY a.' . $orderby . ', a.id ASC',
+            SELECT
+                v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
+                v.template, v.mtime, v.ctime,
+                c.id AS collid, c.name, v.type
+            ' . $from . $where . '
+            ORDER BY v.' . $orderby . ', v.id ASC',
             $ph, $offset, $limit
         );
 
