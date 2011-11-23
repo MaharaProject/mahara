@@ -69,6 +69,11 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody .= $separator . "\n\n";
 
             $messagebody .= get_string_from_language($lang, 'subject') . ': ' . $data->subject . "\n\n";
+
+            if ($data->url && stripos($data->url, 'http://') !== 0 && stripos($data->url, 'https://') !== 0) {
+                $data->url = get_config('wwwroot') . $data->url;
+            }
+
             if ($data->activityname == 'usermessage') {
                 // Do not include the message body in user messages when they are sent by email
                 // because it encourages people to reply to the email.

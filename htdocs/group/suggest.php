@@ -102,7 +102,7 @@ function addmembers_submit(Pieform $form, $values) {
                 'args'    => array(display_name($USER), hsc($group->name), get_config('sitename')),
             ),
         ),
-        'url'     => get_config('wwwroot') . 'group/view.php?id=' . GROUP,
+        'url'     => 'group/view.php?id=' . GROUP,
         'urltext' => hsc($group->name),
     ));
 

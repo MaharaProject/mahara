@@ -1,8 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
+ * Copyright (C) 2011 Catalyst IT Ltd and others; see:
+ *                    http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,24 @@
  *
  * @package    mahara
  * @subpackage notification-internal
- * @author     Catalyst IT Ltd
+ * @author     Richard Mansfield
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2011112300;
-$config->release = '1.0.2';
+function xmldb_notification_internal_upgrade($oldversion=0) {
+
+    if ($oldversion < 2011112300) {
+        execute_sql("
+            UPDATE {notification_internal_activity}
+            SET url = REPLACE(url, ?, '')
+            WHERE url IS NOT NULL",
+            array(get_config('wwwroot'))
+        );
+    }
+
+    return true;
+}
+

@@ -7,10 +7,10 @@
   {if $item->message}
       <a href="" onclick="showHideMessage({$item->id}); return false;">{$item->subject}</a>
       <div id="message-{$item->id}" class="hidden">{$item->message|safe}
-      {if $item->url}<br><a href="{$item->url}">{if $item->urltext}{$item->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
+      {if $item->url}<br><a href="{$WWWROOT}{$item->url}">{if $item->urltext}{$item->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $item->url}
-      <a href="{$item->url}">{$item->subject}</a>
+      <a href="{$WWWROOT}{$item->url}">{$item->subject}</a>
   {else}
       {$item->subject}
   {/if}

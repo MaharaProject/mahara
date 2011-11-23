@@ -111,6 +111,9 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $body .= "\n" . $entry->message;
                 }
                 if (!empty($entry->url)) {
+                    if (stripos($entry->url, 'http://') !== 0 && stripos($entry->url, 'https://') !== 0) {
+                        $entry->url = get_config('wwwroot') . $entry->url;
+                    }
                     $body .= "\n" . $entry->url;
                 }
                 $body .= "\n\n";

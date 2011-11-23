@@ -797,7 +797,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
         $post->textbody = trim(html2text($post->body));
         $post->htmlbody = clean_html($post->body);
-        $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
 
         $this->add_urltext(array(
             'key'     => 'Topic',
@@ -827,7 +827,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             display_name($post->poster, $user),
             $post->posttime,
             $post->textbody,
-            $this->url,
+            get_config('wwwroot') . $this->url,
             $user->subscribetype,
             $unsubscribelink
         );
@@ -842,7 +842,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             hsc(display_name($post->poster, $user)),
             $post->posttime,
             $post->htmlbody,
-            $this->url,
+            get_config('wwwroot') . $this->url,
             $unsubscribelink,
             $user->subscribetype
         );

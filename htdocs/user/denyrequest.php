@@ -79,7 +79,7 @@ function denyrequest_submit(Pieform $form, $values) {
     
     // notification info
     $n = new StdClass;
-    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
+    $n->url = 'user/view.php?id=' . $loggedinid;
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);

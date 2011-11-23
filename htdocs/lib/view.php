@@ -1051,7 +1051,7 @@ class View {
         ArtefactType::update_locked($this->owner);
         db_commit();
         $ownerlang = get_user_language($this->get('owner'));
-        $url = get_config('wwwroot') . 'view/view.php?id=' . $this->get('id');
+        $url = 'view/view.php?id=' . $this->get('id');
         require_once('activity.php');
         activity_occurred('maharamessage', 
             array(
@@ -3605,7 +3605,7 @@ class View {
     /**
      * Makes a URL for a view page
      */
-    public function get_url() {
+    public function get_url($full=true) {
         if ($this->type == 'profile') {
             $url = 'user/view.php?id=' . (int) $this->owner;
         }
@@ -3618,7 +3618,7 @@ class View {
         else {
             $url = 'view/view.php?id=' . (int) $this->id;
         }
-        return get_config('wwwroot') . $url;
+        return $full ? (get_config('wwwroot') . $url) : $url;
     }
 
 

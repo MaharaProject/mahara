@@ -928,7 +928,7 @@ function group_invite_user($group, $userid, $userfrom, $role='member', $delay=nu
         'users'   => array($user->id),
         'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
         'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
-        'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id,
+        'url'     => 'group/view.php?id=' . $group->id,
         'urltext' => $group->name,
     );
     activity_occurred('maharamessage', $activitydata, null, null, $delay);
