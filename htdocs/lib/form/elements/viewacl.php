@@ -62,8 +62,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
         $presets[] = 'friends';
     }
 
+    $accesslist = array();
     if ($value) {
-        foreach ($value as $key => &$item) {
+        foreach ($value as $item) {
             if (is_array($item)) {
                 if ($item['accesstype'] == 'public') {
                     $item['publicallowed'] = (int)$public;
@@ -79,12 +80,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                     $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
                 // only show access that is still current. Expired access will be deleted if the form is saved
-                if($item['stopdate'] && (time() > strtotime($item['stopdate']))) {
-                    unset($value[$key]);
+                if (empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
+                    $accesslist[] = $item;
                 }
-            }
-            else {
-                unset($value[$key]);
             }
         }
     }
@@ -156,7 +154,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('viewtype', $element['viewtype']);
     $smarty->assign('potentialpresets', json_encode($potentialpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
-    $smarty->assign('accesslist', json_encode($value));
+    $smarty->assign('accesslist', json_encode($accesslist));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
     $smarty->assign('myinstitutions', json_encode($myinstitutions));
