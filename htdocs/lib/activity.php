@@ -523,7 +523,7 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         if (!empty($this->fromuser)) {
-            $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->fromuser;
+            $this->url = 'user/view.php?id=' . $this->fromuser;
         }
         else {
             $this->customheaders = array(
@@ -581,10 +581,10 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
 
         if (empty($this->artefact)) {
-            $this->url = $this->view->get_url();
+            $this->url = $this->view->get_url(false);
         }
         else {
-            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
+            $this->url = 'view/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
         }
 
         if (empty($this->strings->subject)) {
@@ -720,12 +720,12 @@ class ActivityTypeInstitutionmessage extends ActivityType {
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
         if ($this->messagetype == 'request') {
-            $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
+            $this->url = 'admin/users/institutionusers.php';
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
             $this->add_urltext(array('key' => 'institutionmembers', 'section' => 'admin'));
         } else if ($this->messagetype == 'invite') {
-            $this->url = get_config('wwwroot') . 'account/institutions.php';
+            $this->url = 'account/institutions.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
             $this->add_urltext(array('key' => 'institutionmembership', 'section' => 'mahara'));
         }
@@ -789,7 +789,7 @@ class ActivityTypeUsermessage extends ActivityType {
     }
 
     protected function update_url($internalid) {
-        $this->url = get_config('wwwroot') . 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
+        $this->url = 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
         return true;
     }
 
@@ -836,9 +836,10 @@ class ActivityTypeWatchlist extends ActivityType {
                     WHERE (p.activity = ? OR p.activity IS NULL)
                     AND wv.view = ?
                ';
-        $this->users = get_records_sql_array($sql, 
-                                       array(get_config('wwwroot') . 'view/view.php?id=' 
-                                             . $this->view, $this->get_id(), $this->view));
+        $this->users = get_records_sql_array(
+            $sql,
+            array('view/view.php?id=' . $this->view, $this->get_id(), $this->view)
+        );
 
         // Remove the view from the watchlist of users who can no longer see it
         if ($this->users) {
@@ -893,7 +894,7 @@ class ActivityTypeNewview extends ActivityType {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
 
-        $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+        $this->url = 'view/view.php?id=' . $this->view;
 
         // add users on friendslist or userlist...
         $this->users = activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()); 
@@ -943,7 +944,7 @@ class ActivityTypeViewaccess extends ActivityType {
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+        $this->url = 'view/view.php?id=' . $this->view;
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers

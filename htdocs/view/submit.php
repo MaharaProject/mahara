@@ -96,7 +96,7 @@ function submitview_submit(Pieform $form, $values) {
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
         'roles'         => $roles,
-        'url'           => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
+        'url'           => 'view/view.php?id=' . $viewid,
         'strings'       => (object) array(
             'urltext' => (object) array('key' => 'view'),
             'subject' => (object) array(

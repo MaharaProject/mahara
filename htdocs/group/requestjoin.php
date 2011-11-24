@@ -100,7 +100,7 @@ function requestjoingroup_submit(Pieform $form, $values) {
             'users'   => array($groupadmin),
             'subject' => get_string_from_language($adminlang, 'grouprequestsubject', 'group'),
             'message' => $message,
-            'url'     => get_config('wwwroot') . 'group/members.php?id=' . $group->id . '&membershiptype=request',
+            'url'     => 'group/members.php?id=' . $group->id . '&membershiptype=request',
             'strings' => (object) array(
                 'urltext' => (object) array(
                     'key'     => 'pendingmembers',

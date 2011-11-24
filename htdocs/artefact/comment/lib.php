@@ -652,15 +652,18 @@ class ArtefactTypeComment extends ArtefactType {
         return empty($this->deletedby);
     }
 
-    public function get_view_url($viewid, $showcomment=true) {
+    public function get_view_url($viewid, $showcomment=true, $full=true) {
         if ($artefact = $this->get('onartefact')) {
-            $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+            $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
         }
         else {
-            $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+            $url = 'view/view.php?id=' . $viewid;
         }
         if ($showcomment) {
             $url .= '&showcomment=' . $this->get('id');
+        }
+        if ($full) {
+            $url = get_config('wwwroot') . $url;
         }
         return $url;
     }
@@ -744,7 +747,8 @@ function make_public_submit(Pieform $form, $values) {
 
     $comment = new ArtefactTypeComment((int) $values['comment']);
 
-    $url = $comment->get_view_url($view->get('id'));
+    $relativeurl = $comment->get_view_url($view->get('id'), true, false);
+    $url = get_config('wwwroot') . $relativeurl;
 
     $author    = $comment->get('author');
     $owner     = $comment->get('owner');
@@ -802,7 +806,7 @@ function make_public_submit(Pieform $form, $values) {
             ),
         ),
         'users'     => array($userid),
-        'url'       => $url,
+        'url'       => $relativeurl,
     );
     activity_occurred('maharamessage', $data);
     db_commit();
@@ -828,10 +832,10 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $viewid = $view->get('id');
     if ($artefact = $comment->get('onartefact')) {
-        $url = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+        $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
     }
     else {
-        $url = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+        $url = 'view/view.php?id=' . $viewid;
     }
 
     db_begin();
@@ -883,7 +887,7 @@ function delete_comment_submit(Pieform $form, $values) {
     db_commit();
 
     $SESSION->add_ok_msg(get_string('commentremoved', 'artefact.comment'));
-    redirect($url);
+    redirect(get_config('wwwroot') . $url);
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
@@ -955,7 +959,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     $comment->commit();
 
-    $goto = $comment->get_view_url($view->get('id'));
+    $url = $comment->get_view_url($view->get('id'), true, false);
+    $goto = get_config('wwwroot') . $url;
 
     if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
         $arg = $author ? display_name($USER, null, true) : $data->authorname;
@@ -979,7 +984,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
                 ),
             ),
             'users'     => array($data->owner),
-            'url'       => $goto,
+            'url'       => $url,
         );
     }
 
@@ -1094,8 +1099,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $userid = $artefactinstance->get('owner');
             }
             if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/artefact.php?artefact='
-                    . $onartefact . '&view=' . $this->viewid;
+                $this->url = 'view/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
             }
         }
         else { // feedback on view.
@@ -1105,7 +1109,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             }
             $userid = $viewrecord->owner;
             if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?id=' . $onview;
+                $this->url = 'view/view.php?id=' . $onview;
             }
         }
         if (empty($userid)) {
@@ -1139,11 +1143,11 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             // Email
             $this->users[0]->htmlmessage = get_string_from_language(
                 $lang, 'feedbackdeletedhtml', 'artefact.comment',
-                hsc($title), $removedbyline, clean_html($body), $this->url, hsc($title)
+                hsc($title), $removedbyline, clean_html($body), get_config('wwwroot') . $this->url, hsc($title)
             );
             $this->users[0]->emailmessage = get_string_from_language(
                 $lang, 'feedbackdeletedtext', 'artefact.comment',
-                $title, $removedbyline, trim(html2text($body)), $title, $this->url
+                $title, $removedbyline, trim(html2text($body)), $title, get_config('wwwroot') . $this->url
             );
             return;
         }
@@ -1164,11 +1168,11 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         $this->users[0]->htmlmessage = get_string_from_language(
             $lang, 'feedbacknotificationhtml', 'artefact.comment',
-            hsc($authorname), hsc($title), $posttime, clean_html($body), $this->url
+            hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
         );
         $this->users[0]->emailmessage = get_string_from_language(
             $lang, 'feedbacknotificationtext', 'artefact.comment',
-            $authorname, $title, $posttime, trim(html2text($body)), $this->url
+            $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
         );
     }
 

@@ -9,12 +9,12 @@
     </td>
     <td>
   {if $i->message}
-      <a href="{if $i->url}{$i->url}{else}{$WWWROOT}account/activity{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
+      <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
       <div class="inbox-message hidden messagebody messagebody-{$i->type}" id="inbox-message-{$i->id}">{$i->message|safe}
-      {if $i->url}<br><a href="{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
+      {if $i->url}<br><a href="{$WWWROOT}{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $i->url}
-      <a href="{$i->url}">{$i->subject}</a>
+      <a href="{$WWWROOT}{$i->url}">{$i->subject}</a>
   {else}
       {$i->subject}
   {/if}
