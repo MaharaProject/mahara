@@ -120,7 +120,7 @@ function ViewManager() {
         removeElement('views-loading');
         showElement(self.bottomPane);
 
-    }
+    };
 
     /**
      * Adds a column to the view
@@ -183,7 +183,7 @@ function ViewManager() {
         // Wire up the new column buttons to be AJAX
         self.rewriteAddColumnButtons('column_' + id);
         self.rewriteRemoveColumnButtons('column_' + id);
-    }
+    };
 
     /**
      * Removes a column from the view, sizes the others to take its place and
@@ -260,7 +260,7 @@ function ViewManager() {
                 i = 1;
             }
         });
-    }
+    };
 
     /**
      * Rewrites the category select links to be AJAX
@@ -280,7 +280,7 @@ function ViewManager() {
                 e.stop();
             });
         });
-    }
+    };
 
     /**
      * Rewrites the blockinstance configure buttons to be AJAX
@@ -289,7 +289,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('input', 'configurebutton', self.bottomPane), function(i) {
             self.rewriteConfigureButton(i);
         });
-    }
+    };
 
     /**
      * Rewrites one configure button to be AJAX
@@ -299,7 +299,7 @@ function ViewManager() {
             e.stop();
             self.getConfigureForm(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
         });
-    }
+    };
 
 
     this.getConfigureForm = function(blockinstance) {
@@ -334,7 +334,7 @@ function ViewManager() {
             });
 
         });
-    }
+    };
 
 
     this.hideMediaPlayers = function () {
@@ -361,7 +361,7 @@ function ViewManager() {
         });
 
         insertSiblingNodesBefore(document.body.firstChild, DIV({'id': 'overlay'}));
-    }
+    };
 
 
     this.showMediaPlayers = function () {
@@ -381,7 +381,7 @@ function ViewManager() {
         if ($('overlay')) {
             removeElement('overlay');
         }
-    }
+    };
 
 
     this.addConfigureBlock = function(oldblock, configblock, removeoncancel) {
@@ -445,7 +445,7 @@ function ViewManager() {
 
         showElement(newblock);
         eval(configblock.javascript);
-    }
+    };
 
 
     this.replaceConfigureBlock = function(data) {
@@ -453,7 +453,7 @@ function ViewManager() {
         if (oldblock) {
             var temp = DIV();
             temp.innerHTML = data.data.html;
-            var newblock = getFirstElementByTagAndClassName('div', 'blockinstance', temp)
+            var newblock = getFirstElementByTagAndClassName('div', 'blockinstance', temp);
             swapDOM(oldblock, newblock);
             eval(data.data.javascript);
             self.makeBlockinstanceDraggable(newblock);
@@ -462,12 +462,12 @@ function ViewManager() {
         }
         self.removeConfigureBlocks();
         self.showMediaPlayers();
-    }
+    };
 
     this.removeConfigureBlocks = function() {
         // FF3 hangs unless you delay removal of the iframe inside the old configure block
         callLater(0.0001, function () { forEach(getElementsByTagAndClassName('div', 'configure'), removeElement); });
-    }
+    };
 
     /**
      * Rewrites the blockinstance delete buttons to be AJAX
@@ -476,7 +476,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('input', 'deletebutton', self.bottomPane), function(i) {
             self.rewriteDeleteButton(i);
         });
-    }
+    };
 
     /**
      * Rewrites one delete button to be AJAX
@@ -503,7 +503,7 @@ function ViewManager() {
             }
             e.stop();
         });
-    }
+    };
 
 
     /**
@@ -522,7 +522,7 @@ function ViewManager() {
             });
             e.stop();
         });
-    }
+    };
 
     /**
      * Rewrites the add column buttons to be AJAX
@@ -559,7 +559,7 @@ function ViewManager() {
                 e.stop();
             });
         });
-    }
+    };
 
     /**
      * Rewrite the remove column buttons to be AJAX
@@ -596,7 +596,7 @@ function ViewManager() {
                 e.stop();
             });
         });
-    }
+    };
     
     /**
      * Disables the 'add column' buttons
@@ -624,7 +624,7 @@ function ViewManager() {
                 removeNodeAttribute(i, 'disabled');
             }
         });
-    }
+    };
 
     /**
      * Makes block instances draggable
@@ -633,7 +633,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('div', 'blockinstance', self.bottomPane), function(i) {
             self.makeBlockinstanceDraggable(i);
         });
-    }
+    };
 
     /**
      * Make a particular blockinstance draggable
@@ -715,7 +715,7 @@ function ViewManager() {
                     {x: 0, y: 0, duration: 0});
             }
         });
-    }
+    };
 
     /**
      * Makes block types draggable
@@ -816,7 +816,7 @@ function ViewManager() {
                 }
             });
         });
-    }
+    };
 
     this.showBlockTypeDescription = function() {
         forEach(getElementsByTagAndClassName('li', null, 'blocktype-list'), function(i) {
@@ -827,7 +827,7 @@ function ViewManager() {
                 $('current_bt_description').innerHTML = '';
             });
         });
-    }
+    };
 
     /**
      * changes the intructions so they are for ajax
@@ -835,7 +835,7 @@ function ViewManager() {
 
     this.ajaxInstructions = function() {
         $('blocksinstruction').innerHTML = get_string('blocksinstructionajax');
-    }
+    };
 
     /**
      * Wire up the view theme selector
@@ -851,7 +851,7 @@ function ViewManager() {
                 self.viewThemeSelect.form.submit();
             }
         });
-    }
+    };
 
     /**
      * Place hotzones over the blockinstances on the page, so that we can work
@@ -1015,7 +1015,7 @@ function ViewManager() {
                 previousHotzone = hotzone;
             }
         });
-    }
+    };
 
     /**
      * Creates a new hotzone and puts it in the DOM, ready for use
@@ -1090,7 +1090,7 @@ function ViewManager() {
         self.makeHotzoneDroppable(hotzone, node, placementFunction, dropFunction, placeAfter);
         appendChildNodes(self.hotzoneContainer, hotzone);
         return hotzone;
-    }
+    };
 
     /**
      * Makes a hotzone droppable. In a separate function for scoping purposes
@@ -1131,7 +1131,7 @@ function ViewManager() {
                 }
             }
         });
-    }
+    };
 
     /**
      * Removes hotzones from the document.
@@ -1140,7 +1140,7 @@ function ViewManager() {
      */
     this.destroyHotzones = function() {
         removeElement(self.hotzoneContainer);
-    }
+    };
 
     /**
      * Find the co-ordinates of a given block instance
@@ -1162,7 +1162,7 @@ function ViewManager() {
         });
 
         return {'column': column, 'order': order};
-    }
+    };
 
     /**
      * Adds CSS rules that should apply for the javascript only version
@@ -1174,7 +1174,7 @@ function ViewManager() {
             'href': config['wwwroot'] + 'theme/views-js.css'
         });
         appendChildNodes(getFirstElementByTagAndClassName('head'), styleNode);
-    }
+    };
 
 
     // Whether it is a blocktype that is being added, rather than a

@@ -41,7 +41,7 @@ var Paginator = function(id, datatable, script, extradata) {
         self.extraData = extradata;
 
         self.rewritePaginatorLinks();
-    }
+    };
 
     this.rewritePaginatorLinks = function() {
         forEach(getElementsByTagAndClassName('span', 'pagination', self.id), function(i) {
@@ -52,7 +52,7 @@ var Paginator = function(id, datatable, script, extradata) {
                 self.rewritePaginatorLink(a);
             }
         });
-    }
+    };
 
     this.updateResults = function (data) {
         var container = self.datatable;
@@ -110,14 +110,14 @@ var Paginator = function(id, datatable, script, extradata) {
                 results.innerHTML = data.data.results;
             }
         }
-    }
+    };
 
     this.sendQuery = function(params) {
         sendjsonrequest(self.jsonScript, params, 'GET', function(data) {
             self.updateResults(data);
             self.alertProxy('pagechanged', data['data']);
         });
-    }
+    };
 
     this.rewritePaginatorLink = function(a) {
         connect(a, 'onclick', function(e) {
@@ -132,16 +132,16 @@ var Paginator = function(id, datatable, script, extradata) {
 
             self.sendQuery(queryData);
         });
-    }
+    };
 
     this.alertProxy = function(eventName, data) {
         if (typeof(paginatorProxy) == 'object') {
             paginatorProxy.alertObservers(eventName, data);
         }
-    }
+    };
 
     this.init(id, datatable, script, extradata);
-}
+};
 
 /**
  * Any object can subscribe to the PaginatorProxy and thus be alerted when a
@@ -163,14 +163,14 @@ function PaginatorProxy() {
         forEach(self.observers, function(o) {
             signal(o, eventName, data);
         });
-    }
+    };
 
     /**
      * Adds an observer to listen to paginator events
      */
     this.addObserver = function(o) {
         self.observers.push(o);
-    }
+    };
 
     this.observers = [];
 }

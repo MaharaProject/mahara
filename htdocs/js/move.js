@@ -68,7 +68,7 @@ var MoveSource = function(element, options) {
         if (e) {
             e.stop();
         }
-    }
+    };
 
     self.cancelMove = function(e) {
         MochiKit.Signal.disconnect(self.onClick);
@@ -80,7 +80,7 @@ var MoveSource = function(element, options) {
         if (e) {
             e.stop();
         }
-    }
+    };
 
     self.onClick = MochiKit.Signal.connect(self.element, 'onclick', self, self.startMove);
     MoveSources.register(self);

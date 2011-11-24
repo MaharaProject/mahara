@@ -30,7 +30,7 @@ function UserSearch() {
         self.rewriteQueryButton();
         self.rewritePaging();
         self.params = {};
-    }
+    };
 
     this.rewriteInitials = function() {
         forEach(getElementsByTagAndClassName('span', 'first-initial', 'firstnamelist'), function(i) {
@@ -39,11 +39,11 @@ function UserSearch() {
         forEach(getElementsByTagAndClassName('span', 'last-initial', 'lastnamelist'), function(i) {
             self.rewriteInitial('l', i);
         });
-    }
+    };
 
     this.rewriteInitial = function(t, i) {
         connect(i, 'onclick', partial(self.searchInitial, t));
-    }
+    };
 
     this.searchInitial = function(initialtype, e) {
         // Clear all search params except for the other initial
@@ -78,7 +78,7 @@ function UserSearch() {
         forEach(getElementsByTagAndClassName('span', 'pagination', 'searchresults'), function(i) {
             connect(i, 'onclick', self.changePage);
         });
-    }
+    };
 
     this.changePage = function(e) {
         var children = getElementsByTagAndClassName('a', null, this);
@@ -88,18 +88,18 @@ function UserSearch() {
             self.doSearch();
         }
         e.stop();
-    }
+    };
 
     this.rewriteQueryButton = function() {
         connect($('query-button'), 'onclick', self.newQuery);
-    }
+    };
 
     this.newQuery = function(e) {
         self.params = {};
         self.params.query = $('query').value;
         self.doSearch();
         e.stop();
-    }
+    };
 
     this.doSearch = function() {
         self.params.action = 'search';
@@ -107,7 +107,7 @@ function UserSearch() {
             $('results').innerHTML = data.data;
             self.rewritePaging();
         });
-    }
+    };
 
     addLoadEvent(self.init);
 }

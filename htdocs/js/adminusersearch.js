@@ -34,7 +34,7 @@ function UserSearch() {
         self.selectusers = {};
         self.rewriteCheckboxes();
         self.params = {};
-    }
+    };
 
     this.rewriteInitials = function() {
         forEach(getElementsByTagAndClassName('span', 'first-initial', 'firstnamelist'), function(i) {
@@ -43,11 +43,11 @@ function UserSearch() {
         forEach(getElementsByTagAndClassName('span', 'last-initial', 'lastnamelist'), function(i) {
             self.rewriteInitial('l', i);
         });
-    }
+    };
 
     this.rewriteInitial = function(t, i) {
         connect(i, 'onclick', partial(self.searchInitial, t));
-    }
+    };
 
     this.resetInitials = function() {
         forEach(getElementsByTagAndClassName('span', 'selected', 'initials'), function (i) {
@@ -56,7 +56,7 @@ function UserSearch() {
         forEach(getElementsByTagAndClassName('span', 'all', 'initials'), function (i) {
             addElementClass(i, 'selected');
         });
-    }
+    };
 
     this.searchInitial = function(initialtype, e) {
         // Clear all search params except for the other initial
@@ -96,33 +96,33 @@ function UserSearch() {
             // so pass true here to avoid clearing the selected users.
             self.doSearch(true);
         }
-    }
+    };
 
     this.changePage = function(e) {
         e.stop();
         self.searchByChildLink(this);
-    }
+    };
 
     this.rewritePaging = function() {
         forEach(getElementsByTagAndClassName('span', 'pagination', 'searchresults'), function(i) {
             connect(i, 'onclick', self.changePage);
         });
-    }
+    };
 
     this.sortColumn = function(e) {
         e.stop();
         self.searchByChildLink(this);
-    }
+    };
 
     this.rewriteSorting = function() {
         forEach(getElementsByTagAndClassName('th', 'search-results-sort-column', 'searchresults'), function(i) {
             connect(i, 'onclick', self.sortColumn);
         });
-    }
+    };
 
     this.rewriteQueryButton = function() {
         connect($('query-button'), 'onclick', self.newQuery);
-    }
+    };
 
     this.newQuery = function(e) {
         self.params = {};
@@ -138,7 +138,7 @@ function UserSearch() {
         }
         self.doSearch();
         e.stop();
-    }
+    };
 
     this.doSearch = function(saveselected) {
         self.params.action = 'search';
@@ -154,7 +154,7 @@ function UserSearch() {
                 self.rewriteSetLimit();
             }
         });
-    }
+    };
 
     this.rewriteCheckboxes = function() {
         forEach(getElementsByTagAndClassName('input', 'selectusers', 'searchresults'), function(i) {
@@ -186,7 +186,7 @@ function UserSearch() {
                 });
             });
         }
-    }
+    };
 
     this.rewriteSetLimit = function() {
         if ($('setlimit')) {
@@ -202,7 +202,7 @@ function UserSearch() {
                 });
             });
         }
-    }
+    };
 
     addLoadEvent(self.init);
 }
@@ -232,13 +232,13 @@ addLoadEvent(function() {
                 appendChildNodes('bulkactions', INPUT({
                     'type': 'hidden',
                     'name': 'action',
-                    'value': input.name,
+                    'value': input.name
                 }));
                 $('bulkactions').submit();
                 return false;
             }
             removeElementClass('nousersselected', 'hidden');
             return false;
-        })
+        });
     });
 });

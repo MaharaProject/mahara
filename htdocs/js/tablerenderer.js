@@ -25,7 +25,7 @@
  */
 
 TableRendererPageLoaded = false;
-addLoadEvent(function() { TableRendererPageLoaded = true });
+addLoadEvent(function() { TableRendererPageLoaded = true; });
 document.write('<script type="text/javascript" src="' + config.wwwroot + 'js/Pager.js"></script>');
 
 function TableRenderer(target, source, columns, options) {
@@ -40,7 +40,7 @@ function TableRenderer(target, source, columns, options) {
     this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = undefined;  // Something to display when no results are found
-    this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
+    this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); };
     this.updatecallback = function () {};
     this.postupdatecallback = function () {};
     this.updateOnLoadFlag = false;
@@ -132,12 +132,12 @@ function TableRenderer(target, source, columns, options) {
             }
             appendChildNodes(self.tfoot, self.footRow);
         }
-    }
+    };
 
     this.pageChange = function(n) {
         self.lastArgs.offset = ( n - 1 ) * self.limit;
         self.doupdate(self.lastArgs);
-    }
+    };
 
     this.onFirstPage = function () {
         if (self.offset == 0) {
@@ -145,7 +145,7 @@ function TableRenderer(target, source, columns, options) {
         }
 
         return false;
-    }
+    };
     this.onLastPage = function () {
         // logDebug('offset=' + self.offset + ', limit=' + self.limit + ', count=' + self.count);
         if ( self.offset + self.limit >= self.count ) {
@@ -153,7 +153,7 @@ function TableRenderer(target, source, columns, options) {
         }
 
         return false;
-    }
+    };
 
     this.renderdata = function(data) {
         replaceChildNodes(self.tbody);
@@ -187,7 +187,7 @@ function TableRenderer(target, source, columns, options) {
                 appendChildNodes(self.tbody, tr);
             });
         }
-    }
+    };
 
     this.doupdate = function(request_args) {
         if (!request_args) {
@@ -299,7 +299,7 @@ function TableRenderer(target, source, columns, options) {
         else {
             addLoadEvent(partial(self.doupdate, request_args));
         }
-    }
+    };
 
     this.defaultPagerOptions = {
         'pageChangeCallback': self.pageChange,
