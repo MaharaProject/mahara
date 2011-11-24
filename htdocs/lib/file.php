@@ -527,8 +527,14 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
             // gd can eat a lot of memory shrinking large images, so use a placeholder image
             // here if necessary
-            if (isset($imageinfo[0]) && isset($imageinfo[1]) && isset($imageinfo['bits'])) {
-                $approxmem = $imageinfo[0] * $imageinfo[1] * ($imageinfo['bits'] / 8)
+            if (isset($imageinfo['bits'])) {
+                $bits = $imageinfo['bits'];
+            }
+            else if ($imageinfo['mime'] == 'image/gif') {
+                $bits = 8;
+            }
+            if (isset($imageinfo[0]) && isset($imageinfo[1]) && !empty($bits)) {
+                $approxmem = $imageinfo[0] * $imageinfo[1] * ($bits / 8)
                     * (isset($imageinfo['channels']) ? $imageinfo['channels'] : 3);
             }
             if (empty($approxmem) || $approxmem > get_config('maximageresizememory')) {
