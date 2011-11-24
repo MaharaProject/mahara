@@ -781,11 +781,16 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         // When emailing forum posts, create Message-Id headers for threaded display by email clients
         $urlinfo = parse_url(get_config('wwwroot'));
         $hostname = $urlinfo['host'];
-        $cleanforumname = str_replace('"', "'", strip_tags($post->forumtitle));
+        $cleanforumname = clean_email_headers($post->forumtitle);
+        $cleangroupname = clean_email_headers($post->groupname);
+        $cleanforumname = str_replace('"', "'", strip_tags($cleanforumname));
+        $cleangroupname = str_replace('"', "'", strip_tags($cleangroupname));
         $this->customheaders = array(
             'List-Id: "' . $cleanforumname . '" <forum' . $post->forumid . '@' . $hostname . '>',
             'List-Help: ' . get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forumid,
             'Message-ID: <forumpost' . $this->postid . '@' . $hostname . '>',
+            'X-Mahara-Group: ' . $cleangroupname,
+            'X-Mahara-Forum: ' . $cleanforumname
         );
         if ($post->parent) {
             $this->customheaders[] = 'In-Reply-To: <forumpost' . $post->parent . '@' . $hostname . '>';
@@ -805,9 +810,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         ));
 
         $this->strings->subject = (object) array(
-            'key'     => $post->parent ? 'replyforumpostnotificationsubject' : 'newforumpostnotificationsubject',
+            'key'     => $post->parent ? 'replyforumpostnotificationsubjectline' : 'newforumpostnotificationsubjectline',
             'section' => 'interaction.forum',
-            'args'    => array($post->groupname, $post->forumtitle, $post->parent ? $post->topicsubject : $post->subject),
+            'args'    => array($post->parent ? $post->topicsubject : $post->subject),
         );
 
         foreach ($this->users as &$user) {
