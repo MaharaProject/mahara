@@ -80,7 +80,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
                     $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
                 // only show access that is still current. Expired access will be deleted if the form is saved
-                if (empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
+                if ($form->is_submitted() || empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
                     $accesslist[] = $item;
                 }
             }
