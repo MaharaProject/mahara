@@ -492,12 +492,11 @@ function cron_lock($job, $start, $plugintype='core') {
     $strstart = $started ? date('r', $started) : '';
     $msg = "long-running cron job $jobname ($strstart).";
 
-    // If it's been going for more than 24 hours, start another one anyway
+    // If it's been going for more than 24 hours, remove the lock
     if ($started && $started < $start - 60*60*24) {
-        delete_records('config', 'field', $lockname);
-        insert_record('config', (object) array('field' => $lockname, 'value' => $start));
-        log_debug('Restarting ' . $msg);
-        return true;
+        log_debug('Removing lock record for ' . $msg);
+        cron_free($job, $started, $plugintype);
+        return false;
     }
 
     log_debug('Skipping ' . $msg);
