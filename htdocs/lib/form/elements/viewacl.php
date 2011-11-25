@@ -51,24 +51,26 @@ function pieform_element_viewacl(Pieform $form, $element) {
     else if (get_config('allowpublicprofiles') && $element['viewtype'] == 'profile') {
         $public = true;
     }
-    $presets = array();
+    $allpresets = array('public', 'loggedin', 'friends');
+    $allowedpresets = array();
     $loggedinindex = 0;
     if ($public) {
-        $presets[] = 'public';
+        $allowedpresets[] = 'public';
         $loggedinindex = 1;
     }
-    $presets[] = 'loggedin';
+    $allowedpresets[] = 'loggedin';
     if ($form->get_property('userview')) {
-        $presets[] = 'friends';
+        $allowedpresets[] = 'friends';
     }
 
+    $accesslist = array();
     if ($value) {
-        foreach ($value as $key => &$item) {
+        foreach ($value as $item) {
             if (is_array($item)) {
-                if ($item['accesstype'] == 'public') {
+                if ($item['type'] == 'public') {
                     $item['publicallowed'] = (int)$public;
                 }
-                if (in_array($item['type'], $presets)) {
+                if (in_array($item['type'], $allpresets)) {
                     $item['name'] = get_string($item['type'], 'view');
                     $item['preset'] = true;
                 }
@@ -79,12 +81,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
                     $item['shortname'] = str_shorten_text($item['name'], 30, true);
                 }
                 // only show access that is still current. Expired access will be deleted if the form is saved
-                if($item['stopdate'] && (time() > strtotime($item['stopdate']))) {
-                    unset($value[$key]);
+                if ($form->is_submitted() || empty($item['stopdate']) || (time() <= strtotime($item['stopdate']))) {
+                    $accesslist[] = $item;
                 }
-            }
-            else {
-                unset($value[$key]);
             }
         }
     }
@@ -101,8 +100,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
         );
     }
 
-    $potentialpresets = $presets;
-    foreach ($potentialpresets as &$preset) {
+    foreach ($allowedpresets as &$preset) {
         $preset = array(
             'type' => $preset,
             'id'   => $preset,
@@ -154,9 +152,9 @@ function pieform_element_viewacl(Pieform $form, $element) {
     }
 
     $smarty->assign('viewtype', $element['viewtype']);
-    $smarty->assign('potentialpresets', json_encode($potentialpresets));
+    $smarty->assign('potentialpresets', json_encode($allowedpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
-    $smarty->assign('accesslist', json_encode($value));
+    $smarty->assign('accesslist', json_encode($accesslist));
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
     $smarty->assign('myinstitutions', json_encode($myinstitutions));
