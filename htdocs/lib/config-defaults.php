@@ -242,3 +242,15 @@ $cfg->leapovermnetloglevel = 0;
 
 // This needs to be true when forcing https with an ssl proxy such as nginx.
 $cfg->sslproxy = false;
+
+// External login page
+// Use this config option when you want users to be redirected to another
+// login page, for example a moodle instance that has mnet to this mahara
+// You can use the following placeholders:
+// {wwwroot} - Expands out to the wwwroot of this moodle
+// {shorturlencoded} - Expands to the relative script path of the current page (and is urlencoded)
+//
+// A point to note about the example below. Moodle doesn't strip the trailing slash from wwwroot
+// Bug MDL-30042 fixes this, if this patch isn't applied, just hard code the login url you want instead
+//
+// $cfg->externallogin = 'http://moodle.example.com/auth/mnet/jump.php?hostwwwroot={wwwroot}&wantsurl={shorturlencoded}';
