@@ -421,6 +421,16 @@ function editaccess_validate(Pieform $form, $values) {
     if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('newstartdatemustbebeforestopdate', 'view', 'Overriding'));
     }
+
+    $accesstypestrings = array(
+        'public'      => get_string('public', 'view'),
+        'loggedin'    => get_string('loggedin', 'view'),
+        'friends'     => get_string('friends', 'view'),
+        'user'        => get_string('user', 'group'),
+        'group'       => get_string('group', 'group'),
+        'institution' => get_string('institution'),
+    );
+
     $loggedinaccess = false;
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -446,12 +456,12 @@ function editaccess_validate(Pieform $form, $values) {
             }
             $now = strptime(date('Y/m/d H:i'), $dateformat);
             if ($item['stopdate'] && ptimetotime($now) > ptimetotime($item['stopdate'])) {
-                $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', get_string($item['type'], 'view')));
+                $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
             }
             if ($item['startdate'] && $item['stopdate'] && ptimetotime($item['startdate']) > ptimetotime($item['stopdate'])) {
-                $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', get_string($item['type'], 'view')));
+                $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
             }
