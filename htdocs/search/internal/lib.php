@@ -504,7 +504,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else { // All group members
             $select = '
-                    u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
+                    u.id, u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon,
                     u.staff, ' . db_format_tsfield('gm.ctime', 'jointime') . ', gm.role';
             $from = '
                 FROM {usr} u
