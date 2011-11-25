@@ -100,7 +100,7 @@ $prefsform = pieform(array(
 $smarty = smarty();
 $smarty->assign('pagedescription', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', $prefsform);
-$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('PAGEHEADING', get_config('dropdownmenu') ? get_string('settings') : TITLE);
 $smarty->display('form.tpl');
 
 function activityprefs_submit(Pieform $form, $values) {
