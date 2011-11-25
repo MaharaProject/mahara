@@ -1392,7 +1392,7 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 
     $status = true;
     foreach($sqlarr as $sql) {
-        if (!execute_sql($sql, $feedback)) {
+        if (!execute_sql($sql)) {
             $status = false;
             if (!$continue) {
                 break;
