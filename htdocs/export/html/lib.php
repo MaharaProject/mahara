@@ -305,7 +305,7 @@ class PluginExportHtml extends PluginExport {
      * aren't legal on most real filesystems.
      */
     public static function sanitise_path($path) {
-        return substr(str_replace('/', '_', $path), 0, 255);
+        return trim(substr(str_replace('/', '_', $path), 0, 255));
     }
 
 
@@ -522,7 +522,7 @@ abstract class HtmlExportArtefactPlugin {
     public function paginate($artefact) {
 
         // Create directory for storing the artefact
-        $dirname = PluginExportHtml::text_to_path($artefact->get('title'));
+        $dirname = PluginExportHtml::text_to_path(trim($artefact->get('title')));
         if (!check_dir_exists($this->fileroot . $dirname)) {
             throw new SystemException("Couldn't create artefact directory {$this->fileroot}{$dirname}");
         }

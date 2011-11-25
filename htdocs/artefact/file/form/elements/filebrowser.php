@@ -860,7 +860,7 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
     $data = (object) array(
         'parent'      => $parentfolder,
         'owner'       => null,
-        'title'       => $data['title'],
+        'title'       => trim($data['title']),
     );
 
     if ($parentfolder) {
@@ -938,7 +938,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
         }
     }
 
-    $artefact->set('title', $data['title']);
+    $artefact->set('title', trim($data['title']));
     $artefact->set('description', $data['description']);
     $artefact->set('allowcomments', (int) $data['allowcomments']);
 
