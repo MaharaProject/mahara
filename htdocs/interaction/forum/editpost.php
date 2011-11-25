@@ -210,6 +210,13 @@ function addpost_submit(Pieform $form, $values) {
         'body'    => $values['body'],
         'ctime'   =>  db_format_timestamp(time())
     );
+    // See if the same content has been submitted in the last 5 seconds. If so, don't add this post.
+    $oldpost = get_record_select('interaction_forum_post', 'topic = ? AND poster = ? AND parent = ? AND subject = ? AND body = ? AND ctime > ?',
+        array($post->topic, $post->poster, $post->parent, $post->subject, $post->body, db_format_timestamp(time() - 5)),
+        'id');
+    if ($oldpost) {
+        redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $oldpost->id);
+    }
     $postid = insert_record('interaction_forum_post', $post, 'id', true);
 
     // Rewrite the post id into links in the body
