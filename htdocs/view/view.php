@@ -231,7 +231,6 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $collection ? hsc($collection->get('name')) : $view->display_title(true, false));
 
     if ($can_edit) {
-        $smarty->assign('visitstring', $view->visit_message());
         if ($new) {
             $microheaderlinks = array(
                 array(
@@ -255,6 +254,7 @@ if (get_config('viewmicroheaders')) {
 
 }
 else if ($can_edit) {
+    $smarty->assign('visitstring', $view->visit_message());
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid . ($new ? '&new=1' : ''));
 }
 
