@@ -2775,5 +2775,16 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2011111500) {
+        $table = new XMLDBTable('blocktype_installed_category');
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('blocktype'));
+        add_key($table, $key);
+        $table = new XMLDBTable('artefact_log');
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact', 'usr'));
+        add_key($table, $key);
+    }
+
     return $status;
 }

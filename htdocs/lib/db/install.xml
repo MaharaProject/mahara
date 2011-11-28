@@ -504,6 +504,7 @@
                 <FIELD NAME="edited" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="false" />
             </FIELDS>
             <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,usr" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
