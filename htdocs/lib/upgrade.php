@@ -1183,6 +1183,11 @@ function site_warnings() {
         $warnings[] = get_string('notenoughsessionentropy', 'error');
     }
 
+    // Check noreply address is valid.
+    if (!sanitize_email(get_config('noreplyaddress'))) {
+        $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
+    }
+
     // Check file upload settings.
     $postmax       = ini_get('post_max_size');
     $uploadmax     = ini_get('upload_max_filesize');

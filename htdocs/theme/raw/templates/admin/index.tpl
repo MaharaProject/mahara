@@ -5,7 +5,7 @@
 <h3>{str tag="warnings" section=admin}</h3>
 <ul>
 {foreach from=$warnings key=key item=warning}
-    <li>{$warning}</li>
+    <li>{$warning|safe}</li>
 {/foreach}
 </ul>
 </div>
