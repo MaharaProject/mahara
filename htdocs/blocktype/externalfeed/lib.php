@@ -395,6 +395,17 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 break;
             }
             $description = $item->content ? $item->content : ($item->description ? $item->description : ($item->summary ? $item->summary : null));
+            if (!$item->title) {
+                if (!empty($description)) {
+                    $item->title = substr($description, 0, 60);
+                }
+                else if ($item->link) {
+                    $item->title = $item->link;
+                }
+                else {
+                    $item->title = get_string('notitle', 'view');
+                }
+            }
             $data->content[] = (object)array('title' => $item->title, 'link' => $item->link, 'description' => $description);
         }
         $cache[$source] = $data;
