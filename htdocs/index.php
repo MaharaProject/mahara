@@ -74,7 +74,9 @@ function nevershow() {
     sendjsonrequest('homeinfo.json.php', data, 'POST', hideinfo);
 }
 addLoadEvent(function () {
-    $('hideinfo').onclick = nevershow;
+    if ($('hideinfo')) {
+        $('hideinfo').onclick = nevershow;
+    }
 });
 JAVASCRIPT;
 
