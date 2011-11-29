@@ -248,7 +248,8 @@ function newurl_submit(Pieform $form, $values) {
     redirect('/view/urls.php?id=' . $viewid);
 }
 
-$newform = pieform($newform);
+$allownew = !$view->get('owner') || (get_config('allowpublicviews') && $USER->institution_allows_public_views());
+$newform = $allownew ? pieform($newform) : null;
 
 $js = <<<EOF
 \$j(function() {
@@ -268,5 +269,6 @@ $smarty = smarty(
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
+$smarty->assign('allownew', $allownew);
 $smarty->assign('newform', $newform);
 $smarty->display('view/urls.tpl');

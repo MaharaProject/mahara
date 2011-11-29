@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+{if !$allownew}
+  <div class="message info">{str tag=publicaccessnotallowed section=view}</div>
+{/if}
+
 {if $editurls}
 <table class="secreturls">
   <tbody>

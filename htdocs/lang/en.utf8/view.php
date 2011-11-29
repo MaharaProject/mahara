@@ -107,6 +107,8 @@ $string['secreturlupdated'] = 'Secret URL updated';
 $string['generatesecreturl'] = 'Generate a new secret URL for %s';
 $string['secreturls'] = 'Secret URLs';
 
+$string['publicaccessnotallowed'] = "Your institution or site administrator has disabled public pages and secret URLs.  Any secret URLs you see listed here are currently inactive.";
+
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';
 $string['addusertogroup'] = 'Add this user to a group';
