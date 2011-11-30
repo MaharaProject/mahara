@@ -44,6 +44,22 @@ if (is_https()) {
     ini_set('session.cookie_secure', true);
 }
 
+// Attempt to create session directories
+$sessionpath = get_config('dataroot') . 'sessions';
+if (!is_dir("$sessionpath/0")) {
+    // Create three levels of directories, named 0-9, a-f
+    $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+    foreach ($characters as $c1) {
+        check_dir_exists("$sessionpath/$c1");
+        foreach ($characters as $c2) {
+            check_dir_exists("$sessionpath/$c1/$c2");
+            foreach ($characters as $c3) {
+                check_dir_exists("$sessionpath/$c1/$c2/$c3");
+            }
+        }
+    }
+}
+
 /**
  * The session class handles session data and messages.
  *
