@@ -304,7 +304,8 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 #right-nav li {
   padding: 0;
 }
-#right-nav li a {
+#right-nav li a,
+#right-nav li.identity a {
   color: #fff;
 }
 #right-nav li.selected a {

@@ -284,7 +284,8 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav li a {
+#right-nav li a,
+#right-nav li.identity a {
   color: #f7be23;
 }
 #right-nav li.selected a {

@@ -288,7 +288,8 @@ span.btn a.icon, a span.icon {
 #right-nav li {
   padding: 0 0 0 1em;
 }
-#right-nav li a {
+#right-nav li a,
+#right-nav li.identity a {
   color: #FFF;
 }
 #right-nav li.selected a {

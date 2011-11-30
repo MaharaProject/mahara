@@ -1006,6 +1006,10 @@ div.rbuttons .small-logo {
 #right-nav li a {
 	padding: 0 5px;
 }
+#right-nav li.identity a {
+	color: #333;
+	text-decoration: none;
+}
 #main-nav {
 	clear: both;
 	font-size: 1.1667em;
