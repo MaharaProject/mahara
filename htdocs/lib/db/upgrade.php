@@ -2780,10 +2780,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $key = new XMLDBKey('primary');
         $key->setAttributes(XMLDB_KEY_PRIMARY, array('blocktype'));
         add_key($table, $key);
-        $table = new XMLDBTable('artefact_log');
-        $key = new XMLDBKey('primary');
-        $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact', 'usr'));
-        add_key($table, $key);
     }
 
     return $status;
