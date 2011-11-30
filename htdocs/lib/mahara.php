@@ -235,6 +235,9 @@ function upgrade_mahara($upgrades) {
             if ($name == 'core') {
                 $funname = 'upgrade_core';
             }
+            else if ($name == 'local') {
+                $funname = 'upgrade_local';
+            }
             else {
                 $funname = 'upgrade_plugin';
             }
