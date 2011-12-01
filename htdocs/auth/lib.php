@@ -1671,10 +1671,36 @@ function auth_handle_institution_expiries() {
  * out session files of users whose sessions have timed out.
  */
 function auth_remove_old_session_files() {
-    // Note: read the manpage for find and xargs to understand what is going on 
-    // here. In particular, -mtime +1 means files older than about two days 
-    // will be removed
-    exec('find ' . escapeshellarg(get_config('dataroot') . 'sessions') . ' -type f -mtime +1 | xargs -n 1000 -r rm');
+    $basedir = get_config('dataroot') . 'sessions/';
+
+    // delete sessions older than the session timeout plus 2 days
+    $mintime = time() - get_config('session_timeout') - 2 * 24 * 60 * 60;
+
+    // Session files are stored in a three tier md5sum layout
+    // The actual files are stored in the third directory
+    // This loops through all three directories, then checks the files for age
+
+    $iter1 = new DirectoryIterator($basedir);
+    foreach ($iter1 as $dir1) {
+        if ($dir1->isDot()) continue;
+        $dir1path = $dir1->getPath() . '/' . $dir1->getFilename();
+        $iter2 = new DirectoryIterator($dir1path);
+        foreach ($iter2 as $dir2) {
+            if ($dir2->isDot()) continue;
+            $dir2path = $dir2->getPath() . '/' . $dir2->getFilename();
+            $iter3 = new DirectoryIterator($dir2path);
+            foreach ($iter3 as $dir3) {
+                if ($dir3->isDot()) continue;
+                $dir3path = $dir3->getPath() . '/' . $dir3->getFilename();
+                $fileiter = new DirectoryIterator($dir3path);
+                foreach ($fileiter as $file) {
+                    if ($file->isFile() && $file->getCTime() < $mintime) {
+                        unlink($file->getPath() . '/' . $file->getFilename());
+                    }
+                }
+            }
+        }
+    }
     // Throw away records of old login sessions. Should check whether any are still alive.
     delete_records_select('usr_session', 'ctime < ?', array(db_format_timestamp(time() - 86400 * 30)));
 }
