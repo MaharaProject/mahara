@@ -745,6 +745,8 @@ class Theme {
         $this->templatedirs[] = get_config('docroot') . 'theme/' . $this->basename . '/templates/';
         $this->inheritance[]  = $this->basename;
 
+        $this->templatedirs[] = get_config('docroot') . 'local/theme/templates/';
+
         // Now go through the theme hierarchy assigning variables from the 
         // parent themes
         $currenttheme = $this->basename;
