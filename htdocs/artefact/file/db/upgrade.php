@@ -308,25 +308,17 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
             );
         }
         else {
-            $folders = get_records_select_array(
-                'artefact',
-                'artefacttype = ? AND title = ? AND description = ?',
-                array('folder', $imagesdir, $imagesdirdesc),
-                'owner ASC'
+            execute_sql("
+                UPDATE {artefact}, (
+                    SELECT owner, MAX(id) AS folderid
+                    FROM {artefact}
+                    WHERE artefacttype = 'folder' AND title = ? AND description = ?
+                    GROUP BY owner
+                ) f
+                SET parent = f.folderid, description = ?
+                WHERE artefacttype = 'profileicon' AND {artefact}.owner = f.owner",
+                array($imagesdir, $imagesdirdesc, $profileicondesc)
             );
-            if ($folders) {
-                $lastowner = null;
-                foreach ($folders as $f) {
-                    if ($f->owner != $lastowner) {
-                        execute_sql("
-                            UPDATE {artefact} SET parent = ?, description = ?
-                            WHERE owner = ? AND artefacttype = 'profileicon'",
-                            array($f->id, $profileicondesc, $f->owner)
-                        );
-                    }
-                    $lastowner = $f->owner;
-                }
-            }
         }
     }
 
