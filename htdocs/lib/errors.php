@@ -558,7 +558,7 @@ class MaharaException extends Exception {
             exit; // let it be caught by phpunit
         }
 
-        if (defined('CRON')) {
+        if (defined('CRON') || defined('CLI')) {
             echo $this->render_exception();
             exit;
         }
