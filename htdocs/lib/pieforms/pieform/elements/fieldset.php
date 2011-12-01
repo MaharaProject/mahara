@@ -59,7 +59,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
                 break;
             }
         }
-        if (!empty($element['collapsed']) && !$error) {
+        if (!empty($element['collapsed']) && !$error && param_alphanumext('fs', null) != $element['name']) {
             $classes[] = 'collapsed';
         }
     }
