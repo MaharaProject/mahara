@@ -247,6 +247,27 @@ class Collection {
 
         $collection->add_views($copyviews);
 
+        // Update all the navigation blocks referring to this collection
+        if ($viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'))) {
+            $navblocks = get_records_select_array(
+                'block_instance',
+                'view IN (' . join(',', array_fill(0, count($viewids), '?')) . ") AND blocktype = 'navigation'",
+                $viewids
+            );
+
+            if ($navblocks) {
+                safe_require('blocktype', 'navigation');
+                foreach ($navblocks as $b) {
+                    $bi = new BlockInstance($b->id, $b);
+                    $configdata = $bi->get('configdata');
+                    if (isset($configdata['collection']) && $configdata['collection'] == $templateid) {
+                        $bi->set('configdata', array('collection' => $collection->get('id')));
+                        $bi->commit();
+                    }
+                }
+            }
+        }
+
         db_commit();
 
         return array(
