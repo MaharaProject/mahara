@@ -2782,5 +2782,14 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2011120200) {
+        if ($data = check_upgrades('blocktype.blog/taggedposts')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('blocktype.watchlist')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
