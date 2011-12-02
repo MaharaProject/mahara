@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Your Plans';
+$string['title'] = 'Your plans';
 $string['description'] = 'Display your plans list';
-$string['defaulttitledescription'] = 'If this is left empty the title of the plan will be used.';
+$string['defaulttitledescription'] = 'If this is left empty, the title of the plan will be used.';
 $string['newerplans'] = 'Newer plans';
 $string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
 $string['olderplans'] = 'Older plans';

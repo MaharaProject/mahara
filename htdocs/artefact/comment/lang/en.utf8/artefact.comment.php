@@ -34,7 +34,7 @@ $string['comments'] = 'comments';
 
 $string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';
-$string['approvalrequired'] = 'Comments are moderated, so if you choose to make this comment public, it will not be visible to others until it is approved by the owner.';
+$string['approvalrequired'] = 'Comments are moderated. If you choose to make this comment public, it will not be visible to others until it is approved by the owner.';
 $string['attachfile'] = "Attach file";
 $string['Attachments'] = "Attachments";
 $string['cantedithasreplies'] = 'You can only edit the most recent comment';
@@ -50,16 +50,16 @@ $string['commentremovedbyauthor'] = 'Comment removed by the author';
 $string['commentremovedbyowner'] = 'Comment removed by the owner';
 $string['commentremovedbyadmin'] = 'Comment removed by an administrator';
 $string['commentupdated'] = 'Comment updated';
-$string['editcomment'] = 'Edit Comment';
-$string['editcommentdescription'] = 'You can update your comments if they are less than %d minutes old and have had no newer replies added.  After this time you may still be able to delete your comments and add new ones.';
-$string['entriesimportedfromleapexport'] = 'Entries imported from a LEAP export, that were not able to be imported elsewhere';
+$string['editcomment'] = 'Edit comment';
+$string['editcommentdescription'] = 'You can update your comments if they are less than %d minutes old and have had no newer replies added. After this time you may still be able to delete your comments and add new ones.';
+$string['entriesimportedfromleapexport'] = 'Entries imported from a LEAP export that were not able to be imported elsewhere';
 $string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentfiles';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';
 $string['feedbackattachmessage'] = 'The attached file(s) have been added to your %s folder';
 $string['feedbackonviewbyuser'] = 'Feedback on %s by %s';
 $string['feedbacksubmitted'] = 'Feedback submitted';
-$string['lastcomment'] = 'Last Comment';
+$string['lastcomment'] = 'Last comment';
 $string['makepublic'] = 'Make public';
 $string['makepublicnotallowed'] = 'You are not allowed to make this comment public';
 $string['makepublicrequestsubject'] = 'Request to change private comment to public';
@@ -113,4 +113,4 @@ To see %s online, follow this link:
 %s";
 
 $string['artefactdefaultpermissions'] = 'Default comment permission';
-$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation.  Users can override these settings for individual artefacts.';
+$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation. Users can override these settings for individual artefacts.';

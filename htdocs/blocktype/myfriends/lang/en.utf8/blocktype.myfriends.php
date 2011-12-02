@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'My Friends';
-$string['otherusertitle'] = "%s's Friends";
+$string['title'] = 'My friends';
+$string['otherusertitle'] = "%s's friends";
 $string['description'] = 'Display your friends';
 $string['numberoffriends'] = '(%s of %s)';

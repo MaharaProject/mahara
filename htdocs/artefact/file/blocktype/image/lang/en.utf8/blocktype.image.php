@@ -27,9 +27,9 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'An Image';
-$string['description'] = 'A single image from your Files area';
+$string['title'] = 'Image';
+$string['description'] = 'A single image from your files area';
 
-$string['showdescription'] = 'Show Description?';
+$string['showdescription'] = 'Show description';
 $string['width'] = 'Width';
 $string['widthdescription'] = 'Specify the width for your image (in pixels). The image will be scaled to this width. Leave it blank to use the original size of the image.';

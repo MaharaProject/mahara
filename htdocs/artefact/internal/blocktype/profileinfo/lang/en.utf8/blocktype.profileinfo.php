@@ -27,12 +27,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Profile Information';
+$string['title'] = 'Profile information';
 $string['description'] = 'Choose profile information to display';
 
-$string['aboutme'] = 'About Me';
+$string['aboutme'] = 'About me';
 $string['fieldstoshow'] = 'Fields to show';
-$string['introtext'] = 'Introduction Text';
+$string['introtext'] = 'Introduction text';
 $string['useintroductioninstead'] = 'You can use your introduction profile field instead by enabling that and leaving this field blank';
 $string['dontshowprofileicon'] = "Don't show a profile picture";
 $string['dontshowemail'] = "Don't show email address";

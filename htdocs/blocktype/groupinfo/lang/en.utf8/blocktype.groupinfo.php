@@ -27,5 +27,5 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Group Info';
+$string['title'] = 'Group info';
 $string['description'] = 'Display information about the group';
