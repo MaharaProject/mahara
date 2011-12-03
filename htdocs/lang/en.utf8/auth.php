@@ -34,17 +34,17 @@ $string['wwwroot'] = 'WWW root';
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
-$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \nplugin that exists for this institution.";
-$string['cannotremoveinuse']  = "We can't remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
+$string['cannotremove']  = "We cannot remove this auth plugin, as it's the only \nplugin that exists for this institution.";
+$string['cannotremoveinuse']  = "We cannot remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
 $string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
-$string['editauthority'] = 'Edit an Authority';
-$string['addauthority']  = 'Add an Authority';
+$string['editauthority'] = 'Edit an authority';
+$string['addauthority']  = 'Add an authority';
 
 $string['updateuserinfoonlogin'] = 'Update user info on login';
 $string['updateuserinfoonlogindescription'] = 'Retrieve user info from the remote server and update your local user record each time the user logs in.';
-$string['xmlrpcserverurl'] = 'XML-RPC Server URL';
-$string['ipaddress'] = 'IP Address';
+$string['xmlrpcserverurl'] = 'XML-RPC server URL';
+$string['ipaddress'] = 'IP address';
 $string['shortname'] = 'Short name for your site';
 $string['name'] = 'Site name';
 $string['nodataforinstance'] = 'Could not find data for auth instance ';
@@ -63,19 +63,19 @@ $string['ssodirection'] = 'SSO direction';
 
 $string['errorcertificateinvalidwwwroot'] = 'This certificate claims to be for %s, but you are trying to use it for %s.';
 $string['errorcouldnotgeneratenewsslkey'] = 'Could not generate a new SSL key. Are you sure that both openssl and the PHP module for openssl are installed on this machine?';
-$string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at %s';
-$string['errornotvalidsslcertificate'] = 'This is not a valid SSL Certificate';
-$string['errnoxmlrpcinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at %s';
-$string['errnoxmlrpcwwwroot']   = 'We don\'t have a record for any host at %s';
+$string['errnoauthinstances']   = 'We do not seem to have any authentication plugin instances configured for the host at %s';
+$string['errornotvalidsslcertificate'] = 'This is not a valid SSL certificate';
+$string['errnoxmlrpcinstances'] = 'We do not seem to have any XMLRPC authentication plugin instances configured for the host at %s';
+$string['errnoxmlrpcwwwroot']   = 'We do not have a record for any host at %s';
 $string['errnoxmlrpcuser1']      = "We were unable to authenticate you at this time. Possible reasons might be:
 
     * Your SSO session might have expired. Go back to the other application and click the link to sign into %s again.
     * You may not be allowed to SSO to %s. Please check with your administrator if you think you should be allowed to.";
 
-$string['toomanytries'] = 'You have exceeded the maximum login attempts. The account has been locked for up to 5 minutes.';
+$string['toomanytries'] = 'You have exceeded the maximum login attempts. This account has been locked for up to 5 minutes.';
 $string['unabletosigninviasso'] = 'Unable to sign in via SSO';
 $string['xmlrpccouldnotlogyouin'] = 'Sorry, could not log you in :(';
-$string['xmlrpccouldnotlogyouindetail1'] = 'Sorry, we could not log you into %s at this time. Please try again shortly, and if the problem persists, contact your administrator';
+$string['xmlrpccouldnotlogyouindetail1'] = 'Sorry, we could not log you into %s at this time. Please try again shortly.  If the problem persists, contact your administrator';
 
 $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
