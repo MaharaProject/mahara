@@ -700,28 +700,19 @@ function quotaUpdate(quotaused, quota) {
 
 function updateUnreadCount(n, decrement) {
     var newcount = -1;
-    forEach(getElementsByTagAndClassName('span', 'unreadmessagescontainer'), function(message) {
-        var countnode = message.firstChild;
-        if (decrement == 'decrement') {
-            var oldcount = parseInt(countnode.innerHTML);
-            newcount = (oldcount - n);
-        }
-        else {
-            newcount = n;
-        }
-        var messagenode = message.lastChild;
-        if (newcount == 1) { // jump through hoops to change between plural and singular
-            messagenode.innerHTML = get_string('unreadmessage');
-        }
-        else {
-            messagenode.innerHTML = get_string('unreadmessages');
-        }
-        countnode.innerHTML = newcount;
-    });
+    var countnode = getFirstElementByTagAndClassName('span', 'unreadmessagecount', 'right-nav');
+    if (!countnode) {
+        return;
+    }
+    if (decrement == 'decrement') {
+        var oldcount = parseInt(countnode.innerHTML);
+        newcount = (oldcount - n);
+    }
+    else {
+        newcount = n;
+    }
     if (newcount > -1) {
-        forEach(getElementsByTagAndClassName('span', 'unreadmessagecount', 'right-nav'), function(element) {
-            element.innerHTML = newcount;
-        });
+        countnode.innerHTML = newcount;
     }
 }
 
