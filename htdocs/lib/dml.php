@@ -1688,3 +1688,23 @@ function db_interval($s) {
         return "INTERVAL $s SECOND";
     }
 }
+
+function postgres_language_exists($language) {
+    if (!is_postgres()) {
+        throw new SQLException('postgres_language_exists() expects a postgres database');
+    }
+    return get_field_sql('SELECT 1 FROM pg_catalog.pg_language WHERE lanname = ?', array($language)) == 1;
+}
+
+function postgres_create_language($language) {
+    if (!is_postgres()) {
+        throw new SQLException('postgres_create_language() expects a postgres database');
+    }
+
+    // CREATE LANGUAGE fails if the language already exists
+    if (postgres_language_exists($language)) {
+        return true;
+    }
+    execute_sql("CREATE LANGUAGE $language;");
+    return postgres_language_exists($language);
+}
