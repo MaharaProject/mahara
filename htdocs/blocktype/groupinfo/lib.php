@@ -84,7 +84,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
         // get the currently requested group
         $group = group_current_group();
 
-        $group->ctime = strftime(get_string('strftimedate'), $group->ctime);
+        $group->ctime = format_date($group->ctime, 'strftimedate');
         // if the user isn't logged in an the group isn't public don't show anything
         if (!is_logged_in() && !$group->public) {
             throw new AccessDeniedException();

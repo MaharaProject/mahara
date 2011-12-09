@@ -544,7 +544,7 @@ class ArtefactTypeTask extends ArtefactType {
                     if ($result->completiondate < $datenow && !$result->completed) {
                         $result->completed = -1;
                     }
-                    $result->completiondate = strftime(get_string('strftimedate'), $result->completiondate);
+                    $result->completiondate = format_date($result->completiondate, 'strftimedate');
                 }
             }
         }
