@@ -1281,16 +1281,35 @@ function rebuild_artefact_parent_cache_complete() {
             continue;
         }
 
-        // Individual user artefacts
-        // Process artefacts in chunks with $userlimit owners
-        $userlimit = 5000;
+        // There are usually a lot of individual user artefacts, so these are processed in
+        // chunks.  Ideally we would like to do < $artefactlimit artefacts at a time, but
+        // it's more important to make sure all artefacts with the same owner are processed
+        // together, so if one user has too many artefacts, this limit will be exceeded.
+        $artefactlimit = 25000;
+        $defaultuserlimit = 1000; // Try to do this many users in each run
+
         $maxuser = get_field('artefact', 'MAX(owner)');
         $sql = $select . $where . ' AND owner >= ? AND owner < ?' . $groupby;
+        $countsql = 'SELECT COUNT(r.id) FROM (' . $sql . ') r';
 
-        for ($i = 0; $i <= $maxuser; $i += $userlimit) {
+        $i = 0;
+        while ($i <= $maxuser) {
+            $userlimit = $defaultuserlimit;
+            $n = count_records_sql($countsql, array($i, $i + $userlimit));
+            // If we have too many artefacts, try fewer users.
+            while ($n > $artefactlimit) {
+                $userlimit = floor($userlimit / 2);
+                if ($userlimit < 2) {
+                    break;
+                }
+                $n = count_records_sql($countsql, array($i, $i + $userlimit));
+            }
             if ($artefacts = get_records_sql_assoc($sql, array($i, $i + $userlimit))) {
+                $lastuser = min($i + $userlimit, $maxuser);
+                log_debug("Rebuilding parent cache for " . count($artefacts) . " artefacts (users $i-$lastuser of $maxuser)");
                 rebuild_artefact_parent_cache_partial($artefacts);
             }
+            $i += $userlimit;
         }
     }
 
