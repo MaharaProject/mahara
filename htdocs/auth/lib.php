@@ -1355,8 +1355,8 @@ function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
     try {
         email_user($user, null, $subject, $bodytext, $bodyhtml);
     }
-    catch (EmailDisabledException $e) {
-        // Send a notification instead - email is disabled for this user
+    catch (EmailException $e) {
+        // Send a notification instead - email is invalid or disabled for this user
         $message = new StdClass;
         $message->users = array($user->id);
         $message->subject = $subject;
