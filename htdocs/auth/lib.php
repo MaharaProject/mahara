@@ -1092,7 +1092,7 @@ function get_login_form_js($form) {
     $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
-    return <<<EOF
+    $js = <<< EOF
 <script type="text/javascript">
 var loginbox = $('loginform_container');
 document.cookie = "$cookiename=1";
@@ -1105,6 +1105,47 @@ else {
 }
 </script>
 EOF;
+
+    $authplugins = auth_get_enabled_auth_plugins();
+    foreach ($authplugins as $plugin) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        $pluginjs = call_static_method($classname, 'login_form_js');
+        if (!empty($pluginjs)) {
+            $js .= $pluginjs;
+        }
+    }
+
+    return $js;
+}
+
+/**
+ * Return a list of all enabled and usable auth plugins.
+ */
+function auth_get_enabled_auth_plugins() {
+
+    $sql = 'SELECT
+                DISTINCT(authname)
+            FROM
+                {auth_instance} ai
+            JOIN
+                {institution} i ON ai.institution = i.name
+            JOIN
+                {auth_installed} inst ON inst.name = ai.authname
+            WHERE
+                i.suspended = 0 AND
+                inst.active = 1';
+    $authplugins = get_column_sql($sql);
+
+    $usableplugins = array();
+    foreach ($authplugins as $plugin) {
+        safe_require('auth', strtolower($plugin));
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        if (call_static_method($classname, 'is_usable')) {
+            $usableplugins[] = $plugin;
+        }
+    }
+
+    return $usableplugins;
 }
 
 
@@ -1743,6 +1784,14 @@ class PluginAuth extends Plugin {
     }
 
     public static function can_be_disabled() {
+        return false;
+    }
+
+    /**
+     * Can be overridden by plugins that need to inject more
+     * Javascript to make the login form work.
+     */
+    public static function login_form_js() {
         return false;
     }
 }
