@@ -1032,6 +1032,16 @@ function auth_get_login_form() {
         ),
     );
 
+    // Get any extra elements from the enabled auth plugins
+    $authplugins = auth_get_enabled_auth_plugins();
+    foreach ($authplugins as $plugin) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        $pluginelements = call_static_method($classname, 'login_form_elements');
+        if (!empty($pluginelements)) {
+            $elements = array_merge($elements, $pluginelements);
+        }
+    }
+
     // The login page is completely transient, and it is smart because it
     // remembers the GET and POST data sent to it and resends that on
     // afterwards. 
@@ -1610,6 +1620,49 @@ function auth_generate_login_form() {
     else {
         $registerlink = '';
     }
+
+    $elements = array(
+        'login_username' => array(
+            'type'        => 'text',
+            'title'       => get_string('username') . ':',
+            'description' => get_string('usernamedescription'),
+            'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
+            'rules' => array(
+                'required'    => true
+            )
+        ),
+        'login_password' => array(
+            'type'        => 'password',
+            'title'       => get_string('password') . ':',
+            'description' => get_string('passworddescription'),
+            'defaultvalue'       => '',
+            'rules' => array(
+                'required'    => true
+            )
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('login')
+        ),
+        'register' => array(
+            'value' => '<div id="login-helplinks">' . $registerlink
+                . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+        ),
+        'loginsaml' => array(
+            'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
+        ),
+    );
+
+    // Get any extra elements from the enabled auth plugins
+    $authplugins = auth_get_enabled_auth_plugins();
+    foreach ($authplugins as $plugin) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        $pluginelements = call_static_method($classname, 'login_form_elements');
+        if (!empty($pluginelements)) {
+            $elements = array_merge($elements, $pluginelements);
+        }
+    }
+
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1617,37 +1670,7 @@ function auth_generate_login_form() {
         'plugintype' => 'auth',
         'pluginname' => 'internal',
         'autofocus'  => false,
-        'elements'   => array(
-            'login_username' => array(
-                'type'        => 'text',
-                'title'       => get_string('username') . ':',
-                'description' => get_string('usernamedescription'),
-                'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
-                'rules' => array(
-                    'required'    => true
-                )
-            ),
-            'login_password' => array(
-                'type'        => 'password',
-                'title'       => get_string('password') . ':',
-                'description' => get_string('passworddescription'),
-                'defaultvalue'       => '',
-                'rules' => array(
-                    'required'    => true
-                )
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('login')
-            ),
-            'register' => array(
-                'value' => '<div id="login-helplinks">' . $registerlink
-                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
-            ),
-            'loginsaml' => array(
-                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
-            ),
-        )
+        'elements'   => $elements,
     )));
 
     return $loginform;
@@ -1784,6 +1807,14 @@ class PluginAuth extends Plugin {
     }
 
     public static function can_be_disabled() {
+        return false;
+    }
+
+    /**
+     * Can be overridden by plugins that need to inject more
+     * pieform elements into the login form.
+     */
+    public static function login_form_elements() {
         return false;
     }
 
