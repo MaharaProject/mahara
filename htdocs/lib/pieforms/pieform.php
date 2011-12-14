@@ -1400,6 +1400,11 @@ EOF;
                 $element['helphtml'] = '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
         }
+
+        // Issue a warning if this element wants to add something in the <head> tag, and it's too late to do that.
+        if (defined('PIEFORM_GOT_HEADDATA') && function_exists('pieform_element_' . $element['type'] . '_get_headdata')) {
+            log_warn('Pieform element ' . $this->name . '_' . $element['name'] . ' wants to add headdata to the page, but it\'s too late. Build your form before generating the page.');
+        }
     }/*}}}*/
 
     /**

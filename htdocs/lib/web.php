@@ -85,6 +85,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
+        define('PIEFORM_GOT_HEADDATA', 1);
     }
 
     // Insert the appropriate javascript tags 
