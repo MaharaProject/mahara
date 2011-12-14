@@ -31,8 +31,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-json_headers();
-
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
@@ -93,7 +91,7 @@ else {
     }
 }
 
-echo json_encode(array(
+json_reply(false, array(
     'count'    => $count,
     'limit'    => $limit,
     'offset'   => $offset,
