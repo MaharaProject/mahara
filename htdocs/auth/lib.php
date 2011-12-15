@@ -1023,9 +1023,6 @@ function auth_get_login_form() {
         'register' => array(
             'value' => '<div id="login-helplinks">' . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
         ),
-        'loginsaml' => array(
-            'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<div id="login-helplinks"><a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a></div>')
-        ),
         'login_submitted' => array(
             'type'  => 'hidden',
             'value' => 1
@@ -1647,9 +1644,6 @@ function auth_generate_login_form() {
         'register' => array(
             'value' => '<div id="login-helplinks">' . $registerlink
                 . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
-        ),
-        'loginsaml' => array(
-            'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
         ),
     );
 
