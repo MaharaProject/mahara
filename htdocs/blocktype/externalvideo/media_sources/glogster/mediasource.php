@@ -8,19 +8,22 @@ class Media_glogster implements MediaBase {
 
     private static $default_width  = 480;
     private static $default_height = 650;
-    private static $default_scale  = 50;
 
     private static $embed_sources  = array(
         array(
-            'match' => '#.*?glogster\.com/flash/flash_loader\.swf\?ver=(\d+).*?flashvars="([^"]+)".*#',
-            'url'   => 'http://www.glogster.com/flash/flash_loader.swf?ver=$1&$2',
+            'match' => '#.*?glogster\.com/([a-zA-Z0-9\-\_\/]*)/g-([a-zA-Z0-9\-\_\/]*).*#',
+            'url'   => 'http://www.glogster.com/glog/$2',
+        ),
+        array(
+            'match' => '#.*?glogster\.com/glog/([a-zA-Z0-9\-\_\/]*).*#',
+            'url'   => 'http://www.glogster.com/glog/$1',
         ),
     );
 
     private static $iframe_sources = array(
         array(
-            'match' => '#.*?https?://((www|edu)\.)?glogster\.com/glog\.php\?glog_id=([0-9]*).*#',
-            'url'   => 'http://www.glogster.com/glog.php?glog_id=$3&scale=',
+            'match' => '#.*?https?://((www|edu)\.)?glogster\.com/glog/([a-zA-Z0-9\-\_]*)".*#',
+            'url'   => 'http://www.glogster.com/glog/$3',
         ),
     );
 
@@ -38,14 +41,13 @@ class Media_glogster implements MediaBase {
 
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
-        $scale  = (int) $width / self::$default_width * self::$default_scale;
 
         foreach (self::$embed_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
                 $result = array(
                     'videoid' => $output,
-                    'type'    => 'embed',
+                    'type'    => 'iframe',
                     'width'   => $width,
                     'height'  => $height,
                 );
@@ -57,7 +59,7 @@ class Media_glogster implements MediaBase {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
                 $result = array(
-                    'videoid' => $output . $scale,
+                    'videoid' => $output,
                     'type'    => 'iframe',
                     'width'   => $width,
                     'height'  => $height,
