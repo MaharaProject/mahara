@@ -1280,18 +1280,6 @@ function login_submit(Pieform $form, $values) {
         redirect();
     }
 
-    // Check if the user's account has been deleted
-    if ($USER->deleted) {
-        $USER->logout();
-        die_info(get_string('accountdeleted'));
-    }
-
-    // Check if the user's account has expired
-    if ($USER->expiry > 0 && time() > $USER->expiry) {
-        $USER->logout();
-        die_info(get_string('accountexpired'));
-    }
-
     // Check if the user's account has become inactive
     $inactivetime = get_config('defaultaccountinactiveexpire');
     if ($inactivetime && $oldlastlogin > 0
@@ -1300,17 +1288,52 @@ function login_submit(Pieform $form, $values) {
         die_info(get_string('accountinactive'));
     }
 
-    // Check if the user's account has been suspended
-    if ($USER->suspendedcusr) {
-        $suspendedctime  = strftime(get_string('strftimedaydate'), $USER->suspendedctime);
-        $suspendedreason = $USER->suspendedreason;
-        $USER->logout();
-        die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
-    }
+    ensure_user_account_is_active();
 
     // User is allowed to log in
     //$USER->login($userdata);
     auth_check_required_fields();
+}
+
+/**
+ * Die and log the user out if their account is not active.
+ *
+ * @param $user The user object to check or null for the currently logged in user.
+ */
+function ensure_user_account_is_active($user=null) {
+
+    $dologout = false;
+    if (!$user) {
+        global $USER;
+        $user = $USER;
+        $dologout = true;
+    }
+
+    // Check if the user's account has been deleted
+    if ($user->deleted) {
+        if ($dologout) {
+            $user->logout();
+        }
+        die_info(get_string('accountdeleted'));
+    }
+
+    // Check if the user's account has expired
+    if ($user->expiry > 0 && time() > $user->expiry) {
+        if ($dologout) {
+            $user->logout();
+        }
+        die_info(get_string('accountexpired'));
+    }
+
+    // Check if the user's account has been suspended
+    if ($user->suspendedcusr) {
+        $suspendedctime  = strftime(get_string('strftimedaydate'), $user->suspendedctime);
+        $suspendedreason = $user->suspendedreason;
+        if ($dologout) {
+            $user->logout();
+        }
+        die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
+    }
 }
 
 /**
