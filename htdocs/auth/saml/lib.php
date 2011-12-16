@@ -596,4 +596,8 @@ class PluginAuthSaml extends PluginAuth {
         );
         return $elements;
     }
+
+    public static function need_basic_login_form() {
+        return false;
+    }
 }
