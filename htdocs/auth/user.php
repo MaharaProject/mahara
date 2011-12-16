@@ -1131,15 +1131,7 @@ class LiveUser extends User {
            return false;
         }
 
-        $siteclosedforupgrade = get_config('siteclosed');
-        if ($siteclosedforupgrade && get_config('disablelogin')) {
-            global $SESSION;
-            $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
-            return false;
-        }
-        if (!$user->admin && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
-            global $SESSION;
-            $SESSION->add_error_msg(get_string('siteclosed'));
+        if (is_site_closed($user->admin)) {
             return false;
         }
 
@@ -1472,4 +1464,21 @@ class LiveUser extends User {
             'mimetype' => $mimetype,
         ));
     }
+}
+
+function is_site_closed($adminuser) {
+    $siteclosedforupgrade = get_config('siteclosed');
+    if ($siteclosedforupgrade && get_config('disablelogin')) {
+        global $SESSION;
+        $SESSION->add_error_msg(get_string('siteclosedlogindisabled', 'mahara', get_config('wwwroot') . 'admin/upgrade.php'), false);
+        return true;
+    }
+
+    if (!$adminuser && ($siteclosedforupgrade || get_config('siteclosedbyadmin'))) {
+        global $SESSION;
+        $SESSION->add_error_msg(get_string('siteclosed'));
+        return true;
+    }
+
+    return false;
 }
