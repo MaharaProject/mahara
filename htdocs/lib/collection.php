@@ -222,7 +222,11 @@ class Collection {
         $colltemplate = new Collection($templateid);
 
         $data = new StdClass;
-        $data->name = self::new_name(get_string('Copyof', 'mahara', $colltemplate->get('name')), (object)$collectiondata);
+        $desiredname = $colltemplate->get('name');
+        if (get_config('renamecopies')) {
+            $desiredname = get_string('Copyof', 'mahara', $desiredname);
+        }
+        $data->name = self::new_name($desiredname, (object)$collectiondata);
         $data->description = $colltemplate->get('description');
         $data->navigation = $colltemplate->get('navigation');
 

@@ -254,3 +254,6 @@ $cfg->sslproxy = false;
 // Bug MDL-30042 fixes this, if this patch isn't applied, just hard code the login url you want instead
 //
 // $cfg->externallogin = 'http://moodle.example.com/auth/mnet/jump.php?hostwwwroot={wwwroot}&wantsurl={shorturlencoded}';
+
+// If true, new copies of views & collections will have 'Copy of' prepended to the title.
+$cfg->renamecopies = true;

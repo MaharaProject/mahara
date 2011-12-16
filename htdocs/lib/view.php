@@ -217,7 +217,11 @@ class View {
 
         // Set a default title if one wasn't set
         if (!isset($viewdata['title'])) {
-            $view->set('title', self::new_title(get_string('Copyof', 'mahara', $template->get('title')), (object)$viewdata));
+            $desiredtitle = $template->get('title');
+            if (get_config('renamecopies')) {
+                $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
+            }
+            $view->set('title', self::new_title($desiredtitle, (object)$viewdata));
             $view->set('dirty', true);
         }
 
