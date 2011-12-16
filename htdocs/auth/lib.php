@@ -1029,14 +1029,28 @@ function auth_get_login_form() {
         ),
     );
 
+
     // Get any extra elements from the enabled auth plugins
+    $extraelements = array();
+    $showbasicform = false;
     $authplugins = auth_get_enabled_auth_plugins();
     foreach ($authplugins as $plugin) {
         $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
         $pluginelements = call_static_method($classname, 'login_form_elements');
         if (!empty($pluginelements)) {
-            $elements = array_merge($elements, $pluginelements);
+            $extraelements = array_merge($extraelements, $pluginelements);
         }
+        if (call_static_method($classname, 'need_basic_login_form')) {
+            $showbasicform = true;
+        }
+    }
+
+    // Replace or supplement the standard login form elements
+    if ($showbasicform) {
+        $elements = array_merge($elements, $extraelements);
+    }
+    else {
+        $elements = $extraelements;
     }
 
     // The login page is completely transient, and it is smart because it
@@ -1648,13 +1662,26 @@ function auth_generate_login_form() {
     );
 
     // Get any extra elements from the enabled auth plugins
+    $extraelements = array();
+    $showbasicform = false;
     $authplugins = auth_get_enabled_auth_plugins();
     foreach ($authplugins as $plugin) {
         $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
         $pluginelements = call_static_method($classname, 'login_form_elements');
         if (!empty($pluginelements)) {
-            $elements = array_merge($elements, $pluginelements);
+            $extraelements = array_merge($extraelements, $pluginelements);
         }
+        if (call_static_method($classname, 'need_basic_login_form')) {
+            $showbasicform = true;
+        }
+    }
+
+    // Replace or supplement the standard login form elements
+    if ($showbasicform) {
+        $elements = array_merge($elements, $extraelements);
+    }
+    else {
+        $elements = $extraelements;
     }
 
     $loginform = get_login_form_js(pieform(array(
@@ -1818,5 +1845,13 @@ class PluginAuth extends Plugin {
      */
     public static function login_form_js() {
         return false;
+    }
+
+    /**
+     * Can be overridden by plugins that inject the things they need
+     * in the login form and don't need the standard elements.
+     */
+    public static function need_basic_login_form() {
+        return true;
     }
 }
