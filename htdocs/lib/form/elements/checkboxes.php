@@ -46,6 +46,9 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     $element['name'] .= '[]';
 
+    // Number of characters in checkbox labels (use 0 or false for no limit).
+    $labelwidth = isset($element['labelwidth']) ? (int) $element['labelwidth'] : 17;
+
     foreach ($element['elements'] as $e) {
         if (!$submitted || !empty($e['disabled'])) {
             $checked = $e['defaultvalue'];
@@ -53,11 +56,12 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
         else {
             $checked = !empty($value[$e['value']]) || in_array($e['value'], $value);
         }
+        $title = $labelwidth ? str_shorten_text($e['title'], $labelwidth, true) : $e['title'];
         $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
         . $form->element_attributes($element)
         . ($checked ? ' checked="checked"' : '')
         . (!empty($e['disabled']) ? ' disabled' : '')
-        . '>' . Pieform::hsc(str_shorten_text($e['title'], 17, true)) . '</div>';
+        . '>' . Pieform::hsc($title) . '</div>';
     }
     $result .= '<div class="cl"></div>';
 
