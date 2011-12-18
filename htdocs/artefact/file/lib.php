@@ -130,7 +130,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'editfile',
                     'editfolder',
                     'fileappearsinviews',
-                    'fileattached',
+                    'fileattachedtoportfolioitems',
                     'filewithnameexists',
                     'folderappearsinviews',
                     'foldercontainsprofileicons',

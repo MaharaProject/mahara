@@ -28,11 +28,21 @@ function get_string(s) {
         return '[[[' + s + ((args.length > 0) ? ('(' + args.join(',') + ')') : '') + ']]]';
     }
     var str = strings[s];
-    // @todo Need to sprintf these strings properly.
-    for (var i = 0; i < args.length; i++) {
-        str = str.replace('%s',args[i]);
+    if (typeof(str) == 'object') {
+        var index = 0;
+        if (args.length > 0 && typeof(plural) == 'function') {
+            index = plural(parseInt(args[0]));
+            if (typeof(index) == 'boolean') {
+                index = index ? 1 : 0;
+            }
+        }
+        if (typeof(str[index]) != 'string') {
+            return '[[[' + s + ((args.length > 0) ? ('(' + args.join(',') + ')') : '') + ']]]';
+        }
+        str = str[index];
     }
-    return str;
+    var i = 0;
+    return str.replace(/%((%)|s)/g, function (m) { return m[2] || args[i++]; });
 }
 
 // Expects an image/css path to fetch url for (requires config.theme[] to be

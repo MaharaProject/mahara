@@ -46,3 +46,13 @@ $string['strftimew3cdatetime'] = '%%Y-%%m-%%dT%%H:%%M:%%S%%z';
 $string['strftimew3cdate'] = '%%Y-%%m-%%d';
 $string['thislanguage'] = 'English';
 $string['locales'] = 'en_US.utf8,en_GB.utf8,en,english-us,english-uk,english';
+
+// Rule to choose from the language's plural forms.
+// See the gettext manual, http://www.gnu.org/s/hello/manual/gettext/Plural-forms.html
+// For language packs converted from PO format, the following strings and function will be
+// automatically generated from the expression in the PO file's "Plural-Forms:" header.
+$string['pluralrule'] = 'n != 1';
+$string['pluralfunction'] = 'plural_en_utf8';
+function plural_en_utf8($n) {
+    return (int) $n != 1;
+}
