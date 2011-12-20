@@ -79,6 +79,9 @@ if (!$view) {
 
 $viewid = $view->get('id');
 $restrictedview = !can_view_view($viewid);
+if (!$restrictedview) {
+    $viewcontent = $view->build_columns();
+}
 
 $javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
@@ -278,7 +281,7 @@ else {
 }
 
 if (!$restrictedview) {
-    $smarty->assign('viewcontent', $view->build_columns());
+    $smarty->assign('viewcontent', $viewcontent);
 }
 
 $smarty->display('user/view.tpl');
