@@ -338,7 +338,7 @@ class ArtefactTypeComment extends ArtefactType {
 
             $comments = get_records_sql_assoc('
                 SELECT
-                    a.id, a.author, a.authorname, a.ctime, a.description,
+                    a.id, a.author, a.authorname, a.ctime, a.mtime, a.description,
                     c.private, c.deletedby, c.requestpublic, c.rating,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
                     u.deleted, u.profileicon
@@ -424,6 +424,9 @@ class ArtefactTypeComment extends ArtefactType {
         foreach ($data->data as &$item) {
             $item->ts = strtotime($item->ctime);
             $item->date = format_date($item->ts, 'strftimedatetime');
+            if ($item->ts < strtotime($item->mtime)) {
+                $item->updated = format_date(strtotime($item->mtime), 'strftimedatetime');
+            }
             $item->isauthor = $item->author && $item->author == $USER->get('id');
             if (!empty($item->attachments)) {
                 if ($data->isowner) {
