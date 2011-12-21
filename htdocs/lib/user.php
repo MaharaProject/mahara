@@ -1282,6 +1282,31 @@ function expire_user($userid) {
  * @param int $userid The ID of user to unexpire
  */
 function unexpire_user($userid) {
+    $lifetime = get_config('defaultaccountlifetime');
+
+    $now = time();
+    $dbnow = db_format_timestamp($now);
+
+    $values = array($dbnow, $userid, $dbnow);
+
+    if ($lifetime) {
+        $newexpiry = '?';
+        array_unshift($values, db_format_timestamp($now + $lifetime));
+    }
+    else {
+        $newexpiry = 'NULL';
+    }
+
+    // Update the lastaccess time here to stop users who are currently
+    // inactive from expiring again on the next cron run.  We can leave
+    // inactivemailsent turned on until the user logs in again.
+
+    execute_sql("
+        UPDATE {usr} SET expiry = $newexpiry, expirymailsent = 0, lastaccess = ?
+        WHERE id = ? AND expiry IS NOT NULL AND expiry < ?",
+        $values
+    );
+
     handle_event('unexpireuser', $userid);
 }
 

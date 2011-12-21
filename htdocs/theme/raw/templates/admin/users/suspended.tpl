@@ -1,5 +1,6 @@
 {include file="header.tpl"}
 
+            {$typeform|safe}
             {$buttonformopen|safe}
             {$buttonform|safe}
             <table id="suspendedlist" class="table fullwidth">
@@ -10,6 +11,7 @@
                         <th>{str tag=studentid}</th>
                         <th>{str tag=suspendingadmin section=admin}</th>
                         <th>{str tag=suspensionreason section=admin}</th>
+                        <th>{str tag=expired section=admin}</th>
                         <th>{str tag=select}</th>
                     </tr>
                 </thead>
