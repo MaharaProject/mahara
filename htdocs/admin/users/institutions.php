@@ -702,7 +702,7 @@ function institution_submit(Pieform $form, $values) {
 
     // Set the logo after updating the institution, because the institution
     // needs to exist before it can own the logo artefact.
-    if ($values['logo']) {
+    if (!empty($values['logo'])) {
         safe_require('artefact', 'file');
 
         // Entry in artefact table
