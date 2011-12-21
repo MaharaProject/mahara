@@ -1288,8 +1288,7 @@ function unexpire_user($userid) {
 /**
  * Marks a user as inactive
  *
- * Nothing amazing needs to happen here, but this function is here for
- * consistency.
+ * Sets the account expiry to the current time to disable login.
  *
  * This function is called when a user account is detected to be inactive.
  * It is assumed that the account actually is inactive.
@@ -1297,6 +1296,11 @@ function unexpire_user($userid) {
  * @param int $userid The ID of user to mark inactive
  */
 function deactivate_user($userid) {
+    execute_sql('
+        UPDATE {usr} SET expiry = current_timestamp
+        WHERE id = ? AND (expiry IS NULL OR expiry > current_timestamp)',
+        array($userid)
+    );
     handle_event('deactivateuser', $userid);
 }
 

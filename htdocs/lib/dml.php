@@ -1679,3 +1679,12 @@ function db_replace($replacearray) {
         }
     }
 }
+
+function db_interval($s) {
+    if (is_postgres()) {
+        return "INTERVAL '$s seconds'";
+    }
+    if (is_mysql()) {
+        return "INTERVAL $s SECOND";
+    }
+}

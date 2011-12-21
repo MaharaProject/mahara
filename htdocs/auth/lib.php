@@ -1478,10 +1478,21 @@ function auth_handle_account_expiries() {
     
     if ($expire) {
         // Inactivity (lastlogin is too old)
-        if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+
+        // MySQL doesn't want to compare intervals, so when editing the where clauses below, make sure
+        // the intervals are always added to datetimes first.
+        $dbexpire = db_interval($expire);
+        $dbwarn = db_interval($warn);
+
+        $installationtime = get_config('installation_time');
+        $lastactive = "COALESCE(u.lastaccess, u.lastlogin, u.ctime, ?)";
+
+        if ($users = get_records_sql_array("
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
             FROM {usr} u
-            WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
-            AND inactivemailsent = 0 AND deleted = 0', array(time()))) {
+            WHERE $lastactive + $dbexpire < current_timestamp + $dbwarn
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp)
+                AND inactivemailsent = 0 AND deleted = 0",  array($installationtime))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
                 _email_or_notify($user, get_string('accountinactivewarning'),
@@ -1493,9 +1504,11 @@ function auth_handle_account_expiries() {
         }
         
         // Actual inactive users
-        if ($users = get_records_sql_array('SELECT u.id
+        if ($users = get_records_sql_array("
+            SELECT u.id
             FROM {usr} u
-            WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
+            WHERE $lastactive + $dbexpire < current_timestamp
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp)", array($installationtime))) {
             // Users have become inactive!
             foreach ($users as $user) {
                 deactivate_user($user->id);
@@ -1818,8 +1831,11 @@ class PluginAuth extends Plugin {
         else if ($user->expiry && $user->expiry < time()) {
             $active = false;
         }
-        else if ($inactivetime && $user->lastlogin + $inactivetime < time()) {
-            $active = false;
+        else if ($inactivetime) {
+            $lastactive = max($user->lastlogin, $user->lastaccess, $user->ctime);
+            if ($lastactive && ($lastactive + $inactivetime < time())) {
+                $active = false;
+            }
         }
         else if ($user->deleted) {
             $active = false;
