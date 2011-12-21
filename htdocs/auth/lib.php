@@ -1244,6 +1244,12 @@ function login_submit(Pieform $form, $values) {
                     // The user will be asked to populate this when they log in.
                     $USER->email = null;
                 }
+                if (isset($userdata->studentid)) {
+                    $USER->studentid = sanitize_studentid($userdata->studentid);
+                }
+                if (isset($userdata->preferredname)) {
+                    $USER->preferredname = sanitize_preferredname($userdata->preferredname);
+                }
                 try {
                     // If this authinstance is a parent auth for some xmlrpc authinstance, pass it along to create_user
                     // so that this username also gets recorded as the username for sso from the remote sites.

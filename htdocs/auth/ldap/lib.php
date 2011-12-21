@@ -52,6 +52,8 @@ class AuthLdap extends Auth {
         $this->config['firstnamefield' ] = '';
         $this->config['surnamefield'] = '';
         $this->config['emailfield'] = '';
+        $this->config['studentidfield'] = '';
+        $this->config['preferrednamefield'] = '';
 
         if (!empty($id)) {
             return $this->init($id);
@@ -123,14 +125,16 @@ class AuthLdap extends Auth {
                     // Define ldap attributes
                     $ldapattributes = array();
                     $ldapattributes['firstname'] = $this->config['firstnamefield'];
-                    $ldapattributes['lastname']  = $this->config['surnamefield' ];
-                    $ldapattributes['email']     = $this->config['emailfield' ];
+                    $ldapattributes['lastname'] = $this->config['surnamefield'];
+                    $ldapattributes['email'] = $this->config['emailfield'];
+                    $ldapattributes['studentid'] = $this->config['studentidfield'];
+                    $ldapattributes['preferredname'] = $this->config['preferrednamefield'];
 
                     // Retrieve information of user from LDAP
                     $ldapdetails = $this->get_userinfo_ldap($username, $ldapattributes);
 
                     // Match database and ldap entries and update in database if required
-                    $fieldstoimport = array('firstname', 'lastname', 'email');
+                    $fieldstoimport = array_keys($ldapattributes);
                     foreach ($fieldstoimport as $field) {
                         $sanitizer = "sanitize_$field";
                         $ldapdetails[$field] = $sanitizer($ldapdetails[$field]);
@@ -306,8 +310,10 @@ class AuthLdap extends Auth {
         // get the attribute field names
         $attributes = array();
         $attributes['firstname'] = $this->config['firstnamefield'];
-        $attributes['lastname']  = $this->config['surnamefield' ];
-        $attributes['email']     = $this->config['emailfield'];
+        $attributes['lastname'] = $this->config['surnamefield' ];
+        $attributes['email'] = $this->config['emailfield'];
+        $attributes['studentid'] = $this->config['studentidfield'];
+        $attributes['preferredname'] = $this->config['preferrednamefield'];
 
         $userinfo = $this->get_userinfo_ldap($username, $attributes);
 
@@ -432,7 +438,9 @@ class PluginAuthLdap extends PluginAuth {
         'weautocreateusers' => 1,
         'firstnamefield'    => '',
         'surnamefield'      => '',
-        'emailfield'        => ''
+        'emailfield'        => '',
+        'studentidfield'    => '',
+        'preferrednamefield' => '',
         );
 
     public static function has_config() {
@@ -612,6 +620,18 @@ class PluginAuthLdap extends PluginAuth {
                 'defaultvalue' => self::$default_config['emailfield'],
                 'help' => true,
             ),
+            'studentidfield' => array(
+                'type'  => 'text',
+                'title' => get_string('ldapfieldforstudentid', 'auth.ldap'),
+                'defaultvalue' => self::$default_config['studentidfield'],
+                'help' => true,
+            ),
+            'preferrednamefield' => array(
+                'type'  => 'text',
+                'title' => get_string('ldapfieldforpreferredname', 'auth.ldap'),
+                'defaultvalue' => self::$default_config['preferrednamefield'],
+                'help' => true,
+            ),
         );
 
         return array(
@@ -673,7 +693,9 @@ class PluginAuthLdap extends PluginAuth {
                                         'weautocreateusers' => $values['weautocreateusers'],
                                         'firstnamefield' => $values['firstnamefield'],
                                         'surnamefield' => $values['surnamefield'],
-                                        'emailfield' => $values['emailfield']
+                                        'emailfield' => $values['emailfield'],
+                                        'studentidfield' => $values['studentidfield'],
+                                        'preferrednamefield' => $values['preferrednamefield'],
                                         );
 
         foreach(self::$default_config as $field => $value) {

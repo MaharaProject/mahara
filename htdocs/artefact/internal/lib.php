@@ -641,7 +641,7 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
     }
 }
 
-class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
+class ArtefactTypeStudentid extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
     public function render_self($options) {
         return array('html' => clean_html($this->title), 'javascript' => null);

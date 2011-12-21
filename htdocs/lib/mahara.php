@@ -2919,3 +2919,17 @@ function sanitize_lastname($value) {
     }
     return $value;
 }
+
+function sanitize_studentid($value) {
+    if (!preg_match('/\S/', $value)) {
+        return '';
+    }
+    return $value;
+}
+
+function sanitize_preferredname($value) {
+    if (!preg_match('/\S/', $value)) {
+        return '';
+    }
+    return $value;
+}
