@@ -67,10 +67,16 @@ switch ($returnto) {
       $goto = 'user/myfriends.php';
 }
 
-$user = get_record('usr', 'id', $id, 'deleted', 0);
+$user = get_record('usr', 'id', $id);
 
-if (!$user || !can_send_message($USER->to_stdclass(), $id)) {
-	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
+if (!$user) {
+    throw new UserNotFoundException(get_string('cantmessageuser', 'group'));
+}
+else if ($user->deleted != 0) {
+    throw new AccessDeniedException(get_string('cantmessageuserdeleted', 'group'));
+}
+else if (!can_send_message($USER->to_stdclass(), $id)) {
+    throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 
 define('TITLE', get_string('sendmessageto', 'group', display_name($user)));

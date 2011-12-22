@@ -309,6 +309,7 @@ $string['denyfriendrequest'] = 'Deny Friend Request';
 $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request';
 $string['cantmessageuser'] = 'You cannot send this user a message';
+$string['cantmessageuserdeleted'] = 'You cannot send this user a message because the account has been deleted';
 $string['cantviewmessage'] = 'You cannot view this message';
 $string['requestedfriendship'] = 'requested friendship';
 $string['notinanygroups'] = 'Not in any groups';
