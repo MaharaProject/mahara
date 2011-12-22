@@ -1226,7 +1226,6 @@ function login_submit(Pieform $form, $values) {
     $username      = trim($values['login_username']);
     $password      = $values['login_password'];
     $authenticated = false;
-    $oldlastlogin  = 0;
 
     try {
         $authenticated = $USER->login($username, $password);
@@ -1352,14 +1351,6 @@ function login_submit(Pieform $form, $values) {
         (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
         $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
         redirect();
-    }
-
-    // Check if the user's account has become inactive
-    $inactivetime = get_config('defaultaccountinactiveexpire');
-    if ($inactivetime && $oldlastlogin > 0
-        && $oldlastlogin + $inactivetime < time()) {
-        $USER->logout();
-        die_info(get_string('accountinactive'));
     }
 
     ensure_user_account_is_active();
