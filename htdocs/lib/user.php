@@ -1049,7 +1049,9 @@ function get_friend_request($userid1, $userid2) {
  */
 function get_user($userid) {
     if (!$user = get_record('usr', 'id', $userid, null, null, null, null,
-        '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
+        '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin') .
+        ', ' . db_format_tsfield('lastlastlogin') . ', ' . db_format_tsfield('lastaccess') .
+        ', ' . db_format_tsfield('suspendedctime') . ', ' . db_format_tsfield('ctime'))) {
         throw new InvalidArgumentException('Unknown user ' . $userid);
     }
 
