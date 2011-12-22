@@ -1319,6 +1319,13 @@ class LiveUser extends User {
         $this->load_views();
         $this->store_sessionid();
 
+        // This user may have logged in to reactivate themselves, so now we know they're active, reset
+        // the fields that may have been changed by cron.
+        if (!$this->active || $this->inactivemailsent) {
+            // Properties will be reloaded by the call to $this->commit() below
+            execute_sql('UPDATE {usr} SET active = 1, inactivemailsent = 0 WHERE id = ?', array($user->id));
+        }
+
         $this->commit();
 
         // finally, after all is done, call the (maybe non existant) hook on their auth plugin
