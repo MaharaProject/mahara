@@ -48,7 +48,7 @@
       {if $item->deletedmessage}
         <span>{$item->deletedmessage} | </span>
       {else}
-        <span class="date">{$item->date} </span>
+        <span class="date">{$item->date} {if $item->updated}[{str tag=Updated}: {$item->updated}]{/if}</span>
         {if $item->pubmessage} | <span>{$item->pubmessage}</span>{/if}
         {if $item->makepublicrequested} | <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>{/if}
         {strip}
