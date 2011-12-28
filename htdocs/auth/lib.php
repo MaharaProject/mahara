@@ -1487,6 +1487,19 @@ function auth_handle_account_expiries() {
         $installationtime = get_config('installation_time');
         $lastactive = "COALESCE(u.lastaccess, u.lastlogin, u.ctime, ?)";
 
+        // Actual inactive users
+        if ($users = get_records_sql_array("
+            SELECT u.id
+            FROM {usr} u
+            WHERE $lastactive + $dbexpire < current_timestamp
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp) AND id > 0", array($installationtime))) {
+            // Users have become inactive!
+            foreach ($users as $user) {
+                deactivate_user($user->id);
+            }
+        }
+
+        // Inactivity warning emails
         if ($users = get_records_sql_array("
             SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
             FROM {usr} u
@@ -1500,18 +1513,6 @@ function auth_handle_account_expiries() {
                     get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
                 );
                 set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
-            }
-        }
-        
-        // Actual inactive users
-        if ($users = get_records_sql_array("
-            SELECT u.id
-            FROM {usr} u
-            WHERE $lastactive + $dbexpire < current_timestamp
-                AND (u.expiry IS NULL OR u.expiry > current_timestamp) AND id > 0", array($installationtime))) {
-            // Users have become inactive!
-            foreach ($users as $user) {
-                deactivate_user($user->id);
             }
         }
     }
