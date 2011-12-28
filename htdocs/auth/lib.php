@@ -1492,7 +1492,7 @@ function auth_handle_account_expiries() {
             FROM {usr} u
             WHERE $lastactive + $dbexpire < current_timestamp + $dbwarn
                 AND (u.expiry IS NULL OR u.expiry > current_timestamp)
-                AND inactivemailsent = 0 AND deleted = 0",  array($installationtime))) {
+                AND inactivemailsent = 0 AND deleted = 0 AND id > 0",  array($installationtime))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
                 _email_or_notify($user, get_string('accountinactivewarning'),
@@ -1508,7 +1508,7 @@ function auth_handle_account_expiries() {
             SELECT u.id
             FROM {usr} u
             WHERE $lastactive + $dbexpire < current_timestamp
-                AND (u.expiry IS NULL OR u.expiry > current_timestamp)", array($installationtime))) {
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp) AND id > 0", array($installationtime))) {
             // Users have become inactive!
             foreach ($users as $user) {
                 deactivate_user($user->id);
@@ -1819,6 +1819,14 @@ class PluginAuth extends Plugin {
     }
 
     public static function update_active_flag($event, $user) {
+        if (!isset($user['id'])) {
+            log_warn("update_active_flag called without a user id");
+        }
+
+        if ($user['id'] === 0 || $user['id'] === '0') {
+            return;
+        }
+
         $active = true;
 
         // ensure we have everything we need
