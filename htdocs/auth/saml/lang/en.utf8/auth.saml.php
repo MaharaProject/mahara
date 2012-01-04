@@ -26,16 +26,16 @@
 
 defined('INTERNAL') || die();
 
-//$string['defaultidpidentity'] = 'Default IdP Identity Service';
+//$string['defaultidpidentity'] = 'Default IdP identity service';
 $string['defaultinstitution'] = 'Default institution';
 $string['description'] = 'Authenticate against a SAML 2.0 IdP service';
 $string['errorbadinstitution'] = 'Institution for connecting user not resolved';
 $string['errorbadssphp'] = 'Invalid SimpleSAMLphp session handler - must not be phpsession';
 $string['errorbadssphplib'] = 'Invalid SimpleSAMLphp library configuration';
-$string['errorretryexceeded'] = 'Maximum number of retries exceeded (%s) - there must be a problem with the Identity Service';
-$string['errnosamluser'] = 'No User found';
+$string['errorretryexceeded'] = 'Maximum number of retries exceeded (%s) - there must be a problem with the identity service';
+$string['errnosamluser'] = 'No user found';
 $string['errorbadlib'] = 'SimpleSAMLPHP lib directory %s is not correct.';
-$string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is in correct.';
+$string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is incorrect.';
 $string['errorbadcombo'] = 'You can only choose user auto creation if you have not selected remoteuser';
 $string['errorbadinstitutioncombo'] = 'There is already an existing authinstance with this institutionattribute and institutionvalue combination';
 $string['errormissinguserattributes'] = 'You seem to be authenticated but we did not receive the required user attributes. Please check that your Identity Provider releases these SSO fields for First Name, Surname, and Email to the Service Provider Mahara is running on or inform the webmaster of this server.';
