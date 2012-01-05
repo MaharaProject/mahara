@@ -147,7 +147,13 @@ function ensure_sanity() {
 
     // dataroot not writable..
     if (!check_dir_exists(get_config('dataroot')) || !is_writable(get_config('dataroot'))) {
-        throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
+        $message = get_string('datarootnotwritable', 'error', get_config('dataroot'));
+        if ($openbasedir = ini_get('open_basedir')) {
+            $message .= "\n(" . get_string('openbasedirenabled', 'error') . ' '
+                . get_string('openbasedirpaths', 'error', htmlspecialchars($openbasedir)) // hsc() is not defined yet
+                . ')';
+        }
+        throw new ConfigSanityException($message);
     }
 
     if (

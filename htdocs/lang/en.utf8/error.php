@@ -129,3 +129,6 @@ $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is sm
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small.  Uploads larger than %s will fail without displaying an error.';
 $string['notenoughsessionentropy'] = 'Your PHP session.entropy_length setting is too small. Set it to at least 16 in your php.ini to ensure that generated session IDs are random and unpredictable enough.';
 $string['noreplyaddressmissingorinvalid'] = 'The noreply address setting is either empty or has an invalid email address. Please check the configuration in the <a href="%s">site options in the email settings</a>.';
+$string['openbasedirenabled'] = 'Your server has the php open_basedir restriction enabled.';
+$string['openbasedirpaths'] = 'Mahara can only open files within the following path(s): %s';
+$string['openbasedirwarning'] = 'Some requests for external sites may fail to complete.  This could stop certain feeds from updating, among other things.';
