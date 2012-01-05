@@ -9,12 +9,7 @@
 function Dwoo_Plugin_theme_url(Dwoo $dwoo, $filename, $plugin = null) {
     global $THEME;
 
-    $plugintype = $pluginname = '';
-    if ($plugin) {
-        list($plugintype, $pluginname) = explode('/', $plugin);
-    }
-
-    return $THEME->get_url($filename, false, $plugintype, $pluginname);
+    return $THEME->get_url($filename, false, $plugin);
 }
 
 ?>

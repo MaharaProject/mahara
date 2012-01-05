@@ -15,12 +15,7 @@ function Dwoo_Plugin_theme_path(Dwoo $dwoo, $location, $pluginlocation=null) {
     global $THEME;
     log_warn("The dwoo modifier theme_path is deprecated: please use theme_url");
     
-    $plugintype = $pluginname = '';
-    if ($pluginlocation) {
-        list($plugintype, $pluginname) = explode('/', $pluginlocation);
-    }
-
-    return $THEME->get_url($location, false, $plugintype, $pluginname);
+    return $THEME->get_url($location, false, $pluginlocation);
 }
 
 ?>
