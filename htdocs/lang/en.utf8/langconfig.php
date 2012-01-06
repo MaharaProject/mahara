@@ -38,6 +38,7 @@ $string['strftimedayshort'] = '%%A, %%d %%B';
 $string['strftimedaytime'] = '%%a, %%k:%%M';
 $string['strftimemonthyear'] = '%%B %%Y';
 $string['strftimerecent'] = '%%d %%b, %%k:%%M';
+$string['strftimerecentyear'] = '%%d %%b %%Y, %%k:%%M';
 $string['strftimerecentfull'] = '%%a, %%d %%b %%Y, %%l:%%M %%p';
 $string['strftimetime'] = '%%l:%%M %%p';
 $string['strfdaymonthyearshort'] = '%%d/%%m/%%Y';

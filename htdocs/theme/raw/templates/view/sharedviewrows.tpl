@@ -12,7 +12,7 @@
             {$view.sharedby}
           {/if}
         </span>
-        <span class="postedon nowrap"> - {$view.mtime|strtotime|format_date:'strftimerecent'}</span>
+        <span class="postedon nowrap"> - {$view.mtime|strtotime|format_date:'strftimerecentyear'}</span>
         {/if}
         <div class="s">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
         {if $view.tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
@@ -27,7 +27,7 @@
           {else}
             {$view.commentauthorname}
           {/if}
-            <span class="postedon nowrap">{$view.lastcommenttime|strtotime|format_date:'strftimerecent'}</span>
+            <span class="postedon nowrap">{$view.lastcommenttime|strtotime|format_date:'strftimerecentyear'}</span>
         {/if}
       </td>
     </tr>
