@@ -151,7 +151,7 @@ if (count($authinstances) > 1) {
     $external = false;
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
-            $options[$authinstance->id] = $authinstance->instancename . ' (' . $authinstance->displayname . ')';
+            $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
             if ($authinstance->authname != 'internal') {
                 $external = true;
             }
