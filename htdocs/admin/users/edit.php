@@ -513,6 +513,7 @@ else {
     $suspendform2 = pieform($suspendformdef);
 
     $suspender = display_name(get_record('usr', 'id', $suspended));
+    $suspendedtime = format_date($user->get('suspendedctime'), 'strftimedate');
 }
 
 function edituser_suspend_submit(Pieform $form, $values) {
@@ -725,7 +726,7 @@ $smarty = smarty();
 $smarty->assign('user', $user);
 $smarty->assign('suspended', $suspended);
 if ($suspended) {
-    $smarty->assign('suspendedby', get_string('suspendedby', 'admin', $suspender));
+    $smarty->assign('suspendedby', get_string('suspendedinfo', 'admin', $suspender, $suspendedtime));
 }
 $smarty->assign('suspendform', $suspendform);
 if (isset($suspendform2)) {
