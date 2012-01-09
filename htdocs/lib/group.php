@@ -679,6 +679,37 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         $group = get_record('group', 'id', $groupid);
     }
 
+    db_begin();
+    // Leave the group_member table alone, it's needed for the deleted
+    // group notification that's about to happen on cron.
+    delete_records('group_member_invite', 'group', $group->id);
+    delete_records('group_member_request', 'group', $group->id);
+    delete_records('view_access', 'group', $group->id);
+
+    // Delete views owned by the group
+    require_once(get_config('libroot') . 'view.php');
+    foreach (get_column('view', 'id', 'group', $group->id) as $viewid) {
+        $view = new View($viewid);
+        $view->delete();
+    }
+
+    // Release views submitted to the group
+    foreach (get_column('view', 'id', 'submittedgroup', $group->id) as $viewid) {
+        $view = new View($viewid);
+        $view->release();
+    }
+
+    // Delete artefacts
+    require_once(get_config('docroot') . 'artefact/lib.php');
+    ArtefactType::delete_by_artefacttype(get_column('artefact', 'id', 'group', $group->id));
+
+    // Delete forums
+    require_once(get_config('docroot') . 'interaction/lib.php');
+    foreach (get_column('interaction_instance', 'id', 'group', $group->id) as $forumid) {
+        $forum = interaction_instance_from_id($forumid);
+        $forum->delete();
+    }
+
     if ($notifymembers) {
         require_once('activity.php');
         activity_occurred('groupmessage', array(
@@ -705,11 +736,13 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
             'name' => $group->name . '.deleted.' . time(),
             'shortname' => null,
             'institution' => null,
+            'category' => null,
         ),
         array(
             'id' => $group->id,
         )
     );
+    db_commit();
 }
 
 /**
