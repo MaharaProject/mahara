@@ -1123,6 +1123,11 @@ EOF;
  */
 function auth_get_enabled_auth_plugins() {
 
+    static $cached_plugins = null;
+    if ($cached_plugins !== null) {
+        return $cached_plugins;
+    }
+
     $sql = 'SELECT
                 DISTINCT(authname)
             FROM
@@ -1145,7 +1150,8 @@ function auth_get_enabled_auth_plugins() {
         }
     }
 
-    return $usableplugins;
+    $cached_plugins = $usableplugins;
+    return $cached_plugins;
 }
 
 
