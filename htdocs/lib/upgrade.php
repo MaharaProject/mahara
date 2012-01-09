@@ -1200,5 +1200,9 @@ function site_warnings() {
         $warnings[] = get_string('smallpostmaxsize', 'error', $postmax, $postmax);
     }
 
+    if (ini_get('open_basedir')) {
+        $warnings[] = get_string('openbasedirenabled', 'error') . ' ' . get_string('openbasedirwarning', 'error');
+    }
+
     return $warnings;
 }
