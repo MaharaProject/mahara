@@ -622,6 +622,7 @@ $string['deleteuser'] = 'Delete User';
 $string['userdeletedsuccessfully'] = 'User deleted successfully';
 $string['confirmdeleteuser'] = 'Are you sure you want to delete this user?';
 $string['filequota'] = 'File quota (MB)';
+$string['quotaused'] = 'Quota used';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
 $string['addusertoinstitution'] = 'Add User to Institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';

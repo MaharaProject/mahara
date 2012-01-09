@@ -117,11 +117,12 @@ $elements['expiry'] = array(
     'maxyear'      => $currentdate['year'] + 20,
     'defaultvalue' => $user->expiry
 );
+$quotaused = get_string('quotaused', 'admin') . ': ' . display_size($user->quotaused);
 if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
     $elements['quota'] = array(
         'type'         => 'bytes',
         'title'        => get_string('filequota','admin'),
-        'description'  => get_string('filequotadescription','admin'),
+        'description'  => get_string('filequotadescription','admin') . '<br>' . $quotaused,
         'rules'        => array('integer' => true),
         'defaultvalue' => $user->quota,
     );
@@ -131,7 +132,7 @@ else {
         'type'         => 'text',
         'disabled'     => true,
         'title'        => get_string('filequota', 'admin'),
-        'description'  => get_string('filequotadescription', 'admin'),
+        'description'  => get_string('filequotadescription', 'admin') . '<br>' . $quotaused,
         'value'        => display_size($user->quota),
     );
 }
