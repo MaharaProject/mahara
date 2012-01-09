@@ -9,15 +9,14 @@
             <input type="hidden" name="s" value="1">
             <input type="submit" class="submit" id="artefactchooser-searchsubmit" name="action_acsearch_id_{$blockinstance}" value="&raquo;" tabindex="42"></label>
         </div>
-        {if $artefacts}
+        {if !$artefacts}
+        <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
+        {/if}
         <table id="{$datatable}" class="artefactchooser-data">
             <tbody>
                 {$artefacts|safe}
             </tbody>
         </table>
         {$pagination|safe}
-        {else}
-        <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
-        {/if}
     </div>
 </div>
