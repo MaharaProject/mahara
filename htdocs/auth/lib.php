@@ -1436,7 +1436,7 @@ function auth_handle_account_expiries() {
     if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
         FROM {usr} u
         WHERE ' . db_format_tsfield('u.expiry', false) . ' < ?
-        AND expirymailsent = 0', array(time() + $warn))) {
+        AND expirymailsent = 0 AND deleted = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
             _email_or_notify($user, get_string('accountexpirywarning'),
@@ -1463,7 +1463,7 @@ function auth_handle_account_expiries() {
         if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
             FROM {usr} u
             WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
-            AND inactivemailsent = 0', array(time()))) {
+            AND inactivemailsent = 0 AND deleted = 0', array(time()))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
                 _email_or_notify($user, get_string('accountinactivewarning'),
@@ -1498,7 +1498,7 @@ function auth_handle_account_expiries() {
         INNER JOIN {usr_institution} ui ON u.id = ui.usr
         INNER JOIN {institution} i ON ui.institution = i.name
         WHERE ' . db_format_tsfield('ui.expiry', false) . ' < ?
-        AND ui.expirymailsent = 0', array(time() + $warn))) {
+        AND ui.expirymailsent = 0 AND u.deleted = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
             _email_or_notify($user, get_string('institutionmembershipexpirywarning'),
