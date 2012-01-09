@@ -144,7 +144,9 @@ function reason_cancel_submit() {
     redirect('/register.php');
 }
 
+$form = pieform($form);
+
 $smarty = smarty();
-$smarty->assign('register_form', pieform($form));
+$smarty->assign('register_form', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('register.tpl');

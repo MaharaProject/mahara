@@ -33,7 +33,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_tags(Pieform $form, $element) {
-    $smarty = smarty();
+    $smarty = smarty_core();
 
     $value = array();
 

@@ -681,12 +681,12 @@ abstract class ArtefactType {
      * A dummy method, giving graceful output, if this method is not implemented in the relevant child class
      */
     public function render_self($options) {
-        $smarty = smarty();
-        $smarty->assign('viewtitle', $this->get('title'));
-        $smarty->assign('viewdescription', $this->get('description'));
+        $smarty = smarty_core();
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('description', $this->get('description'));
 
         return array(
-            'html' => $smarty->fetch('view/viewcontent.tpl'),
+            'html' => $smarty->fetch('artefact.tpl'),
             'javascript'=>''
         );
     }
