@@ -1260,6 +1260,9 @@ div.sideblock ul li {
 	line-height: 1.333em;
 	padding-left: 5px;
 }
+.login-externallink {
+	clear: left;
+}
 #login_login_username_container input, #login_login_password_container input {
 	margin: 0 0 5px 0;
 	display: block;

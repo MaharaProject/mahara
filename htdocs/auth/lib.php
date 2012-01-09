@@ -1023,14 +1023,35 @@ function auth_get_login_form() {
         'register' => array(
             'value' => '<div id="login-helplinks">' . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
         ),
-        'loginsaml' => array(
-            'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<div id="login-helplinks"><a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a></div>')
-        ),
         'login_submitted' => array(
             'type'  => 'hidden',
             'value' => 1
         ),
     );
+
+
+    // Get any extra elements from the enabled auth plugins
+    $extraelements = array();
+    $showbasicform = false;
+    $authplugins = auth_get_enabled_auth_plugins();
+    foreach ($authplugins as $plugin) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        $pluginelements = call_static_method($classname, 'login_form_elements');
+        if (!empty($pluginelements)) {
+            $extraelements = array_merge($extraelements, $pluginelements);
+        }
+        if (call_static_method($classname, 'need_basic_login_form')) {
+            $showbasicform = true;
+        }
+    }
+
+    // Replace or supplement the standard login form elements
+    if ($showbasicform) {
+        $elements = array_merge($elements, $extraelements);
+    }
+    else {
+        $elements = $extraelements;
+    }
 
     // The login page is completely transient, and it is smart because it
     // remembers the GET and POST data sent to it and resends that on
@@ -1622,6 +1643,59 @@ function auth_generate_login_form() {
     else {
         $registerlink = '';
     }
+
+    $elements = array(
+        'login_username' => array(
+            'type'        => 'text',
+            'title'       => get_string('username') . ':',
+            'description' => get_string('usernamedescription'),
+            'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
+            'rules' => array(
+                'required'    => true
+            )
+        ),
+        'login_password' => array(
+            'type'        => 'password',
+            'title'       => get_string('password') . ':',
+            'description' => get_string('passworddescription'),
+            'defaultvalue'       => '',
+            'rules' => array(
+                'required'    => true
+            )
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('login')
+        ),
+        'register' => array(
+            'value' => '<div id="login-helplinks">' . $registerlink
+                . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+        ),
+    );
+
+    // Get any extra elements from the enabled auth plugins
+    $extraelements = array();
+    $showbasicform = false;
+    $authplugins = auth_get_enabled_auth_plugins();
+    foreach ($authplugins as $plugin) {
+        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+        $pluginelements = call_static_method($classname, 'login_form_elements');
+        if (!empty($pluginelements)) {
+            $extraelements = array_merge($extraelements, $pluginelements);
+        }
+        if (call_static_method($classname, 'need_basic_login_form')) {
+            $showbasicform = true;
+        }
+    }
+
+    // Replace or supplement the standard login form elements
+    if ($showbasicform) {
+        $elements = array_merge($elements, $extraelements);
+    }
+    else {
+        $elements = $extraelements;
+    }
+
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1629,37 +1703,7 @@ function auth_generate_login_form() {
         'plugintype' => 'auth',
         'pluginname' => 'internal',
         'autofocus'  => false,
-        'elements'   => array(
-            'login_username' => array(
-                'type'        => 'text',
-                'title'       => get_string('username') . ':',
-                'description' => get_string('usernamedescription'),
-                'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
-                'rules' => array(
-                    'required'    => true
-                )
-            ),
-            'login_password' => array(
-                'type'        => 'password',
-                'title'       => get_string('password') . ':',
-                'description' => get_string('passworddescription'),
-                'defaultvalue'       => '',
-                'rules' => array(
-                    'required'    => true
-                )
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('login')
-            ),
-            'register' => array(
-                'value' => '<div id="login-helplinks">' . $registerlink
-                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
-            ),
-            'loginsaml' => array(
-                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
-            ),
-        )
+        'elements'   => $elements,
     )));
 
     return $loginform;
@@ -1801,9 +1845,25 @@ class PluginAuth extends Plugin {
 
     /**
      * Can be overridden by plugins that need to inject more
+     * pieform elements into the login form.
+     */
+    public static function login_form_elements() {
+        return false;
+    }
+
+    /**
+     * Can be overridden by plugins that need to inject more
      * Javascript to make the login form work.
      */
     public static function login_form_js() {
         return false;
+    }
+
+    /**
+     * Can be overridden by plugins that inject the things they need
+     * in the login form and don't need the standard elements.
+     */
+    public static function need_basic_login_form() {
+        return true;
     }
 }
