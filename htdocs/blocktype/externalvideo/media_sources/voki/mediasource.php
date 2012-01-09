@@ -8,7 +8,7 @@ class Media_voki implements MediaBase {
     private static $default_width  = 200;
     private static $default_height = 267;
 
-    private static $scrape_sources = array(
+    private static $iframe_sources = array(
         array(
             'match' => '#http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)#',
             'url' => 'http://voki.com/php/checksum/scid=$2'
@@ -16,14 +16,19 @@ class Media_voki implements MediaBase {
 
         array(
             'match' => '#http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
-            'url' => 'http://voki.com/php/checksum/scid=$2/height=$3/width=$4'
+            'url' => 'http://voki.com/php/checksum/scid=$2&height=$3&width=$4'
+        ),
+
+        array(
+            'match' => '#http://voki\.com/php/checksum/scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
+            'url' => 'http://voki.com/php/checksum/scid=$1&height=$2&width=$3'
         ),
     );
 
     private static $embed_sources = array(
         array(
-            'match' => '#.*http://vhss(-d)?\.oddcast\.com/vhss_editors/voki_player\.swf\?(.+)(%26)?sc%3d([0-9]+).*#',
-            'url' => 'http://vhss$1.oddcast.com/vhss_editors/voki_player.swf?$2$3sc%3D$4'
+            'match' => '#.*http://vhss(-d)?\.oddcast\.com/vhss_editors/voki_player\.swf\?(.+)(%26)?sc=([0-9]+).*#',
+            'url' => 'http://vhss$1.oddcast.com/vhss_editors/voki_player.swf?$2$3sc=$4'
         ),
     );
 
@@ -45,12 +50,20 @@ class Media_voki implements MediaBase {
             }
         }
 
-        foreach (self::$scrape_sources as $source) {
+        foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
-                return self::process_url(self::scrape_url($output));
+                $result = array(
+                    'videoid' => $output,
+                    'type'    => 'iframe',
+                    'width'   => ($width + 20),
+                    'height'  => ($height + 20),
+                );
+error_log(print_r($result, true));
+                return $result;
             }
         }
+
         return false;
     }
 
@@ -62,7 +75,7 @@ class Media_voki implements MediaBase {
             }
         }
 
-        foreach (self::$scrape_sources as $source) {
+        foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 return true;
             }
