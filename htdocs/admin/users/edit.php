@@ -302,8 +302,16 @@ function edituser_site_submit(Pieform $form, $values) {
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         $user->quota = $values['quota'];
     }
-    $user->expiry = db_format_timestamp($values['expiry']);
 
+    $unexpire = $user->expiry && strtotime($user->expiry) < time() && (empty($values['expiry']) || $values['expiry'] > time());
+    $newexpiry = db_format_timestamp($values['expiry']);
+    if ($user->expiry != $newexpiry) {
+        $user->expiry = $newexpiry;
+        if ($unexpire) {
+            $user->expirymailsent = 0;
+            $user->lastaccess = db_format_timestamp(time());
+        }
+    }
 
     // Try to kick the user from any active login sessions, before saving data.
     require_once(get_config('docroot') . 'auth/session.php');

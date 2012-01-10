@@ -1226,7 +1226,6 @@ function login_submit(Pieform $form, $values) {
     $username      = trim($values['login_username']);
     $password      = $values['login_password'];
     $authenticated = false;
-    $oldlastlogin  = 0;
 
     try {
         $authenticated = $USER->login($username, $password);
@@ -1354,14 +1353,6 @@ function login_submit(Pieform $form, $values) {
         redirect();
     }
 
-    // Check if the user's account has become inactive
-    $inactivetime = get_config('defaultaccountinactiveexpire');
-    if ($inactivetime && $oldlastlogin > 0
-        && $oldlastlogin + $inactivetime < time()) {
-        $USER->logout();
-        die_info(get_string('accountinactive'));
-    }
-
     ensure_user_account_is_active();
 
     // User is allowed to log in
@@ -1487,10 +1478,34 @@ function auth_handle_account_expiries() {
     
     if ($expire) {
         // Inactivity (lastlogin is too old)
-        if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+
+        // MySQL doesn't want to compare intervals, so when editing the where clauses below, make sure
+        // the intervals are always added to datetimes first.
+        $dbexpire = db_interval($expire);
+        $dbwarn = db_interval($warn);
+
+        $installationtime = get_config('installation_time');
+        $lastactive = "COALESCE(u.lastaccess, u.lastlogin, u.ctime, ?)";
+
+        // Actual inactive users
+        if ($users = get_records_sql_array("
+            SELECT u.id
             FROM {usr} u
-            WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
-            AND inactivemailsent = 0 AND deleted = 0', array(time()))) {
+            WHERE $lastactive + $dbexpire < current_timestamp
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp) AND id > 0", array($installationtime))) {
+            // Users have become inactive!
+            foreach ($users as $user) {
+                deactivate_user($user->id);
+            }
+        }
+
+        // Inactivity warning emails
+        if ($users = get_records_sql_array("
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+            FROM {usr} u
+            WHERE $lastactive + $dbexpire < current_timestamp + $dbwarn
+                AND (u.expiry IS NULL OR u.expiry > current_timestamp)
+                AND inactivemailsent = 0 AND deleted = 0 AND id > 0",  array($installationtime))) {
             foreach ($users as $user) {
                 $displayname = display_name($user);
                 _email_or_notify($user, get_string('accountinactivewarning'),
@@ -1498,16 +1513,6 @@ function auth_handle_account_expiries() {
                     get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
                 );
                 set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
-            }
-        }
-        
-        // Actual inactive users
-        if ($users = get_records_sql_array('SELECT u.id
-            FROM {usr} u
-            WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
-            // Users have become inactive!
-            foreach ($users as $user) {
-                deactivate_user($user->id);
             }
         }
     }
@@ -1815,6 +1820,14 @@ class PluginAuth extends Plugin {
     }
 
     public static function update_active_flag($event, $user) {
+        if (!isset($user['id'])) {
+            log_warn("update_active_flag called without a user id");
+        }
+
+        if ($user['id'] === 0 || $user['id'] === '0') {
+            return;
+        }
+
         $active = true;
 
         // ensure we have everything we need
@@ -1827,8 +1840,11 @@ class PluginAuth extends Plugin {
         else if ($user->expiry && $user->expiry < time()) {
             $active = false;
         }
-        else if ($inactivetime && $user->lastlogin + $inactivetime < time()) {
-            $active = false;
+        else if ($inactivetime) {
+            $lastactive = max($user->lastlogin, $user->lastaccess, $user->ctime);
+            if ($lastactive && ($lastactive + $inactivetime < time())) {
+                $active = false;
+            }
         }
         else if ($user->deleted) {
             $active = false;

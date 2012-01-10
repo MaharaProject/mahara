@@ -1049,7 +1049,9 @@ function get_friend_request($userid1, $userid2) {
  */
 function get_user($userid) {
     if (!$user = get_record('usr', 'id', $userid, null, null, null, null,
-        '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
+        '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin') .
+        ', ' . db_format_tsfield('lastlastlogin') . ', ' . db_format_tsfield('lastaccess') .
+        ', ' . db_format_tsfield('suspendedctime') . ', ' . db_format_tsfield('ctime'))) {
         throw new InvalidArgumentException('Unknown user ' . $userid);
     }
 
@@ -1280,14 +1282,38 @@ function expire_user($userid) {
  * @param int $userid The ID of user to unexpire
  */
 function unexpire_user($userid) {
+    $lifetime = get_config('defaultaccountlifetime');
+
+    $now = time();
+    $dbnow = db_format_timestamp($now);
+
+    $values = array($dbnow, $userid, $dbnow);
+
+    if ($lifetime) {
+        $newexpiry = '?';
+        array_unshift($values, db_format_timestamp($now + $lifetime));
+    }
+    else {
+        $newexpiry = 'NULL';
+    }
+
+    // Update the lastaccess time here to stop users who are currently
+    // inactive from expiring again on the next cron run.  We can leave
+    // inactivemailsent turned on until the user logs in again.
+
+    execute_sql("
+        UPDATE {usr} SET expiry = $newexpiry, expirymailsent = 0, lastaccess = ?
+        WHERE id = ? AND expiry IS NOT NULL AND expiry < ?",
+        $values
+    );
+
     handle_event('unexpireuser', $userid);
 }
 
 /**
  * Marks a user as inactive
  *
- * Nothing amazing needs to happen here, but this function is here for
- * consistency.
+ * Sets the account expiry to the current time to disable login.
  *
  * This function is called when a user account is detected to be inactive.
  * It is assumed that the account actually is inactive.
@@ -1295,6 +1321,11 @@ function unexpire_user($userid) {
  * @param int $userid The ID of user to mark inactive
  */
 function deactivate_user($userid) {
+    execute_sql('
+        UPDATE {usr} SET expiry = current_timestamp
+        WHERE id = ? AND (expiry IS NULL OR expiry > current_timestamp)',
+        array($userid)
+    );
     handle_event('deactivateuser', $userid);
 }
 

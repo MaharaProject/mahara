@@ -30,25 +30,23 @@ define('INSTITUTIONALADMIN', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-
-json_headers();
+require_once('pieforms/pieform.php');
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$type = param_alpha('type', 'suspended');
 
 // Filter for institutional admins:
 $instsql = $USER->get('admin') ? '' : ' 
     AND ui.institution IN (' . join(',', array_map('db_quote', array_keys($USER->get('institutions')))) . ')';
 
-// NOTE: the check is not done on the 'active' column here, since suspended
-// users are by definition not active. However deleted users are filtered out.
 $count = get_field_sql('
     SELECT COUNT(*)
     FROM (
         SELECT u.id
         FROM {usr} u
         LEFT OUTER JOIN {usr_institution} ui ON (ui.usr = u.id)
-        WHERE suspendedcusr IS NOT NULL 
+        WHERE ' . ($type == 'expired' ? 'u.expiry < current_timestamp' : 'suspendedcusr IS NOT NULL') . '
         AND deleted = 0 ' . $instsql . '
         GROUP BY u.id
     ) AS a');
@@ -56,16 +54,16 @@ $count = get_field_sql('
 $data = get_records_sql_assoc('
     SELECT 
         u.id, u.firstname, u.lastname, u.studentid, u.suspendedctime, u.suspendedreason AS reason,
-        ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname
+        ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname, ' . db_format_tsfield('u.expiry', 'expiry') . '
     FROM {usr} u
     LEFT JOIN {usr} ua on (ua.id = u.suspendedcusr)
     LEFT OUTER JOIN {usr_institution} ui ON (ui.usr = u.id)
-    WHERE u.suspendedcusr IS NOT NULL
+    WHERE ' . ($type == 'expired' ? 'u.expiry < current_timestamp' : 'u.suspendedcusr IS NOT NULL') . '
     AND u.deleted = 0 ' . $instsql . '
     GROUP BY
         u.id, u.firstname, u.lastname, u.studentid, u.suspendedctime, u.suspendedreason,
-        ua.firstname, ua.lastname
-    ORDER BY u.suspendedctime, u.id
+        ua.firstname, ua.lastname, u.expiry
+    ORDER BY ' . ($type == 'expired' ? 'u.expiry' : 'u.suspendedctime') . ', u.id
     LIMIT ?
     OFFSET ?', array($limit, $offset));
 
@@ -89,11 +87,12 @@ else {
         $record->firstname = $record->cusrfirstname;
         $record->lastname  = $record->cusrlastname;
         $record->cusrname  = full_name($record);
+        $record->expiry    = $record->expiry ? format_date($record->expiry, 'strftimew3cdate') : '-';
         unset($record->firstname, $record->lastname);
     }
 }
 
-echo json_encode(array(
+json_reply(false, array(
     'count'    => $count,
     'limit'    => $limit,
     'offset'   => $offset,

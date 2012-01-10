@@ -597,6 +597,10 @@ $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 $string['suspendingadmin'] = 'Suspending Admin';
 $string['usersuspended'] = 'User suspended';
 $string['userunsuspended'] = 'User unsuspended';
+$string['expiredusers'] = 'Expired users';
+$string['expired'] = 'Expired';
+$string['unexpireusers'] = 'Reactivate expired users';
+$string['usersreactivated'] = 'Users reactivated';
 
 // User account settings
 $string['accountsettings'] = 'Account settings';
