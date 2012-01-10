@@ -2169,7 +2169,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                     $this->data['filescreated']++;
                 }
                 if ($progresscallback && ++$i % 5 == 0) {
-                    call_user_func_array($progresscallback, $i);
+                    call_user_func($progresscallback, $i);
                 }
             }
 
@@ -2221,7 +2221,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                     $this->data['filescreated']++;
                 }
                 if ($progresscallback && ++$i % 5 == 0) {
-                    call_user_func_array($progresscallback, $i);
+                    call_user_func($progresscallback, $i);
                 }
             }
         }
