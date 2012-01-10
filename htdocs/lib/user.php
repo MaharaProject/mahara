@@ -1914,9 +1914,9 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         else {
             $un = $user->username;
         }
-        // remote username must not allready exist
+        // remote username must not already exist
         if (record_exists('auth_remote_user', 'remoteusername', $un, 'authinstance', $user->authinstance)) {
-            throw new InvalidArgumentException("user_create: remoteusername allready exists: ".$un);
+            throw new InvalidArgumentException("user_create: remoteusername already exists: ".$un);
         }
         insert_record('auth_remote_user', (object) array(
             'authinstance'   => $user->authinstance,
@@ -2010,9 +2010,9 @@ function update_user($user, $profile, $remotename=null, $accountprefs=array(), $
             delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'remoteusername', $remotename);
         }
         else {
-            // remote username must not allready exist
+            // remote username must not already exist
             if (record_exists('auth_remote_user', 'remoteusername', $remotename, 'authinstance', $user->authinstance)) {
-                throw new InvalidArgumentException("user_update: remoteusername allready in use: ".$remotename);
+                throw new InvalidArgumentException("user_update: remoteusername already in use: ".$remotename);
             }
         }
         insert_record('auth_remote_user', (object) array(
