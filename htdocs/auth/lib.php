@@ -44,7 +44,13 @@ class AuthUnknownUserException extends UserException {}
  * If appropriate - the 'message' of the exception will be used
  * as the display message, so don't forget to language translate it
  */
-class AuthInstanceException extends UserException {}
+class AuthInstanceException extends UserException {
+
+    public function strings() {
+        return array_merge(parent::strings(),
+                           array('title' => $this->get_sitename() . ': Authentication problem'));
+    }
+}
 
 /**
  * We tried to call a method on an auth plugin that hasn't been init'ed 
