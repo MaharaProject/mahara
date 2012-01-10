@@ -43,11 +43,11 @@ $realstart = time();
 $fake = isset($argv[1]);
 $start = $fake ? strtotime($argv[1]) : $realstart;
 
-log_debug('---------- cron running ' . date('r', $start) . ' ----------');
+log_info('---------- cron running ' . date('r', $start) . ' ----------');
 raise_memory_limit('128M');
 
 if (!is_writable(get_config('dataroot'))) {
-    log_debug("Warning - unable to write to dataroot directory.");
+    log_warn("Unable to write to dataroot directory.");
 }
 
 // for each plugin type
@@ -81,14 +81,14 @@ foreach (plugin_types() as $plugintype) {
                 array($job->plugin, $job->callfunction)
             );
             if ($nextrun != $job->nextrun) {
-                log_debug("Too late to run $plugintype $job->plugin $job->callfunction; skipping.");
+                log_info("Too late to run $plugintype $job->plugin $job->callfunction; skipping.");
                 cron_free($job, $start, $plugintype);
                 continue;
             }
 
             $classname = generate_class_name($plugintype, $job->plugin);
 
-            log_debug("Running $classname::" . $job->callfunction);
+            log_info("Running $classname::" . $job->callfunction);
 
             safe_require($plugintype, $job->plugin, 'lib.php', 'require_once');
             call_static_method(
@@ -139,12 +139,12 @@ if ($jobs) {
             array($job->id)
         );
         if ($nextrun != $job->nextrun) {
-            log_debug("Too late to run core $job->callfunction; skipping.");
+            log_info("Too late to run core $job->callfunction; skipping.");
             cron_free($job, $start);
             continue;
         }
 
-        log_debug("Running core cron " . $job->callfunction);
+        log_info("Running core cron " . $job->callfunction);
 
         $function = $job->callfunction;
         $function();
@@ -166,7 +166,7 @@ if (isset($argv[1])) {
     $diff = $realstart - $start;
     $finish = $finish - $diff;
 }
-log_debug('---------- cron finished ' . date('r', $finish) . ' ----------');
+log_info('---------- cron finished ' . date('r', $finish) . ' ----------');
 
 function cron_next_run_time($lastrun, $job) {
     $run_date = getdate($lastrun);
@@ -494,12 +494,12 @@ function cron_lock($job, $start, $plugintype='core') {
 
     // If it's been going for more than 24 hours, remove the lock
     if ($started && $started < $start - 60*60*24) {
-        log_debug('Removing lock record for ' . $msg);
+        log_info('Removing lock record for ' . $msg);
         cron_free($job, $started, $plugintype);
         return false;
     }
 
-    log_debug('Skipping ' . $msg);
+    log_info('Skipping ' . $msg);
     return false;
 }
 
