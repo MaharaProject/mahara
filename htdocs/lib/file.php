@@ -827,7 +827,7 @@ function file_cleanup_old_cached_files() {
             continue;
         }
 
-        $mintime = time() - (7 * 24 * 60 * 60); // delete caches older than 1 week
+        $mintime = time() - (12 * 7 * 24 * 60 * 60); // delete caches older than 12 weeks
 
         // Cached files are stored in a three tier md5sum layout
         // The actual files are stored in the third directory
@@ -849,22 +849,18 @@ function file_cleanup_old_cached_files() {
                     $fileiter = new DirectoryIterator($dir3path);
                     foreach ($fileiter as $file) {
                         if ($file->isFile() && $file->getCTime() < $mintime) {
-                            log_debug('Deleting stale cache file ' . $file->getPath() . '/' . $file->getFilename());
                             unlink($file->getPath() . '/' . $file->getFilename());
                         }
                     }
                     if (sizeof(scandir($dir3path)) <= 2) {   // first 2 entries are . and ..
-                        log_debug('Deleting empty folder ' . $dir3path);
                         rmdir($dir3path);
                     }
                 }
                 if (sizeof(scandir($dir2path)) <= 2) {   // first 2 entries are . and ..
-                    log_debug('Deleting empty folder ' . $dir2path);
                     rmdir($dir2path);
                 }
             }
             if (sizeof(scandir($dir1path)) <= 2) {   // first 2 entries are . and ..
-                log_debug('Deleting empty folder ' . $dir1path);
                 rmdir($dir1path);
             }
         }
