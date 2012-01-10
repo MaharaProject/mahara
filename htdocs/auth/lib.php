@@ -59,6 +59,20 @@ class AuthInstanceException extends UserException {
 class UninitialisedAuthException extends SystemException {}
 
 /**
+ * We tried creating automatically creating an account for a user but
+ * it failed for a reason that the user might want to know about
+ * (e.g. they used an email address that's already used on the site)
+ */
+class AccountAutoCreationException extends AuthInstanceException {
+
+    public function strings() {
+        return array_merge(parent::strings(),
+                           array('message' => 'The automatic creation of your user account failed.'
+                                 . "\nDetails if any, follow:"));
+    }
+}
+
+/**
  * Base authentication class. Provides a common interface with which
  * authentication can be carried out for system users.
  *
