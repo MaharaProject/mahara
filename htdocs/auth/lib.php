@@ -44,13 +44,33 @@ class AuthUnknownUserException extends UserException {}
  * If appropriate - the 'message' of the exception will be used
  * as the display message, so don't forget to language translate it
  */
-class AuthInstanceException extends UserException {}
+class AuthInstanceException extends UserException {
+
+    public function strings() {
+        return array_merge(parent::strings(),
+                           array('title' => $this->get_sitename() . ': Authentication problem'));
+    }
+}
 
 /**
  * We tried to call a method on an auth plugin that hasn't been init'ed 
  * successfully
  */
 class UninitialisedAuthException extends SystemException {}
+
+/**
+ * We tried creating automatically creating an account for a user but
+ * it failed for a reason that the user might want to know about
+ * (e.g. they used an email address that's already used on the site)
+ */
+class AccountAutoCreationException extends AuthInstanceException {
+
+    public function strings() {
+        return array_merge(parent::strings(),
+                           array('message' => 'The automatic creation of your user account failed.'
+                                 . "\nDetails if any, follow:"));
+    }
+}
 
 /**
  * Base authentication class. Provides a common interface with which
