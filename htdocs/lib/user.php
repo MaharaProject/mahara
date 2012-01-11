@@ -748,84 +748,13 @@ function process_email($address) {
 function display_name($user, $userto=null, $nameonly=false, $realname=false, $username=false) {
     global $USER;
     static $tutorcache  = array();
-    static $usercache   = array();
 
     if ($nameonly) {
         return display_default_name($user);
     }
 
-    if (empty($userto)) {
-        $userto = new StdClass;
-        $userto->id            = $USER->get('id');
-        $userto->username      = $USER->get('username');
-        $userto->preferredname = $USER->get('preferredname');
-        $userto->firstname     = $USER->get('firstname');
-        $userto->lastname      = $USER->get('lastname');
-        $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
-        $userto->staff         = $USER->get('staff') || $USER->is_institutional_staff();
-    }
-    else if (is_numeric($userto)) {
-        if (isset($usercache[$userto])) {
-            $userto = $usercache[$userto];
-        }
-        else if ($userto == $USER->get('id')) {
-            $userto = new StdClass;
-            $userto->id            = $USER->get('id');
-            $userto->username      = $USER->get('username');
-            $userto->preferredname = $USER->get('preferredname');
-            $userto->firstname     = $USER->get('firstname');
-            $userto->lastname      = $USER->get('lastname');
-            $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
-            $userto->staff         = $USER->get('staff') || $USER->is_institutional_staff();
-            $usercache[$userto->id] = $userto;
-        }
-        else {
-            $userto = $usercache[$userto] = get_record('usr', 'id', $userto);
-        }
-    }
-
-    if (is_array($user)) {
-        $user = (object)$user;
-    }
-    else if (is_numeric($user)) {
-        if (isset($usercache[$user])) {
-            $user = $usercache[$user];
-        }
-        else if ($user == $USER->get('id')) {
-            $user = new StdClass;
-            $user->id            = $USER->get('id');
-            $user->username      = $USER->get('username');
-            $user->preferredname = $USER->get('preferredname');
-            $user->firstname     = $USER->get('firstname');
-            $user->lastname      = $USER->get('lastname');
-            $user->admin         = $USER->get('admin') || $USER->is_institutional_admin();
-            $user->staff         = $USER->get('staff') || $USER->is_institutional_staff();
-            $user->deleted       = 0;
-            $usercache[$user->id] = $user;
-        }
-        else {
-            $user = $usercache[$user] = get_record('usr', 'id', $user);
-        }
-    }
-    if (!is_object($user)) {
-        throw new InvalidArgumentException("Invalid user passed to display_name");
-    }
-
-    if ($user instanceof User) {
-        $userObj = $user;
-        $user = new StdClass;
-        $user->id            = $userObj->get('id');
-        $user->username      = $userObj->get('username');
-        $user->preferredname = $userObj->get('preferredname');
-        $user->firstname     = $userObj->get('firstname');
-        $user->lastname      = $userObj->get('lastname');
-        $user->admin         = $userObj->get('admin');
-        $user->staff         = $userObj->get('staff');
-        $user->deleted       = $userObj->get('deleted');
-    }
-
-    $user->id   = (isset($user->id)) ? $user->id : null;
-    $userto->id = (isset($userto->id)) ? $userto->id : null;
+    $userto = get_user_for_display($userto);
+    $user   = get_user_for_display($user);
 
     $addusername = $username || !empty($userto->admin) || !empty($userto->staff);
 
@@ -881,26 +810,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
  * ie when display_name is not going to work..
  */
 function display_default_name($user) {
-    if (is_array($user)) {
-        $user = (object)$user;
-    }
-    else if (is_numeric($user)) {
-        $user = get_record('usr', 'id', $user);
-    }
-    if (!is_object($user)) {
-        throw new InvalidArgumentException("Invalid user passed to display_name");
-    }
-
-    if ($user instanceof User) {
-        $userObj = $user;
-        $user = new StdClass;
-        $user->id            = $userObj->get('id');
-        $user->preferredname = $userObj->get('preferredname');
-        $user->firstname     = $userObj->get('firstname');
-        $user->lastname      = $userObj->get('lastname');
-        $user->deleted       = $userObj->get('deleted');
-    }
-
+    $user = get_user_for_display($user);
     return empty($user->preferredname) ? full_name($user) : $user->preferredname;
 }
 
@@ -925,6 +835,68 @@ function full_name($user=null) {
     }
 
     return isset($user->deleted) && $user->deleted ? get_string('deleteduser') : $user->firstname . ' ' . $user->lastname;
+}
+
+/**
+ * Takes an array, object or integer identifying a user and returns an object with
+ * the properties needed for display_name, display_default_name, or profile_icon_url.
+ */
+function get_user_for_display($user=null) {
+    global $USER;
+    static $usercache = array();
+
+    $fields = array(
+        'id', 'username', 'preferredname', 'firstname', 'lastname', 'admin', 'staff',
+        'profileicon', 'email', 'deleted',
+    );
+
+    if (is_numeric($user) && isset($usercache[$user])) {
+        return $usercache[$user];
+    }
+
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
+    else if (is_null($user) || (is_numeric($user) && $user == $USER->get('id'))) {
+        $user = new StdClass;
+        foreach ($fields as $f) {
+            $user->$f = $USER->get($f);
+        }
+        $user->admin |= $USER->is_institutional_admin();
+        $user->staff |= $USER->is_institutional_staff();
+    }
+    else if ($user instanceof User) {
+        $userObj = $user;
+        $user = new StdClass;
+        foreach ($fields as $f) {
+            $user->$f = $userObj->get($f);
+        }
+    }
+    else if (is_numeric($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+
+    if (!is_object($user)) {
+        throw new InvalidArgumentException("Invalid user passed to get_user_for_display");
+    }
+
+    if (!isset($user->id)) {
+        $user->id = null;
+    }
+
+    if (is_numeric($user->id)) {
+        if (!isset($usercache[$user->id])) {
+            return $usercache[$user->id] = $user;
+        }
+        foreach ($fields as $f) {
+            if (!isset($usercache[$user->id]->$f) && isset($user->$f)) {
+                $usercache[$user->id]->$f = $user->$f;
+            }
+        }
+        return $usercache[$user->id];
+    }
+
+    return $user;
 }
 
 /**
@@ -2224,30 +2196,18 @@ function install_system_dashboard_view() {
  * gravatar.
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
-    global $USER, $THEME;
-    static $usercache   = array();
+    global $THEME;
 
-    if (is_array($user)) {
-        $user = (object)$user;
-    }
-    else if (is_numeric($user)) {
-        if (isset($usercache[$user])) {
-            $user = $usercache[$user];
-        }
-        else if ($user == $USER->get('id')) {
-            $user = new StdClass;
-            $user->id            = $USER->get('id');
-            $user->profileicon   = $USER->get('profileicon');
-            $user->email         = $USER->get('email');
-            $usercache[$user->id] = $user;
-        }
-        else {
-            $user = $usercache[$user] = get_record('usr', 'id', $user);
-        }
-    }
+    $user = get_user_for_display($user);
+
     if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
-        throw new SystemException('profile_icon_url requires a user with profileicon & email properties');
+        if (!is_numeric($user->id)) {
+            throw new SystemException('profile_icon_url requires a user with profileicon & email properties');
+        }
+        log_debug("profile_icon_url was passed a user without profileicon & email properties");
+        $user = get_record('usr', 'id', $user->id);
     }
+
     if ($maxwidth != $maxheight || ($maxwidth != 20 && $maxwidth != 40 && $maxwidth != 60)) {
         log_warn('profile_icon_url should specify maxwidth, maxheight of 20x20, 40x40 or 60x60');
     }
