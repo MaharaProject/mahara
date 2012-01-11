@@ -1614,7 +1614,7 @@ function group_get_menu_tabs() {
     if ($role) {
         safe_require('grouptype', $group->grouptype);
         $artefactplugins = call_static_method('GroupType' . $group->grouptype, 'get_group_artefact_plugins');
-        if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
+        if ($plugins = plugins_installed('artefact')) {
             foreach ($plugins as &$plugin) {
                 if (!in_array($plugin->name, $artefactplugins)) {
                     continue;
