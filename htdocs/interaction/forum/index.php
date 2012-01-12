@@ -122,6 +122,6 @@ $smarty->assign('publicgroup', $group->public);
 $smarty->assign('feedlink', $feedlink);
 $smarty->assign('heading', $group->name);
 $smarty->assign('admin', $membership == 'admin');
-$smarty->assign('groupadmins', group_get_admin_ids($groupid));
+$smarty->assign('groupadmins', group_get_admins(array($groupid)));
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');
