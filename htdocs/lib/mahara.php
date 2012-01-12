@@ -1364,7 +1364,7 @@ function blocktype_name_to_namespaced($blocktype) {
     static $resultcache = array();
 
     if (!isset($resultcache[$blocktype])) {
-        $artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $blocktype);
+        $artefactplugin = blocktype_artefactplugin($blocktype);
         if ($artefactplugin) {
             $resultcache[$blocktype] = "$artefactplugin/$blocktype";
         }
