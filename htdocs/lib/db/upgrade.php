@@ -2783,5 +2783,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2012011300) {
+        $table = new XMLDBTable('group_member');
+        $field = new XMLDBField('method');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL, null, null, null, 'internal');
+        add_field($table, $field);
+    }
+
     return $status;
 }
