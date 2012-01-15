@@ -858,15 +858,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->filetype = $data->guess;
         }
 
-        if ($video = ArtefactTypeVideo::new_video($data)) {
-            return $video;
+        foreach (array('video', 'audio', 'archive') as $artefacttype) {
+            $classname = 'ArtefactType' . ucfirst($artefacttype);
+            if (call_static_method($classname, 'is_valid_file', $path, &$data)) {
+                return new $classname(0, $data);
+            }
         }
-        if ($audio = ArtefactTypeAudio::new_audio($data)) {
-            return $audio;
-        }
-        if ($archive = ArtefactTypeArchive::new_archive($path, $data)) {
-            return $archive;
-        }
+
         return new ArtefactTypeFile(0, $data);
     }
 
@@ -1910,14 +1908,29 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         }
     }
 
-    public static function new_archive($path, $data) {
-        if (!isset($data->filetype)) {
-            return self::archive_from_file($path, $data);
-        }
+    public static function is_valid_file($path, $data) {
         $descriptions = self::archive_file_descriptions();
         $validtypes = self::archive_mime_types();
-        if (isset($validtypes[$data->filetype])) {
-            return self::archive_from_file($path, $data, $descriptions[$validtypes[$data->filetype]->description]);
+        if (!isset($validtypes[$data->filetype])) {
+            return false;
+        }
+
+        $type = $descriptions[$validtypes[$data->filetype]->description];
+
+        if (is_null($type)) {
+            if (self::is_zip($path)) {
+                $data->filetype = 'application/zip';
+                $data->archivetype = 'zip';
+                return true;
+            }
+            if ($data->filetype = self::is_tar($path)) {
+                $data->archivetype = 'tar';
+                return true;
+            }
+        }
+        else if ($type == 'zip' && self::is_zip($path) || $type == 'tar' && self::is_tar($path)) {
+            $data->archivetype = $type;
+            return true;
         }
         return false;
     }
@@ -1950,32 +1963,10 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         return false;
     }
 
-    public static function archive_from_file($path, $data, $type=null) {
-        if (is_null($type)) {
-            if (self::is_zip($path)) {
-                $data->filetype = 'application/zip';
-                $data->archivetype = 'zip';
-                return new ArtefactTypeArchive(0, $data);
-            }
-            if ($data->filetype = self::is_tar($path)) {
-                $data->archivetype = 'tar';
-                return new ArtefactTypeArchive(0, $data);
-            }
-        }
-        else if ($type == 'zip' && self::is_zip($path) || $type == 'tar' && self::is_tar($path)) {
-            $data->archivetype = $type;
-            return new ArtefactTypeArchive(0, $data);
-        }
-        return false;
-    }
-
     public static function archive_file_descriptions() {
-        static $descriptions = null;
-        if (is_null($descriptions)) {
-            $descriptions = array('tar' => 'tar', 'gz' => 'tar', 'tgz' => 'tar', 'bz2' => 'tar');
-            if (function_exists('zip_open')) {
-                $descriptions['zip'] = 'zip';
-            }
+        $descriptions = array('tar' => 'tar', 'gz' => 'tar', 'tgz' => 'tar', 'bz2' => 'tar');
+        if (function_exists('zip_open')) {
+            $descriptions['zip'] = 'zip';
         }
         return $descriptions;
     }
@@ -2243,13 +2234,13 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
         }
     }
 
-    public static function new_video($data) {
-        $descriptions = self::video_file_descriptions();
+    public static function is_valid_file($path, $data) {
         $validtypes = self::video_mime_types();
-        if (isset($validtypes[$data->filetype])) {
-            return new ArtefactTypeVideo(0, $data);
+        if (!isset($validtypes[$data->guess])) {
+            return false;
         }
-        return false;
+        $data->filetype = $data->guess;
+        return true;
     }
 
     public static function video_file_descriptions() {
@@ -2286,12 +2277,13 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
 class ArtefactTypeAudio extends ArtefactTypeFile {
 
-    public static function new_audio($data) {
+    public static function is_valid_file($path, $data) {
         $validtypes = self::audio_mime_types();
-        if (isset($validtypes[$data->filetype])) {
-            return new ArtefactTypeAudio(0, $data);
+        if (!isset($validtypes[$data->guess])) {
+            return false;
         }
-        return false;
+        $data->filetype = $data->guess;
+        return true;
     }
 
     public static function audio_file_descriptions() {
