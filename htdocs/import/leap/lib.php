@@ -1425,7 +1425,6 @@ class PluginImportLeap extends PluginImport {
         $data = (object)array(
             'title' => (string)$entry->title . ' ' . get_string('attachment'),
             'owner' => $this->get('usr'),
-            'filetype' => file_mime_type($pathname),
         );
         return ArtefactTypeFile::save_file($pathname, $data, $this->get('usrobj'), true);
     }

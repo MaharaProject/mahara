@@ -241,7 +241,6 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         $data = (object)array(
             'title' => (string)$blogpostentry->title . ' ' . get_string('attachment', 'artefact.blog'),
             'owner' => $importer->get('usr'),
-            'filetype' => file_mime_type($pathname),
         );
         return ArtefactTypeFile::save_file($pathname, $data, $importer->get('usrobj'), true);
     }

@@ -845,6 +845,19 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->height   = $imageinfo[1];
             return new ArtefactTypeImage(0, $data);
         }
+
+        // If $data->filetype is set here, it's probably the claim made by the
+        // browser during upload or by a Leap2a file.  Generally we believe this
+        // claim, because it gives better results when serving the file on
+        // download.  If there's no claimed mimetype, use file_mime_type to make
+        // a guess, and give each file artefact type access to both the claimed
+        // and guessed mimetypes.
+        $data->guess = file_mime_type($path);
+
+        if (empty($data->filetype) || $data->filetype == 'application/octet-stream') {
+            $data->filetype = $data->guess;
+        }
+
         if ($video = ArtefactTypeVideo::new_video($data)) {
             return $video;
         }
@@ -879,11 +892,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $size = filesize($pathname);
         $f = self::new_file($pathname, $data);
         $f->set('size', $size);
-
-        // sometimes the filetype is actually set, assume it is correct
-        if (empty($data->filetype)) {
-            $f->set('filetype', file_mime_type($pathname));
-        }
 
         // if an extension has been provided (only from self::extract() at this stage), use it
         if (!empty($data->extension)) {
@@ -973,16 +981,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             }
         }
         $data->size = $size;
-
-        if ($filetype == 'application/octet-stream') {
-            // the browser wasn't sure, so use file_mime_type to guess
-            require_once('file.php');
-            $data->filetype = file_mime_type($tmpname);
-        }
-        else {
-            $data->filetype = $filetype;
-        }
-
+        $data->filetype = $filetype;
         $data->oldextension = $um->original_filename_extension();
         $f = self::new_file($tmpname, $data);
         $f->commit();
