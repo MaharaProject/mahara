@@ -248,7 +248,7 @@ EOF;
         // avoid confusion in the templates
         $sql = '
             SELECT bwp.id AS postid, bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
-                u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin
+                u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin, u.email, u.profileicon
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0
