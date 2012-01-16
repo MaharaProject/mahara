@@ -339,7 +339,8 @@ EOF;
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
     }
-    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
+
+    if ($adminsection = in_admin_section()) {
         if ($adminsheets = $THEME->get_url('style/admin.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
         }
@@ -408,6 +409,12 @@ EOF;
     if (defined('INSTITUTIONALADMIN')) {
         $smarty->assign('INSTITUTIONALADMIN', true);
     }
+    if (defined('STAFF')) {
+        $smarty->assign('STAFF', true);
+    }
+    if (defined('INSTITUTIONALSTAFF')) {
+        $smarty->assign('INSTITUTIONALSTAFF', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
@@ -461,7 +468,7 @@ EOF;
     // ---------- sideblock stuff ----------
     $sidebars = !isset($extraconfig['sidebars']) || $extraconfig['sidebars'] !== false;
     if ($sidebars && !defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
-        if (get_config('installed') && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
+        if (get_config('installed') && !$adminsection) {
             $data = site_menu();
             if (!empty($data)) {
                 $smarty->assign('SITEMENU', site_menu());
@@ -492,7 +499,7 @@ EOF;
             }
         }
 
-        if($USER->is_logged_in() && !defined('ADMIN') && !defined('INSTITUTIONALADMIN')) {
+        if ($USER->is_logged_in() && !$adminsection) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'profile',
                 'id'     => 'sb-profile',
@@ -1714,6 +1721,14 @@ function pieform_get_help(Pieform $form, $element) {
         $form->get_name(), $element['name']);
 }
 
+/**
+ * Is this a page in the admin area?
+ *
+ * @return bool
+ */
+function in_admin_section() {
+    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF');
+}
 
 /**
  * Returns the entries in the standard admin menu
