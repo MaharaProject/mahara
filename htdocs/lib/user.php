@@ -1208,9 +1208,9 @@ function delete_user($userid) {
         }
     }
 
-    db_commit();
-
     handle_event('deleteuser', $userid);
+
+    db_commit();
 }
 
 /**
