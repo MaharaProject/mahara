@@ -130,6 +130,10 @@ $string['invites'] = "Invites";
 $string['member'] = 'member';
 $string['members'] = 'members';
 $string['Members'] = 'Members';
+$string['nmembers'] = array(
+    '1 member',
+    '%s members',
+);
 
 $string['memberrequests'] = 'Membership requests';
 $string['declinerequest'] = 'Decline request';

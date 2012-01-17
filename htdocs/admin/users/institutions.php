@@ -82,8 +82,28 @@ if ($institution || $add) {
 
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
-            if (get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
-                throw new ConfigException('Attempt to delete an institution that has members');
+            // Ensure the institution has no members left
+            if ($members = get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
+                $form->set_error('submit', get_string('institutionstillhas', 'admin', get_string('nmembers', 'group', $members)));
+            }
+
+            // If some users are still using one of this institution's authinstances, it's okay if
+            // we can find a default authinstance for those users, otherwise it's an error.
+            if ($authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i'])) {
+                $badusers = count_records_select(
+                    'usr',
+                    'authinstance IN (' . join(',', array_fill(0, count($authinstanceids), '?')) . ')',
+                    $authinstanceids
+                );
+                if ($badusers) {
+                    $defaultauth = record_exists('auth_instance', 'institution', 'mahara', 'authname', 'internal');
+                    if ($values['i'] == 'mahara' || !$defaultauth) {
+                        $form->set_error(
+                            'submit',
+                            get_string('institutionauthinuseby', 'admin', get_string('nusers', 'mahara', $badusers))
+                        );
+                    }
+                }
             }
         }
 
@@ -117,6 +137,19 @@ if ($institution || $add) {
                     }
                 }
             }
+
+            // If any users are still using this institution's authinstances, change them now.
+            if ($authinstanceids) {
+                execute_sql("
+                    UPDATE {usr}
+                    SET authinstance = (
+                        SELECT MIN(id) FROM {auth_instance} WHERE institution = 'mahara' AND authname = 'internal'
+                    )
+                    WHERE authinstance IN (" . join(',', array_fill(0, count($authinstanceids), '?')) . ')',
+                    $authinstanceids
+                );
+            }
+
             foreach ($authinstanceids as $id) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
