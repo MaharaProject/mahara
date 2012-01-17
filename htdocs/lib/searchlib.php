@@ -225,8 +225,8 @@ function get_admin_user_search_results($search, $offset, $limit) {
 
     // Filter by viewable institutions:
     global $USER;
-    if (!$USER->get('admin')) {
-        $allowed = $USER->get('admininstitutions');
+    if (!$USER->get('admin') && !$USER->get('staff')) {
+        $allowed = array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'));
         if (empty($search->institution)) {
             $search->institution = 'all';
         }
@@ -256,10 +256,25 @@ function get_admin_user_search_results($search, $offset, $limit) {
     );
 
     if ($results['count']) {
+        $isadmin = $USER->get('admin');
+        $admininstitutions = $USER->get('admininstitutions');
+
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
             if (!empty($result['institutions'])) {
                 $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
+            }
+            if ($isadmin) {
+                continue;
+            }
+
+            // Remove email address when viewed by staff
+            if (!$hideemail = (empty($admininstitutions) || empty($result['institutions']))) {
+                $commoninstitutions = array_intersect($admininstitutions, $result['institutions']);
+                $hideemail |= empty($commoninstitutions);
+            }
+            if ($hideemail) {
+                unset($result['email']);
             }
         }
     }
@@ -336,6 +351,17 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'template' => 'admin/users/searchselectcolumn.tpl',
         'class'    => 'center nojs-hidden-table-cell',
     );
+
+    if (!$USER->get('admin') && !$USER->is_institutional_admin()) {
+        unset($cols['email']);
+    }
+    else if (!$USER->get('admin')) {
+        foreach ($results['data'] as &$r) {
+            if (!isset($r['email'])) {
+                $r['email'] = '- ' . get_string('emailaddresshidden', 'admin') . ' -';
+            }
+        }
+    }
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);

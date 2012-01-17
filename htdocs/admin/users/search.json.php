@@ -27,7 +27,7 @@
 
 define('INTERNAL', 1);
 define('JSON', 1);
-define('INSTITUTIONALADMIN', 1);
+define('INSTITUTIONALSTAFF', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
