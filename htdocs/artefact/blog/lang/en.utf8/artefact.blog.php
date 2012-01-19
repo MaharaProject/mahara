@@ -82,7 +82,7 @@ $string['newattachmentsexceedquota'] = 'The total size of the new files that you
 $string['newblog'] = 'New Journal';
 $string['newblogpost'] = 'New Journal Entry in Journal "%s"';
 $string['newerposts'] = 'Newer entries';
-$string['noblogfound'] = 'No default journal found. This is a bug with the system, to fix it you need to enable the multiple journals option on the account settings page.';
+$string['nodefaultblogfound'] = 'No default journal found. This is a bug with the system, to fix it you need to enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
 $string['nopostsyet'] = 'No entries yet.';
 $string['addone'] = 'Add one!';
 $string['noimageshavebeenattachedtothispost'] = 'No images have been attached to this entry.  You need to upload or attach an image to the entry before you can insert it.';

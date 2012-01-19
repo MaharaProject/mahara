@@ -51,7 +51,7 @@ if (is_null($id)) {
             array($USER->get('id')),
             'id ASC'
         )) {
-        throw new ArtefactNotFoundException(get_string('noblogfound', 'artefact.blog'));
+        die_info(get_string('nodefaultblogfound', 'artefact.blog', get_config('wwwroot')));
     }
     $id = $records[0]->id;
     $blog = new ArtefactTypeBlog($id, $records[0]);
