@@ -25,6 +25,10 @@
               <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
             </td>
           </tr>
+          <tr>
+            <td></td>
+            <td>{str tag=tagsdescprofile}</td>
+          </tr>
 {if $groupinfo}
           <tr>
             <th><label>{str tag=Permissions}</label></th>
