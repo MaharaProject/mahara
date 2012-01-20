@@ -358,7 +358,7 @@ ul.edit-view-tabs li {
   background: none;
   line-height: 25px;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
 ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #1E6297;
   padding: 0 12px 0 10px;
@@ -367,11 +367,11 @@ ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visi
   border-right: 1px solid #d1d1d1;
   border-bottom: 1px solid #d1d1d1;
 }
-ul.in-page-tabs li a:hover,
+ul.in-page-tabs li a:hover, ul.in-page-tabs li input.linkbtn:hover,
 ul.edit-view-tabs li a:hover {
   color: #7E7327;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab,
 ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
   background: transparent url(../images/tabs-over-bg.gif) no-repeat right bottom;
   color: #000;
