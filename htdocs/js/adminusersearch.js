@@ -209,15 +209,15 @@ function UserSearch() {
 
 userSearch = new UserSearch();
 
-addLoadEvent(function() {
-    forEach(getElementsByTagAndClassName('input', 'button', 'bulkactions'), function(input) {
+function connectSelectedUsersForm(formid) {
+    forEach(getElementsByTagAndClassName('input', 'button', formid), function(input) {
         connect(input, 'onclick', function() {
             // Some of the selected users aren't on the page, so just add them all to the
             // form now.
             var count = 0;
             if (userSearch.selectusers) {
                 for (j in userSearch.selectusers) {
-                    appendChildNodes('bulkactions', INPUT({
+                    appendChildNodes(formid, INPUT({
                         'type': 'checkbox',
                         'name': 'users[' + j + ']',
                         'value': j,
@@ -229,16 +229,20 @@ addLoadEvent(function() {
             }
             if (count) {
                 addElementClass('nousersselected', 'hidden');
-                appendChildNodes('bulkactions', INPUT({
+                appendChildNodes(formid, INPUT({
                     'type': 'hidden',
                     'name': 'action',
                     'value': input.name
                 }));
-                $('bulkactions').submit();
+                $(formid).submit();
                 return false;
             }
             removeElementClass('nousersselected', 'hidden');
             return false;
         });
     });
+}
+
+addLoadEvent(function() {
+    forEach(['bulkactions', 'report'], connectSelectedUsersForm);
 });

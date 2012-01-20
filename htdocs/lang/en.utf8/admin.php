@@ -303,6 +303,8 @@ $string['smallviewheaders'] = 'Small page headers';
 $string['smallviewheadersdescription'] = 'If enabled, a small header and site navigation block will be displayed when viewing or editing portfolio pages created by users.';
 $string['spamhaus'] = 'Enable Spamhaus URL blacklist';
 $string['spamhausdescription'] = 'If enabled, URLs will be checked against the Spamhaus DNSBL';
+$string['staffuserreports'] = 'Staff report access';
+$string['staffuserreportsdescription'] = 'If enabled, site and institutional staff will have access to the reports page for users in their institutions.  This page is normally restricted to administrators, and lists extra user information including page access lists.';
 $string['surbl'] = 'Enable SURBL URL blacklist';
 $string['surbldescription'] = 'If enabled, URLs will be checked against the SURBL DNSBL';
 $string['disableexternalresources'] = 'Disable external resources in user HTML';
@@ -865,11 +867,12 @@ $string['invitedby'] = 'Invited by';
 $string['requestto'] = 'Request to';
 $string['useradded'] = 'User added';
 $string['invitationsent'] = 'Invitation sent';
-$string['editselectedusers'] = 'Edit selected users';
+$string['withselectedusers'] = 'With selected users';
+$string['getreports'] = 'Get reports';
 
-// Bulk actions
+// Bulk actions & user reports
 $string['bulkactions'] = 'Bulk actions';
-$string['editselectedusersdescription'] = 'Suspend, delete, change authentication method, or download a CSV file of the users you have selected on the search page.';
+$string['editselectedusersdescription1'] = 'Suspend, delete, or change the authentication method of the users you have selected on the search page.';
 $string['uneditableusers'] = array(
     0 => 'One of the users you selected is not editable by you, and has been removed from the list.',
     1 => 'You selected %s users that are not editable by you.  They have been removed from the list.',
@@ -886,6 +889,8 @@ $string['bulkchangeauthmethodresetpassword'] = 'You have chosen an authenticatio
 $string['bulkdeleteuserssuccess'] = 'Deleted %d user(s)';
 $string['selectedusers'] = 'Selected users';
 $string['remoteuser'] = 'Remote username';
+$string['userreports'] = 'User reports';
+$string['userreportsdescription'] = 'View or download information about the users you selected on the search page.';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

@@ -1,16 +1,9 @@
 {include file="header.tpl"}
 
-<p>{str tag=editselectedusersdescription section=admin}</p>
+<p>{str tag=editselectedusersdescription1 section=admin}</p>
 
 <div>
-  <div class="bulkactionform">
-    <span class="bulkaction-title">{str tag=exportusersascsv section=admin}:</span>
-    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin}</a>
-  </div>
   {$suspendform|safe}
-</div>
-
-<div>
   {$changeauthform|safe}
   {$deleteform|safe}
 </div>

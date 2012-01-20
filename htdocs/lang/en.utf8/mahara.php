@@ -955,6 +955,7 @@ $string['nusers'] = array(
     '1 user',
     '%s users',
 );
+$string['hidden'] = 'hidden';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';
