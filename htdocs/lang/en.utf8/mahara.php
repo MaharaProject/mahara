@@ -543,6 +543,8 @@ $string['findgroups']         = 'Find Groups';
 $string['returntosite']       = 'Return to Site';
 $string['siteadministration'] = 'Site Administration';
 $string['institutionadministration'] = 'Institution Administration';
+$string['siteinformation']    = 'Site Information';
+$string['institutioninformation'] = 'Institution Information';
 
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
