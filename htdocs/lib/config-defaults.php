@@ -38,10 +38,10 @@
 
 $cfg = new StdClass;
 
-// directorypermissions - what permissions to use for files and directories in 
-// dataroot. The default allows only the web server user to read the data. If 
-// you're on shared hosting and might want to download the contents of your 
-// dataroot later (e.g. for backup purposes), set this to 0777. Otherwise, 
+// directorypermissions - what permissions to use for files and directories in
+// dataroot. The default allows only the web server user to read the data. If
+// you're on shared hosting and might want to download the contents of your
+// dataroot later (e.g. for backup purposes), set this to 0755. Otherwise,
 // leave it as is!
 //$cfg->directorypermissions = 0700;
 
