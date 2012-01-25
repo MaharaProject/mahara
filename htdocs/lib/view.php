@@ -2790,14 +2790,21 @@ class View {
      * @param array    $types       List of view types to filter by
      * @param bool     $collection  Use query against collection names and descriptions
      * @param array    $accesstypes Only return views visible due to the given access types
+     * @param array    $tag         Only return views with this tag
      *
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
-                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null) {
+                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
+
+        $from = '
+            FROM {view} v
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
+            ';
 
         $where = '
             WHERE (v.owner IS NULL OR v.owner > 0)
@@ -2827,16 +2834,24 @@ class View {
         }
 
         $like = db_ilike();
-        if ($query) {
+
+        if ($query) { // Include matches on the title, description or tag
+            $from .= "
+                LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
             $where .= "
-                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' ";
-            $ph = array($query, $query);
+                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?";
+            $ph = array($query, $query, $query, $query);
             if ($collection) {
                 $where .= "
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
                 array_push($ph, $query, $query);
             }
             $where .= ")";
+        }
+        else if ($tag) { // Filter by the tag
+            $from .= "
+                INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
+            $ph = array($tag);
         }
         else {
             $ph = array();
@@ -2853,12 +2868,6 @@ class View {
             $editableviews = false;
             $accesstypes = array('public');
         }
-
-        $from = '
-            FROM {view} v
-            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
-            ';
 
         if ($editableviews) {
             $editablesql = "v.owner = ?      -- user owns the view
