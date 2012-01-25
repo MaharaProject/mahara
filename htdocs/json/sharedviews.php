@@ -46,7 +46,22 @@ else if (!empty($query)) {
     $queryparams['query'] = $query;
 }
 
-$data = View::shared_to_user($query, $tag, $limit, $offset);
+$sortoptions = array(
+    'lastchanged',
+    'mtime',
+    'ownername',
+    'title',
+);
+
+if (!in_array($sort = param_alpha('sort', 'lastchanged'), $sortoptions)) {
+    $sort = 'lastchanged';
+}
+if ($sort !== 'lastchanged') {
+    $queryparams['sort'] = $sort;
+}
+$sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
+
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',

@@ -58,29 +58,50 @@ else {
     }
 }
 
+$sortoptions = array(
+    'lastchanged' => get_string('lastupdateorcomment'),
+    'mtime'       => get_string('lastupdate'),
+    'ownername'   => get_string('Owner', 'view'),
+    'title'       => get_string('Title'),
+);
+
+if (!in_array($sort = param_alpha('sort', 'lastchanged'), array_keys($sortoptions))) {
+    $sort = 'lastchanged';
+}
+if ($sort !== 'lastchanged') {
+    $queryparams['sort'] = $sort;
+}
+$sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
+
 $searchform = pieform(array(
     'name' => 'search',
-    'renderer' => 'oneline',
     'dieaftersubmit' => false,
     'elements' => array(
         'query' => array(
             'type' => 'text',
-            'title' => get_string('search') . ': ',
+            'title' => get_string('Query') . ': ',
             'defaultvalue' => $searchdefault,
         ),
         'type' => array(
             'type'         => 'select',
+            'title'        => get_string('searchwithin') . ': ',
             'options'      => $searchoptions,
             'defaultvalue' => $searchtype,
         ),
-        'submit' => array(
+        'sort' => array(
+            'type'         => 'select',
+            'title'        => get_string('sortresultsby') . ' ',
+            'options'      => $sortoptions,
+            'defaultvalue' => $sort,
+        ),
+        'search' => array(
             'type' => 'submit',
             'value' => get_string('search')
-        )
+        ),
     )
 ));
 
-$data = View::shared_to_user($query, $tag, $limit, $offset);
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',

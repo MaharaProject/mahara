@@ -3090,14 +3090,22 @@ class View {
      * @param string   $tag         Return only views with this tag
      * @param integer  $limit
      * @param integer  $offset
+     * @param string   $sort        Either 'lastchanged', 'ownername', or a column of the view table
+     * @param string   $sortdir     Ascending/descending
      *
      */
-    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0) {
+    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0, $sort='lastchanged', $sortdir='desc') {
+
+        $sort = array(
+            array(
+                'column' => $sort,
+                'desc'   => $sortdir == 'desc',
+            )
+        );
 
         $result = self::view_search(
-            $query, null, null, null, $limit, $offset, true,
-            array(array('column' => 'lastchanged', 'desc' => true)),
-            array('portfolio'), false, array('user', 'group', 'friend'), $tag
+            $query, null, null, null, $limit, $offset, true, $sort, array('portfolio'), false,
+            array('user', 'group', 'friend'), $tag
         );
 
         if (!$result->count) {
