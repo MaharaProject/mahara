@@ -36,19 +36,21 @@ $tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
+$queryparams = array();
+
 if (!empty($tag)) {
-    $querystring = '?tag=' . urlencode($tag);
+    $queryparams['tag'] = $tag;
     $query = null;
 }
-else {
-    $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
+else if (!empty($query)) {
+    $queryparams['query'] = $query;
 }
 
 $data = View::shared_to_user($query, $tag, $limit, $offset);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . $querystring,
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
     'jsonscript' => '/json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,

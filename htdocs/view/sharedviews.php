@@ -38,6 +38,8 @@ $tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
+$queryparams = array();
+
 $searchoptions = array(
     'titleanddescription' => get_string('titleanddescription', 'view'),
     'tagsonly' => get_string('tagsonly', 'view'),
@@ -45,18 +47,21 @@ $searchoptions = array(
 if (!empty($tag)) {
     $searchtype = 'tagsonly';
     $searchdefault = $tag;
-    $querystring = '?tag=' . urlencode($tag);
+    $queryparams['tag'] = $tag;
     $query = null;
 }
 else {
     $searchtype = 'titleanddescription';
     $searchdefault = $query;
-    $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
+    if (!empty($query)) {
+        $queryparams['query'] = $query;
+    }
 }
 
 $searchform = pieform(array(
     'name' => 'search',
     'renderer' => 'oneline',
+    'dieaftersubmit' => false,
     'elements' => array(
         'query' => array(
             'type' => 'text',
@@ -79,7 +84,7 @@ $data = View::shared_to_user($query, $tag, $limit, $offset);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . $querystring,
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
     'jsonscript' => '/json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,
@@ -97,11 +102,25 @@ $smarty->display('view/sharedviews.tpl');
 exit;
 
 function search_submit(Pieform $form, $values) {
-    $goto = '/view/sharedviews.php';
-    if (!empty($values['query'])) {
-        $querystring = $values['type'] == 'tagsonly' ? '?tag=' : '?query=';
-        $querystring .= urlencode($values['query']);
-        $goto .= $querystring;
+    // Convert (query,type) parameters from form to (query,tag)
+    global $queryparams, $tag, $query;
+
+    if (isset($queryparams['query'])) {
+        unset($queryparams['query']);
+        $query = null;
     }
-    redirect($goto);
+
+    if (isset($queryparams['tag'])) {
+        unset($queryparams['tag']);
+        $tag = null;
+    }
+
+    if (!empty($values['query'])) {
+        if ($values['type'] == 'tagsonly') {
+            $queryparams['tag'] = $tag = $values['query'];
+        }
+        else {
+            $queryparams['query'] = $query = $values['query'];
+        }
+    }
 }
