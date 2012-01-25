@@ -2990,7 +2990,6 @@ class View {
             $ph = array_merge($ph, array($ownerquery,$ownerquery,$ownerquery,$ownerquery,$ownerquery));
         }
 
-        $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
         $orderby = 'title ASC';
         if (!empty($sort)) {
             $orderby = '';
@@ -3002,7 +3001,21 @@ class View {
                 if (!empty($orderby)) {
                     $orderby .= ', ';
                 }
-                $orderby .= $item['column'];
+
+                if ($item['column'] == 'lastchanged') {
+                    // We need the date of the last comment on each view
+                    $from .= 'LEFT OUTER JOIN (
+                SELECT c.onview, MAX(a.mtime) AS lastcomment
+                FROM {artefact_comment_comment} c JOIN {artefact} a ON c.artefact = a.id AND c.deletedby IS NULL AND c.private = 0
+                GROUP BY c.onview
+            ) l ON v.id = l.onview
+            ';
+                    $orderby .= 'GREATEST(lastcomment, v.mtime)';
+                }
+                else {
+                    $orderby .= 'v.' . $item['column'];
+                }
+
                 if ($item['desc']) {
                     $orderby .= ' DESC';
                 }
@@ -3012,13 +3025,15 @@ class View {
             }
         }
 
+        $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
+
         $viewdata = get_records_sql_assoc('
             SELECT
                 v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
                 v.template, v.mtime, v.ctime,
                 c.id AS collid, c.name, v.type
             ' . $from . $where . '
-            ORDER BY v.' . $orderby . ', v.id ASC',
+            ORDER BY ' . $orderby . ', v.id ASC',
             $ph, $offset, $limit
         );
 
