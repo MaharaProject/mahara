@@ -3032,6 +3032,14 @@ class View {
             ';
                     $orderby .= 'GREATEST(lastcomment, v.mtime)';
                 }
+                else if ($item['column'] == 'ownername') {
+                    // Join on usr, group, and institution and order by name
+                    $from .= 'LEFT OUTER JOIN {usr} su ON su.id = v.owner
+            LEFT OUTER JOIN {group} sg ON sg.id = v.group
+            LEFT OUTER JOIN {institution} si ON si.name = v.institution
+            ';
+                    $orderby .= "COALESCE(sg.name, si.displayname, CASE WHEN su.preferredname IS NOT NULL AND su.preferredname != '' THEN su.preferredname ELSE su.firstname || ' ' || su.lastname END)";
+                }
                 else {
                     $orderby .= 'v.' . $item['column'];
                 }
