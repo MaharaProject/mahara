@@ -2789,9 +2789,11 @@ class View {
      * @param array    $sort        Order by, each element of the array is an array containing "column" (string) and "desc" (boolean)
      * @param array    $types       List of view types to filter by
      * @param bool     $collection  Use query against collection names and descriptions
+     * @param array    $accesstypes Only return views visible due to the given access types
      *
      */
-    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0, $extra=true, $sort=null, $types=null, $collection=false) {
+    public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
+                                       $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
@@ -2840,47 +2842,61 @@ class View {
             $ph = array();
         }
 
-        if (!$loggedin) {
-            // Unreachable and not tested yet:
-            $from = '
+        if (is_array($accesstypes)) {
+            $editableviews = in_array('editable', $accesstypes);
+        }
+        else if ($loggedin) {
+            $editableviews = true;
+            $accesstypes = array('public', 'loggedin', 'friend', 'user', 'group', 'institution');
+        }
+        else {
+            $editableviews = false;
+            $accesstypes = array('public');
+        }
+
+        $from = '
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
             ';
-            $where .= "
-                AND (v.startdate IS NULL OR v.startdate < current_timestamp)
-                AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                AND (v.id IN ( -- public access
-                    SELECT va.view
-                    FROM {view_access} va
-                    WHERE va.accesstype = 'public'
-                        AND (va.startdate IS NULL OR va.startdate < current_timestamp)
-                        AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                ))";
-        }
-        else {
-            $from = "
-            FROM {view} v
-                LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-                LEFT OUTER JOIN {collection} c ON cv.collection = c.id";
-            $where .= "
-                AND (v.owner = ?      -- user owns the view
-                    OR (v.group IN (  -- group view, editable by the user
+
+        if ($editableviews) {
+            $editablesql = "v.owner = ?      -- user owns the view
+                    OR v.group IN (  -- group view, editable by the user
                         SELECT m.group
                         FROM {group_member} m JOIN {group} g ON m.member = ? AND m.group = g.id
                         WHERE m.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND m.role != 'member')
-                    ))
-                    OR ( -- user has permission to see the view
-                        (v.startdate IS NULL OR v.startdate < current_timestamp)
-                        AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                        AND ((v.id IN ( -- public or loggedin access
+                    )";
+            $ph[] = $viewerid;
+            $ph[] = $viewerid;
+        }
+        else {
+            $editablesql = 'FALSE';
+        }
+
+        $accesssql = array();
+
+        foreach ($accesstypes as $t) {
+            if ($t == 'public') {
+                $accesssql[] = "v.id IN ( -- public access
                                 SELECT va.view
                                 FROM {view_access} va
-                                WHERE (va.accesstype = 'public' OR va.accesstype = 'loggedin')
+                                WHERE va.accesstype = 'public'
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            ))
-                            OR (v.id IN ( -- friend access
+                            )";
+            }
+            else if ($t == 'loggedin') {
+                $accesssql[] = "v.id IN ( -- loggedin access
+                                SELECT va.view
+                                FROM {view_access} va
+                                WHERE va.accesstype = 'loggedin'
+                                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
+                            )";
+            }
+            else if ($t == 'friend') {
+                $accesssql[] = "v.id IN ( -- friend access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {view} vf ON va.view = vf.id AND vf.owner IS NOT NULL
@@ -2888,15 +2904,22 @@ class View {
                                 WHERE va.accesstype = 'friends'
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            ))
-                            OR (v.id IN ( -- user access
+                            )";
+                $ph[] = $viewerid;
+                $ph[] = $viewerid;
+            }
+            else if ($t == 'user') {
+                $accesssql[] = "v.id IN ( -- user access
                                 SELECT va.view
                                 FROM {view_access} va
                                 WHERE va.usr = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            ))
-                            OR (v.id IN ( -- group access
+                            )";
+                $ph[] = $viewerid;
+            }
+            else if ($t == 'group') {
+                $accesssql[] = "v.id IN ( -- group access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {group_member} m ON va.group = m.group AND (va.role = m.role OR va.role IS NULL)
@@ -2904,8 +2927,11 @@ class View {
                                     m.member = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            ))
-                            OR (v.id IN ( -- institution access
+                            )";
+                $ph[] = $viewerid;
+            }
+            else if ($t == 'institution') {
+                $accesssql[] = "v.id IN ( -- institution access
                                 SELECT va.view
                                 FROM {view_access} va
                                     JOIN {usr_institution} ui ON va.institution = ui.institution
@@ -2913,13 +2939,24 @@ class View {
                                     ui.usr = ?
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                            ))
-                        )
-                    )
-                )";
-
-            $ph = array_merge($ph, array($viewerid,$viewerid,$viewerid,$viewerid,$viewerid,$viewerid,$viewerid));
+                            )";
+                $ph[] = $viewerid;
+            }
         }
+
+        if (!empty($accesssql)) {
+            $accesssql = '( -- user has permission to see the view
+                        (v.startdate IS NULL OR v.startdate < current_timestamp)
+                        AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
+                        AND (' . join(' OR ', $accesssql) . '))';
+        }
+        else {
+            $accesssql = 'FALSE';
+        }
+
+        $where .= "
+                AND ($editablesql
+                    OR $accesssql)";
 
         if (!$ownedby && $ownerquery) {
             $from .= '
