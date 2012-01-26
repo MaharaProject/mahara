@@ -83,12 +83,14 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
 
                 $foruminfo = get_records_sql_array('
                     SELECT
-                        p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname
+                        p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname,
+                        u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon, u.admin, u.staff, u.deleted
                     FROM
                         {interaction_forum_post} p
                         INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic)
                         INNER JOIN {interaction_instance} i ON (i.id = t.forum)
                         INNER JOIN {interaction_forum_post} pt ON (pt.topic = p.topic AND pt.parent IS NULL)
+                        INNER JOIN {usr} u ON p.poster = u.id
                     WHERE
                         i.group = ?
                         AND i.deleted = 0
@@ -98,6 +100,20 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                         p.ctime DESC',
                     array($group->id), 0, $limit
                 );
+
+                if ($foruminfo) {
+                    $userfields = array(
+                        'firstname', 'lastname', 'username', 'preferredname', 'email', 'profileicon',
+                        'admin', 'staff', 'deleted'
+                    );
+                    foreach ($foruminfo as $f) {
+                        $f->author = (object) array('id' => $f->poster);
+                        foreach ($userfields as $uf) {
+                            $f->author->$uf = $f->$uf;
+                            unset($f->$uf);
+                        }
+                    }
+                }
 
                 $smarty = smarty_core();
                 $smarty->assign('group', $group);

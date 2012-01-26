@@ -37,7 +37,7 @@ define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') 
 
 $sql = '
     SELECT
-        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff,
+        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff, u.profileicon, u.email,
         a.activity, a.method
     FROM {usr} u 
     LEFT JOIN {usr_activity_preference} a ON a.usr = u.id
@@ -46,7 +46,7 @@ $sql = '
                               . join(',',array_map('db_quote', array_keys($USER->get('institutions')))) . ')') . ')
     WHERE u.deleted = 0
     GROUP BY
-        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff,
+        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff, u.profileicon, u.email,
         a.activity, a.method
     HAVING (' . ($USER->get('admin') ? 'u.admin = 1 OR ' : '') . 'SUM(ui.admin) > 0)';
 

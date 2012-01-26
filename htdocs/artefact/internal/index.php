@@ -200,7 +200,7 @@ $profileform = pieform(array(
 function get_desired_fields(&$allfields, $desiredfields, $section) {
     global $USER;
     if ($section == 'about') {
-        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxsize=100&id=' . intval($USER->get('id')) . '" alt=""></a></div>';
+        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&maxsize=100&id=' . intval($USER->get('profileicon')) . '" alt=""></a></div>';
         $descr = get_string('aboutdescription', 'artefact.internal');
     }
     else {

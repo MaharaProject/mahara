@@ -2483,7 +2483,7 @@ function onlineusers_sideblock() {
         foreach ($onlineusers as &$user) {
             if ($user->id == $USER->get('id')) {
                 // Use a shorter caching time for the current user, just in case they change their profile icon
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $user->id . '&maxheight=20&maxwidth=20&earlyexpiry=1';
+                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $user->profileicon . '&maxheight=20&maxwidth=20&earlyexpiry=1';
             }
             else {
                 $user->profileiconurl = profile_icon_url($user, 20, 20);
