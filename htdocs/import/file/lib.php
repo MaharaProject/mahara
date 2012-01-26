@@ -121,11 +121,6 @@ class PluginImportFile extends PluginImport {
                     'container' => 0,
                 );
 
-                if ($imagesize = getimagesize($uzd . $f->actualfilename)) {
-                    $mime = $imagesize['mime'];
-                    $data->filetype = $mime;
-                }
-
                 $id = ArtefactTypeFile::save_file(
                     $uzd . $f->actualfilename,
                     $data,
