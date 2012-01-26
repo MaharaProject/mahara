@@ -28,7 +28,7 @@ safe_require('auth', 'browserid');
 
 define('BROWSERID_VERIFIER_URL', 'https://browserid.org/verify');
 
-$assertion = param_alphanum('assertion', null);
+$assertion = param_variable('assertion', null);
 if (!$assertion) {
     throw new AuthInstanceException(get_string('missingassertion','auth.browserid'));
 }
@@ -37,7 +37,7 @@ if (!$assertion) {
 $request = array(
     CURLOPT_URL        => BROWSERID_VERIFIER_URL,
     CURLOPT_POST       => 1,
-    CURLOPT_POSTFIELDS => 'assertion='.$assertion.'&audience='.get_audience(),
+    CURLOPT_POSTFIELDS => 'assertion='.urlencode($assertion).'&audience='.get_audience(),
 );
 
 $response = mahara_http_request($request);
