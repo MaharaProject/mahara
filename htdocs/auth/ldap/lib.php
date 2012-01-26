@@ -144,9 +144,24 @@ class AuthLdap extends Auth {
                         if (!empty($ldapdetails[$field]) && ($user->$field != $ldapdetails[$field])) {
                             $user->$field = $ldapdetails[$field];
                             set_profile_field($user->id, $field, $ldapdetails[$field]);
+                            if (('studentid' == $field) && ('mahara' != $this->institution)) {
+                                // studentid is specific for the institution, so store it there too.
+                                $dataobject = array(
+                                    'usr' => $user->id,
+                                    'institution' => $this->institution,
+                                    'ctime' => db_format_timestamp(time()),
+                                    'studentid' => $user->studentid,
+                                );
+                                $whereobject = $dataobject;
+                                unset($whereobject['ctime']);
+                                unset($whereobject['studentid']);
+                                ensure_record_exists('usr_institution', $whereobject, $dataobject);
+                                unset($dataobject);
+                                unset($whereobject);
+                            }
                         }
                     }
-               }
+                }
                 return true;
             }
         }
