@@ -83,7 +83,23 @@ class PluginNotificationInternal extends PluginNotification {
     }
 
     public static function deleteuser($event, $user) {
+        db_begin();
+
+        // Before deleting the user's notifications, remove parent pointers to the
+        // messages we're about to delete. The temporary table in this query is
+        // required by MySQL
+        execute_sql("
+            UPDATE {notification_internal_activity}
+            SET parent = NULL
+            WHERE parent IN (
+                SELECT id FROM (
+                   SELECT id FROM {notification_internal_activity} WHERE usr = ?
+                ) AS temp
+            )",
+            array($user['id'])
+        );
         delete_records('notification_internal_activity', 'usr', $user['id']);
+
         // Delete system messages from this user where the url points to their
         // missing profile.  They're mostly friend requests, which are now useless.
         delete_records_select(
@@ -91,6 +107,7 @@ class PluginNotificationInternal extends PluginNotification {
             '"from" = ? AND type = (SELECT id FROM {activity_type} WHERE name = ?) AND url = ?',
             array($user['id'], 'maharamessage', get_config('wwwroot') . 'user/view.php?id=' . $user['id'])
         );
+        db_commit();
     }
 
     /**
