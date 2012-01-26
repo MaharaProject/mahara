@@ -241,7 +241,7 @@ class PluginAuthBrowserid extends PluginAuth {
 
 <script type="text/javascript">
 function browserid_login() {
-    navigator.id.getVerifiedEmail(function(assertion) {
+    navigator.id.get(function(assertion) {
         if (assertion) {
             document.getElementById('browserid-assertion').setAttribute('value', assertion);
             document.getElementById('browserid-form').submit();
