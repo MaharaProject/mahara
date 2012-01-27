@@ -285,7 +285,7 @@
 
 				// Explorer won't clone contents of script and style and the
 				// selected index of select elements are cleared on a clone operation.
-				if (isIE && dom.select('script,style,select').length > 0) {
+				if (isIE && dom.select('script,style,select,map').length > 0) {
 					content = node.innerHTML;
 					node = node.cloneNode(false);
 					dom.setHTML(node, content);
@@ -336,7 +336,7 @@
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup)
-					args.content = args.content.replace(/\uFEFF/g, '');
+					args.content = args.content.replace(/\uFEFF|\u200B/g, '');
 
 				// Post process
 				if (!args.no_events)
