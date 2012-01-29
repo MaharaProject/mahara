@@ -2426,7 +2426,6 @@ form#search, form#filter, div.searchform {
 /* Home page info boxes */
 .home-info-table {
 	margin: 5px 0 15px 0;
-	border: 4px solid #eee;
 }
 #hideinfo {
 	margin: 0 -4px;
@@ -2440,6 +2439,18 @@ form#search, form#filter, div.searchform {
 .home-info {
 	margin-top: 2px;
 	margin-bottom: 2px;
+	border: 3px solid #f3f3f3;
+	background: #efefef; /* Old browsers */
+	background: -moz-linear-gradient(top, #efefef 0%, #ffffff 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efefef), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #efefef 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #efefef 0%,#ffffff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #efefef 0%,#ffffff 100%); /* IE10+ */
+	background: linear-gradient(top, #efefef 0%,#ffffff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+.home-info h3 {
+	margin: 0 0 5px 0;
 }
 .home-info-1 {
 	margin-left: 4px;
@@ -2476,9 +2487,12 @@ form#search, form#filter, div.searchform {
 	vertical-align: top;
 }
 .home-info p.subtitle {
-	font-size: 1.1667em;
-	border-top: 1px solid #d1d1d1;
-	border-bottom: 1px solid #d1d1d1;
+	font-size: 1em;
+	border-top: 2px solid #cccccc;
+	border-bottom: 2px solid #cccccc;
+	white-space: nowrap;
+	margin: 0 0 10px 0;
+	padding: 3px 0;
 }
 #accessdesc {
 	background: url(../images/access.png) no-repeat left;
