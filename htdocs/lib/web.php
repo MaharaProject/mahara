@@ -214,7 +214,7 @@ EOF;
         }
         // Load jquery first, so that it doesn't break Mochikit
         if (($key = array_search('jquery', $check)) !== false) {
-            array_unshift($javascript_array, $jsroot . 'jquery/jquery-1.5.2.js');
+            array_unshift($javascript_array, $jsroot . 'jquery/jquery.js');
             // Make jQuery accessible with $j (Mochikit has $)
             $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
             unset($check[$key]);
