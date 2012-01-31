@@ -951,6 +951,10 @@ $string['Visits'] = 'Visits';
 $string['after'] = 'after';
 $string['before'] = 'before';
 $string['Visibility'] = 'Visibility';
+$string['nusers'] = array(
+    '1 user',
+    '%s users',
+);
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';
