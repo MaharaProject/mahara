@@ -73,6 +73,25 @@ if ($sort !== 'lastchanged') {
 }
 $sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
 
+$share = $queryparams['share'] = $sharedefault = array('user', 'friend', 'group');
+
+$shareoptions = array(
+    'user'        => get_string('Me', 'view'),
+    'friend'      => get_string('friends', 'view'),
+    'group'       => get_string('mygroups'),
+);
+if ($USER->get('institutions')) {
+    $shareoptions['institution'] = get_string('myinstitutions', 'group');
+}
+$shareoptions['loggedin'] = get_string('loggedin', 'view');
+if (get_config('allowpublicviews')) {
+    $shareoptions['public'] = get_string('public', 'view');
+}
+
+foreach ($shareoptions as $k => &$v) {
+    $v = array('title' => $v, 'value' => $k, 'defaultvalue' => in_array($k, $sharedefault));
+}
+
 $searchform = pieform(array(
     'name' => 'search',
     'dieaftersubmit' => false,
@@ -94,6 +113,12 @@ $searchform = pieform(array(
             'options'      => $sortoptions,
             'defaultvalue' => $sort,
         ),
+        'share' => array(
+            'type'         => 'checkboxes',
+            'title'        => get_string('sharedwith', 'view') . ': ',
+            'elements'     => $shareoptions,
+            'labelwidth'   => 0,
+        ),
         'search' => array(
             'type' => 'submit',
             'value' => get_string('search')
@@ -101,7 +126,7 @@ $searchform = pieform(array(
     )
 ));
 
-$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir);
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
@@ -124,7 +149,7 @@ exit;
 
 function search_submit(Pieform $form, $values) {
     // Convert (query,type) parameters from form to (query,tag)
-    global $queryparams, $tag, $query;
+    global $queryparams, $tag, $query, $share;
 
     if (isset($queryparams['query'])) {
         unset($queryparams['query']);
@@ -144,4 +169,6 @@ function search_submit(Pieform $form, $values) {
             $queryparams['query'] = $query = $values['query'];
         }
     }
+
+    $share = $queryparams['share'] = param_variable('share', array());
 }

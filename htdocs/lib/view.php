@@ -3082,9 +3082,8 @@ class View {
 
     }
     /**
-     * Get views that have been actively shared with a user, either
-     * shared with the user individually, shared as a friend of the
-     * view owner, or shared with one of the user's groups.
+     * Get views that have been shared with a user using the given
+     * access types.
      *
      * @param string   $query       Search string for title/description
      * @param string   $tag         Return only views with this tag
@@ -3092,9 +3091,11 @@ class View {
      * @param integer  $offset
      * @param string   $sort        Either 'lastchanged', 'ownername', or a column of the view table
      * @param string   $sortdir     Ascending/descending
+     * @param array    $accesstypes Types of view access
      *
      */
-    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0, $sort='lastchanged', $sortdir='desc') {
+    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0, $sort='lastchanged', $sortdir='desc',
+        $accesstypes=null) {
 
         $sort = array(
             array(
@@ -3104,8 +3105,7 @@ class View {
         );
 
         $result = self::view_search(
-            $query, null, null, null, $limit, $offset, true, $sort, array('portfolio'), false,
-            array('user', 'group', 'friend'), $tag
+            $query, null, null, null, $limit, $offset, true, $sort, array('portfolio'), false, $accesstypes, $tag
         );
 
         if (!$result->count) {

@@ -61,7 +61,24 @@ if ($sort !== 'lastchanged') {
 }
 $sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
 
-$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir);
+$shareoptions = array(
+    'user',
+    'friend',
+    'group',
+    'institution',
+    'loggedin',
+    'public',
+);
+
+$share = param_variable('share', array());
+if (is_array($share)) {
+    $share = $queryparams['share'] = array_intersect($share, $shareoptions);
+}
+else {
+    $share = null;
+}
+
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
