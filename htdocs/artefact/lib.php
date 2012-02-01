@@ -1650,6 +1650,7 @@ function artefact_get_owner_info($ids) {
     foreach ($data as &$d) {
         if ($d->institution == 'mahara') {
             $name = get_config('sitename');
+            $url  = '';
         }
         else if ($d->institution) {
             $name = $d->displayname;;
@@ -1663,10 +1664,7 @@ function artefact_get_owner_info($ids) {
             $name = display_name($d);
             $url  = 'user/view.php?id=' . $d->id;
         }
-        $d = (object) array('name' => $name);
-        if (!empty($url)) {
-            $d->url = $wwwroot . $url;
-        }
+        $d = (object) array('name' => $name, 'url' => $wwwroot . $url);
     }
     return $data;
 }
