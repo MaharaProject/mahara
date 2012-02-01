@@ -68,16 +68,23 @@ class Sitemap {
     private $currenturlset;
 
     /**
+     * @var string The directory in which to put sitemap files
+     */
+    private $directory;
+
+    /**
      * @param bool $forcefull Force generation of a full sitemap (non-daily)
      */
     public function __construct($forcefull = false) {
+        $this->directory = get_config('dataroot') . 'sitemaps/';
+
         // on the first of the month, or if forced, generate the full sitemap
         if (date("d") == 1 || $forcefull === true) {
             $this->date_to_check = null;
 
             // remove all content from the sitemaps directory so that
             // only newly created sitemaps are added to the index
-            $sitemaps = glob(get_config('docroot') .'/sitemaps/sitemap_*.xml*');
+            $sitemaps = glob(get_config('dataroot') . '/sitemaps/sitemap_*.xml*');
             foreach ($sitemaps as $sitemap) {
                 if (!unlink($sitemap)) {
                     log_warn(sprintf("Failed to remove sitemap: %s, please check directory and file permissions.", basename($sitemap)));
@@ -97,7 +104,7 @@ class Sitemap {
     public function generate() {
 
         // check that the sitemaps directory exists and create it if it doesn't
-        check_dir_exists(get_config('docroot') . 'sitemaps', true);
+        check_dir_exists($this->directory, true);
 
         // this is used by PluginInteractionForum::get_active_topics
         $USER = new User();
@@ -191,7 +198,7 @@ class Sitemap {
 
         // step through each sitemap we have generated
         foreach ($this->sitemaps as $key => $sitemap) {
-            $filename = sprintf("%ssitemaps/sitemap_%s_%d.xml", get_config('docroot'), date("Ymd"), $key);
+            $filename = sprintf("%ssitemap_%s_%d.xml", $this->directory, date("Ymd"), $key);
             // if the save succeeded, add it to the index
             if ($sitemap->save($filename) !== false) {
                 // try to gzip the xml file
@@ -213,7 +220,7 @@ class Sitemap {
         }
 
         // get a list of sitemaps in the sitemap directory
-        $sitemaps = glob(get_config('docroot') .'/sitemaps/sitemap_*.xml*');
+        $sitemaps = glob($this->directory . 'sitemap_*.xml*');
         foreach ($sitemaps as $sitemap) {
             // create a <sitemap> node for each one we're adding
             $sitemapelement = $doc->createElement('sitemap');
@@ -239,7 +246,7 @@ class Sitemap {
 
         // add the index to the main doc and save it
         $doc->appendChild($sitemapindex);
-        $indexfilename = sprintf("%ssitemap_index.xml", get_config('docroot'));
+        $indexfilename = sprintf("%ssitemap_index.xml", $this->directory);
         $doc->save($indexfilename);
     }
 
