@@ -95,11 +95,6 @@ class Sitemap {
      * @return bool
      */
     public function generate() {
-        $generatesitemap = get_config('generatesitemap');
-        if (!$generatesitemap) {
-            log_info('Sitemap generation has been disabled.');
-            return false;
-        }
 
         // check that the sitemaps directory exists and create it if it doesn't
         check_dir_exists(get_config('docroot') . 'sitemaps', true);
