@@ -81,18 +81,24 @@ class Sitemap {
         // on the first of the month, or if forced, generate the full sitemap
         if (date("d") == 1 || $forcefull === true) {
             $this->date_to_check = null;
-
-            // remove all content from the sitemaps directory so that
-            // only newly created sitemaps are added to the index
-            $sitemaps = glob(get_config('dataroot') . '/sitemaps/sitemap_*.xml*');
-            foreach ($sitemaps as $sitemap) {
-                if (!unlink($sitemap)) {
-                    log_warn(sprintf("Failed to remove sitemap: %s, please check directory and file permissions.", basename($sitemap)));
-                }
-            }
-        } // otherwise limit to 'yesterday'
-        else {
+            $remove = 'sitemap_*.xml';
+        }
+        else { // otherwise limit to 'yesterday'
             $this->date_to_check = date("Y-m-d", strtotime('yesterday'));
+            $remove = 'sitemap_' . date('Ymd') . '_*.xml';
+        }
+
+        // remove any sitemaps we're about to replace
+        if (!$oldsitemaps = glob($this->directory . $remove)) {
+            $oldsitemaps = array();
+        }
+        if ($oldcompressed = glob($this->directory . $remove . '.gz')) {
+            $oldsitemaps = array_merge($oldsitemaps, $oldcompressed);
+        }
+        foreach ($oldsitemaps as $sitemap) {
+            if (!unlink($sitemap)) {
+                log_warn(sprintf("Failed to remove sitemap: %s, please check directory and file permissions.", basename($sitemap)));
+            }
         }
     }
 
