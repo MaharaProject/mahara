@@ -232,7 +232,7 @@ class Sitemap {
             $sitemapelement = $doc->createElement('sitemap');
 
             // create and encode the url
-            $sitemapurl = sprintf("%ssitemaps/%s", get_config('wwwroot'), basename($sitemap));
+            $sitemapurl = sprintf("%sdownload.php?type=sitemap&name=%s", get_config('wwwroot'), basename($sitemap));
             $sitemapurl = utf8_encode(htmlspecialchars($sitemapurl, ENT_QUOTES, 'UTF-8'));
 
             // add it to the <sitemap> node
