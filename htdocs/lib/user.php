@@ -2208,8 +2208,10 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
         $user = get_record('usr', 'id', $user->id);
     }
 
-    if ($maxwidth != $maxheight || ($maxwidth != 20 && $maxwidth != 40 && $maxwidth != 60)) {
-        log_warn('profile_icon_url should specify maxwidth, maxheight of 20x20, 40x40 or 60x60');
+    // Available sizes of the 'no_userphoto' image:
+    $allowedsizes = array(16, 20, 25, 40, 50, 60, 100);
+    if ($maxwidth != $maxheight || !in_array($maxwidth, $allowedsizes)) {
+        log_warn('profile_icon_url: maxwidth, maxheight should be equal and in (' . join(', ', $allowedsizes) . ')');
     }
 
     $thumb = get_config('wwwroot') . 'thumb.php';
@@ -2221,7 +2223,8 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
 
     // Assume we have the right size available in docroot, so we don't
     // have to call thumb.php
-    $notfound = $THEME->get_url('images/no_userphoto' . $maxwidth . '.png');
+    $notfoundwidth = $maxwidth == 100 ? '' : $maxwidth;
+    $notfound = $THEME->get_url('images/no_userphoto' . $notfoundwidth . '.png');
 
     if (get_config('remoteavatars')) {
         return remote_avatar($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
@@ -2357,13 +2360,7 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
     $onlineusers = get_records_sql_array($sql, array($lastaccess), $offset, $limit);
     if ($onlineusers) {
         foreach ($onlineusers as &$user) {
-            if ($user->id == $USER->get('id')) {
-                // Use a shorter caching time for the current user, just in case they change their profile icon
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $user->profileicon . '&maxheight=20&maxwidth=20&earlyexpiry=1';
-            }
-            else {
-                $user->profileiconurl = profile_icon_url($user, 20, 20);
-            }
+            $user->profileiconurl = profile_icon_url($user, 20, 20);
 
             // If the user is an MNET user, show where they've come from
             $authobj = AuthFactory::create($user->authinstance);

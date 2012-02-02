@@ -17,7 +17,7 @@
 <table class="fullwidth" id="useraccountsettingsleft">
 <tr><td class="center">
     <div id="profilepict">
-        <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=100&amp;maxheight=100&amp;id={$user->profileicon}" alt=""></a>
+        <a href="{$WWWROOT}user/view.php?id={$user->id}"><img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt=""></a>
         <div id="profilename"><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name}</a></div>
     </div>
     {if $loginas}

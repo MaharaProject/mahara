@@ -2384,7 +2384,6 @@ function profile_sideblock() {
         'id'          => $USER->get('id'),
         'myname'      => display_name($USER, null, true),
         'username'    => $USER->get('username'),
-        'profileicon' => $USER->get('profileicon') ? $USER->get('profileicon') : 0,
     );
 
     $authinstance = $SESSION->get('mnetuser') ? $SESSION->get('authinstance') : $USER->get('authinstance');
@@ -2481,13 +2480,7 @@ function onlineusers_sideblock() {
     $onlineusers = get_records_sql_array($sql, array(db_format_timestamp(time() - get_config('accessidletimeout'))), 0, $maxonlineusers);
     if ($onlineusers) {
         foreach ($onlineusers as &$user) {
-            if ($user->id == $USER->get('id')) {
-                // Use a shorter caching time for the current user, just in case they change their profile icon
-                $user->profileiconurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $user->profileicon . '&maxheight=20&maxwidth=20&earlyexpiry=1';
-            }
-            else {
-                $user->profileiconurl = profile_icon_url($user, 20, 20);
-            }
+            $user->profileiconurl = profile_icon_url($user, 20, 20);
 
             // If the user is an MNET user, show where they've come from
             $authobj = AuthFactory::create($user->authinstance);

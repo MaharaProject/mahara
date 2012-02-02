@@ -386,8 +386,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     var identityNodes = [], profileIcon = null, roleSelector = null;
     if (rowdata.type == 'user') {
-        iconid = rowdata.profileicon ? rowdata.profileicon : 0;
-        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileiconbyid&maxwidth=20&maxheight=20&id=' + iconid});
+        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=20&maxheight=20&id=' + rowdata.id});
         identityNodes.push(A({'href': config.wwwroot + 'user/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
