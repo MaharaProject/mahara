@@ -206,18 +206,18 @@ class Sitemap {
         foreach ($this->sitemaps as $key => $sitemap) {
             $filename = sprintf("%ssitemap_%s_%d.xml", $this->directory, date("Ymd"), $key);
             // if the save succeeded, add it to the index
-            if ($sitemap->save($filename) !== false) {
+            $xml = $sitemap->saveXML();
+            if ($xml !== false) {
                 // try to gzip the xml file
-                if (is_executable(get_config('pathtogzip'))) {
-                    $command = sprintf('%s %s', get_config('pathtogzip'), escapeshellarg($filename));
-                    $output = array();
-                    exec($command, $output, $returnvar);
-                    if ($returnvar != 0) {
-                        log_warn('gzip command failed.');
-                    }
+                if (function_exists('gzopen') and $zp = gzopen($filename . '.gz', 'w9')) {
+                    gzwrite($zp, $xml);
+                    gzclose($zp);
                 }
                 else {
                     log_info('Skipping compression of xml file - gzip command not found, or not executable.');
+                    if (!file_put_contents($filename, $xml)) {
+                        throw new SystemException(sprintf("Saving of this sitemap file failed: %s", $filename));
+                    }
                 }
             }
             else {
