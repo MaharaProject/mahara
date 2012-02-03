@@ -382,6 +382,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	border-top: 0;
 }
 
+#containerX #main-wrapper,
 #mainmiddle {
 	width: 90%;
 	min-width: 950px;

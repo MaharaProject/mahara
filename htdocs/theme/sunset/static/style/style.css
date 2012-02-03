@@ -25,6 +25,9 @@ body {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
 }
+body#micro {
+	background: #f7be23;
+}
 acronym {
     border-bottom: 1px dotted #d4d1c0;
 }
@@ -405,7 +408,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 	margin-top: 15px;
 	background: none;
 }
-#main-column {
+.main-column {
 	background: #FFF;
 }
 .main-column-narrow {
