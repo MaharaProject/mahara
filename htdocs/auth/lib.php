@@ -415,26 +415,26 @@ function auth_setup () {
         // The session is still active, so continue it.
         // Make sure that if a user's admin status has changed, they're kicked
         // out of the admin section
-        if (defined('ADMIN')) {
-            $userreallyadmin = get_field('usr', 'admin', 'id', $USER->id);
-            if (!$USER->get('admin') && $userreallyadmin) {
+        if (in_admin_section()) {
+            // Reload site admin/staff permissions
+            $realuser = get_record('usr', 'id', $USER->id, null, null, null, null, 'admin,staff');
+            if (!$USER->get('admin') && $realuser->admin) {
                 // The user has been made into an admin
                 $USER->admin = 1;
             }
-            else if ($USER->get('admin') && !$userreallyadmin) {
+            else if ($USER->get('admin') && !$realuser->admin) {
                 // The user's admin rights have been taken away
                 $USER->admin = 0;
             }
-            if (!$USER->get('admin')) {
-                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect();
+            if (!$USER->get('staff') && $realuser->staff) {
+                $USER->staff = 1;
             }
-        } else if (defined('INSTITUTIONALADMIN') && !$USER->get('admin')) {
+            else if ($USER->get('staff') && !$realuser->staff) {
+                $USER->staff = 0;
+            }
+            // Reload institutional admin/staff permissions
             $USER->reset_institutions();
-            if (!$USER->is_institutional_admin()) {
-                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect();
-            }
+            auth_check_admin_section();
         }
         $USER->renew();
         auth_check_required_fields();
@@ -1366,18 +1366,41 @@ function login_submit(Pieform $form, $values) {
         }
     }
 
-    // Only admins in the admin section!
-    if (!$USER->get('admin') && 
-        (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
-        $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-        redirect();
-    }
-
+    auth_check_admin_section();
     ensure_user_account_is_active();
 
     // User is allowed to log in
     //$USER->login($userdata);
     auth_check_required_fields();
+}
+
+/**
+ * Redirect to the home page if the user is trying to access the admin
+ * area without permission
+ */
+function auth_check_admin_section() {
+    global $USER, $SESSION;
+
+    if (defined('ADMIN')) {
+        $allowed = $USER->get('admin');
+    }
+    else if (defined('STAFF')) {
+        $allowed = $USER->get('admin') || $USER->get('staff');
+    }
+    else if (defined('INSTITUTIONALADMIN')) {
+        $allowed = $USER->get('admin') || $USER->is_institutional_admin();
+    }
+    else if (defined('INSTITUTIONALSTAFF')) {
+        $allowed = $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff();
+    }
+    else {
+        return;
+    }
+
+    if (!$allowed) {
+        $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
+        redirect();
+    }
 }
 
 /**

@@ -551,12 +551,7 @@ function auth_saml_login_submit(Pieform $form, $values) {
         redirect('/auth/saml/');
     }
 
-    // Only admins in the admin section!
-    if (!$USER->get('admin') &&
-        (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
-        $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-        redirect();
-    }
+    auth_check_admin_section();
 
     // Check if the user's account has been deleted
     if ($USER->deleted) {
