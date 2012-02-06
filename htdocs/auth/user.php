@@ -1236,7 +1236,7 @@ class LiveUser extends User {
             'expiry'           => db_format_tsfield('expiry'),
             'expirymailsent'   => 'expirymailsent',
             'inactivemailsent' => 'inactivemailsent',
-            'suspendedctime'   => 'suspendedctime',
+            'suspendedctime'   => db_format_tsfield('suspendedctime'),
             'suspendedreason'  => 'suspendedreason',
             'suspendedcusr'    => 'suspendedcusr',
             'quota'            => 'quota',
