@@ -827,11 +827,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $post = $this->temp->post;
         $unsubscribeid = $post->{$user->subscribetype . 'id'};
         $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
-        $cleanforumname = str_replace('"', "'", strip_tags($post->forumtitle));
-        $cleangroupname = str_replace('"', "'", strip_tags($post->groupname));
         return get_string_from_language($user->lang, 'forumposttemplate', 'interaction.forum',
-            $cleanforumname,
-            $cleangroupname,
+            $post->forumtitle,
+            $post->groupname,
             $post->textbody,
             get_config('wwwroot') . $this->url,
             $user->subscribetype,
@@ -843,11 +841,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $post = $this->temp->post;
         $unsubscribeid = $post->{$user->subscribetype . 'id'};
         $unsubscribelink = get_config('wwwroot') . 'interaction/forum/unsubscribe.php?' . $user->subscribetype . '=' . $unsubscribeid . '&key=' . $user->unsubscribekey;
-        $cleanforumname = str_replace('"', "'", clean_html($post->forumtitle));
-        $cleangroupname = str_replace('"', "'", clean_html($post->groupname));
         return get_string_from_language($user->lang, 'forumposthtmltemplate', 'interaction.forum',
-            $cleanforumname,
-            $cleangroupname,
+            hsc($post->forumtitle),
+            hsc($post->groupname),
             $post->htmlbody,
             get_config('wwwroot') . $this->url,
             $unsubscribelink,
