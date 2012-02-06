@@ -215,16 +215,18 @@ class AuthSaml extends Auth {
             }
 
         } elseif ($update) {
-            if (empty($firstname) || empty($lastname) || empty($email)) {
-                throw new AuthInstanceException(get_string('errormissinguserattributes', 'auth.saml'));
+            if (! empty($firstname)) {
+                set_profile_field($user->id, 'firstname', $firstname);
+                $user->firstname = $firstname;
             }
-            set_profile_field($user->id, 'firstname', $firstname);
-            $user->firstname = $firstname;
-            set_profile_field($user->id, 'lastname', $lastname);
-            $user->lastname = $lastname;
-            set_profile_field($user->id, 'email', $email);
-            $user->email = $email;
-
+            if (! empty($lastname)) {
+                set_profile_field($user->id, 'lastname', $lastname);
+                $user->lastname = $lastname;
+            }
+            if (! empty($email)) {
+                set_profile_field($user->id, 'email', $email);
+                $user->email = $email;
+            }
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
         }
