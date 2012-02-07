@@ -21,7 +21,7 @@
  */
 
 /* styles based on elements */
-body {
+body, body#micro {
     background: #10171A url(../images/bg.gif) repeat top center;	
 	color: #BEE3F1;
 }
@@ -445,6 +445,10 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 #mainmiddle {
 	background: #0C2839;
 	padding: 0 10px;
+}
+#containerX #main-wrapper {
+	background: #0C2839;
+	overflow: hidden;
 }
 #main-wrapper {
 	background: #080D0F;

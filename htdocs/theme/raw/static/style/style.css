@@ -1104,6 +1104,7 @@ ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-p
 	margin-top: 5px !important;
 }
 /**************** MAIN CONTENT *****************/
+#containerX #main-wrapper,
 #mainmiddle {
 	clear: both;
 	margin: 0 auto;

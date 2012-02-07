@@ -21,7 +21,7 @@
  */
 
 /* General rules */
-body {
+body, body#micro {
     background: #0B1960;
 	color: #14336F;
 }
@@ -413,6 +413,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 }
 
 /**************** MAIN CONTENT *****************/
+#containerX #main-wrapper,
 #mainmiddle {
     min-width: 970px;
     width: 90%;
