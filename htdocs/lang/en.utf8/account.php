@@ -64,7 +64,6 @@ $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display 
 
 $string['enablemultipleblogs'] = 'Enable multiple journals';
 $string['enablemultipleblogsdescription']  = 'By default, you have one journal. If you would like to keep more than one journal, check this option.';
-$string['disablemultipleblogserror'] = 'You cannot disable multiple journals unless you only have one journal';
 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';

@@ -92,6 +92,9 @@ $elements['accountoptionsdesc'] = array(
 // Add general account options
 $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
 
+// If the user doesn't have exactly one blog, don't show the multipleblogs option.
+$elements['multipleblogs']['ignore'] = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) != 1;
+
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')
@@ -142,13 +145,6 @@ function accountprefs_validate(Pieform $form, $values) {
         if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
             $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
         }
-    }
-
-    // Don't let users turn multiple blogs off unless they only have 1 blog
-    if ($USER->get_account_preference('multipleblogs')
-        && empty($values['multipleblogs'])
-        && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) != 1) {
-        $form->set_error('multipleblogs', get_string('disablemultipleblogserror', 'account'));
     }
 }
 
