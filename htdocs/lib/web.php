@@ -1006,6 +1006,10 @@ function _param_retrieve($name) {
     return array($value, false);
 }
 
+function param_exists($name) {
+    return isset($_POST[$name]) || isset($_GET[$name]);
+}
+
 /**
  * This function returns a GET or POST parameter with optional default.  If the
  * default isn't specified and the parameter hasn't been sent, a

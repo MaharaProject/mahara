@@ -105,7 +105,8 @@ $form = array(
         ),
         'submit' => array(
             'type'         => 'submitcancel',
-            'value'        => array(get_string('savegroup', 'group'), get_string('cancel'))
+            'value'        => array(get_string('savegroup', 'group'), get_string('cancel')),
+            'goto'         => get_config('wwwroot') . 'group/mygroups.php',
         ),
     ),
 );
@@ -232,8 +233,10 @@ else {
 
 $publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
 
-if (!$id && !param_variable('editgroup_submit', null)) {
-    // If 'public=0' param is passed on first page load, hide the public checkbox.
+if (!$id && !param_exists('pieform_editgroup')) {
+    // If a 'public=0' parameter is passed on the first page load, hide the
+    // public checkbox.  The only purpose of this is to allow custom create
+    // group buttons/links which lead to a slightly simplified form.
     $publicparam = param_integer('public', null);
 }
 
