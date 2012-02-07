@@ -2811,6 +2811,10 @@ function cron_site_data_daily() {
  * A cronjob to generate a sitemap
  */
 function cron_sitemap_daily() {
+    if (!get_config('generatesitemap')) {
+        return;
+    }
+
     require_once(get_config('libroot') . 'searchlib.php');
     require_once(get_config('libroot') . 'group.php');
     require_once(get_config('libroot') . 'view.php');

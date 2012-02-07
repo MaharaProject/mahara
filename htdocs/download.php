@@ -28,16 +28,38 @@ define('INTERNAL', 1);
 require('init.php');
 require_once('file.php');
 
-$data = $SESSION->get('downloadfile');
+$type = param_alpha('type', null);
 
-if (!$USER->is_logged_in() || empty($data) || empty($data['file'])) {
-    throw new NotFoundException(get_string('filenotfound'));
+if ($type == 'sitemap') {
+    if (!get_config('generatesitemap')) {
+        throw new NotFoundException(get_string('filenotfound'));
+    }
+    if ($name = param_alphanumext('name', null)) {
+        if (!preg_match('/^sitemap_[a-z0-9_]+\.xml(\.gz)?$/', $name, $m)) {
+            throw new NotFoundException(get_string('filenotfound'));
+        }
+        $mimetype = empty($m[1]) ? 'text/xml' : 'application/gzip';
+    }
+    else {
+        $name = 'sitemap_index.xml';
+        $mimetype = 'text/xml';
+    }
+    $path = get_config('dataroot') . 'sitemaps/' . $name;
 }
+else {
+    $data = $SESSION->get('downloadfile');
 
-$path = get_config('dataroot') . 'export/' . $USER->get('id') . '/' . $data['file'];
+    if (!$USER->is_logged_in() || empty($data) || empty($data['file'])) {
+        throw new NotFoundException(get_string('filenotfound'));
+    }
+
+    $path = get_config('dataroot') . 'export/' . $USER->get('id') . '/' . $data['file'];
+    $name = $data['name'];
+    $mimetype = $data['mimetype'];
+}
 
 if (!file_exists($path)) {
     throw new NotFoundException(get_string('filenotfound'));
 }
 
-serve_file($path, $data['name'], $data['mimetype']);
+serve_file($path, $name, $mimetype);
