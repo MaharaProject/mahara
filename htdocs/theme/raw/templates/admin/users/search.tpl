@@ -22,12 +22,19 @@
        </span>
        {/foreach}
     </div>
+    {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
+    <div class="fr">
+    <strong>{str tag=withselectedusers section=admin}:</strong>&nbsp;
     {if $USER->get('admin') || $USER->is_institutional_admin()}
-    <form class="fr nojs-hidden-block" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
-      {str tag=editselectedusers section=admin}:
-      <input type="button" class="button" name="go" value="{str tag=go}">
-      <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
+    <form class="nojs-hidden-inline" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
+      <input type="button" class="button" name="edit" value="{str tag=edit}">
     </form>
+    {/if}
+    <form class="nojs-hidden-inline" id="report" action="{$WWWROOT}admin/users/report.php" method="post">
+      <input type="button" class="button" name="reports" value="{str tag=getreports section=admin}">
+    </form>
+    <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
+    </div>
     {/if}
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">

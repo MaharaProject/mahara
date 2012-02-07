@@ -2069,6 +2069,21 @@ function institutional_admin_nav() {
 
 }
 
+/**
+ * Returns the entries in the staff menu
+ *
+ * @return a data structure containing the staff navigation
+ */
+function staff_nav() {
+    return array(
+        'usersearch' => array(
+            'path'   => 'usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
+        ),
+    );
+}
 
 /**
  * Returns the entries in the standard user menu
@@ -2175,9 +2190,17 @@ function mahara_standard_nav() {
  * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
-    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
+    if (in_admin_section()) {
         global $USER;
-        $menu = $USER->get('admin') ? admin_nav() : institutional_admin_nav();
+        if ($USER->get('admin')) {
+            $menu = admin_nav();
+        }
+        else if ($USER->is_institutional_admin()) {
+            $menu = institutional_admin_nav();
+        }
+        else {
+            $menu = staff_nav();
+        }
     }
     else {
         // Build the menu structure for the site

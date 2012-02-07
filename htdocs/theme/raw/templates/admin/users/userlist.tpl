@@ -2,24 +2,24 @@
   <thead>
     <tr>
       <th>{str tag=username}</th>
-      <th>{str tag=email}</th>
+      {if $USER->get('admin') || $USER->is_institutional_admin()}<th>{str tag=email}</th>{/if}
       <th>{str tag=firstname}</th>
       <th>{str tag=lastname}</th>
       <th>{str tag=studentid}</th>
       <th>{str tag=preferredname}</th>
-      <th>{str tag=remoteuser section=admin}</th>
+      {if $USER->get('admin') || $USER->is_institutional_admin()}<th>{str tag=remoteuser section=admin}</th>{/if}
     </tr>
   </thead>
   <tbody>
   {foreach from=$users item=user}
     <tr class="{cycle values='r0,r1'}">
       <td>{$user->username}</td>
-      <td>{$user->email}</td>
+      {if $USER->get('admin') || $USER->is_institutional_admin()}<td>{if $user->hideemail}<span class="dull">({str tag=hidden})</span>{else}{$user->email}{/if}</td>{/if}
       <td>{$user->firstname}</td>
       <td>{$user->lastname}</td>
       <td>{$user->studentid}</td>
       <td>{$user->preferredname}</td>
-      <td>{$user->remoteuser}</td>
+      {if $USER->get('admin') || $USER->is_institutional_admin()}<td>{if $user->hideemail}<span class="dull">({str tag=hidden})</span>{else}{$user->remoteuser}{/if}</td>{/if}
     </tr>
   {/foreach}
   </tbody>

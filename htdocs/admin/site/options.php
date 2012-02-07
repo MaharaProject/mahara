@@ -183,6 +183,13 @@ $siteoptionform = array(
                     'disabled'     => in_array('loggedinprofileviewaccess', $OVERRIDDEN),
                     'help'         => true,
                 ),
+                'staffreports' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('staffuserreports', 'admin'),
+                    'description'  => get_string('staffuserreportsdescription', 'admin'),
+                    'defaultvalue' => get_config('staffreports'),
+                    'disabled'     => in_array('staffreports', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -608,6 +615,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
+        'staffreports',
     );
 
     // if public views are disabled, sitemap generation must also be disabled.

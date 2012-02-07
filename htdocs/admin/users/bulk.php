@@ -67,18 +67,6 @@ if ($uneditableusers = count($userids) - count($users)) {
 
 $userids = array_keys($users);
 
-// Export CSV
-$csv = "username,email,firstname,lastname,studentid,preferredname,remoteuser\n";
-foreach ($users as $user) {
-    $u = array();
-    foreach (array('username', 'email', 'firstname', 'lastname', 'studentid', 'preferredname', 'remoteuser') as $f) {
-        $u[] = str_replace('"', '""', $user->$f);
-    }
-    $csv .= '"' . join('","', $u) . '"' . "\n";
-}
-
-$USER->set_download_file($csv, 'users.csv', 'text/csv');
-
 // Hidden drop-down to submit the list of users back to this page.
 // Used in all three forms
 $userelement = array(
