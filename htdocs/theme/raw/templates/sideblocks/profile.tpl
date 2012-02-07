@@ -1,6 +1,6 @@
     <div class="sidebar-header">
       <div id="user-profileicon">
-        <a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{$WWWROOT}thumb.php?type=profileiconbyid&amp;maxwidth=50&amp;maxheight=50&amp;id={$sbdata.profileicon}&amp;earlyexpiry=1" alt=""></a>
+        <a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
       </div>
       <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
     </div>
