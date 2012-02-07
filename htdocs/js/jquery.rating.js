@@ -1,5 +1,5 @@
 /*
- ### jQuery Star Rating Plugin v3.13 - 2009-03-26 ###
+ ### jQuery Star Rating Plugin v3.14 - 2012-01-26 ###
  * Home: http://www.fyneworks.com/jquery/star-rating/
  * Code: http://code.google.com/p/jquery-star-rating-plugin/
  *
@@ -73,7 +73,7 @@
 			else{
 				// create new control if first star or control element was removed/replaced
 				
-				// Initialize options for this raters
+				// Initialize options for this rater
 				control = $.extend(
 					{}/* new object */,
 					options || {} /* current call options */,
@@ -92,7 +92,10 @@
 				rater.addClass('rating-to-be-drawn');
 				
 				// Accept readOnly setting from 'disabled' property
-				if(input.attr('disabled')) control.readOnly = true;
+				if(input.attr('disabled') || input.hasClass('disabled')) control.readOnly = true;
+				
+				// Accept required setting from class property (class='required')
+				if(input.hasClass('required')) control.required = true;
 				
 				// Create 'cancel' button
 				rater.append(
@@ -163,6 +166,12 @@
 			
 			// set current selection
 			if(this.checked)	control.current = star;
+			
+			// set current select for links
+			if(this.nodeName=="A"){
+    if($(this).hasClass('selected'))
+     control.current = star;
+   };
 			
 			// hide input element
 			input.hide();

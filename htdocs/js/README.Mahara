@@ -1,0 +1,10 @@
+jquery.rating.js
+=================
+
+Website: http://code.google.com/p/jquery-star-rating-plugin/
+Version: 3.14
+
+Changes:
+
+* Added a pager hook for reskining
+* Changed name and path of images in theme/raw/static/style/jquery.rating.css
