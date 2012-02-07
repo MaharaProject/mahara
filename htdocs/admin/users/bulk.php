@@ -58,6 +58,13 @@ $users = get_records_sql_assoc('
     $ph
 );
 
+// Display the number of users filtered out due to institution permissions.  This is not an
+// exception, because the logged in user might be an admin in one institution, and staff in
+// another.
+if ($uneditableusers = count($userids) - count($users)) {
+    $SESSION->add_info_msg(get_string('uneditableusers', 'admin', $uneditableusers));
+}
+
 $userids = array_keys($users);
 
 // Export CSV

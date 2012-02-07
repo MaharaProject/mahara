@@ -117,6 +117,7 @@ $string['uploadgroupmemberscsv'] = 'Update Group Members by CSV';
 $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 $string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
+$string['emailaddresshidden'] = 'Email address hidden';
 
 $string['administergroups'] = 'Administer Groups';
 $string['administergroupsdescription'] = 'Appoint group administrators and delete groups';
@@ -869,6 +870,10 @@ $string['editselectedusers'] = 'Edit selected users';
 // Bulk actions
 $string['bulkactions'] = 'Bulk actions';
 $string['editselectedusersdescription'] = 'Suspend, delete, change authentication method, or download a CSV file of the users you have selected on the search page.';
+$string['uneditableusers'] = array(
+    0 => 'One of the users you selected is not editable by you, and has been removed from the list.',
+    1 => 'You selected %s users that are not editable by you.  They have been removed from the list.',
+);
 $string['exportusersascsv'] = 'Export users in CSV format';
 $string['Download'] = 'Download';
 $string['suspendusers'] = 'Suspend users';

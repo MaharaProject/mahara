@@ -416,19 +416,19 @@ ul.edit-view-tabs li {
   margin: 0 3px 0 0 !important;
   background: none;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
 ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #FFF;
   font-weight: normal;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
 }
-ul.in-page-tabs li a:hover,
+ul.in-page-tabs li a:hover, ul.in-page-tabs li input.linkbtn:hover,
 ul.edit-view-tabs li a:hover {
   color: #FFF;
   background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
   text-decoration: underline;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab,
 ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
   color: #FFF;
   font-weight: bold;

@@ -2761,7 +2761,27 @@ class View {
         throw new SystemException("View::owner_sql: Passed object did not have an institution, group or owner field");
     }
 
-
+    /**
+     * Returns an SQL snippet that can be used in a where clause to get views
+     * with the given set of owners.
+     *
+     * Only one of the owner, group, institution fields is used.
+     *
+     * @param object $ownerobj An object that has view ownership information -
+     *                         either the institution, group or owner fields set
+     * @return array containing an sql string and an array of placeholder values
+     */
+    private static function multiple_owner_sql($ownerobj) {
+        foreach (get_object_vars($ownerobj) as $column => $values) {
+            if (is_array($values) && !empty($values)) {
+                return array(
+                    '"' . $column . '" IN (' . join(',', array_fill(0, count($values), '?')) . ')',
+                    $values,
+                );
+            }
+        }
+        return array(self::owner_sql($ownerobj), array());
+    }
 
     /**
      * Get all views visible to a user.  Complicated because a view v
@@ -3799,9 +3819,9 @@ class View {
      * Get all views for a (user,group,institution), grouping views
      * into their collections.  Empty collections not returned.
      *
-     * @param integer $owner
-     * @param integer $group
-     * @param string  $institution
+     * @param mixed   $owner integer userid or array of userids
+     * @param mixed   $group integer groupid or array of groupids
+     * @param mixed   $institution string institution name or array of institution names
      * @param string  $matchconfig record all matches with given config hash (see set_access)
      * @param boolean $includeprofile include profile view
      *
@@ -3809,10 +3829,12 @@ class View {
      */
     function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true) {
         $excludelocked = $group && group_user_access($group) != 'admin';
-        $ownersql = self::owner_sql((object) array('owner' => $owner, 'group' => $group, 'institution' => $institution));
+        list($ownersql, $values) = self::multiple_owner_sql(
+            (object) array('owner' => $owner, 'group' => $group, 'institution' => $institution)
+        );
         $sql = "
             SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.template,
+                v.startdate, v.stopdate, v.template, v.owner, v.group,
                 c.id AS cid, c.name AS cname
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
@@ -3821,7 +3843,7 @@ class View {
         $sql .= $includeprofile ? ", 'profile') " : ') ';
         $sql .= $excludelocked ? 'AND v.locked != 1 ' : '';
         $sql .= 'ORDER BY c.name, v.title';
-        $records = get_records_sql_array($sql, array());
+        $records = get_records_sql_array($sql, $values);
 
         $collections = array();
         $views = array();
@@ -3836,8 +3858,8 @@ class View {
                 'id'    => $r->vid,
                 'title' => $r->vname,
                 'type'  => $r->vtype,
-                'owner' => $owner,
-                'group' => $group,
+                'owner' => $r->owner,
+                'group' => $r->group,
             ));
             $view->set('dirty', false);
             $v = array(
@@ -3848,10 +3870,16 @@ class View {
                 'startdate' => $r->startdate,
                 'stopdate'  => $r->stopdate,
                 'template'  => $r->template,
+                'owner'     => $r->owner,
             );
             if ($r->cid) {
                 if (!isset($collections[$r->cid])) {
-                    $collections[$r->cid] = array('id' => $r->cid, 'name' => $r->cname, 'views' => array());
+                    $collections[$r->cid] = array(
+                        'id' => $r->cid,
+                        'name' => $r->cname,
+                        'owner' => $r->owner,
+                        'views' => array(),
+                    );
                     if ($matchconfig && $matchconfig == $r->accessconf) {
                         $collections[$r->cid]['match'] = true;
                     }
@@ -3906,7 +3934,7 @@ class View {
     public static function get_accesslists($owner=null, $group=null, $institution=null) {
         require_once('institution.php');
 
-        if (!is_null($owner) && $owner > 0) {
+        if (!is_null($owner) && !is_array($owner) && $owner > 0) {
             $ownerobj = new User();
             $ownerobj->find_by_id($owner);
         }

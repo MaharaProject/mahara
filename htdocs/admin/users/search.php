@@ -26,7 +26,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALADMIN', 1);
+define('INSTITUTIONALSTAFF', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('usersearch', 'admin'));
@@ -46,11 +46,18 @@ $search = (object) array(
 $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);
 
-if ($USER->get('admin')) {
+if ($USER->get('admin') || $USER->get('staff')) {
     $institutions = get_records_array('institution', '', '', 'displayname');
     $search->institution = param_alphanum('institution', 'all');
-} else {
-    $institutions = get_records_select_array('institution', "name IN ('" . join("','", array_keys($USER->get('admininstitutions'))) . "')", null, 'displayname');
+}
+else {
+    $institutionnames = array_keys(array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions')));
+    $institutions = get_records_select_array(
+        'institution',
+        'name IN (' . join(',', array_fill(0, count($institutionnames), '?')) . ')',
+        $institutionnames,
+        'displayname'
+    );
 }
 
 $smarty = smarty(array('adminusersearch'));

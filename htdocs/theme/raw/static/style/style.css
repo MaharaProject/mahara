@@ -1077,7 +1077,10 @@ ul.in-page-tabs li, ul.edit-view-tabs li {
 	padding: 0;
 	margin: 0 2px 0 0 !important;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
+ul.in-page-tabs li input.linkbtn {
+    font-weight: bold;
+}
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active, ul.in-page-tabs li input.linkbtn {
 	background: #EEEEEE;
 	text-decoration: none;
 	height: 24px;
@@ -1085,7 +1088,7 @@ ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, u
 	display: block;
 	padding: 0 10px;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab {
 	color: #333;
 	text-decoration: none;
 	background: #D1D1D1;
