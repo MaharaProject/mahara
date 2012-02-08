@@ -358,7 +358,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
             unset($cols['select']);
         }
     }
-    else if (!$USER->get('admin')) {
+    else if (!$USER->get('admin') && $results['data']) {
         foreach ($results['data'] as &$r) {
             if (!isset($r['email'])) {
                 $r['email'] = '- ' . get_string('emailaddresshidden', 'admin') . ' -';
