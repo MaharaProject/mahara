@@ -632,6 +632,7 @@ $string['results'] = 'results';
 $string['Results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
 $string['users'] = 'Users';
+$string['searchwithin'] = 'Search within';
 
 // artefact
 $string['artefact'] = 'artefact';
@@ -958,6 +959,9 @@ $string['nusers'] = array(
     '%s users',
 );
 $string['hidden'] = 'hidden';
+$string['lastupdate'] = 'Last update';
+$string['lastupdateorcomment'] = 'Last update or comment';
+$string['Title'] = 'Title';
 
 // import related strings (maybe separated later)
 $string['importedfrom'] = 'Imported from %s';

@@ -38,6 +38,8 @@ $tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
+$queryparams = array();
+
 $searchoptions = array(
     'titleanddescription' => get_string('titleanddescription', 'view'),
     'tagsonly' => get_string('tagsonly', 'view'),
@@ -45,41 +47,90 @@ $searchoptions = array(
 if (!empty($tag)) {
     $searchtype = 'tagsonly';
     $searchdefault = $tag;
-    $querystring = '?tag=' . urlencode($tag);
+    $queryparams['tag'] = $tag;
     $query = null;
 }
 else {
     $searchtype = 'titleanddescription';
     $searchdefault = $query;
-    $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
+    if (!empty($query)) {
+        $queryparams['query'] = $query;
+    }
+}
+
+$sortoptions = array(
+    'lastchanged' => get_string('lastupdateorcomment'),
+    'mtime'       => get_string('lastupdate'),
+    'ownername'   => get_string('Owner', 'view'),
+    'title'       => get_string('Title'),
+);
+
+if (!in_array($sort = param_alpha('sort', 'lastchanged'), array_keys($sortoptions))) {
+    $sort = 'lastchanged';
+}
+if ($sort !== 'lastchanged') {
+    $queryparams['sort'] = $sort;
+}
+$sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
+
+$share = $queryparams['share'] = $sharedefault = array('user', 'friend', 'group');
+
+$shareoptions = array(
+    'user'        => get_string('Me', 'view'),
+    'friend'      => get_string('friends', 'view'),
+    'group'       => get_string('mygroups'),
+);
+if ($USER->get('institutions')) {
+    $shareoptions['institution'] = get_string('myinstitutions', 'group');
+}
+$shareoptions['loggedin'] = get_string('loggedin', 'view');
+if (get_config('allowpublicviews')) {
+    $shareoptions['public'] = get_string('public', 'view');
+}
+
+foreach ($shareoptions as $k => &$v) {
+    $v = array('title' => $v, 'value' => $k, 'defaultvalue' => in_array($k, $sharedefault));
 }
 
 $searchform = pieform(array(
     'name' => 'search',
-    'renderer' => 'oneline',
+    'dieaftersubmit' => false,
     'elements' => array(
         'query' => array(
             'type' => 'text',
-            'title' => get_string('search') . ': ',
+            'title' => get_string('Query') . ': ',
             'defaultvalue' => $searchdefault,
         ),
         'type' => array(
             'type'         => 'select',
+            'title'        => get_string('searchwithin') . ': ',
             'options'      => $searchoptions,
             'defaultvalue' => $searchtype,
         ),
-        'submit' => array(
+        'sort' => array(
+            'type'         => 'select',
+            'title'        => get_string('sortresultsby') . ' ',
+            'options'      => $sortoptions,
+            'defaultvalue' => $sort,
+        ),
+        'share' => array(
+            'type'         => 'checkboxes',
+            'title'        => get_string('sharedwith', 'view') . ': ',
+            'elements'     => $shareoptions,
+            'labelwidth'   => 0,
+        ),
+        'search' => array(
             'type' => 'submit',
             'value' => get_string('search')
-        )
+        ),
     )
 ));
 
-$data = View::shared_to_user($query, $tag, $limit, $offset);
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . $querystring,
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
     'jsonscript' => '/json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,
@@ -97,11 +148,27 @@ $smarty->display('view/sharedviews.tpl');
 exit;
 
 function search_submit(Pieform $form, $values) {
-    $goto = '/view/sharedviews.php';
-    if (!empty($values['query'])) {
-        $querystring = $values['type'] == 'tagsonly' ? '?tag=' : '?query=';
-        $querystring .= urlencode($values['query']);
-        $goto .= $querystring;
+    // Convert (query,type) parameters from form to (query,tag)
+    global $queryparams, $tag, $query, $share;
+
+    if (isset($queryparams['query'])) {
+        unset($queryparams['query']);
+        $query = null;
     }
-    redirect($goto);
+
+    if (isset($queryparams['tag'])) {
+        unset($queryparams['tag']);
+        $tag = null;
+    }
+
+    if (!empty($values['query'])) {
+        if ($values['type'] == 'tagsonly') {
+            $queryparams['tag'] = $tag = $values['query'];
+        }
+        else {
+            $queryparams['query'] = $query = $values['query'];
+        }
+    }
+
+    $share = $queryparams['share'] = param_variable('share', array());
 }

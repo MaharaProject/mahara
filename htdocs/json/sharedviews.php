@@ -36,19 +36,53 @@ $tag    = param_variable('tag', null);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
+$queryparams = array();
+
 if (!empty($tag)) {
-    $querystring = '?tag=' . urlencode($tag);
+    $queryparams['tag'] = $tag;
     $query = null;
 }
-else {
-    $querystring = empty($query) ? '' : ('?query=' . urlencode($query));
+else if (!empty($query)) {
+    $queryparams['query'] = $query;
 }
 
-$data = View::shared_to_user($query, $tag, $limit, $offset);
+$sortoptions = array(
+    'lastchanged',
+    'mtime',
+    'ownername',
+    'title',
+);
+
+if (!in_array($sort = param_alpha('sort', 'lastchanged'), $sortoptions)) {
+    $sort = 'lastchanged';
+}
+if ($sort !== 'lastchanged') {
+    $queryparams['sort'] = $sort;
+}
+$sortdir = ($sort == 'lastchanged' || $sort == 'mtime') ? 'desc' : 'asc';
+
+$shareoptions = array(
+    'user',
+    'friend',
+    'group',
+    'institution',
+    'loggedin',
+    'public',
+);
+
+$share = param_variable('share', array());
+if (is_array($share)) {
+    $share = $queryparams['share'] = array_intersect($share, $shareoptions);
+}
+else {
+    $share = null;
+}
+
+$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir, $share);
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . $querystring,
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
     'jsonscript' => '/json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,

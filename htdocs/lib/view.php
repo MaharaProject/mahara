@@ -3032,6 +3032,14 @@ class View {
             ';
                     $orderby .= 'GREATEST(lastcomment, v.mtime)';
                 }
+                else if ($item['column'] == 'ownername') {
+                    // Join on usr, group, and institution and order by name
+                    $from .= 'LEFT OUTER JOIN {usr} su ON su.id = v.owner
+            LEFT OUTER JOIN {group} sg ON sg.id = v.group
+            LEFT OUTER JOIN {institution} si ON si.name = v.institution
+            ';
+                    $orderby .= "COALESCE(sg.name, si.displayname, CASE WHEN su.preferredname IS NOT NULL AND su.preferredname != '' THEN su.preferredname ELSE su.firstname || ' ' || su.lastname END)";
+                }
                 else {
                     $orderby .= 'v.' . $item['column'];
                 }
@@ -3067,87 +3075,43 @@ class View {
         }
 
         return (object) array(
+            'ids'   => array_keys($viewdata),
             'data'  => array_values($viewdata),
             'count' => $count,
         );
 
     }
     /**
-     * Get views that have been actively shared with a user, either
-     * shared with the user individually, shared as a friend of the
-     * view owner, or shared with one of the user's groups.
+     * Get views that have been shared with a user using the given
+     * access types.
      *
      * @param string   $query       Search string for title/description
      * @param string   $tag         Return only views with this tag
      * @param integer  $limit
      * @param integer  $offset
+     * @param string   $sort        Either 'lastchanged', 'ownername', or a column of the view table
+     * @param string   $sortdir     Ascending/descending
+     * @param array    $accesstypes Types of view access
      *
      */
-    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0) {
-        global $USER;
-        $viewerid = $USER->get('id');
+    public static function shared_to_user($query=null, $tag=null, $limit=null, $offset=0, $sort='lastchanged', $sortdir='desc',
+        $accesstypes=null) {
 
-        $values = array();
+        $sort = array(
+            array(
+                'column' => $sort,
+                'desc'   => $sortdir == 'desc',
+            )
+        );
 
-        $select = "
-            SELECT va.view
-            FROM {view_access} va
-                INNER JOIN {view} v ON va.view = v.id";
-
-        if ($tag) { // Filter by the tag
-            $select .= "
-                INNER JOIN {view_tag} vt ON (vt.view = va.view AND vt.tag = ?)";
-            $values[] = $tag;
-        }
-        elseif ($query) { // Include matches on the title, description or tag
-            $select .= "
-                LEFT JOIN {view_tag} vt ON (vt.view = va.view AND vt.tag = ?)";
-            $values[] = $query;
-        }
-
-        $select .= "
-                LEFT JOIN {usr_friend} f1 ON (v.owner = f1.usr1 AND f1.usr2 = ?)
-                LEFT JOIN {usr_friend} f2 ON (v.owner = f2.usr2 AND f2.usr1 = ?)
-                LEFT JOIN {group_member} gm ON (va.group = gm.group AND (va.role IS NULL OR va.role = gm.role) AND gm.member = ?)
-                LEFT JOIN {usr_institution} ui ON (va.institution = ui.institution AND ui.usr = ?)";
-
-        array_push($values, $viewerid, $viewerid, $viewerid, $viewerid);
-
-        $where = "
-            WHERE
-                (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))
-                AND v.type NOT IN ('profile', 'dashboard', 'grouphomepage')
-                AND (v.startdate IS NULL OR v.startdate < current_timestamp)
-                AND (v.stopdate IS NULL OR v.stopdate > current_timestamp)
-                AND (va.startdate IS NULL OR va.startdate < current_timestamp)
-                AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                AND (va.usr = ?
-                    OR (va.accesstype = 'friends' AND (f1.usr2 IS NOT NULL OR f2.usr1 IS NOT NULL))
-                    OR gm.member IS NOT NULL
-                    OR ui.institution IS NOT NULL
-                )";
-
-        array_push($values, $viewerid, $viewerid);
-
-        if ($query) {
-            $like = db_ilike();
-            $where .= "
-                AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?)";
-            array_push($values, $query, $query, $query);
-        }
-
-        $innerselect = $select . $where;
-
-        $result = (object) array(
-            'data'  => array(),
-            'count' => count_records_sql('SELECT COUNT(*) FROM {view} WHERE id IN (' . $innerselect . ')', $values),
+        $result = self::view_search(
+            $query, null, null, null, $limit, $offset, true, $sort, array('portfolio'), false, $accesstypes, $tag
         );
 
         if (!$result->count) {
             return $result;
         }
 
-        // Order by last comment.
         if (is_postgres()) {
             $lastcomments = '
                     SELECT DISTINCT ON (l.onview) l.onview, a.mtime, a.author, a.authorname, a.id, a.description
@@ -3167,27 +3131,31 @@ class View {
                     GROUP BY onview';
         }
 
-        $viewdata = get_records_sql_assoc('
+        // Get additional data: number of comments, last commenter
+        $commentdata = get_records_sql_assoc('
             SELECT
-                v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.mtime, v.ctime,
-                last.mtime AS lastcommenttime, last.author AS commentauthor, last.authorname AS commentauthorname,
+                v.id, last.mtime AS lastcommenttime, last.author AS commentauthor, last.authorname AS commentauthorname,
                 last.description AS commenttext, last.id AS commentid,
                 COUNT(c.artefact) AS commentcount
             FROM {view} v
                 LEFT JOIN {artefact_comment_comment} c ON (c.onview = v.id AND c.deletedby IS NULL AND c.private = 0)
                 LEFT JOIN (' . $lastcomments . '
                 ) last ON last.onview = v.id
-            WHERE v.id IN (' . $innerselect . ')
+            WHERE v.id IN (' . join(',', array_fill(0, count($result->data), '?')) . ')
             GROUP BY
-                v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution, v.mtime, v.ctime,
-                last.mtime, last.author, last.authorname, last.description, last.id
-            ORDER BY GREATEST(last.mtime, v.mtime) DESC, v.title, v.id',
-            $values, $offset, $limit
+                v.id, last.mtime, last.author, last.authorname, last.description, last.id',
+            $result->ids
         );
 
-        View::get_extra_view_info($viewdata, false);
+        $fields = array('lastcommenttime', 'commentauthor', 'commentauthorname', 'commenttext', 'commentid', 'commentcount');
 
-        $result->data =& $viewdata;
+        foreach ($result->data as &$v) {
+            if (isset($commentdata[$v['id']])) {
+                foreach ($fields as $f) {
+                    $v[$f] = $commentdata[$v['id']]->$f;
+                }
+            }
+        }
 
         return $result;
     }
