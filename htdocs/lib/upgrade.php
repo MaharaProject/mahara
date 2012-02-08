@@ -1188,6 +1188,20 @@ function site_warnings() {
         $warnings[] = get_string('noreplyaddressmissingorinvalid', 'error', get_config('wwwroot') . 'admin/site/options.php?fs=emailsettings');
     }
 
+    // Check that the GD library has support for jpg, png and gif at least
+    $gdinfo = gd_info();
+    if (!$gdinfo['JPEG Support']) {
+        $warnings[] = get_string('gdlibrarylacksjpegsupport', 'error');
+    }
+
+    if (!$gdinfo['PNG Support']) {
+        $warnings[] = get_string('gdlibrarylackspngsupport', 'error');
+    }
+
+    if (!$gdinfo['GIF Read Support'] || !$gdinfo['GIF Create Support']) {
+        $warnings[] = get_string('gdlibrarylacksgifsupport', 'error');
+    }
+
     // Check file upload settings.
     $postmax       = ini_get('post_max_size');
     $uploadmax     = ini_get('upload_max_filesize');
