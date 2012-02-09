@@ -113,22 +113,11 @@ function groupadminsform_submit(Pieform $form, $values) {
     }
     $dbnow = db_format_timestamp(time());
     foreach ($newadmins as $id) {
-        if (record_exists('group_member', 'group', $group->id, 'member', $id)) {
-            execute_sql("
-                UPDATE {group_member}
-                SET role = 'admin'
-                WHERE \"group\" = ? AND member = ?",
-                array($group->id, $id)
-            );
+        if (group_user_access($group->id, $id)) {
+            group_change_role($group->id, $id, 'admin');
         }
         else {
-            insert_record('group_member', (object) array(
-                'group' => $group->id,
-                'member' => $id,
-                'role' => 'admin',
-                'ctime' => $dbnow,
-                'mtime' => $dbnow,
-            ));
+            group_add_user($group->id, $id, 'admin');
         }
     }
     db_commit();

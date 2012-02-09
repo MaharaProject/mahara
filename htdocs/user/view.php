@@ -298,17 +298,11 @@ function invite_submit(Pieform $form, $values) {
 function addmember_submit(Pieform $form, $values) {
     global $USER, $SESSION, $userid;
 
-    $data = new StdClass;
-    $data->group  = $values['group'];
-    $data->member = $userid;
-    $data->ctime  = db_format_timestamp(time());
-    $data->role  = 'member'; // TODO: modify the dropdown to allow the role to be chosen
-    $ctitle = get_field('group', 'name', 'id', $data->group);
-    $adduser = get_record('usr', 'id', $data->member);
+    $ctitle = get_field('group', 'name', 'id', $values['group']);
+    $adduser = get_record('usr', 'id', $userid);
 
     try {
-        insert_record('group_member', $data);
-        delete_records('group_member_request', 'member', $userid, 'group', $data->group);
+        group_add_user($values['group'], $userid, 'member');
         $lang = get_user_language($userid);
         require_once(get_config('libroot') . 'activity.php');
         activity_occurred('maharamessage', array(
