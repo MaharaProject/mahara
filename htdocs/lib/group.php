@@ -756,7 +756,7 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
  * @param int $userid
  * @param string $role
  */
-function group_add_user($groupid, $userid, $role=null) {
+function group_add_user($groupid, $userid, $role=null, $method='internal') {
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
@@ -768,6 +768,7 @@ function group_add_user($groupid, $userid, $role=null) {
         $role = get_field_sql('SELECT gt.defaultrole FROM {grouptype} gt, {group} g WHERE g.id = ? AND g.grouptype = gt.name', array($groupid));
     }
     $gm->role = $role;
+    $gm->method = $method;
 
     db_begin();
     insert_record('group_member', $gm);

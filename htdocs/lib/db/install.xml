@@ -371,6 +371,7 @@
                 <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="method" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="internal" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
