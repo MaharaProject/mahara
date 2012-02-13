@@ -134,7 +134,16 @@ abstract class PluginSearch extends Plugin {
                 switch ($result['type']) {
                     case 'artefact':
                         safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $result['artefacttype']));
-                        $result['links'] = call_static_method(generate_artefact_class_name($result['artefacttype']), 'get_links', $result['id']);
+                        $artefact = artefact_instance_from_id($result['id']);
+                        if ($artefact->in_view_list() && $views = $artefact->get_views_instances()) {
+                            foreach ($views as $view) {
+                                $result['views'][$view->get('title')] = get_config('wwwroot') . 'view/artefact.php?artefact='
+                                    . $result['id'] . '&view=' . $view->get('id');
+                            }
+                        }
+                        if ($links = $artefact->get_links($result['id'])) {
+                            $result['links'] = $links;
+                        }
                         break;
                     case 'view':
                         $result['links'] = array(
