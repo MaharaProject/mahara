@@ -762,6 +762,7 @@ function release_submitted_view($viewid, $assessmentdata, $teacherusername) {
     $view->set('submittedhost', null);
     $view->set('submittedtime', null);
     $view->commit();
+    ArtefactType::update_locked($view->get('owner'));
     db_commit();
 }
 
