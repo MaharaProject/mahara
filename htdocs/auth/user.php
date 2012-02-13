@@ -96,7 +96,8 @@ class User {
             'sesskey'          => '',
             'ctime'            => null,
             'views'            => array(),
-            'showhomeinfo'     => 1
+            'showhomeinfo'     => 1,
+            'unread'           => 0,
         );
         $this->attributes = array();
 
@@ -1224,29 +1225,35 @@ class LiveUser extends User {
         $this->changed = false;
     }
 
+    /**
+     * Some fields may have been changed in the db by some other process, and
+     * should be occasionally reloaded into the session.
+     */
+    public function reload_background_fields() {
+        $reload = array(
+            'active', 'deleted', 'expiry', 'expirymailsent', 'inactivemailsent', 'suspendedctime', 'suspendedreason',
+            'suspendedcusr', 'quota', 'unread',
+        );
+        $tsfields = array('expiry', 'suspendedctime');
+        $record = get_record('usr', 'id', $this->id);
+        foreach ($reload as $f) {
+            if (!isset($record->$f)) {
+                continue;
+            }
+            if (in_array($f, $tsfields)) {
+                $record->$f = strtotime($record->$f);
+            }
+            if ($record->$f != $this->$f) {
+                $this->$f = $record->$f;
+            }
+        }
+    }
+
     public function commit() {
         if ($this->changed == false) {
             return;
         }
-        // Fields which can't be changed in the session, but which may have
-        // changed in the db.  They should be reloaded.
-        $reload = array(
-            'active'           => 'active',
-            'deleted'          => 'deleted',
-            'expiry'           => db_format_tsfield('expiry'),
-            'expirymailsent'   => 'expirymailsent',
-            'inactivemailsent' => 'inactivemailsent',
-            'suspendedctime'   => db_format_tsfield('suspendedctime'),
-            'suspendedreason'  => 'suspendedreason',
-            'suspendedcusr'    => 'suspendedcusr',
-            'quota'            => 'quota',
-        );
-        $r = get_record('usr', 'id', $this->id, null, null, null, null, join(',', $reload));
-        foreach (array_keys($reload) as $k) {
-            if ($r->$k != $this->$k) {
-                $this->$k = $r->$k;
-            }
-        }
+        $this->reload_background_fields();
         parent::commit();
     }
 
@@ -1477,6 +1484,15 @@ class LiveUser extends User {
             'name'     => $name,
             'mimetype' => $mimetype,
         ));
+    }
+
+    public function add_unread($n) {
+        // The unread property can change any time a notification is processed on
+        // cron, so it's reloaded from the db in commit(), every time the last
+        // access time is saved.  This just updates it in the session.
+        $new = $this->get('unread') + $n;
+        $this->SESSION->set('user/unread', $new);
+        return $new;
     }
 }
 

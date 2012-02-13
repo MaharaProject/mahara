@@ -1688,3 +1688,82 @@ function db_interval($s) {
         return "INTERVAL $s SECOND";
     }
 }
+
+function postgres_language_exists($language) {
+    if (!is_postgres()) {
+        throw new SQLException('postgres_language_exists() expects a postgres database');
+    }
+    return get_field_sql('SELECT 1 FROM pg_catalog.pg_language WHERE lanname = ?', array($language)) == 1;
+}
+
+function postgres_create_language($language) {
+    if (!is_postgres()) {
+        throw new SQLException('postgres_create_language() expects a postgres database');
+    }
+
+    // CREATE LANGUAGE fails if the language already exists
+    if (postgres_language_exists($language)) {
+        return true;
+    }
+    execute_sql("CREATE LANGUAGE $language;");
+    return postgres_language_exists($language);
+}
+
+/**
+ * Creates a database row trigger
+ *
+ * @param string $name trigger name
+ * @param string $time trigger action time, e.g. AFTER
+ * @param string $event trigger event, one of (INSERT, UPDATE, DELETE)
+ * @param string $table table name
+ * @param string $body function body
+ */
+function db_create_trigger($name, $time, $event, $table, $body) {
+    if ($time != 'AFTER' || ($event != 'INSERT' && $event != 'UPDATE' && $event != 'DELETE')) {
+        throw new SQLException("db_create_trigger() not implemented for $time $event");
+    }
+    if (is_postgres()) {
+        $functionname = $name . '_function';
+        $triggername  = $name . '_trigger';
+        execute_sql('
+            CREATE FUNCTION {' . $functionname . '}() RETURNS TRIGGER AS $$
+            BEGIN
+                ' . $body . '
+                RETURN NULL;
+            END
+            $$ LANGUAGE plpgsql;
+            CREATE TRIGGER {' . $triggername . '} ' . $time . ' ' . $event . '
+                ON {' . $table . '} FOR EACH ROW
+                EXECUTE PROCEDURE {' . $functionname . '}();'
+        );
+    }
+    else if (is_mysql()) {
+        $triggername = $name . '_trigger';
+        execute_sql('
+            CREATE TRIGGER {' . $triggername . '} ' . $time . ' ' . $event . '
+                ON {' . $table . '} FOR EACH ROW
+                BEGIN
+                    ' . $body . '
+                END'
+        );
+    }
+    else {
+        throw new SQLException("db_create_trigger() is not implemented for your database engine");
+    }
+}
+
+function db_drop_trigger($name, $table) {
+    if (is_postgres()) {
+        $functionname = $name . '_function';
+        $triggername  = $name . '_trigger';
+        execute_sql('DROP TRIGGER {' . $triggername . '} ON {' . $table . '}');
+        execute_sql('DROP FUNCTION {' . $functionname . '}()');
+    }
+    else if (is_mysql()) {
+        $triggername = $name . '_trigger';
+        execute_sql('DROP TRIGGER {' . $triggername . '}');
+    }
+    else {
+        throw new SQLException("db_drop_trigger() is not implemented for your database engine");
+    }
+}

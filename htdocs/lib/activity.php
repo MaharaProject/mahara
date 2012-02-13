@@ -480,6 +480,8 @@ abstract class ActivityType {
             }
         }
 
+        // The user's unread message count does not need to be updated from $changes->read
+        // because of the db trigger on notification_internal_activity.
     }
 
     public function notify_users() {

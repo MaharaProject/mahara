@@ -180,6 +180,9 @@ function ensure_install_sanity() {
     if (!db_is_utf8()) {
         throw new ConfigSanityException(get_string('dbnotutf8', 'error'));
     }
+    if (is_postgres() && !postgres_create_language('plpgsql')) {
+        throw new ConfigSanityException(get_string('plpgsqlnotavailable', 'error'));
+    }
 }
 
 function ensure_upgrade_sanity() {
@@ -191,6 +194,9 @@ function ensure_upgrade_sanity() {
                 throw new ConfigSanityException(get_string('dbcollationmismatch', 'admin'));
             }
         }
+    }
+    if (is_postgres() && !postgres_create_language('plpgsql')) {
+        throw new ConfigSanityException(get_string('plpgsqlnotavailable', 'error'));
     }
 }
 

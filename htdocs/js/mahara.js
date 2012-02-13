@@ -708,21 +708,22 @@ function quotaUpdate(quotaused, quota) {
     }
 }
 
-function updateUnreadCount(n, decrement) {
-    var newcount = -1;
-    var countnode = getFirstElementByTagAndClassName('span', 'unreadmessagecount', 'right-nav');
-    if (!countnode) {
+function updateUnreadCount(data) {
+    var inboxmenu = getFirstElementByTagAndClassName(null, 'inbox', 'right-nav');
+    if (!inboxmenu) {
         return;
     }
-    if (decrement == 'decrement') {
-        var oldcount = parseInt(countnode.innerHTML);
-        newcount = (oldcount - n);
+    if (typeof(data.data.newunreadcount) != 'undefined') {
+        var countnode = getFirstElementByTagAndClassName('span', 'unreadmessagecount', inboxmenu);
+        if (countnode) {
+            countnode.innerHTML = data.data.newunreadcount;
+        }
     }
-    else {
-        newcount = n;
-    }
-    if (newcount > -1) {
-        countnode.innerHTML = newcount;
+    if (data.data.newimage) {
+        var oldimage = getFirstElementByTagAndClassName('img', null, inboxmenu);
+        if (oldimage) {
+            setNodeAttribute(oldimage, 'src', data.data.newimage);
+        }
     }
 }
 
