@@ -438,7 +438,8 @@ $string['forceuserstochangepassword'] = 'Force password change?';
 $string['forceuserstochangepassworddescription'] = 'Whether users should be forced to change their password when they log in for the first time';
 $string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
 $string['configureauthplugin'] = 'You must configure an authentication plugin before you can add users';
-$string['csvfiledescription'] = 'The file containing users to add';
+$string['csvfiledescription'] = 'The file containing users to add.';
+$string['csvmaxusersdescription'] = 'This file should not contain more than %s.';
 $string['groupcsvfiledescription'] = 'The file containing groups to add';
 $string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
 $string['csverroremptyfile'] = 'The csv file is empty.';
@@ -481,6 +482,7 @@ $string['uploadcsvpagedescription2institutionaladmin'] = '<p>You may use this fa
 <p>Your CSV file may include any other profile fields as you require. The full list of fields is:</p>
 
 %s';
+$string['uploadcsverrortoomanyusers'] = 'You have too many lines in your csv file.  Your file should not contain more than %s.';
 $string['uploadgroupcsverrorgroupnamealreadyexists'] = 'Error on line %s of your file: The groupname "%s" already exists';
 $string['uploadgroupcsverrorinvalidshortname'] = 'Error on line %s of your file: The shortname "%s" is invalid';
 $string['uploadgroupcsverrorinvalidgrouptype'] = 'Error on line %s of your file: The grouptype "%s" is invalid';

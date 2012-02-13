@@ -166,6 +166,10 @@ $form = array(
     )
 );
 
+if ($maxcsvlines = get_config('maxusercsvlines')) {
+    $form['elements']['file']['description'] .= ' ' . get_string('csvmaxusersdescription', 'admin', get_string('nusers', 'mahara', $maxcsvlines));
+}
+
 unset($prefs);
 
 if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride'))) {
@@ -250,6 +254,12 @@ function uploadcsv_validate(Pieform $form, $values) {
     $emails = array();
     if (isset($formatkeylookup['remoteuser'])) {
         $remoteusers = array();
+    }
+
+    $maxcsvlines = get_config('maxusercsvlines');
+    if ($maxcsvlines && $maxcsvlines < count($csvdata->data)) {
+        $form->set_error('file', get_string('uploadcsverrortoomanyusers', 'admin', get_string('nusers', 'mahara', $maxcsvlines)));
+        return;
     }
 
     foreach ($csvdata->data as $key => $line) {
@@ -543,6 +553,7 @@ function uploadcsv_submit(Pieform $form, $values) {
                 log_debug('updated user ' . $user->username . ' (' . implode(', ', array_keys($updated)) . ')');
             }
         }
+        set_time_limit(10);
     }
     db_commit();
 
