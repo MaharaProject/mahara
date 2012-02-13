@@ -47,12 +47,12 @@ results.emptycontent = {$enc_noresults};
 results.rowfunction = function (r, n, d) {
 
     var titleElement;
-    if (r.links._default) {
+    if (r.links && r.links._default) {
         titleElement = [H3(null, A({'href': r.links._default}, r.title))];
         delete r.links._default;
     }
     else {
-        titleElement = [H3(null, A(null, r.title))];
+        titleElement = [H3(null, r.title)];
     }
 
     for ( var k in r.links ) {

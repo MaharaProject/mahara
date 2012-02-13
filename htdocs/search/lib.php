@@ -127,7 +127,7 @@ abstract class PluginSearch extends Plugin {
      */
     public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
 
-    protected static function self_search_make_links($data) {
+    protected static function self_search_make_links(&$data) {
         $wwwroot = get_config('wwwroot');
         if ($data['count']) {
             foreach ($data['data'] as &$result) {

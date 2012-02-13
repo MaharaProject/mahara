@@ -804,6 +804,7 @@ class PluginSearchInternal extends PluginSearch {
         );
 
         if ($results['data']) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
             foreach ($results['data'] as &$result) {
                 $newresult = array();
                 foreach ($result as $key => &$value) {
@@ -812,10 +813,13 @@ class PluginSearchInternal extends PluginSearch {
                     }
                 }
                 $newresult['type'] = 'artefact';
-                $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
-                if ($artefactplugin == 'internal') {
+
+                $artefact = artefact_instance_from_id($newresult['id']);
+                $artefactplugin = $artefact->get_plugin_name();
+                if ($artefactplugin == 'internal' && in_array($artefact->get('artefacttype'), PluginArtefactInternal::get_profile_artefact_types())) {
+                    // Profile artefact
                     $newresult['summary'] = $newresult['title'];
-                    $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
+                    $newresult['title'] = get_string($artefact->get('artefacttype'), 'artefact.' . $artefactplugin);
                 }
                 else {
                     $newresult['summary'] = $newresult['description'];
