@@ -708,8 +708,5 @@ class ArtefactTypeHtml extends ArtefactType {
     }
 
     public static function get_links($id) {
-        return array(
-            '_default' => get_config('wwwroot'),
-        );
     }
 }

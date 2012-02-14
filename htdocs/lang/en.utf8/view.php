@@ -92,6 +92,7 @@ $string['viewssubmittedtogroup'] = 'Pages submitted to this group';
 $string['submitaviewtogroup'] = 'Submit a page to this group';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
 $string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s';
+$string['listedinpages'] = 'Listed in pages';
 
 // access levels
 $string['public'] = 'Public';

@@ -34,6 +34,7 @@ $artefacttype  = param_variable('artefacttype','all');
 
 $enc_jsonscript = json_encode(get_config('wwwroot') . 'json/selfsearch.php');
 $enc_noresults  = json_encode(get_string('noresultsfound'));
+$enc_pages = json_encode(get_string('listedinpages', 'view'));
 
 $javascript = <<<EOF
 var results = new TableRenderer(
@@ -44,32 +45,38 @@ var results = new TableRenderer(
 results.statevars.push('query');
 results.statevars.push('type');
 results.emptycontent = {$enc_noresults};
-results.rowfunction = function (r, n, d) {
+results.rowfunction = function (r, rownumber, d) {
 
     var titleElement;
-    if (r.links._default) {
+    if (r.links && r.links._default) {
         titleElement = [H3(null, A({'href': r.links._default}, r.title))];
         delete r.links._default;
     }
     else {
-        titleElement = [H3(null, A(null, r.title))];
+        titleElement = [H3(null, r.title)];
     }
 
     for ( var k in r.links ) {
-        var button = BUTTON(null, k);
-        connect(button, 'onclick', partial(
-            function (link) { document.location.href = link },
-            r.links[k]
-        ));
-        titleElement.push(button);
+        var link = A({'href': r.links[k]}, k);
+        titleElement.push(link);
+    }
+
+    if (r.views) {
+        var viewsList = UL(null);
+        var viewsElement = P(null, STRONG(null, $enc_pages), viewsList);
+        for ( var k in r.views ) {
+            var link = A({'href': r.views[k]}, k);
+            viewsList.appendChild(LI(null, link));
+        }
     }
 
     var descriptionElement = P(null);
     descriptionElement.innerHTML = r.summary;
 
-    return TR(null, TD(null,
+    return TR({'class': 'r' + (rownumber % 2)}, TD(null,
         titleElement,
-        descriptionElement
+        descriptionElement,
+        viewsElement
     ));
 };
 

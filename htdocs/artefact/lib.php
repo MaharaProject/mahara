@@ -207,14 +207,22 @@ abstract class ArtefactType {
         $this->atime = time();
     }
 
+    /**
+     * Returns the instances of all views where this artefact is used.
+     *
+     * @return array Array of view instances.
+     */
     public function get_views_instances() {
         // @todo test this
         if (!isset($this->viewsinstances)) {
             $this->viewsinstances = false;
             if ($views = $this->get_views_metadata()) {
                 $this->viewsinstances = array();
+                if (!class_exists('View')) {
+                    require_once(get_config('libroot') . 'view.php');
+                }
                 foreach ($views as $view) {
-                    $this->viewsinstances[] = new View($view->id, $view);
+                    $this->viewsinstances[] = new View($view->view);
                 }
             }
         }
