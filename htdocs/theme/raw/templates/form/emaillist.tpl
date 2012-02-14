@@ -1,3 +1,19 @@
+{{if $disabled}}
+  {{foreach from=$validated item=email}}
+    <div class="validated">
+      <label>
+        <input disabled {{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}">
+        {{$email}}
+      </label>
+    </div>
+    <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
+    {{if $email == $default}}<input type="hidden" name="{{$name}}_selected" value="{{$email}}">{{/if}}
+  {{/foreach}}
+  {{foreach from=$unvalidated item=email}}
+    <div class="unvalidated">{{$email}}</div>
+    <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
+  {{/foreach}}
+{{else}}
 <script type="text/javascript">
     var {{$name}}_newrefinput = null;
     var {{$name}}_newref = null;
@@ -79,3 +95,4 @@
 {{/foreach}}
 </div>
 <a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
+{{/if}}

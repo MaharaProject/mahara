@@ -134,6 +134,9 @@ foreach ( $element_list as $element => $type ) {
 
     if (isset($lockedfields[$element]) && !$USER->get('admin')) {
         $items[$element]['disabled'] = true;
+        if ($element == 'email') {
+            $items[$element]['help'] = false;
+        }
     }
 
 }
