@@ -60,7 +60,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
     this.upload_init = function () {
         if ($(self.id + '_notice')) {
-            setNodeAttribute(self.id + '_userfile', 'disabled', true);
+            // If the file input is disabled immediately without this delay, later javascript changes
+            // to the filebrowser are not rendered by Chrome when the filebrowser is inside a block
+            // configuration form.
+            callLater(0.0001, function() { setNodeAttribute(self.id + '_userfile', 'disabled', true); });
         }
         if (!$(self.id + '_upload')) {
             insertSiblingNodesAfter(self.id + '_uploadnumber', INPUT({
