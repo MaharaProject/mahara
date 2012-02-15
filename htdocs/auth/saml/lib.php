@@ -47,7 +47,7 @@ class AuthSaml extends Auth {
         $this->config['institutionregex'] = 0;
         $this->config['institutionvalue'] = '';
         $this->config['updateuserinfoonlogin'] = 1;
-        $this->config['remoteuser'] = false;
+        $this->config['remoteuser'] = true;
         $this->config['loginlink'] = false;
         $this->instanceid = $id;
 
@@ -103,6 +103,7 @@ class AuthSaml extends Auth {
 
         // Retrieve a $user object. If that fails, create a blank one.
         try {
+            $isremote = $this->config['remoteuser'] ? true : false;
             $user = new User;
             if (get_config('usersuniquebyusername')) {
                 // When turned on, this setting means that it doesn't matter
@@ -133,9 +134,15 @@ class AuthSaml extends Auth {
                         . "somewhere else. Please turn this setting on in Site Options");
                     throw new AccessDeniedException();
                 }
-
             }
-            $isremote = $this->config['remoteuser'] ? true : false;
+            else {
+                if (!$isremote){
+                    log_warn("usersuniquebyusername is turned off but remoteuser has not been set on for this institution: $institutionname. "
+                        . "This is a security risk as users from different institutions with different IdPs can hijack "
+                        . "each others accounts.  Fix this in the institution level auth/saml settings.");
+                    throw new AccessDeniedException();
+                }
+            }
             if ($isremote) {
                 $user->find_by_instanceid_username($this->instanceid, $remoteuser, $isremote);
             }
@@ -282,7 +289,7 @@ class PluginAuthSaml extends PluginAuth {
         'institutionattribute'  => '',
         'institutionvalue'      => '',
         'institutionregex'      => 0,
-        'remoteuser'            => 0,
+        'remoteuser'            => 1,
         'loginlink'             => 0,
             );
 
@@ -487,6 +494,10 @@ class PluginAuthSaml extends PluginAuth {
             if (! file_exists($values['simplesamlphpconfig'].'/config.php')) {
                 $form->set_error('simplesamlphpconfig', get_string('errorbadconfig', 'auth.saml', $values['simplesamlphpconfig']));
             }
+        }
+        // only allow remoteuser to be unset if usersuniquebyusername is NOT set
+        if (isset($values['remoteuser']) && !get_config('usersuniquebyusername') && !$values['remoteuser']) {
+            $form->set_error('remoteuser', get_string('errorremoteuser', 'auth.saml'));
         }
         if (isset($values['weautocreateusers'])) {
             if ($values['weautocreateusers'] && $values['remoteuser']) {
