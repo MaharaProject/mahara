@@ -123,6 +123,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                 $toolbar_align = 'left';
 
                 if ($check[$key] == 'tinymce') {
+                    $spellchecker_rpc = $jsroot.'tinymce/plugins/spellchecker/rpc.php';
                     $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
@@ -133,6 +134,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "{$toolbar_align}",
     fix_list_elements: true,
+    spellchecker_rpc_url : "{$spellchecker_rpc}",
     //width: '512',
 EOF;
                 }

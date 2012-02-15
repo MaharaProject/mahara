@@ -6,6 +6,14 @@
  */
 	// General settings
 	$config['general.engine'] = 'GoogleSpell';
+
+	define('INTERNAL', 1);
+	require_once(dirname(__FILE__).'/../../../../init.php');
+	$aspellpath = get_config('pathtoaspell');
+	if (file_exists($aspellpath) && is_executable($aspellpath)) {
+		$config['general.engine'] = 'PSpellShell';
+	}
+
 	//$config['general.engine'] = 'PSpell';
 	//$config['general.engine'] = 'PSpellShell';
 	//$config['general.remote_rpc_url'] = 'http://some.other.site/some/url/rpc.php';
@@ -18,7 +26,7 @@
 
 	// PSpellShell settings
 	$config['PSpellShell.mode'] = PSPELL_FAST;
-	$config['PSpellShell.aspell'] = '/usr/bin/aspell';
+	$config['PSpellShell.aspell'] = $aspellpath;
 	$config['PSpellShell.tmp'] = '/tmp';
 
 	// Windows PSpellShell settings
