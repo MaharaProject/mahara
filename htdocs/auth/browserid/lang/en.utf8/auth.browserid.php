@@ -31,3 +31,8 @@ $string['badassertion'] = 'The given BrowserID assertion is not valid: %s';
 $string['badverification'] = 'Mahara did not receive valid JSON output from the BrowserID verifier.';
 $string['login'] = 'BrowserID Login';
 $string['missingassertion'] = 'BrowserID did not return an alpha-numeric assertion.';
+
+$string['emailalreadyclaimed'] = "Another user account has already claimed the email address '%s'.";
+$string['emailclaimedasusername'] = "Another user account has already claimed the email address '%s' as a username.";
+$string['browseridnotenabled'] = "The BrowserID authentication plugin is not enabled in any active institution.";
+$string['emailnotfound'] = "A user account with an email address of '%s' was not found in any of the institutions where BrowserID is enabled.";
