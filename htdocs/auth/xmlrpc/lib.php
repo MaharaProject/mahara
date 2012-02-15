@@ -472,7 +472,7 @@ class AuthXmlrpc extends Auth {
         // Language
         if (!empty($remoteuser->lang)) {
             $validlanguages = array_keys(get_languages());
-            $newlanguage = str_replace('_', '.', strtolower($remoteuser->lang));
+            $newlanguage = str_replace('_utf8', '', strtolower($remoteuser->lang)) . '.utf8';
             if (in_array($newlanguage, $validlanguages)) {
                 set_account_preference($user->id, 'lang', $newlanguage);
                 $user->set_account_preference('lang', $newlanguage);
