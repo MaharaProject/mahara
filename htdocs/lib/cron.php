@@ -91,10 +91,16 @@ foreach (plugin_types() as $plugintype) {
             log_info("Running $classname::" . $job->callfunction);
 
             safe_require($plugintype, $job->plugin, 'lib.php', 'require_once');
-            call_static_method(
-                $classname,
-                $job->callfunction
-            );
+
+            try {
+                call_static_method($classname, $job->callfunction);
+            }
+            catch (Exception $e) {
+                log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
+                $output = $e instanceof MaharaException ? $e->render_exception() : $e->getMessage();
+                echo "$output\n";
+                // Don't call handle_exception; try to update next run time and free the lock
+            }
 
             $nextrun = cron_next_run_time($start, (array)$job);
 
@@ -147,7 +153,16 @@ if ($jobs) {
         log_info("Running core cron " . $job->callfunction);
 
         $function = $job->callfunction;
-        $function();
+
+        try {
+            $function();
+        }
+        catch (Exception $e) {
+            log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
+            $output = $e instanceof MaharaException ? $e->render_exception() : $e->getMessage();
+            echo "$output\n";
+            // Don't call handle_exception; try to update next run time and free the lock
+        }
         
         $nextrun = cron_next_run_time($start, (array)$job);
         
