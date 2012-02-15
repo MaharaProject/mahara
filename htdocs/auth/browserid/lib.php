@@ -58,11 +58,11 @@ class AuthBrowserid extends Auth {
         }
 
         if (record_exists('artefact_internal_profile_email', 'email', $email)) {
-            throw new AccountAutoCreationException("Another user account has already claimed the email address '$email'.");
+            throw new AccountAutoCreationException(get_string('emailalreadyclaimed', 'auth.browserid', $email));
         }
 
         if (record_exists('usr', 'username', $email)) {
-            throw new AccountAutoCreationException("Another user account has already claimed the email address '$email' as a username.");
+            throw new AccountAutoCreationException(get_string('emailclaimedasusername', 'auth.browserid', $email));
         }
 
         // Personal details are currently not provided by the BrowserID API.
@@ -270,7 +270,7 @@ class BrowserIDUser extends LiveUser {
                     i.suspended = 0";
         $authinstances = get_records_sql_array($sql, null);
         if (!$authinstances) {
-            throw new ConfigException('The BrowserID authentication plugin is not enabled in any active institution.');
+            throw new ConfigException(get_string('browseridnotenabled', 'auth.browserid'));
         }
 
         foreach ($authinstances as $authinstance) {
@@ -322,7 +322,7 @@ class BrowserIDUser extends LiveUser {
             $this->authenticate($user, $auth->instanceid);
         }
         else {
-            throw new AuthUnknownUserException("A user account with an email address of '$email' was not found in any of the institutions where BrowserID is enabled.");
+            throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
         }
     }
 }
