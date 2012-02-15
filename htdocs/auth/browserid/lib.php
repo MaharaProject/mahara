@@ -30,7 +30,7 @@ class AuthBrowserid extends Auth {
         $this->has_instance_config = true;
         $this->type = 'browserid';
 
-        $this->config['weautocreateusers'] = 1;
+        $this->config['weautocreateusers'] = 0;
         if (!empty($id)) {
             return $this->init($id);
         }
@@ -89,7 +89,7 @@ class AuthBrowserid extends Auth {
 class PluginAuthBrowserid extends PluginAuth {
 
     private static $default_config = array(
-        'weautocreateusers' => 1,
+        'weautocreateusers' => 0,
     );
 
     public static function has_config() {
