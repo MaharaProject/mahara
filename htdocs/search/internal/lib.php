@@ -794,7 +794,7 @@ class PluginSearchInternal extends PluginSearch {
                 (LOWER(at.tag) = ?)
             )";
         array_unshift($querydata[1], $USER->get('id'));
-        array_push($querydata[1], $querystring);
+        array_push($querydata[1], strtolower($querystring));
 
         $results = array(
             'data'   => get_records_sql_array($sql, $querydata[1], $offset, $limit),
@@ -1057,7 +1057,7 @@ class PluginSearchInternal extends PluginSearch {
         }
       }
       // Return matching snippet and number of added words
-      return array("a.title ". ($not ? 'NOT ' : '') ."LIKE '%' || ? || '%'" . ($not ? ' AND ' : ' OR ') . 'a.description ' . ($not ? 'NOT ' : '') . "LIKE '%' || ? || '%'", $count);
+      return array("a.title ". ($not ? 'NOT ' : '') . db_ilike() . " '%' || ? || '%'" . ($not ? ' AND ' : ' OR ') . 'a.description ' . ($not ? 'NOT ' : '') . db_ilike() . " '%' || ? || '%'", $count);
     }
 
     /**
