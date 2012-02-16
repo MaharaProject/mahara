@@ -106,7 +106,7 @@ if ($USER->get('admin')) {
 $elements['maildisabled'] = array(
     'type' => 'checkbox',
     'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
-    'title' => get_string('email'),
+    'title' => get_string('disableemail', 'admin'),
     'help' => true,
 );
 $elements['expiry'] = array(
