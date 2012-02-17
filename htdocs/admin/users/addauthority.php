@@ -114,13 +114,20 @@ function auth_config_validate(Pieform $form, $values) {
     $plugin = $values['authname'];
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
 
-    if (!method_exists($classname, 'validate_config_options')) {
+    if (method_exists($classname, 'validate_instance_config_options')) {
+        $method = 'validate_instance_config_options';
+    }
+    else if (method_exists($classname, 'validate_config_options')) {
+        $method = 'validate_config_options';
+        log_warn("The validate_config_options method is being called during $plugin auth instance configuration.  In future this won't work: the plugin should define the validate_instance_config_options method instead.");
+    }
+    if (!isset($method)) {
         return;
     }
     safe_require('auth', strtolower($plugin));
 
     try {
-        $values = call_static_method($classname, 'validate_config_options', $values, $form);
+        $values = call_static_method($classname, $method, $values, $form);
     } catch (Exception $e) {
         if (!$form->has_errors()) {
             $form->set_error('instancename', "An unknown error occurred while processing this form");
@@ -132,9 +139,21 @@ function auth_config_submit(Pieform $form, $values) {
     global $SESSION;
     $plugin = $values['authname'];
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+
+    if (method_exists($classname, 'save_instance_config_options')) {
+        $method = 'save_instance_config_options';
+    }
+    else if (method_exists($classname, 'save_config_options')) {
+        $method = 'save_config_options';
+        log_warn("The save_config_options method is being called during $plugin auth instance configuration.  In future this won't work: the plugin should define the save_instance_config_options method instead.");
+    }
+    if (!isset($method)) {
+        return;
+    }
+
     safe_require('auth', strtolower($plugin));
     try {
-        $values = call_static_method($classname, 'save_config_options', $values, $form);
+        $values = call_static_method($classname, $method, $values, $form);
     } catch (Exception $e) {
         log_info($e->getMessage());
         log_info($e->getTrace());

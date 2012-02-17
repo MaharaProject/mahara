@@ -476,33 +476,25 @@ class PluginAuthSaml extends PluginAuth {
         );
     }
 
-
-    public static function validate_config_options($values, $form) {
-
-        if ($values instanceof Pieform) {
-            $tmp = $form;
-            $form = $values;
-            $values = $tmp;
+    public static function validate_config_options(Pieform $form, $values) {
+        // SimpleSAMLPHP lib directory must have right things
+        if (!file_exists($values['simplesamlphplib'] . '/lib/_autoload.php')) {
+            $form->set_error('simplesamlphplib', get_string('errorbadlib', 'auth.saml', $values['simplesamlphplib']));
         }
-        // fix problems with config validation interface incorrect between site/institution
-        if (isset($values['authglobalconfig'])) {
-            // SimpleSAMLPHP lib directory must have right things
-            if (! file_exists($values['simplesamlphplib'].'/lib/_autoload.php')) {
-                $form->set_error('simplesamlphplib', get_string('errorbadlib', 'auth.saml', $values['simplesamlphplib']));
-            }
-            // SimpleSAMLPHP config directory must shape up
-            if (! file_exists($values['simplesamlphpconfig'].'/config.php')) {
-                $form->set_error('simplesamlphpconfig', get_string('errorbadconfig', 'auth.saml', $values['simplesamlphpconfig']));
-            }
+        // SimpleSAMLPHP config directory must shape up
+        if (!file_exists($values['simplesamlphpconfig'] . '/config.php')) {
+            $form->set_error('simplesamlphpconfig', get_string('errorbadconfig', 'auth.saml', $values['simplesamlphpconfig']));
         }
+    }
+
+    public static function validate_instance_config_options($values, $form) {
+
         // only allow remoteuser to be unset if usersuniquebyusername is NOT set
-        if (isset($values['remoteuser']) && !get_config('usersuniquebyusername') && !$values['remoteuser']) {
+        if (!get_config('usersuniquebyusername') && !$values['remoteuser']) {
             $form->set_error('remoteuser', get_string('errorremoteuser', 'auth.saml'));
         }
-        if (isset($values['weautocreateusers'])) {
-            if ($values['weautocreateusers'] && $values['remoteuser']) {
-                $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
-            }
+        if ($values['weautocreateusers'] && $values['remoteuser']) {
+            $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
         }
         $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
                                           WHERE ((field = \'institutionattribute\' AND value = ?) OR
@@ -520,78 +512,78 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
-
-    public static function save_config_options($values, $form) {
-
+    public static function save_config_options($values) {
         $configs = array('simplesamlphplib', 'simplesamlphpconfig');
+        foreach ($configs as $config) {
+            set_config_plugin('auth', 'saml', $config, $values[$config]);
+        }
+    }
 
-        if (isset($values['authglobalconfig'])) {
-            foreach ($configs as $config) {
-                set_config_plugin('auth', 'saml', $config, $values[$config]);
-            }
+    public static function save_instance_config_options($values, $form) {
+
+        $authinstance = new stdClass();
+
+        if ($values['instance'] > 0) {
+            $values['create'] = false;
+            $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
+            $authinstance->id = $values['instance'];
         }
         else {
-            $authinstance = new stdClass();
+            $values['create'] = true;
+            $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
 
-            if ($values['instance'] > 0) {
-                $values['create'] = false;
-                $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
-                $authinstance->id = $values['instance'];
+            if ($lastinstance == false) {
+                $authinstance->priority = 0;
             }
             else {
-                $values['create'] = true;
-                $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
-
-                if ($lastinstance == false) {
-                    $authinstance->priority = 0;
-                }
-                else {
-                    $authinstance->priority = $lastinstance[0]->priority + 1;
-                }
-            }
-
-            $authinstance->institution  = $values['institution'];
-            $authinstance->authname     = $values['authname'];
-            $authinstance->instancename = $values['authname'];
-
-            if ($values['create']) {
-                $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
-            }
-            else {
-                update_record('auth_instance', $authinstance, array('id' => $values['instance']));
-            }
-
-            if (empty($current)) {
-                $current = array();
-            }
-
-            self::$default_config =   array('user_attribute' => $values['user_attribute'],
-                                            'weautocreateusers' => $values['weautocreateusers'],
-                                            'loginlink' => $values['loginlink'],
-                                            'remoteuser' => $values['remoteuser'],
-                                            'firstnamefield' => $values['firstnamefield'],
-                                            'surnamefield' => $values['surnamefield'],
-                                            'emailfield' => $values['emailfield'],
-                                            'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
-                                            'institutionattribute' => $values['institutionattribute'],
-                                            'institutionvalue' => $values['institutionvalue'],
-                                            'institutionregex' => $values['institutionregex'],
-                                            );
-
-            foreach(self::$default_config as $field => $value) {
-                $record = new stdClass();
-                $record->instance = $values['instance'];
-                $record->field    = $field;
-                $record->value    = $value;
-
-                if ($values['create'] || !array_key_exists($field, $current)) {
-                    insert_record('auth_instance_config', $record);
-                }
-                else {
-                    update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
-                }
+                $authinstance->priority = $lastinstance[0]->priority + 1;
             }
         }
+
+        $authinstance->institution  = $values['institution'];
+        $authinstance->authname     = $values['authname'];
+        $authinstance->instancename = $values['authname'];
+
+        if ($values['create']) {
+            $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
+        }
+        else {
+            update_record('auth_instance', $authinstance, array('id' => $values['instance']));
+        }
+
+        if (empty($current)) {
+            $current = array();
+        }
+
+        self::$default_config = array(
+            'user_attribute' => $values['user_attribute'],
+            'weautocreateusers' => $values['weautocreateusers'],
+            'loginlink' => $values['loginlink'],
+            'remoteuser' => $values['remoteuser'],
+            'firstnamefield' => $values['firstnamefield'],
+            'surnamefield' => $values['surnamefield'],
+            'emailfield' => $values['emailfield'],
+            'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
+            'institutionattribute' => $values['institutionattribute'],
+            'institutionvalue' => $values['institutionvalue'],
+            'institutionregex' => $values['institutionregex'],
+        );
+
+        foreach(self::$default_config as $field => $value) {
+            $record = new stdClass();
+            $record->instance = $values['instance'];
+            $record->field    = $field;
+            $record->value    = $value;
+
+            if ($values['create'] || !array_key_exists($field, $current)) {
+                insert_record('auth_instance_config', $record);
+            }
+            else {
+                update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
+            }
+        }
+
+        $configs = array('simplesamlphplib', 'simplesamlphpconfig');
         foreach ($configs as $config) {
             self::$default_config[$config] = get_config_plugin('auth', 'saml', $config);
         }
