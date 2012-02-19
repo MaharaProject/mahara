@@ -334,6 +334,11 @@ function uploadcsv_validate(Pieform $form, $values) {
             $remoteusers[$remoteuser] = true;
         }
 
+        // If we didn't even get a username, we can't check for duplicates, so move on.
+        if (strlen($username) < 1) {
+            continue;
+        }
+
         if (isset($usernames[strtolower($username)])) {
             // Duplicate username within this file.
             $csverrors->add($i, get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
