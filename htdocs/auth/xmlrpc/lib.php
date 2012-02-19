@@ -862,7 +862,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         );
     }
 
-    public static function validate_config_options($values, $form) {
+    public static function validate_instance_config_options($values, $form) {
         if (false === strpos($values['wwwroot'], '://')) {
             $values['wwwroot'] = 'http://' . $values['wwwroot'];
         }
@@ -902,7 +902,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         //TODO: test values and set appropriate errors on form
     }
 
-    public static function save_config_options($values, $form) {
+    public static function save_instance_config_options($values, $form) {
         if (false === strpos($values['wwwroot'], '://')) {
             $values['wwwroot'] = 'http://' . $values['wwwroot'];
         }
