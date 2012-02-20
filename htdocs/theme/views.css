@@ -1000,6 +1000,10 @@ table.resumecomposite {
 	font-size: .9167em;
 }
 
+.filedownload-item h4 a {
+        display:block;
+        height: 1em;
+}
 
 #blogdescription {
 	margin: 0 0 10px 0;
