@@ -541,13 +541,13 @@ function uploadcsv_submit(Pieform $form, $values) {
         if (!$values['updateusers'] || !isset($UPDATES[$user->username])) {
             $user->passwordchange = (int)$values['forcepasswordchange'];
 
-            $user->id = create_user($user, $profilefields, $institution, $authrecord, $remoteuser, $values);
+            $user->id = create_user($user, $profilefields, $institution, $authrecord, $remoteuser, $values, true);
 
             $addedusers[] = $user;
             log_debug('added user ' . $user->username);
         }
         else if (isset($UPDATES[$user->username])) {
-            $updated = update_user($user, $profilefields, $remoteuser, $values, true);
+            $updated = update_user($user, $profilefields, $remoteuser, $values, true, true);
 
             if (empty($updated)) {
                 // Nothing changed for this user

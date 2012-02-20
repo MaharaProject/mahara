@@ -2797,5 +2797,21 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2012021700) {
+        $users = get_records_sql_array('SELECT u.id, u.password, u.salt FROM {usr} u JOIN {auth_instance} ai ON (u.authinstance = ai.id) WHERE ai.authname = ?', array('internal'));
+        foreach ($users as $user) {
+            if ($user->password == '*' || $user->salt == '*') {
+                continue;
+            }
+            // Wrap the old hashed password inside a SHA512 hash ($6$ is the identifier for SHA512)
+            $user->password = crypt($user->password, '$6$' . substr(md5(get_config('passwordsaltmain') . $user->salt), 0, 16));
+
+            // Drop the salt from the password as it may contain secrets that are not stored in the db
+            // for example, the passwordsaltmain value
+            $user->password = substr($user->password, 0, 3) . substr($user->password, 3+16);
+            set_field('usr', 'password', $user->password, 'id', $user->id);
+        }
+    }
+
     return $status;
 }

@@ -88,4 +88,11 @@ $cfg->dataroot = '/path/to/uploaddir';
 // user in the event of a false positive.
 $cfg->emailcontact = '';
 
+// Set this to enable a secondary hash that is only present in the config file
+// $cfg->passwordsaltmain = 'some long random string here with lots of characters';
+
+// When changing the salt (or disabling it), you will need to set the current salt as an alternate salt
+// There are up to 20 alternate salts
+// $cfg->passwordsaltalt1 = 'old salt value';
+
 // closing php tag intentionally omitted to prevent whitespace issues

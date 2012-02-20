@@ -258,6 +258,16 @@ if (!get_config('searchplugin')) {
         $CFG->searchplugin = 'internal';
     }
 }
+
+$bcrypt_cost = get_config('bcrypt_cost');
+// bcrypt_cost is the cost parameter passed as part of the bcrypt hash
+// See http://php.net/manual/en/function.crypt.php
+// The value is a 2 digit number in the range of 04-31
+if (!$bcrypt_cost || !is_int($bcrypt_cost) || $bcrypt_cost < 4 || $bcrypt_cost > 31) {
+    $bcrypt_cost = 12;
+}
+$CFG->bcrypt_cost = sprintf('%02d', $bcrypt_cost);
+
 header('Content-type: text/html; charset=UTF-8');
 
 // Only do authentication once we know the page theme, so that the login form

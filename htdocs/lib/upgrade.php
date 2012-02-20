@@ -694,7 +694,8 @@ function core_install_lastcoredata_defaults() {
     $user = new StdClass;
     $user->username = 'admin';
     $user->salt = auth_get_random_salt();
-    $user->password = sha1($user->salt . 'mahara');
+    $user->password = crypt('mahara', '$2a$' . get_config('bcrypt_cost') . '$' . substr(md5(get_config('passwordsaltmain') . $user->salt), 0, 22));
+    $user->password = substr($user->password, 0, 7) . substr($user->password, 7+22);
     $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;
@@ -1216,6 +1217,16 @@ function site_warnings() {
 
     if (ini_get('open_basedir')) {
         $warnings[] = get_string('openbasedirenabled', 'error') . ' ' . get_string('openbasedirwarning', 'error');
+    }
+
+    $sitesalt = get_config('passwordsaltmain');
+    if (empty($sitesalt)) {
+        $warnings[] = get_string('nopasswordsaltset', 'error');
+    }
+    else if ($sitesalt == 'some long random string here with lots of characters'
+            || trim($sitesalt) === ''
+            || preg_match('/^([a-zA-Z0-9]{0,10})$/', $sitesalt)) {
+        $warnings[] = get_string('passwordsaltweak', 'error');
     }
 
     return $warnings;

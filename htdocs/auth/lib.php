@@ -1813,12 +1813,12 @@ function auth_get_random_salt() {
 }
 
 // Add salt and encrypt the pw for a user, if their auth instance allows for it
-function reset_password($user, $resetpasswordchange=true) {
+function reset_password($user, $resetpasswordchange=true, $quickhash=false) {
     $userobj = new User();
     $userobj->find_by_id($user->id);
     $authobj = AuthFactory::create($user->authinstance);
     if (isset($user->password) && $user->password != '' && method_exists($authobj, 'change_password')) {
-        $authobj->change_password($userobj, $user->password, $resetpasswordchange);
+        $authobj->change_password($userobj, $user->password, $resetpasswordchange, $quickhash);
     }
     else {
         $userobj->password = '';
