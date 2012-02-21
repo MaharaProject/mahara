@@ -787,6 +787,7 @@ $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove Users';
 $string['declinerequests'] = 'Decline requests';
 $string['nousersupdated'] = 'No users were updated';
+$string['errorupdatinginstitutionusers'] = 'An error occured when updating institution users';
 $string['revokeinvitations'] = 'Revoke invitations';
 $string['invitedusers'] = 'Invited users';
 $string['userstobeuninvited'] = 'Users to be uninvited';
