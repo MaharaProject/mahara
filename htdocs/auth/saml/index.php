@@ -182,7 +182,7 @@ catch (XmlrpcClientException $e) {
     throw new AccessDeniedException($e->getMessage());
 }
 catch (AuthInstanceException $e) {
-    throw new AccessDeniedException(get_string('errormissinguserattributes', 'auth.saml'));
+    throw new AccessDeniedException(get_string('errormissinguserattributes1', 'auth.saml', get_config('sitename')));
 }
 
 // if we can login with SAML - then let them go

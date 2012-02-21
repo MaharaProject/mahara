@@ -183,7 +183,7 @@ function forgotpass_submit(Pieform $form, $values) {
     // warn users that they may not receive the e-mail
     if ($mailinfo = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($user->id))) {
         if (check_overcount($mailinfo)) {
-            $SESSION->add_info_msg(get_string('forgotpassemailsentanyway'));
+            $SESSION->add_info_msg(get_string('forgotpassemailsentanyway1', 'mahara', get_config('sitename')));
         }
     }
 

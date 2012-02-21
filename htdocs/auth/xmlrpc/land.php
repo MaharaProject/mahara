@@ -122,5 +122,6 @@ if ($res == true) {
 if ($rpcconfigured === false) {
     throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcinstances','auth', $remotewwwroot));
 } else {
-    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcuser','auth'));
+    $sitename = get_config('sitename');
+    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcuser1', 'auth', $sitename, $sitename));
 }

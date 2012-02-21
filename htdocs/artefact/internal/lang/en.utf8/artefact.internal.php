@@ -86,14 +86,14 @@ $string['profilefailedsaved'] = 'Profile saving failed';
 
 
 $string['emailvalidation_subject'] = 'Email validation';
-$string['emailvalidation_body'] = <<<EOF
+$string['emailvalidation_body1'] = <<<EOF
 Hello %s,
 
-You have added email address %s to your user account in Mahara. Please visit the link below to activate this address.
+You have added email address %s to your user account at %s. Please visit the link below to activate this address.
 
 %s
 
-If this email belongs to you but you have not requested adding it to your Mahara account, follow the link below to decline email activation.
+If this email belongs to you but you have not requested adding it to your %s account, follow the link below to decline email activation.
 
 %s
 EOF;

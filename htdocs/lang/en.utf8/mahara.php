@@ -325,8 +325,8 @@ $string['chooseusernamepassword'] = 'Choose your username and password';
 $string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s.  Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';
 $string['deleteaccount'] = 'Delete Account of: %s / %s';
-$string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
-$string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
+$string['javascriptnotenabled'] = 'Your browser does not have javascript enabled. This site requires javascript to be enabled before you can log in.';
+$string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies. This site requires cookies to be enabled before you can log in.';
 $string['institution'] = 'Institution';
 $string['institutioncontacts'] = '\'%s\' contacts';
 $string['institutionlink'] = '<a href="%s">%s</a>';
@@ -426,7 +426,7 @@ $string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
-$string['forgotpassemailsentanyway'] = 'An e-mail was sent to the address stored for this user, but the address may not be correct or the recipient server is returning messages. Please contact your Mahara administrator to reset your password if you do not receive the e-mail.';
+$string['forgotpassemailsentanyway1'] = 'An e-mail was sent to the address stored for this user, but the address may not be correct or the recipient server is returning messages. Please contact the %s administrator to reset your password if you do not receive the e-mail.';
 $string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered doesn\'t match any users for this site';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
