@@ -2586,8 +2586,29 @@ img.feedicon {
 	line-height: 2em;
 }
 /******* Shared Pages **********/
-#search #search_query_container #search_query {
-	margin-right: 3px;
+form.search input#search_search {
+    margin: 0 0 3px;
+}
+form.search .advanced {
+    margin: .5em 0 0;
+}
+form.search .advanced label {
+    display: block;
+    clear: left;
+    width: 9em;
+    float: left;
+    padding: 3px;
+    margin: 3px 0;
+    font-size: 1em;
+}
+form.search .advanced select {
+    width: 20em;
+}
+form.search .advanced .checkboxes a {
+    display: block;
+    float: left;
+    padding: 3px;
+    margin: 3px 0;
 }
 .sharedpages h3 {
 	margin: 0;
