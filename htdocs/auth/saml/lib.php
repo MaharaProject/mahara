@@ -191,7 +191,7 @@ class AuthSaml extends Auth {
 
             // must have these values
             if (empty($firstname) || empty($lastname) || empty($email)) {
-                throw new AccessDeniedException(get_string('errormissinguserattributes', 'auth.saml'));
+                throw new AccessDeniedException(get_string('errormissinguserattributes1', 'auth.saml', get_config('sitename')));
             }
 
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;

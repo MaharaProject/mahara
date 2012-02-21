@@ -68,7 +68,8 @@ $string['enablemultipleblogsdescription']  = 'By default, you have one journal. 
 $string['hiderealname'] = 'Hide real name';
 $string['hiderealnamedescription'] = 'Check this box if you have set a display name and you do not want other users to be able to find you by your real name in user searches.';
 
-$string['showhomeinfo'] = 'Show information about Mahara on the home page';
+$string['showhomeinfo1'] = 'Homepage information';
+$string['showhomeinfodescription'] = 'Display information about how to use %s on the homepage.';
 
 $string['mobileuploadtoken'] = 'Mobile upload token';
 $string['mobileuploadtokendescription'] = 'Enter a token here and on your phone to enable uploads (note: it will change automatically after each upload. <br/>If you have any problems - simply reset it here and on your phone.';

@@ -290,6 +290,7 @@ function profileform_submit(Pieform $form, $values) {
                 $key_url_decline = $key_url . '&decline=1';
 
                 try {
+                    $sitename = get_config('sitename');
                     email_user(
                         (object)array(
                             'id'            => $USER->get('id'),
@@ -303,7 +304,7 @@ function profileform_submit(Pieform $form, $values) {
                         ),
                         null,
                         get_string('emailvalidation_subject', 'artefact.internal'),
-                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url, $key_url_decline)
+                        get_string('emailvalidation_body1', 'artefact.internal', $USER->get('firstname'), $email, $sitename, $key_url, $sitename, $key_url_decline)
                     );
                 }
                 catch (EmailException $e) {

@@ -67,15 +67,15 @@ $string['errnoauthinstances']   = 'We don\'t seem to have any authentication plu
 $string['errornotvalidsslcertificate'] = 'This is not a valid SSL Certificate';
 $string['errnoxmlrpcinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at %s';
 $string['errnoxmlrpcwwwroot']   = 'We don\'t have a record for any host at %s';
-$string['errnoxmlrpcuser']      = "We were unable to authenticate you at this time. Possible reasons might be:
+$string['errnoxmlrpcuser1']      = "We were unable to authenticate you at this time. Possible reasons might be:
 
-    * Your SSO session might have expired. Go back to the other application and click the link to sign into Mahara again.
-    * You may not be allowed to SSO to Mahara. Please check with your administrator if you think you should be allowed to.";
+    * Your SSO session might have expired. Go back to the other application and click the link to sign into %s again.
+    * You may not be allowed to SSO to %s. Please check with your administrator if you think you should be allowed to.";
 
 $string['toomanytries'] = 'You have exceeded the maximum login attempts. The account has been locked for up to 5 minutes.';
 $string['unabletosigninviasso'] = 'Unable to sign in via SSO';
 $string['xmlrpccouldnotlogyouin'] = 'Sorry, could not log you in :(';
-$string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Mahara at this time. Please try again shortly, and if the problem persists, contact your administrator';
+$string['xmlrpccouldnotlogyouindetail1'] = 'Sorry, we could not log you into %s at this time. Please try again shortly, and if the problem persists, contact your administrator';
 
 $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
