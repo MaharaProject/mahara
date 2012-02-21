@@ -2729,9 +2729,18 @@ function clean_html($text, $xhtml=false) {
     }
 
     // Permit embedding contents from other sites
+    $safeiframesources = array('www.youtube.com/embed/',
+                               'player.vimeo.com/video/',
+                               'www.slideshare.net/slideshow/embed_code/',
+                               '(www|edu).glogster.com/glog(/|.php)',
+                               'wikieducator.org/index.php',
+                               );
     $config->set('HTML.SafeEmbed', true);
     $config->set('HTML.SafeObject', true);
     $config->set('Output.FlashCompat', true);
+    $config->set('HTML.SafeIframe', true);
+    $config->set('URI.SafeIframeRegexp',
+                 '%^https?://('.implode('|', $safeiframesources).')%');
 
     // Allow namespaced IDs
     // see http://htmlpurifier.org/docs/enduser-id.html

@@ -2825,5 +2825,9 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2012022100) {
+        reload_html_filters();
+    }
+
     return $status;
 }
