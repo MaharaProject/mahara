@@ -51,6 +51,9 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         if (!isset($_PIEFORM_FIELDSETS['forms'][$formname])) {
             $_PIEFORM_FIELDSETS['forms'][$formname] = array('formname' => $formname);
         }
+        if (isset($element['name'])) {
+            $openparam = $formname . '_' . $element['name'] . '_open';
+        }
         // Work out whether any of the children have errors on them
         $error = false;
         foreach ($element['elements'] as $subelement) {
@@ -60,7 +63,8 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
             }
         }
         if (!empty($element['collapsed']) && !$error
-            && (!isset($element['name']) || param_alphanumext('fs', null) != $element['name'])) {
+            && (!isset($element['name'])
+                || (param_alphanumext('fs', null) != $element['name'] && !param_boolean($openparam, false)))) {
             $classes[] = 'collapsed';
         }
     }
@@ -70,6 +74,10 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
         $result .= '<legend>';
         if (!empty($element['collapsible'])) {
             $result .= '<a href="">' . Pieform::hsc($element['legend']) . '</a>';
+            if (isset($openparam)) {
+                $result .= '<input type="hidden" name="' . hsc($openparam) . '" class="open-fieldset-input" '
+                    . 'value="' . intval(!in_array('collapsed', $classes)) . '">';
+            }
         }
         else {
             $result .= Pieform::hsc($element['legend']);
@@ -113,6 +121,10 @@ function pieform_update_legends(element) {
         if (legend.firstChild.tagName == 'A') {
             connect(legend.firstChild, 'onclick', function(e) {
                 toggleElementClass('collapsed', fieldset);
+                var input = getFirstElementByTagAndClassName('input', 'open-fieldset-input', legend);
+                if (input) {
+                    input.value = !hasElementClass(fieldset, 'collapsed');
+                }
                 e.stop();
             });
         }
