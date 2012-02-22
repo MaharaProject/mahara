@@ -2754,9 +2754,11 @@ function clean_html($text, $xhtml=false) {
             $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
 
             if (!in_array($filter->file, $builtinfilters)) {
-                require_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
+                include_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
                 $classname = 'HTMLPurifier_Filter_' . $filter->file;
-                $customfilters[] = new $classname();
+                if (class_exists($classname)) {
+                    $customfilters[] = new $classname();
+                }
             }
         }
         $config->set('Filter.Custom', $customfilters);
