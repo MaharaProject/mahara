@@ -226,9 +226,12 @@ $smarty->assign('tags', $view->get('tags'));
 
 $smarty->assign('PAGEAUTHOR', $view->formatted_owner());
 
+$titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
+
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $collection ? hsc($collection->get('name')) : $view->display_title(true, false));
+
+    $smarty->assign('microheadertitle', $titletext);
 
     if ($can_edit) {
         if ($new) {
@@ -261,8 +264,7 @@ else if ($can_edit) {
 $title = hsc(TITLE);
 
 if (!get_config('viewmicroheaders')) {
-    $title = $collection ? hsc($collection->get('name')) : $view->display_title();
-    $smarty->assign('maintitle', $title);
+    $smarty->assign('maintitle', $titletext);
 }
 
 // Provide a link for roaming teachers to return
