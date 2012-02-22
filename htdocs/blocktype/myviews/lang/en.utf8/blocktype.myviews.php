@@ -27,6 +27,6 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'My Pages';
+$string['title'] = 'My pages';
 $string['otherusertitle'] = "%s's pages";
 $string['description'] = 'Display all your pages that are visible to the person viewing your profile';

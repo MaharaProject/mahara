@@ -46,32 +46,32 @@ $string['contact'] = 'Contact information';
 $string['messaging'] = 'Messaging';
 
 // profile fields
-$string['firstname'] = 'First Name';
-$string['lastname'] = 'Last Name';
-$string['fullname'] = 'Full Name';
+$string['firstname'] = 'First name';
+$string['lastname'] = 'Last name';
+$string['fullname'] = 'Full name';
 $string['institution'] = 'Institution';
 $string['studentid'] = 'Student ID';
-$string['preferredname'] = 'Display Name';
+$string['preferredname'] = 'Display name';
 $string['introduction'] = 'Introduction';
-$string['email'] = 'Email Address';
-$string['maildisabled'] = 'Email Disabled';
-$string['officialwebsite'] = 'Official Website Address';
-$string['personalwebsite'] = 'Personal Website Address';
-$string['blogaddress'] = 'Blog Address';
-$string['address'] = 'Postal Address';
+$string['email'] = 'Email address';
+$string['maildisabled'] = 'Email disabled';
+$string['officialwebsite'] = 'Official web site address';
+$string['personalwebsite'] = 'Personal web site address';
+$string['blogaddress'] = 'Blog address';
+$string['address'] = 'Postal address';
 $string['town'] = 'Town';
-$string['city'] = 'City/Region';
+$string['city'] = 'City/region';
 $string['country'] = 'Country';
-$string['homenumber'] = 'Home Phone';
-$string['businessnumber'] = 'Business Phone';
-$string['mobilenumber'] = 'Mobile Phone';
-$string['faxnumber'] = 'Fax Number';
-$string['icqnumber'] = 'ICQ Number';
-$string['msnnumber'] = 'MSN Chat';
-$string['aimscreenname'] = 'AIM Screen Name';
-$string['yahoochat'] = 'Yahoo Chat';
-$string['skypeusername'] = 'Skype Username';
-$string['jabberusername'] = 'Jabber Username';
+$string['homenumber'] = 'Home phone';
+$string['businessnumber'] = 'Business phone';
+$string['mobilenumber'] = 'Mobile phone';
+$string['faxnumber'] = 'Fax number';
+$string['icqnumber'] = 'ICQ number';
+$string['msnnumber'] = 'MSN chat';
+$string['aimscreenname'] = 'AIM screen name';
+$string['yahoochat'] = 'Yahoo chat';
+$string['skypeusername'] = 'Skype username';
+$string['jabberusername'] = 'Jabber username';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
@@ -80,7 +80,7 @@ $string['name'] = 'Name';
 $string['principalemailaddress'] = 'Primary email';
 $string['emailaddress'] = 'Alternative email';
 
-$string['saveprofile'] = 'Save Profile';
+$string['saveprofile'] = 'Save profile';
 $string['profilesaved'] = 'Profile saved successfully';
 $string['profilefailedsaved'] = 'Profile saving failed';
 
@@ -89,25 +89,25 @@ $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body1'] = <<<EOF
 Hello %s,
 
-You have added email address %s to your user account at %s. Please visit the link below to activate this address.
+You have added the email address %s to your user account in %s. Please visit the link below to activate this address.
 
 %s
 
-If this email belongs to you but you have not requested adding it to your %s account, follow the link below to decline email activation.
+If this email belongs to you, but you have not requested adding it to your %s account, follow the link below to decline the email activation.
 
 %s
 EOF;
 
-$string['validationemailwillbesent'] = 'a validation email will be sent when you save your profile';
-$string['validationemailsent'] = 'a validation email has been sent';
-$string['emailactivation'] = 'Email Activation';
-$string['emailactivationsucceeded'] = 'Email Activation Successful';
+$string['validationemailwillbesent'] = 'A validation email will be sent when you save your profile';
+$string['validationemailsent'] = 'A validation email has been sent';
+$string['emailactivation'] = 'Email activation';
+$string['emailactivationsucceeded'] = 'Email activation successful';
 $string['emailalreadyactivated'] = 'Email already activiated';
-$string['emailactivationfailed'] = 'Email Activation Failed';
-$string['emailactivationdeclined'] = 'Email Activation Declined Successfully';
+$string['emailactivationfailed'] = 'Email activation failed';
+$string['emailactivationdeclined'] = 'Email activation declined successfully';
 $string['verificationlinkexpired'] = 'Verification link expired';
 $string['invalidemailaddress'] = 'Invalid email address';
-$string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to validate is already taken';
+$string['unvalidatedemailalreadytaken'] = 'The email address you are trying to validate is already taken';
 $string['addbutton'] = 'Add';
 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
@@ -119,14 +119,14 @@ $string['Title'] = 'Title';
 $string['Created'] = 'Created';
 $string['Description'] = 'Description';
 $string['Download'] = 'Download';
-$string['lastmodified'] = 'Last Modified';
+$string['lastmodified'] = 'Last modified';
 $string['Owner'] = 'Owner';
 $string['Preview'] = 'Preview';
 $string['Size'] = 'Size';
 $string['Type'] = 'Type';
 
-$string['profileinformation'] = 'Profile Information';
-$string['profilepage'] = 'Profile Page';
+$string['profileinformation'] = 'Profile information';
+$string['profilepage'] = 'Profile page';
 $string['viewprofilepage'] = 'View profile page';
 $string['viewallprofileinformation'] = 'View all profile information';
 
@@ -135,8 +135,8 @@ $string['Notes'] = 'Notes';
 $string['mynotes'] = 'My Notes';
 $string['notesfor'] = "Notes for %s";
 $string['containedin'] = "Contained in:";
-$string['notesdescription'] = 'These are the html notes you have created inside Text Box blocks on your pages.';
-$string['editnote'] = 'Edit Note';
-$string['confirmdeletenote'] = 'This note is used in %d blocks and %d pages.  If you delete it, all the blocks which currently contain the text will appear empty.';
+$string['notesdescription'] = 'These are the html notes you have created inside text box blocks on your pages.';
+$string['editnote'] = 'Edit note';
+$string['confirmdeletenote'] = 'This note is used in %d blocks and %d pages. If you delete it, all the blocks which currently contain the text will appear empty.';
 $string['notedeleted'] = 'Note deleted';
 $string['noteupdated'] = 'Note updated';

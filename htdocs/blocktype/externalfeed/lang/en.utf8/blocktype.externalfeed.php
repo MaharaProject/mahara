@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'External Feed';
+$string['title'] = 'External feed';
 $string['description'] = 'Embed an external RSS or ATOM feed';
 
 $string['authuser'] = 'HTTP username';
@@ -40,8 +40,8 @@ $string['insecuresslmode'] = 'Insecure SSL mode';
 $string['insecuresslmodedesc'] = 'Disable SSL certificate verification. This is not recommended but might be necessary if the feed is served using an invalid or untrusted certificate.';
 $string['itemstoshow'] = 'Items to show';
 $string['itemstoshowdescription'] = 'Between 1 and 20';
-$string['showfeeditemsinfull'] = 'Show feed items in full?';
-$string['showfeeditemsinfulldesc'] = 'Whether to show a summary of the feed items, or show the full text for each one too';
+$string['showfeeditemsinfull'] = 'Show feed items in full';
+$string['showfeeditemsinfulldesc'] = 'Whether to show a summary of the feed items or show the full text for each one too.';
 $string['invalidurl'] = 'That URL is invalid. You can only view feeds for http and https URLs.';
 $string['invalidfeed'] = 'The feed appears to be invalid. The error reported was: %s';
 $string['lastupdatedon'] = 'Last updated on %s';

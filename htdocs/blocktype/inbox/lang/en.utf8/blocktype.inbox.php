@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'My Inbox';
+$string['title'] = 'My inbox';
 $string['description'] = 'Display a selection of your recent inbox messages';
 $string['messagetypes'] = 'Message types to display';
 $string['maxitems'] = 'Maximum number of items to display';

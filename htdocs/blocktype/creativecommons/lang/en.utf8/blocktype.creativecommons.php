@@ -25,11 +25,11 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Creative Commons License';
+$string['title'] = 'Creative Commons license';
 $string['description'] = 'Attach a Creative Commons license to your page';
-$string['blockcontent'] = 'Block Content';
+$string['blockcontent'] = 'Block content';
 
-$string['alttext'] = 'Creative Commons License';
+$string['alttext'] = 'Creative Commons license';
 $string['cclicensename'] = 'Creative Commons %s 3.0 Unported';
 $string['cclicensestatement'] = "%s by %s is licensed under a %s license.";
 $string['otherpermissions'] = 'Permissions beyond the scope of this license may be available from %s.';

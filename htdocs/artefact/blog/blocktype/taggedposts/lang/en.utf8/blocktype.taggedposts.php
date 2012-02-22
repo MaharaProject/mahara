@@ -27,12 +27,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Tagged Journal Entries';
-$string['description'] = 'Display Journal entries with a particular tag';
+$string['title'] = 'Tagged journal entries';
+$string['description'] = 'Display journal entries with a particular tag';
 $string['blockheading'] = 'Journal entries tagged';
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
 $string['postsperpage'] = 'Entries per page';
-$string['taglist'] = 'My Tags';
+$string['taglist'] = 'My tags';
 $string['notags'] = 'There are no posts tagged "%s"';
 $string['notagsavailable'] = 'You have not created any tags';
 $string['postedin'] = 'in';

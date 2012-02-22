@@ -27,11 +27,11 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Group Members';
-$string['description'] = 'Display a list of Members in this Group';
-$string['show_all'] = 'View all Members of this Group…';
+$string['title'] = 'Group members';
+$string['description'] = 'Display a list of members in this group';
+$string['show_all'] = 'View all members of this Group…';
 
-$string['options_numtoshow_title'] = 'Shown Members';
+$string['options_numtoshow_title'] = 'Shown members';
 $string['options_numtoshow_desc'] = 'The number of members you want to display.';
 
 $string['options_order_title'] = 'Order';

@@ -27,10 +27,10 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Group Pages';
+$string['title'] = 'Group pages';
 $string['description'] = 'Display the pages related to the group';
-$string['displaygroupviews'] = 'Display Group pages?';
+$string['displaygroupviews'] = 'Display group pages';
 $string['displaygroupviewsdesc'] = 'Group pages - pages created in the group';
-$string['displaysharedviews'] = 'Display Shared pages?';
-$string['displaysharedviewsdesc'] = 'Shared pages - pages shared by group members from their individual portfolio';
+$string['displaysharedviews'] = 'Display shared pages';
+$string['displaysharedviewsdesc'] = 'Shared pages - pages shared by group members from their individual portfolios';
 $string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';

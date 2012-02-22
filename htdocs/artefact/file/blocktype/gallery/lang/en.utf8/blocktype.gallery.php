@@ -28,12 +28,12 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Image Gallery';
-$string['description'] = 'A collection of images from your Files area';
+$string['title'] = 'Image gallery';
+$string['description'] = 'A collection of images from your files area';
 
-$string['select'] = 'Image Selection';
+$string['select'] = 'Image selection';
 $string['selectfolder'] = 'Display all images from one of my folders (will include images uploaded later)';
-$string['selectimages'] = 'I will choose individual images to display';
+$string['selectimages'] = 'Choose individual images to display';
 $string['selectexternal'] = 'Display images from external gallery';
 $string['externalgalleryurl'] = 'Gallery URL or RSS';
 $string['externalgalleryurldesc'] = 'You can embed the following external galleries:';
@@ -41,27 +41,27 @@ $string['width'] = 'Width';
 $string['widthdescription'] = 'Specify the width for your images (in pixels). The images will be scaled to this width.';
 $string['style'] = 'Style';
 $string['stylethumbs'] = 'Thumbnails';
-$string['stylesquares'] = 'Thumbnails (Square)';
+$string['stylesquares'] = 'Thumbnails (square)';
 $string['styleslideshow'] = 'Slideshow';
 
 $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 
-$string['gallerysettings'] = 'Gallery Settings';
+$string['gallerysettings'] = 'Gallery settings';
 $string['useslimbox2'] = 'Use Slimbox 2?';
 $string['useslimbox2desc'] = 'Slimbox 2 (visual clone of Lightbox 2) is a simple, unobtrusive script used to overlay images on the current page.';
 $string['photoframe'] = 'Use photo frame?';
-$string['photoframedesc'] = 'If enabled, than the frame will be rendered around the thumbnail of each photo in the gallery.';
+$string['photoframedesc'] = 'If enabled, a frame will be rendered around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
-$string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized, when viewed with Slimbox2.';
+$string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox2.';
 
 // Flickr
-$string['flickrsettings'] = 'Flickr Settings';
+$string['flickrsettings'] = 'Flickr settings';
 $string['flickrapikey'] = 'Flickr API key';
 $string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="http://www.flickr.com/services/api/keys/apply/" target="_blank">Apply for your key online</a>.';
 $string['flickrsets'] = 'Flickr Sets';
 
 // Photobucket
-$string['pbsettings'] = 'Photobucket Settings';
+$string['pbsettings'] = 'Photobucket settings';
 $string['pbapikey'] = 'Photobucket API key';
 $string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a valid API key and API private key.<br>Go to the <a href="http://developer.photobucket.com/" target="_blank">Photobucket developer web site</a>, agree to the terms of service, sign up, and get the API keys.';
 $string['pbapiprivatekey'] = 'Photobucket API private key';
@@ -73,8 +73,8 @@ $string['by'] = 'by';
 $string['panoramiocopyright'] = 'Photos provided by Panoramio are under the copyright of their owners.';
 $string['panoramiouserphotos'] = 'Panoramio user photos';
 
-$string['picasaalbums'] = 'Picasa Albums';
+$string['picasaalbums'] = 'Picasa albums';
 
-$string['windowslivephotoalbums'] = 'Windows Live Photo Gallery albums';
+$string['windowslivephotoalbums'] = 'Windows Live photo gallery albums';
 
 $string['externalnotsupported'] = 'The external URL you provided is not supported';

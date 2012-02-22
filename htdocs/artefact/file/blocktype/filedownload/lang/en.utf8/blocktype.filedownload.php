@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'File(s) to Download';
+$string['title'] = 'File(s) to download';
 $string['description'] = 'Select files for people to download';
 
 $string['Files'] = 'Files';

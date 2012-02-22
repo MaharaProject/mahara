@@ -28,10 +28,10 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Wall';
-$string['otherusertitle'] = "%s's Wall";
+$string['otherusertitle'] = "%s's wall";
 $string['description'] = 'Display an area where people can leave you comments';
 $string['noposts'] = 'No wall posts to display';
-$string['makeyourpostprivate'] = 'Make your post private?';
+$string['makeyourpostprivate'] = 'Make your post private';
 $string['viewwall'] = 'View wall';
 $string['backtoprofile'] = 'Back to profile';
 $string['wall'] = 'Wall';
@@ -48,7 +48,7 @@ $string['sorrymaxcharacters'] = "Sorry, your post cannot be more than %s charact
 $string['posttextrequired'] = "This field is required.";
 
 // Config strings
-$string['postsizelimit'] = "Post Size Limit";
+$string['postsizelimit'] = "Post size limit";
 $string['postsizelimitdescription'] = "You can limit the size of wall posts here. Existing posts will not be changed";
 $string['postsizelimitmaxcharacters'] = "Maximum number of characters";
 $string['postsizelimitinvalid'] = "This is not a valid number.";

@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'One Résumé Field';
+$string['title'] = 'One résumé field';
 $string['description'] = 'Display any résumé information';
 
 $string['fieldtoshow'] = 'Field to show';
