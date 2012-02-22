@@ -95,33 +95,46 @@ foreach ($shareoptions as $k => &$v) {
 $searchform = pieform(array(
     'name' => 'search',
     'dieaftersubmit' => false,
+    'renderer'       => 'div',
+    'class'          => 'search',
     'elements' => array(
         'query' => array(
             'type' => 'text',
             'title' => get_string('Query') . ': ',
+            'class' => 'inline',
             'defaultvalue' => $searchdefault,
         ),
-        'type' => array(
-            'type'         => 'select',
-            'title'        => get_string('searchwithin') . ': ',
-            'options'      => $searchoptions,
-            'defaultvalue' => $searchtype,
-        ),
-        'sort' => array(
-            'type'         => 'select',
-            'title'        => get_string('sortresultsby') . ' ',
-            'options'      => $sortoptions,
-            'defaultvalue' => $sort,
-        ),
-        'share' => array(
-            'type'         => 'checkboxes',
-            'title'        => get_string('sharedwith', 'view') . ': ',
-            'elements'     => $shareoptions,
-            'labelwidth'   => 0,
-        ),
         'search' => array(
-            'type' => 'submit',
-            'value' => get_string('search')
+            'type'         => 'submit',
+            'class'        => 'inline',
+            'value'        => get_string('search')
+        ),
+        'advanced' => array(
+            'type'        => 'fieldset',
+            'legend'      => get_string('moreoptions', 'view'),
+            'class'       => 'advanced',
+            'collapsible' => true,
+            'collapsed'   => true,
+            'elements'    => array(
+                'type' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('searchwithin') . ': ',
+                    'options'      => $searchoptions,
+                    'defaultvalue' => $searchtype,
+                ),
+                'sort' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('sortresultsby') . ' ',
+                    'options'      => $sortoptions,
+                    'defaultvalue' => $sort,
+                ),
+                'share' => array(
+                    'type'         => 'checkboxes',
+                    'title'        => get_string('sharedwith', 'view') . ': ',
+                    'elements'     => $shareoptions,
+                    'labelwidth'   => 0,
+                ),
+            ),
         ),
     )
 ));
