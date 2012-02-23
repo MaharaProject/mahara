@@ -270,6 +270,9 @@ span.btn a.icon, a span.icon {
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
 }
+#right-nav li.identity a {
+    color: #767676;
+}
 #main-nav {
 	height: 25px;
 	border-bottom: 0;
