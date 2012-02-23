@@ -41,7 +41,7 @@ $string['typegroupmessage'] = 'Group message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
-$string['prefsdescr'] = 'If you select either of the email options, notifications will still arrive in your Inbox, but they will be automatically marked as read.';
+$string['prefsdescr'] = 'If you select either of the email options, notifications will still arrive in your inbox, but they will be automatically marked as read.';
 
 $string['subject'] = 'Subject';
 $string['date'] = 'Date';
@@ -81,13 +81,13 @@ $string['newviewaccessmessagenoowner'] = 'You have been added to the access list
 $string['newviewaccesssubject'] = 'New page access';
 
 $string['viewmodified'] = 'has changed their page';
-$string['ongroup'] = 'on Group';
+$string['ongroup'] = 'on group';
 $string['ownedby'] = 'owned by';
 
-$string['objectionablecontentview'] = 'Objectionable content on Page "%s" reported by %s';
-$string['objectionablecontentviewartefact'] = 'Objectionable content on Page "%s" in "%s" reported by %s';
+$string['objectionablecontentview'] = 'Objectionable content on page "%s" reported by %s';
+$string['objectionablecontentviewartefact'] = 'Objectionable content on page "%s" in "%s" reported by %s';
 
-$string['objectionablecontentviewhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" reported by %s<strong></strong><br>%s</div>
+$string['objectionablecontentviewhtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" reported by %s<br>%s</div>
 
 <div style="margin: 1em 0;">%s</div>
 
@@ -107,7 +107,7 @@ To see the page, follow this link:
 To see the reporter\'s profile, follow this link:
 %s';
 
-$string['objectionablecontentviewartefacthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" in "%s" reported by %s<strong></strong><br>%s</div>
+$string['objectionablecontentviewartefacthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on "%s" in "%s" reported by %s<br>%s</div>
 
 <div style="margin: 1em 0;">%s</div>
 
@@ -136,10 +136,10 @@ $string['removefromwatchlist'] = 'Remove from watchlist';
 $string['missingparam'] = 'Required parameter %s was empty for activity type %s';
 
 $string['institutionrequestsubject'] = '%s has requested membership of %s.';
-$string['institutionrequestmessage'] = 'You can add users to institutions on the Institution Members page:';
+$string['institutionrequestmessage'] = 'You can add users to institutions on the "Institution members" page:';
 
 $string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
-$string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Institution Settings Page:';
+$string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your "Institution settings" page:';
 
 $string['deleteallnotifications'] = 'Delete all notifications';
 $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications of this activity type?';

@@ -33,7 +33,7 @@ $string['oldpasswordincorrect'] = 'This is not your current password';
 
 $string['changeusernameheading'] = 'Change username';
 $string['changeusername'] = 'New username';
-$string['changeusernamedesc'] = 'The username you use to log into %s.  Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excluding spaces.';
+$string['changeusernamedesc'] = 'The username you use to log into %s. Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excluding spaces.';
 
 $string['usernameexists'] = 'This username is taken, please choose another.';
 
@@ -52,7 +52,7 @@ $string['enabled'] = 'Enabled';
 
 $string['messagesdescr'] = 'Messages from other users';
 $string['messagesnobody'] = 'Do not allow anyone to send me messages';
-$string['messagesfriends'] = 'Allow people on my Friends list to send me messages';
+$string['messagesfriends'] = 'Allow people on my friends list to send me messages';
 $string['messagesallow'] = 'Allow anyone to send me messages';
 
 $string['language'] = 'Language';
@@ -60,7 +60,7 @@ $string['language'] = 'Language';
 $string['showviewcolumns'] = 'Show controls to add and remove columns when editing a page';
 
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
-$string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your Tag Cloud';
+$string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your tag cloud';
 
 $string['enablemultipleblogs'] = 'Enable multiple journals';
 $string['enablemultipleblogsdescription']  = 'By default, you have one journal. If you would like to keep more than one journal, check this option.';
@@ -75,16 +75,16 @@ $string['mobileuploadtoken'] = 'Mobile upload token';
 $string['mobileuploadtokendescription'] = 'Enter a token here and on your phone to enable uploads (note: it will change automatically after each upload. <br/>If you have any problems - simply reset it here and on your phone.';
 
 $string['prefssaved']  = 'Preferences saved';
-$string['prefsnotsaved'] = 'Failed to save your Preferences!';
+$string['prefsnotsaved'] = 'Failed to save your preferences.';
 
-$string['maildisabled'] = 'E-mail disabled';
+$string['maildisabled'] = 'Email disabled';
 $string['disableemail'] = 'Disable email';
 $string['maildisabledbounce'] =<<< EOF
-Sending of e-mail to your e-mail address has been disabled as too many messages have been returned to the server.
-Please check that your e-mail account is working as expected before you re-enable e-mail on the account preferences at %s.
+Sending of email to your email address has been disabled as too many messages have been returned to the server.
+Please check that your email account is working as expected before you re-enable email on the account preferences at %s.
 EOF;
 $string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
-$string['deleteaccount']  = 'Delete Account';
+$string['deleteaccount']  = 'Delete account';
 $string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other users. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
 $string['accountdeleted']  = 'Your account has been deleted.';

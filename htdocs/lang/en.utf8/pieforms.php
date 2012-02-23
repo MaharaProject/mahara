@@ -45,9 +45,9 @@ $string['element.expiry.months'] = 'Months';
 $string['element.expiry.years'] = 'Years';
 $string['element.expiry.noenddate'] = 'No end date';
 
-$string['rule.before.before'] = 'This can not be after the field "%s"';
+$string['rule.before.before'] = 'This cannot be after the field "%s"';
 
-$string['rule.email.email'] = 'E-mail address is invalid';
+$string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
 
@@ -55,7 +55,7 @@ $string['rule.maxlength.maxlength'] = 'This field must be at most %d characters 
 
 $string['rule.minlength.minlength'] = 'This field must be at least %d characters long';
 
-$string['rule.minvalue.minvalue'] = 'This value can not be smaller than %d';
+$string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d';
 
 $string['rule.regex.regex'] = 'This field is not in valid form';
 
@@ -63,4 +63,4 @@ $string['rule.required.required'] = 'This field is required';
 
 $string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid';
 
-$string['rule.maxvalue.maxvalue'] = 'This value can not be larger than %d';
+$string['rule.maxvalue.maxvalue'] = 'This value cannot be larger than %d';
