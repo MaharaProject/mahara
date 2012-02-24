@@ -469,8 +469,9 @@ if ($registerterms) {
 }
 $registerdescription .= ' ' . get_string('registerprivacy');
 
+$form = pieform($form);
 $smarty = smarty();
-$smarty->assign('register_form', pieform($form));
+$smarty->assign('register_form', $form);
 $smarty->assign('registerdescription', $registerdescription);
 if ($registerterms) {
     $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
