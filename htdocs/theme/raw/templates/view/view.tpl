@@ -17,11 +17,13 @@
 </div>
 {/if}
 
-<div id="view-description">{$viewdescription|clean_html|safe}</div>
-
 {if !$microheaders && $collection}
     {include file=collectionnav.tpl}
 {/if}
+
+<p>{$author|safe}</p>
+
+<div id="view-description">{$viewdescription|clean_html|safe}</div>
 
 <div id="view" class="cb">
         <div id="bottom-pane">

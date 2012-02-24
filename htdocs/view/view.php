@@ -223,6 +223,7 @@ $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('tags', $view->get('tags'));
+$smarty->assign('author', $view->display_author());
 
 $smarty->assign('PAGEAUTHOR', $view->formatted_owner());
 

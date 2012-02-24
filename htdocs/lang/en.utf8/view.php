@@ -253,6 +253,7 @@ $string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someo
 
 $string['by'] = 'by';
 $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
+$string['viewauthor'] = 'by <a href="%s">%s</a>';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 $string['timeofsubmission'] = 'Time of submission';
