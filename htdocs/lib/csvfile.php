@@ -152,7 +152,7 @@ class CsvFile {
 
         if ($this->data === null) {
             // Oops! Couldn't get CSV data for some reason
-            $this->add_error('file', get_string('uploadcsverrorunspecifiedproblem', 'admin'));
+            $this->add_error('file', get_string('uploadcsverrorunspecifiedproblem1', 'admin'));
         }
     }
 
