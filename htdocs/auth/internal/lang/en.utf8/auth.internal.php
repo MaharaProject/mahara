@@ -124,7 +124,7 @@ Regards
 %s';
 $string['registeredokawaitingemail'] = 'You have successfully submitted your application for registration.  An email should have been sent to you in order to confirm your email and continue the process.';
 $string['registrationreason'] = 'Registration Reason';
-$string['registrationreasondesc'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.  The registration cannot be completed without this information.';
+$string['registrationreasondesc1'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.';
 
 $string['pendingregistrationadminemailsubject'] = "New user registration for institution '%s' at %s.";
 $string['pendingregistrationadminemailtext'] = "Hi %s,

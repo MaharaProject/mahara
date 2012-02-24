@@ -67,12 +67,23 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
+// The user has registered with an institution that requires approval,
+// tell them to wait.
+if (!empty($_SESSION['registeredokawaiting'])) {
+    unset($_SESSION['registeredokawaiting']);
+    die_info(get_string('registeredokawaitingemail', 'auth.internal'));
+}
+
 if (!empty($_SESSION['registrationcancelled'])) {
     unset($_SESSION['registrationcancelled']);
     die_info(get_string('registrationcancelledok', 'auth.internal'));
 }
 
-// email confirmed, show them a screen telling them this.
+// When $_SESSION['emailconfirmed'] is set, the user has verified their email address,
+// and has registered with an institution that requires approval.
+// @TODO We should not do email verification before approval, because approval will
+// send another email which can act as verification
+// See https://bugs.launchpad.net/mahara/+bug/918431, part 2.
 if (!empty($_SESSION['emailconfirmed'])) {
     // email institutional administrator(s) of new registration
     if (isset($_SESSION['registrationkey'])) {
@@ -92,6 +103,7 @@ if (!empty($_SESSION['emailconfirmed'])) {
             }
 
             // email each admin
+            // @TODO Respect the notification preferences of these admins in case they don't want to be spammed.
             foreach ($admins as $admin) {
                 $user = new User();
                 $user->find_by_id($admin);
@@ -258,11 +270,17 @@ $sql = 'SELECT
             ai.institution = i.name AND
             i.registerallowed = 1';
 $institutions = get_records_sql_array($sql, array());
+$registerconfirm = array();
+$reason = false;
 
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {
         $options[$institution->name] = $institution->displayname;
+        if ($registerconfirm[$institution->name] = $institution->registerconfirm) {
+            $options[$institution->name] .= ' (' . get_string('approvalrequired') . ')';
+            $reason = true;
+        }
     }
     natcasesort($options);
     array_unshift($options, get_string('chooseinstitution', 'mahara'));
@@ -283,9 +301,21 @@ else if ($institutions) { // Only one option - probably mahara ('No Institution'
         'type' => 'hidden',
         'value' => $institution->name
     );
+    $reason = (bool) $institution->registerconfirm;
 }
 else {
     die_info(get_string('registeringdisallowed'));
+}
+
+if ($reason) {
+    $elements['reason'] = array(
+        'type' => 'textarea',
+        'title' => get_string('registrationreason', 'auth.internal'),
+        'description' => get_string('registrationreasondesc1', 'auth.internal'),
+        'class' => 'js-hidden',
+        'rows' => 4,
+        'cols' => 60,
+    );
 }
 
 $registerterms = get_config('registerterms');
@@ -329,7 +359,7 @@ $form = array(
     'spam' => array(
         'secret'       => get_config('formsecret'),
         'mintime'      => 5,
-        'hash'         => array('firstname', 'lastname', 'email', 'institution', 'tandc', 'submit'),
+        'hash'         => array('firstname', 'lastname', 'email', 'institution', 'reason', 'tandc', 'submit'),
     ),
 );
 
@@ -432,21 +462,28 @@ function register_submit(Pieform $form, $values) {
             update_record('usr_registration', $values, array('email' => $values['email']));
         }
 
+        $user =(object) $values;
+        $user->admin = 0;
+        $user->staff = 0;
+
         // if the institution requires a registration workflow
         // redirect to get more details
         $confirm = get_field('institution', 'registerconfirm', 'name', $values['institution']);
         if ($confirm) {
-            $id = get_field('usr_registration', 'id', 'email', $values['email']);
-            redirect('/register/reason.php?r='.$id);
+            email_user($user, null,
+                get_string('confirmemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('confirmemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+                get_string('confirmemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            $_SESSION['registeredokawaiting'] = true;
         }
-
-        $user =(object) $values;
-        $user->admin = 0;
-        $user->staff = 0;
-        email_user($user, null,
-            get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-            get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
-            get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+        else {
+            email_user($user, null,
+                get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+                get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            // Add a marker in the session to say that the user has registered
+            $_SESSION['registered'] = true;
+        }
     }
     catch (EmailException $e) {
         log_warn($e);
@@ -457,9 +494,6 @@ function register_submit(Pieform $form, $values) {
         die_info(get_string('registrationunsuccessful', 'auth.internal'));
     }
 
-    // Add a marker in the session to say that the user has registered
-    $_SESSION['registered'] = true;
-
     redirect('/register.php');
 }
 
@@ -469,12 +503,37 @@ if ($registerterms) {
 }
 $registerdescription .= ' ' . get_string('registerprivacy');
 
-$form = pieform($form);
-$smarty = smarty();
-$smarty->assign('register_form', $form);
+// The javascript needs to refer to field names, but they are obfuscated in this form,
+// so construct and build the form in separate steps, so we can get the field names.
+$form = new Pieform($form);
+$institutionid = 'register_' . $form->hashedfields['institution'];
+$reasonid = 'register_' . $form->hashedfields['reason'];
+$formhtml = $form->build();
+
+$js = '
+var registerconfirm = ' . json_encode($registerconfirm) . ';
+$j(function() {
+    $j("#' . $institutionid . '").change(function() {
+        if (this.value && registerconfirm[this.value] == 1) {
+            $j("#' . $reasonid . '_container").removeClass("js-hidden");
+            $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+            $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+        }
+        else {
+            $j("#' . $reasonid . '_container").addClass("js-hidden");
+            $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
+            $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+        }
+    });
+});
+';
+
+$smarty = smarty(array('jquery'));
+$smarty->assign('register_form', $formhtml);
 $smarty->assign('registerdescription', $registerdescription);
 if ($registerterms) {
     $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
 }
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('register.tpl');
