@@ -252,6 +252,12 @@ class AuthInternal extends Auth {
             return false;
         }
 
+        if (empty($wehave)) {
+            // This means the user has not been set up completely yet
+            // Common cause is that still in registration phase
+            return false;
+        }
+
         $sitesalt = get_config('passwordsaltmain');
         $bcrypt = substr($wehave, 0, 4) == '$2a$';
         if ($bcrypt) {
