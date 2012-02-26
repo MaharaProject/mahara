@@ -447,7 +447,7 @@ $string['invalidfilename'] = 'The file "%s" does not exist';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine)';
-$string['uploadcsverrorunspecifiedproblem'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format, then this is a bug and you should <a href="https://eduforge.org/tracker/?func=add&group_id=176&atid=739">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file';
+$string['uploadcsverrorunspecifiedproblem1'] = 'The records in your CSV file could not be inserted for some reason. If your file is in the correct format, then this is a bug and you should <a href="https://bugs.launchpad.net/mahara/+filebug">create a bug report</a>, attaching the CSV file (remember to blank out passwords!) and, if possible, the error log file';
 $string['uploadcsverrorwrongnumberoffields'] = 'Error on line %s of your file: Incorrect number of fields';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The email address for this user is not in the correct format';
 $string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields';
