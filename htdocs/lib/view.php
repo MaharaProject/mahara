@@ -3600,6 +3600,12 @@ class View {
         return $title;
     }
 
+    public function display_author() {
+        $ownername = hsc($this->formatted_owner());
+        $ownerlink = hsc($this->owner_link());
+        return get_string('viewauthor', 'view', $ownerlink, $ownername);
+    }
+
     public function display_title_editing() {
         if ($this->type == 'profile') {
             return get_string('profileviewtitle', 'view');

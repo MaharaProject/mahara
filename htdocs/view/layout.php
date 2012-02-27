@@ -85,7 +85,7 @@ $smarty->assign('displaylink', $view->get_url());
 $smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false));
+    $smarty->assign('microheadertitle', $view->display_title(true, false, false));
 }
 $smarty->display('view/layout.tpl');
 
