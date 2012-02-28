@@ -347,15 +347,18 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         } else {
             $links = $this->model->getElementsByTagName('link');
         }
-        if ($links->length > $offset) {
-            if ($links->item($offset)->hasAttribute($attribute)) {
-                $value = $links->item($offset)->getAttribute($attribute);
+        foreach ($links as $link) {
+            if ($link->hasAttribute($attribute)
+                && ($link->hasAttribute('rel') == false
+                || $link->getAttribute('rel') == 'alternate')
+            ) {
+                $value = $link->getAttribute($attribute);
                 if ($attribute == 'href') {
-                    $value = $this->addBase($value, $links->item($offset));
+                    $value = $this->addBase($value, $link);
                 }
                 return $value;
             } else if ($attribute == 'rel') {
-                return 'alternate';
+                return $link->getAttribute($attribute);
             }
         }
         return false;
