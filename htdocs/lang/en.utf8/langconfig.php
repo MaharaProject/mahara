@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['parentlanguage'] = '';
-$string['strftimedate'] = '%%#d %%B %%Y';
+$string['strftimedate'] = '%%e %%B %%Y';
 $string['strftimedateshort'] = '%%d %%B';
 $string['strftimedatetime'] = '%%d %%B %%Y, %%l:%%M %%p';
 $string['strftimedatetimeshort'] = '%%Y/%%m/%%d %%H:%%M';
