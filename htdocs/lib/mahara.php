@@ -1560,10 +1560,13 @@ class Plugin {
  * (see langconfig.php or the top of {@link get_string_location}
  * for supported keys
  */
-
 function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='strftimenotspecified', $notspecifiedsection='mahara') {
     if (empty($date)) {
         return get_string($notspecifiedkey, $notspecifiedsection);
+    }
+    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        $fixedkey = str_replace('%e', '%#d', get_string($formatkey));
+        return strftime($fixedkey, $date);
     }
     return strftime(get_string($formatkey), $date);
 }

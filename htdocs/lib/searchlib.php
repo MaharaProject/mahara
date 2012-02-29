@@ -451,7 +451,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
             $result['name'] = display_name($result);
             $result['introduction'] = isset($introductions[$result['id']]) ? $introductions[$result['id']]->title : '';
             if (isset($result['jointime'])) {
-                $result['jointime'] = strftime(get_string('strftimedate'), $result['jointime']);
+                $result['jointime'] = format_date($result['jointime'], 'strftimedate');
             }
         }
     }
