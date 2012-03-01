@@ -266,7 +266,7 @@ $siteoptionform = array(
                 'institutionexpirynotification' => array(
                     'type'         => 'expiry',
                     'title'        => get_string('institutionexpirynotification', 'admin'),
-                    'description'  => get_string('institutionexpirynotificationdescription', 'admin'),
+                    'description'  => get_string('institutionexpirynotificationdescriptioninfo', 'admin'),
                     'defaultvalue' => get_config('institutionexpirynotification'),
                     'help'         => true,
                     'disabled'     => in_array('institutionexpirynotification', $OVERRIDDEN),
@@ -514,14 +514,14 @@ $siteoptionform = array(
                 'showselfsearchsideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showselfsearchsideblock', 'admin'),
-                    'description'  => get_string('showselfsearchsideblockdescription', 'admin'),
+                    'description'  => get_string('showselfsearchsideblockdescription1', 'admin'),
                     'defaultvalue' => get_config('showselfsearchsideblock'),
                     'disabled'     => in_array('showselfsearchsideblock', $OVERRIDDEN),
                 ),
                 'showtagssideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showtagssideblock', 'admin'),
-                    'description'  => get_string('showtagssideblockdescription', 'admin'),
+                    'description'  => get_string('showtagssideblockdescription1', 'admin'),
                     'defaultvalue' => get_config('showtagssideblock'),
                     'disabled'     => in_array('showtagssideblock', $OVERRIDDEN),
                 ),
@@ -544,7 +544,7 @@ $siteoptionform = array(
                 'showonlineuserssideblock' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('showonlineuserssideblock', 'admin'),
-                    'description'  => get_string('showonlineuserssideblockdescription', 'admin'),
+                    'description'  => get_string('showonlineuserssideblockdescriptionmessage', 'admin'),
                     'defaultvalue' => get_config('showonlineuserssideblock'),
                     'disabled'     => in_array('showonlineuserssideblock', $OVERRIDDEN),
                 ),

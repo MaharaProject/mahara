@@ -34,7 +34,7 @@ class PluginBlocktypeNewViews extends SystemBlocktype {
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.newviews');
+        return get_string('description1', 'blocktype.newviews');
     }
 
     public static function get_categories() {

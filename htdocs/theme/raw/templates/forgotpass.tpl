@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 {if $forgotpass_form}
-            {str tag="forgotusernamepasswordtext"}
+            {str tag="forgotusernamepasswordtextprimaryemail"}
 
             {$forgotpass_form|safe}
 {/if}

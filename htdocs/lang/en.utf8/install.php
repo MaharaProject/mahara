@@ -74,7 +74,7 @@ $string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
 
 <p>We will only use your personal information for the purpose for which you provided it to us.</p>
 
-<p>As [<i>name of site</i>] users you are able to determine what personal information you make available to others. By default, unless assigned administrator, course creator or tutor access rights, a user may only view your display name. This includes listings within a notification report or visitor log.</p>
+<p>As [<i>name of site</i>] users you are able to determine what personal information you make available to others. By default, unless assigned administrator or staff access rights, a user may only view your display name (or name if you have not chosen / could not choose a display name) and your default profile picture. This includes listings within a notification report or visitor log.</p>
 
 <p>We may also collect system usage for statistical purposes. However this data will not identify any individual.</p>
 
@@ -82,7 +82,7 @@ $string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
 
 <p>We will take all reasonable steps to ensure that any personal information we hold is not subject to loss or misuse or unauthorised access, disclosure or alteration.</p>
 
-<p>In order to help protect your personal information, please do not disclose your username or password to any person other than the site administrator.</p>
+<p>In order to help protect your personal information, please do not disclose your username or password to any person.</p>
 
 <h2>Changes to this privacy statement</h2>
 
@@ -105,7 +105,7 @@ $string['termsandconditionsdefaultcontent'] = '<h1>Terms and conditions</h1>
 
 <p>You are encouraged to report objectionable material or inappropriate behaviour to the <a href="contact.php">site administrator</a> immediately. We will ensure the matter is investigated in a timely manner.</p>
 
-<p>Site administrators may access your portfolio and its contents at anytime, however they will avoid doing so unless specifically required to support your use of [<i>name of site</i>] or as per these terms and conditions.</p>
+<p>Administrators may access your portfolio and its contents at anytime, however they will avoid doing so unless specifically required to support your use of [<i>name of site</i>] or as per these terms and conditions.</p>
 
 <h2>Your obligations</h2>
 
@@ -115,11 +115,11 @@ $string['termsandconditionsdefaultcontent'] = '<h1>Terms and conditions</h1>
 
 <p>All files and content you upload to [<i>name of site</i>] are subject to New Zealand Copyright legislation. You are responsible for ensuring you have appropriate permission to reproduce and publish any work that is not your own. Incidents of plagiarism will be dealt with in accordance to your educational institution\'s policy.</p>
 
-<p>You must not use your portfolio to store or display offensive material. If the site administrator receives report of any objectionable material within your portfolio, your account will be suspended and your access to [<i>name of site</i>] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution. Where no conduct policy exists, the matter will be referred to an appropriate staff member of your institution or organisation.</p>
+<p>You must not use your portfolio to store or display offensive material. If an administrator receives report of any objectionable material within your portfolio, your account will be suspended and your access to [<i>name of site</i>] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution. Where no conduct policy exists, the matter will be referred to an appropriate staff member of your institution or organisation.</p>
 
 <p>If the site administrator receives report of any inappropriate behaviour on your part, where it relates to [<i>name of site</i>], your account will be suspended and your access to [<i>name of site</i>] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution. Where no conduct policy exists, the matter will be referred to an appropriate staff member of your institution or organisation.</p>
 
-<p>Inappropriate behaviour includes misuse of the objectionable material reporting system, intentionally attempting to load files with virus content, placing objectionable or excessive feedback or comments on any other user\'s portfolio and any other behaviour deemed to be a nuisance or offensive by the site administrator.</p>
+<p>Inappropriate behaviour includes misuse of the objectionable material reporting system, intentionally attempting to load files with virus content, placing objectionable or excessive feedback or comments on any other user\'s portfolio and any other behaviour deemed to be a nuisance or offensive by an administrator.</p>
 
 <p>Any unsolicited contact you receive as a result of personal information you have publicly released via your portfolio is your responsibility. However, any misconduct in behaviour from users of the system should be reported to the <a href="contact.php">site administrator</a> immediately.</p>
 

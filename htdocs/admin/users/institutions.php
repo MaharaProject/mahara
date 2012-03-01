@@ -327,7 +327,7 @@ if ($institution || $add) {
         $elements['registerallowed'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('registrationallowed', 'admin'),
-            'description'  => get_string('registrationalloweddescription2', 'admin'),
+            'description'  => get_string('registrationalloweddescription3', 'admin'),
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         );
@@ -399,7 +399,7 @@ if ($institution || $add) {
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
             'title'                 => get_string('showonlineusers', 'admin'),
-            'description'           => get_string('showonlineusersdesc','admin'),
+            'description'           => get_string('showonlineusersdescription','admin'),
             'defaultvalue'          => $data->showonlineusers,
             'collapseifoneoption'   => true,
             'options'               => $showonlineusersoptions,
