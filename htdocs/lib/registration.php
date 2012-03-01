@@ -109,7 +109,7 @@ function register_submit(Pieform $form, $values) {
  * Worker - performs sending of registration data to mahara.org
  */
 function registration_send_data() {
-    $registrationurl = 'http://mahara.org/api/registration.php';
+    $registrationurl = 'https://mahara.org/api/registration.php';
     $data = registration_data();
     $request = array(
         CURLOPT_URL        => $registrationurl,
