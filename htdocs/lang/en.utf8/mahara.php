@@ -387,7 +387,7 @@ $string['language'] = 'Language';
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead.';
 $string['forgotusernamepassword'] = 'Forgotten your username or password?';
-$string['forgotusernamepasswordtext'] = '<p>If you have forgotten your username or password, enter the email address listed in your profile and we will send you a message you can use to give yourself a new password.</p>
+$string['forgotusernamepasswordtextprimaryemail'] = '<p>If you have forgotten your username or password, enter the primary email address listed in your profile and we will send you a message you can use to give yourself a new password.</p>
 <p>If you know your username and have forgotten your password, you can also enter your username instead.</p>';
 $string['lostusernamepassword'] = 'Lost username / password';
 $string['emailaddressorusername'] = 'Email address or username';

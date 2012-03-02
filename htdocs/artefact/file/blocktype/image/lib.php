@@ -93,7 +93,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'type' => 'text',
                 'title' => get_string('width', 'blocktype.file/image'),
                 'size' => 3,
-                'description' => get_string('widthdescription', 'blocktype.file/image'),
+                'description' => get_string('widthdescription1', 'blocktype.file/image'),
                 'rules' => array(
                     'minvalue' => 16,
                     'maxvalue' => get_config('imagemaxwidth'),
