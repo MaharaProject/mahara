@@ -4266,8 +4266,8 @@ function objection_form() {
     );
     $form['elements']['submit'] = array(
         'type'  => 'submitcancel',
-        'value' => array(get_string('notifysiteadministrator', 'view'), get_string('cancel')),
-        'confirm' => array(get_string('notifysiteadministratorconfirm', 'view')),
+        'value' => array(get_string('notifyadministrator', 'view'), get_string('cancel')),
+        'confirm' => array(get_string('notifyadministratorconfirm', 'view')),
     );
     return $form;
 }
