@@ -1,3 +1,7 @@
+1.3.8 (2012-03-06)
+- Ensure that default SAML behaviour is to match user to remote user name (Bug #932909)
+- Update the registration URL to support SSL (Bug #943772)
+
 1.3.7 (2011-11-01)
 - XSS in unvalidated URI attributes (CVE-2011-2771)
 - Information disclosure exposing private messages (CVE-2011-2774)
