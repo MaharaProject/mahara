@@ -1,3 +1,11 @@
+1.4.2 (2012-03-06)
+- Fix PHP Fatal Error in user/view.php (Bug #885588)
+- Fixes to Selenium tests
+- Blog block pagination bug prevents images from being displayed (Bug #886581)
+- Fixed youtube filter Bug #884438
+- Ensure that default SAML behaviour is to match user to remote user name (Bug #932909)
+- Update the registration URL to support SSL (Bug #943772)
+
 1.4.1 (2011-11-01)
 - XSS in unvalidated URI attributes (CVE-2011-2771)
 - Information disclosure exposing private messages (CVE-2011-2774)
