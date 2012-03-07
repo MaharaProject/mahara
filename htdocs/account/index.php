@@ -116,10 +116,9 @@ $elements['accountoptionsdesc'] = array(
 // Add general account options
 $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
 
-// If the user doesn't have exactly one blog, don't show the multipleblogs option.
 $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) ;
 if ($blogcount != 1 && $prefs->multipleblogs == 1) {
-    $elements['multipleblogs']['ignore'] = true;
+    $elements['multipleblogs']['disabled'] = true;
 }
 
 $elements['submit'] = array(
