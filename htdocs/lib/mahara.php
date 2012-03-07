@@ -886,17 +886,21 @@ function set_config($key, $value) {
 function get_config_plugin($plugintype, $pluginname, $key) {
     global $CFG;
 
+    $CFG->plugin = new StdClass;
+
     // Suppress NOTICE with @ in case $key is not yet cached
     @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
     if (isset($CFG->plugin->{$plugintype})) {
         return $value;
     }
 
+    $CFG->plugin = new stdClass();
     $CFG->plugin->{$plugintype} = new StdClass;
 
     $records = get_records_array($plugintype . '_config');
     if (!empty($records)) {
         foreach($records as $record) {
+            $CFG->plugin->{$plugintype}->{$record->plugin} = new stdClass();
             $CFG->plugin->{$plugintype}->{$record->plugin}->{$record->field} = $record->value;
             if ($record->field == $key && $record->plugin == $pluginname) {
                 $value = $record->value;
@@ -925,6 +929,7 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
         $status = insert_record($table, $pconfig);
     }
     if ($status) {
+        $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
         $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
         return true;
     }

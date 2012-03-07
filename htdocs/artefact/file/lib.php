@@ -609,6 +609,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $ownerkey = $artefact->owner . '::' . $artefact->group . '::' . $artefact->institution;
         if (!isset($folderdata[$ownerkey])) {
             $ownersql = artefact_owner_sql($artefact->owner, $artefact->group, $artefact->institution);
+            $folderdata[$ownerkey] = new stdClass();
             $folderdata[$ownerkey]->data = get_records_select_assoc('artefact', "artefacttype='folder' AND $ownersql", array(), '', 'id, title, parent');
             if ($artefact->group) {
                 $folderdata[$ownerkey]->ownername = get_field('group', 'name', 'id', $artefact->group) . ':';
