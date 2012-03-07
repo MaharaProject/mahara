@@ -860,7 +860,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         foreach (array('video', 'audio', 'archive') as $artefacttype) {
             $classname = 'ArtefactType' . ucfirst($artefacttype);
-            if (call_static_method($classname, 'is_valid_file', $path, &$data)) {
+            if (call_user_func_array(array($classname, 'is_valid_file'), array($path, &$data))) {
                 return new $classname(0, $data);
             }
         }
