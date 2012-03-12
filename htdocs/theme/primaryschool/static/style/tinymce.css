@@ -1,0 +1,62 @@
+body {
+	font-family: Arial, Helvetica, sans-serif !important;
+	font-size: 12px !important;
+	padding: 0 !important;
+	color: #333333 !important;
+	background: #FFF !important;
+}
+td {
+	font-family: Arial, Helvetica, sans-serif !important;
+	font-size: 1em !important;
+	padding: .5em !important;
+	color: #333333 !important;
+}
+pre {
+	font: 12px monospace !important;
+}
+a, a:link, a:active, a:visited, a:hover {
+	color: #d66800 !important;
+	text-decoration: none !important;
+}
+h1 {
+	color: #252c66 !important;
+	font-weight: normal !important;
+	margin: 0 0 .5em 0 !important;
+	padding: 0 !important;
+	font-size: 2em !important;
+}
+h2 {
+	color: #252c66 !important;
+	font-weight: bold !important;
+	margin: 0 0 .5em 0 !important;
+	padding: 0 !important;
+	font-size: 1.8em !important;
+}
+h3 {
+	color: #252c66 !important;
+	font-weight: bold !important;
+	margin: 1.5em 0 .5em 0 !important;
+	font-size: 1.4em !important;
+}
+h4 {
+	color: #252c66 !important;
+	font-weight: bold !important;
+	margin: 1.5em 0 .5em 0 !important;
+	font-size: 1.3em !important;
+}
+h5 {
+	color: #252c66 !important;
+	font-weight: bold !important;
+	margin: .5em 0 !important;
+	font-size: 1.2em !important;
+}
+h6 {
+	color: #252c66 !important;
+	font-weight: bold !important;
+	margin: .5em 0 !important;
+	font-size: 1em !important;
+}
+ul {
+	padding: 0 !important;
+	margin: .5em 0 1em 0 !important;
+}
