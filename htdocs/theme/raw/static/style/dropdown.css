@@ -20,7 +20,6 @@
 	margin: 0;
 }
 #main-nav .dropdown-sub li {
-	display: block;
 	float: none !important;
 	margin: 0 !important;
 	list-style-type: none;
@@ -30,19 +29,21 @@
 }
 #main-nav .dropdown-sub li span {
 	height: auto;
+	display: block;
 }
 #main-nav .dropdown-sub li a, #main-nav .dropdown-sub li a:link, #main-nav .dropdown-sub li a:visited, #main-nav .dropdown-sub li a:active {
 	padding: 4px 10px;
 	background: #DDDDDD;
 	border: none;
 	float: none;
-	width: 150px;
+	width: 160px;
 	white-space: normal;
 	line-height: 1.3em;
 	text-align: left;
 	height: auto;
 	font-weight: normal;
 	font-size: .9167em;
+	display: block;
 }
 #main-nav .dropdown-sub li a:hover {
 	background: #eee;

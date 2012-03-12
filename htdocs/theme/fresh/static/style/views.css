@@ -182,9 +182,9 @@ ul.artefactchooser-subtabs li.current a:active {
 /* View Page footer menu */
 #view .viewfooter {
 	border: 1px solid #10171A;
+	background: #1c3d53;
 }
 #view #feedbacktable {
-	border: 1px solid #10171A;
 	clear: both;
 }
 
@@ -197,7 +197,9 @@ ul.colnav li.selected span {
 	background: #00aef1;
 	color: #FFFFFF;
 }
-
+#collection .collection-title {
+	margin-left: 10px;
+}
 .submissionform {
 	background: #10171A;
 }

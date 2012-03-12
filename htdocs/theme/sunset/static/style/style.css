@@ -287,9 +287,11 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav li a,
+#right-nav li a {
+	color: #f7be23;
+}
 #right-nav li.identity a {
-  color: #f7be23;
+	color: #D1D1D1;
 }
 #right-nav li.selected a {
   color: #f7be23;
@@ -520,6 +522,9 @@ div#sb-profile h3 {
   color: #8E1901;
 } 
 
+body#micro #footer-wrap #performance-info {
+	padding-top: 10px;
+}
 /****************************** PAGE BY PAGE STYLES **********************************/
 
 /* Settings > Preferences */
@@ -527,23 +532,7 @@ div#sb-profile h3 {
     color: #8E1901;
 	border-bottom: 1px solid #8E1901;
 }
-
-
-/* Home page info boxes */
-
-.home-info {
-    border: solid 2px #FFF9EA;
-    background: #F0E8E0;
-}
-.home-info p.subtitle {
-    border-top: solid 1px #FFF9EA;
-    border-bottom: solid 1px #FFF9EA;
-}
-.home-info-table {
-	border: 0;
-}
-body#micro #top-wrapper,
-body#micro #footer-wrap {
+body#micro #top-wrapper {
 	background: transparent;
 }
 .viewheader .title {

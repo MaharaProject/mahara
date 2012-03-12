@@ -52,3 +52,10 @@ ul.colnav li a {
 #collectionnavwrap {
 	background-color: #6b1200;
 }
+.viewheader #collection .collection-title {
+	color: #FFFFFF;
+}
+.viewheader #collection #collectionnavwrap ul.colnav li a {
+	background: #f7be23;
+	color: #8e1901;
+}

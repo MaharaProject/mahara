@@ -259,7 +259,7 @@ span.btn a.icon, a span.icon {
 }
 #containerX #top-wrapper {
 	height: auto;
-    background: transparent;
+	background: transparent url(../images/bg-container.jpg) no-repeat top center;
 }
 #loading-box {
     background-color: #ECF3D4 !important;
@@ -282,16 +282,14 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav ul {
-  margin: 1.5em 1em 1em 0;
-  min-width: 20em;
-}
 #right-nav li {
-  padding: 0 0 0 1em;
+	color: #8fa3df;
 }
-#right-nav li a,
+#right-nav li a {
+	color: #fff;
+}
 #right-nav li.identity a {
-  color: #fff;
+	color: #8fa3df;
 }
 #right-nav li.selected a {
   color: #fff;
@@ -526,6 +524,9 @@ div.sideblock h3 a:hover {
 } 
 
 
+body#micro #footer-wrap #performance-info {
+	padding-top: 10px;
+}
 /****************************** PAGE BY PAGE STYLES **********************************/
 /* Group: about */
 
@@ -533,23 +534,11 @@ div.sideblock h3 a:hover {
 #accountprefs table h3 {
 	border-bottom: 1px dotted #888888
 }
-
-
-/* Home page info boxes */
-.home-info {
-    border: solid 2px #cccccc;
-    background: #eeeeee;
-}
-.home-info p.subtitle {
-    border-top: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
-}
-.home-info-table {
-	border: 0;
-}
-
 #micro #footer-wrap {
-	background: transparent;
+	margin: 0 auto;
+	min-width: 970px;
+	width: 90%;
+	padding: 0;
 }
 .viewheader a {
 	color: #FFF;
