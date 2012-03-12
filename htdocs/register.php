@@ -135,7 +135,7 @@ if (isset($key)) {
     if ($confirm && $registration->pending == 0) {
         $values['key']   = get_random_key();
         $values['pending'] = 1;
-        $values['expiry'] = db_format_timestamp(time() + (86400 * 7)); // now + 1 week
+        $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
         update_record('usr_registration', $values, array('email' => $registration->email));
         $SESSION->set('emailconfirmed', true);
         $SESSION->set('registrationkey', $values['key']);
