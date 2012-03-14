@@ -101,6 +101,8 @@ $urls = array(
     'views'   => $wwwroot . 'view',
     'friends' => $wwwroot . 'user/find.php',
     'groups'  => $wwwroot . 'group/find.php',
+    'topics'  => $wwwroot . 'group/topics.php',
+    'share'   => $wwwroot . 'view/share.php',
 );
 $smarty->assign('url', $urls);
 
