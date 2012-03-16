@@ -542,8 +542,6 @@ function kill_children($username, $useragent) {
         // TODO: We should send kill_child requests to the remote servers too
         session_id($mnetsession->sessionid);
         session_start();
-        session_unregister("USER");
-        session_unregister("SESSION");
         unset($_SESSION);
         $_SESSION = array();
         session_destroy();
