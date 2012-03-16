@@ -281,16 +281,11 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav ul {
-  margin: 1.1em 0 1em 0;
-  min-width: 20em;
-}
-#right-nav li {
-  padding: 0 0 0 1em;
-}
-#right-nav li a,
-#right-nav li.identity a {
+#right-nav li a {
   color: #FFF;
+}
+#right-nav li.identity a {
+	color: #aa56ae;
 }
 #right-nav li.selected a {
   color: #FFF;
@@ -530,13 +525,6 @@ div.sideblock #friendscontrol label {
     border: solid 2px #F4E7F5;
     background: #FAEEFB;
 }
-.home-info p.subtitle {
-    border-top: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
-}
-.home-info-table {
-	border: 0;
-}
 
 #containerX #top-wrapper {
 	background: transparent;
@@ -555,8 +543,8 @@ div.sideblock #friendscontrol label {
 #containerX #top-wrapper .viewheader .title a {
 	color: #FFF;
 }
-#micro #footer-wrap {
-	background: transparent;
+body#micro #footer-wrap #performance-info {
+	padding-top: 10px;
 }
 
 

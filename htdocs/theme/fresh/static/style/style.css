@@ -305,16 +305,14 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav ul {
-  margin: 1em 1em 1em 0;
-  min-width: 20em;
-}
 #right-nav li {
-  padding: 0 0 0 1em;
+	color: #83a0b3;
 }
-#right-nav li a,
+#right-nav li a {
+	color: #fff;
+}
 #right-nav li.identity a {
-  color: #fff;
+	color: #83a0b3;
 }
 #right-nav li.selected a {
   color: #fff;
@@ -566,7 +564,7 @@ div.sideblock ul ul {
 }
 
 #micro #footer-wrap {
-	background:transparent;
+	background-position: 15px 15px;
 }
 #footernav {
   color: #888;
@@ -684,11 +682,8 @@ table.attachments td {
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
     border-bottom: solid 1px #cccccc;
+	color: #cccccc;
 }
-.home-info-table {
-	border: 0;
-}
-
 #export fieldset {
     background: #0C2839;
 	border:0;
@@ -701,7 +696,9 @@ table.attachments td {
 #collectionnavwrap {
 	background: #0C2839;
 }
-
+.viewheadertop {
+	padding: 5px 10px;
+}
 #feedback_pagination {
 	background: #080D0F !important;
 	border-top: 1px dotted #BEE3F1 !important;

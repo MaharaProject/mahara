@@ -934,8 +934,12 @@ div.rbuttons .small-logo {
 	color: #FFFFFF;
 	text-decoration: underline;
 }
-#container, #containerX {
+#container {
 	background: #fff;
+	margin: 0 auto;
+	width: 100%;
+}
+#containerX {
 	margin: 0 auto;
 	width: 100%;
 }
@@ -1007,7 +1011,7 @@ div.rbuttons .small-logo {
 	padding: 0 5px;
 }
 #right-nav li.identity a {
-	color: #333;
+	color: #666666;
 	text-decoration: none;
 }
 #main-nav {
@@ -1545,7 +1549,9 @@ a.tag {
 	margin: 0 auto;
 }
 #micro #footer-wrap {
-	background: #eee;
+	background: url(../images/powered-by-mahara-small.png) no-repeat 5px 5px;
+	background-color: transparent;
+	min-height: 30px;
 }
 #footer {
 	margin: 0 auto;
@@ -1573,6 +1579,7 @@ a.tag {
 #micro #footer-wrap #performance-info {
 	width: auto;
 	float: none;
+	padding-left: 80px;
 }
 #performance-info span {
 	color: #888;
@@ -2478,10 +2485,12 @@ form#search, form#filter, div.searchform {
 }
 .home-info .desc {
 	text-align: center;
+	font-size: .9167em;
 }
 .home-info .caption {
 	padding-bottom: 5px;
 	line-height: 1.2em;
+	font-size: .9167em;
 }
 .home-info a, .home-info a:hover, .home-info a:active {
 	text-decoration: none;
@@ -2490,7 +2499,7 @@ form#search, form#filter, div.searchform {
 	width: 100%;
 }
 .home-info td {
-	padding: 0;
+	padding: 0 0 5px 0;
 	width: 1%;
 	vertical-align: top;
 }
@@ -2501,6 +2510,7 @@ form#search, form#filter, div.searchform {
 	white-space: nowrap;
 	margin: 0 0 10px 0;
 	padding: 3px 0;
+	color: #666666;
 }
 #accessdesc {
 	background: url(../images/access.png) no-repeat left;

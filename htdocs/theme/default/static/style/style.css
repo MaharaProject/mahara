@@ -463,8 +463,12 @@ div.sideblock h3 a:hover {
 	padding: 10px;
 }
 #micro #footer-wrap {
-	background: #939393;
+	background-color: #939393;
     color: #bababa;
+}
+#micro #footer-wrap #performance-info {
+	margin: 0;
+	padding: 10px;
 }
 #footernav {
     color: #bababa;
@@ -517,20 +521,6 @@ div.sideblock h3 a:hover {
 	color: #333333;
 	font-size: 1em;
 }
-
-/* Home page info boxes */
-.home-info {
-    border: solid 2px #cccccc;
-    background: #eeeeee;
-}
-.home-info p.subtitle {
-    border-top: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
-}
-.home-info-table {
-	border: 0;
-}
-
 /* Collections */
 #collectionviews {
 	background: #f6f6f6;
@@ -573,7 +563,6 @@ div.sideblock h3 a:hover {
 #main-nav .dropdown-sub li span {
 	border-top: 1px solid #dfdfdf !important;
 	border-bottom: 1px solid #9c9c9c !important;
-	display: block !important;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,

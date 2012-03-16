@@ -85,8 +85,23 @@
                             {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}</div>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            {if $USER->is_logged_in()}<a href="{$url.share}">{/if}
+                                <img src="{theme_url filename='images/share.png'}" alt="" />
+                            {if $USER->is_logged_in()}</a>{/if}
+                            <div class="caption">{assign var=s value="controlyourprivacy"|str:mahara:$url.share}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}</div>
+                        </td>
+                        <td>
+                            {if $USER->is_logged_in()}<a href="{$url.topics}">{/if}
+                                <img src="{theme_url filename='images/topics.png'}" alt="" />
+                            {if $USER->is_logged_in()}</a>{/if}
+                            <div class="caption">{assign var=s value="discusstopics"|str:mahara:$url.topics}
+                            {if $USER->is_logged_in()}{$s|safe}{else}{$s|safe|strip_tags}{/if}</div>
+                        </td>
+                    </tr>
                 </table>
-                <p id="accessdesc">{str tag=sharenetworkdescription}</p>
             </div>
             </div>
         </td>
