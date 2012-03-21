@@ -457,6 +457,7 @@ $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The u
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
 $string['uploadcsverroremailaddresstaken'] = 'Line %s of the file specifies the email address "%s" that is already taken by another user';
+$string['uploadcsverrorduplicateremoteuser'] = 'Line %s of the file specifies a remote username "%s" that is already taken by another user';
 $string['uploadcsverrorremoteusertaken'] = 'Line %s of the file specifies a remote username "%s" that is already taken by the user "%s"';
 $string['uploadcsverrorusernotininstitution'] = 'Error on line %s: The user "%s" is not a member of the institution %s.';
 $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: The user "%s" is a member of the following institutions: %s. You cannot update this user\'s authentication method to No Institution.';
