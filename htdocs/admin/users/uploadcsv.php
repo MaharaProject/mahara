@@ -324,11 +324,15 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         if (isset($remoteusers) && $remoteuser) {
             if (isset($remoteusers[$remoteuser])) {
-                $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+                $csverrors->add($i, get_string('uploadcsverrorduplicateremoteuser', 'admin', $i, $remoteuser));
             }
             else if (!$values['updateusers']) {
-                if (record_exists('auth_remote_user', 'remoteusername', $remoteuser, 'authinstance', $authinstance)) {
-                    $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser));
+                if ($remoteuserowner = get_record_sql('
+                    SELECT u.username
+                    FROM {auth_remote_user} aru JOIN {usr} u ON aru.localusr = u.id
+                    WHERE aru.remoteusername = ? AND aru.authinstance = ?',
+                    array($remoteuser, $authinstance))) {
+                    $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser, $remoteuserowner));
                 }
             }
             $remoteusers[$remoteuser] = true;
