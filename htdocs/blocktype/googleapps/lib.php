@@ -112,21 +112,27 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
         $httpstr = is_https() ? 'https' : 'http';
 
         $embedsources = array(
-            // docs.google.com/leaf - Google collections
+            // docs.google.com/leaf and (as of early 2012) docs.google.com/open - Google collections
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the collection
             array(
-                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)leaf\?id=([a-zA-Z0-9]+).*#',
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)leaf\?id=([a-zA-Z0-9\_\-]+).*#',
                 'url'   => $httpstr . '://docs.google.com/$1leaf?id=$2',
+                'type'  => 'spanicon',
+            ),
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)open\?id=([a-zA-Z0-9\_\-]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1open?id=$2',
                 'type'  => 'spanicon',
             ),
             // docs.google.com/present - Google presentation incl. custom domain presentation
             // $1 - domain, e.g. /a/domainname/
-            // $2 - mode, e.g. view or embed
-            // $3 - id, key, etc. of the presentation
+            // $2 - present or presentation
+            // $3 - mode, e.g. pub, view or embed
+            // $4 - id, key, etc. of the presentation
             array(
-                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)present/([a-z]+).*id=([a-zA-Z0-9\_\-\&\=]+).*#',
-                'url'   => $httpstr . '://docs.google.com/$1present/embed?id=$3',
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)present([a-z]*)/([a-z]+).*?id=([a-zA-Z0-9\_\-\&\=]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1present$2/embed?id=$4',
                 'type'  => 'iframe',
             ),
             // docs.google.com/drawings - Google drawing incl. custom domain drawing
@@ -143,6 +149,23 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)View.*id=([a-zA-Z0-9\_\-]+).*#',
                 'url'   => $httpstr . '://docs.google.com/$1View?id=$2',
+                'type'  => 'iframe',
+            ),
+            // docs.google.com - Google document (after march 2012) incl. custom domain document
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - id, key, etc. of the document
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)viewer.*srcid=([a-zA-Z0-9\_\-\&\=]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1viewer?srcid=$2',
+                'type'  => 'iframe',
+            ),
+            // docs.google.com/viewer created urls
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - http or https
+            // $3 - domain of document, non-google or googleapps
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)viewer.*url=http([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/\:]+)\.(pdf|tif|tiff|ppt|doc|docx).*#',
+                'url'   => $httpstr . '://docs.google.com/$1viewer?url=http$2.$3&embedded=true',
                 'type'  => 'iframe',
             ),
             // docs.google.com - Google document (after July 2010) incl. custom domain document
@@ -217,7 +240,7 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => 'http://books.google.com/books?id=$1',
                 'type'  => 'iframe',
             ),
-            // If everything else fails, match if it is a valid link to a file... and than show that file with Google Dovs Viewer
+            // If everything else fails, match if it is a valid link to a file... and than show that file with Google Docs Viewer
             // Google Docs Viewer supported files: PDF, TIFF, PPT, DOC, DOCX
             array(
                 'match' => '#http([a-zA-Z0-9\.\,\;\_\-\&\%\=\+/\:]+)\.(pdf|tif|tiff|ppt|doc|docx)#',
