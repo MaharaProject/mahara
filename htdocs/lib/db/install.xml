@@ -919,5 +919,24 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"  />
             </KEYS>
         </TABLE>
+        <TABLE NAME="iframe_source_icon">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="domain" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="iframe_source">
+            <FIELDS>
+                <FIELD NAME="prefix" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="prefix" />
+                <KEY NAME="namefk" TYPE="foreign" FIELDS="name" REFTABLE="iframe_source_icon" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

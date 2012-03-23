@@ -2729,19 +2729,13 @@ function clean_html($text, $xhtml=false) {
     }
 
     // Permit embedding contents from other sites
-    // List of pattern fragments for the URI.SafeIframeRegexp below
-    $safeiframesources = array('www\.youtube\.com/embed/',
-                               'player\.vimeo\.com/video/',
-                               'www\.slideshare\.net/slideshow/embed_code/',
-                               '(www|edu)\.glogster\.com/glog(/|\.php)',
-                               'wikieducator\.org/index\.php',
-                               );
     $config->set('HTML.SafeEmbed', true);
     $config->set('HTML.SafeObject', true);
     $config->set('Output.FlashCompat', true);
-    $config->set('HTML.SafeIframe', true);
-    $config->set('URI.SafeIframeRegexp',
-                 '%^https?://('.implode('|', $safeiframesources).')%');
+    if ($iframeregexp = get_config('iframeregexp')) {
+        $config->set('HTML.SafeIframe', true);
+        $config->set('URI.SafeIframeRegexp', $iframeregexp);
+    }
 
     // Allow namespaced IDs
     // see http://htmlpurifier.org/docs/enduser-id.html
