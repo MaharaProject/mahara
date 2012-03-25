@@ -308,6 +308,7 @@ $string['copythisview'] = 'Copy this page';
 $string['copyview'] = 'Copy page';
 $string['createemptyview'] = 'Create empty page';
 $string['copyaview'] = 'Copy a page';
+$string['copyvieworcollection'] = 'Copy a page or collection';
 $string['Untitled'] = 'Untitled';
 $string['copyfornewusers'] = 'Copy for new users';
 $string['copyfornewusersdescription'] = 'Whenever a new user is created, automatically make a personal copy of this page in the user\'s portfolio.';
