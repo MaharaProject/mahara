@@ -21,7 +21,7 @@
  */
 
 /* General rules */
-body {
+body, body#micro {
     background: #ccdce7 url(../images/background.gif) repeat-x top left;
 	color: #474220;
 }
@@ -192,34 +192,7 @@ span.btn a.icon, a span.icon {
 	text-indent: -999px;
 	font-size: 1%;
 	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
-}
-#selfsearch button,
-.query-button,
-#moderator_search_btn,
-#search_search,
-#selfsearch button,
-#search_submit,
-.btn-search,
-#searchviews_submit,
-#selfsearch button:hover,
-.query-button:hover,
-#moderator_search_btn:hover,
-#search_search:hover,
-#selfsearch button:hover,
-#search_submit:hover,
-.btn-search:hover,
-#searchviews_submit:hover {
-	background: transparent url(../images/btn-search.gif) no-repeat !important;
-	border: 0;
-	color: #6e8e00;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
+	vertical-align: top;
 	height: 24px;
 	width: 24px;
 	margin-left: 2px;
@@ -328,8 +301,10 @@ span.btn a.icon, a span.icon {
 #sub-nav li a:active {
     color: #474220;
 	height: 25px;
-    padding: 5px 12px 5px 10px;
+	padding: 0 12px 0 10px;
 	background: url(../images/submenu-divider.gif) no-repeat right top;
+	display: block;
+	float: left;
 }
 #sub-nav li a:hover {
     color: #7e7327;

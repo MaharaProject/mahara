@@ -158,3 +158,9 @@ ul.colnav li a {
 #viewmenu a {
 	color: #182768;
 }
+
+#copyview .searchquery {
+	background: none;
+	border: 0;
+	padding: 0;
+}

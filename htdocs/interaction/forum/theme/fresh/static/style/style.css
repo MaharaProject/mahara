@@ -30,16 +30,16 @@
 
 /* Posts */
 .forumpost {
-	border: 1px dotted #BEE3F1;
+	border: 0;
 	background-color: #10171A;
 }
 .forumsubject {
-	background: #1A292F;
-	border-bottom: 1px dotted #BEE3F1;
+	background: #0e0e0e;
+	border-bottom: 0;
 }
 .forumpostleft {
-	background-color: #1A292F;
-	border-right: 1px dotted #BEE3F1;
+	background-color: #000000;
+	border-right: 0;
 }
 .forumpostleft h5 {
     color: #BEE3F1;
@@ -51,4 +51,8 @@
 .postedits {
 	padding: 10px;
 	background: #000;
+}
+
+#viewforum div.pagination {
+	background: none;
 }
