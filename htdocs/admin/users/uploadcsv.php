@@ -121,7 +121,7 @@ $form = array(
         'authinstance' => $authinstanceelement,
         'quota' => array(
             'type' => 'bytes',
-            'title' => get_string('filequota', 'admin'),
+            'title' => get_string('filequota1', 'admin'),
             'description' => get_string('filequotadescription', 'admin'),
             'rules' => array('integer' => true, 'minvalue' => 0),
             'defaultvalue' => get_config_plugin('artefact', 'file', 'defaultquota'),
@@ -176,7 +176,7 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
     $form['elements']['quota'] = array(
         'type'         => 'text',
         'disabled'     => true,
-        'title'        => get_string('filequota', 'admin'),
+        'title'        => get_string('filequota1', 'admin'),
         'description'  => get_string('filequotadescription', 'admin'),
         'value'        => display_size(get_config_plugin('artefact', 'file', 'defaultquota')),
     );
