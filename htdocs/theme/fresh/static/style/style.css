@@ -71,7 +71,8 @@ h6 {
 #searchresults tfoot td,
 #adminstitutionslist tfoot td,
 #profileicons tfoot td,
-#activitylist tfoot td {
+#activitylist tfoot td,
+.tag-results #results {
 	border-top: 1px dotted #BEE3F1;
 }
 .main-column table h3 a,
@@ -97,7 +98,7 @@ h6 {
 }
 .listing.twocolumn td {
     padding: 4px !important;
-	border-color: #080D0F;
+    border-color: #1A292F;
 }
 /* Alternative row background colours */
 .r0, .r0 td, .d0  {
@@ -117,6 +118,15 @@ tr.highlight td {
   border-bottom: none;
     border-bottom: 1px solid #080D0F;
 }
+.filelist tr.highlight-file  td {
+    color: #666666;
+}
+.filelist tr.folder td a {
+    color: #0084d7;
+}
+.filelist tr td a {
+    color: #00AEF1;
+}
 
 /**************************** Pagination ****************************/
 div.pagination a {
@@ -124,8 +134,8 @@ div.pagination a {
     background-color: #1A292F;
 }
 div.pagination .disabled {
-	background-color: #080D0F;
-	color: #26363d;
+    background: none;
+    color: #080D0F;
 }
 div.pagination .selected {
 	border: 0;
@@ -161,7 +171,7 @@ legend a:hover {
 
 /* Fieldset */
 fieldset {
-    border: 1px solid #1C3740;
+    border: 1px solid #BEE3F1;
 }
 
 
@@ -225,33 +235,6 @@ span.btn a.icon, a span.icon {
 /* Search buttons */
 #usf_submit,
 #usf_submit:hover {
-	background: transparent url(../images/btn-search.png) no-repeat !important;
-	border: 0;
-	color: #7EF000;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
-}
-#selfsearch button,
-.query-button,
-#moderator_search_btn,
-#search_search,
-#selfsearch button,
-#search_submit,
-.btn-search,
-#searchviews_submit,
-#selfsearch button:hover,
-.query-button:hover,
-#moderator_search_btn:hover,
-#search_search:hover,
-#selfsearch button:hover,
-#search_submit:hover,
-.btn-search:hover,
-#searchviews_submit:hover {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
 	border: 0;
 	color: #7EF000;
@@ -437,21 +420,32 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 .subpage {
   border: 1px solid #1C3740;
   border-top: 10px solid #009ad5;
+  background: #1A292F;
+}
+.grouppageswrap {
+	border: 0;
+	padding: 10px 0;
 }
 
 
 /**************** MAIN CONTENT *****************/
 #mainmiddle {
 	background: #0C2839;
-	padding: 0 10px;
 }
 #containerX #main-wrapper {
 	background: #0C2839;
-	overflow: hidden;
+}
+#containerX .main-column {
+	margin: 0 10px;
+	padding: 0;
+	background: #080D0F;
+}
+#containerX #main-column-container {
+	padding: 10px 15px;
 }
 #main-wrapper {
 	background: #080D0F;
-		overflow-x: hidden;
+	margin: 0 10px;
 }
 .main-column-narrow {
 	width: 69%;
@@ -463,6 +457,10 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 div.ok {
     color: #2da000;
     background-color: #cfe7c5;
+}
+.message.info,
+div.info {
+	background: #366900;
 }
 #messages .error,
 div.error {
@@ -476,7 +474,7 @@ div.error {
 /* system messages */
 .message {
     background-color: #1C3740;
-    border: 1px dotted #e0e8ee;
+    border: 0;
 }
 
 .sitemessage {
@@ -530,6 +528,9 @@ div.sideblock ul ul {
 #sb-profile #user-profileicon {
 	padding-top: 35px;
 	padding-right: 5px;
+}
+#user-profileicon img {
+	border: 0;
 }
 /* Side Online Users */
 #lastminutes {
@@ -613,10 +614,10 @@ table.attachments td {
 /* User/view */
 #userview {
 	background-color: transparent;
-    border: 2px solid #1C3740;
+	border-color: #1C3740;
 }
 #userview .user-icon {
-	background: #0C2839;
+	background: none;
 	border: 0;
 }
 
@@ -631,14 +632,12 @@ table.attachments td {
 
 /* Copy a view */
 #viewpreview {
-  border: 10px solid #1C3740;
-  background-color: #10171A;
+  border: 10px solid #363636;
+  background-color: #000000;
 }
 #viewpreviewinner {
-  border: 1px solid #BEE3F1;
-}
-#viewpreviewclose {
-  border-bottom: 1px dotted #BEE3F1;
+  border: 0;
+  background: none;
 }
 
 /* View access */
@@ -662,22 +661,26 @@ table.attachments td {
 }
 
 
-#friendslist td {
+#friendslist td, #onlinelist td, #adminlist td, #stafflist td, #pendinglist td {
 	border-bottom: 0;
 }
 
 /* Group: about */
 .group-info {
-    border: 2px solid #1C3740;
-	background-color: #1A292F;
+    border: 0;
+    background-color: #000000;
 }
 
+.main-column .groupviewsection table h3 a {
+    color: #7EF000 !important;
+}
 
 /* Home page info boxes */
 
 .home-info {
     border: 0;
     background: #0C2839;
+    filter: none\0/;
 }
 .home-info p.subtitle {
     border-top: solid 1px #cccccc;
@@ -705,13 +708,17 @@ table.attachments td {
 }
 .morelinkwrap,
 #myviews .submitted-viewitem {
-	background: #080D0F;
+	background: none;
 }
 .viewfooter .releaseviewform {
 	background: #080D0F;
 }
+.memberswrap {
+	border: 0;
+	paddign: 5px 0;
+}
 .memberssearch {
-	background: #080D0F !important;
+	background: #1A292F !important;
 	border: 0 !important;
 }
 #createfolder {
@@ -731,6 +738,40 @@ tr.editrow, tr.editrow td {
 	border: 0 !important;
 }
 
+#editaccess #editaccess_collections_container,
+#editaccess #editaccess_views_container,
+#editaccess #editaccess_accesslist_container,
+#editaccess #editaccess_more_container {
+	background: #1C3740;
+	border: 0;
+}
+#editaccess .checkboxes label {
+	color: #00AEF1;
+}
+#editaccess fieldset legend,
+#editaccess fieldset legend a {
+	color: #7EF000 !important;
+}
+#accesslistitems .ai-container th, #accesslistitems .ai-container td {
+	border-bottom: 1px solid #BEE3F1;
+	color: #FFFFFF;
+}
+.wallpost {
+	background: #10171A;
+	border-color: #080D0F;
+}
+
+div.groupbox {
+  border: 10px solid #363636;
+  background-color: #000000;
+}
+div.groupbox div.jointype {
+	border: 0;
+}
+#addmembers {
+	background: #000000;
+	border: 0;
+}
 /**************** DROPDOWN NAVIGATION ****************/
 /**************** SUB NAVIGATION *********************/
 #main-nav .dropdown-sub {

@@ -22,6 +22,16 @@
 #forumbtns .editforum {
 	font-weight: bold;
 }
+#subscribe_forum div.btn-subscribe input.submit {
+	* display: block;
+	* float: left;
+	* filter: none;
+}
+#subscribe_forum span.help a img {
+	* zoom: 1;
+	* display: block;
+	* float: left;
+}
 
 /* forum description */
 #forumdescription {

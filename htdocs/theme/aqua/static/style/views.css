@@ -47,6 +47,8 @@
 #current_bt_description {
     background: #e1ecf4;
     color: #333;
+    border-left: 10px solid #1D499F;
+    border-right: 10px solid #1D499F;
 }
 
 

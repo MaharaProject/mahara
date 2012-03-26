@@ -1,21 +1,22 @@
 {include file='header.tpl'}
 
 {if $sitedata}
-<div class="site-stats-left fl">
+<div id="site-stats-wrap">
+<div class="site-stats-left">
   {include file='admin/stats.tpl' cron=1}
 </div>
-<div class="site-stats-right fr">
+<div class="site-stats-right">
 <div class="tabswrap"><ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
   <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
 {/foreach}
 </ul></div>
 
-<div class="subpage rel">
-  <div class="statistics-subpage-left-column fl">
+<div class="subpage rel"><div id="site-stats-wrap2">
+  <div class="statistics-subpage-left-column">
   {$subpagedata.summary|safe}
   </div>
-  <div id="statistics_table_container" class="statistics-subpage-right-column fr{if $subpagedata.table.count == 0} hidden{/if}">
+  <div id="statistics_table_container" class="statistics-subpage-right-column {if $subpagedata.table.count == 0} hidden{/if}">
     <h3>{$subpagedata.tabletitle}</h3>
     <table id="statistics_table" class="fullwidth">
       <thead>
@@ -23,7 +24,7 @@
 {foreach from=$subpagedata.tableheadings item=heading}
           <th{if $heading.class} class="{$heading.class}"{/if}>{$heading.name}</th>
 {/foreach}
-        <tr>
+        </tr>
       </thead>
       <tbody>
 {$subpagedata.table.tablerows|safe}
@@ -32,9 +33,12 @@
 {$subpagedata.table.pagination|safe}
   </div>
   <div class="cb"></div>
+  </div>
 </div>
 </div>
   <div class="cb"></div>
+</div>
 {/if}
 
+<div id="site-stats-clearer"></div>
 {include file='footer.tpl'}

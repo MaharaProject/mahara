@@ -3,8 +3,8 @@
 <table id="notes" class="fullwidth listing">
   <thead>
     <tr>
-      <th style="width:65%">{str tag=Note section=artefact.internal}</th>
-      <th style="width:30%">{str tag=containedin section=artefact.internal}</th>
+      <th>{str tag=Note section=artefact.internal}</th>
+      <th>{str tag=containedin section=artefact.internal}</th>
       <th></th>
     </tr>
   </thead>
@@ -14,7 +14,7 @@
     <tr class="{cycle values=r0,r1}">
       <td>
         <a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a>
-        <div id="n{$n->id}_desc" class="hidden">{$n->description|clean_html|safe}</div>
+        <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
       </td>
       <td>
       {foreach from=$n->views item=v}
