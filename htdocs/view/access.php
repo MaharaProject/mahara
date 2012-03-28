@@ -261,7 +261,7 @@ EOF;
 } else {
     $form['elements']['more']['elements']['retainview'] = array(
         'type'         => 'checkbox',
-        'title'        => get_string('retainviewrights', 'view'),
+        'title'        => get_string('retainviewrights1', 'view'),
         'description'  => $group ? get_string('retainviewrightsgroupdescription', 'view') : get_string('retainviewrightsdescription', 'view'),
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
