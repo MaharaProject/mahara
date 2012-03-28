@@ -383,6 +383,8 @@ $string['institutionfull'] = 'The institution you have chosen is not accepting a
 $string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
 $string['registrationcomplete'] = 'Thank you for registering at %s';
 $string['language'] = 'Language';
+$string['itemdeleted'] = 'Item deleted';
+$string['itemupdated'] = 'Item updated';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead.';

@@ -1944,6 +1944,12 @@ function admin_nav() {
             'title'  => get_string('htmlfilters', 'admin'),
             'weight' => 20,
         ),
+        'configextensions/iframesites' => array(
+            'path'   => 'configextensions/iframesites',
+            'url'    => 'admin/extensions/iframesites.php',
+            'title'  => get_string('allowediframesites', 'admin'),
+            'weight' => 30,
+        ),
     );
 
     return $menu;
@@ -3396,4 +3402,12 @@ function clean_email_headers($headertext) {
     $filtered = filter_var($decoloned, FILTER_SANITIZE_STRING, array(FILTER_FLAG_STRIP_LOW, FILTER_FLAG_STRIP_HIGH));
     return substr($filtered, 0, 100);
 
+}
+
+function favicon_display_url($host) {
+    $url = sprintf(get_config('favicondisplay'), $host);
+    if (is_https()) {
+        $url = str_replace('http://', 'https://', $url);
+    }
+    return $url;
 }

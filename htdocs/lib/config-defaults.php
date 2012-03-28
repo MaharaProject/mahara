@@ -258,3 +258,11 @@ $cfg->sslproxy = false;
 
 // If true, new copies of views & collections will have 'Copy of' prepended to the title.
 $cfg->renamecopies = true;
+
+// Favicon display: string used to get the favicon image src from a given domain.
+// Used to display the sites whose iframe embed code is allowed by htmlpurifier.
+// Either assume that favicon.ico exists at the root of the domain, or use a service.
+// $cfg->favicondisplay = 'http://%s/favicon.ico';
+$cfg->favicondisplay = 'http://www.google.com/s2/favicons?domain=%s';
+// $cfg->favicondisplay = 'http://www.grabicon.com/%s';
+// $cfg->favicondisplay = 'http://www.getfavicon.org/?url=%s';
