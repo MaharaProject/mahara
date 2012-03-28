@@ -1705,7 +1705,16 @@ function postgres_create_language($language) {
     if (postgres_language_exists($language)) {
         return true;
     }
-    execute_sql("CREATE LANGUAGE $language;");
+
+    try {
+        execute_sql("CREATE LANGUAGE $language;");
+    }
+    catch (SQLException $e) {
+        // Instead of dying with a generic SQLException, return false below and
+        // let the caller decide what to do when the language cannot be created,
+        // e.g. throw a ConfigSanityException with a useful error message.
+    }
+
     return postgres_language_exists($language);
 }
 
