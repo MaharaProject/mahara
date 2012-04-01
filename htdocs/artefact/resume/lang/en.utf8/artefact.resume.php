@@ -31,7 +31,7 @@ $string['pluginname'] = 'Résumé';
 
 // Tabs
 $string['introduction'] = 'Introduction';
-$string['educationandemployment'] = 'Education & Employment';
+$string['educationandemployment'] = 'Education and employment';
 $string['achievements'] = 'Achievements';
 $string['goals'] = 'Goals';
 $string['skills'] = 'Skills';
@@ -66,7 +66,7 @@ $string['qualification'] = 'Qualification';
 $string['title'] = 'Title';
 $string['description'] = 'Description';
 $string['employer'] = 'Employer';
-$string['jobtitle'] = 'Job Title';
+$string['jobtitle'] = 'Job title';
 $string['jobdescription'] = 'Position description';
 $string['institution'] = 'Institution';
 $string['qualtype'] = 'Qualification type';
