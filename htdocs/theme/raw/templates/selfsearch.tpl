@@ -3,7 +3,7 @@
                 <div class="searchform">
                     <h2>{str tag="search"}</h2>
                     <form method="post" onsubmit="dosearch(); return false;">
-                        <label>Query: 
+                        <label>{str tag="query"}: 
                             <input type="text" name="query" id="search_query" value="{$query}">
                         </label>
                         <button type="submit" class="button">{str tag="go"}</button>
