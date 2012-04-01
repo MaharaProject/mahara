@@ -59,7 +59,6 @@ class Media_voki implements MediaBase {
                     'width'   => ($width + 20),
                     'height'  => ($height + 20),
                 );
-error_log(print_r($result, true));
                 return $result;
             }
         }
@@ -86,20 +85,5 @@ error_log(print_r($result, true));
 
     public function get_base_url() {
         return self::$base_url;
-    }
-
-    private function scrape_url($url) {
-        $request = array(
-            CURLOPT_URL => $url,
-        );
-
-        $return = mahara_http_request($request);
-
-        $regex = '#<param name="movie" value="http://vhss(-d)?\.oddcast\.com/vhss_editors/voki_player\.swf\?doc=(.+)chsm%3d([0-9a-z]+)%26sc%3d([0-9]+)">#U';
-        if (preg_match($regex, strtolower($return->data), $matches)) {
-            return 'http://vhss' . $matches[1] . '.oddcast.com/vhss_editors/voki_player.swf?' . 'doc=' . $matches[2] . 'chsm%3D' . $matches[3] . '%26sc%3D' . $matches[4];
-        }
-
-        return false;
     }
 }
