@@ -48,10 +48,6 @@ $settingsform = new Pieform(array(
             'type'  => 'submit', 
             'value' => get_string('Delete', 'artefact.file'),
         ),
-        'unsetdefault' => array(
-            'type' => 'submit',
-            'value' => get_string('usenodefault', 'artefact.file'),
-        ),
     )
 ));
 
@@ -83,13 +79,25 @@ $uploadform = pieform(array(
 $strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.file'));
 $struploadingfile = json_encode(get_string('uploadingfile', 'artefact.file'));
 $wwwroot = get_config('wwwroot');
+$notfound = $THEME->get_url('images/no_userphoto.png');
+if (!get_config('remoteavatars')) {
+    $ravatar = $notfound;
+}
+else {
+    $ravatar = remote_avatar($USER->get('email'), array('maxw' => '100', 'maxh' => '100'), $notfound);
+}
 $IJS = <<<EOF
 var table = new TableRenderer(
     'profileicons',
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+            if (rowdata.id) {
+                return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+            }
+            else {
+                return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.note}));
+            }
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);
@@ -106,7 +114,12 @@ var table = new TableRenderer(
             return TD({'class': 'left', 'width': '110px'}, INPUT(options));
         },
         function(rowdata) {
-            return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+            if (rowdata.id) {
+                return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+            }
+            else {
+                return TD({'class': 'left', 'width': '110px'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+            }
         }
     ]
 );
@@ -189,13 +202,6 @@ function upload_submit(Pieform $form, $values) {
     global $USER, $filesize;
     safe_require('artefact', 'file');
 
-    // If there are no icons, we can set this one that is being uploaded to be
-    // the default for the user
-    $setasdefault = false;
-    if (0 == get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id)) {
-        $setasdefault = true;
-    }
-
     try {
         $USER->quota_add($filesize);
     }
@@ -232,10 +238,6 @@ function upload_submit(Pieform $form, $values) {
     check_dir_exists($directory);
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
 
-    if ($setasdefault) {
-        $USER->profileicon = $id;
-    }
-
     $USER->commit();
 
     $form->json_reply(PIEFORM_OK, get_string('profileiconaddedtoimagesfolder', 'artefact.file', get_string('imagesdir', 'artefact.file')));
@@ -246,14 +248,21 @@ function settings_submit_default(Pieform $form, $values) {
 
     $default = param_integer('d');
 
-    if (1 != get_field('artefact', 'COUNT(*)', 'id', $default, 'artefacttype', 'profileicon', 'owner', $USER->id)) {
-        throw new UserException(get_string('profileiconsetdefaultnotvalid', 'artefact.file'));
-    }
+    if ($default) {
+        if (1 != get_field('artefact', 'COUNT(*)', 'id', $default, 'artefacttype', 'profileicon', 'owner', $USER->id)) {
+            throw new UserException(get_string('profileiconsetdefaultnotvalid', 'artefact.file'));
+        }
 
-    $USER->profileicon = $default;
-    $USER->commit();
-    $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.file'));
-    redirect('/artefact/file/profileicons.php');
+        $USER->profileicon = $default;
+        $USER->commit();
+        $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.file'));
+        redirect('/artefact/file/profileicons.php');
+    }
+    else {
+        $USER->profileicon = null;
+        $USER->commit();
+        $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.file'));
+    }
 }
 
 function settings_submit_delete(Pieform $form, $values) {
@@ -292,13 +301,6 @@ function settings_submit_delete(Pieform $form, $values) {
     }
 
     redirect('/artefact/file/profileicons.php');
-}
-
-function settings_submit_unsetdefault(Pieform $form, $values) {
-    global $USER, $SESSION;
-    $USER->profileicon = null;
-    $USER->commit();
-    $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.file'));
 }
 
 $smarty = smarty(

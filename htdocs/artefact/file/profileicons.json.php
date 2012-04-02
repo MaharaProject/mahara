@@ -37,9 +37,20 @@ $result = get_records_sql_array('SELECT a.id, a.title, a.note, (u.profileicon = 
     AND a.owner = ?
     ORDER BY a.id', array($USER->get('id')));
 
-if(!$result) {
+$lastrow = array(
+    'id'        => 0,
+    'isdefault' => 't',
+    'title'     => get_string('standardavatartitle', 'artefact.file'),
+    'note'      => get_string('standardavatarnote', 'artefact.file')
+);
+$usersdefaulticon = record_exists_select('usr', 'profileicon IS NULL AND id = ?', array($USER->get('id')));
+if (!$usersdefaulticon) {
+    $lastrow['isdefault'] = 'f';
+}
+if (!$result) {
     $result = array();
 }
+$result[] = $lastrow;
 
 $data['error'] = false;
 $data['data'] = $result;
