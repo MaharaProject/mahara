@@ -247,7 +247,8 @@ $string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</stro
 $string['setdefault'] = 'Set default';
 $string['Title'] = 'Title';
 $string['imagetitle'] = 'Image title';
-$string['usenodefault'] = 'Use no default';
+$string['standardavatartitle'] = 'Standard or external avatar';
+$string['standardavatarnote'] = 'Standard or external profile picture';
 $string['usingnodefaultprofileicon'] = 'Now using no default profile picture';
 $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct type for this block.';
 
