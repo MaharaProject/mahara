@@ -11,7 +11,7 @@ class Media_googlevideo implements MediaBase {
 
     private static $embed_sources  = array(
         array(
-            'match' => '#.*video\.google\.com.*doc[Ii]d=(\-?[0-9]+).*#',
+            'match' => '#^http://video\.google\.com.*doc[Ii]d=(\-?[0-9]+).*#',
             'url'   => 'http://video.google.com/googleplayer.swf?docId=$1',
         ),
     );

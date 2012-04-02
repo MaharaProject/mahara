@@ -10,25 +10,18 @@ class Media_voki implements MediaBase {
 
     private static $iframe_sources = array(
         array(
-            'match' => '#http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)#',
+            'match' => '#^http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)#',
             'url' => 'http://voki.com/php/checksum/scid=$2'
         ),
 
         array(
-            'match' => '#http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
+            'match' => '#^http://www\.voki\.com/pickup\.php\?(partnerid=symbaloo&)?scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
             'url' => 'http://voki.com/php/checksum/scid=$2&height=$3&width=$4'
         ),
 
         array(
-            'match' => '#http://voki\.com/php/checksum/scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
+            'match' => '#^http://voki\.com/php/checksum/scid=([0-9]+)&height=([0-9]+)&width=([0-9]+)#',
             'url' => 'http://voki.com/php/checksum/scid=$1&height=$2&width=$3'
-        ),
-    );
-
-    private static $embed_sources = array(
-        array(
-            'match' => '#.*http://vhss(-d)?\.oddcast\.com/vhss_editors/voki_player\.swf\?(.+)(%26)?sc=([0-9]+).*#',
-            'url' => 'http://vhss$1.oddcast.com/vhss_editors/voki_player.swf?$2$3sc=$4'
         ),
     );
 
@@ -36,19 +29,6 @@ class Media_voki implements MediaBase {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
         $input = strtolower($input);
-
-        foreach (self::$embed_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                $output = preg_replace($source['match'], $source['url'], $input);
-                $result = array(
-                    'videoid' => $output,
-                    'type'    => 'embed',
-                    'width'   => $width,
-                    'height'  => $height,
-                );
-                return $result;
-            }
-        }
 
         foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
@@ -68,11 +48,6 @@ class Media_voki implements MediaBase {
 
     public function validate_url($input) {
         $input = strtolower($input);
-        foreach (self::$embed_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                return true;
-            }
-        }
 
         foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {

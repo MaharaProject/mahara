@@ -13,14 +13,14 @@ class Media_wikieducator implements MediaBase {
 
     private static $iframe_sources = array(
         array(
-            'match' => '#.*?https?://(www\.)?wikieducator\.org/index\.php\?(old|cur)id=([0-9]+).*#',
+            'match' => '#^https?://(www\.)?wikieducator\.org/index\.php\?(old|cur)id=([0-9]+).*#',
             'url'   => 'http://wikieducator.org/index.php?$2id=$3',
         ),
     );
 
     private static $scrape_sources = array(
         array(
-            'match' => '#.*?https?://(www\.)?wikieducator\.org/([a-zA-Z0-9_\-+:%/]+).*#',
+            'match' => '#^https?://(www\.)?wikieducator\.org/([a-zA-Z0-9_\-+:%/]+).*#',
             'url'   => 'http://wikieducator.org/$2',
         ),
     );
@@ -49,7 +49,14 @@ class Media_wikieducator implements MediaBase {
         foreach (self::$scrape_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
-                return $this->process_url(self::scrape_url($output));
+                if ($newurl = self::scrape_url($output)) {
+                    return array(
+                        'videoid' => $newurl,
+                        'type'    => 'iframe',
+                        'width'   => $width,
+                        'height'  => $height,
+                    );
+                }
             }
         }
 
