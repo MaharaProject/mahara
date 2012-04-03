@@ -2844,6 +2844,7 @@ function xmldb_core_upgrade($oldversion=0) {
             'SlideShare'   => 'www.slideshare.net',
             'Glogster'     => 'www.glogster.com',
             'WikiEducator' => 'wikieducator.org',
+            'Voki'         => 'voki.com',
         );
         foreach ($iframedomains as $name => $domain) {
             insert_record('iframe_source_icon', (object) array('name' => $name, 'domain' => $domain));
@@ -2865,6 +2866,7 @@ function xmldb_core_upgrade($oldversion=0) {
             'edu.glogster.com/glog/'                   => 'Glogster',
             'edu.glogster.com/glog.php'                => 'Glogster',
             'wikieducator.org/index.php'               => 'WikiEducator',
+            'voki.com/php/'                            => 'Voki',
         );
         foreach ($iframesources as $prefix => $name) {
             insert_record('iframe_source', (object) array('prefix' => $prefix, 'name' => $name));

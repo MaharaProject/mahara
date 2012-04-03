@@ -654,6 +654,7 @@ function core_postinst() {
         'edu.glogster.com/glog/'                   => 'Glogster',
         'edu.glogster.com/glog.php'                => 'Glogster',
         'wikieducator.org/index.php'               => 'WikiEducator',
+        'voki.com/php/'                            => 'Voki',
     );
     $iframedomains = array(
         'YouTube'      => 'www.youtube.com',
@@ -661,6 +662,7 @@ function core_postinst() {
         'SlideShare'   => 'www.slideshare.net',
         'Glogster'     => 'www.glogster.com',
         'WikiEducator' => 'wikieducator.org',
+        'Voki'         => 'voki.com',
     );
     update_safe_iframes($iframesources, $iframedomains);
 
