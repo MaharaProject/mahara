@@ -29,6 +29,10 @@ class Media_voicethread implements MediaBase {
         );
     }
 
+    public function enabled() {
+        return true;
+    }
+
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;

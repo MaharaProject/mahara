@@ -74,7 +74,15 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         foreach (self::$media_sources as $source) {
             include_once('media_sources/' . $source . '/mediasource.php');
             $sourcename = 'Media_' . $source;
-            $loaded_sources[$source] = new $sourcename;
+            $mediasource = new $sourcename;
+            // Any iframe output from these media sources must be
+            // checked against the site-wide allowed iframe sources.
+            // If a media source can only convert urls into iframes
+            // that are going to be stripped, leave it out of the
+            // list.
+            if ($mediasource->enabled()) {
+                $loaded_sources[$source] = $mediasource;
+            }
         }
         return $loaded_sources;
     }

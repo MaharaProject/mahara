@@ -28,6 +28,12 @@ class Media_vimeo implements MediaBase {
         );
     }
 
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        $outputsrc = $this->httpstr . '://player.vimeo.com/video/';
+        return preg_match(get_config('iframeregexp'), $outputsrc);
+    }
+
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;

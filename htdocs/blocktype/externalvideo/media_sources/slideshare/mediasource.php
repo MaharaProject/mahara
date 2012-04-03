@@ -16,6 +16,11 @@ class Media_slideshare implements MediaBase {
         ),
     );
 
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        return preg_match(get_config('iframeregexp'), 'http://www.slideshare.net/slideshow/embed_code/');
+    }
+
     public function process_url($input, $width=0, $height=0) {
         if (empty($input)) {
             return false;

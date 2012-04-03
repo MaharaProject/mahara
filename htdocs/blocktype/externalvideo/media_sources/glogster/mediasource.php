@@ -23,6 +23,20 @@ class Media_glogster implements MediaBase {
         ),
     );
 
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        $outputs = array(
+            'http://www.glogster.com/glog/',            // iframe_sources
+            'http://edu.glogster.com/glog.php?glog_id', // scrape_sources
+        );
+        foreach ($outputs as $o) {
+            if (!preg_match(get_config('iframeregexp'), $o)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function process_url($input, $width=0, $height=0) {
         if (empty($input)) {
             return false;

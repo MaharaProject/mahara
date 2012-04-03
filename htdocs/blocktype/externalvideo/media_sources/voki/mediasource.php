@@ -25,6 +25,11 @@ class Media_voki implements MediaBase {
         ),
     );
 
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        return preg_match(get_config('iframeregexp'), 'http://voki.com/php/checksum/');
+    }
+
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
