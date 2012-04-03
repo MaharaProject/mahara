@@ -8,8 +8,7 @@
     border-color: #1C3740;
 }
 #top-pane {
-    padding: 10px 10px 0 10px;
-    background: #1C3740;
+    background: none;
 }
 /* The tabs that allow you to select a blocktype category */
 #category-list {
@@ -57,17 +56,15 @@
 #middle-pane {
     background: #00aef1;
     color: #FFF;
-		border-style: solid;
-    border-width: 0 10px;
-		border-color: #1C3740;
+    border: 0;
 }
 #current_bt_description strong {
-	color: #7EF000;
+    color: #ffffff;
 }
 
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
-	border-color: #1C3740;
+	border: none;
 }
 #blocksinstruction {
     background: #080D0F;
@@ -159,6 +156,10 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 
 
+.ac-pagination .results {
+	background: #000000;
+}
+
 /* attachments */
 .attachments {
 	background-color: #10171A;
@@ -175,14 +176,14 @@ ul.artefactchooser-subtabs li.current a:active {
 
 #copyview .searchquery {
 	background: #0C2839;
-	border: 1px solid #1C3740;
+	border: 0;
 }
 
 
 /* View Page footer menu */
 #view .viewfooter {
 	border: 1px solid #10171A;
-	background: #1c3d53;
+	background: none;
 }
 #view #feedbacktable {
 	clear: both;

@@ -142,6 +142,7 @@ legend a:hover {
 /* Select */
 select {
     border: 1px solid #d1d1d1;
+    padding: 2px;
 }
 
 /* Fieldset */
@@ -223,33 +224,6 @@ span.btn a.icon, a span.icon {
 	width: 23px;
 	margin-left: 0;
 }
-#selfsearch button,
-.query-button,
-#moderator_search_btn,
-#search_search,
-#selfsearch button,
-#search_submit,
-.btn-search,
-#searchviews_submit,
-#selfsearch button:hover,
-.query-button:hover,
-#moderator_search_btn:hover,
-#search_search:hover,
-#selfsearch button:hover,
-#search_submit:hover,
-.btn-search:hover,
-#searchviews_submit:hover {
-	background: #FFFFFF url(../images/btn-search.png) no-repeat center !important;
-	border: 0;
-	color: #FFFFFF;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 22px;
-	width: 22px;
-	margin-left: 0px;
-}
 input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact, .btn, div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.submit.btn-add, button.btn-add, div.btn-msg input.submit, div.btn-edit input.submit, .btn-reply, .btn-subscribe input.submit, .rbuttons, .rbuttons a {
  * filter:chroma(color=#FFFFFF);
 }
@@ -293,6 +267,7 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 #usf_query_container input {
     color: #888888;
 	width: 205px;
+	border-width: 1px;
 	border: #888888;
 }
 
@@ -494,6 +469,15 @@ div.sideblock .sidebar-content a:hover,
 
 #sb-profile .sidebar-header {
 	min-height:	57px;
+}
+#sb-profile .sidebar-content {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+#sb-profile .sidebar-content ul li#groups,
+#sb-profile .sidebar-content #changeuser {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 #sb-profile #user-profileicon {
 	padding-top: 0;
