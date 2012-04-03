@@ -45,7 +45,7 @@ if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_
     throw new AccessDeniedException();
 }
 
-define('TITLE', get_string('copyaview', 'view'));
+define('TITLE', get_string('copyvieworcollection', 'view'));
 
 $views = new StdClass;
 $views->query      = trim(param_variable('viewquery', ''));
