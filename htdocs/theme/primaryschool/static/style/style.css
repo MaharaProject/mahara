@@ -120,10 +120,6 @@ legend {
 legend a, legend a:link, legend a:visited, legend a:active, legend a:hover {
 	color: #182768 !important;
 }
-/* Select */
-select {
-	border: 1px solid #b2b2b2;
-}
 /* Fieldset */
 fieldset {
 	border: 1px solid #14436F;
@@ -175,18 +171,6 @@ span.btn a.icon, a span.icon {
 	width: 21px;
 	margin: 0 0 5px 0;
  * filter:chroma(color=#000000);
-}
-#selfsearch button, .query-button, #moderator_search_btn, #search_search, #selfsearch button, #search_submit, .btn-search, #searchviews_submit, #selfsearch button:hover, .query-button:hover, #moderator_search_btn:hover, #search_search:hover, #selfsearch button:hover, #search_submit:hover, .btn-search:hover, #searchviews_submit:hover {
-	background: transparent url(../images/btn-search.png) no-repeat !important;
-	border: 0;
-	color: #1F97D5;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
 }
 /********************* THEME SWITCHER ***************************/
 #switch-mode {
@@ -269,6 +253,8 @@ span.btn a.icon, a span.icon {
 	height: 21px;
 	padding: 2px 0 3px 10px;
  * padding: 1px 0 3px 10px;
+ * line-height: 18px;
+  line-height: 18px\0/;
 }
 #header-right {
 	padding: 15px 5px 0 0;
@@ -546,7 +532,7 @@ ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-p
 div.sideblock {
 	border-bottom: 0;
 	padding: 0 0 5px 0;
-	margin-bottom: 20px;
+	margin: 0 0 20px 0;
 	background: url(../images/sidebar-blue-bottom.png) no-repeat bottom left;
 }
 div.sideblock .sidebar-header {
@@ -565,6 +551,7 @@ div.sideblock .sidebar-content {
 	background: #f1f2f8;
 	margin: 0 14px 0 10px;
 	padding: 5px;
+	* width: 220px;
 }
 div.sideblock .sidebar-content a {
 	color: #182768;
@@ -583,7 +570,8 @@ div.sideblock .sidebar-content a {
 }
 #sb-profile .sidebar-content {
 	background: #fff4cf;
-	padding: 5px 10px;
+	padding: 0 10px;
+	* width: 210px;
 }
 #sb-profile #unreadmessages {
 	margin-bottom: 3px;
@@ -593,6 +581,11 @@ div.sideblock .sidebar-content a {
 }
 #sb-profile #user-profileicon {
 	padding: 0
+}
+#sb-profile .sidebar-content ul li#groups,
+#sb-profile .sidebar-content #changeuser {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 #sb-profile ul a, #sb-profile ul a:link, #sb-profile ul a:visited, #sb-profile ul a:active {
 	color: #000000;
@@ -660,14 +653,14 @@ div.sideblock .sidebar-content a {
 }
 #performance-info {
 	color: #4f5a8c;
-	margin: 10px 0 5px 0;
+	margin: 15px 0 0 0;
 }
 #performance-info span {
 	color: #636d9b;
 }
 #version {
 	color: #636d9b;
-	margin: 0 0 5px 0;
+	margin: 15px 0 0 0;
 }
 #powered-by {
 	margin: 10px 10px 10px 0;
@@ -676,7 +669,7 @@ body#micro #footer-wrap {
 	background: url(../images/powered-by-mahara-small.png) no-repeat top left;
 	padding-left: 60px;
 	width: 900px;
-	margin: 0 auto;
+	margin: 10px auto 0 auto;
 	min-height: 20px;
 }
 /****************************** PAGE BY PAGE STYLES **********************************/

@@ -173,3 +173,9 @@ ul.colnav li a {
 .blockinstance-content .groupviewsection h5 {
 	color: #333;
 }
+
+/* copy a page */
+#copyview .searchquery {
+	background-color: #EBF0F4;
+	border: 0;
+}

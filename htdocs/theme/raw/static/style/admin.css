@@ -205,13 +205,23 @@ input#register_register {
   margin: 1px;
 }
 #site-stats-graph {
-  margin: 0 3px 10px 3px;
+  margin: 0 0 10px 0;
+}
+#site-stats-graph img {
+	width: 265px;
+}
+#site-stats-wrap {
+	margin-left: 280px;
 }
 .site-stats-left {
-	width: 34%;
+	width: 265px;
+	float: left;
+	margin-left: -280px;
 }
 .site-stats-right {
-	width: 62%;
+	margin-left: 0;
+	float: left;
+	width: 100%;
 }
 .site-stats-table div {
 	padding: 3px 5px;
@@ -226,14 +236,25 @@ input#register_register {
 	background: none;
 	padding: 0;
 }
+#site-stats-wrap2 {
+	margin-left: 320px;
+}
 .statistics-subpage-left-column {
-  width: 25%;
+	width: 320px;
+	float: left;
+	margin-left: -320px;
 }
 .statistics-subpage-right-column {
-  width: 73%;
+	margin-left: 0;
+	float: left;
+	width: 100%;
 }
 .statistics-subpage-left-column p {
 	margin: 0 0 10px 0;
+}
+#clearingsitestats {
+	position: absolute;
+	margin-bottom: 20px;
 }
 .admin-home-column {
   width: 49%;
@@ -444,6 +465,9 @@ table.tablerenderer th.desc {
 }
 #edituser_site td {
 	vertical-align: top;
+}
+#edituser_site #edituser_site_tags_container #edituser_site_tags {
+	width: 200px !important;
 }
 
 /* USERS > SUSPENDED USERS */
@@ -709,6 +733,9 @@ form#uploadcsv {
 	list-style: disc;
 	margin: 0 0 0 15px;
 	font-size: 1em;
+}
+#adminplugin ul.adminpluginstypes ul ul li form {
+	* zoom: 1;
 }
 
 #edituser_institution tr.submit td {

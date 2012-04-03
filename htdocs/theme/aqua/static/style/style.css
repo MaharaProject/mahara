@@ -216,34 +216,6 @@ span.btn a.icon, a span.icon {
 	width: 24px;
 	margin-left: 2px;
 }
-#selfsearch button,
-.query-button,
-#moderator_search_btn,
-#search_search,
-#selfsearch button,
-#search_submit,
-.btn-search,
-#searchviews_submit,
-#selfsearch button:hover,
-.query-button:hover,
-#moderator_search_btn:hover,
-#search_search:hover,
-#selfsearch button:hover,
-#search_submit:hover,
-.btn-search:hover,
-#searchviews_submit:hover {
-	background: transparent url(../images/btn-search.png) no-repeat !important;
-	border: 0;
-	color: #1F97D5;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 24px;
-	width: 24px;
-	margin-left: 2px;
-}
-
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {

@@ -322,6 +322,7 @@ div.pagination {
 	text-align: center;
 	margin: 3px 0;
 	padding: 5px;
+	line-height: 2.5em;
 }
 div.pagination span {
 	margin: 0 3px;
@@ -449,6 +450,9 @@ select {
 	margin-right: 3px;
 	padding: 3px;
 }
+div.select {
+	margin-bottom: 3px;
+}
 /* Fieldset */
 fieldset {
 	padding: 10px 15px;
@@ -497,6 +501,8 @@ fieldset.collapsed legend a {
 /* Text fields and such */
 input.text, input.password, input.file, textarea, input[type=text], input[type=password], input[type=file] {
 	padding: 3px;
+	padding: 3px\0/;
+	* padding: 1px;
 }
 input.text.required {
 	border: 1px solid #e98a88;
@@ -880,6 +886,46 @@ div.rbuttons .small-logo {
 	border: 0;
 	background: none;
 }
+#friendslistcontainer input#search_submit,
+.memberssearch input#search_submit {
+	* padding: 1px 3px;
+	padding: 4px 3px 3px 3px\0/;
+	margin-left: 2px;
+}
+input#search_search,
+input#filter_submit,
+input#searchviews_submit,
+#files #files_filebrowser_createfolder,
+div.searchform button#query-button,
+table.userlisttable button#users_search_btn,
+table.userlisttable button#admins_search_btn,
+form#search input#search_submit,
+tr#institution_authplugin_container td button,
+form#invite input#invite_submit {
+	* padding: 1px 3px;
+	padding: 4px 3px 3px 3px\0/;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+input#usf_submit {
+	padding: 4px 3px 3px 3px;
+}
+}
+#searchviews #searchviews_submit,
+#editmenus #menuitemlist td input.button,
+#copyview button.query-button {
+	* padding: 1px 3px;
+	padding: 4px 3px 4px 3px\0/;
+}
+.rbuttons form {
+	* display: block;
+	* float: left;
+}
+.rbuttons form input,
+input.cancel,
+#wall input.submit {
+	* filter: none;
+}
+
 /**************************** Top of page elements ****************************/
 .viewheadertop {
 	height: 30px;
@@ -991,6 +1037,9 @@ div.rbuttons .small-logo {
 }
 #usf_query_container input {
 	width: 130px;
+	padding: 2px 2px 3px 2px;
+	* padding: 2px;
+	padding: 2px\0/;
 }
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
@@ -1287,6 +1336,9 @@ div.sideblock ul li {
 #sb-loginbox #login_login_username, #sb-loginbox #login_login_password {
 	width: 95%;
 }
+#sb-loginbox .login-externallink {
+	margin-top: 3px;
+}
 /* Side Profile */
 #user-profileicon {
 	float: right;
@@ -1454,6 +1506,9 @@ a.tag {
 	font-weight: bold;
 	text-decoration: none;
 }
+.setlimit a {
+	margin-left: 5px;
+}
 .mytags .tagfreq {
 	font-weight: normal;
 	font-size: .9167em;
@@ -1589,12 +1644,12 @@ a.tag {
 #version {
 	clear: right;
 	float: right;
-	margin: 5px;
+	margin: 10px 10px 5px 10px;
 	color: #888;
 }
 #release {
 	float: right;
-	margin: 5px;
+	margin: 10px 10px 5px 10px;
 	color: #888;
 }
 /****************************** PAGE BY PAGE STYLES **********************************/
@@ -1674,7 +1729,7 @@ table.attachments td {
 }
 /* Profile icons */
 #userview .user-icon a {
-	margin: 0 0 0 10px;
+	margin: 0 10px 0 0;
 }
 .profile-icon-container {
 	width: 20px;
@@ -1880,6 +1935,20 @@ table.secreturls {
 #viewacl-advanced .viewacl-advanced-search #search {
 	display: inline;
 	width: 95px;
+	width: 85px\0/;
+	padding: 3px;
+	* padding: 1px 0;
+}
+#viewacl-advanced .viewacl-advanced-search button#dosearch {
+	padding: 3px 2px 1px 2px;
+	* padding: 1px 2px 0 2px;
+	* margin-left: 2px;
+	padding: 4px 3px 3px 3px\0/;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#viewacl-advanced .viewacl-advanced-search button#dosearch {
+	padding: 4px 3px 3px 3px;
+}
 }
 #viewacl-advanced #results {
 	margin: 10px 0 0 0;
@@ -1906,9 +1975,18 @@ table.secreturls {
 #templatesearch_table tbody td.right {
 	width: 17em;
 }
-#editaccess_more_container .calendar {
+#editaccess_more_container fieldset div.calendar {
 	border: 0;
 	font-size: 1em;
+	* zoom: 1;
+}
+#editaccess_more_container fieldset div.checkbox,
+#editaccess_more_container fieldset div.html,
+#editaccess_more_container fieldset div.calendar {
+	margin-top: 5px;
+}
+#editaccess_more_container fieldset div label {
+	margin-right: 3px;
 }
 .main-column .accesslist-head1 th {
 	border-bottom: none;
@@ -1987,6 +2065,7 @@ table.secreturls {
 }
 #editaccess #editaccess_accesslist_container #viewacl-advanced legend {
 	font-size: 1.1667em;
+	white-space: nowrap;
 }
 .checkboxes label {
 	clear: left;
@@ -2241,6 +2320,9 @@ div.groupbox ul {
 div.groupbox li.last {
 	margin-top: 5px;
 }
+div#groupbox p.fullwidth a.btn {
+	* display: block;
+}
 #friendslist ul.actionlist li, #onlinelist ul.actionlist li, #adminlist ul.actionlist li, #stafflist ul.actionlist li {
 	list-style: none;
 	margin: 0;
@@ -2463,6 +2545,7 @@ form#search, form#filter, div.searchform {
 	background: -ms-linear-gradient(top, #efefef 0%,#ffffff 100%); /* IE10+ */
 	background: linear-gradient(top, #efefef 0%,#ffffff 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+	* filter: none;
 }
 .home-info h3 {
 	margin: 0 0 5px 0;
@@ -2600,11 +2683,8 @@ img.feedicon {
 	line-height: 2em;
 }
 /******* Shared Pages **********/
-form.search input#search_search {
-    margin: 0 0 3px;
-}
 form.search .advanced {
-    margin: .5em 0 0;
+    margin: 10px 0 0 0;
 }
 form.search .advanced label {
     display: block;
@@ -2676,4 +2756,22 @@ form#sendmessage #sendmessage_message, #editpost_description_tbl, #editblog_desc
 	margin:0px;
 	border:1px solid #CCCCCC;
 	background:white;
+}
+#notes td .desc p {
+	margin: 0 0 3px 0;
+	font-size: .9167em;
+}
+
+table.fileedittable tr th label {
+	white-space: nowrap;
+}
+form#adduser td label {
+	font-weight: normal;
+}
+form#register tbody tr.checkbox th {
+	padding-top: 7px;
+	width: 15%;
+}
+form#register tbody tr.checkbox td {
+	width:85%;
 }
