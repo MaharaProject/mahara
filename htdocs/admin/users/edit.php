@@ -121,7 +121,7 @@ $quotaused = get_string('quotaused', 'admin') . ': ' . display_size($user->quota
 if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
     $elements['quota'] = array(
         'type'         => 'bytes',
-        'title'        => get_string('filequota','admin'),
+        'title'        => get_string('filequota1','admin'),
         'description'  => get_string('filequotadescription','admin') . '<br>' . $quotaused,
         'rules'        => array('integer' => true),
         'defaultvalue' => $user->quota,
@@ -131,7 +131,7 @@ else {
     $elements['quota'] = array(
         'type'         => 'text',
         'disabled'     => true,
-        'title'        => get_string('filequota', 'admin'),
+        'title'        => get_string('filequota1', 'admin'),
         'description'  => get_string('filequotadescription', 'admin') . '<br>' . $quotaused,
         'value'        => display_size($user->quota),
     );

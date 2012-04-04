@@ -45,7 +45,7 @@ $quotasform = pieform(array(
         ),
         'quota'  => array(
             'type' => 'bytes',
-            'title' => get_string('filequota', 'admin'),
+            'title' => get_string('filequota1', 'admin'),
             'description' => get_string('groupfilequotadescription', 'admin'),
             'defaultvalue' => $group->quota,
         ),
