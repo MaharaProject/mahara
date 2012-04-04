@@ -290,7 +290,7 @@ $string['nothemeselected'] = 'No theme selected';
 // Templates
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
-$string['retainviewrights'] = 'Retain view access on copied pages';
+$string['retainviewrights1'] = 'Retain view access on copied pages or collections';
 $string['templatedescription'] = 'Check this box if you would like the people who can see your page to be able to make their own copies of it, along with any files and folders it contains.';
 $string['templatedescriptionplural'] = 'Check this box if you would like the people who can see your pages to be able to make their own copies of them, along with any files and folders they contain.';
 $string['retainviewrightsdescription'] = 'Check this box if you would like to add access for you to view copies of this page or collection that are copied by other users. Those users can revoke this access after they copy it if they wish. Pages that are copied from a copy of this page or collection will not have this same access.';
