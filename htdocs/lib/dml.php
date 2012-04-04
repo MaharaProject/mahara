@@ -1718,6 +1718,29 @@ function postgres_create_language($language) {
     return postgres_language_exists($language);
 }
 
+function mysql_has_trigger_privilege() {
+    // Finding out whether the current user has trigger permission
+    // seems to be quite hard.  It would require parsing the output
+    // from SHOW GRANTS.  It's much easier to try and create one.
+
+    execute_sql("CREATE TABLE {testtable} (testcolumn INT);");
+
+    try {
+        execute_sql("CREATE TRIGGER {testtrigger} BEFORE INSERT ON {testtable} FOR EACH ROW BEGIN END;");
+        execute_sql("DROP TRIGGER {testtrigger};");
+        $success = true;
+    }
+    catch (SQLException $e) {
+        // Instead of dying with a generic SQLException, return false below and
+        // let the caller decide what to do when the trigger cannot be created,
+        // e.g. throw a ConfigSanityException with a useful error message.
+        $success = false;
+    }
+
+    execute_sql("DROP TABLE {testtable};");
+    return $success;
+}
+
 /**
  * Creates a database row trigger
  *

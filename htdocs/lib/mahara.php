@@ -183,6 +183,9 @@ function ensure_install_sanity() {
     if (is_postgres() && !postgres_create_language('plpgsql')) {
         throw new ConfigSanityException(get_string('plpgsqlnotavailable', 'error'));
     }
+    if (is_mysql() && !mysql_has_trigger_privilege()) {
+        throw new ConfigSanityException(get_string('mysqlnotriggerprivilege', 'error'));
+    }
 }
 
 function ensure_upgrade_sanity() {
@@ -193,6 +196,9 @@ function ensure_upgrade_sanity() {
             if (!column_collation_is_default('event_type', 'name')) {
                 throw new ConfigSanityException(get_string('dbcollationmismatch', 'admin'));
             }
+        }
+        if (!mysql_has_trigger_privilege()) {
+            throw new ConfigSanityException(get_string('mysqlnotriggerprivilege', 'error'));
         }
     }
     if (is_postgres() && !postgres_create_language('plpgsql')) {
