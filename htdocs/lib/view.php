@@ -480,6 +480,8 @@ class View {
         if (isset($this->tags)) {
             delete_records('view_tag', 'view', $this->get('id'));
             foreach ($this->get_tags() as $tag) {
+                //truncate the tag before insert it into the database
+                $tag = substr($tag, 0, 128);
                 insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
             }
         }
