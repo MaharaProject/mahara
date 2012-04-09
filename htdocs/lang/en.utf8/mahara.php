@@ -428,6 +428,7 @@ $string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the email could not be sent successfully. This is our fault. Please try again shortly.';
 $string['forgotpassemailsentanyway1'] = 'An email was sent to the address stored for this user, but the address may not be correct or the recipient server is returning messages. Please contact the %s administrator to reset your password if you do not receive the email.';
 $string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered doesn\'t match any users for this site';
+$string['forgotpassuserusingexternalauthentication'] = 'The user you requested uses an external authentication method. <a href="%s">Ask your administrator</a> for help with changing your password. Or provide another username or email address.';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
