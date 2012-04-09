@@ -229,8 +229,11 @@ function uploadcsv_validate(Pieform $form, $values) {
     // sure that the required fields are included
     $mandatoryfields = array(
         'username',
-        'password'
     );
+    if (!$values['updateusers']) {
+        $mandatoryfields[] = 'password';
+    }
+
     $mandatoryfields = array_merge($mandatoryfields, array_keys(ArtefactTypeProfile::get_mandatory_fields()));
     if ($lockedprofilefields = get_column('institution_locked_profile_field', 'profilefield', 'name', $institution)) {
         $mandatoryfields = array_merge($mandatoryfields, $lockedprofilefields);
@@ -281,7 +284,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         // it can be used in the profile screen as well.
 
         $username = $line[$formatkeylookup['username']];
-        $password = $line[$formatkeylookup['password']];
+        $password = isset($formatkeylookup['password']) ? $line[$formatkeylookup['password']] : null;
         $email    = $line[$formatkeylookup['email']];
         if (isset($remoteusers)) {
             $remoteuser = strlen($line[$formatkeylookup['remoteuser']]) ? $line[$formatkeylookup['remoteuser']] : null;
