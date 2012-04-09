@@ -66,7 +66,7 @@ var params = {
 function sortTagAlpha(a, b) {
     var aid = getNodeAttribute(a, 'id');
     var bid = getNodeAttribute(b, 'id');
-    return aid < bid ? -1 : (aid > bid ? 1 : 0);
+    return aid.toLowerCase() < bid.toLowerCase() ? -1 : (aid.toLowerCase() > bid.toLowerCase() ? 1 : 0);
 }
 
 function sortTagFreq(a, b) {
