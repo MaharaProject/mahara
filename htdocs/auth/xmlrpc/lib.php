@@ -815,7 +815,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'rows'         => 10,
             'cols'         => 70,
             'title'        => '',
-            'description'  => get_string('authloginmsg', 'auth'),
+            'description'  => get_string('authloginmsg2', 'auth'),
             'defaultvalue' => self::$default_config['authloginmsg'],
             'help'         => true,
         );
