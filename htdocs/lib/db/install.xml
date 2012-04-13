@@ -595,6 +595,7 @@
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true"/>
                 <FIELD NAME="pending" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true"/>
                 <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="extra" TYPE="text" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
