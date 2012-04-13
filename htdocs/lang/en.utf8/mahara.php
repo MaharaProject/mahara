@@ -600,7 +600,7 @@ $string['blacklisteddomaininurl'] = 'A URL in this field contains the blackliste
 
 $string['notinstallable'] = 'Not installable';
 $string['installedplugins'] = 'Installed plugins';
-$string['notinstalledplugins'] = 'Not installed plugins';
+$string['notinstalledplugins'] = '<span class="error">Not installed plugins</span>';
 $string['plugintype'] = 'Plugin type';
 
 $string['settingssaved'] = 'Settings saved';
