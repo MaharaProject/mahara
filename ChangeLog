@@ -1,3 +1,46 @@
+1.5.0 (2012-04-17)
+- A new theme for younger students called "Primary School"
+- Optional drop-down menus for the site navigation
+- Support for institution logos to replace the site header logo
+- New institution theme with configurable colours
+- Reusable text boxes, a.k.a. "Notes"
+- Block to display journal entries with a particular tag
+- Block to display a user's watchlist
+- Improvements to online users sideblock (e.g. limit on number of users to display)
+- Image gallery displays external galleries (flickr, Panoramio, Photobucket, Picasa, Windows Live)
+- Support for embedding content from Glogster, Prezi, Slideshare, Vimeo, Voki and WikiEducator
+- Add an option to include feedback in HTML export
+- Implementation of the SafeIFrame feature of HTML Purifier to facilitate the use of specified iFrames
+- Copying of collections
+- Pages and collections can be shared with institutions
+- Allow original author of a copyable page to retain permission to see copies of the page
+- More search options on "Shared pages"
+- Added and updated many help texts and descriptions
+- Improvements to search usability
+- WYSIWYG fullscreen option
+- Profile pictures are available in the files area
+- Multiple file uploads
+- Institution landing page listing institution admins and staff
+- Users can suggest and invite others to groups
+- Group admins can hide members
+- Group and group member CSV uploads
+- Group file quotas
+- Admins can suspend, delete, and change the authentication method for multiple users in one action
+- Admin report on user pages access lists
+- Support for custom links in the footer menu
+- User file quotas are configurable by institution and visible on the user accounts page
+- Set general account preferences when adding users for internal authentication
+- Allow institutions more control over access to user profiles
+- Allow site admin to specify a default notification method for new users
+- MNet key regeneration button and functions to export dashboard info to Moodle
+- User CSV upload can make updates to existing users
+- Sitemap generation
+- CLI install and upgrade abilities for unattended installations
+- BrowserID authentication method
+- More user-friendly password policy with password salts, bcrypt storage and brute force prevention
+- Student ID and display name can be set from LDAP
+- Confirmation of new user registrations via self-registration method prior to account creation
+
 1.4.2 (2012-03-06)
 - Fix PHP Fatal Error in user/view.php (Bug #885588)
 - Fixes to Selenium tests
