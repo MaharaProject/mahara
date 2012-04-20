@@ -21,7 +21,7 @@
         </div>
 {if $LOGGEDIN}
         <div id="mainnav-container" class="nav">
-         <div id="mainnav" class="js-hidden">
+         <div id="mainnav">
           <strong><a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true}</a>:</strong>
           {foreach from=$MAINNAV item=item}
             {if $item.path}
@@ -37,15 +37,6 @@
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
           <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
-        <script type="text/javascript">{literal}
-        addLoadEvent(function(){
-            setStyle('mainnav', {'display': 'none'});
-            removeElementClass('mainnav', 'js-hidden');
-            connect('mainnav-container', 'onmouseenter', function(e) { appear('mainnav', {'duration': 0.25}); });
-            connect('mainnav-container', 'onmouseleave', function(e) { fade('mainnav', {'duration': 0.25}); });
-        });
-        {/literal}
-        </script>
        </div>
 {/if}
       </div>
