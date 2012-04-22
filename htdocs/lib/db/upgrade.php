@@ -2893,5 +2893,35 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2012053100) {
+        // Clean url fields for usr, group, and view tables.
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('urlid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 30, null, null);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('urliduk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('urlid'));
+        add_index($table, $index);
+
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('urlid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 30, null, null);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('urliduk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('urlid'));
+        add_index($table, $index);
+
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('urlid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, null);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('urliduk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('urlid', 'owner', 'group', 'institution'));
+        add_index($table, $index);
+    }
+
     return $status;
 }

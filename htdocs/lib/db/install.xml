@@ -142,6 +142,7 @@
                 <FIELD NAME="showhomeinfo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="logintries" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="unread" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="urlid" TYPE="char" LENGTH="30" NOTNULL="false" />
                 <!-- If adding a datetime column, you should also update the relevant
                 functions in htdocs/auth/user.php and htdocs/lib/user.php to convert the
                 value to a timestamp when a record is retrieved -->
@@ -152,6 +153,7 @@
             </KEYS>
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username"/>
+                <INDEX NAME="urliduk" UNIQUE="true" FIELDS="urlid" />
             </INDEXES>
         </TABLE>
         <TABLE NAME="usr_institution">
@@ -354,6 +356,7 @@
                 <FIELD NAME="hidemembersfrommembers" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="invitefriends" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="suggestfriends" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="urlid" TYPE="char" LENGTH="30" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -364,6 +367,7 @@
             </KEYS>
             <INDEXES>
                 <INDEX NAME="instshortuk" UNIQUE="true" FIELDS="institution, shortname"/>
+                <INDEX NAME="urliduk" UNIQUE="true" FIELDS="urlid" />
             </INDEXES>
         </TABLE>
         <TABLE NAME="group_member">
@@ -686,6 +690,7 @@
                 <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
                 <FIELD NAME="accessconf" TYPE="char" LENGTH="40" NOTNULL="false"/>
                 <FIELD NAME="locked" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
+                <FIELD NAME="urlid" TYPE="char" LENGTH="100" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -697,6 +702,9 @@
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="view_type" REFFIELDS="type" />
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="urliduk" UNIQUE="true" FIELDS="urlid,owner,group,institution" />
+            </INDEXES>
         </TABLE>
         <TABLE NAME="view_tag">
             <FIELDS>
