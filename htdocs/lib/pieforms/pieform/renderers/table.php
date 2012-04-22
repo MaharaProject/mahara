@@ -74,6 +74,9 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
         $result .= $element['labelhtml'];
     }
     $result .= "</th>\n\t\t<td>";
+    if (isset($element['prehtml'])) {
+        $result .= $element['prehtml'];
+    }
     $result .= $element['html'];
     if (isset($element['helphtml'])) {
         $result .= ' ' . $element['helphtml'];

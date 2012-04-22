@@ -47,6 +47,10 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $result .= $element['labelhtml'];
     }
 
+    if (isset($element['prehtml'])) {
+        $result .= $element['prehtml'];
+    }
+
     //$result .= $builtelement;
     $result .= $element['html'];
 

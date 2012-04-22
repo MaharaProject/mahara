@@ -55,6 +55,10 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
         $result .= $element['labelhtml'];
     }
 
+    if (isset($element['prehtml'])) {
+        $result .= $element['prehtml'];
+    }
+
     $result .= $element['html'];
 
     $result .= "</span>";
