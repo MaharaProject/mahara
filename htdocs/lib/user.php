@@ -1440,6 +1440,28 @@ function get_new_username($desired) {
 }
 
 /**
+ * Get a unique profile urlid
+ *
+ * @param string $desired
+ */
+function get_new_profile_urlid($desired) {
+    $maxlen = 30;
+    $desired = strtolower(substr($desired, 0, $maxlen));
+    $taken = get_column_sql('SELECT urlid FROM {usr} WHERE urlid LIKE ?', array(substr($desired, 0, $maxlen - 6) . '%'));
+    if (!$taken) {
+        return $desired;
+    }
+
+    $i = 1;
+    $newname = substr($desired, 0, $maxlen - 2) . '-1';
+    while (in_array($newname, $taken)) {
+        $i++;
+        $newname = substr($desired, 0, $maxlen - strlen($i) - 1) . '-' . $i;
+    }
+    return $newname;
+}
+
+/**
  * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
  * @param array $userids
  * @return array containing the users in the order from $userids
@@ -1901,6 +1923,11 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
     else {
         $user->ctime = db_format_timestamp(time());
+        // Ensure this user has a profile urlid
+        if (get_config('cleanurls') && (!isset($user->urlid) || is_null($user->urlid))) {
+            $user->urlid = generate_urlid($user->username, get_config('cleanurluserdefault'), 3, 30);
+            $user->urlid = get_new_profile_urlid($user->urlid);
+        }
         if (empty($user->quota)) {
             $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
         }

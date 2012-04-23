@@ -346,6 +346,11 @@ function group_create($data) {
         $data['shortname'] = null;
     }
 
+    if (get_config('cleanurls') && (!isset($data['urlid']) || strlen($data['urlid']) == 0)) {
+        $data['urlid'] = generate_urlid($data['name'], get_config('cleanurlgroupdefault'), 3, 30);
+        $data['urlid'] = group_get_new_homepage_urlid($data['urlid']);
+    }
+
     if (!is_array($data['members']) || count($data['members']) == 0) {
         throw new InvalidArgumentException("group_create: at least one member must be specified for adding to the group");
     }
@@ -368,6 +373,7 @@ function group_create($data) {
         (object) array(
             'name'           => $data['name'],
             'description'    => isset($data['description']) ? $data['description'] : null,
+            'urlid'          => $data['urlid'],
             'grouptype'      => $data['grouptype'],
             'category'       => isset($data['category']) ? intval($data['category']) : null,
             'jointype'       => $jointype,
@@ -2148,4 +2154,21 @@ function group_quota_remove($groupid, $bytes) {
     $group->id = $groupid;
     $group->quotaused = $newquota;
     update_record('group', $group);
+}
+
+function group_get_new_homepage_urlid($desired) {
+    $maxlen = 30;
+    $desired = strtolower(substr($desired, 0, $maxlen));
+    $taken = get_column_sql('SELECT urlid FROM {group} WHERE urlid LIKE ?', array(substr($desired, 0, $maxlen - 6) . '%'));
+    if (!$taken) {
+        return $desired;
+    }
+
+    $i = 1;
+    $newname = substr($desired, 0, $maxlen - 2) . '-1';
+    while (in_array($newname, $taken)) {
+        $i++;
+        $newname = substr($desired, 0, $maxlen - strlen($i) - 1) . '-' . $i;
+    }
+    return $newname;
 }
