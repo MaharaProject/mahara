@@ -1238,10 +1238,6 @@ function group_view_submission_form($groupid, $viewdata) {
                 'type' => 'hidden',
                 'value' => $groupid
             ),
-            'returnto' => array(
-                'type' => 'hidden',
-                'value' => get_config('wwwroot') . 'group/view.php?id=' . $groupid,
-            ),
         ),
     ));
 }
