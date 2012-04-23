@@ -116,7 +116,29 @@ class View {
     );
 
     public function __construct($id=0, $data=null) {
-        if (!empty($id)) {
+        if (is_array($id) && isset($id['urlid']) && isset($id['ownerurlid'])) {
+            $tempdata = get_record_sql('
+                SELECT v.*
+                FROM {view} v JOIN {usr} u ON v.owner = u.id
+                WHERE v.urlid = ? AND u.urlid = ?',
+                array($id['urlid'], $id['ownerurlid'])
+            );
+            if (empty($tempdata)) {
+                throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['ownerurlid']));
+            }
+        }
+        else if (is_array($id) && isset($id['urlid']) && isset($id['groupurlid'])) {
+            $tempdata = get_record_sql('
+                SELECT v.*
+                FROM {view} v JOIN {group} g ON v.group = g.id
+                WHERE v.urlid = ? AND g.urlid = ? AND g.deleted = 0',
+                array($id['urlid'], $id['groupurlid'])
+            );
+            if (empty($tempdata)) {
+                throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['groupurlid']));
+            }
+        }
+        else if (!empty($id) && is_numeric($id)) {
             $tempdata = get_record_sql('
                 SELECT v.*
                 FROM {view} v LEFT JOIN {group} g ON v.group = g.id
@@ -126,13 +148,15 @@ class View {
             if (empty($tempdata)) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
+        }
+        if (isset($tempdata)) {
             if (!empty($data)) {
                 $data = array_merge((array)$tempdata, $data);
             }
             else {
                 $data = $tempdata; // use what the database has
             }
-            $this->id = $id;
+            $this->id = $tempdata->id;
         }
         else {
             $this->ctime = time();

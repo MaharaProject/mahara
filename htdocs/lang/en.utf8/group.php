@@ -185,6 +185,7 @@ $string['groupsiminvitedto'] = 'Groups I\'m invited to';
 $string['groupsiwanttojoin'] = 'Groups I want to join';
 $string['requestedtojoin'] = 'You have requested to join this group';
 $string['groupnotfound'] = 'Group with id %s not found';
+$string['groupnotfoundname'] = 'Group %s not found';
 $string['groupconfirmleave'] = 'Are you sure you want to leave this group?';
 $string['cantleavegroup'] = 'You can\'t leave this group';
 $string['usercantleavegroup'] = 'This user cannot leave this group';

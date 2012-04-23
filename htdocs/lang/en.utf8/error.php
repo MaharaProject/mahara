@@ -106,6 +106,7 @@ $string['accessdeniedexception'] =  'You do not have access to view this page';
 $string['viewnotfoundexceptiontitle'] = 'Page not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that doesn\'t exist.';
 $string['viewnotfound'] = 'Page with id %s not found';
+$string['viewnotfoundbyname'] = 'Page %s by %s not found';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";

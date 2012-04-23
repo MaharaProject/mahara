@@ -35,8 +35,15 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 require_once(get_config('libroot') . 'view.php');
 safe_require('artefact', 'file');
 
-define('GROUP', param_integer('id'));
-$group = group_current_group();
+if ($urlid = param_alphanumext('homepage', null)) {
+    define('GROUPURLID', $urlid);
+    $group = group_current_group();
+}
+else {
+    define('GROUP', param_integer('id'));
+    $group = group_current_group();
+}
+
 if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
 }

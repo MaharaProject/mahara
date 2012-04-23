@@ -54,6 +54,18 @@ else if ($usertoken) {
         throw new AccessDeniedException(get_string('accessdenied', 'error'));
     }
 }
+else if ($pageurl = param_alphanumext('page', null)) {
+    if ($profile = param_alphanumext('profile', null)) {
+        $view = new View(array('urlid' => $pageurl, 'ownerurlid' => $profile));
+    }
+    else if ($homepage = param_alphanumext('homepage', null)) {
+        $view = new View(array('urlid' => $pageurl, 'groupurlid' => $homepage));
+    }
+    else {
+        throw new ViewNotFoundException(get_string('viewnotfoundexceptiontitle', 'error'));
+    }
+    $viewid = $view->get('id');
+}
 else {
     $viewid = param_integer('id');
 }
@@ -73,7 +85,9 @@ $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
 
-$view = new View($viewid);
+if (!isset($view)) {
+    $view = new View($viewid);
+}
 
 // Create the "make feedback private form" now if it's been submitted
 if (param_variable('make_public_submit', null)) {
