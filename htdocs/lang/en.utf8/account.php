@@ -38,6 +38,12 @@ $string['changeusernamedesc'] = 'The username you use to log into %s. Usernames 
 $string['usernameexists'] = 'This username is taken, please choose another.';
 
 $string['accountoptionsdesc'] = 'General account options';
+
+$string['changeprofileurl'] = 'Change profile URL';
+$string['profileurl'] = 'Profile URL';
+$string['profileurldescription'] = 'A personalised URL for your profile page. This field must be 3-30 characters long.';
+$string['urlalreadytaken'] = 'This profile URL is already taken. Please choose another.';
+
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';

@@ -73,6 +73,7 @@ else {
         'hidemembersfrommembers' => 0,
         'invitefriends'  => 0,
         'suggestfriends' => 0,
+        'urlid'          => null,
     );
 }
 
@@ -94,6 +95,15 @@ $form = array(
             'rows'         => 10,
             'cols'         => 55,
             'defaultvalue' => $group_data->description,
+        ),
+        'urlid' => array(
+            'type'         => 'text',
+            'title'        => get_string('groupurl', 'group'),
+            'prehtml'      => '<span class="description">' . get_config('wwwroot') . get_config('cleanurlgroupdefault') . '/</span> ',
+            'description'  => get_string('groupurldescription', 'group') . ' ' . get_string('cleanurlallowedcharacters'),
+            'rules'        => array('maxlength' => 30, 'regex' => get_config('cleanurlvalidate')),
+            'defaultvalue' => $group_data->urlid,
+            'ignore'       => !$id || !get_config('cleanurls'),
         ),
         'settings' => array(
             'type'         => 'fieldset',
@@ -347,6 +357,25 @@ function editgroup_validate(Pieform $form, $values) {
             }
         }
     }
+
+    if (isset($values['urlid']) && get_config('cleanurls')) {
+        $urlidlength = strlen($values['urlid']);
+        if ($group_data->urlid != $values['urlid']) {
+            if ($urlidlength && record_exists('group', 'urlid', $values['urlid'])) {
+                $form->set_error('urlid', get_string('groupurltaken', 'group'));
+            }
+            else if (!$urlidlength) {
+                // Once you've set a group url, there's no going back
+                $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
+            }
+        }
+        // If the urlid is empty, we'll generate it when creating a group, but if it's 1 or 2 characters
+        // long, it's an error.
+        if ($urlidlength > 0 && $urlidlength < 3) {
+            $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
+        }
+    }
+
     if (!empty($values['open'])) {
         if (!empty($values['controlled'])) {
             $form->set_error('open', get_string('membershipopencontrolled', 'group'));
@@ -392,6 +421,10 @@ function editgroup_submit(Pieform $form, $values) {
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
     );
+
+    if (get_config('cleanurls') && isset($values['urlid'])) {
+        $newvalues['urlid'] = $values['urlid'];
+    }
 
     db_begin();
 

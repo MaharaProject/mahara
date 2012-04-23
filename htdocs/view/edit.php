@@ -85,6 +85,22 @@ if ($studentid !== '') {
     $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
 }
 
+// Clean urls are only available for portfolio views owned by groups or users who already
+// have their own clean profiles or group homepages.
+if ($urlallowed = get_config('cleanurls') && $view->get('type') == 'portfolio' && !$institution) {
+    if ($group) {
+        $groupdata = get_record('group', 'id', $group);
+        $urlallowed &= strlen($groupdata->urlid);
+        $cleanurlbase = get_config('wwwroot') . get_config('cleanurlgroupdefault') . '/' . $groupdata->urlid . '/';
+    }
+    else {
+        $userurlid = $USER->get('urlid');
+        if ($urlallowed &= (!is_null($userurlid) && strlen($userurlid))) {
+            $cleanurlbase = get_config('wwwroot') . get_config('cleanurluserdefault') . '/' . $userurlid . '/';
+        }
+    }
+}
+
 $editview = array(
     'name'     => 'editview',
     'method'   => 'post',
@@ -106,6 +122,15 @@ $editview = array(
             'title'        => get_string('title','view'),
             'defaultvalue' => $view->get('title'),
             'rules'        => array( 'required' => true ),
+        ),
+        'urlid' => array(
+            'type'         => 'text',
+            'title'        => get_string('viewurl', 'view'),
+            'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
+            'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
+            'defaultvalue' => $new ? null : $view->get('urlid'),
+            'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
+            'ignore'       => !$urlallowed || $new,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -161,8 +186,24 @@ $editview['elements']['submit'] = array(
 
 $editview = pieform($editview);
 
+function editview_validate(Pieform $form, $values) {
+    global $view;
+
+    if (isset($values['urlid']) && $values['urlid'] != $view->get('urlid')) {
+        if (strlen($values['urlid']) < 3) {
+            $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
+        }
+        else if ($group = $view->get('group') and record_exists('view', 'group', $group, 'urlid', $values['urlid'])) {
+            $form->set_error('urlid', get_string('groupviewurltaken', 'view'));
+        }
+        else if ($owner = $view->get('owner') and record_exists('view', 'owner', $owner, 'urlid', $values['urlid'])) {
+            $form->set_error('urlid', get_string('userviewurltaken', 'view'));
+        }
+    }
+}
+
 function editview_submit(Pieform $form, $values) {
-    global $new, $view, $SESSION;
+    global $new, $view, $SESSION, $urlallowed;
 
     $view->set('title', $values['title']);
     $view->set('description', $values['description']);
@@ -172,6 +213,15 @@ function editview_submit(Pieform $form, $values) {
     }
     if (isset($values['ownerformat']) && $view->get('owner')) {
         $view->set('ownerformat', $values['ownerformat']);
+    }
+    if (isset($values['urlid'])) {
+        $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
+    }
+    else if ($new && $urlallowed) {
+        // Generate one automatically based on the title
+        $desired = generate_urlid($values['title'], get_config('cleanurlviewdefault'), 3, 100);
+        $ownerinfo = (object) array('owner' => $view->get('owner'), 'group' => $view->get('group'));
+        $view->set('urlid', View::new_urlid($desired, $ownerinfo));
     }
     $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
     $view->commit();

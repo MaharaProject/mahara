@@ -47,6 +47,10 @@ $string['groupsaved'] = 'Group saved successfully';
 $string['invalidgroup'] = 'The group doesn\'t exist';
 $string['canteditdontown'] = 'You can\'t edit this group because you don\'t own it';
 $string['groupdescription'] = 'Group description';
+$string['groupurl'] = 'Group homepage URL';
+$string['groupurldescription'] = "The URL of your group's homepage. This field must be 3-30 characters long.";
+$string['groupurltaken'] = 'That URL is already taken by another group.';
+
 $string['Membership'] = 'Membership';
 $string['Roles'] = 'Roles';
 $string['Open'] = 'Open';
