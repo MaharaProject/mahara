@@ -2416,6 +2416,7 @@ function profile_sideblock() {
         'id'          => $USER->get('id'),
         'myname'      => display_name($USER, null, true),
         'username'    => $USER->get('username'),
+        'url'         => profile_url($USER),
     );
 
     $authinstance = $SESSION->get('mnetuser') ? $SESSION->get('authinstance') : $USER->get('authinstance');

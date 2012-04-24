@@ -10,7 +10,7 @@
       <td class="center">{$topic->postcount}</td>
       <td>
         <div class="s">{$topic->body|str_shorten_html:80:true|strip_tags|safe}</div>
-        <span class="s poster"><a href="{$WWWROOT}user/view.php?id={$topic->poster}">{$topic->poster|display_name}</a></span>
+        <span class="s poster"><a href="{profile_url($topic->poster)}">{$topic->poster|display_name}</a></span>
         <span class="postedon nowrap"> - {$topic->ctime|strtotime|format_date:'strftimerecent'}</span>
       </td>
     </tr>

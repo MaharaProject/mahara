@@ -525,7 +525,7 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         if (!empty($this->fromuser)) {
-            $this->url = 'user/view.php?id=' . $this->fromuser;
+            $this->url = profile_url($this->fromuser, false);
         }
         else {
             $this->customheaders = array(
@@ -611,7 +611,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     }
 
     public function get_emailmessage($user) {
-        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         if (empty($this->artefact)) {
             return get_string_from_language(
@@ -632,7 +632,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     public function get_htmlmessage($user) {
         $viewtitle = hsc($this->view->get('title'));
         $reportername = hsc(display_default_name($this->reporter));
-        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         $message = hsc($this->message);
         if (empty($this->artefact)) {

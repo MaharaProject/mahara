@@ -1306,7 +1306,7 @@ function group_get_admins($groupids) {
     }
 
     $groupadmins = get_records_sql_array('
-        SELECT m.group, m.member, u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.profileicon
+        SELECT m.group, m.member, u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.profileicon, u.urlid
         FROM {group_member} m JOIN {usr} u ON u.id = m.member
         WHERE m.group IN (' . implode(',', db_array_to_ph($groupids)) . ")
         AND m.role = 'admin'",

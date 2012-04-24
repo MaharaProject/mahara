@@ -84,7 +84,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                 $foruminfo = get_records_sql_array('
                     SELECT
                         p.id, p.subject, p.body, p.poster, p.topic, t.forum, pt.subject AS topicname,
-                        u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon, u.admin, u.staff, u.deleted
+                        u.firstname, u.lastname, u.username, u.preferredname, u.email, u.profileicon, u.admin, u.staff, u.deleted, u.urlid
                     FROM
                         {interaction_forum_post} p
                         INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic)
@@ -104,7 +104,7 @@ class PluginBlocktypeRecentForumPosts extends SystemBlocktype {
                 if ($foruminfo) {
                     $userfields = array(
                         'firstname', 'lastname', 'username', 'preferredname', 'email', 'profileicon',
-                        'admin', 'staff', 'deleted'
+                        'admin', 'staff', 'deleted', 'urlid',
                     );
                     foreach ($foruminfo as $f) {
                         $f->author = (object) array('id' => $f->poster);

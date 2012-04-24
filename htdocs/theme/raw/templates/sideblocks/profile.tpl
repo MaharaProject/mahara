@@ -1,8 +1,8 @@
     <div class="sidebar-header">
       <div id="user-profileicon">
-        <a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
+        <a href="{$sbdata.url}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
       </div>
-      <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
+      <h3><a href="{$sbdata.url}">{$sbdata.myname}</a></h3>
     </div>
     <div class="sidebar-content">
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>

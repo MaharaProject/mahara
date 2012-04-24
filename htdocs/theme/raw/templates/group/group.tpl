@@ -1,5 +1,5 @@
 <h3><a href="{group_homepage_url($group)}">{$group->name}</a></h3>
-<h6>{foreach name=admins from=$group->admins item=user}<a href="{$WWWROOT}user/view.php?id={$user->id}">{$user|display_name}</a>{if !$.foreach.admins.last}, {/if}{/foreach}</h6>
+<h6>{foreach name=admins from=$group->admins item=user}<a href="{profile_url($user)}">{$user|display_name}</a>{if !$.foreach.admins.last}, {/if}{/foreach}</h6>
 <div class="inline s"> - {$group->settingsdescription}
 {$group->description|str_shorten_html:100:true|safe}</div>
 {if $group->membercount}

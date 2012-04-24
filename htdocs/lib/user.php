@@ -1518,7 +1518,7 @@ function get_users_data($userids, $getviews=true) {
     $userids = array_map('intval', $userids);
 
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
-                u.profileicon, u.email,
+                u.profileicon, u.email, u.urlid,
                 fp.requester AS pending,
                 ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
@@ -2375,11 +2375,11 @@ function get_friends($userid, $limit=10, $offset=0) {
     $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false);
 
     $from = 'FROM (
-            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon, u.urlid
             FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr1
             WHERE f.usr2 = ? AND u.deleted = 0
             UNION
-            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon, u.urlid
             FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr2
             WHERE f.usr1 = ? AND u.deleted = 0
         ) f';

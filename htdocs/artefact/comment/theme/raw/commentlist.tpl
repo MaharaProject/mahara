@@ -13,10 +13,10 @@
       </div>
       <div class="details commentleft">
       {if $item->author}
-        <div class="icon"><a href="{$WWWROOT}user/view.php?id={$item->author->id}">
+        <div class="icon"><a href="{$item->author->profileurl}">
           <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{$item->author|display_name}">
         </a><br />
-        <a href="{$WWWROOT}user/view.php?id={$item->author->id}" class="username">{$item->author|display_name}</a></div>
+        <a href="{$item->author->profileurl}" class="username">{$item->author|display_name}</a></div>
       {else}
         {$item->authorname}
       {/if}

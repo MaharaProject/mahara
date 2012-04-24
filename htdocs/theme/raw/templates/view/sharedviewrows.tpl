@@ -23,7 +23,7 @@
             <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" class="fr btn" title="{str tag=viewcomment section=artefact.comment}">{str tag=viewcomment section=artefact.comment}</a>
             <div>{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</div>
           {if $view.commentauthor}
-            <a href="{$WWWROOT}user/view.php?id={$view.commentauthor}" class="poster">{$view.commentauthor|display_name}</a>
+            <a href="{profile_url($view.commentauthor)}" class="poster">{$view.commentauthor|display_name}</a>
           {else}
             {$view.commentauthorname}
           {/if}
