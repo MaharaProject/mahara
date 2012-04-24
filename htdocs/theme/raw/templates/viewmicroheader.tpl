@@ -22,7 +22,7 @@
 {if $LOGGEDIN}
         <div id="mainnav-container" class="nav">
          <div id="mainnav">
-          <strong><a href="{$WWWROOT}user/view.php">{$USER|display_name:null:true}</a>:</strong>
+          <strong><a href="{profile_url($USER)}">{$USER|display_name:null:true}</a>:</strong>
           {foreach from=$MAINNAV item=item}
             {if $item.path}
               <a href="{$WWWROOT}{$item.url}">{$item.title}</a> |

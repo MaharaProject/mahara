@@ -83,7 +83,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('invite', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $userid,
+            'goto' => profile_url($user),
         )
     ),
 ));
@@ -97,5 +97,5 @@ function invitetogroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $user;
     group_invite_user($group, $user->id, $USER, isset($values['role']) ? $values['role'] : null);
     $SESSION->add_ok_msg(get_string('userinvited', 'group'));
-    redirect('/user/view.php?id=' . $user->id);
+    redirect(profile_url($user));
 }

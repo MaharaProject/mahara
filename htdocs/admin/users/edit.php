@@ -42,7 +42,7 @@ $authobj = AuthFactory::create($user->authinstance);
 
 if (!$USER->is_admin_for_user($user)) {
     $SESSION->add_error_msg(get_string('youcannotadministerthisuser', 'admin'));
-    redirect('/user/view.php?id=' . $id);
+    redirect(profile_url($user));
 }
 
 if ($user->deleted) {

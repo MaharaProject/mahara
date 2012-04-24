@@ -871,7 +871,7 @@ function get_user_for_display($user=null) {
 
     $fields = array(
         'id', 'username', 'preferredname', 'firstname', 'lastname', 'admin', 'staff',
-        'profileicon', 'email', 'deleted',
+        'profileicon', 'email', 'deleted', 'urlid',
     );
 
     if (is_numeric($user) && isset($usercache[$user])) {
@@ -1462,6 +1462,52 @@ function get_new_profile_urlid($desired) {
 }
 
 /**
+ * Get the profile url for a user
+ *
+ * @param object $user
+ * @param boolean $full return a full url
+ * @param boolean $useid Override the cleanurls setting and use a view id in the link
+ *
+ * @return string
+ */
+function profile_url($user, $full=true, $useid=false) {
+    $wantclean = !$useid && get_config('cleanurls');
+
+    if ($user instanceof User) {
+        $id = $user->get('id');
+        $urlid = $wantclean ? $user->get('urlid') : null;
+    }
+    else if (is_array($user)) {
+        $id = $user['id'];
+        $urlid = $user['urlid'];
+    }
+    else if (is_numeric($user)) {
+        $id = $user;
+        $urlid = $wantclean ? get_user_for_display($id)->urlid : null;
+    }
+    else if (isset($user->id)) {
+        $id = $user->id;
+        $urlid = isset($user->urlid) ? $user->urlid : null;
+    }
+
+    if ($wantclean && !is_null($urlid)) {
+        $url = get_config('cleanurluserdefault') . '/' . $urlid;
+    }
+    else if (!empty($id)) {
+        $url = 'user/view.php?id=' . (int) $id;
+    }
+    else {
+        throw new SystemException("profile_url called with no user id");
+    }
+
+    if ($full) {
+        $url = get_config('wwwroot') . $url;
+    }
+
+    return $url;
+}
+
+/**
  * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
  * @param array $userids
  * @return array containing the users in the order from $userids
@@ -1789,7 +1835,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     if (is_friend($USER->get('id'), $user->id)) {
         $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
         delete_records('usr_friend_request', 'owner', $USER->get('id'), 'requester', $user->id);
-        redirect('/user/view.php?id=' . $user->id);
+        redirect(profile_url($user));
     }
 
     // friend db record
@@ -1800,7 +1846,7 @@ function acceptfriend_submit(Pieform $form, $values) {
 
     // notification info
     $n = new StdClass;
-    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id');
+    $n->url = profile_url($USER);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
@@ -1816,7 +1862,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
-    redirect('/user/view.php?id=' . $values['id']);
+    redirect(profile_url($user));
 }
 
 // Form to add someone who has friendscontrol set to 'auto'
@@ -1866,7 +1912,7 @@ function addfriend_submit(Pieform $form, $values) {
     if (is_friend($loggedinid, $user->id)) {
         $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
         delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $user->id);
-        redirect('/user/view.php?id=' . $user->id);
+        redirect(profile_url($user));
     }
 
     // friend db record
@@ -1875,7 +1921,7 @@ function addfriend_submit(Pieform $form, $values) {
 
     // notification info
     $n = new StdClass;
-    $n->url = 'user/view.php?id=' . $loggedinid;
+    $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
@@ -1898,7 +1944,7 @@ function addfriend_submit(Pieform $form, $values) {
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
-    redirect('/user/view.php?id=' . $values['id']);
+    redirect(profile_url($user));
 }
 
 /**

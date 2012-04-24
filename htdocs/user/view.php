@@ -325,5 +325,5 @@ function addmember_submit(Pieform $form, $values) {
     catch (SQLException $e) {
         $SESSION->add_error_msg(get_string('adduserfailed', 'group'));
     }
-    redirect('/user/view.php?id=' . $userid);
+    redirect(profile_url($adduser));
 }
