@@ -33,7 +33,7 @@ require_once('group.php');
 $groupid = param_integer('id');
 define('GROUP', $groupid);
 
-$group = get_record_sql("SELECT g.name
+$group = get_record_sql("SELECT g.*
     FROM {group} g
     INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
     WHERE g.id = ?
@@ -54,7 +54,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'group/view.php?id=' . $groupid
+            'goto' => group_homepage_url($group),
         )
     ),
 ));

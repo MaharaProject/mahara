@@ -38,7 +38,7 @@ $returnto = param_variable('returnto', 'view');
 
 $view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
 $group = get_record_sql(
-    'SELECT g.id, g.name, g.grouptype
+    'SELECT g.id, g.name, g.grouptype, g.urlid
        FROM {group_member} u
        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
        WHERE u.member = ?
@@ -121,10 +121,10 @@ function submitview_submit(Pieform $form, $values) {
 }
 
 function returnto() {
-    GLOBAL $viewid, $groupid, $returnto;
+    global $viewid, $group, $returnto;
     // Deteremine the best place to return to
     if ($returnto === 'group') {
-        $goto = 'group/view.php?id=' . $groupid;
+        $goto = group_homepage_url($group, false);
     }
     else if ($returnto === 'view') {
         $goto = 'view/view.php?id=' . $viewid;

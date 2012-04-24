@@ -24,7 +24,7 @@
             <li id="groups"><label><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></label>
                 <ul>
 {foreach from=$sbdata.groups item=group}
-                    <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
+                    <li><a href="{group_homepage_url($group)}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
 {/foreach}
                 </ul></li>
 {/if}

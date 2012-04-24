@@ -578,7 +578,7 @@ function group_stats_table($limit, $offset) {
 
     $groupdata = get_records_sql_array(
         "SELECT
-            g.id, g.name, mc.members, vc.views, fc.forums, pc.posts
+            g.id, g.name, g.urlid, mc.members, vc.views, fc.forums, pc.posts
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
