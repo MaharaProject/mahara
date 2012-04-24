@@ -98,7 +98,7 @@ function addmembers_submit(Pieform $form, $values) {
 
     $SESSION->add_ok_msg(get_string('invitationssent', 'group', count($values['users'])));
     if ($friends) {
-        redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP);
+        redirect(group_homepage_url($group));
     }
     redirect(get_config('wwwroot') . 'group/members.php?id=' . GROUP);
 }

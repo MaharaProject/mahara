@@ -916,7 +916,9 @@ class GroupAccessDeniedException extends AccessDeniedException {
                     || get_record('group_member_invite', 'group', GROUP, 'member', $USER->get('id'))) {
                     $SESSION->add_error_msg(get_string('notmembermayjoin', 'group', $group->name));
                     $next = substr($_SERVER['REQUEST_URI'], strlen(get_mahara_install_subdirectory()) - 1);
-                    redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP . '&next=' . urlencode($next));
+                    $goto = group_homepage_url($group);
+                    $goto .= (strpos($goto, '?') ? '&' : '?') . 'next=' . urlencode($next);
+                    redirect($goto);
                 }
                 if ($group->request && !get_record('group_member_request', 'group', GROUP, 'member', $USER->get('id'))) {
                     $SESSION->add_error_msg(get_string('notamember', 'group'));

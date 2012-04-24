@@ -124,7 +124,7 @@ class Sitemap {
             foreach ($publicgroups as $group) {
                 if (isset($group->mtime) && $this->check_date($group->mtime)) {
                     // each group gets a url entry
-                    $groupurl     = get_config('wwwroot') . 'group/view.php?id=' . $group->id;
+                    $groupurl     = group_homepage_url($group);
                     $groupurl     = utf8_encode(htmlspecialchars($groupurl, ENT_QUOTES, 'UTF-8'));
                     $grouplastmod = format_date(strtotime($group->mtime), 'strftimew3cdate');
 

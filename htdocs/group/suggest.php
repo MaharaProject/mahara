@@ -86,6 +86,7 @@ function addmembers_submit(Pieform $form, $values) {
     }
 
     require_once('activity.php');
+    $groupurl = group_homepage_url($group, false);
     activity_occurred('maharamessage', array(
         'users'   => $values['users'],
         'subject' => '',
@@ -102,10 +103,10 @@ function addmembers_submit(Pieform $form, $values) {
                 'args'    => array(display_name($USER), hsc($group->name), get_config('sitename')),
             ),
         ),
-        'url'     => 'group/view.php?id=' . GROUP,
+        'url'     => $groupurl,
         'urltext' => hsc($group->name),
     ));
 
     $SESSION->add_ok_msg(get_string('recommendationssent', 'group', count($values['users'])));
-    redirect(get_config('wwwroot') . 'group/view.php?id=' . GROUP);
+    redirect(get_config('wwwroot') . $groupurl);
 }

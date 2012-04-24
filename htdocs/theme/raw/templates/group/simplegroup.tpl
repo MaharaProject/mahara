@@ -1,6 +1,6 @@
 <div>
     <h3>
-        <a href="{$WWWROOT}group/view.php?id={$group->id}">
+        <a href="{group_homepage_url($group)}">
             {$group->name}
         </a>
     </h3>

@@ -608,6 +608,7 @@ function get_groups_for_user($username) {
     $data->displayname = display_name($user);
     if ($data->count) {
         foreach ($groupdata['groups'] as $g) {
+            $groupurl = group_homepage_url($g, false);
             $record = array();
             $record['id'] = $g->id;
             $record['name'] = $g->name;
@@ -617,8 +618,8 @@ function get_groups_for_user($username) {
             $record['grouptype'] = $g->grouptype;
             $record['membershiptype'] = $g->membershiptype;
             $record['role'] = $g->role;
-            $record['url'] = '/group/view.php?id=' . $g->id;
-            $record['fullurl'] = get_config('wwwroot') . 'group/view.php?id=' . $g->id;
+            $record['url'] = '/' . $groupurl;
+            $record['fullurl'] = get_config('wwwroot') . $groupurl;
             $data->data[] = $record;
         }
     }

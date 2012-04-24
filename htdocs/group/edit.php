@@ -442,7 +442,12 @@ function editgroup_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect('/group/view.php?id=' . $group_data->id);
+    // Reload $group_data->urlid or else the redirect will fail
+    if (get_config('cleanurls') && !isset($values['urlid']) || $group_data->urlid != $values['urlid']) {
+        $group_data->urlid = get_field('group', 'urlid', 'id', $group_data->id);
+    }
+
+    redirect(group_homepage_url($group_data));
 }
 
 $js = '
