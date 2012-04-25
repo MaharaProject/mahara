@@ -1944,6 +1944,12 @@ function admin_nav() {
             'title'  => get_string('htmlfilters', 'admin'),
             'weight' => 20,
         ),
+        'configextensions/iframesites' => array(
+            'path'   => 'configextensions/iframesites',
+            'url'    => 'admin/extensions/iframesites.php',
+            'title'  => get_string('allowediframesites', 'admin'),
+            'weight' => 30,
+        ),
     );
 
     return $menu;
@@ -2729,19 +2735,13 @@ function clean_html($text, $xhtml=false) {
     }
 
     // Permit embedding contents from other sites
-    // List of pattern fragments for the URI.SafeIframeRegexp below
-    $safeiframesources = array('www\.youtube\.com/embed/',
-                               'player\.vimeo\.com/video/',
-                               'www\.slideshare\.net/slideshow/embed_code/',
-                               '(www|edu)\.glogster\.com/glog(/|\.php)',
-                               'wikieducator\.org/index\.php',
-                               );
     $config->set('HTML.SafeEmbed', true);
     $config->set('HTML.SafeObject', true);
     $config->set('Output.FlashCompat', true);
-    $config->set('HTML.SafeIframe', true);
-    $config->set('URI.SafeIframeRegexp',
-                 '%^https?://('.implode('|', $safeiframesources).')%');
+    if ($iframeregexp = get_config('iframeregexp')) {
+        $config->set('HTML.SafeIframe', true);
+        $config->set('URI.SafeIframeRegexp', $iframeregexp);
+    }
 
     // Allow namespaced IDs
     // see http://htmlpurifier.org/docs/enduser-id.html
@@ -3402,4 +3402,12 @@ function clean_email_headers($headertext) {
     $filtered = filter_var($decoloned, FILTER_SANITIZE_STRING, array(FILTER_FLAG_STRIP_LOW, FILTER_FLAG_STRIP_HIGH));
     return substr($filtered, 0, 100);
 
+}
+
+function favicon_display_url($host) {
+    $url = sprintf(get_config('favicondisplay'), $host);
+    if (is_https()) {
+        $url = str_replace('http://', 'https://', $url);
+    }
+    return $url;
 }

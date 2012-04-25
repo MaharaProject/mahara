@@ -18,18 +18,20 @@ class Media_vimeo implements MediaBase {
 
         self::$iframe_sources = array(
             array(
-                    'match' => '#.*http://vimeo\.com/moogaloop\.swf\?clip_id=([0-9]+).*#',
+                    'match' => '#^http://player\.vimeo\.com/video/([0-9]+).*#',
                     'url'   => $this->httpstr . '://player.vimeo.com/video/$1'
             ),
             array(
-                    'match' => '#.*http://player\.vimeo\.com/video/([0-9]+).*#',
-                    'url'   => $this->httpstr . '://player.vimeo.com/video/$1'
-            ),
-            array(
-                    'match' => '#https?://(www\.|secure\.)?vimeo\.com/([0-9]+)#',
+                    'match' => '#^https?://(www\.|secure\.)?vimeo\.com/([0-9]+)#',
                     'url'   => $this->httpstr . '://player.vimeo.com/video/$2'
             ),
         );
+    }
+
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        $outputsrc = $this->httpstr . '://player.vimeo.com/video/';
+        return preg_match(get_config('iframeregexp'), $outputsrc);
     }
 
     public function process_url($input, $width=0, $height=0) {

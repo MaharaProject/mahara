@@ -643,6 +643,29 @@ function core_postinst() {
 
     set_antispam_defaults();
     reload_html_filters();
+
+    // Default set of sites from which iframe content can be embedded
+    $iframesources = array(
+        'www.youtube.com/embed/'                   => 'YouTube',
+        'player.vimeo.com/video/'                  => 'Vimeo',
+        'www.slideshare.net/slideshow/embed_code/' => 'SlideShare',
+        'www.glogster.com/glog/'                   => 'Glogster',
+        'www.glogster.com/glog.php'                => 'Glogster',
+        'edu.glogster.com/glog/'                   => 'Glogster',
+        'edu.glogster.com/glog.php'                => 'Glogster',
+        'wikieducator.org/index.php'               => 'WikiEducator',
+        'voki.com/php/'                            => 'Voki',
+    );
+    $iframedomains = array(
+        'YouTube'      => 'www.youtube.com',
+        'Vimeo'        => 'vimeo.com',
+        'SlideShare'   => 'www.slideshare.net',
+        'Glogster'     => 'www.glogster.com',
+        'WikiEducator' => 'wikieducator.org',
+        'Voki'         => 'voki.com',
+    );
+    update_safe_iframes($iframesources, $iframedomains);
+
     return $status;
 }
 
@@ -1092,6 +1115,41 @@ function reload_html_filters() {
     }
     set_config('filters', serialize($filters));
     log_info('Enabled ' . count($filters) . ' HTML filters.');
+}
+
+function update_safe_iframe_regex() {
+    $prefixes = get_column('iframe_source', 'prefix');
+    if (!empty($prefixes)) {
+        // We must generate a guaranteed valid regex here that's not
+        // too slack.  It's easiest to whitelist a few characters, but
+        // in future we may need to be more clever.  Admins who know
+        // what they're doing, and need something fancy, can always
+        // override this in config.php.
+        foreach ($prefixes as $r) {
+            if (!preg_match('/^[a-zA-Z0-9\/\._-]+$/', $r)) {
+                throw new SystemException('Invalid site passed to update_safe_iframe_regex');
+            }
+        }
+        $iframeregexp = '%^https?://(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
+    }
+    set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
+}
+
+function update_safe_iframes(array $iframesources, array $iframedomains) {
+    db_begin();
+
+    delete_records('iframe_source_icon');
+    foreach ($iframedomains as $name => $domain) {
+        insert_record('iframe_source_icon', (object) array('name' => $name, 'domain' => $domain));
+    }
+
+    delete_records('iframe_source');
+    foreach ($iframesources as $prefix => $name) {
+        insert_record('iframe_source', (object) array('prefix' => $prefix, 'name' => $name));
+    }
+
+    update_safe_iframe_regex();
+    db_commit();
 }
 
 /**

@@ -763,3 +763,9 @@ form#uploadcsv {
     font-weight: bold;
     margin: 0 .25em 0 0;
 }
+.iframesources {
+    min-width: 75%;
+}
+.iframesources .editrow form td.description {
+    max-width: 500px;
+}

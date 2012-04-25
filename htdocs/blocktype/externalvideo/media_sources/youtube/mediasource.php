@@ -19,18 +19,24 @@ class Media_youtube implements MediaBase {
 
         self::$iframe_sources = array(
             array(
-                'match' => '#.*youtube\.com.*(v|(cp))(=|\/)([a-zA-Z0-9_=-]+).*#',
-                'url'   => $this->httpstr . '://www.youtube.com/embed/$4'
+                'match' => '#^https?://(www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_=-]+).*#',
+                'url'   => $this->httpstr . '://www.youtube.com/embed/$2'
             ),
             array(
-                'match' => '#.*https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*).*#',
+                'match' => '#^https?://(www\.)?youtube\.com/embed/([a-zA-Z0-9\-_+]*).*#',
                 'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
             ),
             array(
-                'match' => '#https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
+                'match' => '#^https?://(www\.)?youtu\.be/([a-zA-Z0-9\-_+]*)#',
                 'url'   => $this->httpstr . '://www.youtube.com/embed/$2',
             ),
         );
+    }
+
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        $outputsrc = $this->httpstr . '://www.youtube.com/embed/';
+        return preg_match(get_config('iframeregexp'), $outputsrc);
     }
 
     public function process_url($input, $width=0, $height=0) {

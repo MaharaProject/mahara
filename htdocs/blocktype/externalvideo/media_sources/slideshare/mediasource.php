@@ -11,17 +11,15 @@ class Media_slideshare implements MediaBase {
 
     private static $scrape_sources = array(
         array(
-            'match' => '@.*https?://(www\.)?slideshare\.net/([^/]+)/([^/?&#]+).*@',
+            'match' => '@^https?://(www\.)?slideshare\.net/(?!slideshow/)([^/]+)/([^/?&#]+).*@',
             'url'   => 'http://www.slideshare.net/$2/$3',
         ),
     );
 
-    private static $iframe_sources = array(
-        array(
-            'match' => '#.*https?://(www\.)?slideshare\.net/slideshow/embed_code/([0-9]+).*#',
-            'url'   => 'http://www.slideshare.net/slideshow/embed_code/$2',
-        ),
-    );
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        return preg_match(get_config('iframeregexp'), 'http://www.slideshare.net/slideshow/embed_code/');
+    }
 
     public function process_url($input, $width=0, $height=0) {
         if (empty($input)) {
@@ -31,23 +29,17 @@ class Media_slideshare implements MediaBase {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
 
-        foreach (self::$iframe_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                $output = preg_replace($source['match'], $source['url'], $input);
-                $result = array(
-                    'videoid' => $output,
-                    'type'    => 'iframe',
-                    'width'   => $width,
-                    'height'  => $height,
-                );
-                return $result;
-            }
-        }
-
         foreach (self::$scrape_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
-                return $this->process_url(self::scrape_url($output), $width, $height);
+                if ($newurl = self::scrape_url($output)) {
+                    return array(
+                        'videoid' => $newurl,
+                        'type'    => 'iframe',
+                        'width'   => $width,
+                        'height'  => $height,
+                    );
+                }
             }
         }
         return false;
@@ -60,11 +52,6 @@ class Media_slideshare implements MediaBase {
             }
         }
 
-        foreach (self::$iframe_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                return true;
-            }
-        }
         return false;
     }
 

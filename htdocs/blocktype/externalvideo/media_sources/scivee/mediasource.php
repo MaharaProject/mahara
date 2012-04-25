@@ -11,14 +11,18 @@ class Media_scivee implements MediaBase {
 
     private static $embed_sources  = array(
         array(
-            'match' => '#.*scivee\.tv/node/([0-9]+).*#',
+            'match' => '#^http://scivee\.tv/node/([0-9]+).*#',
             'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
         ),
         array(
-            'match' => '#.*scivee\.tv.*id=([0-9]+).*#',
+            'match' => '#^http://scivee\.tv.*id=([0-9]+).*#',
             'url'   => 'http://scivee.tv/flash/embedPlayer.swf?id=$1&type=3',
         ),
     );
+
+    public function enabled() {
+        return true;
+    }
 
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;

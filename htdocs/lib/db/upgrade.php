@@ -2829,5 +2829,52 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
+    if ($oldversion < 2012032300) {
+        // Tables for configurable safe iframe sources
+
+        $table = new XMLDBTable('iframe_source_icon');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('domain', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
+        create_table($table);
+
+        $iframedomains = array(
+            'YouTube'      => 'www.youtube.com',
+            'Vimeo'        => 'vimeo.com',
+            'SlideShare'   => 'www.slideshare.net',
+            'Glogster'     => 'www.glogster.com',
+            'WikiEducator' => 'wikieducator.org',
+            'Voki'         => 'voki.com',
+        );
+        foreach ($iframedomains as $name => $domain) {
+            insert_record('iframe_source_icon', (object) array('name' => $name, 'domain' => $domain));
+        }
+
+        $table = new XMLDBTable('iframe_source');
+        $table->addFieldInfo('prefix', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('prefix'));
+        $table->addKeyInfo('namefk', XMLDB_KEY_FOREIGN, array('name'), 'iframe_source_icon', array('name'));
+        create_table($table);
+
+        $iframesources = array(
+            'www.youtube.com/embed/'                   => 'YouTube',
+            'player.vimeo.com/video/'                  => 'Vimeo',
+            'www.slideshare.net/slideshow/embed_code/' => 'SlideShare',
+            'www.glogster.com/glog/'                   => 'Glogster',
+            'www.glogster.com/glog.php'                => 'Glogster',
+            'edu.glogster.com/glog/'                   => 'Glogster',
+            'edu.glogster.com/glog.php'                => 'Glogster',
+            'wikieducator.org/index.php'               => 'WikiEducator',
+            'voki.com/php/'                            => 'Voki',
+        );
+        foreach ($iframesources as $prefix => $name) {
+            insert_record('iframe_source', (object) array('prefix' => $prefix, 'name' => $name));
+        }
+
+        $iframeregexp = '%^https?://(' . str_replace('.', '\.', implode('|', array_keys($iframesources))) . ')%';
+        set_config('iframeregexp', $iframeregexp);
+    }
+
     return $status;
 }

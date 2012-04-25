@@ -29,10 +29,13 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'External media';
 $string['description'] = 'Embed external content';
-$string['videourl'] = 'Content URL';
-$string['videourldescription2'] = 'Paste the embed code or the URL of the page where the content is located. You can embed content from the following sites:';
+$string['urlorembedcode'] = 'URL or embed code';
+$string['videourldescription3'] = 'Paste the <strong>embed code</strong> or the <strong>URL</strong> of the page where the content is located.';
+$string['validiframesites'] = '<strong>Embed code</strong> containing &lt;iframe&gt; tags is allowed from the following sites:';
+$string['validurlsites'] = '<strong>URLs</strong> from the following sites are allowed:';
 $string['width'] = 'Width';
 $string['height'] = 'Height';
+$string['widthheightdescription'] = 'Width and height fields are only used for URLs. If you have entered embed or iframe code above, you need to update the width and height within the code.';
 $string['invalidurl'] = 'Invalid URL';
 
 //Supported sites language strings

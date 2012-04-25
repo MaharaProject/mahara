@@ -11,22 +11,18 @@ class Media_teachertube implements MediaBase {
 
     private static $embed_sources  = array(
         array(
-            'match' => '#.*teachertube\.com/flvideo/([0-9]+)\.flv.*#',
+            'match' => '#^http://(?:www\.)?teachertube\.com/flvideo/([0-9]+)\.flv.*#',
             'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$1.flv',
         ),
         array(
-            'match' => '#.*teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
+            'match' => '#^http://(?:www\.)?teachertube\.com/viewVideo\.php\?video_id=(\d+).*#',
             'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$1',
         ),
-        array(
-            'match' => '#.*http://(www\.)?teachertube\.com/embed/player\.swf\?file=http://(www\.)?teachertube\.com/embedFLV.php\?pg=video_([0-9]+).*#',
-            'url'   => 'http://www.teachertube.com/embed/player.swf?file=http://www.teachertube.com/embedFLV.php?pg=video_$3',
-        ),
-        array(
-            'match' => '#.*http://(www\.)?teachertube.com/skin-p/mediaplayer\.swf\?file=http://www.teachertube.com/flvideo/([0-9]+)\.flv.*#',
-            'url'   => 'http://www.teachertube.com/skin-p/mediaplayer.swf?file=http://www.teachertube.com/flvideo/$2.flv',
-        ),
     );
+
+    public function enabled() {
+        return true;
+    }
 
     public function process_url($input, $width=0, $height=0) {
         $width  = $width  ? (int)$width  : self::$default_width;

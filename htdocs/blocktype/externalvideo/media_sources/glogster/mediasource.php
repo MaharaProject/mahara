@@ -9,30 +9,33 @@ class Media_glogster implements MediaBase {
     private static $default_width  = 480;
     private static $default_height = 650;
 
-    private static $embed_sources  = array(
-        array(
-            'match' => '#.*?glogster\.com/([a-zA-Z0-9\-\_\/]*)/g-([a-zA-Z0-9\-\_\/]*).*#',
-            'url'   => 'http://www.glogster.com/glog/$2',
-        ),
-        array(
-            'match' => '#.*?glogster\.com/glog/([a-zA-Z0-9\-\_\/]*).*#',
-            'url'   => 'http://www.glogster.com/glog/$1',
-        ),
-    );
-
     private static $iframe_sources = array(
         array(
-            'match' => '#.*?https?://((www|edu)\.)?glogster\.com/glog/([a-zA-Z0-9\-\_]*)".*#',
-            'url'   => 'http://www.glogster.com/glog/$3',
+            'match' => '#^https?://(?:(?:www|edu)\.)?glogster\.com/([a-zA-Z0-9_/-]*?)/g-([a-zA-Z0-9_-]*).*#',
+            'url'   => 'http://www.glogster.com/glog/$2',
         ),
     );
 
     private static $scrape_sources = array(
         array(
-            'match' => '#https?://([^.]*(\.edu)?)\.glogster\.com/([^/]*)/.*#',
+            'match' => '#^https?://([^.]*(\.edu)?)\.glogster\.com/([^/]*)/.*#',
             'url'   => 'http://$1.glogster.com/$3/',
         ),
     );
+
+    public function enabled() {
+        // Check that the output iframe source will be allowed by htmlpurifier
+        $outputs = array(
+            'http://www.glogster.com/glog/',            // iframe_sources
+            'http://edu.glogster.com/glog.php?glog_id', // scrape_sources
+        );
+        foreach ($outputs as $o) {
+            if (!preg_match(get_config('iframeregexp'), $o)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public function process_url($input, $width=0, $height=0) {
         if (empty($input)) {
@@ -41,19 +44,6 @@ class Media_glogster implements MediaBase {
 
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
-
-        foreach (self::$embed_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                $output = preg_replace($source['match'], $source['url'], $input);
-                $result = array(
-                    'videoid' => $output,
-                    'type'    => 'iframe',
-                    'width'   => $width,
-                    'height'  => $height,
-                );
-                return $result;
-            }
-        }
 
         foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
@@ -71,7 +61,14 @@ class Media_glogster implements MediaBase {
         foreach (self::$scrape_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
-                return $this->process_url(self::scrape_url($output));
+                if ($newurl = self::scrape_url($output)) {
+                    return array(
+                        'videoid' => $newurl,
+                        'type'    => 'iframe',
+                        'width'   => $width,
+                        'height'  => $height,
+                    );
+                }
             }
         }
         return false;
@@ -79,12 +76,6 @@ class Media_glogster implements MediaBase {
 
     public function validate_url($input) {
         foreach (self::$scrape_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                return true;
-            }
-        }
-
-        foreach (self::$embed_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 return true;
             }
@@ -105,7 +96,7 @@ class Media_glogster implements MediaBase {
 
         $data = mahara_http_request($config);
         if (!empty($data->data)) {
-            if (preg_match('#<textarea[^>]*?id="glogiframe"[^>]*>([^<]*)</textarea>#m',$data->data, $matches)) {
+            if (preg_match('#<textarea[^>]*?id="glogiframe"[^>]*>.*?\bsrc\s*=\s*"([^>"]+)"[^<]*</textarea>#m', $data->data, $matches)) {
                 $iframe = html_entity_decode($matches[1], ENT_QUOTES);
                 return $iframe;
             }

@@ -19,18 +19,14 @@ class Media_prezi implements MediaBase {
 
         self::$embed_sources = array(
             array(
-                'match' => '#.*https?://(www\.)?prezi\.com/bin/preziloader\.swf\?prezi_id=([a-zA-Z0-9\-_]+).*#',
-                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$2',
-            ),
-            array(
-                'match' => '#.*?"preziEmbed_([a-zA-Z0-9\-_]+)".*#',
-                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$1',
-            ),
-            array(
-                'match' => '#.*?prezi.com/([a-zA-Z0-9\-_]+)/.*#',
+                'match' => '#https?://prezi.com/([a-zA-Z0-9\-_]+)/.*#',
                 'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$1',
             ),
         );
+    }
+
+    public function enabled() {
+        return true;
     }
 
     public function process_url($input, $width=0, $height=0) {

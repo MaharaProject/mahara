@@ -19,18 +19,18 @@ class Media_voicethread implements MediaBase {
 
         self::$embed_sources = array(
             array(
-                'match' => '#.*https?://(www\.)?voicethread\.com/book\.swf\?b=([0-9]+).*#',
+                'match' => '#^https?://(www\.)?voicethread\.com/share/([0-9]+).*#',
                 'url'   => $this->httpstr . '://voicethread.com/book.swf?b=$2',
             ),
             array(
-                'match' => '#.*https?://(www\.)?voicethread\.com/share/([0-9]+).*#',
-                'url'   => $this->httpstr . '://voicethread.com/book.swf?b=$2',
-            ),
-            array(
-                'match' => '@.*https?://(www\.)?voicethread\.com/\??#q\.b([0-9]+).*@',
+                'match' => '@^https?://(www\.)?voicethread\.com/\??#q\.b([0-9]+).*@',
                 'url'   => $this->httpstr . '://voicethread.com/book.swf?b=$2',
             ),
         );
+    }
+
+    public function enabled() {
+        return true;
     }
 
     public function process_url($input, $width=0, $height=0) {

@@ -117,6 +117,7 @@
     <ul>
         <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/extensions/filter.php">{str tag=htmlfilters section=admin}</a></strong> - {str tag=htmlfiltersdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/iframesites.php">{str tag=allowediframesites section=admin}</a></strong> - {str tag=allowediframesitesdescriptionshort section=admin}</li>
     </ul>
 </div>
 
