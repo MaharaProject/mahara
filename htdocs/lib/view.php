@@ -3424,10 +3424,10 @@ class View {
             }
             if (!empty($owners)) {
                 $owners = get_records_select_assoc('usr', 'id IN (' . join(',', $owners) . ')', null, '', 
-                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid,email,profileicon');
+                                                   'id,username,firstname,lastname,preferredname,admin,staff,studentid,email,profileicon,urlid');
             }
             if (!empty($groups)) {
-                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name');
+                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name,urlid');
             }
             if (!empty($institutions)) {
                 $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
@@ -3439,6 +3439,7 @@ class View {
                     $v->user = $owners[$v->owner];
                 } else if ($v->group) {
                     $v->sharedby = $groups[$v->group]->name;
+                    $v->groupdata = $groups[$v->group];
                 } else if ($v->institution) {
                     $v->sharedby = $institutions[$v->institution]->displayname;
                 }

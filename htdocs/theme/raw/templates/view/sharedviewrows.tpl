@@ -5,9 +5,9 @@
         {if $view.sharedby}
         <span class="owner">
           {if $view.group}
-            <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+            <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
           {elseif $view.owner}
-            <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+            <a href="{profile_url($view.user)}">{$view.sharedby}</a>
           {else}
             {$view.sharedby}
           {/if}

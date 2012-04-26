@@ -7,9 +7,9 @@
             {if $view.sharedby}
             <td class="right">
                 {if $view.group && $loggedin}
-                  <a href="{$WWWROOT}group/view.php?id={$view.group}" class="s">{$view.sharedby}</a>
+                  <a href="{group_homepage_url($view.groupdata)}" class="s">{$view.sharedby}</a>
                 {elseif $view.owner && $loggedin}
-                  <a href="{$WWWROOT}user/view.php?id={$view.owner}" class="s">{$view.sharedby}</a>
+                  <a href="{profile_url($view.user)}" class="s">{$view.sharedby}</a>
                 {else}
                   {$view.sharedby}
                 {/if}
