@@ -1017,3 +1017,5 @@ $string['setblocktitle'] = 'Set a block title';
 
 // Download
 $string['filenotfound'] = 'File not found';
+
+$string['betweenxandy'] = 'Between %s and %s';
