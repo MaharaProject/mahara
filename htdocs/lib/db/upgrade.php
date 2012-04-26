@@ -2829,7 +2829,7 @@ function xmldb_core_upgrade($oldversion=0) {
         reload_html_filters();
     }
 
-    if ($oldversion < 2012032300) {
+    if ($oldversion < 2012042600 && !table_exists(new XMLDBTable('iframe_source'))) {
         // Tables for configurable safe iframe sources
 
         $table = new XMLDBTable('iframe_source_icon');
