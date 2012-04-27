@@ -219,7 +219,7 @@ $string['groupmemberaverage'] = 'On average, each user is in %s groups';
 $string['viewsperuser'] = 'Users who make pages have about %s pages each';
 $string['Cron'] = 'Cron';
 $string['runningnormally'] = 'Running normally';
-$string['cronnotrunning'] = 'Cron is not running.<br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up.';
+$string['cronnotrunning'] = '<span class="error">Cron is not running.</span><br>See the <a href="http://wiki.mahara.org/System_Administrator\'s_Guide/Installing_Mahara">installation guide</a> for instructions on how to set it up.';
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average user...';
 $string['statsmaxfriends'] = 'Has %s friends (most is <a href="%s">%s</a> with %d)';
