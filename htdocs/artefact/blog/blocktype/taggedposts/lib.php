@@ -139,9 +139,10 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 'count'     => array(
                     'type'          => 'text',
                     'title'         => get_string('itemstoshow', 'blocktype.blog/taggedposts'),
+                    'description'   => get_string('betweenxandy', 'mahara', 1, 100),
                     'defaultvalue'  => isset($configdata['count']) ? $configdata['count'] : 10,
                     'size'          => 3,
-                    'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 999),
+                    'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
                 ),
             );
         }
