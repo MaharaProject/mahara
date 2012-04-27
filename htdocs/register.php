@@ -71,7 +71,7 @@ if (!empty($_SESSION['registered'])) {
 // tell them to wait.
 if (!empty($_SESSION['registeredokawaiting'])) {
     unset($_SESSION['registeredokawaiting']);
-    die_info(get_string('registeredokawaitingemail', 'auth.internal'));
+    die_info(get_string('registeredokawaitingemail2', 'auth.internal'));
 }
 
 if (!empty($_SESSION['registrationcancelled'])) {
@@ -79,58 +79,11 @@ if (!empty($_SESSION['registrationcancelled'])) {
     die_info(get_string('registrationcancelledok', 'auth.internal'));
 }
 
-// When $_SESSION['emailconfirmed'] is set, the user has verified their email address,
-// and has registered with an institution that requires approval.
-// @TODO We should not do email verification before approval, because approval will
-// send another email which can act as verification
-// See https://bugs.launchpad.net/mahara/+bug/918431, part 2.
-if (!empty($_SESSION['emailconfirmed'])) {
-    // email institutional administrator(s) of new registration
-    if (isset($_SESSION['registrationkey'])) {
-        $key = $_SESSION['registrationkey'];
-        if ($registration = get_record_select('usr_registration', '"key" = ? AND "pending" = ?', array($key, 1))) {
-            $fullname = sprintf("%s %s", trim($registration->firstname), trim($registration->lastname));
-            $institution = new Institution($registration->institution);
-            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php?institution=%s", get_config('wwwroot'), $registration->institution);
-
-            // list of admins for this institution
-            if (count($institution->admins()) > 0) {
-                $admins = $institution->admins();
-            }
-            else {
-                // use site admins if the institution doesn't have any
-                $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
-            }
-
-            // email each admin
-            // @TODO Respect the notification preferences of these admins in case they don't want to be spammed.
-            foreach ($admins as $admin) {
-                $user = new User();
-                $user->find_by_id($admin);
-                email_user($user, null,
-                    get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
-                    get_string('pendingregistrationadminemailtext', 'auth.internal',
-                        $user->firstname, $institution->displayname, $pendingregistrationslink,
-                        $fullname, $registration->email, $registration->reason, get_config('sitename')),
-                    get_string('pendingregistrationadminemailhtml', 'auth.internal',
-                        $user->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
-                        $fullname, $registration->email, $registration->reason, get_config('sitename'))
-                    );
-            }
-        }
-
-        unset($_SESSION['registrationkey']);
-    }
-
-    unset($_SESSION['emailconfirmed']);
-    die_info(get_string('emailconfirmedok', 'auth.internal'));
-}
-
 // Step three of registration - given a key register the user
 if (isset($key)) {
 
     // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
+    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ? AND pending != 1', array($key, db_format_timestamp(time())))) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
@@ -140,22 +93,8 @@ if (isset($key)) {
         $SESSION->set('lang', $registration->lang);
     }
 
-    // check if institution requires admin approval for registration
-    // if so and !$registration->pending page hit was email confirmation
-    // update registration details + redirect to notify user
-    $confirm = get_field('institution', 'registerconfirm', 'name', $registration->institution);
-    if ($confirm && $registration->pending == 0) {
-        $values['key']   = get_random_key();
-        $values['pending'] = 1;
-        $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
-        update_record('usr_registration', $values, array('email' => $registration->email));
-        $SESSION->set('emailconfirmed', true);
-        $SESSION->set('registrationkey', $values['key']);
-        redirect('/register.php');
-    }
-
     function create_registered_user($profilefields=array()) {
-        global $registration, $SESSION, $USER, $confirm;
+        global $registration, $SESSION, $USER;
         require_once(get_config('libroot') . 'user.php');
 
         db_begin();
@@ -203,8 +142,10 @@ if (isset($key)) {
             }
             // Else, since there are multiple, request to join
             else {
-                if ($confirm && $registration->pending == 2) {
-                    $user->join_institution($registration->institution);
+                if ($registration->pending == 2) {
+                    if ($confirm = get_field('institution', 'registerconfirm', 'name', $registration->institution)) {
+                        $user->join_institution($registration->institution);
+                    }
                 }
                 else {
                     $user->add_institution_request($registration->institution);
@@ -446,14 +387,23 @@ function register_validate(Pieform $form, $values) {
 function register_submit(Pieform $form, $values) {
     global $SESSION;
 
-    // store password encrypted
     // don't die_info, since reloading the page shows the login form.
     // instead, redirect to some other page that says this
     safe_require('auth', 'internal');
     $values['key']   = get_random_key();
-    // @todo the expiry date should be configurable
-    $values['expiry'] = db_format_timestamp(time() + 86400);
     $values['lang'] = $SESSION->get('lang');
+
+    // If the institution requires approval, mark the record as pending
+    // @todo the expiry date should be configurable
+    if ($confirm = get_field('institution', 'registerconfirm', 'name', $values['institution'])) {
+        $values['pending'] = 1;
+        $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
+    }
+    else {
+        $values['pending'] = 0;
+        $values['expiry'] = db_format_timestamp(time() + 86400);
+    }
+
     try {
         if (!record_exists('usr_registration', 'email', $values['email'])) {
             insert_record('usr_registration', $values);
@@ -466,14 +416,40 @@ function register_submit(Pieform $form, $values) {
         $user->admin = 0;
         $user->staff = 0;
 
-        // if the institution requires a registration workflow
-        // redirect to get more details
-        $confirm = get_field('institution', 'registerconfirm', 'name', $values['institution']);
+        // If the institution requires approval, notify institutional admins.
         if ($confirm) {
+            $fullname = sprintf("%s %s", trim($user->firstname), trim($user->lastname));
+            $institution = new Institution($values['institution']);
+            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php?institution=%s", get_config('wwwroot'), $values['institution']);
+
+            // list of admins for this institution
+            if (count($institution->admins()) > 0) {
+                $admins = $institution->admins();
+            }
+            else {
+                // use site admins if the institution doesn't have any
+                $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
+            }
+
+            // email each admin
+            // @TODO Respect the notification preferences of the admins.
+            foreach ($admins as $admin) {
+                $adminuser = new User();
+                $adminuser->find_by_id($admin);
+                email_user($adminuser, null,
+                    get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
+                    get_string('pendingregistrationadminemailtext', 'auth.internal',
+                        $adminuser->firstname, $institution->displayname, $pendingregistrationslink,
+                        $fullname, $values['email'], $values['reason'], get_config('sitename')),
+                    get_string('pendingregistrationadminemailhtml', 'auth.internal',
+                        $adminuser->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
+                        $fullname, $values['email'], $values['reason'], get_config('sitename'))
+                    );
+            }
             email_user($user, null,
-                get_string('confirmemailsubject', 'auth.internal', get_config('sitename')),
-                get_string('confirmemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
-                get_string('confirmemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+                get_string('approvalemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('approvalemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')),
+                get_string('approvalemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')));
             $_SESSION['registeredokawaiting'] = true;
         }
         else {
