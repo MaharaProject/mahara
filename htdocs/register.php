@@ -176,10 +176,11 @@ if (isset($key)) {
 
 
 // Default page - show the registration form
-list($formhtml, $js) = auth_generate_registration_form('register', 'internal', '/register.php');
-if (!$formhtml) {
+list($form, $registerconfirm) = auth_generate_registration_form('register', 'internal', '/register.php');
+if (!$form) {
     die_info(get_string('registeringdisallowed'));
 }
+list($formhtml, $js) = auth_generate_registration_form_js($form, $registerconfirm);
 
 $registerdescription = get_string('registerwelcome');
 if ($registerterms = get_config('registerterms')) {

@@ -1994,11 +1994,16 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         $form['pluginname'] = 'register';
     }
 
+    return array($form, $registerconfirm);
+}
+
+function auth_generate_registration_form_js($form, $registerconfirm) {
+
     // The javascript needs to refer to field names, but they are obfuscated in this form,
     // so construct and build the form in separate steps, so we can get the field names.
     $form = new Pieform($form);
-    $institutionid = $formname . '_' . $form->hashedfields['institution'];
-    $reasonid = $formname . '_' . $form->hashedfields['reason'];
+    $institutionid = $form->get_name() . '_' . $form->hashedfields['institution'];
+    $reasonid = $form->get_name() . '_' . $form->hashedfields['reason'];
     $formhtml = $form->build();
 
     $js = '
