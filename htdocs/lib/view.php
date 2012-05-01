@@ -3757,20 +3757,41 @@ class View {
 
     /**
      * Makes a URL for a view page
+     *
+     * @param bool $full return a full url
+     * @param bool $useid ignore clean url settings and always return a url with an id in it
+     *
+     * @return string
      */
-    public function get_url($full=true) {
+    public function get_url($full=true, $useid=false) {
         if ($this->type == 'profile') {
+            if (!$useid) {
+                return profile_url($this->get_owner_object(), $full);
+            }
             $url = 'user/view.php?id=' . (int) $this->owner;
         }
         else if ($this->type == 'dashboard') {
             $url = '';
         }
         else if ($this->type == 'grouphomepage') {
+            if (!$useid) {
+                return group_homepage_url($this->get_group_object(), $full);
+            }
             $url = 'group/view.php?id=' . $this->group;
         }
-        else {
+        else if (!$useid && !is_null($this->urlid) && get_config('cleanurls')) {
+            if ($this->owner && !is_null($this->get_owner_object()->urlid)) {
+                return profile_url($this->ownerobj, $full) . '/' . $this->urlid;
+            }
+            else if ($this->group && !is_null($this->get_group_object()->urlid)) {
+                return group_homepage_url($this->groupobj, $full) . '/' . $this->urlid;
+            }
+        }
+
+        if (!isset($url)) {
             $url = 'view/view.php?id=' . (int) $this->id;
         }
+
         return $full ? (get_config('wwwroot') . $url) : $url;
     }
 
