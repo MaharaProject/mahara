@@ -259,6 +259,10 @@ EOF;
 
 class BrowserIDUser extends LiveUser {
     public function login($email) {
+        // This will do one of 3 things
+        // 1 - If a user has an account, log them in
+        // 2 - If a user doesn't have an account, and there is an auth method (which also has weautocreate), create acc and login
+        // 3 - If a user doesn't have an account, and there is more than one auth method, show a registration page
         $sql = "SELECT
                     a.id, i.name AS institutionname
                 FROM
@@ -322,7 +326,40 @@ class BrowserIDUser extends LiveUser {
             $this->authenticate($user, $auth->instanceid);
         }
         else {
-            throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
+            list($form, $registerconfirm) = auth_generate_registration_form('register', 'browserid', '/register.php');
+            if (!$form) {
+                throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
+            }
+            if (record_exists('usr', 'email', $email)
+                    || record_exists('artefact_internal_profile_email', 'email', $email)) {
+                throw new AuthUnknownUserException(get_string('emailalreadytaken', 'auth.internal', $email));
+            }
+            $form['elements']['email'] = array(
+                'type' => 'hidden',
+                'value' => $email
+            );
+            $form['elements']['authtype'] = array(
+                'type' => 'hidden',
+                'value' => 'browserid'
+            );
+            list($formhtml, $js) = auth_generate_registration_form_js($form, $registerconfirm);
+
+            $registerdescription = get_string('registerwelcome');
+            if ($registerterms = get_config('registerterms')) {
+                $registerdescription .= ' ' . get_string('registeragreeterms');
+            }
+            $registerdescription .= ' ' . get_string('registerprivacy');
+
+            $smarty = smarty(array('jquery'));
+            $smarty->assign('register_form', $formhtml);
+            $smarty->assign('registerdescription', $registerdescription);
+            if ($registerterms) {
+                $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
+            }
+            $smarty->assign('PAGEHEADING', get_string('register', 'auth.browserid'));
+            $smarty->assign('INLINEJAVASCRIPT', $js);
+            $smarty->display('register.tpl');
+            die;
         }
     }
 }

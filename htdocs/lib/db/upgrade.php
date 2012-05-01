@@ -2883,5 +2883,15 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2012051500) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('authtype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL, null, null, null, 'internal');
+        add_field($table, $field);
+        $key = new XMLDBKey('authtype');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('authtype'), 'auth_installed', array('name'));
+        add_key($table, $key);
+    }
+
     return $status;
 }

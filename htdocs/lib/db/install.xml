@@ -596,10 +596,12 @@
                 <FIELD NAME="pending" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true"/>
                 <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="extra" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="authtype" TYPE="char" LENGTH="255" DEFAULT="internal" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+                <KEY NAME="authtype" TYPE="foreign" FIELDS="authtype" REFTABLE="auth_installed" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="usr_infectedupload">
