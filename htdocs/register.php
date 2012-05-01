@@ -148,7 +148,18 @@ if (isset($key)) {
                     }
                 }
                 else {
-                    $user->add_institution_request($registration->institution);
+                    if ($registration->authtype && $registration->authtype != 'internal') {
+                        $auth = AuthFactory::create($authinstance->id);
+                        if ($auth->weautocreateusers) {
+                            $user->join_institution($registration->institution);
+                        }
+                        else {
+                            $user->add_institution_request($registration->institution);
+                        }
+                    }
+                    else {
+                        $user->add_institution_request($registration->institution);
+                    }
                 }
             }
         }

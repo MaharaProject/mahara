@@ -1901,8 +1901,15 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         foreach ($institutions as $institution) {
             $options[$institution->name] = $institution->displayname;
             if ($registerconfirm[$institution->name] = $institution->registerconfirm) {
-                $options[$institution->name] .= ' (' . get_string('approvalrequired') . ')';
-                $reason = true;
+                if ($authname != 'internal') {
+                    $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
+                    $auth = AuthFactory::create($authinstance->id);
+                    $registerconfirm[$institution->name] = !$auth->weautocreateusers;
+                }
+                if ($registerconfirm[$institution->name]) {
+                    $options[$institution->name] .= ' (' . get_string('approvalrequired') . ')';
+                    $reason = true;
+                }
             }
         }
         natcasesort($options);
@@ -1923,6 +1930,11 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             'value' => $institution->name
         );
         $reason = (bool) $institution->registerconfirm;
+        if ($reason) {
+            $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
+            $auth = AuthFactory::create($authinstance->id);
+            $reason = !$auth->weautocreateusers;
+        }
     }
     else {
         return;
@@ -2118,8 +2130,19 @@ function auth_register_submit(Pieform $form, $values) {
     // If the institution requires approval, mark the record as pending
     // @todo the expiry date should be configurable
     if ($confirm = get_field('institution', 'registerconfirm', 'name', $values['institution'])) {
-        $values['pending'] = 1;
-        $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
+        if ($values['authtype'] && $values['authtype'] != 'internal') {
+            $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal');
+            $auth = AuthFactory::create($authinstance->id);
+            $confirm = !$auth->weautocreateusers;
+        }
+        if ($confirm) {
+            $values['pending'] = 1;
+            $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
+        }
+        else {
+            $values['pending'] = 0;
+            $values['expiry'] = db_format_timestamp(time() + 86400);
+        }
     }
     else {
         $values['pending'] = 0;
