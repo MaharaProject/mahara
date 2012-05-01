@@ -2597,7 +2597,7 @@ class View {
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
 
         $select = '
-            SELECT v.id, v.title, v.description, v.type, v.mtime, v.owner, v.group, v.institution, v.locked';
+            SELECT v.id, v.title, v.description, v.type, v.mtime, v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid';
         $from = '
             FROM {view} v';
         $where = '
@@ -2637,57 +2637,48 @@ class View {
         }
 
         $count = count_records_sql('SELECT COUNT(v.id) ' . $from . $where, $values);
-        $viewdata = get_records_sql_array($select . $from . $where . $sort, $values, $offset, $limit);
+        $viewdata = get_records_sql_assoc($select . $from . $where . $sort, $values, $offset, $limit);
+        View::get_extra_view_info($viewdata, false);
 
-        $data = array();
         if ($viewdata) {
-            for ($i = 0; $i < count($viewdata); $i++) {
-                $view = new View(0, $viewdata[$i]);
-                $view->set('dirty', false);
-                $index[$viewdata[$i]->id] = $i;
-                $data[$i]['id'] = $viewdata[$i]->id;
-                $data[$i]['type'] = $viewdata[$i]->type;
-                $data[$i]['displaytitle'] = $view->display_title_editing();
-                $data[$i]['url'] = $view->get_url();
-                $data[$i]['mtime'] = $viewdata[$i]->mtime;
-                $data[$i]['locked'] = $viewdata[$i]->locked;
-                $data[$i]['removable'] = self::can_remove_viewtype($viewdata[$i]->type);
-                $data[$i]['description'] = $viewdata[$i]->description;
-                if (!empty($viewdata[$i]->submitgroupid)) {
-                    if (!empty($viewdata[$i]->submittedtime)) {
-                        $data[$i]['submittedto'] = get_string(
+            foreach ($viewdata as $id => &$data) {
+                $data['removable'] = self::can_remove_viewtype($data['type']);
+                if (!empty($data['submitgroupid'])) {
+                    if (!empty($data['submittedtime'])) {
+                        $data['submittedto'] = get_string(
                             'viewsubmittedtogroupon', 'view',
-                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                            hsc($viewdata[$i]->submitgroupname), format_date(strtotime($viewdata[$i]->submittedtime))
+                            get_config('wwwroot') . 'group/view.php?id=' . $data['submitgroupid'],
+                            hsc($data['submitgroupname']), format_date(strtotime($data['submittedtime']))
                         );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string(
+                        $data['submittedto'] = get_string(
                             'viewsubmittedtogroup', 'view',
-                            get_config('wwwroot') . 'group/view.php?id=' . $viewdata[$i]->submitgroupid,
-                            hsc($viewdata[$i]->submitgroupname)
+                            get_config('wwwroot') . 'group/view.php?id=' . $data['submitgroupid'],
+                            hsc($data['submitgroupname'])
                         );
                     }
                 }
-                else if (!empty($viewdata[$i]->submithostwwwroot)) {
-                    if (!empty($viewdata[$i]->submittedtime)) {
-                        $data[$i]['submittedto'] = get_string(
-                            'viewsubmittedtogroupon', 'view', $viewdata[$i]->submithostwwwroot,
-                            hsc($viewdata[$i]->submithostname), format_date(strtotime($viewdata[$i]->submittedtime))
+                else if (!empty($data['submithostwwwroot'])) {
+                    if (!empty($data['submittedtime'])) {
+                        $data['submittedto'] = get_string(
+                            'viewsubmittedtogroupon', 'view', $data['submithostwwwroot'],
+                            hsc($data['submithostname']), format_date(strtotime($data['submittedtime']))
                         );
                     }
                     else {
-                        $data[$i]['submittedto'] = get_string(
-                            'viewsubmittedtogroup', 'view', $viewdata[$i]->submithostwwwroot,
-                            hsc($viewdata[$i]->submithostname)
+                        $data['submittedto'] = get_string(
+                            'viewsubmittedtogroup', 'view', $data['submithostwwwroot'],
+                            hsc($data['submithostname'])
                         );
                     }
                 }
             }
+            $viewdata = array_values($viewdata);
         }
 
         return (object) array(
-            'data'  => $data,
+            'data'  => $viewdata,
             'count' => $count,
         );
     }
