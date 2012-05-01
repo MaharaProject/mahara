@@ -116,6 +116,7 @@ class View {
     );
 
     public function __construct($id=0, $data=null) {
+        global $USER;
         if (is_array($id) && isset($id['urlid']) && isset($id['ownerurlid'])) {
             $tempdata = get_record_sql('
                 SELECT v.*
@@ -164,14 +165,24 @@ class View {
             $this->dirty = true;
         }
 
-        if (empty($data)) {
-            $data = array();
-        }
-        foreach ((array)$data as $field => $value) {
+        $data = empty($data) ? array() : (array)$data;
+        foreach ($data as $field => $value) {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
         }
+
+        // Add in owner and group objects if we already happen to have them from view_search(), etc.
+        if (isset($data['user']) && isset($data['user']->id) && $data['user']->id == $this->owner) {
+            $this->ownerobj = $data['user'];
+        }
+        else if (isset($data['groupdata']->id) && $data['groupdata']->id == $this->group) {
+            $this->groupobj = $data['groupdata'];
+        }
+        else if (!isset($data['user']) && !empty($this->owner) && $this->owner == $USER->get('id')) {
+            $this->ownerobj = $USER;
+        }
+
         $this->atime = time();
         $this->columns = array();
         $this->dirtycolumns = array();
@@ -3427,6 +3438,7 @@ class View {
                                                    'id,username,firstname,lastname,preferredname,admin,staff,studentid,email,profileicon,urlid');
             }
             if (!empty($groups)) {
+                require_once('group.php');
                 $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name,urlid');
             }
             if (!empty($institutions)) {
@@ -3444,6 +3456,14 @@ class View {
                     $v->sharedby = $institutions[$v->institution]->displayname;
                 }
                 $v = (array)$v;
+
+                // Now that we have the owner & group records, create a temporary View object
+                // so that we can use display_title_editing and get_url methods.
+                $view = new View(0, $v);
+                $view->set('dirty', false);
+                $v['displaytitle'] = $view->display_title_editing();
+                $v['url'] = $view->get_url(false);
+                $v['fullurl'] = get_config('wwwroot') . $v['url'];
             }
         }
     }
