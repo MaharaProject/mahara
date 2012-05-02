@@ -2439,6 +2439,7 @@ function profile_sideblock() {
     global $USER, $SESSION;
     safe_require('notification', 'internal');
     require_once('group.php');
+    require_once('institution.php');
     $data = array(
         'id'          => $USER->get('id'),
         'myname'      => display_name($USER, null, true),
@@ -2452,7 +2453,7 @@ function profile_sideblock() {
         if ($authobj->authname == 'xmlrpc') {
             $peer = get_peer($authobj->wwwroot);
             if ($SESSION->get('mnetuser')) {
-                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, $peer->name);
+                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, institution_display_name($peer->name));
             }
             else {
                 $data['peer'] = array('name' => $peer->name, 'wwwroot' => $peer->wwwroot);
