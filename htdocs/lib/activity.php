@@ -805,6 +805,7 @@ class ActivityTypeWatchlist extends ActivityType {
 
     protected $view;
 
+    private $ownerinfo;
     private $viewinfo;
 
     /**
@@ -813,15 +814,19 @@ class ActivityTypeWatchlist extends ActivityType {
      */
     public function __construct($data, $cron) { 
         parent::__construct($data, $cron); 
-        //$oldsubject = $this->subject;
-        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                         JOIN {view} v ON v.owner = u.id
-                                         WHERE v.id = ?', array($this->view))) {
+
+        require_once('view.php');
+        if ($this->viewinfo = new View($this->view)) {
+            $this->ownerinfo = $this->viewinfo->get_owner_object();
+        }
+        if (empty($this->ownerinfo)) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
+        $viewurl = $this->viewinfo->get_url(false);
+
         // mysql compatibility (sigh...)
         $casturl = 'CAST(? AS TEXT)';
         if (get_config('dbtype') == 'mysql') {
@@ -840,7 +845,7 @@ class ActivityTypeWatchlist extends ActivityType {
                ';
         $this->users = get_records_sql_array(
             $sql,
-            array('view/view.php?id=' . $this->view, $this->get_id(), $this->view)
+            array($viewurl, $this->get_id(), $this->view)
         );
 
         // Remove the view from the watchlist of users who can no longer see it
@@ -870,7 +875,7 @@ class ActivityTypeWatchlist extends ActivityType {
 
     public function get_message($user) {
         return get_string_from_language($user->lang, 'newwatchlistmessageview', 'activity', 
-                                        display_name($this->viewinfo, $user), $this->viewinfo->title);
+                                        display_name($this->ownerinfo, $user), $this->viewinfo->get('title'));
     }
 
     public function get_required_parameters() {
