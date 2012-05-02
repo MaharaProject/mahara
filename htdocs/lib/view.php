@@ -3130,7 +3130,7 @@ class View {
             SELECT
                 v.id, v.title, v.description, v.owner, v.ownerformat, v.group, v.institution,
                 v.template, v.mtime, v.ctime,
-                c.id AS collid, c.name, v.type
+                c.id AS collid, c.name, v.type, v.urlid
             ' . $from . $where . '
             ORDER BY ' . $orderby . ', v.id ASC',
             $ph, $offset, $limit
@@ -3323,7 +3323,7 @@ class View {
 
         $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
         $viewdata = get_records_sql_assoc('
-            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution ' . $from . '
+            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid ' . $from . '
             ORDER BY v.title, v.id',
             $ph, $offset, $limit
         );
@@ -3354,9 +3354,9 @@ class View {
             $where .= ' AND v.owner = ?';
         }
 
-        $viewdata = get_records_sql_array('
+        $viewdata = get_records_sql_assoc('
             SELECT
-                v.id as id, v.title, v.description, v.owner, v.ownerformat, u.firstname, u.lastname, u.preferredname,
+                v.id as id, v.title, v.description, v.owner, v.ownerformat, v.urlid,
                 ' . db_format_tsfield('v.submittedtime','submittedtime') . '
             FROM {view} v
             INNER JOIN {usr} u ON u.id = v.owner
@@ -3366,10 +3366,11 @@ class View {
         );
 
         if ($viewdata) {
+            View::get_extra_view_info($viewdata, false);
             foreach ($viewdata as &$v) {
-                $v->sharedby = full_name($v);
-                $v = (array)$v;
+                $v['sharedby'] = full_name($v['user']);
             }
+            $viewdata = array_values($viewdata);
         }
 
         return $viewdata;

@@ -3,7 +3,7 @@
     {foreach from=$VIEWS item=item name=view}
         <tr>
             <td class="{cycle values='r0,r1'}">
-                <h4><a href="{$WWWROOT}view/view.php?id={$item.id}">{$item.title}</a></h4>
+                <h4><a href="{$item.fullurl}">{$item.title}</a></h4>
                 {if $item.description}
                   <div class="details">{$item.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {/if}

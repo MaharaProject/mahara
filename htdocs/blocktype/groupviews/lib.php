@@ -174,7 +174,6 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
             if (!empty($data['mysubmittedviews'])) {
                 foreach ($data['mysubmittedviews'] as &$v) {
-                    $v['url'] = get_config('wwwroot') . 'view/view.php?id=' . $v['id'];
                     if ($v['submittedtime']) {
                         $v['submittedtime'] = format_date($v['submittedtime']);
                     }

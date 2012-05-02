@@ -1,7 +1,7 @@
 {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
       <td class="sharedpages">
-        <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|str_shorten_text:65:true}</a></h3>
+        <h3><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a></h3>
         {if $view.sharedby}
         <span class="owner">
           {if $view.group}
