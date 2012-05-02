@@ -889,11 +889,13 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         $from = "FROM (
-           (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . "
+           (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . ",
+                a.owner, a.group, a.institution, NULL AS urlid
             FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact)
             WHERE a.owner = ?" . $artefacttypefilter . ")
            UNION
-           (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . "
+           (SELECT v.id, v.title, v.description, 'view' AS type, NULL AS artefacttype, " . db_format_tsfield('v.ctime', 'ctime') . ",
+                v.owner, v.group, v.institution, v.urlid
             FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view)
             WHERE v.owner = ? " . $viewfilter . ")
         ) p";

@@ -2862,12 +2862,15 @@ function cron_sitemap_daily() {
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');
+    require_once('view.php');
     foreach ($data->data as &$item) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
             $item->typestr = get_string('view');
             $item->icon    = $THEME->get_url('images/view.gif');
-            $item->url     = get_config('wwwroot') . 'view/view.php?id=' . $item->id;
+            $v = new View(0, (array)$item);
+            $v->set('dirty', false);
+            $item->url = $v->get_url();
         }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
