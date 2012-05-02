@@ -767,6 +767,45 @@ function process_email($address) {
 }
 
 /**
+ * Check an imap mailbox for new mailbounces
+ */
+function check_imap_for_bounces() {
+    $imapserver = get_config('imapserver');
+    if (!$imapserver) {
+        return;
+    }
+    if (!extension_loaded('imap')) {
+        log_debug('php imap extension not loaded, can\'t continue');
+        return;
+    }
+    $imapport = get_config('imapport');
+    $imap = imap_open("{" . $imapserver . ($imapport ? ':' . $imapport : '') . get_config('imapflags') . '}' . get_config('imapmailbox'),
+                        get_config('imapuser'), get_config('imappass'));
+    $check = imap_check($imap);
+    if ($check->Nmsgs == 0) {
+        imap_close($imap);
+        return;
+    }
+    $emails = imap_fetch_overview($imap, "1:" . $check->Nmsgs);
+    foreach ($emails as $email) {
+        if ($email->deleted) {
+            continue;
+        }
+        $address = $email->to;
+        log_debug('---------- started  processing email at ' . date('r', time()) . ' ----------');
+        log_debug('-- mail from ' . $address . ' -- delivered ' . $email->date);
+
+        $ret = process_email($address);
+
+        log_debug('---------- finished processing email at ' . date('r', time()) . ' ----------');
+
+        imap_delete($imap, $email->msgno);
+    }
+    imap_expunge($imap);
+    imap_close($imap);
+}
+
+/**
  * converts a user object to a string representation of the user suitable for
  * the current user (or specified user) to see
  *

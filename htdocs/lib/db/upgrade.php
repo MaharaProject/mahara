@@ -3103,5 +3103,17 @@ function xmldb_core_upgrade($oldversion=0) {
                             WHERE field=\'mobileuploadtoken\' AND NOT value ' . db_ilike() . '\'|%|\'');
     }
 
+    if ($oldversion < 2012080600) {
+        // Every minute, poll an imap mailbox to see if there are new mail bounces
+        $cron = new StdClass;
+        $cron->callfunction = 'check_imap_for_bounces';
+        $cron->minute       = '*';
+        $cron->hour         = '*';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }
