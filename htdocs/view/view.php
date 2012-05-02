@@ -35,6 +35,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
+require_once('institution.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
 
@@ -310,7 +311,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
         require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
         if ($peer = get_peer_from_instanceid($SESSION->get('authinstance'))) {
             $smarty->assign('mnethost', array(
-                'name'      => $peer->name,
+                'name'      => institution_display_name($peer->name),
                 'url'       => $returnurl ? $returnurl : $peer->wwwroot,
             ));
         }
