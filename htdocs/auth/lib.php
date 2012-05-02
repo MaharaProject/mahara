@@ -1857,6 +1857,367 @@ function user_login_tries_to_zero() {
     execute_sql('UPDATE {usr} SET logintries = 0 WHERE logintries > 0');
 }
 
+function auth_generate_registration_form($formname, $authname='internal', $goto) {
+    $elements = array(
+        'firstname' => array(
+            'type' => 'text',
+            'title' => get_string('firstname'),
+            'rules' => array(
+                'required' => true
+            )
+        ),
+        'lastname' => array(
+            'type' => 'text',
+            'title' => get_string('lastname'),
+            'rules' => array(
+                'required' => true
+            )
+        ),
+        'email' => array(
+            'type' => 'text',
+            'title' => get_string('emailaddress'),
+            'rules' => array(
+                'required' => true,
+                'email' => true
+            )
+        )
+    );
+
+    $sql = 'SELECT
+                i.*
+            FROM
+                {institution} i,
+                {auth_instance} ai
+            WHERE
+                ai.authname = ? AND
+                ai.institution = i.name AND
+                i.registerallowed = 1';
+    $institutions = get_records_sql_array($sql, array($authname));
+    $registerconfirm = array();
+    $reason = false;
+
+    if (count($institutions) > 1) {
+        $options = array();
+        foreach ($institutions as $institution) {
+            $options[$institution->name] = $institution->displayname;
+            if ($registerconfirm[$institution->name] = $institution->registerconfirm) {
+                if ($authname != 'internal') {
+                    $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
+                    $auth = AuthFactory::create($authinstance->id);
+                    $registerconfirm[$institution->name] = !$auth->weautocreateusers;
+                }
+                if ($registerconfirm[$institution->name]) {
+                    $options[$institution->name] .= ' (' . get_string('approvalrequired') . ')';
+                    $reason = true;
+                }
+            }
+        }
+        natcasesort($options);
+        array_unshift($options, get_string('chooseinstitution', 'mahara'));
+        $elements['institution'] = array(
+            'type' => 'select',
+            'title' => get_string('institution'),
+            'options' => $options,
+            'rules' => array(
+                'required' => true
+            )
+        );
+    }
+    else if ($institutions) { // Only one option - probably mahara ('No Institution') but that's not certain
+        $institution = array_shift($institutions);
+        $elements['institution'] = array(
+            'type' => 'hidden',
+            'value' => $institution->name
+        );
+        $reason = (bool) $institution->registerconfirm;
+        if ($reason) {
+            $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
+            $auth = AuthFactory::create($authinstance->id);
+            $reason = !$auth->weautocreateusers;
+        }
+    }
+    else {
+        return;
+    }
+
+    if ($reason) {
+        $elements['reason'] = array(
+            'type' => 'textarea',
+            'title' => get_string('registrationreason', 'auth.internal'),
+            'description' => get_string('registrationreasondesc1', 'auth.internal'),
+            'class' => 'js-hidden',
+            'rows' => 4,
+            'cols' => 60,
+        );
+    }
+
+    $registerterms = get_config('registerterms');
+    if ($registerterms) {
+        $elements['tandc'] = array(
+            'type' => 'radio',
+            'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
+            'options' => array(
+                'yes' => get_string('yes'),
+                'no'  => get_string('no')
+            ),
+            'defaultvalue' => 'no',
+            'rules' => array(
+                'required' => true
+            ),
+            'separator' => ' &nbsp; '
+        );
+    }
+
+    $elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('register'),
+    );
+
+    $elements['goto'] = array(
+        'type' => 'hidden',
+        'value' => $goto,
+    );
+
+    // swap the name and email fields at random
+    if (rand(0,1)) {
+        $emailelement = $elements['email'];
+        unset($elements['email']);
+        $elements = array('email' => $emailelement) + $elements;
+    }
+
+    $form = array(
+        'name' => $formname,
+        'validatecallback' => 'auth_' . $formname . '_validate',
+        'successcallback' => 'auth_' . $formname . '_submit',
+        'method' => 'post',
+        'action' => '',
+        'showdescriptiononerror' => false,
+        'renderer' => 'table',
+        'elements' => $elements,
+        'spam' => array(
+            'secret'       => get_config('formsecret'),
+            'mintime'      => 5,
+            'hash'         => array('firstname', 'lastname', 'email', 'institution', 'reason', 'tandc', 'submit'),
+        ),
+    );
+
+    if ($authname == 'internal') {
+        $form['plugintype'] = 'core';
+        $form['pluginname'] = 'register';
+    }
+
+    return array($form, $registerconfirm);
+}
+
+function auth_generate_registration_form_js($form, $registerconfirm) {
+
+    // The javascript needs to refer to field names, but they are obfuscated in this form,
+    // so construct and build the form in separate steps, so we can get the field names.
+    $form = new Pieform($form);
+    $institutionid = $form->get_name() . '_' . $form->hashedfields['institution'];
+    $reasonid = $form->get_name() . '_' . $form->hashedfields['reason'];
+    $formhtml = $form->build();
+
+    $js = '
+    var registerconfirm = ' . json_encode($registerconfirm) . ';
+    $j(function() {
+        $j("#' . $institutionid . '").change(function() {
+            if (this.value && registerconfirm[this.value] == 1) {
+                $j("#' . $reasonid . '_container").removeClass("js-hidden");
+                $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+                $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+            }
+            else {
+                $j("#' . $reasonid . '_container").addClass("js-hidden");
+                $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
+                $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+            }
+        });
+    });
+    ';
+
+    return array($formhtml, $js);
+}
+
+/**
+ * @todo add note: because the form select thing will eventually enforce
+ * that the result for $values['institution'] was in the original lot,
+ * and because that only allows authmethods that use 'internal' auth, we
+ * can guarantee that the auth method is internal
+ */
+function auth_register_validate(Pieform $form, $values) {
+    global $SESSION;
+
+    $registerterms = get_config('registerterms');
+
+    $spamtrap = new_spam_trap(array(
+        array(
+            'type' => 'name',
+            'value' => $values['firstname'],
+        ),
+        array(
+            'type' => 'name',
+            'value' => $values['lastname'],
+        ),
+        array(
+            'type' => 'email',
+            'value' => $values['email'],
+        ),
+    ));
+
+    if ($form->spam_error() || $spamtrap->is_spam()) {
+        $msg = get_string('formerror');
+        $emailcontact = get_config('emailcontact');
+        if (!empty($emailcontact)) {
+            $msg .= ' ' . get_string('formerroremail', 'mahara', $emailcontact, $emailcontact);
+        }
+        $form->set_error(null, $msg);
+        return;
+    }
+
+    $institution = $values['institution'];
+    safe_require('auth', 'internal');
+
+    // First name and last name must contain at least one non whitespace
+    // character, so that there's something to read
+    if (!$form->get_error('firstname') && !preg_match('/\S/', $values['firstname'])) {
+        $form->set_error('firstname', $form->i18n('required'));
+    }
+
+    if (!$form->get_error('lastname') && !preg_match('/\S/', $values['lastname'])) {
+        $form->set_error('lastname', $form->i18n('required'));
+    }
+
+    // The e-mail address cannot already be in the system
+    if (!$form->get_error('email')
+        && (record_exists('usr', 'email', $values['email'])
+        || record_exists('artefact_internal_profile_email', 'email', $values['email']))) {
+        $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
+    }
+
+    // If the user hasn't agreed to the terms and conditions, don't bother
+    if ($registerterms && $values['tandc'] != 'yes') {
+        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
+    }
+
+    $institution = get_record_sql('
+        SELECT
+            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
+        FROM {institution} i
+            LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
+            LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
+        WHERE
+            i.name = ?
+        GROUP BY
+            i.name, i.maxuseraccounts, i.registerallowed', array($institution));
+
+    if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
+        $form->set_error($hashed['institution'], get_string('institutionfull'));
+    }
+
+    if (!$institution || !$institution->registerallowed) {
+        $form->set_error('institution', get_string('registrationnotallowed'));
+    }
+}
+
+function auth_register_submit(Pieform $form, $values) {
+    global $SESSION;
+
+    safe_require('auth', 'internal');
+    $values['key'] = get_random_key();
+    $values['lang'] = $SESSION->get('lang');
+
+    // If the institution requires approval, mark the record as pending
+    // @todo the expiry date should be configurable
+    if ($confirm = get_field('institution', 'registerconfirm', 'name', $values['institution'])) {
+        if ($values['authtype'] && $values['authtype'] != 'internal') {
+            $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal');
+            $auth = AuthFactory::create($authinstance->id);
+            $confirm = !$auth->weautocreateusers;
+        }
+        if ($confirm) {
+            $values['pending'] = 1;
+            $values['expiry'] = db_format_timestamp(time() + (86400 * 14)); // now + 2 weeks
+        }
+        else {
+            $values['pending'] = 0;
+            $values['expiry'] = db_format_timestamp(time() + 86400);
+        }
+    }
+    else {
+        $values['pending'] = 0;
+        $values['expiry'] = db_format_timestamp(time() + 86400);
+    }
+
+    try {
+        if (!record_exists('usr_registration', 'email', $values['email'])) {
+            insert_record('usr_registration', $values);
+        }
+        else {
+            update_record('usr_registration', $values, array('email' => $values['email']));
+        }
+
+        $user =(object) $values;
+        $user->admin = 0;
+        $user->staff = 0;
+
+        // If the institution requires approval, notify institutional admins.
+        if ($confirm) {
+            $fullname = sprintf("%s %s", trim($user->firstname), trim($user->lastname));
+            $institution = new Institution($values['institution']);
+            $pendingregistrationslink = sprintf("%sadmin/users/pendingregistrations.php?institution=%s", get_config('wwwroot'), $values['institution']);
+
+            // list of admins for this institution
+            if (count($institution->admins()) > 0) {
+                $admins = $institution->admins();
+            }
+            else {
+                // use site admins if the institution doesn't have any
+                $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
+            }
+
+            // email each admin
+            // @TODO Respect the notification preferences of the admins.
+            foreach ($admins as $admin) {
+                $adminuser = new User();
+                $adminuser->find_by_id($admin);
+                email_user($adminuser, null,
+                    get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
+                    get_string('pendingregistrationadminemailtext', 'auth.internal',
+                        $adminuser->firstname, $institution->displayname, $pendingregistrationslink,
+                        $fullname, $values['email'], $values['reason'], get_config('sitename')),
+                    get_string('pendingregistrationadminemailhtml', 'auth.internal',
+                        $adminuser->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
+                        $fullname, $values['email'], $values['reason'], get_config('sitename'))
+                    );
+            }
+            email_user($user, null,
+                get_string('approvalemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('approvalemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')),
+                get_string('approvalemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('sitename')));
+            $_SESSION['registeredokawaiting'] = true;
+        }
+        else {
+            email_user($user, null,
+                get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+                get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+                get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            // Add a marker in the session to say that the user has registered
+            $_SESSION['registered'] = true;
+        }
+    }
+    catch (EmailException $e) {
+        log_warn($e);
+        die_info(get_string('registrationunsuccessful', 'auth.internal'));
+    }
+    catch (SQLException $e) {
+        log_warn($e);
+        die_info(get_string('registrationunsuccessful', 'auth.internal'));
+    }
+
+    redirect($values['goto']);
+}
+
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {

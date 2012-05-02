@@ -385,6 +385,7 @@ $string['registrationcomplete'] = 'Thank you for registering at %s';
 $string['language'] = 'Language';
 $string['itemdeleted'] = 'Item deleted';
 $string['itemupdated'] = 'Item updated';
+$string['approvalrequired'] = 'Approval required';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead.';
