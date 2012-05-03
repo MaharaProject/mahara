@@ -1,3 +1,7 @@
+1.5.1 (2012-05-04)
+- Use MySQL database collation for string literals (bug #985608)
+- Make download.php publicly accessible (bug #979538)
+
 1.5.0 (2012-04-17)
 - A new theme for younger students called "Primary School"
 - Optional drop-down menus for the site navigation
