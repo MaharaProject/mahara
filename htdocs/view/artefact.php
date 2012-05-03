@@ -165,22 +165,13 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 }
 
+$smarty->assign('view', $view);
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('feedback', $feedback);
 
 $smarty->assign('hasfeed', $hasfeed);
 $smarty->assign('feedlink', $feedlink);
 
-$viewowner = $view->get('owner');
-if ($viewowner) {
-    $smarty->assign('ownerlink', 'user/view.php?id=' . $viewowner);
-}
-else if ($view->get('group')) {
-    $smarty->assign('ownerlink', 'group/view.php?id=' . $view->get('group'));
-}
-
-$smarty->assign('ownername', $view->formatted_owner());
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
     $smarty->assign('anonfeedback', $anonfeedback);

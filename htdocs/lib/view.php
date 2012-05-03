@@ -3678,10 +3678,10 @@ class View {
 
     public function owner_link() {
         if ($this->owner) {
-            return get_config('wwwroot') . 'user/view.php?id=' . $this->owner;
+            return profile_url($this->get_owner_object());
         }
         else if ($this->group) {
-            return get_config('wwwroot') . 'group/view.php?id=' . $this->group;
+            return group_homepage_url($this->get_group_object());
         }
         return null;
     }
