@@ -31,7 +31,7 @@ define('TITLE', '');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$address = $_ENV['RECIPIENT'];
+$address = getenv('RECIPIENT');
 
 log_debug('---------- started  processing email at ' . date('r', time()) . ' ----------');
 log_debug('-- mail from ' . $address );
