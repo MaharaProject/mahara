@@ -32,7 +32,7 @@
             <li id="views"><label><a href="{$WWWROOT}view/">{str tag="views"}:</a></label>
                 <ul>
 {foreach from=$sbdata.views item=view}
-                    <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title}</a></li>
+                    <li><a href="{$view->fullurl}">{$view->title}</a></li>
 {/foreach}
                 </ul>
             </li>

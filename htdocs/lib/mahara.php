@@ -2449,13 +2449,21 @@ function profile_sideblock() {
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
     $data['groups'] = group_get_user_groups($USER->get('id'));
     $data['views'] = get_records_sql_array(
-        'SELECT v.id, v.title
+        'SELECT v.id, v.title, v.urlid, v.owner
         FROM {view} v
         INNER JOIN {view_tag} vt ON (vt.tag = ? AND vt.view = v.id)
         WHERE v.owner = ?
         ORDER BY v.title',
         array(get_string('profile'), $USER->get('id'))
     );
+    if ($data['views']) {
+        require_once('view.php');
+        foreach($data['views'] as $v) {
+            $view = new View(0, (array)$v);
+            $view->set('dirty', false);
+            $v->fullurl = $view->get_url();
+        }
+    }
     $data['artefacts'] = get_records_sql_array(
          'SELECT a.id, a.artefacttype, a.title
          FROM {artefact} a
