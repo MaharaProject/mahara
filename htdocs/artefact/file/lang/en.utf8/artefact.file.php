@@ -255,6 +255,7 @@ $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct ty
 // Unzip
 $string['Contents'] = 'Contents';
 $string['Continue'] = 'Continue';
+$string['Decompress'] = 'Decompress';
 $string['nfolders'] = array(
     '%s folder',
     '%s folders',
@@ -271,7 +272,6 @@ $string['insufficientquotaforunzip'] = 'Your remaining file quota is too small t
 $string['invalidarchive'] = 'Error reading archive file.';
 $string['pleasewaitwhileyourfilesarebeingunzipped'] = 'Please wait while your files are being unzipped.';
 $string['spacerequired'] = 'Space required';
-$string['Unzip'] = 'Unzip';
 $string['unzipprogress'] = '%s files/folders created.';
 
 // Group file permissions
