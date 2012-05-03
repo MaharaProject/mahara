@@ -1754,13 +1754,13 @@ function pieform_template_dir($file, $pluginlocation='') {
  * Given a view id, and a user id (defaults to currently logged in user if not
  * specified) will return wether this user is allowed to look at this view.
  *
- * @param integer $view_id      View ID to check
+ * @param mixed $view           viewid or View to check
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null) {
+function can_view_view($view, $user_id=null) {
     global $USER, $SESSION;
 
     if (defined('BULKEXPORT')) {
@@ -1791,8 +1791,15 @@ function can_view_view($view_id, $user_id=null) {
         return false;
     }
 
-    require_once(get_config('libroot') . 'view.php');
-    $view = new View($view_id);
+    if (!class_exists('View')) {
+        require_once(get_config('libroot') . 'view.php');
+    }
+    if ($view instanceof View) {
+        $view_id = $view->get('id');
+    }
+    else {
+        $view = new View($view_id = $view);
+    }
 
     // group views and logged in users are not affected by
     // the institution level config for public views

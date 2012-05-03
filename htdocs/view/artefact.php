@@ -40,7 +40,7 @@ $viewid     = param_integer('view');
 $path       = param_variable('path', null);
 
 $view = new View($viewid);
-if (!can_view_view($viewid)) {
+if (!can_view_view($view)) {
     throw new AccessDeniedException();
 }
 

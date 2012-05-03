@@ -76,7 +76,11 @@ if (!$showmore) {
     $showmore = 0;
 }
 
-if (!can_view_view($viewid)) {
+if (!isset($view)) {
+    $view = new View($viewid);
+}
+
+if (!can_view_view($view)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
@@ -84,10 +88,6 @@ if (!can_view_view($viewid)) {
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
-
-if (!isset($view)) {
-    $view = new View($viewid);
-}
 
 // Create the "make feedback private form" now if it's been submitted
 if (param_variable('make_public_submit', null)) {
