@@ -26,10 +26,10 @@
 {if $row.institution}
       <td class="owner s">{$row.sharedby}</td>
 {elseif $row.group}
-      <td class="owner s"><a class="grouplink" href="{$WWWROOT}group/view.php?id={$row.group}" target="_blank">{$row.sharedby}</a></td>
+      <td class="owner s"><a class="grouplink" href="{group_homepage_url($row.groupdata, true, true)}" target="_blank">{$row.sharedby}</a></td>
 {elseif $row.owner}
       <td class="ownericon s">
-        <a class="userlink" href="{$WWWROOT}user/view.php?id={$row.owner}" target="_blank">
+        <a class="userlink" href="{profile_url($row.user, true, true)}" target="_blank">
            <div class="profile-icon-container"><img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt=""></div>
            {$row.sharedby}
         </a>
