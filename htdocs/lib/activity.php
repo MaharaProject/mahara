@@ -937,37 +937,19 @@ class ActivityTypeViewaccess extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!$viewinfo = get_record_sql('
-            SELECT v.title, v.owner, v.group, v.institution,
-                u.id, u.username, u.preferredname, u.firstname, u.lastname, u.staff, u.admin,
-                g.name AS groupname, i.displayname AS institutionname
-            FROM {view} v
-                LEFT JOIN {usr} u ON v.owner = u.id
-                LEFT JOIN {group} g ON v.group = g.id
-                LEFT JOIN {institution} i ON v.institution = i.name
-            WHERE v.id = ?', array($this->view))) {
+        if (!$viewinfo = new View($this->view)) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->url = 'view/view.php?id=' . $this->view;
+        $this->url = $viewinfo->get_url(false);
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
-        $this->title = $viewinfo->title;
-        if ($this->users) {
-            if ($viewinfo->group) {
-                $this->ownername = $viewinfo->groupname;
-            }
-            else if ($viewinfo->institution) {
-                $this->ownername = $viewinfo->institutionname;
-            }
-            else if ($viewinfo->owner) {
-                $this->ownername = display_name($viewinfo, null, true);
-            }
-        }
+        $this->title = $viewinfo->get('title');
+        $this->ownername = $viewinfo->formatted_owner();
         $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
