@@ -317,10 +317,12 @@ function build_admin_user_search_results($search, $offset, $limit) {
         'firstname' => array(
             'name'     => get_string('firstname'),
             'sort'     => true,
+            'template' => 'admin/users/searchfirstnamecolumn.tpl',
         ),
         'lastname' => array(
             'name'     => get_string('lastname'),
             'sort'     => true,
+            'template' => 'admin/users/searchlastnamecolumn.tpl',
         ),
         'preferredname' => array(
             'name'     => get_string('displayname'),
