@@ -2027,8 +2027,10 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         $typesql = 'AND v.type = ' . db_quote($type);
     }
 
+    $data = array();
+
     // public, logged in, or friends' views
-    if ($results = get_records_sql_array(
+    if ($results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('atime') . ',
@@ -2058,18 +2060,17 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         array( $dbnow, $dbnow )
         )
     ) {
-        foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+        foreach ($results as $row) {
+            $list[$row->owner][$row->id] = $row->id;
         }
-    }
+        $data = $results;
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+        // bail if we've filled all users to the limit
+        $done = _get_views_trim_list($list, $users, $limit, $data);
     }
 
     // check individual user access
-    if ($results = get_records_sql_array(
+    if (!$done && $results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('atime') . ',
@@ -2087,17 +2088,16 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         )
     ) {
         foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+            $list[$row->owner][$row->id] = $row->id;
         }
-    }
+        $data = array_merge($data, $results);
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+        // bail if we've filled all users to the limit
+        $done &= _get_views_trim_list($list, $users, $limit, $data);
     }
 
     // check group access
-    if ($results = get_records_sql_array(
+    if (!$done && $results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('v.atime','atime') . ',
@@ -2117,24 +2117,35 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         )
     ) {
         foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+            $list[$row->owner][$row->id] = $row->id;
         }
+        $data = array_merge($data, $results);
+
+        // bail if we've filled all users to the limit
+        $done &= _get_views_trim_list($list, $users, $limit, $data);
     }
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+    require_once('view.php');
+    View::get_extra_view_info($data, false, false);
+
+    $list = array();
+
+    foreach ($data as $d) {
+        $list[$d['owner']][$d['id']] = (object)$d;
     }
 
     return $list;
 }
 
-function _get_views_trim_list(&$list, &$users, $limit) {
+function _get_views_trim_list(&$list, &$users, $limit, &$results) {
     if ($limit === null) {
         return;
     }
     foreach ($list as $user_id => &$views) {
         if($limit and count($views) > $limit) {
+            foreach (array_slice($views, $limit) as $v) {
+                unset($results[$v]);
+            }
             $views = array_slice($views, 0, $limit);
         }
         if($limit and count($views) == $limit) {

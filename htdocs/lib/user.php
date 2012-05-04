@@ -1560,7 +1560,7 @@ function get_users_data($userids, $getviews=true) {
             foreach ($cleanviews as $userviews) {
                 foreach ($userviews as &$view) {
                     foreach (array_keys(get_object_vars($view)) as $key) {
-                        if ($key != 'id' && $key != 'title') {
+                        if ($key != 'id' && $key != 'title' && $key != 'url' && $key != 'fullurl') {
                             unset($view->$key);
                         }
                     }
