@@ -26,7 +26,7 @@
                 {else}
                     <td>&nbsp;</td>
                 {/if}
-                <td><label><a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a></label></td>
+                <td><label><a href="{$view->fullurl}">{$view->title}</a></label></td>
                 <td><div class="fr s">{$view->remove|safe}</div></td>
             </tr>
         {/foreach}

@@ -6,7 +6,7 @@
                 {if $currentview == $item->view}
                     <h4>{$item->title}</h4>
                 {else}
-                    <h4><a href="{$WWWROOT}view/view.php?id={$item->view}">{$item->title}</a></h4>
+                    <h4><a href="{$item->fullurl}">{$item->title}</a></h4>
                 {/if}
             </td>
         </tr>
