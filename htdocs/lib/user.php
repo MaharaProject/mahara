@@ -1639,7 +1639,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
 
 function build_onlinelist_html(&$data, $page) {
     if ($data['data']) {
-        $userdata = get_users_data($data['data'], $page);
+        $userdata = get_users_data($data['data'], false);
     }
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
@@ -1673,7 +1673,7 @@ function build_onlinelist_html(&$data, $page) {
 function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
     global $USER;
     if ($data) {
-        $data = get_users_data($data, $page);
+        $data = get_users_data($data, false);
     }
     $smarty = smarty_core();
     $smarty->assign('page', $page);
