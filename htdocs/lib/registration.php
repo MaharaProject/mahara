@@ -754,14 +754,8 @@ function view_stats_table($limit, $offset) {
 
     $viewdata = get_records_sql_assoc(
         "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits,
-            u.id AS userid, u.firstname, u.lastname,
-            g.id AS groupid, g.name AS groupname,
-            i.displayname AS institutionname
+            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid
         FROM {view} v
-            LEFT JOIN {usr} u ON v.owner = u.id
-            LEFT JOIN {group} g ON v.group = g.id
-            LEFT JOIN {institution} i ON v.institution = i.name
         WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
         ORDER BY v.visits DESC, v.title, v.id",
         array('dashboard'),
@@ -769,23 +763,27 @@ function view_stats_table($limit, $offset) {
         $limit
     );
 
+    require_once('view.php');
+    require_once('group.php');
+    View::get_extra_view_info($viewdata, false, false);
+
     safe_require('artefact', 'comment');
     $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
 
     foreach ($viewdata as &$v) {
+        $v = (object) $v;
         if ($v->owner) {
-            $v->ownername = display_name($v->owner);
-            $v->ownerurl  = 'user/view.php?id=' . $v->userid;
+            $v->ownername = display_name($v->user);
+            $v->ownerurl  = profile_url($v->user);
         }
-        else if ($v->group) {
-            $v->ownername = $v->groupname;
-            $v->ownerurl  = 'group/view.php?id=' . $v->groupid;
-        }
-        else if ($v->institution == 'mahara') {
-            $v->ownername = get_config('sitename');
-        }
-        else if ($v->institution) {
-            $v->ownername = $v->institutionname;
+        else {
+            $v->ownername = $v->sharedby;
+            if ($v->group) {
+                $v->ownerurl = group_homepage_url($v->groupdata);
+            }
+            else if ($v->institution && $v->institution != 'mahara') {
+                $v->ownerurl = get_config('wwwroot') . 'institution/index.php?institution=' . $v->institution;
+            }
         }
         $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }
