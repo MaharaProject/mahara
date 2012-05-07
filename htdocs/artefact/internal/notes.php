@@ -26,6 +26,7 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'internal');
+require_once('view.php');
 define('TITLE', get_string('Notes', 'artefact.internal'));
 
 $offset  = param_integer('offset', 0);
@@ -93,22 +94,32 @@ if ($data) {
         SELECT
             bi.id AS block, bi.title AS blocktitle,
             va.artefact,
-            va.view, v.title AS viewtitle,
-            v.owner, u.firstname, u.lastname, u.preferredname,
-            v.group, g.name AS groupname,
-            v.institution, i.displayname AS institutionname
+            va.view, v.title AS viewtitle, v.owner, v.group, v.institution, v.ownerformat, v.urlid
         FROM
             {block_instance} bi
             JOIN {view_artefact} va ON bi.id = va.block
             JOIN {view} v ON va.view = v.id
-            LEFT OUTER JOIN {usr} u ON v.owner = u.id
-            LEFT OUTER JOIN {group} g ON v.group = g.id
-            LEFT OUTER JOIN {institution} i ON v.institution = i.name
         WHERE
             va.artefact IN (' . join(',', array_fill(0, count($data), '?')) . ')',
         array_keys($data)
     );
     if ($blocks) {
+        $viewdata = array();
+        foreach ($blocks as $b) {
+            if (!isset($viewdata[$b->view])) {
+                $viewdata[$b->view] = (object) array(
+                    'id'          => $b->view,
+                    'title'       => $b->viewtitle,
+                    'owner'       => $b->owner,
+                    'group'       => $b->group,
+                    'institution' => $b->institution,
+                    'ownerformat' => $b->ownerformat,
+                    'urlid'       => $b->urlid,
+                );
+            }
+        }
+        View::get_extra_view_info($viewdata, false, false);
+
         foreach ($blocks as $b) {
             if (!isset($data[$b->artefact]->views)) {
                 $data[$b->artefact]->views = array();
@@ -116,23 +127,20 @@ if ($data) {
             if (!isset($data[$b->artefact]->views[$b->view])) {
                 $data[$b->artefact]->views[$b->view] = array(
                     'view' => $b->view,
-                    'viewtitle' => $b->viewtitle
+                    'viewtitle' => $b->viewtitle,
+                    'fullurl' => $viewdata[$b->view]['fullurl'],
                 );
                 // Add the view owner's name if it's not the same as the note owner.  This will either
                 // be a group artefact inside an individual's view, or it's an institution/site artefact.
                 if ((!empty($params['group']) && $b->owner)
                     || (!empty($params['institution']) && $params['institution'] != $b->institution)) {
                     if ($b->owner) {
-                        $ownername = display_default_name((object) array(
-                            'firstname'     => $b->firstname,
-                            'lastname'      => $b->lastname,
-                            'preferredname' => $b->preferredname,
-                        ));
-                        $ownerurl  = get_config('wwwroot') . 'user/view.php?id=' . $b->owner;
+                        $ownername = display_default_name($viewdata[$b->view]['user']);
+                        $ownerurl  = profile_url($viewdata[$b->view]['user']);
                     }
                     else if ($b->group) {
-                        $ownername = $b->groupname;
-                        $ownerurl  = get_config('wwwroot') . 'group/view.php?id=' . $b->group;
+                        $ownername = $viewdata[$b->view]['groupdata']['name'];
+                        $ownerurl  = group_homepage_url($viewdata[$b->view]['groupdata']);
                     }
                     else if ($b->institution == 'mahara') {
                         $ownername = get_config('sitename');

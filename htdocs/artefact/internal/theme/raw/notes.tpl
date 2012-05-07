@@ -19,7 +19,7 @@
       <td>
       {foreach from=$n->views item=v}
         <div>
-          <a href="{$WWWROOT}view/view.php?id={$v.view}">{$v.viewtitle|str_shorten_text:30:true}</a>
+          <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
           {if $v.ownername}{str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
         </div>
       {/foreach}
