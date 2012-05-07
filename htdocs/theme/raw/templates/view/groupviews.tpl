@@ -5,7 +5,7 @@
     {foreach from=$views item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
-                <h5><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title}</a></h5>
+                <h5><a href="{$view.fullurl}">{$view.title}</a></h5>
                 {if $view.description}
                     <div>{$view.description|clean_html|safe}</div>
                 {/if}

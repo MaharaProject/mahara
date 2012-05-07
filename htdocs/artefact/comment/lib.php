@@ -839,7 +839,7 @@ function delete_comment_submit(Pieform $form, $values) {
         $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
     }
     else {
-        $url = 'view/view.php?id=' . $viewid;
+        $url = $view->get_url(false);
     }
 
     db_begin();
@@ -1074,7 +1074,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 function add_feedback_form_cancel_submit(Pieform $form) {
     global $view;
     $form->reply(PIEFORM_OK, array(
-        'goto' => '/view/view.php?id=' . $view->get('id'),
+        'goto' => '/' . $view->get_url(false),
     ));
 }
 
