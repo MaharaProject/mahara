@@ -579,7 +579,9 @@ function generate_email_processing_address($userid, $userto, $type='B') {
     $mailprefix = get_config('bounceprefix');
     $maildomain = get_config('bouncedomain');
     $installation_key = get_config('installation_key');
-    $args = $type . base64_encode(pack('V', $userid)) . substr(md5($userto->email), 0, 16);
+    // Postfix and other smtp servers don't like the use of / in the extension part of an email
+    // Replace it with another valid email character that isn't in base64, like '-'
+    $args = $type . preg_replace('/\//', '-', base64_encode(pack('V', $userid))) . substr(md5($userto->email), 0, 16);
     return $mailprefix . $args . substr(md5($mailprefix . $userto->email . $installation_key), 0, 16) . '@' . $maildomain;
 }
 
@@ -698,7 +700,10 @@ function process_email($address) {
     // The type of message received is a one letter code
     $email->type          = substr($email->localpart,4,1);
     // The userid should be available immediately afterwards
-    list(,$email->userid) = unpack('V',base64_decode(substr($email->localpart,5,8)));
+    // Postfix and other smtp servers don't like the use of / in the extension part of an email
+    // We may of replaced it with another valid email character which isn't in base64, namely '-'
+    // If we didn't, then the preg_replace won't do anything
+    list(,$email->userid) = unpack('V',base64_decode(preg_replace('/-/', '/', substr($email->localpart,5,8))));
     // Any additional arguments
     $email->args          = substr($email->localpart,13,-16);
     // And a hash of the intended recipient for authentication
