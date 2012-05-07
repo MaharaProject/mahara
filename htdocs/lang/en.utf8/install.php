@@ -30,7 +30,7 @@ defined('INTERNAL') || die();
 $string['aboutdefaultcontent'] = '<h1>About</h1>
 <p><i>Add text about your organisation or the installation here</i></p>
 
-<p>[<i>Name of your installation here</i>] is powered by <a href="http://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
+<p><strong>[<i>Name of your installation here</i>]</strong> is powered by <a href="http://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
 
 <ul>
     <li>provide the source code to others, </li>
@@ -40,9 +40,9 @@ $string['aboutdefaultcontent'] = '<h1>About</h1>
 ';
 $string['homedefaultcontent'] = '<h1>Welcome</h1>
 
-<p>[<i>Name of your installation here</i>] is a fully featured electronic portfolio system with social networking features to create online learning communities.</p>
+<p><strong>[<i>Name of your installation here</i>]</strong> is a fully featured electronic portfolio system with social networking features to create online learning communities.</p>
 
-<p>For more information you can read <a href="about.php">About</a> [<i>please ensure you also edit this page</i>] or alternatively please feel free to <a href="contact.php">contact us</a>.</p>
+<p>For more information you can read <a href="about.php">About</a> <strong>[<i>please ensure you also edit this page</i>]</strong> or alternatively please feel free to <a href="contact.php">contact us</a>.</p>
 
 <p><i>You can edit this text via "Edit site pages" in "Configure site" in "Site administration"</i></p>';
 $string['loggedouthomedefaultcontent'] = '<h1>Welcome</h1>
