@@ -58,15 +58,15 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
 
         $smarty = smarty_core();
 
-        $sql =
-            'SELECT v.title, v.id
+        $sql = '
+            SELECT v.id, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
             FROM {view} v
             JOIN {usr_watchlist_view} wv ON wv.view = v.id
             WHERE wv.usr = ?
             ORDER BY v.title
             LIMIT ?';
 
-        $results = get_records_sql_array($sql, array($userid, $limit));
+        $results = get_records_sql_assoc($sql, array($userid, $limit));
 
         // if there are no watched views, notify the user
         if (!$results) {
@@ -74,8 +74,13 @@ class PluginBlocktypeWatchlist extends SystemBlocktype {
             return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
         }
 
+        View::get_extra_view_info($results, false, false);
+        foreach ($results as &$r) {
+            $r = (object) $r;
+        }
+
         $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
-        $smarty->assign('views', $results);
+        $smarty->assign('views', array_values($results));
         return $smarty->fetch('blocktype:watchlist:watchlist.tpl');
     }
 
