@@ -270,7 +270,7 @@ function user_statistics($limit, $offset, &$sitedata) {
     $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
 
     $maxfriends = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, SUM(f.friends) AS friends
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, SUM(f.friends) AS friends
         FROM {usr} u INNER JOIN (
             SELECT DISTINCT(usr1) AS id, COUNT(usr1) AS friends
             FROM {usr_friend}
@@ -279,7 +279,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             FROM {usr_friend}
             GROUP BY usr2
         ) f ON u.id = f.id
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY friends DESC
         LIMIT 1", array());
     $maxfriends = $maxfriends[0];
@@ -289,7 +289,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxfriends',
             'admin',
             round($meanfriends, 1),
-            get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
+            profile_url($maxfriends),
             hsc(display_name($maxfriends, null, true)),
             $maxfriends->friends
         );
@@ -298,10 +298,10 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
     }
     $maxviews = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.id) AS views
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(v.id) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
         WHERE \"owner\" <> 0
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY views DESC
         LIMIT 1", array());
     $maxviews = $maxviews[0];
@@ -310,7 +310,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxviews',
             'admin',
             $sitedata['viewsperuser'],
-            get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
+            profile_url($maxviews),
             hsc(display_name($maxviews, null, true)),
             $maxviews->views
         );
@@ -319,10 +319,10 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxviews'] = get_string('statsnoviews', 'admin');
     }
     $maxgroups = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(m.group) AS groups
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
         FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
         WHERE g.deleted = 0
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY groups DESC
         LIMIT 1", array());
     $maxgroups = $maxgroups[0];
@@ -331,7 +331,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxgroups',
             'admin',
             $sitedata['groupmemberaverage'],
-            get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
+            profile_url($maxgroups),
             hsc(display_name($maxgroups, null, true)),
             $maxgroups->groups
         );
@@ -340,7 +340,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxgroups'] = get_string('statsnogroups', 'admin');
     }
     $maxquotaused = get_records_sql_array("
-        SELECT id, firstname, lastname, preferredname, quotaused
+        SELECT id, firstname, lastname, preferredname, urlid, quotaused
         FROM {usr}
         WHERE deleted = 0 AND id > 0
         ORDER BY quotaused DESC
@@ -350,7 +350,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         'statsmaxquotaused',
         'admin',
         display_size(get_field('usr', 'AVG(quotaused)', 'deleted', 0)),
-        get_config('wwwroot') . 'user/view.php?id=' . $maxquotaused->id,
+        profile_url($maxquotaused),
         hsc(display_name($maxquotaused, null, true)),
         display_size($maxquotaused->quotaused)
     );
