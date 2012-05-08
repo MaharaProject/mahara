@@ -601,7 +601,7 @@ class View {
             return false;
         }
         if (!isset($this->ownerobj)) {
-            $this->ownerobj = get_record('usr', 'id', $this->get('owner'));
+            $this->ownerobj = get_user_for_display($this->get('owner'));
         }
         return $this->ownerobj;
     }

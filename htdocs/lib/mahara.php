@@ -1823,7 +1823,7 @@ function can_view_view($view, $user_id=null) {
 
     // If the view's owner is suspended, deny access to the view
     if ($view->get('owner')) {
-        if ((!$owner = $view->get_owner_object()) || $owner->suspendedcusr) {
+        if ((!$owner = $view->get_owner_object()) || $owner->suspendedctime) {
             return false;
         }
     }
