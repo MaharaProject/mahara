@@ -92,13 +92,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             // check if the user viewing the page is the owner of the selected tag
             $owner = $results[0]->owner;
             if ($USER->id != $owner) {
-                $sql =
-                    'SELECT id, firstname, lastname
-                    FROM {usr}
-                    WHERE id = ?';
-
-                $viewowner = get_records_sql_array($sql, array($owner));
-
+                $viewowner = get_user_for_display($owner);
                 $smarty->assign('viewowner', $viewowner);
             }
 

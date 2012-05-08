@@ -5,8 +5,7 @@
 {else}
     {str tag='blockheading' section='blocktype.blog/taggedposts'}
     {if $viewowner}
-    {$viewowner = $viewowner[0]}
-        <strong>{$tag}</strong> by <strong><a href="{$WWWROOT}user/view.php?id={$viewowner->id}">{$viewowner->firstname} {$viewowner->lastname}</a></strong>
+        <strong>{$tag}</strong> by <strong><a href="{profile_url($viewowner)}">{$viewowner|display_default_name}</a></strong>
     {else}
         <strong><a href="{$WWWROOT}tags.php?tag={$tag}&sort=name&type=text">{$tag}</a></strong>
     {/if}
