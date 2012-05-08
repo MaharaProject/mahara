@@ -175,7 +175,7 @@ class PluginSearchInternal extends PluginSearch {
         $sql = '
             SELECT
                 u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.studentid, u.staff,
-                u.admin, u.profileicon
+                u.admin, u.profileicon, u.urlid
             FROM {usr} u';
 
         if (isset($data['group'])) {
