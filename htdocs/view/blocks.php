@@ -98,6 +98,7 @@ else if ($view->get('type') == 'dashboard') {
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
+    $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
@@ -204,6 +205,9 @@ if (get_config('viewmicroheaders')) {
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
+if (isset($groupurl)) {
+    $smarty->assign('groupurl', $groupurl);
+}
 $smarty->assign('institution', $institution);
 
 if (get_config('userscanchooseviewthemes')
