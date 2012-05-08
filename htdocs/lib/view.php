@@ -2642,7 +2642,8 @@ class View {
         }
         if ($userid) {
             $select .= ',v.submittedtime,
-                g.id AS submitgroupid, g.name AS submitgroupname, h.wwwroot AS submithostwwwroot, h.name AS submithostname';
+                g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
+                h.wwwroot AS submithostwwwroot, h.name AS submithostname';
             $from .= '
                 LEFT OUTER JOIN {group} g ON (v.submittedgroup = g.id AND g.deleted = 0)
                 LEFT OUTER JOIN {host} h ON (v.submittedhost = h.wwwroot)';
@@ -2658,17 +2659,16 @@ class View {
             foreach ($viewdata as $id => &$data) {
                 $data['removable'] = self::can_remove_viewtype($data['type']);
                 if (!empty($data['submitgroupid'])) {
+                    $groupurl = group_homepage_url((object) array('id' => $data['submitgroupid'], 'urlid' => $data['submitgroupurlid']));
                     if (!empty($data['submittedtime'])) {
                         $data['submittedto'] = get_string(
-                            'viewsubmittedtogroupon', 'view',
-                            get_config('wwwroot') . 'group/view.php?id=' . $data['submitgroupid'],
+                            'viewsubmittedtogroupon', 'view', $groupurl,
                             hsc($data['submitgroupname']), format_date(strtotime($data['submittedtime']))
                         );
                     }
                     else {
                         $data['submittedto'] = get_string(
-                            'viewsubmittedtogroup', 'view',
-                            get_config('wwwroot') . 'group/view.php?id=' . $data['submitgroupid'],
+                            'viewsubmittedtogroup', 'view', $groupurl,
                             hsc($data['submitgroupname'])
                         );
                     }
