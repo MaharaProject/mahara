@@ -4031,7 +4031,7 @@ class View {
         );
         $sql = "
             SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.template, v.owner, v.group,
+                v.startdate, v.stopdate, v.template, v.owner, v.group, v.urlid,
                 c.id AS cid, c.name AS cname
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
@@ -4057,6 +4057,7 @@ class View {
                 'type'  => $r->vtype,
                 'owner' => $r->owner,
                 'group' => $r->group,
+                'urlid' => $r->urlid,
             ));
             $view->set('dirty', false);
             $v = array(
@@ -4161,7 +4162,7 @@ class View {
 
         // Get view_access records, apart from those with visible = 0 (system access records)
         $accessgroups = get_records_sql_array('
-            SELECT va.*, g.grouptype, g.name
+            SELECT va.*, g.grouptype, g.name, g.urlid
             FROM {view_access} va LEFT OUTER JOIN {group} g ON (g.id = va.group AND g.deleted = 0)
             WHERE va.view IN (' . join(',', array_keys($viewindex)) . ') AND va.visible = 1
             ORDER BY va.view, va.accesstype, g.grouptype, va.role, g.name, va.group, va.usr',
@@ -4203,6 +4204,7 @@ class View {
                 if ($access->role) {
                     $access->roledisplay = get_string($access->role, 'grouptype.' . $access->grouptype);
                 }
+                $access->groupurl = group_homepage_url((object) array('id' => $access->group, 'urlid' => $access->urlid));
             }
             else if ($access->institution) {
                 $access->accesstype = 'institution';
