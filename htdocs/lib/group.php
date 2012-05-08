@@ -743,6 +743,7 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
             'shortname' => null,
             'institution' => null,
             'category' => null,
+            'urlid' => null,
         ),
         array(
             'id' => $group->id,

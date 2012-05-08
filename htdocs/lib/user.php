@@ -1158,6 +1158,9 @@ function delete_user($userid) {
         $deleterec->authinstance = $authinst;
     }
 
+    // Free the urlid for another user to use
+    $deleterec->urlid = null;
+
     update_record('usr', $deleterec);
 
     // Remove user from any groups they're in, invited to or want to be in
