@@ -402,7 +402,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
                 rowdata.roledisplay = scrapeText(this.childNodes[this.selectedIndex]);
             }
         });
-        identityNodes.push(A({'href': config.wwwroot + 'group/view.php?id=' + rowdata.id, 'target': '_blank'}, rowdata.name));
+        identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
         identityNodes.push(" - ");
         identityNodes.push(roleSelector);
     }
