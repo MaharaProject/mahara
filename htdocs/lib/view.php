@@ -3784,9 +3784,11 @@ class View {
         else {
             if ($this->get('group')) {
                 if ($this->get('type') == 'grouphomepage') {
-                    $redirecturl = '/group/view.php?id='.$this->get('group');
+                    $redirecturl = group_homepage_url(get_record('group', 'id', $this->get('group')));
                 }
-                $redirecturl = '/view/groupviews.php?group='.$this->get('group');
+                else {
+                    $redirecturl = '/view/groupviews.php?group='.$this->get('group');
+                }
             }
             else if ($this->get('institution')) {
                 $redirecturl = '/view/institutionviews.php?institution=' . $this->get('institution');
