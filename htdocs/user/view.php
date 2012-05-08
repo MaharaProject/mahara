@@ -306,7 +306,8 @@ function invite_submit(Pieform $form, $values) {
 function addmember_submit(Pieform $form, $values) {
     global $USER, $SESSION, $userid;
 
-    $ctitle = get_field('group', 'name', 'id', $values['group']);
+    $group = get_record('group', 'id', $values['group']);
+    $ctitle = $group->name;
     $adduser = get_record('usr', 'id', $userid);
 
     try {
@@ -317,7 +318,7 @@ function addmember_submit(Pieform $form, $values) {
             'users'   => array($userid),
             'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
             'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
-            'url'     => 'group/view.php?id=' . $values['group'],
+            'url'     => group_homepage_url($group, false),
             'urltext' => $ctitle,
         ));
         $SESSION->add_ok_msg(get_string('useradded', 'group'));
