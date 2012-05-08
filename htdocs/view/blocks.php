@@ -214,12 +214,6 @@ if (get_config('userscanchooseviewthemes')
 
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $viewtitle);
-if ($owner) {
-    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-}
-else if ($group) {
-    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
-}
 
 $blockid = $view->get_blockinstance_currently_being_configured();
 if (!$blockid) {
