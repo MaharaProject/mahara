@@ -615,7 +615,7 @@ EOF;
 
         $select = '
             SELECT
-                t.id, t.forum AS forumid, f.title AS forumname, g.id AS groupid, g.name AS groupname,
+                t.id, t.forum AS forumid, f.title AS forumname, g.id AS groupid, g.name AS groupname, g.urlid,
                 first.subject AS topicname, first.poster AS firstpostby,
                 last.id AS postid, last.poster, last.subject, last.body, last.ctime, edits.ctime as mtime,
                 COUNT(posts.id) AS postcount';
@@ -626,12 +626,16 @@ EOF;
 
         $sort = '
             GROUP BY
-                t.id, t.forum, f.title, g.id, g.name,
+                t.id, t.forum, f.title, g.id, g.name, g.urlid,
                 first.subject, first.poster,
                 last.id, last.poster, last.subject, last.body, last.ctime, edits.ctime
             ORDER BY last.ctime DESC';
 
         $result['data'] = get_records_sql_array($select . $from . $where . $sort, $values, $offset, $limit);
+
+        foreach($result['data'] as &$r) {
+            $r->groupurl = group_homepage_url((object) array('id' => $r->groupid, 'urlid' => $r->urlid));
+        }
 
         return $result;
     }

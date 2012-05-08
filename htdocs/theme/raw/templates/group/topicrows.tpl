@@ -3,7 +3,7 @@
       <td>
         <div class="topictitle"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->topicname|str_shorten_text:65:true}</a></div>
         <div class="s">
-          <a href="{$WWWROOT}group/view.php?id={$topic->groupid}" class="topicgroup">{$topic->groupname|str_shorten_text:30:true}</a> >
+          <a href="{$topic->groupurl}" class="topicgroup">{$topic->groupname|str_shorten_text:30:true}</a> >
           <a href="{$WWWROOT}interaction/forum/view.php?id={$topic->forumid}" class="topicforum">{$topic->forumname|str_shorten_text:30:true}</a>
         </div>
       </td>
