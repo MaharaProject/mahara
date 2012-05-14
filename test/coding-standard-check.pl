@@ -57,12 +57,16 @@ while (<>) {
         if (/\}\s*(else|catch)/) {
             bad_line("cuddled elses/catches are against Mahara coding guidelines", $_);
         }
-        if (/elseif/) {
+        if (/\belseif\b/) {
             bad_line("a single space is requred between an else and an if on the same line", $_);
         }
-        if (/(if|while|for)\(/ || /(if|while|for)\s\s+\(/) {
+        if (/\b(if|while|for)\(/ || /\b(if|while|for)\s\s+\(/) {
             bad_line("conditional and looping statements should have a space between keywords ".
                      "and the condition brackets", $_);
+        }
+        if (/\b(if|while|for) \(.+\)(\s{2,})?{$/) {
+            bad_line("if/while/for constructs should have a space between the closing parenthesis ".
+                     "of the expression and the opening brace of the following block", $_);
         }
         if (/\)$/) {#Note no trailing semicolon
             $stack = $_;
