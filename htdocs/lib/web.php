@@ -1893,13 +1893,13 @@ function admin_nav() {
         'manageinstitutions/institutionstaff' => array(
             'path'   => 'manageinstitutions/institutionstaff',
             'url'    => 'admin/users/institutionstaff.php',
-            'title'  => get_string('institutionstaff', 'admin'),
+            'title'  => get_string('Staff', 'admin'),
             'weight' => 30,
         ),
         'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',
             'url'    => 'admin/users/institutionadmins.php',
-            'title'  => get_string('institutionadmins', 'admin'),
+            'title'  => get_string('Admins', 'admin'),
             'weight' => 40,
         ),
         'manageinstitutions/institutionviews' => array(
@@ -2032,13 +2032,13 @@ function institutional_admin_nav() {
         'manageinstitutions/institutionstaff' => array(
             'path'   => 'manageinstitutions/institutionstaff',
             'url'    => 'admin/users/institutionstaff.php',
-            'title'  => get_string('institutionstaff', 'admin'),
+            'title'  => get_string('Staff', 'admin'),
             'weight' => 30,
         ),
         'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',
             'url'    => 'admin/users/institutionadmins.php',
-            'title'  => get_string('institutionadmins', 'admin'),
+            'title'  => get_string('Admins', 'admin'),
             'weight' => 40,
         ),
         'manageinstitutions/adminnotifications' => array(
