@@ -60,7 +60,7 @@ function smarty_core() {
  */
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION, $THEME;
+    global $USER, $SESSION, $THEME, $HEADDATA;
 
     if (!is_array($headers)) {
         $headers = array();
@@ -441,7 +441,6 @@ EOF;
     $smarty->assign_by_ref('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
-    $smarty->assign_by_ref('HEADERS', $headers);
     $siteclosedforupgrade = get_config('siteclosed');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
@@ -582,6 +581,11 @@ EOF;
         $smarty->assign('SIDEBARS', $sidebars);
 
     }
+
+    if (is_array($HEADDATA) && !empty($HEADDATA)) {
+        $headers = array_merge($HEADDATA, $headers);
+    }
+    $smarty->assign_by_ref('HEADERS', $headers);
 
     if ($USER->get('parentuser')) {
         $smarty->assign('USERMASQUERADING', true);
