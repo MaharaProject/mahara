@@ -113,6 +113,11 @@ if (isset($key)) {
             throw new ConfigException('No internal auth instance for institution');
         }
 
+        if (!empty($registration->extra)) {
+            // Additional user settings were added during confirmation
+            $extrafields = unserialize($registration->extra);
+        }
+
         $user = new User();
         $user->active           = 1;
         $user->authinstance     = $authinstance->id;
@@ -161,6 +166,12 @@ if (isset($key)) {
                         $user->add_institution_request($registration->institution);
                     }
                 }
+            }
+
+            if (!empty($extrafields->institutionstaff)) {
+                // If the user isn't a member yet, this does nothing, but that's okay, it'll
+                // only be set after successful confirmation.
+                set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $registration->institution);
             }
         }
 

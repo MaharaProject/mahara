@@ -832,7 +832,7 @@ $string['updateinstitutionuserquotasdesc'] = 'If checked, the default quota you 
 // pending institution registrations
 $string['approve'] = 'Approve';
 $string['deny'] = 'Deny';
-$string['approveregistrationfor'] = 'Approve registration for \'%s %s\'';
+$string['approveregistrationfor2'] = 'Approve registration for %s %s <%s>';
 $string['approveregistrationmessage'] = 'This will approve the registration and add the user to the institution \'%s\'. Are you sure you want to approve this registration?';
 $string['denyregistrationfor'] = 'Deny registration for \'%s %s\'';
 $string['denyregistrationmessage'] = 'This will deny the registration for the user. Are you sure you want to deny this registration?';
@@ -849,6 +849,7 @@ $string['registrationdeniedreasondesc'] = 'Information as to why the application
 $string['registrationdeniedsuccessful'] = 'Registration denied successfully.';
 $string['registrationdeniedunsuccessful'] = 'The attempted registration denial failed.';
 $string['registrationreason'] = 'Registration reason';
+$string['makeuserinstitutionstaff'] = 'Automatically assign institution staff permissions to the owner of this email the first time they log in';
 
 // Suspend Institutions
 $string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';

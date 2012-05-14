@@ -50,21 +50,21 @@ if (!$inst = get_record('institution', 'name', $registration->institution)) {
 
 if ($action == 'approve') {
     $message = get_string('approveregistrationmessage', 'admin', $inst->displayname);
+    $submitbtn = get_string('approve', 'admin');
+    define('TITLE', get_string('approveregistrationfor2', 'admin', $registration->firstname, $registration->lastname, $registration->email));
+    if ($registration->institution != 'mahara') {
+        $elements['institutionstaff'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('institutionstaff', 'admin'),
+            'description'  => get_string('makeuserinstitutionstaff', 'admin'),
+            'defaultvalue' => 0,
+        );
+    }
 }
 else {
     $message = get_string('denyregistrationmessage', 'admin');
-}
-
-if ($action == 'approve') {
-    $submitbtn = get_string('approve', 'admin');
-}
-else {
     $submitbtn = get_string('deny', 'admin');
-}
-
-define('TITLE', get_string($action.'registrationfor', 'admin', $registration->firstname, $registration->lastname));
-
-if ($action !== 'approve') {
+    define('TITLE', get_string('denyregistrationfor', 'admin', $registration->firstname, $registration->lastname));
     $elements['message'] = array(
         'type'  => 'textarea',
         'title' => get_string('registrationdeniedreason', 'admin'),
@@ -135,6 +135,13 @@ function denyregistration_submit(Pieform $form, $values) {
 
 function approveregistration_submit(Pieform $form, $values) {
     global $SESSION;
+
+    // Get additional values to pass through to user creation
+    $extra = new StdClass;
+    if (!empty($values['institutionstaff'])) {
+        $extra->institutionstaff = 1;
+    }
+    $values['extra'] = serialize($extra);
 
     // update expiry time and set pending to a value that identify
     // it as approved (2)

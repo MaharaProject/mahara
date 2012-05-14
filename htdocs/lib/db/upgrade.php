@@ -2876,5 +2876,12 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('iframeregexp', $iframeregexp);
     }
 
+    if ($oldversion < 2012042800) {
+        $table = new XMLDBTable('usr_registration');
+        $field = new XMLDBField('extra');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }
