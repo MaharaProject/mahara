@@ -64,6 +64,10 @@ while (<>) {
             bad_line("conditional and looping statements should have a space between keywords ".
                      "and the condition brackets", $_);
         }
+        if (/\b(if|while|for) \(.+\)(\s{2,})?{$/) {
+            bad_line("if/while/for constructs should have a space between the closing parenthesis ".
+                     "of the expression and the opening brace of the following block", $_);
+        }
         if (/\)$/) {#Note no trailing semicolon
             $stack = $_;
         }
