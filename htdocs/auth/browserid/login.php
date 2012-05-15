@@ -28,34 +28,44 @@ safe_require('auth', 'browserid');
 
 define('BROWSERID_VERIFIER_URL', 'https://browserid.org/verify');
 
-$assertion = param_variable('assertion', null);
-if (!$assertion) {
-    throw new AuthInstanceException(get_string('missingassertion','auth.browserid'));
+if (!session_id()) {
+    session_start();
 }
 
-// Send the assertion to the verification service
-$request = array(
-    CURLOPT_URL        => BROWSERID_VERIFIER_URL,
-    CURLOPT_POST       => 1,
-    CURLOPT_POSTFIELDS => 'assertion='.urlencode($assertion).'&audience='.get_audience(),
-);
+if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpires']) {
+    $assertion = param_variable('assertion', null);
+    if (!$assertion) {
+        throw new AuthInstanceException(get_string('missingassertion','auth.browserid'));
+    }
 
-$response = mahara_http_request($request);
+    // Send the assertion to the verification service
+    $request = array(
+        CURLOPT_URL        => BROWSERID_VERIFIER_URL,
+        CURLOPT_POST       => 1,
+        CURLOPT_POSTFIELDS => 'assertion='.urlencode($assertion).'&audience='.get_audience(),
+    );
 
-if (empty($response->data)) {
-    throw new AuthInstanceException(get_string('badverification','auth.browserid'));
-}
-$jsondata = json_decode($response->data);
-if (empty($jsondata)) {
-    throw new AuthInstanceException(get_string('badverification','auth.browserid'));
-}
+    $response = mahara_http_request($request);
 
-if ($jsondata->status != 'okay') {
-    throw new AuthInstanceException(get_string('badassertion','auth.browserid', htmlspecialchars($jsondata->reason)));
+    if (empty($response->data)) {
+        throw new AuthInstanceException(get_string('badverification','auth.browserid'));
+    }
+    $jsondata = json_decode($response->data);
+    if (empty($jsondata)) {
+        throw new AuthInstanceException(get_string('badverification','auth.browserid'));
+    }
+
+    if ($jsondata->status != 'okay') {
+        throw new AuthInstanceException(get_string('badassertion','auth.browserid', htmlspecialchars($jsondata->reason)));
+    }
+    $_SESSION['browseridexpires'] = $jsondata->expires/1000;
+    $_SESSION['browseridemail'] = $jsondata->email;
 }
 
 $USER = new BrowserIDUser;
-$USER->login($jsondata->email);
+$USER->login($_SESSION['browseridemail']);
+unset($_SESSION['browseridexpires']);
+unset($_SESSION['browseridemail']);
 redirect();
 
 function get_audience() {

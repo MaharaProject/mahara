@@ -30,6 +30,7 @@ $string['description'] = 'Authenticate using a BrowserID';
 $string['badassertion'] = 'The given BrowserID assertion is not valid: %s';
 $string['badverification'] = 'Mahara did not receive valid JSON output from the BrowserID verifier.';
 $string['login'] = 'BrowserID Login';
+$string['register'] = 'BrowserID Register';
 $string['missingassertion'] = 'BrowserID did not return an alpha-numeric assertion.';
 
 $string['emailalreadyclaimed'] = "Another user account has already claimed the email address '%s'.";

@@ -1858,6 +1858,7 @@ function user_login_tries_to_zero() {
 }
 
 function auth_generate_registration_form($formname, $authname='internal', $goto) {
+    require_once(get_config('libroot').'antispam.php');
     $elements = array(
         'firstname' => array(
             'type' => 'text',
@@ -2198,10 +2199,15 @@ function auth_register_submit(Pieform $form, $values) {
             $_SESSION['registeredokawaiting'] = true;
         }
         else {
-            email_user($user, null,
-                get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-                get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
-                get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            if ($values['authtype'] == 'browserid') {
+                redirect('/register.php?key='.$values['key']);
+            }
+            else {
+                email_user($user, null,
+                    get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+                    get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('sitename')),
+                    get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), get_config('wwwroot'), $values['key'], get_config('wwwroot'), $values['key'], get_config('sitename')));
+            }
             // Add a marker in the session to say that the user has registered
             $_SESSION['registered'] = true;
         }

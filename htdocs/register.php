@@ -62,7 +62,7 @@ if (is_logged_in()) {
 
 // Step two of registration (first as it's the easiest): the user has
 // registered, show them a screen telling them this.
-if (!empty($_SESSION['registered'])) {
+if (!$key && !empty($_SESSION['registered'])) {
     unset($_SESSION['registered']);
     die_info(get_string('registeredok', 'auth.internal'));
 }
@@ -108,9 +108,9 @@ if (isset($key)) {
         }
         $registration->lastlogin = db_format_timestamp(time());
 
-        $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', 'internal');
+        $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', $registration->authtype ? $registration->authtype : 'internal');
         if (false == $authinstance) {
-            throw new ConfigException('No internal auth instance for institution');
+            throw new ConfigException('No ' . ($registration->authtype ? $registration->authtype : 'internal') . ' auth instance for institution');
         }
 
         if (!empty($registration->extra)) {
