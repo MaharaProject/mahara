@@ -277,6 +277,8 @@ class BrowserIDUser extends LiveUser {
             throw new ConfigException(get_string('browseridnotenabled', 'auth.browserid'));
         }
 
+        $autocreate = array(); // Remember the authinstances that are happy to create users
+
         foreach ($authinstances as $authinstance) {
             $auth = AuthFactory::create($authinstance->id);
 
@@ -309,6 +311,14 @@ class BrowserIDUser extends LiveUser {
                     $institutionwhere";
             $user = get_record_sql($sql, $sqlvalues);
             if (!$user) {
+                if ($auth->weautocreateusers) {
+                    if ($authinstance->institutionname == 'mahara') {
+                        array_unshift($autocreate, $auth); // Try "No Instititution" first when creating users below
+                    }
+                    else {
+                        $autocreate[] = $auth;
+                    }
+                }
                 continue; // skip to the next auth_instance
             }
 
@@ -321,45 +331,48 @@ class BrowserIDUser extends LiveUser {
             return true;
         }
 
-        // TODO: pick the right authinstance for creating a new user (make sure !$institution->isFull(), default to "No institution")
-        if ($user = $auth->create_new_user($email)) {
+        foreach ($autocreate as $auth) {
+            if (!$user = $auth->create_new_user($email)) {
+                continue;
+            }
             $this->authenticate($user, $auth->instanceid);
+            return;
         }
-        else {
-            list($form, $registerconfirm) = auth_generate_registration_form('register', 'browserid', '/register.php');
-            if (!$form) {
-                throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
-            }
-            if (record_exists('usr', 'email', $email)
-                    || record_exists('artefact_internal_profile_email', 'email', $email)) {
-                throw new AuthUnknownUserException(get_string('emailalreadytaken', 'auth.internal', $email));
-            }
-            $form['elements']['email'] = array(
-                'type' => 'hidden',
-                'value' => $email
-            );
-            $form['elements']['authtype'] = array(
-                'type' => 'hidden',
-                'value' => 'browserid'
-            );
-            list($formhtml, $js) = auth_generate_registration_form_js($form, $registerconfirm);
 
-            $registerdescription = get_string('registerwelcome');
-            if ($registerterms = get_config('registerterms')) {
-                $registerdescription .= ' ' . get_string('registeragreeterms');
-            }
-            $registerdescription .= ' ' . get_string('registerprivacy');
-
-            $smarty = smarty(array('jquery'));
-            $smarty->assign('register_form', $formhtml);
-            $smarty->assign('registerdescription', $registerdescription);
-            if ($registerterms) {
-                $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
-            }
-            $smarty->assign('PAGEHEADING', get_string('register', 'auth.browserid'));
-            $smarty->assign('INLINEJAVASCRIPT', $js);
-            $smarty->display('register.tpl');
-            die;
+        // Autocreation failed; try registration.
+        list($form, $registerconfirm) = auth_generate_registration_form('register', 'browserid', '/register.php');
+        if (!$form) {
+            throw new AuthUnknownUserException(get_string('emailnotfound', 'auth.browserid', $email));
         }
+        if (record_exists('usr', 'email', $email)
+                || record_exists('artefact_internal_profile_email', 'email', $email)) {
+            throw new AuthUnknownUserException(get_string('emailalreadytaken', 'auth.internal', $email));
+        }
+        $form['elements']['email'] = array(
+            'type' => 'hidden',
+            'value' => $email
+        );
+        $form['elements']['authtype'] = array(
+            'type' => 'hidden',
+            'value' => 'browserid'
+        );
+        list($formhtml, $js) = auth_generate_registration_form_js($form, $registerconfirm);
+
+        $registerdescription = get_string('registerwelcome');
+        if ($registerterms = get_config('registerterms')) {
+            $registerdescription .= ' ' . get_string('registeragreeterms');
+        }
+        $registerdescription .= ' ' . get_string('registerprivacy');
+
+        $smarty = smarty(array('jquery'));
+        $smarty->assign('register_form', $formhtml);
+        $smarty->assign('registerdescription', $registerdescription);
+        if ($registerterms) {
+            $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
+        }
+        $smarty->assign('PAGEHEADING', get_string('register', 'auth.browserid'));
+        $smarty->assign('INLINEJAVASCRIPT', $js);
+        $smarty->display('register.tpl');
+        die;
     }
 }
