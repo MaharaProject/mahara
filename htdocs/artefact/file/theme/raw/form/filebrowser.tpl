@@ -61,6 +61,15 @@
       {if $config.uploadagreement}<script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>{/if}
     </td>
   </tr>
+  {if $config.resizeonuploaduseroption}
+  <tr id="{$prefix}_resizeonuploaduseroption" class="description">
+    <th></th>
+    <td>{str tag='resizeonuploadenablefilebrowser' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
+      <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if}/>
+      {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
+    </td>
+  </tr>
+  {/if}
   <tr class="uploadform">
     <th></th>
     <td id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
