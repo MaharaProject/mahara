@@ -86,9 +86,7 @@ class User {
             'activityprefs'    => array(),
             'institutions'     => array(),
             'grouproles'       => array(),
-            'theme'            => null,
-            'headerlogo'       => null,
-            'stylesheets'      => array(),
+            'institutiontheme' => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
             'parentuser'       => null,
@@ -836,8 +834,8 @@ class User {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
         $staffinstitutions = array();
-        $this->theme = get_config('theme');
-        $this->headerlogo = null;
+        $themename = get_config('theme');
+        $headerlogo = null;
         $stylesheets = array();
         $themeinstitution = null;
         foreach ($institutions as $name => $i) {
@@ -860,8 +858,8 @@ class User {
             }
         }
         if (!is_null($themeinstitution)) {
-            $this->theme      = $institutions[$themeinstitution]->theme;
-            $this->headerlogo = $institutions[$themeinstitution]->logo;
+            $themename  = $institutions[$themeinstitution]->theme;
+            $headerlogo = $institutions[$themeinstitution]->logo;
             if ($institutions[$themeinstitution]->style) {
                 $stylesheet = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
                 if ($nocachecss) {
@@ -870,18 +868,18 @@ class User {
                 $stylesheets[] = $stylesheet;
             }
         }
-        $this->stylesheets        = $stylesheets;
+        $this->institutiontheme = (object) array(
+            'basename'    => $themename,
+            'headerlogo'  => $headerlogo,
+            'stylesheets' => $stylesheets,
+        );
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
     }
 
     public function get_themedata() {
-        return (object) array(
-            'basename'    => $this->theme,
-            'headerlogo'  => $this->headerlogo,
-            'stylesheets' => $this->stylesheets,
-        );
+        return $this->institutiontheme;
     }
 
     public function reset_grouproles() {

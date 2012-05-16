@@ -716,7 +716,7 @@ class Theme {
             $themename = $themedata->basename;
         }
 
-        if (!$themename) {
+        if (empty($themename)) {
             // Theme to show to when no theme has been suggested
             if (!$themename = get_config('theme')) {
                 $themename = 'raw';
