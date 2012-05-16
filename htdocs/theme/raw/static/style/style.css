@@ -191,6 +191,7 @@ th {
 .wysiwyg th,
 .filebrowser th,
 .textarea th,
+.multitext th,
 #edit_interaction_weight_container th,
 .userlist th {
 	vertical-align: top;
