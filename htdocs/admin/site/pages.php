@@ -38,13 +38,17 @@ define('TITLE', get_string('editsitepages', 'admin'));
 define('DEFAULTPAGE', 'home');
 
 $sitepages = array();
-$sitepagenames = site_content_pages();
-if ($sitepagenames) {
-    $sitepages = get_records_select_array('site_content', 'name IN (' . join(',', array_map('db_quote', $sitepagenames)) . ')');
+$corepagenames = site_content_pages();
+$localpagenames = function_exists('local_site_content_pages') ? local_site_content_pages() : array();
+if ($pagenames = array_merge($corepagenames, $localpagenames)) {
+    $sitepages = get_records_select_array(
+        'site_content', 'name IN (' . join(',', array_fill(0, count($pagenames), '?')) . ')', $pagenames
+    );
 }
 $pageoptions = array();
 foreach ($sitepages as $page) {
-    $pageoptions[$page->name] = get_string($page->name, 'admin');
+    $section = in_array($page->name, $localpagenames) ? 'local' : 'admin';
+    $pageoptions[$page->name] = get_string($page->name, $section);
     $pagecontents[$page->name] = $page->content;
 }
 asort($pageoptions);
