@@ -1041,12 +1041,19 @@ function auth_get_login_form() {
             'value' => get_string('login')
         ),
         'register' => array(
+            'type' => 'markup',
             'value' => '<div id="login-helplinks">' . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
         ),
         'login_submitted' => array(
             'type'  => 'hidden',
             'value' => 1
         ),
+    );
+    $elements = array(
+        'login' => array(
+            'type' => 'container',
+            'elements' => $elements
+        )
     );
 
 
@@ -1064,6 +1071,13 @@ function auth_get_login_form() {
             $showbasicform = true;
         }
     }
+    $extraelements = array(
+        'login_extra' => array(
+            'type' => 'container',
+            'class' => 'login_extra',
+            'elements' => $extraelements
+        )
+    );
 
     // Replace or supplement the standard login form elements
     if ($showbasicform) {
@@ -1747,10 +1761,19 @@ function auth_generate_login_form() {
             'value' => get_string('login')
         ),
         'register' => array(
+            'type' => 'markup',
             'value' => '<div id="login-helplinks">' . $registerlink
                 . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
         ),
     );
+    $elements = array(
+        'login' => array(
+            'type' => 'container',
+            'class' => 'login',
+            'elements' => $elements
+        )
+    );
+
 
     // Get any extra elements from the enabled auth plugins
     $extraelements = array();
@@ -1766,6 +1789,13 @@ function auth_generate_login_form() {
             $showbasicform = true;
         }
     }
+    $extraelements = array(
+        'login_extra' => array(
+            'type' => 'container',
+            'class' => 'login_extra',
+            'elements' => $extraelements
+        )
+    );
 
     // Replace or supplement the standard login form elements
     if ($showbasicform) {
