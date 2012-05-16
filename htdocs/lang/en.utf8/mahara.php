@@ -334,6 +334,7 @@ $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
+$string['orloginvia'] = 'Or login via:';
 $string['newpassword'] = 'New password';
 $string['nosessionreload'] = 'Reload the page to log in';
 $string['oldpassword'] = 'Current password';

@@ -1071,6 +1071,13 @@ function auth_get_login_form() {
             $showbasicform = true;
         }
     }
+    if (!empty($extraelements) && $showbasicform) {
+        $loginlabel = array(
+            'type' => 'markup',
+            'value' => '<label>'.get_string('orloginvia') . '</label>'
+        );
+        $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
+    }
     $extraelements = array(
         'login_extra' => array(
             'type' => 'container',
@@ -1788,6 +1795,13 @@ function auth_generate_login_form() {
         if (call_static_method($classname, 'need_basic_login_form')) {
             $showbasicform = true;
         }
+    }
+    if (!empty($extraelements) && $showbasicform) {
+        $loginlabel = array(
+            'type' => 'markup',
+            'value' => '<label>'.get_string('orloginvia') . '</label>'
+        );
+        $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
     }
     $extraelements = array(
         'login_extra' => array(
