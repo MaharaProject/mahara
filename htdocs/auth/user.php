@@ -879,6 +879,9 @@ class User {
     }
 
     public function get_themedata() {
+        if ($preftheme = $this->get_account_preference('theme')) {
+            return (object) array('basename' => $preftheme);
+        }
         return $this->institutiontheme;
     }
 
@@ -1439,16 +1442,15 @@ class LiveUser extends User {
     }
 
     public function update_theme() {
-        $this->reset_institutions(true);
-        $this->commit();
-    }
-
-    public function reset_institutions($nocachecss=false) {
         global $THEME;
-        parent::reset_institutions($nocachecss);
         if (!defined('INSTALLER')) {
             $THEME = new Theme($this);
         }
+    }
+
+    public function reset_institutions($nocachecss=false) {
+        parent::reset_institutions($nocachecss);
+        $this->update_theme();
     }
 
     private function store_sessionid() {

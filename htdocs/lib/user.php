@@ -209,6 +209,7 @@ function expected_account_preferences() {
                  'multipleblogs' => 0,
                  'showhomeinfo' => 1,
                  'mobileuploadtoken' => '',
+                 'theme' => '',
                  );
 }
 
