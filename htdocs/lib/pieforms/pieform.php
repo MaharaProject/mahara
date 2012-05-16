@@ -115,7 +115,7 @@ class Pieform {/*{{{*/
 
     /**
      * A hash of references to the elements of the form, not including 
-     * fieldsets (although including all elements inside any fieldsets. Used 
+     * fieldsets/containers (although including all elements inside any fieldsets/containers. Used
      * internally for simplifying looping over elements
      *
      * @var array
@@ -315,7 +315,7 @@ class Pieform {/*{{{*/
             $this->spamerror = false;
         }
 
-        // Get references to all the elements in the form, excluding fieldsets
+        // Get references to all the elements in the form, excluding fieldsets/containers
         foreach ($this->data['elements'] as $name => &$element) {
             // The name can be in the element itself. This is compatibility for 
             // the perl version
@@ -323,11 +323,11 @@ class Pieform {/*{{{*/
                 $name = $element['name'];
             }
 
-            if (isset($element['type']) && $element['type'] == 'fieldset') {
-                // Load the fieldset plugin as we know this form has one now
-                $this->include_plugin('element', 'fieldset');
+            if (isset($element['type']) && ($element['type'] == 'fieldset' || $element['type'] == 'container')) {
+                // Load the fieldset/container plugin as we know this form has one now
+                $this->include_plugin('element', $element['type']);
                 if ($this->get_property('template')) {
-                    self::info("Your form '$this->name' has a fieldset, but is using a template. Fieldsets make no sense when using templates");
+                    self::info("Your form '$this->name' has a " . $element['type'] . ", but is using a template. Fieldsets/containers make no sense when using templates");
                 }
 
                 foreach ($element['elements'] as $subname => &$subelement) {
@@ -360,7 +360,7 @@ class Pieform {/*{{{*/
         // This can't be done using $this->elementrefs, because you can't unset 
         // an entry in there and have it unset the entry in $this->data['elements']
         foreach ($this->data['elements'] as $name => $element) {
-            if (isset($element['type']) && $element['type'] == 'fieldset') {
+            if (isset($element['type']) && ($element['type'] == 'fieldset' || $element['type'] == 'container')) {
                 foreach ($element['elements'] as $subname => $subelement) {
                     if (!empty($subelement['ignore'])) {
                         unset ($this->data['elements'][$name]['elements'][$subname]);
@@ -647,7 +647,7 @@ class Pieform {/*{{{*/
         // Builds the HTML each element (see the build_element_html method for 
         // more information)
         foreach ($this->data['elements'] as &$element) {
-            if ($element['type'] == 'fieldset') {
+            if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
                     $this->build_element_html($subelement);
                 }
@@ -818,14 +818,14 @@ class Pieform {/*{{{*/
     /**
      * Retrieves a list of elements in the form.
      *
-     * This flattens fieldsets, and ignores the actual fieldset elements
+     * This flattens fieldsets/containers, and ignores the actual fieldset/container elements
      *
      * @return array The elements of the form
      */ 
     public function get_elements() {/*{{{*/
         $elements = array();
         foreach ($this->data['elements'] as $name => $element) {
-            if ($element['type'] == 'fieldset') {
+            if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as $subelement) {
                     $elements[] = $subelement;
                 }
@@ -841,7 +841,7 @@ class Pieform {/*{{{*/
      * Returns the element with the given name. Throws a PieformException if the
      * element cannot be found.
      *
-     * Fieldset elements are ignored. This might change if a valid case for
+     * Fieldset and container elements are ignored. This might change if a valid case for
      * needing them is found.
      *
      * @param  string $name     The name of the element to find
@@ -950,7 +950,7 @@ EOF;
             return;
         }
         foreach ($this->data['elements'] as $key => &$element) {
-            if ($element['type'] == 'fieldset') {
+            if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
                     if ($subelement['name'] == $name) {
                         $subelement['error'] = $message;
@@ -1231,7 +1231,7 @@ EOF;
      * for example if they were check boxes that were not checked upon
      * submission.
      *
-     * A value is returned for every element (except fieldsets of course). If
+     * A value is returned for every element (except fieldsets/containers of course). If
      * an element was not set, the value set is <kbd>null</kbd>.
      *
      * @return array The submitted values
@@ -1329,7 +1329,7 @@ EOF;
      */
     private function auto_focus_first_error() {/*{{{*/
         foreach ($this->data['elements'] as &$element) {
-            if ($element['type'] == 'fieldset') {
+            if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
                     if (isset($subelement['error'])) {
                         $subelement['autofocus'] = true;
@@ -1580,7 +1580,7 @@ EOF;
  * PieformException.
  *
  * {@internal This is separate so that child element types can nest other
- * elements inside them (like the fieldset element does for example).}}
+ * elements inside them (like the fieldset and container elements do for example).}}
  *
  * NOTE: This function is SCHEDULED FOR REMOVAL. Nicer ways of getting built 
  * elements are available
@@ -1610,6 +1610,11 @@ function pieform_render_element(Pieform $form, $element) {/*{{{*/
     // Render fieldsets now
     if ($element['type'] == 'fieldset') {
         $element['html'] = pieform_element_fieldset($form, $element);
+    }
+
+    // Render containers now
+    if ($element['type'] == 'container') {
+        $element['html'] = pieform_element_container($form, $element);
     }
 
     return $rendererfunction($form, $element);
