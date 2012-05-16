@@ -230,10 +230,10 @@ class PluginAuthBrowserid extends PluginAuth {
      * the browser.
      */
     public static function login_form_js() {
+        global $HEADDATA;
+        $HEADDATA[] = '<script src="https://browserid.org/include.js" type="text/javascript"></script>';
         $wwwroot = get_config('wwwroot');
         return <<< EOF
-<script src="https://browserid.org/include.js" type="text/javascript"></script>
-
 <form id="browserid-form" action="{$wwwroot}auth/browserid/login.php" method="post">
 <input id="browserid-assertion" type="hidden" name="assertion" value="">
 <input style="display: none" type="submit">
