@@ -36,8 +36,8 @@ define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');
 require_once(get_config('libroot') . 'pieforms/pieform.php');
 
-if ($publish = param_integer('publish', null)) {
-    ArtefactTypeBlogpost::publish_form($publish);
+if ($changepoststatus = param_integer('changepoststatus', null)) {
+    ArtefactTypeBlogpost::changepoststatus_form($changepoststatus);
 }
 if ($delete = param_integer('delete', null)) {
     ArtefactTypeBlogpost::delete_form($delete);
@@ -75,10 +75,19 @@ $pagination = array(
 ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 
 $strpublished = json_encode(get_string('published', 'artefact.blog'));
+$strdraft = json_encode(get_string('draft', 'artefact.blog'));
+$strchangepoststatuspublish = json_encode(get_string('publish', 'artefact.blog'));
+$strchangepoststatusunpublish = json_encode(get_string('unpublish', 'artefact.blog'));
 $js = <<<EOF
-function publish_success(form, data) {
-    removeElement('publish_' + data.id);
-    $('poststatus' + data.id).innerHTML = {$strpublished};
+function changepoststatus_success(form, data) {
+    if ($('changepoststatus_' + data.id + '_currentpoststatus').value == 0) {
+        $('poststatus' + data.id).innerHTML = {$strpublished};
+        $('changepoststatus_' + data.id + '_submit').value = {$strchangepoststatusunpublish};
+    }
+    else {
+        $('poststatus' + data.id).innerHTML = {$strdraft};
+        $('changepoststatus_' + data.id + '_submit').value = {$strchangepoststatuspublish};
+    }
 }
 function delete_success(form, data) {
     addElementClass('postdetails_' + data.id, 'hidden');
@@ -104,14 +113,21 @@ $smarty->assign_by_ref('posts', $posts);
 $smarty->display('artefact:blog:view.tpl');
 exit;
 
-function publish_submit(Pieform $form, $values) {
-    $blogpost = new ArtefactTypeBlogPost((int) $values['publish']);
+function changepoststatus_submit(Pieform $form, $values) {
+    $blogpost = new ArtefactTypeBlogPost((int) $values['changepoststatus']);
     $blogpost->check_permission();
-    $blogpost->publish();
+    $newpoststatus = !($values['currentpoststatus']);
+    $blogpost->changepoststatus($newpoststatus);
+    if ($newpoststatus) {
+        $strmessage = get_string('blogpostpublished', 'artefact.blog');
+    }
+    else {
+        $strmessage = get_string('blogpostunpublished', 'artefact.blog');
+    }
     $form->reply(PIEFORM_OK, array(
-        'message' => get_string('blogpostpublished', 'artefact.blog'),
+        'message' => $strmessage,
         'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
-        'id' => $values['publish'],
+        'id' => $values['changepoststatus'],
     ));
 }
 
