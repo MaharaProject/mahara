@@ -261,6 +261,23 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true,
         'ignore' => count($languages) < 2,
     );
+    if (get_config('themeprefs') && !in_admin_section()) {
+        // get_user_accessible_themes() returns 'sitedefault' to mean fall back to the site or
+        // institution theme.  This won't work for account prefs, where 'sitedefault' is just
+        // a theme that doesn't exist.  So change the 'sitedefault' key to '', and the empty
+        // preference will be interpreted as "No theme selected".
+        $themes = array_reverse(get_user_accessible_themes());
+        $themes[''] = $themes['sitedefault'];
+        unset($themes['sitedefault']);
+        $themes = array_reverse($themes);
+        $elements['theme'] = array(
+            'type' => 'select',
+            'defaultvalue' => $prefs->theme,
+            'title' => get_string('theme'),
+            'options' => $themes,
+            'ignore' => count($themes) < 2,
+        );
+    }
     $elements['addremovecolumns'] = array(
         'type' => 'checkbox',
         'defaultvalue' => $prefs->addremovecolumns,

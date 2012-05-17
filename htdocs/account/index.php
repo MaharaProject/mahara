@@ -174,8 +174,9 @@ function accountprefs_submit(Pieform $form, $values) {
         update_send_count($u,true);
     }
 
-    // Remember the user's language pref, so we can reload the page if they change it
+    // Remember the user's language & theme prefs, so we can reload the page if they change them
     $oldlang = $USER->get_account_preference('lang');
+    $oldtheme = $USER->get_account_preference('theme');
 
     // Set user account preferences
     foreach ($expectedprefs as $eprefkey => $epref) {
@@ -194,13 +195,23 @@ function accountprefs_submit(Pieform $form, $values) {
 
     db_commit();
 
-    if (isset($values['lang']) && $values['lang'] != $oldlang) {
+    $updatelang = isset($values['lang']) && $values['lang'] != $oldlang;
+    $updatetheme = isset($values['theme']) && $values['theme'] != $oldtheme;
+
+    if ($updatetheme) {
+        $USER->update_theme();
+        $message = get_string('prefssaved', 'account');
+    }
+    if ($updatelang) {
         // The session language pref is used when the user has no user pref,
         // and when logged out.
         $SESSION->set('lang', $values['lang']);
+        $message = get_string_from_language($values['lang'], 'prefssaved', 'account');
+    }
+    if ($updatelang || $updatetheme) {
         // Use PIEFORM_CANCEL here to force a page reload and show the new language.
         $returndata['location'] = get_config('wwwroot') . 'account/index.php';
-        $SESSION->add_ok_msg(get_string_from_language($values['lang'], 'prefssaved', 'account'));
+        $SESSION->add_ok_msg($message);
         $form->json_reply(PIEFORM_CANCEL, $returndata);
     }
 

@@ -271,3 +271,7 @@ $cfg->favicondisplay = 'http://www.google.com/s2/favicons?domain=%s';
 // site is not in production mode, and that some data may be missing and/or
 // out of date
 $cfg->productionmode = true;
+
+// If true, users can change their preferred theme for browsing the site.  The user's theme preference
+// will override any site, institution, or page theme.
+// $cfg->themeprefs = true;
