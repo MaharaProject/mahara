@@ -75,11 +75,13 @@ if ($remove && $member) {
 
 // Search related stuff for member pager
 $query  = trim(param_variable('query', ''));
+// pagination params
+$setlimit = true; //Enable choosing page size; list of page sizes has been predefined in function build_pagination()
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
 $results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype, $setlimit);
 
 // Type-specific instructions
 $instructions = '';
@@ -104,6 +106,10 @@ $searchform = pieform(array(
             'type' => 'hidden',
             'value' => $membershiptype
         ),
+        'setlimit' => array(
+            'type' => 'hidden',
+            'value' => $setlimit
+        ),
         'query' => array(
             'type' => 'text',
             'defaultvalue' => $query
@@ -120,7 +126,10 @@ addLoadEvent(function () {
     p = {$pagination['javascript']}
     connect('search_submit', 'onclick', function (event) {
         replaceChildNodes('messages');
-        var params = {'query': $('search_query').value, 'id':$('search_id').value, 'membershiptype':$('search_membershiptype').value};
+        var params = {'query': $('search_query').value, 'id':$('search_id').value,
+            'membershiptype':$('search_membershiptype').value,
+            'setlimit':$('search_setlimit').value
+            };
         p.sendQuery(params);
         event.stop();
     });
@@ -162,5 +171,8 @@ $smarty->assign('membershiptype', $membershiptype);
 $smarty->display('group/members.tpl');
 
 function search_submit(Pieform $form, $values) {
-    redirect('/group/members.php?id=' . $values['id'] . (!empty($values['query']) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['membershiptype']) ? '&membershiptype=' . urlencode($values['membershiptype']) : ''));
+    redirect('/group/members.php?id=' . $values['id'] .
+                    (!empty($values['query']) ? '&query=' . urlencode($values['query']) : '') .
+                    (!empty($values['membershiptype']) ? '&membershiptype=' . urlencode($values['membershiptype']) : '') .
+                    (!empty($values['setlimit']) ? '&setlimit=' . urlencode($values['setlimit']) : ''));
 }

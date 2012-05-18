@@ -38,10 +38,15 @@ require_once('pieforms/pieform.php');
 define('TITLE', get_string('Views', 'view'));
 
 list($searchform, $data, $pagination) = View::views_by_owner();
-
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+});
+EOF;
 $createviewform = pieform(create_view_form());
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);

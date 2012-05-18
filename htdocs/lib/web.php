@@ -3035,6 +3035,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  *
  * - url: The base URL to use for all links
  * - count: The total number of results to paginate for
+ * - setlimit: toggle variable for enabling/disabling limit dropbox, default value = false
  * - limit: How many to show per page
  * - offset: At which result to start showing results
  *
@@ -3055,6 +3056,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
      and current- and last page
  * - resultcounttextsingular: The text to use for 'result'
  * - resultcounttextplural: The text to use for 'results'
+ * - limittext: The text to use for the limitoption, e.g. "Max items per page" or "Page size"
  *
  * Optional options to support javascript pagination include:
  *
@@ -3069,12 +3071,25 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  * @param array $params Options for the pagination
  */
 function build_pagination($params) {
+    $limitoptions = array(10, 20, 50, 100, 500);
     // Bail if the required attributes are not present
     $required = array('url', 'count', 'limit', 'offset');
     foreach ($required as $option) {
         if (!isset($params[$option])) {
             throw new ParameterException('You must supply option "' . $option . '" to build_pagination');
         }
+    }
+
+    if (isset($params['setlimit']) && $params['setlimit']) {
+        if (!in_array($params['limit'], $limitoptions)) {
+            $params['limit'] = 10;
+        }
+        if (!isset($params['limittext'])) {
+            $params['limittext'] = get_string('maxitemsperpage');
+        }
+    }
+    else {
+        $params['setlimit'] = false;
     }
 
     // Work out default values for parameters
@@ -3205,9 +3220,8 @@ function build_pagination($params) {
 
         // Build the first/previous links
         $isfirst = $page == 0;
-        $output .= build_pagination_pagelink('first', $params['url'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
-        $output .= build_pagination_pagelink('prev', $params['url'], $params['limit'] * $prev, 
-            '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+        $output .= build_pagination_pagelink('first', $params['url'], $params['setlimit'], $params['limit'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
+        $output .= build_pagination_pagelink('prev', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $prev, '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
 
         // Build the pagenumbers in the middle
         foreach ($pagenumbers as $k => $i) {
@@ -3218,7 +3232,7 @@ function build_pagination($params) {
                 $output .= '<span class="selected">' . ($i + 1) . '</span>';
             }
             else {
-                $output .= build_pagination_pagelink('', $params['url'],
+                $output .= build_pagination_pagelink('', $params['url'], $params['setlimit'], $params['limit'],
                     $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
             }
             $prevpagenum = $i;
@@ -3226,21 +3240,45 @@ function build_pagination($params) {
 
         // Build the next/last links
         $islast = $page == $last;
-        $output .= build_pagination_pagelink('next', $params['url'], $params['limit'] * $next,
+        $output .= build_pagination_pagelink('next', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $next,
             $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
-        $output .= build_pagination_pagelink('last', $params['url'], $params['limit'] * $last,
+        $output .= build_pagination_pagelink('last', $params['url'], $params['setlimit'], $params['limit'], $params['limit'] * $last,
             $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
+    }
+
+    // Build limitoptions dropbox
+    if ($params['setlimit']) {
+        $strlimitoptions = array();
+        $limit = $params['limit'];
+        for ($i = 0; $i < count($limitoptions); $i++) {
+            if ($limit == $limitoptions[$i]) {
+                $strlimitoptions[] = "<option value = '$limit' selected='selected'> $limit </option>";
+            }
+            else {
+                $strlimitoptions[] = "<option value = '$limitoptions[$i]'> $limitoptions[$i] </option>";
+            }
+        }
+        $output .= '<form class="pagination" action="' . $params['url'] . '" method="POST">
+            <span class="pagination"> ' . $params['limittext'] . '</span>' .
+            '<select id="setlimitselect" class="pagination" name="limit"> '.
+                join(' ', $strlimitoptions) .
+            '</select>
+            <input class="pagination js-hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
+        </form>';
     }
 
     // Work out what javascript we need for the paginator
     $js = '';
+    $id = json_encode($params['id']);
     if (isset($params['jsonscript']) && isset($params['datatable'])) {
         $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
-        $id           = json_encode($params['id']);
         $datatable    = json_encode($params['datatable']);
         $jsonscript   = json_encode($params['jsonscript']);
         $extradata    = json_encode($params['extradata']);
         $js .= "new Paginator($id, $datatable, $jsonscript, $extradata);";
+    }
+    else {
+        $js .= "new Paginator($id, null, null, null);";
     }
 
     // Output the count of results
@@ -3258,12 +3296,16 @@ function build_pagination($params) {
  * Used by build_pagination to build individual links. Shouldn't be used 
  * elsewhere.
  */
-function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabled=false, $offsetname='offset') {
+function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $text, $title, $disabled=false, $offsetname='offset') {
     $return = '<span class="pagination';
     $return .= ($class) ? " $class" : '';
 
     $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&amp;';
     $url .= "$offsetname=$offset";
+    if ($setlimit) {
+        $url .= '&amp;' . "setlimit=$setlimit";
+        $url .= '&amp;' . "limit=$limit";
+    }
 
     if ($disabled) {
         $return .= ' disabled">' . $text . '</span>';

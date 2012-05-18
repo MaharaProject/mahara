@@ -1423,14 +1423,13 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
     return $data;
 }
 
-function group_get_membersearch_data($results, $group, $query, $membershiptype) {
+function group_get_membersearch_data($results, $group, $query, $membershiptype, $setlimit=false) {
     global $USER;
 
     $params = array();
     if (!empty($query)) {
         $params[] = 'query=' . $query;
     }
-    $params[] = 'limit=' . $results['limit'];
     if (!empty($membershiptype)) {
         $params[] = 'membershiptype=' . $membershiptype;
     }
@@ -1481,6 +1480,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype) 
         'class' => 'center',
         'url' => $searchurl,
         'count' => $results['count'],
+        'setlimit' => $setlimit,
         'limit' => $results['limit'],
         'offset' => $results['offset'],
         'jumplinks' => 8,

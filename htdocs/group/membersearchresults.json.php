@@ -34,6 +34,7 @@ require_once('searchlib.php');
 
 $id     = param_integer('id');
 $query  = trim(param_variable('query', ''));
+$setlimit = param_boolean('setlimit', false);
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
@@ -77,7 +78,7 @@ if (!param_integer('html', 1)) {
     json_reply(false, $results);
 }
 
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $id, $query, $membershiptype);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $id, $query, $membershiptype, $setlimit);
 
 json_reply(false, array(
     'message' => null,
@@ -88,6 +89,7 @@ json_reply(false, array(
         'count' => $count,
         'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
         'offset' => $offset,
+        'setlimit' => $setlimit,
         'membershiptype' => $membershiptype,
     )
 ));

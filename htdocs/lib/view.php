@@ -2656,8 +2656,11 @@ class View {
 
     public static function views_by_owner($group=null, $institution=null) {
 
-        $limit  = param_integer('limit', 25);
+        // Pagination configuration
+        $setlimit = true;
+        $limit  = param_integer('limit', 20);
         $offset = param_integer('offset', 0);
+
         $query  = param_variable('query', null);
         $tag    = param_variable('tag', null);
 
@@ -2690,6 +2693,10 @@ class View {
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
                 ),
+                'setlimit' => array(
+                    'type' => 'hidden',
+                    'value' => $setlimit
+                ),
                 'submit' => array(
                     'type' => 'submit',
                     'value' => get_string('search')
@@ -2714,6 +2721,7 @@ class View {
             'url'    => $url,
             'count'  => $data->count,
             'limit'  => $limit,
+            'setlimit' => $setlimit,
             'offset' => $offset,
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,

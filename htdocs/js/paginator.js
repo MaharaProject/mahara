@@ -36,11 +36,17 @@ var Paginator = function(id, datatable, script, extradata) {
 
     this.init = function(id, datatable, script, extradata) {
         self.id = id;
-        self.datatable = $(datatable);
-        self.jsonScript = config['wwwroot'] + script;
-        self.extraData = extradata;
+        if (script && script.length !== 0) {
+            self.datatable = $(datatable);
+            self.jsonScript = config['wwwroot'] + script;
+            self.extraData = extradata;
 
-        self.rewritePaginatorLinks();
+            self.rewritePaginatorLinks();
+            self.rewritePaginatorSelectForm();
+        }
+        else {
+            self.rewritePaginatorSelectFormWithoutJSON();
+        }
     };
 
     this.rewritePaginatorLinks = function() {
@@ -52,6 +58,50 @@ var Paginator = function(id, datatable, script, extradata) {
                 self.rewritePaginatorLink(a);
             }
         });
+    };
+
+    this.rewritePaginatorSelectFormWithoutJSON = function() {
+        var setlimitform = getFirstElementByTagAndClassName('form', 'pagination', self.id);
+        // If there is a form for choosing page size(page limit)
+        if (setlimitform) {
+            var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            connect (setlimitselect, 'onchange', function(e) {
+                e.stop();
+
+                var url = setlimitform.action;
+                if (url.indexOf('?') != -1) {
+                    url += "&";
+                }
+                else {
+                    url += "?";
+                }
+                url += this.name + "=" + this.value;
+                location.assign(url);
+            });
+        }
+    };
+
+    this.rewritePaginatorSelectForm = function() {
+        var setlimitform = getFirstElementByTagAndClassName('form', 'pagination', self.id);
+        // If there is a form for choosing page size(page limit)
+        if (setlimitform) {
+            var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            connect (setlimitselect, 'onchange', function(e) {
+                e.stop();
+
+                var url = setlimitform.action
+                var loc = url.indexOf('?');
+                var queryData = [];
+                if (loc != -1) {
+                    queryData = parseQueryString(url.substring(loc + 1, url.length));
+                    queryData.setlimit = "1";
+                    queryData.limit = setlimitselect.value;
+                    queryData.extradata = serializeJSON(self.extraData);
+                }
+
+                self.sendQuery(queryData);
+            });
+        }
     };
 
     this.updateResults = function (data) {
