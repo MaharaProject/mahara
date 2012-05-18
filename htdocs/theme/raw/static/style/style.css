@@ -318,8 +318,10 @@ tr.profileicon td.filename {
 	font-style: italic;
 }
 /**************************** Pagination ****************************/
+.pagination {
+    font-size: .9167em;
+}
 div.pagination {
-	font-size: .9167em;
 	text-align: center;
 	margin: 3px 0;
 	padding: 5px;
@@ -353,6 +355,9 @@ div.pagination .results {
 }
 div.pagination .results a {
 	border: 0;
+}
+form.pagination {
+    display: inline;
 }
 #feedback_pagination span.pagination a,
 .blockinstance-content div.center div.pagination span.pagination a {
