@@ -136,8 +136,14 @@ function denyregistration_submit(Pieform $form, $values) {
 function approveregistration_submit(Pieform $form, $values) {
     global $SESSION;
 
+    if (!empty($values['extra'])) {
+        // The local_register_submit hook may have been used to put other values in
+        // this column; if so, leave them in the db.
+        $extra = unserialize($values['extra']);
+    }
+    $extra = (!empty($extra) && $extra instanceof Stdclass) ? $extra : new StdClass;
+
     // Get additional values to pass through to user creation
-    $extra = new StdClass;
     if (!empty($values['institutionstaff'])) {
         $extra->institutionstaff = 1;
     }
