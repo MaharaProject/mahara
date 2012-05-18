@@ -302,3 +302,6 @@ $cfg->cleanurlinvalidcharacters = '/[^a-zA-Z0-9]+/';
 // A pattern to validate user-editable fields for use in clean urls.  If a user enters a string that
 // doesn't match this, it's an error.
 $cfg->cleanurlvalidate = '/^[a-z0-9-]*$/';
+
+// Setting this to false will remove the "Change profile URL" option from the settings page.
+$cfg->cleanurlusereditable = true;

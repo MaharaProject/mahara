@@ -85,7 +85,7 @@ if ($authobj->authname == 'internal') {
     );
 }
 
-if (get_config('cleanurls')) {
+if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
     $elements['changeprofileurl'] = array(
         'value' => '<tr><td colspan="2"><h3>' . get_string('changeprofileurl', 'account') . '</h3></td></tr>'
     );
@@ -164,7 +164,7 @@ function accountprefs_validate(Pieform $form, $values) {
         }
     }
 
-    if (get_config('cleanurls') && $values['urlid'] != $USER->get('urlid')) {
+    if (isset($values['urlid']) && get_config('cleanurls') && $values['urlid'] != $USER->get('urlid')) {
         if (strlen($values['urlid']) < 3) {
             $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
         }
