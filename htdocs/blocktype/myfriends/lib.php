@@ -61,7 +61,8 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
             return;
         }
 
-        $baseurl = $instance->get_view()->get_url() . '&block=' . $instance->get('id');
+        $baseurl = $instance->get_view()->get_url();
+        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $instance->get('id');
         $baseurl .= '&user=' . (int) $userid;
         $pagination = build_pagination(array(
             'id' => 'userfriendstable_pagination',

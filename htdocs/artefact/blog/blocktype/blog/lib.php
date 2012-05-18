@@ -79,8 +79,10 @@ class PluginBlocktypeBlog extends PluginBlocktype {
                 $pagination = false;
             }
             else {
+                $baseurl = $instance->get_view()->get_url();
+                $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $instance->get('id');
                 $pagination = array(
-                    'baseurl' => $instance->get_view()->get_url() . '&block=' . $instance->get('id'),
+                    'baseurl' => $baseurl,
                     'id' => 'blogpost_pagination_' . $instance->get('id'),
                     'datatable' => 'postlist_' . $instance->get('id'),
                     'jsonscript' => 'artefact/blog/posts.json.php',

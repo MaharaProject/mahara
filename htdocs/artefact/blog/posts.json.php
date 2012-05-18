@@ -47,8 +47,10 @@ if ($blockid = param_integer('block', null)) {
     $configdata['viewid'] = $bi->get('view');
     $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
+    $baseurl = $bi->get_view()->get_url();
+    $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $blockid;
     $pagination = array(
-        'baseurl' => $bi->get_view()->get_url() . '&block=' . $blockid,
+        'baseurl' => $baseurl,
         'id' => 'blogpost_pagination_' . $blockid,
         'datatable' => 'postlist_' . $blockid,
         'jsonscript' => 'artefact/blog/posts.json.php',
