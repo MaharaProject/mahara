@@ -462,7 +462,9 @@ class User {
 
     /** @todo document this method */
     public function set_account_preference($field, $value) {
-        set_account_preference($this->get('id'), $field, $value);
+        if ($id = $this->get('id')) {
+            set_account_preference($id, $field, $value);
+        }
         $accountprefs = $this->get('accountprefs');
         $accountprefs[$field] = $value;
         $this->set('accountprefs', $accountprefs);
