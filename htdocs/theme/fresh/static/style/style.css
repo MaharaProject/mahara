@@ -523,6 +523,11 @@ div.sideblock ul ul {
 #sb-loginbox input.password {
 	width: 240px;
 }
+#sb-loginbox #login_login_container,
+#sb-loginbox #login_login_extra_container {
+    border: 0;
+    background: #000000;
+}
 
 /* Side Profile */
 #sb-profile #user-profileicon {
