@@ -14,20 +14,8 @@
     </tbody>
 </table>
 {if $tasks.pagination}
-<div id="plans_page_container_{$blockid}" class="hidden">{$tasks.pagination|safe}</div>
+<div id="plans_page_container_{$blockid}" class="nojs-hidden-block">{$tasks.pagination|safe}</div>
 {/if}
-{if $tasks.pagination_js}
-<script>
-{literal}
-addLoadEvent(function() {{/literal}
-    {$tasks.pagination_js|safe}
-    removeElementClass('plans_page_container_{$blockid}', 'hidden');
-{literal}}{/literal});
-
-var taskPager_{$blockid} = new TaskPager({$blockid});
-addLoadEvent(partial(rewriteTaskTitles, {$blockid}));
-</script>
-{/if} {* pagination_js *}
 {else}
     <p>{str tag='notasks' section='artefact.plans'}</p>
 {/if}

@@ -59,7 +59,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
         return array(
             array(
                 'file'   => 'js/plansblock.js',
-                'initjs' => "rewriteTaskTitles($blockid);",
+                'initjs' => "initNewPlansBlock($blockid);",
             )
         );
     }
