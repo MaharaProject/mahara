@@ -54,7 +54,6 @@ catch (Exception $e) { }
 
 $personalinformationform = pieform(array(
     'name'        => 'personalinformation',
-    'jsform'      => true,
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
