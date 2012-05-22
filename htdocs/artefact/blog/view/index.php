@@ -94,9 +94,14 @@ $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', $blog->get('title'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
-if (!$USER->get_account_preference('multipleblogs')
-    && count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) == 1) {
-    $smarty->assign('enablemultipleblogstext', 1);
+if (!$USER->get_account_preference('multipleblogs')) {
+    $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id'));
+    if ($blogcount == 1) {
+        $smarty->assign('enablemultipleblogstext', 1);
+    }
+    else if ($blogcount > 1) {
+        $smarty->assign('hiddenblogsnotification', 1);
+    }
 }
 
 $smarty->assign_by_ref('blog', $blog);

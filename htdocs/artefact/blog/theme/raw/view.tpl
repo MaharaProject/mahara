@@ -33,6 +33,9 @@ addLoadEvent(function() {literal}{{/literal}
                 {if $enablemultipleblogstext}
                 <p class="s dull center">{str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
                 {/if}
+                {if $hiddenblogsnotification}
+                <p class="s dull center">{str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>
+                {/if}
             </div>
 {include file="footer.tpl"}
 
