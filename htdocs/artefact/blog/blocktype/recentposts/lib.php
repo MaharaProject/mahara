@@ -66,7 +66,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 AND a.parent IN ( ' . $artefactids . ' )
                 AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                 AND ' . $before . '
-                ORDER BY a.ctime DESC
+                ORDER BY a.ctime DESC, a.id DESC
                 LIMIT ' . $limit, array($instance->get('view')))) {
                 $mostrecent = array();
             }

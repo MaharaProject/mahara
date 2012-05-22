@@ -533,7 +533,7 @@ class ArtefactTypeTask extends ArtefactType {
                 FROM {artefact} a
             JOIN {artefact_plans_task} at ON at.artefact = a.id
             WHERE a.artefacttype = 'task' AND a.parent = ?
-            ORDER BY at.completiondate ASC", array($plan), $offset, $limit))
+            ORDER BY at.completiondate ASC, a.id", array($plan), $offset, $limit))
             || ($results = array());
 
         // format the date and setup completed for display if task is incomplete
