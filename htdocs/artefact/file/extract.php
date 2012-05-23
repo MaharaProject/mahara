@@ -52,7 +52,7 @@ if ($group = $file->get('group')) {
     define('TITLE', $group->name);
 }
 else {
-    define('TITLE', get_string('Unzip', 'artefact.file'));
+    define('TITLE', get_string('Decompress', 'artefact.file'));
 }
 
 if (!($file instanceof ArtefactTypeArchive)) {
@@ -100,7 +100,7 @@ if ($zipinfo) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'value' => array(get_string('Unzip', 'artefact.file'), get_string('cancel')),
+                    'value' => array(get_string('Decompress', 'artefact.file'), get_string('cancel')),
                     'goto' => $goto,
                 )
             ),
