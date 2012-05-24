@@ -1440,7 +1440,10 @@ function get_cookies($prefix) {
 function set_cookie($name, $value='', $expires=0, $access=false) {
     $name = get_config('cookieprefix') . $name;
     $url = parse_url(get_config('wwwroot'));
-    setcookie($name, $value, $expires, $url['path'], $url['host'], false, true);
+    if (!$domain = get_config('cookiedomain')) {
+        $domain = $url['host'];
+    }
+    setcookie($name, $value, $expires, $url['path'], $domain, false, true);
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }

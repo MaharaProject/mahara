@@ -211,6 +211,13 @@ if (isset($CFG->wwwroot)) {
     }
 }
 
+// If we have cleanurl subdomains turned on, we need to set cookiedomain
+// to ensure cookies are given back to us in all subdomains
+if (isset($CFG->cleanurls) && isset($CFG->cleanurlusersubdomains) && !isset($CFG->cookiedomain)) {
+    $url = parse_url(get_config('wwwroot'));
+    $CFG->cookiedomain = '.' . $url['host'];
+}
+
 // If we're forcing an ssl proxy, make sure the wwwroot is correct
 if ($CFG->sslproxy == true && parse_url($CFG->wwwroot, PHP_URL_SCHEME) !== 'https') {
     throw new ConfigSanityException(get_string('wwwrootnothttps', 'error', get_config('wwwroot')));
