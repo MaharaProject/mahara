@@ -730,10 +730,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         foreach ($data as &$post) {
             // Format dates properly
             if (is_null($viewoptions)) {
-                // My Blogs area: create forms for publishing & deleting posts.
-                if (!$post->published) {
-                    $post->publish = ArtefactTypeBlogpost::publish_form($post->id);
-                }
+                // My Blogs area: create forms for changing post status & deleting posts.
+                $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published);
                 $post->delete = ArtefactTypeBlogpost::delete_form($post->id);
             }
             else {
@@ -830,29 +828,41 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-
-    public static function publish_form($id) {
+    public static function changepoststatus_form($id, $published = null) {
+        //Get current post status from database
+        if ($published === null) {
+            $post = new ArtefactTypeBlogPost($id);
+            $published = $post->published;
+        }
+        if ($published) {
+            $strchangepoststatus = get_string('unpublish', 'artefact.blog');
+        }
+        else {
+            $strchangepoststatus = get_string('publish', 'artefact.blog');
+        }
         return pieform(array(
-            'name' => 'publish_' . $id,
-            'successcallback' => 'publish_submit',
+            'name' => 'changepoststatus_' . $id,
+            'jssuccesscallback' => 'changepoststatus_success',
+            'successcallback' => 'changepoststatus_submit',
             'jsform' => true,
-            'jssuccesscallback' => 'publish_success',
             'renderer' => 'oneline',
             'elements' => array(
-                'publish' => array(
+                'changepoststatus' => array(
                     'type' => 'hidden',
                     'value' => $id,
-                    'help' => true,
                 ),
-                'submit' => array(
+                'currentpoststatus' => array(
+                    'type' => 'hidden',
+                    'value' => $published,
+                ),'submit' => array(
                     'type' => 'submit',
                     'class' => 'publish',
-                    'value' => get_string('publish', 'artefact.blog'),
+                    'value' => $strchangepoststatus,
+                    'help' => true,
                 ),
             ),
         ));
     }
-
 
     public static function delete_form($id) {
         global $THEME;
@@ -878,20 +888,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
         ));
     }
 
-
     /**
-     * This function publishes the blog post.
+     * This function changes the blog post status.
      *
+     * @param $newpoststatus: boolean 1=published, 0=draft
      * @return boolean
      */
-    public function publish() {
+    public function changepoststatus($newpoststatus) {
         if (!$this->id) {
             return false;
         }
-        
+
         $data = (object)array(
-            'blogpost'  => $this->id,
-            'published' => 1
+                'blogpost'  => $this->id,
+                'published' => (int) $newpoststatus
         );
 
         if (get_field('artefact_blog_blogpost', 'COUNT(*)', 'blogpost', $this->id)) {
@@ -903,7 +913,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
-    
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 

@@ -6,7 +6,11 @@
       {str tag=published section=artefact.blog}
     {else}
       {str tag=draft section=artefact.blog}
-      {if !$post->locked && !$post->published}&nbsp;{$post->publish|safe}{/if}
+    {/if}
+  </th>
+  <th id="changepoststatus{$post->id}" class="changepoststatus">
+    {if !$post->locked}
+        {$post->changepoststatus|safe}
     {/if}
   </th>
   <th class="controls">
@@ -22,7 +26,7 @@
   </th>
 </tr>
 <tr id="postdescription_{$post->id}">
-  <td colspan=3>{$post->description|clean_html|safe}</td>
+  <td colspan=4>{$post->description|clean_html|safe}</td>
 </tr>
 {if $post->files}
 <tr id="postfiles_{$post->id}">
