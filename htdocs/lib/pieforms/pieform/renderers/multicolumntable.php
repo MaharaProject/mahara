@@ -59,8 +59,8 @@ class FormRendererMultiColumnTable {/*{{{*/
     private $form;
 
     function add_element($builtelement, $rawelement) {
-        if ($rawelement['type'] == 'fieldset') {
-            throw new PieformException('The multicolumntable renderer does not support fieldsets');
+        if ($rawelement['type'] == 'fieldset' || $rawelement['type'] == 'container') {
+            throw new PieformException('The multicolumntable renderer does not support fieldsets or containers');
         }
 
         if (!isset($rawelement['key'])) {

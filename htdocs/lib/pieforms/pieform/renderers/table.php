@@ -33,6 +33,9 @@
  */
 function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
     $formname = $form->get_name();
+    if ($element['type'] == 'container') {
+        throw new PieformException('The table renderer does not support containers');
+    }
     if ($element['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
         $builtelement = $element['html'];
