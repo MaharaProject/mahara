@@ -2619,18 +2619,7 @@ function get_full_script_path() {
         $url = parse_url($CFG->wwwroot);
     }
 
-    if (!empty($url['host'])) {
-        $hostname = $url['host'];
-    } else if (!empty($_SERVER['SERVER_NAME'])) {
-        $hostname = $_SERVER['SERVER_NAME'];
-    } else if (!empty($_ENV['SERVER_NAME'])) {
-        $hostname = $_ENV['SERVER_NAME'];
-    } else if (!empty($_SERVER['HTTP_HOST'])) {
-        $hostname = $_SERVER['HTTP_HOST'];
-    } else if (!empty($_ENV['HTTP_HOST'])) {
-        $hostname = $_ENV['HTTP_HOST'];
-    } else {
-        log_warn('Warning: could not find the name of this server!');
+    if (!$hostname = get_requested_host_name()) {
         return false;
     }
 
