@@ -305,3 +305,8 @@ $cfg->cleanurlvalidate = '/^[a-z0-9-]*$/';
 
 // Setting this to false will remove the "Change profile URL" option from the settings page.
 $cfg->cleanurlusereditable = true;
+
+// The following option will generate subdomain-style profile urls like http://bob.mahara.example.com
+// Warning: Enabling this option on your site is likely to cause users with open sessions to be logged out on all profile pages.
+// See https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Clean_URL_Configuration#User_Subdomains
+// $cfg->cleanurlusersubdomains = true;
