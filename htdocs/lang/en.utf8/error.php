@@ -142,3 +142,5 @@ $string['gdlibrarylackspngsupport'] = 'The installed PHP GD Library does not sup
 
 $string['nopasswordsaltset'] = 'No site-wide password salt has been set. Edit your config.php and set the "passwordsaltmain" parameter to a reasonable secret phrase.';
 $string['passwordsaltweak'] = 'Your site-wide password salt is not strong enough. Edit your config.php and set the "passwordsaltmain" parameter to a longer secret phrase.';
+
+$string['notproductionsite'] = 'This site is not in production mode. Some data may not be available and/or may be out of date';

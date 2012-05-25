@@ -266,3 +266,8 @@ $cfg->renamecopies = true;
 $cfg->favicondisplay = 'http://www.google.com/s2/favicons?domain=%s';
 // $cfg->favicondisplay = 'http://www.grabicon.com/%s';
 // $cfg->favicondisplay = 'http://www.getfavicon.org/?url=%s';
+
+// If false, a message is shown at the top of the screen saying that the
+// site is not in production mode, and that some data may be missing and/or
+// out of date
+$cfg->productionmode = true;

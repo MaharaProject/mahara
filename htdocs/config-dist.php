@@ -95,4 +95,9 @@ $cfg->emailcontact = '';
 // There are up to 20 alternate salts
 // $cfg->passwordsaltalt1 = 'old salt value';
 
+// Uncomment the following line if this server is not a production system.
+// This will put a line up the top of the page saying that it isn't a production
+// site, and that files may not be present.
+//$cfg->productionmode = false;
+
 // closing php tag intentionally omitted to prevent whitespace issues
