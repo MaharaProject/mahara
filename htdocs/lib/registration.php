@@ -119,6 +119,21 @@ function registration_send_data() {
     return mahara_http_request($request);
 }
 
+function registration_store_data() {
+    $data = registration_data();
+    db_begin();
+    $registration_id = insert_record('site_registration', (object)array(
+        'time' => db_format_timestamp(time()),
+    ), 'id', true);
+    foreach ($data as $key => $value) {
+        insert_record('site_registration_data', (object)array(
+            'registration_id' => $registration_id,
+            'field'           => $key,
+            'value'           => ($value == null ? '' : $value)
+        ));
+    }
+    db_commit();
+}
 
 /**
  * Builds the data that will be sent by the "register your site" feature

@@ -2948,5 +2948,22 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2012062900) {
+        // Add site registration data tables
+        $table = new XMLDBTable('site_registration');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('time', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $table = new XMLDBTable('site_registration_data');
+        $table->addFieldInfo('registration_id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('registration_id', 'field'));
+        $table->addKeyInfo('regdatafk', XMLDB_KEY_FOREIGN, array('registration_id'), 'site_registration', array('id'));
+        create_table($table);
+    }
+
     return $status;
 }

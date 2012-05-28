@@ -2740,11 +2740,12 @@ function cron_check_for_updates() {
  * Cronjob to send an update of site statistics to mahara.org
  */
 function cron_send_registration_data() {
+    require_once(get_config('libroot') . 'registration.php');
+    registration_store_data();
     if (!get_config('registration_sendweeklyupdates')) {
         return;
     }
 
-    require_once(get_config('libroot') . 'registration.php');
     $result = registration_send_data();
     $data = json_decode($result->data);
 
