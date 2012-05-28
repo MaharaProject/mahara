@@ -465,6 +465,7 @@ class BlockInstance {
                 $this->{$field} = $value;
             }
         }
+        $this->artefactplugin = blocktype_artefactplugin($this->blocktype);
     }
 
     public function get($field) {
