@@ -310,10 +310,10 @@ $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 if ($owner && $owner == $USER->get('id')) {
     if ($tutorgroupdata = group_get_user_course_groups()) {
-        if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
+        if (!$view->is_submitted()) {
             $smarty->assign(
                 'view_group_submission_form',
-                view_group_submission_form($view->get('id'), $tutorgroupdata, 'view')
+                view_group_submission_form($view, $tutorgroupdata, 'view')
             );
         }
     }

@@ -66,6 +66,7 @@ $string['viewdeleted'] = 'Page deleted';
 $string['viewsubmitted'] = 'Page submitted';
 $string['deletethisview'] = 'Delete this page';
 $string['submitthisviewto'] = 'Submit this page to';
+$string['submitthiscollectionto'] = 'Submit this collection to';
 $string['forassessment'] = 'for assessment';
 $string['accessfromdate2'] = 'Nobody else can see this page before %s';
 $string['accessuntildate2'] = 'Nobody else can see this page after %s';

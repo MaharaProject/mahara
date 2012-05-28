@@ -162,7 +162,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             }
         }
 
-        if ($group->submittableto && ($userviewdata = View::get_user_views())) {
+        if ($group->submittableto) {
             require_once('pieforms/pieform.php');
             // A user can submit more than one view to the same group, but no view can be
             // submitted to more than one group.
@@ -180,8 +180,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 }
             }
 
-            $data['group_view_submission_form'] = group_view_submission_form($group->id, $userviewdata);
-
+            $data['group_view_submission_form'] = group_view_submission_form($group->id);
         }
         $data['group'] = $group;
         return $data;

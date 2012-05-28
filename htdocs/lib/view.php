@@ -4033,8 +4033,8 @@ class View {
         );
         $sql = "
             SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.template, v.owner, v.group, v.urlid,
-                c.id AS cid, c.name AS cname
+                v.startdate, v.stopdate, v.template, v.owner, v.group, v.urlid, v.submittedgroup, v.submittedhost,
+                c.id AS cid, c.name AS cname, c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -4071,6 +4071,8 @@ class View {
                 'stopdate'  => $r->stopdate,
                 'template'  => $r->template,
                 'owner'     => $r->owner,
+                'submittedgroup' => $r->submittedgroup,
+                'submittedhost'  => $r->submittedhost,
             );
             if ($r->cid) {
                 if (!isset($collections[$r->cid])) {
@@ -4078,6 +4080,8 @@ class View {
                         'id' => $r->cid,
                         'name' => $r->cname,
                         'owner' => $r->owner,
+                        'submittedgroup' => $r->csubmitgroup,
+                        'submittedhost'  => $r->csubmithost,
                         'views' => array(),
                     );
                     if ($matchconfig && $matchconfig == $r->accessconf) {
@@ -4365,14 +4369,34 @@ function searchviews_submit(Pieform $form, $values) {
     redirect(View::get_myviews_url($group, $institution, $query, $tag));
 }
 
-function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
+/**
+ * Generates a form which will submit a view or collection to one of
+ * the owner's groups.
+ *
+ * @param mixed $view The view to be submitted. Either a View object,
+ *                    or (for compatibility with previous versions of
+ *                    this function) an integer view id.
+ * @param array $tutorgroupdata An array of StdClass objects with id
+ *                    and name properties representing groups.
+ * @param string $returnto A URL - where to go after leaving the
+ *                    submit page.
+ *
+ * @return string
+ */
+function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
+    if (is_numeric($view)) {
+        $view = new View($view);
+    }
+    $viewid = $view->get('id');
+
     $options = array();
     foreach ($tutorgroupdata as $group) {
         $options[$group->id] = $group->name;
     }
+
     // This form sucks from a language string point of view. It should
     // use pieforms' form template feature
-    return pieform(array(
+    $form = array(
         'name' => 'view_group_submission_form_' . $viewid,
         'method' => 'post',
         'renderer' => 'oneline',
@@ -4380,7 +4404,8 @@ function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
         'successcallback' => 'view_group_submission_form_submit',
         'elements' => array(
             'text1' => array(
-                'type' => 'html', 'value' => get_string('submitthisviewto', 'view') . ' ',
+                'type' => 'html',
+                'value' => '',
             ),
             'options' => array(
                 'type' => 'select',
@@ -4395,20 +4420,43 @@ function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
                 'type' => 'submit',
                 'value' => get_string('submit')
             ),
-            'view' => array(
-                'type' => 'hidden',
-                'value' => $viewid
-            ),
             'returnto' => array(
                 'type' => 'hidden',
                 'value' => $returnto,
             )
         ),
-    ));
+    );
+
+    if ($view->get_collection()) {
+        $form['elements']['collection'] = array(
+            'type' => 'hidden',
+            'value' => $view->get_collection()->get('id'),
+        );
+        $form['elements']['text1']['value'] = get_string('submitthiscollectionto', 'view') . ' ';
+    }
+    else {
+        $form['elements']['view'] = array(
+            'type' => 'hidden',
+            'value' => $viewid
+        );
+        $form['elements']['text1']['value'] = get_string('submitthisviewto', 'view') . ' ';
+    }
+
+    return pieform($form);
 }
 
 function view_group_submission_form_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options'] . '&returnto=' . $values['returnto']);
+    $params = array(
+        'group' => $values['options'],
+        'returnto' => $values['returnto'],
+    );
+    if (isset($values['collection'])) {
+        $params['collection'] = $values['collection'];
+    }
+    else {
+        $params['id'] = $values['view'];
+    }
+    redirect('/view/submit.php?' . http_build_query($params));
 }
 
 
