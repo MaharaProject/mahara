@@ -37,6 +37,7 @@ $query  = trim(param_variable('query', ''));
 $setlimit = param_boolean('setlimit', false);
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
+$sortoptionidx = param_alpha('sortoption', 'adminfirst');
 
 define('GROUP', $id);
 $group = group_current_group();
@@ -69,7 +70,8 @@ if (!empty($membershiptype)) {
 
 $results = get_group_user_search_results(
     $group->id, $query, $offset, $limit, $membershiptype, null,
-    $friends ? $USER->get('id') : null
+    $friends ? $USER->get('id') : null,
+    $sortoptionidx
 );
 if (!param_integer('html', 1)) {
     foreach ($results['data'] as &$result) {
@@ -91,5 +93,6 @@ json_reply(false, array(
         'offset' => $offset,
         'setlimit' => $setlimit,
         'membershiptype' => $membershiptype,
+        'sortoption' => $sortoptionidx,
     )
 ));

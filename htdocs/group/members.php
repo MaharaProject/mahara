@@ -79,8 +79,23 @@ $query  = trim(param_variable('query', ''));
 $setlimit = true; //Enable choosing page size; list of page sizes has been predefined in function build_pagination()
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
+// Sort options index and list of sort options
+// ORDER BY statements defined in group_user_search function need to be matched
+$sortoptions = array(
+    'adminfirst' => get_string('adminfirst'),
+    'nameatoz' => get_string('nameatoz'),
+    'nameztoa' => get_string('nameztoa'),
+    'firstjoined' => get_string('firstjoined'),
+    'lastjoined' => get_string('lastjoined')
+);
+$sortoptionidx = param_alpha('sortoption', 'adminfirst');
 
-$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype);
+if ($membershiptype == 'request') {
+    array_shift($sortoptions);
+    $sortoptionidx = param_alpha('sortoption', 'nameatoz');
+}
+
+$results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype, null, null, $sortoptionidx);
 list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype, $setlimit);
 
 // Type-specific instructions
@@ -114,6 +129,15 @@ $searchform = pieform(array(
             'type' => 'text',
             'defaultvalue' => $query
         ),
+        'sortoption' => array(
+            'type' => 'select',
+            'class' => 'sortoption',
+            'title' => get_string('sortedby'),
+            'multiple' => false,
+            'size' => 1,
+            'defaultvalue' => $sortoptionidx,
+            'options' => $sortoptions
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('search')
@@ -128,7 +152,8 @@ addLoadEvent(function () {
         replaceChildNodes('messages');
         var params = {'query': $('search_query').value, 'id':$('search_id').value,
             'membershiptype':$('search_membershiptype').value,
-            'setlimit':$('search_setlimit').value
+            'setlimit':$('search_setlimit').value,
+            'sortoption':$('search_sortoption').value
             };
         p.sendQuery(params);
         event.stop();

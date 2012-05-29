@@ -449,9 +449,25 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof) {
+    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null) {
 
         list($searchsql, $values) = self::name_search_sql($query_string);
+
+        $orderbyoptions = array(
+            'adminfirst' => 'gm.role = \'admin\' DESC, CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.firstname END ASC,
+                           CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.lastname END ASC, gm.ctime, u.id',
+            'nameatoz' => 'CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.firstname END ASC,
+                           CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.lastname END ASC, gm.ctime, u.id',
+            'nameztoa' => 'CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.firstname END DESC,
+                           CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.lastname END DESC, gm.ctime, u.id',
+            'firstjoined' => 'gm.ctime ASC, CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.firstname END ASC,
+                           CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.lastname END ASC, u.id',
+            'lastjoined' => 'gm.ctime DESC, CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.firstname END ASC,
+                           CASE WHEN NOT u.preferredname IS NULL AND u.preferredname <> \'\' THEN u.preferredname ELSE u.lastname END ASC, u.id'
+        );
+        if (! key_exists($orderbyoptionidx, $orderbyoptions)) {
+            $orderbyoptionidx = 'adminfirst';
+        }
 
         if ($membershiptype == 'nonmember') {
             $select = '
@@ -480,28 +496,31 @@ class PluginSearchInternal extends PluginSearch {
         else if ($membershiptype == 'request') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
-                    u.staff, ' . db_format_tsfield('gmr.ctime', 'jointime');
+                    u.staff, ' . db_format_tsfield('gm.ctime', 'jointime');
             $from = '
                 FROM {usr} u
-                    INNER JOIN {group_member_request} gmr ON (gmr.member = u.id)
+                    INNER JOIN {group_member_request} gm ON (gm.member = u.id)
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
-                    AND gmr.group = ?';
+                    AND gm.group = ?';
             $values[] = $group;
-            $orderby = 'u.firstname, u.lastname, gmr.ctime, u.id';
+            if ($orderbyoptionidx == 'adminfirst') {
+                $orderbyoptionidx = 'nameatoz';
+            }
+            $orderby = $orderbyoptions[$orderbyoptionidx];
         }
         else if ($membershiptype == 'invite') {
             $select = '
                     u.id, u.firstname, u.lastname, u.username, u.email, u.profileicon,
-                    u.staff, ' . db_format_tsfield('gmi.ctime', 'jointime');
+                    u.staff, ' . db_format_tsfield('gm.ctime', 'jointime');
             $from = '
                 FROM {usr} u
-                    INNER JOIN {group_member_invite} gmi ON (gmi.member = u.id)
+                    INNER JOIN {group_member_invite} gm ON (gm.member = u.id)
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
-                    AND gmi.group = ?';
+                    AND gm.group = ?';
             $values[] = $group;
-            $orderby = 'u.firstname, u.lastname, gmi.ctime, u.id';
+            $orderby = $orderbyoptions[$orderbyoptionidx];
         }
         else { // All group members
             $select = '
@@ -514,7 +533,7 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
                     AND gm.group = ?';
             $values[] = $group;
-            $orderby = "gm.role = 'admin' DESC, u.firstname, u.lastname, gm.ctime, u.id";
+            $orderby = $orderbyoptions[$orderbyoptionidx];
             if ($order == 'latest') {
                 $orderby = 'gm.ctime DESC, u.firstname, u.lastname, u.id';
             }

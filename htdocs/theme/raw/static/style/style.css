@@ -2781,3 +2781,8 @@ form#register tbody tr.checkbox th {
 form#register tbody tr.checkbox td {
 	width:85%;
 }
+/* sort options */
+.sortoption label{
+	font-weight:normal;
+	margin: 0px 5px
+}
