@@ -1712,8 +1712,8 @@ class View {
                 foreach($instancejs as &$jsfile) {
                     $jsfile = (is_array($jsfile) && isset($jsfile['file'])) ? $jsfile['file'] : $jsfile;
                     if(strpos($jsfile, 'http://') === false) {
-                        if ($artefactplugin = blocktype_artefactplugin($pluginname)) {
-                            $jsfile = 'artefact/' . $artefactplugin . '/blocktype/' .
+                        if ($blockinstance->get('artefactplugin')) {
+                            $jsfile = 'artefact/' . $blockinstance->get('artefactplugin') . '/blocktype/' .
                                 $pluginname . '/' . $jsfile;
                         }
                         else {
