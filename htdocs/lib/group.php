@@ -2010,6 +2010,9 @@ function group_display_settings($group) {
     if ($group->jointype != 'approve') {
         $settings[] = get_string('membershiptype.abbrev.'.$group->jointype, 'group');
     }
+    if ($group->request) {
+        $settings[] = get_string('requestmembership', 'group');
+    }
     if ($group->submittableto) {
         $settings[] = get_string('allowssubmissions', 'group');
     }
