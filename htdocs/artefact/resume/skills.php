@@ -50,7 +50,7 @@ $defaults = array(
 );
 $form = pieform(simple_resumefield_form($defaults, 'artefact/resume/skills.php'));
 
-$smarty = smarty(array('jquery', 'artefact/resume/js/simpleresumefield.js'));
+$smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('skillform', $form);
 $smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
 $smarty->assign('PAGEHEADING', TITLE);

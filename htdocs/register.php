@@ -210,7 +210,7 @@ if ($registerterms = get_config('registerterms')) {
 }
 $registerdescription .= ' ' . get_string('registerprivacy');
 
-$smarty = smarty(array('jquery'));
+$smarty = smarty();
 $smarty->assign('register_form', $formhtml);
 $smarty->assign('registerdescription', $registerdescription);
 if ($registerterms) {

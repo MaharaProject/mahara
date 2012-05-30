@@ -914,7 +914,7 @@ $j(function() {
 });
 ';
 
-$smarty = smarty(array('jquery'));
+$smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $customthemejs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);

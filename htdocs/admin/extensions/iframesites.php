@@ -269,7 +269,7 @@ $js = <<<EOF
 EOF;
 
 $smarty = smarty(
-    array('jquery'),
+    array(),
     array(),
     array(),
     array('sidebars' => false)

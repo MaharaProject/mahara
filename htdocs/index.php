@@ -47,7 +47,7 @@ if ($USER->is_logged_in()) {
     require_once(get_config('libroot') . 'view.php');
     $view = $USER->get_view_by_type('dashboard');
 
-    $javascript = array('paginator', 'jquery');
+    $javascript = array('paginator');
     $javascript = array_merge($javascript, $view->get_blocktype_javascript());
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
     $smarty = smarty(

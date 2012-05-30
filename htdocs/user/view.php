@@ -83,7 +83,7 @@ if (!$restrictedview) {
     $viewcontent = $view->build_columns();
 }
 
-$javascript = array('paginator', 'jquery', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
+$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 // Set up theme
