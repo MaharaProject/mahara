@@ -88,7 +88,9 @@ if ($group->public) {
 }
 
 $javascript = array('paginator');
-$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+$blocktype_js = $view->get_all_blocktype_javascript();
+$javascript = array_merge($javascript, $blocktype_js['jsfiles']);
+$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 $smarty = smarty(
     $javascript,
@@ -96,6 +98,7 @@ $smarty = smarty(
     array(),
     array('stylesheets' => array('style/views.css'))
 );
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('group', $group);

@@ -153,7 +153,9 @@ function releaseview_submit() {
 }
 
 $javascript = array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js');
-$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+$blocktype_js = $view->get_all_blocktype_javascript();
+$javascript = array_merge($javascript, $blocktype_js['jsfiles']);
+$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 $extrastylesheets = array('style/views.css');
   
@@ -229,7 +231,7 @@ if ($collection = $view->get('collection')) {
     }
 }
 
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
 $smarty->assign('new', $new);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);

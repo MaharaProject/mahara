@@ -48,7 +48,9 @@ if ($USER->is_logged_in()) {
     $view = $USER->get_view_by_type('dashboard');
 
     $javascript = array('paginator');
-    $javascript = array_merge($javascript, $view->get_blocktype_javascript());
+    $blocktype_js = $view->get_all_blocktype_javascript();
+    $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
+    $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
     $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
     $smarty = smarty(
         $javascript,
@@ -80,7 +82,7 @@ addLoadEvent(function () {
 });
 JAVASCRIPT;
 
-        $smarty->assign('INLINEJAVASCRIPT', $js);
+        $smarty->assign('INLINEJAVASCRIPT', $js . $inlinejs);
     }
 
     $smarty->assign('dashboardview', true);

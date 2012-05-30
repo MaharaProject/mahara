@@ -92,7 +92,9 @@ if (!$restrictedview) {
 }
 
 $javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
-$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+$blocktype_js = $view->get_all_blocktype_javascript();
+$javascript = array_merge($javascript, $blocktype_js['jsfiles']);
+$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 // Set up theme
 $viewtheme = $view->get('theme');
@@ -260,6 +262,8 @@ if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($U
     $loginas = null;
 }
 $smarty->assign('loginas', $loginas);
+
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 
 $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', $loggedinid != $userid && can_send_message($loggedinid, $userid));
