@@ -80,7 +80,7 @@ if ($group->public) {
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
 }
 
-$javascript = array('paginator', 'jquery');
+$javascript = array('paginator');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 $smarty = smarty(

@@ -139,7 +139,7 @@ function releaseview_submit() {
     redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
 }
 
-$javascript = array('paginator', 'viewmenu', 'jquery', 'artefact/resume/resumeshowhide.js');
+$javascript = array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js');
 $javascript = array_merge($javascript, $view->get_blocktype_javascript());
 
 $extrastylesheets = array('style/views.css');

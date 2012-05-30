@@ -175,7 +175,7 @@ $j(function() {
     });
 });';
 
-$smarty = smarty(array('jquery'));
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign_by_ref('data', $data);

@@ -475,7 +475,7 @@ $j(function() {
 });
 ';
 
-$smarty = smarty(array('jquery'));
+$smarty = smarty();
 $smarty->assign('form', $editgroup);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);

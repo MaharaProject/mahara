@@ -130,7 +130,7 @@ function edit_comment_submit(Pieform $form, $values) {
 }
 
 $stylesheets = array('style/jquery.rating.css');
-$smarty = smarty(array('jquery','jquery.rating'), array(), array(), array('stylesheets' => $stylesheets));
+$smarty = smarty(array('jquery.rating'), array(), array(), array('stylesheets' => $stylesheets));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('strdescription', get_string('editcommentdescription', 'artefact.comment', $maxage));
 $smarty->assign('form', $form);

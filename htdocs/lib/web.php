@@ -214,14 +214,16 @@ EOF;
                 unset($check[$key]);
             }
         }
-        // Load jquery first, so that it doesn't break Mochikit
+
+        // If any page adds jquery explicitly, remove it from the list
         if (($key = array_search('jquery', $check)) !== false) {
-            array_unshift($javascript_array, $jsroot . 'jquery/jquery.js');
-            // Make jQuery accessible with $j (Mochikit has $)
-            $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
             unset($check[$key]);
         }
     }
+
+    // Make jQuery accessible with $j (Mochikit has $)
+    $javascript_array[] = $jsroot . 'jquery/jquery.js';
+    $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
 
     if (get_config('developermode') & DEVMODE_UNPACKEDJS) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
