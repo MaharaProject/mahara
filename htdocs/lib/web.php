@@ -2576,6 +2576,37 @@ function get_script_path() {
 }
 
 /**
+ * Get the requested servername in preference to the host in the configured
+ * wwwroot.  Usually the same unless some parts of the site are at subdomains.
+ *
+ * @return string
+ */
+function get_requested_host_name() {
+    global $CFG;
+
+    if (!empty($_SERVER['SERVER_NAME'])) {
+        return $_SERVER['SERVER_NAME'];
+    }
+    if (!empty($_ENV['SERVER_NAME'])) {
+        return $_ENV['SERVER_NAME'];
+    }
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        return $_SERVER['HTTP_HOST'];
+    }
+    if (!empty($_ENV['HTTP_HOST'])) {
+        return $_ENV['HTTP_HOST'];
+    }
+    if (!empty($CFG->wwwroot)) {
+        $url = parse_url($CFG->wwwroot);
+        if (!empty($url['host'])) {
+            return $url['host'];
+        }
+    }
+    log_warn('Warning: could not find the name of this server!');
+    return false;
+}
+
+/**
  * Like {@link get_script_path()} but returns a full URL
  * @see get_script_path()
  * @return string
