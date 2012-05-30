@@ -81,6 +81,21 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // drag them around the wysiwyg editor
     $jswwwroot = json_encode($wwwroot);
 
+    // Workaround for $cfg->cleanurlusersubdomains.
+    // When cleanurlusersubdomains is on, ajax requests might come from somewhere other than
+    // the wwwroot.  To avoid cross-domain requests, set a js variable when this page is on a
+    // different subdomain, and let the ajax wrapper function sendjsonrequest rewrite its url
+    // if necessary.
+    if (get_config('cleanurls') && get_config('cleanurlusersubdomains')) {
+        if ($requesthost = get_requested_host_name()) {
+            $wwwrootparts = parse_url($wwwroot);
+            if ($wwwrootparts['host'] != $requesthost) {
+                $fakewwwroot = $wwwrootparts['scheme'] . '://' . $requesthost . '/';
+                $headers[] = '<script type="text/javascript">var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
+            }
+        }
+    }
+
     $theme_list = array();
     
     if (function_exists('pieform_get_headdata')) {

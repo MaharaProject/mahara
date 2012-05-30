@@ -221,6 +221,15 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
 
     document.documentElement.style.cursor = 'wait';
 
+    if (typeof(fakewwwroot) == 'string') {
+        if (script.substring(0, 4) == 'http') {
+            script = fakewwwroot + script.substring(config.wwwroot.length);
+        }
+        else {
+            script = fakewwwroot + script;
+        }
+    }
+
     var d = doXHR(script, xhrOptions);
 
     d.addCallbacks(function (result) {
