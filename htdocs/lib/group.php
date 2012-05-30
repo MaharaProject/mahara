@@ -1970,6 +1970,7 @@ function group_display_settings($group) {
 
 function group_get_groupinfo_data($group) {
     safe_require('artefact', 'file');
+    safe_require('interaction', 'forum');
 
     $group->admins = group_get_admins(array($group->id));
     $group->settingsdescription = group_display_settings($group);
@@ -1984,6 +1985,12 @@ function group_get_groupinfo_data($group) {
     $group->viewcount = count_records('view', 'group', $group->id);
 
     $group->filecounts = ArtefactTypeFileBase::count_user_files(null, $group->id, null);
+
+    $group->forumcounts = PluginInteractionForum::count_group_forums($group->id);
+
+    $group->topiccounts = PluginInteractionForum::count_group_topics($group->id);
+
+    $group->postcounts = PluginInteractionForum::count_group_posts($group->id);
 
     return $group;
 }

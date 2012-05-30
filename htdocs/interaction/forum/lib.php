@@ -720,6 +720,57 @@ EOF;
 
         return true;
     }
+
+    /**
+     * Return number of forums associated to a group
+     *
+     * @param  $groupid: the group ID number
+     * @return the number of forums
+     *     OR null if invalid $groupid
+     */
+    public static function count_group_forums($groupid) {
+        if ($groupid && $groupid > 0) {
+            return count_records_select('interaction_instance', '"group" = ? AND deleted != 1', array($groupid), 'COUNT(id)');
+        }
+        return null;
+    }
+
+    /**
+     * Return number of topics associated to a group
+     *
+     * @param  $groupid: the group ID number
+     * @return the number of topics
+     *     OR null if invalid $groupid
+     */
+    public static function count_group_topics($groupid) {
+        if ($groupid && $groupid > 0) {
+            return count_records_sql('SELECT COUNT(t.id)
+                    FROM {interaction_instance} f
+                    JOIN {interaction_forum_topic} t ON t.forum = f.id AND t.deleted != 1
+                    WHERE f.group = ?
+                        AND f.deleted != 1', array($groupid));
+        }
+        return null;
+    }
+
+    /**
+     * Return number of posts associated to a group
+     *
+     * @param  $groupid: the group ID number
+     * @return the number of posts
+     *     OR null if invalid $groupid
+     */
+    public static function count_group_posts($groupid) {
+        if ($groupid && $groupid > 0) {
+            return count_records_sql('SELECT COUNT(p.id)
+                    FROM {interaction_instance} f
+                    JOIN {interaction_forum_topic} t ON t.forum = f.id AND t.deleted != 1
+                    JOIN {interaction_forum_post} p ON p.topic = t.id AND p.deleted != 1
+                    WHERE f.group = ?
+                    AND f.deleted != 1', array($groupid));
+        }
+        return null;
+    }
 }
 
 class InteractionForumInstance extends InteractionInstance {
