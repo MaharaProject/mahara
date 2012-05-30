@@ -7,9 +7,12 @@
                     {if $group->categorytitle}<li><label>{str tag=groupcategory section=group}:</label> {$group->categorytitle}</li>{/if}
                     <li><label class="groupinfolabel">{str tag=Created section=group}:</label> {$group->ctime}</li>
                     <li class="last">
-                        {if $group->membercount}<span><label>{str tag=Members section=group}:</label> {$group->membercount}&nbsp;</span>{/if}
-                        <span><label>{str tag=Views section=view}:</label> {$group->viewcount}&nbsp;</span>
-                        <span><label>{str tag=Files section=artefact.file}:</label> {$group->filecounts->files}&nbsp;</span>
-                        <span><label>{str tag=Folders section=artefact.file}:</label> {$group->filecounts->folders}</span>
+                        {if $group->membercount}<span><label>{str tag=Members section=group}:</label>&nbsp;{$group->membercount}</span>{/if}
+                        <span><label>{str tag=Views section=view}:</label>&nbsp;{$group->viewcount}</span>
+                        <span><label>{str tag=Files section=artefact.file}:</label>&nbsp;{$group->filecounts->files}</span>
+                        <span><label>{str tag=Folders section=artefact.file}:</label>&nbsp;{$group->filecounts->folders}</span>
+                        <span><label>{str tag=nameplural section=interaction.forum}:</label>&nbsp;{$group->forumcounts}</span>
+                        <span><label>{str tag=Topics section=interaction.forum}:</label>&nbsp;{$group->topiccounts}</span>
+                        <span><label>{str tag=Posts section=interaction.forum}:</label>&nbsp;{$group->postcounts}</span>
                     </li>
                 </ul>
