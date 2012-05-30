@@ -39,6 +39,7 @@ $string['errorbadconfig'] = 'SimpleSAMLPHP config directory %s is incorrect.';
 $string['errorbadcombo'] = 'You can only choose user auto creation if you have not selected remoteuser';
 $string['errorbadinstitutioncombo'] = 'There is already an existing authinstance with this institutionattribute and institutionvalue combination';
 $string['errormissinguserattributes1'] = 'You seem to be authenticated but we did not receive the required user attributes. Please check that your Identity Provider releases the First Name, Surname, and Email fields for SSO to %s, or inform the administrator.';
+$string['errorregistrationenabledwithautocreate'] = 'An institution has registration enabled, for security reasons this excludes user auto-creation.';
 $string['errorremoteuser'] = 'Matching on remoteuser is mandatory if usersuniquebyusername is turned off';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
 $string['institutionvalue'] = 'Institution value to check against attribute';
