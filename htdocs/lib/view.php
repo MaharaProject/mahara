@@ -1692,12 +1692,13 @@ class View {
     }
 
     /**
-     * Returns a list of required javascript files, based on
+     * Returns a list of required javascript files + initialization codes, based on
      * the blockinstances present in the view.
      */
-    public function get_blocktype_javascript() {
+    public function get_all_blocktype_javascript() {
+        $javascriptfiles = array();
+        $initjavascripts = array();
         $view_data = $this->get_column_datastructure();
-        $javascript = array();
         foreach($view_data as $column) {
             foreach($column['blockinstances'] as $blockinstance) {
                 $pluginname = $blockinstance->get('blocktype');
@@ -1709,22 +1710,49 @@ class View {
                     'get_instance_javascript',
                     $blockinstance
                 );
-                foreach($instancejs as &$jsfile) {
-                    $jsfile = (is_array($jsfile) && isset($jsfile['file'])) ? $jsfile['file'] : $jsfile;
-                    if(strpos($jsfile, 'http://') === false) {
-                        if ($blockinstance->get('artefactplugin')) {
-                            $jsfile = 'artefact/' . $blockinstance->get('artefactplugin') . '/blocktype/' .
-                                $pluginname . '/' . $jsfile;
-                        }
-                        else {
-                            $jsfile = 'blocktype/' . $blockinstance->get('blocktype') . '/' . $jsfile;
+                foreach($instancejs as $jsfile) {
+                    if (is_array($jsfile) && isset($jsfile['file'])) {
+                        $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);;
+                        if (isset($jsfile['initjs'])) {
+                            $initjavascripts[] = $jsfile['initjs'];
                         }
                     }
+                    else if (is_string($jsfile)) {
+                        $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                    }
                 }
-                $javascript = array_merge($javascript, $instancejs);
             }
         }
-        return array_unique($javascript);
+        return array(
+            'jsfiles' => array_unique($javascriptfiles),
+            'initjs'  => array_unique($initjavascripts)
+        );
+    }
+
+    /**
+     * Returns the full path of a blocktype javascript file if it is internal
+     */
+    private function add_blocktype_path($blockinstance, $jsfilename) {
+        $pluginname = $blockinstance->get('blocktype');
+        if (strpos($jsfilename, 'http://') === false) {
+            if ($blockinstance->get('artefactplugin')) {
+                $jsfilename = 'artefact/' . $blockinstance->get('artefactplugin') . '/blocktype/' .
+                    $pluginname . '/' . $jsfilename;
+            }
+            else {
+                $jsfilename = 'blocktype/' . $blockinstance->get('blocktype') . '/' . $jsfilename;
+            }
+        }
+        return $jsfilename;
+    }
+
+    /**
+     * Returns a list of required javascript files, based on
+     * the blockinstances present in the view.
+     */
+    public function get_blocktype_javascript() {
+        $js = $this->get_all_blocktype_javascript();
+        return $js['jsfiles'];
     }
 
     private $blockinstance_currently_being_configured = 0;
