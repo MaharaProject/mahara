@@ -1083,28 +1083,14 @@ class View {
     }
 
     public function release($releaseuser=null) {
-        require_once(get_config('docroot') . 'artefact/lib.php');
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
-        db_begin();
-        if ($submitinfo['type'] == 'group') {
-            $group = $this->get('submittedgroup');
-            $this->set('submittedgroup', null);
-            if ($group) {
-                // Remove hidden tutor view access records
-                delete_records('view_access', 'view', $this->id, 'group', $group, 'visible', 0);
-            }
-        }
-        else if ($submitinfo['type'] == 'host') {
-            $this->set('submittedhost', null);
-        }
-        $this->set('submittedtime', null);
-        $this->commit();
-        ArtefactType::update_locked($this->owner);
-        db_commit();
+
+        self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
         require_once('activity.php');
@@ -1119,6 +1105,34 @@ class View {
                 'urltext' => $this->get('title'),
             )
         );
+    }
+
+    public static function _db_release(array $viewids, $owner, $group=null) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        if (empty($viewids) || empty($owner)) {
+            return;
+        }
+        $idstr = join(',', array_map('intval', $viewids));
+        $owner = intval($owner);
+
+        db_begin();
+        execute_sql("
+            UPDATE {view}
+            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            WHERE id IN ($idstr) AND owner = ?",
+            array($owner)
+        );
+        if (!empty($group)) {
+            // Remove hidden tutor view access records
+            delete_records_select(
+                'view_access',
+                "view IN ($idstr) AND visible = 0 AND \"group\" = ?",
+                array(intval($group))
+            );
+        }
+        ArtefactType::update_locked($owner);
+        db_commit();
     }
 
     /**
