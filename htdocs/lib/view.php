@@ -4247,6 +4247,82 @@ class View {
         return $data;
     }
 
+    public function submit($group) {
+        global $USER;
+
+        if ($this->is_submitted()) {
+            throw new SystemException('Attempting to submit a submitted view');
+        }
+
+        $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+
+        self::_db_submit(array($this->id), $group);
+
+        activity_occurred(
+            'groupmessage',
+            array(
+                'group'         => $group->id,
+                'roles'         => $group->roles,
+                'url'           => $this->get_url(false),
+                'strings'       => (object) array(
+                    'urltext' => (object) array('key' => 'view'),
+                    'subject' => (object) array(
+                        'key'     => 'viewsubmittedsubject1',
+                        'section' => 'activity',
+                        'args'    => array($group->name),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'viewsubmittedmessage1',
+                        'section' => 'activity',
+                        'args'    => array(
+                            display_name($USER, null, false, true),
+                            $this->title,
+                            $group->name,
+                        ),
+                    ),
+                ),
+            )
+        );
+    }
+
+    public function _db_submit($viewids, $group) {
+        global $USER;
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        if (empty($viewids) || empty($group->id)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $viewids));
+        $groupid = (int) $group->id;
+        $userid = $USER->get('id');
+
+        db_begin();
+        execute_sql("
+            UPDATE {view}
+            SET submittedgroup = ?, submittedtime = current_timestamp, submittedhost = NULL
+            WHERE id IN ($idstr) AND owner = ?",
+            array($groupid, $userid)
+        );
+
+        foreach ($group->roles as $role) {
+            foreach ($viewids as $viewid) {
+                $accessrecord = (object) array(
+                    'view'            => $viewid,
+                    'group'           => $groupid,
+                    'role'            => $role,
+                    'visible'         => 0,
+                    'allowcomments'   => 1,
+                    'approvecomments' => 0,
+                    'ctime'           => db_format_timestamp(time()),
+                );
+                ensure_record_exists('view_access', $accessrecord, $accessrecord);
+            }
+        }
+
+        ArtefactType::update_locked($userid);
+        db_commit();
+    }
 }
 
 

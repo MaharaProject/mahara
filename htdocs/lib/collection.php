@@ -694,4 +694,71 @@ class Collection {
 
         return $ids;
     }
+
+    public function is_submitted() {
+        return $this->submittedgroup || $this->submittedhost;
+    }
+
+    public function submit($group) {
+        global $USER;
+
+        if ($this->is_submitted()) {
+            throw new SystemException('Attempting to submit a submitted collection');
+        }
+
+        $viewids = $this->get_viewids();
+        $idstr = join(',', array_map('intval', $viewids));
+
+        // Check that none of the views is submitted to some other group.  This is bound to happen to someone,
+        // because collection submission is being introduced at a time when it is still possible to submit
+        // individual views in a collection.
+        $submittedtitles = get_column_sql("
+            SELECT title FROM {view}
+            WHERE id IN ($idstr) AND (submittedhost IS NOT NULL OR (submittedgroup IS NOT NULL AND submittedgroup != ?))",
+            array($group->id)
+        );
+
+        if (!empty($submittedtitles)) {
+            die_info(get_string('viewsalreadysubmitted', 'view', implode('<br>', $submittedtitles)));
+        }
+
+        $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+
+        db_begin();
+        View::_db_submit($viewids, $group);
+        $this->set('submittedgroup', $group->id);
+        $this->set('submittedhost', null);
+        $this->set('submittedtime', time());
+        $this->commit();
+        db_commit();
+
+        activity_occurred(
+            'groupmessage',
+            array(
+                'group'         => $group->id,
+                'roles'         => $group->roles,
+                'url'           => $this->get_url(false),
+                'strings'       => (object) array(
+                    'urltext' => (object) array(
+                        'key'     => 'Collection',
+                        'section' => 'collection',
+                    ),
+                    'subject' => (object) array(
+                        'key'     => 'viewsubmittedsubject1',
+                        'section' => 'activity',
+                        'args'    => array($group->name),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'viewsubmittedmessage1',
+                        'section' => 'activity',
+                        'args'    => array(
+                            display_name($USER, null, false, true),
+                            $this->name,
+                            $group->name,
+                        ),
+                    ),
+                ),
+            )
+        );
+    }
 }

@@ -144,7 +144,7 @@ $string['institutioninvitemessage'] = 'You can confirm your membership of this i
 $string['deleteallnotifications'] = 'Delete all notifications';
 $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all your notifications of this activity type?';
 
-$string['viewsubmittedsubject'] = 'Page submitted to %s';
-$string['viewsubmittedmessage'] = '%s has submitted their page "%s" to %s';
+$string['viewsubmittedsubject1'] = 'Submission to %s';
+$string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s';
 
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
