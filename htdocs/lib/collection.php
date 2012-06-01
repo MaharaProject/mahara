@@ -36,6 +36,9 @@ class Collection {
     private $mtime;
     private $ctime;
     private $navigation;
+    private $submittedgroup;
+    private $submittedhost;
+    private $submittedtime;
     private $views;
 
     public function __construct($id=0, $data=null) {
@@ -151,7 +154,7 @@ class Collection {
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if (in_array($k, array('mtime', 'ctime')) && !empty($v)) {
+            if (in_array($k, array('mtime', 'ctime', 'submittedtime')) && !empty($v)) {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
