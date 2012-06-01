@@ -588,4 +588,110 @@ class Collection {
         }
         throw new SystemException("View::owner_sql: Passed object did not have an institution, group or owner field");
     }
+
+    /**
+     * Makes a URL for a collection
+     *
+     * @param bool $full return a full url
+     * @param bool $useid ignore clean url settings and always return a url with an id in it
+     *
+     * @return string
+     */
+    public function get_url($full=true, $useid=false) {
+        global $USER;
+
+        $views = $this->views();
+        if (!empty($views)) {
+            $v = new View(0, $views['views'][0]);
+            $v->set('dirty', false);
+            return $v->get_url($full, $useid);
+        }
+
+        log_warn("Attempting to get url for an empty collection");
+
+        if ($this->owner === $USER->get('id')) {
+            $url = 'collection/views.php?id=' . $this->id;
+        }
+        else {
+            $url = '';
+        }
+
+        if ($full) {
+            $url = get_config('wwwroot') . $url;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Release a submitted collection
+     *
+     * @param object $releaseuser The user releasing the collection
+     */
+    public function release($releaseuser=null) {
+        if ($this->submittedgroup) {
+            $submittedname = get_field('group', 'name', 'id', $this->submittedgroup);
+        }
+        else if ($this->submittedhost) {
+            $submittedname = get_field('host', 'name', 'wwwroot', $this->submittedhost);
+        }
+        else {
+            throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
+        }
+
+        // One day there might be group and institution collections, so be safe
+        if (empty($this->owner)) {
+            throw new ParameterException("Collection with id " . $this->id . " has no owner");
+        }
+
+        $viewids = $this->get_viewids();
+
+        db_begin();
+        execute_sql('
+            UPDATE {collection}
+            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            WHERE id = ?',
+            array($this->id)
+        );
+        View::_db_release($viewids, $this->owner, $this->submittedgroup);
+        db_commit();
+
+        $releaseuser = optional_userobj($releaseuser);
+        $releaseuserdisplay = display_name($releaseuser, $this->owner);
+
+        require_once('activity.php');
+        activity_occurred(
+            'maharamessage',
+            array(
+                'users' => array($this->get('owner')),
+                'strings' => (object) array(
+                    'subject' => (object) array(
+                        'key'     => 'collectionreleasedsubject',
+                        'section' => 'group',
+                        'args'    => array($this->name, $submittedname, $releaseuserdisplay),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'collectionreleasedmessage',
+                        'section' => 'group',
+                        'args'    => array($this->name, $submittedname, $releaseuserdisplay),
+                    ),
+                ),
+                'url' => $this->get_url(false),
+                'urltext' => $this->name,
+            )
+        );
+    }
+
+    public function get_viewids() {
+        $ids = array();
+        $viewdata = $this->views();
+
+        if (!empty($viewdata['views'])) {
+            foreach ($viewdata['views'] as $v) {
+                $ids[] = $v->id;
+            }
+        }
+
+        return $ids;
+    }
 }
