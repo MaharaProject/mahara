@@ -464,18 +464,21 @@ abstract class ActivityType {
                 call_static_method($notificationclass, 'notify_user', $user, $userdata);
             }
             catch (MaharaException $e) {
+                static $badnotification = false;
                 // We don't mind other notification methods failing, as it'll
                 // go into the activity log as 'unread'
                 $changes->read = 0;
                 update_record('notification_internal_activity', $changes);
-                if (!($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
+                if (!$badnotification && !($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
                     // Though, admins should probably know about the error
                     $message = (object) array(
                         'users' => get_column('usr', 'id', 'admin', 1),
                         'subject' => get_string('adminnotificationerror', 'activity'),
                         'message' => $e,
                     );
+                    $badnotification = true;
                     activity_occurred('maharamessage', $message);
+                    $badnotification = false;
                 }
             }
         }
