@@ -204,6 +204,89 @@ function registration_data() {
     return $data_to_send;
 }
 
+function institution_registration_data() {
+    $data_to_store = array();
+    foreach (get_column('institution', 'name') as $institution) {
+        $inst_data = array();
+        if ($institution == 'mahara') {
+            $members = get_column_sql('SELECT id
+                    FROM {usr}
+                    WHERE deleted = 0 AND id > 0 AND id NOT IN
+                        (SELECT usr FROM {usr_institution})
+                    ', array());
+        }
+        else {
+            $members = get_column_sql('SELECT usr
+                    FROM {usr_institution} ui
+                    JOIN {usr} u ON (u.id = ui.usr)
+                    WHERE u.deleted = 0 AND ui.institution = ?
+                    ', array($institution));
+        }
+        $inst_data['count_members'] =  count($members);
+        if (!$members) {
+            $inst_data['count_views'] = 0;
+            $inst_data['count_blocks'] = 0;
+            $inst_data['count_artefacts'] = 0;
+            $inst_data['count_interaction_forum_post'] = 0;
+            $inst_data['usersloggedin'] = 0;
+            $data_to_store[$institution] = $inst_data;
+            continue;
+        }
+        $inst_data['count_views'] = 0;
+        if ($data = get_records_sql_array('SELECT tmp.type, SUM(tmp.count) AS count
+                FROM (SELECT v.type, COUNT(*) AS count
+                    FROM {view} v
+                    WHERE v.owner IS NOT NULL AND v.owner IN (' . join(',', array_fill(0, count($members), '?')) . ')
+                    GROUP BY v.type
+                UNION ALL
+                    SELECT v.type, COUNT(*) AS count
+                    FROM {view} v
+                    WHERE v.institution IS NOT NULL AND v.institution = ?
+                    GROUP BY v.type
+                ) tmp GROUP BY tmp.type', array_merge($members, array($institution)))) {
+            foreach ($data as $viewtypeinfo) {
+                $inst_data['view_type_' . $viewtypeinfo->type] = $viewtypeinfo->count;
+                $inst_data['count_views'] += $viewtypeinfo->count;
+            }
+        }
+        $inst_data['count_blocks'] = 0;
+        if ($data = get_records_sql_array('SELECT tmp.type, SUM(tmp.count) AS count
+                FROM (SELECT bi.blocktype AS type, COUNT(*) AS count
+                    FROM {block_instance} bi
+                    JOIN {view} v ON v.id = bi.view
+                    WHERE v.owner IS NOT NULL AND v.owner IN (' . join(',', array_fill(0, count($members), '?')) . ')
+                    GROUP BY bi.blocktype
+                UNION ALL
+                    SELECT bi.blocktype AS type, COUNT(*) AS count
+                    FROM {block_instance} bi
+                    JOIN {view} v ON v.id = bi.view
+                    WHERE v.institution IS NOT NULL AND v.institution = ?
+                    GROUP BY bi.blocktype
+                ) tmp GROUP BY tmp.type', array_merge($members, array($institution)))) {
+            foreach ($data as $blocktypeinfo) {
+                $inst_data['blocktype_' . $blocktypeinfo->type] = $blocktypeinfo->count;
+                $inst_data['count_blocks'] += $blocktypeinfo->count;
+            }
+        }
+        $inst_data['count_artefacts'] = 0;
+        if ($data = get_records_sql_array('SELECT a.artefacttype AS type, COUNT(*) AS count
+                FROM {artefact} a
+                WHERE a.author IN (' . join(',', array_fill(0, count($members), '?')) . ')
+                GROUP BY a.artefacttype', $members)) {
+            foreach ($data as $artefacttypeinfo) {
+                $inst_data['artefact_type_' . $artefacttypeinfo->type] = $artefacttypeinfo->count;
+                $inst_data['count_artefacts'] += $artefacttypeinfo->count;
+            }
+        }
+        $inst_data['count_interaction_forum_post'] = count_records_select('interaction_forum_post',
+                'poster IN (' . join(',', array_fill(0, count($members), '?')) . ')',
+                $members);
+
+        $data_to_store[$institution] = $inst_data;
+    }
+    return $data_to_store;
+}
+
 function site_data_current() {
     return array(
         'users' => count_records_select('usr', 'id > 0 AND deleted = 0'),
