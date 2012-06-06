@@ -1,7 +1,13 @@
 {foreach from=$data item=item}
   <tr class="{cycle values='r0,r1'}">
     <td>
+  {if $item->read && $item->type == 'usermessage'}
+        <img src="{theme_url filename=cat('images/read' $item->type '.gif')}" alt="{$item->strtype} - {str tag='read' section='activity'}" />
+  {elseif $item->type == 'usermessage'}
+        <img src="{theme_url filename=cat('images/' $item->type '.gif')}" alt="{$item->strtype}" class="unreadmessage" />
+  {else}
         <img src="{theme_url filename=cat('images/' $item->type '.gif')}" alt="{$item->strtype}" />
+  {/if}
     </td>
     <td>
   {if $item->message}

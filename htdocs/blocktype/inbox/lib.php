@@ -46,7 +46,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        global $USER;
+        global $USER, $THEME;
         $configdata = $instance->get('configdata');
 
         $desiredtypes = array();
@@ -88,6 +88,8 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if ($records) {
             require_once('activity.php');
             foreach ($records as &$r) {
+                $section = empty($r->plugintype) ? 'activity' : "{$r->plugintype}.{$r->pluginname}";
+                $r->strtype = get_string('type' . $r->type, $section);
                 $r->message = format_notification_whitespace($r->message, $r->type);
             }
         }
@@ -98,6 +100,8 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         }
         $smarty->assign('blockid', 'blockinstance_' . $instance->get('id'));
         $smarty->assign('items', $records);
+        $smarty->assign('readicon', $THEME->get_url('images/readusermessage.gif'));
+
         return $smarty->fetch('blocktype:inbox:inbox.tpl');
     }
 
