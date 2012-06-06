@@ -805,7 +805,7 @@ function institution_submit(Pieform $form, $values) {
             if ($changedtheme || $values['theme'] == 'custom') {
                 $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
             }
-            $USER->update_theme();
+            $USER->reset_institutions();
         }
         $SESSION->add_ok_msg($message);
         $nexturl = '/admin/users/institutions.php';

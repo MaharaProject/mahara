@@ -335,7 +335,8 @@ class View {
                     $owner = new User();
                     $owner->find_by_id($viewdata['owner']);
                 }
-                $ownertheme = $owner->get('theme');
+                $ownerthemedata = $owner->get('institutiontheme');
+                $ownertheme = isset($ownerthemedata->basename) ? $ownerthemedata->basename : null;
                 if ($ownertheme && $ownertheme != get_config('theme') && $ownertheme != 'custom') {
                     $viewdata['theme'] = $ownertheme;
                 }

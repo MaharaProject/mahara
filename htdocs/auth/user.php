@@ -86,9 +86,7 @@ class User {
             'activityprefs'    => array(),
             'institutions'     => array(),
             'grouproles'       => array(),
-            'theme'            => null,
-            'headerlogo'       => null,
-            'stylesheets'      => array(),
+            'institutiontheme' => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
             'parentuser'       => null,
@@ -836,8 +834,8 @@ class User {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
         $staffinstitutions = array();
-        $this->theme = get_config('theme');
-        $this->headerlogo = null;
+        $themename = get_config('theme');
+        $headerlogo = null;
         $stylesheets = array();
         $themeinstitution = null;
         foreach ($institutions as $name => $i) {
@@ -860,8 +858,8 @@ class User {
             }
         }
         if (!is_null($themeinstitution)) {
-            $this->theme      = $institutions[$themeinstitution]->theme;
-            $this->headerlogo = $institutions[$themeinstitution]->logo;
+            $themename  = $institutions[$themeinstitution]->theme;
+            $headerlogo = $institutions[$themeinstitution]->logo;
             if ($institutions[$themeinstitution]->style) {
                 $stylesheet = get_config('wwwroot') . 'style.php?id=' . $institutions[$themeinstitution]->style;
                 if ($nocachecss) {
@@ -870,18 +868,21 @@ class User {
                 $stylesheets[] = $stylesheet;
             }
         }
-        $this->stylesheets        = $stylesheets;
+        $this->institutiontheme = (object) array(
+            'basename'    => $themename,
+            'headerlogo'  => $headerlogo,
+            'stylesheets' => $stylesheets,
+        );
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
         $this->staffinstitutions  = $staffinstitutions;
     }
 
     public function get_themedata() {
-        return (object) array(
-            'basename'    => $this->theme,
-            'headerlogo'  => $this->headerlogo,
-            'stylesheets' => $this->stylesheets,
-        );
+        if ($preftheme = $this->get_account_preference('theme')) {
+            return (object) array('basename' => $preftheme);
+        }
+        return $this->institutiontheme;
     }
 
     public function reset_grouproles() {
@@ -1441,16 +1442,15 @@ class LiveUser extends User {
     }
 
     public function update_theme() {
-        $this->reset_institutions(true);
-        $this->commit();
-    }
-
-    public function reset_institutions($nocachecss=false) {
         global $THEME;
-        parent::reset_institutions($nocachecss);
         if (!defined('INSTALLER')) {
             $THEME = new Theme($this);
         }
+    }
+
+    public function reset_institutions($nocachecss=false) {
+        parent::reset_institutions($nocachecss);
+        $this->update_theme();
     }
 
     private function store_sessionid() {
