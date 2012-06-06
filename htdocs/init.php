@@ -276,6 +276,10 @@ require_once('auth/lib.php');
 $SESSION = Session::singleton();
 $USER    = new LiveUser();
 
+if (function_exists('local_init_user')) {
+    local_init_user();
+}
+
 // try to set the theme, or catch the thrown exception (eg if the name is invalid)
 try {
     $THEME   = new Theme($USER);

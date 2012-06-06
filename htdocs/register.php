@@ -189,6 +189,10 @@ if (isset($key)) {
         $USER = new LiveUser();
         $USER->reanimate($user->id, $authinstance->id);
 
+        if (function_exists('local_post_register')) {
+            local_post_register($registration);
+        }
+
         $SESSION->add_ok_msg(get_string('registrationcomplete', 'mahara', get_config('sitename')));
         $SESSION->set('resetusername', true);
         redirect();
