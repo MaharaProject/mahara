@@ -355,4 +355,5 @@ $string['membersdescription:controlled'] = 'This is a controlled membership grou
 // View submission
 $string['submit'] = 'Submit';
 $string['allowssubmissions'] = 'Allows submissions';
-$string['allowssubmissionsdescription'] = 'Members can submit pages to the group';
+$string['allowsubmissions'] = 'Allow submissions';
+$string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages can't be edited until they are released by a group tutor or administrator.";

@@ -219,8 +219,8 @@ $elements['editroles'] = array(
 if ($cancreatecontrolled) {
     $elements['submittableto'] = array(
         'type'         => 'checkbox',
-        'title'        => get_string('allowssubmissions', 'group'),
-        'description'  => get_string('allowssubmissionsdescription', 'group'),
+        'title'        => get_string('allowsubmissions', 'group'),
+        'description'  => get_string('allowssubmissionsdescription1', 'group'),
         'defaultvalue' => $group_data->submittableto,
     );
 }
