@@ -1840,7 +1840,6 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
-    // and the first three members by id
     
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
