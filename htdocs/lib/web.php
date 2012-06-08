@@ -1962,6 +1962,12 @@ function admin_nav() {
             'title'  => get_string('allowediframesites', 'admin'),
             'weight' => 30,
         ),
+        'configextensions/cleanurls' => array(
+            'path'   => 'configextensions/cleanurls',
+            'url'    => 'admin/extensions/cleanurls.php',
+            'title'  => get_string('cleanurls', 'admin'),
+            'weight' => 40,
+        ),
     );
 
     return $menu;

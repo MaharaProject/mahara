@@ -156,6 +156,34 @@ $string['iframeinvalidsite'] = "This field should contain a valid host, an optio
 $string['iframeiconhost'] = 'Icon host';
 $string['iframeiconhostdescription'] = 'If you wish, you may specify a different host for the favicon image. All sites with the same name will use this icon.';
 
+$string['cleanurls'] = 'Clean URLs';
+$string['cleanurlsdescription'] = "
+<p>You can configure your site to use human-readable URLs for user profiles, group homepages and portfolio pages. For example,
+<ul><li>http://mahara.example.com/user/bob</li>
+<li>http://mahara.example.com/group/bobs-group</li>
+<li>http://mahara.example.com/user/bob/bobs-portfolio-page</li>
+</ul>
+Before enabling this option, your server administrator must configure your webserver so that incoming requests have their URLs rewritten.</p>
+<p>See <a href=\"https://wiki.mahara.org/index.php/System_Administrator's_Guide/Clean_URL_Configuration\">Clean URL Configuration</a> on the Mahara wiki for instructions on how to do this.</p>
+";
+$string['cleanurlsdisabled'] = 'Clean URLs are disabled.';
+$string['cleanurlsettings'] = 'Clean URL settings';
+$string['regenerateurls'] = 'Regenerate URLs';
+$string['regenerateurlsdescription'] = 'This will remove all clean URLs from the site and automatically regenerate them using usernames, group names and page titles.';
+$string['regenerateurlsconfirm'] = 'Are you sure you want to do this? It will replace all existing URLs chosen by users.';
+$string['generateduserurls'] = array(
+    'Generated 1 profile URL',
+    'Generated %s profile URLs',
+);
+$string['generatedgroupurls'] = array(
+    'Generated 1 group homepage URL',
+    'Generated %s group homepage URLs',
+);
+$string['generatedviewurls'] = array(
+    'Generated 1 portfolio page URL',
+    'Generated %s portfolio page URLs',
+);
+
 // sanity check warnings
 $string['warnings'] = 'Warning';
 
