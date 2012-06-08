@@ -275,3 +275,30 @@ $cfg->productionmode = true;
 // If true, users can change their preferred theme for browsing the site.  The user's theme preference
 // will override any site, institution, or page theme.
 // $cfg->themeprefs = true;
+
+// Clean url configuration
+// Do not turn this on until you have the correct rewrite rules in place on your webserver, or none of
+// your links will work.
+// See https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Clean_URL_Configuration
+// $cfg->cleanurls = true;
+
+// Strings to use when generating user and group urls, i.e. the 'user' and 'group' portion of clean urls
+// such as http://mahara.example.com/user/bob and http://mahara.example.com/group/bobs-group.  These
+// must match the output of the rewrite rules you have enabled in your webserver.  These strings will
+// also be used as prefixes whenever a valid clean url cannot be automatically generated.
+$cfg->cleanurluserdefault = 'user';
+$cfg->cleanurlgroupdefault = 'group';
+$cfg->cleanurlviewdefault = 'page';
+
+// Character encoding for clean urls.  ASCII or UTF-8.
+$cfg->cleanurlcharset = 'ASCII';
+
+// A PCRE pattern defining sequences of characters to be removed and replaced by '-' when automatically
+// generating names for use in clean urls.  For example, if the pattern is /[^a-zA-Z0-9]+/, and a clean
+// url is being generated for a user with the username 'nigel.mcnie', the '.', which appears in the
+// invalidcharacters list is replaced, to give a url like http://mahara.example.com/user/nigel-mcnie
+$cfg->cleanurlinvalidcharacters = '/[^a-zA-Z0-9]+/';
+
+// A pattern to validate user-editable fields for use in clean urls.  If a user enters a string that
+// doesn't match this, it's an error.
+$cfg->cleanurlvalidate = '/^[a-z0-9-]*$/';
