@@ -70,6 +70,7 @@ class View {
     private $collection;
     private $accessconf;
     private $locked;
+    private $urlid;
 
     /**
      * Valid view layouts. These are read at install time and inserted into
@@ -367,6 +368,11 @@ class View {
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
+
+        if ($data->type == 'portfolio' && (!isset($data->url) || is_null($data->url) || !strlen($data->url))) {
+            $data->urlid = generate_urlid($data->title, get_config('cleanurlviewdefault'), 3, 100);
+            $data->urlid = self::new_urlid($data->urlid, $data);
+        }
 
         $view = new View(0, $data);
         $view->commit();
@@ -3515,6 +3521,33 @@ class View {
             }
         }
         return $title . $ext;
+    }
+
+    /**
+     * Get a simplified name for this view for use in a url, which must be unique for a
+     * a given owner.
+     */
+    public static function new_urlid($desired, $ownerdata) {
+        $maxlen = 100;
+        $desired = strtolower(substr($desired, 0, $maxlen));
+        $taken = get_column_sql('
+            SELECT urlid
+            FROM {view}
+            WHERE urlid LIKE ?
+                AND ' . self::owner_sql($ownerdata),
+            array(substr($desired, 0, $maxlen - 6) . '%')
+        );
+        if (!$taken) {
+            return $desired;
+        }
+
+        $i = 1;
+        $newname = substr($desired, 0, $maxlen - 2) . '-1';
+        while (in_array($newname, $taken)) {
+            $i++;
+            $newname = substr($desired, 0, $maxlen - strlen($i) - 1) . '-' . $i;
+        }
+        return $newname;
     }
 
     public static function get_templatesearch_data(&$search) {

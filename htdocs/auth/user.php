@@ -96,6 +96,7 @@ class User {
             'views'            => array(),
             'showhomeinfo'     => 1,
             'unread'           => 0,
+            'urlid'            => null,
         );
         $this->attributes = array();
 
@@ -313,6 +314,10 @@ class User {
      */
     public function create() {
         $this->set('ctime', time());
+        if (get_config('cleanurls') && is_null($this->urlid)) {
+            $desiredurlid = generate_urlid($this->username, get_config('cleanurluserdefault'), 3, 30);
+            $this->set('urlid', get_new_profile_urlid($desiredurlid));
+        }
     }
 
 
