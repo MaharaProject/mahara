@@ -3465,3 +3465,37 @@ function favicon_display_url($host) {
     }
     return $url;
 }
+
+/**
+ * Given an arbitrary string, generate a string containing only the allowed
+ * characters for use in a clean url.
+ *
+ * @param string  $dirty string containing invalid or undesirable url characters
+ * @param mixed   $default an integer id or clean string to use as the default
+ * @param integer $minlength
+ * @param integer $maxlength
+ *
+ * @return string    A string of the specified length containing only valid characters
+ */
+function generate_urlid($dirty, $default, $minlength=3, $maxlength=100) {
+    $charset = get_config('cleanurlcharset');
+    if ($charset != 'ASCII' || preg_match('/[^\x00-\x7F]/', $dirty)) {
+        $dirty = iconv('UTF-8', $charset . '//TRANSLIT', $dirty);
+    }
+    $dirty = preg_replace(get_config('cleanurlinvalidcharacters'), '-', $dirty);
+    $s = substr(strtolower(trim($dirty, '-')), 0, $maxlength);
+
+    // If the string is too short, use the default, padding with zeros if necessary
+    $length = strlen($s);
+    if ($length < $minlength) {
+        if (is_numeric($default)) {
+            $format = '%0' . $minlength . 'd';
+            $default = sprintf($format, (int) $default);
+        }
+        if ($length > 0) {
+            $default .= '-' . $s;
+        }
+        $s = $default;
+    }
+    return $s;
+}
