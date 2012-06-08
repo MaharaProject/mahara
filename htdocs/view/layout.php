@@ -71,6 +71,11 @@ $layoutform = new Pieform(array(
     ),
 ));
 
+$displaylink = $view->get_url();
+if ($new) {
+    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
+}
+
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('layouts', $layouts);
 $smarty->assign('currentlayout', $currentlayout);
@@ -81,7 +86,7 @@ $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $view->get_url());
+$smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);

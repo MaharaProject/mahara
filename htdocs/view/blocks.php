@@ -180,8 +180,12 @@ foreach (array_keys($_POST + $_GET) as $key) {
 }
 
 $viewid = $view->get('id');
+$displaylink = $view->get_url();
+if ($new) {
+    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
+}
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $view->get_url());
+$smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);

@@ -228,12 +228,17 @@ function editview_submit(Pieform $form, $values) {
     redirect('/view/blocks.php?id=' . $view->get('id'));
 }
 
+$displaylink = $view->get_url();
+if ($new) {
+    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
+}
+
 $smarty = smarty(array(), array(), array(), array('sidebars' => false));
 $smarty->assign('editview', $editview);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $view->get_url());
+$smarty->assign('displaylink', $displaylink);
 $smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
