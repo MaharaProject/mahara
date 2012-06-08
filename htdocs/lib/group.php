@@ -1843,11 +1843,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount,
             COUNT(gmr.member) AS requests
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role,
+                g.hidemembers, g.hidemembersfrommembers, g.urlid, t.membershiptype, t.reason, t.role,
                 COUNT(gm.member) AS membercount
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
@@ -1855,11 +1855,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             WHERE g.deleted = ?' .
             $catsql . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                g.hidemembers, g.hidemembersfrommembers, t.membershiptype, t.reason, t.role
+                g.hidemembers, g.hidemembersfrommembers, g.urlid, t.membershiptype, t.reason, t.role
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.membershiptype, g1.reason, g1.role, g1.membercount
+            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -2177,4 +2177,29 @@ function group_get_new_homepage_urlid($desired) {
         $newname = substr($desired, 0, $maxlen - strlen($i) - 1) . '-' . $i;
     }
     return $newname;
+}
+
+/**
+ * Returns the homepage url for a group
+ *
+ * @param stdclass $group object with at least an id
+ * @param bool $full return a full url
+ * @param bool $useid ignore clean url settings and always return a url with an id in it
+ *
+ * @return string
+ */
+function group_homepage_url($group, $full=true, $useid=false) {
+    if (!$useid && !is_null($group->urlid) && get_config('cleanurls')) {
+        $url = get_config('cleanurlgroupdefault') . '/' . $group->urlid;
+    }
+    else if ($group->id) {
+        $url = 'group/view.php?id=' . $group->id;
+    }
+    else {
+        throw new SystemException("group_homepage_url called with no group id");
+    }
+    if ($full) {
+        $url = get_config('wwwroot') . $url;
+    }
+    return $url;
 }
