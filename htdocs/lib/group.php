@@ -1697,6 +1697,13 @@ function group_current_group() {
             throw new GroupNotFoundException(get_string('groupnotfound', 'group', GROUP));
         }
     }
+    else if (defined('GROUPURLID')) {
+        $group = get_record_select('group', 'urlid = ? AND deleted = 0', array(GROUPURLID), '*, ' . db_format_tsfield('ctime'));
+        if (!$group) {
+            throw new GroupNotFoundException(get_string('groupnotfoundname', 'group', GROUPURLID));
+        }
+        define('GROUP', $group->id);
+    }
     else {
         $group = null;
     }

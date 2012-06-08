@@ -45,7 +45,14 @@ else if (param_variable('addfriend_submit', null)) {
 }
 
 $loggedinid = $USER->get('id');
-if (!empty($loggedinid)) {
+
+if ($profileurlid = param_alphanumext('profile', null)) {
+    if (!$user = get_record('usr', 'urlid', $profileurlid, 'deleted', 0)) {
+        throw new UserNotFoundException("User $profileurlid not found");
+    }
+    $userid = $user->id;
+}
+else if (!empty($loggedinid)) {
     $userid = param_integer('id', $loggedinid);
 }
 else {
@@ -56,9 +63,10 @@ if ($userid == 0) {
 }
 
 // Get the user's details
-
-if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
-    throw new UserNotFoundException("User with id $userid not found");
+if (!isset($user)) {
+    if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
+        throw new UserNotFoundException("User with id $userid not found");
+    }
 }
 $is_friend = is_friend($userid, $loggedinid);
 
