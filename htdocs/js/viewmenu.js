@@ -117,7 +117,7 @@ addLoadEvent(function () {
     if ($('toggle_watchlist_link')) {
         connect('toggle_watchlist_link', 'onclick', function (e) {
             e.stop();
-            sendjsonrequest('togglewatchlist.json.php', {'view': viewid}, 'POST', function(data) {
+            sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid}, 'POST', function(data) {
                 $('toggle_watchlist_link').innerHTML = data.newtext;
             });
         });

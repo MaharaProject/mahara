@@ -31,11 +31,22 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
 $id = param_integer('id');
+
+if (get_account_preference($id, 'friendscontrol') != 'auth'
+    || $id == $USER->get('id')
+    || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
+    throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
+}
+
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
+define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
+
 $returnto = param_alpha('returnto', 'myfriends');
 
 switch ($returnto) {
 case 'find': $goto = 'user/find.php'; break;
-case 'view': $goto = 'user/view.php?id=' . $id; break;
+case 'view': $goto = profile_url($user, false); break;
 default:
     $goto = 'user/myfriends.php';
 }
@@ -49,16 +60,6 @@ else if (get_friend_request($id, $USER->get('id'))) {
     $SESSION->add_info_msg(get_string('friendshipalreadyrequestedowner', 'group', display_name($id)));
     redirect(get_config('wwwroot') . 'user/myfriends.php?filter=pending');
 }
-
-if (get_account_preference($id, 'friendscontrol') != 'auth'
-    || $id == $USER->get('id')
-    || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
-    throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
-}
-
-$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
-
-define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
 
 $form = pieform(array(
     'name' => 'requestfriendship',
@@ -96,7 +97,7 @@ function requestfriendship_submit(Pieform $form, $values) {
     
     // notification info
     $n = new StdClass;
-    $n->url = 'user/view.php?id=' . $loggedinid;
+    $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $n->fromuser = $loggedinid;
     $lang = get_user_language($user->id);

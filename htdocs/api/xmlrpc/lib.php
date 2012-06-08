@@ -582,12 +582,6 @@ function get_views_for_user($username, $query=null) {
     require_once('view.php');
     $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')));
     $data->displayname = display_name($user);
-    if ($data->count) {
-        foreach ($data->data as &$v) {
-            $v['url'] = '/view/view.php?id=' . $v['id'];
-            $v['fullurl'] = get_config('wwwroot') . 'view/view.php?id=' . $v['id'];
-        }
-    }
     return $data;
 }
 

@@ -233,7 +233,7 @@ EOF;
             'message'  => get_string('addpostsuccess', 'blocktype.wall'),
             'posts'    => $renderedposts,
             'block'    => $values['instance'],
-            'goto'     => '/user/view.php?id=' . $owner,
+            'goto'     => profile_url($owner),
         ));
     }
 
@@ -248,7 +248,7 @@ EOF;
         // avoid confusion in the templates
         $sql = '
             SELECT bwp.id AS postid, bwp.instance, bwp.from, bwp.replyto, bwp.private, bwp.postdate, bwp.text,' . db_format_tsfield('postdate') . ',
-                u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin, u.email, u.profileicon
+                u.id, u.id AS userid, u.username, u.firstname, u.lastname, u.preferredname, u.staff, u.admin, u.email, u.profileicon, u.urlid
                 FROM {blocktype_wall_post} bwp 
                 JOIN {usr} u ON bwp.from = u.id
                 WHERE bwp.instance = ? AND u.deleted = 0
@@ -263,6 +263,7 @@ EOF;
                 create_function(
                     '$item', 
                     '$item->displayname = display_name($item);
+                    $item->profileurl = profile_url($item);
                     $item->deletable = PluginBlocktypeWall::can_delete_wallpost($item->from, ' . intval($owner) .');
                     return $item;'),
                 $records

@@ -98,6 +98,7 @@ else if ($view->get('type') == 'dashboard') {
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
+    $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
@@ -179,8 +180,12 @@ foreach (array_keys($_POST + $_GET) as $key) {
 }
 
 $viewid = $view->get('id');
+$displaylink = $view->get_url();
+if ($new) {
+    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
+}
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $view->get_url());
+$smarty->assign('displaylink', $displaylink);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
@@ -204,6 +209,9 @@ if (get_config('viewmicroheaders')) {
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
+if (isset($groupurl)) {
+    $smarty->assign('groupurl', $groupurl);
+}
 $smarty->assign('institution', $institution);
 
 if (get_config('userscanchooseviewthemes')
@@ -214,12 +222,6 @@ if (get_config('userscanchooseviewthemes')
 
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtitle', $viewtitle);
-if ($owner) {
-    $smarty->assign('ownerlink', 'user/view.php?id=' . $owner);
-}
-else if ($group) {
-    $smarty->assign('ownerlink', 'group/view.php?id=' . $group);
-}
 
 $blockid = $view->get_blockinstance_currently_being_configured();
 if (!$blockid) {

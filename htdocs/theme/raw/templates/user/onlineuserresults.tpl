@@ -7,7 +7,7 @@
             </div>
 
             <div class="rightdiv">
-              <h3><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->display_name}</a></h3>
+              <h3><a href="{profile_url($user)}">{$user->display_name}</a></h3>
             </div>
         </td>
     </tr>

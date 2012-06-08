@@ -170,8 +170,7 @@ class Sitemap {
         if (!empty($views->data)) {
             foreach ($views->data as $view) {
                 if (isset($view['mtime']) && $this->check_date($view['mtime'])) {
-                    $viewurl = get_config('wwwroot') . 'view/view.php?id=' . $view['id'];
-                    $viewurl = utf8_encode(htmlspecialchars($viewurl, ENT_QUOTES, 'UTF-8'));
+                    $viewurl = utf8_encode(htmlspecialchars($view['fullurl'], ENT_QUOTES, 'UTF-8'));
                     $viewlastmod = format_date(strtotime($view['mtime']), 'strftimew3cdate');
 
                     $this->add_url($viewurl, $viewlastmod);

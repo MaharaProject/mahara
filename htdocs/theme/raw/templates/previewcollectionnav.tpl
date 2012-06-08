@@ -9,7 +9,7 @@
           var params = {};
           params.id = {/literal}{$view->view}{literal};
           sendjsonrequest('../collection/viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
-          {/literal}" href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title|str_shorten_text:30:true}</a>
+          {/literal}" href="{$view->fullurl}">{$view->title|str_shorten_text:30:true}</a>
       {else}
           <span>{$view->title|str_shorten_text:30:true}</span>
       {/if}

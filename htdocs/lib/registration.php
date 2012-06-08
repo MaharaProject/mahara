@@ -270,7 +270,7 @@ function user_statistics($limit, $offset, &$sitedata) {
     $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
 
     $maxfriends = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, SUM(f.friends) AS friends
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, SUM(f.friends) AS friends
         FROM {usr} u INNER JOIN (
             SELECT DISTINCT(usr1) AS id, COUNT(usr1) AS friends
             FROM {usr_friend}
@@ -279,7 +279,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             FROM {usr_friend}
             GROUP BY usr2
         ) f ON u.id = f.id
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY friends DESC
         LIMIT 1", array());
     $maxfriends = $maxfriends[0];
@@ -289,7 +289,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxfriends',
             'admin',
             round($meanfriends, 1),
-            get_config('wwwroot') . 'user/view.php?id=' . $maxfriends->id,
+            profile_url($maxfriends),
             hsc(display_name($maxfriends, null, true)),
             $maxfriends->friends
         );
@@ -298,10 +298,10 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
     }
     $maxviews = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(v.id) AS views
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(v.id) AS views
         FROM {usr} u JOIN {view} v ON u.id = v.owner
         WHERE \"owner\" <> 0
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY views DESC
         LIMIT 1", array());
     $maxviews = $maxviews[0];
@@ -310,7 +310,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxviews',
             'admin',
             $sitedata['viewsperuser'],
-            get_config('wwwroot') . 'user/view.php?id=' . $maxviews->id,
+            profile_url($maxviews),
             hsc(display_name($maxviews, null, true)),
             $maxviews->views
         );
@@ -319,10 +319,10 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxviews'] = get_string('statsnoviews', 'admin');
     }
     $maxgroups = get_records_sql_array("
-        SELECT u.id, u.firstname, u.lastname, u.preferredname, COUNT(m.group) AS groups
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
         FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
         WHERE g.deleted = 0
-        GROUP BY u.id, u.firstname, u.lastname, u.preferredname
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
         ORDER BY groups DESC
         LIMIT 1", array());
     $maxgroups = $maxgroups[0];
@@ -331,7 +331,7 @@ function user_statistics($limit, $offset, &$sitedata) {
             'statsmaxgroups',
             'admin',
             $sitedata['groupmemberaverage'],
-            get_config('wwwroot') . 'user/view.php?id=' . $maxgroups->id,
+            profile_url($maxgroups),
             hsc(display_name($maxgroups, null, true)),
             $maxgroups->groups
         );
@@ -340,7 +340,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         $data['strmaxgroups'] = get_string('statsnogroups', 'admin');
     }
     $maxquotaused = get_records_sql_array("
-        SELECT id, firstname, lastname, preferredname, quotaused
+        SELECT id, firstname, lastname, preferredname, urlid, quotaused
         FROM {usr}
         WHERE deleted = 0 AND id > 0
         ORDER BY quotaused DESC
@@ -350,7 +350,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         'statsmaxquotaused',
         'admin',
         display_size(get_field('usr', 'AVG(quotaused)', 'deleted', 0)),
-        get_config('wwwroot') . 'user/view.php?id=' . $maxquotaused->id,
+        profile_url($maxquotaused),
         hsc(display_name($maxquotaused, null, true)),
         display_size($maxquotaused->quotaused)
     );
@@ -578,7 +578,7 @@ function group_stats_table($limit, $offset) {
 
     $groupdata = get_records_sql_array(
         "SELECT
-            g.id, g.name, mc.members, vc.views, fc.forums, pc.posts
+            g.id, g.name, g.urlid, mc.members, vc.views, fc.forums, pc.posts
         FROM {group} g
             LEFT JOIN (
                 SELECT gm.group, COUNT(gm.member) AS members
@@ -754,14 +754,8 @@ function view_stats_table($limit, $offset) {
 
     $viewdata = get_records_sql_assoc(
         "SELECT
-            v.id, v.title, v.owner, v.group, v.institution, v.visits,
-            u.id AS userid, u.firstname, u.lastname,
-            g.id AS groupid, g.name AS groupname,
-            i.displayname AS institutionname
+            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid
         FROM {view} v
-            LEFT JOIN {usr} u ON v.owner = u.id
-            LEFT JOIN {group} g ON v.group = g.id
-            LEFT JOIN {institution} i ON v.institution = i.name
         WHERE (v.owner != 0 OR \"owner\" IS NULL) AND v.type != ?
         ORDER BY v.visits DESC, v.title, v.id",
         array('dashboard'),
@@ -769,23 +763,27 @@ function view_stats_table($limit, $offset) {
         $limit
     );
 
+    require_once('view.php');
+    require_once('group.php');
+    View::get_extra_view_info($viewdata, false, false);
+
     safe_require('artefact', 'comment');
     $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
 
     foreach ($viewdata as &$v) {
+        $v = (object) $v;
         if ($v->owner) {
-            $v->ownername = display_name($v->owner);
-            $v->ownerurl  = 'user/view.php?id=' . $v->userid;
+            $v->ownername = display_name($v->user);
+            $v->ownerurl  = profile_url($v->user);
         }
-        else if ($v->group) {
-            $v->ownername = $v->groupname;
-            $v->ownerurl  = 'group/view.php?id=' . $v->groupid;
-        }
-        else if ($v->institution == 'mahara') {
-            $v->ownername = get_config('sitename');
-        }
-        else if ($v->institution) {
-            $v->ownername = $v->institutionname;
+        else {
+            $v->ownername = $v->sharedby;
+            if ($v->group) {
+                $v->ownerurl = group_homepage_url($v->groupdata);
+            }
+            else if ($v->institution && $v->institution != 'mahara') {
+                $v->ownerurl = get_config('wwwroot') . 'institution/index.php?institution=' . $v->institution;
+            }
         }
         $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }

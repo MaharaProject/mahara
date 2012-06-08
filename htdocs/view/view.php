@@ -76,7 +76,11 @@ if (!$showmore) {
     $showmore = 0;
 }
 
-if (!can_view_view($viewid)) {
+if (!isset($view)) {
+    $view = new View($viewid);
+}
+
+if (!can_view_view($view)) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
@@ -84,10 +88,6 @@ if (!can_view_view($viewid)) {
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
-
-if (!isset($view)) {
-    $view = new View($viewid);
-}
 
 // Create the "make feedback private form" now if it's been submitted
 if (param_variable('make_public_submit', null)) {
@@ -141,16 +141,15 @@ else {
 
 
 function releaseview_submit() {
-    global $USER, $SESSION, $view;
-    $groupid = $view->get('submittedgroup');
+    global $USER, $SESSION, $view, $submittedgroup;
     $view->release($USER);
     $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
-    if ($groupid) {
+    if ($submittedgroup) {
         // The tutor might not have access to the view any more; send
         // them back to the group page.
-        redirect(get_config('wwwroot') . 'group/view.php?id='.$groupid);
+        redirect(group_homepage_url($submittedgroup));
     }
-    redirect(get_config('wwwroot') . 'view/view.php?id='.$view->get('id'));
+    redirect($view->get_url());
 }
 
 $javascript = array('paginator', 'viewmenu', 'artefact/resume/resumeshowhide.js');

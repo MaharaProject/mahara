@@ -85,7 +85,7 @@ if ($authobj->authname == 'internal') {
     );
 }
 
-if (get_config('cleanurls')) {
+if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
     $elements['changeprofileurl'] = array(
         'value' => '<tr><td colspan="2"><h3>' . get_string('changeprofileurl', 'account') . '</h3></td></tr>'
     );
@@ -164,7 +164,7 @@ function accountprefs_validate(Pieform $form, $values) {
         }
     }
 
-    if (get_config('cleanurls') && $values['urlid'] != $USER->get('urlid')) {
+    if (isset($values['urlid']) && get_config('cleanurls') && $values['urlid'] != $USER->get('urlid')) {
         if (strlen($values['urlid']) < 3) {
             $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
         }
@@ -222,31 +222,33 @@ function accountprefs_submit(Pieform $form, $values) {
     if (get_config('cleanurls') && isset($values['urlid']) && $values['urlid'] != $USER->get('urlid')) {
         $USER->urlid = $values['urlid'];
         $USER->commit();
+        $reload = true;
     }
 
     db_commit();
 
-    $updatelang = isset($values['lang']) && $values['lang'] != $oldlang;
-    $updatetheme = isset($values['theme']) && $values['theme'] != $oldtheme;
+    $returndata['message'] = get_string('prefssaved', 'account');
 
-    if ($updatetheme) {
+    if (isset($values['theme']) && $values['theme'] != $oldtheme) {
         $USER->update_theme();
-        $message = get_string('prefssaved', 'account');
+        $reload = true;
     }
-    if ($updatelang) {
+
+    if (isset($values['lang']) && $values['lang'] != $oldlang) {
         // The session language pref is used when the user has no user pref,
         // and when logged out.
         $SESSION->set('lang', $values['lang']);
-        $message = get_string_from_language($values['lang'], 'prefssaved', 'account');
+        $returndata['message'] = get_string_from_language($values['lang'], 'prefssaved', 'account');
+        $reload = true;
     }
-    if ($updatelang || $updatetheme) {
+
+    if (!empty($reload)) {
         // Use PIEFORM_CANCEL here to force a page reload and show the new language.
         $returndata['location'] = get_config('wwwroot') . 'account/index.php';
-        $SESSION->add_ok_msg($message);
+        $SESSION->add_ok_msg($returndata['message']);
         $form->json_reply(PIEFORM_CANCEL, $returndata);
     }
 
-    $returndata['message'] = get_string('prefssaved', 'account');
     $form->json_reply(PIEFORM_OK, $returndata);
 }
 

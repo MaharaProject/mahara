@@ -47,11 +47,15 @@ switch ($type) {
         $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
         break;
     case 'group':
+        require_once('group.php');
         $data = search_group($query, $limit, $offset, '');
         $roles = get_records_array('grouptype_roles');
         $data['roles'] = array();
         foreach ($roles as $r) {
             $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.'.$r->grouptype));
+        }
+        foreach ($data['data'] as &$r) {
+            $r->url = group_homepage_url($r);
         }
         break;
 }

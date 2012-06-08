@@ -54,7 +54,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('removefriend', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
+            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? profile_url($user, false) : 'user/myfriends.php')),
         )
     )
 ));
@@ -77,7 +77,7 @@ function removefriend_submit(Pieform $form, $values) {
     
     // notification info
     $n = new StdClass;
-    $n->url = 'user/view.php?id=' . $loggedinid;
+    $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
@@ -104,7 +104,7 @@ function removefriend_submit(Pieform $form, $values) {
             redirect('/user/find.php');
             break;
         case 'view':
-            redirect('/user/view.php?id=' . $id);
+            redirect(profile_url($user));
             break;
         default:
             redirect('/user/myfriends.php');

@@ -3,8 +3,7 @@
 {if $notrudeform}<div class="message delete">{$notrudeform|safe}</div>{/if}
 
         <h2>
-            <a href="{$WWWROOT}view/view.php?id={$viewid}">{$viewtitle}</a>{if $ownername} {str tag=by section=view}
-            <a href="{$WWWROOT}{$ownerlink}">{$ownername}</a>{/if}{foreach from=$artefactpath item=a}:
+            {$view->display_title()|safe}{foreach from=$artefactpath item=a}:
                 {if $a.url}<a href="{$a.url}">{/if}{$a.title}{if $a.url}</a>{/if}{if $hasfeed}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}
             {/foreach}
         </h2>

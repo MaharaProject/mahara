@@ -341,7 +341,7 @@ class ArtefactTypeComment extends ArtefactType {
                     a.id, a.author, a.authorname, a.ctime, a.mtime, a.description,
                     c.private, c.deletedby, c.requestpublic, c.rating,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
-                    u.deleted, u.profileicon
+                    u.deleted, u.profileicon, u.urlid
                 FROM {artefact} a
                     INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
                     LEFT JOIN {usr} u ON a.author = u.id
@@ -494,6 +494,7 @@ class ArtefactTypeComment extends ArtefactType {
                         'admin'         => $item->admin,
                         'deleted'       => $item->deleted,
                         'profileicon'   => $item->profileicon,
+                        'profileurl'    => profile_url($item),
                     );
                 }
             }
@@ -838,7 +839,7 @@ function delete_comment_submit(Pieform $form, $values) {
         $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
     }
     else {
-        $url = 'view/view.php?id=' . $viewid;
+        $url = $view->get_url(false);
     }
 
     db_begin();
@@ -1073,7 +1074,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
 function add_feedback_form_cancel_submit(Pieform $form) {
     global $view;
     $form->reply(PIEFORM_OK, array(
-        'goto' => '/view/view.php?id=' . $view->get('id'),
+        'goto' => '/' . $view->get_url(false),
     ));
 }
 

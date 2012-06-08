@@ -48,7 +48,7 @@ if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $owner)) {
 $goto = get_config('wwwroot');
 $goto .= ($return == 'wall')
     ? '/blocktype/wall/wall.php?id=' . $instance->get('id')
-    : '/user/view.php?id=' . $owner;
+    : profile_url($owner);
 
 $form = pieform(array(
     'name'     => 'deletepost',

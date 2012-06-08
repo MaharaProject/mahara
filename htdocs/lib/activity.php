@@ -525,7 +525,7 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
     function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
         if (!empty($this->fromuser)) {
-            $this->url = 'user/view.php?id=' . $this->fromuser;
+            $this->url = profile_url($this->fromuser, false);
         }
         else {
             $this->customheaders = array(
@@ -611,7 +611,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     }
 
     public function get_emailmessage($user) {
-        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         if (empty($this->artefact)) {
             return get_string_from_language(
@@ -632,7 +632,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     public function get_htmlmessage($user) {
         $viewtitle = hsc($this->view->get('title'));
         $reportername = hsc(display_default_name($this->reporter));
-        $reporterurl = get_config('wwwroot') . 'user/view.php?id=' . $this->reporter;
+        $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         $message = hsc($this->message);
         if (empty($this->artefact)) {
@@ -805,6 +805,7 @@ class ActivityTypeWatchlist extends ActivityType {
 
     protected $view;
 
+    private $ownerinfo;
     private $viewinfo;
 
     /**
@@ -813,15 +814,19 @@ class ActivityTypeWatchlist extends ActivityType {
      */
     public function __construct($data, $cron) { 
         parent::__construct($data, $cron); 
-        //$oldsubject = $this->subject;
-        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                         JOIN {view} v ON v.owner = u.id
-                                         WHERE v.id = ?', array($this->view))) {
+
+        require_once('view.php');
+        if ($this->viewinfo = new View($this->view)) {
+            $this->ownerinfo = $this->viewinfo->get_owner_object();
+        }
+        if (empty($this->ownerinfo)) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
+        $viewurl = $this->viewinfo->get_url(false);
+
         // mysql compatibility (sigh...)
         $casturl = 'CAST(? AS TEXT)';
         if (get_config('dbtype') == 'mysql') {
@@ -840,7 +845,7 @@ class ActivityTypeWatchlist extends ActivityType {
                ';
         $this->users = get_records_sql_array(
             $sql,
-            array('view/view.php?id=' . $this->view, $this->get_id(), $this->view)
+            array($viewurl, $this->get_id(), $this->view)
         );
 
         // Remove the view from the watchlist of users who can no longer see it
@@ -870,7 +875,7 @@ class ActivityTypeWatchlist extends ActivityType {
 
     public function get_message($user) {
         return get_string_from_language($user->lang, 'newwatchlistmessageview', 'activity', 
-                                        display_name($this->viewinfo, $user), $this->viewinfo->title);
+                                        display_name($this->ownerinfo, $user), $this->viewinfo->get('title'));
     }
 
     public function get_required_parameters() {
@@ -932,37 +937,19 @@ class ActivityTypeViewaccess extends ActivityType {
      */
     public function __construct($data, $cron=false) { 
         parent::__construct($data, $cron);
-        if (!$viewinfo = get_record_sql('
-            SELECT v.title, v.owner, v.group, v.institution,
-                u.id, u.username, u.preferredname, u.firstname, u.lastname, u.staff, u.admin,
-                g.name AS groupname, i.displayname AS institutionname
-            FROM {view} v
-                LEFT JOIN {usr} u ON v.owner = u.id
-                LEFT JOIN {group} g ON v.group = g.id
-                LEFT JOIN {institution} i ON v.institution = i.name
-            WHERE v.id = ?', array($this->view))) {
+        if (!$viewinfo = new View($this->view)) {
             if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->url = 'view/view.php?id=' . $this->view;
+        $this->url = $viewinfo->get_url(false);
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
-        $this->title = $viewinfo->title;
-        if ($this->users) {
-            if ($viewinfo->group) {
-                $this->ownername = $viewinfo->groupname;
-            }
-            else if ($viewinfo->institution) {
-                $this->ownername = $viewinfo->institutionname;
-            }
-            else if ($viewinfo->owner) {
-                $this->ownername = display_name($viewinfo, null, true);
-            }
-        }
+        $this->title = $viewinfo->get('title');
+        $this->ownername = $viewinfo->formatted_owner();
         $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 

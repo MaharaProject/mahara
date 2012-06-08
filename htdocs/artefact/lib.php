@@ -1642,8 +1642,8 @@ function artefact_get_owner_info($ids) {
     $data = get_records_sql_assoc('
         SELECT
             a.id AS aid, a.owner, a.group, a.institution,
-            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email,
-            g.name AS groupname,
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.urlid,
+            g.name AS groupname, g.urlid as groupurlid,
             i.displayname
         FROM
             {artefact} a
@@ -1658,21 +1658,21 @@ function artefact_get_owner_info($ids) {
     foreach ($data as &$d) {
         if ($d->institution == 'mahara') {
             $name = get_config('sitename');
-            $url  = '';
+            $url  = $wwwroot;
         }
         else if ($d->institution) {
             $name = $d->displayname;;
-            $url  = 'institution/index.php?institution=' . $d->institution;
+            $url  = $wwwroot . 'institution/index.php?institution=' . $d->institution;
         }
         else if ($d->group) {
             $name = $d->groupname;;
-            $url  = 'group/view.php?id=' . $d->group;
+            $url  = group_homepage_url((object) array('id' => $d->group, 'urlid' => $d->groupurlid));
         }
         else {
             $name = display_name($d);
-            $url  = 'user/view.php?id=' . $d->id;
+            $url  = profile_url($d);
         }
-        $d = (object) array('name' => $name, 'url' => $wwwroot . $url);
+        $d = (object) array('name' => $name, 'url' => $url);
     }
     return $data;
 }

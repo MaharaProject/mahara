@@ -36,9 +36,9 @@ $viewid = param_integer('id');
 $groupid = param_integer('group');
 $returnto = param_variable('returnto', 'view');
 
-$view = get_record('view', 'id', $viewid, 'owner', $USER->get('id'));
+$view = new View($viewid);
 $group = get_record_sql(
-    'SELECT g.id, g.name, g.grouptype
+    'SELECT g.id, g.name, g.grouptype, g.urlid
        FROM {group_member} u
        INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
        WHERE u.member = ?
@@ -47,11 +47,11 @@ $group = get_record_sql(
     array($USER->get('id'), $groupid)
 );
 
-if (!$view || !$group || $view->submittedgroup || $view->submittedhost) {
+if (!$view || !$group || $view->get('submittedgroup') || $view->get('submittedhost') || ($view->get('owner') !== $USER->get('id'))) {
     throw new AccessDeniedException(get_string('cantsubmitviewtogroup', 'view'));
 }
 
-define('TITLE', get_string('submitviewtogroup', 'view', $view->title, $group->name));
+define('TITLE', get_string('submitviewtogroup', 'view', $view->get('title'), $group->name));
 
 $form = pieform(array(
     'name' => 'submitview',
@@ -69,7 +69,7 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('message', get_string('submitviewconfirm', 'view', $view->title, $group->name));
+$smarty->assign('message', get_string('submitviewconfirm', 'view', $view->get('title'), $group->name));
 $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
@@ -96,7 +96,7 @@ function submitview_submit(Pieform $form, $values) {
         'viewowner'     => $USER->get('id'),
         'group'         => $groupid,
         'roles'         => $roles,
-        'url'           => 'view/view.php?id=' . $viewid,
+        'url'           => $view->get_url(false),
         'strings'       => (object) array(
             'urltext' => (object) array('key' => 'view'),
             'subject' => (object) array(
@@ -109,7 +109,7 @@ function submitview_submit(Pieform $form, $values) {
                 'section' => 'activity',
                 'args'    => array(
                     hsc(display_name($USER, null, false, true)),
-                    hsc($view->title),
+                    hsc($view->get('title')),
                     hsc($group->name),
                 ),
             ),
@@ -121,13 +121,13 @@ function submitview_submit(Pieform $form, $values) {
 }
 
 function returnto() {
-    GLOBAL $viewid, $groupid, $returnto;
+    global $view, $group, $returnto;
     // Deteremine the best place to return to
     if ($returnto === 'group') {
-        $goto = 'group/view.php?id=' . $groupid;
+        $goto = group_homepage_url($group, false);
     }
     else if ($returnto === 'view') {
-        $goto = 'view/view.php?id=' . $viewid;
+        $goto = $view->get_url(false);
     }
     else {
         $goto = 'view/';

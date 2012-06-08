@@ -70,7 +70,7 @@ if (!$USER->get('admin') && !$USER->get('staff')) {
 
 $users = get_records_sql_assoc('
     SELECT
-        u.id, u.username, u.email, u.firstname, u.lastname, u.studentid, u.preferredname,
+        u.id, u.username, u.email, u.firstname, u.lastname, u.studentid, u.preferredname, u.urlid,
         aru.remoteusername AS remoteuser
     FROM {usr} u
         LEFT JOIN {auth_remote_user} aru ON u.id = aru.localusr AND u.authinstance = aru.authinstance

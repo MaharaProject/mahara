@@ -370,19 +370,28 @@ class Collection {
 
         if (!isset($this->views)) {
 
-            $sql = "SELECT cv.*, v.title
+            $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
                 FROM {collection_view} cv JOIN {view} v ON cv.view = v.id
                 WHERE cv.collection = ?
                 ORDER BY cv.displayorder, v.title, v.ctime ASC";
 
-            $result = get_records_sql_array($sql, array($this->get('id')));
+            $result = get_records_sql_assoc($sql, array($this->get('id')));
 
             if (!empty($result)) {
+                require_once('view.php');
+                View::get_extra_view_info($result, false, false);
+                $result = array_values($result);
+                $max = $min = $result[0]['displayorder'];
+                foreach ($result as &$r) {
+                    $max = max($max, $r['displayorder']);
+                    $min = min($min, $r['displayorder']);
+                    $r = (object) $r;
+                }
                 $this->views = array(
-                    'views'     => $result,
+                    'views'     => array_values($result),
                     'count'     => count($result),
-                    'max'       => get_field('collection_view', 'MAX(displayorder)', 'collection', $this->get('id')),
-                    'min'       => get_field('collection_view', 'MIN(displayorder)', 'collection', $this->get('id')),
+                    'max'       => $max,
+                    'min'       => $min,
                 );
             }
             else {

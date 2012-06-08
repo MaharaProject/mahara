@@ -1,8 +1,8 @@
     <div class="sidebar-header">
       <div id="user-profileicon">
-        <a href="{$WWWROOT}user/view.php?id={$sbdata.id}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
+        <a href="{$sbdata.url}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
       </div>
-      <h3><a href="{$WWWROOT}user/view.php?id={$sbdata.id}">{$sbdata.myname}</a></h3>
+      <h3><a href="{$sbdata.url}">{$sbdata.myname}</a></h3>
     </div>
     <div class="sidebar-content">
 {if $sbdata.mnetloggedinfrom}        <p>{$sbdata.mnetloggedinfrom|clean_html|safe}</p>
@@ -24,7 +24,7 @@
             <li id="groups"><label><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></label>
                 <ul>
 {foreach from=$sbdata.groups item=group}
-                    <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
+                    <li><a href="{group_homepage_url($group)}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
 {/foreach}
                 </ul></li>
 {/if}
@@ -32,7 +32,7 @@
             <li id="views"><label><a href="{$WWWROOT}view/">{str tag="views"}:</a></label>
                 <ul>
 {foreach from=$sbdata.views item=view}
-                    <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title}</a></li>
+                    <li><a href="{$view->fullurl}">{$view->title}</a></li>
 {/foreach}
                 </ul>
             </li>

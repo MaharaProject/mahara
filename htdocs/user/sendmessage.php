@@ -47,26 +47,6 @@ if (!is_null($replytoid)) {
     $messages = get_message_thread($replytoid);
 }
 
-$returnto = param_alpha('returnto', 'myfriends');
-switch ($returnto) {
-    case 'find':
-        $goto = 'user/find.php';
-        break;
-    case 'view':
-        $goto = 'user/view.php?id=' . $id;
-        break;
-    case 'inbox':
-        $goto = 'account/activity';
-        break;
-    case 'institution':
-        $goto = ($inst = param_alpha('inst', null))
-            ? 'institution/index.php?institution=' . $inst
-            : 'account/activity';
-        break;
-    default:
-      $goto = 'user/myfriends.php';
-}
-
 $user = get_record('usr', 'id', $id);
 
 if (!$user) {
@@ -80,6 +60,26 @@ else if (!can_send_message($USER->to_stdclass(), $id)) {
 }
 
 define('TITLE', get_string('sendmessageto', 'group', display_name($user)));
+
+$returnto = param_alpha('returnto', 'myfriends');
+switch ($returnto) {
+    case 'find':
+        $goto = 'user/find.php';
+        break;
+    case 'view':
+        $goto = profile_url($user, false);
+        break;
+    case 'inbox':
+        $goto = 'account/activity';
+        break;
+    case 'institution':
+        $goto = ($inst = param_alpha('inst', null))
+            ? 'institution/index.php?institution=' . $inst
+            : 'account/activity';
+        break;
+    default:
+      $goto = 'user/myfriends.php';
+}
 
 $form = pieform(array(
     'name' => 'sendmessage',

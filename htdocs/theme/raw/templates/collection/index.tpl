@@ -16,7 +16,7 @@
                             <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
                         </div>
             {if $collection->views[0]->view}
-                        <h3><a href="{$WWWROOT}view/view.php?id={$collection->views[0]->view}">{$collection->name}</a></h3>
+                        <h3><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h3>
             {else}
                         <h3 title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
             {/if}
@@ -28,7 +28,7 @@
                           <div><label>{str tag=Views section=view}:</label>
                           {if $collection->views}
                             {foreach from=$collection->views item=view name=cviews}
-                                <a href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
+                                <a href="{$view->fullurl}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}
                             {/foreach}
                           {else}
                             {str tag=none}

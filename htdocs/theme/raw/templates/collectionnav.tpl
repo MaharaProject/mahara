@@ -5,7 +5,7 @@
   {foreach from=$chunk item=view}
   <li{if $view->view == $viewid} class="selected"{if $haslots}{$showmore=true}{/if}{/if}>
       {if $view->view != $viewid}
-          <a class="colnav" href="{$WWWROOT}view/view.php?id={$view->view}">{$view->title|str_shorten_text:30:true}</a>
+          <a class="colnav" href="{$view->fullurl}">{$view->title|str_shorten_text:30:true}</a>
       {else}
           <span>{$view->title|str_shorten_text:30:true}</span>
       {/if}

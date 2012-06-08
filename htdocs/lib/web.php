@@ -2943,7 +2943,7 @@ function display_cleaned_html($html, $filename, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
     if ($params['owner']) {
-        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', hsc($filename), get_config('wwwroot') . 'user/view.php?id=' . (int) $params['owner'], hsc(display_name($params['owner']))));
+        $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', hsc($filename), profile_url((int) $params['owner']), hsc(display_name($params['owner']))));
     } else {
         $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', hsc($filename)));
     }

@@ -1,13 +1,13 @@
 {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
       <td class="sharedpages">
-        <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|str_shorten_text:65:true}</a></h3>
+        <h3><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a></h3>
         {if $view.sharedby}
         <span class="owner">
           {if $view.group}
-            <a href="{$WWWROOT}group/view.php?id={$view.group}">{$view.sharedby}</a>
+            <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
           {elseif $view.owner}
-            <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.sharedby}</a>
+            <a href="{profile_url($view.user)}">{$view.sharedby}</a>
           {else}
             {$view.sharedby}
           {/if}
@@ -23,7 +23,7 @@
             <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" class="fr btn" title="{str tag=viewcomment section=artefact.comment}">{str tag=viewcomment section=artefact.comment}</a>
             <div>{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</div>
           {if $view.commentauthor}
-            <a href="{$WWWROOT}user/view.php?id={$view.commentauthor}" class="poster">{$view.commentauthor|display_name}</a>
+            <a href="{profile_url($view.commentauthor)}" class="poster">{$view.commentauthor|display_name}</a>
           {else}
             {$view.commentauthorname}
           {/if}

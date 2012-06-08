@@ -743,6 +743,7 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
             'shortname' => null,
             'institution' => null,
             'category' => null,
+            'urlid' => null,
         ),
         array(
             'id' => $group->id,
@@ -1118,7 +1119,7 @@ function joingroup_submit(Pieform $form, $values) {
         $next = $values['returnto'];
     }
     else {
-        $next = '/group/view.php?id=' . $values['group'];
+        $next = group_homepage_url(get_record('group', 'id', $values['group']));
     }
     redirect($next);
 }
@@ -1135,7 +1136,7 @@ function group_invite_submit(Pieform $form, $values) {
                 $next = $values['returnto'];
             }
             else {
-                $next = '/group/view.php?id=' . $values['group'];
+                $next = group_homepage_url(get_record('group', 'id', $values['group']));
             }
             redirect($next);
         }
@@ -1306,7 +1307,7 @@ function group_get_admins($groupids) {
     }
 
     $groupadmins = get_records_sql_array('
-        SELECT m.group, m.member, u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.profileicon
+        SELECT m.group, m.member, u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.profileicon, u.urlid
         FROM {group_member} m JOIN {usr} u ON u.id = m.member
         WHERE m.group IN (' . implode(',', db_array_to_ph($groupids)) . ")
         AND m.role = 'admin'",
@@ -1879,7 +1880,7 @@ function group_get_user_groups($userid=null, $roles=null) {
     if (!isset($usergroups[$userid])) {
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
-                g.hidemembers, g.invitefriends, gm1.role AS loggedinrole
+                g.hidemembers, g.invitefriends, g.urlid, gm1.role AS loggedinrole
             FROM {group} g
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role

@@ -23,7 +23,7 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td>
-                            <h3><a href="{$view.url}">{$view.displaytitle}</a></h3>
+                            <h3><a href="{$view.fullurl}">{$view.displaytitle}</a></h3>
 {if $view.submittedto}
                               <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {elseif $view.type == 'profile'}

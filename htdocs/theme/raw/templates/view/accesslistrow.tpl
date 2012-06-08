@@ -12,11 +12,11 @@
           {elseif $accessgroup.accesstype == 'friends'}
             <a href="{$WWWROOT}user/myfriends.php" id="link-myfriends">{str tag="friends" section="view"}</a>
           {elseif $accessgroup.accesstype == 'group'}
-            <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
+            <a href="{$accessgroup.groupurl}">{$accessgroup.name}</a>{if $accessgroup.role} ({$accessgroup.roledisplay}){/if}
           {elseif $accessgroup.accesstype == 'institution'}
             <a href="{$WWWROOT}account/institutions.php">{$accessgroup.id|institution_display_name}</a>
           {elseif $accessgroup.accesstype == 'user'}
-            <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name}</a>
+            <a href="{profile_url($accessgroup.id)}">{$accessgroup.id|display_name}</a>
           {/if}
           {if $accessgroup.startdate}
             {if $accessgroup.stopdate}

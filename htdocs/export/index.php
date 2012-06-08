@@ -87,7 +87,7 @@ if ($viewids = get_column('view', 'id', 'owner', $USER->get('id'), 'type', 'port
             'type' => 'checkbox',
             'title' => $view->get('title'),
             'description' => $view->get('description'),
-            'viewlink' => get_config('wwwroot') . 'view/view.php?id=' . $viewid,
+            'viewlink' => $view->get_url(true, true),
         );
     }
     $jsfiles = array('js/preview.js', 'js/export.js');

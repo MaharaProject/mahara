@@ -4,7 +4,7 @@
             {foreach from=$row item=r}
             <td>
               <div class="fl membericon"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt=""></div>
-                <h3><a href="{$WWWROOT}user/view.php?id={$r.id}">{$r.name}</a></h3>
+                <h3><a href="{profile_url($r)}">{$r.name}</a></h3>
                 {if $r.role}
                 <div class="rel">
                   <strong>{$results.roles[$r.role]->display}</strong>

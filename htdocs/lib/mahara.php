@@ -1754,13 +1754,13 @@ function pieform_template_dir($file, $pluginlocation='') {
  * Given a view id, and a user id (defaults to currently logged in user if not
  * specified) will return wether this user is allowed to look at this view.
  *
- * @param integer $view_id      View ID to check
+ * @param mixed $view           viewid or View to check
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id=null) {
+function can_view_view($view, $user_id=null) {
     global $USER, $SESSION;
 
     if (defined('BULKEXPORT')) {
@@ -1791,8 +1791,15 @@ function can_view_view($view_id, $user_id=null) {
         return false;
     }
 
-    require_once(get_config('libroot') . 'view.php');
-    $view = new View($view_id);
+    if (!class_exists('View')) {
+        require_once(get_config('libroot') . 'view.php');
+    }
+    if ($view instanceof View) {
+        $view_id = $view->get('id');
+    }
+    else {
+        $view = new View($view_id = $view);
+    }
 
     // group views and logged in users are not affected by
     // the institution level config for public views
@@ -1816,7 +1823,7 @@ function can_view_view($view_id, $user_id=null) {
 
     // If the view's owner is suspended, deny access to the view
     if ($view->get('owner')) {
-        if ((!$owner = $view->get_owner_object()) || $owner->suspendedcusr) {
+        if ((!$owner = $view->get_owner_object()) || $owner->suspendedctime) {
             return false;
         }
     }
@@ -2020,8 +2027,10 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         $typesql = 'AND v.type = ' . db_quote($type);
     }
 
+    $data = array();
+
     // public, logged in, or friends' views
-    if ($results = get_records_sql_array(
+    if ($results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('atime') . ',
@@ -2051,18 +2060,17 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         array( $dbnow, $dbnow )
         )
     ) {
-        foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+        foreach ($results as $row) {
+            $list[$row->owner][$row->id] = $row->id;
         }
-    }
+        $data = $results;
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+        // bail if we've filled all users to the limit
+        $done = _get_views_trim_list($list, $users, $limit, $data);
     }
 
     // check individual user access
-    if ($results = get_records_sql_array(
+    if (!$done && $results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('atime') . ',
@@ -2080,17 +2088,16 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         )
     ) {
         foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+            $list[$row->owner][$row->id] = $row->id;
         }
-    }
+        $data = array_merge($data, $results);
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+        // bail if we've filled all users to the limit
+        $done &= _get_views_trim_list($list, $users, $limit, $data);
     }
 
     // check group access
-    if ($results = get_records_sql_array(
+    if (!$done && $results = get_records_sql_assoc(
         'SELECT
             v.*,
             ' . db_format_tsfield('v.atime','atime') . ',
@@ -2110,24 +2117,35 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         )
     ) {
         foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
+            $list[$row->owner][$row->id] = $row->id;
         }
+        $data = array_merge($data, $results);
+
+        // bail if we've filled all users to the limit
+        $done &= _get_views_trim_list($list, $users, $limit, $data);
     }
 
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
+    require_once('view.php');
+    View::get_extra_view_info($data, false, false);
+
+    $list = array();
+
+    foreach ($data as $d) {
+        $list[$d['owner']][$d['id']] = (object)$d;
     }
 
     return $list;
 }
 
-function _get_views_trim_list(&$list, &$users, $limit) {
+function _get_views_trim_list(&$list, &$users, $limit, &$results) {
     if ($limit === null) {
         return;
     }
     foreach ($list as $user_id => &$views) {
         if($limit and count($views) > $limit) {
+            foreach (array_slice($views, $limit) as $v) {
+                unset($results[$v]);
+            }
             $views = array_slice($views, 0, $limit);
         }
         if($limit and count($views) == $limit) {
@@ -2416,6 +2434,7 @@ function profile_sideblock() {
         'id'          => $USER->get('id'),
         'myname'      => display_name($USER, null, true),
         'username'    => $USER->get('username'),
+        'url'         => profile_url($USER),
     );
 
     $authinstance = $SESSION->get('mnetuser') ? $SESSION->get('authinstance') : $USER->get('authinstance');
@@ -2441,13 +2460,21 @@ function profile_sideblock() {
     $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
     $data['groups'] = group_get_user_groups($USER->get('id'));
     $data['views'] = get_records_sql_array(
-        'SELECT v.id, v.title
+        'SELECT v.id, v.title, v.urlid, v.owner
         FROM {view} v
         INNER JOIN {view_tag} vt ON (vt.tag = ? AND vt.view = v.id)
         WHERE v.owner = ?
         ORDER BY v.title',
         array(get_string('profile'), $USER->get('id'))
     );
+    if ($data['views']) {
+        require_once('view.php');
+        foreach($data['views'] as $v) {
+            $view = new View(0, (array)$v);
+            $view->set('dirty', false);
+            $v->fullurl = $view->get_url();
+        }
+    }
     $data['artefacts'] = get_records_sql_array(
          'SELECT a.id, a.artefacttype, a.title
          FROM {artefact} a
@@ -2861,12 +2888,15 @@ function cron_sitemap_daily() {
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');
+    require_once('view.php');
     foreach ($data->data as &$item) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
             $item->typestr = get_string('view');
             $item->icon    = $THEME->get_url('images/view.gif');
-            $item->url     = get_config('wwwroot') . 'view/view.php?id=' . $item->id;
+            $v = new View(0, (array)$item);
+            $v->set('dirty', false);
+            $item->url = $v->get_url();
         }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);

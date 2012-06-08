@@ -50,7 +50,7 @@
 
 	<div class="rightdiv">
       <h3>
-		<a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->display_name}</a>
+		<a href="{profile_url($user)}">{$user->display_name}</a>
 		{if $user->pending}- {str tag='pending' section='group'}
         {elseif $user->friend && $page == 'find'}- {str tag='existingfriend' section='group'}
         {/if}
@@ -62,9 +62,7 @@
 			</li>
 			{foreach from=$user->views item=view}
 			<li>
-				<a href="{$WWWROOT}view/view.php?id={$view->id}">
-				{$view->title}
-				</a>
+				<a href="{$view->fullurl}">{$view->title}</a>
 			</li>
 			{/foreach}
       </ul>

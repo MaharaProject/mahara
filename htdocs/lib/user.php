@@ -871,7 +871,7 @@ function get_user_for_display($user=null) {
 
     $fields = array(
         'id', 'username', 'preferredname', 'firstname', 'lastname', 'admin', 'staff',
-        'profileicon', 'email', 'deleted',
+        'profileicon', 'email', 'deleted', 'urlid', 'suspendedctime',
     );
 
     if (is_numeric($user) && isset($usercache[$user])) {
@@ -1157,6 +1157,9 @@ function delete_user($userid) {
     if ($authinst) {
         $deleterec->authinstance = $authinst;
     }
+
+    // Free the urlid for another user to use
+    $deleterec->urlid = null;
 
     update_record('usr', $deleterec);
 
@@ -1462,6 +1465,52 @@ function get_new_profile_urlid($desired) {
 }
 
 /**
+ * Get the profile url for a user
+ *
+ * @param object $user
+ * @param boolean $full return a full url
+ * @param boolean $useid Override the cleanurls setting and use a view id in the link
+ *
+ * @return string
+ */
+function profile_url($user, $full=true, $useid=false) {
+    $wantclean = !$useid && get_config('cleanurls');
+
+    if ($user instanceof User) {
+        $id = $user->get('id');
+        $urlid = $wantclean ? $user->get('urlid') : null;
+    }
+    else if (is_array($user)) {
+        $id = $user['id'];
+        $urlid = $user['urlid'];
+    }
+    else if (is_numeric($user)) {
+        $id = $user;
+        $urlid = $wantclean ? get_user_for_display($id)->urlid : null;
+    }
+    else if (isset($user->id)) {
+        $id = $user->id;
+        $urlid = isset($user->urlid) ? $user->urlid : null;
+    }
+
+    if ($wantclean && !is_null($urlid)) {
+        $url = get_config('cleanurluserdefault') . '/' . $urlid;
+    }
+    else if (!empty($id)) {
+        $url = 'user/view.php?id=' . (int) $id;
+    }
+    else {
+        throw new SystemException("profile_url called with no user id");
+    }
+
+    if ($full) {
+        $url = get_config('wwwroot') . $url;
+    }
+
+    return $url;
+}
+
+/**
  * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
  * @param array $userids
  * @return array containing the users in the order from $userids
@@ -1472,7 +1521,7 @@ function get_users_data($userids, $getviews=true) {
     $userids = array_map('intval', $userids);
 
     $sql = 'SELECT u.id, u.username, u.preferredname, u.firstname, u.lastname, u.admin, u.staff, u.deleted,
-                u.profileicon, u.email,
+                u.profileicon, u.email, u.urlid,
                 fp.requester AS pending,
                 ap.value AS hidenamepref,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
@@ -1514,7 +1563,7 @@ function get_users_data($userids, $getviews=true) {
             foreach ($cleanviews as $userviews) {
                 foreach ($userviews as &$view) {
                     foreach (array_keys(get_object_vars($view)) as $key) {
-                        if ($key != 'id' && $key != 'title') {
+                        if ($key != 'id' && $key != 'title' && $key != 'url' && $key != 'fullurl') {
                             unset($view->$key);
                         }
                     }
@@ -1593,7 +1642,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
 
 function build_onlinelist_html(&$data, $page) {
     if ($data['data']) {
-        $userdata = get_users_data($data['data'], $page);
+        $userdata = get_users_data($data['data'], false);
     }
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
@@ -1627,7 +1676,7 @@ function build_onlinelist_html(&$data, $page) {
 function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
     global $USER;
     if ($data) {
-        $data = get_users_data($data, $page);
+        $data = get_users_data($data, false);
     }
     $smarty = smarty_core();
     $smarty->assign('page', $page);
@@ -1789,7 +1838,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     if (is_friend($USER->get('id'), $user->id)) {
         $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
         delete_records('usr_friend_request', 'owner', $USER->get('id'), 'requester', $user->id);
-        redirect('/user/view.php?id=' . $user->id);
+        redirect(profile_url($user));
     }
 
     // friend db record
@@ -1800,7 +1849,7 @@ function acceptfriend_submit(Pieform $form, $values) {
 
     // notification info
     $n = new StdClass;
-    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id');
+    $n->url = profile_url($USER);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
@@ -1816,7 +1865,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
-    redirect('/user/view.php?id=' . $values['id']);
+    redirect(profile_url($user));
 }
 
 // Form to add someone who has friendscontrol set to 'auto'
@@ -1866,7 +1915,7 @@ function addfriend_submit(Pieform $form, $values) {
     if (is_friend($loggedinid, $user->id)) {
         $SESSION->add_info_msg(get_string('alreadyfriends', 'group', display_name($user)));
         delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $user->id);
-        redirect('/user/view.php?id=' . $user->id);
+        redirect(profile_url($user));
     }
 
     // friend db record
@@ -1875,7 +1924,7 @@ function addfriend_submit(Pieform $form, $values) {
 
     // notification info
     $n = new StdClass;
-    $n->url = 'user/view.php?id=' . $loggedinid;
+    $n->url = profile_url($USER, false);
     $n->users = array($user->id);
     $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
@@ -1898,7 +1947,7 @@ function addfriend_submit(Pieform $form, $values) {
     handle_event('addfriend', array('user' => $f->usr2, 'friend' => $f->usr1));
 
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', display_name($user)));
-    redirect('/user/view.php?id=' . $values['id']);
+    redirect(profile_url($user));
 }
 
 /**
@@ -2329,11 +2378,11 @@ function get_friends($userid, $limit=10, $offset=0) {
     $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false);
 
     $from = 'FROM (
-            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon, u.urlid
             FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr1
             WHERE f.usr2 = ? AND u.deleted = 0
             UNION
-            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, u.profileicon, u.urlid
             FROM {usr} u JOIN {usr_friend} f ON u.id = f.usr2
             WHERE f.usr1 = ? AND u.deleted = 0
         ) f';
