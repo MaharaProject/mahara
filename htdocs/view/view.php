@@ -112,10 +112,10 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
     if ($view->get('submittedtime')) {
-        $text = get_string('viewsubmittedtogroupon', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
+        $text = get_string('viewsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
     }
     else {
-        $text = get_string('viewsubmittedtogroup', 'view', get_config('wwwroot') . 'group/view.php?id=' . $submittedgroup->id, hsc($submittedgroup->name));
+        $text = get_string('viewsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
     $releaseform = pieform(array(
         'name'     => 'releaseview',
