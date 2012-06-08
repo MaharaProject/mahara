@@ -373,7 +373,7 @@ function group_create($data) {
         (object) array(
             'name'           => $data['name'],
             'description'    => isset($data['description']) ? $data['description'] : null,
-            'urlid'          => $data['urlid'],
+            'urlid'          => isset($data['urlid']) ? $data['urlid'] : null,
             'grouptype'      => $data['grouptype'],
             'category'       => isset($data['category']) ? intval($data['category']) : null,
             'jointype'       => $jointype,

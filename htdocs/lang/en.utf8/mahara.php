@@ -1031,3 +1031,6 @@ $string['setblocktitle'] = 'Set a block title';
 $string['filenotfound'] = 'File not found';
 
 $string['betweenxandy'] = 'Between %s and %s';
+
+// Clean URLs
+$string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers, and - are allowed.';

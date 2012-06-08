@@ -85,6 +85,20 @@ if ($authobj->authname == 'internal') {
     );
 }
 
+if (get_config('cleanurls')) {
+    $elements['changeprofileurl'] = array(
+        'value' => '<tr><td colspan="2"><h3>' . get_string('changeprofileurl', 'account') . '</h3></td></tr>'
+    );
+    $elements['urlid'] = array(
+        'type'         => 'text',
+        'defaultvalue' => $USER->get('urlid'),
+        'title'        => get_string('profileurl', 'account'),
+        'prehtml'      => '<span class="description">' . get_config('wwwroot') . get_config('cleanurluserdefault') . '/</span> ',
+        'description'  => get_string('profileurldescription', 'account') . ' ' . get_string('cleanurlallowedcharacters'),
+        'rules'        => array('maxlength' => 30, 'regex' => get_config('cleanurlvalidate')),
+    );
+}
+
 $elements['accountoptionsdesc'] = array(
     'value' => '<tr><td colspan="2"><h3>' . get_string('accountoptionsdesc', 'account') . '</h3></td></tr>'
 );
@@ -149,6 +163,15 @@ function accountprefs_validate(Pieform $form, $values) {
             $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
         }
     }
+
+    if (get_config('cleanurls') && $values['urlid'] != $USER->get('urlid')) {
+        if (strlen($values['urlid']) < 3) {
+            $form->set_error('urlid', get_string('rule.minlength.minlength', 'pieforms', 3));
+        }
+        else if (record_exists('usr', 'urlid', $values['urlid'])) {
+            $form->set_error('urlid', get_string('urlalreadytaken', 'account'));
+        }
+    }
 }
 
 function accountprefs_submit(Pieform $form, $values) {
@@ -194,6 +217,11 @@ function accountprefs_submit(Pieform $form, $values) {
         $USER->username = $values['username'];
         $USER->commit();
         $returndata['username'] = $values['username'];
+    }
+
+    if (get_config('cleanurls') && isset($values['urlid']) && $values['urlid'] != $USER->get('urlid')) {
+        $USER->urlid = $values['urlid'];
+        $USER->commit();
     }
 
     db_commit();
