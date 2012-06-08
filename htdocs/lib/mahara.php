@@ -1025,6 +1025,23 @@ function print_object($mixed) {
 }
 
 /**
+ * Reads the locales string from a language pack and attempts to set the current locale
+ * based on the contents of that string.
+ *
+ * @param string $lang
+ */
+function set_locale_for_language($lang) {
+    if (empty($lang)) {
+        return;
+    }
+
+    if ($args = split(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
+        array_unshift($args, LC_ALL);
+        call_user_func_array('setlocale', $args);
+    }
+}
+
+/**
  * This function returns the current 
  * language to use, either for a given user
  * or sitewide, or the default
@@ -1066,12 +1083,7 @@ function current_language() {
         return $lang;
     }
 
-    // Set locale.  We are probably being called from get_string_location.
-    // $lang had better be non-empty, or it will call us again.
-    if ($args = split(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
-        array_unshift($args, LC_ALL);
-        call_user_func_array('setlocale', $args);
-    }
+    set_locale_for_language($lang);
 
     return $lastlang = $lang;
 }
