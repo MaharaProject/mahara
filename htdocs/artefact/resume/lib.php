@@ -608,8 +608,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     }
 
     public static function get_common_js() {
-        $cancelstr = get_string('cancel');
-        $addstr = get_string('add');
+        $cancelstr = json_encode(get_string('cancel'));
+        $addstr = json_encode(get_string('add'));
         $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
         $js = <<<EOF
 var tableRenderers = {};
@@ -619,10 +619,10 @@ function toggleCompositeForm(type) {
     elemName = type + 'form';
     if (hasElementClass(elemName, 'hidden')) {
         removeElementClass(elemName, 'hidden');
-        $('add' + type + 'button').innerHTML = '{$cancelstr}';
+        $('add' + type + 'button').innerHTML = {$cancelstr};
     }
     else {
-        $('add' + type + 'button').innerHTML = '{$addstr}';
+        $('add' + type + 'button').innerHTML = {$addstr};
         addElementClass(elemName, 'hidden');
     }
 }
