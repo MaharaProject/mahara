@@ -78,10 +78,6 @@ class AuthBrowserid extends Auth {
 
         $user->id = create_user($user, array(), $this->institution);
 
-        if (get_config('usersuniquebyusername')) {
-            $user->join_institution($this->institution);
-        }
-
         return $user;
     }
 }
