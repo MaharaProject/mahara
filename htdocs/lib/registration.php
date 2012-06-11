@@ -281,6 +281,23 @@ function institution_registration_data() {
         $inst_data['count_interaction_forum_post'] = count_records_select('interaction_forum_post',
                 'poster IN (' . join(',', array_fill(0, count($members), '?')) . ')',
                 $members);
+        if (is_postgres()) {
+            $weekago = "CURRENT_DATE - INTERVAL '1 week'";
+            $thisweeksql = "(lastaccess > $weekago)::int";
+        }
+        else {
+            $weekago = 'CURRENT_DATE - INTERVAL 1 WEEK';
+            $thisweeksql = "lastaccess > $weekago";
+        }
+        if ($data = get_record_sql('SELECT SUM(' . $thisweeksql . ') AS sum
+                FROM {usr} u
+                WHERE u.id IN (' . join(',', array_fill(0, count($members), '?')) . ')',
+                $members)) {
+            $inst_data['usersloggedin'] = $data->sum;
+        }
+        else {
+            $inst_data['usersloggedin'] = 0;
+        }
 
         $data_to_store[$institution] = $inst_data;
     }
