@@ -2758,6 +2758,14 @@ function cron_send_registration_data() {
 }
 
 /**
+ * Cronjob to store the institution statistics
+ */
+function cron_institution_registration_data() {
+    require_once(get_config('libroot') . 'registration.php');
+    institution_registration_store_data();
+}
+
+/**
  * Cronjob to save weekly site data locally
  */
 function cron_site_data_weekly() {

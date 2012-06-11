@@ -204,6 +204,25 @@ function registration_data() {
     return $data_to_send;
 }
 
+function institution_registration_store_data() {
+    $data = institution_registration_data();
+    db_begin();
+    foreach ($data as $institution => $inst_data) {
+        $registration_id = insert_record('institution_registration', (object)array(
+            'time'        => db_format_timestamp(time()),
+            'institution' => $institution,
+        ), 'id', true);
+        foreach ($inst_data as $key => $value) {
+            insert_record('institution_registration_data', (object)array(
+                'registration_id' => $registration_id,
+                'field'           => $key,
+                'value'           => $value
+            ));
+        }
+    }
+    db_commit();
+}
+
 function institution_registration_data() {
     $data_to_store = array();
     foreach (get_column('institution', 'name') as $institution) {
@@ -293,7 +312,7 @@ function institution_registration_data() {
                 FROM {usr} u
                 WHERE u.id IN (' . join(',', array_fill(0, count($members), '?')) . ')',
                 $members)) {
-            $inst_data['usersloggedin'] = $data->sum;
+            $inst_data['usersloggedin'] = isset($data->sum) ? $data->sum : 0;
         }
         else {
             $inst_data['usersloggedin'] = 0;

@@ -974,5 +974,27 @@
             <KEY NAME="regdatafk" TYPE="foreign" FIELDS="registration_id" REFTABLE="site_registration" REFFIELDS="id"/>
           </KEYS>
         </TABLE>
+        <TABLE NAME="institution_registration">
+          <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+            <FIELD NAME="time" TYPE="datetime" NOTNULL="true"/>
+            <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+          </KEYS>
+        </TABLE>
+        <TABLE NAME="institution_registration_data">
+          <FIELDS>
+            <FIELD NAME="registration_id" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true"/>
+            <FIELD NAME="value" TYPE="text" NOTNULL="true"/>
+          </FIELDS>
+          <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="registration_id,field"/>
+            <KEY NAME="regdatafk" TYPE="foreign" FIELDS="registration_id" REFTABLE="institution_registration" REFFIELDS="id"/>
+          </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
