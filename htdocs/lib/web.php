@@ -1776,6 +1776,24 @@ function admin_nav() {
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
         ),
+        'adminhome/home' => array(
+            'path'   => 'adminhome/home',
+            'url'    => 'admin/',
+            'title'  => get_string('overview'),
+            'weight' => 10,
+        ),
+        'adminhome/registersite' => array(
+            'path'   => 'adminhome/registersite',
+            'url'    => 'admin/registersite.php',
+            'title'  => get_string('register'),
+            'weight' => 20,
+        ),
+        'adminhome/statistics' => array(
+            'path'   => 'adminhome/statistics',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('sitestatistics', 'admin'),
+            'weight' => 30,
+        ),
         'configsite' => array(
             'path'   => 'configsite',
             'url'    => 'admin/site/options.php',
@@ -2124,6 +2142,28 @@ function staff_nav() {
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
         ),
+        'statistics' => array(
+            'path'   => 'statistics',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('sitestatistics', 'admin'),
+            'weight' => 20,
+        ),
+    );
+}
+
+/**
+ * Returns the entries in the institutional staff menu
+ *
+ * @return a data structure containing the institutional staff navigation
+ */
+function institutional_staff_nav() {
+    return array(
+        'usersearch' => array(
+            'path'   => 'usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
+        ),
     );
 }
 
@@ -2240,8 +2280,11 @@ function main_nav() {
         else if ($USER->is_institutional_admin()) {
             $menu = institutional_admin_nav();
         }
-        else {
+        else if ($USER->get('staff')) {
             $menu = staff_nav();
+        }
+        else {
+            $menu = institutional_staff_nav();
         }
     }
     else {
