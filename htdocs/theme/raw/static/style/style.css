@@ -976,6 +976,7 @@ input.cancel,
 	background-color: #f99;
 	font-weight: bold;
 	padding: 5px;
+	border-bottom: 2px darkred solid;
 	color: #333333;
 }
 .sitemessage img {

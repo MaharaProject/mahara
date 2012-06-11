@@ -400,9 +400,7 @@ EOF;
         $smarty->assign('PAGETITLE', $sitename);
     }
 
-    if (!get_config('productionmode')) {
-        $sitetop = '<div class="error">' . get_string('notproductionsite', 'error') . '</div>';
-    }
+    $smarty->assign('PRODUCTIONMODE', get_config('productionmode'));
     if (function_exists('local_header_top_content')) {
         $sitetop .= local_header_top_content();
     }
