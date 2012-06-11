@@ -358,7 +358,10 @@ abstract class ActivityType {
     private function ensure_parameters() {
         foreach ($this->get_required_parameters() as $param) {
             if (!isset($this->{$param})) {
-                throw new ParamOutOfRangeException(get_string('missingparam', 'activity', $param, $this->get_type()));
+                // Allow some string parameters to be specified in $this->strings
+                if (!in_array($param, array('subject', 'message', 'urltext')) || empty($this->strings->{$param}->key)) {
+                    throw new ParamOutOfRangeException(get_string('missingparam', 'activity', $param, $this->get_type()));
+                }
             }
         }
     }
