@@ -294,7 +294,7 @@ class Collection {
     public static function get_mycollections_data($offset=0, $limit=10) {
         global $USER;
 
-        ($data = get_records_sql_array("
+        ($data = get_records_sql_assoc("
             SELECT c.id, c.description, c.name
                 FROM {collection} c
                 WHERE c.owner = ?
@@ -302,14 +302,57 @@ class Collection {
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($data = array());
 
+        self::add_submission_info($data);
+
         $result = (object) array(
             'count'  => count_records('collection', 'owner', $USER->get('id')),
-            'data'   => $data,
+            'data'   => array_values($data),
             'offset' => $offset,
             'limit'  => $limit,
         );
 
         return $result;
+    }
+
+    private static function add_submission_info(&$data) {
+        if (empty($data)) {
+            return;
+        }
+
+        $records = get_records_sql_assoc('
+            SELECT c.id, c.submittedgroup, c.submittedhost, ' . db_format_tsfield('submittedtime') . ',
+                   sg.name AS groupname, sg.urlid, sh.name AS hostname
+              FROM {collection} c
+         LEFT JOIN {group} sg ON c.submittedgroup = sg.id
+         LEFT JOIN {host} sh ON c.submittedhost = sh.wwwroot
+             WHERE c.id IN (' . join(',', array_fill(0, count($data), '?')) . ')
+               AND (c.submittedgroup IS NOT NULL OR c.submittedhost IS NOT NULL)',
+            array_keys($data)
+        );
+
+        if (empty($records)) {
+            return;
+        }
+
+        foreach ($records as $r) {
+            if (!empty($r->submittedgroup)) {
+                $groupdata = (object) array(
+                    'id'    => $r->submittedgroup,
+                    'name'  => $r->groupname,
+                    'urlid' => $r->urlid,
+                    'time'  => $r->submittedtime,
+                );
+                $groupdata->url = group_homepage_url($groupdata);
+                $data[$r->id]->submitinfo = $groupdata;
+            }
+            else if (!empty($r->submittedhost)) {
+                $data[$r->id]->submitinfo = (object) array(
+                    'name' => $r->hostname,
+                    'url'  => $r->submittedhost,
+                    'time'  => $r->submittedtime,
+                );
+            }
+        }
     }
 
     /**
