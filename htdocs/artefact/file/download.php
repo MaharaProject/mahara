@@ -82,16 +82,16 @@ else {
     }
 
     // If the file is in the public directory, it's fine to serve
-    $fileispublic = (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $fileid, 'parent', ArtefactTypeFolder::admin_public_folder_id());
-    $fileispublic &= $file->get('institution') == 'mahara';
+    $fileispublic = $file->get('institution') == 'mahara';
+    $fileispublic = $fileispublic && (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $fileid, 'parent', ArtefactTypeFolder::admin_public_folder_id());
 
     if (!$fileispublic) {
         // If the file is in the logged in menu and the user is logged in then
         // they can view it
         $fileinloggedinmenu = $file->get('institution') == 'mahara';
-        $fileinloggedinmenu &= $file->get('parent') == null;
-        $fileinloggedinmenu &= record_exists('site_menu', 'file', $fileid, 'public', 0);
-        $fileinloggedinmenu &= $USER->is_logged_in();
+        $fileinloggedinmenu = $fileinloggedinmenu && $file->get('parent') == null;
+        $fileinloggedinmenu = $fileinloggedinmenu && $USER->is_logged_in();
+        $fileinloggedinmenu = $fileinloggedinmenu && record_exists('site_menu', 'file', $fileid, 'public', 0);
 
         if (!$fileinloggedinmenu) {
             // Alternatively, if you own the file or you are an admin, it should always work

@@ -886,8 +886,8 @@ function get_user_for_display($user=null) {
         foreach ($fields as $f) {
             $user->$f = $USER->get($f);
         }
-        $user->admin |= $USER->is_institutional_admin();
-        $user->staff |= $USER->is_institutional_staff();
+        $user->admin = $user->admin || $USER->is_institutional_admin();
+        $user->staff = $user->staff || $USER->is_institutional_staff();
     }
     else if ($user instanceof User) {
         $userObj = $user;
