@@ -3942,8 +3942,8 @@ class View {
             }
 
             if ($a->allowcomments) {
-                $allowcomments |= $a->allowcomments;
-                $approvecomments &= $a->approvecomments;
+                $allowcomments = $allowcomments || $a->allowcomments;
+                $approvecomments = $approvecomments && $a->approvecomments;
             }
             if (!$approvecomments) {
                 return true;

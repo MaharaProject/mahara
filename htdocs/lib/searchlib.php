@@ -272,7 +272,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
             // Remove email address when viewed by staff
             if (!$hideemail = (empty($admininstitutions) || empty($result['institutions']))) {
                 $commoninstitutions = array_intersect($admininstitutions, $result['institutions']);
-                $hideemail |= empty($commoninstitutions);
+                $hideemail = $hideemail || empty($commoninstitutions);
             }
             if ($hideemail) {
                 unset($result['email']);

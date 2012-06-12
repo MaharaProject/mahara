@@ -2028,6 +2028,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
     }
 
     $data = array();
+    $done = false;
 
     // public, logged in, or friends' views
     if ($results = get_records_sql_assoc(
@@ -2093,7 +2094,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         $data = array_merge($data, $results);
 
         // bail if we've filled all users to the limit
-        $done &= _get_views_trim_list($list, $users, $limit, $data);
+        $done = $done && _get_views_trim_list($list, $users, $limit, $data);
     }
 
     // check group access
@@ -2122,7 +2123,7 @@ function get_views($users, $userlooking=null, $limit=5, $type=null) {
         $data = array_merge($data, $results);
 
         // bail if we've filled all users to the limit
-        $done &= _get_views_trim_list($list, $users, $limit, $data);
+        $done = $done && _get_views_trim_list($list, $users, $limit, $data);
     }
 
     require_once('view.php');
