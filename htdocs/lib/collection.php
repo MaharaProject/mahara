@@ -629,13 +629,8 @@ class Collection {
      * @param object $releaseuser The user releasing the collection
      */
     public function release($releaseuser=null) {
-        if ($this->submittedgroup) {
-            $submittedname = get_field('group', 'name', 'id', $this->submittedgroup);
-        }
-        else if ($this->submittedhost) {
-            $submittedname = get_field('host', 'name', 'wwwroot', $this->submittedhost);
-        }
-        else {
+
+        if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
         }
 
@@ -658,6 +653,7 @@ class Collection {
 
         $releaseuser = optional_userobj($releaseuser);
         $releaseuserdisplay = display_name($releaseuser, $this->owner);
+        $submitinfo = $this->submitted_to();
 
         require_once('activity.php');
         activity_occurred(
@@ -668,12 +664,12 @@ class Collection {
                     'subject' => (object) array(
                         'key'     => 'collectionreleasedsubject',
                         'section' => 'group',
-                        'args'    => array($this->name, $submittedname, $releaseuserdisplay),
+                        'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                     ),
                     'message' => (object) array(
                         'key'     => 'collectionreleasedmessage',
                         'section' => 'group',
-                        'args'    => array($this->name, $submittedname, $releaseuserdisplay),
+                        'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                     ),
                 ),
                 'url' => $this->get_url(false),
@@ -697,6 +693,22 @@ class Collection {
 
     public function is_submitted() {
         return $this->submittedgroup || $this->submittedhost;
+    }
+
+    public function submitted_to() {
+        if ($this->submittedgroup) {
+            $record = get_record('group', 'id', $this->submittedgroup, null, null, null, null, 'id, name, urlid');
+            $record->url = group_homepage_url($record);
+        }
+        else if ($this->submittedhost) {
+            $record = get_record('host', 'wwwroot', $this->submittedhost, null, null, null, null, 'wwwroot, name');
+            $record->url = $record->wwwroot;
+        }
+        else {
+            throw new SystemException("Collection with id " . $this->id . " has not been submitted");
+        }
+
+        return $record;
     }
 
     public function submit($group) {
