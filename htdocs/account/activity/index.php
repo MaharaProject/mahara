@@ -76,6 +76,7 @@ require_once('activity.php');
 $activitylist = activitylist_html($type);
 
 $star = json_encode($THEME->get_url('images/star.png'));
+$readicon = json_encode($THEME->get_url('images/readusermessage.gif'));
 $strread = json_encode(get_string('read', 'activity'));
 
 $javascript = <<<JAVASCRIPT
@@ -123,10 +124,16 @@ function showHideMessage(id) {
         var unread = getFirstElementByTagAndClassName(
             'input', 'tocheckread', message.parentNode.parentNode
         );
+        var unreadicon = getFirstElementByTagAndClassName(
+            'img', 'unreadmessage', message.parentNode.parentNode
+        );
         if (unread) {
             var pd = {'readone':id};
             sendjsonrequest('index.json.php', pd, 'GET', function(data) {
                 swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
+                if (unreadicon) {
+                    swapDOM(unreadicon, IMG({'src' : {$readicon}, 'alt' : getNodeAttribute(unreadicon, 'alt') + ' - ' + {$strread}}));
+                };
                 updateUnreadCount(data);
             });
         }

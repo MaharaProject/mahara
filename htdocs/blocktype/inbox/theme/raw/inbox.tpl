@@ -5,7 +5,13 @@
 {foreach from=$items item=i}
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
-        <img src="{theme_url filename=cat('images/' $i->type '.gif')}" />
+  {if $i->read && $i->type == 'usermessage'}
+        <img src="{theme_url filename=cat('images/read' $i->type '.gif')}" alt="{$i->strtype}" />
+  {elseif $i->type == 'usermessage'}
+        <img src="{theme_url filename=cat('images/' $i->type '.gif')}" class="unreadmessage" />
+  {else}
+        <img src="{theme_url filename=cat('images/' $i->type '.gif')}" alt="{$i->strtype}" />
+  {/if}
     </td>
     <td>
   {if $i->message}
@@ -37,12 +43,16 @@ addLoadEvent(function() {
         connect(element, 'onclick', function(e) {
             e.stop();
             var message = getFirstElementByTagAndClassName('div', 'inbox-message', element.parentNode);
+            var unreadicon = getFirstElementByTagAndClassName('img', 'unreadmessage', message.parentNode.parentNode);
             toggleElementClass('hidden', message);
             if (hasElementClass(element, 'unread')) {
                 var id = getNodeAttribute(message, 'id').replace(/inbox-message-(\d+)$/, '$1');
                 var pd = {'readone':id};
                 sendjsonrequest(config.wwwroot + 'account/activity/index.json.php', pd, 'GET', function(data) {
                     removeElementClass(element, 'unread');
+                    if (unreadicon) {
+                        swapDOM(unreadicon, IMG({'src' : {/literal}'{$readicon}'{literal}, 'alt' : getNodeAttribute(unreadicon, 'alt') + ' - ' + {/literal}'{str tag='read' section='activity'}'{literal} }));
+                    };
                     updateUnreadCount(data);
                 });
             }
