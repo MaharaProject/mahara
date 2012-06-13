@@ -50,19 +50,19 @@
 {/if}
 
 
-{if $mysubmittedviews || $group_view_submission_form}
+{if $mysubmitted || $group_view_submission_form}
     <div class="groupviewsection">
     {if $group_view_submission_form}
-        <h5>{str tag="submitaviewtogroup" section="view"}</h5>
+        <h5>{str tag="submittogroup" section="view"}</h5>
     {/if}
     <table class="fullwidth listing">
-    {if $mysubmittedviews}
-      {foreach from=$mysubmittedviews item=view}
+    {if $mysubmitted}
+      {foreach from=$mysubmitted item=item}
       <tr class="{cycle values='r0,r1'}"><td class="submittedform">
-      {if $view.submittedtime}
-        {str tag=youhavesubmittedon section=view arg1=$view.fullurl arg2=$view.title arg3=$view.submittedtime}
+      {if $item.submittedtime}
+        {str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}
       {else}
-        {str tag=youhavesubmitted section=view arg1=$view.fullurl arg2=$view.title}
+        {str tag=youhavesubmitted section=view arg1=$item.url arg2=$item.name}
       {/if}
       </td></tr>
       {/foreach}
@@ -76,21 +76,21 @@
     </div>
 {/if}
 
-{if $allsubmittedviews}
+{if $allsubmitted}
     <div class="groupviewsection">
     <table class="fullwidth listing">
         <tr>
-          <td><h5>{str tag="viewssubmittedtogroup" section="view"}</h5></td>
+          <td><h5>{str tag="submissionstogroup" section="view"}</h5></td>
           <th>{str tag=timeofsubmission section=view}</th>
         </tr>
-    {foreach from=$allsubmittedviews item=view}
+    {foreach from=$allsubmitted item=item}
         <tr class="{cycle values='r0,r1'}">
           <td>
-            <strong><a href="{$view.fullurl}">{$view.title|str_shorten_text:60:true}</a></strong>
-            <div><a href="{profile_url($view.user)}">{$view.sharedby}</a></div>
+            <strong><a href="{$item.url}">{$item.name|str_shorten_text:60:true}</a></strong>
+            <div><a href="{$item.ownerurl}">{$item.ownername}</a></div>
           </td>
           <td>
-            <div class="postedon nowrap">{$view.submittedtime|format_date}</div>
+            <div class="postedon nowrap">{$item.submittedtime|format_date}</div>
           </td>
         </tr>
     {/foreach}

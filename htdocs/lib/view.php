@@ -3369,42 +3369,6 @@ class View {
         );
     }
 
-
-    /** 
-     * Get views submitted to a group
-     */
-    public static function get_submitted_views($groupid, $userid=null) {
-        $values = array($groupid);
-        $where = 'submittedgroup = ?';
-
-        if (!empty($userid)) { // Filter by view owner
-            $values[] = (int) $userid;
-            $where .= ' AND v.owner = ?';
-        }
-
-        $viewdata = get_records_sql_assoc('
-            SELECT
-                v.id as id, v.title, v.description, v.owner, v.ownerformat, v.urlid,
-                ' . db_format_tsfield('v.submittedtime','submittedtime') . '
-            FROM {view} v
-            INNER JOIN {usr} u ON u.id = v.owner
-            WHERE ' . $where . '
-            ORDER BY u.firstname ASC, u.lastname',
-            $values
-        );
-
-        if ($viewdata) {
-            View::get_extra_view_info($viewdata, false);
-            foreach ($viewdata as &$v) {
-                $v['sharedby'] = full_name($v['user']);
-            }
-            $viewdata = array_values($viewdata);
-        }
-
-        return $viewdata;
-    }
-
-
     public static function get_extra_view_info(&$viewdata, $getartefacts=true, $gettags=true) {
         if ($viewdata) {
             // Get view owner details for display
