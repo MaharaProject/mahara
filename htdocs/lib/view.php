@@ -4037,26 +4037,45 @@ class View {
      * @param mixed   $institution string institution name or array of institution names
      * @param string  $matchconfig record all matches with given config hash (see set_access)
      * @param boolean $includeprofile include profile view
+     * @param integer $submittedgroup return only views & collections submitted to this group
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true) {
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null) {
+
         $excludelocked = $group && group_user_access($group) != 'admin';
-        list($ownersql, $values) = self::multiple_owner_sql(
-            (object) array('owner' => $owner, 'group' => $group, 'institution' => $institution)
-        );
+
         $sql = "
-            SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.template, v.owner, v.group, v.urlid, v.submittedgroup, v.submittedhost,
-                c.id AS cid, c.name AS cname, c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost
+            SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
+                v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
+                db_format_tsfield('v.submittedtime', 'submittedtime') . ",
+                c.id AS cid, c.name AS cname,
+                c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
+                db_format_tsfield('c.submittedtime', 'csubmittime') . "
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
-            WHERE v.$ownersql AND v.type IN ('portfolio'";
+            WHERE  v.type IN ('portfolio'";
         $sql .= $includeprofile ? ", 'profile') " : ') ';
         $sql .= $excludelocked ? 'AND v.locked != 1 ' : '';
+
+        if (is_null($owner) && is_null($group) && is_null($institution)) {
+            $values = array();
+        }
+        else {
+            list($ownersql, $values) = self::multiple_owner_sql(
+                (object) array('owner' => $owner, 'group' => $group, 'institution' => $institution)
+            );
+            $sql .= "AND v.$ownersql ";
+        }
+
+        if ($submittedgroup) {
+            $sql .= 'AND v.submittedgroup = ? ';
+            $values[] = (int) $submittedgroup;
+        }
+
         $sql .= 'ORDER BY c.name, v.title';
-        $records = get_records_sql_array($sql, $values);
+        $records = get_records_sql_assoc($sql, $values);
 
         $collections = array();
         $views = array();
@@ -4065,49 +4084,59 @@ class View {
             return array($collections, $views);
         }
 
+        self::get_extra_view_info($records, false, false);
+
         foreach ($records as &$r) {
-            // Construct a View object temporarily just so we can use display_title_editing, get_url
-            $view = new View(0, array(
-                'id'    => $r->vid,
-                'title' => $r->vname,
-                'type'  => $r->vtype,
-                'owner' => $r->owner,
-                'group' => $r->group,
-                'urlid' => $r->urlid,
-            ));
-            $view->set('dirty', false);
+            $vid = $r['id'];
+            $cid = $r['cid'];
             $v = array(
-                'id'        => $r->vid,
-                'type'      => $r->vtype,
-                'name'      => $view->display_title_editing(),
-                'url'       => $view->get_url(),
-                'startdate' => $r->startdate,
-                'stopdate'  => $r->stopdate,
-                'template'  => $r->template,
-                'owner'     => $r->owner,
-                'submittedgroup' => $r->submittedgroup,
-                'submittedhost'  => $r->submittedhost,
+                'id'             => $vid,
+                'type'           => $r['type'],
+                'name'           => $r['displaytitle'],
+                'url'            => $r['fullurl'],
+                'startdate'      => $r['startdate'],
+                'stopdate'       => $r['stopdate'],
+                'template'       => $r['template'],
+                'owner'          => $r['owner'],
+                'submittedgroup' => $r['submittedgroup'],
+                'submittedhost'  => $r['submittedhost'],
+                'submittedtime'  => $r['submittedtime'],
             );
-            if ($r->cid) {
-                if (!isset($collections[$r->cid])) {
-                    $collections[$r->cid] = array(
-                        'id' => $r->cid,
-                        'name' => $r->cname,
-                        'owner' => $r->owner,
-                        'submittedgroup' => $r->csubmitgroup,
-                        'submittedhost'  => $r->csubmithost,
+            if ($r['user']) {
+                $v['ownername'] = display_name($r['user']);
+                $v['ownerurl']  = profile_url($r['user']);
+            }
+
+            // If filtering by submitted views, and the view is submitted, but the collection isn't,
+            // then ignore the collection and return the view by itself.
+            if ($cid && (!$submittedgroup || ($r['csubmitgroup'] == $r['submittedgroup']))) {
+                if (!isset($collections[$cid])) {
+                    $collections[$cid] = array(
+                        'id'             => $cid,
+                        'name'           => $r['cname'],
+                        'url'            => $r['fullurl'],
+                        'owner'          => $r['owner'],
+                        'group'          => $r['group'],
+                        'institution'    => $r['institution'],
+                        'submittedgroup' => $r['csubmitgroup'],
+                        'submittedhost'  => $r['csubmithost'],
+                        'submittedtime'  => $r['csubmittime'],
                         'views' => array(),
                     );
-                    if ($matchconfig && $matchconfig == $r->accessconf) {
-                        $collections[$r->cid]['match'] = true;
+                    if ($r['user']) {
+                        $collections[$cid]['ownername'] = $v['ownername'];
+                        $collections[$cid]['ownerurl'] = $v['ownerurl'];
+                    }
+                    if ($matchconfig && $matchconfig == $r['accessconf']) {
+                        $collections[$cid]['match'] = true;
                     }
                 }
-                $collections[$r->cid]['views'][$r->vid] = $v;
+                $collections[$cid]['views'][$vid] = $v;
             }
             else {
-                $views[$r->vid] = $v;
-                if ($matchconfig && $matchconfig == $r->accessconf) {
-                    $views[$r->vid]['match'] = true;
+                $views[$vid] = $v;
+                if ($matchconfig && $matchconfig == $r['accessconf']) {
+                    $views[$vid]['match'] = true;
                 }
             }
         }
