@@ -36,9 +36,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
 
-$new = param_integer('new',0);
 $id = param_integer('id');
-$newurl = $new ? '&new=1' : '';
 
 // view addition/displayorder values
 $view = param_integer('view',0);
@@ -50,17 +48,11 @@ if (!$USER->can_edit_collection($collection)) {
     redirect('/collection/');
 }
 
-if (!$new) {
-    define('COLLECTION', $id);
-    define('TITLE', $collection->get('name') . ': ' . get_string('editviews', 'collection'));
-}
-else {
-    define('TITLE', get_string('editviews', 'collection'));
-}
+define('TITLE', $collection->get('name') . ': ' . get_string('editviews', 'collection'));
 
 if ($view AND !empty($direction)) {
     $collection->set_viewdisplayorder($view,$direction);
-    redirect('/collection/views.php?id='.$id.$newurl);
+    redirect('/collection/views.php?id='.$id);
 }
 
 $views = $collection->views();
@@ -113,14 +105,14 @@ if ($available = Collection::available_views()) {
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id.$newurl);
-$smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id.$newurl);
+$smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id);
+$smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id);
 $smarty->assign_by_ref('views', $views);
 $smarty->assign_by_ref('viewsform', $viewsform);
 $smarty->display('collection/views.tpl');
 
 function addviews_submit(Pieform $form, $values) {
-    global $SESSION, $collection, $newurl;
+    global $SESSION, $collection;
     $count = $collection->add_views($values);
     if ($count > 1) {
         $SESSION->add_ok_msg(get_string('viewsaddedtocollection', 'collection'));
@@ -128,33 +120,13 @@ function addviews_submit(Pieform $form, $values) {
     else {
         $SESSION->add_ok_msg(get_string('viewaddedtocollection', 'collection'));
     }
-    redirect('/collection/views.php?id='.$collection->get('id').$newurl);
+    redirect('/collection/views.php?id='.$collection->get('id'));
 
-}
-
-function manageviews_submit(Pieform $form, $values) {
-    global $collection, $new, $SESSION, $views;
-    if (param_boolean('back')) {
-        redirect('/collection/edit.php?id='.$collection->get('id').'&new=1');
-    }
-    else {
-        $collection->set('navigation',(int)$values['navigation']);
-        $collection->commit();
-        if ($new) {
-            if ($views) {
-                $SESSION->add_ok_msg(get_string('collectioncreatedsuccessfullyshare', 'collection'));
-            }
-            else {
-                $SESSION->add_ok_msg(get_string('collectioncreatedsuccessfully', 'collection'));
-            }
-        }
-        redirect('/collection/');
-    }
 }
 
 function removeview_submit(Pieform $form, $values) {
-    global $SESSION, $collection, $newurl;
+    global $SESSION, $collection;
     $collection->remove_view((int)$values['view']);
     $SESSION->add_ok_msg(get_string('viewremovedsuccessfully','collection'));
-    redirect('/collection/views.php?id='.$collection->get('id').$newurl);
+    redirect('/collection/views.php?id='.$collection->get('id'));
 }

@@ -47,7 +47,6 @@ if (!$USER->can_edit_collection($collection)) {
 
 // if not a new collection
 if (!$new) {
-    define('COLLECTION', $id);
     define('TITLE', $collection->get('name').': '.get_string('edittitleanddesc', 'collection'));
 }
 else {
