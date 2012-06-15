@@ -37,7 +37,7 @@ require_once('pieforms/pieform.php');
 require_once('collection.php');
 
 $new = param_boolean('new', 0);
-$id = param_integer('id', 0);
+$id = !$new ? param_integer('id') : 0;
 
 $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
