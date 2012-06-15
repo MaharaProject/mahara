@@ -71,5 +71,5 @@ $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('strnocollectionsaddone',
     get_string('nocollectionsaddone','collection','<a href="' . get_config('wwwroot') . 'collection/edit.php?new=1">', '</a>'));
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('collection/index.tpl');
