@@ -39,8 +39,7 @@ define('TITLE', get_string('deletecollection', 'collection'));
 
 $id = param_integer('id');
 
-$data = get_record_select('collection', 'id = ?', array($id));
-$collection = new Collection($id, (array)$data);
+$collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('cantdeletecollection', 'collection'));
     redirect('/collection/');

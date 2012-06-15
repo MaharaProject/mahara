@@ -39,13 +39,10 @@ require_once('collection.php');
 $new = param_boolean('new', 0);
 $id = param_integer('id', 0);
 
-$data = null;
-if ($data = get_record_select('collection', 'id = ?', array($id))) {
-    $collection = new Collection($id, (array)$data);
-    if (!$USER->can_edit_collection($collection)) {
-        $SESSION->add_error_msg(get_string('canteditdontown', 'collection'));
-        redirect('/collection/');
-    }
+$collection = new Collection($id);
+if (!$USER->can_edit_collection($collection)) {
+    $SESSION->add_error_msg(get_string('canteditdontown', 'collection'));
+    redirect('/collection/');
 }
 
 // if not a new collection
@@ -57,7 +54,7 @@ else {
     define('TITLE', get_string('edittitleanddesc', 'collection'));
 }
 
-$elements = Collection::get_collectionform_elements($data);
+$elements = $collection->get_collectionform_elements();
 $submitstr = $new ? array('cancel' => get_string('cancel'), 'submit' => get_string('next') . ': ' . get_string('editviews', 'collection'))
     : array(get_string('save'), get_string('cancel'));
 $confirm = $new ? array('cancel' => get_string('confirmcancelcreatingcollection','collection')) : null;

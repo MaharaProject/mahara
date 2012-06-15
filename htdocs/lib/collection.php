@@ -316,7 +316,7 @@ class Collection {
     * @param array collection
     * @return array $elements
     */
-    public static function get_collectionform_elements($data=null) {
+    public function get_collectionform_elements() {
         $elements = array(
             'name' => array(
                 'type' => 'text',
@@ -344,17 +344,17 @@ class Collection {
         );
 
         // populate the fields with the existing values if any
-        if (!empty($data)) {
+        if (!empty($this->id)) {
             foreach ($elements as $k => $element) {
-                $elements[$k]['defaultvalue'] = $data->$k;
+                $elements[$k]['defaultvalue'] = $this->$k;
             }
             $elements['id'] = array(
                 'type' => 'hidden',
-                'value' => $data->id,
+                'value' => $this->id,
             );
             $elements['owner'] = array(
                 'type' => 'hidden',
-                'value' => $data->owner,
+                'value' => $this->owner,
             );
         }
 

@@ -44,8 +44,7 @@ $newurl = $new ? '&new=1' : '';
 $view = param_integer('view',0);
 $direction = param_variable('direction','');
 
-$data = get_record_select('collection', 'id = ?', array($id), '*');
-$collection = new Collection($id, (array)$data);
+$collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'collection'));
     redirect('/collection/');
