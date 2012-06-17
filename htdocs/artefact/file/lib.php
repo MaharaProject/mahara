@@ -508,6 +508,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      * Creates pieforms definition for forms on the my files, group files, etc. pages.
      */
     public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+        global $USER;
+        $resizeonuploaduserdefault = $USER->get_account_preference('resizeonuploaduserdefault');
+
         $folder = param_integer('folder', 0);
         $edit = param_variable('edit', 0);
         if (is_array($edit)) {
@@ -542,6 +545,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     'config'       => array(
                         'upload'          => true,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                        'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                        'resizeonuploaduserdefault' => $resizeonuploaduserdefault,
                         'createfolder'    => true,
                         'edit'            => true,
                         'select'          => false,
@@ -726,6 +731,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function blockconfig_filebrowser_element(&$instance, $default=array()) {
+        global $USER;
+        $resizeonuploaduserdefault = $USER->get_account_preference('resizeonuploaduserdefault');
         return array(
             'name'         => 'filebrowser',
             'type'         => 'filebrowser',
@@ -736,6 +743,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             'page'         => get_config('wwwroot') . 'view/blocks.php' . View::make_base_url(),
             'config'       => array(
                 'upload'          => true,
+                'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                'resizeonuploaduserdefault' => $resizeonuploaduserdefault,
                 'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
                 'createfolder'    => false,
                 'edit'            => false,
@@ -943,18 +952,24 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Takes the name of a file input.
      * Returns false for no errors, or a string describing the error.
      */
-    public static function save_uploaded_file($inputname, $data, $inputindex=null) {
+    public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname, false, $inputindex);
         if ($error = $um->preprocess_file()) {
             throw new UploadException($error);
         }
         if (isset($inputindex)) {
+            if ($resized) {
+                $um->file['size'][$inputindex] = filesize($um->file['tmp_name'][$inputindex]);
+            }
             $size = $um->file['size'][$inputindex];
             $tmpname = $um->file['tmp_name'][$inputindex];
             $filetype = $um->file['type'][$inputindex];
         }
         else {
+            if ($resized) {
+                $um->file['size'] = filesize($um->file['tmp_name']);
+            }
             $size = $um->file['size'];
             $tmpname = $um->file['tmp_name'];
             $filetype = $um->file['type'];
@@ -1319,6 +1334,64 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true
         );
 
+        // Option to resize images on upload
+        $resizeonuploadenable = get_config_plugin('artefact', 'file', 'resizeonuploadenable');
+        $resizeonuploaduseroption = get_config_plugin('artefact', 'file', 'resizeonuploaduseroption');
+        $currentmaxwidth = get_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth');
+        $currentmaxheight = get_config_plugin('artefact', 'file', 'resizeonuploadmaxheight');
+        if (!isset($currentmaxwidth)) {
+            $currentmaxwidth = get_config('imagemaxwidth');
+        }
+        if (!isset($currentmaxheight)) {
+            $currentmaxheight = get_config('imagemaxheight');
+        }
+
+        $elements['resizeonuploadfieldset'] = array(
+                    'type' => 'fieldset',
+                    'legend' => get_string('resizeonupload', 'artefact.file'),
+                        'elements' => array(
+                            'resizeonuploaddescription' => array(
+                                'value' => get_string('resizeonuploaddescription', 'artefact.file'),
+                        ),
+                        'resizeonuploadenable' => array(
+                            'type'         => 'checkbox',
+                            'title'        => get_string('resizeonuploadenable', 'artefact.file'),
+                            'defaultvalue' => $resizeonuploadenable,
+                            'description'  => get_string('resizeonuploadenabledescription', 'artefact.file'),
+                        ),
+                        'resizeonuploaduseroption' => array(
+                            'title'        => get_string('resizeonuploaduseroption', 'artefact.file'),
+                            'type'         => 'checkbox',
+                            'defaultvalue' => $resizeonuploaduseroption,
+                            'description'  => get_string('resizeonuploaduseroptiondescription', 'artefact.file'),
+                        ),
+                        'resizeonuploadmaxwidth' => array(
+                            'type' => 'text',
+                            'size' => 4,
+                            'suffix' => get_string('widthshort'),
+                            'title' => get_string('resizeonuploadmaxwidth', 'artefact.file'),
+                            'defaultvalue' => $currentmaxwidth,
+                            'rules' => array(
+                                'required' => true,
+                                'integer'  => true,
+                            )
+                        ),
+                        'resizeonuploadmaxheight' => array(
+                            'type' => 'text',
+                            'suffix' => get_string('heightshort'),
+                            'size' => 4,
+                            'title' => get_string('resizeonuploadmaxheight', 'artefact.file'),
+                            'defaultvalue' => $currentmaxheight,
+                            'rules' => array(
+                                'required' => true,
+                                'integer'  => true,
+                                ),
+                            'help' => true,
+                        ),
+                    ),
+                    'collapsible' => true
+        );
+
         // Profile icon size
         $currentwidth = get_config_plugin('artefact', 'file', 'profileiconwidth');
         $currentheight = get_config_plugin('artefact', 'file', 'profileiconheight');
@@ -1406,6 +1479,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'profileiconheight', $values['profileiconheight']);
         set_config_plugin('artefact', 'file', 'uploadagreement', $values['uploadagreement']);
         set_config_plugin('artefact', 'file', 'usecustomagreement', $values['usecustomagreement']);
+        set_config_plugin('artefact', 'file', 'resizeonuploadenable', $values['resizeonuploadenable']);
+        set_config_plugin('artefact', 'file', 'resizeonuploaduseroption', $values['resizeonuploaduseroption']);
+        set_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth', $values['resizeonuploadmaxwidth']);
+        set_config_plugin('artefact', 'file', 'resizeonuploadmaxheight', $values['resizeonuploadmaxheight']);
         $data = new StdClass;
         $data->name    = 'uploadcopyright';
         $data->content = $values['customagreement'];
