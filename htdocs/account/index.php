@@ -89,11 +89,21 @@ if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
     $elements['changeprofileurl'] = array(
         'value' => '<tr><td colspan="2"><h3>' . get_string('changeprofileurl', 'account') . '</h3></td></tr>'
     );
+    if (get_config('cleanurlusersubdomains')) {
+        list($proto, $rest) = explode('://', get_config('wwwroot'));
+        $prehtml = $proto . ':// ';
+        $posthtml = ' .' . $rest;
+    }
+    else {
+        $prehtml = get_config('wwwroot') . get_config('cleanurluserdefault') . '/ ';
+        $posthtml = '';
+    }
     $elements['urlid'] = array(
         'type'         => 'text',
         'defaultvalue' => $USER->get('urlid'),
         'title'        => get_string('profileurl', 'account'),
-        'prehtml'      => '<span class="description">' . get_config('wwwroot') . get_config('cleanurluserdefault') . '/</span> ',
+        'prehtml'      => '<span class="description">' . $prehtml . '</span>',
+        'posthtml'     => '<span class="description">' . $posthtml . '</span>',
         'description'  => get_string('profileurldescription', 'account') . ' ' . get_string('cleanurlallowedcharacters'),
         'rules'        => array('maxlength' => 30, 'regex' => get_config('cleanurlvalidate')),
     );

@@ -90,13 +90,14 @@ if ($studentid !== '') {
 if ($urlallowed = get_config('cleanurls') && $view->get('type') == 'portfolio' && !$institution) {
     if ($group) {
         $groupdata = get_record('group', 'id', $group);
-        $urlallowed = $urlallowed && strlen($groupdata->urlid);
-        $cleanurlbase = get_config('wwwroot') . get_config('cleanurlgroupdefault') . '/' . $groupdata->urlid . '/';
+        if ($urlallowed = !is_null($groupdata->urlid) && strlen($groupdata->urlid)) {
+            $cleanurlbase = group_homepage_url($groupdata) . '/';
+        }
     }
     else {
         $userurlid = $USER->get('urlid');
-        if ($urlallowed = ($urlallowed && !is_null($userurlid) && strlen($userurlid))) {
-            $cleanurlbase = get_config('wwwroot') . get_config('cleanurluserdefault') . '/' . $userurlid . '/';
+        if ($urlallowed = !is_null($userurlid) && strlen($userurlid)) {
+            $cleanurlbase = profile_url($USER) . '/';
         }
     }
 }
