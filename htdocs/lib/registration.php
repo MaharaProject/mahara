@@ -392,6 +392,39 @@ function site_statistics($full=false) {
     return($data);
 }
 
+function institution_data_current($institution) {
+    $data = array();
+    if ($institution == 'mahara') {
+        $data['members'] = get_column_sql('SELECT id
+                FROM {usr}
+                WHERE deleted = 0 AND id > 0 AND id NOT IN
+                    (SELECT usr FROM {usr_institution})
+                ', array());
+    }
+    else {
+        $data['members'] = get_column_sql('SELECT usr
+                FROM {usr_institution} ui
+                JOIN {usr} u ON (u.id = ui.usr)
+                WHERE u.deleted = 0 AND ui.institution = ?
+                ', array($institution));
+    }
+    $data['users'] = count($data['members']);
+    if (!$data['users']) {
+        $data['views'] = 0;
+    }
+    else {
+        $data['viewids'] = get_column_sql('
+                SELECT id FROM {view}
+                    WHERE owner IS NOT NULL AND owner IN (' . join(',', array_fill(0, $data['users'], '?')) . ')
+                UNION
+                    SELECT id FROM {view}
+                    WHERE institution IS NOT NULL AND institution = ?'
+                , array_merge($data['members'], array($institution)));
+        $data['views'] = count($data['viewids']);
+    }
+    return $data;
+}
+
 function user_statistics($limit, $offset, &$sitedata) {
     $data = array();
     $data['tableheadings'] = array(
@@ -997,6 +1030,75 @@ function view_type_graph() {
     }
 }
 
+function institution_view_type_graph(&$institutiondata) {
+    if ($institutiondata['views'] == 0) {
+        return;
+    }
+    // Draw a pie graph of views broken down by view type.
+    $viewtypes = get_records_sql_array('
+        SELECT type, COUNT(id) AS views
+        FROM {view} WHERE type != ?
+        AND id IN (' . join(',', array_fill(0, $institutiondata['views'], '?')) . ')
+        GROUP BY type',
+        array_merge(array('dashboard'), $institutiondata['viewids'])
+    );
+
+    if (count($viewtypes) > 1) {
+        $dataarray = array();
+        foreach ($viewtypes as &$t) {
+            $dataarray[get_string($t->type, 'view')] = $t->views;
+        }
+        arsort($dataarray);
+
+        require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+        $Graph =& Image_Graph::factory('graph', array(300, 200));
+        $Font =& $Graph->addNew('font', 'Vera');
+        $Font->setSize(9);
+        $Graph->setFont($Font);
+
+        $Graph->add(
+            Image_Graph::vertical(
+                Image_Graph::vertical(
+                    Image_Graph::factory('title', array(get_string('viewsbytype', 'admin'), 9)),
+                    $Plotarea = Image_Graph::factory('plotarea'),
+                    5
+                ),
+                $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+                96
+            )
+        );
+
+        $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+        $DateFont =& $Graph->addNew('font', 'Vera');
+        $DateFont->setColor('gray@0.8');
+        $Date->setFont($DateFont);
+
+        $Plotarea->hideAxis();
+        $Dataset =& Image_Graph::factory('dataset', array($dataarray));
+        $Plot =& $Plotarea->addNew('pie', array(&$Dataset));
+
+        $Plot->setLineColor('black');
+
+        $FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
+        $Plot->setFillStyle($FillArray);
+        $FillArray->addColor('blue@0.6');
+        $FillArray->addColor('green@0.6');
+        $FillArray->addColor('red@0.6');
+        $FillArray->addColor('yellow@0.6');
+        $FillArray->addColor('orange@0.6');
+
+        $Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_X);
+        $Marker->setBorderColor('white');
+        $Marker->setFontSize(8);
+
+        $PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
+        $Plot->setMarker($PointingMarker);
+
+        $Graph->done(array('filename' => stats_graph_path($institutiondata['name'] . '_viewtypes')));
+    }
+}
+
 
 function graph_site_data_weekly() {
 
@@ -1089,6 +1191,97 @@ function graph_site_data_daily() {
     user_institution_graph();
     group_type_graph();
     view_type_graph();
+}
+
+function graph_institution_data_weekly(&$institutiondata) {
+
+    $lastyear = db_format_timestamp(time() - 60*60*12*365);
+    $values = array($lastyear, 'view-count', 'user-count', $institutiondata['name']);
+    $weekly = get_records_sql_array('
+        SELECT ctime, type, "value", ' . db_format_tsfield('ctime', 'ts') . '
+        FROM {institution_data}
+        WHERE ctime >= ? AND type IN (?,?) AND institution = ?
+        ORDER BY ctime, type', $values);
+
+    if (!count($weekly) > 1) {
+        return;
+    }
+
+    $dataarray = array();
+    foreach ($weekly as &$r) {
+        $dataarray[$r->type][strftime("%d %b", $r->ts)] = $r->value;
+    }
+    foreach ($dataarray as &$t) {
+        // The graph will look nasty until we have 2 points to plot.
+        if (count($t) < 2) {
+            return;
+        }
+    }
+
+    require_once(get_config('libroot') . "pear/Image/Graph.php");
+
+    $Graph =& Image_Graph::factory('graph', array(350, 200));
+    $Font =& $Graph->addNew('font', 'Vera');
+    $Font->setSize(9);
+    $Graph->setFont($Font);
+
+    $Graph->add(
+        Image_Graph::vertical(
+            Image_Graph::vertical(
+                $Plotarea = Image_Graph::factory('plotarea'),
+                $Legend = Image_Graph::factory('legend'),
+                88
+            ),
+            $Date = Image_Graph::factory('title', array(format_date(time(), 'strftimew3cdate'), 7)),
+            96
+        )
+    );
+
+    $Date->setAlignment(IMAGE_GRAPH_ALIGN_RIGHT);
+    $DateFont =& $Graph->addNew('font', 'Vera');
+    $DateFont->setColor('gray@0.8');
+    $Date->setFont($DateFont);
+
+    $Legend->setPlotarea($Plotarea);
+
+    $datasetinfo = array(
+        'user-count'  => array('color' => 'blue@0.6', 'name' => get_string('users')),
+        'view-count'  => array('color' => 'green@0.6', 'name' => get_string('Views', 'view')),
+        'group-count' => array('color' => 'red@0.6', 'name' => get_string('groups')),
+    );
+
+    $yaxis = array('min' => array(), 'max' => array());
+    $points = 1;
+    foreach (array_keys($datasetinfo) as $k) {
+        $dataset =& Image_Graph::factory('dataset', array($dataarray[$k]));
+        $dataset->setName($datasetinfo[$k]['name']);
+        $plot =& $Plotarea->addNew('line', array(&$dataset));
+        $linestyle =& Image_Graph::factory('Image_Graph_Line_Solid', array($datasetinfo[$k]['color']));
+        $linestyle->setThickness(3);
+        $plot->setLineStyle($linestyle);
+        $yaxis['max'][$k] = max($dataarray[$k]);
+        $yaxis['min'][$k] = min($dataarray[$k]);
+        $points = max($points, count($dataarray[$k]));
+    }
+
+    $AxisX =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+    $AxisX->setFontAngle('vertical');
+    $AxisX->setFontSize(8);
+    $AxisX->setLabelInterval(ceil($points/30)); // Avoid label crowding
+
+    $AxisY =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
+    $maxy = max($yaxis['max']);
+    $AxisY->forceMaximum($maxy * 1.025);
+    // $miny = min($yaxis['min']);
+    // $padding = ($maxy - $miny) * 0.025;
+    // $AxisY->forceMaximum($maxy + $padding);
+    // $AxisY->forceMinimum($miny - $padding);
+
+    $Graph->done(array('filename' => stats_graph_path($institutiondata['name'] . '_weekly')));
+}
+
+function graph_institution_data_daily(&$institutiondata) {
+    institution_view_type_graph($institutiondata);
 }
 
 function stats_graph_path($name) {

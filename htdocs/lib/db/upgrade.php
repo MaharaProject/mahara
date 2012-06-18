@@ -2994,5 +2994,36 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2012062902) {
+        // Add institution stats table
+        $table = new XMLDBTable('institution_data');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','institution','type'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        create_table($table);
+
+        // Insert cron jobs to save institution data
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_institution_data_weekly';
+        $cron->minute       = 55;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = 6;
+        insert_record('cron', $cron);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_institution_data_daily';
+        $cron->minute       = 51;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }

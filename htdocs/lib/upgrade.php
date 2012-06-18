@@ -874,6 +874,8 @@ function core_install_firstcoredata_defaults() {
         'file_cleanup_old_cached_files'             => array(0, 1, '*', '*', '*'),
         'user_login_tries_to_zero'                  => array('*/5', '*', '*', '*', '*'),
         'cron_institution_registration_data'        => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
+        'cron_institution_data_weekly'              => array('55', '23', '*', '*', '6'),
+        'cron_institution_data_daily'               => array('51', '23', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;

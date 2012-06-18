@@ -2876,6 +2876,68 @@ function cron_site_data_daily() {
     graph_site_data_daily();
 }
 
+function cron_institution_data_weekly() {
+    require_once(get_config('libroot') . 'registration.php');
+    foreach (get_column('institution', 'name') as $institution) {
+        $current = institution_data_current($institution);
+        $time = db_format_timestamp(time());
+
+        insert_record('institution_data', (object) array(
+            'ctime'       => $time,
+            'institution' => $institution,
+            'type'        => 'user-count',
+            'value'       => $current['users'],
+        ));
+        insert_record('institution_data', (object) array(
+            'ctime'       => $time,
+            'institution' => $institution,
+            'type'        => 'view-count',
+            'value'       => $current['views'],
+        ));
+
+        $current['name'] = $institution;
+        graph_institution_data_weekly($current);
+    }
+
+}
+
+function cron_institution_data_daily() {
+    require_once(get_config('libroot') . 'registration.php');
+    foreach (get_column('institution', 'name') as $institution) {
+        $current = institution_data_current($institution);
+        $time = db_format_timestamp(time());
+
+        // Total users
+        insert_record('institution_data', (object) array(
+            'ctime'       => $time,
+            'institution' => $institution,
+            'type'        => 'user-count-daily',
+            'value'       => $current['users'],
+        ));
+
+        // Logged-in users
+        $interval = is_postgres() ? "'1 day'" : '1 day';
+        if ($current['users'] != 0) {
+            $where = "lastaccess >= DATE(?) AND lastaccess < DATE(?)+ INTERVAL $interval";
+            $where .= " AND id IN (" . join(',', array_fill(0, $current['users'], '?')) . ")";
+            $loggedin = count_records_select('usr', $where, array_merge(array($time, $time), $current['members']));
+        }
+        else {
+            $loggedin = 0;
+        }
+        insert_record('institution_data', (object) array(
+            'ctime'       => $time,
+            'institution' => $institution,
+            'type'        => 'loggedin-users-daily',
+            'value'       => $loggedin,
+        ));
+
+        $current['name'] = $institution;
+        graph_institution_data_daily($current);
+    }
+
+}
+
 /**
  * A cronjob to generate a sitemap
  */
