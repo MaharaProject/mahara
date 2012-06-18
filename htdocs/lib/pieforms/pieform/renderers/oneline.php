@@ -61,6 +61,10 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
 
     $result .= $element['html'];
 
+    if (isset($element['posthtml'])) {
+        $result .= $element['posthtml'];
+    }
+
     $result .= "</span>";
     return $result;
 }/*}}}*/

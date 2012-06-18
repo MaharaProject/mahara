@@ -78,6 +78,11 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
         $result .= $element['prehtml'];
     }
     $result .= $element['html'];
+
+    if (isset($element['posthtml'])) {
+        $result .= $element['posthtml'];
+    }
+
     if (isset($element['helphtml'])) {
         $result .= ' ' . $element['helphtml'];
     }

@@ -54,6 +54,10 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     //$result .= $builtelement;
     $result .= $element['html'];
 
+    if (isset($element['posthtml'])) {
+        $result .= $element['posthtml'];
+    }
+
     if (isset($element['helphtml'])) {
         $result .= ' ' . $element['helphtml'];
     }
