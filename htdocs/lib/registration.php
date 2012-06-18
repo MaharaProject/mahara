@@ -425,6 +425,82 @@ function institution_data_current($institution) {
     return $data;
 }
 
+function institution_statistics($institution, $full=false) {
+    $data = array();
+
+    if ($full) {
+        $data = institution_data_current($institution);
+        $data['weekly'] = stats_graph_url($institution . '_weekly');
+
+        if (is_postgres()) {
+            $weekago = "CURRENT_DATE - INTERVAL '1 week'";
+            $thisweeksql = "COALESCE((lastaccess > $weekago)::int, 0)::int";
+            $todaysql = 'COALESCE((lastaccess > CURRENT_DATE)::int, 0)::int';
+            $eversql = "(NOT lastaccess IS NULL)::int";
+        }
+        else {
+            $weekago = 'CURRENT_DATE - INTERVAL 1 week';
+            $thisweeksql = "COALESCE(lastaccess > $weekago, 0)";
+            $todaysql = 'COALESCE(lastaccess > CURRENT_DATE, 0)';
+            $eversql = "NOT lastaccess IS NULL";
+        }
+        if (!$data['users']) {
+            $active = get_record_sql("SELECT 0 AS today, 0 AS thisweek, $weekago AS weekago, 0 AS ever");
+        }
+        else {
+            $sql = "SELECT SUM($todaysql) AS today, SUM($thisweeksql) AS thisweek, $weekago AS weekago, SUM($eversql) AS ever FROM {usr}
+                    WHERE id IN (" . join(',', array_fill(0, $data['users'], '?')) . ")";
+            $active = get_record_sql($sql, $data['members']);
+        }
+        $data['usersloggedin'] = get_string('loggedinsince', 'admin', $active->today, $active->thisweek, format_date(strtotime($active->weekago), 'strftimedateshort'), $active->ever);
+
+        if (!$data['users']) {
+            $data['groupmemberaverage'] = 0;
+        }
+        else {
+            $memberships = count_records_sql("
+                SELECT COUNT(*)
+                FROM {group_member} m JOIN {group} g ON g.id = m.group
+                WHERE g.deleted = 0 AND m.member IN (" . join(',', array_fill(0, $data['users'], '?')) . ")
+            ", $data['members']);
+            $data['groupmemberaverage'] = round($memberships/$data['users'], 1);
+        }
+        $data['strgroupmemberaverage'] = get_string('groupmemberaverage', 'admin', $data['groupmemberaverage']);
+        if (!$data['views']) {
+            $data['viewsperuser'] = 0;
+        }
+        else {
+            $data['viewsperuser'] = get_field_sql("
+                SELECT (0.0 + COUNT(id)) / NULLIF(COUNT(DISTINCT \"owner\"), 0)
+                FROM {view}
+                WHERE id IN (" . join(',', array_fill(0, $data['views'], '?')) . ")
+            ", $data['viewids']);
+            $data['viewsperuser'] = round($data['viewsperuser'], 1);
+        }
+        $data['strviewsperuser'] = get_string('viewsperuser', 'admin', $data['viewsperuser']);
+    }
+
+    $data['name']        = $institution;
+    $data['release']     = get_config('release');
+    $data['version']     = get_config('version');
+    if ($institution == 'mahara') {
+        $data['installdate'] = format_date(strtotime(get_config('installation_time')), 'strftimedate');
+    }
+    else {
+        // *** FIXME: See if better way to get this
+        $data['installdate'] = format_date(strtotime(get_field_sql('SELECT MIN(ui.ctime) FROM {usr_institution} ui WHERE ui.institution = ?', array($institution))), 'strftimedate');
+    }
+    if ($data['users']) {
+        $data['diskusage']   = get_field_sql("
+            SELECT SUM(quotaused)
+            FROM {usr}
+            WHERE deleted = 0 AND id IN (" . join(',', array_fill(0, $data['users'], '?')) . ")
+            ", $data['members']);
+    }
+
+    return($data);
+}
+
 function user_statistics($limit, $offset, &$sitedata) {
     $data = array();
     $data['tableheadings'] = array(
@@ -590,6 +666,227 @@ function user_stats_table($limit, $offset) {
         WHERE NOT ctime IS NULL AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
         GROUP BY cdate",
         array($daterange->mindate, $daterange->maxdate)
+    );
+
+    $data = array();
+
+    if ($userdata) {
+        foreach ($userdata as &$r) {
+            if ($r->type == 'user-count-daily') {
+                $data[$r->date] = array(
+                    'date'  => $r->date,
+                    'total' => $r->value,
+                );
+            }
+            else if ($r->type == 'loggedin-users-daily' && isset($data[$r->date])) {
+                $data[$r->date]['loggedin'] = $r->value;
+            }
+        }
+        if ($userscreated) {
+            foreach ($userscreated as &$r) {
+                if (isset($data[$r->cdate])) {
+                    $data[$r->cdate]['created'] = $r->users;
+                }
+            }
+        }
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $result['tablerows'] = $smarty->fetch('admin/userstats.tpl');
+
+    return $result;
+}
+
+function institution_user_statistics($limit, $offset, &$institutiondata) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array('name' => get_string('date')),
+        array('name' => get_string('Loggedin', 'admin'), 'class' => 'center'),
+        array('name' => get_string('Joined', 'group'), 'class' => 'center'),
+        array('name' => get_string('Total'), 'class' => 'center'),
+    );
+    $data['table'] = institution_user_stats_table($limit, $offset, $institutiondata);
+    $data['tabletitle'] = get_string('userstatstabletitle', 'admin');
+
+    if (!$institutiondata['users']) {
+        $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
+        $data['strmaxviews'] = get_string('statsnoviews', 'admin');
+        $data['strmaxgroups'] = get_string('statsnogroups', 'admin');
+        $data['strmaxquotaused'] = get_string('statsnoquota', 'admin');
+
+        $smarty = smarty_core();
+        $smarty->assign('data', $data);
+        $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
+
+        return $data;
+    }
+
+    $maxfriends = get_records_sql_array("
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, SUM(f.friends) AS friends
+        FROM {usr} u INNER JOIN (
+            SELECT DISTINCT(usr1) AS id, COUNT(usr1) AS friends
+            FROM {usr_friend}
+            GROUP BY usr1
+            UNION SELECT DISTINCT(usr2) AS id, COUNT(usr2) AS friends
+            FROM {usr_friend}
+            GROUP BY usr2
+        ) f ON u.id = f.id
+        WHERE u.id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
+        ORDER BY friends DESC
+        LIMIT 1", $institutiondata['members']);
+    $maxfriends = $maxfriends[0];
+    $meanfriends = count_records_sql('SELECT COUNT(*) FROM
+                (SELECT * FROM {usr_friend}
+                    WHERE usr1 IN (' . join(',', array_fill(0, $institutiondata['users'], '?')) . ')
+                UNION ALL SELECT * FROM {usr_friend}
+                    WHERE usr2 IN (' . join(',', array_fill(0, $institutiondata['users'], '?')) . ')
+                ) tmp', array_merge($institutiondata['members'], $institutiondata['members'])) / $institutiondata['users'];
+    if ($maxfriends) {
+        $data['strmaxfriends'] = get_string(
+            'statsmaxfriends',
+            'admin',
+            round($meanfriends, 1),
+            profile_url($maxfriends),
+            hsc(display_name($maxfriends, null, true)),
+            $maxfriends->friends
+        );
+    }
+    else {
+        $data['strmaxfriends'] = get_string('statsnofriends', 'admin');
+    }
+    $maxviews = get_records_sql_array("
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(v.id) AS views
+        FROM {usr} u JOIN {view} v ON u.id = v.owner
+        WHERE \"owner\" IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
+        ORDER BY views DESC
+        LIMIT 1", $institutiondata['members']);
+    $maxviews = $maxviews[0];
+    if ($maxviews) {
+        $data['strmaxviews'] = get_string(
+            'statsmaxviews',
+            'admin',
+            $institutiondata['viewsperuser'],
+            profile_url($maxviews),
+            hsc(display_name($maxviews, null, true)),
+            $maxviews->views
+        );
+    }
+    else {
+        $data['strmaxviews'] = get_string('statsnoviews', 'admin');
+    }
+    $maxgroups = get_records_sql_array("
+        SELECT u.id, u.firstname, u.lastname, u.preferredname, u.urlid, COUNT(m.group) AS groups
+        FROM {usr} u JOIN {group_member} m ON u.id = m.member JOIN {group} g ON m.group = g.id
+        WHERE g.deleted = 0 AND u.id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
+        ORDER BY groups DESC
+        LIMIT 1", $institutiondata['members']);
+    $maxgroups = $maxgroups[0];
+    if ($maxgroups) {
+        $data['strmaxgroups'] = get_string(
+            'statsmaxgroups',
+            'admin',
+            $institutiondata['groupmemberaverage'],
+            profile_url($maxgroups),
+            hsc(display_name($maxgroups, null, true)),
+            $maxgroups->groups
+        );
+    }
+    else {
+        $data['strmaxgroups'] = get_string('statsnogroups', 'admin');
+    }
+    $maxquotaused = get_records_sql_array("
+        SELECT id, firstname, lastname, preferredname, urlid, quotaused
+        FROM {usr}
+        WHERE id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        ORDER BY quotaused DESC
+        LIMIT 1", $institutiondata['members']);
+    $maxquotaused = $maxquotaused[0];
+    $avgquota = get_field_sql("
+        SELECT AVG(quotaused)
+        FROM {usr}
+        WHERE id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
+        ", $institutiondata['members']);
+    $data['strmaxquotaused'] = get_string(
+        'statsmaxquotaused',
+        'admin',
+        display_size($avgquota),
+        profile_url($maxquotaused),
+        hsc(display_name($maxquotaused, null, true)),
+        display_size($maxquotaused->quotaused)
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $data['summary'] = $smarty->fetch('admin/userstatssummary.tpl');
+
+    return $data;
+}
+
+function institution_user_stats_table($limit, $offset, &$institutiondata) {
+    $count = count_records('institution_data', 'type', 'user-count-daily', 'institution', $institutiondata['name']);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=users',
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => array('institution' => $institutiondata['name']),
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $day = is_postgres() ? "to_date(t.ctime::text, 'YYYY-MM-DD')" : 'DATE(t.ctime)'; // TODO: make work on other databases?
+
+    $daterange = get_record_sql(
+        "SELECT
+            MIN($day) AS mindate,
+            MAX($day) AS maxdate
+        FROM (
+            SELECT ctime
+            FROM {institution_data}
+            WHERE type = ? AND institution = ?
+            ORDER BY ctime DESC
+            LIMIT $limit
+            OFFSET $offset
+        ) t",
+        array('user-count-daily', $institutiondata['name'])
+    );
+
+    $dayinterval = is_postgres() ? "'1 day'" : '1 day';
+
+    $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
+
+    $userdata = get_records_sql_array(
+        "SELECT ctime, type, \"value\", $day AS date
+        FROM {institution_data}
+        WHERE type IN (?,?) AND institution = ? AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
+        ORDER BY type = ? DESC, ctime DESC",
+        array('user-count-daily', 'loggedin-users-daily', $institutiondata['name'], $daterange->mindate, $daterange->maxdate, 'user-count-daily')
+    );
+
+    $userscreated = get_records_sql_array(
+        "SELECT $day as cdate, COUNT(usr) AS users
+        FROM {usr_institution}
+        WHERE institution = ?
+        AND NOT ctime IS NULL AND ctime >= ? AND ctime < (date(?) + INTERVAL $dayinterval)
+        GROUP BY cdate",
+        array($institutiondata['name'], $daterange->mindate, $daterange->maxdate)
     );
 
     $data = array();
@@ -1028,6 +1325,118 @@ function view_type_graph() {
 
         $Graph->done(array('filename' => stats_graph_path('viewtypes')));
     }
+}
+
+function institution_view_statistics($limit, $offset, &$institutiondata) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array('name' => '#'),
+        array('name' => get_string('view')),
+        array('name' => get_string('Owner', 'view')),
+        array('name' => get_string('Visits'), 'class' => 'center'),
+        array('name' => get_string('Comments', 'artefact.comment'), 'class' => 'center'),
+    );
+    $data['table'] = institution_view_stats_table($limit, $offset, $institutiondata);
+    $data['tabletitle'] = get_string('viewstatstabletitle', 'admin');
+
+    $smarty = smarty_core();
+    $maxblocktypes = 5;
+    if ($institutiondata['views']) {
+        $smarty->assign('blocktypecounts', get_records_sql_array("
+            SELECT
+                b.blocktype,
+                CASE WHEN bi.artefactplugin IS NULL THEN b.blocktype
+                    ELSE bi.artefactplugin || '/' || b.blocktype END AS langsection,
+                COUNT(b.id) AS blocks
+            FROM {block_instance} b
+            JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
+            JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
+            WHERE v.id IN (" . join(',', array_fill(0, $institutiondata['views'], '?')) . ")
+            GROUP BY b.blocktype, langsection
+            ORDER BY blocks DESC",
+            $institutiondata['viewids'], 0, $maxblocktypes
+        ));
+    }
+    $smarty->assign('viewtypes', stats_graph_url($institutiondata['name'] . '_viewtypes'));
+    $smarty->assign('viewcount', $data['table']['count']);
+    $data['summary'] = $smarty->fetch('admin/viewstatssummary.tpl');
+
+    return $data;
+}
+
+function institution_view_stats_table($limit, $offset, &$institutiondata) {
+    if ($institutiondata['views'] != 0) {
+        $count = count_records_select('view', 'id IN (' . join(',', array_fill(0, $institutiondata['views'], '?')) . ') AND type != ?',
+                                        array_merge($institutiondata['viewids'], array('dashboard')));
+    }
+    else {
+        $count = 0;
+    }
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=views',
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => array('institution' => $institutiondata['name']),
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $viewdata = get_records_sql_assoc(
+        "SELECT
+            v.id, v.title, v.owner, v.group, v.institution, v.visits, v.type, v.ownerformat, v.urlid
+        FROM {view} v
+        WHERE v.id IN (" . join(',', array_fill(0, $institutiondata['views'], '?')) . ") AND v.type != ?
+        ORDER BY v.visits DESC, v.title, v.id",
+        array_merge($institutiondata['viewids'], array('dashboard')),
+        $offset,
+        $limit
+    );
+
+    require_once('view.php');
+    require_once('group.php');
+    View::get_extra_view_info($viewdata, false, false);
+
+    safe_require('artefact', 'comment');
+    $comments = ArtefactTypeComment::count_comments(array_keys($viewdata));
+
+    foreach ($viewdata as &$v) {
+        $v = (object) $v;
+        if ($v->owner) {
+            $v->ownername = display_name($v->user);
+            $v->ownerurl  = profile_url($v->user);
+        }
+        else {
+            $v->ownername = $v->sharedby;
+            if ($v->group) {
+                $v->ownerurl = group_homepage_url($v->groupdata);
+            }
+            else if ($v->institution && $v->institution != 'mahara') {
+                $v->ownerurl = get_config('wwwroot') . 'institution/index.php?institution=' . $v->institution;
+            }
+        }
+        $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $viewdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/viewstats.tpl');
+
+    return $result;
 }
 
 function institution_view_type_graph(&$institutiondata) {

@@ -29,19 +29,16 @@ define('INTERNAL', 1);
 define('STAFF', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$type = param_alpha('type');
+$type = param_alphanumext('type');
 
-switch ($type) {
-    case 'weekly':
-    case 'institutions':
-    case 'viewtypes':
-    case 'grouptypes':
-        $maxage = 3600;
-        header('Content-type: ' . 'image/png');
-        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-        header('Cache-Control: max-age=' . $maxage);
-        header('Pragma: public');
+if (preg_match('/^([a-z]*_)?(viewtypes|weekly)$/', $type) ||
+    $type == 'institutions' || $type == 'grouptypes') {
+    $maxage = 3600;
+    header('Content-type: ' . 'image/png');
+    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+    header('Cache-Control: max-age=' . $maxage);
+    header('Pragma: public');
 
-        readfile(get_config('dataroot') . 'images/' . $type . '.png');
-        exit;
+    readfile(get_config('dataroot') . 'images/' . $type . '.png');
+    exit;
 }

@@ -256,6 +256,7 @@ $string['statsmaxviews'] = 'Has made %s pages (most is <a href="%s">%s</a> with 
 $string['statsnoviews'] = 'Has made 0 pages :(';
 $string['statsmaxgroups'] = 'Is in %s groups (most is <a href="%s">%s</a> with %d)';
 $string['statsnogroups'] = 'Is in 0 groups :(';
+$string['statsnoquota'] = 'Is using no storage :(';
 $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
@@ -266,6 +267,11 @@ $string['viewsbytype'] = 'Pages by type';
 $string['userstatstabletitle'] = 'Daily user statistics';
 $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
+
+// Institutional statistics
+$string['statistics'] = 'Statistics';
+$string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
+$string['institutioncreated'] = 'Institution created';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';
