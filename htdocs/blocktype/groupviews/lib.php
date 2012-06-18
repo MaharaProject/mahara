@@ -143,7 +143,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, null, 0, true, $sort);
             foreach ($data['groupviews']->data as &$view) {
                 if (isset($view['template']) && $view['template']) {
-                    $view['form'] = pieform(create_view_form($group->id, null, $view['id']));
+                    $view['form'] = pieform(create_view_form(null, null, $view['id']));
                 }
             }
 
