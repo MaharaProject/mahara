@@ -1207,20 +1207,44 @@ function group_view_submission_form($groupid) {
 
     list($collections, $views) = View::get_views_and_collections($USER->get('id'));
 
-    $options = array();
+    $viewoptions = $collectionoptions = array();
+
     foreach ($collections as $c) {
         if (empty($c['submittedgroup']) && empty($c['submittedhost'])) {
-            $options['c:' . $c['id']] = $c['name'];
+            $collectionoptions['c:' . $c['id']] = $c['name'];
         }
     }
+
     foreach ($views as $v) {
         if ($v['type'] != 'profile' && empty($v['submittedgroup']) && empty($v['submittedhost'])) {
-            $options['v:' . $v['id']] = $v['name'];
+            $viewoptions['v:' . $v['id']] = $v['name'];
         }
     }
-    if (empty($options)) {
+
+    $options = $optgroups = null;
+
+    if (!empty($collectionoptions) && !empty($viewoptions)) {
+        $optgroups = array(
+            'collections' => array(
+                'label'   => get_string('Collections', 'collection'),
+                'options' => $collectionoptions,
+            ),
+            'views'       => array(
+                'label'   => get_string('Views', 'view'),
+                'options' => $viewoptions,
+            ),
+        );
+    }
+    else if (!empty($collectionoptions)) {
+        $options = $collectionoptions;
+    }
+    else if (!empty($viewoptions)) {
+        $options = $viewoptions;
+    }
+    else {
         return;
     }
+
     return pieform(array(
         'name' => 'group_view_submission_form_' . $groupid,
         'method' => 'post',
@@ -1234,6 +1258,7 @@ function group_view_submission_form($groupid) {
             'options' => array(
                 'type' => 'select',
                 'collapseifoneoption' => false,
+                'optgroups' => $optgroups,
                 'options' => $options,
             ),
             'text2' => array(
