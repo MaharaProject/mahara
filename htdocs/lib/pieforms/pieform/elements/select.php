@@ -41,13 +41,14 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
     }
 
     $optionsavailable = true;
-    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
+    $options = pieform_element_select_get_options($element);
+    if (empty($options)) {
         $optionsavailable = false;
         Pieform::info('Select elements should have at least one option');
     }
 
-    if (!empty($element['collapseifoneoption']) && isset($element['options']) && is_array($element['options']) && count($element['options']) == 1) {
-        foreach ($element['options'] as $key => $value) {
+    if (!empty($element['collapseifoneoption']) && is_array($options) && count($options) == 1) {
+        foreach ($options as $key => $value) {
             if (is_array($value)) {
                 $value = $value['value'];
             }
@@ -67,7 +68,30 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
 
     $values = $form->get_value($element); 
     $optionselected = false;
-    foreach ($element['options'] as $key => $value) {
+
+    if (empty($element['optgroups'])) {
+        $result .= pieform_element_select_render_options($element['options'], $values, $optionselected, $element);
+    }
+    else {
+        foreach ($element['optgroups'] as $optgroup) {
+            $result .= "\t<optgroup label=\"" . hsc($optgroup['label']) . '">' . "\n"
+                . pieform_element_select_render_options($optgroup['options'], $values, $optionselected, $element)
+                . "\t</optgroup>\n";
+        }
+    }
+
+    if (!$optionselected && !is_array($values) && $values !== null) {
+        Pieform::info('Invalid value for select "' . $element['name'] .'"');
+    }
+
+    $result .= '</select>';
+    return $result;
+}/*}}}*/
+
+function pieform_element_select_render_options($options, $values, &$optionselected, $element) {/*{{{*/
+    $result = '';
+
+    foreach ($options as $key => $value) {
         // Select the element if it's in the values or if there are no values
         // and this is the first option
         if (
@@ -114,11 +138,6 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
         $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}>" . Pieform::hsc($value) . "</option>\n";
     }
 
-    if (!$optionselected && !is_array($values) && $values !== null) {
-        Pieform::info('Invalid value for select "' . $element['name'] .'"');
-    }
-
-    $result .= '</select>';
     return $result;
 }/*}}}*/
 
@@ -169,4 +188,22 @@ function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return $values;
+}/*}}}*/
+
+function pieform_element_select_get_options($element) {/*{{{*/
+    if (!isset($element['options']) && !isset($element['optgroups'])) {
+        return false;
+    }
+
+    if (empty($element['optgroups'])) {
+        return $element['options'];
+    }
+
+    $options = array();
+
+    foreach ($element['optgroups'] as $optgroup) {
+        $options = array_merge($options, $optgroup['options']);
+    }
+
+    return $options;
 }/*}}}*/
