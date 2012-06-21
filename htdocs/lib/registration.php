@@ -614,6 +614,8 @@ function group_stats_table($limit, $offset) {
         $limit
     );
 
+    require_once('group.php');
+
     $smarty = smarty_core();
     $smarty->assign('data', $groupdata);
     $smarty->assign('offset', $offset);
