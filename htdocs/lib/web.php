@@ -404,7 +404,7 @@ EOF;
         $sitetop = '<div class="error">' . get_string('notproductionsite', 'error') . '</div>';
     }
     if (function_exists('local_header_top_content')) {
-        $sitetop .= local_header_top_content();
+        $sitetop = (isset($sitetop) ? $sitetop : '') . local_header_top_content();
     }
     if (isset($sitetop)) {
         $smarty->assign('SITETOP', $sitetop);
