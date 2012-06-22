@@ -4,7 +4,7 @@
   {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
   <div id="commentfiles">
   {if (isset($children))}
-  <h4>{str tag=contents section=artefact.file}:</h4>
+  <h4>{str tag=foldercontents section=artefact.file}:</h4>
   <table class="fullwidth">
     <thead>
       <tr>
@@ -26,6 +26,11 @@
       </tr>
     {/foreach}
     </tbody></table>
+    {if $downloadfolderzip}
+    <p>
+        <a href="{$WWWROOT}artefact/file/downloadfolder.php?folder={$folderid}&view={$viewid}">{str tag=downloadfolderziplink section=artefact.file}</a>
+    </p>
+    {/if}
   {else}
     {str tag=emptyfolder section=artefact.file}
   {/if}
