@@ -33,7 +33,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'registration.php');
 
 $limit  = param_integer('limit', 10);
-$offset = param_integer('offset');
+$offset = param_integer('offset', 0);
 
 $type = param_alpha('type', 'users');
 $subpages = array('users', 'groups', 'views');

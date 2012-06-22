@@ -618,6 +618,7 @@ function user_stats_table($limit, $offset) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
+        'setlimit' => true,
     ));
 
     $result = array(
@@ -838,6 +839,7 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
         'limit' => $limit,
         'offset' => $offset,
         'extradata' => array('institution' => $institutiondata['name']),
+        'setlimit' => true,
     ));
 
     $result = array(
@@ -1027,6 +1029,7 @@ function group_stats_table($limit, $offset) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
+        'setlimit' => true,
     ));
 
     $result = array(
@@ -1205,6 +1208,7 @@ function view_stats_table($limit, $offset) {
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
+        'setlimit' => true,
     ));
 
     $result = array(
@@ -1382,6 +1386,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
         'limit' => $limit,
         'offset' => $offset,
         'extradata' => array('institution' => $institutiondata['name']),
+        'setlimit' => true,
     ));
 
     $result = array(
