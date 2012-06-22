@@ -267,6 +267,7 @@ $string['viewsbytype'] = 'Pages by type';
 $string['userstatstabletitle'] = 'Daily user statistics';
 $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
+$string['exportstatsascsv'] = 'Export statistics in CSV format';
 
 // Institutional statistics
 $string['statistics'] = 'Statistics';

@@ -608,6 +608,8 @@ function user_statistics($limit, $offset, &$sitedata) {
 }
 
 function user_stats_table($limit, $offset) {
+    global $USER;
+
     $count = count_records('site_data', 'type', 'user-count-daily');
 
     $pagination = build_pagination(array(
@@ -691,6 +693,18 @@ function user_stats_table($limit, $offset) {
             }
         }
     }
+
+    $csvfields = array('date', 'loggedin', 'created', 'total');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($data as $row) {
+        $u = array();
+        foreach ($csvfields as $f) {
+            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+        }
+        $csv .= '"' . join('","', $u) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'userstatistics.csv', 'text/csv');
+    $result['csv'] = true;
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
@@ -828,6 +842,8 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
 }
 
 function institution_user_stats_table($limit, $offset, &$institutiondata) {
+    global $USER;
+
     $count = count_records('institution_data', 'type', 'user-count-daily', 'institution', $institutiondata['name']);
 
     $pagination = build_pagination(array(
@@ -913,6 +929,18 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
             }
         }
     }
+
+    $csvfields = array('date', 'loggedin', 'created', 'total');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($data as $row) {
+        $u = array();
+        foreach ($csvfields as $f) {
+            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+        }
+        $csv .= '"' . join('","', $u) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'userstatistics.csv', 'text/csv');
+    $result['csv'] = true;
 
     $smarty = smarty_core();
     $smarty->assign('data', $data);
@@ -1019,6 +1047,8 @@ function group_statistics($limit, $offset) {
 }
 
 function group_stats_table($limit, $offset) {
+    global $USER;
+
     $count = count_records('group', 'deleted', 0);
 
     $pagination = build_pagination(array(
@@ -1080,6 +1110,18 @@ function group_stats_table($limit, $offset) {
         $offset,
         $limit
     );
+
+    $csvfields = array('id', 'name', 'members', 'views', 'forums', 'posts');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($groupdata as &$g) {
+        $group = array();
+        foreach ($csvfields as $f) {
+            $group[] = str_replace('"', '""', $g->$f);
+        }
+        $csv .= '"' . join('","', $group) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'groupstatistics.csv', 'text/csv');
+    $result['csv'] = true;
 
     require_once('group.php');
 
@@ -1198,6 +1240,8 @@ function view_statistics($limit, $offset) {
 }
 
 function view_stats_table($limit, $offset) {
+    global $USER;
+
     $count = count_records_select('view', '(owner != 0 OR owner IS NULL) AND type != ?', array('dashboard'));
 
     $pagination = build_pagination(array(
@@ -1257,6 +1301,18 @@ function view_stats_table($limit, $offset) {
         }
         $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }
+
+    $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($viewdata as &$v) {
+        $view = array();
+        foreach ($csvfields as $f) {
+            $view[] = str_replace('"', '""', $v->$f);
+        }
+        $csv .= '"' . join('","', $view) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'viewstatistics.csv', 'text/csv');
+    $result['csv'] = true;
 
     $smarty = smarty_core();
     $smarty->assign('data', $viewdata);
@@ -1369,6 +1425,8 @@ function institution_view_statistics($limit, $offset, &$institutiondata) {
 }
 
 function institution_view_stats_table($limit, $offset, &$institutiondata) {
+    global $USER;
+
     if ($institutiondata['views'] != 0) {
         $count = count_records_select('view', 'id IN (' . join(',', array_fill(0, $institutiondata['views'], '?')) . ') AND type != ?',
                                         array_merge($institutiondata['viewids'], array('dashboard')));
@@ -1435,6 +1493,18 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
         }
         $v->comments = isset($comments[$v->id]) ? (int) $comments[$v->id]->comments : 0;
     }
+
+    $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($viewdata as &$v) {
+        $view = array();
+        foreach ($csvfields as $f) {
+            $view[] = str_replace('"', '""', $v->$f);
+        }
+        $csv .= '"' . join('","', $view) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'viewstatistics.csv', 'text/csv');
+    $result['csv'] = true;
 
     $smarty = smarty_core();
     $smarty->assign('data', $viewdata);
