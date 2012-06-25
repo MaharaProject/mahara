@@ -277,6 +277,7 @@ $string['institutioncreated'] = 'Institution created';
 
 // Registration statistics
 $string['registrationstatstabletitle'] = 'Registration statistics for the current week';
+$string['historicalstatstabletitle'] = 'Historical statistics for field \'%s\'';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

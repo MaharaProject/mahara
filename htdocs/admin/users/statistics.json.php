@@ -36,14 +36,21 @@ $extradata = json_decode(param_variable('extradata'));
 $institution = (isset($extradata->institution) ? $extradata->institution : 'mahara');
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'views', 'registration');
+$subpages = array('users', 'views', 'registration', 'historical');
 if (!in_array($type, $subpages)) {
     $type = 'users';
+}
+
+if ($type == 'historical') {
+    $field = (isset($extradata->field) ? $extradata->field : 'count_members');
 }
 
 $institutiondata = institution_statistics($institution, true);
 
 switch ($type) {
+case 'historical':
+    $data = institution_historical_stats_table($limit, $offset, $field, $institutiondata);
+    break;
 case 'registration':
     $data = institution_registration_stats_table($limit, $offset, $institutiondata);
     break;

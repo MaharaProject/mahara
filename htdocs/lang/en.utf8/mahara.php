@@ -1038,3 +1038,4 @@ $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers
 // Registration statistics
 $string['registration'] = 'Registration';
 $string['modified'] = 'Modified';
+$string['historical'] = 'Historical';
