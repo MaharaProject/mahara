@@ -268,11 +268,15 @@ $string['userstatstabletitle'] = 'Daily user statistics';
 $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
 $string['exportstatsascsv'] = 'Export statistics in CSV format';
+$string['nostats'] = 'No statistics available';
 
 // Institutional statistics
 $string['statistics'] = 'Statistics';
 $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
+
+// Registration statistics
+$string['registrationstatstabletitle'] = 'Registration statistics for the current week';
 
 // Site options
 $string['adminsonly'] = 'Administrators only';

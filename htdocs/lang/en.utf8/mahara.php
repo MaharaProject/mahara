@@ -1034,3 +1034,7 @@ $string['betweenxandy'] = 'Between %s and %s';
 
 // Clean URLs
 $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers, and - are allowed.';
+
+// Registration statistics
+$string['registration'] = 'Registration';
+$string['modified'] = 'Modified';

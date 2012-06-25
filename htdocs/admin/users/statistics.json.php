@@ -36,7 +36,7 @@ $extradata = json_decode(param_variable('extradata'));
 $institution = (isset($extradata->institution) ? $extradata->institution : 'mahara');
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'views');
+$subpages = array('users', 'views', 'registration');
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
@@ -44,6 +44,9 @@ if (!in_array($type, $subpages)) {
 $institutiondata = institution_statistics($institution, true);
 
 switch ($type) {
+case 'registration':
+    $data = institution_registration_stats_table($limit, $offset, $institutiondata);
+    break;
 case 'views':
     $data = institution_view_stats_table($limit, $offset, $institutiondata);
     break;

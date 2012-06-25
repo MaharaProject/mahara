@@ -1583,6 +1583,115 @@ function institution_view_type_graph(&$institutiondata) {
     }
 }
 
+function institution_registration_statistics($limit, $offset, &$institutiondata) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array('name' => '#'),
+        array('name' => get_string('name')),
+        array('name' => get_string('modified')),
+        array('name' => get_string('Total'), 'class' => 'center'),
+    );
+    $data['table'] = institution_registration_stats_table($limit, $offset, $institutiondata);
+    $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+
+    return $data;
+}
+
+function institution_registration_stats_table($limit, $offset, &$institutiondata) {
+    global $USER;
+
+    $dates = get_records_array('institution_registration', 'institution', $institutiondata['name'], 'time DESC', '*', 0, 2);
+
+    if ($dates) {
+        $count = count_records('institution_registration_data', 'registration_id', $dates[0]->id);
+    }
+    else {
+        $count = 0;
+    }
+
+    if ($count > 1) {
+        // remove one as it is userloggedin, which is a psuedostat
+        $count --;
+    }
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=registration',
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => array('institution' => $institutiondata['name']),
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $registrationdata = get_records_sql_assoc(
+        "SELECT
+            field, value
+        FROM {institution_registration_data}
+        WHERE registration_id = ? AND field != ?
+        ORDER BY field",
+        array($dates[0]->id, 'usersloggedin'),
+        $offset,
+        $limit
+    );
+
+    if (count($dates) > 1) {
+        $lastweeks = get_records_sql_assoc(
+            "SELECT
+                field, value
+            FROM {institution_registration_data}
+            WHERE registration_id = ?
+            ORDER BY field",
+            array($dates[1]->id)
+        );
+        foreach ($registrationdata as &$d) {
+            $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
+        }
+    }
+    else {
+        foreach ($registrationdata as &$d) {
+            $d->modified = $d->value;
+        }
+    }
+    if (isset($registrationdata['count_members'])) {
+        $registrationdata['count_members']->modified = get_field('institution_registration_data', 'value', 'registration_id', $dates[0]->id, 'field', 'usersloggedin');
+    }
+
+    $csvfields = array('field', 'modified', 'value');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($registrationdata as &$d) {
+        $data = array();
+        foreach ($csvfields as $f) {
+            $data[] = str_replace('"', '""', $d->$f);
+        }
+        $csv .= '"' . join('","', $data) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $registrationdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/registrationstats.tpl');
+
+    return $result;
+}
+
 
 function graph_site_data_weekly() {
 
