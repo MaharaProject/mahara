@@ -159,6 +159,7 @@ $string['usecustomagreement'] = 'Use custom agreement';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
 $string['fileuploadedtofolderas'] = '%s uploaded to %s as "%s"';
 $string['fileuploadedas'] = '%s uploaded as "%s"';
+$string['insufficientmemoryforresize'] = ' (Not enough memory available to resize the image. Consider resizing manually before uploading)';
 
 
 // File types
