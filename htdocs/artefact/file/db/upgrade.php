@@ -392,5 +392,14 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2012050400) {
+        if (!get_record('artefact_config', 'plugin', 'file', 'field', 'resizeonuploadenable')) {
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'resizeonuploadenable', 'value' => 0));
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'resizeonuploaduseroption', 'value' => 0));
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'resizeonuploadmaxheight', 'value' => get_config('imagemaxheight')));
+            insert_record('artefact_config', (object) array('plugin' => 'file', 'field' => 'resizeonuploadmaxwidth', 'value' => get_config('imagemaxwidth')));
+        }
+    }
+
     return $status;
 }
