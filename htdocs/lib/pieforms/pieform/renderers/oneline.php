@@ -56,13 +56,13 @@ function pieform_renderer_oneline(Pieform $form, $element) {/*{{{*/
     }
 
     if (isset($element['prehtml'])) {
-        $result .= $element['prehtml'];
+        $result .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
 
     $result .= $element['html'];
 
     if (isset($element['posthtml'])) {
-        $result .= $element['posthtml'];
+        $result .= '<span class="posthtml">' . $element['posthtml'] . '</span>';
     }
 
     $result .= "</span>";
