@@ -29,6 +29,7 @@ defined('INTERNAL') || die();
 
 // General form strings
 $string['add']     = 'Add';
+$string['addone']  = 'Add one';
 $string['cancel']  = 'Cancel';
 $string['delete']  = 'Delete';
 $string['edit']    = 'Edit';
