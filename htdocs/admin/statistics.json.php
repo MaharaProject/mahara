@@ -34,14 +34,25 @@ require(get_config('libroot') . 'registration.php');
 
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$extradata = json_decode(param_variable('extradata'));
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'groups', 'views');
+$subpages = array('users', 'groups', 'views', 'registration', 'historical');
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
 
+if ($type == 'historical') {
+    $field = (isset($extradata->field) ? $extradata->field : 'count_usr');
+}
+
 switch ($type) {
+case 'historical':
+    $data = historical_stats_table($limit, $offset, $field);
+    break;
+case 'registration':
+    $data = registration_stats_table($limit, $offset);
+    break;
 case 'groups':
     $data = group_stats_table($limit, $offset);
     break;

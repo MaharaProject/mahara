@@ -1583,6 +1583,106 @@ function institution_view_type_graph(&$institutiondata) {
     }
 }
 
+function registration_statistics($limit, $offset) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array('name' => '#'),
+        array('name' => get_string('name')),
+        array('name' => get_string('modified')),
+        array('name' => get_string('Total'), 'class' => 'center'),
+    );
+    $data['table'] = registration_stats_table($limit, $offset);
+    $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+
+    return $data;
+}
+
+function registration_stats_table($limit, $offset) {
+    global $USER;
+
+    $dates = get_records_array('site_registration', '', '', 'time DESC', '*', 0, 2);
+
+    if ($dates) {
+        $count = count_records('site_registration_data', 'registration_id', $dates[0]->id);
+    }
+    else {
+        $count = 0;
+    }
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=registration',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $registrationdata = get_records_sql_assoc(
+        "SELECT
+            field, value
+        FROM {site_registration_data}
+        WHERE registration_id = ?
+        ORDER BY field",
+        array($dates[0]->id),
+        $offset,
+        $limit
+    );
+
+    if (count($dates) > 1) {
+        $lastweeks = get_records_sql_assoc(
+            "SELECT
+                field, value
+            FROM {site_registration_data}
+            WHERE registration_id = ?
+            ORDER BY field",
+            array($dates[1]->id)
+        );
+        foreach ($registrationdata as &$d) {
+            $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
+        }
+    }
+    else {
+        foreach ($registrationdata as &$d) {
+            $d->modified = $d->value;
+        }
+    }
+
+    $csvfields = array('field', 'modified', 'value');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($registrationdata as &$d) {
+        $data = array();
+        foreach ($csvfields as $f) {
+            $data[] = str_replace('"', '""', $d->$f);
+        }
+        $csv .= '"' . join('","', $data) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $registrationdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/registrationstats.tpl');
+
+    return $result;
+}
+
 function institution_registration_statistics($limit, $offset, &$institutiondata) {
     $data = array();
     $data['tableheadings'] = array(
@@ -1689,6 +1789,96 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
     $smarty->assign('offset', $offset);
     $smarty->assign('institution', $institutiondata['name']);
     $result['tablerows'] = $smarty->fetch('admin/registrationstats.tpl');
+
+    return $result;
+}
+
+function historical_statistics($limit, $offset, $field) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array('name' => get_string('date')),
+        array('name' => get_string('modified'), 'class' => 'center'),
+        array('name' => get_string('Total'), 'class' => 'center'),
+    );
+    $data['table'] = historical_stats_table($limit, $offset, $field);
+    $data['tabletitle'] = get_string('historicalstatstabletitle', 'admin', get_string($field, 'statistics'));
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+
+    return $data;
+}
+
+function historical_stats_table($limit, $offset, $field) {
+    global $USER;
+
+    $count = count_records_sql(
+        "SELECT COUNT(*)
+        FROM {site_registration} sr
+        JOIN {site_registration_data} srd
+            ON (srd.registration_id = sr.id)
+        WHERE srd.field = ?",
+        array($field)
+    );
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=historical',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => array('field' => $field),
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    $registrationdata = get_records_sql_array(
+        "SELECT
+            sr.time, srd.field, srd.value
+        FROM {site_registration} sr
+        JOIN {site_registration_data} srd
+            ON (srd.registration_id = sr.id)
+        WHERE srd.field = ?
+        ORDER BY sr.time DESC",
+        array($field),
+        $offset,
+        $limit
+    );
+
+    if ($registrationdata) {
+        $registrationdata[count($registrationdata) - 1]->modified = $registrationdata[count($registrationdata) - 1]->value;
+    }
+    for ($i = count($registrationdata) - 2; $i >= 0; -- $i) {
+        $registrationdata[$i]->modified = $registrationdata[$i]->value - $registrationdata[$i + 1]->value;
+    }
+
+    $csvfields = array('time', 'field', 'modified', 'value');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($registrationdata as &$d) {
+        $data = array();
+        foreach ($csvfields as $f) {
+            $data[] = str_replace('"', '""', $d->$f);
+        }
+        $csv .= '"' . join('","', $data) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $registrationdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/historicalstats.tpl');
 
     return $result;
 }
