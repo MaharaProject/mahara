@@ -112,6 +112,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $config['simpleupload'] = 1;
     }
 
+    if ($config['resizeonuploaduseroption'] == 1) {
+        $smarty->assign('resizeonuploadenable', get_config_plugin('artefact', 'file', 'resizeonuploadenable'));
+        $smarty->assign('resizeonuploadmaxwidth', get_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth'));
+        $smarty->assign('resizeonuploadmaxheight', get_config_plugin('artefact', 'file', 'resizeonuploadmaxheight'));
+    }
+
     if ($config['upload']) {
         $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
@@ -436,6 +442,14 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
         return pieform_element_filebrowser_delete($form, $element, (int) ($keys[0]));
     }
 
+    $resizeonuploaduserenable = param_variable($prefix . '_resizeonuploaduserenable', null);
+    if (!empty($resizeonuploaduserenable)) {
+        $resizeimage = 1;
+    }
+    else {
+        $resizeimage = 0;
+    }
+
     $update = param_variable($prefix . '_update', null);
     if (is_array($update)) {
         $edit_title = param_variable($prefix . '_edit_title');
@@ -548,6 +562,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'uploadnumber'     => param_integer($prefix . '_uploadnumber'),
                 'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
                 'uploadfoldername' => param_variable($prefix . '_foldername'),
+                'resizeonuploaduserenable' => $resizeimage,
             ));
             // If it's a non-js upload, automatically select the newly uploaded file.
             $result['browse'] = 1;
@@ -584,6 +599,7 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                     'uploadnumber'     => param_integer($prefix . '_uploadnumber') - ($size - $i - 1),
                     'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
                     'uploadfoldername' => param_variable($prefix . '_foldername'),
+                    'resizeonuploaduserenable' => $resizeimage,
                 ));
                 // TODO, what to do here...
                 // If it's a non-js upload, automatically select the newly uploaded file.
@@ -695,6 +711,9 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $querybase        = $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&');
     $prefix           = $form->get_name() . '_' . $element['name'];
     $userfileindex    = isset($data['userfileindex']) ? $data['userfileindex'] : null;
+    $resizeonuploadenable = get_config_plugin('artefact', 'file', 'resizeonuploadenable');
+    $resizeonuploaduseroption = get_config_plugin('artefact', 'file', 'resizeonuploaduseroption');
+    $resizeonuploaduserenable = (int) $data['resizeonuploaduserenable'];
 
     $result = array('error' => false, 'uploadnumber' => $uploadnumber);
 
@@ -752,8 +771,52 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
     $data->title = ArtefactTypeFileBase::get_new_file_title($originalname, $parentfolder, $data->owner, $group, $institution);
 
+    // Overwrite image file with resized version if required
+    $resized = false;
+    $resizeattempted = false;
+    // resize specified if (resizing is enabled AND user has enabled resizing) OR (resizing is enabled AND user is not given an option to enable/disable)
+    if (($resizeonuploadenable && $resizeonuploaduserenable) || ($resizeonuploadenable && !$resizeonuploaduseroption)) {
+
+        require_once('file.php');
+        require_once('imageresizer.php');
+
+        $file = $_FILES['userfile'];
+        if (isset($userfileindex)) {
+            $tmpname = $file['tmp_name'][$userfileindex];
+        }
+        else {
+            $tmpname = $file['tmp_name'];
+        }
+        if (is_image_file($tmpname)) {
+            $imageinfo = getimagesize($tmpname);
+            $mimetype = $imageinfo['mime'];
+            $width    = $imageinfo[0];
+            $height   = $imageinfo[1];
+            $bmptypes = array('image/bmp', 'image/x-bmp', 'image/ms-bmp', 'image/x-ms-bmp');
+
+            // resize image if necessary
+            $resizeonuploadmaxwidth  = get_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth');
+            $resizeonuploadmaxheight = get_config_plugin('artefact', 'file', 'resizeonuploadmaxheight');
+
+            // Don't support bmps for now
+            if (($width > $resizeonuploadmaxwidth || $height > $resizeonuploadmaxheight) && !in_array($mimetype, $bmptypes)) {
+                $resizeattempted = true;
+                $imgrs = new ImageResizer($tmpname, $mimetype);
+                $img = $imgrs->get_image();
+                if (!empty($img)) {
+                    $imgrs->resize_image(array('w' => $resizeonuploadmaxwidth, 'h' => $resizeonuploadmaxheight), $mimetype); //auto
+                    $saveresize = $imgrs->save_image($tmpname, $mimetype, 85);
+                    if (!$saveresize) {
+                        return array('error' => true, 'message' => get_string('problemresizing', 'artefact.file'));
+                    }
+                    $resized = true;
+                }
+            }
+        }
+    }
+
     try {
-        $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data, $userfileindex);
+        $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data, $userfileindex, $resized);
     }
     catch (QuotaExceededException $e) {
         prepare_upload_failed_message($result, $e, $parentfoldername, $originalname);
@@ -813,6 +876,10 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
     else {
         $result['message'] = get_string('fileuploadedas', 'artefact.file', $originalname, $data->title);
+    }
+
+    if ($resizeattempted && !$resized) {
+        $result['message'] .= get_string('insufficientmemoryforresize', 'artefact.file');
     }
 
     $result['highlight'] = $newid;

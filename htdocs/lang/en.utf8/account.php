@@ -94,3 +94,6 @@ $string['maildisableddescription'] = 'Sending of email to your account has been 
 $string['deleteaccount']  = 'Delete account';
 $string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other users. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
 $string['accountdeleted']  = 'Your account has been deleted.';
+
+$string['resizeonuploaduserdefault'] = 'Enable "Resize large images on upload" by default';
+$string['resizeonuploaduserdefaultdescription'] = 'Tick this box to set the "Resize large images on upload" checkbox option to "on" by default when uploading files. Untick to have that checkbox option set to "off" by default.';

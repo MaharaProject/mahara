@@ -210,6 +210,7 @@ function expected_account_preferences() {
                  'showhomeinfo' => 1,
                  'mobileuploadtoken' => '',
                  'theme' => '',
+                 'resizeonuploaduserdefault' => 1,
                  );
 }
 
@@ -324,6 +325,14 @@ function general_account_prefs_form_elements($prefs) {
             'title'        => get_string('mobileuploadtoken', 'account'),
             'description'  => get_string('mobileuploadtokendescription', 'account'),
             'defaultvalue' => isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken')
+        );
+    }
+    if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {
+        $elements['resizeonuploaduserdefault'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('resizeonuploaduserdefault', 'account'),
+            'description'  => get_string('resizeonuploaduserdefaultdescription', 'account'),
+            'defaultvalue' => $prefs->resizeonuploaduserdefault,
         );
     }
 
