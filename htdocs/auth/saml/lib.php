@@ -496,6 +496,19 @@ class PluginAuthSaml extends PluginAuth {
         if ($values['weautocreateusers'] && $values['remoteuser']) {
             $form->set_error('weautocreateusers', get_string('errorbadcombo', 'auth.saml'));
         }
+
+        // Autocreation cannot be enabled unless no institutions have registration enabled.
+        // This seems like a weird rule, but consider the following:
+        // - weautocreateusers = 1 requires remoteuser = 0 (from the test immediately above this one)
+        // - remoteuser = 0 requires usersuniquebyusername = 1 (from the test above that)
+        // - usersuniquebyusername = 1 requires registerallowed = 0 on all institutions
+        //   (for security reasons - see the comments in the request_user_authorise function above).
+        // So weautocreateusers = 1 requires registerallowed = 0 on all institutions, and we might
+        // as well display an error to that effect right away, without forcing the user to enable
+        // usersuniquebyusername.
+        if (($institutions = get_column('institution', 'name', 'registerallowed', '1')) && ($values['weautocreateusers'])) {
+            $form->set_error('weautocreateusers', get_string('errorregistrationenabledwithautocreate', 'auth.saml'));
+        }
         $dup = get_records_sql_array('SELECT COUNT(instance) AS instance FROM {auth_instance_config}
                                           WHERE ((field = \'institutionattribute\' AND value = ?) OR
                                                  (field = \'institutionvalue\' AND value = ?)) AND
