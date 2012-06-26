@@ -157,8 +157,6 @@ $string['groupquota'] = 'Group quota';
 
 $string['updatefailed'] = 'Update failed';
 
-$string['strftimenotspecified']  = 'Not specified';
-
 // profile sideblock strings
 $string['invitedgroup'] = 'group invitation';
 $string['invitedgroups'] = 'group invitations';
