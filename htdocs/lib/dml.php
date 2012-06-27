@@ -1800,3 +1800,15 @@ function db_drop_trigger($name, $table) {
         throw new SQLException("db_drop_trigger() is not implemented for your database engine");
     }
 }
+
+function mysql_get_variable($name) {
+    global $db;
+    if (!is_mysql()) {
+        throw new SQLException('mysql_get_variable() expects a mysql database');
+    }
+    if (empty($name) || preg_match('/[^a-z_]/', $name)) {
+        throw new SQLException('mysql_get_variable: invalid variable name');
+    }
+    $result = $db->Execute("SHOW VARIABLES LIKE ?", array($name));
+    return $result->fields['Value'];
+}
