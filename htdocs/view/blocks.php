@@ -148,7 +148,9 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
 }
 
 $javascript = array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js');
-$javascript = array_merge($javascript, $view->get_blocktype_javascript());
+$blocktype_js = $view->get_all_blocktype_javascript();
+$javascript = array_merge($javascript, $blocktype_js['jsfiles']);
+$inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 $smarty = smarty($javascript, $stylesheets, false, $extraconfig);
 
@@ -192,8 +194,9 @@ $smarty->assign('new', $new);
 $smarty->assign('profile', $profile);
 $smarty->assign('dashboard', $dashboard);
 if (get_config('blockeditormaxwidth')) {
-    $smarty->assign('INLINEJAVASCRIPT', 'config.blockeditormaxwidth = true;');
+    $inlinejs .= 'config.blockeditormaxwidth = true;';
 }
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
 $owner = $view->get('owner');
