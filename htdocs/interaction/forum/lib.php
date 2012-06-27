@@ -598,8 +598,8 @@ EOF;
         }
 
         if (!empty($forumids)) {
-            $where .= ' AND f.id IN (?)';
-            $values[] = implode(',', $forumids);
+            $where .= ' AND f.id IN (' . join(',', array_fill(0, count($forumids), '?')) . ')';
+            $values = array_merge($values, $forumids);
         }
 
         $result = array(
