@@ -1503,6 +1503,12 @@ function profile_url($user, $full=true, $useid=false) {
     }
 
     if ($wantclean && !is_null($urlid)) {
+        // If the host part of the url is not being returned, the user subdomain
+        // can't be added here, so ignore the subdomain setting when !$full.
+        if ($full && get_config('cleanurlusersubdomains')) {
+            list($proto, $rest) = explode('://', get_config('wwwroot'));
+            return $proto . '://' . $urlid . '.' . substr($rest, 0, -1);
+        }
         $url = get_config('cleanurluserdefault') . '/' . $urlid;
     }
     else if (!empty($id)) {

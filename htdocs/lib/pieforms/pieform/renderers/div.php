@@ -48,11 +48,15 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     }
 
     if (isset($element['prehtml'])) {
-        $result .= $element['prehtml'];
+        $result .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
 
     //$result .= $builtelement;
     $result .= $element['html'];
+
+    if (isset($element['posthtml'])) {
+        $result .= '<span class="posthtml">' . $element['posthtml'] . '</span>';
+    }
 
     if (isset($element['helphtml'])) {
         $result .= ' ' . $element['helphtml'];

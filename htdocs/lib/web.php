@@ -81,6 +81,21 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // drag them around the wysiwyg editor
     $jswwwroot = json_encode($wwwroot);
 
+    // Workaround for $cfg->cleanurlusersubdomains.
+    // When cleanurlusersubdomains is on, ajax requests might come from somewhere other than
+    // the wwwroot.  To avoid cross-domain requests, set a js variable when this page is on a
+    // different subdomain, and let the ajax wrapper function sendjsonrequest rewrite its url
+    // if necessary.
+    if (get_config('cleanurls') && get_config('cleanurlusersubdomains')) {
+        if ($requesthost = get_requested_host_name()) {
+            $wwwrootparts = parse_url($wwwroot);
+            if ($wwwrootparts['host'] != $requesthost) {
+                $fakewwwroot = $wwwrootparts['scheme'] . '://' . $requesthost . '/';
+                $headers[] = '<script type="text/javascript">var fakewwwroot = ' . json_encode($fakewwwroot) . ';</script>';
+            }
+        }
+    }
+
     $theme_list = array();
     
     if (function_exists('pieform_get_headdata')) {
@@ -1440,7 +1455,10 @@ function get_cookies($prefix) {
 function set_cookie($name, $value='', $expires=0, $access=false) {
     $name = get_config('cookieprefix') . $name;
     $url = parse_url(get_config('wwwroot'));
-    setcookie($name, $value, $expires, $url['path'], $url['host'], false, true);
+    if (!$domain = get_config('cookiedomain')) {
+        $domain = $url['host'];
+    }
+    setcookie($name, $value, $expires, $url['path'], $domain, false, true);
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }
@@ -2573,6 +2591,37 @@ function get_script_path() {
 }
 
 /**
+ * Get the requested servername in preference to the host in the configured
+ * wwwroot.  Usually the same unless some parts of the site are at subdomains.
+ *
+ * @return string
+ */
+function get_requested_host_name() {
+    global $CFG;
+
+    if (!empty($_SERVER['SERVER_NAME'])) {
+        return $_SERVER['SERVER_NAME'];
+    }
+    if (!empty($_ENV['SERVER_NAME'])) {
+        return $_ENV['SERVER_NAME'];
+    }
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        return $_SERVER['HTTP_HOST'];
+    }
+    if (!empty($_ENV['HTTP_HOST'])) {
+        return $_ENV['HTTP_HOST'];
+    }
+    if (!empty($CFG->wwwroot)) {
+        $url = parse_url($CFG->wwwroot);
+        if (!empty($url['host'])) {
+            return $url['host'];
+        }
+    }
+    log_warn('Warning: could not find the name of this server!');
+    return false;
+}
+
+/**
  * Like {@link get_script_path()} but returns a full URL
  * @see get_script_path()
  * @return string
@@ -2585,18 +2634,7 @@ function get_full_script_path() {
         $url = parse_url($CFG->wwwroot);
     }
 
-    if (!empty($url['host'])) {
-        $hostname = $url['host'];
-    } else if (!empty($_SERVER['SERVER_NAME'])) {
-        $hostname = $_SERVER['SERVER_NAME'];
-    } else if (!empty($_ENV['SERVER_NAME'])) {
-        $hostname = $_ENV['SERVER_NAME'];
-    } else if (!empty($_SERVER['HTTP_HOST'])) {
-        $hostname = $_SERVER['HTTP_HOST'];
-    } else if (!empty($_ENV['HTTP_HOST'])) {
-        $hostname = $_ENV['HTTP_HOST'];
-    } else {
-        log_warn('Warning: could not find the name of this server!');
+    if (!$hostname = get_requested_host_name()) {
         return false;
     }
 

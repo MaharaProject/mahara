@@ -3447,6 +3447,10 @@ class View {
                 $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
                 $institutions['mahara']->displayname = get_config('sitename');
             }
+
+            $wwwroot = get_config('wwwroot');
+            $needsubdomain = get_config('cleanurlusersubdomains');
+
             foreach ($viewdata as &$v) {
                 if ($v->owner) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
@@ -3465,7 +3469,7 @@ class View {
                 $view->set('dirty', false);
                 $v['displaytitle'] = $view->display_title_editing();
                 $v['url'] = $view->get_url(false);
-                $v['fullurl'] = get_config('wwwroot') . $v['url'];
+                $v['fullurl'] = $needsubdomain ? $view->get_url(true) : ($wwwroot . $v['url']);
             }
         }
     }
