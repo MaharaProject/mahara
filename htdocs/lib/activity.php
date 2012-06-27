@@ -467,18 +467,28 @@ abstract class ActivityType {
                 call_static_method($notificationclass, 'notify_user', $user, $userdata);
             }
             catch (MaharaException $e) {
+                static $badnotification = false;
+                static $adminnotified = array();
                 // We don't mind other notification methods failing, as it'll
                 // go into the activity log as 'unread'
                 $changes->read = 0;
                 update_record('notification_internal_activity', $changes);
-                if (!($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
-                    // Though, admins should probably know about the error
-                    $message = (object) array(
-                        'users' => get_column('usr', 'id', 'admin', 1),
-                        'subject' => get_string('adminnotificationerror', 'activity'),
-                        'message' => $e,
-                    );
-                    activity_occurred('maharamessage', $message);
+                if (!$badnotification && !($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
+                    // Admins should probably know about the error, but to avoid sending too many similar notifications,
+                    // save an initial prefix of the message being sent and throw away subsequent exceptions with the
+                    // same prefix.  To cut down on spam, it's worth missing out on a few similar messages.
+                    $k = substr($e, 0, 60);
+                    if (!isset($adminnotified[$k])) {
+                        $message = (object) array(
+                            'users' => get_column('usr', 'id', 'admin', 1),
+                            'subject' => get_string('adminnotificationerror', 'activity'),
+                            'message' => $e,
+                        );
+                        $adminnotified[$k] = 1;
+                        $badnotification = true;
+                        activity_occurred('maharamessage', $message);
+                        $badnotification = false;
+                    }
                 }
             }
         }
