@@ -79,11 +79,11 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         if (!empty($configdata['showsharedviews']) && isset($data['sharedviews'])) {
             $dwoo->assign('sharedviews', $data['sharedviews']->data);
         }
-        if (isset($data['allsubmittedviews'])) {
-            $dwoo->assign('allsubmittedviews', $data['allsubmittedviews']);
+        if (isset($data['allsubmitted'])) {
+            $dwoo->assign('allsubmitted', $data['allsubmitted']);
         }
-        if (isset($data['mysubmittedviews'])) {
-            $dwoo->assign('mysubmittedviews', $data['mysubmittedviews']);
+        if (isset($data['mysubmitted'])) {
+            $dwoo->assign('mysubmitted', $data['mysubmitted']);
         }
         if (!$editing && isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
@@ -158,11 +158,12 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
             if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
                 // Display a list of views submitted to the group
-                $data['allsubmittedviews'] = View::get_submitted_views($group->id);
+                list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $group->id);
+                $data['allsubmitted'] = array_merge(array_values($collections), array_values($views));
             }
         }
 
-        if ($group->submittableto && ($userviewdata = View::get_user_views())) {
+        if ($group->submittableto) {
             require_once('pieforms/pieform.php');
             // A user can submit more than one view to the same group, but no view can be
             // submitted to more than one group.
@@ -170,18 +171,10 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // Display a list of views this user has submitted to this group, and a submission
             // form containing drop-down of their unsubmitted views.
 
-            $data['mysubmittedviews'] = View::get_submitted_views($group->id, $USER->get('id'));
+            list($collections, $views) = View::get_views_and_collections($USER->get('id'), null, null, null, false, $group->id);
+            $data['mysubmitted'] = array_merge(array_values($collections), array_values($views));
 
-            if (!empty($data['mysubmittedviews'])) {
-                foreach ($data['mysubmittedviews'] as &$v) {
-                    if ($v['submittedtime']) {
-                        $v['submittedtime'] = format_date($v['submittedtime']);
-                    }
-                }
-            }
-
-            $data['group_view_submission_form'] = group_view_submission_form($group->id, $userviewdata);
-
+            $data['group_view_submission_form'] = group_view_submission_form($group->id);
         }
         $data['group'] = $group;
         return $data;

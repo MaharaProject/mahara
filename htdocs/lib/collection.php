@@ -36,6 +36,9 @@ class Collection {
     private $mtime;
     private $ctime;
     private $navigation;
+    private $submittedgroup;
+    private $submittedhost;
+    private $submittedtime;
     private $views;
 
     public function __construct($id=0, $data=null) {
@@ -151,7 +154,7 @@ class Collection {
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if (in_array($k, array('mtime', 'ctime')) && !empty($v)) {
+            if (in_array($k, array('mtime', 'ctime', 'submittedtime')) && !empty($v)) {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
@@ -291,7 +294,7 @@ class Collection {
     public static function get_mycollections_data($offset=0, $limit=10) {
         global $USER;
 
-        ($data = get_records_sql_array("
+        ($data = get_records_sql_assoc("
             SELECT c.id, c.description, c.name
                 FROM {collection} c
                 WHERE c.owner = ?
@@ -299,14 +302,57 @@ class Collection {
             LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
             || ($data = array());
 
+        self::add_submission_info($data);
+
         $result = (object) array(
             'count'  => count_records('collection', 'owner', $USER->get('id')),
-            'data'   => $data,
+            'data'   => array_values($data),
             'offset' => $offset,
             'limit'  => $limit,
         );
 
         return $result;
+    }
+
+    private static function add_submission_info(&$data) {
+        if (empty($data)) {
+            return;
+        }
+
+        $records = get_records_sql_assoc('
+            SELECT c.id, c.submittedgroup, c.submittedhost, ' . db_format_tsfield('submittedtime') . ',
+                   sg.name AS groupname, sg.urlid, sh.name AS hostname
+              FROM {collection} c
+         LEFT JOIN {group} sg ON c.submittedgroup = sg.id
+         LEFT JOIN {host} sh ON c.submittedhost = sh.wwwroot
+             WHERE c.id IN (' . join(',', array_fill(0, count($data), '?')) . ')
+               AND (c.submittedgroup IS NOT NULL OR c.submittedhost IS NOT NULL)',
+            array_keys($data)
+        );
+
+        if (empty($records)) {
+            return;
+        }
+
+        foreach ($records as $r) {
+            if (!empty($r->submittedgroup)) {
+                $groupdata = (object) array(
+                    'id'    => $r->submittedgroup,
+                    'name'  => $r->groupname,
+                    'urlid' => $r->urlid,
+                    'time'  => $r->submittedtime,
+                );
+                $groupdata->url = group_homepage_url($groupdata);
+                $data[$r->id]->submitinfo = $groupdata;
+            }
+            else if (!empty($r->submittedhost)) {
+                $data[$r->id]->submitinfo = (object) array(
+                    'name' => $r->hostname,
+                    'url'  => $r->submittedhost,
+                    'time'  => $r->submittedtime,
+                );
+            }
+        }
     }
 
     /**
@@ -584,5 +630,190 @@ class Collection {
             return 'owner = ' . (int)$ownerobj->owner;
         }
         throw new SystemException("View::owner_sql: Passed object did not have an institution, group or owner field");
+    }
+
+    /**
+     * Makes a URL for a collection
+     *
+     * @param bool $full return a full url
+     * @param bool $useid ignore clean url settings and always return a url with an id in it
+     *
+     * @return string
+     */
+    public function get_url($full=true, $useid=false) {
+        global $USER;
+
+        $views = $this->views();
+        if (!empty($views)) {
+            $v = new View(0, $views['views'][0]);
+            $v->set('dirty', false);
+            return $v->get_url($full, $useid);
+        }
+
+        log_warn("Attempting to get url for an empty collection");
+
+        if ($this->owner === $USER->get('id')) {
+            $url = 'collection/views.php?id=' . $this->id;
+        }
+        else {
+            $url = '';
+        }
+
+        if ($full) {
+            $url = get_config('wwwroot') . $url;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Release a submitted collection
+     *
+     * @param object $releaseuser The user releasing the collection
+     */
+    public function release($releaseuser=null) {
+
+        if (!$this->is_submitted()) {
+            throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
+        }
+
+        // One day there might be group and institution collections, so be safe
+        if (empty($this->owner)) {
+            throw new ParameterException("Collection with id " . $this->id . " has no owner");
+        }
+
+        $viewids = $this->get_viewids();
+
+        db_begin();
+        execute_sql('
+            UPDATE {collection}
+            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            WHERE id = ?',
+            array($this->id)
+        );
+        View::_db_release($viewids, $this->owner, $this->submittedgroup);
+        db_commit();
+
+        $releaseuser = optional_userobj($releaseuser);
+        $releaseuserdisplay = display_name($releaseuser, $this->owner);
+        $submitinfo = $this->submitted_to();
+
+        require_once('activity.php');
+        activity_occurred(
+            'maharamessage',
+            array(
+                'users' => array($this->get('owner')),
+                'strings' => (object) array(
+                    'subject' => (object) array(
+                        'key'     => 'collectionreleasedsubject',
+                        'section' => 'group',
+                        'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'collectionreleasedmessage',
+                        'section' => 'group',
+                        'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                    ),
+                ),
+                'url' => $this->get_url(false),
+                'urltext' => $this->name,
+            )
+        );
+    }
+
+    public function get_viewids() {
+        $ids = array();
+        $viewdata = $this->views();
+
+        if (!empty($viewdata['views'])) {
+            foreach ($viewdata['views'] as $v) {
+                $ids[] = $v->id;
+            }
+        }
+
+        return $ids;
+    }
+
+    public function is_submitted() {
+        return $this->submittedgroup || $this->submittedhost;
+    }
+
+    public function submitted_to() {
+        if ($this->submittedgroup) {
+            $record = get_record('group', 'id', $this->submittedgroup, null, null, null, null, 'id, name, urlid');
+            $record->url = group_homepage_url($record);
+        }
+        else if ($this->submittedhost) {
+            $record = get_record('host', 'wwwroot', $this->submittedhost, null, null, null, null, 'wwwroot, name');
+            $record->url = $record->wwwroot;
+        }
+        else {
+            throw new SystemException("Collection with id " . $this->id . " has not been submitted");
+        }
+
+        return $record;
+    }
+
+    public function submit($group) {
+        global $USER;
+
+        if ($this->is_submitted()) {
+            throw new SystemException('Attempting to submit a submitted collection');
+        }
+
+        $viewids = $this->get_viewids();
+        $idstr = join(',', array_map('intval', $viewids));
+
+        // Check that none of the views is submitted to some other group.  This is bound to happen to someone,
+        // because collection submission is being introduced at a time when it is still possible to submit
+        // individual views in a collection.
+        $submittedtitles = get_column_sql("
+            SELECT title FROM {view}
+            WHERE id IN ($idstr) AND (submittedhost IS NOT NULL OR (submittedgroup IS NOT NULL AND submittedgroup != ?))",
+            array($group->id)
+        );
+
+        if (!empty($submittedtitles)) {
+            die_info(get_string('viewsalreadysubmitted', 'view', implode('<br>', $submittedtitles)));
+        }
+
+        $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+
+        db_begin();
+        View::_db_submit($viewids, $group);
+        $this->set('submittedgroup', $group->id);
+        $this->set('submittedhost', null);
+        $this->set('submittedtime', time());
+        $this->commit();
+        db_commit();
+
+        activity_occurred(
+            'groupmessage',
+            array(
+                'group'         => $group->id,
+                'roles'         => $group->roles,
+                'url'           => $this->get_url(false),
+                'strings'       => (object) array(
+                    'urltext' => (object) array(
+                        'key'     => 'Collection',
+                        'section' => 'collection',
+                    ),
+                    'subject' => (object) array(
+                        'key'     => 'viewsubmittedsubject1',
+                        'section' => 'activity',
+                        'args'    => array($group->name),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'viewsubmittedmessage1',
+                        'section' => 'activity',
+                        'args'    => array(
+                            display_name($USER, null, false, true),
+                            $this->name,
+                            $group->name,
+                        ),
+                    ),
+                ),
+            )
+        );
     }
 }

@@ -1202,16 +1202,49 @@ function group_removeuser_submit(Pieform $form, $values) {
 /**
  * Form for submitting views to a group
  */
-function group_view_submission_form($groupid, $viewdata) {
-    $options = array();
-    foreach ($viewdata as $view) {
-        if (empty($view->submittedgroup) && empty($view->submittedhost)) {
-            $options[$view->id] = $view->title;
+function group_view_submission_form($groupid) {
+    global $USER;
+
+    list($collections, $views) = View::get_views_and_collections($USER->get('id'));
+
+    $viewoptions = $collectionoptions = array();
+
+    foreach ($collections as $c) {
+        if (empty($c['submittedgroup']) && empty($c['submittedhost'])) {
+            $collectionoptions['c:' . $c['id']] = $c['name'];
         }
     }
-    if (empty($options)) {
+
+    foreach ($views as $v) {
+        if ($v['type'] != 'profile' && empty($v['submittedgroup']) && empty($v['submittedhost'])) {
+            $viewoptions['v:' . $v['id']] = $v['name'];
+        }
+    }
+
+    $options = $optgroups = null;
+
+    if (!empty($collectionoptions) && !empty($viewoptions)) {
+        $optgroups = array(
+            'collections' => array(
+                'label'   => get_string('Collections', 'collection'),
+                'options' => $collectionoptions,
+            ),
+            'views'       => array(
+                'label'   => get_string('Views', 'view'),
+                'options' => $viewoptions,
+            ),
+        );
+    }
+    else if (!empty($collectionoptions)) {
+        $options = $collectionoptions;
+    }
+    else if (!empty($viewoptions)) {
+        $options = $viewoptions;
+    }
+    else {
         return;
     }
+
     return pieform(array(
         'name' => 'group_view_submission_form_' . $groupid,
         'method' => 'post',
@@ -1225,6 +1258,7 @@ function group_view_submission_form($groupid, $viewdata) {
             'options' => array(
                 'type' => 'select',
                 'collapseifoneoption' => false,
+                'optgroups' => $optgroups,
                 'options' => $options,
             ),
             'text2' => array(
@@ -1244,7 +1278,15 @@ function group_view_submission_form($groupid, $viewdata) {
 }
 
 function group_view_submission_form_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['options'] . '&group=' . $values['group'] . '&returnto=group');
+    if (substr($values['options'], 0, 2) == 'v:') {
+        $viewid = substr($values['options'], 2);
+        redirect('/view/submit.php?id=' . $viewid . '&group=' . $values['group'] . '&returnto=group');
+    }
+    if (substr($values['options'], 0, 2) == 'c:') {
+        $collectionid = substr($values['options'], 2);
+        redirect('/view/submit.php?collection=' . $collectionid . '&group=' . $values['group'] . '&returnto=group');
+    }
+    redirect('/group/view.php?id=' . $values['group']);
 }
 
 // Miscellaneous group related functions

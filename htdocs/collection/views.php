@@ -47,6 +47,10 @@ if (!$USER->can_edit_collection($collection)) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'collection'));
     redirect('/collection/');
 }
+if ($collection->is_submitted()) {
+    $submitinfo = $collection->submitted_to();
+    throw new AccessDeniedException(get_string('canteditsubmitted', 'collection', $submitinfo->name));
+}
 
 define('TITLE', $collection->get('name') . ': ' . get_string('editviews', 'collection'));
 

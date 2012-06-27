@@ -1083,28 +1083,14 @@ class View {
     }
 
     public function release($releaseuser=null) {
-        require_once(get_config('docroot') . 'artefact/lib.php');
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
-        db_begin();
-        if ($submitinfo['type'] == 'group') {
-            $group = $this->get('submittedgroup');
-            $this->set('submittedgroup', null);
-            if ($group) {
-                // Remove hidden tutor view access records
-                delete_records('view_access', 'view', $this->id, 'group', $group, 'visible', 0);
-            }
-        }
-        else if ($submitinfo['type'] == 'host') {
-            $this->set('submittedhost', null);
-        }
-        $this->set('submittedtime', null);
-        $this->commit();
-        ArtefactType::update_locked($this->owner);
-        db_commit();
+
+        self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
         require_once('activity.php');
@@ -1119,6 +1105,34 @@ class View {
                 'urltext' => $this->get('title'),
             )
         );
+    }
+
+    public static function _db_release(array $viewids, $owner, $group=null) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        if (empty($viewids) || empty($owner)) {
+            return;
+        }
+        $idstr = join(',', array_map('intval', $viewids));
+        $owner = intval($owner);
+
+        db_begin();
+        execute_sql("
+            UPDATE {view}
+            SET submittedgroup = NULL, submittedhost = NULL, submittedtime = NULL
+            WHERE id IN ($idstr) AND owner = ?",
+            array($owner)
+        );
+        if (!empty($group)) {
+            // Remove hidden tutor view access records
+            delete_records_select(
+                'view_access',
+                "view IN ($idstr) AND visible = 0 AND \"group\" = ?",
+                array(intval($group))
+            );
+        }
+        ArtefactType::update_locked($owner);
+        db_commit();
     }
 
     /**
@@ -3355,42 +3369,6 @@ class View {
         );
     }
 
-
-    /** 
-     * Get views submitted to a group
-     */
-    public static function get_submitted_views($groupid, $userid=null) {
-        $values = array($groupid);
-        $where = 'submittedgroup = ?';
-
-        if (!empty($userid)) { // Filter by view owner
-            $values[] = (int) $userid;
-            $where .= ' AND v.owner = ?';
-        }
-
-        $viewdata = get_records_sql_assoc('
-            SELECT
-                v.id as id, v.title, v.description, v.owner, v.ownerformat, v.urlid,
-                ' . db_format_tsfield('v.submittedtime','submittedtime') . '
-            FROM {view} v
-            INNER JOIN {usr} u ON u.id = v.owner
-            WHERE ' . $where . '
-            ORDER BY u.firstname ASC, u.lastname',
-            $values
-        );
-
-        if ($viewdata) {
-            View::get_extra_view_info($viewdata, false);
-            foreach ($viewdata as &$v) {
-                $v['sharedby'] = full_name($v['user']);
-            }
-            $viewdata = array_values($viewdata);
-        }
-
-        return $viewdata;
-    }
-
-
     public static function get_extra_view_info(&$viewdata, $getartefacts=true, $gettags=true) {
         if ($viewdata) {
             // Get view owner details for display
@@ -4023,26 +4001,45 @@ class View {
      * @param mixed   $institution string institution name or array of institution names
      * @param string  $matchconfig record all matches with given config hash (see set_access)
      * @param boolean $includeprofile include profile view
+     * @param integer $submittedgroup return only views & collections submitted to this group
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true) {
+    function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null) {
+
         $excludelocked = $group && group_user_access($group) != 'admin';
-        list($ownersql, $values) = self::multiple_owner_sql(
-            (object) array('owner' => $owner, 'group' => $group, 'institution' => $institution)
-        );
+
         $sql = "
-            SELECT v.id AS vid, v.type AS vtype, v.title AS vname, v.accessconf,
-                v.startdate, v.stopdate, v.template, v.owner, v.group, v.urlid,
-                c.id AS cid, c.name AS cname
+            SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
+                v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
+                db_format_tsfield('v.submittedtime', 'submittedtime') . ",
+                c.id AS cid, c.name AS cname,
+                c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
+                db_format_tsfield('c.submittedtime', 'csubmittime') . "
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
-            WHERE v.$ownersql AND v.type IN ('portfolio'";
+            WHERE  v.type IN ('portfolio'";
         $sql .= $includeprofile ? ", 'profile') " : ') ';
         $sql .= $excludelocked ? 'AND v.locked != 1 ' : '';
+
+        if (is_null($owner) && is_null($group) && is_null($institution)) {
+            $values = array();
+        }
+        else {
+            list($ownersql, $values) = self::multiple_owner_sql(
+                (object) array('owner' => $owner, 'group' => $group, 'institution' => $institution)
+            );
+            $sql .= "AND v.$ownersql ";
+        }
+
+        if ($submittedgroup) {
+            $sql .= 'AND v.submittedgroup = ? ';
+            $values[] = (int) $submittedgroup;
+        }
+
         $sql .= 'ORDER BY c.name, v.title';
-        $records = get_records_sql_array($sql, $values);
+        $records = get_records_sql_assoc($sql, $values);
 
         $collections = array();
         $views = array();
@@ -4051,45 +4048,59 @@ class View {
             return array($collections, $views);
         }
 
+        self::get_extra_view_info($records, false, false);
+
         foreach ($records as &$r) {
-            // Construct a View object temporarily just so we can use display_title_editing, get_url
-            $view = new View(0, array(
-                'id'    => $r->vid,
-                'title' => $r->vname,
-                'type'  => $r->vtype,
-                'owner' => $r->owner,
-                'group' => $r->group,
-                'urlid' => $r->urlid,
-            ));
-            $view->set('dirty', false);
+            $vid = $r['id'];
+            $cid = $r['cid'];
             $v = array(
-                'id'        => $r->vid,
-                'type'      => $r->vtype,
-                'name'      => $view->display_title_editing(),
-                'url'       => $view->get_url(),
-                'startdate' => $r->startdate,
-                'stopdate'  => $r->stopdate,
-                'template'  => $r->template,
-                'owner'     => $r->owner,
+                'id'             => $vid,
+                'type'           => $r['type'],
+                'name'           => $r['displaytitle'],
+                'url'            => $r['fullurl'],
+                'startdate'      => $r['startdate'],
+                'stopdate'       => $r['stopdate'],
+                'template'       => $r['template'],
+                'owner'          => $r['owner'],
+                'submittedgroup' => $r['submittedgroup'],
+                'submittedhost'  => $r['submittedhost'],
+                'submittedtime'  => $r['submittedtime'],
             );
-            if ($r->cid) {
-                if (!isset($collections[$r->cid])) {
-                    $collections[$r->cid] = array(
-                        'id' => $r->cid,
-                        'name' => $r->cname,
-                        'owner' => $r->owner,
+            if ($r['user']) {
+                $v['ownername'] = display_name($r['user']);
+                $v['ownerurl']  = profile_url($r['user']);
+            }
+
+            // If filtering by submitted views, and the view is submitted, but the collection isn't,
+            // then ignore the collection and return the view by itself.
+            if ($cid && (!$submittedgroup || ($r['csubmitgroup'] == $r['submittedgroup']))) {
+                if (!isset($collections[$cid])) {
+                    $collections[$cid] = array(
+                        'id'             => $cid,
+                        'name'           => $r['cname'],
+                        'url'            => $r['fullurl'],
+                        'owner'          => $r['owner'],
+                        'group'          => $r['group'],
+                        'institution'    => $r['institution'],
+                        'submittedgroup' => $r['csubmitgroup'],
+                        'submittedhost'  => $r['csubmithost'],
+                        'submittedtime'  => $r['csubmittime'],
                         'views' => array(),
                     );
-                    if ($matchconfig && $matchconfig == $r->accessconf) {
-                        $collections[$r->cid]['match'] = true;
+                    if ($r['user']) {
+                        $collections[$cid]['ownername'] = $v['ownername'];
+                        $collections[$cid]['ownerurl'] = $v['ownerurl'];
+                    }
+                    if ($matchconfig && $matchconfig == $r['accessconf']) {
+                        $collections[$cid]['match'] = true;
                     }
                 }
-                $collections[$r->cid]['views'][$r->vid] = $v;
+                $collections[$cid]['views'][$vid] = $v;
             }
             else {
-                $views[$r->vid] = $v;
-                if ($matchconfig && $matchconfig == $r->accessconf) {
-                    $views[$r->vid]['match'] = true;
+                $views[$vid] = $v;
+                if ($matchconfig && $matchconfig == $r['accessconf']) {
+                    $views[$vid]['match'] = true;
                 }
             }
         }
@@ -4229,6 +4240,82 @@ class View {
         return $data;
     }
 
+    public function submit($group) {
+        global $USER;
+
+        if ($this->is_submitted()) {
+            throw new SystemException('Attempting to submit a submitted view');
+        }
+
+        $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+
+        self::_db_submit(array($this->id), $group);
+
+        activity_occurred(
+            'groupmessage',
+            array(
+                'group'         => $group->id,
+                'roles'         => $group->roles,
+                'url'           => $this->get_url(false),
+                'strings'       => (object) array(
+                    'urltext' => (object) array('key' => 'view'),
+                    'subject' => (object) array(
+                        'key'     => 'viewsubmittedsubject1',
+                        'section' => 'activity',
+                        'args'    => array($group->name),
+                    ),
+                    'message' => (object) array(
+                        'key'     => 'viewsubmittedmessage1',
+                        'section' => 'activity',
+                        'args'    => array(
+                            display_name($USER, null, false, true),
+                            $this->title,
+                            $group->name,
+                        ),
+                    ),
+                ),
+            )
+        );
+    }
+
+    public function _db_submit($viewids, $group) {
+        global $USER;
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        if (empty($viewids) || empty($group->id)) {
+            return;
+        }
+
+        $idstr = join(',', array_map('intval', $viewids));
+        $groupid = (int) $group->id;
+        $userid = $USER->get('id');
+
+        db_begin();
+        execute_sql("
+            UPDATE {view}
+            SET submittedgroup = ?, submittedtime = current_timestamp, submittedhost = NULL
+            WHERE id IN ($idstr) AND owner = ?",
+            array($groupid, $userid)
+        );
+
+        foreach ($group->roles as $role) {
+            foreach ($viewids as $viewid) {
+                $accessrecord = (object) array(
+                    'view'            => $viewid,
+                    'group'           => $groupid,
+                    'role'            => $role,
+                    'visible'         => 0,
+                    'allowcomments'   => 1,
+                    'approvecomments' => 0,
+                    'ctime'           => db_format_timestamp(time()),
+                );
+                ensure_record_exists('view_access', $accessrecord, $accessrecord);
+            }
+        }
+
+        ArtefactType::update_locked($userid);
+        db_commit();
+    }
 }
 
 
@@ -4365,14 +4452,34 @@ function searchviews_submit(Pieform $form, $values) {
     redirect(View::get_myviews_url($group, $institution, $query, $tag));
 }
 
-function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
+/**
+ * Generates a form which will submit a view or collection to one of
+ * the owner's groups.
+ *
+ * @param mixed $view The view to be submitted. Either a View object,
+ *                    or (for compatibility with previous versions of
+ *                    this function) an integer view id.
+ * @param array $tutorgroupdata An array of StdClass objects with id
+ *                    and name properties representing groups.
+ * @param string $returnto A URL - where to go after leaving the
+ *                    submit page.
+ *
+ * @return string
+ */
+function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
+    if (is_numeric($view)) {
+        $view = new View($view);
+    }
+    $viewid = $view->get('id');
+
     $options = array();
     foreach ($tutorgroupdata as $group) {
         $options[$group->id] = $group->name;
     }
+
     // This form sucks from a language string point of view. It should
     // use pieforms' form template feature
-    return pieform(array(
+    $form = array(
         'name' => 'view_group_submission_form_' . $viewid,
         'method' => 'post',
         'renderer' => 'oneline',
@@ -4380,7 +4487,8 @@ function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
         'successcallback' => 'view_group_submission_form_submit',
         'elements' => array(
             'text1' => array(
-                'type' => 'html', 'value' => get_string('submitthisviewto', 'view') . ' ',
+                'type' => 'html',
+                'value' => '',
             ),
             'options' => array(
                 'type' => 'select',
@@ -4395,20 +4503,43 @@ function view_group_submission_form($viewid, $tutorgroupdata, $returnto=null) {
                 'type' => 'submit',
                 'value' => get_string('submit')
             ),
-            'view' => array(
-                'type' => 'hidden',
-                'value' => $viewid
-            ),
             'returnto' => array(
                 'type' => 'hidden',
                 'value' => $returnto,
             )
         ),
-    ));
+    );
+
+    if ($view->get_collection()) {
+        $form['elements']['collection'] = array(
+            'type' => 'hidden',
+            'value' => $view->get_collection()->get('id'),
+        );
+        $form['elements']['text1']['value'] = get_string('submitthiscollectionto', 'view') . ' ';
+    }
+    else {
+        $form['elements']['view'] = array(
+            'type' => 'hidden',
+            'value' => $viewid
+        );
+        $form['elements']['text1']['value'] = get_string('submitthisviewto', 'view') . ' ';
+    }
+
+    return pieform($form);
 }
 
 function view_group_submission_form_submit(Pieform $form, $values) {
-    redirect('/view/submit.php?id=' . $values['view'] . '&group=' . $values['options'] . '&returnto=' . $values['returnto']);
+    $params = array(
+        'group' => $values['options'],
+        'returnto' => $values['returnto'],
+    );
+    if (isset($values['collection'])) {
+        $params['collection'] = $values['collection'];
+    }
+    else {
+        $params['id'] = $values['view'];
+    }
+    redirect('/view/submit.php?' . http_build_query($params));
 }
 
 

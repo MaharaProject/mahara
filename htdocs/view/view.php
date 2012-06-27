@@ -106,12 +106,27 @@ if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphom
 
 define('TITLE', $view->get('title'));
 
+$collection = $view->get('collection');
 $submittedgroup = (int)$view->get('submittedgroup');
 if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_record('group', 'id', $submittedgroup);
-    if ($view->get('submittedtime')) {
+    // If the view is part of a submitted collection, the whole
+    // collection must be released at once.
+    $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id;
+    if ($releasecollection) {
+        if ($ctime = $collection->get('submittedtime')) {
+            $text = get_string(
+                'collectionsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name),
+                format_date(strtotime($ctime))
+            );
+        }
+        else {
+            $text = get_string('collectionsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
+        }
+    }
+    else if ($view->get('submittedtime')) {
         $text = get_string('viewsubmittedtogroupon', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name), format_date(strtotime($view->get('submittedtime'))));
     }
     else {
@@ -130,7 +145,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             ),
             'submit' => array(
                 'type'  => 'submit',
-                'value' => get_string('releaseview', 'group'),
+                'value' => $releasecollection ? get_string('releasecollection', 'group') : get_string('releaseview', 'group'),
             ),
         ),
     ));
@@ -139,11 +154,16 @@ else {
     $releaseform = '';
 }
 
-
 function releaseview_submit() {
-    global $USER, $SESSION, $view, $submittedgroup;
-    $view->release($USER);
-    $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+    global $USER, $SESSION, $view, $collection, $submittedgroup, $releasecollection;
+    if ($releasecollection) {
+        $collection->release($USER);
+        $SESSION->add_ok_msg(get_string('collectionreleasedsuccess', 'group'));
+    }
+    else {
+        $view->release($USER);
+        $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+    }
     if ($submittedgroup) {
         // The tutor might not have access to the view any more; send
         // them back to the group page.
@@ -218,7 +238,7 @@ addLoadEvent(function () {
 EOF;
 
 // collection top navigation
-if ($collection = $view->get('collection')) {
+if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
         if ($views = $collection->get('views')) {
@@ -310,10 +330,10 @@ $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 if ($owner && $owner == $USER->get('id')) {
     if ($tutorgroupdata = group_get_user_course_groups()) {
-        if (!$view->get('submittedgroup') && !$view->get('submittedhost')) {
+        if (!$view->is_submitted()) {
             $smarty->assign(
                 'view_group_submission_form',
-                view_group_submission_form($view->get('id'), $tutorgroupdata, 'view')
+                view_group_submission_form($view, $tutorgroupdata, 'view')
             );
         }
     }

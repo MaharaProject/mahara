@@ -42,6 +42,7 @@ $string['addviewstocollection'] = 'Add pages to collection';
 $string['back'] = 'Back';
 $string['cantdeletecollection'] = 'You cannot delete this collection.';
 $string['canteditdontown'] = 'You cannot edit this collection because you do not own it.';
+$string['canteditsubmitted'] = 'You can\'t edit this collection because it has been submitted for assessment to %s. You will have to wait until a tutor releases it.';
 $string['collection'] = 'collection';
 $string['Collection'] = 'Collection';
 $string['collections'] = 'Collections';

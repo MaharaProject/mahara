@@ -39,7 +39,8 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
     // the actual check involves array keys
     $field = (array) $field;
 
-    $allowedvalues = array_keys($element['options']);
+    $options = $element['type'] == 'select' ? pieform_element_select_get_options($element) : $element['options'];
+    $allowedvalues = array_keys($options);
     foreach ($field as $key) {
         if (!in_array($key, $allowedvalues)) {
             return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), Pieform::hsc($key));

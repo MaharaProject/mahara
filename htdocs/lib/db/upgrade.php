@@ -2923,5 +2923,30 @@ function xmldb_core_upgrade($oldversion=0) {
         add_index($table, $index);
     }
 
+    if ($oldversion < 2012060100) {
+        // Collection submission
+        $table = new XMLDBTable('collection');
+
+        $field = new XMLDBField('submittedgroup');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        $field = new XMLDBField('submittedhost');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+        add_field($table, $field);
+
+        $field = new XMLDBField('submittedtime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $field);
+
+        $key = new XMLDBKey('submittedgroupfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('submittedgroup'), 'group', array('id'));
+        add_key($table, $key);
+
+        $key = new XMLDBKey('submittedhostfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('submittedhost'), 'host', array('wwwroot'));
+        add_key($table, $key);
+    }
+
     return $status;
 }

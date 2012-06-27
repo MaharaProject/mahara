@@ -30,13 +30,12 @@ define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
+require_once('collection.php');
 require_once('activity.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
-$viewid = param_integer('id');
 $groupid = param_integer('group');
 $returnto = param_variable('returnto', 'view');
 
-$view = new View($viewid);
 $group = get_record_sql(
     'SELECT g.id, g.name, g.grouptype, g.urlid
        FROM {group_member} u
@@ -47,11 +46,26 @@ $group = get_record_sql(
     array($USER->get('id'), $groupid)
 );
 
-if (!$view || !$group || $view->get('submittedgroup') || $view->get('submittedhost') || ($view->get('owner') !== $USER->get('id'))) {
-    throw new AccessDeniedException(get_string('cantsubmitviewtogroup', 'view'));
+if (!$group) {
+    throw new AccessDeniedException(get_string('cantsubmittogroup', 'view'));
 }
 
-define('TITLE', get_string('submitviewtogroup', 'view', $view->get('title'), $group->name));
+if ($collectionid = param_integer('collection', null)) {
+    $collection = new Collection($collectionid);
+    if (!$collection || $collection->is_submitted() || ($collection->get('owner') !== $USER->get('id'))) {
+        throw new AccessDeniedException(get_string('cantsubmitcollectiontogroup', 'view'));
+    }
+    $submissionname = $collection->get('name');
+}
+else {
+    $view = new View(param_integer('id'));
+    if (!$view || $view->is_submitted() || ($view->get('owner') !== $USER->get('id'))) {
+        throw new AccessDeniedException(get_string('cantsubmitviewtogroup', 'view'));
+    }
+    $submissionname = $view->get('title');
+}
+
+define('TITLE', get_string('submitviewtogroup', 'view', $submissionname, $group->name));
 
 $form = pieform(array(
     'name' => 'submitview',
@@ -69,65 +83,38 @@ $form = pieform(array(
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('message', get_string('submitviewconfirm', 'view', $view->get('title'), $group->name));
+$smarty->assign('message', get_string('submitconfirm', 'view', $submissionname, $group->name));
 $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $viewid, $view, $groupid, $group;
-    db_begin();
-    update_record('view', array('submittedgroup' => $groupid, 'submittedtime' => db_format_timestamp(time())), array('id' => $viewid));
-    $roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
-    foreach ($roles as $role) {
-        $accessrecord = (object) array(
-            'view'            => $viewid,
-            'group'           => $groupid,
-            'role'            => $role,
-            'visible'         => 0,
-            'allowcomments'   => 1,
-            'approvecomments' => 0,
-            'ctime'           => db_format_timestamp(time()),
-        );
-        ensure_record_exists('view_access', $accessrecord, $accessrecord);
+    global $SESSION, $USER, $view, $collection, $group;
+
+    if (!empty($collection)) {
+        $collection->submit($group, $USER);
+        $SESSION->add_ok_msg(get_string('collectionsubmitted', 'view'));
     }
-    ArtefactType::update_locked($USER->get('id'));
-    activity_occurred('groupmessage', array(
-        'submittedview' => $viewid,
-        'viewowner'     => $USER->get('id'),
-        'group'         => $groupid,
-        'roles'         => $roles,
-        'url'           => $view->get_url(false),
-        'strings'       => (object) array(
-            'urltext' => (object) array('key' => 'view'),
-            'subject' => (object) array(
-                'key'     => 'viewsubmittedsubject',
-                'section' => 'activity',
-                'args'    => array(hsc($group->name)),
-            ),
-            'message' => (object) array(
-                'key'     => 'viewsubmittedmessage',
-                'section' => 'activity',
-                'args'    => array(
-                    hsc(display_name($USER, null, false, true)),
-                    hsc($view->get('title')),
-                    hsc($group->name),
-                ),
-            ),
-        ),
-    ));
-    db_commit();
-    $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+    else if (!empty($view)) {
+        $view->submit($group, $USER);
+        $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+    }
+
     redirect('/' . returnto());
 }
 
 function returnto() {
-    global $view, $group, $returnto;
+    global $view, $collection, $group, $returnto;
     // Deteremine the best place to return to
     if ($returnto === 'group') {
         $goto = group_homepage_url($group, false);
     }
     else if ($returnto === 'view') {
-        $goto = $view->get_url(false);
+        if (!empty($collection)) {
+            $goto = $collection->get_url(false);
+        }
+        else {
+            $goto = $view->get_url(false);
+        }
     }
     else {
         $goto = 'view/';
