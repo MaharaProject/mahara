@@ -26,7 +26,7 @@ addLoadEvent(function() {literal}{{/literal}
 </script>
                 {else}
                 <div class="message">
-                  {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=artefact.blog}</a>{/if}
+                  {str tag=nopostsyet section=artefact.blog} {if !$blog->get('locked')}<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str tag=addone section=mahara}</a>{/if}
                 </div>
                 {/if}
 
