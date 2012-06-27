@@ -40,7 +40,15 @@ function xmldb_blocktype_textbox_upgrade($oldversion=0) {
             ORDER BY b.id';
         $done = 0;
         $lastid = 0;
-        $limit = 5000;
+
+        if (is_mysql()) {
+            $mp = mysql_get_variable('max_allowed_packet');
+            $limit = ($mp && is_numeric($mp) && $mp > 1048576) ? ($mp / 8192) : 100;
+        }
+        else {
+            $limit = 5000;
+        }
+
         while ($records = get_records_sql_array($sql, array($lastid, 'textbox'), 0, $limit)) {
             // Create the new artefacts
             $values = array();
