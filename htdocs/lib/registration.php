@@ -1980,6 +1980,184 @@ function institution_historical_stats_table($limit, $offset, $field, &$instituti
     return $result;
 }
 
+function institution_comparison_statistics($limit, $offset, $sort, $sortdesc) {
+    $data = array();
+    $data['tableheadings'] = array(
+        array(
+            'name' => get_string('institution'),
+            'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+        array(
+            'name' => get_string('members'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_members' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_members&sortdesc=' . ($sort == 'count_members' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+        array(
+            'name' => get_string('views'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_views' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_views&sortdesc=' . ($sort == 'count_views' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+        array(
+            'name' => get_string('blocks'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_blocks' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_blocks&sortdesc=' . ($sort == 'count_blocks' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+        array(
+            'name' => get_string('artefacts'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_artefacts' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_artefacts&sortdesc=' . ($sort == 'count_artefacts' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+        array(
+            'name' => get_string('posts'),
+            'class' => 'search-results-sort-column' . ($sort == 'count_interaction_forum_post' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_interaction_forum_post&sortdesc=' . ($sort == 'count_interaction_forum_post' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+        ),
+    );
+    $data['table'] = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
+    $data['tabletitle'] = get_string('institutionstatstabletitle', 'admin');
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+
+    return $data;
+}
+
+function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
+    global $USER;
+
+    $count = count_records_sql(
+            "SELECT COUNT(DISTINCT institution)
+            FROM {institution_registration}"
+    );
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=institution',
+        'jsonscript' => 'admin/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'extradata' => array('sort' => $sort, 'sortdesc' => $sortdesc),
+        'setlimit' => true,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    if ($count < 1) {
+        return $result;
+    }
+
+    if ($sort == 'displayname') {
+        if (is_postgres()) {
+            $institutions = get_records_sql_array(
+                    "SELECT tmp.id, tmp.institution AS name, i.displayname
+                    FROM (SELECT DISTINCT ON (institution)
+                        id, institution
+                        FROM {institution_registration}
+                        ORDER BY institution, time DESC
+                    ) tmp
+                    JOIN {institution} i ON (tmp.institution = i.name)
+                    ORDER BY i.displayname " . ($sortdesc ? 'DESC' : 'ASC') . "
+                    LIMIT ? OFFSET ?",
+                    array($limit, $offset)
+            );
+        }
+        else {
+            $institutions = get_records_sql_array(
+                    "SELECT tmp.id, tmp.institution AS name, i.displayname
+                    FROM (SELECT ir.id, ir.institution
+                        FROM {institution_registration} ir
+                        JOIN (SELECT institution, MAX(time) AS time
+                            FROM {institution_registration}
+                            GROUP BY institution
+                        ) inn ON (inn.institution = ir.institution AND inn.time = ir.time)
+                    ) tmp
+                    JOIN {institution} i ON (tmp.institution = i.name)
+                    ORDER BY i.displayname " . ($sortdesc ? 'DESC' : 'ASC') . "
+                    LIMIT ? OFFSET ?",
+                    array($limit, $offset)
+            );
+        }
+    }
+    else {
+        if (is_postgres()) {
+            $institutions = get_records_sql_array(
+                    "SELECT tmp.id, tmp.institution AS name, i.displayname
+                    FROM (SELECT DISTINCT ON (ir.institution)
+                        ir.id, ir.institution, ird.value
+                        FROM {institution_registration} ir
+                        JOIN {institution_registration_data} ird ON (ir.id = ird.registration_id)
+                        WHERE ird.field = ?
+                        ORDER BY ir.institution, ir.time DESC
+                    ) tmp
+                    JOIN {institution} i ON (tmp.institution = i.name)
+                    ORDER BY tmp.value::int " . ($sortdesc ? 'DESC' : 'ASC') . "
+                    LIMIT ? OFFSET ?",
+                    array($sort, $limit, $offset)
+            );
+        }
+        else {
+            $institutions = get_records_sql_array(
+                    "SELECT tmp.id, tmp.institution AS name, i.displayname
+                    FROM (SELECT ir.id, ir.institution, ird.value
+                        FROM {institution_registration} ir
+                        JOIN (SELECT institution, MAX(time) AS time
+                            FROM {institution_registration}
+                            GROUP BY institution
+                        ) inn ON (inn.institution = ir.institution AND inn.time = ir.time)
+                        JOIN {institution_registration_data} ird ON (ir.id = ird.registration_id)
+                        WHERE ird.field = ?
+                    ) tmp
+                    JOIN {institution} i ON (tmp.institution = i.name)
+                    ORDER BY (tmp.value + 0) " . ($sortdesc ? 'DESC' : 'ASC') . "
+                    LIMIT ? OFFSET ?",
+                    array($sort, $limit, $offset)
+            );
+        }
+    }
+
+    $registrationdata = array();
+    foreach ($institutions as $i) {
+        $d = new StdClass;
+        $d->name = $i->name;
+        $d->displayname = $i->displayname;
+        $current = get_records_select_array('institution_registration_data',
+                'registration_id = ? AND field IN (?, ?, ?, ? ,?)',
+                array($i->id, 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post'),
+                '', 'field, value'
+        );
+        foreach ($current as $data) {
+            $d->{$data->field} = $data->value;
+        }
+        $registrationdata[] = $d;
+    }
+
+    $csvfields = array('name', 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post');
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($registrationdata as &$d) {
+        $data = array();
+        foreach ($csvfields as $f) {
+            $data[] = str_replace('"', '""', $d->$f);
+        }
+        $csv .= '"' . join('","', $data) . '"' . "\n";
+    }
+    $USER->set_download_file($csv, 'institutionstatistics.csv', 'text/csv');
+    $result['csv'] = true;
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $registrationdata);
+    $smarty->assign('offset', $offset);
+    $result['tablerows'] = $smarty->fetch('admin/comparisonstats.tpl');
+
+    return $result;
+}
+
 
 function graph_site_data_weekly() {
 

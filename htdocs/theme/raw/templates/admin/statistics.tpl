@@ -24,11 +24,11 @@
   {/if}
   <div id="statistics_table_container" class="statistics-subpage-right-column {if $subpagedata.table.count == 0} hidden{/if}">
     <h3>{$subpagedata.tabletitle}</h3>
-    <table id="statistics_table" class="fullwidth">
+    <table id="statistics_table" class="tablerenderer fullwidth">
       <thead>
         <tr>
 {foreach from=$subpagedata.tableheadings item=heading}
-          <th{if $heading.class} class="{$heading.class}"{/if}>{$heading.name}</th>
+          <th{if $heading.class} class="{$heading.class}"{/if}>{if $heading.link}<a href="{$heading.link}">{/if}{$heading.name}{if $heading.link}</a>{/if}</th>
 {/foreach}
         </tr>
       </thead>

@@ -1039,3 +1039,7 @@ $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers
 $string['registration'] = 'Registration';
 $string['modified'] = 'Modified';
 $string['historical'] = 'Historical';
+$string['members'] = 'Members';
+$string['blocks'] = 'Blocks';
+$string['artefacts'] = 'Artefacts';
+$string['posts'] = 'Posts';
