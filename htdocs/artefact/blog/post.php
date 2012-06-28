@@ -44,6 +44,10 @@ safe_require('artefact', 'file');
  */
 $blogpost = param_integer('blogpost', param_integer('id', 0));
 if (!$blogpost) {
+/*
+ *  For a new post, a tag can be set from tagged blogpost block
+ */
+    $tagselect = param_variable('tagselect', '');
     $blog = param_integer('blog');
     if (!get_record('artefact', 'id', $blog, 'owner', $USER->get('id'))) {
         // Blog security is also checked closer to when blogs are added, this 
@@ -53,7 +57,7 @@ if (!$blogpost) {
     }
     $title = '';
     $description = '';
-    $tags = array();
+    $tags = array($tagselect);
     $checked = '';
     $pagetitle = get_string('newblogpost', 'artefact.blog', get_field('artefact', 'title', 'id', $blog));
     $focuselement = 'title';

@@ -364,6 +364,9 @@ form.pagination {
 	background-color: #FFFFFF;
 	border: 1px solid #D1D1D1;
 }
+.blockinstance-content div.shortcut {
+    padding: 3px 0px 3px 0px;
+}
 /**************************** Forms ****************************/
 form {
 	margin: 0;

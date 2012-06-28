@@ -109,6 +109,8 @@ class PluginBlocktypeBlog extends PluginBlocktype {
             $smarty->assign('owner', $blog->get('owner'));
             $smarty->assign('tags', $blog->get('tags'));
             $smarty->assign('blockid', $instance->get('id'));
+            $smarty->assign('editing', $editing);
+            $smarty->assign('blogid', $blog->get('id'));
             $smarty->assign('posts', $posts);
 
             $result = $smarty->fetch('artefact:blog:blog.tpl');
