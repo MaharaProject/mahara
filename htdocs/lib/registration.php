@@ -1718,6 +1718,10 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
         $count --;
     }
 
+    // Show all the stats, is a smallish number
+    $limit = $count;
+    $offset = 0;
+
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
         'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=registration',
@@ -1727,7 +1731,6 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
         'limit' => $limit,
         'offset' => $offset,
         'extradata' => array('institution' => $institutiondata['name']),
-        'setlimit' => true,
     ));
 
     $result = array(
