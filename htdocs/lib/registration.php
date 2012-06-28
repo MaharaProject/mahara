@@ -1605,7 +1605,7 @@ function registration_stats_table($limit, $offset) {
     $dates = get_records_array('site_registration', '', '', 'time DESC', '*', 0, 2);
 
     if ($dates) {
-        $count = count_records('site_registration_data', 'registration_id', $dates[0]->id);
+        $count = count_records_select('site_registration_data', 'registration_id = ? AND value ' . (is_postgres() ? '~ E' : 'REGEXP ') . '\'^[0-9]+$\' AND field NOT LIKE \'%version\'', array($dates[0]->id));
     }
     else {
         $count = 0;
@@ -1638,6 +1638,8 @@ function registration_stats_table($limit, $offset) {
             field, value
         FROM {site_registration_data}
         WHERE registration_id = ?
+        AND value " . (is_postgres() ? "~ E" : "REGEXP ") . "'^[0-9]+$'
+        AND field NOT LIKE '%version'
         ORDER BY field",
         array($dates[0]->id),
         $offset,
