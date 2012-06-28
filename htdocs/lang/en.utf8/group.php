@@ -81,7 +81,6 @@ $string['editroles'] = 'Create and edit pages';
 $string['editrolesdescription'] = 'Roles with permission to create and edit group pages.';
 $string['allexceptmember'] = 'Everyone except ordinary members';
 $string['Admin'] = 'Admin';
-$string['grouptype'] = 'Group type';
 $string['publiclyviewablegroup'] = 'Publicly viewable group';
 $string['publiclyviewablegroupdescription'] = 'Allow people who are not logged in to view this group including the forums.';
 $string['Type'] = 'Type';
