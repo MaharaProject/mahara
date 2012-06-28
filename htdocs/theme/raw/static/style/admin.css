@@ -239,6 +239,11 @@ input#register_register {
 #site-stats-wrap2 {
 	margin-left: 320px;
 }
+.statistics-subpage-full-column {
+	width: 100%;
+	float: left;
+	margin-left: -160px;
+}
 .statistics-subpage-left-column {
 	width: 320px;
 	float: left;

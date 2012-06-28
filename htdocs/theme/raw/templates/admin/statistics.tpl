@@ -13,16 +13,18 @@
 </ul></div>
 
 <div class="subpage rel"><div id="site-stats-wrap2">
-  <div class="statistics-subpage-left-column">
-  {$subpagedata.summary|safe}
-  </div>
+  {if $subpagedata.summary}
+    <div class="statistics-subpage-left-column">
+      {$subpagedata.summary|safe}
+    </div>
+  {/if}
   {if $subpagedata.table.csv}
   <div class="fr">
     <span class="bulkaction-title">{str tag=exportstatsascsv section=admin}:</span>
     <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin}</a>
   </div>
   {/if}
-  <div id="statistics_table_container" class="statistics-subpage-right-column {if $subpagedata.table.count == 0} hidden{/if}">
+  <div id="statistics_table_container" class="statistics-subpage-{if $subpagedata.summary}right{else}full{/if}-column {if $subpagedata.table.count == 0} hidden{/if}">
     <h3>{$subpagedata.tabletitle}</h3>
     <table id="statistics_table" class="tablerenderer fullwidth">
       <thead>

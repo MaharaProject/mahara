@@ -1594,7 +1594,7 @@ function registration_statistics($limit, $offset) {
     $data['table'] = registration_stats_table($limit, $offset);
     $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
 
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
@@ -1694,7 +1694,7 @@ function institution_registration_statistics($limit, $offset, &$institutiondata)
     $data['table'] = institution_registration_stats_table($limit, $offset, $institutiondata);
     $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
 
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
@@ -1803,7 +1803,7 @@ function historical_statistics($limit, $offset, $field) {
     $data['table'] = historical_stats_table($limit, $offset, $field);
     $data['tabletitle'] = get_string('historicalstatstabletitle', 'admin', get_string($field, 'statistics'));
 
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
@@ -1893,7 +1893,7 @@ function institution_historical_statistics($limit, $offset, $field, &$institutio
     $data['table'] = institution_historical_stats_table($limit, $offset, $field, $institutiondata);
     $data['tabletitle'] = get_string('historicalstatstabletitle', 'admin', get_string($field, 'statistics'));
 
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
@@ -2017,7 +2017,7 @@ function institution_comparison_statistics($limit, $offset, $sort, $sortdesc) {
     $data['table'] = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
     $data['tabletitle'] = get_string('institutionstatstabletitle', 'admin');
 
-    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : 'FIXME: should something go here?';
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
