@@ -65,7 +65,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 WHERE a.artefacttype = \'blogpost\'
                 AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
                 AND at.tag = ?
-                ORDER BY a.ctime DESC
+                ORDER BY a.ctime DESC, a.id DESC
                 LIMIT ?';
 
             $results = get_records_sql_array($sql, array($view, $tagselect, $limit));
