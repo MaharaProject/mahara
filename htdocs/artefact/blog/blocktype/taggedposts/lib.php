@@ -41,6 +41,16 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         return array('blog');
     }
 
+    public static function get_instance_javascript(BlockInstance $bi) {
+        $blockid = $bi->get('id');
+        return array(
+            array(
+                'file'   => 'js/taggedposts.js',
+                'initjs' => "addNewTaggedPostShortcut($blockid);",
+            )
+        );
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         global $USER;
 
@@ -70,6 +80,17 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
             $results = get_records_sql_array($sql, array($view, $tagselect, $limit));
 
+            $smarty->assign('blockid', $instance->get('id'));
+            $smarty->assign('editing', $editing);
+            if ($editing) {
+                // Get list of blogs owned by this user to create the "Add new post" shortcut while editing
+                $viewowner = $instance->get_view()->get('owner');
+                if (!$viewowner || !$blogs = get_records_select_array('artefact', 'artefacttype = \'blog\' AND owner = ?', array($viewowner), 'title ASC', 'id, title')) {
+                    $blogs = array();
+                }
+                $smarty->assign('tagselect', $tagselect);
+                $smarty->assign('blogs', $blogs);
+            }
 
             // if posts are not found with the selected tag, notify the user
             if (!$results) {

@@ -1,3 +1,8 @@
+{if ($editing)}
+<div class="right">
+    <span> <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blogid}" target="_blank">{str tag='shortcutnewentry' section='artefact.blog'}</a> </span>
+</div>
+{/if}
 {if !$options.hidetitle}
 <h2>{$artefacttitle|safe}</h2>
 {/if}

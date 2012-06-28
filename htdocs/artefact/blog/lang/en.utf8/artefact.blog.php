@@ -146,3 +146,7 @@ $string['feedrights'] = 'Copyright %s.';
 
 $string['enablemultipleblogstext'] = 'You have one journal. If you would like to start a second one, enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
 $string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option. You can set that on the <a href="%saccount/">account settings</a> page.';
+
+$string['shortcutaddpost'] = 'Add a new entry to';
+$string['shortcutgo'] = 'Go';
+$string['shortcutnewentry'] = 'New entry';

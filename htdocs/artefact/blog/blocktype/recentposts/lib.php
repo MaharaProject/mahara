@@ -42,6 +42,16 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         return array('blog');
     }
 
+    public static function get_instance_javascript(BlockInstance $bi) {
+        $blockid = $bi->get('id');
+        return array(
+            array(
+                'file'   => 'js/recentposts.js',
+                'initjs' => "addNewPostShortcut($blockid);",
+            )
+        );
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
 
@@ -77,6 +87,17 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
             $smarty = smarty_core();
             $smarty->assign('mostrecent', $mostrecent);
             $smarty->assign('view', $instance->get('view'));
+            $smarty->assign('blockid', $instance->get('id'));
+            $smarty->assign('editing', $editing);
+            if ($editing) {
+                // Get id and title of configued blogs
+                $recentpostconfigdata = $instance->get('configdata');
+                $wherestm = ' WHERE id IN (' . join(',', array_fill(0, count($recentpostconfigdata['artefactids']), '?')) . ')';
+                if (!$selectedblogs = get_records_sql_array('SELECT id, title FROM {artefact}'. $wherestm, $recentpostconfigdata['artefactids'])) {
+                    $selectedblogs = array();
+                }
+                $smarty->assign('blogs', $selectedblogs);
+            }
             $result = $smarty->fetch('blocktype:recentposts:recentposts.tpl');
         }
 
