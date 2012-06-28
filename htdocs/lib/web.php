@@ -3543,3 +3543,45 @@ function generate_urlid($dirty, $default, $minlength=3, $maxlength=100) {
     }
     return $s;
 }
+
+/**
+ * Sorts an array by one of the value fields
+ *
+ * @param array  $data an array of arrays
+ * @param string $sort a key field value of second tier array
+ * @param string $direction the direction of the sort
+ */
+function sorttablebycolumn(&$data, $sort, $direction) {
+    global $sortvalue;
+    $sortvalue = $sort;
+    if ($direction == 'desc') {
+        usort($data, 'sorttablearraydesc');    }
+    else {
+        usort($data, 'sorttablearrayasc');
+    }
+
+}
+
+/**
+ * Compare function for sorttablebycolumn()
+ * Sorts ascending.
+ */
+function sorttablearrayasc($a, $b) {
+    global $sortvalue;
+    if (is_string($a[$sortvalue])) {
+        return strcmp(strtolower($a[$sortvalue]), strtolower($b[$sortvalue]));
+    }
+    return ($a[$sortvalue] < $b[$sortvalue]) ? -1 : 1;
+}
+
+/**
+ * Compare function for sorttablebycolumn()
+ * Sorts descending
+ */
+function sorttablearraydesc($a, $b) {
+    global $sortvalue;
+    if (is_string($a[$sortvalue])) {
+        return strcmp(strtolower($b[$sortvalue]), strtolower($a[$sortvalue]));
+    }
+    return ($b[$sortvalue] < $a[$sortvalue]) ? -1 : 1;
+}

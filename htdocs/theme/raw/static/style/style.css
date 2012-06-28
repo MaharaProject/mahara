@@ -2789,3 +2789,29 @@ form#register tbody tr.checkbox td {
 	font-weight:normal;
 	margin: 0px 5px
 }
+
+/* Group reports */
+
+table.groupviewsreport .sorted, table.sharedviewsreport .sorted {
+        background: url("../images/down.gif") no-repeat scroll 2px center transparent;
+        padding-left: 18px;
+        text-decoration: none;
+}
+
+table.groupviewsreport .asc, table.sharedviewsreport .asc  {
+        background: url("../images/up.gif") no-repeat scroll 2px center transparent;
+        padding-left: 18px;
+        text-decoration: none;
+}
+
+table.groupviewsreport li, table.sharedviewsreport li {
+        clear: both;
+}
+
+table.groupviewsreport ul, table.sharedviewsreport ul {
+        margin: 0px;
+}
+
+table.groupviewsreport li span.right, table.sharedviewsreport li span.right {
+        float: right;
+}
