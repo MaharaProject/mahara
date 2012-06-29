@@ -1033,8 +1033,21 @@ class User {
      */
     public function can_edit_collection($c) {
         $owner = $c->get('owner');
-        if ($owner == $this->get('id')) {
+        if ($owner > 0 && $owner == $this->get('id')) {
             return true;
+        }
+        $institution = $c->get('institution');
+        if ($institution && $this->can_edit_institution($institution)) {
+            return true;
+        }
+        $group = $c->get('group');
+        if ($group) {
+            $this->reset_grouproles();
+            if (!isset($this->grouproles[$group])) {
+                return false;
+            }
+            require_once('group.php');
+            return group_role_can_edit_views($group, $this->grouproles[$group]);
         }
         return false;
     }

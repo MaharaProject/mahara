@@ -26,7 +26,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/collection');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
@@ -44,15 +43,44 @@ $direction = param_variable('direction','');
 
 $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
-    $SESSION->add_error_msg(get_string('canteditdontown', 'collection'));
-    redirect('/collection/');
+    throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
+}
+$owner = $collection->get('owner');
+$groupid = $collection->get('group');
+$institutionname = $collection->get('institution');
+$urlparams = array();
+if (!empty($groupid)) {
+    define('MENUITEM', 'groups/collections');
+    define('GROUP', $groupid);
+    $group = group_current_group();
+    define('TITLE', $group->name . ' - ' . get_string('editcollection', 'collection'));
+    $urlparams['group'] = $groupid;
+}
+else if (!empty($institutionname)) {
+    if ($institutionname == 'mahara') {
+        define('ADMIN', 1);
+        define('MENUITEM', 'configsite/collections');
+    }
+    else {
+        define('INSTITUTIONALADMIN', 1);
+        define('MENUITEM', 'manageinstitutions/institutioncollections');
+    }
+    define('TITLE', get_string('editcollection', 'collection'));
+    $urlparams['institution'] = $institutionname;
+}
+else {
+    define('MENUITEM', 'myportfolio/collection');
+    define('TITLE', get_string('editcollection', 'collection'));
+}
+define('SUBTITLE', $collection->get('name'). ': ' . get_string('editviews', 'collection'));
+$baseurl = get_config('wwwroot') . 'collection/index.php';
+if ($urlparams) {
+    $baseurl .= '?' . http_build_query($urlparams);
 }
 if ($collection->is_submitted()) {
     $submitinfo = $collection->submitted_to();
     throw new AccessDeniedException(get_string('canteditsubmitted', 'collection', $submitinfo->name));
 }
-
-define('TITLE', $collection->get('name') . ': ' . get_string('editviews', 'collection'));
 
 if ($view AND !empty($direction)) {
     $collection->set_viewdisplayorder($view,$direction);
@@ -83,7 +111,7 @@ if ($views) {
 
 $elements = array();
 $viewsform = null;
-if ($available = Collection::available_views()) {
+if ($available = Collection::available_views($owner, $groupid, $institutionname)) {
     foreach ($available as $a) {
         $elements['view_'.$a->id] = array(
             'type'      => 'checkbox', 
@@ -108,7 +136,15 @@ if ($available = Collection::available_views()) {
 
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', TITLE);
+if (!empty($groupid)) {
+    $smarty->assign('PAGESUBHEADING', SUBTITLE);
+    $smarty->assign('PAGEHELPNAME', '0');
+    $smarty->assign('SUBPAGEHELPNAME', '1');
+}
+else {
+    $smarty->assign('PAGEHEADING', SUBTITLE);
+}
+$smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl',get_config('wwwroot').'collection/views.php?id='.$id);
 $smarty->assign('removeurl',get_config('wwwroot').'collection/deleteview.php?id='.$id);
 $smarty->assign_by_ref('views', $views);

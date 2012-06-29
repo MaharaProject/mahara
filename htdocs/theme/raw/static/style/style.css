@@ -869,13 +869,6 @@ div.pagetabs {
 * html div.pagetabs {
 	right: 35px;
 }
-div.pagetabs a {
-	font-weight: bold !important;
-	border: none;
-	margin: 0 10px;
-	padding: 0;
-	background: none;
-}
 div.pagetabs .help a {
 	margin: 0;
 }

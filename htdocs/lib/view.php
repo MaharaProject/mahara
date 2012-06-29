@@ -3607,13 +3607,9 @@ class View {
 
     public static function get_templatesearch_data(&$search) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $isstandalone = isset($search->copyableby->owner) && $search->copyableby->owner;
-        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, $isstandalone);
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, true);
 
         foreach ($results->data as &$r) {
-            if (!$isstandalone) {
-                $r['collid'] = null;
-            }
             $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
         }
 
@@ -3634,7 +3630,6 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
-        $smarty->assign('showcollection', $isstandalone ? 1 : 0);
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
 
@@ -4074,7 +4069,7 @@ class View {
                 'submittedhost'  => $r['submittedhost'],
                 'submittedtime'  => $r['submittedtime'],
             );
-            if ($r['user']) {
+            if (isset($r['user'])) {
                 $v['ownername'] = display_name($r['user']);
                 $v['ownerurl']  = profile_url($r['user']);
             }
@@ -4095,7 +4090,7 @@ class View {
                         'submittedtime'  => $r['csubmittime'],
                         'views' => array(),
                     );
-                    if ($r['user']) {
+                    if (isset($r['user'])) {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
@@ -4403,7 +4398,7 @@ function createview_submit(Pieform $form, $values) {
         list($collection, $template, $copystatus) = Collection::create_from_template($values, $templateid);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
-            redirect(get_config('wwwroot') . 'collection/choosetemplate.php');
+            redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
         $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
             $copystatus['pages'],
@@ -4412,7 +4407,7 @@ function createview_submit(Pieform $form, $values) {
             $template->get('name'))
         );
 
-        redirect(get_config('wwwroot') . 'collection/edit.php?new=1&id=' . $collection->get('id'));
+        redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
     else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];

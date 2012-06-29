@@ -1649,11 +1649,18 @@ function group_get_menu_tabs() {
     );
 
     if (group_role_can_edit_views($group, $role)) {
+        $menu['collections'] = array(
+            'path' => 'groups/collections',
+            'url' => 'collection/index.php?group='.$group->id,
+            'title' => get_string('Collections', 'group'),
+            'weight' => 60,
+        );
+
         $menu['share'] = array(
             'path' => 'groups/share',
             'url' => 'group/shareviews.php?group='.$group->id,
             'title' => get_string('share', 'view'),
-            'weight' => 60,
+            'weight' => 70,
         );
     }
 

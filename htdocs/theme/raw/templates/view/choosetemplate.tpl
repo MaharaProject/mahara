@@ -1,4 +1,7 @@
 {include file="header.tpl"}
+{if $GROUP}
+    <h2>{$PAGESUBHEADING}</h2>
+{/if}
 {$helptext|safe}
 <div id="copyview">
 

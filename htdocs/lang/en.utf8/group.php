@@ -277,6 +277,7 @@ $string['currentfriends'] = 'Current friends';
 $string['pendingfriends'] = 'Pending friends';
 $string['backtofriendslist'] = 'Back to friends list';
 $string['findnewfriends'] = 'Find new friends';
+$string['Collections']    = 'Collections';
 $string['Views']          = 'Pages';
 $string['Files']          = 'Files';
 $string['noviewstosee']   = 'None that you can see :(';

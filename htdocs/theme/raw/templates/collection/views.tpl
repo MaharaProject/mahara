@@ -1,4 +1,7 @@
 {include file="header.tpl"}
+{if $GROUP}
+    <h2>{$PAGESUBHEADING}{if $SUBPAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h2>
+{/if}
 {if !$views}
         <div class="message">{str tag=noviews section=collection}</div>
 {else}
@@ -41,7 +44,5 @@
     {str tag=noviewsavailable section=collection}
 {/if}
 </fieldset>
-<form action="{$WWWROOT}collection/index.php">
-  <input type="submit" class="submit" value="{str tag=done}">
-</form>
+<a class="btn" href="{$baseurl}">{str tag=done}</a>
 {include file="footer.tpl"}

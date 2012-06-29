@@ -706,6 +706,10 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
    institutionadmins.php and institutionstaff.php (in /admin/users/).
    This function creates the form for the page. */
 function institution_selector_for_page($institution, $page) {
+    // Special case: $institution == 1 <-> any institution
+    if ($institution == 1) {
+        $institution = '';
+    }
     require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
 
@@ -727,14 +731,22 @@ function institution_selector_for_page($institution, $page) {
             'institution' => $institutionelement,
         )
     ));
-    
+
+    $page = json_encode($page);
     $js = <<< EOF
 function reloadUsers() {
+    var urlstr = $page;
     var inst = '';
     if ($('institutionselect_institution')) {
-        inst = '?institution='+$('institutionselect_institution').value;
+        inst = 'institution='+$('institutionselect_institution').value;
+        if (urlstr.indexOf('?') > 0) {
+            urlstr = urlstr + '&' + inst;
+        }
+        else {
+            urlstr = urlstr + '?' + inst;
+        }
     }
-    window.location.href = '{$page}'+inst;
+    window.location.href = urlstr;
 }
 addLoadEvent(function() {
     if ($('institutionselect_institution')) {
