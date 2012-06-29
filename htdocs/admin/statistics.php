@@ -26,8 +26,8 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'adminhome');
+define('STAFF', 1);
+define('MENUITEM', 'adminhome/statistics');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'registration.php');
@@ -35,7 +35,7 @@ require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('sitestatistics', 'admin'));
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'groups', 'views');
+$subpages = array('users', 'groups', 'views', 'registration', 'historical', 'institution');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
@@ -43,9 +43,27 @@ if (!in_array($type, $subpages)) {
     $type = 'users';
 }
 
+if ($type == 'historical') {
+    $field = param_alphanumext('field', 'count_usr');
+}
+
+if ($type == 'institution') {
+    $sort = param_alphanumext('sort', 'displayname');
+    $sortdesc = param_boolean('sortdesc');
+}
+
 $sitedata = site_statistics(true);
 
 switch ($type) {
+case 'institution':
+    $data = institution_comparison_statistics($limit, $offset, $sort, $sortdesc);
+    break;
+case 'historical':
+    $data = historical_statistics($limit, $offset, $field);
+    break;
+case 'registration':
+    $data = registration_statistics($limit, $offset);
+    break;
 case 'groups':
     $data = group_statistics($limit, $offset);
     break;

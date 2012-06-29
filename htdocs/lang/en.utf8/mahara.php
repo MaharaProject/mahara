@@ -542,6 +542,7 @@ $string['processing']     = 'Processing';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 
 // menu
+$string['overview']    = 'Overview';
 $string['home']        = 'Home';
 $string['Content']     = 'Content';
 $string['myportfolio'] = 'Portfolio';
@@ -1033,3 +1034,12 @@ $string['betweenxandy'] = 'Between %s and %s';
 
 // Clean URLs
 $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers, and - are allowed.';
+
+// Registration statistics
+$string['registration'] = 'Registration';
+$string['modified'] = 'Modified';
+$string['historical'] = 'Historical';
+$string['members'] = 'Members';
+$string['blocks'] = 'Blocks';
+$string['artefacts'] = 'Artefacts';
+$string['posts'] = 'Posts';

@@ -1776,6 +1776,24 @@ function admin_nav() {
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
         ),
+        'adminhome/home' => array(
+            'path'   => 'adminhome/home',
+            'url'    => 'admin/',
+            'title'  => get_string('overview'),
+            'weight' => 10,
+        ),
+        'adminhome/registersite' => array(
+            'path'   => 'adminhome/registersite',
+            'url'    => 'admin/registersite.php',
+            'title'  => get_string('register'),
+            'weight' => 20,
+        ),
+        'adminhome/statistics' => array(
+            'path'   => 'adminhome/statistics',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('sitestatistics', 'admin'),
+            'weight' => 30,
+        ),
         'configsite' => array(
             'path'   => 'configsite',
             'url'    => 'admin/site/options.php',
@@ -1950,11 +1968,17 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 70,
         ),
+        'manageinstitutions/statistics' => array(
+            'path'   => 'manageinstitutions/statistics',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 80,
+        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 80,
+            'weight' => 90,
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
@@ -2101,11 +2125,17 @@ function institutional_admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 80,
         ),
+        'manageinstitutions/statistics' => array(
+            'path'   => 'manageinstitutions/statistics',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 90,
+        ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 90,
+            'weight' => 100,
         ),
     );
 
@@ -2123,6 +2153,40 @@ function staff_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
+        ),
+        'statistics' => array(
+            'path'   => 'statistics',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('sitestatistics', 'admin'),
+            'weight' => 20,
+        ),
+        'institutionalstatistics' => array(
+            'path'   => 'statistics',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 30,
+        ),
+    );
+}
+
+/**
+ * Returns the entries in the institutional staff menu
+ *
+ * @return a data structure containing the institutional staff navigation
+ */
+function institutional_staff_nav() {
+    return array(
+        'usersearch' => array(
+            'path'   => 'usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
+        ),
+        'institutionalstatistics' => array(
+            'path'   => 'statistics',
+            'url'    => 'admin/users/statistics.php',
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 20,
         ),
     );
 }
@@ -2240,8 +2304,11 @@ function main_nav() {
         else if ($USER->is_institutional_admin()) {
             $menu = institutional_admin_nav();
         }
-        else {
+        else if ($USER->get('staff')) {
             $menu = staff_nav();
+        }
+        else {
+            $menu = institutional_staff_nav();
         }
     }
     else {

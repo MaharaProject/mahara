@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2012 Catalyst IT Ltd and others; see:
  *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @author     Hugh Davenport <hugh@catalyst.net.nz
  *
  */
 
@@ -29,47 +27,39 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('JSON', 1);
 
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require(get_config('libroot') . 'registration.php');
 
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $extradata = json_decode(param_variable('extradata'));
+$institution = (isset($extradata->institution) ? $extradata->institution : 'mahara');
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'groups', 'views', 'registration', 'historical', 'institution');
+$subpages = array('users', 'views', 'registration', 'historical');
 if (!in_array($type, $subpages)) {
     $type = 'users';
 }
 
 if ($type == 'historical') {
-    $field = (isset($extradata->field) ? $extradata->field : 'count_usr');
+    $field = (isset($extradata->field) ? $extradata->field : 'count_members');
 }
 
-if ($type == 'institution') {
-    $sort = (isset($extradata->sort) ? $extradata->sort : 'displayname');
-    $sortdesc = (isset($extradata->sortdesc) ? $extradata->sortdesc : false);
-}
+$institutiondata = institution_statistics($institution, true);
 
 switch ($type) {
-case 'institution':
-    $data = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
-    break;
 case 'historical':
-    $data = historical_stats_table($limit, $offset, $field);
+    $data = institution_historical_stats_table($limit, $offset, $field, $institutiondata);
     break;
 case 'registration':
-    $data = registration_stats_table($limit, $offset);
-    break;
-case 'groups':
-    $data = group_stats_table($limit, $offset);
+    $data = institution_registration_stats_table($limit, $offset, $institutiondata);
     break;
 case 'views':
-    $data = view_stats_table($limit, $offset);
+    $data = institution_view_stats_table($limit, $offset, $institutiondata);
     break;
 case 'users':
 default:
-    $data = user_stats_table($limit, $offset);
+    $data = institution_user_stats_table($limit, $offset, $institutiondata);
 }
 
 json_reply(false, (object) array('message' => false, 'data' => $data));

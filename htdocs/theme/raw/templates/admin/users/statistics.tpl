@@ -1,14 +1,15 @@
 {include file='header.tpl'}
 
-{if $sitedata}
+{$institutionselector|safe}
+{if $institutiondata}
 <div id="site-stats-wrap">
 <div class="site-stats-left">
-  {include file='admin/stats.tpl' cron=1}
+  {include file='admin/users/stats.tpl' cron=1}
 </div>
 <div class="site-stats-right">
 <div class="tabswrap"><ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
-  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
+  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/users/statistics.php?institution={$institutiondata.name}&type={$subpage}">{str tag=$subpage}</a></li>
 {/foreach}
 </ul></div>
 
@@ -26,11 +27,11 @@
   {/if}
   <div id="statistics_table_container" class="statistics-subpage-{if $subpagedata.summary}right{else}full{/if}-column {if $subpagedata.table.count == 0} hidden{/if}">
     <h3>{$subpagedata.tabletitle}</h3>
-    <table id="statistics_table" class="tablerenderer fullwidth">
+    <table id="statistics_table" class="fullwidth">
       <thead>
         <tr>
 {foreach from=$subpagedata.tableheadings item=heading}
-          <th{if $heading.class} class="{$heading.class}"{/if}>{if $heading.link}<a href="{$heading.link}">{/if}{$heading.name}{if $heading.link}</a>{/if}</th>
+          <th{if $heading.class} class="{$heading.class}"{/if}>{$heading.name}</th>
 {/foreach}
         </tr>
       </thead>

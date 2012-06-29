@@ -2948,5 +2948,82 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2012062900) {
+        // Add site registration data tables
+        $table = new XMLDBTable('site_registration');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('time', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $table = new XMLDBTable('site_registration_data');
+        $table->addFieldInfo('registration_id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('registration_id', 'field'));
+        $table->addKeyInfo('regdatafk', XMLDB_KEY_FOREIGN, array('registration_id'), 'site_registration', array('id'));
+        create_table($table);
+    }
+
+    if ($oldversion < 2012062901) {
+        // Add institution registration data tables
+        $table = new XMLDBTable('institution_registration');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('time', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        create_table($table);
+
+        $table = new XMLDBTable('institution_registration_data');
+        $table->addFieldInfo('registration_id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('registration_id', 'field'));
+        $table->addKeyInfo('regdatafk', XMLDB_KEY_FOREIGN, array('registration_id'), 'institution_registration', array('id'));
+        create_table($table);
+
+        // Install a cron job to collection institution registration data
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_institution_registration_data';
+        $cron->minute       = rand(0,59);
+        $cron->hour         = rand(0,23);
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = rand(0,6);
+        insert_record('cron', $cron);
+    }
+
+    if ($oldversion < 2012062902) {
+        // Add institution stats table
+        $table = new XMLDBTable('institution_data');
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('ctime','institution','type'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        create_table($table);
+
+        // Insert cron jobs to save institution data
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_institution_data_weekly';
+        $cron->minute       = 55;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = 6;
+        insert_record('cron', $cron);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_institution_data_daily';
+        $cron->minute       = 51;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }
