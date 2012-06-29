@@ -695,15 +695,7 @@ function user_stats_table($limit, $offset) {
     }
 
     $csvfields = array('date', 'loggedin', 'created', 'total');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($data as $row) {
-        $u = array();
-        foreach ($csvfields as $f) {
-            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
-        }
-        $csv .= '"' . join('","', $u) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'userstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -931,15 +923,7 @@ function institution_user_stats_table($limit, $offset, &$institutiondata) {
     }
 
     $csvfields = array('date', 'loggedin', 'created', 'total');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($data as $row) {
-        $u = array();
-        foreach ($csvfields as $f) {
-            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
-        }
-        $csv .= '"' . join('","', $u) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'userstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1112,15 +1096,7 @@ function group_stats_table($limit, $offset) {
     );
 
     $csvfields = array('id', 'name', 'members', 'views', 'forums', 'posts');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($groupdata as &$g) {
-        $group = array();
-        foreach ($csvfields as $f) {
-            $group[] = str_replace('"', '""', $g->$f);
-        }
-        $csv .= '"' . join('","', $group) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'groupstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($groupdata, $csvfields), 'groupstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     require_once('group.php');
@@ -1303,15 +1279,7 @@ function view_stats_table($limit, $offset) {
     }
 
     $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($viewdata as &$v) {
-        $view = array();
-        foreach ($csvfields as $f) {
-            $view[] = str_replace('"', '""', $v->$f);
-        }
-        $csv .= '"' . join('","', $view) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'viewstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1495,15 +1463,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata) {
     }
 
     $csvfields = array('title', 'displaytitle', 'fullurl', 'owner', 'group', 'institution', 'ownername', 'ownerurl', 'visits', 'type', 'comments');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($viewdata as &$v) {
-        $view = array();
-        foreach ($csvfields as $f) {
-            $view[] = str_replace('"', '""', $v->$f);
-        }
-        $csv .= '"' . join('","', $view) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'viewstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1666,15 +1626,7 @@ function registration_stats_table($limit, $offset) {
     }
 
     $csvfields = array('field', 'modified', 'value');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($registrationdata as &$d) {
-        $data = array();
-        foreach ($csvfields as $f) {
-            $data[] = str_replace('"', '""', $d->$f);
-        }
-        $csv .= '"' . join('","', $data) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1778,15 +1730,7 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
     }
 
     $csvfields = array('field', 'modified', 'value');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($registrationdata as &$d) {
-        $data = array();
-        foreach ($csvfields as $f) {
-            $data[] = str_replace('"', '""', $d->$f);
-        }
-        $csv .= '"' . join('","', $data) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1869,15 +1813,7 @@ function historical_stats_table($limit, $offset, $field) {
     }
 
     $csvfields = array('time', 'field', 'modified', 'value');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($registrationdata as &$d) {
-        $data = array();
-        foreach ($csvfields as $f) {
-            $data[] = str_replace('"', '""', $d->$f);
-        }
-        $csv .= '"' . join('","', $data) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -1966,15 +1902,7 @@ function institution_historical_stats_table($limit, $offset, $field, &$instituti
     }
 
     $csvfields = array('time', 'field', 'modified', 'value');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($registrationdata as &$d) {
-        $data = array();
-        foreach ($csvfields as $f) {
-            $data[] = str_replace('"', '""', $d->$f);
-        }
-        $csv .= '"' . join('","', $data) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
@@ -2144,15 +2072,7 @@ function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
     }
 
     $csvfields = array('name', 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post');
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($registrationdata as &$d) {
-        $data = array();
-        foreach ($csvfields as $f) {
-            $data[] = str_replace('"', '""', $d->$f);
-        }
-        $csv .= '"' . join('","', $data) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'institutionstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();

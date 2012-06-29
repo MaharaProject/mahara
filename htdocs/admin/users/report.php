@@ -130,15 +130,9 @@ if ($selected == 'users') {
     else {
         $csvfields = array('username', 'firstname', 'lastname', 'studentid', 'preferredname');
     }
-    $csv = join(',', $csvfields) . "\n";
-    foreach ($users as $user) {
-        $u = array();
-        foreach ($csvfields as $f) {
-            $u[] = str_replace('"', '""', $user->$f);
-        }
-        $csv .= '"' . join('","', $u) . '"' . "\n";
-    }
-    $USER->set_download_file($csv, 'users.csv', 'text/csv');
+
+    $USER->set_download_file(generate_csv($users, $csvfields), 'users.csv', 'text/csv');
+    $csv = true;
 }
 else if ($selected == 'accesslist') {
     require_once(get_config('libroot') . 'view.php');
