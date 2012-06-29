@@ -3070,3 +3070,18 @@ function sanitize_preferredname($value) {
     }
     return $value;
 }
+
+function generate_csv($data, $csvfields) {
+    $csv = join(',', $csvfields) . "\n";
+    foreach ($data as $row) {
+        if (is_object($row)) {
+            $row = (array) $row;
+        }
+        $u = array();
+        foreach ($csvfields as $f) {
+            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+        }
+        $csv .= '"' . join('","', $u) . '"' . "\n";
+    }
+    return $csv;
+}
