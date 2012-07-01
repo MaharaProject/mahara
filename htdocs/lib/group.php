@@ -412,10 +412,12 @@ function group_create($data) {
     // Copy views for the new group
     $templates = get_column('view_autocreate_grouptype', 'view', 'grouptype', $data['grouptype']);
     $templates = get_records_sql_array("
-        SELECT v.id, v.title, v.description 
+        SELECT v.id, v.title, v.description
         FROM {view} v
         INNER JOIN {view_autocreate_grouptype} vag ON vag.view = v.id
-        WHERE vag.grouptype = 'standard'", array());
+        LEFT JOIN {collection_view} cv ON v.id = cv.view
+        WHERE vag.grouptype = 'standard'
+            AND cv.view IS NULL", array());
     if ($templates) {
         require_once(get_config('libroot') . 'view.php');
         foreach ($templates as $template) {
@@ -433,7 +435,20 @@ function group_create($data) {
             )));
         }
     }
-
+    // Copy collections for the new group
+    $templates = get_records_sql_array("
+        SELECT c.id, c.name
+        FROM {view} v
+        INNER JOIN {view_autocreate_grouptype} vag ON vag.view = v.id
+        INNER JOIN {collection_view} cv ON v.id = cv.view
+        INNER JOIN {collection} c ON cv.collection = c.id
+        WHERE vag.grouptype = ?", array($data['grouptype']));
+    if ($templates) {
+        require_once('collection.php');
+        foreach ($templates as $template) {
+            Collection::create_from_template(array('group' => $id), $template->id, null, null, true);
+        }
+    }
     $data['id'] = $id;
     // install the homepage
     if ($t = get_record('view', 'type', 'grouphomepage', 'template', 1, 'owner', 0)) {
