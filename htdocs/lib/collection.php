@@ -72,6 +72,10 @@ class Collection {
                 $this->{$field} = $value;
             }
         }
+        if (empty($this->group) && empty($this->institution) && empty($this->owner)) {
+            global $USER;
+            $this->owner = $USER->get('id');
+        }
     }
 
     public function get($field) {
