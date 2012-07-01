@@ -1099,6 +1099,39 @@ class User {
         db_commit();
     }
 
+    /**
+     * Makes a literal copy of a list of views and collections for the new user.
+     * All site and institution views and collections which set to "copy to new user"
+     * will be copied to this user's profile.
+     *
+     * @param $checkviewaccess.
+     */
+    public function copy_site_views_collections_to_new_user($checkviewaccess=true) {
+        // Get list of available views which are not in collections
+        $templateviewids = get_column_sql("
+            SELECT v.id
+            FROM {view} v
+            LEFT JOIN {collection_view} cv ON v.id = cv.view
+            WHERE cv.view IS NULL
+                AND v.institution = 'mahara'
+                AND v.copynewuser = 1", array());
+        $this->copy_views($templateviewids, $checkviewaccess);
+
+        // Get list of available collections
+        $templatecollectionids = get_column_sql("
+            SELECT c.id
+            FROM {view} v
+            INNER JOIN {collection_view} cv ON v.id = cv.view
+            INNER JOIN {collection} c ON cv.collection = c.id
+            WHERE v.copynewuser = 1
+                AND v.institution = 'mahara'", array());
+        if ($templatecollectionids) {
+            require_once('collection.php');
+            foreach ($templatecollectionids as $templateid) {
+                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
+            }
+        }
+    }
 
 }
 
