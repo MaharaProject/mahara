@@ -200,8 +200,8 @@ class Collection {
      * Creates a Collection for the given user, based off a given template and other
      * Collection information supplied.
      *
-     * Will set a default title of 'Copy of $collectiontitle' if title is not
-     * specified in $collectiondata.
+     * Will set a default name of 'Copy of $collectiontitle' if name is not
+     * specified in $collectiondata and $titlefromtemplate == false.
      *
      * @param array $collectiondata Contains information of the old collection, submitted in form
      * @param int $templateid The ID of the Collection to copy
@@ -214,7 +214,7 @@ class Collection {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true) {
+    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
         require_once(get_config('libroot') . 'view.php');
         global $SESSION;
 
@@ -228,11 +228,20 @@ class Collection {
         $colltemplate = new Collection($templateid);
 
         $data = new StdClass;
-        $desiredname = $colltemplate->get('name');
-        if (get_config('renamecopies')) {
-            $desiredname = get_string('Copyof', 'mahara', $desiredname);
+        // Set a default name if one wasn't set in $collectiondata
+        if ($titlefromtemplate) {
+            $data->name = $colltemplate->get('name');
         }
-        $data->name = self::new_name($desiredname, (object)$collectiondata);
+        else if (!isset($collectiondata['name'])) {
+            $desiredname = $colltemplate->get('name');
+            if (get_config('renamecopies')) {
+                $desiredname = get_string('Copyof', 'mahara', $desiredname);
+            }
+            $data->name = self::new_name($desiredname, (object)$collectiondata);
+        }
+        else {
+            $data->name = $collectiondata['name'];
+        }
         $data->description = $colltemplate->get('description');
         $data->navigation = $colltemplate->get('navigation');
         if (!empty($collectiondata['group'])) {
@@ -262,7 +271,7 @@ class Collection {
                 'institution' => isset($data->institution) ? $data->institution : null,
                 'usetemplate' => $v->view
             );
-            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess);
+            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate);
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
                 return array(null, $colltemplate, array('quotaexceeded' => true));

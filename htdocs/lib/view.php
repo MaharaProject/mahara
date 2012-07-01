@@ -213,7 +213,7 @@ class View {
      * View information supplied.
      *
      * Will set a default title of 'Copy of $viewtitle' if title is not 
-     * specified in $viewdata.
+     * specified in $viewdata and $titlefromtemplate == false.
      *
      * @param array $viewdata See View::_create
      * @param int $templateid The ID of the View to copy
@@ -226,7 +226,7 @@ class View {
      * @throws SystemException under various circumstances, see the source for 
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -253,7 +253,10 @@ class View {
         $view = self::_create($viewdata, $userid);
 
         // Set a default title if one wasn't set
-        if (!isset($viewdata['title'])) {
+        if ($titlefromtemplate) {
+            $view->set('title', $template->get('title'));
+        }
+        else if (!isset($viewdata['title'])) {
             $desiredtitle = $template->get('title');
             if (get_config('renamecopies')) {
                 $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
