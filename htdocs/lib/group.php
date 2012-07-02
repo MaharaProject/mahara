@@ -203,6 +203,23 @@ function group_role_can_moderate_views($group, $role) {
 }
 
 /**
+ * Returns whether a user is allowed to see the report
+ *
+ * @param obj $group The group object
+ * @param str $role The role of the user
+ * @returns boolean
+ */
+function group_role_can_access_report($group, $role) {
+    global $USER;
+
+    if (group_user_access($group->id) && ($role == 'admin' || $USER->get('admin') || $USER->is_institutional_admin() || $USER->is_institutional_staff())) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Returns whether a user is allowed to assess views that have been submitted 
  * to the given group.
  *
@@ -1670,6 +1687,15 @@ function group_get_menu_tabs() {
                 $menu = array_merge($menu, $plugin_menu);
             }
         }
+    }
+
+    if (group_role_can_access_report($group, $role)) {
+        $menu['report'] = array(
+            'path' => 'groups/report',
+            'url' => 'group/report.php?group=' . $group->id,
+            'title' => get_string('report', 'group'),
+            'weight' => 70,
+        );
     }
 
     if (defined('MENUITEM')) {

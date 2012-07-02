@@ -365,3 +365,17 @@ $string['submit'] = 'Submit';
 $string['allowssubmissions'] = 'Allows submissions';
 $string['allowsubmissions'] = 'Allow submissions';
 $string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages can't be edited until they are released by a group tutor or administrator.";
+$string['allowssubmissionsdescription'] = 'Members can submit pages to the group';
+
+// Group reports
+$string['report'] = 'Report';
+$string['grouphasntcreatedanyviewsyet'] = "This group hasn't created any pages yet.";
+$string['noviewssharedwithgroupyet'] = "There are no pages shared with this group yet.";
+$string['groupsharedviewsscrolled'] = "You have scrolled past the end of the shared pages list.";
+$string['groupcreatedviewsscrolled'] = "You have scrolled past the end of the group's pages list.";
+$string['nnonmembers'] = array(
+    '1 non-member',
+    '%s non-members',
+);
+$string['membercommenters'] = "Members involved";
+$string['extcommenters'] = "Non-members involved";

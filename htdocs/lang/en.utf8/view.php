@@ -362,3 +362,6 @@ $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you.  They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
 $string['sharedwith'] = 'Shared with';
 $string['Me'] = 'Me';
+
+// Group reports
+$string['sharedby'] = 'Shared by';
