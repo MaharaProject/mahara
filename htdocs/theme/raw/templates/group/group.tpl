@@ -5,3 +5,6 @@
 {if $group->membercount}
 <div class="s"><a href="{$WWWROOT}group/members.php?id={$group->id}">{$group->membercount} {if $group->membercount > 1}{str tag=members section=group}{else}{str tag=member section=group}{/if}</a></div>
 {/if}
+{if $group->editwindow}
+<div>{str tag=Available section=group}: {$group->editwindow}</div>
+{/if}

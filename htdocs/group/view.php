@@ -78,6 +78,8 @@ if ($USER->is_logged_in()) {
     }
 }
 
+$editwindow = group_format_editwindow($group);
+
 $view = group_get_homepage_view($group->id);
 $viewcontent = $view->build_columns();
 
@@ -102,6 +104,7 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewcontent', $viewcontent);
 $smarty->assign('group', $group);
+$smarty->assign('editwindow', $editwindow);
 $smarty->assign('returnto', 'view');
 $smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
 $smarty->display('group/view.tpl');

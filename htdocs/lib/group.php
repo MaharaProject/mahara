@@ -415,6 +415,8 @@ function group_create($data) {
             'groupparticipationreports' => $data['groupparticipationreports'],
             'invitefriends'  => $data['invitefriends'],
             'suggestfriends' => $data['suggestfriends'],
+            'editwindowstart' => $data['editwindowstart'],
+            'editwindowend'  => $data['editwindowend']
         ),
         'id',
         true
@@ -1443,8 +1445,35 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
             unset($group->membercount);
         }
 
+        $group->editwindow = group_format_editwindow($group);
+
         $group->settingsdescription = group_display_settings($group);
     }
+}
+
+/*
+ * Formats the edit window of a group into human readable format.
+ */
+function group_format_editwindow($group) {
+    $dateformat = 'strftimedatetimeshort';
+
+    $editwindowstart = isset($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
+    $editwindowend = isset($group->editwindowend) ? strtotime($group->editwindowend) : null;
+
+    if (empty($editwindowstart) && empty($editwindowend)) {
+        $formatted = "";
+    }
+    else if (!empty($editwindowstart) && empty($editwindowend)) {
+        $formatted = get_string('editwindowfrom', 'group') . ' ' . format_date($editwindowstart, $dateformat);
+    }
+    else if (empty($editwindowstart) && !empty($editwindowend)) {
+        $formatted = get_string('editwindowuntil', 'group') . ' ' . format_date($editwindowend, $dateformat);
+    }
+    else {
+        $formatted = get_string('editwindowbetween', 'group') . ' ' . format_date($editwindowstart, $dateformat) . " and " . format_date($editwindowend, $dateformat);
+    }
+
+    return $formatted;
 }
 
 /*

@@ -47,6 +47,10 @@ if ($id = param_integer('id', null)) {
     }
 
     $group_data = $group_data[0];
+
+    // Fix dates to unix timestamps instead of formatted timestamps.
+    $group_data->editwindowstart = isset($group_data->editwindowstart) ? strtotime($group_data->editwindowstart) : null;
+    $group_data->editwindowend = isset($group_data->editwindowend) ? strtotime($group_data->editwindowend) : null;
 }
 else {
     define('TITLE', get_string('creategroup', 'group'));
@@ -75,6 +79,8 @@ else {
         'invitefriends'  => 0,
         'suggestfriends' => 0,
         'urlid'          => null,
+        'editwindowstart' => null,
+        'editwindowend'  => null
     );
 }
 
@@ -313,6 +319,34 @@ $elements['groupparticipationreports'] = array(
     'defaultvalue' => $group_data->groupparticipationreports,
 );
 
+$elements['editability'] = array(
+    'type'         => 'html',
+    'title'        => get_string('editability', 'group'),
+    'value'        => '',
+);
+
+$currentdate = getdate();
+
+$elements['editwindowstart'] = array (
+    'type'         => 'date',
+    'title'        => get_string('windowstart', 'group'),
+    'defaultvalue' => $group_data->editwindowstart,
+    'description'  => "Group cannot be edited by members before this date",
+    'minyear'      => $currentdate['year'],
+    'maxyear'      => $currentdate['year'] + 20,
+    'time'         => true
+);
+
+$elements['editwindowend'] = array (
+    'type'         => 'date',
+    'title'        => get_string('windowend', 'group'),
+    'defaultvalue' => $group_data->editwindowend,
+    'description'  => "Group cannot be edited by members after this date",
+    'minyear'      => $currentdate['year'],
+    'maxyear'      => $currentdate['year'] + 20,
+    'time'         => true
+);
+
 $elements['general'] = array(
     'type'         => 'html',
     'title'        => get_string('general'),
@@ -398,6 +432,9 @@ function editgroup_validate(Pieform $form, $values) {
     if (!empty($values['suggestfriends']) && empty($values['open']) && empty($values['request'])) {
         $form->set_error('suggestfriends', get_string('suggestfriendsrequesterror', 'group'));
     }
+    if (!empty($values['editwindowstart']) && !empty($values['editwindowend']) && ($values['editwindowstart'] >= $values['editwindowend'])) {
+        $form->set_error('editwindowend', get_string('editwindowendbeforestart', 'group'));
+    }
 }
 
 function editgroup_cancel_submit() {
@@ -429,6 +466,8 @@ function editgroup_submit(Pieform $form, $values) {
         'groupparticipationreports' => intval($values['groupparticipationreports']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
+        'editwindowstart' => db_format_timestamp($values['editwindowstart']),
+        'editwindowend'  => db_format_timestamp($values['editwindowend'])
     );
 
     if (get_config('cleanurls') && isset($values['urlid'])) {

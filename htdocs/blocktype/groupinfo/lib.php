@@ -64,6 +64,7 @@ class PluginBlocktypeGroupInfo extends SystemBlocktype {
 
         $dwoo = smarty_core();
         $dwoo->assign('group', $data);
+        $dwoo->assign('editwindow', group_format_editwindow($data));
         return $dwoo->fetch('blocktype:groupinfo:groupinfo.tpl');
     }
 
