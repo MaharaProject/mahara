@@ -950,6 +950,9 @@ class User {
         if ($role == 'admin') {
             return true;
         }
+        if (!group_within_edit_window($group)) {
+            return false;
+        }
         if ($this->id == $a->get('author')) {
             return true;
         }

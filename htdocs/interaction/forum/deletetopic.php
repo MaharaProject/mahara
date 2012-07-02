@@ -72,7 +72,7 @@ $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 $topic->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $topic->ctime);
 
-if (!$moderator) {
+if (!$moderator || ($topic->group && !group_within_edit_window($topic->group))) {
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 

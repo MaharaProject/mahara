@@ -68,9 +68,15 @@ if (!$forum) {
 $membership = user_can_access_forum((int)$forumid);
 $admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
-$publicgroup = get_field('group', 'public', 'id', $forum->groupid);
+$group = get_record('group', 'id', $forum->groupid);
+$publicgroup = $group->public;
 if (!$membership && !$publicgroup) {
     throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
+}
+
+$ineditwindow = group_within_edit_window($group);
+if (!$ineditwindow) {
+    $moderator = false;
 }
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
@@ -257,6 +263,7 @@ $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('forum', $forum);
 $smarty->assign('publicgroup', $publicgroup);
+$smarty->assign('ineditwindow', $ineditwindow);
 $smarty->assign('feedlink', $feedlink);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);

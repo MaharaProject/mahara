@@ -176,10 +176,37 @@ function group_role_can_edit_views($group, $role) {
     }
 
     if ($role == 'member') {
-        return $editroles == 'all';
+        return ($editroles == 'all' && group_within_edit_window($group));
     }
 
     return $editroles != 'admin';
+}
+
+
+/**
+ * Determine if the current date/time is within the editable window of the
+ * group if one is set. By default, a group admin is considered to be within
+ * the window.
+ * @param object $group the group to check
+ * @param bool $admin_always whether the admin should be OK regardless of time
+ */
+function group_within_edit_window($group, $admin_always=true) {
+    if (is_numeric($group)) {
+        $group = get_record('group', 'id', $group);
+    }
+
+    if ($admin_always && group_user_access($group->id) == 'admin') {
+      return true;
+    }
+
+    $start = !empty($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
+    $end = !empty($group->editwindowend) ? strtotime($group->editwindowend) : null;
+    $now = time();
+
+    return (empty($start) && empty($end)) ||
+        (!empty($start) && $now > $start && empty($end)) ||
+        (empty($start) && $now < $end && !empty($end)) ||
+        ($start < $now && $now < $end);
 }
 
 function group_role_can_moderate_views($group, $role) {

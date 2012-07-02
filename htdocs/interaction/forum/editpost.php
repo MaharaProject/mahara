@@ -90,6 +90,9 @@ $membership = user_can_access_forum((int)$parent->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!isset($postid)) { // post reply
+    if (!group_within_edit_window($parent->group)) {
+        throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
+    }
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
     }
@@ -100,6 +103,9 @@ if (!isset($postid)) { // post reply
     define('TITLE', $parent->topicsubject . ' - ' . $action);
 }
 else { // edit post
+    if (!group_within_edit_window($parent->group)) {
+        throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
+    }
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($post->poster, $post->ctime)) {
         $post->editrecord = false;

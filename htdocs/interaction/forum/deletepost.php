@@ -66,7 +66,7 @@ if (!$post) {
 $membership = user_can_access_forum((int)$post->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
-if (!$moderator) {
+if (!$moderator || ($post->group && !group_within_edit_window($post->group))) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
 

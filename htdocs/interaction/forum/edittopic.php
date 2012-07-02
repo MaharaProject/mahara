@@ -86,6 +86,10 @@ if (!$membership || ($forumconfig['createtopicusers']->value == 'moderators' && 
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 
+if (!group_within_edit_window($forum->groupid)) {
+    throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
+}
+
 if (!isset($topicid)) { // new topic
     define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
 }

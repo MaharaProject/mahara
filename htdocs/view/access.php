@@ -67,6 +67,10 @@ View::set_nav($group, $institution, true);
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
+if ($group && !group_within_edit_window($group)) {
+    throw new AccessDeniedException();
+}
+
 
 $form = array(
     'name' => 'editaccess',
