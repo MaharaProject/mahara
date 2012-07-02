@@ -3115,5 +3115,16 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2012080601) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('editwindowstart');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $field);
+
+        $field = new XMLDBField('editwindowend');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $field);
+    }
+
     return $status;
 }
