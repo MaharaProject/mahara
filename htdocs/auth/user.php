@@ -1101,7 +1101,7 @@ class User {
 
     /**
      * Makes a literal copy of a list of views and collections for the new user.
-     * All site and institution views and collections which set to "copy to new user"
+     * All site views and collections which set to "copy to new user"
      * will be copied to this user's profile.
      *
      * @param $checkviewaccess.
@@ -1125,6 +1125,44 @@ class User {
             INNER JOIN {collection} c ON cv.collection = c.id
             WHERE v.copynewuser = 1
                 AND v.institution = 'mahara'", array());
+        if ($templatecollectionids) {
+            require_once('collection.php');
+            foreach ($templatecollectionids as $templateid) {
+                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
+            }
+        }
+    }
+
+    /**
+     * Makes a literal copy of a list of views and collections for the new institution member.
+     * All institution views and collections which set to "copy to new institution member"
+     * will be copied to this user's profile.
+     *
+     * @param $institution: ID of the institution to join
+     * @param $checkviewaccess.
+     */
+    public function copy_institution_views_collections_to_new_member($institution, $checkviewaccess=true) {
+        if (empty($institution)) {
+            return;
+        }
+        // Get list of available views which are not in collections
+        $templateviewids = get_column_sql("
+            SELECT v.id
+            FROM {view} v
+            LEFT JOIN {collection_view} cv ON v.id = cv.view
+            WHERE cv.view IS NULL
+                AND v.institution = ?
+                AND v.copynewuser = 1", array($institution));
+        $this->copy_views($templateviewids, $checkviewaccess);
+
+        // Get list of available collections
+        $templatecollectionids = get_column_sql("
+            SELECT c.id
+            FROM {view} v
+            INNER JOIN {collection_view} cv ON v.id = cv.view
+            INNER JOIN {collection} c ON cv.collection = c.id
+            WHERE v.copynewuser = 1
+                AND v.institution = ?", array($institution));
         if ($templatecollectionids) {
             require_once('collection.php');
             foreach ($templatecollectionids as $templateid) {

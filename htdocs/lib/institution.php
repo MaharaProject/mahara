@@ -220,11 +220,11 @@ class Institution {
             WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
             array($user->id)
         );
-        // Copy institution views to the user's portfolio
+        // Copy institution views and collection to the user's portfolio
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
         $userobj = new User();
         $userobj->find_by_id($user->id);
-        $userobj->copy_views(get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1), $checkviewaccess);
+        $userobj->copy_institution_views_collections_to_new_member($this->name, $checkviewaccess);
         require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
