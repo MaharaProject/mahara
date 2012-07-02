@@ -36,6 +36,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     $name = Pieform::hsc($element['name']);
     $element['minyear'] = (isset($element['minyear'])) ? intval($element['minyear']) : 1950;
     $element['maxyear'] = (isset($element['maxyear'])) ? intval($element['maxyear']) : 2050;
+    $showtime = (isset($element['time']) ? $element['time'] : false);
     $required = (!empty($element['rules']['required']));
     if ($required && !isset($element['defaultvalue'])) {
         $element['defaultvalue'] = time();
@@ -72,22 +73,48 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
     }
     $day .= '</select>';
 
-    $result = $year . $month . $day;
+    if ($showtime) {
+        // Hour
+        $value = pieform_element_date_get_timeperiod_value('hour', 0, 23, $element, $form);
+        $hour = '<select name="' . $name . '_hour" id="' . $name . '_hour"'
+            . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+            . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
+        for ($i = 0; $i <= 23; $i++) {
+            $hour .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">" . sprintf('%02d', $i) . "</option>\n";
+        }
+        $hour .= '</select>';
+
+        // Minute
+        $value = pieform_element_date_get_timeperiod_value('minute', 0, 59, $element, $form);
+        $minute = '<select name="' . $name . '_minute" id="' . $name . '_minute"'
+            . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+            . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
+        for ($i = 0; $i <= 59; $i++) {
+            $minute .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">" . sprintf('%02d', $i) . "</option>\n";
+        }
+        $minute .= '</select>';
+
+        $at = ' ' . $form->i18n('element', 'date', 'at', $element) . ' ';
+        $result = $year . $month . $day . $at . $hour . $minute;
+    }
+    else {
+        $result = $year . $month . $day;
+    }
 
     // Optional control
     if (!$required) {
         $optional = <<<EOF
         <script type="text/javascript">
             function {$name}_toggle(x) {
-                if ( x.checked ) {
-                    $('{$name}_day').disabled   = true;
-                    $('{$name}_month').disabled = true;
-                    $('{$name}_year').disabled  = true;
-                }
-                else {
-                    $('{$name}_day').disabled   = false;
-                    $('{$name}_month').disabled = false;
-                    $('{$name}_year').disabled  = false;
+                var elements = [
+                    $('{$name}_hour'),
+                    $('{$name}_minute'),
+                    $('{$name}_day'),
+                    $('{$name}_month'),
+                    $('{$name}_year')
+                ];
+                for (var i in elements) {
+                    if (elements[i]) elements[i].disabled = x.checked;
                 }
             }
         </script>
@@ -118,7 +145,12 @@ function pieform_element_date_get_value(Pieform $form, $element) {/*{{{*/
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if ($form->is_submitted() && isset($global[$name . '_day']) && isset($global[$name . '_month']) && isset($global[$name . '_year'])) {
-        $time = mktime(0, 0, 0, $global[$name . '_month'], $global[$name . '_day'], $global[$name . '_year']);
+        if (isset($global[$name . '_minute']) && isset($global[$name . '_hour'])) {
+            $time = mktime($global[$name . '_hour'], $global[$name . '_minute'], 0, $global[$name . '_month'], $global[$name . '_day'], $global[$name . '_year']);
+        }
+        else {
+            $time = mktime(0, 0, 0, $global[$name . '_month'], $global[$name . '_day'], $global[$name . '_year']);
+        }
         if (false === $time) {
             return null;
         }
@@ -134,7 +166,9 @@ function pieform_element_date_get_timeperiod_value($timeperiod, $min, $max, $ele
     static $lookup = array(
         'year' => 0,
         'month' => 1,
-        'day' => 2
+        'day' => 2,
+        'hour' => 3,
+        'minute' => 4
     );
     $index = $lookup[$timeperiod];
 
@@ -162,6 +196,12 @@ function pieform_element_date_get_timeperiod_value($timeperiod, $min, $max, $ele
     }
 
     switch ($timeperiod) {
+        case 'minute':
+            $value = date('i', $value);
+            break;
+        case 'hour':
+            $value = date('G', $value);
+            break;
         case 'day':
             $value = date('j', $value);
             break;
