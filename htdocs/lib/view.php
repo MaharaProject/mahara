@@ -3376,11 +3376,13 @@ class View {
             $groups = array();
             $institutions = array();
             foreach ($viewdata as $v) {
-                if ($v->owner && !isset($owners[$v->owner])) {
+                if (!empty($v->owner) && !isset($owners[$v->owner])) {
                     $owners[$v->owner] = (int)$v->owner;
-                } else if ($v->group && !isset($groups[$v->group])) {
+                }
+                else if (!empty($v->group) && !isset($groups[$v->group])) {
                     $groups[$v->group] = (int)$v->group;
-                } else if (strlen($v->institution) && !isset($institutions[$v->institution])) {
+                }
+                else if (!empty($v->institution) && !isset($institutions[$v->institution])) {
                     $institutions[$v->institution] = $v->institution;
                 }
             }
@@ -3452,13 +3454,15 @@ class View {
             $needsubdomain = get_config('cleanurlusersubdomains');
 
             foreach ($viewdata as &$v) {
-                if ($v->owner) {
+                if (!empty($v->owner)) {
                     $v->sharedby = View::owner_name($v->ownerformat, $owners[$v->owner]);
                     $v->user = $owners[$v->owner];
-                } else if ($v->group) {
+                }
+                else if (!empty($v->group)) {
                     $v->sharedby = $groups[$v->group]->name;
                     $v->groupdata = $groups[$v->group];
-                } else if ($v->institution) {
+                }
+                else if (!empty($v->institution)) {
                     $v->sharedby = $institutions[$v->institution]->displayname;
                 }
                 $v = (array)$v;
