@@ -60,7 +60,7 @@ $institutionselector = pieform(array(
 define('TITLE', get_string('institutionstatisticsfor', 'admin', get_field('institution', 'displayname', 'name', $institution)));
 
 $type = param_alpha('type', 'users');
-$subpages = array('users', 'views', 'registration', 'historical');
+$subpages = array('users', 'views', 'content', 'historical');
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
@@ -78,8 +78,8 @@ switch ($type) {
 case 'historical':
     $data = institution_historical_statistics($limit, $offset, $field, $institutiondata);
     break;
-case 'registration':
-    $data = institution_registration_statistics($limit, $offset, $institutiondata);
+case 'content':
+    $data = institution_content_statistics($limit, $offset, $institutiondata);
     break;
 case 'views':
     $data = institution_view_statistics($limit, $offset, $institutiondata);

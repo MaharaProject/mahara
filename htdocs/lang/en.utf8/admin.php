@@ -276,7 +276,7 @@ $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
 
 // Registration statistics
-$string['registrationstatstabletitle'] = 'Registration statistics for the current week';
+$string['contentstatstabletitle'] = 'Content statistics for the current week';
 $string['historicalstatstabletitle'] = 'Historical statistics for field \'%s\'';
 $string['institutionstatstabletitle'] = 'Comparison of institution statistics';
 
