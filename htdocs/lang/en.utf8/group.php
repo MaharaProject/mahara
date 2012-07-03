@@ -380,3 +380,5 @@ $string['nnonmembers'] = array(
 );
 $string['membercommenters'] = "Members involved";
 $string['extcommenters'] = "Non-members involved";
+$string['groupparticipationreports'] = "Participation report";
+$string['groupparticipationreportsdesc'] = "If checked, the group admin can access a report displaying all group and shared pages and who has commented on them";
