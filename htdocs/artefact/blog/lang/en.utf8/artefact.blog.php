@@ -98,7 +98,7 @@ $string['posttitle'] = 'Title';
 $string['posts'] = 'entries';
 $string['publish'] = 'Publish';
 $string['unpublish'] = 'Unpublish';
-$string['publishfailed'] = 'An error occurred. Your entry was not published';
+$string['publishfailed'] = 'An error occurred. Your entry was not published.';
 $string['publishblogpost?'] = 'Are you sure you want to publish this entry?';
 $string['published'] = 'Published';
 $string['remove'] = 'Remove';
@@ -114,8 +114,8 @@ $string['title'] = 'Title';
 $string['update'] = 'Update';
 $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View journal';
-$string['youarenottheownerofthisblog'] = 'You are not the owner of this journal';
-$string['youarenottheownerofthisblogpost'] = 'You are not the owner of this journal entry';
+$string['youarenottheownerofthisblog'] = 'You are not the owner of this journal.';
+$string['youarenottheownerofthisblogpost'] = 'You are not the owner of this journal entry.';
 $string['cannotdeleteblogpost'] = 'An error occurred removing this journal entry.';
 
 $string['baseline'] = 'Baseline';
@@ -145,7 +145,7 @@ $string['feedsnotavailable'] = 'Feeds are not available for this artefact type.'
 $string['feedrights'] = 'Copyright %s.';
 
 $string['enablemultipleblogstext'] = 'You have one journal. If you would like to start a second one, enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
-$string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option. You can set that on the <a href="%saccount/">account settings</a> page.';
+$string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option activated. You can enable it on the <a href="%saccount/">account settings</a> page.';
 
 $string['shortcutaddpost'] = 'Add a new entry to';
 $string['shortcutgo'] = 'Go';

@@ -93,7 +93,7 @@ $string['first']     = 'First';
 $string['firstpage'] = 'First page';
 $string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
-$string['maxitemsperpage']  = 'Max items per page:';
+$string['maxitemsperpage']  = 'Maximum items per page:';
 
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
@@ -1015,7 +1015,7 @@ $string['createyourresume'] = 'Create your <a href="%s">résumé</a>';
 $string['publishablog'] = 'Publish a <a href="%s">journal</a>';
 $string['Organise'] = 'Organise';
 $string['organisesubtitle'] = 'Showcase your portfolio';
-$string['organisedescription'] = 'Organise your portfolio into <a href="%s">pages.</a>  Create different pages for different audiences - you choose the elements to include.';
+$string['organisedescription'] = 'Organise your portfolio into <a href="%s">pages.</a> Create different pages for different audiences - you choose the elements to include.';
 $string['sharenetwork'] = 'Share and network';
 $string['sharenetworksubtitle'] = 'Find friends and join groups';
 $string['findfriendslinked'] = 'Find <a href="%s">friends</a>';
@@ -1033,7 +1033,7 @@ $string['filenotfound'] = 'File not found';
 $string['betweenxandy'] = 'Between %s and %s';
 
 // Clean URLs
-$string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers, and - are allowed.';
+$string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers and - are allowed.';
 
 // Registration statistics
 $string['registration'] = 'Registration';
