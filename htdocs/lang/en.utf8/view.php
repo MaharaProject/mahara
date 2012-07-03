@@ -181,6 +181,10 @@ $string['deleteviewconfirmbackup'] = 'Please consider creating a backup of this 
 $string['deleteviewconfirmnote1'] = '<strong>NOTE:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any feedback placed on this page will be deleted.';
 
 $string['editaccesspagedescription3'] = 'By default, only you can see your collections and pages. You can share pages with others by adding access rules below. You may set multiple items to have identical settings by choosing them from the checkboxes. Once you are done, scroll down and click Save to continue.';
+$string['editaccessdescription'] = 'You may set multiple items to have identical settings by choosing them from the check boxes. Once you are done, scroll down and click "Save" to continue.';
+$string['editaccessgrouppagedescription'] = 'By default, only those group members who can add and edit pages and collections can see group collections and pages. ' . $string['editaccessdescription'];
+$string['editaccessinstitutionpagedescription'] = 'By default, only the administrators of your institution can see your institution collections and pages. ' . $string['editaccessdescription'];
+$string['editaccesssitepagedescription'] = 'By default, only site administrators can see site collections and pages. ' . $string['editaccessdescription'];
 $string['editsecreturlsintable'] = '<b>Secret URLs</b> cannot be set on this page as they must be generated individually. To set secret URLs, please return to the <a href="%s">list of collections and pages</a>.';
 $string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of pages and collections';
 
@@ -303,6 +307,8 @@ $string['allowcopying'] = 'Allow copying';
 $string['retainviewrights1'] = 'Retain view access on copied pages or collections';
 $string['templatedescription'] = 'Check this box if you would like the people who can see your page to be able to make their own copies of it, along with any files and folders it contains.';
 $string['templatedescriptionplural'] = 'Check this box if you would like the people who can see your pages to be able to make their own copies of them, along with any files and folders they contain.';
+$string['templatedescription1'] = 'Check this box if you would like the people who can see your page / collection to be able to make their own copies of it, along with any files and folders it contains.';
+$string['templatedescriptionplural1'] = 'Check this box if you would like the people who can see your pages / collections to be able to make their own copies of them, along with any files and folders they contain.';
 $string['retainviewrightsdescription'] = 'Check this box if you would like to add access for you to view copies of this page or collection that are copied by other users. Those users can revoke this access after they copy it if they wish. Pages that are copied from a copy of this page or collection will not have this same access.';
 $string['retainviewrightsgroupdescription'] = 'Check this box if you would like to add access for members of this group to view copies of this page that are copied by other users. Those users can revoke this access after they copy it if they wish. Pages that are copied from a copy of this page will not have this same access.';
 $string['choosetemplatepagedescription'] = '<p>Here you can search through the pages that you are allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it.</p>';
@@ -322,10 +328,13 @@ $string['copyvieworcollection'] = 'Copy a page or collection';
 $string['Untitled'] = 'Untitled';
 $string['copyfornewusers'] = 'Copy for new users';
 $string['copyfornewusersdescription'] = 'Whenever a new user is created, automatically make a personal copy of this page in the user\'s portfolio.';
+$string['copyfornewusersdescription'] = 'Whenever a new user is created, automatically make a personal copy of this page / collection in the user\'s portfolio.';
 $string['copyfornewmembers'] = 'Copy for new institution members';
 $string['copyfornewmembersdescription'] = 'Automatically make a personal copy of this page for all new members of %s.';
+$string['copyfornewmembersdescription1'] = 'Automatically make a personal copy of this page / collection for all new members of %s.';
 $string['copyfornewgroups'] = 'Copy for new groups';
 $string['copyfornewgroupsdescription'] = 'Make a copy of this page in all new groups with these group types:';
+$string['copyfornewgroupsdescription1'] = 'Make a copy of this page / collection in all new groups with these roles:';
 $string['searchviews'] = 'Search pages';
 $string['searchowners'] = 'Search owners';
 $string['owner'] = 'owner';

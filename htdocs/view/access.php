@@ -614,4 +614,6 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
+$smarty->assign('group', $group);
+$smarty->assign('institution', $institution);
 $smarty->display('view/access.tpl');
