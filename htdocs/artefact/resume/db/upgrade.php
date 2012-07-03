@@ -50,5 +50,37 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         execute_sql("UPDATE {blocktype_installed_category} SET category = 'internal' WHERE category = 'resume'");
     }
 
+    if ($oldversion < 2017030600) {
+        log_debug("Allow WYSIWYG HTML for the field 'description' of Resume Book, Certification, and Membership fields");
+        // Escape all HTML tags in the old database
+        $types = array('book', 'membership', 'certification', 'employmenthistory', 'educationhistory');
+        foreach ($types as $type) {
+            log_debug("Cleaning up data for " . $type);
+            $total = count_records('artefact_resume_' . $type);
+            $count = 0;
+            $limit = 1000;
+            for ($i = 0; $i <= $total; $i += $limit) {
+                $sql = "
+                    SELECT r.id, r.description
+                    FROM {artefact_resume_" . $type . "} r
+                    ORDER BY r.id";
+                $resumes = get_records_sql_array($sql, array(), $i, $limit);
+                foreach ($resumes as $item) {
+                    // Escape HTML tags in "description"
+                    $item->description = hsc($item->description);
+                    set_field('artefact_resume_' . $type, 'description', $item->description, 'id', $item->id);
+                    $count += $limit;
+                }
+                if (($count % $limit) == 0 || $count >= $total) {
+                    if ($count > $total) {
+                        $count = $total;
+                    }
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }

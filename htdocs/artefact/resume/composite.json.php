@@ -36,6 +36,21 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
     $data = array();
 }
 
+$classname = generate_artefact_class_name($type);
+$iswysiwyg = false;
+if (is_callable($classname . '::is_wysiwyg')) {
+    $iswysiwyg = call_static_method($classname, 'is_wysiwyg');
+}
+foreach ($data as &$row) {
+    foreach ($row as $key => $value) {
+        if ($iswysiwyg && preg_match('/description$/', $key)) {
+            $row->{$key} = clean_html($row->{$key});
+        }
+        else {
+            $row->{$key} = hsc($row->{$key});
+        }
+    }
+}
 // Add artefact attachments it there are any
 $datawithattachments = array();
 foreach ($data as $record) {

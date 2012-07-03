@@ -79,7 +79,7 @@
         <div id="education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="collapse resume-content">
             {if $row->qualdescription}
             <p class="content-text">
-                {$row->qualdescription}
+                {$row->qualdescription|safe}
             </p>
             {/if}
 
