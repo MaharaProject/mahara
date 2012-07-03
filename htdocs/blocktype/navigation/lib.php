@@ -81,12 +81,24 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        $userid = $instance->get_view()->get('owner');
+        $view = $instance->get_view();
+        $groupid = $view->get('group');
+        $institutionid = $view->get('institution');
+        $userid = $view->get('owner');
+        if (!empty($groupid)) {
+            $where = 'c.group = ?'; $values = array($groupid);
+        }
+        else if (!empty($institutionid)) {
+            $where = 'c.institution = ?'; $values = array($institutionid);
+        }
+        else {
+            $where = 'c.owner = ?'; $values = array($userid);
+        }
         ($collections = get_records_sql_array("
             SELECT c.id, c.name
                 FROM {collection} c
-            WHERE c.owner = ?
-            ORDER BY c.name, c.ctime ASC", array($userid)))
+            WHERE " . $where . "
+            ORDER BY c.name, c.ctime ASC", $values))
             || ($collections = array());
 
         $default = false;
@@ -124,13 +136,6 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
 
     public static function default_copy_type() {
         return 'full';
-    }
-
-    /**
-     * Navigation only makes sense for personal views
-     */
-    public static function allowed_in_view(View $view) {
-        return $view->get('owner') != null;
     }
 
 }
