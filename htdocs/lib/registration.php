@@ -1543,7 +1543,7 @@ function institution_view_type_graph(&$institutiondata) {
     }
 }
 
-function registration_statistics($limit, $offset) {
+function content_statistics($limit, $offset) {
     $data = array();
     $data['tableheadings'] = array(
         array('name' => '#'),
@@ -1551,15 +1551,15 @@ function registration_statistics($limit, $offset) {
         array('name' => get_string('modified')),
         array('name' => get_string('Total'), 'class' => 'center'),
     );
-    $data['table'] = registration_stats_table($limit, $offset);
-    $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
+    $data['table'] = content_stats_table($limit, $offset);
+    $data['tabletitle'] = get_string('contentstatstabletitle', 'admin');
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
 
-function registration_stats_table($limit, $offset) {
+function content_stats_table($limit, $offset) {
     global $USER;
 
     $dates = get_records_array('site_registration', '', '', 'time DESC', '*', 0, 2);
@@ -1571,15 +1571,18 @@ function registration_stats_table($limit, $offset) {
         $count = 0;
     }
 
+    // Show all the stats, is a smallish number
+    $limit = $count;
+    $offset = 0;
+
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/statistics.php?type=registration',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=content',
         'jsonscript' => 'admin/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,
         'limit' => $limit,
         'offset' => $offset,
-        'setlimit' => true,
     ));
 
     $result = array(
@@ -1593,7 +1596,7 @@ function registration_stats_table($limit, $offset) {
         return $result;
     }
 
-    $registrationdata = get_records_sql_assoc(
+    $contentdata = get_records_sql_assoc(
         "SELECT
             field, value
         FROM {site_registration_data}
@@ -1615,29 +1618,29 @@ function registration_stats_table($limit, $offset) {
             ORDER BY field",
             array($dates[1]->id)
         );
-        foreach ($registrationdata as &$d) {
+        foreach ($contentdata as &$d) {
             $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
         }
     }
     else {
-        foreach ($registrationdata as &$d) {
+        foreach ($contentdata as &$d) {
             $d->modified = $d->value;
         }
     }
 
     $csvfields = array('field', 'modified', 'value');
-    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
-    $smarty->assign('data', $registrationdata);
+    $smarty->assign('data', $contentdata);
     $smarty->assign('offset', $offset);
-    $result['tablerows'] = $smarty->fetch('admin/registrationstats.tpl');
+    $result['tablerows'] = $smarty->fetch('admin/contentstats.tpl');
 
     return $result;
 }
 
-function institution_registration_statistics($limit, $offset, &$institutiondata) {
+function institution_content_statistics($limit, $offset, &$institutiondata) {
     $data = array();
     $data['tableheadings'] = array(
         array('name' => '#'),
@@ -1645,15 +1648,15 @@ function institution_registration_statistics($limit, $offset, &$institutiondata)
         array('name' => get_string('modified')),
         array('name' => get_string('Total'), 'class' => 'center'),
     );
-    $data['table'] = institution_registration_stats_table($limit, $offset, $institutiondata);
-    $data['tabletitle'] = get_string('registrationstatstabletitle', 'admin');
+    $data['table'] = institution_content_stats_table($limit, $offset, $institutiondata);
+    $data['tabletitle'] = get_string('contentstatstabletitle', 'admin');
 
     $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
 
     return $data;
 }
 
-function institution_registration_stats_table($limit, $offset, &$institutiondata) {
+function institution_content_stats_table($limit, $offset, &$institutiondata) {
     global $USER;
 
     $dates = get_records_array('institution_registration', 'institution', $institutiondata['name'], 'time DESC', '*', 0, 2);
@@ -1676,7 +1679,7 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=registration',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institutiondata['name'] . '&type=content',
         'jsonscript' => 'admin/users/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,
@@ -1696,7 +1699,7 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
         return $result;
     }
 
-    $registrationdata = get_records_sql_assoc(
+    $contentdata = get_records_sql_assoc(
         "SELECT
             field, value
         FROM {institution_registration_data}
@@ -1716,28 +1719,28 @@ function institution_registration_stats_table($limit, $offset, &$institutiondata
             ORDER BY field",
             array($dates[1]->id)
         );
-        foreach ($registrationdata as &$d) {
+        foreach ($contentdata as &$d) {
             $d->modified = $d->value - (isset($lastweeks[$d->field]->value) ? $lastweeks[$d->field]->value : 0);
         }
     }
     else {
-        foreach ($registrationdata as &$d) {
+        foreach ($contentdata as &$d) {
             $d->modified = $d->value;
         }
     }
-    if (isset($registrationdata['count_members'])) {
-        $registrationdata['count_members']->modified = get_field('institution_registration_data', 'value', 'registration_id', $dates[0]->id, 'field', 'usersloggedin');
+    if (isset($contentdata['count_members'])) {
+        $contentdata['count_members']->modified = get_field('institution_registration_data', 'value', 'registration_id', $dates[0]->id, 'field', 'usersloggedin');
     }
 
     $csvfields = array('field', 'modified', 'value');
-    $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'registrationstatistics.csv', 'text/csv');
+    $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
     $result['csv'] = true;
 
     $smarty = smarty_core();
-    $smarty->assign('data', $registrationdata);
+    $smarty->assign('data', $contentdata);
     $smarty->assign('offset', $offset);
     $smarty->assign('institution', $institutiondata['name']);
-    $result['tablerows'] = $smarty->fetch('admin/registrationstats.tpl');
+    $result['tablerows'] = $smarty->fetch('admin/contentstats.tpl');
 
     return $result;
 }
@@ -1919,32 +1922,32 @@ function institution_comparison_statistics($limit, $offset, $sort, $sortdesc) {
         array(
             'name' => get_string('institution'),
             'class' => 'search-results-sort-column' . ($sort == 'displayname' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=displayname&sortdesc=' . ($sort == 'displayname' ? !$sortdesc : false) . '&limit=' . $limit . '&offset=' . $offset
         ),
         array(
             'name' => get_string('members'),
             'class' => 'search-results-sort-column' . ($sort == 'count_members' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_members&sortdesc=' . ($sort == 'count_members' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=count_members&sortdesc=' . ($sort == 'count_members' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
         ),
         array(
             'name' => get_string('views'),
             'class' => 'search-results-sort-column' . ($sort == 'count_views' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_views&sortdesc=' . ($sort == 'count_views' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=count_views&sortdesc=' . ($sort == 'count_views' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
         ),
         array(
             'name' => get_string('blocks'),
             'class' => 'search-results-sort-column' . ($sort == 'count_blocks' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_blocks&sortdesc=' . ($sort == 'count_blocks' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=count_blocks&sortdesc=' . ($sort == 'count_blocks' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
         ),
         array(
             'name' => get_string('artefacts'),
             'class' => 'search-results-sort-column' . ($sort == 'count_artefacts' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_artefacts&sortdesc=' . ($sort == 'count_artefacts' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=count_artefacts&sortdesc=' . ($sort == 'count_artefacts' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
         ),
         array(
             'name' => get_string('posts'),
             'class' => 'search-results-sort-column' . ($sort == 'count_interaction_forum_post' ? ' ' . ($sortdesc ? 'desc' : 'asc') : ''),
-            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institution&sort=count_interaction_forum_post&sortdesc=' . ($sort == 'count_interaction_forum_post' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
+            'link' => get_config('wwwroot') . 'admin/statistics.php?type=institutions&sort=count_interaction_forum_post&sortdesc=' . ($sort == 'count_interaction_forum_post' ? !$sortdesc : true) . '&limit=' . $limit . '&offset=' . $offset
         ),
     );
     $data['table'] = institution_comparison_stats_table($limit, $offset, $sort, $sortdesc);
@@ -1965,7 +1968,7 @@ function institution_comparison_stats_table($limit, $offset, $sort, $sortdesc) {
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
-        'url' => get_config('wwwroot') . 'admin/statistics.php?type=institution',
+        'url' => get_config('wwwroot') . 'admin/statistics.php?type=institutions',
         'jsonscript' => 'admin/statistics.json.php',
         'datatable' => 'statistics_table',
         'count' => $count,

@@ -1036,9 +1036,10 @@ $string['betweenxandy'] = 'Between %s and %s';
 $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers, and - are allowed.';
 
 // Registration statistics
-$string['registration'] = 'Registration';
+$string['content'] = 'Content';
 $string['modified'] = 'Modified';
 $string['historical'] = 'Historical';
+$string['institutions'] = 'Institutions';
 $string['members'] = 'Members';
 $string['blocks'] = 'Blocks';
 $string['artefacts'] = 'Artefacts';
