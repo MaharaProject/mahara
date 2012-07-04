@@ -35,14 +35,14 @@ $string['changeusernameheading'] = 'Change username';
 $string['changeusername'] = 'New username';
 $string['changeusernamedesc'] = 'The username you use to log into %s. Usernames are 3-30 characters long, and may contain letters, numbers, and most common symbols excluding spaces.';
 
-$string['usernameexists'] = 'This username is taken, please choose another.';
+$string['usernameexists'] = 'This username is taken, please choose another one.';
 
 $string['accountoptionsdesc'] = 'General account options';
 
 $string['changeprofileurl'] = 'Change profile URL';
 $string['profileurl'] = 'Profile URL';
 $string['profileurldescription'] = 'A personalised URL for your profile page. This field must be 3-30 characters long.';
-$string['urlalreadytaken'] = 'This profile URL is already taken. Please choose another.';
+$string['urlalreadytaken'] = 'This profile URL is already taken. Please choose another one.';
 
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
@@ -96,4 +96,4 @@ $string['deleteaccountdescription']  = 'If you delete your account, all your con
 $string['accountdeleted']  = 'Your account has been deleted.';
 
 $string['resizeonuploaduserdefault'] = 'Enable "Resize large images on upload" by default';
-$string['resizeonuploaduserdefaultdescription'] = 'Tick this box to set the "Resize large images on upload" checkbox option to "on" by default when uploading files. Untick to have that checkbox option set to "off" by default.';
+$string['resizeonuploaduserdefaultdescription'] = 'Tick this box to set the "Resize large images on upload" option to "on" by default when uploading files. Untick it to have that option set to "off" by default.';

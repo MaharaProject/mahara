@@ -148,11 +148,11 @@ $string['nofiltersinstalled'] = 'No HTML filters installed.';
 
 $string['allowediframesites'] = 'Allowed iframe sources';
 $string['allowediframesitesdescriptionshort'] = 'Configure permissions for embedding external iframe content';
-$string['allowediframesitesdescription'] = 'Users are allowed to embed content from the following external sites on their pages, inside HTML &lt;iframe&gt; elements. Typically this is used to display videos hosted elsewhere. The list of allowed sites can be modified on this page.';
+$string['allowediframesitesdescription'] = 'Users are allowed to embed content from the following external sites on their pages, inside HTML &lt;iframe&gt; elements. Typically this is used to display content hosted elsewhere. The list of allowed sites can be modified on this page.';
 $string['allowediframesitesdescriptiondetail'] = 'The icon and display name will be visible to users when they configure an external media block. All sites with the same display name are grouped together in the configuration form, but iframe source text matching any of the sites will be allowed.';
-$string['iframeurldescription'] = "Text to match at the beginning of the iframe source URL (without the http://). Only letters, digits, and the characters '.', '/', '_', and '-' are allowed.";
+$string['iframeurldescription'] = "Text to match at the beginning of the iframe source URL (without the http://). Only letters, digits and the characters '.', '/', '_', and '-' are allowed.";
 $string['iframedisplaynamedescription'] = 'The name of the site to be displayed to users.';
-$string['iframeinvalidsite'] = "This field should contain a valid host, an optional path, and can contain only letters, digits, '.', '/', '_', and '-'.";
+$string['iframeinvalidsite'] = "This field should contain a valid host and an optional path. It can contain only letters, digits, '.', '/', '_', and '-'.";
 $string['iframeiconhost'] = 'Icon host';
 $string['iframeiconhostdescription'] = 'If you wish, you may specify a different host for the favicon image. All sites with the same name will use this icon.';
 
@@ -251,12 +251,12 @@ $string['cronnotrunning1'] = '<span class="error">Cron is not running.</span><br
 $string['Loggedin'] = 'Logged in';
 $string['youraverageuser'] = 'Your average user...';
 $string['statsmaxfriends'] = 'Has %s friends (most is <a href="%s">%s</a> with %d)';
-$string['statsnofriends'] = 'Has 0 friends :(';
+$string['statsnofriends'] = 'Has 0 friends';
 $string['statsmaxviews'] = 'Has made %s pages (most is <a href="%s">%s</a> with %d)';
-$string['statsnoviews'] = 'Has made 0 pages :(';
+$string['statsnoviews'] = 'Has made 0 pages';
 $string['statsmaxgroups'] = 'Is in %s groups (most is <a href="%s">%s</a> with %d)';
-$string['statsnogroups'] = 'Is in 0 groups :(';
-$string['statsnoquota'] = 'Is using no storage :(';
+$string['statsnogroups'] = 'Is in 0 groups';
+$string['statsnoquota'] = 'Is using no storage';
 $string['statsmaxquotaused'] = 'Has used about %s of disk quota (most is <a href="%s">%s</a> with %s)';
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
@@ -270,7 +270,7 @@ $string['viewstatstabletitle'] = 'Most popular pages';
 $string['exportstatsascsv'] = 'Export statistics in CSV format';
 $string['nostats'] = 'No statistics available';
 
-// Institutional statistics
+// Institution statistics
 $string['statistics'] = 'Statistics';
 $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
