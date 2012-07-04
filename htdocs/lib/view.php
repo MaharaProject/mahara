@@ -3429,7 +3429,7 @@ class View {
                 $userid = $USER->get('id');
                 $fields = array(
                     'id', 'username', 'firstname', 'lastname', 'preferredname', 'admin', 'staff', 'studentid', 'email',
-                    'profileicon', 'urlid',
+                    'profileicon', 'urlid', 'suspendedctime',
                 );
                 if (count($owners) == 1 && isset($owners[$userid])) {
                     $owners = array($userid => new StdClass);
@@ -4091,6 +4091,7 @@ class View {
                         'submittedgroup' => $r['csubmitgroup'],
                         'submittedhost'  => $r['csubmithost'],
                         'submittedtime'  => $r['csubmittime'],
+                        'template'       => $r['template'],
                         'views' => array(),
                     );
                     if (isset($r['user'])) {
