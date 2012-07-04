@@ -3059,5 +3059,12 @@ function xmldb_core_upgrade($oldversion=0) {
         )');
     }
 
+    if ($oldversion < 2012070300) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('groupparticipationreports');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 }

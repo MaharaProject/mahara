@@ -71,6 +71,7 @@ else {
         'hidden'         => 0,
         'hidemembers'    => 0,
         'hidemembersfrommembers' => 0,
+        'groupparticipationreports' => 0,
         'invitefriends'  => 0,
         'suggestfriends' => 0,
         'urlid'          => null,
@@ -305,6 +306,13 @@ else {
     );
 }
 
+$elements['groupparticipationreports'] = array(
+    'type'         => 'checkbox',
+    'title'        => get_string('groupparticipationreports', 'group'),
+    'description'  => get_string('groupparticipationreportsdesc', 'group'),
+    'defaultvalue' => $group_data->groupparticipationreports,
+);
+
 $elements['general'] = array(
     'type'         => 'html',
     'title'        => get_string('general'),
@@ -418,6 +426,7 @@ function editgroup_submit(Pieform $form, $values) {
         'hidden'         => intval($values['hidden']),
         'hidemembers'    => intval(!empty($values['hidemembersfrommembers']) || !empty($values['hidemembers'])),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
+        'groupparticipationreports' => intval($values['groupparticipationreports']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
     );
