@@ -918,7 +918,7 @@
         <TABLE NAME="collection">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
                 <FIELD NAME="name" TYPE="text" NOTNULL="true"  />
@@ -927,12 +927,16 @@
                 <FIELD NAME="submittedgroup" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="submittedhost" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="submittedtime" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id"  />
                 <KEY NAME="submittedgroupfk" TYPE="foreign" FIELDS="submittedgroup" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="submittedhostfk" TYPE="foreign" FIELDS="submittedhost" REFTABLE="host" REFFIELDS="wwwroot" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id"  />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  />
             </KEYS>
         </TABLE>
         <TABLE NAME="collection_view">

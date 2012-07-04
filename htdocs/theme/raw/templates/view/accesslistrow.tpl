@@ -29,7 +29,7 @@
           {/if}{if !$dwoo.foreach.ags.last}, {/if}
         {/strip}{/foreach}
         </div>
-        {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
+        {if $item.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
       {/if}
       </td>
       <td class="al-edit">

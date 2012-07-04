@@ -26,7 +26,6 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio/collection');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
@@ -35,14 +34,39 @@ define('SECTION_PAGE', 'delete');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('collection.php');
-define('TITLE', get_string('deletecollection', 'collection'));
 
 $id = param_integer('id');
-
 $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
-    $SESSION->add_error_msg(get_string('cantdeletecollection', 'collection'));
-    redirect('/collection/');
+    throw new AccessDeniedException(get_string('cantdeletecollection', 'collection'));
+}
+$groupid = $collection->get('group');
+$institutionname = $collection->get('institution');
+$urlparams = array();
+if (!empty($groupid)) {
+    define('MENUITEM', 'groups/collections');
+    define('GROUP', $groupid);
+    $urlparams['group'] = $groupid;
+}
+else if (!empty($institutionname)) {
+    if ($institutionname == 'mahara') {
+        define('ADMIN', 1);
+        define('MENUITEM', 'configsite/collections');
+    }
+    else {
+        define('INSTITUTIONALADMIN', 1);
+        define('MENUITEM', 'manageinstitutions/institutioncollections');
+    }
+    $urlparams['institution'] = $institutionname;
+}
+else {
+    define('MENUITEM', 'myportfolio/collection');
+}
+define('TITLE', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
+
+$baseurl = get_config('wwwroot') . 'collection/index.php';
+if ($urlparams) {
+    $baseurl .= '?' . http_build_query($urlparams);
 }
 
 if ($collection->is_submitted()) {
@@ -57,20 +81,20 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'collection/',
+            'goto' => $baseurl,
         ),
     ),
 ));
 
 $smarty = smarty();
-$smarty->assign('subheading', TITLE);
+$smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
 function deletecollection_submit(Pieform $form, $values) {
-    global $SESSION, $collection;
+    global $SESSION, $collection, $baseurl;
     $collection->delete();
     $SESSION->add_ok_msg(get_string('collectiondeleted', 'collection'));
-    redirect('/collection/');
+    redirect($baseurl);
 }

@@ -220,11 +220,11 @@ class Institution {
             WHERE usr = ? AND tag " . db_ilike() . " 'lastinstitution:%'",
             array($user->id)
         );
-        // Copy institution views to the user's portfolio
+        // Copy institution views and collection to the user's portfolio
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
         $userobj = new User();
         $userobj->find_by_id($user->id);
-        $userobj->copy_views(get_column('view', 'id', 'institution', $this->name, 'copynewuser', 1), $checkviewaccess);
+        $userobj->copy_institution_views_collections_to_new_member($this->name, $checkviewaccess);
         require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
@@ -706,6 +706,10 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
    institutionadmins.php and institutionstaff.php (in /admin/users/).
    This function creates the form for the page. */
 function institution_selector_for_page($institution, $page) {
+    // Special case: $institution == 1 <-> any institution
+    if ($institution == 1) {
+        $institution = '';
+    }
     require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
 
@@ -727,14 +731,22 @@ function institution_selector_for_page($institution, $page) {
             'institution' => $institutionelement,
         )
     ));
-    
+
+    $page = json_encode($page);
     $js = <<< EOF
 function reloadUsers() {
+    var urlstr = $page;
     var inst = '';
     if ($('institutionselect_institution')) {
-        inst = '?institution='+$('institutionselect_institution').value;
+        inst = 'institution='+$('institutionselect_institution').value;
+        if (urlstr.indexOf('?') > 0) {
+            urlstr = urlstr + '&' + inst;
+        }
+        else {
+            urlstr = urlstr + '?' + inst;
+        }
     }
-    window.location.href = '{$page}'+inst;
+    window.location.href = urlstr;
 }
 addLoadEvent(function() {
     if ($('institutionselect_institution')) {

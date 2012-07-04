@@ -213,7 +213,7 @@ class View {
      * View information supplied.
      *
      * Will set a default title of 'Copy of $viewtitle' if title is not 
-     * specified in $viewdata.
+     * specified in $viewdata and $titlefromtemplate == false.
      *
      * @param array $viewdata See View::_create
      * @param int $templateid The ID of the View to copy
@@ -226,7 +226,7 @@ class View {
      * @throws SystemException under various circumstances, see the source for 
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -253,7 +253,10 @@ class View {
         $view = self::_create($viewdata, $userid);
 
         // Set a default title if one wasn't set
-        if (!isset($viewdata['title'])) {
+        if ($titlefromtemplate) {
+            $view->set('title', $template->get('title'));
+        }
+        else if (!isset($viewdata['title'])) {
             $desiredtitle = $template->get('title');
             if (get_config('renamecopies')) {
                 $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
@@ -3426,7 +3429,7 @@ class View {
                 $userid = $USER->get('id');
                 $fields = array(
                     'id', 'username', 'firstname', 'lastname', 'preferredname', 'admin', 'staff', 'studentid', 'email',
-                    'profileicon', 'urlid',
+                    'profileicon', 'urlid', 'suspendedctime',
                 );
                 if (count($owners) == 1 && isset($owners[$userid])) {
                     $owners = array($userid => new StdClass);
@@ -3607,13 +3610,9 @@ class View {
 
     public static function get_templatesearch_data(&$search) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $isstandalone = isset($search->copyableby->owner) && $search->copyableby->owner;
-        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, $isstandalone);
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, true);
 
         foreach ($results->data as &$r) {
-            if (!$isstandalone) {
-                $r['collid'] = null;
-            }
             $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
         }
 
@@ -3634,7 +3633,6 @@ class View {
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
-        $smarty->assign('showcollection', $isstandalone ? 1 : 0);
         $search->html = $smarty->fetch('view/templatesearchresults.tpl');
         $search->count = $results->count;
 
@@ -4074,7 +4072,7 @@ class View {
                 'submittedhost'  => $r['submittedhost'],
                 'submittedtime'  => $r['submittedtime'],
             );
-            if ($r['user']) {
+            if (isset($r['user'])) {
                 $v['ownername'] = display_name($r['user']);
                 $v['ownerurl']  = profile_url($r['user']);
             }
@@ -4093,9 +4091,10 @@ class View {
                         'submittedgroup' => $r['csubmitgroup'],
                         'submittedhost'  => $r['csubmithost'],
                         'submittedtime'  => $r['csubmittime'],
+                        'template'       => $r['template'],
                         'views' => array(),
                     );
-                    if ($r['user']) {
+                    if (isset($r['user'])) {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
@@ -4403,7 +4402,7 @@ function createview_submit(Pieform $form, $values) {
         list($collection, $template, $copystatus) = Collection::create_from_template($values, $templateid);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
-            redirect(get_config('wwwroot') . 'collection/choosetemplate.php');
+            redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
         $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
             $copystatus['pages'],
@@ -4412,7 +4411,7 @@ function createview_submit(Pieform $form, $values) {
             $template->get('name'))
         );
 
-        redirect(get_config('wwwroot') . 'collection/edit.php?new=1&id=' . $collection->get('id'));
+        redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
     else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];

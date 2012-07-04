@@ -1828,17 +1828,23 @@ function admin_nav() {
             'title'  => get_string('Views', 'view'),
             'weight' => 50,
         ),
+        'configsite/collections' => array(
+            'path'   => 'configsite/collections',
+            'url'    => 'collection/index.php?institution=mahara',
+            'title'  => get_string('Collections', 'collection'),
+            'weight' => 60,
+        ),
         'configsite/share' => array(
             'path'   => 'configsite/share',
             'url'    => 'admin/site/shareviews.php',
             'title'  => get_string('share', 'view'),
-            'weight' => 60,
+            'weight' => 70,
         ),
         'configsite/sitefiles' => array(
             'path'   => 'configsite/sitefiles',
             'url'    => 'artefact/file/sitefiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 70,
+            'weight' => 80,
         ),
         'configusers' => array(
             'path'   => 'configusers',
@@ -1954,17 +1960,23 @@ function admin_nav() {
             'title'  => get_string('Views', 'view'),
             'weight' => 50,
         ),
+        'manageinstitutions/institutioncollections' => array(
+            'path'   => 'manageinstitutions/institutioncollections',
+            'url'    => 'collection/index.php?institution=1',
+            'title'  => get_string('Collections', 'collection'),
+            'weight' => 60,
+        ),
         'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
             'url'    => 'view/institutionshare.php',
             'title'  => get_string('share', 'view'),
-            'weight' => 60,
+            'weight' => 70,
         ),
         'manageinstitutions/institutionfiles' => array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 70,
+            'weight' => 80,
         ),
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
@@ -2111,17 +2123,23 @@ function institutional_admin_nav() {
             'title'  => get_string('Views', 'view'),
             'weight' => 60,
         ),
+        'manageinstitutions/institutioncollections' => array(
+            'path'   => 'manageinstitutions/institutioncollections',
+            'url'    => 'collection/index.php?institution=1',
+            'title'  => get_string('Collections', 'collection'),
+            'weight' => 70,
+        ),
         'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
             'url'    => 'view/institutionshare.php',
             'title'  => get_string('share', 'view'),
-            'weight' => 70,
+            'weight' => 80,
         ),
         'manageinstitutions/institutionfiles' => array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 80,
+            'weight' => 90,
         ),
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',

@@ -33,6 +33,8 @@ class Collection {
     private $name;
     private $description;
     private $owner;
+    private $group;
+    private $institution;
     private $mtime;
     private $ctime;
     private $navigation;
@@ -42,8 +44,6 @@ class Collection {
     private $views;
 
     public function __construct($id=0, $data=null) {
-        global $USER;
-        $userid = $USER->get('id');
 
         if (!empty($id)) {
             $tempdata = get_record('collection','id',$id);
@@ -61,7 +61,6 @@ class Collection {
         else {
             $this->ctime = time();
             $this->mtime = time();
-            $this->owner = $userid;
         }
 
         if (empty($data)) {
@@ -71,6 +70,10 @@ class Collection {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
+        }
+        if (empty($this->group) && empty($this->institution) && empty($this->owner)) {
+            global $USER;
+            $this->owner = $USER->get('id');
         }
     }
 
@@ -197,8 +200,8 @@ class Collection {
      * Creates a Collection for the given user, based off a given template and other
      * Collection information supplied.
      *
-     * Will set a default title of 'Copy of $collectiontitle' if title is not
-     * specified in $collectiondata.
+     * Will set a default name of 'Copy of $collectiontitle' if name is not
+     * specified in $collectiondata and $titlefromtemplate == false.
      *
      * @param array $collectiondata Contains information of the old collection, submitted in form
      * @param int $templateid The ID of the Collection to copy
@@ -211,7 +214,7 @@ class Collection {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true) {
+    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
         require_once(get_config('libroot') . 'view.php');
         global $SESSION;
 
@@ -225,13 +228,34 @@ class Collection {
         $colltemplate = new Collection($templateid);
 
         $data = new StdClass;
-        $desiredname = $colltemplate->get('name');
-        if (get_config('renamecopies')) {
-            $desiredname = get_string('Copyof', 'mahara', $desiredname);
+        // Set a default name if one wasn't set in $collectiondata
+        if ($titlefromtemplate) {
+            $data->name = $colltemplate->get('name');
         }
-        $data->name = self::new_name($desiredname, (object)$collectiondata);
+        else if (!isset($collectiondata['name'])) {
+            $desiredname = $colltemplate->get('name');
+            if (get_config('renamecopies')) {
+                $desiredname = get_string('Copyof', 'mahara', $desiredname);
+            }
+            $data->name = self::new_name($desiredname, (object)$collectiondata);
+        }
+        else {
+            $data->name = $collectiondata['name'];
+        }
         $data->description = $colltemplate->get('description');
         $data->navigation = $colltemplate->get('navigation');
+        if (!empty($collectiondata['group'])) {
+            $data->group = $collectiondata['group'];
+        }
+        else if (!empty($collectiondata['institution'])) {
+            $data->institution = $collectiondata['institution'];
+        }
+        else if (!empty($collectiondata['owner'])) {
+            $data->owner = $collectiondata['owner'];
+        }
+        else {
+            $data->owner = $userid;
+        }
 
         $collection = self::save($data);
 
@@ -240,8 +264,14 @@ class Collection {
         $views = $colltemplate->get('views');
         $copyviews = array();
         foreach ($views['views'] as $v) {
-            $values = array('new' => true, 'usetemplate' => $v->view);
-            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess);
+            $values = array(
+                'new' => true,
+                'owner' => isset($data->owner) ? $data->owner : null,
+                'group' => isset($data->group) ? $data->group : null,
+                'institution' => isset($data->institution) ? $data->institution : null,
+                'usetemplate' => $v->view
+            );
+            list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate);
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
                 return array(null, $colltemplate, array('quotaexceeded' => true));
@@ -285,32 +315,51 @@ class Collection {
     }
 
     /**
-     * Returns a list of the current users collections
+     * Returns a list of the current user, group, or institution collections
      *
      * @param offset current page to display
      * @param limit how many collections to display per page
+     * @param groupid current group ID
+     * @param institutionname current institution name
      * @return array (count: integer, data: array, offset: integer, limit: integer)
      */
-    public static function get_mycollections_data($offset=0, $limit=10) {
-        global $USER;
-
-        ($data = get_records_sql_assoc("
-            SELECT c.id, c.description, c.name
+    public static function get_mycollections_data($offset=0, $limit=10, $owner=null, $groupid=null, $institutionname=null) {
+        if (!empty($groupid)) {
+            $wherestm = '"group" = ?';
+            $values = array($groupid);
+            $count  = count_records('collection', 'group', $groupid);
+        }
+        else if (!empty($institutionname)) {
+            $wherestm = 'institution = ?';
+            $values = array($institutionname);
+            $count  = count_records('collection', 'institution', $institutionname);
+        }
+        else if (!empty($owner)) {
+            $wherestm = 'owner = ?';
+            $values = array($owner);
+            $count  = count_records('collection', 'owner', $owner);
+        }
+        else {
+            $count = 0;
+        }
+        $data = array();
+        if ($count > 0) {
+            $data = get_records_sql_assoc("
+                SELECT c.id, c.description, c.name
                 FROM {collection} c
-                WHERE c.owner = ?
-            ORDER BY c.name, c.ctime ASC
-            LIMIT ? OFFSET ?", array($USER->get('id'), $limit, $offset)))
-            || ($data = array());
+                WHERE " . $wherestm .
+                " ORDER BY c.name, c.ctime, c.id ASC
+                ", $values, $offset, $limit);
+        }
 
         self::add_submission_info($data);
 
         $result = (object) array(
-            'count'  => count_records('collection', 'owner', $USER->get('id')),
-            'data'   => array_values($data),
+            'count'  => $count,
+            'data'   => $data,
             'offset' => $offset,
             'limit'  => $limit,
         );
-
         return $result;
     }
 
@@ -359,7 +408,7 @@ class Collection {
     * Gets the fields for the new/edit collection form
     * - populates the fields with collection data if it is an edit
     *
-    * @param array collection
+    * @param array $collection
     * @return array $elements
     */
     public function get_collectionform_elements() {
@@ -398,6 +447,20 @@ class Collection {
                 'type' => 'hidden',
                 'value' => $this->id,
             );
+        }
+        if (!empty($this->group)) {
+            $elements['group'] = array(
+                'type' => 'hidden',
+                'value' => $this->group,
+            );
+        }
+        else if (!empty($this->institution)) {
+            $elements['institution'] = array(
+                'type' => 'hidden',
+                'value' => $this->institution,
+            );
+        }
+        else if (!empty($this->owner)) {
             $elements['owner'] = array(
                 'type' => 'hidden',
                 'value' => $this->owner,
@@ -456,21 +519,32 @@ class Collection {
      *
      * @return array $views
      */
-    public static function available_views() {
-        global $USER;
-
-        $userid = $USER->get('id');
+    public static function available_views($owner=null, $groupid=null, $institutionname=null) {
+        if (!empty($groupid)) {
+            $wherestm = '"group" = ?';
+            $values = array($groupid);
+        }
+        else if (!empty($institutionname)) {
+            $wherestm = 'institution = ?';
+            $values = array($institutionname);
+        }
+        else if (!empty($owner)) {
+            $wherestm = 'owner = ?';
+            $values = array($owner);
+        }
+        else {
+            return array();
+        }
         ($views = get_records_sql_array("SELECT v.id, v.title
-                  FROM {view} v
-                LEFT JOIN {collection_view} cv ON cv.view = v.id
-                WHERE v.owner = ?
-                AND cv.view IS NULL
+            FROM {view} v
+            LEFT JOIN {collection_view} cv ON cv.view = v.id
+            WHERE " . $wherestm .
+            "   AND cv.view IS NULL
                 AND v.type NOT IN ('dashboard','grouphomepage','profile')
-                GROUP BY v.id, v.title
-                ORDER BY v.title ASC
-                ", array($userid)))
-                || ($views = array());
-
+            GROUP BY v.id, v.title
+            ORDER BY v.title ASC
+            ", $values))
+            || ($views = array());
         return $views;
     }
 
@@ -588,12 +662,16 @@ class Collection {
     /**
      * after editing the collection, redirect back to the appropriate place
      */
-    public function post_edit_redirect($new=false) {
-        if ($new) {
-            $redirecturl = '/collection/views.php?id=' . $this->get('id') . '&new=1';
+    public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
+        if ($new || $copy) {
+            $urlparams['id'] = $this->get('id');
+            $redirecturl = '/collection/views.php';
         }
         else {
             $redirecturl = '/collection/index.php';
+        }
+        if ($urlparams) {
+            $redirecturl .= '?' . http_build_query($urlparams);
         }
         redirect($redirecturl);
     }

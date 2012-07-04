@@ -31,30 +31,41 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 
-$group = param_integer('group', null);
+$owner = param_integer('owner', 0);;
+$groupid = param_integer('group', null);
 $institution = param_alphanum('institution', null);
-View::set_nav($group, $institution);
+
+View::set_nav($groupid, $institution);
 
 if ($usetemplate = param_integer('usetemplate', null)) {
     // If a form has been submitted, build it now and pieforms will
     // call the submit function straight away
-    pieform(create_view_form($group, $institution, $usetemplate, param_integer('copycollection', null)));
+    pieform(create_view_form($groupid, $institution, $usetemplate, param_integer('copycollection', null)));
 }
 
-if ($group && !group_user_can_edit_views($group) || $institution && !$USER->can_edit_institution($institution)) {
+if ($groupid && !group_user_can_edit_views($groupid) || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 
-define('TITLE', get_string('copyvieworcollection', 'view'));
+if (!empty($groupid)) {
+    $group = group_current_group();
+    define('TITLE', $group->name);
+}
+else {
+    $owner = $USER->get('id');
+    define('TITLE', get_string('copyvieworcollection', 'view'));
+}
+
+define('SUBTITLE', get_string('copyvieworcollection', 'view'));
 
 $views = new StdClass;
 $views->query      = trim(param_variable('viewquery', ''));
 $views->ownerquery = trim(param_variable('ownerquery', ''));
 $views->offset     = param_integer('viewoffset', 0);
 $views->limit      = param_integer('viewlimit', 10);
-$views->copyableby = (object) array('group' => $group, 'institution' => $institution, 'owner' => null);
-if ($group) {
-    $views->group = $group;
+$views->copyableby = (object) array('group' => $groupid, 'institution' => $institution, 'owner' => null);
+if ($groupid) {
+    $views->group = $groupid;
     $helptext = get_string('choosetemplategrouppagedescription', 'view');
 }
 else if ($institution) {
@@ -126,7 +137,14 @@ $smarty = smarty(
     array('stylesheets' => array('style/views.css'))
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('PAGEHEADING', TITLE);
+if (!empty($groupid)) {
+    $smarty->assign('PAGESUBHEADING', SUBTITLE);
+    $smarty->assign('PAGEHELPNAME', '0');
+    $smarty->assign('SUBPAGEHELPNAME', '1');
+}
+else {
+    $smarty->assign('PAGEHEADING', SUBTITLE);
+}
 $smarty->assign('helptext', $helptext);
 $smarty->assign('views', $views);
 $smarty->display('view/choosetemplate.tpl');

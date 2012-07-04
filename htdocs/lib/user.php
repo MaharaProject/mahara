@@ -2053,11 +2053,11 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
     }
 
-    // Copy site views to the new user's profile
+    // Copy site views and collections to the new user's profile
     $checkviewaccess = !$user->newuser;
     $userobj = new User();
     $userobj->find_by_id($user->id);
-    $userobj->copy_views(get_column('view', 'id', 'institution', 'mahara', 'copynewuser', 1), $checkviewaccess);
+    $userobj->copy_site_views_collections_to_new_user($checkviewaccess);
 
     reset_password($user, false, $quickhash);
 

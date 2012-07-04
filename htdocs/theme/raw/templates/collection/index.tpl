@@ -1,7 +1,11 @@
 {include file="header.tpl"}
-    <div class="rbuttons">
-        <a class="btn" href="{$WWWROOT}collection/edit.php?new=1">{str section=collection tag=newcollection}</a>
-        <a class="btn" href="{$WWWROOT}view/choosetemplate.php">{str section=collection tag=copyacollection}</a>
+{if $GROUP}
+    <h2>{$PAGESUBHEADING}</h2>
+{/if}
+{if $institution}{$institutionselector|safe}{/if}
+    <div class="rbuttons {if $GROUP}pagetabs{/if}">
+        <a class="btn" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
+        <a class="btn" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
     </div>
 <p class="intro">{str tag=collectiondescription section=collection}</p>
 {if $collections}
@@ -49,6 +53,6 @@
     </table>
        {$pagination|safe}
 {else}
-        <div class="message">{$strnocollectionsaddone|safe}</div>
+        <div class="message">{str tag=nocollections section=collection} <a href={$addonelink}>{str tag=addone}</a></div>
 {/if}
 {include file="footer.tpl"}

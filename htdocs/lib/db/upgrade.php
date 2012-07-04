@@ -3025,5 +3025,39 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2012070200) {
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('group');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, null);
+        add_field($table, $field);
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null, null, null, null, null);
+        add_field($table, $field);
+        $field = new XMLDBField('owner');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        change_field_notnull($table, $field);
+        // For PostgresSQL, change_field_notnull of $field=owner with precision = 10 BIGINT(10)
+        // will add a temporary column, move data from owner column, remove the column 'owner'
+        // and then rename the temporary column to 'owner'. Therefore, all indexes and foreign keys
+        // related to column 'owner' will be removed
+        if (is_postgres()) {
+            $key = new XMLDBKey('owner');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('owner'), 'usr', array('id'));
+            add_key($table, $key);
+        }
+        $key = new XMLDBKey('group');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        add_key($table, $key);
+        $key = new XMLDBKey('institution');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
+        // Add constraints
+        execute_sql('ALTER TABLE {collection} ADD CHECK (
+            (owner IS NOT NULL AND "group" IS NULL     AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NOT NULL AND institution IS NULL) OR
+            (owner IS NULL     AND "group" IS NULL     AND institution IS NOT NULL)
+        )');
+    }
+
     return $status;
 }
