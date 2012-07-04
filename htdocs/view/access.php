@@ -88,7 +88,7 @@ $form = array(
 // For institution views, force edit access of one view at a time for now.  Editing multiple
 // institution views requires doing some tricky stuff with the 'copy for new users/groups'
 // options, and there's not much room for the 'Share' tab in the admin area anyway
-if (!$institution && $view->get('type') != 'profile') {
+if ($view->get('type') != 'profile') {
     list($collections, $views) = View::get_views_and_collections(
         $view->get('owner'), $group, $institution, $view->get('accessconf'), false
     );
@@ -534,39 +534,36 @@ function editaccess_submit(Pieform $form, $values) {
             }
             $viewconfig['copynewgroups'] = $createfor;
         }
-        $toupdate[] = $view->get('id');
     }
-    else {
-        if (isset($values['collections'])) {
-            foreach ($values['collections'] as $cid) {
-                if (!isset($collections[$cid])) {
-                    throw new UserException(get_string('editaccessinvalidviewset', 'view'));
-                }
-                $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
+    if (isset($values['collections'])) {
+        foreach ($values['collections'] as $cid) {
+            if (!isset($collections[$cid])) {
+                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
             }
+            $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
         }
-    
-        if (isset($values['views'])) {
-            foreach ($values['views'] as $viewid) {
-                if (!isset($views[$viewid])) {
-                    throw new UserException(get_string('editaccessinvalidviewset', 'view'));
-                }
-                $toupdate[] = $viewid;
-            }
-        }
-        else if ($view->get('type') == 'profile') {
-            // Force default Advanced options
-            $felements = $form->get_property('elements');
-            if (!empty($felements['more']['elements'])) {
-                foreach (array_keys($felements['more']['elements']) as $ename) {
-                    if (property_exists($view, $ename)) {
-                        $viewconfig[$ename] = $view->get($ename);
-                    }
-                }
-            }
+    }
 
-            $toupdate[] = $view->get('id');
+    if (isset($values['views'])) {
+        foreach ($values['views'] as $viewid) {
+            if (!isset($views[$viewid])) {
+                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+            }
+            $toupdate[] = $viewid;
         }
+    }
+    else if ($view->get('type') == 'profile') {
+        // Force default Advanced options
+        $felements = $form->get_property('elements');
+        if (!empty($felements['more']['elements'])) {
+            foreach (array_keys($felements['more']['elements']) as $ename) {
+                if (property_exists($view, $ename)) {
+                    $viewconfig[$ename] = $view->get($ename);
+                }
+            }
+        }
+
+        $toupdate[] = $view->get('id');
     }
 
     if (!empty($toupdate)) {

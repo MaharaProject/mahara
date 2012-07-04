@@ -1119,7 +1119,7 @@ class User {
 
         // Get list of available collections
         $templatecollectionids = get_column_sql("
-            SELECT c.id
+            SELECT DISTINCT c.id
             FROM {view} v
             INNER JOIN {collection_view} cv ON v.id = cv.view
             INNER JOIN {collection} c ON cv.collection = c.id
@@ -1157,7 +1157,7 @@ class User {
 
         // Get list of available collections
         $templatecollectionids = get_column_sql("
-            SELECT c.id
+            SELECT DISTINCT c.id
             FROM {view} v
             INNER JOIN {collection_view} cv ON v.id = cv.view
             INNER JOIN {collection} c ON cv.collection = c.id

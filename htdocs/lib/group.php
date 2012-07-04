@@ -437,7 +437,7 @@ function group_create($data) {
     }
     // Copy collections for the new group
     $templates = get_records_sql_array("
-        SELECT c.id, c.name
+        SELECT DISTINCT c.id, c.name
         FROM {view} v
         INNER JOIN {view_autocreate_grouptype} vag ON vag.view = v.id
         INNER JOIN {collection_view} cv ON v.id = cv.view
