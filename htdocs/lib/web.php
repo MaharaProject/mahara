@@ -406,6 +406,8 @@ EOF;
     }
     $smarty->assign('sitename', $sitename);
     $smarty->assign('sitelogo', $THEME->header_logo());
+    $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
+    $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);
@@ -850,6 +852,10 @@ class Theme {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogo;
         }
         return $this->get_url('images/site-logo.png');
+    }
+
+    public function facebook_logo() {
+        return $this->get_url('images/site-logo4facebook.png');
     }
 
     public function additional_stylesheets() {

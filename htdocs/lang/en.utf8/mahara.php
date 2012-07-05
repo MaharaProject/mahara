@@ -1044,3 +1044,5 @@ $string['members'] = 'Members';
 $string['blocks'] = 'Blocks';
 $string['artefacts'] = 'Artefacts';
 $string['posts'] = 'Posts';
+$string['facebookdescription'] = 'Mahara is an open source ePortfolio and social networking web application.
+It provides users with tools to create and maintain a digital portfolio of their learning, and social networking features to allow users to interact with each other';
