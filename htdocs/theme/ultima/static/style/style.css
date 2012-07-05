@@ -439,6 +439,13 @@ div.sideblock ul ul {
 	color: #e8c1ea;
 }
 
+/* Side Login */
+#sb-loginbox #login_login_container,
+#sb-loginbox #login_login_extra_container {
+    border: 0;
+    background: #000000;
+}
+
 
 /* Side Quota Bar */
 #quota_used {

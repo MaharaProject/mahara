@@ -749,10 +749,16 @@ form#uploadcsv {
 
 /* warnings for the admin screen */
 .admin-warning-box {
-    border: 1px solid #e98a88;
     background: #fbeceb;
-    margin-bottom: 5px;
-    padding: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #333333;
+}
+.admin-warning-box ul {
+    margin-bottom: 0;
 }
 
 .admin-warning-box h3 {

@@ -468,6 +468,7 @@ fieldset {
 	margin: 5px 0;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
 }
 * html fieldset {
 	width: 90%;
@@ -1215,7 +1216,10 @@ div.rel {
 	padding-top: 5px;
 }
 div.ok, div.error {
-	padding: 2px 5px 2px 25px;
+    padding: 2px 5px 2px 30px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 /* upload file message */
 .message.info,
@@ -1231,11 +1235,11 @@ div.info img {
 /* different message types */
 #messages .ok, div.ok {
 	color: #547c22;
-	background: #e7f1c3 url(../images/success.gif) no-repeat 5px 3px;
+    background: #e7f1c3 url(../images/success.gif) no-repeat 7px 1px;
 }
 #messages .error, div.error {
 	color: #dd0221;
-	background: #ffd3d9 url(../images/failure.gif) no-repeat 5px 3px;
+    background: #ffeded url(../images/failure.gif) no-repeat 7px 1px;
 }
 #editaccess div.error {
 	color: #474220;
@@ -1341,6 +1345,42 @@ div.sideblock ul li {
 }
 #sb-loginbox .login-externallink {
 	margin-top: 3px;
+}
+#loginform_container #login_login_container {
+    border: 1px solid #d6d6d6;
+    background: #f4f4f4;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+#loginform_container {
+		width: 256px;
+}
+#sb-loginbox #loginform_container {
+		width: 100%;
+}
+#loginform_container #login_login_container #login-helplinks {
+	height: 24px;
+}
+#loginform_container #login_login_extra_container {
+    border: 1px solid #d6d6d6;
+    background: #f4f4f4;
+    padding: 10px 10px 15px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+#loginform_container #login_login_extra_container label {
+    display: block;
+    margin-bottom: 5px;
+}
+#loginform_container #login_login_extra_container .login-externallink {
+    display: inline;
+    margin-right: 5px;
+    font-size: 1.091em;
 }
 /* Side Profile */
 #user-profileicon {

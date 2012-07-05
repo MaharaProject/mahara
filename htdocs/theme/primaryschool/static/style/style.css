@@ -560,6 +560,16 @@ div.sideblock .sidebar-content a {
 #sb-loginbox label {
 	color: #1A428F;
 }
+#sb-loginbox #login_login_container {
+    border: 0;
+    margin-top: 0;
+    background: #e5e6f1;
+}
+#sb-loginbox #login_login_extra_container {
+    border: 0;
+    margin-top: 5px;
+    background: #e5e6f1;
+}
 /* Side Profile */
 #sb-profile {
 	background: url(../images/sidebar-yellow-bottom.png) no-repeat bottom left;
