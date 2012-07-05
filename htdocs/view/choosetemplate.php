@@ -66,11 +66,16 @@ $views->limit      = param_integer('viewlimit', 10);
 $views->copyableby = (object) array('group' => $groupid, 'institution' => $institution, 'owner' => null);
 if ($groupid) {
     $views->group = $groupid;
-    $helptext = get_string('choosetemplategrouppagedescription', 'view');
+    $helptext = get_string('choosetemplategrouppageandcollectiondescription', 'view');
 }
 else if ($institution) {
     $views->institution = $institution;
-    $helptext = get_string('choosetemplateinstitutionpagedescription', 'view');
+    if ($institution == 'mahara') {
+        $helptext = get_string('choosetemplatesitepageandcollectiondescription', 'view');
+    }
+    else {
+        $helptext = get_string('choosetemplateinstitutionpageandcollectiondescription', 'view');
+    }
 }
 else {
     $views->copyableby->owner = $USER->get('id');
