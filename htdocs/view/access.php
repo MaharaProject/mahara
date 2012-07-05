@@ -173,7 +173,7 @@ $form['elements']['more'] = array(
         'template' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcopying', 'view'),
-            'description'  => get_string('templatedescription', 'view'),
+            'description'  => get_string('templatedescriptionplural1', 'view'),
             'defaultvalue' => $view->get('template'),
         ),
     ),
@@ -186,18 +186,18 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewusers', 'view'),
-            'description'  => get_string('copyfornewusersdescription', 'view'),
+            'description'  => get_string('copyfornewusersdescription1', 'view'),
             'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
         $form['elements']['more']['elements']['copyfornewgroups'] = array(
             'type'         => 'html',
             'value'        => '<label>' . get_string('copyfornewgroups', 'view') . '</label>',
         );
-        $form['elements']['more']['elements']['copyfornewgroupsdescription'] = array(
+        $form['elements']['more']['elements']['copyfornewgroupsdescription1'] = array(
             'type'         => 'html',
-            'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription', 'view') . '</div>',
+            'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription1', 'view') . '</div>',
         );
-        $copyoptions = array('copynewuser', 'copyfornewgroups', 'copyfornewgroupsdescription');
+        $copyoptions = array('copynewuser', 'copyfornewgroups', 'copyfornewgroupsdescription1');
         $needsaccess = array('copynewuser');
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptype_options() as $grouptype => $grouptypedesc) {
@@ -217,7 +217,7 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('copyfornewmembers', 'view'),
-            'description'  => get_string('copyfornewmembersdescription', 'view', $instname),
+            'description'  => get_string('copyfornewmembersdescription1', 'view', $instname),
             'defaultvalue' => $view->get('template') && $view->get('copynewuser'),
         );
         $copyoptions = array('copynewuser');
@@ -262,7 +262,7 @@ EOF;
     $form['elements']['more']['elements']['retainview'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('retainviewrights1', 'view'),
-        'description'  => $group ? get_string('retainviewrightsgroupdescription', 'view') : get_string('retainviewrightsdescription', 'view'),
+        'description'  => $group ? get_string('retainviewrightsgroupdescription1', 'view') : get_string('retainviewrightsdescription1', 'view'),
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
     $js .= <<< EOF
