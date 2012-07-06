@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>{str tag=insertimage section=artefact.blog}</title>
+	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/MochiKit/Packed.js"></script>
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/tinymce/tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/tinymce/utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="{$WWWROOT}js/tinymce/utils/form_utils.js"></script>
