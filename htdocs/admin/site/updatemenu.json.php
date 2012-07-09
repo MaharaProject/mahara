@@ -47,6 +47,9 @@ if ($type == 'sitefile') {
 else if ($type == 'externallink') {
     $data->url = $linkedto;
 }
+else if (sanitize_url($linkedto) == '') {
+    json_reply('local',get_string('badurl','admin'));
+}
 else { // Bad menu item type
     json_reply('local',get_string('badmenuitemtype','admin'));
 }
