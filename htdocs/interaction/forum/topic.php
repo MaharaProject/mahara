@@ -104,54 +104,33 @@ if ($membership && !$topic->forumsubscribed) {
         )
    ));
 }
+// posts pagination params
+$offset = param_integer('offset', 0);
+$limit  = param_integer('limit', 10);
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.id) AS postcount, ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
-    FROM {interaction_forum_post} p1
-    INNER JOIN {interaction_forum_topic} t ON (t.id = p1.topic)
-    INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
-    INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
-    INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
-    LEFT JOIN (
-        SELECT m.forum, m.user
-        FROM {interaction_forum_moderator} m
-        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
-    ) m ON (m.forum = t.forum AND m.user = p1.poster)
-    LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
-    LEFT JOIN {interaction_forum_post} p3 ON p3.id = e.post
-    LEFT JOIN {interaction_forum_topic} t3 ON t3.id = p3.topic
-    LEFT JOIN (
-        SELECT m.forum, m.user
-        FROM {interaction_forum_moderator} m
-        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
-    ) m2 ON (m2.forum = t3.forum AND m2.user = e.user)
-    WHERE p1.topic = ?
-    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 8, 10, 11, 12, e.ctime
-    ORDER BY p1.ctime, p1.id, e.ctime',
-    array($topic->groupid, $topicid)
+    'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted
+    FROM {interaction_forum_post} p
+    WHERE p.topic = ?
+    ORDER BY p.path, p.ctime, p.id',
+    array($topicid),
+    $offset,
+    $limit
 );
+// Get extra info of posts
+foreach ($posts as $post) {
+    // Get the number of posts
+    $post->postcount = get_postcount($post->poster);
 
-// $posts has an object for every edit to a post
-// this combines all the edits into a single object for each post
-// also formats the edits a bit
-$count = count($posts);
-for ($i = 0; $i < $count; $i++) {
-	$posts[$i]->postcount = get_string('postsvariable', 'interaction.forum', $posts[$i]->postcount);
-    $posts[$i]->canedit = $posts[$i]->parent && ($moderator || user_can_edit_post($posts[$i]->poster, $posts[$i]->ctime));
-    $posts[$i]->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->ctime);
-    $postedits = array();
-    if ($posts[$i]->editor) {
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
-    }
-    $temp = $i;
-    while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) { // while the next object is the same post
-        $i++;
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
-        unset($posts[$i]);
-    }
-    $posts[$temp]->edit = $postedits;
+    $post->canedit = $post->parent && ($moderator || user_can_edit_post($post->poster, $post->ctime));
+    $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $post->ctime);
+    // Get post edit records
+    $post->edit = get_postedits($post->id);
+    // Get moderator info
+    $post->moderator = is_moderator($post->poster)? $post->poster : null;
+    // Update the subject of posts
+    $post->subject = !empty($post->subject) ? $post->subject : get_string('re', 'interaction.forum', get_ancestorpostsubject($post->id));
 }
-
 // If the user has internal notifications for this topic, mark them
 // all as read.  Obviously there's no guarantee the user will actually
 // read all the posts on this page, but better than letting the unread
@@ -170,8 +149,16 @@ execute_sql('
     )
 );
 
-// builds the first post (with index 0) which has as children all the posts in the topic
+// renders a page of posts
 $posts = buildpostlist($posts, $indentmode, $maxindentdepth);
+// adds posts pagination
+$postcount = count_records_sql('SELECT COUNT(id) FROM {interaction_forum_post} WHERE topic = ?', array($topicid));
+$pagination = build_pagination(array(
+        'url' => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+        'count' => $postcount,
+        'limit' => $limit,
+        'offset' => $offset,
+));
 
 $headers = array();
 if ($publicgroup) {
@@ -183,150 +170,79 @@ $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $posts);
+$smarty->assign('pagination', $pagination['html']);
 $smarty->display('interaction:forum:topic.tpl');
 
-function buildpostlist(&$posts, $mode, $max_depth) {
-    buildsubjects(0, '', $posts);
+/*
+ * Render a page of posts
+ *
+ * @param array $posts list of posts
+ * @param string $mode ('no_indent', 'max_indent', 'full_indent')
+ * @param int $max_depth the maximum depth to indent to
+ */
+function buildpostlist($posts, $mode, $max_depth) {
     switch ($mode) {
         case 'no_indent':
-            return buildflatposts($posts);
+            $max_depth = 1;
             break;
         case 'max_indent':
-            $new_posts = array();
-            buildmaxindentposts(0, $posts, $max_depth);
-            $new_posts = buildpost(0, $posts);
-            return renderpost($new_posts);
             break;
         case 'full_indent':
         default:
-            $new_posts = buildpost(0, $posts);
-            return renderpost($new_posts);
+            $max_depth = -1;
             break;
     }
-}
-
-
-/*
- * Sorts posts so that if there parent is too deep will take the nearest ancestor of the right depth
- *
- * @param int $postindex the current index
- * @param array $posts list of posts
- * @param int $max_depth the maximum depth to indent to
- * @oaram int $current_depth the current depth
- * @param int $current_parent the current post parent/ancestor
- */
-
-function buildmaxindentposts($postindex, &$posts, $max_depth, $current_depth = 0, $current_parent = 0) {
-    global $moderator, $topic, $groupadmins;
-    $localposts = $posts;
-
-    $current_depth++;
-    foreach ($localposts as $index => $post) {
-        if ($posts[$index]->parent == $posts[$postindex]->id) {
-            if ($current_depth < $max_depth) {
-                $current_parent = $posts[$postindex]->id;
-            } else {
-                $posts[$index]->parent = $current_parent;
-            }
-            buildmaxindentposts($index, $posts, $max_depth, $current_depth, $current_parent);
-        }
+    $html = '';
+    foreach ($posts as $post) {
+        // calculates the indent tabs for the post
+        $indent = ($max_depth == 1) ? 1 : count(explode('/', $post->path, $max_depth));
+        $html .= renderpost($post, $indent);
     }
+    return $html;
 }
 
+
 /*
- * Renders a post and its children
+ * Renders a post
  *
  * @param object $post post object
- *
+ * @param int $indent indent value
  * @return string html output
  */
 
-function renderpost($post) {
-    global $moderator, $topic, $groupadmins;
-    $children = array();
-    if (isset($post->children) && !empty($post->children)) {
-        foreach ($post->children as $index=>$child_post) {
-            $children[] = renderpost($child_post);
-        }
-    }
-    $membership = user_can_access_forum((int)$topic->forumid);
+function renderpost($post, $indent) {
+    global $moderator, $topic, $groupadmins, $membership;
+
     $smarty = smarty_core();
     $smarty->assign('post', $post);
+    $smarty->assign('width', 100 - $indent*2);
     $smarty->assign('groupadmins', $groupadmins);
-    $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('membership', $membership);
     $smarty->assign('closed', $topic->closed);
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
-/**
- * Builds a flat list of posts
- *
- * @param array $posts the posts in the topic
- *
- * @returns string the html for the topc
- */
-
-function buildflatposts(&$posts) {
-    $localposts = $posts;
-    $first_post = array_shift($localposts);
-    if (!isset($first_post->subject) || empty($first_post->subject)) {
-        $first_post->subject = get_string('re', 'interaction.forum', '');
-    }
-
-    $children = array();
-    foreach ($localposts as $index => $post) {
-        $children[] = $post;
-    }
-    $first_post->children = $children;
-    return renderpost($first_post);
-}
-
 /*
- * Builds subjects for the topic
+ * Return the subject for the topic
  *
- * @param int $postindex index of the post
- * @param string $parentsubject subject title of the parent post
- * @param array $posts the posts in the topic
+ * @param int $postid the ID of the post
+ *
+ * @return string the subject
  */
 
-function buildsubjects($postindex, $parentsubject, &$posts) {
-    $localposts = $posts;
-    if ($posts[$postindex]->subject) {
-        $parentsubject = $posts[$postindex]->subject;
-    }
-    else {
-        $posts[$postindex]->subject = get_string('re', 'interaction.forum', $parentsubject);
-    }
-    foreach ($localposts as $index => $post) {
-        if ($posts[$index]->parent == $posts[$postindex]->id) {
-            buildsubjects($index, $parentsubject, $posts);
+function get_ancestorpostsubject($postid) {
+    while ($ppost = get_record_sql(
+           'SELECT p1.id, p1.subject
+            FROM {interaction_forum_post} p1
+            INNER JOIN {interaction_forum_post} p2 ON (p1.id = p2.parent)
+            WHERE p2.id = ?', array($postid))) {
+        if (!empty ($ppost->subject)) {
+            return $ppost->subject;
         }
+        $postid = $ppost->id;
     }
-}
-
-/**
- * Sorts children posts into their parent
- * 
- * @param int $postindex the index of the post
- * @param array $posts the posts in the topic
- *
- * @returns array the html for the post
- */
-
-function buildpost($postindex, &$posts){
-    global $moderator, $topic, $groupadmins;
-    $localposts = $posts;
-
-    $children = array();
-    foreach ($localposts as $index => $post) {
-        if ($posts[$index]->parent == $posts[$postindex]->id) {
-            $children[] = buildpost($index, $posts);
-        }
-    }
-    $posts[$postindex]->children = $children;
-    return $posts[$postindex];
+    return null;
 }
 
 function subscribe_topic_validate(Pieform $form, $values) {
@@ -357,4 +273,61 @@ function subscribe_topic_submit(Pieform $form, $values) {
         );
     }
     redirect('/interaction/forum/topic.php?id=' . $values['topic']);
+}
+
+/* Return the number of posts submitted by a poster
+ *
+ * @param int $posterid ID of the poster
+ * @return int the number of posts
+ */
+function get_postcount($posterid) {
+    return get_string('postsvariable', 'interaction.forum', count_records_sql(
+       'SELECT COUNT(id)
+        FROM {interaction_forum_post}
+        WHERE deleted != 1 AND poster = ?', array($posterid)));
+}
+
+/* Return the edit records of a post
+ *
+ * @param int $postid ID of the post
+ * @return array the edit records
+ */
+function get_postedits($postid) {
+    ($postedits = get_records_sql_array(
+       'SELECT ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user AS editormoderator
+        FROM {interaction_forum_edit} e
+        LEFT JOIN {interaction_forum_post} p ON p.id = e.post
+        LEFT JOIN {interaction_forum_topic} t ON t.id = p.topic
+        LEFT JOIN (
+            SELECT m.forum, m.user
+            FROM {interaction_forum_moderator} m
+            INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
+        ) m2 ON (m2.forum = t.forum AND m2.user = e.user)
+        WHERE e.post = ?
+        ORDER BY e.ctime',
+        array($postid)
+    )) || ($postedits = array());
+    $editrecs = array();
+    foreach ($postedits as $postedit) {
+        $postedit->edittime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $postedit->edittime);
+        $editrecs[] = array('editormoderator' => $postedit->editormoderator, 'editor' => $postedit->editor, 'edittime' => $postedit->edittime, );
+    }
+    return $editrecs;
+}
+
+/* Check if the poster is the moderator of the forum in which the post is
+ *
+ * @param int $postid ID of the post
+ * @return true if yes, false if else
+ */
+function is_moderator($postid) {
+    return (count_records_sql(
+       'SELECT COUNT(m.user)
+        FROM {interaction_forum_moderator} m
+        INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
+        INNER JOIN {interaction_instance} f ON (m.forum = f.id AND f.deleted != 1)
+        INNER JOIN {interaction_forum_topic} t ON (t.forum = f.id)
+        INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.poster = m.user)
+        WHERE p.id = ?',
+        array($postid)) == 1);
 }
