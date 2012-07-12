@@ -217,7 +217,10 @@ function addpost_submit(Pieform $form, $values) {
     if ($oldpost) {
         redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $oldpost->id);
     }
-    $postid = insert_record('interaction_forum_post', $post, 'id', true);
+    $postrec = new stdClass();
+    $postid = $postrec->id = insert_record('interaction_forum_post', $post, 'id', true);
+    $postrec->path = get_field('interaction_forum_post', 'path', 'id', $parentid) . '/' . sprintf('%010d', $postrec->id);
+    update_record('interaction_forum_post', $postrec);
 
     // Rewrite the post id into links in the body
     $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
