@@ -1078,14 +1078,15 @@ function auth_get_login_form() {
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
     }
-    $extraelements = array(
-        'login_extra' => array(
-            'type' => 'container',
-            'class' => 'login_extra',
-            'elements' => $extraelements
-        )
-    );
-
+    if (count($extraelements)) {
+        $extraelements = array(
+            'login_extra' => array(
+                'type' => 'container',
+                'class' => 'login_extra',
+                'elements' => $extraelements
+            )
+        );
+    }
     // Replace or supplement the standard login form elements
     if ($showbasicform) {
         $elements = array_merge($elements, $extraelements);
@@ -1803,14 +1804,15 @@ function auth_generate_login_form() {
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
     }
-    $extraelements = array(
-        'login_extra' => array(
-            'type' => 'container',
-            'class' => 'login_extra',
-            'elements' => $extraelements
-        )
-    );
-
+    if (count($extraelements)) {
+        $extraelements = array(
+            'login_extra' => array(
+                'type' => 'container',
+                'class' => 'login_extra',
+                'elements' => $extraelements
+            )
+        );
+    }
     // Replace or supplement the standard login form elements
     if ($showbasicform) {
         $elements = array_merge($elements, $extraelements);
