@@ -1021,11 +1021,105 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
  * @access private
  */
 function auth_get_login_form() {
+    $elements = auth_get_login_form_elements();
+
+    $elements['login']['elements']['login_submitted'] = array(
+        'type'  => 'hidden',
+        'value' => 1
+    );
+
+    // Change login redirection for clean urls
+    $url = get_relative_script_path();
+    $getstart = strrpos($url, '?');
+    if ($getstart !== false) {
+        $getpart = substr($url, $getstart + 1);
+        $url = substr($url, 0, $getstart);
+    }
+    if (!file_exists(get_config('docroot') . $url)) {
+        // clean url, treat get string differently
+        $get = array();
+        if (isset($getpart)) {
+            $getarr = split('&', $getpart);
+            if ($getarr) {
+                foreach ($getarr as $data) {
+                    $arr = split('=', $data);
+                    $get[$arr[0]] = isset($arr[1]) ? $arr[1] : null;
+                }
+            }
+        }
+    }
+    else {
+        $get = $_GET;
+    }
+    // The login page is completely transient, and it is smart because it
+    // remembers the GET and POST data sent to it and resends that on
+    // afterwards.
+    $action = '';
+    if ($get) {
+        if (isset($get['logout'])) {
+            // You can log the user out on any particular page by appending
+            // ?logout to the URL. In this case, we don't want the "action"
+            // of the url to include that, or be blank, else the next time
+            // the user logs in they will be logged out again.
+            $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
+        }
+        else {
+            $action .= '?';
+            foreach ($get as $key => $value) {
+                if ($key != 'login') {
+                    $action .= hsc($key) . '=' . hsc($value) . '&';
+                }
+            }
+            $action = substr($action, 0, -1);
+        }
+    }
+    if ($_POST) {
+        foreach ($_POST as $key => $value) {
+            if (!isset($elements[$key]) && !isset($elements['login']['elements'][$key])) {
+                $elements[$key] = array(
+                    'type'  => 'hidden',
+                    'value' => $value
+                );
+            }
+        }
+    }
+
+    $form = array(
+        'name'           => 'login',
+        'renderer'       => 'div',
+        'method'         => 'post',
+        'action'         => $action,
+        'plugintype'     => 'auth',
+        'pluginname'     => 'internal',
+        'elements'       => $elements,
+        'dieaftersubmit' => false,
+        'iscancellable'  => false
+    );
+
+    return $form;
+}
+
+/**
+ * Returns the definition of the login form elements.
+ *
+ * @return array   The login form elements array.
+ * @access private
+ */
+function auth_get_login_form_elements() {
+    // See if user can register
+    if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
+        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
+    }
+    else {
+        $registerlink = '';
+    }
+
     $elements = array(
         'login_username' => array(
             'type'        => 'text',
             'title'       => get_string('username') . ':',
             'description' => get_string('usernamedescription'),
+            'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
             'rules' => array(
                 'required'    => true
             )
@@ -1035,6 +1129,9 @@ function auth_get_login_form() {
             'title'       => get_string('password') . ':',
             'description' => get_string('passworddescription'),
             'defaultvalue'       => '',
+            'rules' => array(
+                'required'    => true
+            )
         ),
         'submit' => array(
             'type'  => 'submit',
@@ -1042,16 +1139,14 @@ function auth_get_login_form() {
         ),
         'register' => array(
             'type' => 'markup',
-            'value' => '<div id="login-helplinks">' . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
-        ),
-        'login_submitted' => array(
-            'type'  => 'hidden',
-            'value' => 1
+            'value' => '<div id="login-helplinks">' . $registerlink
+                . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
         ),
     );
     $elements = array(
         'login' => array(
             'type' => 'container',
+            'class' => 'login',
             'elements' => $elements
         )
     );
@@ -1094,76 +1189,8 @@ function auth_get_login_form() {
     else {
         $elements = $extraelements;
     }
-
-    $url = get_relative_script_path();
-    $getstart = strrpos($url, '?');
-    if ($getstart !== false) {
-        $getpart = substr($url, $getstart + 1);
-        $url = substr($url, 0, $getstart);
-    }
-    if (!file_exists(get_config('docroot') . $url)) {
-        // clean url, treat get string differently
-        $get = array();
-        if (isset($getpart)) {
-            $getarr = split('&', $getpart);
-            if ($getarr) {
-                foreach ($getarr as $data) {
-                    $arr = split('=', $data);
-                    $get[$arr[0]] = isset($arr[1]) ? $arr[1] : null;
-                }
-            }
-        }
-    }
-    else {
-        $get = $_GET;
-    }
-    // The login page is completely transient, and it is smart because it
-    // remembers the GET and POST data sent to it and resends that on
-    // afterwards. 
-    $action = '';
-    if ($get) {
-        if (isset($get['logout'])) {
-            // You can log the user out on any particular page by appending
-            // ?logout to the URL. In this case, we don't want the "action"
-            // of the url to include that, or be blank, else the next time
-            // the user logs in they will be logged out again.
-            $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
-        } else {
-            $action .= '?';
-            foreach ($get as $key => $value) {
-                if ($key != 'login') {
-                    $action .= hsc($key) . '=' . hsc($value) . '&';
-                }
-            }
-            $action = substr($action, 0, -1);
-        }
-    }
-    if ($_POST) {
-        foreach ($_POST as $key => $value) {
-            if (!isset($elements[$key]) && !isset($elements['login']['elements'][$key])) {
-                $elements[$key] = array(
-                    'type'  => 'hidden',
-                    'value' => $value
-                );
-            }
-        }
-    }
-
-    $form = array(
-        'name'           => 'login',
-        'renderer'       => 'div',
-        'method'         => 'post',
-        'action'         => $action,
-        'plugintype'     => 'auth',
-        'pluginname'     => 'internal',
-        'elements'       => $elements,
-        'dieaftersubmit' => false,
-        'iscancellable'  => false
-    );
-
-    return $form;
+    return $elements;
 }
-
 /**
  * Returns javascript to assist with the rendering of the login forms. The
  * javascript is used to detect whether cookies are enabled, and not show the
@@ -1756,93 +1783,11 @@ function auth_remove_old_session_files() {
  * auth_get_login_form, but keep that in mind when making changes.}}
  */
 function auth_generate_login_form() {
+    require_once('pieforms/pieform.php');
     if (!get_config('installed')) {
         return;
     }
-    require_once('pieforms/pieform.php');
-    if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
-    }
-    else {
-        $registerlink = '';
-    }
-
-    $elements = array(
-        'login_username' => array(
-            'type'        => 'text',
-            'title'       => get_string('username') . ':',
-            'description' => get_string('usernamedescription'),
-            'defaultvalue' => (isset($_POST['login_username'])) ? $_POST['login_username'] : '',
-            'rules' => array(
-                'required'    => true
-            )
-        ),
-        'login_password' => array(
-            'type'        => 'password',
-            'title'       => get_string('password') . ':',
-            'description' => get_string('passworddescription'),
-            'defaultvalue'       => '',
-            'rules' => array(
-                'required'    => true
-            )
-        ),
-        'submit' => array(
-            'type'  => 'submit',
-            'value' => get_string('login')
-        ),
-        'register' => array(
-            'type' => 'markup',
-            'value' => '<div id="login-helplinks">' . $registerlink
-                . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
-        ),
-    );
-    $elements = array(
-        'login' => array(
-            'type' => 'container',
-            'class' => 'login',
-            'elements' => $elements
-        )
-    );
-
-
-    // Get any extra elements from the enabled auth plugins
-    $extraelements = array();
-    $showbasicform = false;
-    $authplugins = auth_get_enabled_auth_plugins();
-    foreach ($authplugins as $plugin) {
-        $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-        $pluginelements = call_static_method($classname, 'login_form_elements');
-        if (!empty($pluginelements)) {
-            $extraelements = array_merge($extraelements, $pluginelements);
-        }
-        if (call_static_method($classname, 'need_basic_login_form')) {
-            $showbasicform = true;
-        }
-    }
-    if (!empty($extraelements) && $showbasicform) {
-        $loginlabel = array(
-            'type' => 'markup',
-            'value' => '<label>'.get_string('orloginvia') . '</label>'
-        );
-        $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
-    }
-    if (count($extraelements)) {
-        $extraelements = array(
-            'login_extra' => array(
-                'type' => 'container',
-                'class' => 'login_extra',
-                'elements' => $extraelements
-            )
-        );
-    }
-    // Replace or supplement the standard login form elements
-    if ($showbasicform) {
-        $elements = array_merge($elements, $extraelements);
-    }
-    else {
-        $elements = $extraelements;
-    }
-
+    $elements = auth_get_login_form_elements();
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
