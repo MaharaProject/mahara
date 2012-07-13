@@ -227,7 +227,7 @@ class PluginAuthBrowserid extends PluginAuth {
      */
     public static function login_form_js() {
         global $HEADDATA;
-        $HEADDATA[] = '<script src="https://browserid.org/include.js" type="text/javascript"></script>';
+        $HEADDATA[] = '<script src="https://login.persona.org/include.js" type="text/javascript"></script>';
         $wwwroot = get_config('wwwroot');
         return <<< EOF
 <form id="browserid-form" action="{$wwwroot}auth/browserid/login.php" method="post">
