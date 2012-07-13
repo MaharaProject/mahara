@@ -65,6 +65,7 @@ var Paginator = function(id, datatable, script, extradata) {
         // If there is a form for choosing page size(page limit)
         if (setlimitform) {
             var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
             connect (setlimitselect, 'onchange', function(e) {
                 e.stop();
 
@@ -75,7 +76,8 @@ var Paginator = function(id, datatable, script, extradata) {
                 else {
                     url += "?";
                 }
-                url += this.name + "=" + this.value;
+                url += setlimitselect.name + "=" + setlimitselect.value;
+                url += "&" + currentoffset.name + "=" + currentoffset.value;
                 location.assign(url);
             });
         }
@@ -86,6 +88,7 @@ var Paginator = function(id, datatable, script, extradata) {
         // If there is a form for choosing page size(page limit)
         if (setlimitform) {
             var setlimitselect = getFirstElementByTagAndClassName('select', 'pagination', setlimitform);
+            var currentoffset = getFirstElementByTagAndClassName('input', 'currentoffset', setlimitform);
             connect (setlimitselect, 'onchange', function(e) {
                 e.stop();
 
@@ -94,6 +97,7 @@ var Paginator = function(id, datatable, script, extradata) {
                 var queryData = [];
                 if (loc != -1) {
                     queryData = parseQueryString(url.substring(loc + 1, url.length));
+                    queryData.offset = currentoffset.value;
                     queryData.setlimit = "1";
                     queryData.limit = setlimitselect.value;
                     queryData.extradata = serializeJSON(self.extraData);

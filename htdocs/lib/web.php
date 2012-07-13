@@ -3408,6 +3408,7 @@ function build_pagination($params) {
             '<select id="setlimitselect" class="pagination" name="limit"> '.
                 join(' ', $strlimitoptions) .
             '</select>
+            <input class="currentoffset" type="hidden" name="' . $params['offsetname'] . '" value="' . $params['offset'] . '"/>
             <input class="pagination js-hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
         </form>';
     }
