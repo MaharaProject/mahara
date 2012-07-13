@@ -107,6 +107,18 @@ if ($membership && !$topic->forumsubscribed) {
 // posts pagination params
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
+$postid = param_integer('post', 0);
+if (!empty($postid)) {
+    // validates the $postid
+    $post = get_record('interaction_forum_post', 'id', $postid, 'deleted', '0', null, null, 'id, path');
+    if (!$post) {
+        throw new NotFoundException("The post with ID '$postid' is not found or deleted!");
+    }
+    // caculated offset value to jump to the page of the post
+    $offset = count_records_select('interaction_forum_post', 'topic = ? AND path < ?', array($topicid, $post->path));
+    $offset = $offset - ($offset % $limit);
+    redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '&offset=' . $offset . '&limit=' . $limit . '#post' . $postid);
+}
 
 $posts = get_records_sql_array(
     'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted
@@ -144,7 +156,7 @@ execute_sql('
     )',
     array(
         $USER->get('id'),
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '#post',
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '&post=',
         'newpost',
     )
 );
