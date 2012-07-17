@@ -169,6 +169,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
                 'match' => '#.*youtube\.com.*(embed\/)([a-zA-Z0-9_=-]+).*#',
                 'url' => 'http://www.youtube.com/v/$2'
             ),
+            // www.youtu.be (tiny url version)
+            array(
+                'match' => '#.*youtu\.be/([a-zA-Z0-9_=-]+).*#',
+                'url' => 'http://www.youtube.com/v/$1'
+            ),
             // video.google.com
             array(
                 'match' => '#.*video.google.com.*docid=(\-?[0-9]+).*#',
