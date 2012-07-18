@@ -13,7 +13,11 @@
     {assign var=shortdescription value=$n->description|str_shorten_html:100:true|safe}
     <tr class="{cycle values=r0,r1}">
       <td>
+      {if $n->locked}
+        <a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a>
+      {else}
         <a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a>
+      {/if}
         <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
       </td>
       <td>
@@ -25,8 +29,12 @@
       {/foreach}
       </td>
       <td class="right buttonscell btns2">
+      {if $n->locked}
+        <span class="s dull">{str tag=Submitted section=view}</span>
+      {else}
         <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}
+      {/if}
       </td>
     </tr>
   {/foreach}
