@@ -31,7 +31,7 @@ safe_require('artefact', 'internal');
 define('TITLE', get_string('editnote', 'artefact.internal'));
 
 $artefact = new ArtefactTypeHtml(param_integer('id'));
-if (!$USER->can_edit_artefact($artefact)) {
+if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 
