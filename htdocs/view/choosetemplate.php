@@ -71,7 +71,7 @@ if ($groupid) {
 else if ($institution) {
     $views->institution = $institution;
     if ($institution == 'mahara') {
-        $helptext = get_string('choosetemplatesitepageandcollectiondescription', 'view');
+        $helptext = get_string('choosetemplatesitepageandcollectiondescription1', 'view');
     }
     else {
         $helptext = get_string('choosetemplateinstitutionpageandcollectiondescription', 'view');
