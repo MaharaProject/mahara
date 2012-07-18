@@ -226,7 +226,7 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
 
     $smarty = smarty_core();
     $userid = null;
-    if (is_null($group) && is_null($user)) {
+    if (is_null($institution) && is_null($group) && is_null($user)) {
         $group = $form->get_property('group');
     }
     else if ($user) {
@@ -1021,10 +1021,34 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     }
     $artefact->commit();
 
+    $prefix = $form->get_name() . '_' . $element['name'];
+    $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
+
+    $group = null;
+    $institution = null;
+    $user = null;
+    $folder = 0;
+    if ($newtabdata['owner'] == 'site') {
+        global $USER;
+        if (!$USER->get('admin')) {
+            $folder = ArtefactTypeFolder::admin_public_folder_id();
+        }
+        $institution = 'mahara';
+    }
+    else if ($newtabdata['owner'] == 'institution') {
+        $institution = $newtabdata['ownerid'];
+    }
+    else if ($newtabdata['owner'] == 'group') {
+        $group = $newtabdata['ownerid'];
+    }
+    else if ($newtabdata['owner'] == 'user') {
+        $user = true;
+    }
+
     $returndata = array(
         'error' => false,
         'message' => get_string('changessaved', 'artefact.file'),
-        'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent')),
+        'newlist' => pieform_element_filebrowser_build_filelist($form, $element, $artefact->get('parent'), null, $user, $group, $institution),
     );
 
     if ($updatetags && $form->submitted_by_js()) {
@@ -1210,6 +1234,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     $group = null;
     $institution = null;
     $user = null;
+    $userid = null;
     $folder = 0;
     if ($newtabdata['owner'] == 'site') {
         global $USER;
@@ -1226,12 +1251,14 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     }
     else if ($newtabdata['owner'] == 'user') {
         $user = true;
+        $userid = $newtabdata['ownerid'];
     }
 
     return array(
         'error'         => false, 
         'changedowner'  => true,
         'changedfolder' => true,
+        'editmeta'      =>  (int) ($userid && !$element['config']['edit'] && !empty($element['config']['tag'])),
         'newtabdata'    => $newtabdata,
         'folder'        => $folder,
         'disableedit'   => $group && !pieform_element_filebrowser_edit_group_folder($group, $folder),
