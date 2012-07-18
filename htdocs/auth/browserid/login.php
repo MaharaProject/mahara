@@ -26,7 +26,7 @@ define('PUBLIC', 1);
 require('../../init.php');
 safe_require('auth', 'browserid');
 
-define('BROWSERID_VERIFIER_URL', 'https://browserid.org/verify');
+define('BROWSERID_VERIFIER_URL', 'https://verifier.login.persona.org/verify');
 
 if (!session_id()) {
     session_start();
