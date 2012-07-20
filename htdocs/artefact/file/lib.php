@@ -1149,13 +1149,15 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         // Get all fileids so that we can delete the files on disk
-        $fileids = get_records_select_assoc('artefact_file_files', 'artefact IN (' . $idstr . ')', array());
-
-        $fileidcounts = get_records_sql_assoc('
-            SELECT fileid, COUNT(fileid) AS fileidcount
-            FROM {artefact_file_files}
+        $filetodeleteids = get_column_sql('
+            SELECT fileid
+            FROM {artefact_file_files} aff1
             WHERE artefact IN (' . $idstr . ')
-            GROUP BY fileid',
+            GROUP BY fileid
+            HAVING COUNT(aff1.artefact) IN
+               (SELECT COUNT(aff2.artefact)
+                FROM {artefact_file_files} aff2
+                WHERE aff1.fileid = aff2.fileid)',
             null
         );
 
@@ -1168,15 +1170,11 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         delete_records_select('artefact_file_files', 'artefact IN (' . $idstr . ')');
         parent::bulk_delete($artefactids, $log);
 
-        foreach ($fileids as $r) {
-            // Delete the file on disk if there's only one artefact left pointing to it
-            if ($fileidcounts[$r->fileid]->fileidcount == 1) {
-                $file = get_config('dataroot') . self::get_file_directory($r->fileid) . '/' .  $r->fileid;
-                if (is_file($file)) {
-                    unlink($file);
-                }
+        foreach ($filetodeleteids as $filetodeleteid) {
+            $file = get_config('dataroot') . self::get_file_directory($filetodeleteid) . '/' . $filetodeleteid;
+            if (is_file($file)) {
+                unlink($file);
             }
-            $fileidcounts[$r->fileid]->fileidcount--;
         }
 
         if ($totalsize) {
