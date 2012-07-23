@@ -395,10 +395,13 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
-    $dropdownmenu = get_config('dropdownmenu');
+    // disable drop-downs if a handheld device detected
+    $dropdownmenu = $SESSION->get('handheld_device') ? false : get_config('dropdownmenu');
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
     }
+
+    $smarty->assign('MOBILE', $SESSION->get('mobile'));
 
     $sitename = get_config('sitename');
     if (!$sitename) {
@@ -2319,8 +2322,8 @@ function mahara_standard_nav() {
  */
 function main_nav() {
     if (in_admin_section()) {
-        global $USER;
-        if ($USER->get('admin')) {
+        global $USER, $SESSION;
+        if ($USER->get('admin') && !$SESSION->get('mobile')) {
             $menu = admin_nav();
         }
         else if ($USER->is_institutional_admin()) {
