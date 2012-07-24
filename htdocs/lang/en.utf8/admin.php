@@ -272,6 +272,7 @@ $string['nostats'] = 'No statistics available';
 
 // Institution statistics
 $string['statistics'] = 'Statistics';
+$string['institutionstatistics'] = 'Institution statistics';
 $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
 

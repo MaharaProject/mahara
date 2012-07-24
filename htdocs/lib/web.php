@@ -1987,7 +1987,7 @@ function admin_nav() {
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 80,
         ),
         'manageinstitutions/pendingregistrations' => array(
@@ -2150,7 +2150,7 @@ function institutional_admin_nav() {
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 90,
         ),
         'manageinstitutions/pendingregistrations' => array(
@@ -2185,7 +2185,7 @@ function staff_nav() {
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 30,
         ),
     );
@@ -2207,7 +2207,7 @@ function institutional_staff_nav() {
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('statistics', 'admin'),
+            'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 20,
         ),
     );
