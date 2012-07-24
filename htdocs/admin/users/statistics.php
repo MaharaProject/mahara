@@ -35,7 +35,7 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-$institutionelement = get_institution_selector();
+$institutionelement = get_institution_selector(true, false, true, get_config('staffstats'));
 
 if (empty($institutionelement)) {
     $smarty = smarty();
@@ -45,7 +45,7 @@ if (empty($institutionelement)) {
 }
 
 $institution = param_alphanum('institution', null);
-if (!$institution || !$USER->can_edit_institution($institution)) {
+if (!$institution || !$USER->can_edit_institution($institution, true)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
 else if (!empty($institution)) {
