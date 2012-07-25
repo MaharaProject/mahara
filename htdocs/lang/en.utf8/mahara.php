@@ -1038,7 +1038,7 @@ $string['cleanurlallowedcharacters'] = 'Only lowercase letters from a-z, numbers
 // Registration statistics
 $string['content'] = 'Content';
 $string['modified'] = 'Modified';
-$string['historical'] = 'Historical';
+$string['historical'] = 'Historical data';
 $string['institutions'] = 'Institutions';
 $string['members'] = 'Members';
 $string['blocks'] = 'Blocks';
