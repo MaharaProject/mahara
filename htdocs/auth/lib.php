@@ -1094,12 +1094,34 @@ function auth_get_login_form() {
         $elements = $extraelements;
     }
 
+    $url = get_relative_script_path();
+    $getstart = strrpos($url, '?');
+    if ($getstart !== false) {
+        $getpart = substr($url, $getstart + 1);
+        $url = substr($url, 0, $getstart);
+    }
+    if (!file_exists(get_config('docroot') . $url)) {
+        // clean url, treat get string differently
+        $get = array();
+        if (isset($getpart)) {
+            $getarr = split('&', $getpart);
+            if ($getarr) {
+                foreach ($getarr as $data) {
+                    $arr = split('=', $data);
+                    $get[$arr[0]] = isset($arr[1]) ? $arr[1] : null;
+                }
+            }
+        }
+    }
+    else {
+        $get = $_GET;
+    }
     // The login page is completely transient, and it is smart because it
     // remembers the GET and POST data sent to it and resends that on
     // afterwards. 
     $action = '';
-    if ($_GET) {
-        if (isset($_GET['logout'])) {
+    if ($get) {
+        if (isset($get['logout'])) {
             // You can log the user out on any particular page by appending
             // ?logout to the URL. In this case, we don't want the "action"
             // of the url to include that, or be blank, else the next time
@@ -1107,7 +1129,7 @@ function auth_get_login_form() {
             $action = hsc(substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')));
         } else {
             $action .= '?';
-            foreach ($_GET as $key => $value) {
+            foreach ($get as $key => $value) {
                 if ($key != 'login') {
                     $action .= hsc($key) . '=' . hsc($value) . '&';
                 }
