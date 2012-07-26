@@ -398,6 +398,7 @@ if ($institution || $add) {
         );
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
+            'disabled'              => get_config('showonlineuserssideblock') ? '' : 'disabled',
             'title'                 => get_string('showonlineusers', 'admin'),
             'description'           => get_string('showonlineusersdescription','admin'),
             'defaultvalue'          => $data->showonlineusers,
