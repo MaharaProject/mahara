@@ -1433,20 +1433,43 @@ function load_user_institutions($userid) {
  */
 function get_new_username($desired) {
     $maxlen = 30;
-    $desired = strtolower(substr($desired, 0, $maxlen));
-    $taken = get_column_sql('
-        SELECT LOWER(username) FROM {usr}
-        WHERE username ' . db_ilike() . " ?",
-        array(substr($desired, 0, $maxlen - 6) . '%'));
+    if (function_exists('mb_strtolower')) {
+        $desired = mb_strtolower(mb_substr($desired, 0, $maxlen, 'UTF-8'), 'UTF-8');
+    }
+    else {
+        $desired = strtolower(substr($desired, 0, $maxlen));
+    }
+    if (function_exists('mb_substr')) {
+        $taken = get_column_sql('
+            SELECT LOWER(username) FROM {usr}
+            WHERE username ' . db_ilike() . " ?",
+            array(mb_substr($desired, 0, $maxlen - 6, 'UTF-8')  . '%'));
+    }
+    else {
+        $taken = get_column_sql('
+            SELECT LOWER(username) FROM {usr}
+            WHERE username ' . db_ilike() . " ?",
+            array(substr($desired, 0, $maxlen - 6) . '%'));
+    }
     if (!$taken) {
         return $desired;
     }
     $taken = array_flip($taken);
     $i = '';
-    $newname = substr($desired, 0, $maxlen - 1) . $i;
+    if (function_exists('mb_substr')) {
+        $newname = mb_substr($desired, 0, $maxlen - 1, 'UTF-8') . $i;
+    }
+    else {
+        $newname = substr($desired, 0, $maxlen - 1) . $i;
+    }
     while (isset($taken[$newname])) {
         $i++;
-        $newname = substr($desired, 0, $maxlen - strlen($i)) . $i;
+        if (function_exists('mb_substr')) {
+            $newname = mb_substr($desired, 0, $maxlen - strlen($i), 'UTF-8') . $i;
+        }
+        else {
+            $newname = substr($desired, 0, $maxlen - strlen($i)) . $i;
+        }
     }
     return $newname;
 }
