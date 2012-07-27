@@ -29,7 +29,7 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Group members';
 $string['description'] = 'Display a list of members in this group';
-$string['show_all'] = 'View all members of this Group…';
+$string['show_all'] = 'View all members of this group';
 
 $string['options_numtoshow_title'] = 'Shown members';
 $string['options_numtoshow_desc'] = 'The number of members you want to display.';

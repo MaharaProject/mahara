@@ -31,8 +31,8 @@ $string['internal'] = 'Internal';
 $string['title'] = 'Internal';
 $string['description'] = 'Authenticate against Mahara\'s database';
 
-$string['completeregistration'] = 'Complete Registration';
-$string['emailalreadytaken'] = 'This e-mail address has already registered here';
+$string['completeregistration'] = 'Complete registration';
+$string['emailalreadytaken'] = 'This email address has already been registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions';
 $string['passwordformdescription'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different to your username.<br/>
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
@@ -60,12 +60,12 @@ to complete the signup process:</p>
 <pre>--
 Regards,
 The %s Team</pre>';
-$string['registeredok'] = '<p>You have successfully registered. Please check your e-mail account for instructions on how to activate your account</p>';
+$string['registeredok'] = '<p>You have successfully registered. Please check your email account for instructions on how to activate your account</p>';
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsuccessful. This is our fault, not yours. Please try again later.';
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken';
-$string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols, and must be from 3 to 30 characters in length.  Spaces are not allowed.';
-$string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers and most common symbols, and must be from 3 to 236 characters in length.  Spaces are not allowed.';
+$string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols and must be from 3 to 30 characters in length. Spaces are not allowed.';
+$string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers and most common symbols and must be from 3 to 236 characters in length. Spaces are not allowed.';
 $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
 
 // pending institution registrations
@@ -117,7 +117,7 @@ via email.
 Regards
 %s';
 $string['registeredokawaitingemail2'] = 'You have successfully submitted your application for registration. The institution adminstrator has been notified, and you will receive an email as soon as your application has been processed.';
-$string['registrationreason'] = 'Registration Reason';
+$string['registrationreason'] = 'Registration reason';
 $string['registrationreasondesc1'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.';
 
 $string['pendingregistrationadminemailsubject'] = "New user registration for institution '%s' at %s.";
