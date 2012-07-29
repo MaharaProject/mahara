@@ -283,6 +283,16 @@ if (!$bcrypt_cost || !is_int($bcrypt_cost) || $bcrypt_cost < 4 || $bcrypt_cost >
 }
 $CFG->bcrypt_cost = sprintf('%02d', $bcrypt_cost);
 
+if (!get_config('productionmode')) {
+    $CFG->log_dbg_targets     = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+    $CFG->log_info_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+    $CFG->log_warn_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+    $CFG->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+    $CFG->developermode       = DEVMODE_DEBUGJS | DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
+    $CFG->perftofoot          = true;
+    $CFG->nocache             = true;
+}
+
 header('Content-type: text/html; charset=UTF-8');
 
 // Only do authentication once we know the page theme, so that the login form
