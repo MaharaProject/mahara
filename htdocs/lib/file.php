@@ -101,7 +101,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         header('Content-Disposition: inline; filename="' . $filename . '"');
     }
 
-    if ($options['lifetime'] > 0) {
+    if ($options['lifetime'] > 0 && !get_config('nocache')) {
         header('Cache-Control: max-age=' . $options['lifetime']);
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $options['lifetime']) .' GMT');
         header('Pragma: ');

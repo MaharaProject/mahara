@@ -76,19 +76,21 @@ switch ($type) {
                 if ($mimetype) {
                     header('Content-type: ' . $mimetype);
 
-                    // We can't cache 'profileicon' for as long, because the 
-                    // user can change it at any time. But we can cache 
-                    // 'profileiconbyid' for quite a while, because it will 
-                    // never change
-                    if ($type == 'profileiconbyid' and !$earlyexpiry) {
-                        $maxage = 604800; // 1 week
+                    if (!get_config('nocache')) {
+                        // We can't cache 'profileicon' for as long, because the
+                        // user can change it at any time. But we can cache
+                        // 'profileiconbyid' for quite a while, because it will
+                        // never change
+                        if ($type == 'profileiconbyid' and !$earlyexpiry) {
+                            $maxage = 604800; // 1 week
+                        }
+                        else {
+                            $maxage = 600; // 10 minutes
+                        }
+                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                        header('Cache-Control: max-age=' . $maxage);
+                        header('Pragma: public');
                     }
-                    else {
-                        $maxage = 600; // 10 minutes
-                    }
-                    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-                    header('Cache-Control: max-age=' . $maxage);
-                    header('Pragma: public');
 
                     readfile_exit($path);
                 }
@@ -103,14 +105,16 @@ switch ($type) {
         // We couldn't find an image for this user. Attempt to use the 'no user 
         // photo' image for the current theme
 
-        // We can cache such images
-        $maxage = 604800; // 1 week
-        if ($earlyexpiry) {
-            $maxage = 600; // 10 minutes
+        if (!get_config('nocache')) {
+            // We can cache such images
+            $maxage = 604800; // 1 week
+            if ($earlyexpiry) {
+                $maxage = 600; // 10 minutes
+            }
+            header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+            header('Cache-Control: max-age=' . $maxage);
+            header('Pragma: public');
         }
-        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-        header('Cache-Control: max-age=' . $maxage);
-        header('Pragma: public');
 
         if ($path = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . $THEME->basename, 0, $size)) {
             header('Content-type: ' . 'image/png');
@@ -142,10 +146,12 @@ switch ($type) {
         if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {
             if ($filedata->filetype) {
                 header('Content-type: ' . $filedata->filetype);
-                $maxage = 604800;
-                header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-                header('Cache-Control: max-age=' . $maxage);
-                header('Pragma: public');
+                if (!get_config('nocache')) {
+                    $maxage = 604800;
+                    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                    header('Cache-Control: max-age=' . $maxage);
+                    header('Pragma: public');
+                }
 
                 readfile_exit($path);
             }
@@ -164,10 +170,12 @@ switch ($type) {
             $basepath = 'artefact/' . $ap . '/' . $basepath;
         }
         header('Content-type: image/png');
-        $maxage = 604800;
-        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-        header('Cache-Control: max-age=' . $maxage);
-        header('Pragma: public');
+        if (!get_config('nocache')) {
+            $maxage = 604800;
+            header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+            header('Cache-Control: max-age=' . $maxage);
+            header('Pragma: public');
+        }
         $path = $THEME->get_path('images/thumb.png', false, $basepath);
         if (is_readable($path)) {
             readfile_exit($path);

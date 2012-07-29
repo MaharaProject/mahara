@@ -330,3 +330,6 @@ $cfg->cleanurlusereditable = true;
 // The following option if enabled will allow users to choose also standard site themes as their preferred theme
 // for browsing the site.
 // $cfg->sitethemeprefs = true;
+
+// Turn on caching of HTTP requests
+// $cfg->nocache = true;

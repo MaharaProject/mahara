@@ -30,10 +30,12 @@ define('NOCHECKREQUIREDFIELDS', 1);
 require('init.php');
 
 header('Content-type: text/css');
-$maxage = 604800;
-header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-header('Cache-Control: max-age=' . $maxage);
-header('Pragma: public');
+if (!get_config('nocache')) {
+    $maxage = 604800;
+    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+    header('Cache-Control: max-age=' . $maxage);
+    header('Pragma: public');
+}
 
 if ($style = param_integer('id', null)) {
     echo get_field('style', 'css', 'id', $style);

@@ -33,11 +33,13 @@ $type = param_alphanumext('type');
 
 if (preg_match('/^([a-z]*_)?(viewtypes|weekly)$/', $type) ||
     $type == 'institutions' || $type == 'grouptypes') {
-    $maxage = 3600;
     header('Content-type: ' . 'image/png');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-    header('Cache-Control: max-age=' . $maxage);
-    header('Pragma: public');
+    if (!get_config('nocache')) {
+        $maxage = 3600;
+        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+        header('Cache-Control: max-age=' . $maxage);
+        header('Pragma: public');
+    }
 
     readfile(get_config('dataroot') . 'images/' . $type . '.png');
     exit;
