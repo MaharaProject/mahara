@@ -96,6 +96,8 @@ $string['fileattachedtoportfolioitems'] = array(
     0 => 'This file is attached to %s other item in your portfolio.',
     1 => 'This file is attached to %s other items in your portfolio.',
 );
+$string['profileiconattachedtoportfolioitems'] = 'This profile picture is attached to other items in your portfolio.';
+$string['profileiconappearsinviews'] = 'This profile picture appears in one or more of your pages.';
 $string['fileremoved'] = 'File removed';
 $string['files'] = 'files';
 $string['Files'] = 'Files';
@@ -112,7 +114,10 @@ $string['Folder'] = 'Folder';
 $string['folderappearsinviews'] = 'This folder appears in one or more of your pages.';
 $string['Folders'] = 'Folders';
 $string['foldernotempty'] = 'This folder is not empty.';
-$string['foldercontainsprofileicons'] = 'The folder contains %s profile picture(s).';
+$string['foldercontainsprofileicons'] = array(
+        0 => 'The folder contains %s profile picture.',
+        1 => 'The folder contains %s profile pictures.',
+);
 $string['foldercreated'] = 'Folder created';
 $string['foldernamerequired'] = 'Please provide a name for the new folder.';
 $string['gotofolder'] = 'Go to %s';

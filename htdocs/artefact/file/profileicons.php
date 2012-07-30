@@ -86,6 +86,9 @@ if (!get_config('remoteavatars')) {
 else {
     $ravatar = remote_avatar($USER->get('email'), array('maxw' => '100', 'maxh' => '100'), $notfound);
 }
+$profileiconattachedtoportfolioitems = json_encode(get_string('profileiconattachedtoportfolioitems', 'artefact.file'));
+$profileiconappearsinviews = json_encode(get_string('profileiconappearsinviews', 'artefact.file'));
+$confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
 $IJS = <<<EOF
 var table = new TableRenderer(
     'profileicons',
@@ -115,10 +118,10 @@ var table = new TableRenderer(
         },
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+                return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'class': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
             }
             else {
-                return TD({'class': 'left', 'width': '110px'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']'}));
+                return TD({'class': 'left', 'width': '110px'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'class': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
             }
         }
     ]
@@ -156,6 +159,33 @@ function postSubmit(form, data) {
     $(form).reset();
     $('upload_title').value = '';
 }
+
+addLoadEvent( function() {
+    connect('settings_delete', 'onclick', function(e) {
+        // Find form
+        var form = getFirstParentByTagAndClassName(e, 'form', 'pieform');
+        forEach (getElementsByTagAndClassName('input', 'checkbox', form), function (profileicon) {
+            var id = getNodeAttribute(profileicon, 'name').match(/\d+/)[0];
+            if (profileicon.checked == true) {
+                var counts = profileicon.value.split(',', 2);
+                var warn = '';
+                if (counts[0] > 0) {
+                    warn += {$profileiconattachedtoportfolioitems} + ' ';
+                }
+                if (counts[1] > 0) {
+                    warn += {$profileiconappearsinviews} + ' ';
+                }
+                if (warn != '') {
+                    warn += {$confirmdeletefile};
+                    if (!confirm(warn)) {
+                        e.stop();
+                        return false;
+                    }
+                }
+            }
+        });
+    });
+});
 
 EOF;
 
