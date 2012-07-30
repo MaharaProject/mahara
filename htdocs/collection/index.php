@@ -49,7 +49,7 @@ if (!empty($groupid)) {
     // Check if user can edit group collections <-> user can edit group views
     $role = group_user_access($group->id);
     $canedit = $role && group_role_can_edit_views($group, $role);
-    if (!$canedit) {
+    if (!$role) {
         throw new GroupAccessDeniedException(get_string('cantlistgroupcollections', 'collection'));
     }
 
@@ -137,6 +137,9 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institution', $institutionname);
     $smarty->assign('institutionselector', $s['institutionselector']);
     $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
+}
+if (empty($owner)) {
+    $smarty->assign('canedit', $canedit);
 }
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);

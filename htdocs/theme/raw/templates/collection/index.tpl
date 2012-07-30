@@ -3,18 +3,21 @@
     <h2>{$PAGESUBHEADING}</h2>
 {/if}
 {if $institution}{$institutionselector|safe}{/if}
+{if $canedit}
     <div class="rbuttons {if $GROUP}pagetabs{/if}">
         <a class="btn" href="{$WWWROOT}collection/edit.php?new=1{$urlparamsstr}">{str section=collection tag=newcollection}</a>
         <a class="btn" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">{str section=collection tag=copyacollection}</a>
     </div>
+{/if}
 <p class="intro">{str tag=collectiondescription section=collection}</p>
+{if !$canedit}<p>{str tag=canteditgroupcollections section=collection}</p>{/if}
 {if $collections}
     <table id="myviews" class="fullwidth listing">
         <tbody>
         {foreach from=$collections item=collection}
                 <tr class="{cycle values='r0,r1'}">
                     <td>
-                        {if !$collection->submitinfo}
+                        {if !$collection->submitinfo && $canedit}
                         <div class="fr viewcontrolbuttons">
                             <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}"><img src="{theme_url filename='images/manage.gif'}" alt="{str tag=manageviews section=collection}"></a>
                             <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
