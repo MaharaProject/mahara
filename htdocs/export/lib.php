@@ -71,6 +71,13 @@ abstract class PluginExport extends Plugin {
     const EXPORT_LIST_OF_ARTEFACTS = -5;
 
     /**
+     * Maximum filename length in UTF-8 encoding characters
+     * Most file systems (FAT, FAT32, NTFS, ext2, ext3, ext4) support the filename length of 255 bytes
+     * UTF-8 needs at most 3 bytes to encode
+     */
+    const MAX_FILENAME_LENGTH = 80;
+
+    /**
      * A human-readable title for the export
      */
     abstract public static function get_title();
