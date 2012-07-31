@@ -2242,8 +2242,11 @@ function site_menu() {
     if ($menuitems = get_records_array('site_menu','public',(int) !$USER->is_logged_in(),'displayorder')) {
         foreach ($menuitems as $i) {
             if ($i->url) {
-                $menu[] = array('name' => $i->title,
-                                'link' => $i->url);
+                $safeurl = sanitize_url($i->url);
+                if ($safeurl != '') {
+                    $menu[] = array('name' => $i->title,
+                                    'link' => $safeurl);
+                }
             }
             else if ($i->file) {
                 $menu[] = array('name' => $i->title,
@@ -3083,9 +3086,15 @@ function sanitize_url($url) {
 
     $parsedurl = parse_url($url);
     if (!isset($parsedurl['scheme'])) {
-        return '';
+        if (isset($parsedurl['path'])) {
+            $url = get_config('wwwroot') . ltrim($url, '/');
+            $parsedurl = parse_url($url);
+        }
+        else {
+            return '';
+        }
     }
-    if (in_array($parsedurl['scheme'], array('https', 'http', 'ftp')) === false) {
+    if (!in_array($parsedurl['scheme'], array('https', 'http', 'ftp', 'mailto'))) {
         return '';
     }
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
