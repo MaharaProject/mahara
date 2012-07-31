@@ -265,7 +265,7 @@ $string['rejectfriendshipreason'] = 'Reason for rejecting request';
 $string['alreadyfriends'] = 'You are already friends with %s';
 
 $string['friendrequestacceptedsubject'] = 'Friend request accepted';
-$string['friendrequestacceptedmessage'] = '%s has accepted your friend request and they have been added to your friends list'; 
+$string['friendrequestacceptedmessage'] = '%s has accepted your friend request and they have been added to your friends list';
 $string['friendrequestrejectedsubject'] = 'Friend request rejected';
 $string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
 $string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
@@ -366,7 +366,7 @@ $string['submit'] = 'Submit';
 $string['allowssubmissions'] = 'Allows submissions';
 $string['allowsubmissions'] = 'Allow submissions';
 $string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages can't be edited until they are released by a group tutor or administrator.";
-$string['allowssubmissionsdescription'] = 'Members can submit pages to the group';
+$string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
 
 // Group reports
 $string['report'] = 'Report';
@@ -381,4 +381,4 @@ $string['nnonmembers'] = array(
 $string['membercommenters'] = "Members involved";
 $string['extcommenters'] = "Non-members involved";
 $string['groupparticipationreports'] = "Participation report";
-$string['groupparticipationreportsdesc'] = "If checked, the group admin can access a report displaying all group and shared pages and who has commented on them";
+$string['groupparticipationreportsdesc'] = "If checked, the group admin can access a report displaying all group and shared pages and who has commented on them.";

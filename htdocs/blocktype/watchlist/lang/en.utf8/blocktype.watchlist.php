@@ -27,7 +27,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'My watched pages';
+$string['title'] = 'Watched pages';
 $string['description'] = 'Display pages on your watchlist';
 $string['nopages'] = 'There are no pages on your watchlist';
 $string['itemstoshow'] = 'Items to show';
