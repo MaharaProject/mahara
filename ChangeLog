@@ -1,3 +1,10 @@
+1.5.2 (2012-07-31)
+- Logged-in user's name unescaped in top right header
+- BrowserID changed login URL
+- Textbox upgrade inserts too many rows per query in MySQL
+- sprintf function problems with pluralrule
+- "Copy page" button on group homepage to always copy page into personal portfolio
+
 1.5.1 (2012-05-04)
 - Use MySQL database collation for string literals (bug #985608)
 - Make download.php publicly accessible (bug #979538)
