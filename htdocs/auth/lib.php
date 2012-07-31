@@ -1174,7 +1174,7 @@ function auth_get_login_form() {
  * @private
  */
 function get_login_form_js($form) {
-    $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
+    $form = json_encode($form);
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
     $js = <<< EOF
@@ -1182,7 +1182,7 @@ function get_login_form_js($form) {
 var loginbox = $('loginform_container');
 document.cookie = "$cookiename=1";
 if (document.cookie) {
-    loginbox.innerHTML = '$form';
+    loginbox.innerHTML = $form;
     document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
 }
 else {
