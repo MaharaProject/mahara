@@ -50,6 +50,12 @@ var ImageDialog = {
 
         // Get image list from calling window
         document.getElementById('image_list_container').innerHTML = this.imageSelectorHTML(f.src.value);
+        connect('image_list', 'onchange', function(e) {
+            e.stop();
+            this.form.src.value=this.options[this.selectedIndex].value;
+            ImageDialog.resetImageData();
+            ImageDialog.getImageData(this.form.src.value);
+        });
 
         // Check if the image attached
         if (e.nodeName == 'IMG' && f.image_list.selectedIndex == 0) {
@@ -68,16 +74,15 @@ var ImageDialog = {
             disabled = 'disabled';
         }
 
-        var sel = '<select class="select" name="image_list" id="image_list" ' + disabled + ' onchange="this.form.src.value=this.options[this.selectedIndex].value;ImageDialog.resetImageData();ImageDialog.getImageData(this.form.src.value);">';
-        sel += '<option value="">--</option>';
+        var selectElem = SELECT({'class': 'select', 'name': 'image_list', 'id': 'image_list', 'disabled': disabled }, OPTION({'value':''},'--'));
         for (var i = 0; i < imagefiles.length; i++) {
-            sel += '<option value="' + imagefiles[i].id + '" title="' + imagefiles[i].description + '"';
+            var opt = OPTION({'value': imagefiles[i].id, 'title': imagefiles[i].description}, imagefiles[i].name);
             if (imageid == imagefiles[i].id) {
-                sel += ' selected';
+                setNodeAttribute(opt, 'selected', 'selected');
             }
-            sel += '>' + imagefiles[i].name + '</option>';
+            appendChildNodes(selectElem, opt);
         }
-        return sel;
+        return selectElem.outerHTML;
 
     },
 
