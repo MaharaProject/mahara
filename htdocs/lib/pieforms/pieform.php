@@ -496,11 +496,13 @@ class Pieform {/*{{{*/
                 $submitted = false;
                 foreach ($this->elementrefs as $name => $element) {
                     if (!empty($element['submitelement']) && isset($global[$element['name']])) {
-                        $function = "{$this->data['successcallback']}_{$name}";
-                        if (function_exists($function)) {
-                            $function($this, $values);
-                            $submitted = true;
-                            break;
+                        if (!is_array($this->data['successcallback'])) {
+                            $function = "{$this->data['successcallback']}_{$name}";
+                            if (function_exists($function)) {
+                                $function($this, $values);
+                                $submitted = true;
+                                break;
+                            }
                         }
                     }
                 }
