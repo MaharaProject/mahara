@@ -50,16 +50,22 @@ if ($menuitems) {
         $r = array();
         $r['id'] = $i->id;
         $r['name'] = $i->title;
+        $safeurl = sanitize_url($i->url);
         if (empty($i->url) && !empty($i->file)) {
             $r['type'] = 'sitefile';
             $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file; 
             $r['linktext'] = $i->filename; 
-            $r['file'] = $i->file; 
+            $r['file'] = $i->file;
+        }
+        else if ($safeurl == '') {
+            $r['type'] = 'externallink';
+            $r['linkedto'] = '';
+            $r['linktext'] = strtoupper(get_string('badurl', 'admin')) .  ': ' . $i->url;
         }
         else if (!empty($i->url) && empty($i->file)) {
             $r['type'] = 'externallink';
-            $r['linkedto'] = $i->url;
-            $r['linktext'] = $i->url; 
+            $r['linkedto'] = $safeurl;
+            $r['linktext'] = $safeurl;
         }
         else {
             json_reply('local',get_string('loadmenuitemsfailed','admin'));
