@@ -40,6 +40,7 @@
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="sent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="path" TYPE="char" LENGTH="2048" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -47,6 +48,9 @@
                 <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="interaction_forum_post" REFFIELDS="id" />
                 <KEY NAME="posterfk" TYPE="foreign" FIELDS="poster" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="pathix" UNIQUE="false" FIELDS="path"/>
+            </INDEXES>
         </TABLE>
 
         <TABLE NAME="interaction_forum_subscription_forum">
