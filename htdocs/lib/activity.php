@@ -387,7 +387,8 @@ abstract class ActivityType {
 
     // Optional string to use for the link text.
     public function add_urltext(array $stringdef) {
-        $this->strings->urltext = (object) $stringdef;
+        $def = $stringdef;
+        $this->strings->urltext = (object) $def;
     }
 
     public function get_urltext($user) {
