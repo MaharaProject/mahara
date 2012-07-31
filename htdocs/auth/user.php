@@ -1215,7 +1215,13 @@ class LiveUser extends User {
                     {usr}
                 WHERE
                     LOWER(username) = ?';
-        $user = get_record_sql($sql, array(strtolower($username)));
+
+        if (function_exists('mb_strtolower')) {
+            $user = get_record_sql($sql, array(mb_strtolower($username, 'UTF-8')));
+        }
+        else {
+            $user = get_record_sql($sql, array(strtolower($username)));
+        }
 
         if ($user == false) {
             throw new AuthUnknownUserException("\"$username\" is not known");
