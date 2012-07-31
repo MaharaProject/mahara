@@ -935,6 +935,14 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
         $status = insert_record($table, $pconfig);
     }
     if ($status) {
+        if (!isset($CFG->plugin)) {
+            $CFG->plugin = new stdClass();
+        }
+
+        if (!isset($CFG->plugin->{$plugintype})) {
+            $CFG->plugin->{$plugintype} = new stdClass();
+        }
+
         $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
         $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
         return true;
