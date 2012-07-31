@@ -1,3 +1,10 @@
+1.4.3 (2012-07-31)
+- 
+- Json-encode login form when injected by js (bug #1009784)
+- Patch XSS vulnerability in Insert/Edit Image in Edit blog (bug #1009784)
+- Sanitize links in links and resources menu (bug #1009774)
+- Add youtu.be tinyurl to filters
+
 1.4.2 (2012-03-06)
 - Fix PHP Fatal Error in user/view.php (Bug #885588)
 - Fixes to Selenium tests
