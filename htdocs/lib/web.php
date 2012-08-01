@@ -992,9 +992,7 @@ function theme_get_path($location, $pluginlocation='', $all=false) {
  *
  */
 function json_headers() {
-    // @todo Catalyst IT Ltd
-    // header('Content-type: text/x-json');
-    header('Content-type: text/plain');
+    header('Content-type: application/json');
     header('Pragma: no-cache');
 }
 
