@@ -1729,7 +1729,7 @@ function xmldb_core_upgrade($oldversion=0) {
             ),
             array(
                 'blocktype' => 'inbox',
-                'title' => get_string('recentactivity'),
+                'title' => get_string('inboxblocktitle'),
                 'column' => 2,
                 'config' => array(
                     'feedback' => true,

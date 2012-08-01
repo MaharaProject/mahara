@@ -996,7 +996,7 @@ $string['editdashboard'] = 'Edit';
 $string['usersdashboard'] = "%s's dashboard";
 $string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it';
 $string['topicsimfollowing'] = "Topics I'm following";
-$string['recentactivity'] = 'Recent activity';
+$string['inboxblocktitle'] = 'Inbox';
 $string['mymessages'] = 'My messages';
 
 $string['pleasedonotreplytothismessage'] = "Please do not reply to this message.";

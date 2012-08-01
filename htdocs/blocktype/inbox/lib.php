@@ -166,7 +166,7 @@ class PluginBlocktypeInbox extends SystemBlocktype {
      * We need a default title for this block, so that the inbox blocks
      * on the dashboard are translatable.
      *
-     * To maintain existing behaviour, use the 'recentactivity' string unless
+     * To maintain existing behaviour, use the 'inboxblocktitle' string unless
      * the block has only got forum post notifications in it, in which case
      * use 'topicsimfollowing'
      */
@@ -174,14 +174,14 @@ class PluginBlocktypeInbox extends SystemBlocktype {
         if ($configdata = $instance->get('configdata')) {
             foreach ($configdata as $k => $v) {
                 if ($v && $k != 'newpost' && $k != 'maxitems') {
-                    return get_string('recentactivity');
+                    return get_string('inboxblocktitle');
                 }
             }
             if ($configdata['newpost']) {
                 return get_string('topicsimfollowing');
             }
         }
-        return get_string('recentactivity');
+        return get_string('inboxblocktitle');
     }
 
 }
