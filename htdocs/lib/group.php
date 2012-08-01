@@ -1479,6 +1479,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
         if (get_config('allowgroupcategories')) {
             $group->categorytitle = ($group->category) ? get_field('group_category', 'title', 'id', $group->category) : '';
         }
+        $group->homepage_url = group_homepage_url($group);
     }
 
     $smarty = smarty_core();
