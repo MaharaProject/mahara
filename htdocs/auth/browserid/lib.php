@@ -232,7 +232,7 @@ class PluginAuthBrowserid extends PluginAuth {
     public static function login_form_js() {
         $wwwroot = get_config('wwwroot');
         return <<< EOF
-<script src="https://browserid.org/include.js" type="text/javascript"></script>
+<script src="https://login.persona.org/include.js" type="text/javascript"></script>
 
 <form id="browserid-form" action="{$wwwroot}auth/browserid/login.php" method="post">
 <input id="browserid-assertion" type="hidden" name="assertion" value="">
