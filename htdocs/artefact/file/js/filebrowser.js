@@ -674,6 +674,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     } else {
                         addElementClass(self.id + '_upload_container', 'hidden');
                     }
+                    self.config.editmeta = data.editmeta;
                 }
                 if (self.config.upload) {
                     if (data.disableedit && !hasElementClass(self.id + '_upload_container', 'hidden')) {
