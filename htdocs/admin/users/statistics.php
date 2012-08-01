@@ -39,7 +39,8 @@ $institutionelement = get_institution_selector();
 
 if (empty($institutionelement)) {
     $smarty = smarty();
-    $smarty->display('admin/users/noinstitutions.tpl');
+    $smarty->assign('CANCREATEINST', $USER->get('admin'));
+    $smarty->display('admin/users/noinstitutionsstats.tpl');
     exit;
 }
 

@@ -272,6 +272,7 @@ $string['nostats'] = 'No statistics available';
 
 // Institution statistics
 $string['statistics'] = 'Statistics';
+$string['institutionstatistics'] = 'Institution statistics';
 $string['institutionstatisticsfor'] = 'Institution statistics for \'%s\'';
 $string['institutioncreated'] = 'Institution created';
 
@@ -865,6 +866,7 @@ $string['Admins'] = 'Admins';
 
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
+$string['noinstitutionsstatsdescription'] = 'Institution statistics are not available because there are no institutions available to your user.';
 
 $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled check boxes are for profile fields which are locked in the institution settings for "%s". These profile fields are locked at the site level and cannot be unlocked here.';
