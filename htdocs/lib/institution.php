@@ -662,10 +662,10 @@ class Institution {
     }
 }
 
-function get_institution_selector($includedefault = true, $assumesiteadmin=false) {
+function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false) {
     global $USER;
 
-    if ($assumesiteadmin || $USER->get('admin')) {
+    if (($assumesiteadmin || $USER->get('admin')) || ($includesitestaff && $USER->get('staff'))) {
         if ($includedefault) {
             $institutions = get_records_array('institution', '', '', 'displayname');
         }
@@ -676,6 +676,13 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
         $institutions = get_records_select_array(
             'institution',
             'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')',
+            null, 'displayname'
+        );
+    }
+    else if ($includeinstitutionstaff) {
+        $institutions = get_records_select_array(
+            'institution',
+            'name IN (' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
             null, 'displayname'
         );
     } else {

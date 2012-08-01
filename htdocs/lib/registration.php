@@ -2234,7 +2234,6 @@ function graph_institution_data_weekly(&$institutiondata) {
     $datasetinfo = array(
         'user-count'  => array('color' => 'blue@0.6', 'name' => get_string('users')),
         'view-count'  => array('color' => 'green@0.6', 'name' => get_string('Views', 'view')),
-        'group-count' => array('color' => 'red@0.6', 'name' => get_string('groups')),
     );
 
     $yaxis = array('min' => array(), 'max' => array());
