@@ -93,6 +93,7 @@ else if (!empty($institutionname)) {
 else {
     define('MENUITEM', 'myportfolio/collection');
     $owner = $USER->get('id');
+    $canedit = true;
     define('SUBTITLE', '');
     define('TITLE', get_string('Collections', 'collection'));
 }
@@ -138,9 +139,7 @@ if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institutionselector', $s['institutionselector']);
     $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
 }
-if (empty($owner)) {
-    $smarty->assign('canedit', $canedit);
-}
+$smarty->assign('canedit', $canedit);
 $smarty->assign('urlparamsstr', $urlparamsstr);
 $smarty->assign('collections', $data->data);
 $smarty->assign('pagination', $pagination['html']);
