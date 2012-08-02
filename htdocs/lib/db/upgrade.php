@@ -2817,6 +2817,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 // for example, the passwordsaltmain value
                 $user->password = substr($user->password, 0, 3) . substr($user->password, 3+16);
                 set_field('usr', 'password', $user->password, 'id', $user->id);
+                remove_user_sessions($user->id);
                 $lastid = $user->id;
             }
             $done += count($users);
@@ -3064,6 +3065,36 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('groupparticipationreports');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
+    }
+
+    if ($oldversion < 2012080200) {
+        $sql = "
+            FROM {usr} u JOIN {auth_instance} ai ON (u.authinstance = ai.id)
+            WHERE u.deleted = 0 AND ai.authname = 'internal' AND u.password != '*' AND u.salt != '*'
+            AND u.password NOT LIKE '$%'";
+        $pwcount = count_records_sql("SELECT COUNT(*) " . $sql);
+        $sql = "
+            SELECT u.id, u.password, u.salt" . $sql . " AND u.id > ?
+            ORDER BY u.id";
+        $done = 0;
+        $lastid = 0;
+        $limit = 2000;
+        while ($users = get_records_sql_array($sql, array($lastid), 0, $limit)) {
+            foreach ($users as $user) {
+                // Wrap the old hashed password inside a SHA512 hash ($6$ is the identifier for SHA512)
+                $user->password = crypt($user->password, '$6$' . substr(md5(get_config('passwordsaltmain') . $user->salt), 0, 16));
+
+                // Drop the salt from the password as it may contain secrets that are not stored in the db
+                // for example, the passwordsaltmain value
+                $user->password = substr($user->password, 0, 3) . substr($user->password, 3+16);
+                set_field('usr', 'password', $user->password, 'id', $user->id);
+                remove_user_sessions($user->id);
+                $lastid = $user->id;
+            }
+            $done += count($users);
+            log_debug("Upgrading stored passwords: $done/$pwcount");
+            set_time_limit(30);
+        }
     }
 
     return $status;
