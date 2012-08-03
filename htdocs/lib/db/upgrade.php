@@ -3097,5 +3097,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2012080300) {
+        // For multi-tokens we need '|' aka pipe characters either side of their old single token
+        execute_sql('UPDATE {usr_account_preference} SET value = \'|\' || value || \'|\'
+                            WHERE field=\'mobileuploadtoken\' AND NOT value ' . db_ilike() . '\'|%|\'');
+    }
+
     return $status;
 }

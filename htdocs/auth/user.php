@@ -284,7 +284,8 @@ class User {
                 FROM
                     {usr} u
                     LEFT JOIN {usr_account_preference} p ON u.id = p.usr
-                            WHERE p.field=\'mobileuploadtoken\' AND p.value = ? AND u.username = ?
+                            WHERE p.field=\'mobileuploadtoken\'
+                              AND p.value ' . db_ilike() . ' \'%|\' || ? || \'|%\' AND u.username = ?
 		';
 
         $user = get_record_sql($sql, array($token, $username));
@@ -294,6 +295,7 @@ class User {
         }
 
         $this->populate($user);
+        $this->accountprefs = load_account_preferences($user->id);
         return $this;
     }
 
@@ -301,12 +303,20 @@ class User {
      * Refreshes a users mobile 'token' and returns it
      *
      */
-    public function refresh_mobileuploadtoken() {
-	$new_token = md5( uniqid() );
-        $this->set_account_preference('mobileuploadtoken', $new_token);
+    public function refresh_mobileuploadtoken($old_token) {
+        $new_token = md5(openssl_random_pseudo_bytes(8));
+        $old_tokenstring = $this->get_account_preference('mobileuploadtoken');
+        $tokenarray = explode('|', trim($old_tokenstring, '|'));
+        foreach ($tokenarray as $k => $v) {
+            if ( $v == $old_token ) {
+                $tokenarray[$k] = $new_token;
+            }
+        }
+        $new_tokenstring = empty($tokenarray) ? null : ('|' . join('|', $tokenarray) . '|');
+        $this->set_account_preference('mobileuploadtoken', $new_tokenstring);
         $this->set('lastaccess', time());
-	$this->commit();
-	return $new_token;
+        $this->commit();
+        return $new_token;
     }
 
     /**

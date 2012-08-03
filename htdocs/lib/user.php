@@ -320,11 +320,15 @@ function general_account_prefs_form_elements($prefs) {
         );
     }
     if (get_config('allowmobileuploads')) {
+        $defaultvalue = array();
+        $mobileuploadtoken = isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken');
+        $defaultvalue = explode('|', trim($mobileuploadtoken, '|'));
+
         $elements['mobileuploadtoken'] = array(
-            'type'         => 'text',
+            'type'         => 'multitext',
             'title'        => get_string('mobileuploadtoken', 'account'),
             'description'  => get_string('mobileuploadtokendescription', 'account'),
-            'defaultvalue' => isset($prefs->mobileuploadtoken) ? $prefs->mobileuploadtoken : get_config('mobileuploadtoken')
+            'defaultvalue' => $defaultvalue
         );
     }
     if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {
