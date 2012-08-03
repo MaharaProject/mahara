@@ -78,7 +78,8 @@ $string['showhomeinfo1'] = 'Homepage information';
 $string['showhomeinfodescription'] = 'Display information about how to use %s on the homepage.';
 
 $string['mobileuploadtoken'] = 'Mobile upload token';
-$string['mobileuploadtokendescription'] = 'Enter a token here and on your phone to enable uploads (note: it will change automatically after each upload. <br/>If you have any problems - simply reset it here and on your phone.';
+$string['mobileuploadtokendescription'] = 'Enter a token for each of your mobile devices here and then on your phone to enable uploads (note: tokens must be at least 6 characters and they will be change automatically after each upload). <br/>If you have any problems - simply reset it here and on your phone.';
+$string['badmobileuploadtoken'] = 'Sorry that mobile upload token is invalid - tokens must be at least 6 characters in length.';
 
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your preferences.';
