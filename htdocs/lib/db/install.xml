@@ -393,6 +393,7 @@
                 <FIELD NAME="urlid" TYPE="char" LENGTH="30" NOTNULL="false" />
                 <FIELD NAME="editwindowstart" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="editwindowend" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="sendnow" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

@@ -72,6 +72,7 @@ define('GROUP', $parent->group);
 
 $membership = user_can_access_forum((int)$parent->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$admintutor = (bool) group_get_user_admintutor_groups();
 
 if (!isset($postid)) { // post reply
     if ($parent->deleted) {
@@ -114,7 +115,7 @@ else { // edit post
 
 $parent->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $parent->ctime);
 
-$editform = pieform(array(
+$editform = array(
     'name'     => 'editpost',
     'successcallback' => isset($post) ? 'editpost_submit' : 'addpost_submit',
     'autofocus' => 'body',
@@ -140,6 +141,12 @@ $editform = pieform(array(
                 'maxlength' => 65536,
             ),
         ),
+        'sendnow' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('sendnow', 'interaction.forum'),
+            'description'  => get_string('sendnowdescription', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')),
+            'defaultvalue' => false,
+        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
@@ -157,7 +164,13 @@ $editform = pieform(array(
             'value' => isset($post) ? $post->editrecord : false
         )
     ),
-));
+);
+
+if ((!$moderator && !$admintutor && !group_sendnow($parent->group)) || get_config_plugin('interaction', 'forum', 'postdelay') <= 0) {
+    unset($editform['elements']['sendnow']);
+}
+
+$editform = pieform($editform);
 
 function editpost_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
@@ -203,6 +216,7 @@ function addpost_submit(Pieform $form, $values) {
         'body'    => $values['body'],
         'ctime'   =>  db_format_timestamp(time())
     );
+    $sendnow = isset($values['sendnow']) && $values['sendnow'] ? 1 : 0;
     // See if the same content has been submitted in the last 5 seconds. If so, don't add this post.
     $oldpost = get_record_select('interaction_forum_post', 'topic = ? AND poster = ? AND parent = ? AND subject = ? AND body = ? AND ctime > ?',
         array($post->topic, $post->poster, $post->parent, $post->subject, $post->body, db_format_timestamp(time() - 5)),
@@ -220,8 +234,12 @@ function addpost_submit(Pieform $form, $values) {
     if (!empty($newbody) && $newbody != $post->body) {
         set_field('interaction_forum_post', 'body', $newbody, 'id', $postid);
     }
-
-    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if ($sendnow == 0) {
+      $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    }
+    else {
+      $delay = 0;
+    }
     if (!is_null($delay) && $delay == 0) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));
     }

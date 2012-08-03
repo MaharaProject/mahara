@@ -65,6 +65,7 @@ $forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $
 define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$admintutor = (bool) group_get_user_admintutor_groups();
 
 if (!$membership || ($forumconfig['createtopicusers']->value == 'moderators' && !$moderator)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
@@ -135,6 +136,12 @@ $editform = array(
             'description'  => get_string('closeddescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) ? $topic->closed : !empty($forumconfig['closetopics']->value),
         ),
+        'sendnow' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('sendnow', 'interaction.forum'),
+            'description'  => get_string('sendnowdescription', 'interaction.forum', get_config_plugin('interaction', 'forum', 'postdelay')),
+            'defaultvalue' => false,
+        ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
@@ -154,7 +161,10 @@ $editform = array(
     ),
 );
 
-if(!$moderator){
+if (!$moderator) {
+    if (!group_sendnow($forum->groupid) && !$admintutor) {
+        unset($editform['elements']['sendnow']);
+    }
     unset($editform['elements']['sticky']);
     unset($editform['elements']['closed']);
 }
@@ -185,6 +195,7 @@ function addtopic_submit(Pieform $form, $values) {
             'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
         ), 'id', true
     );
+    $sendnow = isset($values['sendnow']) && $values['sendnow'] ? 1 : 0;
     $post = (object)array(
         'topic'   => $topicid,
         'poster'  => $USER->get('id'),
@@ -208,7 +219,12 @@ function addtopic_submit(Pieform $form, $values) {
         ));
     }
     db_commit();
-    $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    if ($sendnow == 0) {
+      $delay = get_config_plugin('interaction', 'forum', 'postdelay');
+    }
+    else {
+      $delay = 0;
+    }
     if (!is_null($delay) && $delay == 0) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));
     }

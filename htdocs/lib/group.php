@@ -434,7 +434,8 @@ function group_create($data) {
             'invitefriends'  => $data['invitefriends'],
             'suggestfriends' => $data['suggestfriends'],
             'editwindowstart' => $data['editwindowstart'],
-            'editwindowend'  => $data['editwindowend']
+            'editwindowend'  => $data['editwindowend'],
+            'sendnow'        => $data['sendnow'],
         ),
         'id',
         true
@@ -2324,4 +2325,18 @@ function group_homepage_url($group, $full=true, $useid=false) {
         $url = get_config('wwwroot') . $url;
     }
     return $url;
+}
+
+/**
+ * Returns whether 'send now' is set for all memebers or not
+ * If not set only admins/tutors/moderators can use 'send now'
+ *
+ * @param string $groupid the id of the group
+ * @return boolean
+ */
+function group_sendnow($groupid) {
+    if (!$sendnow = get_field('group', 'sendnow', 'id', $groupid)) {
+        return false;
+    }
+    return !empty($sendnow);
 }

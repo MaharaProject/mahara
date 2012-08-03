@@ -64,7 +64,8 @@ else {
         'suggestfriends' => 0,
         'urlid'          => null,
         'editwindowstart' => null,
-        'editwindowend'  => null
+        'editwindowend'  => null,
+        'sendnow'        => 0
     );
 }
 
@@ -369,7 +370,20 @@ $elements['viewnotify'] = array(
     'description' => get_string('viewnotifydescription', 'group'),
     'defaultvalue' => $group_data->viewnotify
 );
-
+if ($cancreatecontrolled) {
+    $elements['sendnow'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('allowsendnow', 'group'),
+        'description'  => get_string('allowsendnowdescription', 'group'),
+        'defaultvalue' => $group_data->sendnow
+    );
+}
+else {
+    $form['elements']['sendnow'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->sendnow,
+    );
+}
 $form['elements']['settings']['elements'] = $elements;
 $editgroup = pieform($form);
 
@@ -451,7 +465,8 @@ function editgroup_submit(Pieform $form, $values) {
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
         'editwindowstart' => db_format_timestamp($values['editwindowstart']),
-        'editwindowend'  => db_format_timestamp($values['editwindowend'])
+        'editwindowend'  => db_format_timestamp($values['editwindowend']),
+        'sendnow'        => intval($values['sendnow'])
     );
 
     if (
