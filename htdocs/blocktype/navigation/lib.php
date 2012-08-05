@@ -85,11 +85,14 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
         $groupid = $view->get('group');
         $institutionid = $view->get('institution');
         $userid = $view->get('owner');
+        $urlparams['new'] = 1;
         if (!empty($groupid)) {
             $where = 'c.group = ?'; $values = array($groupid);
+            $urlparams['group'] = $groupid;
         }
         else if (!empty($institutionid)) {
             $where = 'c.institution = ?'; $values = array($institutionid);
+            $urlparams['institution'] = $institutionid;
         }
         else {
             $where = 'c.owner = ?'; $values = array($userid);
@@ -122,11 +125,15 @@ class PluginBlocktypeNavigation extends SystemBlocktype {
             );
         }
         else {
+            $baseurl = get_config('wwwroot') . 'collection/edit.php';
+            if ($urlparams) {
+                $baseurl .= '?' . http_build_query($urlparams);
+            }
             return array(
                 'nocollections' => array(
                     'type'  => 'html',
                     'title' => get_string('collection', 'blocktype.navigation'),
-                    'description' => get_string('nocollections', 'blocktype.navigation', get_config('wwwroot')),
+                    'description' => get_string('nocollections1', 'blocktype.navigation', $baseurl),
                     'value' => '',
                 ),
             );
