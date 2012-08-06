@@ -186,6 +186,21 @@ $cfg->bounceprefix    = 'AAA-';
 // This must be set for VERP handling to take effect
 //$cfg->bouncedomain    = '';
 
+// The imap server to check for bounced emails
+//$cfg->imapserver  = 'localhost';
+//$cfg->imapport    = 143;
+// The imap username/password to authenticate
+//$cfg->imapuser    = '';
+//$cfg->imappass    = '';
+// Any flags to pass to imap_open, can have multiple
+// See http://www.php.net/manual/en/function.imap-open.php
+//$cfg->imapflags   = '';
+// Which mailbox to poll, defaults to INBOX
+//$cfg->imapmailbox = 'INBOX.someotherbox';
+// You can even set the library to check pop mail boxes
+//$cfg->imapflags   = '/pop3';
+//$cfg->imapport    = 110;
+
 // maximum allowed size of uploaded images
 // NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
 $cfg->imagemaxwidth = 1024;
