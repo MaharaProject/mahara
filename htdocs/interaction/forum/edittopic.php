@@ -205,7 +205,7 @@ function addtopic_submit(Pieform $form, $values) {
         'ctime'   =>  db_format_timestamp(time())
     );
     $postid = insert_record('interaction_forum_post', $post, 'id', true);
-
+    set_field('interaction_forum_post', 'path', sprintf('%010d', $postid), 'id', $postid);
     // Rewrite the post id into links in the body
     $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
     if (!empty($newbody) && $newbody != $post->body) {

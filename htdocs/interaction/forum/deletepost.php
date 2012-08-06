@@ -90,7 +90,7 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic . '#post' . $postid
+            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic . '&post=' . $postid
         ),
         'post' => array(
             'type' => 'hidden',
@@ -115,7 +115,7 @@ function deletepost_submit(Pieform $form, $values) {
         array('id' => $values['post'])
     );
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $values['parent']);
+    redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $values['parent']);
 }
 
 $smarty = smarty();

@@ -857,7 +857,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
         $post->textbody = trim(html2text($post->body));
         $post->htmlbody = clean_html($post->body);
-        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '#post' . $this->postid;
+        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid;
 
         $this->add_urltext(array(
             'key'     => 'Topic',

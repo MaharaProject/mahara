@@ -24,7 +24,7 @@
     <td class="center s">{$topic->postcount}</td>
     <td class="s">
     {if !$topic->lastpostdeleted}
-    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}#post{$topic->lastpost}">{$topic->lastposttime}</a> {str tag=by section=view}
+    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}&post={$topic->lastpost}">{$topic->lastposttime}</a> {str tag=by section=view}
     <a href="{profile_url($topic->lastposter)}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}</a>
     {/if}
     </td>

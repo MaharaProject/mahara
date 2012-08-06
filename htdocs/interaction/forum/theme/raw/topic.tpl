@@ -20,6 +20,7 @@
 	<div class="message closed">{str tag=topicisclosed section=interaction.forum}</div>
 {/if}
 {$posts|safe}
+<div class="center">{$pagination|safe}</div>
 
 {include file="footer.tpl"}
 

@@ -153,7 +153,7 @@ $editform = pieform(array(
                 isset($post) ? get_string('save') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
-            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic . '#post' . (isset($postid) ? $postid : $parentid)
+            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic . '&post=' . (isset($postid) ? $postid : $parentid)
         ),
         'topic' => array(
             'type' => 'hidden',
@@ -196,7 +196,7 @@ function editpost_submit(Pieform $form, $values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('editpostsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
+    redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $postid);
 }
 
 function addpost_submit(Pieform $form, $values) {
@@ -215,9 +215,12 @@ function addpost_submit(Pieform $form, $values) {
         array($post->topic, $post->poster, $post->parent, $post->subject, $post->body, db_format_timestamp(time() - 5)),
         'id');
     if ($oldpost) {
-        redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $oldpost->id);
+        redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $oldpost->id);
     }
-    $postid = insert_record('interaction_forum_post', $post, 'id', true);
+    $postrec = new stdClass();
+    $postid = $postrec->id = insert_record('interaction_forum_post', $post, 'id', true);
+    $postrec->path = get_field('interaction_forum_post', 'path', 'id', $parentid) . '/' . sprintf('%010d', $postrec->id);
+    update_record('interaction_forum_post', $postrec);
 
     // Rewrite the post id into links in the body
     $newbody = PluginInteractionForum::prepare_post_body($post->body, $postid);
@@ -230,7 +233,7 @@ function addpost_submit(Pieform $form, $values) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));
     }
     $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
+    redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $postid);
 }
 
 $smarty = smarty();

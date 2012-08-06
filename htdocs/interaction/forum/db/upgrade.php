@@ -93,5 +93,55 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         ensure_record_exists('interaction_event_subscription', $subscription, $subscription);
     }
 
+    if ($oldversion < 2012071100) {
+        // Add new column 'path' to table interaction_forum_post used for diplaying posts by threads
+        $table = new XMLDBTable('interaction_forum_post');
+        $field = new XMLDBField('path');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 2048, null, null);
+        add_field($table, $field);
+
+        $index = new XMLDBIndex('pathix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('path'));
+        add_index($table, $index);
+
+        // Update the column 'path' for all posts in the old database
+        $done = 0;
+        $lastid = 0;
+        $pwcount = count_records('interaction_forum_post');
+        if (is_mysql()) {
+            $mp = mysql_get_variable('max_allowed_packet');
+            $limit = ($mp && is_numeric($mp) && $mp > 1048576) ? ($mp / 8192) : 100;
+        }
+        else {
+            $limit = 2000;
+        }
+        while ($posts = get_records_select_array('interaction_forum_post', 'id > ?', array($lastid), 'id', 'id, parent', 0, $limit)) {
+            foreach ($posts as $post) {
+                // Update the column 'path'
+                $path = sprintf('%010d', $post->id);
+                $parentid = $post->parent;
+                while (!empty($parentid)) {
+                    if ($p = get_record_select('interaction_forum_post', 'id = ?', array($parentid), 'parent, path')) {
+                        if (!empty($p->path)) {
+                            $path = $p->path . '/' . $path;
+                            break;
+                        }
+                        $path = sprintf('%010d', $parentid) . '/' . $path;
+                        $parentid = $p->parent;
+                    }
+                    else {
+                        throw new SQLException("Can't find the post with id = '$parentid'");
+                    }
+                }
+                $post->path = $path;
+                update_record('interaction_forum_post', $post);
+                $lastid = $post->id;
+            }
+            $done += count($posts);
+            log_debug("Updating posts' path: $done/$pwcount");
+            set_time_limit(50);
+        }
+    }
+
     return true;
 }

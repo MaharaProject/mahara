@@ -198,7 +198,7 @@ if ($postrecords) {
         $posts[] = array(
             'title' => $post->subject,
             'link' => get_config('wwwroot') . 'interaction/forum/topic.php?id=' .
-                $post->topic . '#post' . $post->id,
+                $post->topic . '&post=' . $post->id,
             'id' => implode(',', array(get_config('wwwroot'), $post->topic, $post->id)),
             'description' => $post->body,
             'mtime' => atom_date($post->ctime),
