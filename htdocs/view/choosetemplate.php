@@ -43,7 +43,7 @@ if ($usetemplate = param_integer('usetemplate', null)) {
     pieform(create_view_form($groupid, $institution, $usetemplate, param_integer('copycollection', null)));
 }
 
-if ($groupid && !group_user_can_edit_views($groupid) || $institution && !$USER->can_edit_institution($institution)) {
+if ($groupid && (!group_user_can_edit_views($groupid) || !group_within_edit_window($groupid)) || $institution && !$USER->can_edit_institution($institution)) {
     throw new AccessDeniedException();
 }
 

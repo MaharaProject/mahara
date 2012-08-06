@@ -59,11 +59,13 @@ if (!$topic) {
 
 define('GROUP', $topic->groupid);
 
-$publicgroup = get_field('group', 'public', 'id', $topic->groupid);
+$group = get_record('group', 'id', $topic->groupid);
+$publicgroup = $group->public;
+$ineditwindow = group_within_edit_window($group);
 $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;
 
 $membership = user_can_access_forum((int)$topic->forumid);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = $ineditwindow && (bool)($membership & INTERACTION_FORUM_MOD);
 
 $forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $topic->forumid, '', 'field,value');
 $indentmode = isset($forumconfig['indentmode']) ? $forumconfig['indentmode']->value : 'full_indent';
@@ -73,7 +75,7 @@ if (!$membership
     && !get_field('group', 'public', 'id', $topic->groupid)) {
     throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
 }
-$topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
+$topic->canedit = ($moderator || user_can_edit_post($topic->poster, $topic->ctime)) && $ineditwindow;
 
 define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
 
@@ -134,7 +136,7 @@ foreach ($posts as $post) {
     // Get the number of posts
     $post->postcount = get_postcount($post->poster);
 
-    $post->canedit = $post->parent && ($moderator || user_can_edit_post($post->poster, $post->ctime));
+    $post->canedit = $post->parent && ($moderator || user_can_edit_post($post->poster, $post->ctime)) && $ineditwindow;
     $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $post->ctime);
     // Get post edit records
     $post->edit = get_postedits($post->id);
@@ -223,7 +225,7 @@ function buildpostlist($posts, $mode, $max_depth) {
  */
 
 function renderpost($post, $indent) {
-    global $moderator, $topic, $groupadmins, $membership;
+    global $moderator, $topic, $groupadmins, $membership, $ineditwindow;
 
     $smarty = smarty_core();
     $smarty->assign('post', $post);
@@ -232,6 +234,7 @@ function renderpost($post, $indent) {
     $smarty->assign('moderator', $moderator);
     $smarty->assign('membership', $membership);
     $smarty->assign('closed', $topic->closed);
+    $smarty->assign('ineditwindow', $ineditwindow);
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 

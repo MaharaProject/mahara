@@ -73,6 +73,10 @@ if ($view->is_submitted()) {
 $group = $view->get('group');
 $institution = $view->get('institution');
 
+if ($group && !group_within_edit_window($group)) {
+    throw new AccessDeniedException();
+}
+
 // If a block was configured & submitted, build the form now so it can
 // be processed without having to render the other blocks.
 if ($blockid = param_integer('blockconfig', 0)) {

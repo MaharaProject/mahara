@@ -58,6 +58,10 @@ $institution = $view->get('institution');
 $view->set_edit_nav();
 $view->set_user_theme();
 
+if ($group && !group_within_edit_window($group)) {
+    throw new AccessDeniedException();
+}
+
 $new = param_boolean('new', 0);
 
 if ($new) {

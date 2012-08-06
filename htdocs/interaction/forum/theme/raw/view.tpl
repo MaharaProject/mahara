@@ -11,7 +11,7 @@
 <div id="forumdescription">{$forum->description|clean_html|safe}</div>
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
-    {if $membership && ($moderator || $forum->newtopicusers != 'moderators') }
+    {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
     <div class="rbuttons">
 	<a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn newforumtopic">{str tag="newtopic" section="interaction.forum"}</a>
 	</div>

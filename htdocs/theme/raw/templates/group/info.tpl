@@ -6,6 +6,7 @@
                     {/foreach}</li>
                     {if $group->categorytitle}<li><label>{str tag=groupcategory section=group}:</label> {$group->categorytitle}</li>{/if}
                     <li><label class="groupinfolabel">{str tag=Created section=group}:</label> {$group->ctime}</li>
+                    {if $editwindow}<li><label class="groupinfolabel">{str tag=Available section=group}:</label> {$editwindow}</li>{/if}
                     <li class="last">
                         {if $group->membercount}<span><label>{str tag=Members section=group}:</label>&nbsp;{$group->membercount}</span>{/if}
                         <span><label>{str tag=Views section=view}:</label>&nbsp;{$group->viewcount}</span>

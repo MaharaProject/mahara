@@ -46,7 +46,7 @@ $group = get_record_sql(
     array($USER->get('id'), $groupid)
 );
 
-if (!$group) {
+if (!$group || !group_within_edit_window($group)) {
     throw new AccessDeniedException(get_string('cantsubmittogroup', 'view'));
 }
 

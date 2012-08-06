@@ -176,10 +176,37 @@ function group_role_can_edit_views($group, $role) {
     }
 
     if ($role == 'member') {
-        return $editroles == 'all';
+        return ($editroles == 'all' && group_within_edit_window($group));
     }
 
     return $editroles != 'admin';
+}
+
+
+/**
+ * Determine if the current date/time is within the editable window of the
+ * group if one is set. By default, a group admin is considered to be within
+ * the window.
+ * @param object $group the group to check
+ * @param bool $admin_always whether the admin should be OK regardless of time
+ */
+function group_within_edit_window($group, $admin_always=true) {
+    if (is_numeric($group)) {
+        $group = get_record('group', 'id', $group);
+    }
+
+    if ($admin_always && group_user_access($group->id) == 'admin') {
+      return true;
+    }
+
+    $start = !empty($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
+    $end = !empty($group->editwindowend) ? strtotime($group->editwindowend) : null;
+    $now = time();
+
+    return (empty($start) && empty($end)) ||
+        (!empty($start) && $now > $start && empty($end)) ||
+        (empty($start) && $now < $end && !empty($end)) ||
+        ($start < $now && $now < $end);
 }
 
 function group_role_can_moderate_views($group, $role) {
@@ -415,6 +442,8 @@ function group_create($data) {
             'groupparticipationreports' => $data['groupparticipationreports'],
             'invitefriends'  => $data['invitefriends'],
             'suggestfriends' => $data['suggestfriends'],
+            'editwindowstart' => $data['editwindowstart'],
+            'editwindowend'  => $data['editwindowend']
         ),
         'id',
         true
@@ -1443,8 +1472,35 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
             unset($group->membercount);
         }
 
+        $group->editwindow = group_format_editwindow($group);
+
         $group->settingsdescription = group_display_settings($group);
     }
+}
+
+/*
+ * Formats the edit window of a group into human readable format.
+ */
+function group_format_editwindow($group) {
+    $dateformat = 'strftimedatetimeshort';
+
+    $editwindowstart = isset($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
+    $editwindowend = isset($group->editwindowend) ? strtotime($group->editwindowend) : null;
+
+    if (empty($editwindowstart) && empty($editwindowend)) {
+        $formatted = "";
+    }
+    else if (!empty($editwindowstart) && empty($editwindowend)) {
+        $formatted = get_string('editwindowfrom', 'group') . ' ' . format_date($editwindowstart, $dateformat);
+    }
+    else if (empty($editwindowstart) && !empty($editwindowend)) {
+        $formatted = get_string('editwindowuntil', 'group') . ' ' . format_date($editwindowend, $dateformat);
+    }
+    else {
+        $formatted = get_string('editwindowbetween', 'group') . ' ' . format_date($editwindowstart, $dateformat) . " and " . format_date($editwindowend, $dateformat);
+    }
+
+    return $formatted;
 }
 
 /*

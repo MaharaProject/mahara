@@ -37,6 +37,10 @@ if (!$view || !$USER->can_edit_view($view)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 $groupid = $view->get('group');
+if (!group_within_edit_window($group)) {
+    throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
+}
+
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution);
 

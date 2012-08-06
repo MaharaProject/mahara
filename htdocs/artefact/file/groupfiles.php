@@ -38,7 +38,7 @@ safe_require('artefact', 'file');
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 
-if (!$role = group_user_access($group->id)) {
+if (!$role = group_user_access($group->id) || !group_within_edit_window($group)) {
     throw new AccessDeniedException();
 }
 define('TITLE', $group->name . ' - ' . get_string('groupfiles', 'artefact.file'));

@@ -750,6 +750,9 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
         }
         $data->institution = $institution;
     } else if ($group) {
+        if (!group_within_edit_window($group)) {
+            return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
+        }
         if (!$parentfolder) {
             if (!pieform_element_filebrowser_edit_group_folder($group, 0)) {
                 return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
@@ -942,6 +945,9 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
     if ($institution) {
         $data->institution = $institution;
     } else if ($group) {
+        if (!group_within_edit_window($group)) {
+            return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
+        }
         if (!$parentfolder) {
             if (!pieform_element_filebrowser_edit_group_folder($group, 0)) {
                 return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));

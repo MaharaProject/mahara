@@ -523,6 +523,16 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $highlight = array($file); // todo convert to file1=1&file2=2 etc
         }
 
+        // Check whether the user may upload files; either the group needs to
+        // be within its edit window (if one is set) or the user needs to be
+        // the group admin.
+        if (!empty($group)) {
+            $editfilesfolders = group_within_edit_window($group);
+        }
+        else {
+            $editfilesfolders = true;
+        }
+
         $form = array(
             'name'               => 'files',
             'jsform'             => true,
@@ -543,12 +553,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     'edit'         => $edit,
                     'page'         => $page,
                     'config'       => array(
-                        'upload'          => true,
+                        'upload'          => $editfilesfolders,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
                         'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
                         'resizeonuploaduserdefault' => $resizeonuploaduserdefault,
-                        'createfolder'    => true,
-                        'edit'            => true,
+                        'createfolder'    => $editfilesfolders,
+                        'edit'            => $editfilesfolders,
                         'select'          => false,
                     ),
                 ),
