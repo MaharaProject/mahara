@@ -134,9 +134,19 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
     }
 
     public static function instance_config_form($instance) {
+        global $USER;
         $configdata = $instance->get('configdata');
 
-        $tags = get_my_tags(null, false, 'alpha');
+        $tags = get_records_sql_array("
+            SELECT at.tag
+            FROM {artefact_tag} at
+            JOIN {artefact} a
+            ON a.id = at.artefact
+            WHERE a.owner = ?
+            AND a.artefacttype = 'blogpost'
+            GROUP BY at.tag
+            ORDER BY at.tag ASC
+            ", array($USER->id));
 
         $options = array();
         if (!empty($tags)) {
