@@ -87,3 +87,10 @@ $string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%
 $string['duplicateremoteusername'] = 'This external authentication username is already in use by the user %s. External authentication usernames must be unique within an authentication method.';
 $string['duplicateremoteusernameformerror'] = 'External authentication usernames must be unique within an authentication method.';
 $string['cannotjumpasmasqueradeduser'] = 'You cannot jump to another application whilst masquerading as another user.';
+
+// Error messages for mobile API
+$string['mobileuploadnotenabled'] = 'Sorry mobile uploads are not enabled.';
+$string['mobileuploadtokennotset'] = 'Your mobile upload token cannot be blank. Please check your mobile application settings and try again.';
+$string['mobileuploadusernamenotset'] = 'Your mobile upload username cannot be blank. Please check your mobile application settings and try again.';
+$string['mobileuploadtokennotfound'] = 'Sorry that mobile upload token was not found. Please check your site and mobile application settings.';
+
