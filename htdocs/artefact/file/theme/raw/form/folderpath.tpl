@@ -3,7 +3,7 @@
   {if $.foreach.path.last}
     {$f->title|str_shorten_text:34}
   {else}
-    <a href="{$querybase}folder={$f->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder{if $f->class} {$f->class}{/if}">{$f->title|str_shorten_text:34}</a>
+    <a href="{$querybase|safe}folder={$f->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder{if $f->class} {$f->class}{/if}">{$f->title|str_shorten_text:34}</a>
   {/if}
 {/foreach}
 
