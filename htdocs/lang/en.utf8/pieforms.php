@@ -38,6 +38,7 @@ $string['element.calendar.invalidvalue'] = 'Invalid date/time specified';
 $string['element.date.or'] = 'or';
 $string['element.date.monthnames'] = 'January,February,March,April,May,June,July,August,September,October,November,December';
 $string['element.date.notspecified'] = 'Not specified';
+$string['element.date.at'] = 'at';
 
 $string['element.expiry.days'] = 'Days';
 $string['element.expiry.weeks'] = 'Weeks';
