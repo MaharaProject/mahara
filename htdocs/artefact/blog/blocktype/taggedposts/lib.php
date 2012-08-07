@@ -57,7 +57,8 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         $configdata = $instance->get('configdata');
         $view = $instance->get('view');
         $limit = isset($configdata['count']) ? (int) $configdata['count'] : 10;
-        $results = '';
+        $full = isset($configdata['full']) ? $configdata['full'] : false;
+        $results = array();
 
         $smarty = smarty_core();
         $smarty->assign('view', $view);
@@ -67,7 +68,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             $tagselect = $configdata['tagselect'];
 
             $sql =
-                'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, at.tag
+                'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime
                 FROM {artefact} a
                 JOIN {artefact} p ON a.parent = p.id
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
@@ -108,6 +109,17 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             foreach ($results as $result) {
                 $dataobject["artefact"] = $result->parent;
                 ensure_record_exists('view_artefact', $dataobject, $dataobject);
+                $result->postedbyon = get_string('postedbyon', 'artefact.blog', display_default_name($result->owner), format_date(strtotime($result->ctime)));
+                $result->displaydate= format_date(strtotime($result->ctime));
+
+                // get comment count for this post
+                $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL");
+
+                // get all tags for this post
+                $taglist = get_records_array('artefact_tag', 'artefact', $result->id, "tag DESC");
+                foreach ($taglist as $t) {
+                    $result->taglist[] = $t->tag;
+                }
             }
 
             // check if the user viewing the page is the owner of the selected tag
@@ -125,6 +137,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
         }
 
+        $smarty->assign('full', $full);
         $smarty->assign('results', $results);
         return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
     }
@@ -135,6 +148,7 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
     public static function instance_config_form($instance) {
         global $USER;
+
         $configdata = $instance->get('configdata');
 
         $tags = get_records_sql_array("
@@ -148,28 +162,35 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             ORDER BY at.tag ASC
             ", array($USER->id));
 
+        $elements = array();
         $options = array();
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 $options[$tag->tag] = $tag->tag;
             }
-            return array(
-                'tagselect' => array(
-                    'type'          => 'select',
-                    'title'         => get_string('taglist','blocktype.blog/taggedposts'),
-                    'options'       => $options,
-                    'defaultvalue'  => !empty($configdata['tagselect']) ? $configdata['tagselect'] : $tags[0]->tag,
-                    'required'      => true,
-                ),
-                'count'     => array(
-                    'type'          => 'text',
-                    'title'         => get_string('itemstoshow', 'blocktype.blog/taggedposts'),
-                    'description'   => get_string('betweenxandy', 'mahara', 1, 100),
-                    'defaultvalue'  => isset($configdata['count']) ? $configdata['count'] : 10,
-                    'size'          => 3,
-                    'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
-                ),
+            $elements['tagselect'] = array(
+                'type'          => 'select',
+                'title'         => get_string('taglist','blocktype.blog/taggedposts'),
+                'options'       => $options,
+                'defaultvalue'  => !empty($configdata['tagselect']) ? $configdata['tagselect'] : $tags[0]->tag,
+                'required'      => true,
             );
+            $elements['count']  = array(
+                'type'          => 'text',
+                'title'         => get_string('itemstoshow', 'blocktype.blog/taggedposts'),
+                'description'   => get_string('betweenxandy', 'mahara', 1, 100),
+                'defaultvalue'  => isset($configdata['count']) ? $configdata['count'] : 10,
+                'size'          => 3,
+                'rules'         => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 999),
+            );
+            $elements['full']  = array(
+                'type'         => 'checkbox',
+                'title'        => get_string('showjournalitemsinfull', 'blocktype.blog/taggedposts'),
+                'description'  => get_string('showjournalitemsinfulldesc', 'blocktype.blog/taggedposts'),
+                'defaultvalue' => isset($configdata['full']) ? $configdata['full'] : false,
+            );
+
+            return $elements;
         }
         else {
             return array(
