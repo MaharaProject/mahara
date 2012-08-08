@@ -117,6 +117,7 @@ if ($institution || $add) {
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
             $viewids = get_column('view', 'id', 'institution', $values['i']);
             $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
+            $regdataids = get_column('institution_registration', 'id', 'institution', $values['i']);
 
             db_begin();
             if ($viewids) {
@@ -154,6 +155,10 @@ if ($institution || $add) {
                 delete_records('auth_instance_config', 'instance', $id);
             }
 
+            foreach ($regdataids as $id) {
+                delete_records('institution_registration_data', 'registration_id', $id);
+            }
+
             // The institution should have been removed from favourites lists when the members were removed,
             // but make sure it's gone.
             execute_sql('DELETE FROM {favorite_usr} WHERE favorite IN (SELECT id FROM {favorite} WHERE institution = ?)', array($values['i']));
@@ -165,6 +170,8 @@ if ($institution || $add) {
             delete_records('institution_locked_profile_field', 'name', $values['i']);
             delete_records('usr_institution_request', 'institution', $values['i']);
             delete_records('view_access', 'institution', $values['i']);
+            delete_records('institution_data', 'institution', $values['i']);
+            delete_records('institution_registration', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 
