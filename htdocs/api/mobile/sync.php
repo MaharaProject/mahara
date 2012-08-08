@@ -43,7 +43,7 @@ if ($token == '') {
     mobile_api_json_reply( array('fail' => get_string('mobileuploadtokennotset', 'auth') ) );
 }
 
-$username = trim(param_alphanumext('username', ''));
+$username = trim(param_variable('username', ''));
 
 if ($username == '') {
     mobile_api_json_reply( array('fail' => get_string('mobileuploadusernamenotset', 'auth') ) );
@@ -62,7 +62,7 @@ catch (AuthUnknownUserException $e) {
 $lastsync = param_integer('lastsync', 0);
 
 $notification_types_sql = '';
-$notification_types = explode(",", trim(param_alpha('notifications', '')));
+$notification_types = explode(",", trim(param_variable('notifications', '')));
 if (count($notification_types) > 0) {
     $notification_types_sql = ' a.name IN (' . join(',', array_map('db_quote',$notification_types)) . ')';
 }
