@@ -45,7 +45,7 @@ if ($token == '') {
     mobile_api_json_reply(array('fail' => get_string('mobileuploadtokennotset', 'auth')));
 }
 
-$username = trim(param_alphanumext('username', ''));
+$username = trim(param_variable('username', ''));
 
 if ($username == '') {
     mobile_api_json_reply(array('fail' => get_string('mobileuploadusernamenotset', 'auth')));
@@ -96,9 +96,9 @@ $draft = param_alpha('draft', '');
 $allowcomments = param_alpha('allowcomments', '');
 
 // Check for artefact attributes title, description (or entry), tags, etc
-$title = param_alphanumext('title', '');
-$description = param_alphanumext('description', '');
-$tags = explode(",", param_alphanumext('tags', ''));
+$title = param_variable('title', '');
+$description = param_variable('description', '');
+$tags = explode(",", param_variable('tags', ''));
 
 // -- Now check for files to upload --
 $artefact_id = '';  // our resulting artefact id on creation
