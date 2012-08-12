@@ -1296,5 +1296,9 @@ function site_warnings() {
         $warnings[] = get_string('passwordsaltweak', 'error');
     }
 
+    if (!extension_loaded('mbstring')) {
+        $warnings[] = get_string('mbstringneeded', 'error');
+    }
+
     return $warnings;
 }
