@@ -197,6 +197,7 @@ EOF;
                 $readonly = $artefact->get('owner') !== $view->get('owner')
                     || $artefact->get('group') !== $view->get('group')
                     || $artefact->get('institution') !== $view->get('institution')
+                    || $artefact->get('locked')
                     || !$USER->can_edit_artefact($artefact);
 
                 $text = $artefact->get('description');
@@ -317,6 +318,7 @@ EOF;
             if ($artefact->get('owner') === $data['owner']
                 && $artefact->get('group') === $data['group']
                 && $artefact->get('institution') === $data['institution']
+                && !$artefact->get('locked')
                 && $USER->can_edit_artefact($artefact)) {
                 $artefact->set('description', $values['text']);
             }
