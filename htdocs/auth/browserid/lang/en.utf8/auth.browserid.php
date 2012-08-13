@@ -26,6 +26,7 @@ defined('INTERNAL') || die();
 $string['browserid'] = 'BrowserID';
 $string['title'] = 'BrowserID';
 $string['description'] = 'Authenticate using a BrowserID';
+$string['notusable'] = 'Please install the PHP cURL extension and check the connection to the BrowserID verifier';
 
 $string['badassertion'] = 'The given BrowserID assertion is not valid: %s';
 $string['badverification'] = 'Mahara did not receive valid JSON output from the BrowserID verifier.';
