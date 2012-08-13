@@ -56,6 +56,6 @@
     </table>
        {$pagination|safe}
 {else}
-        <div class="message">{str tag=nocollections section=collection} <a href={$addonelink}>{str tag=addone}</a></div>
+        <div class="message">{str tag=nocollections section=collection}{if $addonelink}<a href={$addonelink}>{str tag=addone}</a>{/if}</div>
 {/if}
 {include file="footer.tpl"}
