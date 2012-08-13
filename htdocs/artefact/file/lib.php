@@ -317,6 +317,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return false;
     }
 
+    /**
+     * This function checks if a artefact can be deleted
+     */
+    public function can_be_deleted() {
+        return true;
+    }
+
     public static function get_icon($options=null) {
 
     }
@@ -800,6 +807,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 }
             }
         }
+    }
+
+    /**
+     * This function checks if a file artefact can be deleted
+     */
+    public function can_be_deleted() {
+        return !$this->get('locked');
     }
 
     /**
@@ -1576,6 +1590,25 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $this->size = null;
         }
 
+    }
+
+    /**
+     * This function checks if a folder artefact can be deleted
+     */
+    public function can_be_deleted() {
+        if ($this->get('locked')) {
+            return false;
+        }
+        // Check if its children files and sub-folders can be deleted or not
+        if ($childrecords = $this->folder_contents()) {
+            foreach ($childrecords as $child) {
+                $c = artefact_instance_from_id($child->id);
+                if (!$c->can_be_deleted()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public function delete() {

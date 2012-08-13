@@ -1086,9 +1086,13 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
         return $result;
     }
 
-    if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
+    if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, 'message' => get_string('nodeletepermission', 'mahara'));
     }
+    if (!$artefact->can_be_deleted()) {
+        return array('error' => true, 'message' => get_string('cantbedeleted', 'mahara'));
+    }
+
     $parentfolder = $artefact->get('parent');
     $artefact->delete();
 

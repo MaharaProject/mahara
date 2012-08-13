@@ -654,6 +654,7 @@ $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
 $string['nodeletepermission'] = 'You do not have permission to delete this artefact';
 $string['noeditpermission'] = 'You do not have permission to edit this artefact';
+$string['cantbedeleted'] = 'This artefact can not be deleted because it and/or its sub artefacts have been in submitted pages';
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
 $string['view'] = 'Page';
