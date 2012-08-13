@@ -63,6 +63,17 @@ if (!$USER->can_edit_artefact($file)) {
     throw new AccessDeniedException();
 }
 
+if ($file->get('locked')) {
+    throw new AccessDeniedException(get_string('cannotextractfilesubmitted', 'artefact.file'));
+}
+
+$folderid = $file->get('parent');
+if (!empty($folderid)) {
+    $folder = artefact_instance_from_id($folderid);
+    if (($folder->get('artefacttype') == 'folder') && $folder->get('locked')) {
+        throw new AccessDeniedException(get_string('cannotextractfileinfoldersubmitted', 'artefact.file'));
+    }
+}
 try {
     $zipinfo = $file->read_archive();
 }
