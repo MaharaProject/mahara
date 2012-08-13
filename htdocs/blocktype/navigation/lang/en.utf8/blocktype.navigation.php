@@ -31,4 +31,4 @@ $string['defaulttitledescription'] = 'If no title is provided here, the title of
 $string['collection'] = 'Collection';
 $string['title'] = 'Navigation';
 $string['description'] = 'Display a collection of pages in a simple navigation list.';
-$string['nocollections'] = 'No collections. <a href="%scollection/edit.php?new=1">Create one</a>.';
+$string['nocollections1'] = 'No collections. <a href="%s">Create one</a>.';
