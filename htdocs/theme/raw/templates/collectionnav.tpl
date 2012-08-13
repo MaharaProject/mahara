@@ -32,11 +32,11 @@ function toggleShowmore() {
     var links = getElementsByTagAndClassName('a', 'colnav', null);
     if (showmore) {
         for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href + '&showmore=1';
+            links[index].href = links[index].href + (links[index].href.indexOf('?') == -1 ? '?' : '&') + 'showmore=1';
         }
     } else {
         for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href.replace('&showmore=1', '');
+            links[index].href = links[index].href.replace(/[?&]showmore=1/, '');
         }
     }
 }
@@ -65,7 +65,7 @@ addLoadEvent(function() {
     } else {
         var links = getElementsByTagAndClassName('a', 'colnav', null);
         for (var index = 0; index < links.length; index ++) {
-            links[index].href = links[index].href + '&showmore=1';
+            links[index].href = links[index].href + (links[index].href.indexOf('?') == -1 ? '?' : '&') + 'showmore=1';
         }
     }
     connect('colnav-more', 'onclick', function(e) {
