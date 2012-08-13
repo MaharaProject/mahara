@@ -131,7 +131,9 @@ $urlparamsstr = '';
 if ($urlparams) {
     $urlparamsstr = '&' . http_build_query($urlparams);
 }
-$smarty->assign('addonelink', get_config('wwwroot') . 'collection/edit.php?new=1' . $urlparamsstr);
+if ($canedit) {
+    $smarty->assign('addonelink', get_config('wwwroot') . 'collection/edit.php?new=1' . $urlparamsstr);
+}
 
 if (!empty($institutionname) && ($institutionname != 'mahara')) {
     $smarty->assign('institution', $institutionname);
