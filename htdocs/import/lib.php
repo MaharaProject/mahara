@@ -238,7 +238,7 @@ function import_process_queue() {
             $processed[] = $item->id;
         }
         catch (Exception $e) {
-            log_debug('an error occured on import: ' . $e->getMessage());
+            log_debug('an error occurred on import: ' . $e->getMessage());
             $importer->get('importertransport')->cleanup();
         }
     }

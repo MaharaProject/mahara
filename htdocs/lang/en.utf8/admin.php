@@ -651,7 +651,7 @@ $string['nousersselected'] = 'No users selected';
 $string['suspenduser'] = 'Suspend user';
 $string['suspendedusers'] = 'Suspended users';
 $string['suspensionreason'] = 'Suspension reason';
-$string['errorwhilesuspending'] = 'An error occured while trying to suspend';
+$string['errorwhilesuspending'] = 'An error occurred while trying to suspend';
 $string['suspendedusersdescription'] = 'Suspend or reactivate users from using the site';
 $string['unsuspendusers'] = 'Unsuspend users';
 $string['usersdeletedsuccessfully'] = 'users deleted successfully';
@@ -844,7 +844,7 @@ $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove users';
 $string['declinerequests'] = 'Decline requests';
 $string['nousersupdated'] = 'No users were updated';
-$string['errorupdatinginstitutionusers'] = 'An error occured when updating institution users';
+$string['errorupdatinginstitutionusers'] = 'An error occurred when updating institution users';
 $string['revokeinvitations'] = 'Revoke invitations';
 $string['invitedusers'] = 'Invited users';
 $string['userstobeuninvited'] = 'Users to be uninvited';
@@ -899,7 +899,7 @@ $string['registrationreason'] = 'Registration reason';
 $string['makeuserinstitutionstaff'] = 'Automatically assign institution staff permissions to the owner of this email the first time they log in';
 
 // Suspend Institutions
-$string['errorwhileunsuspending'] = 'An error occured while trying to unsuspend';
+$string['errorwhileunsuspending'] = 'An error occurred while trying to unsuspend';
 $string['institutionsuspended'] = 'Institution suspended';
 $string['institutionunsuspended'] = 'Institution unsuspended';
 $string['suspendedinstitution'] = 'SUSPENDED';
