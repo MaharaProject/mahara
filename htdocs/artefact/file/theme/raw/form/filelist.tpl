@@ -65,10 +65,10 @@
     <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
     <td class="right s btns3">
     {if $editable && !$file->isparent}
-      {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/unzip.gif"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
       {if $file->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {elseif !isset($file->can_edit) || $file->can_edit != 0}
+        {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/unzip.gif"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
         <input type="image" src="{theme_url filename="images/edit.gif"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}"/>
         <input type="image" src="{theme_url filename="images/icon_close.gif"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}"/>
       {/if}

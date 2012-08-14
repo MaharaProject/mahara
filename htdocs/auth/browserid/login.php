@@ -26,8 +26,6 @@ define('PUBLIC', 1);
 require('../../init.php');
 safe_require('auth', 'browserid');
 
-define('BROWSERID_VERIFIER_URL', 'https://verifier.login.persona.org/verify');
-
 if (!session_id()) {
     session_start();
 }
@@ -40,7 +38,7 @@ if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpire
 
     // Send the assertion to the verification service
     $request = array(
-        CURLOPT_URL        => BROWSERID_VERIFIER_URL,
+        CURLOPT_URL        => PluginAuthBrowserid::BROWSERID_VERIFIER_URL,
         CURLOPT_POST       => 1,
         CURLOPT_POSTFIELDS => 'assertion='.urlencode($assertion).'&audience='.get_audience(),
     );

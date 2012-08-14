@@ -84,6 +84,8 @@ class AuthBrowserid extends Auth {
 
 class PluginAuthBrowserid extends PluginAuth {
 
+    const BROWSERID_VERIFIER_URL = 'https://verifier.login.persona.org/verify';
+
     private static $default_config = array(
         'weautocreateusers' => 0,
     );
@@ -99,9 +101,16 @@ class PluginAuthBrowserid extends PluginAuth {
     public static function has_instance_config() {
         return true;
     }
-
+    /**
+     * Implement the function is_usable()
+     *
+     * @return boolean true if the BrowserID verifier is usable, false otherwise
+     */
     public static function is_usable() {
-        return extension_loaded('curl');
+        if ( extension_loaded('curl')) {
+            return self::is_available();
+        }
+        return false;
     }
 
     public static function get_instance_config_options($institution, $instance = 0) {
@@ -153,6 +162,25 @@ class PluginAuthBrowserid extends PluginAuth {
             'elements' => $elements,
             'renderer' => 'table'
         );
+    }
+
+    /**
+     * Function to check a BrowserID verifier status
+     * @return boolean true if the verifier is available, false otherwise
+     */
+    public static function is_available(){
+        // Send a test assertion to the verification service
+        $request = array(
+                CURLOPT_URL        => self::BROWSERID_VERIFIER_URL,
+                CURLOPT_POST       => 1,
+                CURLOPT_POSTFIELDS => 'request=1'
+        );
+        $response = mahara_http_request($request);
+        if (!empty($response->data)) {
+            $jsondata = json_decode($response->data);
+            return !empty($jsondata);
+        }
+        return false;
     }
 
     public static function save_instance_config_options($values, $form) {
