@@ -327,8 +327,8 @@ function general_account_prefs_form_elements($prefs) {
         $elements['mobileuploadtoken'] = array(
             'type'         => 'multitext',
             'title'        => get_string('mobileuploadtoken', 'account'),
-            'description'  => get_string('mobileuploadtokendescription', 'account'),
-            'defaultvalue' => $defaultvalue
+            'defaultvalue' => $defaultvalue,
+            'help'         => 'true'
         );
     }
     if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {
