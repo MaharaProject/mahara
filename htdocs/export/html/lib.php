@@ -70,7 +70,7 @@ class PluginExportHtml extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
-        $this->rootdir = 'portfolio-for-' . self::text_to_path($user->get('username'));
+        $this->rootdir = 'portfolio-for-' . self::text_to_filename($user->get('username'));
 
         // Create basic required directories
         foreach (array('files', 'views', 'static', 'static/smilies', 'static/profileicons') as $directory) {
@@ -289,13 +289,30 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
-     * Converts the passed text into a a form that could be used in a URL.
+     * Converts the UTF-8 passed text into a a form that could be used in a file name.
      *
      * @param string $text The text to convert
      * @return string      The converted text
      */
-    public static function text_to_path($text) {
-        return substr(preg_replace('#[^a-zA-Z0-9_-]+#', '-', $text), 0, 255);
+    public static function text_to_filename($text) {
+        // truncates the text and replaces NOT allowed characters to hyphens
+        return preg_replace('#["*/:<>?\\| ]+#', '-', mb_substr($text, 0, parent::MAX_FILENAME_LENGTH, 'utf-8'));
+    }
+
+    /**
+     * Converts the UTF-8 passed text into a a form that could be used in a URL.
+     *
+     * @param string $text The text to convert
+     * @return string      The converted text
+     */
+    public static function text_to_URLpath($text) {
+        $tab_text = str_split($text);
+        $output = '';
+        foreach ($tab_text as $id=>$char){
+            $hex = dechex(ord($char));
+            $output .= '%' . $hex;
+        }
+        return $output;
     }
 
     /**
@@ -327,7 +344,7 @@ class PluginExportHtml extends PluginExport {
                 $title = $this->views[$viewid]->get('title');
                 $menus[$collectionid][] = array(
                     'id'   => $viewid,
-                    'url'  => self::text_to_path($title) . '/index.html',
+                    'url'  => self::text_to_URLpath(self::text_to_filename($title)) . '/index.html',
                     'text' => $title,
                 );
             }
@@ -360,7 +377,7 @@ class PluginExportHtml extends PluginExport {
                     array('text' => get_string('Views', 'view')),
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
-                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_path($view->get('title'));
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_filename($view->get('title'));
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
@@ -409,7 +426,7 @@ class PluginExportHtml extends PluginExport {
             if ($view->get('type') != 'profile') {
                 $item = array(
                     'title' => $view->get('title'),
-                    'folder' => self::text_to_path($view->get('title')),
+                    'folder' => self::text_to_filename($view->get('title')),
                 );
                 if (isset($this->viewcollection[$id])) {
                     $list['c' . $this->viewcollection[$id]]['views'][] = $item;
@@ -522,7 +539,7 @@ abstract class HtmlExportArtefactPlugin {
     public function paginate($artefact) {
 
         // Create directory for storing the artefact
-        $dirname = PluginExportHtml::text_to_path(trim($artefact->get('title')));
+        $dirname = PluginExportHtml::text_to_filename(trim($artefact->get('title')));
         if (!check_dir_exists($this->fileroot . $dirname)) {
             throw new SystemException("Couldn't create artefact directory {$this->fileroot}{$dirname}");
         }
@@ -692,7 +709,7 @@ class HtmlExportOutputFilter {
             return $matches[0];
         }
         if (!isset($this->viewtitles[$viewid])) {
-            $this->viewtitles[$viewid] = PluginExportHtml::text_to_path(get_field('view', 'title', 'id', $viewid));
+            $this->viewtitles[$viewid] = PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename(get_field('view', 'title', 'id', $viewid)));
         }
         return $this->basepath . '/views/' . $this->viewtitles[$viewid] . '/index.html';
     }
@@ -717,7 +734,7 @@ class HtmlExportOutputFilter {
             $dir = $artefacttype == 'plan' ? 'plans' : $artefacttype;
             $offset = ($matches[4]) ? intval(substr($matches[4], strlen('&amp;offset='))) : 0;
             $offset = ($offset == 0) ? 'index' : $offset;
-            return '<a href="' . $this->basepath . "/files/$dir/" . PluginExportHtml::text_to_path($artefact->get('title')) . '/' . $offset . '.html">' . $matches[5] . '</a>';
+            return '<a href="' . $this->basepath . "/files/$dir/" . PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename($artefact->get('title'))) . '/' . $offset . '.html">' . $matches[5] . '</a>';
         case 'file':
         case 'folder':
         case 'image':
