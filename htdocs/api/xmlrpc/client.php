@@ -118,7 +118,7 @@ class Client {
             }
         }
         catch (CryptException $e) {
-            throw new XmlrpcClientException("An error occured while decrypting a message sent by $wwwroot. Unable to authenticate the user.");
+            throw new XmlrpcClientException("An error occurred while decrypting a message sent by $wwwroot. Unable to authenticate the user.");
         }
 
         if ($xml->getName() == 'methodResponse') {
@@ -170,7 +170,7 @@ class Client {
                         throw new XmlrpcClientException('Remote site claims to have sent a public key, but they LIE');
                     }
                 }
-                throw new XmlrpcClientException('Unknown error occured: ' . $this->response['faultCode'] . ': ' . $this->response['faultString']);
+                throw new XmlrpcClientException('Unknown error occurred: ' . $this->response['faultCode'] . ': ' . $this->response['faultString']);
             }
 
             // Clean up so object can be re-used.

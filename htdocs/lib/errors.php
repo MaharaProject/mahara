@@ -130,8 +130,8 @@ function log_environ ($message, $escape=true, $backtrace=true) {
  * @param bool   $escape    Whether to HTML escape the message
  * @param bool   $backtrace Whether to provide a backtrace if the system is
  *                          configured to give backtraces at this level.
- * @param string $file      The file the error occured in
- * @param int    $line      The line number the error occured on
+ * @param string $file      The file the error occurred in
+ * @param int    $line      The line number the error occurred on
  * @param array  $trace     The backtrace for the error
  * @access private
  */
@@ -515,7 +515,7 @@ class MaharaException extends Exception {
             return $strings[$tag];
         }
         
-        return 'An error occured';
+        return 'An error occurred';
     }
 
     public function get_sitename() {
@@ -662,7 +662,7 @@ class SystemException extends MaharaException implements MaharaThrowable {
 
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'A nonrecoverable error occured. '
+                           array('message' => 'A nonrecoverable error occurred. '
                                  . 'This probably means you have encountered a bug in the system'));
     }
     
@@ -734,7 +734,7 @@ class ConfigSanityException extends ConfigException {
 }
 
 /**
- * An SQL related error occured
+ * An SQL related error occurred
  */
 class SQLException extends SystemException {
     public function __construct($message=null, $code=0) {

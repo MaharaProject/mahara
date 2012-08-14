@@ -513,7 +513,7 @@ class AuthXmlrpc extends Auth {
                    ->send($this->wwwroot);
         }
         catch (XmlrpcClientException $e) {
-            log_debug("XMLRPC error occured while calling MNET method kill_children on $this->wwwroot");
+            log_debug("XMLRPC error occurred while calling MNET method kill_children on $this->wwwroot");
             log_debug("This means that single-signout probably didn't work properly, but the problem "
                 . "is at the remote application");
             log_debug("If the remote application is Moodle, you are likely a victim of "
