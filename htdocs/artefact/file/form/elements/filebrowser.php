@@ -68,6 +68,9 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
 
     $folder = $element['folder'];
+    if ($group && !pieform_element_filebrowser_view_group_folder($group, $folder)) {
+        $folder = null;
+    }
     $path = pieform_element_filebrowser_get_path($folder);
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
@@ -1316,6 +1319,24 @@ function pieform_element_filebrowser_edit_group_folder($group, $folder) {
 }
 
 
+function pieform_element_filebrowser_view_group_folder($group, $folder) {
+    global $USER;
+    if ($folder) {
+        if (!$folder instanceof ArtefactTypeFolder) {
+            $folder = new ArtefactTypeFolder($folder);
+        }
+        return $USER->can_view_artefact($folder);
+    }
+    require_once(get_config('libroot') . 'group.php');
+    // Group root directory: use default grouptype artefact permissions
+    if (!$role = group_user_access($group)) {
+        return false;
+    }
+    $permissions = group_get_default_artefact_permissions($group);
+    return $permissions[$role]->view;
+}
+
+
 function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     $prefix = $form->get_name() . '_' . $element['name'];
     $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
@@ -1391,6 +1412,12 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
     
     // If changing to a group folder, check whether the user can edit it
     if ($g = ($owner ? $group : $form->get_property('group'))) {
+        if (!pieform_element_filebrowser_view_group_folder($g, $folder)) {
+            return array(
+                'error'   => true,
+                'message' => get_string('cannotviewfolder', 'artefact.file'),
+            );
+        }
         $editgroupfolder = pieform_element_filebrowser_edit_group_folder($g, $folder);
     }
 

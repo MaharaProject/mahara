@@ -945,6 +945,12 @@ class User {
     }
 
     public function can_view_artefact($a) {
+        $parent = $a->get_parent_instance();
+        if ($parent) {
+            if (!$this->can_view_artefact($parent)) {
+                return false;
+            }
+        }
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
@@ -960,7 +966,20 @@ class User {
         return false;
     }
 
-    public function can_edit_artefact($a) {
+    public function can_edit_artefact($a, $viewparent=false) {
+        $parent = $a->get_parent_instance();
+        if ($parent) {
+            if ($viewparent) {
+                if (!$this->can_view_artefact($parent)) {
+                    return false;
+                }
+            }
+            else {
+                if (!$this->can_edit_artefact($parent, true)) {
+                    return false;
+                }
+            }
+        }
         if ($this->get('admin')
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
@@ -989,6 +1008,12 @@ class User {
     }
 
     public function can_publish_artefact($a) {
+        $parent = $a->get_parent_instance();
+        if ($parent) {
+            if (!$this->can_view_artefact($parent)) {
+                return false;
+            }
+        }
         if (($this->get('id') and $this->get('id') == $a->get('owner'))) {
             return true;
         }
