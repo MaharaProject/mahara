@@ -33,6 +33,7 @@ $string['sitefilesloaded'] = 'Site files loaded';
 $string['addafile'] = 'Add a file';
 $string['archive'] = 'Archive';
 $string['bytes'] = 'bytes';
+$string['cannotviewfolder'] = 'You do not have permission to view the content of this folder';
 $string['cannoteditfolder'] = 'You do not have permission to add content to this folder';
 $string['cannoteditfoldersubmitted'] = 'You cannot add content to a folder in a submitted page.';
 $string['cannotremovefromsubmittedfolder'] = 'You cannot remove content from a folder in a submitted page.';
