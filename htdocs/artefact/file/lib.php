@@ -449,10 +449,18 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $where .= '
             AND a.parent = ? ';
             $phvals[] = $parentfolderid;
+            $parent = artefact_instance_from_id($parentfolderid);
+            $can_view_parent = $USER->can_view_artefact($parent);
+            if (!$can_view_parent) {
+                return null;
+            }
+            $can_edit_parent = $USER->can_edit_artefact($parent);
         }
         else {
             $where .= '
             AND a.parent IS NULL';
+            $can_edit_parent = true;
+            $can_view_parent = true;
         }
 
         $filedata = get_records_sql_assoc($select . $from . $where . $groupby, $phvals);
@@ -467,6 +475,18 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
+                }
+                if ($group) {
+                    if ($item->author == $USER->get('id')) {
+                        $item->can_edit = 1;
+                        $item->can_view = 1;
+                        $item->can_republish = 1;
+                    }
+                    else {
+                        $item->can_edit = $can_edit_parent && $item->can_edit;
+                        $item->can_view = $can_view_parent && $item->can_view;
+                        $item->can_republish = $can_view_parent && $item->can_republish;
+                    }
                 }
                 if ($group && $item->author == $USER->get('id')) {
                     $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
