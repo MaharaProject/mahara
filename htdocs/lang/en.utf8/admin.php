@@ -649,6 +649,7 @@ $string['exportingnotsupportedyet'] = 'Exporting user profiles is not supported 
 $string['exportuserprofiles'] = 'Export user profiles';
 $string['nousersselected'] = 'No users selected';
 $string['suspenduser'] = 'Suspend user';
+$string['suspendeduserstitle'] = 'Suspended and expired users';
 $string['suspendedusers'] = 'Suspended users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occured while trying to suspend';
