@@ -1867,7 +1867,7 @@ function admin_nav() {
         'configusers/suspendedusers' => array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
-            'title'  => get_string('suspendedusers', 'admin'),
+            'title'  => get_string('suspendeduserstitle', 'admin'),
             'weight' => 15,
         ),
         'configusers/staffusers' => array(
@@ -2054,7 +2054,7 @@ function institutional_admin_nav() {
         'configusers/suspendedusers' => array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
-            'title'  => get_string('suspendedusers', 'admin'),
+            'title'  => get_string('suspendeduserstitle', 'admin'),
             'weight' => 20,
         ),
         'configusers/adduser' => array(
