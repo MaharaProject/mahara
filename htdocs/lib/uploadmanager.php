@@ -382,7 +382,7 @@ function get_clam_error_code($returncode) {
     $returncodes = array();
     $returncodes[0] = 'No virus found.';
     $returncodes[1] = 'Virus(es) found.';
-    $returncodes[2] = ' An error occured'; // specific to clamdscan
+    $returncodes[2] = ' An error occurred'; // specific to clamdscan
     // all after here are specific to clamscan
     $returncodes[40] = 'Unknown option passed.';
     $returncodes[50] = 'Database initialization error.';
