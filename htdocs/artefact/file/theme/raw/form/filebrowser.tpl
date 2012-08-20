@@ -64,7 +64,7 @@
   {if $config.resizeonuploaduseroption}
   <tr id="{$prefix}_resizeonuploaduseroption" class="description">
     <th></th>
-    <td>{str tag='resizeonuploadenablefilebrowser' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
+    <td>{str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
       <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if}/>
       {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
     </td>
