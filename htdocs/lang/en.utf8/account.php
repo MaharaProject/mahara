@@ -68,7 +68,7 @@ $string['showviewcolumns'] = 'Show controls to add and remove columns when editi
 $string['tagssideblockmaxtags'] = 'Maximum tags in cloud';
 $string['tagssideblockmaxtagsdescription'] = 'Maximum number of tags to display in your tag cloud';
 
-$string['enablemultipleblogs'] = 'Enable multiple journals';
+$string['enablemultipleblogs1'] = 'Multiple journals';
 $string['enablemultipleblogsdescription']  = 'By default, you have one journal. If you would like to keep more than one journal, check this option.';
 
 $string['hiderealname'] = 'Hide real name';
