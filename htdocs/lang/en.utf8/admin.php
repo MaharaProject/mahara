@@ -183,6 +183,7 @@ $string['generatedviewurls'] = array(
     'Generated 1 portfolio page URL',
     'Generated %s portfolio page URLs',
 );
+$string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URLs';
 
 // sanity check warnings
 $string['warnings'] = 'Warning';
