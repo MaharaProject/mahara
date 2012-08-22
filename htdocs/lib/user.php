@@ -288,7 +288,7 @@ function general_account_prefs_form_elements($prefs) {
     // TODO: add a way for plugins (like blog!) to have account preferences
     $elements['multipleblogs'] = array(
         'type' => 'checkbox',
-        'title'=> get_string('enablemultipleblogs' ,'account'),
+        'title'=> get_string('enablemultipleblogs1' ,'account'),
         'description' => get_string('enablemultipleblogsdescription', 'account'),
         'defaultvalue' => $prefs->multipleblogs,
     );
