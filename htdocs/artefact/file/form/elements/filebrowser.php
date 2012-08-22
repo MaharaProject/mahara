@@ -1036,22 +1036,21 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $group = null;
     $institution = null;
     $user = null;
-    $folder = 0;
-    if ($newtabdata['owner'] == 'site') {
-        global $USER;
-        if (!$USER->get('admin')) {
-            $folder = ArtefactTypeFolder::admin_public_folder_id();
+    if (!empty($element['tabs'])) {
+        $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
+
+        if ($newtabdata['owner'] == 'site') {
+            $institution = 'mahara';
         }
-        $institution = 'mahara';
-    }
-    else if ($newtabdata['owner'] == 'institution') {
-        $institution = $newtabdata['ownerid'];
-    }
-    else if ($newtabdata['owner'] == 'group') {
-        $group = $newtabdata['ownerid'];
-    }
-    else if ($newtabdata['owner'] == 'user') {
-        $user = true;
+        else if ($newtabdata['owner'] == 'institution') {
+            $institution = $newtabdata['ownerid'];
+        }
+        else if ($newtabdata['owner'] == 'group') {
+            $group = $newtabdata['ownerid'];
+        }
+        else if ($newtabdata['owner'] == 'user') {
+            $user = true;
+        }
     }
 
     $returndata = array(
