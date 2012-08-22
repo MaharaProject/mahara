@@ -334,8 +334,8 @@ function general_account_prefs_form_elements($prefs) {
     if (get_config_plugin('artefact', 'file', 'resizeonuploadenable')) {
         $elements['resizeonuploaduserdefault'] = array(
             'type'         => 'checkbox',
-            'title'        => get_string('resizeonuploaduserdefault', 'account'),
-            'description'  => get_string('resizeonuploaduserdefaultdescription', 'account'),
+            'title'        => get_string('resizeonuploaduserdefault1', 'account'),
+            'description'  => get_string('resizeonuploaduserdefaultdescription1', 'account'),
             'defaultvalue' => $prefs->resizeonuploaduserdefault,
         );
     }

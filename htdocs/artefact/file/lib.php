@@ -1377,15 +1377,15 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                         ),
                         'resizeonuploadenable' => array(
                             'type'         => 'checkbox',
-                            'title'        => get_string('resizeonuploadenable', 'artefact.file'),
+                            'title'        => get_string('resizeonuploadenable1', 'artefact.file'),
                             'defaultvalue' => $resizeonuploadenable,
-                            'description'  => get_string('resizeonuploadenabledescription', 'artefact.file'),
+                            'description'  => get_string('resizeonuploadenabledescription1', 'artefact.file'),
                         ),
                         'resizeonuploaduseroption' => array(
-                            'title'        => get_string('resizeonuploaduseroption', 'artefact.file'),
+                            'title'        => get_string('resizeonuploaduseroption1', 'artefact.file'),
                             'type'         => 'checkbox',
                             'defaultvalue' => $resizeonuploaduseroption,
-                            'description'  => get_string('resizeonuploaduseroptiondescription', 'artefact.file'),
+                            'description'  => get_string('resizeonuploaduseroptiondescription1', 'artefact.file'),
                         ),
                         'resizeonuploadmaxwidth' => array(
                             'type' => 'text',
