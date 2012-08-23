@@ -29,9 +29,9 @@
     <tr>
       <th class="cv">{str tag=Views section=view}</th>
     {if $accesslists.collections}
-      <th></th>
-      <th></th>
-      <th></th>
+      <th class="al"></th>
+      <th class="al-edit"></th>
+      <th class="secreturls"></th>
     {else}
       <th class="al">{str tag=accesslist section=view}</th>
       <th class="al-edit">{str tag=editaccess section=view}</th>

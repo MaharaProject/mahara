@@ -8,9 +8,7 @@
 {if $groups}<table id="mygroups" class="fullwidth listing">
 {foreach from=$groups item=group}
             <tr><td class="{cycle values='r0,r1'}">
-                <div class="fr">
-                     {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
-                </div>
+                    {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
                 <div class="mygroupsdetails">
                      {include file="group/group.tpl" group=$group returnto='mygroups'}
                 </div>

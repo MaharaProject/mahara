@@ -1,12 +1,29 @@
 <input type="hidden" name="accesslist" value="">
-
+<div id="editaccesswrap">
 <div class="fl presets-container">
   <div id="potentialpresetitems">
     <h3>{{str tag=sharewith section=view}}</h3>
   </div>
+  <fieldset id="viewacl-advanced" class="collapsible collapsed">
+    <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
+      <div class="viewacl-advanced-search">
+        <label>{{str tag=search}}</label>
+        <select name="type" id="type">
+          <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
+          <option value="group">{{str tag=groups}}</option>
+          <option value="user">{{str tag=users}}</option>
+        </select>
+        <input type="text" name="search" id="search">
+        <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
+      </div>
+      <table id="results">
+          <tbody>
+          </tbody>
+      </table>
+  </fieldset>
 </div>
 
-<table id="accesslisttable" class="hidden">
+<table id="accesslisttable" class="fr hidden fullwidth">
   <thead>
     <tr class="accesslist-head1">
       <th colspan="2">{{str tag=Added section=view}}</th>
@@ -27,26 +44,9 @@
   </tbody>
 </table>
 
-<fieldset id="viewacl-advanced" class="collapsible collapsed cb">
-  <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
-    <div class="fl viewacl-advanced-search">
-      <label>{{str tag=search}}</label>
-      <select name="type" id="type">
-        <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
-        <option value="group">{{str tag=groups}}</option>
-        <option value="user">{{str tag=users}}</option>
-      </select>
-      <input type="text" name="search" id="search">
-      <button id="dosearch" class="btn-search" type="button">{{str tag=go}}</button>
-    </div>
-    <table id="results" class="fl">
-        <tbody>
-        </tbody>
-    </table>
-    <div class="cb"></div>
-</fieldset>
 
 <div class="cb"></div>
+</div>
 <script type="text/javascript">
 var count = 0;
 
