@@ -1,6 +1,6 @@
 {if $images}
 <div class="slideshow" id="slideshow{$instanceid}">
-    <table class="images">
+    <table class="images fullwidth">
     <tr>
     <td class="control">
         <span class="first hidden">&laquo;</span>

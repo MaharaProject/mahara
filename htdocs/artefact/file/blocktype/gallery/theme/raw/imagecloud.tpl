@@ -8,7 +8,7 @@
     <p>
     <a href="http://www.roytanck.com">Roy Tanck</a>'s Flickr Widget requires Flash Player 9 or better.</p>
 </object>
-<span style="font-size:9px;"><a href="http://www.roytanck.com">roytanck.com</a></span>
+<span class="s"><a href="http://www.roytanck.com">roytanck.com</a></span>
 </div>
 {else}
   {str tag=noimagesfound section=artefact.file}
