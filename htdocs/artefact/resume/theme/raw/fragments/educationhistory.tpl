@@ -3,7 +3,7 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}
 {/if}
 </legend>{/if}
-<table id="educationhistorylist{$suffix}" class="tablerenderer resumefive resumecomposite">
+<table id="educationhistorylist{$suffix}" class="tablerenderer resumefive resumecomposite fullwidth">
     <thead>
         <tr>
             {if $controls}<th class="resumecontrols"></th>{/if}
