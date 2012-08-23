@@ -16,18 +16,20 @@
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
 	height: 34px;
-	line-height: 34px;
+	line-height: 30px;
 }
 #category-list li {
-	margin: 0 2px 0 0;
 	color: #1E6297;
 	background: url(../images/blocklist-tab-right.png) no-repeat right top;
+	display: inline-block;
 }
 #category-list li a, #category-list li a:link, #category-list li a:visited, #category-list li a:active {
 	background: url(../images/blocklist-tab-left.png) no-repeat left top;
 	color: #FFF;
 	height: 34px;
 	line-height: 40px;
+	padding: 0 10px;
+	margin: 0;
 }
 #category-list li a:hover {
 	text-decoration: none;
@@ -52,6 +54,9 @@
 	margin: 0;
 	padding: 10px;
 }
+#blocktype-list .blocktype h4 {
+	color: #FFFFFF;
+}
 #current_bt_description {
 	color: #b1b5db;
 }
@@ -75,33 +80,26 @@
 }
 /* tabs for the artefact chooser */
 ul.artefactchooser-tabs {
-	font-weight: bold;
-	font-size: 12px !important;
 	padding-left: 1em !important;
 	background: none;
 }
 ul.artefactchooser-tabs li {
-	margin: 0 3px 0 0 !important;
-	color: #FFF !important;
+	margin: 0;
+	color: #FFF;
+	display: inline-block;
 }
 ul.artefactchooser-tabs li a, ul.artefactchooser-tabs li a:link, ul.artefactchooser-tabs li a:visited, ul.artefactchooser-tabs li a:active {
-	color: #FFF !important;
+	color: #FFF;
 	background: #394189;
 }
 ul.artefactchooser-tabs li a:hover {
-	color: #ffae03 !important;
+	color: #ffae03;
 }
 ul.artefactchooser-tabs li.current a, ul.artefactchooser-tabs li.current a:link, ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
-	color: #000 !important;
+	color: #000;
 	background: #dfe1f0;
 }
-ul.artefactchooser-subtabs {
-	margin: 0 0 10px 0 !important;
-	padding: 0 !important;
-}
 ul.artefactchooser-subtabs li {
-	padding: 0 10px !important;
-	margin: 0 !important;
 	border-right: 1px solid #9da2d0;
 }
 ul.artefactchooser-subtabs li a, ul.artefactchooser-subtabs li a:link, ul.artefactchooser-subtabs li a:visited, ul.artefactchooser-subtabs li a:active {
@@ -136,7 +134,15 @@ ul.artefactchooser-subtabs li.current a:hover {
 }
 #collectionnavwrap {
 	background: #F7F7FB;
-	padding: 0 10px;
+}
+.viewheadertop {
+	padding: 5px 0;
+}
+#containerX .viewheader {
+	padding: 0;
+}
+#containerX #collectionnavwrap {
+	padding: 0;
 }
 #collection {
 	color: #FFF;
@@ -147,9 +153,12 @@ ul.colnav li a {
 .viewfooter {
 	border: 0;
 	background: #f7f7fb url(../images/feedback-shad.png) repeat-x top;
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 .submissionform {
-	background: transparent;
+	background: #ced0e0;
 }
 #feedback_pagination {
 	background: #f7f7fb;
@@ -158,7 +167,6 @@ ul.colnav li a {
 #viewmenu a {
 	color: #182768;
 }
-
 #copyview .searchquery {
 	background: none;
 	border: 0;
