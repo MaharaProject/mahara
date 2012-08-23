@@ -1,10 +1,10 @@
 <p id="{$prefix}_empty_selectlist"{if $selectedlist} class="hidden"{/if}>{if !$selectfolders}{str tag=nofilesfound section=artefact.file}{/if}</p>
-<table id="{$prefix}_selectlist"  class="fullwidth {if !$selectedlist} hidden{/if}">
+<table id="{$prefix}_selectlist"  class="fullwidth{if !$selectedlist} hidden{/if}">
  <thead>
   <tr>
    <th></th>
    <th>{str tag=Name section=artefact.file}</th>
-   <th>{str tag=Description section=artefact.file}</th>
+   <th class="filedescription">{str tag=Description section=artefact.file}</th>
    <th></th>
   </tr>
  </thead>
@@ -18,8 +18,8 @@
     <td class="valign">
       {if $selectfolders}{$displaytitle}{else}<a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" target="_blank" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}">{$displaytitle}</a>{/if}
     </td>
-    <td class="valign">{$file->description}</td>
-    <td>
+    <td class="filedescription valign">{$file->description}</td>
+    <td class="right">
        <input type="submit" class="button submit s unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
        <input type="hidden" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>

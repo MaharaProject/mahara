@@ -1,23 +1,23 @@
 {if !$filelist}
 <p>{str tag=nofilesfound section=artefact.file}</p>
 {else}
-<table id="{$prefix}_filelist" class="tablerenderer filelist">
+<table id="{$prefix}_filelist" class="tablerenderer filelist fullwidth">
  <thead>
   <tr>
-   <th></th>
-   <th>{str tag=Name section=artefact.file}</th>
-   <th>{str tag=Description section=artefact.file}</th>
+   <th class="filethumb"></th>
+   <th class="filename">{str tag=Name section=artefact.file}</th>
+   <th class="filedescription">{str tag=Description section=artefact.file}</th>
   {if !$showtags && !$editmeta}
-   <th>{str tag=Size section=artefact.file}</th>
-   <th>{str tag=Date section=artefact.file}</th>
+   <th class="filesize">{str tag=Size section=artefact.file}</th>
+   <th class="filedate">{str tag=Date section=artefact.file}</th>
   {/if}
   {if $showtags}
-   <th><div>{str tag=tags}</div></th>
+   <th class="filetags"><div>{str tag=tags}</div></th>
   {/if}
   {if $editmeta}
-   <th></th>
+   <th class="right"></th>
   {/if}
-   <th></th>
+   <th class="right btns3"></th>
   </tr>
  </thead>
  <tbody>
