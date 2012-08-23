@@ -17,11 +17,9 @@
           <td class="pendinginfo">
                   <p>{$registration->reason}</p>
           </td>
-          <td>
-            <div class="rightdiv">
+          <td class="right">
               <a class="btn" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=approve">{str tag=approve section=admin}</a>
-                 <a class="btn" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=deny">{str tag=deny section=admin}</a>
-            </div>
+                <a class="btn" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=deny">{str tag=deny section=admin}</a>
           </td>
       </tr>
 {/foreach}

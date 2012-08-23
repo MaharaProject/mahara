@@ -1,11 +1,11 @@
 {include file="header.tpl"}
 
 {if $views}
-    <table class="fullwidth">
+    <table id="groupviews" class="fullwidth">
     {foreach from=$views item=view}
         <tr class="{cycle values='r0,r1'}">
             <td>
-                <h5><a href="{$view.fullurl}">{$view.title}</a></h5>
+                <h4><a href="{$view.fullurl}">{$view.title}</a></h4>
                 {if $view.description}
                     <div>{$view.description|clean_html|safe}</div>
                 {/if}

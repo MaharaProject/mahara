@@ -13,5 +13,5 @@
 {include file="view/sharedviewrows.tpl"}
   </tbody>
 </table>
-<div id="sharedviews_pagination">{$pagination|safe}</div>
+{$pagination|safe}
 {include file="footer.tpl"}

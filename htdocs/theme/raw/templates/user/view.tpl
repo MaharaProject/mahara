@@ -2,14 +2,14 @@
   {include file="viewmicroheader.tpl"}
 {else}
   {include file="header.tpl"}
-  <table class="user-icon-name"><tr>
-  <td><img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="" /></td>
+  <h1 class="user-icon-name">
+  <span class="usericon"><img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="" /></span>
   {if $pageheadinghtml}
-    <td><h1>{$pageheadinghtml|safe}</h1></td>
+    {$pageheadinghtml|safe}
   {/if}
-  </tr></table>
+  </h1>
   {if $ownprofile && !$MOBILE}
-  <div class="rbuttons">
+  <div class="userviewrbuttons">
     <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn">{str tag=editthisview section=view}</a>
   </div>
   {/if}
@@ -18,7 +18,7 @@
 
 {if $relationship == 'pending'}
                     	<div class="message">
-                            {str tag='whymakemeyourfriend' section='group'} {$message}
+                            <label>{str tag='whymakemeyourfriend' section='group'}</label>: {$message}
                             <div>
                               {$acceptform|safe}
                               <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">{str tag=denyrequest section=group}</a>

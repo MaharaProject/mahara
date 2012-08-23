@@ -1,7 +1,7 @@
 /**
  * CSS rules for the administration section
  *
- * Copyright (C) 2006-2009 Catalyst IT
+ * Copyright (C) 2006-2012 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
 
@@ -44,17 +44,26 @@
 /* delete/close buttons */
 #close_site_submit,
 #suspenddelete #delete #edituser_delete_submit,
-#institution_suspend_submit {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
+#institution_suspend_submit,
+#networkingform_deletesubmit,
+input#delete_delete {
+	border-color: #950000;
+	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top;
 	color: #FFF;
 }
 #close_site_submit:hover,
 #suspenddelete #delete #edituser_delete_submit:hover,
-#institution_suspend_submit:hover {
-	border-color: #750000 #f69595 #f69595 #750000 !important;
-	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
+#institution_suspend_submit:hover,
+#networkingform_deletesubmit:hover,
+input#delete_delete:hover {
+	border-color: #950000;
+	background: #a40101 url(../images/btn-red-bkgd-hover.gif) repeat-x left top;
 	color: #FFF;
+}
+#close_site_submit:active, #suspenddelete #delete #edituser_delete_submit:active, #institution_suspend_submit:active, #networkingform_deletesubmit:active, input#delete_delete:active {
+    border-color: #f23131;
+    background: #f23131 url(../images/btn-red-bkgd-focus.gif) repeat-x left top;
+    color: #FFF;
 }
 
 /* close site box */
@@ -62,11 +71,11 @@
 	border: 1px solid #e98a88;
 	background: #fbeceb;
     text-align: left;
-	padding: 10px 15px;
-	width: 24%;
+	padding: 10px 1%;
+	width: 22%;
 	float: left;
-	margin: 0 0 0 10px;
-	min-height: 160px;
+	margin: 0 0 0 1.8%;
+	min-height: 170px;
 }
 #close-site h3 {
 	color: #ca0000;
@@ -80,19 +89,17 @@
 /* register site box */
 #register-site {
     text-align: left;
-	padding: 10px 15px;
-	margin: 0 10px 10px 0;
+	padding: 10px 1%;
+	margin: 0 1.8% 10px 0;
 	float: left;
-	width: 35%;
-	min-height: 160px;
+	width: 25%;
+	min-height: 170px;
 }
 #register-site-full {
-	width: 98%;
 	text-align: left;
 	padding: 10px 15px;
 }
 #register-site-full #register table {
-	width: 98%;
 	margin-top: 0;
 }
 #register-site-full #register table table table td {
@@ -189,11 +196,11 @@ input#register_register {
 
 #site-stats {
   margin: 0 0 10px 0;
-  padding: 10px 15px;
+  padding: 10px 1%;
   text-align: left;
   float: left;
-  width: 25%;
-	min-height: 160px;
+  width: 42%;
+	min-height: 170px;
 }
 #site-stats .icon-sitestats {
 	background: url(../images/icon-sitestats.png) no-repeat left;
@@ -301,9 +308,6 @@ input#register_register {
     border-bottom: 1px dotted #d1d1d1;
 	line-height: 2em;
 }
-#menuitemlist table td .button {
-	font-size: .9167em;
-}
 
 /* CONFIGURE SITE > NETWORKING */
 #networkingform_pubkey_container td {
@@ -329,14 +333,27 @@ input#register_register {
     text-decoration: none;
 	cursor: default;
 }
+.withselectedusers {
+    margin: 0;
+    float: right;
+}
 .searchform .institutions {
 	margin-left: 10px;
 }
 #bulkactions {
 	font-weight: bold;
 }
+#results {
+    clear: both;
+}
 #results h2 {
 	margin: 0 0 5px 0;
+}
+#results thead tr.search-results-pages {
+    display:none;
+}
+#results th.nojs-hidden-table-cell a {
+    margin: 0 3px;
 }
 /* SEARCH RESULTS TABLE */
 table.tablerenderer th.asc { 
@@ -363,6 +380,19 @@ table.tablerenderer th.desc {
 
 
 /* USERS > EDIT USER */
+#edituser .suspendederror {
+    font-size: .9167em;
+    padding: 10px;
+    color: #dd0221;
+    background: #ffeded;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+#edituser .suspendederror h4 {
+    margin: 0;
+}
 #edituser_institution td {
 	padding: 0;
 }
@@ -478,6 +508,19 @@ table.tablerenderer th.desc {
 /* USERS > SUSPENDED USERS */
 #suspendedlist {
 	margin: 10px 0;
+}
+form#usertype {
+    float: left;
+}
+form#buttons div span {
+    float: right;
+}
+form#buttons div span input {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+form#buttons table#suspendedlist {
+    clear: both;
 }
 
 
@@ -597,6 +640,11 @@ form#uploadcsv {
 #editmenus #menuitemlist table {
 	width: auto;
 }
+#groupquotasform {
+    border: 1px solid #d1d1d1;
+    background: #f6f6f6;
+    padding: 10px;
+}
 
 /* MANAGE GROUPS > GROUP ADMINS */
 #groupadminsform {
@@ -611,6 +659,15 @@ form#uploadcsv {
 }
 #groupadminsform table #groupadminsform_admins_container th {
 	width: 80px !important;
+}
+#groupcategories #groupcategories_submit_container th {
+    display: inline;
+    float: left;
+    padding: 0;
+}
+#groupcategories #groupcategories_submit_container td {
+    display: inline;
+    float: left;
 }
 
 /* MANAGE INSTITUTIONS > INSTITUTIONS */
@@ -765,10 +822,30 @@ form#uploadcsv {
     color: #CA0000;
 }
 
-.bulkactionform {
-    margin: .25em 0;
+form#suspend, form#changeauth {
     float: left;
-    width: 49%;
+    margin: 0 1% 5px 0;
+    background: #f6f6f6;
+    padding: 10px 1%;
+}
+form#delete {
+    float: left;
+    margin: 0 1% 5px 0;
+    padding: 10px;
+    background: #fbeceb;
+}
+form#suspend span#suspend_reason_container {
+    white-space: nowrap;
+    display: inline-block;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+form#suspend span#suspend_reason_container label {
+    font-weight: normal;
+    font-size: 0.9167em;
+}
+.bulkactionform {
+    margin: 0;
 }
 .bulkaction-title {
     font-weight: bold;

@@ -26,17 +26,12 @@
 {$INLINEJAVASCRIPT|safe}
     </script>
 {/if}
-	<!--[if lt IE 7.]>
-		<script defer type="text/javascript" src="{$WWWROOT}js/pngfix.js"></script>
-	<![endif]-->
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
-{if $DROPDOWNMENU}
-    <link rel="stylesheet" type="text/css" href="{theme_url filename='style/dropdown.css'}">
-{/if}
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="image_src" href="{$sitelogo}" />
 </head>
 {dynamic}{flush}{/dynamic}

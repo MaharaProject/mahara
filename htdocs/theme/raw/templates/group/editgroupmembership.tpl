@@ -1,3 +1,6 @@
+<div id="overlay"></div>
+<div id="groupboxwrap">
+<div class="fr"><a class="btn" href="" onclick="addElementClass('groupbox', 'hidden');return false;">{str tag=Close}</a></div>
 <h3>{str tag=editmembershipforuser section=group arg1=display_name($userid)}</h3>
 {if !$data}
 <p>{str tag=nogroups section=group}</p>
@@ -5,8 +8,8 @@
 <div class="fullwidth center">
   {foreach from=$data key=addtype item=groups}
     {if $groups}
-<div class="{cycle values='fl,fr'} jointype">
-  <div><strong>{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</strong></div>
+<div class="fl jointype">
+  <h3>{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h3>
   <ul>
       {foreach from=$groups item=group}
     <li>
@@ -21,4 +24,4 @@
 </div>
 {/if}
 <div class="cb"></div>
-<p class="fullwidth center"><a class="btn" href="" onclick="addElementClass('groupbox', 'hidden');return false;">{str tag=Close}</a></p>
+</div>

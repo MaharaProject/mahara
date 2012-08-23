@@ -23,7 +23,7 @@
        {/foreach}
     </div>
     {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
-    <div class="fr">
+    <div class="withselectedusers">
     <strong>{str tag=withselectedusers section=admin}:</strong>&nbsp;
     {if $USER->get('admin') || $USER->is_institutional_admin()}
     <form class="nojs-hidden-inline" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">

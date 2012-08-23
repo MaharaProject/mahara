@@ -5,10 +5,14 @@
 #page {
 	padding: 0 10px 10px 10px;
 }
+
 /********************** Top pane of Edit View *************************/
 #top-pane {
 	background: #EEE;
-	padding: 1px 0 0 0;
+	padding: 0;
+}
+.rd-edittab {
+    display: none;
 }
 
 /* The tabs that allow you to select a blocktype category */
@@ -33,7 +37,6 @@
 #noblocks {
     color: #666;
 }
-
 /******************* Between Panes **************************************/
 #layout-link {
 	background: url(../images/icon-change.gif) no-repeat left center;
@@ -67,8 +70,8 @@
 #column-container .column-header input[disabled="disabled"] {
     color: #ccc;
 }
-
-.column-content .add-button input {
+.column-header {
+    background: #EEEEEE;
 }
 
 #block-placeholder {
@@ -81,6 +84,9 @@
 .blockinstance.configure {
   border: 7px solid #eee;
   background: #fff;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
  }
 .blockinstance-content p.noartefacts,
 .blockinstance-content .description {
@@ -131,7 +137,6 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 
 
-
 #copyview .searchquery {
 	background: #eee;
 	border: 1px solid #d1d1d1;
@@ -140,15 +145,27 @@ ul.artefactchooser-subtabs li.current a:active {
 	margin-bottom: 10px;
 }
 
-/* todo: test this */
 .column-content .add-button {
     margin: 5px 0;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #7d99ae #003c74 #003c74 #7d99ae;
+}
+.column-content .add-button input, #feedbacktable .makepublicbtn input {
+    font-size: .9167em;
+    border: 1px solid #5d5d5d;
+    background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
+    color: #333333 !important;
+    padding: 0 3px;
+    vertical-align: text-bottom;
+    margin: 0;
+}
+.column-content .add-button input:hover, #feedbacktable .makepublicbtn input:hover {
+    border: 1px solid #454545;
+    background: #e8e8e8 url(../images/btn-bkgd-small-hover.png) repeat-x bottom left;
+}
+.column-content .add-button input:active, #feedbacktable .makepublicbtn input:active {
+    border: 1px solid #454545;
+    background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
 }
 .add-button input.newblockhere {
-    font-weight: normal;
     width: 100%;
     margin: 0;
 }
@@ -159,21 +176,22 @@ body:last-child:not(:root:root) .newblockhere {
 
 /* VIEWS */
 #feedbacktable .fr {
-	margin-top: 3px;
+	margin-top: 2px;
+    white-space: nowrap;
+    vertical-align: top;
 }
-#feedbacktable #delete_comment_delete_comment_submit {
-	background: url(../images/mini-delete.gif) no-repeat;
+#feedbacktable input {
 	border: 0;
 	cursor: pointer;
-	float: right;
-	font-size: 1%;
-	text-indent: -9999px;
-	margin-left: 5px;
+	margin-left: 3px;
 }
 
 /* views footer */
 .viewfooter {
 	border: 1px solid #eee;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 #viewmenu {
 	color: #d1d1d1;
@@ -212,14 +230,8 @@ body:last-child:not(:root:root) .newblockhere {
 #userviewstable {
 	width: 100%;
 }
-* html #userviewstable {
-	width: 98%;
-}
 .viewlist {
 	width: 100%;
-}
-* html .viewlist {
-	width: 98%;
 }
 .viewlist h4 {
 	margin-bottom: 0;
@@ -255,16 +267,4 @@ ul.colnav li.selected span {
 	background: #fff;
 	text-decoration: none;
 	font-weight: bold;
-}
-
-#approve_deny_friendrequest_deny {
-	border-color: #f69595 #750000 #750000 #f69595 !important;
-	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top !important;
-	color: #FFF;
-	margin-left: 5px;
-}
-#approve_deny_friendrequest_deny:hover {
-	border-color: #750000 #f69595 #f69595 #750000 !important;
-	background: #f23131 url(../images/btn-red-bkgd-hover.gif) repeat-x left top !important;
-	color: #FFF;
 }
