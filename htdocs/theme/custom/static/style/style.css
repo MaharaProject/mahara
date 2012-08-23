@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @author     Paul Walker <paul.walker@catalyst-eu.net>
+ * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
+ * @copyright  (C) 2006-2012 Catalyst IT Ltd http://catalyst.net.nz
  */
 
 /* General rules */
@@ -94,16 +94,14 @@ h6 {
 /* Alternative row background colours */
 .r0,
 .r0 td,
-.d0 {
+.d0,
+.friends {
     background-color: #fff4ea;
 }
 .r1,
 .r1 td,
 .d1 {
     background-color: #fff4ea;
-}
-tr.folder td {
-	background: #cfcfcf url(../images/btn-bkgd.png) repeat-x top !important;
 }
 
 /**************************** Pagination ****************************/
@@ -198,13 +196,14 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #182768;
 }
-/* except those that shouldn't */
-span.btn a.icon, a span.icon {
-	color: #000000;
-}
 /* buttons that look like links */
-.linkbtn {
-	color: #182768;
+.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
+	color: #182768 !important;
+    text-decoration: none;
+}
+/* links that need to look like buttons */
+span.btn a.icon, a span.icon {
+    color: #FFFFFF;
 }
 
 /* Search buttons */
@@ -224,41 +223,18 @@ span.btn a.icon, a span.icon {
 	width: 23px;
 	margin-left: 0;
 }
-input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact, .btn, div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.submit.btn-add, button.btn-add, div.btn-msg input.submit, div.btn-edit input.submit, .btn-reply, .btn-subscribe input.submit, .rbuttons, .rbuttons a {
- * filter:chroma(color=#FFFFFF);
-}
-
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
-    background: none;
-    margin-top:0px;
-    padding-top:0px;
-    min-width: 970px;
-    width: 90%;
-}
-#top-wrapper {
-    background: transparent;
-    border: none;
-}
-#containerX #top-wrapper {
-	height: auto;
-    background: transparent;
+    width: 95%;
+    max-width: 1232px;
 }
 #loading-box {
     background-color: #000000 !important;
 	color: #FFFFFF;
 }
 #site-logo {
-	padding: 10px 10px 10px 0;
-}
-#top-wrapper ul,
-#top-wrapper li {
-    text-align: right;
-    display: inline;
-}
-#header-right {
-	padding: 5px 0 0 10px;
+	margin: 10px 10px 10px 0;
 }
 #languageselect label {
     color: #FFFFFF;
@@ -272,13 +248,6 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 }
 
 /**************** TOP NAVIGATION ****************/
-#right-nav ul {
-  margin: 1.5em 1em 1em 0;
-  min-width: 20em;
-}
-#right-nav li {
-  padding: 0;
-}
 #right-nav li a,
 #right-nav li.identity a {
   color: #fff;
@@ -289,39 +258,26 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 }
 
 #main-nav {
-    padding: 0;
-    margin: 0;
 	height: 32px;
 	background: #f6871f;
 	border-left: 2px solid #FFFFFF;
 	border-top: 2px solid #FFFFFF;
 	border-right: 2px solid #FFFFFF;
-	border-bottom: 0;
-}
-#main-nav ul {
-	float: left;
 }
 #main-nav li {
-    float: left;
     color: #FFFFFF;
     text-decoration: none;
     line-height: 32px;
     font-weight: bold;
-	font-size: 15px;
-	margin: 0;
-	padding: 0;
 	background-color: none;
 }
 #main-nav li a,
 #main-nav li a:link,
 #main-nav li a:visited,
 #main-nav li a:active {
-	margin: 0;
-	padding: 0px 15px 0px;
+	padding: 0px 15px;
 	background-color: none;
     color: #FFFFFF;
-	width:auto;
-	display:block;
 }
 #main-nav li a:hover {
     text-decoration: underline;
@@ -333,13 +289,10 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 #main-nav li.selected a:active {
     color: #333333;
 	background: #fff4ea;
-	padding: 0px 15px 0px;
 }
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
     padding: 0 0 12px 0;
-    margin: 0;
-    font-size: 13px;
 	line-height: 29px;
     font-weight: bold;
     text-align: left;
@@ -365,6 +318,7 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 #sub-nav li a:active {
     color: #14336F;
 	font-weight: normal;
+    padding: 0 10px;
 }
 #sub-nav li a:hover {
     text-decoration: underline;
@@ -382,7 +336,6 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 /**************** IN PAGE TAB NAVIGATION ****************/
 ul.in-page-tabs,
 ul.edit-view-tabs {
-  font-size: 12px;
 	height: 28px;
 	line-height: 28px;
 }
@@ -397,6 +350,7 @@ ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visi
   color: #d66800;
 	height: 28px;
 	line-height: 28px;
+    padding: 5px 10px;
 }
 ul.in-page-tabs li a:hover, ul.in-page-tabs li input.linkbtn:hover,
 ul.edit-view-tabs li a:hover {
@@ -415,7 +369,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 }
 
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
+#mainmiddle {
 	background: #FFF;
 }
 
@@ -423,14 +377,11 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 #left-column,
 #right-column {
 	background: none;
-    padding: 15px 0 0 0;
-	width: 240px;
-	min-width: 240px;
-	margin-right: 10px;
+    margin-top: 15px;
 }
 div.sideblock {
 	background: #182768 url(../images/sidebar-bottom.png) no-repeat bottom left;
-	margin-bottom: 15px;
+    margin: 0 0 15px 0;
 	padding: 0 0 20px 0;
 	width: 240px;
 }
@@ -443,7 +394,6 @@ div.sideblock .sidebar-content {
 	background: #f1f2f8;
 }
 div.sideblock h3 {
-	font-size: 15px;
 	color: #FFFFFF;
 }
 div.sideblock h3 a,
@@ -470,22 +420,6 @@ div.sideblock .sidebar-content a:hover,
 #sb-profile .sidebar-header {
 	min-height:	57px;
 }
-#sb-profile .sidebar-content {
-	padding-top: 0;
-	padding-bottom: 0;
-}
-#sb-profile .sidebar-content ul li#groups,
-#sb-profile .sidebar-content #changeuser {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-#sb-profile #user-profileicon {
-	padding-top: 0;
-}
-#login_login_username_container input,
-#login_login_password_container input {
-	width: 210px;
-}
 #quota_message {
 	margin: 0;
 }
@@ -496,34 +430,15 @@ div.sideblock .sidebar-content a:hover,
 	padding: .5em 0 1.5em 0;
   color: #FFFFFF;
 }
-#footernav  {
-  color: #FFFFFF;
-  margin: 18px 10px 10px 10px;
-}
-#footernav a,
-#footernav a:link,
-#footernav a:active,
-#footernav a:visited,
-#footernav a:hover {
+#footer a,
+#footer a:link,
+#footer a:active,
+#footer a:visited,
+#footer a:hover {
     color: #FFFFFF;
 }
-#performance-info {
-    color: #fff;
-}
-#performance-info span {
-	color: #fff;
-}
-#version  {
-  color: #FFFFFF;
-}
-#powered-by {
-	margin: 5px;
-}
-
 
 /****************************** PAGE BY PAGE STYLES **********************************/
-/* Group: about */
-
 /* Settings > Preferences */
 #accountprefs table h3 {
 	border-bottom: 1px dotted #888888
@@ -542,10 +457,6 @@ div.sideblock .sidebar-content a:hover,
 .home-info-table {
 	border: 0;
 }
-
-#micro #footer-wrap {
-	background: transparent;
-}
 .viewheader a {
 	color: #FFF;
 }
@@ -562,29 +473,31 @@ div.sideblock .sidebar-content a:hover,
 
 /* collection */
 ul.colnav li a {
-	color: #FFF !important;
-	background: #F6871F !important;
+	color: #FFF;
+	background: #F6871F;
 }
 
 /**************** DROPDOWN NAVIGATION ****************/
-/**************** SUB NAVIGATION *********************/
-
 #main-nav .dropdown-sub {
-    top: 32px !important;
+    top: 32px;
+    font-size: .9167em;
+}
+#main-nav .dropdown-sub li {
+    line-height: normal;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,
 #main-nav .dropdown-sub li a:visited,
 #main-nav .dropdown-sub li a:active {
-    color: #FFFFFF !important;
-    background: #f6871f !important;
-	font-size: .9167em !important;
-	padding: 4px 15px !important;
+    color: #FFFFFF;
+    background: #f6871f;
+    padding: 6px 15px;
+    text-decoration: none;
 }
-#main-nav .dropdown-sub li a:hover{
-    color: #1A428F !important;
-    text-decoration: none !important;
-	background: #fff4ea !important;
+#main-nav .dropdown-sub li a:hover {
+    color: #1A428F;
+    text-decoration: none;
+    background: #fff4ea;
 }
 
 

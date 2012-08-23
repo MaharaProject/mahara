@@ -1,71 +1,75 @@
 body {
-	font-family: Arial, Helvetica, sans-serif !important;
-	font-size: 12px !important;
+	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
+	font-size: 75% !important;
 	padding: 0 !important;
 	color: #333333 !important;
-	background: #FFF !important;
+    line-height: 1.333em !important;
+    background-color: #FFFFFF !important;
 }
-td {
-	font-family: Arial, Helvetica, sans-serif !important;
+td, th {
+	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
 	font-size: 1em !important;
-	padding: .5em !important;
-	color: #333333 !important;
+	padding: 3px 5px !important;
 }
 pre {
-    font: 12px monospace !important;
+    font: 1em monospace !important;
 }
-
 a,
 a:link,
 a:active,
 a:visited,
 a:hover {
-    color: #333333 !important;
-    text-decoration: none !important;
+    text-decoration: underline !important;
 }
-
 h1 {
-    color: #333333 !important;
     font-weight: normal !important;
-    margin: 0 0 .5em 0 !important;
+    margin: 0 0 10px 0 !important;
     padding: 0 !important;
     font-size: 2em !important;
+    line-height: 1.25em !important;
 }
 h2 {
-    color: #333333 !important;
     font-weight: bold !important;
-    margin: 0 0 .5em 0 !important;
+    margin: 15px 0 10px 0 !important;
     padding: 0 !important;
-    font-size: 1.8em !important;
+    font-size: 1.5em !important;
+    line-height: 1.25em !important;
 }
 
 h3 {
-    color: #333333 !important;
     font-weight: bold !important;
-    margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.4em !important;
+    margin: 15px 0 10px 0 !important;
+    font-size: 1.3333em !important;
+    line-height: 1.25em !important;
 }
 h4 {
-    color: #333333 !important;
     font-weight: bold !important;
-    margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.3em !important;
+    margin: 15px 0 10px 0 !important;
+    font-size: 1.1667em !important;
+    line-height: 1.25em !important;
 }
 
 h5 {
-    color: #333333 !important;
     font-weight: bold !important;
-    margin: .5em 0 !important;
-    font-size: 1.2em !important;
+    margin: 15px 0 10px 0 !important;
+    font-size: 1em !important;
+    line-height: 1.25em !important;
 }
 h6 {
-    color: #333333 !important;
     font-weight: bold !important;
-    margin: .5em 0 !important;
-    font-size: 1em !important;
+    margin: 15px 0 10px 0 !important;
+    font-size: .9167em !important;
+    line-height: 1.25em !important;
 }
 
 ul {
     padding: 0 !important;
-    margin: .5em 0 1em 0 !important;
+    margin: 5px 0 10px 0 !important;
+    list-style: disc !important;
+}
+ul li {
+    margin: 0 0 3px 20px !important;
+}
+p {
+    margin: 10px 0 !important;
 }
