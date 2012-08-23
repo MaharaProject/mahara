@@ -1,18 +1,17 @@
 {include file="header.tpl"}
-
-<h3>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h3>
 {if $admin}
-<div id="forumbtns" class="rbuttons">
+<div id="forumbtns">
 <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn newforum">{str tag="newforum" section=interaction.forum}</a>
 </div>
 {/if}
+<h2>{str tag="nameplural" section=interaction.forum}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
 {if $forums}
 <div id="viewforum"><table id="forumslist" class="fullwidth nohead">
 	<tr>
 		<th>{str tag="name" section="interaction.forum"}</th>
 		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
-		<th></th>
-		<th></th>
+		<th class="subscribeth"></th>
+		<th class="right btns2"></th>
 	</tr>
     {foreach from=$forums item=forum}
     <tr class="{cycle values='r0,r1'}">
@@ -31,14 +30,12 @@
             </div>
             {/if}
         </td>
-        <td class="center" width="15%">{$forum->topiccount}</td>
+        <td class="center">{$forum->topiccount}</td>
         <td class="nowrap s subscribetd">{if $forum->subscribe}{$forum->subscribe|safe}{/if}</td>
-        <td class="right">
+        <td class="right btns2">
         {if $admin}
-            <div class="btn-spacer s">
                 <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-edit" title="{str tag=edit}"></a>
                 <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="icon btn-big-del" title="{str tag=delete}"></a>
-            </div>
         {/if}
         </td>
 	</tr>
