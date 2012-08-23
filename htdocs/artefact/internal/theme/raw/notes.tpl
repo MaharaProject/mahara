@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <p>{str tag=notesdescription section=artefact.internal}</p>
-<table id="notes" class="fullwidth listing">
+<table id="notes" class="fullwidth">
   <thead>
     <tr>
       <th>{str tag=Note section=artefact.internal}</th>
@@ -12,11 +12,11 @@
   {foreach from=$data item=n}
     {assign var=shortdescription value=$n->description|str_shorten_html:100:true|safe}
     <tr class="{cycle values=r0,r1}">
-      <td>
+      <td class="notetitle">
       {if $n->locked}
-        <a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a>
+        <h4><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a></h4>
       {else}
-        <a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a>
+        <h4><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a></h4>
       {/if}
         <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
       </td>
@@ -24,7 +24,7 @@
       {foreach from=$n->views item=v}
         <div>
           <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
-          {if $v.ownername}{str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
+          {if $v.ownername} - {str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
         </div>
       {/foreach}
       </td>
