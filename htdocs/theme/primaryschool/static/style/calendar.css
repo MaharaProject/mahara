@@ -1,5 +1,4 @@
 /* The main calendar widget.  DIV containing a table. */
-
 div.calendar {
 	position: relative;
 	font-size: 75%;
@@ -34,20 +33,12 @@ div.calendar {
 	color: #FFF;
 	vertical-align: middle;
 }
-.calendar thead .headrow { /* Row <TR> containing navigation buttons */
-}
-.headrow td.button {
-}
 .calendar thead .name { /* Cells <TD> containing the day names */
 	text-align: center;
 	color: #FFF;
 }
-.calendar thead .weekend { /* How a weekend day name shows in header */
-}
 .calendar thead .hilite div { /* How do the buttons in header appear when hover */
 	background-color: #3a54a2;
-}
-.calendar thead .active { /* Active (pressed) buttons in header */
 }
 .calendar thead .daynames { /* Row <TR> containing the day names */
 	background: #F6871F;
@@ -59,7 +50,6 @@ div.calendar {
 	padding-bottom: 3px;
 }
 /* The body part -- contains all the days in month. */
-
 .calendar tbody .day { /* Cells <TD> containing month days dates */
 	width: 20px;
 	text-align: right;
@@ -118,16 +108,7 @@ div.calendar {
 	text-align: center;
 	color: #FFF;
 }
-.calendar tfoot .footrow { /* The <TR> in footer (only one right now) */
-}
-.calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
-}
-.calendar tfoot .hilite { /* Hover style for buttons in footer */
-}
-.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
-}
 /* Combo boxes (menus that display months/years for direct selection) */
-
 .calendar .combo {
 	position: absolute;
 	display: none;

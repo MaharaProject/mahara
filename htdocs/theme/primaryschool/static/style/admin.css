@@ -6,9 +6,6 @@
 	background-color: #FFF8E2;
 	border-color: #FFF4CF;
 }
-#site-stats {
-	width: 28.8%;
-}
 /* CONFIGURE SITE > LINKS AND RESOURCES MENU */
 #menuitemlist table td {
 	background-color: #f5f8fa;
@@ -18,7 +15,4 @@
 }
 #menuitemlist tr.edit td {
 	background-color: #f3f7ec;
-}
-.admin-warning-box {
-	margin-bottom: 10px;
 }
