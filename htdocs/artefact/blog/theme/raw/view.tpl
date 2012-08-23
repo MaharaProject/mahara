@@ -12,11 +12,9 @@
                 {if $blog->get('tags')}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}</div>
 
                 {if $posts}
-				<table id="postlist" class="tablerenderer fullwidth nohead">
-					<tbody>
+				<div id="postlist">
                     {$posts.tablerows|safe}
-					</tbody>
-				</table>
+				</div>
                 <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
 <script>
 addLoadEvent(function() {literal}{{/literal}
