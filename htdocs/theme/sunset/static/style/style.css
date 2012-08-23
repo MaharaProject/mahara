@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,13 @@
  *
  * @author     Paul Walker <paul.walker@catalyst-eu.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
+ * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
  */
 
 /* General rules */
-body {
+body, body#micro {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
-}
-body#micro {
-	background: #f7be23;
 }
 acronym {
     border-bottom: 1px dotted #d4d1c0;
@@ -88,9 +85,6 @@ h6 {
 .listing div h3 a:link {
     color: #8E1901 !important;
 }
-.main-column table h3 a:hover,
-.listing div h3 a:hover {
-}
 .tablerenderer-loading {
     border: 1px solid #8E1901;
 	background-color: #ffffff;
@@ -105,14 +99,11 @@ h6 {
 	border-top: 1px solid #8E1901;
 }
 /* Alternative row background colours */
-.r0, .r0 td, .d0 {
+.r0, .r0 td, .d0, .friends {
     background-color: #fff9ea;
 }
 .r1, .r1 td, .d1 {
     background-color: #f0e8e0;
-}
-tr.folder td {
-	background-color: #f3dc82 !important;
 }
 
 /**************************** Pagination ****************************/
@@ -201,13 +192,14 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #9a4c01;
 }
-/* except those that shouldn't */
-span.btn a.icon, a span.icon {
-	color: #FFF;
-}
 /* buttons that look like links */
-.linkbtn {
-	color: #9a4c01;
+.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
+	color: #9a4c01 !important;
+	text-decoration: none;
+}
+/* links that need to look like buttons */
+span.btn a.icon, a span.icon {
+    color: #FFFFFF;
 }
 
 /* Search buttons */
@@ -228,21 +220,15 @@ span.btn a.icon, a span.icon {
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
-    background-color: transparent;
-    margin-top:0px;
-    padding-top:0px;
     width: 90%;
-	min-width: 960px;
-}
-#top-wrapper {
-    border: none;
+    min-width: 960px;
 }
 #loading-box {
     color: #fff;
     background-color: #8E1901;
 }
 #site-logo {
-	padding: 25px 25px 0 0
+    margin: 15px 0 0 0;
 }
 /* Search and language bar */
 #languageselect {
@@ -258,8 +244,6 @@ span.btn a.icon, a span.icon {
 #header-right label {
     color: #FFFFFF;
 }
-
-/**************** TOP NAVIGATION ****************/
 #right-nav li a {
 	color: #f7be23;
 }
@@ -272,22 +256,18 @@ span.btn a.icon, a span.icon {
   text-decoration: underline;
 }
 
+/**************** TOP NAVIGATION ****************/
 #main-nav {
     padding: 0;
     margin: 0;
     height: 33px;
-	border:none;
-    background: transparent url(../images/transparency.png) repeat center center;	
+    background: transparent url(../images/transparency.png) repeat center center;
 }
 #main-nav li {
-    float:left;
     color: #FFFFFF;
     text-decoration: none;
     font-weight: bold;
-	font-size: 14px;
     line-height: 20px;
-	margin: 0 0 0 5px;
-	padding: 0;
 }
 #main-nav li a,
 #main-nav li a:link,
@@ -296,8 +276,6 @@ span.btn a.icon, a span.icon {
 	margin: 0;
     padding: 6px 15px 7px 15px;
     color: #FFFFFF;
-	width:auto;
-	display:block;
 }
 #main-nav li a:hover {
     color: #FFFFFF;
@@ -316,25 +294,18 @@ span.btn a.icon, a span.icon {
 
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
     font-weight: bold;
     text-align: left;
-    background: #ffffff url(../images/subnav-bg.jpg) repeat-x bottom center;;
+    background: #ffffff url(../images/subnav-bg.jpg) repeat-x bottom center;
     height: 35px;
-	width:100%;
-	border:none;
 }
 #sub-nav ul {
-	padding: 8px 0 5px 20px;
     background: transparent;
 }
 #sub-nav li {
-    padding: 5px 13px 5px 0;
+    padding: 0 7px;
     line-height: 20px;
     height: 35px;
-    margin: 0 !important;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -347,7 +318,6 @@ span.btn a.icon, a span.icon {
     text-decoration: underline;
 }
 #sub-nav li.selected {
-    margin: 0;
 	background: transparent;
 }
 #sub-nav li.selected a,
@@ -359,6 +329,13 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs, ul.edit-view-tabs {
+    background: none;
+}
+ul.in-page-tabs li, ul.edit-view-tabs li {
+    display: inline-block;
+    margin: 0 1px 0 0;
+}
 ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
 ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #fadc8a;
@@ -377,77 +354,36 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 
 
 /**************** MAIN CONTENT *****************/
-#mainmiddle {
-	background: none;
-}
-#main-wrapper {
+#mainmiddlewrap {
 	margin-top: 15px;
-	background: none;
 }
-.main-column {
-	background: #FFF;
+#containerX #mainmiddlewrap {
+    margin-top: 0;
 }
-.main-column-narrow {
-		width: 69%;
-}
-
-/* system messages between nav and main content */
-/* system messages */
-.message {
-    color: #8E1901;
-    background-color: #efd7c2;
-    border: 1px dotted #8E1901;
+#main-column-container {
+    background: #FFF;
 }
 
 /**************** SIDEBAR *********/
-#left-column,
-#right-column {
-    min-width: 260px;
-	background: transparent;
-    padding: 0px;
-}
 div.sideblock {
-	color: #000000;
-    background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x 0px 10px;
-    margin: 0 15px 15px 0;
-    padding: 8px 15px 15px 15px;
+    margin: 0 0 10px 0;
+    background: #FFFFFF;
 }
-div.sideblock h3 {
-    padding: 0;
-    margin: 3px 0 20px 0;
-    color: #8E1901;
+div.sideblock .sidebar-header {
+    padding: 10px 10px 7px 10px;
+    background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x bottom left;
 }
+div.sideblock h3,
 div.sideblock h3 a,
 div.sideblock h3 a:link,
 div.sideblock h3 a:visited,
 div.sideblock h3 a:active {
 	color: #8E1901 !important;
 }
-div.sideblock p {
-    color: #000000;
-}
-div.sideblock ul li {
-	color: #000000;
-}
-div.sideblock ul ul {
-	list-style-type: square;
-	color: #000000;
-}
-div#sb-profile {
-  background: #FFF;
-}
-div#sb-profile h3 {
-  background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x bottom left;
-  padding: 0 15px 15px 15px;
-  margin-left: -15px;
-  margin-right: -15px;
-}
 
 /* Side Profile */
 #user-profileicon {
 	margin-top: 35px;
-	padding-top: 5px;
-	padding-right: 5px;
 }
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
@@ -456,8 +392,6 @@ div#sb-profile h3 {
 	color: #8E1901;
 }
 
-/* Side Online Users */
-
 /* Side Quota Bar */
 #quota_used {
     color: #c66c14;
@@ -465,7 +399,7 @@ div#sb-profile h3 {
 #quota_total {
     color: #c66c14;
 }
-#quota_bar, 
+#quota_bar,
 #quota_bar_100 {
     background: url(../images/quota_bar_bg.gif) no-repeat;
 }
@@ -476,28 +410,11 @@ div#sb-profile h3 {
 
 
 /******************** FOOTER ****************************/
-#footer-wrap {
-    background-color: transparent;
-    border: 0;
-}
 #footer {
-		padding: 10px;
+    color: #8E1901;
 }
-#footernav {
-  color: #8E1901;
-} 
-#performance-info {
-    color: #9A4C01;
-}
-#performance-info span {
-    color: #9A4C01;
-}
-#version {
-  color: #8E1901;
-} 
-
-body#micro #footer-wrap #performance-info {
-	padding-top: 10px;
+#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
+    color: #8E1901;
 }
 /****************************** PAGE BY PAGE STYLES **********************************/
 
@@ -505,9 +422,6 @@ body#micro #footer-wrap #performance-info {
 #accountprefs table h3 {
     color: #8E1901;
 	border-bottom: 1px solid #8E1901;
-}
-body#micro #top-wrapper {
-	background: transparent;
 }
 .viewheader .title {
 	color: #FFF;
@@ -529,23 +443,64 @@ body#micro #top-wrapper {
 	background: #ffeebf;
 }
 
-/**************** DROPDOWN NAVIGATION ****************/
-/**************** SUB NAVIGATION *********************/
-
-#main-nav .dropdown-sub {
-    top: 33px !important;
+/* Forum */
+/* Forum list */
+#forumslist {
+    border-bottom: 1px solid #8E1901;
 }
-#main-nav .dropdown-sub li a,
-#main-nav .dropdown-sub li a:link,
-#main-nav .dropdown-sub li a:visited,
-#main-nav .dropdown-sub li a:active {
-    color: #8E1901 !important;
-    background: #e1cfa1 !important;
-    font-size: .9167em !important;
-    padding: 3px 15px !important;
+#forumslist th {
+    border-bottom: 1px solid #8E1901;
+}
+/* Topic list */
+#forumtopicstable {
+    border-bottom: 1px solid #8E1901;
+}
+#forumtopicstable th {
+    border-bottom: 1px solid #8E1901;
+}
+/* topic types */
+.stickytopic td {
+    background-color: #f7be23;
+    border-bottom: 1px solid #FFF;
+}
+/* admin & moderator */
+.groupadmin {
+    color: #3366CC;
+}
+.moderator {
+    color: #993399;
+}
+/* Posts */
+.forumpost {
+    border-color: #f9f5ec;
+    background-color: #f9f5ec;
+}
+.forumpostleft {
+    background-color: #f9f5ec;
+}
+.posttime {
+    color: #8e1901;
+}
+
+/**************** DROPDOWN NAVIGATION ****************/
+#main-nav .dropdown-sub {
+    top: 33px;
+    font-size: .9167em;
+}
+#main-nav .dropdown-sub li a, #main-nav .dropdown-sub li a:link, #main-nav .dropdown-sub li a:visited, #main-nav .dropdown-sub li a:active {
+    color: #8E1901;
+    background: #e1cfa1;
+    padding: 3px 15px;
+    text-decoration: none;
 }
 #main-nav .dropdown-sub li a:hover {
-    color: #FFFFFF !important;
-    background: #c66c14 !important;
-    text-decoration: underline !important;
+    color: #FFFFFF;
+    background: #c66c14;
+    text-decoration: underline;
+}
+#main-nav #dropdown-nav li.selected ul.dropdown-sub li a {
+    font-weight: normal;
+}
+#main-nav #dropdown-nav li.selected ul.dropdown-sub li.selected a {
+    font-weight: bold;
 }
