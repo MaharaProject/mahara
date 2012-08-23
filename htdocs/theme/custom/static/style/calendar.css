@@ -38,22 +38,13 @@ div.calendar {
 	color: #FFF;
 	vertical-align: middle;
 }
-.calendar thead .headrow { /* Row <TR> containing navigation buttons */
-}
-.headrow td.button {
-}
 .calendar thead .name { /* Cells <TD> containing the day names */
 	text-align: center;
 	color: #FFF;
 }
-.calendar thead .weekend { /* How a weekend day name shows in header */
-}
 
 .calendar thead .hilite div { /* How do the buttons in header appear when hover */
 	background-color: #4b4b4b;
-}
-
-.calendar thead .active { /* Active (pressed) buttons in header */
 }
 
 .calendar thead .daynames { /* Row <TR> containing the day names */
@@ -137,17 +128,6 @@ div.calendar {
 	background: #2b2b2b;
 	text-align: center;
 	color: #FFF;
-}
-.calendar tfoot .footrow { /* The <TR> in footer (only one right now) */
-}
-
-.calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
-}
-
-.calendar tfoot .hilite { /* Hover style for buttons in footer */
-}
-
-.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
 }
 
 /* Combo boxes (menus that display months/years for direct selection) */
