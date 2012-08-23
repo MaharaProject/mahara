@@ -4,7 +4,7 @@
 
 {$editform|safe}
 
-<h4>{str tag="replyto" section="interaction.forum"}</h4>
+<div class="replyto"><h4>{str tag="replyto" section="interaction.forum"}</h4>
 {include file="interaction:forum:simplepost.tpl" post=$parent groupadmins=$groupadmins}
-
+</div>
 {include file="footer.tpl"}

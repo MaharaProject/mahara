@@ -1,60 +1,32 @@
 /**
  * CSS rules for the forum interaction plugin
  *
- * Copyright (C) 2006-2009 Catalyst IT
+ * Copyright (C) 2006-2012 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
  
 /* top buttons */
 #forumbtns {
-    right: 10px;
-    top: 10px;
-	* top: -30px;
-    * right: 0;
-}
-* html #forumbtns {
-	right: 30px;
+	line-height: 2em;
+	float: right;
 }
 #forumbtns a.btn {
-	* display: block;
-	* float: left;
+	display: block;
+	float: left;
 }
 #forumbtns .editforum {
 	font-weight: bold;
 }
-#subscribe_forum div.btn-subscribe input.submit {
-	* display: block;
-	* float: left;
-	* filter: none;
+#subscribe_forum, #subscribe_forum div {
+	display: inline-block;
 }
-#subscribe_forum span.help a img {
-	* zoom: 1;
-	* display: block;
-	* float: left;
-}
-
 /* forum description */
 #forumdescription {
-	margin: 5px 0;
 	clear: both;
-}
-
-/* Edit and Delete in list */
-.btn-spacer a {
-	margin-left: 10px;
-}
-.btn-spacer a.btn-big-del {
-	margin-left: 3px;
+	margin: 0 0 10px 0;
 }
 /* Forum list */
-#forumslist{
-	border-bottom: 1px solid #ccc;
-}
-#forumslist th{
-	border-bottom: 1px solid #ccc;
-}
-#forumslist table th,
-#forumslist table td {
+#forumslist .subscribetd table th, #forumslist .subscribetd table td {
 	background: none;
 	padding-top: 0;
 	border: 0;
@@ -66,60 +38,33 @@
 #forumslist td .inlinelist span {
 	font-weight: bold;
 }
-#forumslist td.right {
-	width: 60px;
-}
-
 /* Topic list */
 #viewforum {
 	padding: 10px;
 	margin: 0;
-	border: 1px solid #eee;
-}
-#viewforum h3 {
-	font-size: 1.3333em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 #viewforum .rbuttons {
-	right: 10px;
-	top: 10px;
-	* top: -30px;
-	* right: 0;
-}
-* html #viewforum .rbuttons {
-	right: 35px;
+	margin-top: -28px;
 }
 /* to get user picts to align with text */
-.forumuser,
-.inlinelist a img {
-    vertical-align: top;
+.forumuser, .inlinelist a img {
+	vertical-align: middle;
+}
+.postertd a img {
+	vertical-align: middle;
 }
 /* topic types */
-.stickytopic td {
-	background-color: #fffcd8;
-	border-bottom: 2px solid #fff;
-}
-#forumtopicstable h4 {
+#forumtopicstable h5 {
 	margin: 0;
-}
-#forumtopicstable td.narrow {
-	width: 15px;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0){
-#forumtopicstable td div.btn-spacer {
-	width: 50px;
-	text-align: right;
-}
 }
 #forumtopicstable td br {
 	line-height: .3333em;
 }
-#forumtopicstable td.right {
-	width: 60px;
-}
-
 /* Forum Pagination */
 #viewforum div.pagination {
-	background: #eee;
 	margin: 0;
 	padding: 5px 3px;
 }
@@ -130,6 +75,7 @@
 /* Forum Action Selector */
 .forumselectwrap {
 	padding: 10px 0 0 0;
+	font-size: 0.9167em;
 }
 /* Forum footer */
 .forumfooter {
@@ -141,65 +87,40 @@
 	padding: 5px;
 	margin: 5px 0;
 }
-.forummods .inlinelist {
-	vertical-align: middle;
-}
 .forummods a {
 	margin-right: 5px;
 }
-.groupadmin {
-}
-.moderator {
-}
-
-
 /* Posts */
 .closed {
 	margin: 0 0 10px 0;
+	font-style: italic;
 }
 .forumpost {
-	border: 2px solid #eee;
 	clear: both;
 }
-.forumsubject {
-	border-bottom: 2px solid #eee;
-	background: #eee;
-}
-.forumsubject h6 {
-	margin: 0 !important;
-}
-.forumpostleft {
-	width: 160px;
-	border-right: 2px solid #eee;
-	text-align: center;
-    font-size: .9167em;
-	background: #eeeeee;
+.forumsubject h5 {
+	margin: 0;
 }
 .postedits .posttime {
-	color: #888;
-    font-size: .9167em;
+	font-size: .9167em;
 }
 .forumpostleft .author img {
-    margin: 3px 5px 3px 3px;
+	margin: 3px 5px 3px 3px;
 }
 .forumpostleft .author .poster {
-	color: #888;
-    margin: 0;
+	margin: 0;
 }
 .forumpostleft .author .postcount {
 	font-weight: normal;
-    margin: 0;
-	color: #888;
+	margin: 0;
 }
 .postedits {
 	padding: 10px;
-	background: #FFF;
 }
 .postbtns {
 	font-size: .9167em;
 	text-align: right;
-	color: #d1d1d1;
-	margin: 5px 0 10px 0;
+	margin: 3px 0 10px 0;
 }
 .postbtns a {
 	text-decoration: none;
@@ -209,15 +130,37 @@
 	margin-left: 0;
 }
 .deletedpost {
-    color: #666666;
-    margin-top: 0;
+	margin-top: 0;
+	font-style: italic;
+	font-weight: normal;
+	padding: 5px 10px;
 }
 .postreply {
 	padding: 0 0 0 10px;
 }
-
+.editstopost {
+	padding: 5px 10px;
+}
+.editstopost h5 {
+	margin: 0;
+}
+.editstopost ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.editstopost ul li {
+	padding: 0;
+	margin: 0 0 3px 0;
+}
+.editstopost ul li a {
+	font-size: 0.9167em;
+}
+.editstopost ul li a img {
+	vertical-align: sub;
+}
 /* Post and topic editing*/
 .timeleftnotice {
-    margin-top: 0.8em;
-    font-size: .9167em;
+	margin-top: 0.8em;
+	font-size: .9167em;
 }
