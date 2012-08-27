@@ -87,6 +87,9 @@ function load_account_preferences($userid) {
  * @param string $value preference value to set.
  */
 function set_account_preference($userid, $field, $value) {
+    if ($field == 'mobileuploadtoken' && !isset($value)) {
+        $value = '';
+    }
     if ($field == 'lang') {
         $oldlang = get_field('usr_account_preference', 'value', 'usr', $userid, 'field', 'lang');
         if (empty($oldlang) || $oldlang == 'default') {
