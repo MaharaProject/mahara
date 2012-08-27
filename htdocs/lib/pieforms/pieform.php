@@ -940,7 +940,7 @@ EOF;
      * Marks a field has having an error.
      *
      * This method should be used to set an error on an element in a custom
-     * validation function, if one has occured.
+     * validation function, if one has occurred.
      *
      * @param string $name    The name of the element to set an error on
      * @param string $message The error message

@@ -677,7 +677,7 @@ function get_records_sql_array($sql,$values, $limitfrom='', $limitnum='') {
  * Utility function used by the following 3 methods.
  *
  * @param object $rs an ADODB RecordSet object with two columns.
- * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
+ * @return mixed an associative array, or false if an error occurred or the RecordSet was empty.
  * @access private
  */
 function recordset_to_menu($rs) {
@@ -717,7 +717,7 @@ function recordset_to_menu($rs) {
  * @param string $value the value the field must have (requred if field1 is given, else optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
- * @return mixed an associative array, or false if no records were found or an error occured.
+ * @return mixed an associative array, or false if no records were found or an error occurred.
  */
 function get_records_menu($table, $field='', $value='', $sort='', $fields='*') {
     $rs = get_recordset($table, $field, $value, $sort, $fields);
@@ -735,7 +735,7 @@ function get_records_menu($table, $field='', $value='', $sort='', $fields='*') {
  * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $sort Sort order (optional) - a valid SQL order parameter
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
- * @return mixed an associative array, or false if no records were found or an error occured.
+ * @return mixed an associative array, or false if no records were found or an error occurred.
  */
 function get_records_select_menu($table, $select='', $values=null, $sort='', $fields='*') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields);
