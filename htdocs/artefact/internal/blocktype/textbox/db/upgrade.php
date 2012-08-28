@@ -84,28 +84,35 @@ function xmldb_blocktype_textbox_upgrade($oldversion=0) {
                     ) a
                     WHERE blocktype = 'textbox' AND {block_instance}.id::text = a.note"
                 );
+                // Update view_artefact table
+                execute_sql("
+                    INSERT INTO {view_artefact} (view, block, artefact)
+                    SELECT b.view, b.id, a.id
+                    FROM {block_instance} b, {artefact} a
+                    WHERE b.blocktype = 'textbox' AND a.artefacttype = 'html' AND a.note IS NOT NULL AND CAST(b.id AS TEXT) = a.note",
+                    array()
+                );
             }
             else if (is_mysql()) {
                 execute_sql("
                     UPDATE {block_instance}, {artefact}
-                    SET {block_instance}.configdata = CONCAT('a:1:{s:10:\"artefactid\";i:', CAST({artefact}.id AS CHAR), ';}')
+                    SET {block_instance}.configdata = CONCAT('a:1:{s:10:\"artefactid\";i:', {artefact}.id, ';}')
                     WHERE
                         {artefact}.artefacttype = 'html'
                         AND {artefact}.note IS NOT NULL
                         AND {block_instance}.blocktype = 'textbox'
-                        AND CAST({block_instance}.id AS CHAR) = {artefact}.note"
+                        AND {block_instance}.id = {artefact}.note"
+                );
+                // Update view_artefact table
+                execute_sql("
+                    INSERT INTO {view_artefact} (view, block, artefact)
+                    SELECT b.view, b.id, a.id
+                    FROM {block_instance} b, {artefact} a
+                    WHERE b.blocktype = 'textbox' AND a.artefacttype = 'html' AND a.note IS NOT NULL AND b.id = a.note",
+                    array()
                 );
             }
 
-            // Update view_artefact table
-            $casttype = is_postgres() ? 'TEXT' : 'CHAR';
-            execute_sql("
-                INSERT INTO {view_artefact} (view, block, artefact)
-                SELECT b.view, b.id, a.id
-                FROM {block_instance} b, {artefact} a
-                WHERE b.blocktype = 'textbox' AND a.artefacttype = 'html' AND a.note IS NOT NULL AND CAST(b.id AS $casttype) = a.note",
-                array()
-            );
 
             // Remove the dodgy block id in the note column
             execute_sql("UPDATE {artefact} SET note = NULL WHERE artefacttype = 'html' AND note IS NOT NULL");
