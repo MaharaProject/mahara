@@ -785,3 +785,36 @@ div.groupbox div.jointype {
     color: #FFF;
     text-decoration: none;
 }
+/* Persona button */
+a.persona-button{
+		background: #1b3b46;
+		background: -moz-linear-gradient(top, #254e5c, #1b3b46);
+		background: -ms-linear-gradient(top, #254e5c, #1b3b46);
+		background: -o-linear-gradient(top, #254e5c, #1b3b46);
+		background: -webkit-linear-gradient(top, #254e5c, #1b3b46);
+		background: linear-gradient(top, #254e5c, #1b3b46);
+}
+a.persona-button:hover{
+		background: #1b3b46;
+		background: -moz-linear-gradient(top, #254e5c, #1b3b46);
+		background: -ms-linear-gradient(top, #254e5c, #1b3b46);
+		background: -o-linear-gradient(top, #254e5c, #1b3b46);
+		background: -webkit-linear-gradient(top, #254e5c, #1b3b46);
+		background: linear-gradient(top, #254e5c, #1b3b46);
+}
+a.persona-button span:before{ /* Icon BG */
+		background: #42a9dd;
+		background: -moz-linear-gradient(top, #50b8e8, #3095ce);
+		background: -ms-linear-gradient(top, #50b8e8, #3095ce);
+		background: -o-linear-gradient(top, #50b8e8, #3095ce);
+		background: -webkit-linear-gradient(top, #50b8e8, #3095ce);
+		background: linear-gradient(top, #50b8e8, #3095ce);
+}
+a.persona-button:before{ /* Triangle */
+    background: #42a9dd;
+    background: -moz-linear-gradient(-45deg, #50b8e8, #3095ce);
+		background: -ms-linear-gradient(-45deg, #50b8e8, #3095ce);
+		background: -o-linear-gradient(-45deg, #50b8e8, #3095ce);
+		background: -webkit-linear-gradient(-45deg, #50b8e8, #3095ce);
+		background: linear-gradient(-45deg, #3095ce, #50b8e8); /* flipped for updated spec */
+}

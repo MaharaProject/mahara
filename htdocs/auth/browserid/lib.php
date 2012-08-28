@@ -65,13 +65,13 @@ class AuthBrowserid extends Auth {
             throw new AccountAutoCreationException(get_string('emailclaimedasusername', 'auth.browserid', $email));
         }
 
-        // Personal details are currently not provided by the BrowserID API.
+        // Personal details are currently not provided by the Persona API.
         $user->username = $email;
         $user->firstname = '';
         $user->lastname = '';
         $user->email = $email;
 
-        // no need for a password on BrowserID accounts
+        // no need for a password on Persona accounts
         $user->password = '';
         $user->passwordchange = 0;
         $user->authinstance = $this->instanceid;
@@ -144,7 +144,7 @@ class PluginAuthBrowserid extends PluginAuth {
             ),
             'instancename' => array(
                 'type'  => 'hidden',
-                'value' => 'BrowserID',
+                'value' => 'Persona',
             ),
             'authname' => array(
                 'type'  => 'hidden',
@@ -239,18 +239,18 @@ class PluginAuthBrowserid extends PluginAuth {
     }
 
     /**
-     * Add a BrowserID link/button.
+     * Add a Persona link/button.
      */
     public static function login_form_elements() {
         return array(
             'loginbrowserid' => array(
-                'value' => '<div class="login-externallink"><a class="btn" href="javascript:window.browserid_login()">' . get_string('login', 'auth.browserid') . '</a></div>'
+                'value' => '<div class="login-externallink"><a class="persona-button" href="javascript:window.browserid_login()"><span>' . get_string('login', 'auth.browserid') . '</span></a></div>'
             )
         );
     }
 
     /**
-     * Load all of the Javascript needed to retrieve BrowserIDs from
+     * Load all of the Javascript needed to retrieve Personas from
      * the browser.
      */
     public static function login_form_js() {

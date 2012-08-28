@@ -504,3 +504,21 @@ div.sideblock h3 a:active {
 #main-nav #dropdown-nav li.selected ul.dropdown-sub li.selected a {
     font-weight: bold;
 }
+
+/* Persona button */
+a.persona-button span:before{ /* Icon BG */
+    background: #cc7314;
+    background: -moz-linear-gradient(top, #e09d1d, #cc7314);
+    background: -ms-linear-gradient(top, #e09d1d, #cc7314);
+    background: -o-linear-gradient(top, #e09d1d, #cc7314);
+    background: -webkit-linear-gradient(top, #e09d1d, #cc7314);
+    background: linear-gradient(top, #e09d1d, #cc7314);
+}
+a.persona-button:before{ /* Triangle */
+    background: #cc7314;
+    background: -moz-linear-gradient(-45deg, #e09d1d, #cc7314);
+    background: -ms-linear-gradient(-45deg, #e09d1d, #cc7314);
+    background: -o-linear-gradient(-45deg, #e09d1d, #cc7314);
+    background: -webkit-linear-gradient(-45deg, #e09d1d, #cc7314);
+    background: linear-gradient(-45deg, #cc7314, #e09d1d); /* flipped for updated spec */
+}

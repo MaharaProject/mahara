@@ -60,7 +60,7 @@ if (empty($_SESSION['browseridexpires']) || time() >= $_SESSION['browseridexpire
     $_SESSION['browseridemail'] = $jsondata->email;
 }
 
-$USER = new BrowserIDUser;
+$USER = new BrowserIDUser();
 $USER->login($_SESSION['browseridemail']);
 unset($_SESSION['browseridexpires']);
 unset($_SESSION['browseridemail']);
@@ -79,7 +79,7 @@ function get_audience() {
         $port = $url['port'];
     }
     else {
-        log_debug('BrowserID: cannot decipher the value of wwwroot');
+        log_debug('Persona: cannot decipher the value of wwwroot');
         return '';
     }
     return $url['scheme'] . '://' .$url['host'] . ':' . $port;
