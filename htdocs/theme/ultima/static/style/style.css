@@ -527,3 +527,20 @@ div.sideblock #friendscontrol label {
 #main-nav li.selected .dropdown-sub li a, #main-nav li.selected .dropdown-sub li a:link, #main-nav li.selected .dropdown-sub li a:visited, #main-nav li.selected .dropdown-sub li a:active {
     font-weight: normal;
 }
+/* Persona button */
+a.persona-button span:before{ /* Icon BG */
+    background: #861d80;
+    background: -moz-linear-gradient(top, #c94cb4, #861d80);
+    background: -ms-linear-gradient(top, #c94cb4, #861d80);
+    background: -o-linear-gradient(top, #c94cb4, #861d80);
+    background: -webkit-linear-gradient(top, #c94cb4, #861d80);
+    background: linear-gradient(top, #c94cb4, #861d80);
+}
+a.persona-button:before{ /* Triangle */
+    background: #861d80;
+    background: -moz-linear-gradient(-45deg, #c94cb4, #861d80);
+    background: -ms-linear-gradient(-45deg, #c94cb4, #861d80);
+    background: -o-linear-gradient(-45deg, #c94cb4, #861d80);
+    background: -webkit-linear-gradient(-45deg, #c94cb4, #861d80);
+    background: linear-gradient(-45deg, #861d80, #c94cb4); /* flipped for updated spec */
+}

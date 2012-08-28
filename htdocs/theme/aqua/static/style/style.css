@@ -463,3 +463,39 @@ div.sideblock h3 a:hover {
 	background:	#F4F7F9;
 	border: 0;
 }
+/* Persona button */
+/* Link body */
+a.persona-button {
+	background: #0b1962;
+	background: -moz-linear-gradient(top, #012cac, #0b1962);
+	background: -ms-linear-gradient(top, #012cac, #0b1962);
+	background: -o-linear-gradient(top, #012cac, #0b1962);
+	background: -webkit-linear-gradient(top, #012cac, #0b1962);
+	background: linear-gradient(top, #012cac, #0b1962);
+}
+a.persona-button:hover {
+	background: #012cac;
+	background: -moz-linear-gradient(top, #0b1962, #012cac);
+	background: -ms-linear-gradient(top, #0b1962, #012cac);
+	background: -o-linear-gradient(top, #0b1962, #012cac);
+	background: -webkit-linear-gradient(top, #0b1962, #012cac);
+	background: linear-gradient(top, #0b1962, #012cac);
+}
+/*  Icon background */
+a.persona-button span:before {
+	background: #3c3c3c;
+	background: -moz-linear-gradient(top, #606060, #3c3c3c);
+	background: -ms-linear-gradient(top, #606060, #3c3c3c);
+	background: -o-linear-gradient(top, #606060, #3c3c3c);
+	background: -webkit-linear-gradient(top, #606060, #3c3c3c);
+	background: linear-gradient(top, #606060, #3c3c3c);
+}
+/* Triangle */
+a.persona-button:before {
+    background: #3c3c3c;
+    background: -moz-linear-gradient(-45deg, #606060, #3c3c3c);
+	background: -ms-linear-gradient(-45deg, #606060, #3c3c3c);
+	background: -o-linear-gradient(-45deg, #606060, #3c3c3c);
+	background: -webkit-linear-gradient(-45deg, #606060, #3c3c3c);
+	background: linear-gradient(-45deg, #3c3c3c, #606060); /* flipped for updated spec */
+}

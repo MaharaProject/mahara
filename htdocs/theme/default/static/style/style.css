@@ -763,6 +763,25 @@ div.sideblock h3 a:hover {
 #sb-loginbox label {
 	color: #677A8A;
 }
+/* Persona button */
+/*  Icon background */
+a.persona-button span:before {
+	background: #2d5308;
+	background: -moz-linear-gradient(top, #79ac45, #2d5308);
+	background: -ms-linear-gradient(top, #79ac45, #2d5308);
+	background: -o-linear-gradient(top, #79ac45, #2d5308);
+	background: -webkit-linear-gradient(top, #79ac45, #2d5308);
+	background: linear-gradient(top, #79ac45, #2d5308);
+}
+/* Triangle */
+a.persona-button:before {
+	background: #2d5308;
+	background: -moz-linear-gradient(-45deg, #79ac45, #2d5308);
+	background: -ms-linear-gradient(-45deg, #79ac45, #2d5308);
+	background: -o-linear-gradient(-45deg, #79ac45, #2d5308);
+	background: -webkit-linear-gradient(-45deg, #79ac45, #2d5308);
+	background: linear-gradient(-45deg, #2d5308, #79ac45); /* flipped for updated spec */
+}
 
 /* Side Profile */
 #sb-profile ul ul a,
