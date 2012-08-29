@@ -1910,7 +1910,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
     $registerconfirm = array();
     $reason = false;
 
-    if (count($institutions) > 1) {
+    if (count($institutions) > 0) {
         $options = array();
         foreach ($institutions as $institution) {
             $options[$institution->name] = $institution->displayname;
@@ -1927,7 +1927,9 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
             }
         }
         natcasesort($options);
-        array_unshift($options, get_string('chooseinstitution', 'mahara'));
+        if (count($institutions) > 1) {
+            array_unshift($options, get_string('chooseinstitution', 'mahara'));
+        }
         $elements['institution'] = array(
             'type' => 'select',
             'title' => get_string('institution'),
@@ -1936,19 +1938,6 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                 'required' => true
             )
         );
-    }
-    else if ($institutions) { // Only one option - probably mahara ('No Institution') but that's not certain
-        $institution = array_shift($institutions);
-        $elements['institution'] = array(
-            'type' => 'hidden',
-            'value' => $institution->name
-        );
-        $reason = (bool) $institution->registerconfirm;
-        if ($reason) {
-            $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
-            $auth = AuthFactory::create($authinstance->id);
-            $reason = !$auth->weautocreateusers;
-        }
     }
     else {
         return;
@@ -2023,32 +2012,43 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
     return array($form, $registerconfirm);
 }
 
-function auth_generate_registration_form_js($form, $registerconfirm) {
+function auth_generate_registration_form_js($aform, $registerconfirm) {
 
     // The javascript needs to refer to field names, but they are obfuscated in this form,
     // so construct and build the form in separate steps, so we can get the field names.
-    $form = new Pieform($form);
+    $form = new Pieform($aform);
     $institutionid = $form->get_name() . '_' . $form->hashedfields['institution'];
     $reasonid = $form->get_name() . '_' . $form->hashedfields['reason'];
     $formhtml = $form->build();
 
-    $js = '
-    var registerconfirm = ' . json_encode($registerconfirm) . ';
-    $j(function() {
-        $j("#' . $institutionid . '").change(function() {
-            if (this.value && registerconfirm[this.value] == 1) {
-                $j("#' . $reasonid . '_container").removeClass("js-hidden");
-                $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
-                $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
-            }
-            else {
-                $j("#' . $reasonid . '_container").addClass("js-hidden");
-                $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
-                $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
-            }
+    if (count($registerconfirm) == 1) {
+        $js = '
+        $j(function() {
+            $j("#' . $reasonid . '_container").removeClass("js-hidden");
+            $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+            $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
         });
-    });
-    ';
+       ';
+    }
+    else {
+        $js = '
+        var registerconfirm = ' . json_encode($registerconfirm) . ';
+        $j(function() {
+            $j("#' . $institutionid . '").change(function() {
+                if (this.value && registerconfirm[this.value] == 1) {
+                    $j("#' . $reasonid . '_container").removeClass("js-hidden");
+                    $j("#' . $reasonid . '_container textarea").removeClass("js-hidden");
+                    $j("#' . $reasonid . '_container").next("tr.textarea").removeClass("js-hidden");
+                }
+                else {
+                    $j("#' . $reasonid . '_container").addClass("js-hidden");
+                    $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
+                    $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+                }
+            });
+        });
+        ';
+    }
 
     return array($formhtml, $js);
 }
