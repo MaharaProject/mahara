@@ -1882,23 +1882,17 @@ function admin_nav() {
             'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
-        'configusers/adminnotifications' => array(
-            'path'   => 'configusers/adminnotifications',
-            'url'    => 'admin/users/notifications.php',
-            'title'  => get_string('adminnotifications', 'admin'),
-            'weight' => 40,
-        ),
         'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
-            'weight' => 50,
+            'weight' => 40,
         ),
         'configusers/uploadcsv' => array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
             'title'  => get_string('uploadcsv', 'admin'),
-            'weight' => 60,
+            'weight' => 50,
         ),
         'managegroups' => array(
             'path'   => 'managegroups',
@@ -1960,41 +1954,47 @@ function admin_nav() {
             'title'  => get_string('Admins', 'admin'),
             'weight' => 40,
         ),
+        'manageinstitutions/adminnotifications' => array(
+            'path'   => 'manageinstitutions/adminnotifications',
+            'url'    => 'admin/users/notifications.php',
+            'title'  => get_string('adminnotifications', 'admin'),
+            'weight' => 50,
+        ),
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
             'title'  => get_string('Views', 'view'),
-            'weight' => 50,
+            'weight' => 60,
         ),
         'manageinstitutions/institutioncollections' => array(
             'path'   => 'manageinstitutions/institutioncollections',
             'url'    => 'collection/index.php?institution=1',
             'title'  => get_string('Collections', 'collection'),
-            'weight' => 60,
+            'weight' => 70,
         ),
         'manageinstitutions/share' => array(
             'path'   => 'manageinstitutions/share',
             'url'    => 'view/institutionshare.php',
             'title'  => get_string('share', 'view'),
-            'weight' => 70,
+            'weight' => 80,
         ),
         'manageinstitutions/institutionfiles' => array(
             'path'   => 'manageinstitutions/institutionfiles',
             'url'    => 'artefact/file/institutionfiles.php',
             'title'  => get_string('Files', 'artefact.file'),
-            'weight' => 80,
+            'weight' => 90,
         ),
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
-            'weight' => 80,
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 100,
         ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 90,
+            'weight' => 110,
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
@@ -2042,7 +2042,7 @@ function institutional_admin_nav() {
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
-            'title'  => get_string('configusers', 'admin'),
+            'title'  => get_string('users'),
             'weight' => 10,
         ),
         'configusers/usersearch' => array(
@@ -2072,7 +2072,7 @@ function institutional_admin_nav() {
         'managegroups' => array(
             'path'   => 'managegroups',
             'url'    => 'admin/groups/uploadcsv.php',
-            'title'  => get_string('managegroups', 'admin'),
+            'title'  => get_string('groups', 'admin'),
             'weight' => 20,
         ),
         'managegroups/uploadcsv' => array(
@@ -2090,7 +2090,7 @@ function institutional_admin_nav() {
         'manageinstitutions' => array(
             'path'   => 'manageinstitutions',
             'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('manageinstitutions', 'admin'),
+            'title'  => get_string('institutions', 'admin'),
             'weight' => 30,
         ),
         'manageinstitutions/institutions' => array(
@@ -2150,14 +2150,14 @@ function institutional_admin_nav() {
         'manageinstitutions/statistics' => array(
             'path'   => 'manageinstitutions/statistics',
             'url'    => 'admin/users/statistics.php',
-            'title'  => get_string('institutionstatistics', 'admin'),
-            'weight' => 90,
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 100,
         ),
         'manageinstitutions/pendingregistrations' => array(
             'path'   => 'manageinstitutions/pendingregistrations',
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
-            'weight' => 100,
+            'weight' => 110,
         ),
     );
 
