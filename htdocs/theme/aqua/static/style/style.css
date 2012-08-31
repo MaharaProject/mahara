@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,12 @@
  *
  * @author     Paul Walker <paul.walker@catalyst-eu.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
+ * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
  */
 
 /* General rules */
 body, body#micro {
-    background: #0B1960;
-	color: #14336F;
+    background: #0B1960 url(../images/bg.jpg) repeat-x top center;
 }
 a, a:visited, a:link, a:active {
     color: #1F97D5;
@@ -76,14 +75,6 @@ h6 {
 #activitylist tfoot td {
 	border-top: 1px solid #14436F;
 }
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-	color: #1e6297 !important;
-}
 .tablerenderer-loading {
     border: 1px solid #f4f7f9;
 	background-color: #f4f7f9;
@@ -98,27 +89,19 @@ h6 {
 	border-top: 1px solid #14436F;
 }
 /* Alternative row background colours */
-.r0, .r0 td, .d0  {
+.r0, .r0 td, .d0, .friends {
     background-color: #e9f1f6;
 }
 .r1, .r1 td, .d1 {
     background-color: #f4f7f9;
 }
-tr.folder td {
-	background-color: #d6dce0 !important;
-}
 
 /**************************** Pagination ****************************/
 div.pagination a {
 	background-color: #f4f7f9;
-	border: 0;
 }
 
 /**************************** Forms ****************************/
-/* Label */
-label {
-    color: #888888;
-}
 /* required */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
     color: #c81511;
@@ -128,24 +111,10 @@ label {
 	color: #333333;
 }
 
-/* Legend */
-legend {
-	color: #1e6297;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active,
-legend a:hover {
-	color: #1e6297 !important;
-}
-
 /* Fieldset */
 fieldset {
     border: 1px solid #14436F;
 }
-
-
 /****************************** Buttons ****************************/
 /** input buttons **/
 .btn,
@@ -193,15 +162,15 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #1F97D5;
 }
-/* except those that shouldn't */
-span.btn a.icon, a span.icon {
-	color: #FFF;
-}
 /* buttons that look like links */
-.linkbtn {
-	color: #1F97D5; 
+.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
+	color: #1F97D5 !important;
+    text-decoration: none;
 }
-
+/* links that need to look like buttons */
+span.btn a.icon, a span.icon {
+	color: #FFFFFF;
+}
 /* Search buttons */
 #usf_submit,
 #usf_submit:hover {
@@ -219,41 +188,32 @@ span.btn a.icon, a span.icon {
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
-    background: transparent url(../images/bg.jpg) repeat-x top center;
-    * overflow: hidden;
+    max-width: 1232px;
 }
 #top-wrapper {
     background: transparent url(../images/bg-container.jpg) no-repeat top center;
-    border: none;
-    min-width: 970px;
-    width: 90%;
-    margin: 0 auto;
+    width: 95%;
 }
 #containerX #top-wrapper {
-	height: auto;
 	background: transparent url(../images/bg-container.jpg) no-repeat top center;
 }
 #loading-box {
     background-color: #ECF3D4 !important;
 }
 #site-logo {
-	padding: 25px 25px 0 0
-}
-#top-wrapper ul,
-#top-wrapper li {
-    text-align: right;
-    display: inline;
+    margin: 12px 5px 0 0
 }
 /* Search and language bar */
 #usf_query_container input {
     color: #333333;
-	width: 205px;
+}
+#mainmiddle {
+    width: 95%;
+    background: #FFFFFF;
 }
 #header-right label {
 	color: #FFFFFF;
 }
-
-/**************** TOP NAVIGATION ****************/
 #right-nav li {
 	color: #8fa3df;
 }
@@ -267,70 +227,50 @@ span.btn a.icon, a span.icon {
   color: #fff;
   text-decoration: underline;
 }
-
+/**************** TOP NAVIGATION ****************/
 #main-nav {
-    padding: 0;
-    margin: 0;
-	height: 27px;
-	border-bottom: 0;
+    background: none;
 }
 #main-nav ul {
 	float: right;
 }
 #main-nav li {
-    float: left;
     color: #FFFFFF;
-    text-decoration: none;
-    line-height: 1.6em;
     font-weight: normal;
-	font-size: 12px;
 	margin: 0 0 0 3px;
-	padding: 0;
 }
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	margin: 0;
-	padding: 5px 15px 3px;
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active {
 	background: #00084F;
     color: #FFFFFF;
-	width:auto;
-	display:block;
 }
 #main-nav li a:hover {
     color: #1F97D5;
     text-decoration: underline;
 }
-#main-nav li.selected a,
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active {
     color: #14336F;
 	background: #FFFFFF;
-	padding: 5px 15px 3px;
 }
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
     font-weight: bold;
     text-align: left;
     background: #FFF;
-    height: 30px;
-	border:none;
-	border-bottom:1px solid #DDD;
-	width:100%;
+    height: 26px;
+	border: 0;
+	border-bottom: 1px solid #DDD;
 }
 #sub-nav ul {
     float:right;
-	height: 15px;
-	padding: 6px 10px 6px 10px;
 	background: #FFF;
 }
 #sub-nav li {
-    height: 25px;
     margin: 0 !important;
 }
 #sub-nav li a,
@@ -338,15 +278,12 @@ span.btn a.icon, a span.icon {
 #sub-nav li a:visited,
 #sub-nav li a:active {
     color: #14336F;
-	height: 25px;
 }
 #sub-nav li a:hover {
     color: #1A428F;
     text-decoration: underline;
 }
 #sub-nav li.selected {
-    height: 25px;
-    margin: 0;
 	background: transparent;
 }
 #sub-nav li.selected a,
@@ -357,19 +294,35 @@ span.btn a.icon, a span.icon {
     text-decoration: underline;
 }
 
+/**************** DROPDOWN NAVIGATION ****************/
+#main-nav .dropdown-sub {
+    left: -3px;
+}
+.main-nav .dropdown-sub li a, .main-nav .dropdown-sub li a:link, .main-nav .dropdown-sub li a:visited, .main-nav .dropdown-sub li a:active {
+    background: #00084f;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+#main-nav .dropdown-sub li a:hover {
+    background: #0b1960;
+    color: #1F97D5;
+    text-decoration: none;
+}
+
 /**************** IN PAGE TAB NAVIGATION ****************/
 ul.in-page-tabs,
 ul.edit-view-tabs {
-	height: 24px;
-	line-height: 26px;
+    background: 0;
 }
 ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
 ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #FFF;
   background: #00084F;
+    margin: 0 4px 0 0;
 }
+ul.in-page-tabs li a:hover,
 ul.in-page-tabs li input.linkbtn:hover,
-ul.in-page-tabs li a:hover {
+ul.edit-view-tabs li a:hover {
   text-decoration: underline;
   color: #1F97D5;
 }
@@ -380,25 +333,18 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 
 .subpage {
 	border: 1px solid #ddd;
-	border-top: 10px solid #d1d1d1;
+	border-top: 5px solid #d1d1d1;
 }
 
 /**************** MAIN CONTENT *****************/
-#containerX #main-wrapper,
-#mainmiddle {
-    min-width: 970px;
-    width: 90%;
-    margin: 0 auto;
-}
-#main-wrapper {
-	background: #FFF;
+#main-column-container {
+    padding: 10px 15px;
 }
 
 /**************** SIDEBAR ******************/
 #left-column,
 #right-column {
 	background: #F4F7F9 url(../images/pixel_grey.gif) repeat-y top left;
-    padding:0px;
 }
 div.sideblock {
 	border-bottom: 1px solid #DDD;
@@ -443,74 +389,33 @@ div.sideblock h3 a:hover {
 #quota_used {
     color: #3986c3;
 }
-#quota_total {
-    color: #1F97D5;
-}
 #quota_bar,
 #quota_bar_100 {
     background: url(../images/quota_bar_bg.gif) no-repeat left top;
     color: #FFF;
 }
 #quota_fill {
-    margin: 0;
     background: url(../images/quota_bar_highlight.gif) repeat-x;
-}
-
-/* Side Search */
-.sidebar #selfsearch input {
-	width: 190px;
 }
 
 
 /******************** FOOTER ****************************/
 #footer-wrap {
     background-color: #0B1960;
-    border: 0;
+    color: #FFFFFF;
+    width: 95%;
 }
-#footer {
-    min-width: 970px;
-    width: 90%;
-    margin: 0 auto;
-    padding: 5px 0;
-}
-#footernav  {
-  color: #FFFFFF;
-} 
-#footernav a,
-#footernav a:link,
-#footernav a:active,
-#footernav a:visited {
+#footer a,
+#footer a:link,
+#footer a:visited,
+#footer a:active,
+#footer a:hover {
     color: #FFFFFF;
 }
-#footernav a:hover {
-    color: #FFF;
-}
-#performance-info {
-    color: #fff;
-}
-#performance-info span {
-	color: #fff;
-}
-#version  {
-  color: #FFFFFF;
-} 
-
-
-body#micro #footer-wrap #performance-info {
-	padding-top: 10px;
-}
 /****************************** PAGE BY PAGE STYLES **********************************/
-/* Group: about */
-
 /* Settings > Preferences */
 #accountprefs table h3 {
 	border-bottom: 1px dotted #888888
-}
-#micro #footer-wrap {
-	margin: 0 auto;
-	min-width: 970px;
-	width: 90%;
-	padding: 0;
 }
 .viewheader a {
 	color: #FFF;
@@ -518,43 +423,42 @@ body#micro #footer-wrap #performance-info {
 .viewheader .title {
 	color: #FFF;
 }
-
-
+/* Forum list */
+#forumslist th {
+    border-bottom: 1px solid #14436F;
+}
+.forumpostleft {
+    background: #e9f1f6;
+}
+/* Posts */
+.forumpost {
+    background-color: #e9f1f6;
+    border: 2px solid #e9f1f6;
+}
+/* Topic list */
+#forumtopicstable th {
+    border-bottom: 1px solid #14436F;
+}
+/* topic types */
+.stickytopic td {
+    background-color: #ceeafe;
+}
+/* admin & moderator */
+.groupadmin {
+    color: #3366CC;
+}
+.moderator {
+    color: #993399;
+}
 #containerX #top-wrapper a,
 #containerX #top-wrapper a:hover,
 #containerX #top-wrapper a:active {
 	color: #ffffff;
 }
-
-/* collection */
-ul.colnav li a {
-	color: #FFF;
+/* Collections */
+#collectionnavwrap {
+    background: #F4F7F9;
 }
-
-/**************** DROPDOWN NAVIGATION ****************/
-/**************** SUB NAVIGATION *********************/
-
-#main-nav .dropdown-sub {
-	top: 27px !important;
-}
-#main-nav .dropdown-sub li {
-	line-height: 25px !important;
-	height: 25px !important;
-}
-#main-nav .dropdown-sub li a,
-#main-nav .dropdown-sub li a:link,
-#main-nav .dropdown-sub li a:visited,
-#main-nav .dropdown-sub li a:active {
-    padding: 5px 13px !important;
-    background: #00084f !important;
-    color: #FFF !important;
-}
-#main-nav .dropdown-sub li a:hover {
-	background: #0b1960 !important;
-	color: #1F97D5 !important;
-	text-decoration: none !important;
-}
-
 .group-info {
 	background:	#F4F7F9;
 	border: 0;
