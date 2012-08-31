@@ -345,6 +345,14 @@ if (defined('JSON') && !defined('NOSESSKEY')) {
     }
 }
 
+// Device detection
+require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
+
+$detect = new Mobile_Detect();
+$SESSION->set('handheld_device', ($detect->isMobile() || $detect->isTablet()));
+$SESSION->set('mobile', $detect->isMobile());
+$SESSION->set('tablet', $detect->isTablet());
+
 /*
  * Initializes our performance info early.
  *
