@@ -9,11 +9,8 @@
 #middle-pane label {
 	color: #FFFFFF;
 }
-#blocksinstruction {
-}
 /* The tabs that allow you to select a blocktype category */
 #category-list ul {
-    padding-left: 1em;
 	height: 28px;
 	line-height: 28px;
 }
@@ -44,7 +41,13 @@
   background-color: #2e2e2e;
   border: 0;
 }
-#current_bt_description {
+#blocktype-list .blocktype h4 {
+    color: #FFFFFF;
+}
+.blocktype-description {
+    color: #FFFFFF;
+}
+#middle-pane {
 	background: #1c1c1c;
   color: #FFF;
 }
@@ -121,6 +124,9 @@ ul.artefactchooser-subtabs li.current a:hover {
 
 #collection {
 	color: #FFF;
+}
+#collection .collection-title {
+    color: #FFF;
 }
 ul.colnav li a {
 	background: #565656;
