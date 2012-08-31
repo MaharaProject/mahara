@@ -58,5 +58,4 @@
 {/if}
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain|safe}</div>
 {/if}
-        <div class="cb"></div>
     </div>

@@ -1,4 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--[if lt IE 7 ]> <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} class="ie ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} class="ie ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} class="ie ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->  <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}><!--<![endif]-->
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
 <body id="micro">
@@ -43,15 +48,17 @@
       <div class="viewheader">
 
 {if $collection}
-        <div id="collection"><div class="collection-title">{$microheadertitle|safe}:</div>{include file=collectionnav.tpl}</div>
+        <div id="collection"><h1 class="collection-title">{$microheadertitle|safe}</h1>{include file=collectionnav.tpl}</div>
 {else}
-        <div class="center title">{$microheadertitle|safe}</div>
+        <h1 class="center title">{$microheadertitle|safe}</h1>
 {/if}
 		<div class="cb"></div>
       </div>
     </div>
 	<div class="cb"></div>
-    <div id="main-wrapper">
-        <div class="main-column">
-            {dynamic}{insert_messages}{/dynamic}
-            <div id="main-column-container">
+  <div id="mainmiddlewrap">
+    <div id="mainmiddle">
+      <div id="main-wrapper">
+          <div class="main-column">
+              <div id="main-column-container">
+              {dynamic}{insert_messages}{/dynamic}

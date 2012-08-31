@@ -30,7 +30,7 @@
                     <td>&nbsp;</td>
                 {/if}
                 <td><label><a href="{$view->fullurl}">{$view->title}</a></label></td>
-                <td><div class="fr s">{$view->remove|safe}</div></td>
+                <td class="s"><div class="fr">{$view->remove|safe}</div></td>
             </tr>
         {/foreach}
     </tbody>

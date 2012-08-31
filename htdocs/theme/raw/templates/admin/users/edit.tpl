@@ -2,7 +2,7 @@
 
 <div id="edituser">
     {if $suspended}
-    <div class="message">
+    <div class="suspendederror">
       <h4>{$suspendedby}</h4>
       {if $user->get('suspendedreason')}
       <div id="suspendreason">
