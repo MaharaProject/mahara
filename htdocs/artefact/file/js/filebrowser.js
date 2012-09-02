@@ -73,17 +73,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 'value':0
             }));
         }
-        if (is_FF() && self.config.select && !$(self.id + '_uploadsubmit') && $(self.id + '_uploadsubmit_container')) {
-            var submitbutton = INPUT({
-                'class': 'submit',
-                'type': 'submit',
-                'name': self.id + '_uploadsubmit',
-                'id': self.id + '_uploadsubmit',
-                'value': get_string('upload')
-            });
-            appendChildNodes(self.id + '_uploadsubmit_container', submitbutton);
-            self.config.submitbutton = true;
-        }
         self.upload_connectbuttons();
     }
 
@@ -99,15 +88,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 }
             });
         }
-        if (self.config.submitbutton && $(self.id + '_uploadsubmit')) {
-            connect(self.id + '_uploadsubmit', 'onclick', self.upload_submit);
-        }
-        else {
-            connect(self.id + '_userfile', 'onchange', self.upload_submit);
-            if ($(self.id + '_uploadsubmit')) {
-                removeElement(self.id + '_uploadsubmit');
-            }
-        }
+        connect(self.id + '_userfile', 'onchange', self.upload_submit);
     }
 
     this.upload_validate = function () {
@@ -155,9 +136,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'multiple':'',
             'size':40
         }));
-        if (!$(self.id + '_uploadsubmit')) {
-            connect(self.id + '_userfile', 'onchange', self.upload_submit);
-        }
+        connect(self.id + '_userfile', 'onchange', self.upload_submit);
         $(self.id + '_upload').value = 0;
         return false;
     }

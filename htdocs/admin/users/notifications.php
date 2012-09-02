@@ -33,7 +33,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'notifications');
 require_once('pieforms/pieform.php');
-define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/adminnotifications');
+define('MENUITEM', 'manageinstitutions/adminnotifications');
 
 $sql = '
     SELECT
