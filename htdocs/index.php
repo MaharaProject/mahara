@@ -110,7 +110,4 @@ $smarty->assign('url', $urls);
 
 $smarty->assign('page_content', get_site_page_content($pagename));
 
-// handheld device flag
-$smarty->assign('handheld_device', $SESSION->get('handheld_device'));
-
 $smarty->display('index.tpl');

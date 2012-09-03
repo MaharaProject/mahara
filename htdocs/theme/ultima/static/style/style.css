@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
  *
  * @author     Paul Walker <paul.walker@catalyst-eu.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2009 Catalyst IT Europe http://catalyst-eu.net
+ * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
  */
 
 /* General rules */
 body, body#micro {
   background: #e99adb url(../images/bg1.jpg) no-repeat top center;	
 	color: #360435;
-  font-family: Arial, Helvetica, sans-serif;
 }
 acronym {
     border-bottom: 1px dotted #d4d1c0;
@@ -49,10 +48,7 @@ h5,
 h6 {
     color: #5A0757;
 }
-.description,
-.unvalidated,
-.postdetails,
-.postedon {
+.description, .unvalidated, .postdetails, .postedon {
     color: #5A0757;
 }
 
@@ -63,7 +59,7 @@ h6 {
 	border-bottom: 1px dotted #360435;
 }
 .main-column tbody th {
-    color: #360435;
+	color: #360435;
 	border-bottom: none;
 }
 /* table with th border-bottom */
@@ -87,9 +83,6 @@ h6 {
 .listing div h3 a:link {
 	color: #5A0757 !important;
 }
-.main-column table h3 a:hover,
-.listing div h3 a:hover {
-}
 .tablerenderer-loading {
     border: 1px solid #490647;
 	background-color: #FFF;
@@ -104,13 +97,11 @@ h6 {
 	border-top: 1px solid #360435;
 }
 /* Alternative row background colours */
-.r0, .r0 td, .d0 {
+.r0, .r0 td, .d0, .friends {
     background-color: #f4e7f5;
 }
 .r1, .r1 td, .d1 {
     background-color: #faeefb;
-}
-tr.folder td {
 }
 
 /**************************** Forms ****************************/
@@ -126,10 +117,6 @@ label {
 .required label.plain, .required.radio td label, .required.emaillist td label {
 	color: #474220;
 }
-/* description */
-.pieform td.description {
-}
-
 /* Legend */
 legend {
 	color: #5A0757;
@@ -141,7 +128,6 @@ legend a:visited,
 legend a:active {
 	color: #5A0757 !important;
 }
-
 /* Fieldset */
 fieldset {
     border: 1px solid #5c0758;
@@ -163,17 +149,14 @@ ul.groupuserstatus li a {
 	color: #FFF !important;
 }
 /** hover for buttons **/
-.btn:hover,
-input.submit:hover,
-input.cancel:hover,
-button:hover,
-.buttondk:hover,
-input.button:hover,
+.btn:hover, input.submit:hover,
+input.cancel:hover, button:hover,
+.buttondk:hover, input.button:hover,
 input.select:hover,
 input#files_filebrowser_edit_artefact:hover,
 ul.groupuserstatus li a:hover {
 	color: #FFF;
-	border-color: #3C083F #e675d3 #e675d3 #3C083F;
+	border-color: #3C083F #e675d3 #e675d3 #3C083F;;
     background: #c94cb4 url(../images/btn-bkgd-hover.gif) repeat-x top;
 }
 /** Depress for buttons **/
@@ -194,15 +177,15 @@ ul.groupuserstatus li a:active {
 .icon {
 	color: #5A0757;
 }
-/* except those that shouldn't */
-span.btn a.icon, a span.icon {
-	color: #FFF;
-}
 /* buttons that look like links */
-.linkbtn {
-	color: #5A0757; 
+.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
+	color: #5A0757 !important;
+	text-decoration: none;
 }
-
+/* links that need to look like buttons */
+span.btn a.icon, a span.icon {
+	color: #FFFFFF;
+}
 /* Search buttons */
 #usf_submit,
 #usf_submit:hover {
@@ -220,39 +203,23 @@ span.btn a.icon, a span.icon {
 
 /**************************** Top of page elements ****************************/
 #container, #containerX {
-    background-color: transparent;
-    margin-top:0px;
-    padding-top:0px;
-    min-width: 970px;
     width: 90%;
-}
-#top-wrapper {
-    background: transparent;
-    border: none;
+    max-width: 1232px;
 }
 #loading-box {
     color: #fff;
     background-color: #8E1901;
 }
 #site-logo {
-	padding: 25px 25px 0 0
-}
-/* Search and language bar */
-#languageselect {
-	margin: 0;
-} 
-#usf {
-	margin: 0;
+    margin: 25px 25px 0 0
 }
 #usf_query_container input {
     color: #490647;
-	width: 195px;
 }
 #header-right label {
 	color: #FFFFFF;
 }
 
-/**************** TOP NAVIGATION ****************/
 #right-nav li a {
   color: #FFF;
 }
@@ -260,26 +227,22 @@ span.btn a.icon, a span.icon {
 	color: #aa56ae;
 }
 #right-nav li.selected a {
-  color: #FFF;
-  text-decoration: underline;
+	color: #FFF;
+	text-decoration: underline;
 }
 
+/**************** TOP NAVIGATION ****************/
 #main-nav {
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    border-bottom: 0;
     height: 33px;
+    background: none;
 }
 #main-nav ul {
 	float: right;
 }
 #main-nav li {
-    float:left;
     color: #FFFFFF;
     text-decoration: none;
     font-weight: normal;
-	font-size: 12px;
     line-height: 20px;
 	margin: 0 0 0 5px;
 	padding: 0;
@@ -292,8 +255,6 @@ span.btn a.icon, a span.icon {
     padding: 6px 15px 7px;
 	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x top center;
     color: #FFFFFF;
-	width:auto;
-	display:block;
 }
 #main-nav li a:hover {
     color: #FFFFFF;
@@ -311,15 +272,9 @@ span.btn a.icon, a span.icon {
 
 /**************** SUB NAVIGATION ****************/
 #sub-nav {
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
     font-weight: bold;
-    text-align: left;
     background: #5c0758 url(../images/subnav-bg.gif) repeat-x top center;
     height: 35px;
-	width:100%;
-	border: none;
 }
 #sub-nav ul {
     float: right;
@@ -344,7 +299,7 @@ span.btn a.icon, a span.icon {
 }
 #sub-nav li.selected {
     margin: 0;
-	background: transparent;
+    background: transparent;
 }
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
@@ -353,8 +308,14 @@ span.btn a.icon, a span.icon {
     color: #FFFFFF;
     text-decoration: underline;
 }
-
 /**************** IN PAGE TAB NAVIGATION ****************/
+ul.in-page-tabs, ul.edit-view-tabs {
+    background: none;
+}
+ul.in-page-tabs li, ul.edit-view-tabs li {
+    display: inline-block;
+    margin: 0 1px 0 0;
+}
 ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
 ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
   color: #ffffff;
@@ -373,22 +334,21 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
   font-weight: bold;
   background-color: #841c7f;
 }
-
 .subpage {
-  border: 1px solid #841c7f;  
+  border: 1px solid #841c7f;
 }
 
 
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
-	background: #FFF;
-    margin: 15px 0;
+#mainmiddlewrap {
+    margin-top: 10px;
 }
-#main-column {
-    display: block;
-    padding: 20px 15px;
+#containerX #mainmiddlewrap {
+    margin-top: 0;
 }
-
+#main-column-container {
+    background: #FFF;
+}
 /* system messages between nav and main content */
 /* different message types */
 #messages .ok,
@@ -414,14 +374,11 @@ div.error {
 
 
 /**************** SIDEBAR *********/
-#left-column,
-#right-column {
-	padding: 0;
-}
 div.sideblock {
 	color: #e8c1ea;
 	background: #490647 url(../images/bg-block.jpg) repeat-x top center;
-	margin: 15px 15px 15px 0;
+	margin: 0 0 10px 0;
+	color: #e8c1ea;
 }
 div.sideblock h3 {
     color: #e8c1ea;
@@ -435,9 +392,7 @@ div.sideblock a:active {
 div.sideblock label {
 	color: #e8c1ea;
 }
-div.sideblock ul ul {
-	color: #e8c1ea;
-}
+
 
 /* Side Login */
 #sb-loginbox #login_login_container,
@@ -454,15 +409,13 @@ div.sideblock ul ul {
 #quota_total {
     color: #A955AD;
 }
-#quota_bar, 
+#quota_bar,
 #quota_bar_100 {
     background: url(../images/quota_bar_bg.gif) no-repeat;
 }
 #quota_fill {
     background-image: url(../images/quota_bar_highlight.gif);
 }
-
-
 /* Friends control sideblock */
 div.sideblock #friendscontrol label {
 	color: #fff;
@@ -471,23 +424,11 @@ div.sideblock #friendscontrol label {
 
 /******************** FOOTER ****************************/
 #footer-wrap {
-    background-color: transparent;
-    border: 0;
-}
-#footernav {
-    color: #5A0757;
-} 
-#performance-info {
     color: #5A0757;
 }
-#performance-info span {
+#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
     color: #5A0757;
 }
-#version {
-    color: #5A0757;
-}
-
-
 /****************************** PAGE BY PAGE STYLES **********************************/
 
 
@@ -503,10 +444,6 @@ div.sideblock #friendscontrol label {
     border: solid 2px #F4E7F5;
     background: #FAEEFB;
 }
-
-#containerX #top-wrapper {
-	background: transparent;
-}
 #containerX #top-wrapper .selected a {
 	color: #333;
 }
@@ -521,8 +458,38 @@ div.sideblock #friendscontrol label {
 #containerX #top-wrapper .viewheader .title a {
 	color: #FFF;
 }
-body#micro #footer-wrap #performance-info {
-	padding-top: 10px;
+/* Forum */
+/* Forum list */
+#forumslist {
+    border-bottom: 1px dotted #5c0758;
+}
+#forumslist th {
+    border-bottom: 1px dotted #5c0758;
+}
+/* Topic list */
+#forumtopicstable {
+    border-bottom: 1px dotted #5c0758;
+}
+#forumtopicstable th {
+    border-bottom: 1px dotted #5c0758;
+}
+/* topic types */
+.stickytopic td {
+    background-color: #e99adb;
+    border-bottom: 1px solid #FFF;
+}
+/* admin & moderator */
+.groupadmin {
+    color: #3366CC;
+}
+.moderator {
+    color: #993399;
+}
+/* Posts */
+.forumpost {
+    background-color: #f7f7f7;
+    border-top: 1px dotted #5c0758;
+    border-bottom: 1px dotted #5c0758;
 }
 
 
@@ -530,28 +497,33 @@ body#micro #footer-wrap #performance-info {
 #collectionnavwrap {
 	background: #F4E7F5;
 }
-
+#collection .collection-title {
+	color: #FFFFFF;
+}
 .group-info {
 	background: #F4E7F5;
 	border: 1px solid #aa55ae;
 }
 
 /**************** DROPDOWN NAVIGATION ****************/
-/**************** SUB NAVIGATION *********************/
 
 #main-nav .dropdown-sub {
-    top: 33px !important;
+    top: 33px;
+    left: -5px;
 }
 #main-nav .dropdown-sub li a,
 #main-nav .dropdown-sub li a:link,
 #main-nav .dropdown-sub li a:visited,
 #main-nav .dropdown-sub li a:active {
-    color: #5C0758 !important;
-    text-decoration: none !important;
-    font-size: 1em !important;
-    background: #F3D2F4 !important;
+    color: #5C0758;
+    background: #F3D2F4;
+    text-decoration: none;
 }
 #main-nav .dropdown-sub li a:hover {
-    color: #5C0758 !important;
-    text-decoration: underline !important;
+    color: #FFFFFF;
+    text-decoration: underline;
+    background: #ab57af;
+}
+#main-nav li.selected .dropdown-sub li a, #main-nav li.selected .dropdown-sub li a:link, #main-nav li.selected .dropdown-sub li a:visited, #main-nav li.selected .dropdown-sub li a:active {
+    font-weight: normal;
 }

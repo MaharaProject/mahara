@@ -96,10 +96,10 @@ var table = new TableRenderer(
     [
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
             }
             else {
-                return TD({'class': 'center', 'width': '120px'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.note}));
+                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.note}));
             }
         },
         function(rowdata) {
@@ -114,14 +114,14 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            return TD({'class': 'left', 'width': '110px'}, INPUT(options));
+            return TD({'class': 'defaultcell'}, INPUT(options));
         },
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'left', 'width': '110px'}, INPUT({'type': 'checkbox', 'class': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
+                return TD({'class': 'deletecell'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
             }
             else {
-                return TD({'class': 'left', 'width': '110px'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'class': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
+                return TD({'class': 'deletecell'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
             }
         }
     ]

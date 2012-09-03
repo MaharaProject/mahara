@@ -408,6 +408,7 @@ EOF;
     }
 
     $smarty->assign('MOBILE', $SESSION->get('mobile'));
+    $smarty->assign('HANDHELD_DEVICE', $SESSION->get('handheld_device'));
 
     $sitename = get_config('sitename');
     if (!$sitename) {
@@ -2228,7 +2229,10 @@ function institutional_staff_nav() {
  * @return $standardnav a data structure containing the standard navigation
  */
 function mahara_standard_nav() {
-    $exportenabled = plugins_installed('export');
+    global $SESSION;
+
+    $exportenabled = (plugins_installed('export') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
+
     $menu = array(
         'home' => array(
             'path' => '',
