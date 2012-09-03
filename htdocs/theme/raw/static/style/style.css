@@ -1566,6 +1566,9 @@ div.sideblock ul li {
 #user-profileicon img {
 	border: 1px solid #FFFFFF;
 }
+#sb-profile .sidebar-content {
+	min-height: 30px;
+}
 #sb-profile .sideblock-content > ul {
 	padding: 0;
 	list-style: none;
