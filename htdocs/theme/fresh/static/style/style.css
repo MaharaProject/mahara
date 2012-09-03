@@ -495,6 +495,10 @@ div.sideblock ul ul {
 #user-profileicon img {
 	border: 0;
 }
+#sb-profile .sidebar-content {
+	min-height: 60px;
+}
+
 /* Side Quota Bar */
 #quota_used {
     color: #00AEF1;
