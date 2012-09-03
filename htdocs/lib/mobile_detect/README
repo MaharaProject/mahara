@@ -1,0 +1,35 @@
+Description
+========================
+
+Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.
+
+
+Usage
+========================
+
+Include and instantiate the class:
+
+include("Mobile_Detect.php");
+$detect = new Mobile_Detect();
+
+Check for a specific platform:
+
+if($detect->isiOS()){
+    // code to run for the Apple iOS platform.
+}
+
+if($detect->isAndroidOS()){
+    // code to run for the Google Android platform.
+}
+
+Other case insensitive available methods are isIphone(), isIpad(), isBlackBerry(), isKindle(), isOpera(), etc. For the full list of available methods check the demo.php file or the wiki.
+
+Alternatively, if you are only interested in checking to see if the user is using a mobile device, without caring for specific platform:
+
+if ($detect->isMobile()) {
+    // any mobile platform
+}
+
+if($detect->isTablet()){
+    // any tablet
+}

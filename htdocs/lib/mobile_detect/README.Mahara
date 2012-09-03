@@ -1,0 +1,11 @@
+Mobile_Detect in Mahara
+======================
+
+Website: http://code.google.com/p/php-mobile-detect/
+Version: 2.0.9
+
+This library is used by isMobile and isTablet, to detect Mobile devices.
+
+Changes:
+
+  * Added README
