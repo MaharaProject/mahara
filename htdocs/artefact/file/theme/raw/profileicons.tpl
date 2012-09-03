@@ -1,12 +1,12 @@
 {include file="header.tpl"}
             {$settingsformtag|safe}
-            <table id="profileicons" class="hidden tablerenderer">
+            <table id="profileicons" class="hidden tablerenderer fullwidth">
                 <thead>
                     <tr>
-                        <th>{str tag="image"}</th>
+                        <th class="profileiconcell">{str tag="image"}</th>
                         <th>{str tag="imagetitle" section=artefact.file}</th>
-                        <th>{str tag="Default" section=artefact.file}</th>
-                        <th>{str tag="delete"}</th>
+                        <th class="defaultcell">{str tag="Default" section=artefact.file}</th>
+                        <th class="deletecell">{str tag="delete"}</th>
                     </tr>
                 </thead>
                 <tbody>

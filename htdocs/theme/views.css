@@ -1,7 +1,7 @@
 /**
  * Views stylesheet - common between all themes
  *
- * Copyright (C) 2006-2009 Catalyst IT Ltd
+ * Copyright (C) 2006-2012 Catalyst IT Ltd
  * This file is licensed under the same terms as Mahara itself
  */ 
 
@@ -26,7 +26,9 @@
 /* just the bottom pane when not editing */
 #bottom-pane {
     margin: 0 0 5px 0;
-  * padding-top: 10px;
+}
+.ie7 #bottom-pane {
+    padding-top: 10px;
 }
 /********************** Top pane of Edit View *************************/
 #page {
@@ -41,30 +43,31 @@
     margin: 0;
     padding: 0;
 	font-size: 1em;
-  	font-weight: bold;
   	position: relative;
   	z-index: 0;
 	height: 1%;
-	line-height: 25px;
-	height: 25px;
 }
 #category-list li {
-    float: left;
     padding: 0;
 	position: static;
 	z-index: 5;
-    margin: 0 2px 0 0;
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
+}
+.ie7 #category-list li {
+    display: inline;
 }
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-    padding: 0 10px;
-    display: block;
+    padding: 5px 10px;
+    display: inline-block;
     background: #EEEEEE;
     text-decoration: none;
-    line-height: 25px;
-    height: 25px;
 }
 #category-list li.current a,
 #category-list li.current a:link,
@@ -74,79 +77,66 @@
   color: #333;
   text-decoration: none;
   background: #D1D1D1;
+    font-weight: bold;
 }
 /* The panel that contains the blocktype icons */
 #blocktype-list {
 	clear: left;
     font-size: .9167em;
+    padding: 0 20px;
 }
 #blocktype-list ul {
     list-style-type: none;
     margin: 0;
 }
 #blocktype-list li {
-    float: left;
+    display: table-cell;
+    vertical-align: top;
     text-align: center;
-    margin: 10px 5px 5px 5px;
-    width: 90px;
-	* z-index: 100;
+    padding: 10px 5px 5px 5px;
+    margin: 0 0 5px 0;
+    width: 100px;
 	line-height: 1.4em;
 	white-space: normal;
 }
-* html #blocktype-list li {
-	position: relative;
-}
-#blocktype-list li div.blocktype div {
-	white-space: normal;
-    width: 90px;
+.ie7 #blocktype-list li {
+    z-index: 100;
+    display: inline;
+    float: left;
 }
 #blocktype-list .blocktype-radio {
     border: none;
     cursor: default; /* ie fix */
 }
 #blocktype-list .blocktype h4 {
-    margin: 0;
-}
-#current_bt_description {
-    height: 1.8em;
-    line-height: 1.8em;
-    padding: 3px 10px;
-    margin: 0;
+    margin: 3px 0;
 }
 #noblocks {
     font-size: larger;
     margin-top: 40px;
     text-align: center;
 }
-
 /* Between top and bottom pane */
+#middle-pane {
+    padding: 3px 5px 3px 10px;
+}
 #middle-pane #themeselect {
 	float: right;
-	padding: 3px 10px;
 }
-
+#current_bt_description {
+    min-height: 1.333em;
+    margin: 3px 0;
+    float: left;
+}
 /********************** Bottom pane of Edit View *************************/
-html>body #column-container {
-	* width: 98%;
+.ie7 #column-container {
+	width: 98%;
 }
 #blocksinstruction {
     padding: 3px 10px;
 	font-style: italic;
 	margin-bottom: 10px;
 }
-
-/* columns 
-#column-container input.submit {
-    cursor: pointer;
-	padding: 0;
-	margin: 0;
-}
-#column-container input.submit:hover {
-	background: none;
-}
-#column-container .column-header input[disabled="disabled"] {
-    cursor: default;
-}*/
 
 /* These column width rules are required only for when a column is
    added/removed dynamically (users have to turn this on in their
@@ -174,16 +164,12 @@ html>body #column-container {
     padding: 10px 0.9% 10px 0.9%;
 	position: relative;
 }
-* html .column {
-	overflow: hidden;
-}
 
 /* An explicit height for when there is one column and no remove button */
 .column-header {
-    padding-top: 5px;
-    width: 100%;
+    padding: 3px;
     position: relative;
-    height: 25px;
+    margin-bottom: 5px;
 }
 .add-button {
     text-align: center;
@@ -191,20 +177,20 @@ html>body #column-container {
 /* contains the left-most 'add column' button */
 .add-column-left {
     position: absolute;
-    top: 5px;
-    left: 0;
+    top: 3px;
+    left: 3px;
 }
 /* contains all add column buttons in the middle of two columns */
 .add-column-center {
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 0;
 }
 /* contains the right most 'add column' button */
 .add-column-right {
     position: absolute;
-    top: 5px;
-    right: 0;
+    top: 3px;
+    right: 3px;
 }
 /* contains the 'remove column' buttons */
 .remove-column {
@@ -219,7 +205,6 @@ html>body #column-container {
     min-height: 20px;
 }
 .column-content .add-button input {
-	border: none;
 	font-size: .9167em;
 }
 
@@ -235,16 +220,12 @@ html>body #column-container {
 }
 /* Configure blockinstance */
 .blockinstance.configure {
-  width: 700px;
   text-align: left;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
   font-size: .75em;
-}
-
-.blockinstance.configure .mceEditor {
-  width: 100%;
+    z-index: 12 !important;
 }
 
 .blockinstance.configure .mceEditor {
@@ -258,7 +239,7 @@ html>body #column-container {
 }
 .blockinstance-header h4 {
     margin: 0 !important;
-	font-size: 1.4em !important;
+	font-size: 1.3333em !important;
 	border-bottom: 2px solid #d1d1d1;
 	padding-bottom: 3px;
 }
@@ -266,11 +247,21 @@ html>body #column-container {
 	text-decoration: none;
 }
 
+.ie7 .blockinstance-header {
+    float: left;
+    display: inline;
+}
 /* control */
 .blockinstance-controls {
+    display: inline;
+    float: right;
+    margin-left: 10px;
+}
+.ie7 .blockinstance-controls {
     position: absolute;
-	right: 0;
-	top: 0;
+    top: 0;
+    right: 0;
+    z-index: 2;
 }
 .blockinstance-controls input,
 .blockinstance-controls input.submit,
@@ -285,33 +276,20 @@ html>body #column-container {
 }
 
 /* content */
-.blockinstance-content {
-}
-
-.blockinstance-content h2 {
-	font-size: 1.3333em !important;
-	border-bottom: 1px dotted #d1d1d1;
-	padding: 3px 0;
-	margin-bottom: 0 !important;
-}
-.blockinstance-content h3 {
-	font-size: 1.1667em !important;
-	margin-bottom: 0 !important;
-}
-.blockinstance-content h4 {
-	font-size: 1em !important;
-}
 .blockinstance-content #userviewstable h4 {
 	margin-bottom: 0 !important;
 }
+.blockinstance-content h1, .blockinstance-content h2, .blockinstance-content h3, .blockinstance-content h4, .blockinstance-content h5, .blockinstance-content h6 {
+    margin: 10px 0 0 0;
+}
+.blockinstance-content td h1, .blockinstance-content td h2, .blockinstance-content td h3, .blockinstance-content td h4, .blockinstance-content td h5, .blockinstance-content td h6 {
+    margin: 0;
+}
+.subpage .blockinstance-content h2 {
+    margin-top: 10px !important;
+}
 .blockinstance-content p {
-	margin: 10px 0;
-}
-.blockinstance-content p:first-child {
-	margin-top: 5px;
-}
-.blockinstance-content p:last-child {
-	margin-bottom: 0;
+	margin: 0 0 10px 0;
 }
 .blockinstance-content p.noartefacts {
     text-align: center;
@@ -327,12 +305,11 @@ html>body #column-container {
 	padding: 0 5px;
 }
 .blockinstance-content fieldset table {
-	* width: 98%;
 	width: 100%;
+    margin: 5px 0;
 }
-.blockinstance-content table.resumepersonalinfo th,
-.blockinstance-content table.resumepersonalinfo td {
-	padding: 0 0 0 3px;
+.ie7 .blockinstance-content fieldset table {
+    width: 98%;
 }
 
 
@@ -347,9 +324,6 @@ html>body #column-container {
 }
 .bt-image .blockinstance-content div a img {
 	max-width: 100%;
-}
-* html .bt-image .blockinstance-content div a img {
-	width: 100%;
 }
 
 /* External Feed */
@@ -366,16 +340,22 @@ html>body #column-container {
 .bt-inbox td.icon-container {
   vertical-align: top;
   width: 16px;
-  * width: 26px;
+}
+.ie7 .bt-inbox td.icon-container {
+    width: 26px;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-.bt-inbox td.icon-container {  width: 26px; }
+.bt-inbox td.icon-container {
+    width: 26px;
+}
 }
 .bt-inbox td.icon-container .icon {
   vertical-align: bottom;
   display: table-cell;
-  * margin-left: 0;
-  * zoom: 1;
+}
+.ie7 .bt-inbox td.icon-container .icon {
+    margin-left: 0;
+    zoom: 1;
 }
 .inbox-showmessage.unread {
   font-weight: bold;
@@ -396,10 +376,6 @@ html>body #column-container {
 	text-decoration: none;
 }
 .blockinstance-content .tags {
-	font-size: .9167em;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	margin-bottom: 0 !important;
 }
 .blockinstance-content div.artefacts {
 	font-size: .9167em;
@@ -444,16 +420,11 @@ html>body #column-container {
 .grouphomepage .bt-groupviews .groupviewsection {
   margin: 5px 0 10px 0;
 }
-.main-column .groupviewsection td h3 {
-	display: inline;
+.groupviewsection h4 {
+	margin: 0 0 3px 3px;
 }
-.main-column .groupviewsection h5 {
-	font-size: 1.1667em;
+.groupviewsection h5 {
 	margin: 0 3px 3px 3px;
-}
-.groupviewsection td h3 {
-	font-size: 1em !important;
-	font-weight: normal;
 }
 
 /* Slideshow */
@@ -481,12 +452,14 @@ html>body #column-container {
   cursor: pointer;
 }
 .thumbnails {
-  padding: 5px;
   text-align: center;
 }
 .thumbnails img {
   padding: 5px;
   vertical-align: middle;
+}
+.thumbnails a {
+    display: block;
 }
 
 /* tabs for the artefact chooser */
@@ -496,24 +469,25 @@ ul.artefactchooser-tabs {
   font-weight: bold;
   list-style: none;
   font-size: 1em;
-  height: 25px;
-  line-height: 25px;
 }
 ul.artefactchooser-tabs li {
   padding: 0;
-  margin: 0 2px 0 0 !important;
-  float: left;
+  margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.ie7 ul.artefactchooser-tabs li {
+    display: inline;
 }
 ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  padding: 0 10px;
+  padding: 5px 10px;
   text-decoration: none;
   background: #EEEEEE;
-  display: block;
-  height: 25px;
-  line-height: 25px;
+  display: inline-block;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
@@ -525,15 +499,16 @@ ul.artefactchooser-tabs li.current a:active {
   cursor: default;
 }
 ul.artefactchooser-subtabs {
-  margin: 0 0 15px 0 !important;
-  padding: 0 !important;
+  margin: 0 0 15px 0;
+  padding: 0;
   font-size: .9167em;
+    line-height: 1.5em;
   list-style: none;
 }
 ul.artefactchooser-subtabs li {
   display: inline;
-  padding: 0 10px;
-  margin: 0 !important;
+  padding: 0 5px;
+  margin: 0;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
@@ -556,10 +531,11 @@ ul.artefactchooser-subtabs li.current a:active {
 .maharatable thead th {
 	font-size: 1em !important;
 	text-align: left !important;
+    padding: 3px 0 0 0;
 }
-.maharatable tbody th {
+.pieform .maharatable tbody th {
 	font-size: 1.1667em;
-	text-align: left !important;
+	text-align: left;
 	padding: 3px 0 0 0;
 }
 .maharatable tbody td {
@@ -583,6 +559,10 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #artefactchooser-body th label {
 	font-size: .9167em;
+}
+.artefactchooser-data td.iconcell input.radio,
+.artefactchooser-data td.iconcell input.checkbox {
+    margin: 0;
 }
 .maharatable td label {
 	font-weight: normal;
@@ -615,6 +595,9 @@ ul.artefactchooser-subtabs li.current a:active {
     height: 10em;
     overflow-y: auto;
 }
+.blockinstance-content iframe {
+    max-width: 100%;
+}
 
 /* pagination */
 .ac-pagination {
@@ -625,7 +608,7 @@ ul.artefactchooser-subtabs li.current a:active {
 	margin: 0;
 	display: block !important;
 }
-.ac-pagination a, 
+.ac-pagination a,
 .ac-pagination .disabled {
     margin: 0 1px;
     padding: 1px 3px;
@@ -694,22 +677,66 @@ ul.artefactchooser-subtabs li.current a:active {
 	width: auto;
 }
 
+/* view head */
+.viewrbuttons {
+    float: right;
+}
+.viewrbuttons a {
+    display: inline-block;
+}
+h1#viewh1 {
+    margin-top: 0;
+}
+/* Collection navigation normal header */
+#collectionnavwrap {
+    padding: 5px 5px 0 5px;
+    background: #EEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+div.colnav1 {
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+ul.colnav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul.colnav li {
+    padding: 0;
+    margin: 0 0 5px 0;
+    float: left;
+}
+ul.colnav li a, ul.colnav li.selected span {
+    padding: 5px 7px;
+    margin: 0 5px 0 0;
+    display: block;
+    white-space: nowrap;
+}
+div.colnav-extra {
+    margin: 0;
+}
+.colnav-showmore ul li {
+    float: left;
+}
+
 /* Collection navigation small header */
 #collection {
 	margin: 0;
 	height: auto;
 }
 #collection .collection-title {
-    font-size: 1.1667em;
-    margin: 10px 5px 0 0;
-    float: left;
-    display: inline;
-    font-weight: bold;
-    padding: 0;
+    margin: 0;
+    text-align: center;
 }
 #containerX #collectionnavwrap {
 	background: none;
-	padding: 0 5px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
 }
 #containerX div.colnav1 {
 	margin: 0;
@@ -726,7 +753,7 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #containerX ul.colnav li {
     padding: 0;
-    margin: 5px 0 0 0 !important;
+    margin: 5px 0 0 0;
 	float: left;
 }
 #containerX ul.colnav li a,
@@ -734,44 +761,17 @@ ul.artefactchooser-subtabs li.current a:active {
 	padding: 5px 7px;
 	margin: 0 5px 0 0;
 	display: block;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
 }
 #containerX div.colnav-extra {
     margin: 0;
 	float: none;
 }
 #containerX div.colnav-showmore {
-    margin: 0;
-    float: none;
-}
-/* Collection navigation normal header */
-#collectionnavwrap {
-	padding: 0 5px;
-	background: #EEE;
-}
-div.colnav1 {
-	clear: both;
 	margin: 0;
-	padding: 0;
-}
-ul.colnav {
-    list-style: none;
-    padding: 0;
-    margin: 0 !important;
-}
-ul.colnav li {
-    padding: 0 !important;
-    margin: 5px 0 !important;
-	float: left;
-}
-ul.colnav li a,
-ul.colnav li.selected span {
-	padding: 5px 7px !important;
-	margin: 0 5px 0 0 !important;
-	display: block;
-	white-space: nowrap;
-}
-div.colnav-extra {
-    margin: 0;
+    float: none;
 }
 
 .submissionform {
@@ -801,7 +801,7 @@ div.colnav-extra {
 	font-size: .9167em;
 }
 .viewfooter .submissionform {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 .viewfooter .releaseviewform {
 	background: #eee;
@@ -848,20 +848,28 @@ div.colnav-extra {
 	float: left;
 	width: 100px;
 	text-align: center;
+    padding: 3px 5px;
 }
-#feedbacktable .commentright {
-	margin-left: 100px;
+#feedbacktable .commentrightwrap {
+	margin-left: 110px;
 }
 #feedbacktable .makepublicbtn {
-	font-size: .9167em;
-	margin-top: 0;
-	float: right;
+    margin: 0 0 3px 3px;
+    display: inline-block;
+    vertical-align: top;
+}
+.ie7 #feedbacktable .makepublicbtn {
+    display: inline;
 }
 #feedbacktable .icon {
-	margin: 0;
+	margin: 0 0 3px 0;
+}
+#feedbacktable .icon a {
+    display: inline-block;
 }
 #feedbacktable .undercomment {
 	font-size: .9167em;
+    margin-left: 110px;
 }
 #feedbacktable .username {
 	line-height: 1.2em;
@@ -883,6 +891,7 @@ div.colnav-extra {
 #feedbacktable form,
 #feedbacktable form div {
 	display: inline;
+    vertical-align: top;
 }
 #add_feedback_form {
 	margin-top: 10px;
@@ -921,18 +930,18 @@ table tr.plan_incomplete {
 	border-bottom: 2px solid #FFF;
 }
 table td div.plan_completed {
-    margin: 3px;
     text-align:center;
     width: 60px;
 }
 
 .blockinstance .blockinstance-content table.postlist {
 	width: 100%;
-	* width: 98%;
+}
+.ie7 .blockinstance .blockinstance-content table.postlist {
+    width: 98%;
 }
 
 .license {
-	padding: 5px;
 	margin: 0;
 }
 .license .licenseicon {
@@ -948,16 +957,9 @@ table td div.plan_completed {
 }
 
 .plansblocktable {
-	margin: 5px 0;
+	margin: 0;
 }
 
-/*#instconf_count_container td,
-#instconf_height_container td,
-#instconf_noderivatives_container td,
-#instconf_collection_container td,
-#instconf_text_container td {
-	padding-bottom: 1em;
-}*/
 #blocktype_externalfeed_title {
 	margin-top: 5px;
 }
@@ -975,11 +977,8 @@ table td div.plan_completed {
 #blocktype_externalfeed_entries h4 {
 	margin-top: 5px;
 }
-#userview {
-	border-bottom: 1px dotted #d1d1d1;
-}
-#latestforumposts td h4 {
-	margin-bottom: 0;
+#latestforumposts td h5 {
+	margin: 0;
 }
 #latestforumposts td div.s br {
 	line-height: .5em;
@@ -987,9 +986,6 @@ table td div.plan_completed {
 
 table.resumecomposite {
 	width: 100%;
-}
-* html table.resumecomposite {
-	width: 96%;
 }
 
 .filedownload-item {
@@ -1005,18 +1001,18 @@ table.resumecomposite {
 
 .filedownload-item h4 a {
         display:block;
-        height: 1em;
 }
 
 #blogdescription {
 	margin: 0 0 10px 0;
 }
 #blogdescription p {
-	margin: 0;
+	margin: 0 0 10px 0;
 }
-
 td.icon-container {
   vertical-align: top;
   width: 16px;
-  * width: 25px;
+}
+.ie7 td.icon-container {
+    width: 25px;
 }

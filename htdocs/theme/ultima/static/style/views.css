@@ -5,60 +5,58 @@
 /********************** Top pane of Edit View *************************/
 /* The tabs that allow you to select a blocktype category */
 #category-list li {
-	margin: 0 5px 0 0;
+	margin: 0 1px 0 0;
+	display: inline-block;
 }
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-  color: #ffffff;
-  font-weight: normal;
-  background-color: #5c0758;
+#category-list li a, #category-list li a:link, #category-list li a:visited, #category-list li a:active {
+	color: #ffffff;
+	font-weight: normal;
+	background-color: #5c0758;
 }
 #category-list li a:hover {
-  color: #ffffff;
-  background-color: #5c0758;
-  text-decoration: underline;
+	color: #ffffff;
+	background-color: #5c0758;
+	text-decoration: underline;
 }
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-  color: #ffffff;
-  font-weight: bold;
-  background-color: #841c7f;
+#category-list li.current a, #category-list li.current a:link, #category-list li.current a:visited, #category-list li.current a:active {
+	color: #ffffff;
+	font-weight: bold;
+	background-color: #841c7f;
 }
-
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-    border: 0;
-    background: #841C7F;
+	border: 0;
+	background: #841C7F;
 }
 #middle-pane {
-    background: #5C0758;
-    color: #fbebfc;
+	background: #5C0758;
+	color: #fbebfc;
 }
-
-
+#middle-pane label {
+	color: #FFFFFF;
+}
+#blocktype-list .blocktype h4 {
+	color: #FFFFFF;
+}
+.blocktype-description {
+	color: #FFFFFF;
+}
 /********************** Bottom pane of Edit View *************************/
 #page #bottom-pane {
 	background-color: #FAEEFB !important;
 }
-
 /**************** Blockinstance **********************/
 .upload_browse #artefactchooser-body {
-    border: 1px solid #1C3740;
+	border: 1px solid #1C3740;
 }
-
 /* pagination */
 #feedback_pagination {
 	border-top: 1px dotted #360435;
 }
-
 #collection {
 	color: #FFF;
 }
 ul.colnav li a {
-	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x top center;
+	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x center;
 	color: #FFFFFF;
 }

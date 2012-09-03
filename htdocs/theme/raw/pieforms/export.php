@@ -3,14 +3,15 @@
 function export_form_cell_html($element) {
     global $THEME;
     $strclicktopreview = get_string('clicktopreview', 'export');
-    $previewimg = $THEME->get_url('images/icon-display.gif');
     $strpreview = get_string('Preview');
     $element['description'] = clean_html($element['description']);
 return <<<EOF
 <td>
-{$element['html']} {$element['labelhtml']}
-<div>{$element['description']}</div>
-<div><a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank"><img src="{$previewimg}" alt=""> {$strclicktopreview}</a></div>
+<div class="checkbox">{$element['html']}</div>
+<div class="labeldescriptpreview">{$element['labelhtml']}
+{$element['description']}
+<a href="{$element['viewlink']}" class="viewlink nojs-hidden-inline" target="_blank">{$strclicktopreview}</a>
+</div>
 </td>
 EOF;
 }
@@ -77,8 +78,8 @@ $body = array();
 $row = $col = 0;
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 11) == 'collection_') {
-        $body[$row][$col] = "<td>{$element['html']} {$element['labelhtml']}"
-            . '<div>' . hsc($element['description']) . '</div></td>';
+        $body[$row][$col] = "<td><div class='checkbox'>{$element['html']}</div><div class='labeldescriptpreview'>{$element['labelhtml']}"
+            . '' . hsc($element['description']) . '</div></td>';
         $col++;
         if ($col % 3 == 0) {
             $row++;

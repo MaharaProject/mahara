@@ -7,13 +7,13 @@
     <div>{str tag="planstasksdesc" section="artefact.plans"}</div>
     <div class="message">{$strnotasksaddone|safe}</div>
 {else}
-<table id="taskslist">
+<table id="taskslist" class="fullwidth listing">
     <thead>
         <tr>
-            <th>{str tag='completiondate' section='artefact.plans'}</th>
-            <th>{str tag='title' section='artefact.plans'}</th>
-            <th>{str tag='description' section='artefact.plans'}</th>
-            <th>{str tag='completed' section='artefact.plans'}</th>
+            <th class="completiondate">{str tag='completiondate' section='artefact.plans'}</th>
+            <th class="plantasktitle">{str tag='title' section='artefact.plans'}</th>
+            <th class="plantaskdescription">{str tag='description' section='artefact.plans'}</th>
+            <th class="completed">{str tag='completed' section='artefact.plans'}</th>
             <th class="planscontrols"></th>
         </tr>
     </thead>

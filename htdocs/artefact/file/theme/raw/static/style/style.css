@@ -1,173 +1,64 @@
 /**
  * CSS rules for the file artefact plugin
  *
- * Copyright (C) 2006-2009 Catalyst IT
+ * Copyright (C) 2006-2012 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-
-#profileicons {
-    width: 100%;
-}
-* html #profileicons {
-	width: 97%;
-}
 #profileicons tfoot td.right input.submit {
 	font-weight: bold;
 }
 #profileicons tfoot td.right input#settings_delete {
 	font-weight: normal;
 }
-
 /* File upload box */
 .fileupload {
-	background: #eee;
-	border: 1px solid #d1d1d1;
 	margin-bottom: 10px;
-	width: 100%;
+	padding: 5px;
 }
 .uploaddisabled {
-	background: #eee;
-	border: 1px solid #d1d1d1;
 	margin-bottom: 10px;
-    padding: .25em;
+	padding: 5px;
 }
-* html .fileupload {
-	width: 98%;
-}
-.fileupload th {
-	text-align: left;
-	padding-left: 10px !important;
-}
-.fileupload th label,
-.uploadform th label {
-	white-space: nowrap !important;
-	font-weight: bold !important;
+#upload label, .fileupload label, .pieform .uploadform label {
+	white-space: nowrap;
+	font-weight: bold;
 }
 .uploadform td {
 	font-size: .9167em;
 	line-height: 1.3333em;
 }
-
 .createfolder-message div {
-    margin-bottom: 3px;
+	margin-bottom: 3px;
 }
 #createfolder {
-	background-color: #EEE;
-	border: 1px solid #D1D1D1;
-	padding: 3px 5px;
+	padding: 5px;
 	margin: 10px 0 5px 0;
 }
-#upload {
-	background-color: #EEE;
-	border: 1px solid #D1D1D1;
-}
-#upload tr th {
-	padding: 5px 5px 3px 10px;
-}
-#upload #upload_file_container th {
-	padding-top: 10px;
-}
-#upload #upload_file_container td {
-	padding-top: 10px;
-}
-#upload #upload_submit_container td {
-	padding-bottom: 10px;
-}
-
-/* folder nav */
-.foldernav {
-    font-weight: bold;
-    padding: 1px 0 0 20px;
-    font-size: 1.3333em;
-    background: url(../images/foldernav_small.png) no-repeat left top;
-}
-form#files .foldernav {
-    padding: 5px 0 3px 30px;
-    font-size: 1.3333em;
-    background: url(../images/foldernav.png) no-repeat left top;
-}
-
 td.filethumb {
 	width: 25px;
-	vertical-align: middle;
 }
-td.filename {
-	padding: 7px 5px 3px 5px !important;
+td.filedescription,
+td.filesize,
+td.filedate,
+td.filetags {
+	font-size: .9167em;
 }
 td.filedescription {
-	padding: 7px 5px 3px 5px!important;
-	font-size: .9167em;
+	padding-top: 5px;
 }
-td.filesize {
-	padding: 7px 5px 3px 5px!important;
-	font-size: .9167em;
-}
-td.filedate {
-	padding: 7px 5px 3px 5px!important;
-	font-size: .9167em;
-	color: #888888;
-}
-td.filetags {
-	padding: 7px 5px 3px 5px!important;
-	font-size: .9167em;
-}
-
 /* File list */
-.filelist {
-    width: 100%;
-}
-* html .filelist {
-	width: 98%;
-}
-.filelist th {
-	border-bottom: 1px solid #CCCCCC;
-}
 .filelist table th {
 	border-bottom: 0;
-}
-.filelist td.right input.btn-big-del {
-	font-size: 1%;
-}
-.filelist td.right input.btn-big-edit {
-	font-size: 1%;
-}
-.filelist .filethumb img {
-	width: 20px;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0){
-.filelist td.right input {
-	display: inline;
-}
-}
-
-/* parent folder row */
-tr.parentfolder td {
-	background-color: #ddd !important;
-	font-style: italic;
-}
-tr.parentfolder td.filename a.changefolder {
-    height: 16px;
-    display: block;
-    background: url(../images/parentfolder.png) no-repeat left top;
-}
-/* new row */
-.filelist tr.highlight-file td {
-    background-color: #fffcd8 !important;
-	border-bottom: 1px solid #FFF;
-}
-/* folder row */
-tr.folder td {
-	border-bottom: 1px solid #FFF;
 }
 tr.folder td.filename {
 	font-weight: bold;
 }
-/* folder row being moved */
-tr.folderhover td {
-    background-color: #ffc;
+tr.editrow table td {
+	border: 0;
+	background: none;
 }
 tr.folderhover a, .foldernav a.folderhover {
-    text-decoration: none;
+	text-decoration: none;
 }
 .icon-drag {
 	width: 1.5em;
@@ -194,33 +85,37 @@ tr.folderhover a, .foldernav a.folderhover {
 #files_filebrowser_edit_row td td {
 	border: none;
 }
-
+.fileedittable tbody th {
+	padding-top: 8px;
+}
 /* Edit post File list */
 #editpost_filebrowser_upload_container {
 	margin-top: 10px;
 }
-#editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
-	padding: 10px;
-	border-top: 1px solid #eee;
-	border-right: 1px solid #eee;
-	border-bottom: 4px solid #eee;
-	border-left: 1px solid #eee;
-}
 .attachments th {
 	text-align: left !important;
 }
-
 /* Edit post selected file list */
 #editpost_filebrowser_empty_selectlist {
 	margin: 0;
 }
-
-.filelist table table.editpermissions th,
-.filelist table table.editpermissions td {
+.filelist table table.editpermissions th, .filelist table table.editpermissions td {
 	font-size: .9167em;
 }
-
-.filelist .disabled {
-	color: #C3C3C3;
+#editpost_filebrowser_selectlist input.unselect {
+	float: right;
+}
+input#upload_submit {
+	font-weight: bold;
+}
+#editpost_filebrowser_upload_browse,
+#editpost_filebrowser_open_upload_browse_container {
+	padding: 5px;
+}
+#instconf_folder_selectlist input.button {
+	font-size: 0.9167em;
+	float: right;
+}
+#instconf_artefactid_selectlist input.button {
+	float: right;
 }

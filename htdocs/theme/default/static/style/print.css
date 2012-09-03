@@ -1,10 +1,12 @@
 body {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11pt;
-	line-height: 16pt;
+	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+	font-size: 10pt;
+	line-height: 14pt;
 	background: none;
 	color: #000000;
 	width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .hiddenStructure {
@@ -12,23 +14,24 @@ body {
 }
 
 
+
 /* TITLES */
 h1 {
 	color: #000000;
-    font-size: 16pt;
-	page-break-after: avoid; 
+    font-size: 18pt;
+	page-break-after: avoid;
     page-break-inside: avoid;
 }
 h2 {
-    font-size: 14pt;
+    font-size: 16pt;
 	color: #000000;
 	page-break-after: avoid; 
     page-break-inside: avoid;
 }
 h3 {
 	color: #000000;
-    font-size: 13pt;
-	page-break-after: avoid; 
+    font-size: 14pt;
+	page-break-after: avoid;
     page-break-inside: avoid;
 }
 h4 {
@@ -39,12 +42,12 @@ h4 {
 }
 h5 {
 	color: #000000;
-    font-size: 11pt;
-	page-break-after: avoid; 
+    font-size: 10pt;
+	page-break-after: avoid;
     page-break-inside: avoid;
 }
 h6 {
-    font-size: 10pt;
+    font-size: 9pt;
 	color: #000000;
 	page-break-after: avoid; 
     page-break-inside: avoid;
@@ -67,23 +70,25 @@ h6 {
 .s,
 .description,
 td.description {
-	font-size: 9pt;
+	font-size: 8pt;
     font-weight: normal;
+	line-height: 10pt;
+	color: #000000;
 }
 acronym {
-    color: #000;
-    border-bottom: 1px dotted #6e6e6e;
+    color: #000000;
+    border-bottom: 1px dotted #000000;
 }
 #uploadformmessage,
 #createfolderformmessage,
 .error {
-    color: #000;
+    color: #000000;
 }
 input.error, select.error {
-    color: #000;
+    color: #000000;
 }
 .errmsg {
-    color: #000;
+    color: #000000;
     font-size: 9pt;
 }
 
@@ -100,19 +105,26 @@ a:link,
 a:active,
 a:visited,
 a:hover {
-    color: #000;
-	text-decoration: none;
+    color: #0033ff;
+	text-decoration: underline;
+}
+a:link[href^="http://"]:after, a[href^="http://"]:visited:after {
+    content: " (" attr(href) ") ";
+    font-size: 11px;
+}
+a[href^="http://"] {
+    color: #000000;
 }
 
 
 /* FORM ELEMENTS */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
-	color: #000;
+	color: #000000;
 }
 
 input.text,
 input.text.required {
-	border: 1px solid #000;
+	border: 1px solid #000000;
 }
 
 .defaultSkin table.mceLayout {
@@ -123,24 +135,15 @@ input.text.required {
 	display: none;
 }
 
-
 /* Tabs in page */
-ul.in-page-tabs li a {
+.tabswrap {
 	display: none;
-}
-ul.in-page-tabs li a.current-tab {
-	background: none;
-	display: inherit;
-	float: left;
-	padding: 0;
-	font-size: 14pt;
-	color: #000;
 }
 .subpage {
 	border: none;
 	padding: 0;
+    clear: both;
 }
-
 #top-pane,
 #layout-link,
 #blocksinstruction,
@@ -156,11 +159,11 @@ ul.in-page-tabs li a.current-tab {
 
 /* STUFF THAT I'VE YET TO WORK OUT WHERE THEY COME FROM */
 table.tablerenderer th.asc,
-table.tablerenderer th.desc { 
+table.tablerenderer th.desc {
     background: none;
 }
 #installer th {
-    border-bottom: 1px solid #6e6e6e;
+    border-bottom: 1px solid #000000;
 }
 #msgscol {
     width: 50%;
@@ -168,9 +171,10 @@ table.tablerenderer th.desc {
 
 
 /* Default light buttons to the big ones */
-input.submit, 
-input.button, button,
-input.submitcancel, 
+input.submit,
+input.button,
+button,
+input.submitcancel,
 input.cancelbackcreate,
 #settings_delete {
 	display: none;
@@ -183,37 +187,57 @@ div.grippie {
 
 /* LABEL */
 label {
-    color: #000;
+    color: #000000;
 }
 /* labels that ended up with required colour but needs to be normal */
 .emaillist .validated label {
-	color: #000;
+	color: #000000;
 	font-weight: normal;
 }
 
 /* CONTENT LAYOUT */
+#switchwrap {
+    display: none;
+}
 #container,
 #containerX,
+#mainmiddlewrap,
+#mainmiddle,
 #mainwrapper,
-#column-left,
-#column-full,
-.maincontent {
+#main-wrapper-narrow-right,
+#main-wrapper-narrow-left,
+#main-column,
+#main-column-container {
 	background: none;
+	width: 100%;
+	padding: 0;
+	margin: 0;
 }
-
+#left-column,
 #right-column {
 	display: none;
 }
 
 /* HEADER ELEMENTS */
-#top-wrapper {
-	border: none;
-}
+#top-wrapper,
 #containerX #top-wrapper {
+	border: none;
 	background: none;
+}
+#site-logo {
+    float: none;
+    padding: 0;
+    margin-bottom: 20pt;
+}
+#header-right {
+    display: none;
 }
 #containerX #top-wrapper .viewheader {
 	text-align: right;
+}
+.viewheader {
+    padding: 0;
+    margin-bottom: 20pt;
 }
 #containerX #top-wrapper .rbuttons {
 	display: inline !important;
@@ -221,15 +245,15 @@ label {
 	left: 0;
 	right: auto;
 }
-
-#site-logo {
-	float: none;
+.viewheader .small-logo img {
+    margin: 0;
+    padding: 0;
 }
-/* search box in header */
-#usf,
+.viewheader .center {
+    text-align: right;
+}
 #main-nav,
 #sub-nav,
-div.sidebar,
 #messages {
     display: none;
 }
@@ -238,12 +262,8 @@ div.sidebar,
 
 
 /* MAIN CONTENT BEGIN */
-* html .content {
-	float: none;
-}
-
 .maincontent ul {
-	page-break-before: avoid; 
+	page-break-before: avoid;
 }
 
 .maincontent li {
@@ -254,20 +274,21 @@ div.sidebar,
 	display: none;
 }
 
+.page-help-icon {
+    display: none;
+}
 
-.description { 
-	font-size: 9pt; 
-	font-style: italic; 
+.error {
 	color: #6e6e6e;
 }
 
-.error { 
-	color: #6e6e6e; 
+.errmsg {
+	color: #6e6e6e;
+    font-size: 9pt;
 }
 
-.errmsg { 
-	color: #6e6e6e; 
-	font-size: 9pt; 
+.column {
+    padding: 0 1% 0 0;
 }
 
 
@@ -289,16 +310,16 @@ div.sidebar,
 	width: 100%;
 }
 .maincontent thead th {
-    color: #000;
-	border-bottom: 1px solid #6e6e6e;
+    color: #000000;
+	border-bottom: 1px solid #000000;
 }
 th,
 .maincontent tbody th {
-    color: #000;
+    color: #000000;
 	border-bottom: none;
 }
 .maincontent tfoot td {
-	border-top: 1px solid #6e6e6e;
+	border-top: 1px solid #000000;
 }
 .tablerenderer {
 	border: none;
@@ -318,21 +339,26 @@ td,
 
 /* Legend */
 legend {
-	color: #000;
+	color: #000000;
 	font-weight: bold;
 	font-size: 14pt;
 }
-legend a, 
-legend a:link, 
-legend a:visited, 
+legend a,
+legend a:link,
+legend a:visited,
 legend a:active {
-	color: #000;
+	color: #000000;
 }
 /* Fieldset */
 
 /* Alternative row background colours */
 .r0,
-.r1 {
+.r0 td,
+.d0,
+.friends,
+.r1,
+.r1 td,
+.d1 {
     background: none;
 }
 

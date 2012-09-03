@@ -23,7 +23,7 @@
 {foreach from=$views item=view}
                     <tr class="{cycle values='r0,r1'}">
                         <td>
-                            <h3><a href="{$view.fullurl}">{$view.displaytitle}</a></h3>
+                            <h4><a href="{$view.fullurl}">{$view.displaytitle}</a></h4>
 {if $view.submittedto}
                               <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
 {elseif $view.type == 'profile'}
@@ -37,7 +37,10 @@
 {/if}
                         </td>
                         <td class="right buttonscell btns2">
-{if !$view.submittedto && (!$view.locked || $editlocked)}
+{if 
+   !$view.submittedto && (!$view.locked || $editlocked)
+   && !($MOBILE && ($view.type == 'profile' || $view.type == 'dashboard'))
+}
                                 <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}

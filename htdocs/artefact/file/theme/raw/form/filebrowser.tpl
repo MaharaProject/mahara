@@ -35,53 +35,44 @@
   </div>
 {/if}
 
-<table id="{$prefix}_upload_container" class="fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
- <tbody>
+<div id="{$prefix}_upload_container" class="fileupload{if ($tabs && !$tabs.upload) || $uploaddisabled} hidden{/if}">
 {if $config.upload}
   {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
   {* config.simpleupload: the form only contains a file chooser *}
   {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
   <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1" />
   <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
-  <tr><td colspan=2 id="{$prefix}_upload_messages"></td></tr>
+  <div id="{$prefix}_upload_messages"></div>
   {if $config.uploadagreement}
-  <tr id="{$prefix}_agreement" class="uploadform">
-    <th><label>{str tag='uploadfile' section='artefact.file'}</label></th>
-    <td>
+  <div id="{$prefix}_agreement" class="uploadform">
+    <label>{str tag='uploadfile' section='artefact.file'}</label>
       <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
       {$agreementtext|clean_html|safe}
-    </td>
-  </tr>
+  </div>
   {/if}
-  <tr class="uploadform">
-    <th><label>{if $config.simpleupload}{str tag='uploadfile' section='artefact.file'}{else}{str tag='File' section='artefact.file'}{/if}</label></th>
-    <td>
-      <span id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile[]" multiple size="40" /></span>
-      <span id="{$prefix}_userfile_maxuploadsize">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
+  <div class="uploadform">
+    <label>{if $config.simpleupload}{str tag='uploadfile' section='artefact.file'}{else}{str tag='File' section='artefact.file'}{/if}</label>
+      <span id="{$prefix}_userfile_container"><input type="file" class="file" id="{$prefix}_userfile" name="userfile[]" multiple size="20" /></span>
+      <span id="{$prefix}_userfile_maxuploadsize" class="s">({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})</span>
       {if $config.uploadagreement}<script>setNodeAttribute('{$prefix}_userfile', 'disabled', true);</script>{/if}
-    </td>
-  </tr>
+  </div>
   {if $config.resizeonuploaduseroption}
-  <tr id="{$prefix}_resizeonuploaduseroption" class="description">
-    <th></th>
-    <td>{str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
+  <div id="{$prefix}_resizeonuploaduseroption" class="description">
+    {str tag='resizeonuploadenablefilebrowser1' section='artefact.file' arg1=$resizeonuploadmaxwidth arg2=$resizeonuploadmaxheight}
       <input type="checkbox" name="{$prefix}_resizeonuploaduserenable" id="{$prefix}_resizeonuploaduserenable" {if $resizeonuploadenable && $config.resizeonuploaduserdefault}checked{/if}/>
       {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
-    </td>
-  </tr>
+  </div>
   {/if}
-  <tr class="uploadform">
-    <th></th>
-    <td id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
+  <div class="uploadform">
+    <div id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
       {if $config.submitbutton}
       <input type="submit" class="submit nojs-hidden-block" name="{$prefix}_uploadsubmit" id="{$prefix}_uploadsubmit" value="{str tag=upload section=artefact.file}" />
       {/if}
       <noscript><input type="submit" class="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
-    </td>
-  </tr>
+    </div>
+  </div>
 {/if}
- </tbody>
-</table>
+</div>
 {if $config.upload}
 <div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} hidden{/if}">{str tag="cannoteditfolder" section=artefact.file}</div>
 {/if}

@@ -1,13 +1,13 @@
 {include file="header.tpl"}
 
-<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
-<div id="forumbtns" class="rbuttons">
+<div id="forumbtns">
 	{if $admin}
 		<a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn editforumtitle">{str tag="edittitle" section="interaction.forum"}</a>
         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn deleteforum">{str tag="deleteforum" section="interaction.forum"}</a>
 	{/if}
 	{if $membership}{$forum->subscribe|safe}{/if}
 </div>
+<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
 <div id="forumdescription">{$forum->description|clean_html|safe}</div>
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
@@ -21,13 +21,13 @@
     <table id="forumtopicstable" class="fullwidth">
     <thead>
     <tr>
-        <th width="12px"></th>
-        <th width="12px"></th>
-        <th>{str tag="Topic" section="interaction.forum"}</th>
-        <th>{str tag="Poster" section="interaction.forum"}</th>
-        <th class="postscount center" width="10%">{str tag="Posts" section="interaction.forum"}</th>
-        <th class="lastpost" width="20%">{str tag="lastpost" section="interaction.forum"}</th>
-        <th width="20px"></th>
+        <th class="narrow"></th>
+        <th class="narrow"></th>
+        <th class="topic">{str tag="Topic" section="interaction.forum"}</th>
+        <th class="posterth">{str tag="Poster" section="interaction.forum"}</th>
+        <th class="postscount center">{str tag="Posts" section="interaction.forum"}</th>
+        <th class="lastpost">{str tag="lastpost" section="interaction.forum"}</th>
+        {if $moderator}<th class="right btns2"></th>{/if}
     </tr>
     </thead>
     {if $stickytopics}

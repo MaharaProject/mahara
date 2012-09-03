@@ -112,34 +112,39 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     $langdirection = get_string('thisdirection', 'langconfig');
 
     // TinyMCE must be included first for some reason we're not sure about
-    $checkarray = array(&$javascript, &$headers);
-    $found_tinymce = false;
-    foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
-            if (!$found_tinymce) {
-                $found_tinymce = $check[$key];
-                $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-                $content_css = json_encode($THEME->get_url('style/tinymce.css'));
-                $language = substr(current_language(), 0, 2);
-                if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                    $language = 'en';
-                }
-                $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
+    //
+    // Note: we do not display tinyMCE for mobile devices
+    // as it doesn't work on some of them and can
+    // disable the editing of a textarea field
+    if ($SESSION->get('mobile') == false) {
+        $checkarray = array(&$javascript, &$headers);
+        $found_tinymce = false;
+        foreach ($checkarray as &$check) {
+            if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+                if (!$found_tinymce) {
+                    $found_tinymce = $check[$key];
+                    $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+                    $content_css = json_encode($THEME->get_url('style/tinymce.css'));
+                    $language = substr(current_language(), 0, 2);
+                    if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
+                        $language = 'en';
+                    }
+                    $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
-                $adv_buttons = array(
-                    "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
-                    "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,spellchecker,cleanup,separator,link,unlink,separator,code,fullscreen",
-                    "undo,redo,separator,bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-                    "fontselect,separator,fontsizeselect,separator,formatselect",
-                );
+                    $adv_buttons = array(
+                        "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+                        "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,spellchecker,cleanup,separator,link,unlink,separator,code,fullscreen",
+                        "undo,redo,separator,bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+                        "fontselect,separator,fontsizeselect,separator,formatselect",
+                    );
 
-                // For right-to-left langs, reverse button order & align controls right.
-                $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
-                $toolbar_align = 'left';
+                    // For right-to-left langs, reverse button order & align controls right.
+                    $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
+                    $toolbar_align = 'left';
 
-                if ($check[$key] == 'tinymce') {
-                    $spellchecker_rpc = $jsroot.'tinymce/plugins/spellchecker/rpc.php';
-                    $tinymce_config = <<<EOF
+                    if ($check[$key] == 'tinymce') {
+                        $spellchecker_rpc = $jsroot.'tinymce/plugins/spellchecker/rpc.php';
+                        $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
     plugins: "table,emotions,spellchecker,inlinepopups,paste,fullscreen",
@@ -152,9 +157,9 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     spellchecker_rpc_url : "{$spellchecker_rpc}",
     //width: '512',
 EOF;
-                }
-                else {
-                    $tinymce_config = <<<EOF
+                    }
+                    else {
+                        $tinymce_config = <<<EOF
     mode: "textareas",
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
@@ -173,9 +178,9 @@ EOF;
         theme_advanced_buttons3 : "{$adv_buttons[3]}"
     },
 EOF;
-                }
+                    }
 
-                $headers[] = <<<EOF
+                    $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
     button_tile_map: true,
@@ -220,19 +225,20 @@ function custom_urlconvert (u, n, e) {
 </script>
 
 EOF;
-                unset($check[$key]);
-            }
-            else {
-                if ($check[$key] != $found_tinymce) {
-                    log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                    unset($check[$key]);
                 }
+                else {
+                    if ($check[$key] != $found_tinymce) {
+                        log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                    }
+                    unset($check[$key]);
+                }
+            }
+
+            // If any page adds jquery explicitly, remove it from the list
+            if (($key = array_search('jquery', $check)) !== false) {
                 unset($check[$key]);
             }
-        }
-
-        // If any page adds jquery explicitly, remove it from the list
-        if (($key = array_search('jquery', $check)) !== false) {
-            unset($check[$key]);
         }
     }
 
@@ -395,10 +401,14 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
-    $dropdownmenu = get_config('dropdownmenu');
+    // disable drop-downs if a handheld device detected
+    $dropdownmenu = $SESSION->get('handheld_device') ? false : get_config('dropdownmenu');
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
     }
+
+    $smarty->assign('MOBILE', $SESSION->get('mobile'));
+    $smarty->assign('HANDHELD_DEVICE', $SESSION->get('handheld_device'));
 
     $sitename = get_config('sitename');
     if (!$sitename) {
@@ -2219,7 +2229,10 @@ function institutional_staff_nav() {
  * @return $standardnav a data structure containing the standard navigation
  */
 function mahara_standard_nav() {
-    $exportenabled = plugins_installed('export');
+    global $SESSION;
+
+    $exportenabled = (plugins_installed('export') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
+
     $menu = array(
         'home' => array(
             'path' => '',
@@ -2319,8 +2332,8 @@ function mahara_standard_nav() {
  */
 function main_nav() {
     if (in_admin_section()) {
-        global $USER;
-        if ($USER->get('admin')) {
+        global $USER, $SESSION;
+        if ($USER->get('admin') && !$SESSION->get('mobile')) {
             $menu = admin_nav();
         }
         else if ($USER->is_institutional_admin()) {

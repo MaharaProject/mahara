@@ -1,71 +1,75 @@
-body{
-	font-family: Arial, Helvetica, sans-serif !important;
-	font-size: 12px !important;
-	padding: 5px !important;
-	color: #3C083F;
-	background: #FFF !important;
+body {
+	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
+	font-size: 75% !important;
+	padding: 0 !important;
+	color: #360435 !important;
+	line-height: 1.333em !important;
+	background-color: #FFFFFF !important;
 }
-td {
-	font-family: Arial, Helvetica, sans-serif !important;
+td, th {
+	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
 	font-size: 1em !important;
-	padding: .5em !important;
-	color: #3C083F;
+	padding: 3px 5px !important;
 }
 pre {
-    font: 12px monospace !important;
+	font: 1em monospace !important;
 }
-
-a,
-a:link,
-a:active,
-a:visited,
-a:hover {
-    color: #580754 !important;
-    text-decoration: none !important;
+a, a:link, a:active, a:visited, a:hover {
+	text-decoration: underline !important;
+	color: #5A0757 !important;
 }
-
 h1 {
-    color: #3C083F !important;
-    font-weight: normal !important;
-    margin: 0 0 .5em 0 !important;
-    padding: 0 !important;
-    font-size: 2em !important;
+	font-weight: normal !important;
+	margin: 0 0 10px 0 !important;
+	padding: 0 !important;
+	font-size: 2em !important;
+	line-height: 1.25em !important;
+	color: #3C083F !important;
 }
 h2 {
-    color: #3C083F !important;
-    font-weight: normal !important;
-    margin: 0 0 .5em 0 !important;
-    padding: 0 !important;
-    font-size: 1.8em !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px 0 !important;
+	padding: 0 !important;
+	font-size: 1.5em !important;
+	line-height: 1.25em !important;
+	color: #3C083F !important;
 }
-
 h3 {
-    color: #3C083F !important;
-    font-weight: normal !important;
-    margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.4em !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px 0 !important;
+	font-size: 1.3333em !important;
+	line-height: 1.25em !important;
+	color: #360435 !important;
 }
 h4 {
-    color: #000000 !important;
-    font-weight: bold !important;
-    margin: 1.5em 0 .5em 0 !important;
-    font-size: 1.3em !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px 0 !important;
+	font-size: 1.1667em !important;
+	line-height: 1.25em !important;
+	color: #360435 !important;
 }
-
 h5 {
-    color: #3C083F !important;
-    font-weight: bold !important;
-    margin: .5em 0 !important;
-    font-size: 1.2em !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px 0 !important;
+	font-size: 1em !important;
+	line-height: 1.25em !important;
+	color: #5A0757 !important;
 }
 h6 {
-    color: #580754 !important;
-    font-weight: bold !important;
-    margin: .5em 0 !important;
-    font-size: 1em !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px 0 !important;
+	font-size: .9167em !important;
+	line-height: 1.25em !important;
+	color: #5A0757 !important;
 }
-
 ul {
-    padding: 0 !important;
-    margin: .5em 0 1em 0 !important;
+	padding: 0 !important;
+	margin: 5px 0 10px 0 !important;
+	list-style: disc !important;
+}
+ul li {
+	margin: 0 0 3px 20px !important;
+}
+p {
+	margin: 10px 0 !important;
 }

@@ -12,7 +12,7 @@
 #register-site fieldset table table th,
 #upgradestable th {
     border-bottom: 1px solid #ccc;
-    background-color: #none;
+    background-color: none;
 	color: #677a8a;
 }
 #register-site fieldset table table td,
@@ -76,4 +76,112 @@
 
 .admininstitutionbtns .btn-edit {
 	color: #6E8E00;
+}
+/******************** RESPONSIVE DESIGN ************************/
+/* for 950px or less */
+@media screen and (max-width: 950px) {
+    #site-stats-wrap2 {
+        margin-left: 0;
+    }
+    .statistics-subpage-left-column {
+        float: none;
+        margin-left: 0;
+        width: 98%;
+    }
+    .statistics-subpage-right-column {
+        float: none;
+        width: 98%;
+    }
+}
+/* for 660px or less */
+@media screen and (max-width: 660px) {
+    form#usertype {
+        float: none;
+    }
+    form#buttons div span {
+        float: none;
+    }
+}
+/* for 650px or less */
+@media screen and (max-width: 650px) {
+    #site-stats-wrap {
+        width: 98%;
+        padding: 0 0.9% 10px 0.9%;
+        float: none;
+        margin: 0;
+    }
+    .site-stats-left,  .site-stats-right {
+        width: 100%;
+        padding: 0 0 10px 0;
+        margin: 0;
+        float: none;
+    }
+}
+/* for 540px or less  */
+@media screen and (max-width: 540px) {
+    #register-site,  #site-stats,  #close-site {
+        width: 94%;
+        float: none;
+        padding: 3% 3%;
+        margin: 0 0 10px 0;
+        min-height: 0;
+    }
+    .admin-home-column {
+        width: 98%;
+        padding: 0 0.9% 1px 0.9%;
+        float: none;
+    }
+    select#siteoptions_country {
+        width: 98%;
+    }
+    #siteoptions th label {
+        white-space: normal;
+    }
+    #menuitemlist input#namenew,  #menuitemlist input#linkedtonew {
+        width: 98%;
+    }
+    #menuitemlist #rownew td div {
+        white-space: nowrap;
+    }
+    #menuitemlist #rownew td div a {
+        display: none;
+    }
+    form#footerlinks td input.text {
+        width: 98%;
+    }
+    #initials label {
+        display: block;
+    }
+    #suspendedlist th,  #suspendedlist td {
+        float: none;
+        width: auto;
+    }
+    .userlisttable .lrfieldlists {
+        width: 44%;
+    }
+    .userlisttable .lrbuttons {
+        width: 10%;
+    }
+    .userlisttable #users_search {
+        width: 50%;
+    }
+    pre {
+        font-size: 1em;
+        white-space: normal;
+    }
+    #adduser table#adduser-t th,  #adduser table#adduser-t td {
+        float: none;
+        width: auto;
+    }
+    #friendslist .rightdiv, #onlinelist .rightdiv, #adminlist .rightdiv, #stafflist .rightdiv, #pendinglist .rightdiv {
+        margin: 0;
+        padding: 0;
+    }
+    #pendinglist .rightdiv a {
+        line-height: 2em;
+    }
+    #adminplugin ul.adminpluginstypes li {
+        float: none;
+        margin: 10px 0;
+    }
 }

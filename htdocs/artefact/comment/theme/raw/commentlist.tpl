@@ -1,16 +1,6 @@
 {foreach from=$data item=item}
   <tr class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}">
     <td>
-      <div class="fr">
-      {if $item->canedit}
-	      <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
-	        <input type="hidden" name="id" value="{$item->id}">
-	        <input type="hidden" name="view" value="{$viewid}">
-	        <input type="image" src="{theme_url filename="images/edit.gif"}" title="{str tag=edit}">
-	      </form>
-      {/if}
-      {if $item->deleteform}{$item->deleteform|safe}{/if}
-      </div>
       <div class="details commentleft">
       {if $item->author}
         <div class="icon"><a href="{$item->author->profileurl}">
@@ -21,14 +11,21 @@
         {$item->authorname}
       {/if}
       </div>
+      <div class="commentrightwrap">
+        <div class="fr">
+        {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
+        {if $item->canedit}
+          <form name="edit_{$post->id}" action="{$WWWROOT}artefact/comment/edit.php">
+            <input type="hidden" name="id" value="{$item->id}">
+            <input type="hidden" name="view" value="{$viewid}">
+            <input type="image" src="{theme_url filename="images/edit.gif"}" title="{str tag=edit}">
+          </form>
+        {/if}
+        {if $item->deleteform}{$item->deleteform|safe}{/if}
+        </div>
       {if $item->deletedmessage}
-      <div class="commentright">
-        {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
         <span class="details">{str tag=commentremoved section=artefact.comment}</span>
-      </div>
       {else}
-      <div class="commentright">
-        {if $item->makepublicform}<div class="makepublicbtn">{$item->makepublicform|safe}</div>{/if}
         {if $item->ratingdata}
         <div class="commentrating">
           {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
@@ -42,8 +39,8 @@
         {/if}
         {$item->description|safe|clean_html}
         {if $item->attachmessage}<div class="attachmessage">{$item->attachmessage}</div>{/if}
-      </div>
       {/if}
+      </div>
       <div class="undercomment">
       {if $item->deletedmessage}
         <span>{$item->deletedmessage} | </span>

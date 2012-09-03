@@ -9,9 +9,9 @@
 <table id="planslist">
     <thead>
         <tr>
-            <th>{str tag='completiondate' section='artefact.plans'}</th>
-            <th>{str tag='title' section='artefact.plans'}</th>
-            <th>{str tag='description' section='artefact.plans'}</th>
+            <th class="completiondate">{str tag='completiondate' section='artefact.plans'}</th>
+            <th class="plantitle">{str tag='title' section='artefact.plans'}</th>
+            <th class="plandescription">{str tag='description' section='artefact.plans'}</th>
             <th class="planscontrols"></th>
             <th class="planscontrols"></th>
             <th class="planscontrols"></th>

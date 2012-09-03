@@ -109,4 +109,5 @@ $urls = array(
 $smarty->assign('url', $urls);
 
 $smarty->assign('page_content', get_site_page_content($pagename));
+
 $smarty->display('index.tpl');

@@ -2,20 +2,20 @@
 
 {if $notrudeform}<div class="message delete narrow">{$notrudeform|safe}</div>{/if}
 
-{if $maintitle}<h1>{$maintitle|safe}</h1>{/if}
-
 {if !$microheaders && ($mnethost || $editurl)}
-<div class="rbuttons">
+<div class="viewrbuttons">
   {if $editurl}{strip}
     {if $new}
       <a class="btn" href="{$editurl}">{str tag=back}</a>
     {else}
-      <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn">{str tag=editthisview section=view}</a>
+      <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn editview">{str tag=editthisview section=view}</a>
     {/if}
   {/strip}{/if}
   {if $mnethost}<a href="{$mnethost.url}" class="btn">{str tag=backto arg1=$mnethost.name}</a>{/if}
 </div>
 {/if}
+
+{if $maintitle}<h1 id="viewh1">{$maintitle|safe}</h1>{/if}
 
 {if !$microheaders && $collection}
     {include file=collectionnav.tpl}

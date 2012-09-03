@@ -26,9 +26,9 @@
                         {/if}
 
             {if $collection->views[0]->view}
-                        <h3><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h3>
+                        <h4><a href="{$collection->views[0]->fullurl}">{$collection->name}</a></h4>
             {else}
-                        <h3 title="{str tag=emptycollection section=collection}">{$collection->name}</h3>
+                        <h4 title="{str tag=emptycollection section=collection}">{$collection->name}</h4>
             {/if}
 
 

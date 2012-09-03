@@ -69,7 +69,7 @@
               <input type="submit" class="cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </td>
           </tr>
-          <tr><td colspan=2 id="{$prefix}_edit_messages"></td></tr>
+          <tr><td colspan="2" id="{$prefix}_edit_messages"></td></tr>
         </tbody>
       </table>
     </td>

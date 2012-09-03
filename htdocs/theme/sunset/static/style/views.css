@@ -1,53 +1,51 @@
 /*  Views  */
-/********************** Top pane of Edit View *************************/
 /* The tabs that allow you to select a blocktype category */
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-  color: #fadc8a;
-  background-color: #c66c14;
+#category-list li {
+	display: inline-block;
 }
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-  color: #ffffff;
-  background-color: #8E1901;
+#category-list li a, #category-list li a:link, #category-list li a:visited, #category-list li a:active {
+	color: #fadc8a;
+	background-color: #c66c14;
 }
-
+#category-list li.current a, #category-list li.current a:link, #category-list li.current a:visited, #category-list li.current a:active {
+	color: #ffffff;
+	background-color: #8E1901;
+}
 /* The panel that contains the blocktype icons */
 #blocktype-list {
-  border: 0;
-  background: #8E1901;
+	border: 0;
+	background: #8E1901;
 }
 #top-pane {
-    background: none;
+	background: none;
 }
 #middle-pane {
-    background: #6b1200;
-    color: #FFF;
+	background: #6b1200;
+	color: #FFF;
 }
 #middle-pane label {
+	color: #FFF;
+}
+#blocktype-list .blocktype h4 {
+	color: #FFF;
+}
+.blocktype-description {
 	color: #FFF;
 }
 #page #bottom-pane {
 	background-color: #dcc695;
 }
-
 /**************** Blockinstance **********************/
 /* pagination */
 #feedback_pagination {
 	border-top: 1px dotted #8E1901;
 }
-
 .blockinstance-header h4 {
 	border-bottom: 1px dotted #8E1901;
 }
-
 ul.colnav li a {
-    background: #8e1901;
-    color: #FFF;
+	background: #8e1901;
+	color: #FFF;
 }
 #collectionnavwrap {
 	background-color: #6b1200;
@@ -58,4 +56,7 @@ ul.colnav li a {
 .viewheader #collection #collectionnavwrap ul.colnav li a {
 	background: #f7be23;
 	color: #8e1901;
+}
+ul.artefactchooser-tabs li {
+	display: inline-block;
 }
