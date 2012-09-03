@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,16 @@
  *
  * @author     Catalyst IT Limited <www.catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2012 Catalyst IT Ltd http://catalyst.net.nz
  */
 
 /* General rules */
-body, body#micro {
+body {
 	background: #182768;
+	color: #333333;
+}
+body#micro {
+	background: #25387E;
 	color: #333333;
 }
 a, a:visited, a:link, a:active {
@@ -83,14 +87,11 @@ h6 {
 	border-top: 1px solid #111641;
 }
 /* Alternative row background colours */
-.r0, .r0 td, .d0 {
+.r0, .r0 td, .d0, .friends {
 	background-color: #fff8e2;
 }
 .r1, .r1 td, .d1 {
 	background-color: #fff4cf;
-}
-tr.folder td {
-	background: #cfcfcf url(../images/folder-bkgd.png) repeat-x top !important;
 }
 .morelinkwrap {
 	background: transparent;
@@ -98,13 +99,8 @@ tr.folder td {
 /**************************** Pagination ****************************/
 div.pagination a {
 	background-color: #fffcf2;
-	border: 0;
 }
 /**************************** Forms ****************************/
-/* Label */
-label {
-	color: #182768;
-}
 /* required */
 .required th, .required label, .requiredmarker, #register_tandc_container th {
 	color: #c81511;
@@ -112,13 +108,6 @@ label {
 /* override required colour to normal colour */
 .required label.plain, .required.radio td label, .required.emaillist td label {
 	color: #333333;
-}
-/* Legend */
-legend {
-	color: #182768;
-}
-legend a, legend a:link, legend a:visited, legend a:active, legend a:hover {
-	color: #182768 !important;
 }
 /* Fieldset */
 fieldset {
@@ -143,20 +132,18 @@ fieldset {
 	border-color: #c86100 #f6871f #f6871f #c86100;
 	color: #000;
 }
-input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact, .btn, div.btn-del input.submit, input.submit.btn-del, div.btn-add input.submit, input.submit.btn-add, button.btn-add, div.btn-msg input.submit, div.btn-edit input.submit, .btn-reply, .btn-subscribe input.submit, .rbuttons, .rbuttons a {
- * filter:chroma(color=#FFFFFF);
-}
 /* buttons that look like links with icons */
 .icon {
 	color: #D66800;
 }
-/* except those that shouldn't */
+/* buttons that look like links */
+.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
+	color: #D66800 !important;
+	text-decoration: none;
+}
+/* links that need to look like buttons */
 span.btn a.icon, a span.icon {
 	color: #000000;
-}
-/* buttons that look like links */
-.linkbtn {
-	color: #D66800;
 }
 /* Search buttons */
 #usf_submit, #usf_submit:hover {
@@ -170,14 +157,19 @@ span.btn a.icon, a span.icon {
 	height: 21px;
 	width: 21px;
 	margin: 0 0 5px 0;
- * filter:chroma(color=#000000);
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+.ie8 #usf_submit, .ie8 #usf_submit:hover {
+	height: 20px;
 }
 /********************* THEME SWITCHER ***************************/
 #switch-mode {
 	width: 100%;
 }
 #switch-mode ul {
-	width: 970px;
+	width: 960px;
 }
 /**************************** Top of page elements ****************************/
 #container {
@@ -189,7 +181,7 @@ span.btn a.icon, a span.icon {
 	max-width: 100%;
 }
 #containerX {
-	background: transparent url(../images/header-bkgd-small.png) repeat-x top left;
+	background: #25387e url(../images/header-bkgd-small.png) repeat-x top left;
 	margin: 0;
 	padding: 0;
 	width: 100%;
@@ -204,18 +196,13 @@ span.btn a.icon, a span.icon {
 	height: 150px;
 }
 #containerX #top-wrapper {
-	height: auto;
-	width: 960px;
-	margin: 0 auto;
 	height: 87px;
 	background: transparent url(../images/header-swirl.png) no-repeat right top;
 }
 #mainmiddle {
-	width: 100%;
 	background: #FFFFFF;
 }
 #containerX #main-wrapper {
-	width: 100%;
 	background: #FFFFFF;
 }
 .main-column {
@@ -236,10 +223,6 @@ span.btn a.icon, a span.icon {
 	padding: 16px 25px 7px 0;
 	margin: 0;
 }
-#top-wrapper ul, #top-wrapper li {
-	text-align: right;
-	display: inline;
-}
 /* Search and language bar */
 #usf {
 	height: 21px;
@@ -254,11 +237,11 @@ span.btn a.icon, a span.icon {
 	padding: 2px 0 3px 10px;
  * padding: 1px 0 3px 10px;
  * line-height: 18px;
-  line-height: 18px\0/;
+	line-height: 18px\0/;
 }
 #header-right {
-	padding: 15px 5px 0 0;
- * padding: 7px 5px 0 0;
+	padding: 0 5px 0 0;
+ * padding: 0 5px 0 0;
 }
 #header-right form {
 	margin: 0;
@@ -270,7 +253,6 @@ span.btn a.icon, a span.icon {
 /**************** TOP NAVIGATION ****************/
 #right-nav ul {
 	margin: 1.5em 0 1em 0;
-	min-width: 20em;
 }
 #right-nav li a {
 	color: #ffd64d;
@@ -286,32 +268,30 @@ span.btn a.icon, a span.icon {
 	padding: 0;
 	margin: 0;
 	height: 38px;
-	line-height: 38px;
 	border-bottom: 0;
+	background: none;
 }
 #main-nav ul {
 	margin: 0;
 	padding: 0;
+	height: 38px;
 }
 #main-nav li {
 	color: #252c66;
 	text-decoration: none;
-	font-size: 15px;
 	margin: 0 0 0 3px;
 	padding: 0;
 }
 #main-nav li span {
 	background: transparent url(../images/nav-divider.png) no-repeat right 5px;
 	height: 38px;
-	display: block;
-	_display: inline-block;
 }
 #main-nav li a, #main-nav li a:link, #main-nav li a:visited, #main-nav li a:active {
 	margin: 0;
 	padding: 0 12px 0 10px;
 	color: #252c66;
 	height: 38px;
-	line-height: 44px;
+	line-height: 40px;
 }
 #main-nav li a:hover {
 	color: #f6871f;
@@ -453,7 +433,7 @@ span.btn a.icon, a span.icon {
 	text-align: left;
 	background: none;
 	height: 30px;
-	line-height: 27px;
+	line-height: 30px;
 	border:none;
 	border-bottom: 0;
 }
@@ -465,7 +445,8 @@ span.btn a.icon, a span.icon {
 #sub-nav li a, #sub-nav li a:link, #sub-nav li a:visited, #sub-nav li a:active {
 	color: #14336F;
 	height: 30px;
-	line-height: 27px;
+	line-height: 30px;
+	padding: 0 10px;
 }
 #sub-nav li a:hover {
 	color: #1A428F;
@@ -489,7 +470,7 @@ form#profileform {
 }
 ul.in-page-tabs, ul.edit-view-tabs {
 	height: 34px;
-	line-height: 34px;
+	line-height: 30px;
 	background: url(../images/inpage-left.png) no-repeat left top;
 	padding-left: 10px;
 }
@@ -498,6 +479,7 @@ ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, u
 	background: none;
 	height: 34px;
 	line-height: 38px;
+	padding: 0 10px;
 }
 ul.in-page-tabs li a:hover {
 	text-decoration: none;
@@ -518,10 +500,15 @@ ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-p
 	background: #f9f9f9;
 }
 /**************** MAIN CONTENT *****************/
-#main-wrapper {
-	background: none;
+#mainmiddlewrap {
+	background: #FFFFFF;
+}
+#mainmiddle {
 	width: 960px;
 	margin: 0 auto;
+}
+#main-column-container {
+	padding: 10px 0;
 }
 /**************** SIDEBAR ******************/
 #left-column, #right-column {
@@ -551,7 +538,9 @@ div.sideblock .sidebar-content {
 	background: #f1f2f8;
 	margin: 0 14px 0 10px;
 	padding: 5px;
-	* width: 220px;
+}
+.ie7 div.sideblock .sidebar-content {
+	width: 220px;
 }
 div.sideblock .sidebar-content a {
 	color: #182768;
@@ -581,7 +570,9 @@ div.sideblock .sidebar-content a {
 #sb-profile .sidebar-content {
 	background: #fff4cf;
 	padding: 0 10px;
-	* width: 210px;
+}
+.ie7 #sb-profile .sidebar-content {
+	width: 210px;
 }
 #sb-profile #unreadmessages {
 	margin-bottom: 3px;
@@ -592,8 +583,7 @@ div.sideblock .sidebar-content a {
 #sb-profile #user-profileicon {
 	padding: 0
 }
-#sb-profile .sidebar-content ul li#groups,
-#sb-profile .sidebar-content #changeuser {
+#sb-profile .sidebar-content ul li#groups, #sb-profile .sidebar-content #changeuser {
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
@@ -605,11 +595,13 @@ div.sideblock .sidebar-content a {
 }
 #sb-profile ul ul li {
 	list-style-image: url(../images/bullet.png);
- * list-style-image: none !important;
- * list-style: disc inside !important;
 	list-style-position: inside;
 	border-top: 1px dashed #ffd850;
 	padding: 5px 0 3px 0;
+}
+.ie7 #sb-profile ul ul li {
+	list-style-image: none !important;
+	list-style: disc inside !important;
 }
 #sb-profile ul ul a, #sb-profile ul ul a:link, #sb-profile ul ul a:visited, #sb-profile ul ul a:active {
 	color: #d66800;
@@ -633,58 +625,21 @@ div.sideblock .sidebar-content a {
 	color: #FFF;
 }
 #quota_fill {
-	margin: 0;
 	background: url(../images/quota_bar_highlight.gif) repeat-x;
-}
-/* Side Search */
-.sidebar #selfsearch input {
-	width: 190px;
 }
 /******************** FOOTER ****************************/
 #footer-wrap {
 	background-color: #182768;
-	border: 0;
-	padding: 0;
-	width: 100%;
+	color: #636d9b;
 }
 #footer {
 	width: 960px;
 	margin: 0 auto;
 }
-#footernav {
+#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
 	color: #FFFFFF;
-	margin-top: 22px;
-}
-#footernav a, #footernav a:link, #footernav a:active, #footernav a:visited {
-	color: #FFFFFF;
-}
-#footernav a:hover {
-	color: #FFF;
-}
-#performance-info {
-	color: #4f5a8c;
-	margin: 15px 0 0 0;
-}
-#performance-info span {
-	color: #636d9b;
-}
-#version {
-	color: #636d9b;
-	margin: 15px 0 0 0;
-}
-#powered-by {
-	margin: 10px 10px 10px 0;
-}
-body#micro #footer-wrap {
-	background: url(../images/powered-by-mahara-small.png) no-repeat top left;
-	padding-left: 60px;
-	width: 900px;
-	margin: 10px auto 0 auto;
-	min-height: 20px;
 }
 /****************************** PAGE BY PAGE STYLES **********************************/
-/* Group: about */
-
 /* Settings > Preferences */
 #accountprefs table h3 {
 	border-bottom: 1px dotted #888888
@@ -838,9 +793,7 @@ body#micro #footer-wrap {
 	background: url(../images/home-sharepages.png) no-repeat left bottom;
 }
 #micro #footer-wrap {
-	background: transparent;
 	width: 960px;
-	margin: 0 auto;
 }
 .viewheader a {
 	color: #FFF;
@@ -860,28 +813,39 @@ ul.colnav li a {
 	border: 0;
 }
 /**************** DROPDOWN NAVIGATION ****************/
-/**************** SUB NAVIGATION *********************/
 #main-nav .dropdown-sub {
-	top: 37px !important;
-	left: -4px !important;
+	top: 37px;
+	left: -4px;
+}
+#main-nav ul li.selected ul.dropdown-sub {
+	left: 7px;
 }
 #main-nav .dropdown-sub li {
-	height: 30px !important;
-	line-height: 30px !important;
+	margin: 0;
 }
 #main-nav .dropdown-sub li span {
-	border-top: 1px solid #0f1978 !important;
-	border-bottom: 1px solid #000533 !important;
+	border-top: 1px solid #0f1978;
+	border-bottom: 1px solid #000533;
+	height: 30px;
 }
 #main-nav .dropdown-sub li a, #main-nav .dropdown-sub li a:link, #main-nav .dropdown-sub li a:visited, #main-nav .dropdown-sub li a:active {
-	background: #00084f !important;
-	color: #FFF !important;
-	padding: 6px 10px !important;
+	background: #00084f;
+	color: #FFF;
+	height: 30px;
+	line-height: 30px;
+	text-decoration: none;
 }
 #main-nav .dropdown-sub li a:hover {
-	background: #0b1960 !important;
-	color: #ffd64d !important;
-	text-decoration: none !important;
+	background: #0b1960;
+	color: #ffd64d;
+	text-decoration: none;
+}
+#main-nav .dropdown-sub li.selected {
+	background: none;
+	margin: 0;
+}
+#main-nav .dropdown-sub li.selected span {
+	background: none;
 }
 #viewforum {
 	background: #FFFFFF;
@@ -890,25 +854,11 @@ ul.colnav li a {
 	background: #FFFFFF;
 }
 /****************** SMALL HEADER *****************/
-a.small-logo {
-	display: block;
-}
-.viewheadertop #mainnav-container {
-	padding: 5px 5px 5px 115px;
-}
 #containerX #top-wrapper a, #containerX #top-wrapper a:hover, #containerX #top-wrapper a:active {
 	color: #ffd64d;
 }
-.viewheader #collection {
-	margin-top: 16px;
-}
 #collection .collection-title {
-	margin: 10px 10px 0 0;
-}
-#containerX ul.colnav li a, #containerX ul.colnav li.selected span {
-	border-radius: 3px 3px 0 0;
-	-webkit-border-radius: 3px 3px 0 0;
-	-moz-border-radius: 3px 3px 0 0;
+	color: #FFFFFF;
 }
 #containerX ul.colnav li a {
 	background: #5b6eae;
