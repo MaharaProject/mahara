@@ -1491,13 +1491,13 @@ function group_format_editwindow($group) {
         $formatted = "";
     }
     else if (!empty($editwindowstart) && empty($editwindowend)) {
-        $formatted = get_string('editwindowfrom', 'group') . ' ' . format_date($editwindowstart, $dateformat);
+        $formatted = get_string('editwindowfrom', 'group', format_date($editwindowstart, $dateformat));
     }
     else if (empty($editwindowstart) && !empty($editwindowend)) {
-        $formatted = get_string('editwindowuntil', 'group') . ' ' . format_date($editwindowend, $dateformat);
+        $formatted = get_string('editwindowuntil', 'group', format_date($editwindowend, $dateformat));
     }
     else {
-        $formatted = get_string('editwindowbetween', 'group') . ' ' . format_date($editwindowstart, $dateformat) . " and " . format_date($editwindowend, $dateformat);
+        $formatted = get_string('editwindowbetween', 'group', format_date($editwindowstart, $dateformat), format_date($editwindowend, $dateformat));
     }
 
     return $formatted;
