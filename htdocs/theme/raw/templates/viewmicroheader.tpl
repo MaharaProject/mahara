@@ -34,9 +34,9 @@
             {/if}
           {/foreach}
           {if $USER->get('admin')}
-            <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a> |
+            <a href="{$WWWROOT}admin/">{str tag="administration"}</a> |
           {elseif $USER->is_institutional_admin()}
-            <a href="{$WWWROOT}admin/users/search.php">{str tag="institutionadministration"}</a> |
+            <a href="{$WWWROOT}admin/users/search.php">{str tag="administration"}</a> |
           {/if}
 
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
