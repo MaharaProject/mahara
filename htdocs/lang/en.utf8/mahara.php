@@ -553,8 +553,7 @@ $string['groups']             = 'Groups';
 $string['mygroups']           = 'My groups';
 $string['findgroups']         = 'Find groups';
 $string['returntosite']       = 'Return to site';
-$string['siteadministration'] = 'Site administration';
-$string['institutionadministration'] = 'Institution administration';
+$string['administration'] = 'Administration';
 $string['siteinformation']    = 'Site information';
 $string['institutioninformation'] = 'Institution information';
 
