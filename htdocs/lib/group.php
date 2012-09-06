@@ -1482,7 +1482,7 @@ function group_prepare_usergroups_for_display($groups, $returnto='mygroups') {
  * Formats the edit window of a group into human readable format.
  */
 function group_format_editwindow($group) {
-    $dateformat = 'strftimedatetimeshort';
+    $dateformat = 'strftimedatetime';
 
     $editwindowstart = isset($group->editwindowstart) ? strtotime($group->editwindowstart) : null;
     $editwindowend = isset($group->editwindowend) ? strtotime($group->editwindowend) : null;
