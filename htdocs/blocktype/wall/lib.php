@@ -237,7 +237,7 @@ EOF;
         ));
     }
 
-    public static function fetch_posts(BlockInstance $instance ) {
+    public static function fetch_posts(BlockInstance $instance, $nolimit=false ) {
         global $USER;
         $owner = $instance->get_view()->get('owner');
         $userid = (!empty($USER) ? $USER->get('id') : 0);
@@ -258,7 +258,7 @@ EOF;
         ';
         $params = array($instance->get('id'));
 
-        if ($records = get_records_sql_array($sql, $params, 0, 10)) {
+        if ($records = get_records_sql_array($sql, $params, $nolimit ? '' : 0, $nolimit ? '' : 10)) {
             return array_map(
                 create_function(
                     '$item', 
