@@ -2047,8 +2047,9 @@ function admin_nav() {
  * @return $adminnav a data structure containing the admin navigation
  */
 function institutional_admin_nav() {
+    global $USER;
 
-    return array(
+    $ret = array(
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
@@ -2170,6 +2171,22 @@ function institutional_admin_nav() {
             'weight' => 110,
         ),
     );
+    if ($USER->get('staff')) {
+        $ret['adminhome'] = array(
+            'path'   => 'adminhome',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('site', 'admin'),
+            'weight' => 40,
+        );
+        $ret['adminhome/statistics'] = array(
+            'path'   => 'adminhome/statistics',
+            'url'    => 'admin/statistics.php',
+            'title'  => get_string('statistics', 'admin'),
+            'weight' => 10,
+        );
+    };
+
+    return $ret;
 
 }
 

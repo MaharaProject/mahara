@@ -271,6 +271,7 @@ $string['groupstatstabletitle'] = 'Biggest groups';
 $string['viewstatstabletitle'] = 'Most popular pages';
 $string['exportstatsascsv'] = 'Export statistics in CSV format';
 $string['nostats'] = 'No statistics available';
+$string['site'] = 'Site';
 
 // Institution statistics
 $string['statistics'] = 'Statistics';
