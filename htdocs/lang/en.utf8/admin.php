@@ -806,7 +806,6 @@ $string['institutionadmin'] = 'Institution admin';
 $string['institutionadministrator'] = 'Institution administrator';
 $string['institutionadmindescription'] = 'If checked, the user can administer all users in this institution.';
 $string['settingsfor'] = 'Settings for:';
-$string['institutionadministration'] = 'Institution administration';
 $string['institutionmembers'] = 'Institution members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution';
 $string['institutionmemberspagedescription'] = 'On this page, you can see users who have requested membership of your institution and add them as members. You can also remove users from your institution and invite users to join.';
