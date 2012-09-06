@@ -479,6 +479,9 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             $data['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
             foreach ($_POST as $k => $v) {
                 if (preg_match('/^' . $prefix . '_permission:([a-z]+):([a-z]+)$/', $k, $m)) {
+                    if (!isset($data['permissions'][$m[1]])) {
+                        $data['permissions'][$m[1]] = new stdClass;
+                    }
                     $data['permissions'][$m[1]]->{$m[2]} = (bool) $v;
                 }
             }
@@ -1028,7 +1031,7 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $artefact->commit();
 
     $prefix = $form->get_name() . '_' . $element['name'];
-    $newtabdata = pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix);
+    $newtabdata = (isset($element['tabs']) ? pieform_element_filebrowser_configure_tabs($element['tabs'], $prefix) : null);
 
     $group = null;
     $institution = null;
