@@ -1250,7 +1250,8 @@ function auth_get_enabled_auth_plugins() {
                 {auth_installed} inst ON inst.name = ai.authname
             WHERE
                 i.suspended = 0 AND
-                inst.active = 1';
+                inst.active = 1
+            ORDER BY authname';
     $authplugins = get_column_sql($sql);
 
     $usableplugins = array();
