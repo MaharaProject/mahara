@@ -2144,7 +2144,7 @@ function auth_register_submit(Pieform $form, $values) {
     // If the institution requires approval, mark the record as pending
     // @todo the expiry date should be configurable
     if ($confirm = get_field('institution', 'registerconfirm', 'name', $values['institution'])) {
-        if ($values['authtype'] && $values['authtype'] != 'internal') {
+        if (isset($values['authtype']) && $values['authtype'] != 'internal') {
             $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal');
             $auth = AuthFactory::create($authinstance->id);
             $confirm = !$auth->weautocreateusers;
@@ -2216,7 +2216,7 @@ function auth_register_submit(Pieform $form, $values) {
             $_SESSION['registeredokawaiting'] = true;
         }
         else {
-            if ($values['authtype'] == 'browserid') {
+            if (isset($values['authtype']) && $values['authtype'] == 'browserid') {
                 redirect('/register.php?key='.$values['key']);
             }
             else {
