@@ -738,7 +738,10 @@ form#uploadcsv {
 #usertypeselect_institution_container td,
 #institutionselect_institution_container td {
 	padding: 0 0 5px 0 !important;
-	font-size: 1.5em;
+}
+#usertypeselect_institution_container td select,
+#institutionselect_institution_container td select {
+	max-width: 100%;
 }
 #institutionusers table #institutionusers_users_container th {
 	width: 120px;

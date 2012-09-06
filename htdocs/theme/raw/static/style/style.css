@@ -871,6 +871,10 @@ a.btn-big-del {
     border: 1px solid #454545;
     background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
 }
+.ie7 #postlist form {
+    width: auto;
+    overflow: hidden;
+}
 .postbtns .btn {
     font-size: 1em;
     line-height: 2.3333em;
@@ -1562,6 +1566,9 @@ div.sideblock ul li {
 #user-profileicon img {
 	border: 1px solid #FFFFFF;
 }
+#sb-profile .sidebar-content {
+	min-height: 30px;
+}
 #sb-profile .sideblock-content > ul {
 	padding: 0;
 	list-style: none;
@@ -1815,7 +1822,7 @@ a.tag {
 	margin: 0 auto;
     color: #D1D1D1;
 }
-#micro #footer-wrap {
+#micro #footer {
 	background: url(../images/powered-by-mahara-small.png) no-repeat 10px 5px;
 	min-height: 35px;
 }
@@ -2544,7 +2551,7 @@ form#files .foldernav {
     margin-left: 10px;
 }
 #bloglist span.newentry {
-    margin: 1px 5px 0;
+    margin: 0 1px 0 5px;
     float: left;
     display: block;
 }
@@ -2552,6 +2559,16 @@ form#files .foldernav {
     font-size: .9167em;
     margin: 0;
     padding: 0 3px 1px 3px !important;
+}
+.ie7 #bloglist span.newentry a {
+    display: block;
+    padding: 0 3px !important;
+}
+.ie8 #bloglist span.newentry a {
+    padding: 0 3px !important;
+}
+.ie9 #bloglist span.newentry a {
+    padding: 0 3px 2px 3px !important;
 }
 /* My Groups / My Friends */
 ul.groupuserstatus {

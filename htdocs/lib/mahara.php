@@ -3031,9 +3031,9 @@ function mahara_log($logname, $string) {
  */
 
 function is_html_editor_enabled () {
-    global $USER;
-    return (!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
-        get_config('wysiwyg') == 'enable';
+    global $USER, $SESSION;
+    return ((!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
+        get_config('wysiwyg') == 'enable') && $SESSION->get('mobile') == false;
 }
 
 /**
