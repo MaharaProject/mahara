@@ -30,6 +30,7 @@ require_once(get_config('docroot') . 'auth/lib.php');
 require_once(get_config('libroot') . 'peer.php');
 require_once(get_config('libroot') . 'applicationset.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
+require_once(get_config('libroot') . 'institution.php');
 
 /**
  * The XMLRPC authentication method, which authenticates users against the
@@ -108,7 +109,7 @@ class AuthXmlrpc extends Auth {
         $peer = get_peer($remotewwwroot);
 
         if ($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
-            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . $peer->name);
+            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . institution_display_name($peer->name));
         }
 
         $client = new Client();
