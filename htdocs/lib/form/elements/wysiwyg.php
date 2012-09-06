@@ -90,7 +90,7 @@ function pieform_element_wysiwyg(Pieform $form, $element) {
 }
 
 function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element, $check) {
-    return $check && strip_tags($value) === '' ? $form->i18n('rule', 'required', 'required', $element) : '';
+    return $check && strip_tags($value, '<img><iframe><object><embed>') === '' ? $form->i18n('rule', 'required', 'required', $element) : '';
 }
 
 function pieform_element_wysiwyg_get_headdata() {
