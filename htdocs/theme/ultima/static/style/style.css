@@ -349,6 +349,9 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 #main-column-container {
     background: #FFF;
 }
+.ie7 .main-column-narrow {
+    padding-right: 10px;
+}
 /* system messages between nav and main content */
 /* different message types */
 #messages .ok,
