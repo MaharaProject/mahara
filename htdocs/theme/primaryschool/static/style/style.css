@@ -863,3 +863,20 @@ ul.colnav li a {
 #containerX ul.colnav li a {
 	background: #5b6eae;
 }
+/* Persona button */
+a.persona-button span:before{ /* Icon BG */
+    background: #f58f14;
+    background: -moz-linear-gradient(top, #fed54c, #f58f14);
+    background: -ms-linear-gradient(top, #fed54c, #f58f14);
+    background: -o-linear-gradient(top, #fed54c, #f58f14);
+    background: -webkit-linear-gradient(top, #fed54c, #f58f14);
+    background: linear-gradient(top, #fed54c, #f58f14);
+}
+a.persona-button:before{ /* Triangle */
+    background: #f58f14;
+    background: -moz-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -ms-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -o-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -webkit-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: linear-gradient(-45deg, #f58f14, #fed54c); /* flipped for updated spec */
+}
