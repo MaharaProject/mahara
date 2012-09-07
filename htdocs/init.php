@@ -58,6 +58,10 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 
 init_performance_info();
 
+if (function_exists('libxml_disable_entity_loader')) {
+    libxml_disable_entity_loader(true);
+}
+
 require($CFG->docroot . 'config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 require_once('config-defaults.php');
