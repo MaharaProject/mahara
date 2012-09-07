@@ -70,5 +70,12 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2010073001) {
+        // Reset all feeds to reset themselves
+        set_field('blocktype_externalfeed_data', 'lastupdate', db_format_timestamp('0'));
+        safe_require('blocktype', 'externalfeed');
+        call_static_method('PluginBlocktypeExternalfeed', 'refresh_feeds');
+    }
+
     return true;
 }
