@@ -325,3 +325,8 @@ $cfg->cleanurlusereditable = true;
 // Warning: Enabling this option on your site is likely to cause users with open sessions to be logged out on all profile pages.
 // See https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Clean_URL_Configuration#User_Subdomains
 // $cfg->cleanurlusersubdomains = true;
+
+// Users in multiple institutions can choose one institution theme as their preferred theme for browsing the site.
+// The following option if enabled will allow users to choose also standard site themes as their preferred theme
+// for browsing the site.
+// $cfg->sitethemeprefs = true;
