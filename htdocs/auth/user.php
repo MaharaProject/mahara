@@ -892,6 +892,7 @@ class User {
             'basename'    => $themename,
             'headerlogo'  => $headerlogo,
             'stylesheets' => $stylesheets,
+            'institutionname' => $themeinstitution,
         );
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
@@ -899,9 +900,35 @@ class User {
     }
 
     public function get_themedata() {
-        if ($preftheme = $this->get_account_preference('theme')) {
-            return (object) array('basename' => $preftheme);
+        $preftheme = $this->get_account_preference('theme');
+        if (!empty($preftheme)) {
+            // the format of preferred theme: <theme name>/<institution name>
+            // This format is created by the function general_account_prefs_form_elements()
+            $list = (explode('/', $preftheme));
+            if (count($list) > 1) {
+                $iid = $list[1];
+                $institutions = load_user_institutions($this->id);
+                if (isset($institutions[$iid])) {
+                    $institution = $institutions[$iid];
+                    $stylesheets = array();
+                    if ($institution->style) {
+                        $stylesheets[] = get_config('wwwroot') . 'style.php?id=' . $institution->style;
+                    }
+                    return (object) array(
+                        'basename'    => $institution->theme,
+                        'headerlogo'  => $institution->logo,
+                        'stylesheets' => $stylesheets,
+                        'institutionname' => $iid,
+                    );
+                }
+            }
+            else if (!empty($list[0]) && get_config('sitethemeprefs')) {
+                return (object) array('basename' => $list[0]);
+            }
         }
+        // The current user has not picked a preferred theme yet
+        // or his current preferred theme is not available for him
+        // The system will pick one for him
         return $this->institutiontheme;
     }
 
