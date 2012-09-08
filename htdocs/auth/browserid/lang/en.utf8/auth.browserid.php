@@ -26,7 +26,7 @@ defined('INTERNAL') || die();
 $string['browserid'] = 'Persona';
 $string['title'] = 'Persona';
 $string['description'] = 'Authenticate using Persona';
-$string['notusable'] = 'Please install the PHP cURL extension and check the connection to the BrowserID verifier';
+$string['notusable'] = 'Please install the PHP cURL extension and check the connection to the Persona verifier';
 
 $string['badassertion'] = 'The given Persona assertion is not valid: %s';
 $string['badverification'] = 'Mahara did not receive valid JSON output from the Persona verifier.';

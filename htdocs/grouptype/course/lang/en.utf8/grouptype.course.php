@@ -31,4 +31,4 @@ $string['name'] = 'Course';
 $string['admin'] = 'Admin';
 $string['tutor'] = 'Tutor';
 $string['member'] = 'Member';
-$string['youaregrouptutor'] = 'You are a tutor in this group';
+$string['youaregrouptutor'] = 'You are a tutor in this group.';

@@ -127,8 +127,8 @@ To see the page, follow this link:
 To see the reporter\'s profile, follow this link:
 %s';
 
-$string['newgroupmembersubj'] = '%s is now a group member!';
-$string['removedgroupmembersubj'] = '%s is no longer a group member';
+$string['newgroupmembersubj'] = '%s is now a group member.';
+$string['removedgroupmembersubj'] = '%s is no longer a group member.';
 
 $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
