@@ -31,6 +31,6 @@ $string['title'] = 'One résumé field';
 $string['description'] = 'Display any résumé information';
 
 $string['fieldtoshow'] = 'Field to show';
-$string['filloutyourresume'] = '%sFill out your résumé%s in order to add more fields!';
+$string['filloutyourresume'] = '%sFill out your résumé%s in order to add more fields.';
 
-$string['defaulttitledescription'] = 'If you leave this blank, the name of the field will be used';
+$string['defaulttitledescription'] = 'If you leave this blank, the name of the field will be used.';

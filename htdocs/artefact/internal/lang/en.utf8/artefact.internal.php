@@ -55,8 +55,8 @@ $string['preferredname'] = 'Display name';
 $string['introduction'] = 'Introduction';
 $string['email'] = 'Email address';
 $string['maildisabled'] = 'Email disabled';
-$string['officialwebsite'] = 'Official web site address';
-$string['personalwebsite'] = 'Personal web site address';
+$string['officialwebsite'] = 'Official website address';
+$string['personalwebsite'] = 'Personal website address';
 $string['blogaddress'] = 'Blog address';
 $string['address'] = 'Postal address';
 $string['town'] = 'Town';
@@ -98,8 +98,8 @@ If this email belongs to you, but you have not requested adding it to your %s ac
 %s
 EOF;
 
-$string['validationemailwillbesent'] = 'A validation email will be sent when you save your profile';
-$string['validationemailsent'] = 'A validation email has been sent';
+$string['validationemailwillbesent'] = 'A validation email will be sent when you save your profile.';
+$string['validationemailsent'] = 'A validation email has been sent.';
 $string['emailactivation'] = 'Email activation';
 $string['emailactivationsucceeded'] = 'Email activation successful';
 $string['emailalreadyactivated'] = 'Email already activated';
@@ -107,7 +107,7 @@ $string['emailactivationfailed'] = 'Email activation failed';
 $string['emailactivationdeclined'] = 'Email activation declined successfully';
 $string['verificationlinkexpired'] = 'Verification link expired';
 $string['invalidemailaddress'] = 'Invalid email address';
-$string['unvalidatedemailalreadytaken'] = 'The email address you are trying to validate is already taken';
+$string['unvalidatedemailalreadytaken'] = 'The email address you are trying to validate is already taken.';
 $string['addbutton'] = 'Add';
 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
@@ -132,7 +132,7 @@ $string['viewallprofileinformation'] = 'View all profile information';
 
 $string['Note'] = 'Note';
 $string['Notes'] = 'Notes';
-$string['mynotes'] = 'My Notes';
+$string['mynotes'] = 'My notes';
 $string['notesfor'] = "Notes for %s";
 $string['containedin'] = "Contained in:";
 $string['notesdescription'] = 'These are the html notes you have created inside text box blocks on your pages.';

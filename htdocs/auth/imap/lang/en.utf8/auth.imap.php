@@ -28,5 +28,5 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'IMAP';
-$string['description'] = 'Authenticate against an IMAP e-mail server';
+$string['description'] = 'Authenticate against an IMAP email server';
 $string['notusable'] = 'Please install the PHP IMAP extension';

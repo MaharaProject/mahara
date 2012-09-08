@@ -29,7 +29,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Image gallery';
-$string['description'] = 'A collection of images from your files area';
+$string['description1'] = 'A collection of images from your files area or an external gallery';
 
 $string['select'] = 'Image selection';
 $string['selectfolder'] = 'Display all images from one of my folders (will include images uploaded later)';
@@ -52,13 +52,13 @@ $string['useslimbox2desc'] = 'Slimbox 2 (visual clone of Lightbox 2) is a simple
 $string['photoframe'] = 'Use photo frame?';
 $string['photoframedesc'] = 'If enabled, a frame will be rendered around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
-$string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox2.';
+$string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox 2.';
 
 // Flickr
 $string['flickrsettings'] = 'Flickr settings';
 $string['flickrapikey'] = 'Flickr API key';
 $string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="http://www.flickr.com/services/api/keys/apply/" target="_blank">Apply for your key online</a>.';
-$string['flickrsets'] = 'Flickr Sets';
+$string['flickrsets'] = 'Flickr sets';
 
 // Photobucket
 $string['pbsettings'] = 'Photobucket settings';
