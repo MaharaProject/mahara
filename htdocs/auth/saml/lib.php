@@ -516,11 +516,13 @@ class PluginAuthSaml extends PluginAuth {
                                           GROUP BY instance
                                           ORDER BY instance',
                                       array($values['institutionattribute'], $values['institutionvalue'], $values['instance']));
-        foreach ($dup as $instance) {
-            if ($instance->instance >= 2) {
-                // we already have an authinstance with these same values
-                $form->set_error('institutionattribute', get_string('errorbadinstitutioncombo', 'auth.saml'));
-                break;
+        if (is_array($dup)) {
+            foreach ($dup as $instance) {
+                if ($instance->instance >= 2) {
+                    // we already have an authinstance with these same values
+                    $form->set_error('institutionattribute', get_string('errorbadinstitutioncombo', 'auth.saml'));
+                    break;
+                }
             }
         }
     }
