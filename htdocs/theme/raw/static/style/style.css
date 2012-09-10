@@ -1488,7 +1488,7 @@ div.sideblock ul li {
 	padding-left: 5px;
 }
 .login-externallink {
-	clear: left;
+    height: 24px;
 }
 #login_login_username_container input, #login_login_password_container input {
 	margin: 0 0 5px 0;
@@ -1545,10 +1545,10 @@ div.sideblock ul li {
     margin-bottom: 5px;
 }
 #loginform_container #login_login_extra_container .login-externallink {
-    display: inline;
+    display: inline-block;
     margin-right: 5px;
     font-size: 1.091em;
-    position: relative;
+    vertical-align: top;
 }
 #loginform_container #login_login_extra_container .login-externallink a.btn {
     position: absolute;
