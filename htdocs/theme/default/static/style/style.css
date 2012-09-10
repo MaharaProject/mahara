@@ -199,6 +199,7 @@ span.btn a.icon, a span.icon {
 }
 #mainmiddlewrap {
     background: #FFFFFF;
+    min-height: 260px;
 }
 #right-nav li.identity a {
     color: #767676;
