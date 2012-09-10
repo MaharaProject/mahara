@@ -35,7 +35,7 @@ $string['validiframesites'] = '<strong>Embed code</strong> containing &lt;iframe
 $string['validurlsites'] = '<strong>URLs</strong> from the following sites are allowed:';
 $string['width'] = 'Width';
 $string['height'] = 'Height';
-$string['widthheightdescription'] = 'Width and height fields are only used for URLs. If you have entered embed or iframe code above, you need to update the width and height within the code.';
+$string['widthheightdescription'] = 'Width and height fields are only used for URLs. If you have entered embed or iframe code above, you need to update the width and height within the code itself.';
 $string['invalidurl'] = 'Invalid URL';
 
 //Supported sites language strings

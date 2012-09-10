@@ -27,13 +27,13 @@
 defined('INTERNAL') || die();
 
 /* Plans */
-$string['canteditdontownplan'] = 'You can\'t edit this plan because you don\'t own it.';
+$string['canteditdontownplan'] = 'You cannot edit this plan because you do not own it.';
 $string['description'] = 'Description';
 $string['deleteplanconfirm'] = 'Are you sure you wish to delete this plan? Deleting this plan will also remove any tasks it contains.';
 $string['deleteplan'] = 'Delete plan';
 $string['deletethisplan'] = 'Delete plan: \'%s\'';
-$string['editplan'] = 'Edit Plan';
-$string['editingplan'] = 'Editing Plan';
+$string['editplan'] = 'Edit plan';
+$string['editingplan'] = 'Editing plan';
 $string['managetasks'] = 'Manage tasks';
 $string['newplan'] = 'New plan';
 $string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
@@ -53,7 +53,7 @@ $string['titledesc'] = 'The title will be used to display each task in the plans
 
 /* Tasks */
 $string['alltasks'] = 'All tasks';
-$string['canteditdontowntask'] = 'You can\'t edit this task because you don\'t own it.';
+$string['canteditdontowntask'] = 'You cannot edit this task because you do not own it.';
 $string['completed'] = 'Completed';
 $string['completiondate'] = 'Completion date';
 $string['completeddesc'] = 'Mark your task completed.';

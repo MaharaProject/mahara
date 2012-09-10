@@ -71,7 +71,7 @@ $string['plugindisabled'] = 'The plugin has been hidden.';
 $string['pluginnotenabled'] = 'Plugin is hidden. You must make the %s plugin visible first.';
 $string['pluginexplainaddremove'] = 'Plugins in Mahara are always installed and can be accessed if users know the URLs and would otherwise have access. Rather than enabling and disabling the functionality, plugins are hidden or made visible by clicking on the \'Hide\' or \'Show\' links beside the plugins below.';
 $string['pluginexplainartefactblocktypes'] = 'When hiding an \'artefact\' type plugin, Mahara also stops the display of the blocks related to it.';
-$string['pluginbrokenanddisabledtitle'] = 'A broken plugin (%s) was disabled';
+$string['pluginbrokenanddisabledtitle'] = 'A broken plugin (%s) was disabled.';
 $string['pluginbrokenanddisabled'] = 'A user attempted to load the %s plugin, but it could not be loaded.
 To prevent further errors, the plugin has been disabled.
 
@@ -98,7 +98,7 @@ $string['maxitemsperpage']  = 'Maximum items per page:';
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
 $string['staffofinstitutions'] = 'Staff of %s';
-$string['adminofinstitutions'] = 'Admin of %s';
+$string['adminofinstitutions'] = 'Administrator of %s';
 $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
@@ -179,9 +179,9 @@ $string['linksandresources'] = 'Links and resources';
 // auth
 $string['accesstotallydenied_institutionsuspended'] = 'Your institution %s has been suspended. Until it is unsuspended, you will not be able to log in to %s.
 Please contact your institution for help.';
-$string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
-$string['accountdeleted'] = 'Sorry, your account has been deleted';
-$string['accountexpired'] = 'Sorry, your account has expired';
+$string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section.';
+$string['accountdeleted'] = 'Sorry, your account has been deleted.';
+$string['accountexpired'] = 'Sorry, your account has expired.';
 $string['accountcreated'] = '%s: New account';
 $string['accountcreatedtext'] = 'Dear %s,
 
@@ -302,7 +302,7 @@ $string['institutionexpirywarninghtml_site'] = '<p>Dear %s,</p>
 <p>You may wish to contact them to extend their membership of %s.</p>
 
 <p>Regards, %s site administrator</p>';
-$string['accountinactive'] = 'Sorry, your account is currently inactive';
+$string['accountinactive'] = 'Sorry, your account is currently inactive.';
 $string['accountinactivewarning'] = 'Account inactivity warning';
 $string['accountinactivewarningtext'] = 'Dear %s,
 
@@ -323,15 +323,15 @@ $string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s site administrator</p>';
 $string['accountsuspended'] = 'Your account has been suspended as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
-$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
-$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
+$string['youraccounthasbeensuspended'] = 'Your account has been suspended.';
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended.';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['chooseinstitution'] = 'Choose your institution';
 $string['chooseusernamepassword'] = 'Choose your username and password';
 $string['chooseusernamepasswordinfo'] = 'You need a username and password to log in to %s. Please choose them now.';
 $string['confirmpassword'] = 'Confirm password';
 $string['deleteaccount'] = 'Delete account of: %s / %s';
-$string['javascriptnotenabled'] = 'Your browser does not have javascript enabled. This site requires javascript to be enabled before you can log in.';
+$string['javascriptnotenabled'] = 'Your browser does not have JavaScript enabled. This site requires JavaScript to be enabled before you can log in.';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled or is blocking cookies. This site requires cookies to be enabled before you can log in.';
 $string['institution'] = 'Institution';
 $string['institutioncontacts'] = '\'%s\' contacts';
@@ -340,7 +340,7 @@ $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
-$string['orloginvia'] = 'Or login via:';
+$string['orloginvia'] = 'Or log in via:';
 $string['newpassword'] = 'New password';
 $string['nosessionreload'] = 'Reload the page to log in';
 $string['oldpassword'] = 'Current password';
@@ -349,7 +349,7 @@ $string['passworddescription'] = ' ';
 $string['passwordhelp'] = 'The password you use to access the system';
 $string['passwordnotchanged'] = 'You did not change your password. Please choose a new password.';
 $string['passwordsaved'] = 'Your new password has been saved';
-$string['passwordsdonotmatch'] = 'The passwords do not match';
+$string['passwordsdonotmatch'] = 'The passwords do not match.';
 $string['passwordtooeasy'] = 'Your password is too easy. Please choose a harder password.';
 $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out. Please enter your login details to continue.';
@@ -364,9 +364,9 @@ $string['yournewpassword'] = 'Your new password. Passwords must be at least six 
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
-$string['cannotremovedefaultemail'] = 'You cannot remove your primary email address';
-$string['emailtoolong'] = 'E-mail addresses cannot be longer than 255 characters';
-$string['mustspecifyoldpassword'] = 'You must specify your current password';
+$string['cannotremovedefaultemail'] = 'You cannot remove your primary email address.';
+$string['emailtoolong'] = 'Email addresses cannot be longer than 255 characters.';
+$string['mustspecifyoldpassword'] = 'You must specify your current password.';
 $string['Site'] = 'Site';
 
 // Misc. register stuff that could be used elsewhere
@@ -382,9 +382,9 @@ $string['fullname'] = 'Full name';
 $string['registerwelcome'] = 'Welcome! To use this site you must register first.';
 $string['registeragreeterms'] = 'You must also agree to the <a href="terms.php">terms and conditions</a>.';
 $string['registerprivacy'] = 'The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
-$string['registerstep3fieldsoptional'] = '<h3>Choose an optional profile picture</h3><p>You have now successfully registered with %s! You may now choose an optional profile picture to be displayed as your avatar.</p>';
-$string['registerstep3fieldsmandatory'] = '<h3>Fill Out mandatory profile fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
-$string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
+$string['registerstep3fieldsoptional'] = '<h3>Choose an optional profile picture</h3><p>You have now successfully registered with %s. You may now choose an optional profile picture to be displayed as your avatar.</p>';
+$string['registerstep3fieldsmandatory'] = '<h3>Fill out mandatory profile fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
+$string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time.';
 $string['membershipexpiry'] = 'Membership expires';
 $string['institutionfull'] = 'The institution you have chosen is not accepting any more registrations.';
 $string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
@@ -401,7 +401,7 @@ $string['forgotusernamepasswordtextprimaryemail'] = '<p>If you have forgotten yo
 <p>If you know your username and have forgotten your password, you can also enter your username instead.</p>';
 $string['lostusernamepassword'] = 'Lost username / password';
 $string['emailaddressorusername'] = 'Email address or username';
-$string['pwchangerequestsent'] = 'You should receive an email shortly with a link you can use to change the password for your account';
+$string['pwchangerequestsent'] = 'You should receive an email shortly with a link you can use to change the password for your account.';
 $string['forgotusernamepasswordemailsubject'] = 'Username / password details for %s';
 $string['forgotusernamepasswordemailmessagetext'] = 'Dear %s,
 
@@ -437,11 +437,11 @@ $string['forgotusernamepasswordemailmessagehtml'] = '<p>Dear %s,</p>
 <p>Regards, %s site administrator</p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the email could not be sent successfully. This is our fault. Please try again shortly.';
 $string['forgotpassemailsentanyway1'] = 'An email was sent to the address stored for this user, but the address may not be correct or the recipient server is returning messages. Please contact the %s administrator to reset your password if you do not receive the email.';
-$string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered doesn\'t match any users for this site';
+$string['forgotpassnosuchemailaddressorusername'] = 'The email address or username you entered does not match any users for this site';
 $string['forgotpassuserusingexternalauthentication'] = 'The user you requested uses an external authentication method. <a href="%s">Ask your administrator</a> for help with changing your password. Or provide another username or email address.';
-$string['forgotpasswordenternew'] = 'Please enter your new password to continue';
+$string['forgotpasswordenternew'] = 'Please enter your new password to continue.';
 $string['nosuchpasswordrequest'] = 'No such password request';
-$string['passwordchangedok'] = 'Your password was successfully changed';
+$string['passwordchangedok'] = 'Your password was successfully changed.';
 
 // Reset password when moving from external to internal auth.
 $string['noinstitutionsetpassemailsubject'] = '%s: Membership of %s';
@@ -583,9 +583,9 @@ $string['institutionmembershipdescription'] = 'If you are a member of any instit
 $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
 $string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
-$string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
+$string['youhaverequestedmembershipof'] = 'You have requested membership of %s.';
 $string['cancelrequest'] = 'Cancel request';
-$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
+$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s.';
 $string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
 $string['decline'] = 'Decline';
@@ -595,13 +595,13 @@ $string['institutionmemberconfirmsubject'] = 'Institution membership confirmatio
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 $string['institutionmemberrejectsubject'] = 'Institution membership request declined';
 $string['institutionmemberrejectmessage'] = 'Your request for membership of %s was declined.';
-$string['noinstitutionstafffound'] = 'No institution staff were found';
-$string['noinstitutionadminfound'] = 'No institution administrators were found';
+$string['noinstitutionstafffound'] = 'No institution staff were found.';
+$string['noinstitutionadminfound'] = 'No institution administrators were found.';
 $string['Memberships'] = 'Memberships';
 $string['Requests'] = 'Requests';
 $string['Invitations'] = 'Invitations';
 
-$string['config'] = 'Config';
+$string['config'] = 'Configuration';
 
 $string['sendmessage'] = 'Send message';
 $string['spamtrap'] = 'Spam trap';
@@ -624,12 +624,12 @@ $string['heightshort'] = 'h';
 $string['filter'] = 'Filter';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
-$string['more...'] = 'More ...';
-$string['nohelpfound'] = 'There was no help found for this item';
-$string['nohelpfoundpage'] = 'There was no help found for this page';
-$string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page';
+$string['more...'] = 'More...';
+$string['nohelpfound'] = 'There was no help found for this item.';
+$string['nohelpfoundpage'] = 'There was no help found for this page.';
+$string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page.';
 $string['profileimage'] = 'Profile picture';
-$string['primaryemailinvalid'] = 'Your primary email address is invalid';
+$string['primaryemailinvalid'] = 'Your primary email address is invalid.';
 $string['addemail'] = 'Add email address';
 
 // Search
@@ -651,14 +651,14 @@ $string['Artefact'] = 'Artefact';
 $string['Artefacts'] = 'Artefacts';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
-$string['nodeletepermission'] = 'You do not have permission to delete this artefact';
-$string['noeditpermission'] = 'You do not have permission to edit this artefact';
-$string['cantbedeleted'] = 'This artefact can not be deleted because it and/or its sub artefacts have been in submitted pages';
+$string['nodeletepermission'] = 'You do not have permission to delete this artefact.';
+$string['noeditpermission'] = 'You do not have permission to edit this artefact.';
+$string['cantbedeleted'] = 'This artefact cannot be deleted because it and/or its sub artefacts are in submitted pages.';
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
 $string['view'] = 'Page';
 $string['artefactnotpublishable'] = 'Artefact %s is not publishable in page %s';
-$string['nopublishpermissiononartefact'] = 'You don\'t have permission to publish %s';
+$string['nopublishpermissiononartefact'] = 'You do not have permission to publish %s.';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
@@ -667,8 +667,8 @@ $string['attachment'] = 'Attachment';
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';
 $string['clammovedfile'] = 'The file has been moved to a quarantine directory.';
-$string['clamdeletedfile'] = 'The file has been deleted';
-$string['clamdeletedfilefailed'] = 'The file could not be deleted';
+$string['clamdeletedfile'] = 'The file has been deleted.';
+$string['clamdeletedfilefailed'] = 'The file could not be deleted.';
 $string['clambroken'] = 'Your administrator has enabled virus checking for file uploads but has misconfigured something. Your file upload was NOT successful. Your administrator was notified so they can fix it. Maybe try uploading this file later.';
 $string['clamemailsubject'] = '%s :: ClamAV notification';
 $string['clamlost'] = 'ClamAV is configured to run on file upload, but the path supplied to ClamAV, %s, is invalid.';
@@ -683,7 +683,7 @@ $string['fileunknowntype'] = 'The type of your uploaded file could not be determ
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
 
-$string['phpuploaderror'] = 'An error occurred during file upload: %s (Error code %s)';
+$string['phpuploaderror'] = 'An error occurred during file upload: %s (Error code %s).';
 $string['phpuploaderror_1'] = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
 $string['phpuploaderror_2'] = 'The uploaded file exceeds the max_file_size directive that was specified in the HTML form.';
 $string['phpuploaderror_3'] = 'The uploaded file was only partially uploaded.';
@@ -950,7 +950,7 @@ $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
 
-$string['nocountryselected'] = 'No Country Selected';
+$string['nocountryselected'] = 'No country selected';
 
 // general stuff that doesn't really fit anywhere else
 $string['system'] = 'System';
@@ -988,14 +988,14 @@ $string['allowpublicaccess'] = 'Allow public access';
 $string['viewmyprofilepage']  = 'View profile page';
 $string['editmyprofilepage']  = 'Edit profile page';
 $string['usersprofile'] = "%s's Profile";
-$string['profiledescription'] = 'Your profile page is what others see when they click on your name or profile picture';
+$string['profiledescription'] = 'Your profile page is what others see when they click on your name or profile picture.';
 
 // Dashboard views
 $string['mydashboard'] = 'My dashboard';
 $string['editdashboard'] = 'Edit';
 $string['usersdashboard'] = "%s's dashboard";
-$string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it';
-$string['topicsimfollowing'] = "Topics I'm following";
+$string['dashboarddescription'] = 'Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.';
+$string['topicsimfollowing'] = "Topics I am following";
 $string['inboxblocktitle'] = 'Inbox';
 $string['mymessages'] = 'My messages';
 
@@ -1045,4 +1045,4 @@ $string['blocks'] = 'Blocks';
 $string['artefacts'] = 'Artefacts';
 $string['posts'] = 'Posts';
 $string['facebookdescription'] = 'Mahara is an open source ePortfolio and social networking web application.
-It provides users with tools to create and maintain a digital portfolio of their learning, and social networking features to allow users to interact with each other';
+It provides users with tools to create and maintain a digital portfolio of their learning and social networking features to allow users to interact with each other.';
