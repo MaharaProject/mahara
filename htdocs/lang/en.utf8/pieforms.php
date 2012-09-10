@@ -52,16 +52,16 @@ $string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
 
-$string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long';
+$string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long.';
 
-$string['rule.minlength.minlength'] = 'This field must be at least %d characters long';
+$string['rule.minlength.minlength'] = 'This field must be at least %d characters long.';
 
-$string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d';
+$string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d.';
 
-$string['rule.regex.regex'] = 'This field is not in valid form';
+$string['rule.regex.regex'] = 'This field is not in valid form.';
 
-$string['rule.required.required'] = 'This field is required';
+$string['rule.required.required'] = 'This field is required.';
 
-$string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid';
+$string['rule.validateoptions.validateoptions'] = 'The option "%s" is invalid.';
 
-$string['rule.maxvalue.maxvalue'] = 'This value cannot be larger than %d';
+$string['rule.maxvalue.maxvalue'] = 'This value cannot be larger than %d.';

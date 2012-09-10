@@ -64,4 +64,4 @@ $string['writingfiles'] = 'Writing files';
 $string['youarehere'] = 'You are here';
 $string['youmustselectatleastonecollectiontoexport'] = 'You must select at least one collection to export';
 $string['youmustselectatleastoneviewtoexport'] = 'You must select at least one page to export';
-$string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature';
+$string['zipnotinstalled'] = 'Your system does not have the zip command. Please install zip to enable this feature.';

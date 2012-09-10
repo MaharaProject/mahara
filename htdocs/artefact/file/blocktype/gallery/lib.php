@@ -36,7 +36,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.file/gallery');
+        return get_string('description1', 'blocktype.file/gallery');
     }
 
     public static function get_categories() {

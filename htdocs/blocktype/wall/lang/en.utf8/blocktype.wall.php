@@ -49,7 +49,7 @@ $string['posttextrequired'] = "This field is required.";
 
 // Config strings
 $string['postsizelimit'] = "Post size limit";
-$string['postsizelimitdescription'] = "You can limit the size of wall posts here. Existing posts will not be changed";
+$string['postsizelimitdescription'] = "You can limit the size of wall posts here. Existing posts will not be changed.";
 $string['postsizelimitmaxcharacters'] = "Maximum number of characters";
 $string['postsizelimitinvalid'] = "This is not a valid number.";
-$string['postsizelimittoosmall'] = "This limit cannot be lower than zero.";
+$string['postsizelimittoosmall'] = "The limit cannot be lower than zero.";
