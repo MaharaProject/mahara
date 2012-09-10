@@ -1172,6 +1172,11 @@ function auth_get_login_form_elements() {
             'value' => '<label>'.get_string('orloginvia') . '</label>'
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
+        $keys = array_keys($extraelements);
+        if (!empty($keys)) {
+            $key = $keys[count($keys) - 1];
+            $extraelements[$key]['value'] .= '<div class="cb"></div>';
+        }
     }
     if (count($extraelements)) {
         $extraelements = array(
