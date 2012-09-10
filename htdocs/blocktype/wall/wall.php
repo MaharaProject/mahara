@@ -50,7 +50,7 @@ $smarty->assign('instanceid', $instanceid);
 $smarty->assign('owner', $owner);
 $smarty->assign('wholewall', true);
 $smarty->assign('ownwall', (!empty($USER) && $USER->get('id') == $owner->id));
-if ($posts = PluginBlocktypeWall::fetch_posts($block)) {
+if ($posts = PluginBlocktypeWall::fetch_posts($block, true)) {
     $smarty->assign('wallposts', $posts);
 }
 else {
