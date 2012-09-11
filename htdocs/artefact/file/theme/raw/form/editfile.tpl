@@ -8,8 +8,8 @@
             {if $fileinfo}{if $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}{/if}
             </th>
           </tr>
-          <tr>
-            <th><label>{str tag=name}</label></th>
+          <tr class="required">
+            <th><label>{str tag=name}</label> <span class="requiredmarker">*</span></th>
             <td><input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
           </tr>
           {if $fileinfo->artefacttype != 'profileicon'}
