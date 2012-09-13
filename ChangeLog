@@ -1,3 +1,7 @@
+1.4.4 (2012-09-14)
+- 
+- Disable XML Entity parsing (Bug #1047111)
+
 1.4.3 (2012-07-31)
 - 
 - Json-encode login form when injected by js (bug #1009784)
