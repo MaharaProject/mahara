@@ -865,9 +865,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         ));
 
         $this->strings->subject = (object) array(
-            'key'     => $post->parent ? 'replyforumpostnotificationsubjectline' : 'newforumpostnotificationsubjectline',
+            'key'     => 'newforumpostnotificationsubjectline',
             'section' => 'interaction.forum',
-            'args'    => array($post->parent ? $post->topicsubject : $post->subject),
+            'args'    => array($post->parent ? get_string('Re:', 'interaction.forum') . $post->topicsubject : $post->subject),
         );
 
         foreach ($this->users as &$user) {

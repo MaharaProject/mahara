@@ -131,6 +131,7 @@ $string['re'] ='Re: %s';
 $string['regulartopics'] = 'Regular topics';
 $string['Reply'] = 'Reply';
 $string['replyforumpostnotificationsubjectline'] = 'Re: %s';
+$string['Re:'] = 'Re: ';
 $string['replyto'] = 'Reply to: ';
 $string['Sticky'] = 'Sticky';
 $string['stickydescription'] = 'Sticky topics are at the top of every page';
