@@ -1,3 +1,6 @@
+1.5.3 (2012-09-14)
+- Disable XML Entity parsing (Bug #1047111)
+
 1.5.2 (2012-07-31)
 - Logged-in user's name unescaped in top right header
 - BrowserID changed login URL
