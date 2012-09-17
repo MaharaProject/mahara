@@ -57,8 +57,8 @@ flush();
  *
  * @param string $message The message to display to the user
  */
-function export_iframe_die($message) {
-    print_export_iframe_die($message);
+function export_iframe_die($message, $link=null) {
+    print_export_iframe_die($message, $link);
     exit;
 }
 
@@ -104,7 +104,7 @@ $exporter->includefeedback = $exportdata['includefeedback'];
 try {
     $zipfile = $exporter->export();
 } catch (SystemException $e) {
-    export_iframe_die($e->getMessage());
+    export_iframe_die($e->getMessage(), get_config('wwwroot') . 'view/');
 }
 
 // Store the filename in the session, and redirect the iframe to it to trigger 

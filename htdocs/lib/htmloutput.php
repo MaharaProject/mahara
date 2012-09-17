@@ -50,8 +50,12 @@ function print_export_head($stylesheets) {
 <?php
 }
 
-function print_export_iframe_die($message) {
-    echo '<div class="progress-bar" style="width: 100%;"><p>' . hsc($message) . '</p></div></body></html>';
+function print_export_iframe_die($message, $link=null) {
+    $message = hsc($message);
+    if (isset($link)) {
+        $message .= ' <a target="_top" href="' . hsc($link) . '">' . get_string('continue', 'admin') . '</a>';
+    }
+    echo '<div class="progress-bar" style="width: 100%;"><p>' . $message . '</p></div></body></html>';
 }
 
 function print_iframe_progress_handler($percent, $status) {
