@@ -378,6 +378,9 @@ class PluginExportHtml extends PluginExport {
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
                 $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_filename($view->get('title'));
+                if (is_dir($directory)) {
+                    throw new SystemException(get_string('duplicatepagetitle', 'export.html'));
+                }
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
