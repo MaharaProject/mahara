@@ -1,3 +1,7 @@
+1.6rc1 (2012-09-17)
+- 
+- First Release Candidate for 1.6.0
+
 1.5.2 (2012-07-31)
 - Logged-in user's name unescaped in top right header
 - BrowserID changed login URL
