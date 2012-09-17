@@ -65,7 +65,10 @@ else {
     if (!can_view_view($viewid)) {
         json_reply(true, get_string('accessdenied', 'error'));
     }
-    $options = array('viewid' => $viewid);
+    $options = array(
+        'viewid' => $viewid,
+        'countcomments' => true,
+    );
     $posts = ArtefactTypeBlogpost::get_posts($blogid, $limit, $offset, $options);
 
     $template = 'artefact:blog:viewposts.tpl';
