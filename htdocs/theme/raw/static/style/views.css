@@ -256,6 +256,9 @@ input.addcolumn, input.removecolumn {
     background: none;
     border: none;
 }
+.ie7 div.blockinstance div.blockinstance-content select {
+    width: 80%;
+}
 
 /* Collection navigation */
 ul.colnav li a {
@@ -273,4 +276,14 @@ ul.colnav li.selected span {
 img.license-icon {
     float: left;
     margin-right: 2ex;
+}
+/* Retractable blocks */
+div.blockinstance.retractable div.blockinstance-header .arrow {
+    background: url(../images/retractable.png) no-repeat 0 2px;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+}
+div.blockinstance.retractable div.blockinstance-header.retracted .arrow {
+    background: url(../images/retracted.png) no-repeat 4px 0;
 }

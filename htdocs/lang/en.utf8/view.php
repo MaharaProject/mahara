@@ -371,3 +371,9 @@ $string['Me'] = 'Me';
 
 // Group reports
 $string['sharedby'] = 'Shared by';
+
+// Retractable blocks
+$string['retractable'] = 'Retractable';
+$string['retractabledescription'] = 'Select to allow this block to be retracted when the header is clicked.';
+$string['retractedonload'] = 'Automatically retract';
+$string['retractedonloaddescription'] = 'Select to automatically retract this block.';

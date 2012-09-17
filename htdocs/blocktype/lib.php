@@ -707,6 +707,18 @@ class BlockInstance {
         $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock', 'view') : get_string('configureblock', 'view', "'$title'"));
         $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock', 'view') : get_string('removeblock', 'view', "'$title'"));
 
+        if (!$configure && $title) {
+            $configdata = $this->get('configdata');
+            if (isset($configdata['retractable']) && $configdata['retractable']) {
+                $smarty->assign('retractable', true);
+                if (defined('JSON') || $jsreply) {
+                    $jssmarty = smarty_core();
+                    $jssmarty->assign('id', $this->get('id'));
+                    $js .= $jssmarty->fetch('view/retractablejs.tpl');
+                }
+            }
+        }
+
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
     }
 
@@ -762,6 +774,12 @@ class BlockInstance {
             $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
         }
         $smarty->assign('content', $content);
+        if (isset($configdata['retractable']) && $title) {
+            $smarty->assign('retractable', $configdata['retractable']);
+            if (isset($configdata['retractedonload'])) {
+                $smarty->assign('retractedonload', $configdata['retractedonload']);
+            }
+        }
 
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
@@ -793,6 +811,9 @@ class BlockInstance {
         $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
 
         $title = $this->get('title');
+        $configdata = $this->get('configdata');
+        $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
+        $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
 
         $elements = array_merge(
             array(
@@ -820,6 +841,19 @@ class BlockInstance {
                 'new' => array(
                     'type'  => 'hidden',
                     'value' => $new,
+                ),
+                'retractable' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('retractable', 'view'),
+                    'description'  => get_string('retractabledescription', 'view'),
+                    'defaultvalue' => $retractable,
+                ),
+                'retractedonload' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('retractedonload', 'view'),
+                    'description'  => get_string('retractedonloaddescription', 'view'),
+                    'defaultvalue' => $retractedonload,
+                    'disabled'     => !$retractable,
                 ),
             ),
             $elements
@@ -906,6 +940,20 @@ class BlockInstance {
         else if (is_string($configjs)) {
             $js .= $configjs;
         }
+        $js .= '
+        $j(function() {
+            $j("#instconf_retractable").click(function() {
+                if ($(this).checked) {
+                    $j("#instconf_retractedonload").removeAttr("disabled");
+                    $j("#instconf_retractedonload").removeAttr("checked");
+                }
+                else {
+                    $j("#instconf_retractedonload").removeAttr("checked");
+                    $j("#instconf_retractedonload").attr("disabled", true);
+                }
+            });
+        });
+        ';
 
         $renderedform = array('html' => $html, 'javascript' => $js);
         return $renderedform;

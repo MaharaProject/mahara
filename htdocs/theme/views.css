@@ -196,6 +196,11 @@
 .remove-column {
     text-align: center;
 }
+.ie7 .remove-column {
+    position: absolute;
+    top: 3px;
+    left: 40%;
+}
 /* needed for when there are no add/remove buttons so the column doesn't disappear */
 .column-header-empty {
     height: 1px;
@@ -246,22 +251,11 @@
 .blockinstance-header h4 a {
 	text-decoration: none;
 }
-
-.ie7 .blockinstance-header {
-    float: left;
-    display: inline;
-}
 /* control */
 .blockinstance-controls {
     display: inline;
     float: right;
     margin-left: 10px;
-}
-.ie7 .blockinstance-controls {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
 }
 .blockinstance-controls input,
 .blockinstance-controls input.submit,
@@ -273,6 +267,11 @@
     padding: 0;
     cursor: pointer;
 	margin: 0 0 0 1px;
+}
+/* Retractable blocks */
+div.blockinstance.retractable div.blockinstance-header .arrow {
+    float: right;
+    cursor: pointer;
 }
 
 /* content */
