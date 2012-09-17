@@ -1,0 +1,19 @@
+Pear Image Canvas in Mahara
+==============================
+
+Website: http://pear.php.net/package/Image_Canvas/
+Version: 0.3.3
+
+This class is used by graphing features of Mahara
+
+Changes:
+
+ * The Licence header on the htdocs/lib/pear/Image/Canvas/Color.php file
+   has been manually updated, as it was incorrectly distributed as a php
+   licence file within an LGPL package, which is not permittable.
+
+   The licence was updated by upstream, but there were functional changes
+   to the library between our last update of it and the licence fix, which
+   we did not include soon enough for adequate testing.
+
+   The upstream fix: https://github.com/pear/Image_Canvas/commit/99d4e285c
