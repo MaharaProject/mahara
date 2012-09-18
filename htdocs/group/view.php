@@ -86,7 +86,7 @@ $viewcontent = $view->build_columns();
 $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
 if ($group->public) {
     $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
-    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
 $javascript = array('paginator');
