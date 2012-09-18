@@ -143,7 +143,7 @@ if($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
     $hasfeed = true;
     $feedlink = get_config('wwwroot') . 'artefact/blog/atom.php?artefact=' .
         $artefactid . '&view=' . $viewid;
-    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
 $smarty = smarty(
