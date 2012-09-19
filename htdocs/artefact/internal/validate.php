@@ -73,7 +73,22 @@ if ($row) {
             )
         );
         $SESSION->add_ok_msg(get_string('emailactivationsucceeded', 'artefact.internal'));
-        redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=contact');
+        // Update user's email if this email address is primary (principal == 1)
+        if (record_exists('artefact_internal_profile_email', 'owner', $row->owner, 'email', $row->email, 'principal', 1)) {
+            update_record(
+                'usr',
+                (object)array(
+                    'email' => $row->email,
+                ),
+                (object)array(
+                    'id' => $row->owner,
+                )
+            );
+            redirect(get_config('wwwroot'));
+        }
+        else {
+            redirect(get_config('wwwroot') . 'artefact/internal/index.php?fs=contact');
+        }
     }
     else {
         $message = get_string('verificationlinkexpired', 'artefact.internal');

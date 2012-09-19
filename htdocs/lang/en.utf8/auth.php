@@ -79,6 +79,8 @@ $string['xmlrpccouldnotlogyouindetail1'] = 'Sorry, we could not log you into %s 
 
 $string['requiredfields'] = 'Required profile fields';
 $string['requiredfieldsset'] = 'Required profile fields set';
+$string['primaryemaildescription'] = 'The primary email address. You will receive an email containing a clickable link – follow this to validate the address and log in to the system';
+$string['validationprimaryemailsent'] = 'A validation email has been sent. Please click the link inside this to validate the address';
 $string['noauthpluginconfigoptions'] = 'There are no configuration options associated with this plugin.';
 
 $string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%s).';

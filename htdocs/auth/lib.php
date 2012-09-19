@@ -848,7 +848,17 @@ function auth_check_required_fields() {
         }
 
         if ($field == 'email') {
-            $elements[$field]['rules']['email'] = true;
+            // Check if a validation email has been sent
+            if (record_exists('artefact_internal_profile_email', 'owner', $USER->get('id'))) {
+                $elements['email']['type'] = 'html';
+                $elements['email']['value'] = get_string('validationprimaryemailsent', 'auth');
+                $elements['email']['disabled'] = true;
+                $elements['email']['rules'] = array('required' => false);
+            }
+            else {
+                $elements[$field]['rules']['email'] = true;
+                $elements[$field]['description'] = get_string('primaryemaildescription', 'auth');
+            }
         }
     }
 
@@ -856,17 +866,32 @@ function auth_check_required_fields() {
         return;
     }
 
-    $elements['submit'] = array(
-        'type' => 'submit',
-        'value' => get_string('submit')
-    );
+    if ((count($elements) == 1) && isset($elements['email']) && ($elements['email']['type'] == 'html')) {
+        // Display a message if there is only 1 required field and this field is email whose validation has been sent
+        $elements['submit'] = array(
+                'type' => 'submit',
+                'value' => get_string('continue', 'admin')
+        );
+        $form = pieform(array(
+                'name'     => 'requiredfields',
+                'method'   => 'post',
+                'action'   => get_config('wwwroot') . '?logout',
+                'elements' => $elements
+        ));
+    }
+    else {
+        $elements['submit'] = array(
+            'type' => 'submit',
+            'value' => get_string('submit')
+        );
 
-    $form = pieform(array(
-        'name'     => 'requiredfields',
-        'method'   => 'post',
-        'action'   => '',
-        'elements' => $elements
-    ));
+        $form = pieform(array(
+            'name'     => 'requiredfields',
+            'method'   => 'post',
+            'action'   => '',
+            'elements' => $elements
+        ));
+    }
 
     $smarty = smarty();
     if ($USER->get('parentuser')) {
@@ -883,37 +908,39 @@ function auth_check_required_fields() {
 
 function requiredfields_validate(Pieform $form, $values) {
     global $USER;
-    if (!isset($values['password1'])) {
-        return true;
-    }
+    if (isset($values['password1'])) {
 
-    // Get the authentication type for the user, and
-    // use the information to validate the password
-    $authobj = AuthFactory::create($USER->authinstance);
+        // Get the authentication type for the user, and
+        // use the information to validate the password
+        $authobj = AuthFactory::create($USER->authinstance);
 
-    // @todo this could be done by a custom form rule... 'password' => $user
-    password_validate($form, $values, $USER);
+        // @todo this could be done by a custom form rule... 'password' => $user
+        password_validate($form, $values, $USER);
 
-    // The password cannot be the same as the old one
-    try {
-        if (!$form->get_error('password1')
-            && $authobj->authenticate_user_account($USER, $values['password1'])) {
-            $form->set_error('password1', get_string('passwordnotchanged'));
+        // The password cannot be the same as the old one
+        try {
+            if (!$form->get_error('password1')
+                && $authobj->authenticate_user_account($USER, $values['password1'])) {
+                $form->set_error('password1', get_string('passwordnotchanged'));
+            }
+        }
+        // propagate error up as the collective error AuthUnknownUserException
+         catch  (AuthInstanceException $e) {
+            $form->set_error('password1', $e->getMessage());
+        }
+
+        if ($authobj->authname == 'internal' && isset($values['username']) && $values['username'] != $USER->get('username')) {
+            if (!AuthInternal::is_username_valid($values['username'])) {
+                $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
+            }
+            if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
+                $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
+            }
         }
     }
-    // propagate error up as the collective error AuthUnknownUserException
-     catch  (AuthInstanceException $e) {
-        $form->set_error('password1', $e->getMessage());
-    }
-
-
-    if ($authobj->authname == 'internal' && isset($values['username']) && $values['username'] != $USER->get('username')) {
-        if (!AuthInternal::is_username_valid($values['username'])) {
-            $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
-        }
-        if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', strtolower($values['username']))) {
-            $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
-        }
+    // Check if email has been taken
+    if (isset($values['email']) && record_exists('artefact_internal_profile_email', 'email', $values['email'])) {
+            $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
     }
 }
 
@@ -948,11 +975,53 @@ function requiredfields_submit(Pieform $form, $values) {
             continue;
         }
         if ($field == 'email') {
-            $USER->email = $values['email'];
-            $USER->commit();
+            $email = $values['email'];
+            // Check if a validation email has been sent, if not send one
+            if (!record_exists('artefact_internal_profile_email', 'owner', $USER->get('id'))) {
+                $key = get_random_key();
+                $key_url = get_config('wwwroot') . 'artefact/internal/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
+                $key_url_decline = $key_url . '&decline=1';
+
+                try {
+                    $sitename = get_config('sitename');
+                    email_user(
+                        (object)array(
+                            'id'            => $USER->get('id'),
+                            'username'      => $USER->get('username'),
+                            'firstname'     => $USER->get('firstname'),
+                            'lastname'      => $USER->get('lastname'),
+                            'preferredname' => $USER->get('preferredname'),
+                            'admin'         => $USER->get('admin'),
+                            'staff'         => $USER->get('staff'),
+                            'email'         => $email,
+                        ),
+                        null,
+                        get_string('emailvalidation_subject', 'artefact.internal'),
+                        get_string('emailvalidation_body1', 'artefact.internal', $USER->get('firstname'), $email, $sitename, $key_url, $sitename, $key_url_decline)
+                    );
+                }
+                catch (EmailException $e) {
+                    $SESSION->add_error_msg($email);
+                }
+
+                insert_record(
+                    'artefact_internal_profile_email',
+                    (object) array(
+                        'owner'    => $USER->get('id'),
+                        'email'    => $email,
+                        'verified' => 0,
+                        'principal' => 1,
+                        'key'      => $key,
+                        'expiry'   => db_format_timestamp(time() + 86400),
+                    )
+                );
+                $SESSION->add_ok_msg(get_string('validationemailsent', 'artefact.internal'));
+            }
         }
-        set_profile_field($USER->get('id'), $field, $value);
-        $otherfield = true;
+        else {
+            set_profile_field($USER->get('id'), $field, $value);
+            $otherfield = true;
+        }
     }
 
     if (isset($otherfield)) {
