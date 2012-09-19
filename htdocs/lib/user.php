@@ -214,6 +214,7 @@ function expected_account_preferences() {
                  'mobileuploadtoken' => '',
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
+                 'disabledevicedetection' => 0,
                  );
 }
 
@@ -373,6 +374,15 @@ function general_account_prefs_form_elements($prefs) {
             'title'        => get_string('resizeonuploaduserdefault1', 'account'),
             'description'  => get_string('resizeonuploaduserdefaultdescription1', 'account'),
             'defaultvalue' => $prefs->resizeonuploaduserdefault,
+        );
+    }
+
+    if (get_config('userscandisabledevicedetection')) {
+        $elements['disabledevicedetection'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('disabledevicedetection', 'account'),
+            'description'  => get_string('disabledevicedetectiondescription', 'accont'),
+            'defaultvalue' => $prefs->disabledevicedetection,
         );
     }
 
