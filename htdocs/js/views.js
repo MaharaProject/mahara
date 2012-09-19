@@ -25,6 +25,7 @@ function ViewManager() {
     var self = this;
 
     this.init = function () {
+        self.topPane = $('top-pane');
         self.bottomPane = $('bottom-pane');
         self.viewThemeSelect = $('viewtheme-select');
 
@@ -33,7 +34,7 @@ function ViewManager() {
             // base for positioned elements inside it
             self.columnContainer = $('column-container');
             makePositioned(self.columnContainer);
-            if (self.isIE7) {
+            if (self.isIE7 && self.topPane) {
                 // Stop blocktypes being dragged from disappearing underneath the content area
                 setStyle('top-pane', {'z-index': 1});
             }
@@ -90,7 +91,7 @@ function ViewManager() {
             self.rewriteViewThemeSelector();
 
             // Make the top pane a dropzone for cancelling adding block types
-            if (!self.isIE6) {
+            if (!self.isIE6 && self.topPane) {
                 var count = 0;
                 new Droppable('top-pane', {
                     'onhover': function() {
@@ -104,7 +105,7 @@ function ViewManager() {
             }
         }
         // Unhide the radio button if the browser is iPhone, IPad or IPod
-        else if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+        else if (config['handheld_device'] || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i)) && self.topPane) {
             forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
                     setNodeAttribute(i, 'style', 'display:inline');
                 });
@@ -365,7 +366,7 @@ function ViewManager() {
 
 
     this.showMediaPlayers = function () {
-        if (tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.editorId) {
+        if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.editorId) {
             tinyMCE.execCommand('mceRemoveControl', false, tinyMCE.activeEditor.editorId);
         }
         var cols = $('column-container');
@@ -1211,8 +1212,8 @@ function ViewManager() {
     // Whether the browser is IE6
     this.isIE6 = !this.isIE7 && document.all && !window.opera;
 
-    // Whether the brower is iPhone, IPad or IPod
-    if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+    // Whether the brower is iPhone, IPad or IPod, and mobile devices
+    if (config['handheld_device'] || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
         this.isIE6 = true; // work-around for broken drag-and-drop
     }
 
