@@ -8,7 +8,7 @@
     {$pageheadinghtml|safe}
   {/if}
   </h1>
-  {if $ownprofile && !$MOBILE}
+  {if $ownprofile}
   <div class="userviewrbuttons">
     <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn">{str tag=editthisview section=view}</a>
   </div>

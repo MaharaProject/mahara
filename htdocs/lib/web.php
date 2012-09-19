@@ -116,7 +116,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // Note: we do not display tinyMCE for mobile devices
     // as it doesn't work on some of them and can
     // disable the editing of a textarea field
-    if ($SESSION->get('mobile') == false) {
+    if ($SESSION->get('handheld_device') == false) {
         $checkarray = array(&$javascript, &$headers);
         $found_tinymce = false;
         foreach ($checkarray as &$check) {
@@ -239,6 +239,14 @@ EOF;
             if (($key = array_search('jquery', $check)) !== false) {
                 unset($check[$key]);
             }
+        }
+    }
+    else {
+        if (($key = array_search('tinymce', $javascript)) !== false || ($key = array_search('tinytinymce', $javascript)) !== false) {
+            unset($javascript[$key]);
+        }
+        if (($key = array_search('tinymce', $headers)) !== false || ($key = array_search('tinytinymce', $headers)) !== false) {
+            unset($headers[$key]);
         }
     }
 
@@ -2350,7 +2358,7 @@ function mahara_standard_nav() {
 function main_nav() {
     if (in_admin_section()) {
         global $USER, $SESSION;
-        if ($USER->get('admin') && !$SESSION->get('mobile')) {
+        if ($USER->get('admin')) {
             $menu = admin_nav();
         }
         else if ($USER->is_institutional_admin()) {

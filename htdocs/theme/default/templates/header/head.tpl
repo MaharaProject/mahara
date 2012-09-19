@@ -8,7 +8,9 @@
         'sesskey' : '{$SESSKEY}',
         'wwwroot': '{$WWWROOT}',
         'loggedin': {$USER->is_logged_in()|intval},
-        'userid': {$USER->get('id')}
+        'userid': {$USER->get('id')},
+        'mobile': {if $MOBILE}1{else}0{/if},
+        'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if}
     {literal}}{/literal};
     </script>
     {$STRINGJS|safe}

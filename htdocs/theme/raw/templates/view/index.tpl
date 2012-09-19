@@ -37,10 +37,7 @@
 {/if}
                         </td>
                         <td class="right buttonscell btns2">
-{if 
-   !$view.submittedto && (!$view.locked || $editlocked)
-   && !($MOBILE && ($view.type == 'profile' || $view.type == 'dashboard'))
-}
+{if !$view.submittedto && (!$view.locked || $editlocked)}
                                 <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}

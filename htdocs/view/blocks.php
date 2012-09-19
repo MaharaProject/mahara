@@ -64,14 +64,6 @@ if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
-// is mobile detected?
-$mobile = $SESSION->get('mobile');
-
-// do not show edit content page for mobiles
-if ($mobile && $view->get('type') != 'profile' && $view->get('type') != 'dashboard') {
- redirect('/view/edit.php?id=' . $view->get('id'));
-}
-
 // If the view has been submitted, disallow editing
 if ($view->is_submitted()) {
     $submittedto = $view->submitted_to();
