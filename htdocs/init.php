@@ -350,17 +350,13 @@ if (defined('JSON') && !defined('NOSESSKEY')) {
 }
 
 // Device detection
+require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
+
 if (!get_account_preference($USER->get('id'), 'disabledevicedetection')) {
-    require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
     $detect = new Mobile_Detect();
     $SESSION->set('handheld_device', ($detect->isMobile() || $detect->isTablet()));
     $SESSION->set('mobile', $detect->isMobile());
     $SESSION->set('tablet', $detect->isTablet());
-    $SESSION->add_info_message('done detection');
-    $SESSION->add_info_message(print_r($SESSION, true));
-}
-else {
-    $SESSION->add_info_message('no detection');
 }
 
 /*
