@@ -26,17 +26,8 @@
 $j(document).ready(function(){
     $j('body').removeClass('no-js').addClass('js');
     function navClass(navTarget, wrapper) {
-        // start by getting width of total nav items combined
-        var navWidth = 0;
-        navTarget.each(function() {
-            thisWidth = $j(this).outerWidth(true);
-
-            navWidth += thisWidth;
-            // compensate for padding
-            navWidth += 2;
-        });
-        // add buffer of 10 px to accomodate left padding on nav
-        var navBuffer = navWidth + 10;
+        // This is from theme/default/static/style/style.css (a media query)
+        var navBuffer = 600;
         $j(window).bind('load resize orientationchange', function() {
             // get window width
             var windowWidth = $j(window).width();
