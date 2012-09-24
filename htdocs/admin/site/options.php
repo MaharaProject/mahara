@@ -303,14 +303,6 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('viruschecking', $OVERRIDDEN),
                 ),
-                'pathtoclam' => array(
-                    'type'         => 'text',
-                    'title'        => get_string('pathtoclam', 'admin'),
-                    'description'  => get_string('pathtoclamdescription', 'admin'),
-                    'defaultvalue' => get_config('pathtoclam'),
-                    'help'         => true,
-                    'disabled'     => in_array('pathtoclam', $OVERRIDDEN),
-                ),
                 'antispam' => array(
                     'type'         => 'select',
                     'title'        => get_string('antispam', 'admin'),
@@ -541,7 +533,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
-        'sitename','lang','theme', 'pathtoclam',
+        'sitename','lang','theme',
         'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
