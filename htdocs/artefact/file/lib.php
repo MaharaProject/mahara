@@ -833,6 +833,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             return false;
         }
+        chmod($newname, get_config('filepermissions'));
         if (empty($user)) {
             global $USER;
             $user = $USER;
@@ -1950,7 +1951,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             // Untar everything into a temp directory first
             $tempsubdir = tempnam($tempdir, '');
             unlink($tempsubdir);
-            mkdir($tempsubdir);
+            mkdir($tempsubdir, get_config('directorypermissions'));
             if (!$this->handle->extract($tempsubdir)) {
                 throw new SystemException("Unable to extract archive into $tempsubdir");
             }

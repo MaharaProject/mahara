@@ -787,7 +787,7 @@ function copyr($source, $dest)
 
     // Make destination directory
     if (!is_dir($dest)) {
-        mkdir($dest);
+        mkdir($dest, get_config('directorypermissions'));
     }
 
     // Loop through the folder
