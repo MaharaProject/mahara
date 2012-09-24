@@ -80,6 +80,7 @@ $CFG->xmldbdisablecommentchecking = true;
 if (empty($CFG->directorypermissions)) {
     $CFG->directorypermissions = 0700;
 }
+$CFG->filepermissions = $CFG->directorypermissions & 0666;
 
 // core libraries
 require('mahara.php');
