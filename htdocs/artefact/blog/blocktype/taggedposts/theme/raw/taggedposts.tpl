@@ -1,7 +1,7 @@
 {if ($editing)}
-<div class="shortcut right nojs-hidden-block">
+<div class="shortcut nojs-hidden-block">
     <div{if (count($blogs) == 1)} class="hidden"{/if}>
-        <span class="text">{str tag='shortcutaddpost' section='artefact.blog'}</span>
+        <label class="text">{str tag='shortcutaddpost' section='artefact.blog'}</label>
         <select id="blogselect_{$blockid}" class="select">{foreach from=$blogs item=blog}<option value="{$blog->id}"> {$blog->title} </option>{/foreach}</select>
         <input class="select" type="hidden" value="{$tagselect}">
         <a class="shortcut btn">{str tag='shortcutgo' section='artefact.blog'}</a>

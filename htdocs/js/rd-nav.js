@@ -57,7 +57,7 @@ $j(document).ready(function(){
         $j(".main-nav").toggleClass("nav-expand");
     });
     // adds expand when click on arrow to expand tabs
-    $j(".rd-tab").click(function(event) {
+    $j(".rd-tab-title").click(function(event) {
         $j(".tabswrap").toggleClass("expand");
     });
     // adds expand when click on arrow to expand tabs
