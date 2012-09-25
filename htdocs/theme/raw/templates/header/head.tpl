@@ -32,6 +32,6 @@
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
-    <link rel="image_src" href="{$sitelogo}" />
+    <link rel="image_src" href="{$sitelogo}">
 </head>
 {dynamic}{flush}{/dynamic}

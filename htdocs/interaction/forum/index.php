@@ -113,7 +113,7 @@ if ($forums) {
 $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=g&id=' . $group->id;
 $headers = array();
 if ($group->public) {
-    $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+    $headers[] ='<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
 $smarty = smarty(array(), $headers, array(), array());
