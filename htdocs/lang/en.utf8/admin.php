@@ -992,3 +992,6 @@ $string['groupmanage'] = 'Manage';
 $string['groupdelete'] = 'Delete';
 $string['managegroupquotadescription'] = 'Use the form below to change the group file quota for this group.';
 $string['managegroupdescription'] = 'Use the form below to promote and demote administrators for this group. If you remove a group administrator they will remain a group member.';
+
+$string['userscandisabledevicedetection'] = 'Users can disable device detection';
+$string['userscandisabledevicedetectiondescription'] = 'If checked, users will be allowed to disable mobile device detection when they are browsing this site.';

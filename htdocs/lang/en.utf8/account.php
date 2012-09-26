@@ -97,3 +97,6 @@ $string['accountdeleted']  = 'Your account has been deleted.';
 
 $string['resizeonuploaduserdefault1'] = 'Resize large images on upload';
 $string['resizeonuploaduserdefaultdescription1'] = 'If checked, the option "Automatic resizing of images" will be enabled by default, and images larger than the maximum dimensions will be resized when they are uploaded. You can disable this default setting for each image upload individually.';
+
+$string['devicedetection'] = 'Device detection';
+$string['devicedetectiondescription'] = 'Enable mobile device detection when browsing this site.';

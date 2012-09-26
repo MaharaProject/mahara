@@ -197,6 +197,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('staffstats'),
                     'disabled'     => in_array('staffstats', $OVERRIDDEN),
                 ),
+                'userscandisabledevicedetection' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('userscandisabledevicedetection', 'admin'),
+                    'description'  => get_string('userscandisabledevicedetectiondescription', 'admin'),
+                    'defaultvalue' => get_config('userscandisabledevicedetection'),
+                    'disabled'     => in_array('userscandisabledevicedetection', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -622,7 +629,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
-        'staffreports', 'staffstats',
+        'staffreports', 'staffstats', 'userscandisabledevicedetection',
     );
 
     // if public views are disabled, sitemap generation must also be disabled.
