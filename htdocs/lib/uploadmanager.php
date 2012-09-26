@@ -289,7 +289,7 @@ function mahara_clam_scan_file($file, $inputindex=null) {
         $tmpname = $file['tmp_name'];
     }
     if (is_array($file) && is_uploaded_file($tmpname)) { // it's from $_FILES
-        $fullpath = $file['tmp_name'];
+        $fullpath = $tmpname;
     }
     else if (file_exists($file)) {
         $fullpath = $file;

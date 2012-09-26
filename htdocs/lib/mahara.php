@@ -3033,7 +3033,7 @@ function mahara_log($logname, $string) {
 function is_html_editor_enabled () {
     global $USER, $SESSION;
     return ((!get_config('wysiwyg') && ($USER->get_account_preference('wysiwyg') || defined('PUBLIC'))) ||
-        get_config('wysiwyg') == 'enable') && $SESSION->get('mobile') == false;
+        get_config('wysiwyg') == 'enable') && $SESSION->get('handheld_device') == false;
 }
 
 /**

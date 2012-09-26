@@ -255,7 +255,7 @@ EOF;
 
 $headers = array();
 if ($publicgroup) {
-    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '" />';
+    $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
 $smarty = smarty(array(), $headers, array(), array());

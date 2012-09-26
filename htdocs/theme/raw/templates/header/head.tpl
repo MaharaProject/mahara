@@ -11,7 +11,9 @@
         'sesskey' : '{$SESSKEY}',
         'wwwroot': '{$WWWROOT}',
         'loggedin': {$USER->is_logged_in()|intval},
-        'userid': {$USER->get('id')}
+        'userid': {$USER->get('id')},
+        'mobile': {if $MOBILE}1{else}0{/if},
+        'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if}
     {literal}}{/literal};
     </script>
     {$STRINGJS|safe}
@@ -32,6 +34,6 @@
     <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
-    <link rel="image_src" href="{$sitelogo}" />
+    <link rel="image_src" href="{$sitelogo}">
 </head>
 {dynamic}{flush}{/dynamic}

@@ -416,6 +416,16 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         // Left of the screen - there's enough room for it
         position.x += 15;
     }
+    else if (position.x - dimensions.w < 0) {
+        if (dimensions.w >= screenDimensions.w) {
+            // Very small screen, let them scroll
+            position.x = 0;
+        }
+        else {
+            // Otherwise center it
+            position.x = (screenDimensions.w / 2) - (dimensions.w / 2);
+        }
+    }
     else {
         position.x -= dimensions.w;
     }

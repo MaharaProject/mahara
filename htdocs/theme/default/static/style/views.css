@@ -311,9 +311,6 @@ ul.colnav li a {
         float: none;
         text-align: center;
     }
-    #blocksinstruction {
-        display: none;
-    }
     #feedbacktable .commentleft {
         float: none;
         width: 98%;

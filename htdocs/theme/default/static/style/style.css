@@ -970,12 +970,6 @@ table.mceLayout td.mceToolbar td {
         border-top: 2px solid #d1d1d1;
     }
 }
-/* for 800px or less */
-@media screen and (max-width: 800px) {
-	a.print {
-		display: none;
-	}
-}
 /* for 700px or less */
 @media screen and (max-width: 700px) {
     table#useraccountsettingsleft td {
@@ -1049,9 +1043,6 @@ table.mceLayout td.mceToolbar td {
         display: block;
         font-size: 1em;
     }
-    #right-nav li.settings {
-        display: none;
-    }
     #usf {
         float: none;
         clear: both;
@@ -1076,10 +1067,7 @@ table.mceLayout td.mceToolbar td {
         float: none;
     }
     .pagetabs {
-        display: none;
-    }
-    #createview,  .rbuttons .editview {
-        display: none;
+        float: right;
     }
     .textarea .resizable-textarea,  select#profileform_country,  textarea,  #search_advanced_container select#search_type,  #search_advanced_container select#search_sort,  #resumewrap input.text, input#newblog_tags {
         width: 94% !important;
@@ -1099,9 +1087,6 @@ table.mceLayout td.mceToolbar td {
     }
     #searchviews select {
         width: 26%;
-    }
-    #myviews td.btns2,  #forumtopicstable th.right,  #forumtopicstable td.right {
-        display: none;
     }
     #friendslistcontainer #search #search_query {
         width: 34%;
@@ -1232,9 +1217,6 @@ table.mceLayout td.mceToolbar td {
         float: none;
         width: auto;
         padding: 0 5px 3px 5px;
-    }
-    #membersearchresults .removemember {
-        display: none;
     }
     tr.uploadform th,  tr.uploadform td {
         display: block;
@@ -1620,9 +1602,6 @@ table.mceLayout td.mceToolbar td {
 }
 /* for 480px or less */
 @media screen and (max-width: 480px) {
-    #main-nav li.siteadmin {
-        display: none;
-    }
     .viewlist td {
         float: left;
         width: 98%;
@@ -1650,9 +1629,6 @@ table.mceLayout td.mceToolbar td {
     }
     .profileiconcell img {
         width: 100%;
-    }
-    .page-help-icon, .help {
-        display: none;
     }
     .forumpost td {
         width: 98%;
