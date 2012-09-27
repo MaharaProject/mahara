@@ -350,7 +350,7 @@ if (defined('JSON') && !defined('NOSESSKEY')) {
 }
 
 // Device detection
-if (get_account_preference($USER->get('id'), 'devicedetection')) {
+if (get_config('installed') && get_account_preference($USER->get('id'), 'devicedetection')) {
     require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
     $detect = new Mobile_Detect();
     $SESSION->set('handheld_device', $detect->isMobile());
