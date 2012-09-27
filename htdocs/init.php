@@ -46,6 +46,9 @@ header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-
 header('Expires: '. gmdate('D, d M Y H:i:s', 507686400) .' GMT');
 header('Pragma: no-cache');
 
+// Prevent clickjacking through iframe tags
+header('X-Frame-Options: SAMEORIGIN');
+
 // Set up error handling
 require('errors.php');
 
