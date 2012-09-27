@@ -415,6 +415,13 @@ function group_create($data) {
         throw new InvalidArgumentException("group_create: invalid option for page editroles setting");
     }
 
+    if (!isset($data['editwindowstart'])) {
+        $data['editwindowstart'] = null;
+    }
+    if (!isset($data['editwindowend'])) {
+        $data['editwindowend'] = null;
+    }
+
     db_begin();
 
     $id = insert_record(
