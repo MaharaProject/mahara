@@ -136,7 +136,7 @@ catch (UploadException $e) {
 }
 
 // Here we need to create a new hash - update our own store of it and return it too the handset
-JSONResponse ( "success", $USER->refresh_mobileuploadtoken() );
+JSONResponse ( "success", $USER->refresh_mobileuploadtoken($token) );
 
 function JSONResponse ( $key, $value ) {
   header('Content-Type: application/json');
