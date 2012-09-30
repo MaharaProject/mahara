@@ -10,7 +10,7 @@
 <table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th class="cv">{str tag=collections section=collection}</th>
+      <th class="cv">{str tag=Collections section=collection}</th>
       <th class="al">{str tag=accesslist section=view}</th>
       <th class="al-edit">{str tag=editaccess section=view}</th>
       <th class="secreturls">{str tag=secreturls section=view}</th>

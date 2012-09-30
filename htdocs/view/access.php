@@ -109,7 +109,7 @@ if (!empty($collections)) {
     }
     $form['elements']['collections'] = array(
         'type'         => 'checkboxes',
-        'title'        => get_string('collections', 'collection'),
+        'title'        => get_string('Collections', 'collection'),
         'elements'     => $collections,
     );
 }
