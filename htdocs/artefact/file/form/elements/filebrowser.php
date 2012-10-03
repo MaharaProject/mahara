@@ -1270,7 +1270,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
         'error'         => false, 
         'changedowner'  => true,
         'changedfolder' => true,
-        'editmeta'      =>  (int) ($userid && !$element['config']['edit'] && !empty($element['config']['tag'])),
+        'editmeta'      =>  (int) ($user && !$element['config']['edit'] && !empty($element['config']['tag'])),
         'newtabdata'    => $newtabdata,
         'folder'        => $folder,
         'disableedit'   => $group && !pieform_element_filebrowser_edit_group_folder($group, $folder),
