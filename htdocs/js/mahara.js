@@ -675,7 +675,10 @@ function augment_tags_control(elem, returnContainer) {
 };
 
 function quotaUpdate(quotaused, quota) {
-    if (! $('quota_percentage') ) {
+    if ($('instconf')) {
+        return;
+    }
+    if (! $('quota_percentage')) {
         logWarning('quotaUpdate(', quotaused, quota, ') called but no id="quota_percentage" on page');
         return;
     }
