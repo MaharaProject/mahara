@@ -1244,3 +1244,18 @@ function blockConfigError(form, data) {
         return;
     }
 }
+
+function update_width(configblock, width) {
+    var vpdim = getViewportDimensions();
+    var w = Math.max(width, 500);
+    var style = {
+            'position': 'absolute',
+            'z-index': 1
+        };
+    var lborder = parseFloat(getStyle(configblock, 'border-left-width'));
+    var lpadding = parseFloat(getStyle(configblock, 'padding-left'));
+    style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
+    style.width = w + 'px';
+
+    setStyle(configblock, style);
+}

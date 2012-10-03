@@ -104,7 +104,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if ($(self.id + '_userfile').files) {
             for (var i = 0; i < $(self.id + '_userfile').files.length; ++ i) {
                 self.nextupload++;
-                var localname = $(self.id + '_userfile').files[i].fileName;
+                if (is_FF()) {
+                    var localname = $(self.id + '_userfile').files[i].name;
+                }
+                else {
+                    var localname = $(self.id + '_userfile').files[i].fileName;
+                }
                 var message = makeMessage(DIV(null,
                     IMG({'src':get_themeurl('images/loading.gif')}), ' ',
                     get_string('uploadingfiletofolder',localname,self.foldername)
@@ -282,6 +287,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             connect(this, 'onclick', self.edit_form);
             return false;
         });
+
+        // Recalculate the width of config block
+        var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
+        update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
 
         return false;
     }
@@ -539,45 +548,48 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
     }
 
+    this.update_metadata_to_selected_list = function () {
+        forEach(getElementsByTagAndClassName('input', 'btn-edit', self.id + '_filelist'), function (elem) {
+            var id = elem.name.replace(/.*_edit\[(\d+)\]$/, '$1');
+            var row = getFirstParentByTagAndClassName(elem, 'tr');
+            var newtitle = getFirstElementByTagAndClassName('a', null, row);
+            var newdescription = getFirstElementByTagAndClassName('td', 'filedescription', row);
+            if (self.selecteddata[id]) {
+                var hiddeninput = $(self.id + '_selected[' + id + ']');
+                var row2update = getFirstParentByTagAndClassName(hiddeninput, 'tr');
+                var filetitle = getFirstElementByTagAndClassName('a', null, row2update);
+                if (filetitle) {
+                    filetitle.innerHTML = newtitle.innerHTML;
+                }
+                var filedesc = getFirstElementByTagAndClassName('td', 'filedescription', row2update);
+                if (filedesc) {
+                    filedesc.innerHTML = newdescription.innerHTML;
+                }
+            }
+        });
+    }
+
     this.add_to_selected_list = function (id, highlight) {
         if (!self.filedata[id]) {
             return;
         }
         var tbody = getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist');
         var rows = getElementsByTagAndClassName('tr', null, tbody);
-        if (rows.length == 0) {
-            removeElementClass(self.id + '_selectlist', 'hidden');
-            addElementClass(self.id + '_empty_selectlist', 'hidden');
-        }
-        else if (highlight) {
-            forEach(rows, function (r) { removeElementClass(r, 'highlight-file'); });
-        }
         if (self.config.selectone) {
             forEach(rows, function (row) {
-                var selectbutton = $(self.id + '_select_' + getFirstElementByTagAndClassName(null, 'unselect', row).name.replace(/.*_unselect\[(\d+)\]$/, '$1'));
-                if (selectbutton) {
-                    removeElementClass(selectbutton, 'hidden');
+                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', row);
+                if (hiddeninput) {
+                    var rowid = hiddeninput.name.replace(/.*_selected\[(\d+)\]$/, '$1');
+                    removeElement(hiddeninput);
+                    var selectbutton = $(self.id + '_select_' + rowid);
+                    if (selectbutton) {
+                        removeElementClass(selectbutton, 'hidden');
+                    }
                 }
-                removeElement(row);
             });
-            rows = [];
             self.selecteddata = {};
         }
-        var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
-        connect(remove, 'onclick', self.unselect);
-        filelink = ''
-        if (self.filedata[id].artefacttype == 'folder') {
-            filelink = self.filedata[id].title;
-        }
-        else {
-            filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
-        }
-        appendChildNodes(tbody, TR({'class': 'r' + rows.length % 2 + (highlight ? ' highlight-file' : '')},
-                                   TD(null, IMG({'src':self.filedata[id].icon})),
-                                   TD(null, filelink),
-                                   TD(null, self.filedata[id].description),
-                                   TD(null, remove, INPUT({'type':'hidden', 'name':self.id+'_selected[' + id + ']', 'value':id}))
-                                  ));
+
         self.selecteddata[id] = {
             'id': id,
             'artefacttype': self.filedata[id].artefacttype,
@@ -590,23 +602,89 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
         }
+        // Check if the file to add was already in the selected list
+        var existed = false;
+        for (i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+            if (rowid == id) {
+                existed = true;
+                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', r);
+                if (!hiddeninput) {
+                    hiddeninput = INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id});
+                    appendChildNodes(getFirstParentByTagAndClassName(rowbutton, 'td'), hiddeninput);
+                }
+                continue;
+            }
+        };
+        if (!existed) {
+            var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
+            connect(remove, 'onclick', self.unselect);
+            filelink = ''
+            if (self.filedata[id].artefacttype == 'folder') {
+                filelink = self.filedata[id].title;
+            }
+            else {
+                filelink = A({'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id, 'target':'_blank'}, self.filedata[id].title);
+            }
+            appendChildNodes(tbody, TR({'class': (highlight ? ' highlight-file' : '')},
+                   TD(null, IMG({'src':self.filedata[id].icon})),
+                   TD(null, filelink),
+                   TD({'class':'filedescription'}, self.filedata[id].description),
+                   TD({'class':'valign'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
+                  ));
+        }
+        // Display the list
+        var rows = getElementsByTagAndClassName('tr', null, tbody);
+        var rcount = 0;
+        for (i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+            if (typeof(self.selecteddata[rowid]) != 'undefined') {
+                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                removeElementClass(r, 'hidden');
+                rcount ++;
+            }
+            else {
+                addElementClass(r, 'hidden');
+            }
+        };
+        if (rcount == 1) {
+            removeElementClass(self.id + '_selectlist', 'hidden');
+            addElementClass(self.id + '_empty_selectlist', 'hidden');
+        }
+        this.update_metadata_to_selected_list();
     }
 
     this.unselect = function (e) {
         e.stop();
         var id = this.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
         delete self.selecteddata[id];
-        removeElement(getFirstParentByTagAndClassName(this, 'tr'));
+        // Display the list
         var rows = getElementsByTagAndClassName('tr', null, getFirstElementByTagAndClassName('tbody', null, self.id + '_selectlist'));
-        if (rows.length == 0) {
-            addElementClass(self.id + '_selectlist', 'hidden');
-            removeElementClass(self.id + '_empty_selectlist', 'hidden');
-        }
-        else {
-            // Fix row classes
-            for (var r = 0; r < rows.length; r++) {
-                setNodeAttribute(rows[r], 'class', 'r' + r % 2);
+        var rcount = 0;
+        for (i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var rowbutton = getFirstElementByTagAndClassName('input', 'button', r);
+            var rowid = rowbutton.name.replace(/.*_unselect\[(\d+)\]$/, '$1');
+            if (typeof(self.selecteddata[rowid]) != 'undefined') {
+                setNodeAttribute(r, 'class', 'r' + rcount % 2);
+                removeElementClass(r, 'hidden');
+                rcount ++;
             }
+            else {
+                var hiddeninput = getFirstElementByTagAndClassName('input', 'hidden', r);
+                if (hiddeninput) {
+                    removeElement(hiddeninput);
+                }
+                addElementClass(r, 'hidden');
+            }
+        };
+        if (rcount == 0) {
+                addElementClass(self.id + '_selectlist', 'hidden');
+                removeElementClass(self.id + '_empty_selectlist', 'hidden');
         }
         if ($(self.id + '_select_' + id)) {
             removeElementClass(self.id + '_select_' + id, 'hidden');
@@ -678,6 +756,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 // Newly uploaded files should be automatically selected
                 self.add_to_selected_list(data.highlight, true);
             }
+            if (self.config.select && self.config.editmeta) {
+                self.update_metadata_to_selected_list();
+            }
             if (data.tagblockhtml && $('sb-tags')) {
                 $('sb-tags').innerHTML = data.tagblockhtml;
             }
@@ -690,6 +771,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             formSuccess(form, data);
             self.init();
         }
+        // Recalculate the width of config block
+        var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
+        update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
     }
 
 }
