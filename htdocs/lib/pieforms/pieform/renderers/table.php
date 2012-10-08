@@ -109,7 +109,7 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
 
     if (!empty($element['error'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
-        $result .= $element['error'];
+        $result .= hsc($element['error']);
         $result .= "</td>\n\t</tr>\n";
     }
 
