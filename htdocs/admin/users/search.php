@@ -62,6 +62,7 @@ else {
 
 $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
+$smarty->assign('limit', $limit);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit));

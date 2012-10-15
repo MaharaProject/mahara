@@ -5,22 +5,22 @@
     <div id="firstnamelist">
       <label>{str tag="firstname"}:</label>
        <span class="first-initial{if !$search->f} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l}{/if}">{str tag="All"}</a>
+        <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="first-initial{if $a == $search->f} selected{/if}">
-        <a href="{$WWWROOT}admin/users/search.php?f={$a}{if $search->l}&amp;l={$search->l}{/if}">{$a}</a>
+        <a href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
        </span>
        {/foreach}
     </div>
     <div id="lastnamelist">
       <label>{str tag="lastname"}:</label>
        <span class="last-initial{if !$search->l} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f}{/if}">{str tag="All"}</a>
+        <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="last-initial{if $a == $search->l} selected{/if}">
-        <a href="{$WWWROOT}admin/users/search.php?l={$a}{if $search->f}&amp;f={$search->f}{/if}">{$a}</a>
+        <a href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
        </span>
        {/foreach}
     </div>
@@ -40,6 +40,21 @@
     </div>
     {/if}
     <form action="{$WWWROOT}admin/users/search.php" method="post">
+        {if $search->f}
+        <input type="hidden" name="f" id="f" value="{$search->f}">
+        {/if}
+        {if $search->l}
+        <input type="hidden" name="l" id="l" value="{$search->l}">
+        {/if}
+        {if $search->sortby}
+        <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
+        {/if}
+        {if $search->sortdir}
+        <input type="hidden" name="sortdir" id="sortdir" value="{$search->sortdir}">
+        {/if}
+        {if $limit}
+        <input type="hidden" name="limit" id="limit" value="{$limit}">
+        {/if}
         <div class="searchform">
             <label>{str tag='Search' section='admin'}:</label>
                 <input type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
