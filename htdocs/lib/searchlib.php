@@ -223,6 +223,29 @@ function get_admin_user_search_results($search, $offset, $limit) {
                                'type' => 'starts',
                                'string' => $search->l);
     }
+    if ($search->loggedin !== 'any') {
+        if ($search->loggedin == 'never') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'equals',
+                                   'string' => null);
+        }
+        else if ($search->loggedin == 'ever') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'notequals',
+                                   'string' => null);
+        }
+        else if ($search->loggedin == 'since') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'greaterthan',
+                                   'string' => $search->loggedindate);
+        }
+        else if ($search->loggedin == 'notsince') {
+            $constraints[] = array('field'  => 'lastlogin',
+                                   'type'   => 'lessthanequal',
+                                   'string' => $search->loggedindate);
+        }
+
+    }
 
     // Filter by viewable institutions:
     global $USER;

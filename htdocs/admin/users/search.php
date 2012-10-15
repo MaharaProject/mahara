@@ -41,6 +41,8 @@ $search = (object) array(
     'l'           => param_alpha('l', null), // last initial
     'sortby'      => param_alpha('sortby', 'firstname'),
     'sortdir'     => param_alpha('sortdir', 'asc'),
+    'loggedin'    => param_alpha('loggedin', 'any'),
+    'loggedindate'=> param_variable('loggedindate', null),
 );
 
 $offset  = param_integer('offset', 0);

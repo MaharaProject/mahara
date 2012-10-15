@@ -43,6 +43,8 @@ if ($action == 'search') {
     $params->l           = param_alpha('l', null);
     $params->sortby      = param_alpha('sortby', 'firstname');
     $params->sortdir     = param_alpha('sortdir', 'asc');
+    $params->loggedin    = param_alpha('loggedin', 'any');
+    $params->loggedindate= param_variable('loggedindate', null);
 
     $offset  = param_integer('offset', 0);
     $limit   = param_integer('limit', 10);
