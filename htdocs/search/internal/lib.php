@@ -339,8 +339,29 @@ class PluginSearchInternal extends PluginSearch {
             $values[] = $string;
             return ' ' . $ilike . ' ? || \'%\'';
         case 'equals':
+            if ($string === null) {
+                return ' IS NULL ';
+            }
             $values[] = $string;
             return ' = ? ';
+        case 'notequals':
+            if (is_null($string)) {
+                return ' IS NOT NULL ';
+            }
+            $values[] = $string;
+            return ' <> ? ';
+        case 'greaterthan':
+            $values[] = $string;
+            return ' > ? ';
+        case 'greaterthanequal':
+            $values[] = $string;
+            return ' >= ? ';
+        case 'lessthan':
+            $values[] = $string;
+            return ' < ? ';
+        case 'lessthanequal':
+            $values[] = $string;
+            return ' <= ? ';
         case 'contains':
             $values[] = $string;
             return ' ' . $ilike . ' \'%\' || ? || \'%\'';
