@@ -48,7 +48,7 @@ checksignoff:
 
 push: minaccept checksignoff
 	if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/for/1.4_STABLE; \
+		git push gerrit HEAD:refs/publish/1.4_STABLE; \
 	else \
-		git push gerrit HEAD:refs/for/1.4_STABLE/$(TAG); \
+		git push gerrit HEAD:refs/publish/1.4_STABLE/$(TAG); \
 	fi
