@@ -55,6 +55,18 @@
         {if $limit}
         <input type="hidden" name="limit" id="limit" value="{$limit}">
         {/if}
+        <div class="loggedin-filter">
+            <label for="loggedin">{str tag="loggedinfilter" section="admin"}</label>
+            <select name="loggedin" id="loggedin">
+                {foreach from=$loggedintypes item=t}
+                    <option value="{$t['name']}"{if $search->loggedin === $t['name']} selected="selected"{/if}>{$t['string']}</option>
+                {/foreach}
+            </select>
+            <span id="loggedindate_container"{if !($search->loggedin == 'since' || $search->loggedin == 'notsince')} class="js-hidden"{/if}>
+                {$loggedindate|safe}
+            </span>
+        </div>
+        <div class="searchform-gap nojs-hidden-block"></div>
         <div class="searchform">
             <label>{str tag='Search' section='admin'}:</label>
                 <input type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>

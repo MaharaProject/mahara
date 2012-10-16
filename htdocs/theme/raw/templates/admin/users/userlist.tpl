@@ -8,6 +8,7 @@
       <th>{str tag=studentid}</th>
       <th>{str tag=preferredname}</th>
       {if $USER->get('admin') || $USER->is_institutional_admin()}<th>{str tag=remoteuser section=admin}</th>{/if}
+      <th>{str tag=lastlogin section=admin}</th>
     </tr>
   </thead>
   <tbody>
@@ -20,6 +21,7 @@
       <td>{$user->studentid}</td>
       <td>{$user->preferredname}</td>
       {if $USER->get('admin') || $USER->is_institutional_admin()}<td>{if $user->hideemail}<span class="dull">({str tag=hidden})</span>{else}{$user->remoteuser}{/if}</td>{/if}
+      <td>{if $user->lastlogin}{$user->lastlogin|strtotime|format_date:'strftimedatetime'}{/if}</td>
     </tr>
   {/foreach}
   </tbody>

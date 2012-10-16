@@ -71,7 +71,7 @@ if (!$USER->get('admin') && !$USER->get('staff')) {
 $users = get_records_sql_assoc('
     SELECT
         u.id, u.username, u.email, u.firstname, u.lastname, u.studentid, u.preferredname, u.urlid,
-        aru.remoteusername AS remoteuser
+        aru.remoteusername AS remoteuser, u.lastlogin
     FROM {usr} u
         LEFT JOIN {auth_remote_user} aru ON u.id = aru.localusr AND u.authinstance = aru.authinstance
     WHERE id IN (' . join(',', array_fill(0, count($userids), '?')) . ')
@@ -125,10 +125,10 @@ if ($selected == 'users') {
     $userlisthtml = $smarty->fetch('admin/users/userlist.tpl');
 
     if ($USER->get('admin') || $USER->is_institutional_admin()) {
-        $csvfields = array('username', 'email', 'firstname', 'lastname', 'studentid', 'preferredname', 'remoteuser');
+        $csvfields = array('username', 'email', 'firstname', 'lastname', 'studentid', 'preferredname', 'remoteuser', 'lastlogin');
     }
     else {
-        $csvfields = array('username', 'firstname', 'lastname', 'studentid', 'preferredname');
+        $csvfields = array('username', 'firstname', 'lastname', 'studentid', 'preferredname', 'lastlogin');
     }
 
     $USER->set_download_file(generate_csv($users, $csvfields), 'users.csv', 'text/csv');

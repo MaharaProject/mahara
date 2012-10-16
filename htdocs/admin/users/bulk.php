@@ -49,7 +49,7 @@ if (!$USER->get('admin')) {
 $users = get_records_sql_assoc('
     SELECT
         u.id, u.username, u.email, u.firstname, u.lastname, u.suspendedcusr, u.authinstance, u.studentid,
-        u.preferredname, CHAR_LENGTH(u.password) AS haspassword, aru.remoteusername AS remoteuser
+        u.preferredname, CHAR_LENGTH(u.password) AS haspassword, aru.remoteusername AS remoteuser, u.lastlogin
     FROM {usr} u
         LEFT JOIN {auth_remote_user} aru ON u.id = aru.localusr AND u.authinstance = aru.authinstance
     WHERE id IN (' . join(',', array_fill(0, count($userids), '?')) . ')

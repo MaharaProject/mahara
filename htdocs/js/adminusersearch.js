@@ -33,7 +33,8 @@ function UserSearch() {
         self.rewriteSetLimit();
         self.selectusers = {};
         self.rewriteCheckboxes();
-        self.params = {};
+        self.rewriteLoggedInFilter();
+        self.params = {'loggedindate' : $('loggedinform_loggedindate').value};
     };
 
     this.rewriteInitials = function() {
@@ -193,6 +194,26 @@ function UserSearch() {
                 });
             });
         }
+    };
+
+    this.rewriteLoggedInFilter = function() {
+        connect($('loggedin'), 'onchange', function(e) {
+            e.stop();
+            var type = this.value;
+            self.params.loggedin = type;
+            if (type === 'since' || type === 'notsince') {
+                removeElementClass($('loggedindate_container'), 'js-hidden');
+            }
+            else {
+                addElementClass($('loggedindate_container'), 'js-hidden');
+            }
+            self.doSearch();
+        });
+        $('loggedinform_loggedindate').onchange = function(e) {
+            // Set handler directly so that calendar works
+            self.params.loggedindate = this.value;
+            self.doSearch();
+        };
     };
 
     addLoadEvent(self.init);

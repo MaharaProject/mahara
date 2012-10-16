@@ -34,7 +34,7 @@
             {if !$c.template}
               {$r[$f]}
             {else}
-              {include file=$c.template r=$r}
+              {include file=$c.template r=$r f=$f}
             {/if}
             </td>{/strip}
           {/foreach}

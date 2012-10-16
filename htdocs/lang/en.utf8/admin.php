@@ -995,3 +995,13 @@ $string['managegroupdescription'] = 'Use the form below to promote and demote ad
 
 $string['userscandisabledevicedetection'] = 'Users can disable device detection';
 $string['userscandisabledevicedetectiondescription'] = 'If checked, users will be allowed to disable mobile device detection when they are browsing this site.';
+
+// Admin user search logged in filter
+$string['loggedinfilter'] = 'Filter by login date:';
+$string['anyuser'] = 'Any user';
+$string['usershaveloggedin'] = 'Users have logged in';
+$string['usershaveneverloggedin'] = 'Users have never logged in';
+$string['usershaveloggedinsince'] = 'Users have logged in since';
+$string['usershavenotloggedinsince'] = 'Users have not logged in since';
+
+$string['lastlogin'] = 'Last login';

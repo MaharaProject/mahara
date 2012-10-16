@@ -310,7 +310,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
-    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir');
+    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate');
     $params = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
@@ -375,6 +375,12 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'template' => 'admin/users/searchinstitutioncolumn.tpl',
         );
     }
+
+    $cols['lastlogin'] = array(
+        'name'      => get_string('lastlogin', 'admin'),
+        'sort'      => true,
+        'template'  => 'strftimedatetime.tpl',
+    );
 
     $cols['select'] = array(
         'headhtml' => '<a href="" id="selectall">' . get_string('All') . '</a>&nbsp;<a href="" id="selectnone">' . get_string('none') . '</a>',

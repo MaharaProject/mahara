@@ -42,7 +42,7 @@ $search = (object) array(
     'sortby'      => param_alpha('sortby', 'firstname'),
     'sortdir'     => param_alpha('sortdir', 'asc'),
     'loggedin'    => param_alpha('loggedin', 'any'),
-    'loggedindate'=> param_variable('loggedindate', null),
+    'loggedindate'=> param_variable('loggedindate', strftime(get_string('strftimedatetimeshort'))),
 );
 
 $offset  = param_integer('offset', 0);
@@ -62,9 +62,40 @@ else {
     );
 }
 
+$loggedintypes = array();
+$loggedintypes[] = array('name' => 'any', 'string' => get_string('anyuser', 'admin'));
+$loggedintypes[] = array('name' => 'ever', 'string' => get_string('usershaveloggedin', 'admin'));
+$loggedintypes[] = array('name' => 'never', 'string' => get_string('usershaveneverloggedin', 'admin'));
+$loggedintypes[] = array('name' => 'since', 'string' => get_string('usershaveloggedinsince', 'admin'));
+$loggedintypes[] = array('name' => 'notsince', 'string' => get_string('usershavenotloggedinsince', 'admin'));
+
+$calendar = array(
+    'name' => 'loggedindate',
+    'id' => 'loggedindate',
+    'tabindex' => false,
+    'type' => 'calendar',
+    'title' => get_string('date'),
+    'imagefile' => $THEME->get_url('images/calendar.gif'),
+    'defaultvalue' => strtotime($search->loggedindate),
+    'caloptions'   => array(
+        'showsTime'      => true,
+        'ifFormat'       => get_string('strftimedatetimeshort'),
+    ),
+);
+$calendarform = new Pieform(array(
+    'name' => 'loggedinform',
+    'elements' => array(
+        'loggedindate' => $calendar,
+    ),
+));
+$calendarform->include_plugin('element', 'calendar');
+$loggedindate = pieform_element_calendar($calendarform, $calendar);
+
 $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
+$smarty->assign('loggedintypes', $loggedintypes);
+$smarty->assign('loggedindate', $loggedindate);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit));

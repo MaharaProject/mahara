@@ -320,7 +320,6 @@ input#register_register {
 
 /* USERS > USER SEARCH */
 #initials {
-	font-size: 1.1667em;
 	margin: 0 0 5px 0;
 	line-height: 2em;
 }
@@ -336,6 +335,10 @@ input#register_register {
 .withselectedusers {
     margin: 0;
     float: right;
+    padding-top: 60px;
+}
+.searchform-gap {
+    height: 30px;
 }
 .searchform .institutions {
 	margin-left: 10px;
