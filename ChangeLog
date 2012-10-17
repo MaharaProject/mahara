@@ -1,3 +1,6 @@
+1.4.6 (2012-10-17)
+- Fix Leap2A imports from Moodle, broken due to fix for Bug #1047111
+
 1.4.5 (2012-10-10)
 - 
 
