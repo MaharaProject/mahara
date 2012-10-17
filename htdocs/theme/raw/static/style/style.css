@@ -544,6 +544,9 @@ textarea {
 .mceEditor {
 	display: inline-block;
 }
+#mce_fullscreen_container .mceEditor {
+    display: block;
+}
 .radio, .checkbox {
 	vertical-align: top;
 }
