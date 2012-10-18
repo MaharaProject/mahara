@@ -22,7 +22,7 @@ jenkinsaccept: minaccept
 push: minaccept
 	@echo "Pushing the change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/for/1.5_STABLE; \
+		git push gerrit HEAD:refs/publish/1.5_STABLE; \
 	else \
-		git push gerrit HEAD:refs/for/1.5_STABLE/$(TAG); \
+		git push gerrit HEAD:refs/publish/1.5_STABLE/$(TAG); \
 	fi
