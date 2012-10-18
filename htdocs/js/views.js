@@ -403,7 +403,7 @@ function ViewManager() {
         var vpdim = getViewportDimensions();
 
         var h = Math.max(d.h, 200);
-        var w = Math.max(d.w, 500);
+        var w = Math.max(d.w, 510);
         if (config.blockeditormaxwidth && getFirstElementByTagAndClassName('textarea', 'wysiwyg', newblock)) {
             w = vpdim.w - 80;
             style.height = h + 'px';
