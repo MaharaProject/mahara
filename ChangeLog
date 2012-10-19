@@ -1,3 +1,33 @@
+1.6.0 (2012-10-19)
+- A new "responsive theme", designed to work fluidly on many screen sizes; especially mobile devices
+- Members of multiple institutions can decide which theme to use
+- Basic support for theming logged-out users
+- Option for images to be resized at upload time
+- Ability to add journal entries directly from a page
+- Tagged journal entries block can show full entries
+- Collections can be submitted to groups
+- Mobile uploads support multiple devices
+- Mobile API support for journal entries and attaching files to journal entries
+- Mobile API support for syncing messages, tags, files, and journals
+- Breadcrumbs in small headers are visible at all times
+- New "Unpublish" button for journal entries
+- Optional "Clean URLs" for user profiles, portfolio page, groups and group pages with support for subdomains
+- More sorting options on member's listing in a group
+- Collections are available for groups, institutions and on the site level
+- Group information expanded to include number of forums, topics and posts
+- Group admins can enable and view participation reports within groups
+- Editability of group content can be limited with a start and end time
+- Pagination for forum topics
+- Statistics for institutions and more statistics at the site level
+- Cron error message appears red for visibility
+- Option to add institution staff rights during registration approval
+- Configurable SafeIframe site list
+- Option to allow self registration process for users authenticating via Persona
+- Cron can poll an imap inbox for mail bounces
+- Option to allow local customisation of "Edit site pages" list
+- "User search" in the admin area links to profile pages
+- 
+
 1.6rc1 (2012-09-17)
 - 
 - First Release Candidate for 1.6.0
