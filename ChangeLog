@@ -1,3 +1,7 @@
+1.6.1 (2012-10-24)
+- Fix regression with mobile upload token (Bug #1057878)
+- 
+
 1.6.0 (2012-10-19)
 - A new "responsive theme", designed to work fluidly on many screen sizes; especially mobile devices
 - Members of multiple institutions can decide which theme to use
