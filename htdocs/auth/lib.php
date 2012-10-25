@@ -422,6 +422,9 @@ function auth_setup () {
 
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
+        // reset Javascript Detector
+        require_once(get_config('libroot') . 'jsCheck/jsdetector.php');
+        JavascriptDetector::reset();
         redirect();
     }
     if ($sessionlogouttime > time()) {

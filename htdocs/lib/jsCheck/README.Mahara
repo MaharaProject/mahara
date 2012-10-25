@@ -1,0 +1,13 @@
+Javascript check in Mahara
+===============
+Website: http://www.phpclasses.org/browse/file/26690.html
+Author: Gustav Eklundh
+
+This class will check whether Javascript is enabled in the browser or
+not. If javascript is enabled this class does js check only once, then
+uses set $SESSION variable, which only gets cleared on logout.
+
+Changes:
+
+  * Replace $_SESSION by the Mahara global $SESSION variable
+  * Add reset method

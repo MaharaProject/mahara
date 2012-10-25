@@ -393,6 +393,10 @@ else {
     $SESSION->set('tablet', false);
 }
 
+// Javascript detection
+require_once(get_config('libroot') . 'jsCheck/jsdetector.php');
+JavascriptDetector::check_javascript();
+
 /*
  * Initializes our performance info early.
  *
