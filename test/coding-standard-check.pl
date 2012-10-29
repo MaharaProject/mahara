@@ -42,6 +42,9 @@ while (<>) {
     if (s/^\+//) {
         $lineno++;
         chomp;
+        if (/^([<>])\1{6} |^={7}$/) {
+            bad_line("unresolved merge conflict", $_);
+        }
         if ($filename !~ /\.(php|js)$/) {
             next;
         }
@@ -50,9 +53,6 @@ while (<>) {
         }
         if (/\t+/) {
             bad_line("TABs should be replaced by 4 spaces.", $_);
-        }
-        if (/^([<>])\1{6} |^={7}$/) {
-            bad_line("unresolved merge conflict", $_);
         }
         if (/\}\s*(else|catch)/) {
             bad_line("cuddled elses/catches are against Mahara coding guidelines", $_);
