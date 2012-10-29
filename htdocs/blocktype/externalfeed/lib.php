@@ -64,8 +64,15 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
             $data = $instance->get_data('feed', $configdata['feedid']);
 
-            $data->content = unserialize($data->content);
-            $data->image   = unserialize($data->image);
+            if (is_string($data->content)) {
+                $data->content = unserialize($data->content);
+            }
+            if (is_string($data->image) || is_array($data->image)) {
+                $data->image = @unserialize($data->image);
+            }
+            else {
+                $data->image = null;
+            }
 
             // only keep the number of entries the user asked for
             if (count($data->content)) {
