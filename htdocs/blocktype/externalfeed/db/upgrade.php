@@ -106,9 +106,9 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    if ($oldversion < 2011091402) {
+    if ($oldversion < 2011091403) {
         // Reset all feeds to reset themselves
-        set_field('blocktype_externalfeed_data', 'lastupdate', db_format_timestamp('0'));
+        set_field('blocktype_externalfeed_data', 'lastupdate', db_format_timestamp(strtotime('-90 minutes')));
         safe_require('blocktype', 'externalfeed');
         call_static_method('PluginBlocktypeExternalfeed', 'refresh_feeds');
     }
