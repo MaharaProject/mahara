@@ -659,6 +659,20 @@ EOF;
             . '</a>');
     }
 
+    // Define additional html content
+    if (get_config('installed')) {
+        $additionalhtmlitemnames = site_content_additional_html_items();
+        $additionalhtmlitems = get_records_select_array(
+            'site_content',
+            'name IN (' . join(',', array_fill(0, count($additionalhtmlitemnames), '?')) . ')',
+            $additionalhtmlitemnames
+        );
+        if ($additionalhtmlitems) {
+            foreach ($additionalhtmlitems as $item) {
+                $smarty->assign(strtoupper($item->name), $item->content);
+            }
+        }
+    }
     return $smarty;
 }
 
@@ -1897,6 +1911,12 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 80,
         ),
+        'configsite/additionalhtml' => array(
+            'path'   => 'configsite/additionalhtml',
+            'url'    => 'admin/site/additionalhtml.php',
+            'title'  => get_string('additionalhtml', 'admin'),
+            'weight' => 90
+        ),
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
@@ -2626,6 +2646,14 @@ function site_menu() {
  */
 function site_content_pages() {
     return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions');
+}
+
+/**
+ * Returns the list of additional html itmes (site content pages)
+ * @return array of names
+ */
+function site_content_additional_html_items() {
+    return array('additionalhtmlhead', 'additionalhtmltopofbody', 'additionalhtmlfooter');
 }
 
 function get_site_page_content($pagename) {

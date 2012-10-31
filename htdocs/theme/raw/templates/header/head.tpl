@@ -35,5 +35,6 @@
     <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
     <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
     <link rel="image_src" href="{$sitelogo}">
+{if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|clean_html|safe}{/if}
 </head>
 {dynamic}{flush}{/dynamic}

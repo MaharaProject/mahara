@@ -38,5 +38,6 @@
       </div><!-- footer -->
     </div><!-- footer-wrap -->
 </div><!-- container -->
+{if $ADDITIONALHTMLFOOTER}{$ADDITIONALHTMLFOOTER|clean_html|safe}{/if}
 </body>
 </html>

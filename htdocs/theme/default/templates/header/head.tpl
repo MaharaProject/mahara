@@ -38,5 +38,6 @@
   <!-- Responsive design -->
         <script type="text/javascript" src="{$WWWROOT}js/rd-nav.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|clean_html|safe}{/if}
 </head>
 {dynamic}{flush}{/dynamic}

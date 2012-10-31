@@ -426,6 +426,18 @@ $string['sitepageloaded']      = 'Site page loaded';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 
+// Additional html content
+$string['additionalhtml'] = 'Additional HTML';
+$string['additionalhtmlcontent'] = 'Content';
+$string['additionalhtmldescription'] = 'Edit HTML content that you want to add to every page. This allows you to embed counters and services like Google Analytics. You can define HTML that will be added before the closing HEAD tag for the page, immediately after the BODY tag has been opened, or immediately before the BODY tag is closed.';
+$string['additionalhtmlfooter'] = 'Before BODY is closed';
+$string['additionalhtmlhead'] = 'Within HEAD';
+$string['additionalhtmllocation'] = 'Location';
+$string['additionalhtmlsaved'] = 'Content saved';
+$string['additionalhtmltopofbody'] = 'When BODY is opened';
+$string['discardcontentedits'] = 'Discard your changes?';
+$string['loadsitecontentfailed'] = 'Unable to load any content for %s';
+
 // Links and resources menu editor
 $string['sitefile']            = 'Site file';
 $string['adminpublicdirname']  = 'public';  // Name of the directory in which to store public admin files
