@@ -36,8 +36,8 @@ function updateWYSIWYGText() {
         checkOldContent = true;
     }
     sendjsonrequest(
-        'editchangepage.json.php',
-        {'pagename' :$('editsitepage_pagename').value},
+        'editchangecontent.json.php',
+        {'contentname' :$('editsitepage_pagename').value},
         'POST',
         function(data) {
             if (!data.error) {

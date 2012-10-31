@@ -31,15 +31,15 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$pagename = param_alpha('pagename');
+$contentname = param_alpha('contentname');
 
-if (!$page = get_record('site_content', 'name', $pagename)) {
-    json_reply('local', get_string('loadsitepagefailed', 'admin'));
+if (!$contentitem = get_record('site_content', 'name', $contentname)) {
+    json_reply('local', get_string('loadsitecontentfailed', 'admin'));
 }
 
 $data = array(
-    'pagename' => $pagename,
-    'content'  => $page->content,
+    'contentname' => $contentname,
+    'content'  => $contentitem->content,
     'error'    => false,
     'message'  => false,
 );
