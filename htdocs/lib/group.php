@@ -2272,7 +2272,7 @@ function get_forum_list($groupid, $userid = 0) {
             WHERE f.group = ?
             AND f.deleted != 1
             GROUP BY 1, 2, 3, 4, 6, c.value
-            ORDER BY c.value, m.user',
+            ORDER BY CHAR_LENGTH(c.value), c.value, m.user',
             array($userid, $groupid)
         );
     }
