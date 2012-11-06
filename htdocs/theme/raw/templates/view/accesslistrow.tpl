@@ -27,8 +27,8 @@
             <span class="date"> {str tag=before} {$accessgroup.stopdate|strtotime|format_date:'strfdaymonthyearshort'}</span>
           {/if}{if !$dwoo.foreach.ags.last}, {/if}
         {/strip}{/foreach}
-        {if $view.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
       {/if}
+      {if $item.template}<div>{str tag=thisviewmaybecopied section=view}</div>{/if}
       </td>
       <td class="al-edit">
         <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/edit_access.gif'}" alt="{str tag=editaccess}"></a>
