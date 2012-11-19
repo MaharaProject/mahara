@@ -106,10 +106,25 @@ var table = new TableRenderer(
         },
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'deletecell'}, INPUT({'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
+                return TD({'class': 'deletecell'},
+                        INPUT({
+                            'type'  : 'checkbox',
+                            'class' : 'checkbox',
+                            'name'  : 'icons[' + rowdata.id + ']',
+                            'value' : rowdata.attachcount + ',' + rowdata.viewcount}
+                        )
+                );
             }
             else {
-                return TD({'class': 'deletecell'}, INPUT({'disabled': 'disabled', 'type': 'checkbox', 'name': 'icons[' + rowdata.id + ']', 'value': rowdata.attachcount + ',' + rowdata.viewcount}));
+                return TD({'class': 'deletecell'},
+                        INPUT({
+                            'disabled': 'disabled',
+                            'type'    : 'checkbox',
+                            'class'   : 'checkbox',
+                            'name'    : 'icons[' + rowdata.id + ']',
+                            'value'   : rowdata.attachcount + ',' + rowdata.viewcount}
+                        )
+                );
             }
         }
     ]
@@ -157,7 +172,7 @@ addLoadEvent( function() {
         profileiconschecker.set(FORM_SUBMITTED);
 
         // Find form
-        var form = getFirstParentByTagAndClassName(e, 'form', 'pieform');
+        var form = getFirstParentByTagAndClassName(this, 'form', 'pieform');
         forEach (getElementsByTagAndClassName('input', 'checkbox', form), function (profileicon) {
             var id = getNodeAttribute(profileicon, 'name').match(/\d+/)[0];
             if (profileicon.checked == true) {
