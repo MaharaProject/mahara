@@ -1204,7 +1204,7 @@ function activate_plugin_submit(Pieform $form, $values) {
     global $SESSION;
     if ($values['plugintype'] == 'blocktype') {
         if (strpos($values['pluginname'], '/') !== false) {
-            list($artefact, $values['pluginname']) = split('/', $values['pluginname']);
+            list($artefact, $values['pluginname']) = explode('/', $values['pluginname']);
             // Don't enable blocktypes unless the artefact plugin that provides them is also enabled
             if ($values['enable'] && !get_field('artefact_installed', 'active', 'name', $artefact)) {
                 $SESSION->add_error_msg(get_string('pluginnotenabled', 'mahara', $artefact));

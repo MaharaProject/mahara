@@ -719,7 +719,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
      * @param string $institution
      */
     public static function get_new_file_title($desired, $parent, $owner=null, $group=null, $institution=null) {
-        $bits = split('\.', $desired);
+        $bits = explode('\.', $desired);
         if (count($bits) > 1 && preg_match('/[^0-9]/', end($bits))) {
             $start = join('.', array_slice($bits, 0, count($bits)-1));
             $end = '.' . end($bits);
@@ -2126,7 +2126,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
     }
 
     private function read_entry($name, $isfolder, $size) {
-        $path = split('/', $name);
+        $path = explode('/', $name);
         if ($isfolder) {
             array_pop($path);
         }
@@ -2298,7 +2298,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                 if (!isset($this->data['folderids'][$folder])) {
                     $parent = '.';
                     $child = '';
-                    $path = split('/', $folder);
+                    $path = explode('/', $folder);
                     for ($i = 0; $i < count($path); $i++) {
                         $child .= $path[$i] . '/';
                         if (!isset($this->data['folderids'][$child])) {

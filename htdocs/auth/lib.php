@@ -1039,10 +1039,10 @@ function auth_get_login_form() {
         // clean url, treat get string differently
         $get = array();
         if (isset($getpart)) {
-            $getarr = split('&', $getpart);
+            $getarr = explode('&', $getpart);
             if ($getarr) {
                 foreach ($getarr as $data) {
-                    $arr = split('=', $data);
+                    $arr = explode('=', $data);
                     $get[$arr[0]] = isset($arr[1]) ? $arr[1] : null;
                 }
             }

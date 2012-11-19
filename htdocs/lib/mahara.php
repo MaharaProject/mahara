@@ -320,7 +320,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     $subdir = 'help/';
 
     if ($page) {
-        $pagebits = split('-', $page);
+        $pagebits = explode('-', $page);
         $file = array_pop($pagebits) . '.html';
         if ($plugintype != 'core') {
             $subdir .= 'pages/' . join('/', $pagebits) . '/';
@@ -1043,7 +1043,7 @@ function set_locale_for_language($lang) {
         return;
     }
 
-    if ($args = split(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
+    if ($args = explode(',', get_string_location('locales', 'langconfig', array(), 'raw_langstring', $lang))) {
         array_unshift($args, LC_ALL);
         call_user_func_array('setlocale', $args);
     }
