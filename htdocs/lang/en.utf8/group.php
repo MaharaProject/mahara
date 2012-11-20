@@ -196,6 +196,7 @@ $string['groupsimin']  = 'Groups I\'m in';
 $string['groupsiown']  = 'Groups I own';
 $string['groupsiminvitedto'] = 'Groups I\'m invited to';
 $string['groupsiwanttojoin'] = 'Groups I want to join';
+$string['groupsicanjoin'] = 'Groups I can join';
 $string['requestedtojoin'] = 'You have requested to join this group';
 $string['groupnotfound'] = 'Group with id %s not found';
 $string['groupnotfoundname'] = 'Group %s not found';

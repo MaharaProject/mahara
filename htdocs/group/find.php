@@ -32,17 +32,15 @@ require_once('pieforms/pieform.php');
 define('TITLE', get_string('findgroups'));
 require_once('group.php');
 require_once('searchlib.php');
-$filter = param_alpha('filter', 'notmember');
+$filter = param_alpha('filter', 'canjoin');
 $offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
 $groupsperpage = 10;
 $query = param_variable('query', '');
 
-if ($filter == 'member') {
-    $type = 'member';
-}
-else if ($filter == 'notmember') {
-    $type = 'notmember';
+// check that the filter is valid, if not default to 'all'
+if (in_array($filter, array('member', 'notmember', 'canjoin'))) {
+    $type = $filter;
 }
 else { // all or some other text
     $filter = 'all';
@@ -55,6 +53,7 @@ $elements['query'] = array(
 $elements['filter'] = array(
             'type' => 'select',
             'options' => array(
+                'canjoin'   => get_string('groupsicanjoin', 'group'),
                 'notmember' => get_string('groupsnotin', 'group'),
                 'member'    => get_string('groupsimin', 'group'),
                 'all'       => get_string('allgroups', 'group')
@@ -134,9 +133,7 @@ if ($groups['data']) {
 group_prepare_usergroups_for_display($groups['data'], 'find');
 
 $params = array();
-if ($filter != 'notmember') {
-    $params['filter'] = $filter;
-}
+$params['filter'] = $filter;
 if ($groupcategory != 0) {
     $params['groupcategory'] = $groupcategory;
 }

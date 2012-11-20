@@ -721,16 +721,18 @@ class PluginSearchInternal extends PluginSearch {
 
         $canseehidden = $USER->get('admin') || $USER->get('staff');
 
-       if ($type == 'member') {
+        if ($type == 'member') {
             $sql .=  'AND id IN (' . $grouproles . ')';
         }
         else if ($type == 'notmember') {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
-            if (!$canseehidden) {
-                $sql .= ' AND hidden = 0';
-            }
         }
-        else if (!$canseehidden) {
+        else if ($type == 'canjoin') {
+            $sql .= 'AND jointype != ? AND id NOT IN (' . $grouproles . ')';
+            $values[] = 'controlled';
+        }
+
+        if (!$canseehidden) {
             $sql .= ' AND (hidden = 0 OR id IN (' . $grouproles . '))';
         }
 
