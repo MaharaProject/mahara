@@ -10,13 +10,12 @@
   </thead>
   <tbody>
   {foreach from=$data item=n}
-    {assign var=shortdescription value=$n->description|str_shorten_html:100:true|safe}
     <tr class="{cycle values=r0,r1}">
       <td class="notetitle">
       {if $n->locked}
-        <h4><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a></h4>
+        <h4><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h4>
       {else}
-        <h4><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true|safe}</a></h4>
+        <h4><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h4>
       {/if}
         <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
       </td>
