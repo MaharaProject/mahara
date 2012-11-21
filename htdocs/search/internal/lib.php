@@ -728,8 +728,8 @@ class PluginSearchInternal extends PluginSearch {
             $sql .= 'AND id NOT IN (' . $grouproles . ')';
         }
         else if ($type == 'canjoin') {
-            $sql .= 'AND jointype != ? AND id NOT IN (' . $grouproles . ')';
-            $values[] = 'controlled';
+            $sql .= 'AND (jointype != ? AND NOT (jointype = ? AND request = 0)) AND id NOT IN (' . $grouproles . ')';
+            $values = array_merge($values, array('controlled', 'approve'));
         }
 
         if (!$canseehidden) {
