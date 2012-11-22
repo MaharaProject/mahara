@@ -29,6 +29,10 @@ securitycheck:
 		echo "This change has drafts in the chain. Please use make security instead"; \
 		false; \
 	fi
+	@if git log $(mergebase)..HEAD --pretty=format:%B | grep -iE '(security|cve)' >/dev/null; then \
+		echo "This change has a security keyword in it. Please use make security instead"; \
+		false; \
+	fi
 
 push: securitycheck minaccept
 	@echo "Pushing the change upstream..."
