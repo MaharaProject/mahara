@@ -580,7 +580,24 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     $replytoset = false;
     if (!empty($customheaders) && is_array($customheaders)) {
         foreach ($customheaders as $customheader) {
-            $mail->AddCustomHeader($customheader);
+            // To prevent duplicated declaration of the field "Message-ID",
+            // don't add it into the $mail->CustomHeader[].
+            if (false === stripos($customheader, 'message-id')) {
+                // Hack the fields "In-Reply-To" and "References":
+                // add touser<userID>
+                if ((0 === stripos($customheader, 'in-reply-to')) ||
+                    (0 === stripos($customheader, 'references'))) {
+                    $customheader = preg_replace('/<forumpost(\d+)/', '<forumpost${1}touser' . $userto->id, $customheader);
+                }
+                $mail->AddCustomHeader($customheader);
+            }
+            else {
+                list($h, $msgid) = explode(':', $customheader, 2);
+                // Hack the "Message-ID": add touser<userID> to make sure
+                // the "Message-ID" is unique
+                $msgid = preg_replace('/<forumpost(\d+)/', '<forumpost${1}touser' . $userto->id, $msgid);
+                $mail->MessageID = trim($msgid);
+            }
             if (0 === stripos($customheader, 'reply-to')) {
                 $replytoset = true;
             }
