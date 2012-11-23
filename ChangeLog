@@ -1,3 +1,8 @@
+1.5.7 (2012-11-23)
+- Bug #1079498: Fix XSS in pagination URL
+- Fix the rss image exceptions preventing updating (Bug #1081431)
+- Check originals directory before iterator in upgrade (Bug #1080498)
+
 1.5.6 (2012-10-17)
 - Fix Leap2A imports from Moodle, broken due to fix for Bug #1047111#
 
