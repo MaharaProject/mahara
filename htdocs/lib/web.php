@@ -3444,7 +3444,7 @@ function build_pagination($params) {
                 $strlimitoptions[] = "<option value = '$limitoptions[$i]'> $limitoptions[$i] </option>";
             }
         }
-        $output .= '<form class="pagination" action="' . $params['url'] . '" method="POST">
+        $output .= '<form class="pagination" action="' . hsc($params['url']) . '" method="POST">
             <span class="pagination"> ' . $params['limittext'] . '</span>' .
             '<select id="setlimitselect" class="pagination" name="limit"> '.
                 join(' ', $strlimitoptions) .
@@ -3499,7 +3499,7 @@ function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $te
     }
     else {
         $return .= '">'
-            . '<a href="' . $url . '" title="' . $title
+            . '<a href="' . hsc($url) . '" title="' . $title
             . '">' . $text . '</a></span>';
     }
 
