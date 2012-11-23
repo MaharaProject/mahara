@@ -3273,7 +3273,7 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     }
     else {
         $return .= '">'
-            . '<a href="' . $url . '" title="' . $title
+            . '<a href="' . hsc($url) . '" title="' . $title
             . '">' . $text . '</a></span>';
     }
 
