@@ -2453,7 +2453,7 @@ function profile_sideblock() {
         if ($authobj->authname == 'xmlrpc') {
             $peer = get_peer($authobj->wwwroot);
             if ($SESSION->get('mnetuser')) {
-                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, institution_display_name($peer->name));
+                $data['mnetloggedinfrom'] = get_string('youhaveloggedinfrom', 'auth.xmlrpc', $authobj->wwwroot, institution_display_name($peer->institution));
             }
             else {
                 $data['peer'] = array('name' => $peer->name, 'wwwroot' => $peer->wwwroot);
