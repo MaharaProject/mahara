@@ -1,3 +1,11 @@
+1.6.2 (2012-11-23)
+- Bug #1079498: Fix XSS in pagination URL
+- Fix the rss image exceptions preventing updating (Bug #1081431)
+- Check originals directory before iterator in upgrade (Bug #1080498)
+- Fix mnet jump-back link regression (Bug #1079260)
+- Escape table names in profile image query (Bug #1077013)
+- 
+
 1.6.1 (2012-10-24)
 - Fix regression with mobile upload token (Bug #1057878)
 - 
