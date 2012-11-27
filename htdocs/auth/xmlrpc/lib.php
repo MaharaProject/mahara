@@ -109,7 +109,7 @@ class AuthXmlrpc extends Auth {
         $peer = get_peer($remotewwwroot);
 
         if ($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
-            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . institution_display_name($peer->name));
+            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . institution_display_name($peer->institution));
         }
 
         $client = new Client();

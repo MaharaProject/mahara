@@ -311,7 +311,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
         require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
         if ($peer = get_peer_from_instanceid($SESSION->get('authinstance'))) {
             $smarty->assign('mnethost', array(
-                'name'      => institution_display_name($peer->name),
+                'name'      => $peer->name,
                 'url'       => $returnurl ? $returnurl : $peer->wwwroot,
             ));
         }
