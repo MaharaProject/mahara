@@ -184,10 +184,17 @@ function fetch_user_image($username) {
     }
 }
 
+/*
+ * Check session and return user data for the provided token.
+ *
+ * @param  string $token    The unique ID provided by remotehost.
+ * @param  string $seragent User Agent string (as seen by peer) - ignored
+ * @return array  $userdata Array of user info for remote host
+ */
 function user_authorise($token, $useragent) {
     global $USER;
 
-    $sso_session = get_record('sso_session', 'token', $token, 'useragent', $useragent);
+    $sso_session = get_record('sso_session', 'token', $token);
     if (empty($sso_session)) {
         throw new XmlrpcServerException('No such session exists');
     }
@@ -502,7 +509,7 @@ function send_content_ready($token, $username, $format, $importdata, $fetchnow=f
  * it will kill the local sessions for the user
  *
  * @param   string  $username       Username for session to kill
- * @param   string  $useragent      SHA1 hash of user agent to look for
+ * @param   string  $useragent      SHA1 hash of user agent from peer - ignored
  * @return  string                  A plaintext report of what has happened
  */
 function kill_children($username, $useragent) {
@@ -526,7 +533,7 @@ function kill_children($username, $useragent) {
         return 'This host is not permitted to kill sessions for this username';
     }
 
-    $mnetsessions = get_records_select_array('sso_session', 'userid = ? AND useragent = ?', array($userid, $useragent));
+    $mnetsessions = get_records_select_array('sso_session', 'userid = ?', array($userid));
 
     // Prepare to destroy local sessions associated with the user
     $start = ob_start();
@@ -560,7 +567,6 @@ function kill_children($username, $useragent) {
     $end = ob_end_clean();
 
     delete_records('sso_session',
-                   'useragent', $useragent,
                    'userid',    $userid);
 
     return true;
