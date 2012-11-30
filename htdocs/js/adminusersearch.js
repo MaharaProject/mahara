@@ -61,20 +61,10 @@ function UserSearch() {
     this.searchInitial = function(initialtype, e) {
         // Clear all search params except for the other initial
         if (initialtype == 'f') {
-            if (self.params.l) {
-                self.params = {'l' : self.params.l};
-            } else {
-                self.params = {};
-            }
             forEach(getElementsByTagAndClassName('span', 'selected', 'firstnamelist'), function (i) {
                 removeElementClass(i, 'selected');
             });
         } else if (initialtype == 'l') {
-            if (self.params.f) {
-                self.params = {'f' : self.params.f};
-            } else {
-                self.params = {};
-            }
             forEach(getElementsByTagAndClassName('span', 'selected', 'lastnamelist'), function (i) {
                 removeElementClass(i, 'selected');
             });
@@ -82,6 +72,9 @@ function UserSearch() {
         addElementClass(this, 'selected');
         if (!hasElementClass(this, 'all')) {
             self.params[initialtype] = scrapeText(this).replace(/\s+/g, '');
+        }
+        else {
+            delete self.params[initialtype];
         }
         self.doSearch();
         e.stop();
@@ -125,8 +118,6 @@ function UserSearch() {
     };
 
     this.newQuery = function(e) {
-        self.params = {};
-        self.resetInitials();
         self.params.query = $('query').value;
         var institution = $('institution');
         if (institution) {

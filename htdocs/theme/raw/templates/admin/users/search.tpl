@@ -2,25 +2,28 @@
 
     <p>{str tag="usersearchinstructions" section="admin"}</p>
     <div id="initials">
+    <div id="firstnamelist">
       <label>{str tag="firstname"}:</label>
-       <span class="{if !$search->f} selected{/if} all">
+       <span class="first-initial{if !$search->f} selected{/if} all">
         <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
-       <span class="{if $a == $search->f} selected{/if}">
+       <span class="first-initial{if $a == $search->f} selected{/if}">
         <a href="{$WWWROOT}admin/users/search.php?f={$a}{if $search->l}&amp;l={$search->l}{/if}">{$a}</a>
        </span>
        {/foreach}
-	  <br />
+    </div>
+    <div id="lastnamelist">
       <label>{str tag="lastname"}:</label>
-       <span class="{if !$search->l} selected{/if} all">
+       <span class="last-initial{if !$search->l} selected{/if} all">
         <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
-       <span class="{if $a == $search->l} selected{/if}">
+       <span class="last-initial{if $a == $search->l} selected{/if}">
         <a href="{$WWWROOT}admin/users/search.php?l={$a}{if $search->f}&amp;f={$search->f}{/if}">{$a}</a>
        </span>
        {/foreach}
+    </div>
     </div>
     {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
     <div class="withselectedusers">
