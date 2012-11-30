@@ -2,7 +2,7 @@
     <div id="setlimit" class="setlimit fr">
       {str tag=resultsperpage}:
     {foreach from=$limitoptions item=l}
-      <a href="?limit={$l}"{if $l == $results.limit} class="selected"{/if}>{$l}</a>
+      <a href="{$searchurl}&limit={$l}"{if $l == $results.limit} class="selected"{/if}>{$l}</a>
     {/foreach}
     </div>
     <h2>{str tag="Results"}</h2>

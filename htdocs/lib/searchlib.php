@@ -287,8 +287,12 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
+    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir');
     $params = array();
     foreach ($search as $k => $v) {
+        if (!in_array($k, $wantedparams)) {
+            continue;
+        }
         if (!empty($v)) {
             $params[] = $k . '=' . $v;
         }
@@ -376,6 +380,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('sortby', $search->sortby);
     $smarty->assign('sortdir', $search->sortdir);
+    $smarty->assign('limit', $limit);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
     $smarty->assign('cols', $cols);
     $smarty->assign('ncols', count($cols));
