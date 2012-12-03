@@ -494,7 +494,7 @@ class ArtefactTypeComment extends ArtefactType {
                         'admin'         => $item->admin,
                         'deleted'       => $item->deleted,
                         'profileicon'   => $item->profileicon,
-                        'profileurl'    => profile_url($item),
+                        'profileurl'    => profile_url($item->author),
                     );
                 }
             }
