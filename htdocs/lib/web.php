@@ -3487,11 +3487,11 @@ function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $te
     $return = '<span class="pagination';
     $return .= ($class) ? " $class" : '';
 
-    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&amp;';
+    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
     $url .= "$offsetname=$offset";
     if ($setlimit) {
-        $url .= '&amp;' . "setlimit=$setlimit";
-        $url .= '&amp;' . "limit=$limit";
+        $url .= '&' . "setlimit=$setlimit";
+        $url .= '&' . "limit=$limit";
     }
 
     if ($disabled) {
