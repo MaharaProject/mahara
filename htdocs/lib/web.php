@@ -3265,7 +3265,7 @@ function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabl
     $return = '<span class="pagination';
     $return .= ($class) ? " $class" : '';
 
-    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&amp;';
+    $url = (false === strpos($url, '?')) ? $url . '?' : $url . '&';
     $url .= "$offsetname=$offset";
 
     if ($disabled) {
