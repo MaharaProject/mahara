@@ -3520,7 +3520,7 @@ function build_pagination($params) {
 
         // Current page with adjacent prev and next pages
         if ($params['numbersincludeprevnext'] > 0) {
-            for ($i=$params['numbersincludeprevnext']; $i > 0; $i--) {
+            for ($i = 1; $i <= $params['numbersincludeprevnext']; $i++) {
                 $prevlink = $page - $i;
                 if ($prevlink < 0) {
                     break;
