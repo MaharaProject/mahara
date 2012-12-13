@@ -1274,7 +1274,7 @@ function simple_resumefield_form($defaults, $goto) {
                     'type' => 'wysiwyg',
                     'class' => 'js-hidden',
                     'rows' => 20,
-                    'cols' => 80,
+                    'cols' => 65,
                     'defaultvalue' => $content,
                     'rules' => array('maxlength' => 65536),
                 ),

@@ -27,7 +27,12 @@ function connect_editbuttons() {
         $j("#" + t + "display_container").removeClass("nojs-hidden-block");
         $j("#" + t + "edit_container").addClass("hidden");
         $j("#" + t + "edit_container").removeClass("nojs-hidden-block");
-        tinyMCE.get(t).show();
+        if (typeof tinyMCE != 'undefined') {
+            tinyMCE.get(t).show();
+        }
+        else {
+            $j("#" + t).removeClass("js-hidden");
+        }
     });
 }
 
@@ -41,7 +46,12 @@ function connect_cancelbuttons() {
         $j("#cancel_" + t + "submit").addClass("js-hidden");
         $j("#" + t + "display_container").removeClass("hidden");
         $j("#" + t + "edit_container").removeClass("hidden");
-        tinyMCE.get(t).hide();
+        if (typeof tinyMCE != 'undefined') {
+            tinyMCE.get(t).hide();
+        }
+        else {
+            $j("#" + t).addClass("js-hidden");
+        }
     });
 }
 
