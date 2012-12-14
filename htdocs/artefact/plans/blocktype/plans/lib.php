@@ -94,7 +94,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
 
             if ($exporter && $tasks['count'] > $tasks['limit']) {
                 $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $configdata['artefactid']
-                    . '&amp;view=' . $instance->get('view');
+                    . '&view=' . $instance->get('view');
                 $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
             }
             $smarty->assign('tasks',$tasks);
