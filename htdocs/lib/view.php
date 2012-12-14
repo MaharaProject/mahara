@@ -2228,7 +2228,7 @@ class View {
         $baseurl = '?';
         foreach ($_POST + $_GET as $key => $value) {
             if (in_array($key, $allowed_keys) || preg_match('/^action_.*(_x)?$/', $key)) {
-                $baseurl .= hsc($key) . '=' . hsc($value) . '&amp;';
+                $baseurl .= hsc($key) . '=' . hsc($value) . '&';
             }
         }
         $baseurl = substr($baseurl, 0, -5);
@@ -3618,18 +3618,18 @@ class View {
 
         $params = array();
         if (!empty($search->query)) {
-            $params[] = 'viewquery=' . $search->query;
+            $params['viewquery'] = $search->query;
         }
         if (!empty($search->ownerquery)) {
-            $params[] = 'ownerquery=' . $search->query;
+            $params['ownerquery'] = $search->query;
         }
         if (!empty($search->group)) {
-            $params[] = 'group=' . $search->group;
+            $params['group'] = $search->group;
         }
         if (!empty($search->institution)) {
-            $params[] = 'institution=' . $search->institution;
+            $params['institution'] = $search->institution;
         }
-        $params[] = 'viewlimit=' . $search->limit;
+        $params['viewlimit'] = $search->limit;
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('results', $results->data);
@@ -3639,7 +3639,7 @@ class View {
         $search->pagination = build_pagination(array(
             'id' => 'templatesearch_pagination',
             'class' => 'center',
-            'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . join('&amp;', $params),
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php?' . http_build_query($params),
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
