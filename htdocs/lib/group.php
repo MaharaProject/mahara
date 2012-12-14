@@ -1428,13 +1428,13 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype) 
 
     $params = array();
     if (!empty($query)) {
-        $params[] = 'query=' . $query;
+        $params['query'] = $query;
     }
     $params[] = 'limit=' . $results['limit'];
     if (!empty($membershiptype)) {
-        $params[] = 'membershiptype=' . $membershiptype;
+        $params['membershiptype'] = $membershiptype;
     }
-    $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . '&amp;' . join('&amp;', $params);
+    $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . (!empty($params) ? '&' . http_build_query($params) : '');
 
     $smarty = smarty_core();
 
