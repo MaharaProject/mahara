@@ -27,7 +27,7 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/suspendeduserstitle');
+define('MENUITEM', 'configusers/suspendedusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('suspendeduserstitle', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
