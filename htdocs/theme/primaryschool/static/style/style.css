@@ -281,6 +281,7 @@ span.btn a.icon, a span.icon {
 	text-decoration: none;
 	margin: 0 0 0 3px;
 	padding: 0;
+    font-size: 14px;
 }
 #main-nav li span {
 	background: transparent url(../images/nav-divider.png) no-repeat right 5px;

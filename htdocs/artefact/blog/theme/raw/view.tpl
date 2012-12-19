@@ -2,9 +2,9 @@
 			<div id="myblogs rel">
 
                 <div class="rbuttons">
-                    <a class="btn" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+                    <a class="btn addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
                 {if !$blog->get('locked')}
-                    <a class="btn" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+                    <a class="btn settings" href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                 {/if}
 				</div>
 

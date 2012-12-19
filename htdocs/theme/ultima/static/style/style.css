@@ -278,11 +278,9 @@ span.btn a.icon, a span.icon {
 }
 #sub-nav ul {
     float: right;
-	padding: 8px 0 5px 0;
 	background: transparent;
 }
 #sub-nav li {
-    padding: 5px 13px 5px 13px;
     line-height: 20px;
     height: 35px;
     margin: 0 !important;

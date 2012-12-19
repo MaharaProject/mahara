@@ -17,7 +17,9 @@
     </tr>
   </thead>
 {foreach from=$accesslists.collections item=collection}
+    <tr class="{cycle values='r0,r1'}">
   {include file="view/accesslistrow.tpl" item=$collection}
+    </tr>
 {/foreach}
   </tbody>
 </table>
@@ -41,7 +43,9 @@
   </thead>
   <tbody>
 {foreach from=$accesslists.views item=view}
+    <tr class="{cycle values='r0,r1'}">
   {include file="view/accesslistrow.tpl" item=$view}
+    </tr>
 {/foreach}
   </tbody>
 </table>

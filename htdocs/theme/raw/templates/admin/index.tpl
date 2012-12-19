@@ -20,7 +20,7 @@
 {/if}
 
 {if $upgrades}
-<div id="runupgrade">
+<div class="message" id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
 <div class="fr"><span class="upgradeicon"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>

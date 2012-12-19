@@ -212,7 +212,6 @@
 .column-content .add-button input {
 	font-size: .9167em;
 }
-
 #block-placeholder {
     margin-top: 10px;
 }
@@ -328,11 +327,47 @@ div.blockinstance.retractable div.blockinstance-header .arrow {
 /* External Feed */
 #blocktype_externalfeed_title {
 	font-weight: bold;
-	font-size: 1.1667em;
+    font-size: 1em;
+    margin: 5px 0 0 0;
+}
+#blocktype_externalfeed_title a img {
+    vertical-align: baseline;
+}
+#blocktype_externalfeed_desc {
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #d1d1d1;
+}
+#blocktype_externalfeed_entries {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+#blocktype_externalfeed_entries h4 {
+	margin: 15px 0 10px 0;
+    font-size: 1.3333em;
 }
 #blocktype_externalfeed_entries ol,
 #blocktype_externalfeed_entries ul {
 	margin: 0;
+}
+.feedcontent {
+    border-bottom: 1px dotted #d1d1d1;
+    padding-bottom: 10px;
+}
+.feedcontent h1,
+.feedcontent h2 {
+    font-size: 1.3333em;
+}
+.feedcontent h3 {
+    font-size: 1.25em;
+}
+.feedcontent h4 {
+    font-size: 1.167em;
+}
+.feedcontent h5 {
+    font-size: 1em;
+}
+.feedcontent h6 {
+    font-size: 0.9167em;
 }
 
 /* Inbox */
@@ -852,6 +887,9 @@ div.colnav-extra {
 #feedbacktable .commentrightwrap {
 	margin-left: 110px;
 }
+#feedbacktable .commentrightwrap p span {
+    line-height: 1.333em;
+}
 #feedbacktable .makepublicbtn {
     margin: 0 0 3px 3px;
     display: inline-block;
@@ -871,7 +909,7 @@ div.colnav-extra {
     margin-left: 110px;
 }
 #feedbacktable .username {
-	line-height: 1.2em;
+	line-height: 1.167em;
 }
 #feedbacktable .details span {
 	margin: 0 3px;
@@ -894,6 +932,9 @@ div.colnav-extra {
 }
 #add_feedback_form {
 	margin-top: 10px;
+}
+#add_feedback_form tr#add_feedback_form_attachments_container th {
+    vertical-align: top;
 }
 
 /** viewing artefact */
@@ -959,13 +1000,6 @@ table td div.plan_completed {
 	margin: 0;
 }
 
-#blocktype_externalfeed_title {
-	margin-top: 5px;
-}
-#blocktype_externalfeed_entries {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
 #recentforumpostsblock {
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -973,8 +1007,8 @@ table td div.plan_completed {
 #recentforumpostsblock td.s img {
 	vertical-align: top;
 }
-#blocktype_externalfeed_entries h4 {
-	margin-top: 5px;
+#recentforumpostsblock td.s {
+    line-height: 1.167em;
 }
 #latestforumposts td h5 {
 	margin: 0;
@@ -1014,4 +1048,14 @@ td.icon-container {
 }
 .ie7 td.icon-container {
     width: 25px;
+}
+table.maharatable tr#instconf_otherblocksmsg_container {
+    font-size: 1em;
+    border: 0;
+    background-color: #ffeded;
+	color: #dd0221;
+}
+table.maharatable tr#instconf_otherblocksmsg_container td {
+    padding: 5px;
+    font-style: italic;
 }
