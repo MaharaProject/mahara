@@ -3219,7 +3219,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  * This function takes one array that contains the options to configure the 
  * pagination. Required options include:
  *
- * - url: The base URL to use for all links
+ * - url: The base URL to use for all links (it should not contain special characters)
  * - count: The total number of results to paginate for
  * - setlimit: toggle variable for enabling/disabling limit dropbox, default value = false
  * - limit: How many to show per page

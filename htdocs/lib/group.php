@@ -1580,7 +1580,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
     if (!empty($membershiptype)) {
         $params['membershiptype'] = $membershiptype;
     }
-    $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . (!empty($params) ? '&' . http_build_query($params) : '');
+    $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . (!empty($params) ? ('&' . http_build_query($params)) : '');
 
     $smarty = smarty_core();
 

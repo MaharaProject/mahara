@@ -1073,7 +1073,7 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',
-        'url'        => get_config('wwwroot') . 'account/activity/index.php?type=' . hsc($type),
+        'url'        => get_config('wwwroot') . 'account/activity/index.php?type=' . $type,
         'jsonscript' => 'account/activity/index.json.php',
         'datatable'  => 'activitylist',
         'count'      => $count,
