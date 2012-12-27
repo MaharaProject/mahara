@@ -1053,7 +1053,7 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
     $typesql = '';
     if ($type != 'all') {
         // Treat as comma-separated list of activity type names
-        $types = split(',', preg_replace('/[^a-z,]+/', '', $type));
+        $types = explode(',', preg_replace('/[^a-z,]+/', '', $type));
         if ($types) {
             $typesql = ' at.name IN (' . join(',', array_map('db_quote', $types)) . ')';
             if (in_array('adminmessages', $types)) {

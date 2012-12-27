@@ -38,7 +38,7 @@ function bulkexport_submit(Pieform $form, $values) {
     $usernames = array();
 
     // Read in the usernames explicitly specified
-    foreach (split("\n", $values['usernames']) as $username) {
+    foreach (explode("\n", $values['usernames']) as $username) {
         $username = trim($username);
         if (!empty($username)) {
             $usernames[] = $username;

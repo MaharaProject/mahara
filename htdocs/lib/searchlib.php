@@ -136,7 +136,7 @@ function parse_name_query($text) {
     // Strip off phrase quotes
     if ($match[1]{0} == '"') {
       $phrase = preg_replace('/\s\s+/', ' ', strtolower(substr($match[1], 1, -1)));
-      $phraselist = split(' ', $phrase);
+      $phraselist = explode(' ', $phrase);
       if (count($phraselist) == 2) {
         $fullnames[] = $phraselist;
       } else {

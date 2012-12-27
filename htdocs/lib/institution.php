@@ -603,7 +603,7 @@ class Institution {
             $where = '';
         }
 
-        $querydata = split(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query))));
+        $querydata = explode(' ', preg_replace('/\s\s+/', ' ', strtolower(trim($query))));
         $namesql = '(
                 ii.name ' . db_ilike() . ' \'%\' || ? || \'%\'
             )
