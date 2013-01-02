@@ -126,3 +126,21 @@ $string['termsandconditionsdefaultcontent'] = '<h1>Terms and conditions</h1>
 <p>We may occasionally make minor adjustments to our terms and condition to reflect changes to the system and in response to user feedback. As such we suggest you check the terms and conditions each time you visit this site. We will however notify users of any major changes to the terms and conditions via the [<i>name of site</i>] homepage.</p>';
 
 $string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upload is my own or I have express permission to reproduce and/or distribute this item. My use of this file does not breach any local copyright legislation. This file also adheres to the terms and conditions outlined on this site.';
+
+// Note: these license names (long and short) are taken from the SPDX License
+// List "Full name" and "Identifier" columns. See: http://spdx.org/licenses
+$string['licensedisplaynamebysa']   = 'Creative Commons Attribution Share Alike 3.0';
+$string['licensedisplaynameby']     = 'Creative Commons Attribution 3.0';
+$string['licensedisplaynamebynd']   = 'Creative Commons Attribution No Derivatives 3.0';
+$string['licensedisplaynamebyncsa'] = 'Creative Commons Attribution Non Commercial Share Alike 3.0';
+$string['licensedisplaynamebync']   = 'Creative Commons Attribution Non Commercial 3.0';
+$string['licensedisplaynamebyncnd'] = 'Creative Commons Attribution Non Commercial No Derivatives 3.0';
+$string['licensedisplaynamegfdl']   = 'GNU Free Documentation License v1.3';
+
+$string['licenseshortnamebysa']   = 'CC-BY-SA-3.0';
+$string['licenseshortnameby']     = 'CC-BY-3.0';
+$string['licenseshortnamebynd']   = 'CC-BY-ND-3.0';
+$string['licenseshortnamebyncsa'] = 'CC-BY-NC-SA-3.0';
+$string['licenseshortnamebync']   = 'CC-BY-NC-3.0';
+$string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-3.0';
+$string['licenseshortnamegfdl']   = 'GFDL-1.3';

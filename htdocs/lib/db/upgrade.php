@@ -3187,5 +3187,10 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2013020501) {
+        require_once('license.php');
+        install_licenses_default();
+    }
+
     return $status;
 }
