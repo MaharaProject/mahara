@@ -56,6 +56,10 @@ $string['off'] = 'Off';
 $string['disabled'] = 'Disabled';
 $string['enabled'] = 'Enabled';
 
+$string['licensedefault'] = 'Default license';
+$string['licensedefaultdescription'] = 'The default license for your content.';
+$string['licensedefaultinherit'] = 'Use the institution default';
+
 $string['messagesdescr'] = 'Messages from other users';
 $string['messagesnobody'] = 'Do not allow anyone to send me messages';
 $string['messagesfriends'] = 'Allow people on my friends list to send me messages';

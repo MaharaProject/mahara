@@ -32,6 +32,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
+require_once('license.php');
 define('MENUITEM', 'manageinstitutions/institutions');
 
 $institution = param_variable('i', '');
@@ -245,6 +246,8 @@ if ($institution || $add) {
         $data->defaultmembershipperiod = null;
         $data->showonlineusers = 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
+        $data->licensemandatory = 0;
+        $data->licensedefault = '';
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -412,6 +415,20 @@ if ($institution || $add) {
             'collapseifoneoption'   => true,
             'options'               => $showonlineusersoptions,
         );
+        if (get_config('licensemetadata')) {
+            $elements['licensemandatory'] = array(
+                'type'         => 'checkbox',
+                'title'        => get_string('licensemandatory', 'admin'),
+                'description'  => get_string('licensemandatorydescription','admin'),
+                'defaultvalue' => $data->licensemandatory,
+            );
+            $elements['licensedefault'] = license_form_el_basic(null, true);
+            $elements['licensedefault']['title'] = get_string('licensedefault','admin');
+            $elements['licensedefault']['description'] = get_string('licensedefaultdescription','admin');
+            if ($data->licensedefault) {
+                $elements['licensedefault']['defaultvalue'] = $data->licensedefault;
+            }
+        }
         if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
             $elements['defaultquota'] = array(
                'type'         => 'bytes',
@@ -564,6 +581,10 @@ function institution_validate(Pieform $form, $values) {
         }
     }
 
+    if (get_config('licensemetadata') and $values['licensemandatory'] and $values['licensedefault'] == '') {
+        $form->set_error('licensedefault', get_string('licensedefaultmandatory', 'admin'));
+    }
+
     // Check uploaded logo
     if (!empty($values['logo'])) {
         require_once('file.php');
@@ -647,6 +668,11 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $newinstitution->style = null;
+    }
+
+    if (get_config('licensemetadata')) {
+        $newinstitution->licensemandatory = ($values['licensemandatory']) ? 1 : 0;
+        $newinstitution->licensedefault = $values['licensedefault'];
     }
 
     if (!empty($values['resetcustom']) && !empty($oldinstitution->style)) {

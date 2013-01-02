@@ -205,6 +205,7 @@ function get_user_language($userid) {
 function expected_account_preferences() {
     return array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
+                 'licensedefault' => '-',
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
@@ -221,6 +222,8 @@ function expected_account_preferences() {
 }
 
 function general_account_prefs_form_elements($prefs) {
+    global $USER;
+    require_once('license.php');
     $elements = array();
     $elements['friendscontrol'] = array(
         'type' => 'radio',
@@ -241,6 +244,17 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true,
         'disabled' => get_config('wysiwyg'),
     );
+    if (get_config('licensemetadata')) {
+        $elements['licensedefault'] = license_form_el_basic(null);
+        $elements['licensedefault']['title'] = get_string('licensedefault','account');
+        if ($USER->get('institutions')) {
+            $elements['licensedefault']['options']['-'] = get_string('licensedefaultinherit','account');
+        }
+        $elements['licensedefault']['description'] = get_string('licensedefaultdescription','account');
+        if (isset($prefs->licensedefault)) {
+            $elements['licensedefault']['defaultvalue'] = $prefs->licensedefault;
+        }
+    }
     $elements['maildisabled'] = array(
         'type' => 'checkbox',
         'defaultvalue' => $prefs->maildisabled,
