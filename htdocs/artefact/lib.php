@@ -695,6 +695,12 @@ abstract class ArtefactType {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
 
         return array(
             'html' => $smarty->fetch('artefact.tpl'),

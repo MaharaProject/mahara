@@ -33,6 +33,7 @@ define('SECTION_PAGE', 'post');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+require_once('license.php');
 
 safe_require('artefact', 'blog');
 safe_require('artefact', 'file');
@@ -136,6 +137,8 @@ $form = pieform(array(
             'description'  => get_string('tagsdesc'),
             'help' => true,
         ),
+        'license' => license_form_el_basic(isset($blogpostobj) ? $blogpostobj : null),
+        'licensing_advanced' => license_form_el_advanced(isset($blogpostobj) ? $blogpostobj : null),
         'filebrowser' => array(
             'type'         => 'filebrowser',
             'title'        => get_string('attachments', 'artefact.blog'),
@@ -288,6 +291,11 @@ function editpost_submit(Pieform $form, $values) {
     $postobj->set('title', $values['title']);
     $postobj->set('description', $values['description']);
     $postobj->set('tags', $values['tags']);
+    if (get_config('licensemetadata')) {
+        $postobj->set('license', $values['license']);
+        $postobj->set('licensor', $values['licensor']);
+        $postobj->set('licensorurl', $values['licensorurl']);
+    }
     $postobj->set('published', !$values['draft']);
     $postobj->set('allowcomments', (int) $values['allowcomments']);
     if (!$blogpost) {

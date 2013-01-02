@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 require_once('activity.php');
+require_once('license.php');
 
 define('MIN_RATING', 1);
 define('MAX_RATING', 5);
@@ -595,6 +596,10 @@ class ArtefactTypeComment extends ArtefactType {
             'title' => get_string('makepublic', 'artefact.comment'),
             'defaultvalue' => !$defaultprivate,
         );
+        if (get_config('licensemetadata')) {
+            $form['elements']['license'] = license_form_el_basic(null);
+            $form['elements']['licensing_advanced'] = license_form_el_advanced(null);
+        }
         if ($moderate) {
             $form['elements']['ispublic']['description'] = get_string('approvalrequired', 'artefact.comment');
             $form['elements']['moderate'] = array(
@@ -951,6 +956,12 @@ function add_feedback_form_submit(Pieform $form, $values) {
     }
     else {
         $data->private = (int) !$values['ispublic'];
+    }
+
+    if (get_config('licensemetadata')) {
+        $data->license       = $values['license'];
+        $data->licensor      = $values['licensor'];
+        $data->licensorurl   = $values['licensorurl'];
     }
 
     if (isset($values['rating'])) {

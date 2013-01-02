@@ -34,6 +34,7 @@ define('SECTION_PAGE', 'settings');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('blogsettings','artefact.blog'));
 require_once('pieforms/pieform.php');
+require_once('license.php');
 safe_require('artefact', 'blog');
 
 $id = param_integer('id');
@@ -83,6 +84,8 @@ $form = pieform(array(
             'description'  => get_string('tagsdescprofile'),
             'help' => true,
         ),
+        'license' => license_form_el_basic($blog),
+        'licensing_advanced' => license_form_el_advanced($blog),
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(

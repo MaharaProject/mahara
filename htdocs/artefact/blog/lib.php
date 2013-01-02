@@ -247,6 +247,13 @@ class ArtefactTypeBlog extends ArtefactType {
             $smarty->assign('artefacttitle', hsc($this->get('title')));
         }
 
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
+
         $options['hidetitle'] = true;
         $smarty->assign('options', $options);
         $smarty->assign('description', $this->get('description'));
@@ -335,6 +342,9 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
         $artefact->set('tags', $values['tags']);
+        $artefact->set('license', $values['license']);
+        $artefact->set('licensor', $values['licensor']);
+        $artefact->set('licensorurl', $values['licensorurl']);
         $artefact->commit();
     }
 
@@ -357,6 +367,9 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('tags', $values['tags']);
+        $artefact->set('license', $values['license']);
+        $artefact->set('licensor', $values['licensor']);
+        $artefact->set('licensorurl', $values['licensorurl']);
         $artefact->commit();
     }
 
@@ -615,6 +628,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
+
         $attachments = $this->get_attachments();
         if ($attachments) {
             $this->add_to_render_path($options);
@@ -824,6 +844,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('published', $values['published']);
         $artefact->set('tags', $values['tags']);
+        $artefact->set('license', $values['license']);
+        $artefact->set('licensor', $values['licensor']);
+        $artefact->set('licensorurl', $values['licensorurl']);
         $artefact->commit();
         return true;
     }

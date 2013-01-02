@@ -91,6 +91,10 @@ $elements['ispublic'] = array(
     'title' => get_string('makepublic', 'artefact.comment'),
     'defaultvalue' => !$comment->get('private'),
 );
+if (get_config('licensemetadata')) {
+    $elements['license'] = license_form_el_basic($comment);
+    $elements['licensing_advanced'] = license_form_el_advanced($comment);
+}
 $elements['submit'] = array(
     'type'  => 'submitcancel',
     'value' => array(get_string('save'), get_string('cancel')),

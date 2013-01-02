@@ -8,3 +8,8 @@
     {/if}
 {/foreach}
 </table>
+{if $license}
+<div class="resumelicense">
+{$license|safe}
+</div>
+{/if}

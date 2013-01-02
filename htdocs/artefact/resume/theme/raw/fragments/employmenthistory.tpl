@@ -36,4 +36,9 @@
     <button id="addemploymenthistorybutton" class="submit" onclick="toggleCompositeForm('employmenthistory');">{str tag='add'}</button>
 </div>
 {/if}
+{if $license}
+<div class="resumelicense">
+{$license|safe}
+</div>
+{/if}
 </fieldset>

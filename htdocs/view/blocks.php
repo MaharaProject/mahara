@@ -155,6 +155,8 @@ $javascript = array('views', 'tinymce', 'paginator', 'tablerenderer', 'artefact/
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
+require_once('pieforms/pieform/elements/select.php');
+$inlinejs .= pieform_element_select_get_inlinejs();
 
 $smarty = smarty($javascript, $stylesheets, false, $extraconfig);
 

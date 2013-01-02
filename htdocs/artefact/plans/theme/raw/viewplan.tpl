@@ -11,6 +11,11 @@
     </tbody>
 </table>
 <div id="plans_page_container">{$tasks.pagination|safe}</div>
+{if $license}
+<div class="resumelicense">
+{$license|safe}
+</div>
+{/if}
 <script>
 {literal}
 function rewriteTaskTitles() {
