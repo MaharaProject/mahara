@@ -113,7 +113,15 @@ class PluginArtefactResume extends Plugin {
                 'url'   => 'artefact/resume/interests.php',
                 'title' => get_string('interests', 'artefact.resume'),
             ),
+            'license' => array(
+                'page'  => 'license',
+                'url'   => 'artefact/resume/license.php',
+                'title' => get_string('license', 'artefact.resume'),
+            ),
         );
+        if (!get_config('licensemetadata')) {
+            unset($tabs['license']);
+        }
         if (defined('RESUME_SUBPAGE') && isset($tabs[RESUME_SUBPAGE])) {
             $tabs[RESUME_SUBPAGE]['selected'] = true;
         }
