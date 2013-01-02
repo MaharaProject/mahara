@@ -1846,6 +1846,12 @@ function admin_nav() {
             'title'  => get_string('networking', 'admin'),
             'weight' => 40,
         ),
+        'configsite/sitelicenses' => array(
+            'path'   => 'configsite/sitelicenses',
+            'url'    => 'admin/site/licenses.php',
+            'title'  => get_string('sitelicenses', 'admin'),
+            'weight' => 45,
+        ),
         'configsite/siteviews' => array(
             'path'   => 'configsite/siteviews',
             'url'    => 'admin/site/views.php',

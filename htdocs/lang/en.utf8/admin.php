@@ -92,6 +92,9 @@ $string['editsitepagesdescription'] = 'Edit the content of various pages around 
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
+$string['sitelicenses']     = 'Licenses';
+$string['sitelicensesdescription']     = 'Configure the list of licenses that users can use for content.';
+$string['sitelicensesdisablednote']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "General settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to specify licenses.';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
 $string['siteviews']          = 'Site pages';
 $string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
@@ -451,6 +454,19 @@ $string['footercustomlink'] = 'You can override the default page, <em>%s</em>, b
 
 // Admin Files
 $string['adminfilespagedescription'] = 'Here you can upload files that can be included in the %s"Links and resources"%s menu. Files in the home directory will be able to be added to the logged-in menu, while files in the public directory will be able to be added to the public menu.';
+
+// License settings
+$string['extralicensesdescription'] = 'Note: The following licenses are used by some content but have not been configured.';
+$string['licensenamelabel'] = 'URL';
+$string['licensedisplaynamelabel'] = 'Display name';
+$string['licenseshortnamelabel'] = 'Acronym';
+$string['licenseiconlabel'] = 'Icon';
+$string['addsitelicense'] = 'Add a license';
+$string['licensedeleted'] = 'License deleted.';
+$string['licensesave'] = 'Save';
+$string['licensesaved'] = 'License saved.';
+$string['licenseurldup'] = 'The URLs must be unique; %s is repeated here.';
+$string['licenseurlnone'] = 'Please specify a URL for %s.';
 
 // Networking options
 $string['networkingextensionsmissing'] = 'Sorry, you cannot configure Mahara networking because your PHP installation is missing one or more required extensions:';
