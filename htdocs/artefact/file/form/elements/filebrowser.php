@@ -35,6 +35,7 @@ defined('INTERNAL') || die();
  * @return string           The HTML for the element
  */
 function pieform_element_filebrowser(Pieform $form, $element) {
+    require_once('license.php');
     global $USER, $_PIEFORM_FILEBROWSERS;
     $smarty = smarty_core();
 
@@ -111,6 +112,11 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     else if (!isset($config['simpleupload'])) {
         $config['simpleupload'] = 1;
     }
+
+    $licensing = '<table class="fileuploadlicense"><tbody>'
+               . license_form_files($prefix)
+               . '</tbody></table>';
+    $smarty->assign('licenseform', $licensing);
 
     if ($config['resizeonuploaduseroption'] == 1) {
         $smarty->assign('resizeonuploadenable', get_config_plugin('artefact', 'file', 'resizeonuploadenable'));
@@ -217,6 +223,7 @@ function pieform_element_filebrowser_build_path($form, $element, $folder, $owner
 
 
 function pieform_element_filebrowser_build_filelist($form, $element, $folder, $highlight=null, $user=null, $group=null, $institution=null) {
+    require_once('license.php');
     if (!$form->submitted_by_js()) {
         // We're going to rebuild the page from scratch anyway.
         return;
@@ -432,6 +439,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
 
 
 function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
+    require_once('license.php');
     $result = null;
 
     $prefix = $form->get_name() . '_' . $element['name'];
@@ -475,6 +483,15 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'folder'      => $element['folder'],
             'allowcomments' => param_boolean($prefix . '_edit_allowcomments'),
         );
+        if (get_config('licensemetadata')) {
+            $data = array_merge($data, array(
+                'license'     => license_coalesce(null,
+                    param_variable($prefix . '_edit_license'),
+                    param_variable($prefix . '_edit_license_other', null)),
+                'licensor'    => param_variable($prefix . '_edit_licensor'),
+                'licensorurl' => param_variable($prefix . '_edit_licensorurl'),
+            ));
+        }
         if ($form->get_property('group')) {
             $data['permissions']  = array('admin' => (object) array('view' => true, 'edit' => true, 'republish' => true));
             foreach ($_POST as $k => $v) {
@@ -560,13 +577,23 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                     'browse'  => 1,
                 );
             }
-            $result = pieform_element_filebrowser_upload($form, $element, array(
+            $data = array(
                 'userfile'         => $_FILES['userfile'],
                 'uploadnumber'     => param_integer($prefix . '_uploadnumber'),
                 'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
                 'uploadfoldername' => param_variable($prefix . '_foldername'),
                 'resizeonuploaduserenable' => $resizeimage,
-            ));
+            );
+            if (get_config('licensemetadata')) {
+                $data = array_merge($data, array(
+                    'license'     => license_coalesce(null,
+                        param_variable($prefix . '_edit_license'),
+                        param_variable($prefix . '_edit_license_other', null)),
+                    'licensor'    => param_variable($prefix . '_edit_licensor'),
+                    'licensorurl' => param_variable($prefix . '_edit_licensorurl'),
+                ));
+            }
+            $result = pieform_element_filebrowser_upload($form, $element, $data);
             // If it's a non-js upload, automatically select the newly uploaded file.
             $result['browse'] = 1;
             if (!$form->submitted_by_js() && !$result['error'] && !empty($element['config']['select'])) {
@@ -596,14 +623,24 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                         'message' => get_string('nametoolong', 'artefact.file'),
                     );
                 }
-                $result['multiuploads'][$i] = pieform_element_filebrowser_upload($form, $element, array(
+                $data = array(
                     'userfile'         => $_FILES['userfile'],
                     'userfileindex'    => $i,
                     'uploadnumber'     => param_integer($prefix . '_uploadnumber') - ($size - $i - 1),
                     'uploadfolder'     => $element['folder'] ? $element['folder'] : null,
                     'uploadfoldername' => param_variable($prefix . '_foldername'),
                     'resizeonuploaduserenable' => $resizeimage,
-                ));
+                );
+                if (get_config('licensemetadata')) {
+                    $data = array_merge($data, array(
+                        'license'     => license_coalesce(null,
+                            param_variable($prefix . '_license'),
+                            param_variable($prefix . '_license_other', null)),
+                        'licensor'    => param_variable($prefix . '_licensor'),
+                        'licensorurl' => param_variable($prefix . '_licensorurl'),
+                    ));
+                }
+                $result['multiuploads'][$i] = pieform_element_filebrowser_upload($form, $element, $data);
                 // TODO, what to do here...
                 // If it's a non-js upload, automatically select the newly uploaded file.
                 $result['multiuploads'][$i]['browse'] = 1;
@@ -708,6 +745,11 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
     $institution      = $form->get_property('institution');
     $group            = $form->get_property('group');
+    if (get_config('licensemetadata')) {
+        $license          = $data['license'];
+        $licensor         = $data['licensor'];
+        $licensorurl      = $data['licensorurl'];
+    }
     $uploadnumber     = (int) $data['uploadnumber'];
     $editable         = (int) $element['config']['edit'];
     $selectable       = (int) $element['config']['select'];
@@ -727,6 +769,11 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     $data             = new StdClass;
     $data->parent     = $parentfolder;
     $data->owner      = null;
+    if (get_config('licensemetadata')) {
+        $data->license    = $license;
+        $data->licensor   = $licensor;
+        $data->licensorurl= $licensorurl;
+    }
 
     if ($parentfolder) {
         $parentartefact = artefact_instance_from_id($parentfolder);
@@ -1023,6 +1070,17 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $updatetags = $oldtags != $newtags;
     if ($updatetags) {
         $artefact->set('tags', $newtags);
+    }
+
+    if (get_config('licensemetadata')) {
+        foreach (array('license', 'licensor', 'licensorurl') as $licensef) {
+            if ($data[$licensef] !== null) {
+                $data[$licensef] = trim($data[$licensef]);
+                if ($artefact->get($licensef) !== $data[$licensef]) {
+                    $artefact->set($licensef, $data[$licensef]);
+                }
+            }
+        }
     }
 
     if ($form->get_property('group') && $data['permissions']) {

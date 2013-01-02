@@ -155,6 +155,7 @@ $string['savechanges'] = 'Save changes';
 $string['selectafile'] = 'Select a file';
 $string['selectingfailed'] = 'Selecting failed: file or folder does not exist any more.';
 $string['Size'] = 'Size';
+$string['License'] = 'License';
 $string['spaceused'] = 'Space used';
 $string['timeouterror'] = 'File upload failed: try uploading the file again.';
 $string['title'] = 'Name';

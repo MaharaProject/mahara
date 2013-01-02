@@ -10,5 +10,8 @@
     <tr><th>{str tag=Created section=artefact.file}:</th><td>{$created}</td></tr>
     <tr><th>{str tag=lastmodified section=artefact.file}:</th><td>{$modified}</td></tr>
     <tr><th>{str tag=Size section=artefact.file}:</th><td>{$size}</td></tr>
+    {if $license!==false}
+    <tr><th>{str tag=License section=artefact.file}:</th><td>{$license|safe}</td></tr>
+    {/if}
     <tr><th>{str tag=Download section=artefact.file}:</th><td><a href="{$downloadpath}">{str tag=Download section=artefact.file}</a></td></tr>
 </table>

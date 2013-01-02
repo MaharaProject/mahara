@@ -126,6 +126,10 @@ function license_form_el_advanced($artefact, $prefix = '') {
         $licensor = $artefact->get('licensor');
         $licensorurl = $artefact->get('licensorurl');
     }
+    else {
+        $licensor = '';
+        $licensorurl = '';
+    }
     return array(
         'type'        => 'fieldset',
         'collapsible' => true,
@@ -149,6 +153,97 @@ function license_form_el_advanced($artefact, $prefix = '') {
         )
     );
 
+}
+
+/**
+ * Given the old license value and the values from the form license and
+ * license_other elements, calculate the correct new license value. This is
+ * mostly used by the file artefact, because it doesn't use pieforms;
+ * everything else uses the similar logic in pieform_element_select_get_value.
+ *
+ * @param string   Old license value.
+ * @param string   Value of the license form element.
+ * @param string   Value of the license_other form element.
+ * @param string   Optional out argument giving the reason for returning the old license.
+ * @return string  New license value.
+ */
+function license_coalesce($old_license, $new_license, $new_license_other, &$error = '') {
+
+    global $USER;
+    if ($new_license === 'other') {
+        $new_license = trim($new_license_other);
+    }
+
+    $institution = $USER->get('institutions');
+    if ($institution) {
+        $institution = array_shift($institution);
+        if (!empty($institution->licensemandatory) and trim($new_license)==='') {
+            $error = get_string('licensemandatoryerror');
+            return $old_license;
+        }
+    }
+
+    if (get_config('licenseallowcustom') or $new_license === $old_license) {
+        return $new_license;
+    }
+
+    if (record_exists('artefact_license', 'name', $new_license)) {
+        return $new_license;
+    }
+    else {
+        $error = get_string('licensenocustomerror');
+        return $old_license;
+    }
+}
+
+/**
+ * Given an artefact object, return the form already rendered.
+ *
+ * @param object   The artefact
+ * @return string  HTML containing <tr> tags at the top level.
+ */
+function license_form_files($prefix, $prefix2=null) {
+    if (!get_config('licensemetadata')) {
+        return '';
+    }
+    require_once('pieforms/pieform.php');
+    if ($prefix2 !== null) {
+        $prefix .= '_' . $prefix2;
+    }
+    $form = array(
+        'name' => $prefix,
+        'plugintype' => 'artefact',
+        'pluginname' => 'file',
+        'elements' => array(
+            $prefix . '_license' => license_form_el_basic(null),
+            'license_advanced' => license_form_el_advanced(null, $prefix . '_'),
+        ),
+    );
+    $pie = new Pieform($form);
+    $pie->build();
+    $rendered = $pie->get_property('elements');
+    if (empty($form['elements'][$prefix . '_license']['rules']['required'])) {
+        $rowattr = '';
+    }
+    else {
+        $rowattr = 'class="required"';
+    }
+    $html = '';
+    foreach (array(
+        $rendered[$prefix . '_license'],
+        $rendered['license_advanced']['elements'][$prefix . '_licensor'],
+        $rendered['license_advanced']['elements'][$prefix . '_licensorurl'],
+    ) as $e) {
+        $helphtml = preg_replace('/files_filebrowser_(edit_)?licens/', 'licens', $e['helphtml']);
+        $html .= '<tr ' . $rowattr . '><th>' . $e['labelhtml'] . '</th>' .
+                 '<td>' . $e['html'] . $helphtml . '</td></tr>';
+        $rowattr = '';
+    }
+    $html = str_replace(
+        'id="' . $prefix . '_' . $prefix . '_',
+        'id="' . $prefix . '_',
+        $html);
+    return $html;
 }
 
 /**

@@ -257,6 +257,25 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         $(self.id + '_edit_title').value = self.filedata[id].title;
         $(self.id + '_edit_description').value = self.filedata[id].description == null ? '' : self.filedata[id].description;
+        if ($(self.id + '_edit_license')) {
+            if (self.filedata[id].license == null) {
+                $(self.id + '_edit_license').value = ''
+            }
+            else {
+                $(self.id + '_edit_license').value = self.filedata[id].license;
+                if ($(self.id + '_edit_license').value != self.filedata[id].license) {
+                    // Doesn't exist in the select box, add it!
+                    var new_option = jQuery('<option/>');
+                    new_option.attr('value', self.filedata[id].license);
+                    new_option.text(self.filedata[id].license);
+                    jQuery($(self.id + '_edit_license')).append(new_option);
+                    $(self.id + '_edit_license').value = self.filedata[id].license;
+                }
+            }
+            $(self.id + '_edit_licensor').value = self.filedata[id].licensor == null ? '' : self.filedata[id].licensor;
+            $(self.id + '_edit_licensorurl').value = self.filedata[id].licensorurl == null ? '' : self.filedata[id].licensorurl;
+            pieform_select_other($(self.id + '_edit_license'));
+        }
         $(self.id + '_edit_allowcomments').checked = self.filedata[id].allowcomments;
         $(self.id + '_edit_tags').value = self.filedata[id].tags.join(', ');
         replaceChildNodes($(self.id + '_edit_messages'));
@@ -601,6 +620,15 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         if (self.filedata[id].tags) {
             self.selecteddata[id].tags = self.filedata[id].tags;
+        }
+        if (self.filedata[id].license) {
+            self.selecteddata[id].license = self.filedata[id].license;
+        }
+        if (self.filedata[id].licensor) {
+            self.selecteddata[id].licensor = self.filedata[id].licensor;
+        }
+        if (self.filedata[id].licensorurl) {
+            self.selecteddata[id].licensorurl = self.filedata[id].licensorurl;
         }
         // Check if the file to add was already in the selected list
         var existed = false;
