@@ -812,6 +812,7 @@ function core_install_firstcoredata_defaults() {
         'addfriendrequest',
         'removefriendrequest',
         'creategroup',
+        'loginas',
     );
 
     foreach ($eventtypes as $et) {

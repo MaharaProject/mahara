@@ -3130,5 +3130,12 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('defaultregistrationexpirylifetime', 1209600);
     }
 
+    if ($oldversion < 2013012100) {
+        $event = (object)array(
+            'name' => 'loginas',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 }

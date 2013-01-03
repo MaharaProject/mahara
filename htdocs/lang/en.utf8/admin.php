@@ -1006,3 +1006,18 @@ $string['usershaveloggedinsince'] = 'Users have logged in since';
 $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 
 $string['lastlogin'] = 'Last login';
+
+// Masquerading reasons and notification
+$string['masqueradingreasonrequired'] = 'Require reason for masquerading';
+$string['masqueradingreasonrequireddescription'] = 'If checked, administrators will be required to enter a reason for masquerading as other users. This will be logged, and if the setting "Notify users of masquerading" is enabled, included in the notification to the user about the masquerading.';
+$string['masqueradingnotified'] = 'Notify users of masquerading';
+$string['masqueradingnotifieddescription'] = 'If checked, users will be notified when an administrator masqueraded as them. The notification will include who, when and - if enabled under "Require reason for masquerading" - why.';
+
+$string['masquerade'] = 'Continue';
+$string['masqueradereason'] = 'Reason';
+$string['masqueradereasondescription'] = 'Please enter a reason for logging in as this user. Note: The user will not be notified of this reason, but it will be logged.';
+$string['masqueradenotificationdone'] = 'The user has been notified of this masquerading session.';
+$string['masqueradenotifiedreasondescription'] = 'Please enter a reason for logging in as this user. Note: The user will receive a message containing your name, the date and time as well as the reason for your masquerading.';
+$string['masqueradenotificationsubject'] = 'An administrator logged in as you';
+$string['masqueradenotificationnoreason'] = 'The administrator %s logged into your account on %s.';
+$string['masqueradenotificationreason'] = 'The administrator %s logged into your account on %s. The reason was: %s';

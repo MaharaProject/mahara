@@ -204,6 +204,20 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('userscandisabledevicedetection'),
                     'disabled'     => in_array('userscandisabledevicedetection', $OVERRIDDEN),
                 ),
+                'masqueradingreasonrequired' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('masqueradingreasonrequired', 'admin'),
+                    'description'  => get_string('masqueradingreasonrequireddescription', 'admin'),
+                    'defaultvalue' => get_config('masqueradingreasonrequired'),
+                    'disabled'     => in_array('masqueradingreasonrequired', $OVERRIDDEN),
+                ),
+                'masqueradingnotified' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('masqueradingnotified', 'admin'),
+                    'description'  => get_string('masqueradingnotifieddescription', 'admin'),
+                    'defaultvalue' => get_config('masqueradingnotified'),
+                    'disabled'     => in_array('masqueradingnotified', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -630,6 +644,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection',
+        'masqueradingreasonrequired', 'masqueradingnotified',
     );
 
     // if public views are disabled, sitemap generation must also be disabled.
