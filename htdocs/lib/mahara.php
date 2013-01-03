@@ -1427,12 +1427,21 @@ function blocktype_artefactplugin($blocktype) {
  * Fires an event which can be handled by different parts of the system
  */
 function handle_event($event, $data) {
+    global $USER;
     if (!$e = get_record('event_type', 'name', $event)) {
         throw new SystemException("Invalid event");
     }
 
-    if ($data instanceof ArtefactType || $data instanceof BlockInstance) {
-        // leave it alone
+    if ($data instanceof ArtefactType) {
+        // leave $data alone, but convert for the event log
+        $logdata = $data->to_stdclass();
+    }
+    else if ($data instanceof BlockInstance) {
+        // leave $data alone, but convert for the event log
+        $logdata = array(
+            'id' => $data->get('id'),
+            'blocktype' => $data->get('blocktype'),
+        );
     }
     else if (is_object($data)) {
         $data = (array)$data;
@@ -1440,6 +1449,21 @@ function handle_event($event, $data) {
     else if (is_numeric($data)) {
         $data = array('id' => $data);
     }
+
+    $parentuser = $USER->get('parentuser');
+    $eventloglevel = get_config('eventloglevel');
+    if ($eventloglevel === 'all'
+            or ($parentuser and $eventloglevel === 'masq')) {
+        $logentry = (object) array(
+            'usr'      => $USER->get('id'),
+            'realusr'  => $parentuser ? $parentuser->id : $USER->get('id'),
+            'event'    => $event,
+            'data'     => json_encode(isset($logdata) ? $logdata : $data),
+            'time'     => db_format_timestamp(time()),
+        );
+        insert_record('event_log', $logentry);
+    }
+
 
     if ($coreevents = get_records_array('event_subscription', 'event', $event)) {
         require_once('activity.php'); // core events can generate activity.
@@ -2964,6 +2988,20 @@ function cron_sitemap_daily() {
 
     $sitemap = new Sitemap();
     $sitemap->generate();
+}
+
+/**
+ * Cronjob to expire the event_log table.
+ */
+function cron_event_log_expire() {
+    if ($expiry = get_config('eventlogexpiry')) {
+        delete_records_select(
+            'event_log',
+            'time < CURRENT_DATE - INTERVAL ' .
+                (is_postgres() ? "'" . $expiry . " seconds'" : $expiry . ' SECONDS')
+        );
+
+    }
 }
 
 function build_portfolio_search_html(&$data) {

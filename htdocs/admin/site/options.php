@@ -614,6 +614,35 @@ $siteoptionform = array(
                 ),
             ),
         ),
+        'loggingsettings' => array(
+            'type'         => 'fieldset',
+            'collapsible'  => true,
+            'collapsed'    => true,
+            'legend'       => get_string('loggingsettingslegend', 'admin'),
+            'elements'     => array(
+                'eventloglevel' => array(
+                    'type'         => 'select',
+                    'title'        => get_string('eventloglevel', 'admin'),
+                    'description'  => get_string('eventlogleveldescription', 'admin'),
+                    'defaultvalue' => get_config('eventloglevel'),
+                    'options'      => array(
+                        'none' => get_string('eventloglevelnone', 'admin'),
+                        'masq' => get_string('eventloglevelmasq', 'admin'),
+                        'all' => get_string('eventloglevelall', 'admin'),
+                    ),
+                    'help'         => true,
+                    'disabled'     => in_array('eventloglevel', $OVERRIDDEN),
+                ),
+                'eventlogexpiry' => array(
+                    'type'         => 'expiry',
+                    'title'        => get_string('eventlogexpiry', 'admin'),
+                    'description'  => get_string('eventlogexpirydescription', 'admin'),
+                    'defaultvalue' => get_config('eventlogexpiry'),
+                    'help'         => false,
+                    'disabled'     => in_array('eventlogexpiry', $OVERRIDDEN),
+                ),
+            ),
+        ),
     )
 );
 
@@ -645,6 +674,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection',
         'masqueradingreasonrequired', 'masqueradingnotified',
+        'eventloglevel', 'eventlogexpiry',
     );
 
     // if public views are disabled, sitemap generation must also be disabled.

@@ -3137,5 +3137,26 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2013012101) {
+        $table = new XMLDBTable('event_log');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('realusr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('data', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('time', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('realusrfk', XMLDB_KEY_FOREIGN, array('realusr'), 'usr', array('id'));
+        create_table($table);
+
+        $cron = new StdClass;
+        $cron->callfunction = 'cron_event_log_expire';
+        $cron->minute       = 7;
+        $cron->hour         = 23;
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
+
     return $status;
 }

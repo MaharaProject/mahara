@@ -274,6 +274,19 @@
                 <KEY NAME="callfunctionuk" TYPE="unique" FIELDS="callfunction" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="event_log">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="realusr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="time" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="event" TYPE="char" LENGTH="255" NOTNULL="false"  />
+                <FIELD NAME="data" TYPE="text" NOTNULL="false"  />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="realusrfk" TYPE="foreign" FIELDS="realusr" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="activity_type">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />

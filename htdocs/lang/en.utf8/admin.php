@@ -388,6 +388,13 @@ $string['whocancreatepublicgroupsdescription'] = 'Decide which users will be abl
 $string['wysiwyg'] = 'HTML editor';
 $string['wysiwygdescription'] = 'Defines whether or not the HTML editor is enabled globally or whether users are allowed to enable / disable it themselves.';
 $string['wysiwyguserdefined'] = 'User-defined';
+$string['eventloglevel'] = 'Log events';
+$string['eventlogleveldescription'] = 'Which events should be logged?';
+$string['eventlogexpiry'] = 'Event log expiry';
+$string['eventlogexpirydescription'] = 'How long to keep the event log.';
+$string['eventloglevelnone'] = 'None';
+$string['eventloglevelmasq'] = 'Masquerading';
+$string['eventloglevelall'] = 'All';
 
 // Site content
 $string['about']               = 'About';
@@ -983,6 +990,7 @@ $string['institutionsettingslegend'] = 'Institution settings';
 $string['accountsettingslegend'] = 'Account settings';
 $string['securitysettingslegend'] = 'Security settings';
 $string['generalsettingslegend'] = 'General settings';
+$string['loggingsettingslegend'] = 'Logging settings';
 
 $string['groupname'] = 'Group name';
 $string['groupmembers'] = 'Members';

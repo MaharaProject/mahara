@@ -884,6 +884,7 @@ function core_install_firstcoredata_defaults() {
         'cron_institution_data_weekly'              => array('55', '23', '*', '*', '6'),
         'cron_institution_data_daily'               => array('51', '23', '*', '*', '*'),
         'check_imap_for_bounces'                    => array('*', '*', '*', '*', '*'),
+        'cron_event_log_expire'                     => array('7', '23', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new StdClass;
