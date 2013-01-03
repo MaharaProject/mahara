@@ -268,3 +268,9 @@ ul.colnav li.selected span {
 	text-decoration: none;
 	font-weight: bold;
 }
+
+/* License icon */
+img.license-icon {
+    float: left;
+    margin-right: 2ex;
+}
