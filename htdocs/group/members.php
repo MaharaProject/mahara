@@ -197,7 +197,7 @@ $smarty->display('group/members.tpl');
 
 function search_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $values['id'] .
-                    (!empty($values['query']) ? '&query=' . urlencode($values['query']) : '') .
+                    ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') .
                     (!empty($values['membershiptype']) ? '&membershiptype=' . urlencode($values['membershiptype']) : '') .
                     (!empty($values['setlimit']) ? '&setlimit=' . urlencode($values['setlimit']) : ''));
 }

@@ -2642,7 +2642,7 @@ class View {
                 INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
             $values[] = $tag;
         }
-        elseif ($query) { // Include matches on the title, description or tag
+        else if ($query != '') { // Include matches on the title, description or tag
             $from .= "
                 LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
             $like = db_ilike();
@@ -2720,7 +2720,7 @@ class View {
         if (!empty($tag)) {
             $queryparams[] = 'tag=' . urlencode($tag);
         }
-        else if (!empty($query)) {
+        else if ($query != '') {
             $queryparams[] =  'query=' . urlencode($query);
         }
 
@@ -3617,11 +3617,11 @@ class View {
         }
 
         $params = array();
-        if (!empty($search->query)) {
+        if (isset($search->query) && ($search->query != '')) {
             $params['viewquery'] = $search->query;
         }
-        if (!empty($search->ownerquery)) {
-            $params['ownerquery'] = $search->query;
+        if (isset($search->ownerquery) && ($search->ownerquery != '')) {
+            $params['ownerquery'] = $search->ownerquery;
         }
         if (!empty($search->group)) {
             $params['group'] = $search->group;
@@ -4446,7 +4446,7 @@ function createview_cancel_submit(Pieform $form, $values) {
 
 function searchviews_submit(Pieform $form, $values) {
     $tag = $query = null;
-    if (!empty($values['query'])) {
+    if ($values['query'] != '') {
         if ($values['type'] == 'tagsonly') {
             $tag = $values['query'];
         }

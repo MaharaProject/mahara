@@ -609,7 +609,7 @@ class PluginSearchInternal extends PluginSearch {
             WHERE u.id <> 0 AND u.deleted = 0 ';
 
         $values = array();
-        if (!empty($query)) {
+        if ($query != '') {
             $where .= 'AND (t.tag = LOWER(?) OR ';
             $values[] = $query;
             $query = preg_replace('/\s\s+/', ' ', $query);
