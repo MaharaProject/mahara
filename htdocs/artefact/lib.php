@@ -140,6 +140,9 @@ abstract class ArtefactType {
     protected $approvecomments;
     protected $rolepermissions;
     protected $mtimemanuallyset;
+    protected $license;
+    protected $licensor;
+    protected $licensorurl;
 
     protected $viewsinstances;
     protected $viewsmetadata;

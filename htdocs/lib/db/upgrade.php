@@ -3158,5 +3158,34 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $cron);
     }
 
+    if ($oldversion < 2013020500) {
+        $table = new XMLDBTable('artefact');
+        $field = new XMLDBField('license');
+        $field->setAttributes(XMLDB_TYPE_CHAR,255);
+        add_field($table, $field);
+        $field = new XMLDBField('licensor');
+        $field->setAttributes(XMLDB_TYPE_CHAR,255);
+        add_field($table, $field);
+        $field = new XMLDBField('licensorurl');
+        $field->setAttributes(XMLDB_TYPE_CHAR,255);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('licensedefault');
+        $field->setAttributes(XMLDB_TYPE_CHAR,255);
+        add_field($table, $field);
+        $field = new XMLDBField('licensemandatory');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('artefact_license');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('displayname', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addFieldInfo('shortname', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addFieldInfo('icon', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
+        create_table($table);
+    }
+
     return $status;
 }
