@@ -39,6 +39,10 @@ $tabs = array(
         'id'   => 'accesslist',
         'name' => get_string('accesslist', 'view'),
     ),
+    'loginaslog' => array(
+        'id'   => 'loginaslog',
+        'name' => get_string('loginaslog', 'admin'),
+    ),
 );
 
 $selected = 'users';
@@ -153,6 +157,39 @@ else if ($selected == 'accesslist') {
     $smarty->assign_by_ref('users', $users);
     $smarty->assign_by_ref('USER', $USER);
     $userlisthtml = $smarty->fetch('admin/users/accesslists.tpl');
+}
+else if ($selected == 'loginaslog') {
+    $ph = array_merge($userids, $userids);
+    $log = get_records_sql_array('
+        SELECT *
+        FROM event_log
+        WHERE (usr IN (' . join(',', array_fill(0, count($userids), '?')) . ')
+           OR realusr IN (' . join(',', array_fill(0, count($userids), '?')) . '))
+          AND event = \'loginas\'
+
+        ORDER BY time DESC',
+        $ph
+    );
+    if (empty($log)) {
+        $log = array();
+    }
+    foreach($log as $l) {
+        $l->data = json_decode($l->data);
+        foreach(array('usr', 'realusr') as $f) {
+            $l->{$f . 'name'} = display_name($l->{$f});
+        }
+    }
+    if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
+      $note = get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot'));
+    }
+    else {
+      $note = false;
+    }
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('log', $log);
+    $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('note', $note);
+    $userlisthtml = $smarty->fetch('admin/users/loginaslog.tpl');
 }
 
 $smarty = smarty();
