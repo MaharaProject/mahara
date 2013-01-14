@@ -64,8 +64,15 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
 
             $data = $instance->get_data('feed', $configdata['feedid']);
 
-            $data->content = unserialize($data->content);
-            $data->image   = unserialize($data->image);
+            if (isset($data) && is_string($data->content)) {
+                $data->content = unserialize($data->content);
+            }
+            if (isset($data) && (is_string($data->image) || is_array($data->image))) {
+                $data->image = @unserialize($data->image);
+            }
+            else {
+                $data->image = null;
+            }
 
             // only keep the number of entries the user asked for
             if (count($data->content)) {
@@ -285,16 +292,29 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             }
             try {
                 $data = self::parse_feed($feed->url, $feed->insecuresslmode, $feed->authuser, $feed->authpassword);
-                $data->id = $feed->id;
-                $data->lastupdate = db_format_timestamp(time());
-                $data->content = serialize($data->content);
-                $data->image   = serialize($data->image);
-                update_record('blocktype_externalfeed_data', $data);
             }
             catch (XML_Feed_Parser_Exception $e) {
                 // The feed must have changed in such a way as to become 
                 // invalid since it was added. We ignore this case in the hope 
                 // the feed will become valid some time later
+            }
+            if (isset($data) && $data instanceof XML_Feed_Parser_Exception) {
+                continue;
+            }
+            else if (isset($data)) {
+                if (!isset($data->image)) {
+                    $data->image = null;
+                }
+                try {
+                    $data->content = $data->content ? serialize($data->content) : '' ;
+                    $data->image = $data->image ? serialize($data->image) : '';
+                    $data->id = $feed->id;
+                    $data->lastupdate = db_format_timestamp(time());
+                    update_record('blocktype_externalfeed_data', $data);
+                }
+                catch (XML_Feed_Parser_Exception $e) {
+                    // We tried to add the newly parsed data
+                }
             }
         }
     }
