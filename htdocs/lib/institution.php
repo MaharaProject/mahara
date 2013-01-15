@@ -831,7 +831,17 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
         else {
             $institutions = get_records_select_array('institution', "name != 'mahara'", null, 'displayname');
         }
-    } else if ($USER->is_institutional_admin()) {
+    }
+    else if ($USER->is_institutional_admin() && ($USER->is_institutional_staff() && $includeinstitutionstaff)) {
+        // if a user is both an admin for some institution and is a staff member for others
+        $institutions = get_records_select_array(
+            'institution',
+            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) .
+                      ',' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
+            null, 'displayname'
+        );
+    }
+    else if ($USER->is_institutional_admin()) {
         $institutions = get_records_select_array(
             'institution',
             'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')',
@@ -844,7 +854,8 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
             'name IN (' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
             null, 'displayname'
         );
-    } else {
+    }
+    else {
         return null;
     }
 

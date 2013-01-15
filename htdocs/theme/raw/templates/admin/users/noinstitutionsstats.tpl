@@ -1,8 +1,8 @@
 {include file="header.tpl"}
 
-<h1>{str tag="noinstitutions" section="admin"}</h1>
+<h1>{str tag="noinstitutionsstats" section="admin"}</h1>
 
-<p>{str tag="noinstitutionsstatsdescription" section="admin"}</p>
+<p>{str tag="noinstitutionsstatsdescription1" section="admin" arg1="`$WWWROOT`"}</p>
 {if $CANCREATEINST}
 <div class="institutioneditbuttons">
 <form action="{$WWWROOT}admin/users/institutions.php" method="post">
