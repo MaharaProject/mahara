@@ -908,7 +908,10 @@ $string['Admins'] = 'Administrators';
 
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
-$string['noinstitutionsstatsdescription'] = 'Institution statistics are not available because there are no institutions available to your user.';
+$string['noinstitutionsstats'] = 'Unable to view institution statistics';
+$string['noinstitutionsstatsdescription1'] = 'Staff statistics access needs to be turned on for the site to allow staff to view their institution statistics. A site administrator can turn this setting on in "User settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutiongeneralpages'] = 'You do not have permission to edit any institution general pages or no institutions have been created yet.';
+$string['noinstitutiongeneralpagesadmin'] = 'If you are a site administrator, please edit the default general pages in <a href="%s">Configure site</a>.';
 
 $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled checkboxes are for profile fields which are locked in the institution settings for "%s". These profile fields are locked at the site level and cannot be unlocked here.';
