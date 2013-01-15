@@ -1512,7 +1512,7 @@ function ensure_user_account_is_active($user=null) {
         if ($dologout) {
             $user->logout();
         }
-        die_info(get_string('accountexpired'));
+        die_info(get_string('accountexpired', 'mahara', get_config('wwwroot')));
     }
 
     // Check if the user's account has been suspended
