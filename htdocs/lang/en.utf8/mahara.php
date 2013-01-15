@@ -154,6 +154,7 @@ $string['resultsperpage'] = 'Results per page';
 // Quota strings
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';
+$string['quotausagegroup'] = 'This group has used <span id="quota_used">%s</span> of its <span id="quota_total">%s</span> quota.';
 $string['groupquota'] = 'Group quota';
 
 $string['updatefailed'] = 'Update failed';

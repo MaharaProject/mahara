@@ -1016,7 +1016,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (!empty($data->group)) {
             require_once('group.php');
             if (!group_quota_allowed($data->group, $size)) {
-                throw new QuotaExceededException(get_string('uploadexceedsquota', 'artefact.file'));
+                throw new QuotaExceededException(get_string('uploadexceedsquotagroup', 'artefact.file'));
             }
         }
         $data->size = $size;
