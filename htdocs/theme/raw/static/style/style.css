@@ -48,13 +48,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child {
 	margin-top: 0;
-	word-break: break-all;
 	white-space: normal;
 	word-wrap: break-word;
 }
 /* For Browsers which do not support first-child */
 .ie6 h1, .ie6 h2, .ie6 h3, .ie6 h4, .ie6 h5, .ie6 h6 {
-	word-break: break-all;
 	white-space: normal;
 	word-wrap:break-word;
 }
