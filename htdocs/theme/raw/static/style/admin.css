@@ -46,6 +46,7 @@
 #suspenddelete #delete #edituser_delete_submit,
 #institution_suspend_submit,
 #networkingform_deletesubmit,
+input#buttons_delete,
 input#delete_delete {
 	border-color: #950000;
 	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top;
