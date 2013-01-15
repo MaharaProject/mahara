@@ -2,7 +2,7 @@
     <tr class="{cycle name=rows values='r0,r1'}">
         <td colspan="2">
             <div class="fr">
-                <span class="entries"><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{$blog->postcount}{if $blog->postcount == 1}{str tag=post section=artefact.blog}{else}{str tag=posts section=artefact.blog}{/if}</a></span>
+                <span class="entries"><a href="{$WWWROOT}artefact/blog/view/?id={$blog->id}">{str tag=nposts section=artefact.blog arg1=$blog->postcount}</a></span>
                 <span class="newentry"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn">{str tag=addpost section=artefact.blog}</a></span>
                 <span class="btns2">
                     {if $blog->locked}
