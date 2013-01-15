@@ -96,6 +96,11 @@ $string['postedon'] = 'Posted on';
 $string['postedbyon'] = 'Posted by %s on %s';
 $string['posttitle'] = 'Title';
 $string['posts'] = 'entries';
+$string['nposts'] = array(
+    '1 entry',
+    '%s entries',
+);
+
 $string['publish'] = 'Publish';
 $string['unpublish'] = 'Unpublish';
 $string['publishfailed'] = 'An error occurred. Your entry was not published.';
