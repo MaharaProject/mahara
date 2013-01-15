@@ -23,7 +23,7 @@ function Dwoo_Plugin_str(Dwoo $dwoo, $tag, $section = 'mahara', $args = null, $a
         $params = array_merge($params, $args);
     } else if (isset($arg1)) {
         foreach (array('arg1', 'arg2', 'arg3') as $k) {
-            if ($$k) {
+            if (isset($$k)) {
                 $params[] = $$k;
             }
         }
