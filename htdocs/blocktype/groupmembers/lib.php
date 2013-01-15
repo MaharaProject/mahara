@@ -107,7 +107,7 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
 
-        $options = range(0,20);
+        $options = range(0,100);
         unset($options[0]);
 
         return array(
