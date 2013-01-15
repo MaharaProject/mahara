@@ -329,7 +329,7 @@ class Moxiecode_JSONReader {
 	}
 
 	function read($len = 1) {
-		if ($this->_pos < $this->_len) {
+        if (($this->_pos + 1) < $this->_len) {
 			if ($len > 1) {
 				$str = substr($this->_data, $this->_pos + 1, $len);
 				$this->_pos += $len;
@@ -347,7 +347,7 @@ class Moxiecode_JSONReader {
 	}
 
 	function peek() {
-		if ($this->_pos < $this->_len)
+        if (($this->_pos + 1) < $this->_len)
 			return $this->_data[$this->_pos + 1];
 
 		return null;
