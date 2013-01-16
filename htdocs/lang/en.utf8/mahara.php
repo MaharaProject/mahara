@@ -182,7 +182,7 @@ $string['accesstotallydenied_institutionsuspended'] = 'Your institution %s has b
 Please contact your institution for help.';
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section.';
 $string['accountdeleted'] = 'Sorry, your account has been deleted.';
-$string['accountexpired'] = 'Sorry, your account has expired.';
+$string['accountexpired'] = 'Sorry, your account has expired. You can <a href="%scontact.php">contact the site administrator</a> to have it reactivated.';
 $string['accountcreated'] = '%s: New account';
 $string['accountcreatedtext'] = 'Dear %s,
 
