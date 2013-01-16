@@ -123,6 +123,8 @@ div.sideblock .sidebar-content a:hover,
 #footernav a:hover,
 #performance-info,
 #performance-info span,
+#right-nav li a,
+#right-nav li.identity a,
 #version {
     color: {$data.backgroundfg};
 }
