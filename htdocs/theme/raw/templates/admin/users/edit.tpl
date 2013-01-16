@@ -40,10 +40,10 @@
     <td id="useraccountsettingsright">
     {if $suspendable}
     <div id="suspenddelete">
-    	<h2>{str tag="suspenddeleteuser" section=admin}</h2>
-    	<p>{str tag="suspenddeleteuserdescription" section=admin}</p>
+
     	<div id="suspend">
         	<h3>{str tag="suspenduser" section=admin}</h3>
+		<p>{str tag="suspenduserdescription" section=admin}</p>
             {$suspendform|safe}
      	</div>
 		{if $deletable}
