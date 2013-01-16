@@ -1504,7 +1504,7 @@ function ensure_user_account_is_active($user=null) {
         if ($dologout) {
             $user->logout();
         }
-        die_info(get_string('accountdeleted'));
+        die_info(get_string('accountdeleted', 'mahara', get_config('wwwroot')));
     }
 
     // Check if the user's account has expired
