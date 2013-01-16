@@ -154,6 +154,7 @@ $string['profileicon'] = 'Profile picture';
 // general views stuff
 $string['Added'] = 'Added';
 $string['share'] = 'Share';
+$string['sharedbyme'] = 'Shared by me';
 $string['sharewith'] = 'Share with';
 $string['accesslist'] = 'Access list';
 $string['sharewithmygroups'] = 'Share with my groups';
@@ -359,7 +360,7 @@ $string['grouphomepage'] = 'Group homepage';
 $string['grouphomepagedescription'] = 'The Group homepage is the content that appears on the About tab for this group';
 
 // Shared views
-$string['sharedviews'] = 'Shared pages';
+$string['sharedviews'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
 $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';

@@ -2288,8 +2288,14 @@ function mahara_standard_nav() {
         'myportfolio/share' => array(
             'path' => 'myportfolio/share',
             'url' => 'view/share.php',
-            'title' => get_string('share', 'view'),
+            'title' => get_string('sharedbyme', 'view'),
             'weight' => 30,
+        ),
+        'myportfolio/sharedviews' => array(
+            'path' => 'myportfolio/sharedviews',
+            'url' => 'view/sharedviews.php',
+            'title' => get_string('sharedviews', 'view'),
+            'weight' => 60,
         ),
         'myportfolio/export' => array(
             'path' => 'myportfolio/export',
@@ -2340,12 +2346,6 @@ function mahara_standard_nav() {
             'url' => 'account/institutions.php',
             'title' => get_string('institutionmembership'),
             'weight' => 50,
-        ),
-        'groups/sharedviews' => array(
-            'path' => 'groups/sharedviews',
-            'url' => 'view/sharedviews.php',
-            'title' => get_string('sharedviews', 'view'),
-            'weight' => 60,
         ),
     );
 
