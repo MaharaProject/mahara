@@ -36,7 +36,7 @@ require_once('collection.php');
 
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
-$limit  = param_integer('limit', 5);
+$limit  = param_integer('limit', 10);
 
 $owner = null;
 $groupid = param_integer('group', 0);
