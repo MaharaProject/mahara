@@ -103,7 +103,7 @@ if (isset($key)) {
         $registrationid = $registration->id;
         unset($registration->id);
         unset($registration->expiry);
-        if ($expirytime = get_config('defaultaccountlifetime')) {
+        if ($expirytime = get_config('defaultregistrationexpirylifetime')) {
             $registration->expiry = db_format_timestamp(time() + $expirytime);
         }
         $registration->lastlogin = db_format_timestamp(time());

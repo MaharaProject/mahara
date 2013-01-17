@@ -127,7 +127,7 @@ A new user has requested to join the institution '%s'.
 
 Because you are listed as an administrator of this institution you need to approve or deny this registration request. To do this, select the following link: %s
 
-You will need to approve or deny this registration request within 2 weeks.
+You will need to approve or deny this registration request within %s.
 
 Details of the registration request follow:
 
@@ -142,7 +142,7 @@ The %s Team";
 $string['pendingregistrationadminemailhtml'] = "<p>Hi %s,</p>
 <p>A new user has requested to join the institution '%s'.</p>
 <p>Because you are listed as an administrator of this institution you need to approve or deny this registration request. To do this, select the following link: <a href='%s'>%s</a></p>
-<p>You will need to approve or deny this registration request within 2 weeks.</p>
+<p>You will need to approve or deny this registration request within %s.</p>
 <p>Details of the registration request follows:</p>
 <p>Name: %s</p>
 <p>Email: %s</p>
