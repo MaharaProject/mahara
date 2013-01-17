@@ -867,7 +867,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $this->strings->subject = (object) array(
             'key'     => 'newforumpostnotificationsubjectline',
             'section' => 'interaction.forum',
-            'args'    => array($post->parent ? get_string('Re:', 'interaction.forum') . $post->topicsubject : $post->subject),
+            'args'    => array($post->subject ? $post->subject : get_string('Re:', 'interaction.forum') . ($post->parent ? get_ancestorpostsubject($post->parent, true) : $post->topicsubject)),
         );
 
         foreach ($this->users as &$user) {
@@ -1058,4 +1058,35 @@ function subscribe_forum_submit(Pieform $form, $values) {
     else {
         redirect('/interaction/forum/view.php?id=' . $values['forum'] . '&offset=' . $values['offset']);
     }
+}
+
+/*
+ * Return the subject for the topic
+ *
+ * @param int $postid the ID of the post
+ *
+ * @return string the subject
+ */
+
+function get_ancestorpostsubject($postid, $isparent = false) {
+    if ($isparent) {
+        $record = get_record_sql(
+           'SELECT p.subject
+            FROM {interaction_forum_post} p
+            WHERE p.id = ?', array($postid));
+        if ($record && !empty($record->subject)) {
+            return $record->subject;
+        }
+    }
+    while ($ppost = get_record_sql(
+           'SELECT p1.id, p1.subject
+            FROM {interaction_forum_post} p1
+            INNER JOIN {interaction_forum_post} p2 ON (p1.id = p2.parent)
+            WHERE p2.id = ?', array($postid))) {
+        if (!empty ($ppost->subject)) {
+            return $ppost->subject;
+        }
+        $postid = $ppost->id;
+    }
+    return null;
 }
