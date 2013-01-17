@@ -125,7 +125,7 @@ p {
 	color: #888;
 	line-height: 1.3333em;
 }
-.date {
+.date td {
 	color: #888;
 	font-style: italic;
 }
