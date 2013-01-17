@@ -1009,7 +1009,7 @@ function relative_date($relative, $absolute, $time1, $time2=null) {
     else if ($date['year'] == $today['year'] && $date['yday'] == $today['yday']) {
         return str_replace('%v', get_string('today', 'interaction.forum'), strftime($relative, $time1));
     }
-    return strftime($absolute, $time1);
+    return strftime(get_string('strftimedatetime'), $time1);
 
 }
 
