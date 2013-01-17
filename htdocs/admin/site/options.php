@@ -311,6 +311,14 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('session_timeout', $OVERRIDDEN),
                 ),
+                'defaultregistrationexpirylifetime' => array(
+                    'type'         => 'expiry',
+                    'title'        => get_string('defaultregistrationexpirylifetime', 'admin'),
+                    'description'  => get_string('defaultregistrationexpirylifetimedescription', 'admin'),
+                    'defaultvalue' => get_config('defaultregistrationexpirylifetime'),
+                    'help'         => false,
+                    'disabled'     => in_array('defaultregistrationexpirylifetime', $OVERRIDDEN),
+                ),
                 'defaultaccountlifetime' => array(
                     'type'         => 'expiry',
                     'title'        => get_string('defaultaccountlifetime', 'admin'),
@@ -612,7 +620,7 @@ function siteoptions_fail(Pieform $form, $field) {
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'dropdownmenu',
-        'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
+        'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',

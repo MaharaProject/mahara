@@ -2200,6 +2200,18 @@ function auth_register_submit(Pieform $form, $values) {
                 $admins = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
             }
 
+            require_once(get_config('libroot') . 'pieforms/pieform/elements/expiry.php');
+            $expirytime = pieform_element_expiry_get_expiry_from_seconds(get_config('defaultregistrationexpirylifetime'));
+            if ($expirytime == null) {
+                $expirystring = get_config('defaultregistrationexpirylifetime') . ' ' . get_string('seconds', 'performance');
+            }
+            else if ($expirytime['units'] == 'noenddate') {
+                $expirystring = get_string('element.expiry.noenddate', 'pieforms');
+            }
+            else {
+                $expirystring = $expirytime['number'] . ' ' . get_string('element.expiry.' . $expirytime['units'], 'pieforms');
+            }
+
             // email each admin
             // @TODO Respect the notification preferences of the admins.
             foreach ($admins as $admin) {
@@ -2209,10 +2221,10 @@ function auth_register_submit(Pieform $form, $values) {
                     get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
                     get_string('pendingregistrationadminemailtext', 'auth.internal',
                         $adminuser->firstname, $institution->displayname, $pendingregistrationslink,
-                        $fullname, $values['email'], $values['reason'], get_config('sitename')),
+                        $expirystring, $fullname, $values['email'], $values['reason'], get_config('sitename')),
                     get_string('pendingregistrationadminemailhtml', 'auth.internal',
                         $adminuser->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
-                        $fullname, $values['email'], $values['reason'], get_config('sitename'))
+                        $expirystring, $fullname, $values['email'], $values['reason'], get_config('sitename'))
                     );
             }
             email_user($user, null,
