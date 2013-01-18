@@ -238,28 +238,6 @@ function renderpost($post, $indent) {
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
-/*
- * Return the subject for the topic
- *
- * @param int $postid the ID of the post
- *
- * @return string the subject
- */
-
-function get_ancestorpostsubject($postid) {
-    while ($ppost = get_record_sql(
-           'SELECT p1.id, p1.subject
-            FROM {interaction_forum_post} p1
-            INNER JOIN {interaction_forum_post} p2 ON (p1.id = p2.parent)
-            WHERE p2.id = ?', array($postid))) {
-        if (!empty ($ppost->subject)) {
-            return $ppost->subject;
-        }
-        $postid = $ppost->id;
-    }
-    return null;
-}
-
 function subscribe_topic_validate(Pieform $form, $values) {
     if (!is_logged_in()) {
         // This page is public, so the access denied exception will cause a 
