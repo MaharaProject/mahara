@@ -1,0 +1,13 @@
+mahara-flashplayer
+=====================
+
+This is a modified version of FlowPlayer. In accordance with the FlowPlayer
+GPL license, it has been renamed to "mahara-flashplayer" for distribution.
+
+Website: https://github.com/agwells/mahara-flashplayer/tree/mahara-flashplayer
+Version: 3.2.16dev
+
+This flash video player is used by the Mahara internal media blocktype. The 
+primary modification made from the original project is that it has been 
+modified to disallow absolute URLs in configuration parameters, because it is
+intended only to display internally hosted media.
