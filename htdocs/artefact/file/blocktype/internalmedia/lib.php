@@ -282,9 +282,11 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
 
         $id = 'blocktype_internalmedia_flow_' . time() . $count;
         $url = self::get_download_link($artefact, $block);
+        $url = parse_url($url, PHP_URL_PATH) . '?' . parse_url($url, PHP_URL_QUERY);
         $escapedurl = str_replace('&', '%26', $url); // Flash needs these escaped
 
-        $baseurl = get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/';
+        $baseurlpath = parse_url(get_config('wwwroot'), PHP_URL_PATH);
+        $baseurl = $baseurlpath . 'artefact/file/blocktype/internalmedia/';
 
         $playerurl = $baseurl . 'flowplayer/flowplayer-3.2.7.swf';
         $autohide = 'true';
