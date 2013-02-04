@@ -857,6 +857,8 @@ function group_add_user($groupid, $userid, $role=null, $method='internal') {
     delete_records('group_member_invite', 'group', $groupid, 'member', $userid);
     handle_event('userjoinsgroup', $gm);
     db_commit();
+    global $USER;
+    $USER->reset_grouproles();
 }
 
 /**
