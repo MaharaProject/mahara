@@ -45,8 +45,7 @@ if (!PluginBlocktypeWall::can_delete_wallpost($wallpost->from, $owner)) {
     throw new AccessDeniedException();
 }
 
-$goto = get_config('wwwroot');
-$goto .= ($return == 'wall')
+$goto = ($return == 'wall')
     ? '/blocktype/wall/wall.php?id=' . $instance->get('id')
     : profile_url($owner);
 
