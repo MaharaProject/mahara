@@ -1,3 +1,11 @@
+1.5.8 (2013-02-15)
+- Bug #1081431 rss fails to update feeds  
+- Bug #1082416 XMLRPC with Firefox 17.0 not possible 
+- Bug #1091764 Cross site Scripting(XSS) Vulnerability in Mahara 1.6 
+- Bug #1103748 included flowplayer 3.2.7 is vulnerable 
+- Bug #1089282 Pagination links are broken due to encoding of encoded ampersands
+- Bug #1090203 Double encoding of &amp; in 'url' for pagination causes pagination links to be broken
+
 1.5.7 (2012-11-23)
 - Bug #1079498: Fix XSS in pagination URL
 - Fix the rss image exceptions preventing updating (Bug #1081431)
