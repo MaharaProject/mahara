@@ -1,3 +1,15 @@
+1.6.3 (2013-02-15)
+- Bug #1082416 XMLRPC with Firefox 17.0 not possible
+- Bug #1091764 Cross site Scripting(XSS) Vulnerability in notes page
+- Bug #1103748 included flowplayer 3.2.7 is vulnerable
+- Bug #1113180 Delete Wall Post Throws 404 Error
+- Bug #1115832 collection navigation links break after "show more" with cleanurls
+- Bug #1089282 Pagination links are broken due to encoding of encoded ampersands
+- Bug #1090203 Double encoding of &amp; in 'url' for pagination causes pagination links to be broken
+- Bug #1085569 Link to user profile takes on comment ID
+- Bug #1097788 forum next page link
+- 
+
 1.6.2 (2012-11-23)
 - Bug #1079498: Fix XSS in pagination URL
 - Fix the rss image exceptions preventing updating (Bug #1081431)
