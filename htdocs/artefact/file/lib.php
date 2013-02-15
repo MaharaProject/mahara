@@ -374,7 +374,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount,
                 COUNT(DISTINCT api.id) AS profileiconcount';
         $from = '
@@ -402,7 +402,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $groupby = '
             GROUP BY
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.locked, a.allowcomments,
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments,
                 u.profileicon';
 
         $phvals = array();
@@ -1054,6 +1054,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public function render_self($options) {
+        require_once('license.php');
         $options['id'] = $this->get('id');
 
         $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
@@ -1073,6 +1074,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
         $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
+        if (get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
 
         foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
             $smarty->assign($field, $this->get($field));

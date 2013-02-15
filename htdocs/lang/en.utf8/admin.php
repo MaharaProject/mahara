@@ -92,6 +92,9 @@ $string['editsitepagesdescription'] = 'Edit the content of various pages around 
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
+$string['sitelicenses']     = 'Licenses';
+$string['sitelicensesdescription']     = 'Configure the list of licenses that users can use for content.';
+$string['sitelicensesdisablednote']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "General settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to specify licenses.';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
 $string['siteviews']          = 'Site pages';
 $string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
@@ -330,6 +333,10 @@ $string['pathtoclam'] = 'Path to ClamAV';
 $string['pathtoclamdescription'] = 'The file system path to clamscan or clamdscan';
 $string['registerterms'] = 'Registration agreement';
 $string['registertermsdescription'] = "Force users to agree to the terms and conditions before registration. You should edit your site's terms and conditions page before enabling this option.";
+$string['licensemetadata'] = 'License metadata';
+$string['licensemetadatadescription'] = "Request and store license metadata for user-generated content.";
+$string['licenseallowcustom'] = 'Allow custom licenses';
+$string['licenseallowcustomdescription'] = "For license metadata, allow users to enter any URL as the license. If not checked, users will be limited to the licenses configured by the site administrator.";
 $string['allowmobileuploads'] = 'Allow mobile uploads';
 $string['allowmobileuploadsdescription'] = 'If checked, users will have the option of setting an authentication token. Content uploaded with this token will be saved as artefacts.';
 $string['remoteavatars'] = 'Display remote avatars';
@@ -447,6 +454,19 @@ $string['footercustomlink'] = 'You can override the default page, <em>%s</em>, b
 
 // Admin Files
 $string['adminfilespagedescription'] = 'Here you can upload files that can be included in the %s"Links and resources"%s menu. Files in the home directory will be able to be added to the logged-in menu, while files in the public directory will be able to be added to the public menu.';
+
+// License settings
+$string['extralicensesdescription'] = 'Note: The following licenses are used by some content but have not been configured.';
+$string['licensenamelabel'] = 'URL';
+$string['licensedisplaynamelabel'] = 'Display name';
+$string['licenseshortnamelabel'] = 'Acronym';
+$string['licenseiconlabel'] = 'Icon';
+$string['addsitelicense'] = 'Add a license';
+$string['licensedeleted'] = 'License deleted.';
+$string['licensesave'] = 'Save';
+$string['licensesaved'] = 'License saved.';
+$string['licenseurldup'] = 'The URLs must be unique; %s is repeated here.';
+$string['licenseurlnone'] = 'Please specify a URL for %s.';
 
 // Networking options
 $string['networkingextensionsmissing'] = 'Sorry, you cannot configure Mahara networking because your PHP installation is missing one or more required extensions:';
@@ -779,6 +799,11 @@ $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution.';
 $string['showonlineusers'] = 'Show online users';
 $string['showonlineusersdescription'] = 'The online users to show to members of this institution. If users are allowed to be in multiple institutions and these have different settings, the most permissive institution settings will be used.';
+$string['licensemandatory'] = 'Require license information';
+$string['licensemandatorydescription'] = 'If checked, users will be required to select a license when creating artefacts. Otherwise, they will be able to leave the license field blank.';
+$string['licensedefault'] = 'Default license';
+$string['licensedefaultdescription'] = 'The default license for content created or uploaded by institution members. Users can override this on their account settings page and on the individual items.';
+$string['licensedefaultmandatory'] = 'If users are required to choose a license, you need to choose a default license here. If you do not want to choose a default license, do not make it required for users.';
 
 $string['Logo'] = 'Logo';
 $string['logodescription'] = 'You can upload an image here that will be displayed to your institution\'s members in place of the standard header logo. For best results, this image should have the same dimensions as the site logo in your institution\'s theme. As each theme can have a different header height, no exact dimensions can be provided.';

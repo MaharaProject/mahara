@@ -50,3 +50,8 @@
 {/if}
 </table>
 {/if}
+{if $license}
+<div class="resumelicense">
+{$license|safe}
+</div>
+{/if}

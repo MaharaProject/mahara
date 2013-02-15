@@ -151,6 +151,18 @@ $string['tagdeletedsuccessfully'] = 'Tag deleted successfully';
 $string['selfsearch'] = 'Search my portfolio';
 $string['resultsperpage'] = 'Results per page';
 
+// License metadata
+$string['license'] = 'License';
+$string['licensedesc'] = 'The license for this content.';
+$string['licensenone'] = 'None selected';
+$string['licensingadvanced'] = 'Advanced licensing';
+$string['licensor'] = 'Licensor';
+$string['licensordesc'] = 'The original licensor for this content.';
+$string['licensorurl'] = 'Original URL';
+$string['licensorurldesc'] = 'The original URL for this content.';
+$string['licensemandatoryerror'] = 'The license field is mandatory.';
+$string['licensenocustomerror'] = 'This is not a permitted license on this site.';
+
 // Quota strings
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';

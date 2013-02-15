@@ -23,4 +23,9 @@
     {if isset($commentcount) && $artefact->get('allowcomments')} | <a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a>{/if}
 
   </div>
+  {if $license}
+    <div class="postlicense">
+      {$license|safe}
+    </div>
+  {/if}
 </div>

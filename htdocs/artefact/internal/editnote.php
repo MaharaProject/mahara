@@ -26,6 +26,7 @@
 define('INTERNAL', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('license.php');
 safe_require('artefact', 'internal');
 
 define('TITLE', get_string('editnote', 'artefact.internal'));
@@ -50,7 +51,7 @@ else {
     define('MENUITEM', 'content/notes');
 }
 
-$form = pieform(array(
+$form = array(
     'name' => 'editnote',
     'elements' => array(
         'title' => array(
@@ -65,6 +66,8 @@ $form = pieform(array(
             'cols'         => 70,
             'defaultvalue' => $artefact->get('description'),
         ),
+        'license' => license_form_el_basic($artefact),
+        'licensing_advanced' => license_form_el_advanced($artefact),
         'allowcomments' => array(
             'type'         => 'checkbox',
             'title'        => get_string('allowcomments', 'artefact.comment'),
@@ -83,7 +86,12 @@ $form = pieform(array(
             'goto'         => $goto,
         ),
     ),
-));
+);
+if (!get_config('licensemetadata')) {
+    unset($form['elements']['license']);
+    unset($form['elements']['licensing_advanced']);
+}
+$form = pieform($form);
 
 $smarty = smarty();
 $smarty->assign('PAGEHEADING', $artefact->get('title'));
@@ -98,6 +106,11 @@ function editnote_submit(Pieform $form, array $values) {
     if (isset($values['perms'])) {
         $artefact->set('rolepermissions', $values['perms']);
         $artefact->set('dirty', true);
+    }
+    if (get_config('licensemetadata')) {
+        $artefact->set('license', $values['license']);
+        $artefact->set('licensor', $values['licensor']);
+        $artefact->set('licensorurl', $values['licensorurl']);
     }
     $artefact->commit();
     $SESSION->add_ok_msg(get_string('noteupdated', 'artefact.internal'));

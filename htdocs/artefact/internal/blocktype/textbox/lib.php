@@ -177,6 +177,7 @@ EOF;
 
     public static function instance_config_form($instance) {
         global $USER;
+        require_once('license.php');
         $instance->set('artefactplugin', 'internal');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
@@ -274,6 +275,19 @@ EOF;
                     . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
         );
+        if ($readonly) {
+            if ($license = render_license(isset($artefact) ? $artefact : null)) {
+                $elements['license'] = array(
+                    'type' => 'html',
+                    'title' => get_string('license'),
+                    'value' => $license,
+                );
+            }
+        }
+        else {
+            $elements['license'] = license_form_el_basic(isset($artefact) ? $artefact : null);
+            $elements['license_advanced'] = license_form_el_advanced(isset($artefact) ? $artefact : null);
+        }
         return $elements;
     }
 
@@ -302,6 +316,9 @@ EOF;
             $artefact = new ArtefactTypeHtml(0, $data);
             $artefact->set('title', $title);
             $artefact->set('description', $values['text']);
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
         }
         else {
             $artefact = new ArtefactTypeHtml((int)$values['artefactid']);
@@ -321,6 +338,9 @@ EOF;
                 && !$artefact->get('locked')
                 && $USER->can_edit_artefact($artefact)) {
                 $artefact->set('description', $values['text']);
+                $artefact->set('license', $values['license']);
+                $artefact->set('licensor', $values['licensor']);
+                $artefact->set('licensorurl', $values['licensorurl']);
             }
         }
 

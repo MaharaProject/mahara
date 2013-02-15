@@ -46,6 +46,8 @@ $string['element.expiry.months'] = 'Months';
 $string['element.expiry.years'] = 'Years';
 $string['element.expiry.noenddate'] = 'No end date';
 
+$string['element.select.other'] = 'Other';
+
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 
 $string['rule.email.email'] = 'Email address is invalid';

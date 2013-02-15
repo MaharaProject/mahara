@@ -113,7 +113,15 @@ class PluginArtefactResume extends Plugin {
                 'url'   => 'artefact/resume/interests.php',
                 'title' => get_string('interests', 'artefact.resume'),
             ),
+            'license' => array(
+                'page'  => 'license',
+                'url'   => 'artefact/resume/license.php',
+                'title' => get_string('license', 'artefact.resume'),
+            ),
         );
+        if (!get_config('licensemetadata')) {
+            unset($tabs['license']);
+        }
         if (defined('RESUME_SUBPAGE') && isset($tabs[RESUME_SUBPAGE])) {
             $tabs[RESUME_SUBPAGE]['selected'] = true;
         }
@@ -196,6 +204,30 @@ class ArtefactTypeResume extends ArtefactType {
             }
         }
     }
+
+    public function get_license_artefact() {
+        if ($this->get_artefact_type() == 'personalinformation')
+            return $this;
+
+        $pi = get_record('artefact',
+                         'artefacttype', 'personalinformation',
+                         'owner', $this->owner);
+        if (!$pi)
+            return null;
+
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        return artefact_instance_from_id($pi->id);
+    }
+
+
+    public function render_license($options, &$smarty) {
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this->get_license_artefact()));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
@@ -235,6 +267,8 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
             }
             catch (Exception $e) { }
         }
+
+        $this->render_license($options, $smarty);
 
         return array('html' => $smarty->fetch('artefact:resume:fragments/contactinformation.tpl'));
     }
@@ -362,6 +396,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
             $fields[get_string($field, 'artefact.resume')] = $value;
         }
         $smarty->assign('fields', $fields);
+        $this->render_license($options, $smarty);
         return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
     }
 
@@ -587,6 +622,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         // Give the artefact type a chance to format the data how it sees fit
         $data = call_static_method(generate_artefact_class_name($type), 'format_render_self_data', $data);
         $smarty->assign('rows', $data);
+        $this->render_license($options, $smarty);
 
         $content = array(
             'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),

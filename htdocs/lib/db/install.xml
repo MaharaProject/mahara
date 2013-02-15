@@ -77,6 +77,8 @@
                 during the postinst phase. -->
                 <FIELD NAME="logo" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="style" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="licensemandatory" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="licensedefault" TYPE="char" LENGTH="255" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -447,6 +449,9 @@
                 <FIELD NAME="authorname" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="allowcomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
                 <FIELD NAME="approvecomments" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="license" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="licensor" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="licensorurl" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -467,6 +472,17 @@
                 <KEY NAME="artefact_attachmentpk" TYPE="primary" FIELDS="artefact,attachment" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
                 <KEY NAME="attachmentfk" TYPE="foreign" FIELDS="attachment" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="artefact_license">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="shortname" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="icon" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact_tag">

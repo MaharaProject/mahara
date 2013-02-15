@@ -36,6 +36,7 @@ $string['achievements'] = 'Achievements';
 $string['goals'] = 'Goals';
 $string['skills'] = 'Skills';
 $string['interests'] = 'Interests';
+$string['license'] = 'License';
 
 $string['mygoals'] = 'My goals';
 $string['myskills'] = 'My skills';

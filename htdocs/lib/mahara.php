@@ -421,6 +421,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
             return $langfile;
         }
     }
+
+    // if it's a form element, try the wildcard form name
+    if (!empty($form) && !empty($element) && $form !== 'ANY') {
+        return get_helpfile_location('core', '', 'ANY', $element, $page, $section);
+    }
+
     return false;
 }
 

@@ -718,6 +718,9 @@ function core_install_lastcoredata_defaults() {
     install_system_dashboard_view();
     install_system_grouphomepage_view();
 
+    require_once('license.php');
+    install_licenses_default();
+
     // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';

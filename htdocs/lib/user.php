@@ -205,6 +205,7 @@ function get_user_language($userid) {
 function expected_account_preferences() {
     return array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
+                 'licensedefault' => '-',
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
@@ -221,6 +222,8 @@ function expected_account_preferences() {
 }
 
 function general_account_prefs_form_elements($prefs) {
+    global $USER;
+    require_once('license.php');
     $elements = array();
     $elements['friendscontrol'] = array(
         'type' => 'radio',
@@ -241,6 +244,17 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true,
         'disabled' => get_config('wysiwyg'),
     );
+    if (get_config('licensemetadata')) {
+        $elements['licensedefault'] = license_form_el_basic(null);
+        $elements['licensedefault']['title'] = get_string('licensedefault','account');
+        if ($USER->get('institutions')) {
+            $elements['licensedefault']['options']['-'] = get_string('licensedefaultinherit','account');
+        }
+        $elements['licensedefault']['description'] = get_string('licensedefaultdescription','account');
+        if (isset($prefs->licensedefault)) {
+            $elements['licensedefault']['defaultvalue'] = $prefs->licensedefault;
+        }
+    }
     $elements['maildisabled'] = array(
         'type' => 'checkbox',
         'defaultvalue' => $prefs->maildisabled,
@@ -1508,7 +1522,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.displayname,i.theme,i.registerallowed, i.showonlineusers,i.allowinstitutionpublicviews, i.logo, i.style
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('u.expiry', 'membership_expiry').',u.studentid,u.staff,u.admin,i.displayname,i.theme,i.registerallowed, i.showonlineusers,i.allowinstitutionpublicviews, i.logo, i.style, i.licensemandatory, i.licensedefault
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ? ORDER BY i.priority DESC', array($userid))) {
         return $institutions;

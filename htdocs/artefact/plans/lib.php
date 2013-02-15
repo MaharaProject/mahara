@@ -169,6 +169,11 @@ class ArtefactTypePlan extends ArtefactType {
 
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
         $artefact->commit();
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
@@ -187,6 +192,7 @@ class ArtefactTypePlan extends ArtefactType {
     */
     public static function get_form($plan=null) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
+        require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('plan'), 'get_planform_elements', $plan);
         $elements['submit'] = array(
             'type' => 'submitcancel',
@@ -240,6 +246,11 @@ class ArtefactTypePlan extends ArtefactType {
             );
         }
 
+        if (get_config('licensemetadata')) {
+            $elements['license'] = license_form_el_basic($plan);
+            $elements['license_advanced'] = license_form_el_advanced($plan);
+        }
+
         return $elements;
     }
 
@@ -276,6 +287,13 @@ class ArtefactTypePlan extends ArtefactType {
             $smarty->assign('artefacttitle', hsc($this->get('title')));
         }
         $smarty->assign('plan', $this);
+
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
 
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
     }
@@ -401,6 +419,7 @@ class ArtefactTypeTask extends ArtefactType {
     */
     public static function get_form($parent, $task=null) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
+        require_once('license.php');
         $elements = call_static_method(generate_artefact_class_name('task'), 'get_taskform_elements', $parent, $task);
         $elements['submit'] = array(
             'type' => 'submitcancel',
@@ -473,6 +492,10 @@ class ArtefactTypeTask extends ArtefactType {
                 'value' => $task->id,
             );
         }
+        if (get_config('licensemetadata')) {
+            $elements['license'] = license_form_el_basic($task);
+            $elements['license_advanced'] = license_form_el_advanced($task);
+        }
 
         $elements['parent'] = array(
             'type' => 'hidden',
@@ -510,6 +533,11 @@ class ArtefactTypeTask extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('completed', $values['completed'] ? 1 : 0);
         $artefact->set('completiondate', $values['completiondate']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
         $artefact->commit();
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));

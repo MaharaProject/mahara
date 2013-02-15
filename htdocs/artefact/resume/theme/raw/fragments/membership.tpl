@@ -36,4 +36,9 @@
     <button id="addmembershipbutton" class="cancel" onclick="toggleCompositeForm('membership');">{str tag='add'}</button>
 </div>
 {/if}
+{if $license}
+<div class="resumelicense">
+{$license|safe}
+</div>
+{/if}
 </fieldset>

@@ -73,7 +73,8 @@ define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' 
 // Render the artefact
 $options = array(
     'viewid' => $viewid,
-    'path' => $path
+    'path' => $path,
+    'details' => true,
 );
 if (param_integer('details', 0)) {
     $options['metadata'] = 1;

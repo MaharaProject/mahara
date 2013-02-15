@@ -125,6 +125,17 @@ try {
 }
 catch (ParameterException $e) { }
 
+if (get_config('licensemetadata')) {
+    // Set licensing information
+    try {
+        $license = license_coalesce(null,
+            param_variable('license'), param_variable('license_other', null));
+        $licensor = param_variable('licensor');
+        $licensorurl = param_variable('licensorurl');
+    }
+    catch (ParameterException $e) { }
+}
+
 try {
     $newid = ArtefactTypeFile::save_uploaded_file('userfile', $data);
 }
