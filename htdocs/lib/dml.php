@@ -43,11 +43,19 @@ function db_table_name($name) {
  * @return string
  */
 function db_quote_table_placeholders($sql) {
-    return preg_replace_callback('/\{([a-z][a-z0-9_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
+    return preg_replace_callback('/\{([a-z][a-z0-9_]+)\}/', '_db_quote_table_placeholders_callback', $sql);
 }
 
 /**
- * Given a table name or other identifier, return it quoted for the appropriate 
+ * A callback function used only in db_quote_table_placeholders
+ * @param array $matches
+ */
+function _db_quote_table_placeholders_callback($matches) {
+    return db_table_name($matches[1]);
+}
+
+/**
+ * Given a table name or other identifier, return it quoted for the appropriate
  * database engine currently being used
  *
  * @param string $identifier The identifier to quote
