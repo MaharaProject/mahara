@@ -150,19 +150,20 @@ function makeMessage(message, type) {
 }
 
 /* Appends a status message to the end of elemid */
-function displayMessage(message, type) {
+function displayMessage(message, type, hideprevmsg) {
     // ensure we have type 'ok', 'error', or 'info' (the default)
     if (!type || (type != 'ok' && type != 'error')) {
         type = 'info';
     }
 
-    var oldmessage = getFirstElementByTagAndClassName('div', null, 'messages');
-
     var message = makeMessage(message, type);
     appendChildNodes('messages', message);
 
-    if (oldmessage) {
-        fade(oldmessage, {afterFinish: partial(removeElement, oldmessage)});
+    if (typeof hideprevmsg === 'undefined' || hideprevmsg == true) {
+        var oldmessage = getFirstElementByTagAndClassName('div', null, 'messages');
+        if (oldmessage) {
+            fade(oldmessage, {afterFinish: partial(removeElement, oldmessage)});
+        }
     }
 }
 
