@@ -908,6 +908,9 @@ function group_remove_user($groupid, $userid=null, $force=false) {
     }
     delete_records('group_member', 'group', $groupid, 'member', $userid);
 
+    global $USER;
+    $USER->reset_grouproles();
+
     require_once(get_config('docroot') . 'interaction/lib.php');
     $interactions = get_column('interaction_instance', 'id', 'group', $groupid);
     foreach ($interactions as $interaction) {
