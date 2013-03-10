@@ -32,15 +32,23 @@ body, caption, th, td, input, textarea, select, option, legend, fieldset, button
 	font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
 pre, code, tt {
-	font-size: 1.1667em; /* Monospace fonts can be hard to read */
+	font-size: 1em;
 	font-family: "Courier New", "DejaVu Sans Mono", monospace;
 	white-space: pre-wrap;
+}
+blockquote {
+    margin: 10px 30px;
+	border-left: 2px solid #999;
+	padding-left: 1em;
 }
 acronym {
     border-bottom: 1px dotted #d1d1d1;
 }
 img {
 	border: 0;
+}
+p span {
+    line-height: 1.333em;
 }
 h1, h2, h3, h4, h5, h6 {
 	margin: 15px 0 10px 0;
@@ -466,10 +474,24 @@ select {
     border-bottom: 1px solid #e3e9ef;
     border-left: 1px solid #e2e3ea;
     font-size: 1em;
-    max-width: 80%; /* to stop overflowing selects in columns */
 }
 div.select {
 	margin-bottom: 3px;
+}
+.column select {
+    max-width: 80%;
+}
+#institution_authplugin_container select#dummySelect,
+select#edituser_site_authinstance,
+select#edituser_institution_addinstitution,
+select#uploadcsv_authinstance {
+    max-width: 380px;
+}
+.ie7 #institution_authplugin_container select#dummySelect,
+.ie7 select#edituser_site_authinstance,
+.ie7 edituser_institution_addinstitution,
+.ie7 select#uploadcsv_authinstance {
+    width: 380px;
 }
 /* Fieldset */
 fieldset {
@@ -568,7 +590,7 @@ input.error, select.error, textarea.error {
 }
 .errmsg {
 	color: #dd0221;
-	font-size: .9167em;
+	font-size: 1em;
 	background: #ffeded url(../images/failure.gif) no-repeat 4px 2px;
 	padding: 3px 3px 3px 24px !important;
     -webkit-border-radius: 5px;
@@ -642,6 +664,10 @@ input.submit, input.cancel, button, .buttondk, input.button, input.select, input
 form.delete input.submit {
 	color: #dd0221;
 	border: 1px solid #DBA0A9;
+}
+button#users_search_btn,
+button#admins_search_btn {
+    padding: 2px 3px 2px 3px;
 }
 /** hover for buttons **/
 .btn:hover, input.submit:hover, input.cancel:hover, button:hover, .buttondk:hover, input.button:hover, input.select:hover, input#files_filebrowser_edit_artefact:hover, ul.groupuserstatus li a:hover {
@@ -1339,7 +1365,7 @@ ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-p
     float: left;
 }
 #main-column-container {
-	position: relative;
+	/* position: relative; taken out as it moved contextual help */
 	min-height: 0;  /* IE layout hack */
     padding: 10px;
 }
@@ -1666,6 +1692,11 @@ div.sideblock ul li {
 	z-index: 10;
 	color: #000000;
 	font-weight: bold;
+    line-height: 2.5em;
+}
+/* Portfolio search sideblock */
+div.sideblock #selfsearch button.button {
+    font-size: 1.08em;
 }
 /* Friends control sideblock */
 div.sideblock #friendscontrol th {
@@ -2283,9 +2314,6 @@ table.secreturls table tr td {
 	border: 0;
 	font-size: 1em;
 }
-.ie7 #editaccess_more_container fieldset div.calendar {
-    zoom: 1;
-}
 #editaccess_more_container fieldset div.checkbox,
 #editaccess_more_container fieldset div.html,
 #editaccess_more_container fieldset div.calendar {
@@ -2604,6 +2632,10 @@ ul.groupuserstatus li a span {
 	text-align: right;
     line-height: 1.25em;
 }
+#findgroups ul.groupuserstatus li.requestedtojoin, #mygroups ul.groupuserstatus li.requestedtojoin
+#findgroups ul.groupuserstatus li.member, #mygroups ul.groupuserstatus li.member {
+    margin-bottom: 5px;
+}
 #mygroups ul.groupuserstatus li a {
     padding: 1px 5px 1px 5px;
     display: inline-block;
@@ -2902,8 +2934,6 @@ td.actionlisttd {
 	font-weight: bold;
 }
 .roledisplay {
-    font-weight: normal;
-    font-style: italic;
     font-size: 0.9167em;
 }
 /* Forum */

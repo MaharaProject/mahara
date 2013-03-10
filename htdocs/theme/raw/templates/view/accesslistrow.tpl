@@ -1,4 +1,4 @@
-    <tr class="{cycle values='r0,r1'}">
+
       <td class="cv"><a href="{$item.url}">{$item.name|str_shorten_text:50:true}</a></td>
       <td class="al">
       {if $item.access}<div>{$item.access}</div>{/if}
@@ -36,4 +36,3 @@
       <td class="secreturls">
         {$item.secreturls} <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
       </td>
-    </tr>

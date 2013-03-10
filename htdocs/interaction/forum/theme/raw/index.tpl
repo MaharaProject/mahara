@@ -16,7 +16,7 @@
     {foreach from=$forums item=forum}
     <tr class="{cycle values='r0,r1'}">
         <td>
-            <div class="nowrap">
+            <div>
                 <strong><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">{$forum->title}</a>{if $publicgroup}<a href="{$forum->feedlink}"><img class="feedicon" src="{theme_url filename='images/rss_small.gif'}"></a>{/if}</strong>
             </div>
             <div class="s">{$forum->description|str_shorten_html:1000:true|safe}</div>

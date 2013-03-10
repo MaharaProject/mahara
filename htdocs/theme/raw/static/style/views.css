@@ -154,6 +154,8 @@ ul.artefactchooser-subtabs li.current a:active {
     background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
     color: #333333 !important;
     padding: 0 3px;
+    line-height: 16px;
+    height: 16px;
     vertical-align: text-bottom;
     margin: 0;
 }

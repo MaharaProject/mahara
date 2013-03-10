@@ -31,7 +31,6 @@
 </table>
 {/if}
 
-<hr>
 {$newform|safe}
 
 {include file="footer.tpl"}

@@ -15,7 +15,7 @@
                 {$entry->title}
                 {if $entry->link}</a>{/if}
                 </h4>
-                <div class="s">{$entry->description|clean_html|safe}</div>
+                <div class="feedcontent">{$entry->description|clean_html|safe}</div>
             {/foreach}
         {else}
             <ol>

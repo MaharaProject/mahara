@@ -74,3 +74,10 @@
 	background: #000000;
 	border: 0;
 }
+
+
+#groupquotasform,
+#newurl {
+  border-color: #080D0F;
+  background: #1A292F;
+}

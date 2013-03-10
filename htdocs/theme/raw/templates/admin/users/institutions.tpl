@@ -25,13 +25,14 @@
   {if $add}
 <h3>{str tag="addinstitution" section="admin"}</h3>
   {/if}
-{$institution_form|safe}
   {if $suspendform}
 <div id="suspendinstitution">
   <h3 id="suspend">{str tag="suspendinstitution" section=admin}</h3>
   <div class="suspendform">{$suspendform|safe}</div>
 </div>
   {/if}
+{$institution_form|safe}
+
 
 {else}
 {$searchform|safe}

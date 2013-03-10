@@ -248,9 +248,9 @@ input#register_register {
 	margin-left: 320px;
 }
 .statistics-subpage-full-column {
-	width: 100%;
-	float: left;
-	margin-left: -160px;
+	float: none;
+	margin-left: -320px;
+    margin-right: 0;
 }
 .statistics-subpage-left-column {
 	width: 320px;
@@ -639,6 +639,10 @@ form#uploadcsv {
 #usertypeselect_institution_container td {
 	vertical-align: inherit;
 }
+#adduser_mobileuploadtoken_list, #adduser_mobileuploadtoken_list div,
+#uploadcsv_mobileuploadtoken_list, #uploadcsv_mobileuploadtoken_list div {
+    display: inline;
+}
 
 /* GROUPS */
 #editmenus #menuitemlist table {
@@ -706,18 +710,21 @@ form#uploadcsv {
 #institution #lockedfieldshelp {
 	float: right;
 }
+#institution table tr td fieldset {
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+}
+#institution tr#institution_description_container th {
+    display: none;
+}
 #suspendinstitution {
-	margin-top: 20px;
 	border: 1px solid #e98a88;
 	background: #fbeceb;
 	padding: 10px 10px 10px 0;
-	position: absolute;
-	top: 0;
-	right: 0;
+    float: right;
 	width: 220px;
-}
-* html #suspendinstitution {
-	right: 20px;
+    margin: 10px 0 0 10px;
 }
 #suspendinstitution h3#suspend {
 	color: #ca0000;
@@ -858,9 +865,15 @@ form#suspend span#suspend_reason_container label {
     font-weight: bold;
     margin: 0 .25em 0 0;
 }
-.iframesources {
-    min-width: 75%;
+table.iframesources {
+    width: 100%;
 }
-.iframesources .editrow form td.description {
-    max-width: 500px;
+table.iframesources .pieform table tr,
+table.iframesources .pieform table tr td {
+    border-bottom: 0;
+}
+#newurl {
+    background: #f1f1f1;
+    padding: 3px;
+    border-top: 2px solid #FFFFFF;
 }
