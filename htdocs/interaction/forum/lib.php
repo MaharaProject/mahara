@@ -61,7 +61,7 @@ class PluginInteractionForum extends PluginInteraction {
             WHERE i.group = ?
             AND i.deleted != 1
             ' . $exclude . '
-            ORDER BY c.value',
+            ORDER BY CHAR_LENGTH(c.value), c.value',
             array($group->id));
         if ($existing) {
             foreach ($existing as &$item) {
