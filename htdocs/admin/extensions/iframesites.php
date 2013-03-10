@@ -268,12 +268,7 @@ $js = <<<EOF
 });
 EOF;
 
-$smarty = smarty(
-    array(),
-    array(),
-    array(),
-    array('sidebars' => false)
-);
+$smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
