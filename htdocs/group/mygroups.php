@@ -84,7 +84,7 @@ if ($groupcategory != 0) {
 }
 
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/mygroups.php' . ($params ? ('?' . http_build_query($params)) : ''),
+    'url' => get_config('wwwroot') . 'group/mygroups.php' . (!empty($params) ? ('?' . http_build_query($params)) : ''),
     'count' => $results['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
