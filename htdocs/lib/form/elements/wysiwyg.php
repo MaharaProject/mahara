@@ -119,9 +119,9 @@ function pieform_element_wysiwyg_get_headdata() {
 function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($element['value'])) {
-        return $element['value'];
+        return clean_html($element['value']);
     }
-    else if (isset($global[$element['name']])) {
+    else if ($form->is_submitted() && isset($global[$element['name']])) {
         $value = $global[$element['name']];
         if (!is_html_editor_enabled()) {
             $value = format_whitespace($value);
@@ -129,7 +129,7 @@ function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
         return $value;
     }
     else if (isset($element['defaultvalue'])) {
-        return $element['defaultvalue'];
+        return clean_html($element['defaultvalue']);
     }
     return null;
 }
