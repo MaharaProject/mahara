@@ -513,21 +513,20 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     foreach ($CSVDATA as $record) {
         $user = new StdClass;
+        foreach ($FORMAT as $field) {
+            if ($field == 'username'  ||
+                $field == 'firstname' ||
+                $field == 'lastname'  ||
+                $field == 'password'  ||
+                $field == 'email'     ||
+                $field == 'studentid' ||
+                $field == 'preferredname') {
+                $user->{$field} = $record[$formatkeylookup[$field]];
+            }
+        }
         $user->authinstance = $authinstance;
-        $user->username     = $record[$formatkeylookup['username']];
-        $user->firstname    = $record[$formatkeylookup['firstname']];
-        $user->lastname     = $record[$formatkeylookup['lastname']];
-        $user->password     = $record[$formatkeylookup['password']];
-        $user->email        = $record[$formatkeylookup['email']];
         if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
             $user->quota        = $values['quota'];
-        }
-
-        if (isset($formatkeylookup['studentid'])) {
-            $user->studentid = $record[$formatkeylookup['studentid']];
-        }
-        if (isset($formatkeylookup['preferredname'])) {
-            $user->preferredname = $record[$formatkeylookup['preferredname']];
         }
 
         $profilefields = new StdClass;
