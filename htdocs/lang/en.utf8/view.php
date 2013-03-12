@@ -362,7 +362,7 @@ $string['grouphomepage'] = 'Group homepage';
 $string['grouphomepagedescription'] = 'The Group homepage is the content that appears on the About tab for this group';
 
 // Shared views
-$string['sharedviews'] = 'Shared with me';
+$string['sharedwithme'] = 'Shared with me';
 $string['titleanddescription'] = 'Title, description, tags';
 $string['tagsonly'] = 'Tags only';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you. They may have been shared with you directly, shared with friends of the owner, or shared with one of your groups.';
