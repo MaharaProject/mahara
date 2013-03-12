@@ -422,5 +422,12 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2013031200) {
+        // Update MIME types for Microsoft video files: avi, asf, wm, and wmv
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-asf', 'description' => 'asf'), (object) array('mimetype' => 'video/x-ms-asf'));
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-wm', 'description' => 'wm'), (object) array('mimetype' => 'video/x-ms-wm'));
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-wmv', 'description' => 'wmv'), (object) array('mimetype' => 'video/x-ms-wmv'));
+    }
+
     return $status;
 }

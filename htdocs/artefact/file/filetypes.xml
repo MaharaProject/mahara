@@ -121,11 +121,14 @@
 
     <!-- Movie formats -->
     <filetype>
+        <description>asf</description>
+        <mimetypes>
+            <mimetype>video/x-ms-asf</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
         <description>avi</description>
         <mimetypes>
-            <mimetype>video/x-ms-wm</mimetype>
-            <mimetype>video/x-ms-wmv</mimetype>
-            <mimetype>video/x-ms-asf</mimetype>
             <mimetype>video/x-msvideo</mimetype>
         </mimetypes>
     </filetype>
@@ -160,9 +163,15 @@
         </mimetypes>
     </filetype>
     <filetype>
+        <description>wm</description>
+        <mimetypes>
+            <mimetype>video/x-ms-wm</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
         <description>wmv</description>
         <mimetypes>
-            <mimetype>video/ms-wmv</mimetype>
+            <mimetype>video/x-ms-wmv</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
