@@ -53,7 +53,7 @@ if (!empty($tag)) {
 else {
     $searchtype = 'titleanddescription';
     $searchdefault = $query;
-    if (!empty($query)) {
+    if ($query != '') {
         $queryparams['query'] = $query;
     }
 }
@@ -174,7 +174,7 @@ function search_submit(Pieform $form, $values) {
         $tag = null;
     }
 
-    if (!empty($values['query'])) {
+    if ((isset($values['query']) && ($values['query'] != ''))) {
         if ($values['type'] == 'tagsonly') {
             $queryparams['tag'] = $tag = $values['query'];
         }

@@ -42,7 +42,7 @@ if (!empty($tag)) {
     $queryparams['tag'] = $tag;
     $query = null;
 }
-else if (!empty($query)) {
+else if ($query != '') {
     $queryparams['query'] = $query;
 }
 

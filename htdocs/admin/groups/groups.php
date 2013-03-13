@@ -77,5 +77,5 @@ $smarty->assign('results', $data);
 $smarty->display('admin/groups/groups.tpl');
 
 function search_submit(Pieform $form, $values) {
-    redirect(get_config('wwwroot') . 'admin/groups/groups.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
+    redirect(get_config('wwwroot') . 'admin/groups/groups.php' . ((isset($values['query']) && ($values['query'] != '')) ? '?query=' . urlencode($values['query']) : ''));
 }

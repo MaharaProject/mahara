@@ -1558,7 +1558,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
     $pagination = build_pagination(array(
                 'id' => 'admgroupslist_pagination',
                 'datatable' => 'admgroupslist',
-                'url' => get_config('wwwroot') . 'admin/groups/groups.php' . (!empty($query) ? '?query=' . urlencode($query) : ''),
+                'url' => get_config('wwwroot') . 'admin/groups/groups.php' . (($query != '') ? '?query=' . urlencode($query) : ''),
                 'jsonscript' => 'admin/groups/groups.json.php',
                 'count' => $count,
                 'limit' => $limit,
@@ -1579,7 +1579,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
     global $USER;
 
     $params = array();
-    if (!empty($query)) {
+    if ($query != '') {
         $params['query'] = $query;
     }
     if (!empty($membershiptype)) {

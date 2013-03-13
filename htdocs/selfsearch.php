@@ -88,7 +88,7 @@ function dosearch(e) {
 }
 EOF;
 
-if (!empty($query)) {
+if ($query != '') {
     $javascript .= 'results.query = ' . json_encode($query) . ";\n";
     $javascript .= "results.updateOnLoad();\n";
 }

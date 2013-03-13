@@ -782,7 +782,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
     $pagination = build_pagination(array(
                 'id' => 'adminstitutionslist_pagination',
                 'datatable' => 'adminstitutionslist',
-                'url' => get_config('wwwroot') . 'admin/users/institutions.php' . (!empty($query) ? '?query=' . urlencode($query) : ''),
+                'url' => get_config('wwwroot') . 'admin/users/institutions.php' . (($query != '') ? '?query=' . urlencode($query) : ''),
                 'jsonscript' => 'admin/users/institutions.json.php',
                 'count' => $count,
                 'limit' => $limit,

@@ -931,7 +931,7 @@ if ($institution && $institution != 'mahara') {
 }
 
 function search_submit(Pieform $form, $values) {
-    redirect('/admin/users/institutions.php' . (!empty($values['query']) ? '?query=' . urlencode($values['query']) : ''));
+    redirect('/admin/users/institutions.php' . ((isset($values['query']) && ($values['query'] != '')) ? '?query=' . urlencode($values['query']) : ''));
 }
 
 // Hide custom colour boxes unless theme selector is on 'custom'
