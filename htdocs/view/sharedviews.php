@@ -31,7 +31,7 @@ define('MENUITEM', 'myportfolio/sharedviews');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('sharedviews', 'view'));
+define('TITLE', get_string('sharedwithme', 'view'));
 
 $query  = param_variable('query', null);
 $tag    = param_variable('tag', null);

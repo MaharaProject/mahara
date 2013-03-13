@@ -2300,7 +2300,7 @@ function mahara_standard_nav() {
         'myportfolio/sharedviews' => array(
             'path' => 'myportfolio/sharedviews',
             'url' => 'view/sharedviews.php',
-            'title' => get_string('sharedviews', 'view'),
+            'title' => get_string('sharedwithme', 'view'),
             'weight' => 60,
         ),
         'myportfolio/export' => array(
