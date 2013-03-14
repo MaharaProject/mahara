@@ -39,9 +39,11 @@ define('TITLE', get_string('sitelicenses', 'admin'));
 define('DEFAULTPAGE', 'home');
 
 $extralicensessql = "
-    SELECT license FROM artefact WHERE license IS NOT NULL and license <> ''
-    EXCEPT
-    SELECT name FROM artefact_license
+    SELECT DISTINCT license
+    FROM artefact
+    WHERE license IS NOT NULL AND license <> ''
+        AND license NOT IN (SELECT name FROM artefact_license)
+    ORDER BY license
 ";
 
 $edit = param_variable('edit', null);
