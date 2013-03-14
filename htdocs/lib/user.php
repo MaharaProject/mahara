@@ -205,7 +205,7 @@ function get_user_language($userid) {
 function expected_account_preferences() {
     return array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
-                 'licensedefault' => '-',
+                 'licensedefault' => '',
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'addremovecolumns' => 0,
@@ -251,7 +251,7 @@ function general_account_prefs_form_elements($prefs) {
             $elements['licensedefault']['options']['-'] = get_string('licensedefaultinherit','account');
         }
         $elements['licensedefault']['description'] = get_string('licensedefaultdescription','account');
-        if (isset($prefs->licensedefault)) {
+        if (isset($prefs->licensedefault) && $prefs->licensedefault != '') {
             $elements['licensedefault']['defaultvalue'] = $prefs->licensedefault;
         }
     }
