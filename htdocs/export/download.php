@@ -111,7 +111,14 @@ try {
 // the download. Here it would be nice to trigger the download for everyone, 
 // but alas this is not possible for people without javascript.
 $SESSION->set('exportfile', $exporter->get('exportdir') . $zipfile);
-$wwwroot = get_config('wwwroot');
-$strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 'export', '<a href="' . $wwwroot . 'export/" target="_top">', '</a>');
-$strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="download.php" target="_top">', '</a>');
-print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, $exporter->get('messages'), 'download.php');
+$continueurl = 'download.php';
+$continueurljs = get_config('wwwroot') . 'export/';
+$result = $SESSION->get('messages');
+if (empty($result)) {
+    $strexport   = get_string('exportgeneratedsuccessfully1', 'export');
+}
+else {
+    $SESSION->clear('messages');
+    $strexport   = get_string('exportgeneratedwitherrors', 'export');
+}
+print_export_footer($strexport, $continueurl, $continueurljs, $result, 'download.php');

@@ -41,6 +41,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
     private $otherfiles = array();
 
     public function dump_export_data() {
+        global $SESSION;
 
         $this->owner = $this->exporter->get('user')->get('id');
 
@@ -89,7 +90,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             }
             $dest = $this->extrafileroot . $id . '-' . PluginExportHtml::sanitise_path($this->artefactdata[$id]->get('title'));
             if (!copy($this->artefactdata[$id]->get_path(), $dest)) {
-                throw new SystemException("Unable to copy artefact $id's file");
+                $SESSION->add_error_msg(get_string('unabletocopyartefact', 'export', $this->artefactdata[$id]->get('title')));
             }
         }
     }
@@ -114,21 +115,27 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      * Puts all profile icons in the static/profileicons/ directory
      */
     private function populate_profileicons() {
+        global $SESSION;
         $profileiconsdir = $this->exporter->get('exportdir') . '/' . $this->exporter->get('rootdir') . '/static/profileicons/';
         $removekeys = array();
         foreach ($this->artefactdata as $artefactid => $artefact) {
             if ($artefact->get('artefacttype') == 'profileicon') {
                 $removekeys[] = $artefactid;
 
-                if (!copy($artefact->get_path(), $profileiconsdir . PluginExportHtml::sanitise_path($artefact->get('title')))) {
-                    throw new SystemException("Unable to copy profile icon $artefactid into export");
+                if (!$profileiconpath = $artefact->get_path()) {
+                    $SESSION->add_error_msg(get_string('nonexistentprofileicon', 'export', $artefact->get('title')));
+                }
+                else if (!copy($profileiconpath, $profileiconsdir . PluginExportHtml::sanitise_path($artefact->get('title')))) {
+                    $SESSION->add_error_msg(get_string('unabletocopyprofileicon', 'export', $artefact->get('title')));
                 }
 
                 // Make sure we grab a nicely resized version too
                 $maxdimension = 200;
-                $resizedpath = get_dataroot_image_path('artefact/file/profileicons/', $artefactid, $maxdimension);
-                if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . PluginExportHtml::sanitise_path($artefact->get('title')))) {
-                    throw new SystemException("Unable to copy resized profile icon {$maxdimension}px-{$artefact->get('title')} into export");
+                if (!$resizedpath = get_dataroot_image_path('artefact/file/profileicons/', $artefactid, $maxdimension)) {
+                    $SESSION->add_error_msg(get_string('nonexistentresizedprofileicon', 'export', $maxdimension . 'px-' . $artefact->get('title')));
+                }
+                else if (!copy($resizedpath, $profileiconsdir . $maxdimension . 'px-' . PluginExportHtml::sanitise_path($artefact->get('title')))) {
+                    $SESSION->add_error_msg(get_string('unabletocopyresizedprofileicon', 'export', $maxdimension . 'px-' . $artefact->get('title')));
                 }
             }
         }
@@ -149,6 +156,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
      * @param int    $parentid            The folder to start from - can be null
      */
     private function populate_filedir($filesystemdirectory, $level, $parentid) {
+        global $SESSION;
         foreach ($this->artefactdata as $artefactid => $artefact) {
             if ($artefact->get('parent') == $parentid && $artefact->get('owner') == $this->owner) {
                 if ($artefact->get('artefacttype') == 'folder') {
@@ -160,7 +168,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                 else {
                     $artefact = artefact_instance_from_id($artefactid);
                     if (!$artefact->get_path() || !copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')))) {
-                        throw new SystemException(get_string('nonexistentfile', 'export', $artefact->get('title')));
+                        $SESSION->add_error_msg(get_string('nonexistentfile', 'export', $artefact->get('title')));
                     }
                 }
             }

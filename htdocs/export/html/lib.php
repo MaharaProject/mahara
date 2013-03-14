@@ -121,7 +121,7 @@ class PluginExportHtml extends PluginExport {
      * Main export routine
      */
     public function export() {
-        global $THEME;
+        global $THEME, $SESSION;
         raise_memory_limit('128M');
 
         $summaries = array();
@@ -221,13 +221,12 @@ class PluginExportHtml extends PluginExport {
         foreach ($copydata as $from => $to) {
             $to = $this->get('exportdir') . '/' . $this->get('rootdir') . $to;
             if (!check_dir_exists(dirname($to))) {
-                throw new SystemException("Could not create directory $todir");
+                $SESSION->add_error_msg(get_string('couldnotcreatedirectory', 'export', $todir));
             }
             if (!copy($from, $to)) {
-                throw new SystemException("Could not copy static file $from");
+                $SESSION->add_error_msg(get_string('couldnotcopystaticfile', 'export', $from));
             }
         }
-        
 
         // zip everything up
         $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
@@ -469,7 +468,7 @@ class PluginExportHtml extends PluginExport {
      * Copies the static files (stylesheets etc.) into the export
      */
     private function copy_static_files() {
-        global $THEME;
+        global $THEME, $SESSION;
         require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
@@ -494,20 +493,20 @@ class PluginExportHtml extends PluginExport {
         foreach ($this->pluginstaticdirs as $dir) {
             $destinationdir = str_replace('export/html/', '', $dir);
             if (!check_dir_exists($staticdir . $destinationdir)) {
-                throw new SystemException("Could not create static directory $destinationdir");
+                $SESSION->add_error_msg(get_string('couldnotcreatestaticdirectory', 'export', $destinationdir));
             }
             $directoriestocopy[get_config('docroot') . 'artefact/' . $dir] = $staticdir . $destinationdir;
         }
 
         foreach ($directoriestocopy as $from => $to) {
             if (!copyr($from, $to)) {
-                throw new SystemException("Could not copy $from to $to");
+                $SESSION->add_error_msg(get_string('couldnotcopyfilesfromto', 'export', $from, $to));
             }
         }
 
         foreach ($filestocopy as $from => $to) {
-            if (!copy($from, $to)) {
-                throw new SystemException("Could not copy static file $from");
+            if (!is_file($from) || !copy($from, $to)) {
+                $SESSION->add_error_msg(get_string('couldnotcopystaticfile', 'export', $from));
             }
         }
     }

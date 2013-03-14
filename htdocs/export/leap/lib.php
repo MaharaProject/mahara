@@ -123,6 +123,7 @@ class PluginExportLeap extends PluginExport {
     * main export routine
     */
     public function export() {
+        global $SESSION;
         // the xml stuff
         $this->export_header();
         $this->setup_links();
@@ -155,14 +156,16 @@ class PluginExportLeap extends PluginExport {
 
         // write out xml to a file
         if (!file_put_contents($this->exportdir . $this->leapfile, $this->xml)) {
-            throw new SystemException("Couldn't write LEAP data to the file");
+            $SESSION->add_error_msg(get_string('couldnotwriteLEAPdata', 'export'));
         }
 
         // copy attachments over
         foreach ($this->attachments as $id => $fileinfo) {
             $existingfile = $fileinfo->file;
             $desiredname  = $fileinfo->name;
-            copy($existingfile, $this->exportdir . $this->filedir . $id . '-' . $desiredname);
+            if (!is_file($existingfile) || !copy($existingfile, $this->exportdir . $this->filedir . $id . '-' . $desiredname)) {
+                $SESSION->add_error_msg(get_string('couldnotcopyattachment', 'export', $desiredname));
+            }
         }
         $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
 
@@ -571,8 +574,9 @@ class PluginExportLeap extends PluginExport {
     * @return filename string use this to pass to add_enclosure_link
     */
     public function add_attachment($filepath, $newname) {
+        global $SESSION;
         if (!file_exists($filepath) || empty($newname)) {
-            throw new FileNotFoundException(get_string('nonexistentfile', 'export', $newname));
+            $SESSION->add_error_msg(get_string('nonexistentfile', 'export', $newname));
         }
         $newname = substr(str_replace('/', '_', $newname), 0, 245);
         $this->attachments[] = (object)array('file' => $filepath, 'name' => $newname);

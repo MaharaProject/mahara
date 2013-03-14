@@ -224,7 +224,6 @@ if (!empty($exporterrors)) {
 // the download. Here it would be nice to trigger the download for everyone, 
 // but alas this is not possible for people without javascript.
 $SESSION->set('exportfile', $zipfile);
-$wwwroot = get_config('wwwroot');
-$strexportgeneratedsuccessfullyjs = get_string('exportgeneratedsuccessfullyjs', 'export', '<a href="' . $wwwroot . '" target="_top">', '</a>');
-$strexportgeneratedsuccessfully   = get_string('exportgeneratedsuccessfully', 'export', '<a href="bulkdownload.php" target="_top">', '</a>');
-print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, 'bulkdownload.php');
+$continueurljs = get_config('wwwroot');
+$continueurl = 'bulkdownload.php';
+print_export_footer(get_string('exportgeneratedsuccessfully1', 'export'), $continueurl, $continueurljs, 'bulkdownload.php');

@@ -67,22 +67,24 @@ function print_iframe_progress_handler($percent, $status) {
     echo '<p class="progress-text">' . hsc($status) . "</p>\n";
 }
 
-function print_export_footer($strexportgeneratedsuccessfully, $strexportgeneratedsuccessfullyjs, $jsmessages=array(), $newlocation) {
+function print_export_footer($strexportgenerated, $continueurl, $continueurljs, $jsmessages=array(), $newlocation) {
 ?>
         <script type="text/javascript">
-            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgeneratedsuccessfullyjs; ?></p></div>');
+            document.write('<div class="progress-bar" style="width: 100%;"><p><?php echo $strexportgenerated . ' <a href="' . $continueurljs . '" target="_top">' . get_string('continue', 'export') . '</a>'; ?></p></div>');
             if (!window.opera) {
                 // Opera can't handle this for some reason - it vomits out the
                 // download inline in the iframe
                 document.location = '<?php echo $newlocation; ?>';
             }
-            var messages = <?php echo json_encode(join('; ', $jsmessages)); ?>;
+            var messages = <?php echo json_encode($jsmessages); ?>;
             if (messages) {
-                parent.displayMessage(messages);
+                for (var i = 0; i < messages.length; i++) {
+                    parent.displayMessage(messages[i].msg, messages[i].type, false);
+                }
             }
         </script>
         <div class="progress-bar" style="width: 100%;">
-            <p><?php echo $strexportgeneratedsuccessfully; ?></p>
+            <p><?php echo $strexportgenerated . ' <a href="' . $continueurl . '" target="_top">' . get_string('clickheretodownload', 'export') . '</a>'; ?></p>
         </div>
     </body>
 </html>
