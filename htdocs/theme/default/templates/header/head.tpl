@@ -1,5 +1,8 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="{$PAGETITLE}" />
+    <meta property="og:description" content="{$sitedescription4facebook}" />
+    <meta property="og:image" content="{$sitelogo4facebook}" />
     {if isset($PAGEAUTHOR)}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
     <script type="text/javascript">
