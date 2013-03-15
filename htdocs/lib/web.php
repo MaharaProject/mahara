@@ -74,6 +74,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
     $SIDEBLOCKS = array();
 
+    $langselectform = language_select_form();
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
@@ -475,7 +476,7 @@ EOF;
         }
     }
     else {
-        $smarty->assign('languageform', language_select_form());
+        $smarty->assign('languageform', $langselectform);
     }
     $smarty->assign('FOOTERMENU', footer_menu());
 
