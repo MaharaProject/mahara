@@ -135,12 +135,32 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://docs.google.com/$1present$2/embed?id=$4',
                 'type'  => 'iframe',
             ),
+            // docs.google.com - Google presentation URL format (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - storage path, e.g. d/<hashstring>
+            // $3 - mode, e.g. pub, view or embed
+            // $4 - url parameters: start, loop, delayms
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)presentation/([a-zA-Z0-9\_\-\/]+)/([a-z]+)\?([a-zA-Z0-9\_\-\&\=]*).*#',
+                'url'   => $httpstr . '://docs.google.com/$1presentation/$2/embed?$4',
+                'type'  => 'iframe',
+            ),
             // docs.google.com/drawings - Google drawing incl. custom domain drawing
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the drawing
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)drawings.*id=([a-zA-Z0-9\_\-\&\=]+).*#',
                 'url'   => $httpstr . '://docs.google.com/$1drawings/pub?id=$2',
+                'type'  => 'image',
+            ),
+            // docs.google.com - Google drawing document URL format (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - storage path, e.g. d/<hashstring>
+            // $3 - mode, e.g. pub, view or embed
+            // $4 - url parameters: w, h
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)drawings/([a-zA-Z0-9\_\-\/]+)/([a-z]+)\?([a-zA-Z0-9\_\-\&\=]*).*#',
+                'url'   => $httpstr . '://docs.google.com/$1drawings/$2/$3?$4',
                 'type'  => 'image',
             ),
             // docs.google.com - Google document (before July 2010) incl. custom domain document
@@ -157,6 +177,22 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)viewer.*srcid=([a-zA-Z0-9\_\-\&\=]+).*#',
                 'url'   => $httpstr . '://docs.google.com/$1viewer?srcid=$2',
+                'type'  => 'iframe',
+            ),
+            // docs.google.com - Google document URL format (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - storage path, e.g. d/<hashstring>
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)document/([a-zA-Z0-9\_\-\/]+)/pub.*#',
+                'url'   => $httpstr . '://docs.google.com/$1document/$2/pub?embedded=true',
+                'type'  => 'iframe',
+            ),
+            // docs.google.com - Google document viewer URL format (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - storage path, e.g. d/<hashstring>
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)file/([a-zA-Z0-9\_\-\/]+)/([a-z]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1file/$2/preview',
                 'type'  => 'iframe',
             ),
             // docs.google.com/viewer created urls
@@ -184,12 +220,20 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://docs.google.com/$1document/pub?id=$2',
                 'type'  => 'iframe',
             ),
-            // docs.google.com - Google spreadsheet document (after Sept 2011) incl. custom domain document
-            // $1 - domain, e.g. /a/domainname/
-            // $2 - id, key, etc. of the document
+            // docs.google.com - Google spreadsheet document (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/ (optional)
+            // $2 - key of the document
+            // $3 - other parameters: single, gid, output
             array(
-                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)spreadsheet/.*key=([a-zA-Z0-9\_\-]+).*#',
-                'url'   => $httpstr . '://docs.google.com/$1spreadsheet/pub?key=$2',
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)spreadsheet/.*key=([a-zA-Z0-9\_\-]+)([a-zA-Z0-9\_\-\&\=]*).*#',
+                'url'   => $httpstr . '://docs.google.com/$1spreadsheet/pub?key=$2$3&widget=true',
+                'type'  => 'iframe',
+            ),
+            // docs.google.com - Google form (updated on Mar 2013)
+            // $1 - domain, e.g. /a/domainname/
+            array(
+                'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)forms/([a-zA-Z0-9\_\-\.\/]*)/viewform\?embedded=true.*#',
+                'url'   => $httpstr . '://docs.google.com/$1forms/$2/viewform?embedded=true',
                 'type'  => 'iframe',
             ),
             // spreadsheets.google.com/viewform - Google form incl. custom domain form
