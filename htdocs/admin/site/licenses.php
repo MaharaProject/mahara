@@ -51,9 +51,11 @@ if (!isset($licenses)) {
     $licenses = get_records_assoc('artefact_license', null, null, 'displayname');
 }
 $extralicenses = get_column_sql("
-    SELECT license FROM artefact WHERE license IS NOT NULL and license <> ''
-    EXCEPT
-    SELECT name FROM artefact_license
+    SELECT DISTINCT license
+    FROM artefact
+    WHERE license IS NOT NULL AND license <> ''
+        AND license NOT IN (SELECT name FROM artefact_license)
+    ORDER BY license
 ");
 
 $smarty = smarty();
