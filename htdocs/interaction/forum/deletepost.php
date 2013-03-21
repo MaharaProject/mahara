@@ -115,7 +115,18 @@ function deletepost_submit(Pieform $form, $values) {
         array('id' => $values['post'])
     );
     $SESSION->add_ok_msg(get_string('deletepostsuccess', 'interaction.forum'));
-    redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $values['parent']);
+    // Figure out which parent record to redirect us to. If the parent record is deleted,
+    // keep moving up the chain until you find one that's not deleted.
+    $postrec = new stdClass();
+    $postrec->parent = $values['parent'];
+    do {
+        $postrec = get_record('interaction_forum_post', 'id', $postrec->parent, '', '', '', '', 'id, deleted, parent');
+    } while ($postrec && $postrec->deleted && $postrec->parent);
+    $redirecturl = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'];
+    if ($postrec && $postrec->parent) {
+        $redirecturl .= '&post=' . $postrec->id;
+    }
+    redirect($redirecturl);
 }
 
 $smarty = smarty();
