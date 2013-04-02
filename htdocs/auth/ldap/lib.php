@@ -183,7 +183,7 @@ class AuthLdap extends Auth {
      *
      * @return connection result
      */
-    private function ldap_connect($binddn='',$bindpwd='') {
+    protected function ldap_connect($binddn='',$bindpwd='') {
         // Select bind password, With empty values use
         // ldap_bind_* variables or anonymous bind if ldap_bind_* are empty
         if ($binddn == '' and $bindpwd == '') {
@@ -260,7 +260,7 @@ class AuthLdap extends Auth {
      * @param mixed $username username (external encoding no slashes)
      *
      */
-    private function ldap_find_userdn($ldapconnection, $username) {
+    protected function ldap_find_userdn($ldapconnection, $username) {
         // default return value
         $ldap_user_dn = FALSE;
 
@@ -300,7 +300,7 @@ class AuthLdap extends Auth {
      *
      * @param string
      */
-    private function filter_addslashes($text) {
+    protected function filter_addslashes($text) {
         $text = str_replace('\\', '\\5c', $text);
         $text = str_replace(array('*',    '(',    ')',    "\0"),
                             array('\\2a', '\\28', '\\29', '\\00'), $text);
@@ -347,7 +347,7 @@ class AuthLdap extends Auth {
      *
      * @return mixed array with no magic quotes or false on error
      */
-    private function get_userinfo_ldap($username, $attrmap ) {
+    protected function get_userinfo_ldap($username, $attrmap ) {
         $ldapconnection = $this->ldap_connect();
 
         $result = array();
@@ -413,7 +413,7 @@ class AuthLdap extends Auth {
      *
      * @return array ldap-entries
      */
-    private function ldap_get_entries($conn, $searchresult) {
+    protected function ldap_get_entries($conn, $searchresult) {
         $i = 0;
         $fresult=array();
         $entry = ldap_first_entry($conn, $searchresult);
@@ -442,7 +442,7 @@ class AuthLdap extends Auth {
  */
 class PluginAuthLdap extends PluginAuth {
 
-    private static $default_config = array(
+    protected static $default_config = array(
         'host_url'          => '',
         'contexts'          => '',
         'user_type'         => 'default',
