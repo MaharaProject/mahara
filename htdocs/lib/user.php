@@ -218,6 +218,7 @@ function expected_account_preferences() {
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
                  'devicedetection' => 1,
+                 'licensedefault' => '',
                  );
 }
 
@@ -248,10 +249,10 @@ function general_account_prefs_form_elements($prefs) {
         $elements['licensedefault'] = license_form_el_basic(null);
         $elements['licensedefault']['title'] = get_string('licensedefault','account');
         if ($USER->get('institutions')) {
-            $elements['licensedefault']['options']['-'] = get_string('licensedefaultinherit','account');
+            $elements['licensedefault']['options'][LICENSE_INSTITUTION_DEFAULT] = get_string('licensedefaultinherit','account');
         }
         $elements['licensedefault']['description'] = get_string('licensedefaultdescription','account');
-        if (isset($prefs->licensedefault) && $prefs->licensedefault != '') {
+        if (isset($prefs->licensedefault)) {
             $elements['licensedefault']['defaultvalue'] = $prefs->licensedefault;
         }
     }
@@ -2115,7 +2116,7 @@ function addfriend_submit(Pieform $form, $values) {
  *
  * @param object $user stdclass or User object for the usr table
  * @param array  $profile profile field/values to set
- * @param string $institution Institution the user should joined to
+ * @param string|object $institution Institution the user should joined to (name or Institution object)
  * @param stdclass $remoteauth authinstance record for a remote authinstance
  * @param string $remotename username on the remote site
  * @param array $accountprefs user account preferences to set
@@ -2168,6 +2169,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         if ($institution->name != 'mahara') {
             $institution->addUserAsMember($user); // uses $user->newuser
         }
+        $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
     }
 
     if (!empty($remoteauth)) {

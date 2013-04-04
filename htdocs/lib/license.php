@@ -26,10 +26,13 @@
 
 defined('INTERNAL') || die();
 
+define('LICENSE_INSTITUTION_DEFAULT', '(institution default)');
+
 /**
  * Given an artefact object, return the first of the two pieform elements.
  *
- * @param object  The artefact
+ * @param object $artefact The artefact
+ * @param boolean $always_allow_none True to indicate that it should definitely include "allow none"; otherwise the function decides
  * @return array  A pieform element (license field).
  */
 function license_form_el_basic($artefact, $always_allow_none=false) {
@@ -44,24 +47,34 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
         $options[$l->name] = $l->displayname;
     }
 
+    // Determine whether to include the "none selected" option in the list of licenses
+    $include_noneselected = false;
+    // If it was passed in as a param, then we will include "none selected"
     if ($always_allow_none) {
-        $options[''] = '';
+        $include_noneselected = true;
     }
 
     $institution = $USER->get('institutions');
     if ($institution) {
         $institution = array_shift($institution);
+        // If the user's institution is not set to "license mandatory", then we will include "none selected"
         if (empty($institution->licensemandatory)) {
-            $options[''] = '';
+            $include_noneselected = true;
         }
     }
     else {
-        $options[''] = '';
+        // If the user has no institution, then we will include "none selected"
+        $include_noneselected = true;
     }
+    if ($include_noneselected) {
+        $options[''] = get_string('licensenone');
+    }
+
     if (empty($artefact)) {
         // Find the correct default license.
         $license = $USER->get_account_preference('licensedefault');
-        if ($license === NULL or $license === '-') {
+        // If the user is set to "institution default"
+        if ($license == LICENSE_INSTITUTION_DEFAULT) {
             if ($institution and isset($institution->licensedefault)) {
                 $license = $institution->licensedefault;
             }
@@ -69,7 +82,8 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
                 $license = '';
             }
         }
-        if (!isset($options[$license]) and !get_config('licenseallowcustom')) {
+
+        if (!isset($options[$license]) && !get_config('licenseallowcustom')) {
             // Note: this won't happen normally, but it can happen for instance
             // if the site admin removes a license which is the default for the
             // user's institution.
@@ -87,9 +101,6 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
         }
     }
 
-    if (isset($options[''])) {
-        $options[''] = get_string('licensenone');
-    }
     $res = array(
         'defaultvalue' => $license,
         'type'         => 'select',

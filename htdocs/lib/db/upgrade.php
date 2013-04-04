@@ -3192,5 +3192,10 @@ function xmldb_core_upgrade($oldversion=0) {
         install_licenses_default();
     }
 
+    if ($oldversion < 2013032202) {
+        require_once(get_config('libroot').'license.php');
+        set_field('usr_account_preference', 'value', LICENSE_INSTITUTION_DEFAULT, 'field', 'licensedefault', 'value', '-');
+    }
+
     return $status;
 }
