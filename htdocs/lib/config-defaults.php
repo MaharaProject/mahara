@@ -366,3 +366,6 @@ $cfg->additionalhtmlhead = '';
 $cfg->additionalhtmltopofbody = '';
 // additionalhtmlfooter: Last item before the closing </body> tag
 $cfg->additionalhtlmfooter = '';
+
+// Whether to display extended debugging messages in the auth/ldap user & group synchronization cron task.
+// $cfg->auth_ldap_debug_sync_cron = false;

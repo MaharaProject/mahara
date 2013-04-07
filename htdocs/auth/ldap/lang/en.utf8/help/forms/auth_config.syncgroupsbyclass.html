@@ -1,0 +1,12 @@
+<h3>Sync groups stored as LDAP objects</h3>
+<p>Enable this option if your groups are stored as standalone records
+in LDAP.</p>
+<p>Example:</p>
+<pre>
+dn: cn=languagestudents,ou=groups,dc=mahara,dc=org
+objectClass: groupOfUniqueNames
+cn: languagestudents
+uniqueMember: uid=user1,dc=mahara,dc=org
+uniqueMember: uid=user2,dc=mahara,dc=org
+uniqueMember: cn=frenchclass,ou=groups,dc=mahara,dc=org
+</pre>

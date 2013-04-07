@@ -1,0 +1,12 @@
+<h3>Sync groups automatically via cron job</h3>
+<p>Enable this setting to activate a task in the cron which will automatically create and/or update
+groups and their membership based on records in the LDAP server. By default, this cron task will execute once
+daily at midnight (server time). Edit the record in the "auth_cron" table or use the optional command-line scripts
+supplied in htdocs/auth/ldap/cli/ if you wish to schedule it to run at other times or with other settings.</p>
+<p><b>Note:</b> You'll also need to activate the "Sync groups stored as LDAP objects" and/or "Sync groups stored as
+user attributes" settings in order for groups to be synced.</p>
+<p>Group members can be removed as well as added by this setting. If a group is no longer found in the LDAP
+records, all of its members will be removed from the group.</p>
+<p>This setting will have no effect if the cron is not running. See the
+<a href="http://wiki.mahara.org/System_Administrator's_Guide/Installing_Mahara">installation guide</a> for
+instructions on how to set it up.</p>
