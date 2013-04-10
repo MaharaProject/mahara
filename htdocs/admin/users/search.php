@@ -36,13 +36,14 @@ define('SECTION_PAGE', 'usersearch');
 require_once('searchlib.php');
 
 $search = (object) array(
-    'query'       => trim(param_variable('query', '')),
-    'f'           => param_alpha('f', null), // first initial
-    'l'           => param_alpha('l', null), // last initial
-    'sortby'      => param_alpha('sortby', 'firstname'),
-    'sortdir'     => param_alpha('sortdir', 'asc'),
-    'loggedin'    => param_alpha('loggedin', 'any'),
-    'loggedindate'=> param_variable('loggedindate', strftime(get_string('strftimedatetimeshort'))),
+    'query'          => trim(param_variable('query', '')),
+    'f'              => param_alpha('f', null), // first initial
+    'l'              => param_alpha('l', null), // last initial
+    'sortby'         => param_alpha('sortby', 'firstname'),
+    'sortdir'        => param_alpha('sortdir', 'asc'),
+    'loggedin'       => param_alpha('loggedin', 'any'),
+    'loggedindate'   => param_variable('loggedindate', strftime(get_string('strftimedatetimeshort'))),
+    'duplicateemail' => param_boolean('duplicateemail', false),
 );
 
 $offset  = param_integer('offset', 0);

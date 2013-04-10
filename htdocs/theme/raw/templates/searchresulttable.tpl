@@ -21,6 +21,9 @@
           {else}
               {$c.name}
           {/if}
+          {if $c.help}
+              {$c.helplink|safe}
+          {/if}
           {if $c.headhtml}<div style="font-weight: normal;">{$c.headhtml|safe}</div>{/if}
             </th>
           {/foreach}

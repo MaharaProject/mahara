@@ -1038,6 +1038,9 @@ $string['usershaveneverloggedin'] = 'Users have never logged in';
 $string['usershaveloggedinsince'] = 'Users have logged in since';
 $string['usershavenotloggedinsince'] = 'Users have not logged in since';
 
+// Admin user search duplicate email filter
+$string['duplicateemailfilter'] = 'Filter by duplicate email addresses:';
+
 $string['lastlogin'] = 'Last login';
 
 // Masquerading reasons and notification
