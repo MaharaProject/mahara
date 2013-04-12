@@ -305,13 +305,17 @@ function mahara_clam_scan_file($file, $inputindex=null) {
         clam_handle_infected_file($fullpath);
         return get_string('clambroken');
     }
+    $clamparam = ' ';
+    // If we are dealing with clamdscan, clamd is likely run as a different user
+    // that might not have permissions to access your file.
+    // To make clamdscan work, we use --fdpass parameter that passes the file
+    // descriptor permissions to clamd, which allows it to scan given file
+    // irrespective of directory and file permissions.
+    if (basename($pathtoclam) == 'clamdscan') {
+        $clamparam .= '--fdpass ';
+    }
+    $cmd = $pathtoclam . $clamparam . escapeshellarg($fullpath) ." 2>&1";
 
-    $cmd = $pathtoclam .' '. escapeshellarg($fullpath) ." 2>&1";
-
-    // before we do anything we need to change perms so that clamscan
-    // can read the file (clamdscan won't work otherwise)
-    chmod($fullpath,0644);
-    
     exec($cmd, $output, $return);
 
     switch ($return) {
