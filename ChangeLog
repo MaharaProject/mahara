@@ -1,3 +1,7 @@
+1.6.4 (2013-04-15)
+- Bug #1153423 Stored XSS in TinyMCE editor
+- Bug #1141446 Google presentation embed code doesn't work
+
 1.6.3 (2013-02-15)
 - Bug #1082416 XMLRPC with Firefox 17.0 not possible
 - Bug #1091764 Cross site Scripting(XSS) Vulnerability in notes page
