@@ -335,7 +335,7 @@ function uploadcsv_validate(Pieform $form, $values) {
                     FROM {auth_remote_user} aru JOIN {usr} u ON aru.localusr = u.id
                     WHERE aru.remoteusername = ? AND aru.authinstance = ?',
                     array($remoteuser, $authinstance))) {
-                    $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser, $remoteuserowner));
+                    $csverrors->add($i, get_string('uploadcsverrorremoteusertaken', 'admin', $i, $remoteuser, $remoteuserowner->username));
                 }
             }
             $remoteusers[$remoteuser] = true;
