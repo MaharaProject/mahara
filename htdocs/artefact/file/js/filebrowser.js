@@ -206,18 +206,20 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.callback_feedback = function (data) {
+        var infoclass = 'info';
         if (data.problem) {
             var image = 'images/icon_problem.gif';
         }
         else if (data.error) {
             var image = 'images/failure.gif';
+            infoclass = 'error';
         }
         else {
             var image = 'images/success.gif';
         }
 
         quotaUpdate(data.quotaused, data.quota);
-        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), 'info');
+        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), infoclass);
         setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
             removeElement($('uploadstatusline'+data.uploadnumber));
