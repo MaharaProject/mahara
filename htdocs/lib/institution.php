@@ -29,6 +29,8 @@
 
 defined('INTERNAL') || die();
 
+require_once(get_config('libroot') . 'license.php');
+
 class Institution {
 
     const   UNINITIALIZED  = 0;
@@ -485,6 +487,9 @@ class Institution {
                 'tag' => 'lastinstitution:' . strtolower($this->name),
             )
         );
+
+        // If the user's license default is set to "institution default", remove the pref
+        delete_records('usr_account_preference', 'usr', $user->id, 'field', 'licensedefault', 'value', LICENSE_INSTITUTION_DEFAULT);
 
         delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
         handle_event('updateuser', $user->id);
