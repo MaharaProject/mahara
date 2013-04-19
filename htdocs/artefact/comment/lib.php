@@ -478,6 +478,10 @@ class ArtefactTypeComment extends ArtefactType {
                     $item->makepublicrequested = 1;
                 }
             }
+            else if (!$item->deletedby && $item->private && !$item->author
+                && $data->owner && $data->isowner && $item->requestpublic == 'author') {
+                $item->makepublicform = pieform(self::make_public_form($item->id));
+            }
 
             if ($item->author) {
                 if (isset($authors[$item->author])) {
@@ -746,7 +750,7 @@ function make_public_validate(Pieform $form, $values) {
     $owner     = $comment->get('owner');
     $requester = $USER->get('id');
 
-    if (!$author || !$owner || !$requester || ($requester != $owner && $requester != $author)) {
+    if (!$owner || !$requester || ($requester != $owner && $requester != $author)) {
         $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
     }
 }
