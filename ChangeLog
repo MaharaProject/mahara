@@ -1,3 +1,52 @@
+1.7.0 (2013-04-19)
+- Bug 1100187: First option under "manage institutions", institution is not capitalised
+- Bug 1100024: Relocate "Shared pages" menu item
+- Bug 1095499: License metadata for every artefact
+- Bug 1085566: Add logged in filter to admin search
+- Bug 1081194: Add 'groups I can join' to groups search condition and make it default
+- Bug 1051868: Add support for "retractable" blocks
+- Bug 1040337: Upgraded TinyMCE to 3.5.8
+- Bug 1033070: Increase limit on group members block
+- Bug 1027574: Improve logging of what admins do while masqueraded
+- Bug 939299: Display more collections on the overview page
+- Bug 1100030: Take out word-break in the CSS
+- Bug 1057259: Add year to forum post dates
+- Bug 1051497: Correct word spacing between posts and entries on journal page
+- Bug 1050655: forum post notification subject should be the post subject not the topic subject
+- Bug 1021653: Ensure length of input fields is sufficient for required data
+- Bug 1006706: Missing lang strings in view/urls.php
+- Bug 952625: Pending registrations have an unreasonable expiry time
+- Bug 920263: Make "Institution expiry date" column not be in italics
+- Bug 913320: Separate "Suspend / delete user" on /admin/users/edit.php
+- Bug 1100104: Account deleted notice to include contact information
+- Bug 1100066: dwoo function str doesn't take extra arguments that are "0"
+- Bug 1073136: Fix ordering of forums when there are more than 10 forums
+- Bug 1072850: Facebook doesn't pick up Mahara's Facebook logo
+- Bug 1069811: Quota exceeded message for groups
+- Bug 1069664: "Text on background" does not change for top right-hand corner in configurable theme
+- Bug 1068962: "Delete users" button should be red on /admin/users/suspended.php
+- Bug 1051529: Activating spellchecker brings up warning
+- Bug 1046617: hard-coded plural logic on /group/find.php
+- Bug 1023834: Refactor login form elements code duplication
+- Bug 1154928: Warning when adding a new user or add users via CSV
+- Bug 1145178: Warning after installing other language packs
+- Bug 1095834: Wrong result when searching for the special string: '0'
+- Bug 1089730: Plain editor not available in Resume area instead of WYSIWYG editor
+- Bug 1081309: export fails if files missing from dataroot
+- Bug 1079451: split function is deprecated but still used
+- Bug 1074974: WMV files are not recognized by Internal Media block when uploaded directly in the block
+- Bug 1072967: Add user-unique message IDs to forum emails
+- Bug 1069274: "Allow copying" is not shown on the institution and site access list
+- Bug 1068952: Update of user information brings warnings
+- Bug 1056544: The number of topics on /interaction/forum/view.php doesn't count the sticky topics
+- Bug 1111066: define('CLI') should bypass auth_setup() in init.php
+- Bug 1091506: Allowed iframe sources page doesn't allow sideblocks
+- Bug 1091504: Suspended and expired users page is not displayed as selected in menu
+- Bug 1031560: json_headers change to use application/json
+- Bug 1046647: Warnings when access "Group files" tab
+- Bug 1046641: "Group files" tab does not show up until the user re-login.
+- Bug 900983: Notification after user has been masqueraded
+
 1.6.4 (2013-04-15)
 - Bug #1153423 Stored XSS in TinyMCE editor
 - Bug #1141446 Google presentation embed code doesn't work
