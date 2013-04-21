@@ -2234,7 +2234,12 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
     public function create_folder($folder) {
         $newfolder = new ArtefactTypeFolder(0, $this->data['template']);
         $newfolder->commit();
-        $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $this->data['template']->title;
+        if ($this->archivetype == 'zip') {
+            $folderindex = ($folder == '.' ? ($this->data['template']->title . '/') : ($folder . $this->data['template']->title . '/'));
+        }
+        else {
+            $folderindex = ($folder == '.' ? '' : ($folder . '/')) . $this->data['template']->title;
+        }
         $this->data['folderids'][$folderindex] = $newfolder->get('id');
         $this->data['folderscreated']++;
     }
@@ -2318,16 +2323,13 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
                     }
                 }
 
-                $this->data['template']->parent = $this->data['folderids'][$folder];
+                $this->data['template']->parent = $this->data['folderids'][($folder == '.' ? '.' : ($folder . '/'))];
                 $this->data['template']->title = basename($name);
 
                 // set the file extension for later use (eg by flowplayer)
                 $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
 
-                if (substr($name, -1) == '/') {
-                    $this->create_folder($folder);
-                }
-                else {
+                if (substr($name, -1) != '/') {
                     $h = fopen($tempfile, 'w');
                     $size = zip_entry_filesize($entry);
                     $contents = zip_entry_read($entry, $size);
