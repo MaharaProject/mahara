@@ -40,9 +40,9 @@ define('DEFAULTPAGE', 'home');
 
 $extralicensessql = "
     SELECT DISTINCT license
-    FROM artefact
+    FROM {artefact}
     WHERE license IS NOT NULL AND license <> ''
-        AND license NOT IN (SELECT name FROM artefact_license)
+        AND license NOT IN (SELECT name FROM {artefact_license})
     ORDER BY license
 ";
 
