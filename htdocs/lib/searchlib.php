@@ -247,6 +247,30 @@ function get_admin_user_search_results($search, $offset, $limit) {
 
     }
 
+    // Filter by duplicate emails
+    if ($search->duplicateemail) {
+        $duplicateemailartefacts = get_column_sql('
+            SELECT id
+            FROM {artefact}
+            WHERE
+                artefacttype = \'email\'
+                AND LOWER(title) IN (
+                    SELECT LOWER(title)
+                    FROM artefact
+                    WHERE artefacttype = \'email\'
+                    GROUP BY LOWER(title)
+                    HAVING count(id) > 1
+                )');
+        if ($duplicateemailartefacts === false || !is_array($duplicateemailartefacts)) {
+            $duplicateemailartefacts = array();
+        }
+        $constraints[] = array(
+            'field'  => 'duplicateemail',
+            'type'   => 'in',
+            'string' => $duplicateemailartefacts
+        );
+    }
+
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin') && !$USER->get('staff')) {
@@ -288,6 +312,35 @@ function get_admin_user_search_results($search, $offset, $limit) {
             if (!empty($result['institutions'])) {
                 $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
             }
+
+            // Show all user's emails if searching for duplicate emails
+            if ($search->duplicateemail) {
+                $emails = get_records_sql_array('
+                    SELECT title,
+                        (CASE WHEN id IN (' . join(',', array_map('db_quote', $duplicateemailartefacts)) . ') THEN 1 ELSE 0 END) AS duplicated
+                    FROM {artefact} a
+                    WHERE a.artefacttype = ?
+                        AND a.owner = ?',
+                    array('email', $result['id']));
+                if (is_array($emails)) {
+                    for ($i = 0; $i < count($emails); $i++) {
+                        // Move primary email to the beginning of $emails
+                        if ($emails[0]->title == $result['email']) {
+                            break;
+                        }
+                        if ($emails[$i]->title == $result['email']) {
+                            $e = $emails[0];
+                            $emails[0] = $emails[$i];
+                            $emails[$i] = $e;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    throw new EmailException('An User must have at least one email!');
+                }
+                $result['email'] = $emails;
+            }
             if ($isadmin) {
                 continue;
             }
@@ -310,7 +363,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
-    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate');
+    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate', 'duplicateemail');
     $params = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
@@ -367,6 +420,16 @@ function build_admin_user_search_results($search, $offset, $limit) {
         ),
     );
 
+    if ($search->duplicateemail) {
+        $cols['email'] = array(
+                'name'     => get_string('emails'),
+                'sort'     => true,
+                'help'     => true,
+                'helplink'     => get_help_icon('core', 'admin', 'usersearch', 'email'),
+                'template' => 'admin/users/searchemailcolumn.tpl',
+        );
+    }
+
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
         $cols['institution'] = array(
@@ -375,6 +438,11 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'template' => 'admin/users/searchinstitutioncolumn.tpl',
         );
     }
+
+    $cols['authname'] = array(
+            'name'     => get_string('authentication'),
+            'sort'     => true,
+    );
 
     $cols['lastlogin'] = array(
         'name'      => get_string('lastlogin', 'admin'),

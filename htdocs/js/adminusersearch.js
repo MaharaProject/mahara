@@ -34,6 +34,7 @@ function UserSearch() {
         self.selectusers = {};
         self.rewriteCheckboxes();
         self.rewriteLoggedInFilter();
+        self.rewriteDuplicateEmailFilter();
         self.params = {'loggedindate' : $('loggedinform_loggedindate').value};
     };
 
@@ -77,19 +78,19 @@ function UserSearch() {
         else {
             delete self.params[initialtype];
         }
+        self.params.offset = 0;
         self.doSearch();
         e.stop();
     };
 
     this.searchByChildLink = function (element) {
         var children = getElementsByTagAndClassName('a', null, element);
-        if (children.length == 1) {
-            var href = getNodeAttribute(children[0], 'href');
-            self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
-            // Assume this is only changing the page or the order of results,
-            // so pass true here to avoid clearing the selected users.
-            self.doSearch(true);
-        }
+        // First <a> element should be the link of the column header
+        var href = getNodeAttribute(children[0], 'href');
+        self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
+        // Assume this is only changing the page or the order of results,
+        // so pass true here to avoid clearing the selected users.
+        self.doSearch(true);
     };
 
     this.changePage = function(e) {
@@ -200,6 +201,7 @@ function UserSearch() {
         connect($('loggedin'), 'onchange', function(e) {
             e.stop();
             var type = this.value;
+            self.params.offset = 0;
             self.params.loggedin = type;
             if (type === 'since' || type === 'notsince') {
                 removeElementClass($('loggedindate_container'), 'js-hidden');
@@ -211,7 +213,16 @@ function UserSearch() {
         });
         $('loggedinform_loggedindate').onchange = function(e) {
             // Set handler directly so that calendar works
+            self.params.offset = 0;
             self.params.loggedindate = this.value;
+            self.doSearch();
+        };
+    };
+
+    this.rewriteDuplicateEmailFilter = function() {
+        $('duplicateemail').onclick = function(e) {
+            self.params.offset = 0;
+            self.params.duplicateemail = this.checked;
             self.doSearch();
         };
     };

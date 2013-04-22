@@ -37,14 +37,15 @@ if ($action == 'search') {
     require_once('searchlib.php');
 
     $params = new StdClass;
-    $params->query       = trim(param_variable('query', ''));
-    $params->institution = param_alphanum('institution', null);
-    $params->f           = param_alpha('f', null);
-    $params->l           = param_alpha('l', null);
-    $params->sortby      = param_alpha('sortby', 'firstname');
-    $params->sortdir     = param_alpha('sortdir', 'asc');
-    $params->loggedin    = param_alpha('loggedin', 'any');
-    $params->loggedindate= param_variable('loggedindate', null);
+    $params->query          = trim(param_variable('query', ''));
+    $params->institution    = param_alphanum('institution', null);
+    $params->f              = param_alpha('f', null);
+    $params->l              = param_alpha('l', null);
+    $params->sortby         = param_alpha('sortby', 'firstname');
+    $params->sortdir        = param_alpha('sortdir', 'asc');
+    $params->loggedin       = param_alpha('loggedin', 'any');
+    $params->loggedindate   = param_variable('loggedindate', null);
+    $params->duplicateemail = param_boolean('duplicateemail', false);
 
     $offset  = param_integer('offset', 0);
     $limit   = param_integer('limit', 10);

@@ -66,6 +66,10 @@
                 {$loggedindate|safe}
             </span>
         </div>
+        <div class="duplicateemail-filter">
+            <label for="duplicateemail">{str tag="duplicateemailfilter" section="admin"}</label>
+            <input type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
+        </div>
         <div class="searchform-gap nojs-hidden-block"></div>
         <div class="searchform">
             <label>{str tag='Search' section='admin'}:</label>

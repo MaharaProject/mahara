@@ -406,6 +406,7 @@ $string['language'] = 'Language';
 $string['itemdeleted'] = 'Item deleted';
 $string['itemupdated'] = 'Item updated';
 $string['approvalrequired'] = 'Approval required';
+$string['authentication'] = 'Authentication';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead.';
@@ -543,6 +544,7 @@ $string['sitecontentnotfound'] = '%s text not available';
 // Contact us form
 $string['name']                     = 'Name';
 $string['email']                    = 'Email';
+$string['emails']                    = 'Emails';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
 $string['messagesent']              = 'Your message has been sent';

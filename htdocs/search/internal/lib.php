@@ -371,6 +371,33 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
+    /**
+     * Returns a list of search results for the admin user search interface.
+     *
+     * The constraints parameter takes an array of arrays, like so:
+     * $params = array(
+     *     array(
+     *         'field' => 'institution'
+     *         'string' => 'mahara'
+     *         'type' => 'equals'
+     *     ),
+     *     ...
+     * )
+     *
+     * Each constraint should has these three keys:
+     * field: Should be a column in the usr table, or the special field "duplicateemails" (which indicates only users with a non-unique email).
+     *   also, for the field "institution", a string value of "mahara" indicates users with no institution
+     * string: The value to compare the contents of that field against
+     * type: The operation by which to compare "field" to "string". This can be any of the operations in PluginSearchInternal::match_expression
+     *   (starts, equals, notequals, greaterthan, greaterthanequal, lessthan, lessthanequal, contains, or in)
+     *
+     * @param string $query_string The string to search for
+     * @param array $constraints A list of constraints on the search results (see above for format)
+     * @param int $offset
+     * @param int $limit
+     * @param string $sortfield Which of the output columns to sort by
+     * @param string $sortdir DESC or ASC
+     */
     public static function admin_search_user($query_string, $constraints, $offset, $limit,
                                              $sortfield, $sortdir) {
         $sort = 'TRUE';
@@ -421,7 +448,22 @@ class PluginSearchInternal extends PluginSearch {
                             . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . '
                             )';
                     }
-                } else {
+                }
+                else if ($f['field'] == 'duplicateemail') {
+                    if (!empty($f['string'])) {
+                        $where .= '
+                            AND u.id IN (
+                                SELECT owner
+                                FROM {artefact}
+                                WHERE id IN (' . join(',', array_map('db_quote', $f['string'])) . ')
+                            )';
+                    }
+                    else {
+                        // No duplicate email is found, return empty list
+                        $where .= 'AND FALSE';
+                    }
+                }
+                else {
                     $where .= ' AND u.' . $f['field'] 
                         . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
                 }
@@ -434,8 +476,8 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_assoc('
                 SELECT 
                     u.id, u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
-                    u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended
-                FROM {usr} u ' . $where . '
+                    u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname
+                FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $where . '
                 ORDER BY ' . $sort . ', u.id',
                 $values,
                 $offset,
