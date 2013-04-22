@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_artefact_file_upgrade($oldversion=0) {
-    
+
     $status = true;
 
     if ($oldversion < 2007010900) {
@@ -403,9 +403,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
     if ($oldversion < 2012092400) {
         $basepath = get_config('dataroot') . "artefact/file/originals/";
-        if (!is_dir($basepath)) {
-            mkdir($basepath);
-        }
+        check_dir_exists($basepath, true, true);
         $baseiter = new DirectoryIterator($basepath);
         foreach ($baseiter as $dir) {
             if ($dir->isDot()) continue;
