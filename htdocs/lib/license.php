@@ -327,57 +327,54 @@ function license_icon_url($icon) {
  * Install the initial set of licenses (if the license table is empty).
  */
 function install_licenses_default() {
-    $exist = get_record_sql("
-        SELECT * FROM artefact_license
-        LIMIT 1
-    ");
+    $exist = record_exists('artefact_license');
     if ($exist) {
         return;
     }
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by-sa/3.0/';
     $license->displayname = get_string('licensedisplaynamebysa', 'install');
     $license->shortname = get_string('licenseshortnamebysa', 'install');
     $license->icon = 'license:by-sa.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by/3.0/';
     $license->displayname = get_string('licensedisplaynameby', 'install');
     $license->shortname = get_string('licenseshortnameby', 'install');
     $license->icon = 'license:by.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by-nd/3.0/';
     $license->displayname = get_string('licensedisplaynamebynd', 'install');
     $license->shortname = get_string('licenseshortnamebynd', 'install');
     $license->icon = 'license:by-nd.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by-nc-sa/3.0/';
     $license->displayname = get_string('licensedisplaynamebyncsa', 'install');
     $license->shortname = get_string('licenseshortnamebyncsa', 'install');
     $license->icon = 'license:by-nc-sa.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by-nc/3.0/';
     $license->displayname = get_string('licensedisplaynamebync', 'install');
     $license->shortname = get_string('licenseshortnamebync', 'install');
     $license->icon = 'license:by-nc.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://creativecommons.org/licenses/by-nc-nd/3.0/';
     $license->displayname = get_string('licensedisplaynamebyncnd', 'install');
     $license->shortname = get_string('licenseshortnamebyncnd', 'install');
     $license->icon = 'license:by-nc-nd.png';
     insert_record('artefact_license', $license);
 
-    $license = new StdClass;
+    $license = new stdClass();
     $license->name = 'http://www.gnu.org/copyleft/fdl.html';
     $license->displayname = get_string('licensedisplaynamegfdl', 'install');
     $license->shortname = get_string('licenseshortnamegfdl', 'install');
