@@ -47,7 +47,7 @@ class PluginArtefactPlans extends PluginArtefact {
         return array(
             'content/plans' => array(
                 'path' => 'content/plans',
-                'url'  => 'artefact/plans/',
+                'url'  => 'artefact/plans/index.php',
                 'title' => get_string('Plans', 'artefact.plans'),
                 'weight' => 60,
             ),
@@ -182,7 +182,7 @@ class ArtefactTypePlan extends ArtefactType {
             redirect('/artefact/plans/plan.php?id='.$artefact->get('id'));
         }
         else {
-            redirect('/artefact/plans/');
+            redirect('/artefact/plans/index.php');
         }
     }
 
@@ -197,7 +197,7 @@ class ArtefactTypePlan extends ArtefactType {
         $elements['submit'] = array(
             'type' => 'submitcancel',
             'value' => array(get_string('saveplan','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/plans/',
+            'goto' => get_config('wwwroot') . 'artefact/plans/index.php',
         );
         $planform = array(
             'name' => empty($plan) ? 'addplan' : 'editplan',

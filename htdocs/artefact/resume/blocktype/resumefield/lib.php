@@ -86,7 +86,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
         $form['message'] = array(
             'type' => 'html',
-            'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/">', '</a>'),
+            'value' => get_string('filloutyourresume', 'blocktype.resume/resumefield', '<a href="' . get_config('wwwroot') . 'artefact/resume/index.php">', '</a>'),
         );
 
         return $form;

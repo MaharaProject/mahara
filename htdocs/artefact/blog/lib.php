@@ -54,11 +54,11 @@ class PluginArtefactBlog extends PluginArtefact {
             'weight' => 40,
         );
         if ($USER->get_account_preference('multipleblogs')) {
-            $tab['url']   = 'artefact/blog/';
+            $tab['url']   = 'artefact/blog/index.php';
             $tab['title'] = get_string('blogs', 'artefact.blog');
         }
         else {
-            $tab['url']   = 'artefact/blog/view/';
+            $tab['url']   = 'artefact/blog/view/index.php';
             $tab['title'] = get_string('blog', 'artefact.blog');
         }
         return array('content/blogs' => $tab);
@@ -377,8 +377,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $wwwroot = get_config('wwwroot');
 
         return array(
-            '_default'                                  => $wwwroot . 'artefact/blog/view/?id=' . $id,
-            get_string('blogsettings', 'artefact.blog') => $wwwroot . 'artefact/blog/settings/?id=' . $id,
+            '_default'                                  => $wwwroot . 'artefact/blog/view/index.php?id=' . $id,
+            get_string('blogsettings', 'artefact.blog') => $wwwroot . 'artefact/blog/settings/index.php?id=' . $id,
         );
     }
 
@@ -440,7 +440,7 @@ class ArtefactTypeBlog extends ArtefactType {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }
         catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/'), false);
+            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
         }
 
         try {
@@ -996,7 +996,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }
         catch (Exception $e) {
-            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/'), false);
+            $SESSION->add_error_msg(get_string('unabletosetmultipleblogs', 'error', $user->username, $viewid, get_config('wwwroot') . 'account/index.php'), false);
         }
 
         try {

@@ -83,7 +83,7 @@ $string['newattachmentsexceedquota'] = 'The total size of the new files that you
 $string['newblog'] = 'New journal';
 $string['newblogpost'] = 'New journal entry in journal "%s"';
 $string['newerposts'] = 'Newer entries';
-$string['nodefaultblogfound'] = 'No default journal found. This is a bug in the system. To fix it, you need to enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
+$string['nodefaultblogfound'] = 'No default journal found. This is a bug in the system. To fix it, you need to enable the multiple journals option on the <a href="%saccount/index.php">account settings</a> page.';
 $string['nopostsyet'] = 'No entries yet.';
 $string['noimageshavebeenattachedtothispost'] = 'No images have been attached to this entry. You need to upload or attach an image to the entry before you can insert it.';
 $string['nofilesattachedtothispost'] = 'No attached files';
@@ -149,8 +149,8 @@ $string['youhaveblogs'] = 'You have %s journals.';
 $string['feedsnotavailable'] = 'Feeds are not available for this artefact type.';
 $string['feedrights'] = 'Copyright %s.';
 
-$string['enablemultipleblogstext'] = 'You have one journal. If you would like to start a second one, enable the multiple journals option on the <a href="%saccount/">account settings</a> page.';
-$string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option activated. You can enable it on the <a href="%saccount/">account settings</a> page.';
+$string['enablemultipleblogstext'] = 'You have one journal. If you would like to start a second one, enable the multiple journals option on the <a href="%saccount/index.php">account settings</a> page.';
+$string['hiddenblogsnotification'] = 'Additional journal(s) have been made for you, but your account does not have the multiple journals option activated. You can enable it on the <a href="%saccount/index.php">account settings</a> page.';
 
 $string['shortcutaddpost'] = 'Add a new entry to';
 $string['shortcutgo'] = 'Go';

@@ -44,7 +44,7 @@ if (function_exists('apache_setenv')) {
 }
 
 if (!$exportdata = $SESSION->get('exportdata')) {
-    redirect('/export/');
+    redirect('/export/index.php');
 }
 $SESSION->set('exportdata', '');
 
@@ -104,7 +104,7 @@ $exporter->includefeedback = $exportdata['includefeedback'];
 try {
     $zipfile = $exporter->export();
 } catch (SystemException $e) {
-    export_iframe_die($e->getMessage(), get_config('wwwroot') . 'view/');
+    export_iframe_die($e->getMessage(), get_config('wwwroot') . 'view/index.php');
 }
 
 // Store the filename in the session, and redirect the iframe to it to trigger 
@@ -112,7 +112,7 @@ try {
 // but alas this is not possible for people without javascript.
 $SESSION->set('exportfile', $exporter->get('exportdir') . $zipfile);
 $continueurl = 'download.php';
-$continueurljs = get_config('wwwroot') . 'export/';
+$continueurljs = get_config('wwwroot') . 'export/index.php';
 $result = $SESSION->get('messages');
 if (empty($result)) {
     $strexport   = get_string('exportgeneratedsuccessfully1', 'export');
