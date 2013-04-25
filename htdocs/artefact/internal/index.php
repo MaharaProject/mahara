@@ -146,7 +146,7 @@ if ($items['firstname']) {
 
 
 $items['maildisabled']['ignore'] = !get_account_preference($USER->get('id'),'maildisabled');
-$items['maildisabled']['value'] = get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/');
+$items['maildisabled']['value'] = get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/index.php');
 
 // build form elements
 $elements = array(
@@ -434,7 +434,7 @@ function profileform_reply($form, $code, $message) {
             $method = 'add_ok_msg';
         }
         $SESSION->$method($message);
-        redirect('/artefact/internal/');
+        redirect('/artefact/internal/index.php');
     }
     // Should never be replying with an array for an OK message
 }

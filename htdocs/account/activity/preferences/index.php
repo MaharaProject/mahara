@@ -62,7 +62,7 @@ foreach ($activitytypes as $type) {
         $section = 'activity';
     }
     if ($dv == 'email' && !isset($maildisabledmsg) && get_account_preference($USER->get('id'),'maildisabled')) {
-        $SESSION->add_error_msg(get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/'), false);
+        $SESSION->add_error_msg(get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/index.php'), false);
         $maildisabledmsg = true;
     }
     $elements['activity_'.$type->id] = array(

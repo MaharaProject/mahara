@@ -41,7 +41,7 @@ if (!$forum) {
 }
 $goto = $USER->is_logged_in()
     ? ($subscriptiontype == 'forum') ? '/interaction/forum/view.php?id=' . $forum : '/interaction/forum/topic.php?id=' . $topic
-    : '/';
+    : '/index.php';
 
 if ($key || $USER->is_logged_in()) {
     // get record from forum subscriptions for this key
@@ -72,4 +72,4 @@ if ($key || $USER->is_logged_in()) {
 }
 
 // Not logged in and no key provided
-redirect('/');
+redirect('/index.php');

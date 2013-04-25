@@ -43,11 +43,11 @@
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
-                    <li><a href="{$WWWROOT}artefact/blog/view/?id={$artefact->id}">{$artefact->title}</a></li>
+                    <li><a href="{$WWWROOT}artefact/blog/view/index.php?id={$artefact->id}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image' || $artefact->artefacttype == 'profileicon' || $artefact->artefacttype == 'archive'}
                     <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'folder'}
-                    <li><a href="{$WWWROOT}artefact/file/?folder={$artefact->id}">{$artefact->title}</a></li>
+                    <li><a href="{$WWWROOT}artefact/file/index.php?folder={$artefact->id}">{$artefact->title}</a></li>
 {/if}
 {/foreach}
                 </ul>
