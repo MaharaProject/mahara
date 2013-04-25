@@ -49,7 +49,7 @@ $deleteform = array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('deleteplan','artefact.plans'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . '/artefact/plans/',
+            'goto' => get_config('wwwroot') . '/artefact/plans/index.php',
         ),
     )
 );
@@ -69,5 +69,5 @@ function deleteplanform_submit(Pieform $form, $values) {
     $todelete->delete();
     $SESSION->add_ok_msg(get_string('plandeletedsuccessfully', 'artefact.plans'));
 
-    redirect('/artefact/plans/');
+    redirect('/artefact/plans/index.php');
 }

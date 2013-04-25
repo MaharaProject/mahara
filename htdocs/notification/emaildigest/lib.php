@@ -118,7 +118,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 }
                 $body .= "\n\n";
             }
-            $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
+            $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
             $body .= "\n\n" . get_string_from_language($lang, 'emailbodyending', 'notification.emaildigest', $prefurl);
             try {
                 email_user($user->user, null, $subject, $body);

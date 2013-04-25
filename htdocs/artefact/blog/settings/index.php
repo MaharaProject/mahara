@@ -117,7 +117,7 @@ function editblog_submit(Pieform $form, $values) {
     
     ArtefactTypeBlog::edit_blog($USER, $values);
 
-    redirect('/artefact/blog/view/?id=' . $values['id']);
+    redirect('/artefact/blog/view/index.php?id=' . $values['id']);
 }
 
 /**
@@ -126,5 +126,5 @@ function editblog_submit(Pieform $form, $values) {
  */
 function editblog_cancel_submit() {
     $id = param_integer('id');
-    redirect('/artefact/blog/view/?id=' . $id);
+    redirect('/artefact/blog/view/index.php?id=' . $id);
 }

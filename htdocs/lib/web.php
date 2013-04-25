@@ -1793,13 +1793,13 @@ function admin_nav() {
     $menu = array(
         'adminhome' => array(
             'path'   => 'adminhome',
-            'url'    => 'admin/',
+            'url'    => 'admin/index.php',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
         ),
         'adminhome/home' => array(
             'path'   => 'adminhome/home',
-            'url'    => 'admin/',
+            'url'    => 'admin/index.php',
             'title'  => get_string('overview'),
             'weight' => 10,
         ),
@@ -2273,20 +2273,20 @@ function mahara_standard_nav() {
         ),
         'content' => array(
             'path' => 'content',
-            'url'  => 'artefact/internal/', // @todo possibly do path aliasing and dispatch?
+            'url'  => 'artefact/internal/index.php', // @todo possibly do path aliasing and dispatch?
             'title' => get_string('Content'),
             'weight' => 20,
         ),
         'myportfolio' => array(
             'path' => 'myportfolio',
-            'url' => 'view/',
+            'url' => 'view/index.php',
             'title' => get_string('myportfolio'),
             'weight' => 30,
             'accesskey' => 'v',
         ),
         'myportfolio/views' => array(
             'path' => 'myportfolio/views',
-            'url' => 'view/',
+            'url' => 'view/index.php',
             'title' => get_string('Views', 'view'),
             'weight' => 10,
         ),
@@ -2304,14 +2304,14 @@ function mahara_standard_nav() {
         ),
         'myportfolio/export' => array(
             'path' => 'myportfolio/export',
-            'url' => 'export/',
+            'url' => 'export/index.php',
             'title' => get_string('Export', 'export'),
             'weight' => 70,
             'ignore' => !$exportenabled,
         ),
         'myportfolio/collection' => array(
             'path' => 'myportfolio/collection',
-            'url' => 'collection/',
+            'url' => 'collection/index.php',
             'title' => get_string('Collections', 'collection'),
             'weight' => 20,
         ),
@@ -2424,7 +2424,7 @@ function right_nav() {
     $menu = array(
         'settings' => array(
             'path' => 'settings',
-            'url' => 'account/',
+            'url' => 'account/index.php',
             'title' => get_string('settings'),
             'icon' => $THEME->get_url('images/settings.png'),
             'alt' => get_string('settings'),
@@ -2432,7 +2432,7 @@ function right_nav() {
         ),
         'inbox' => array(
             'path' => 'inbox',
-            'url' => 'account/activity',
+            'url' => 'account/activity/index.php',
             'icon' => $THEME->get_url($unread ? 'images/newemail.gif' : 'images/email.gif'),
             'alt' => get_string('inbox'),
             'count' => $unread,
@@ -2441,13 +2441,13 @@ function right_nav() {
         ),
         'settings/account' => array(
             'path' => 'settings/account',
-            'url' => 'account/',
+            'url' => 'account/index.php',
             'title' => get_config('dropdownmenu') ? get_string('general') : get_string('account'),
             'weight' => 10,
         ),
         'settings/notifications' => array(
             'path' => 'settings/notifications',
-            'url' => 'account/activity/preferences/',
+            'url' => 'account/activity/preferences/index.php',
             'title' => get_string('notifications'),
             'weight' => 30,
         ),
