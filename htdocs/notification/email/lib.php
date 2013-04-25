@@ -88,7 +88,7 @@ class PluginNotificationEmail extends PluginNotification {
 
             $messagebody .= "\n\n$separator";
 
-            $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
+            $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
             $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailfooter', 'notification.email', $sitename, $prefurl);
         }
 

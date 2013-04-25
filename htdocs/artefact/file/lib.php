@@ -53,7 +53,7 @@ class PluginArtefactFile extends PluginArtefact {
         return array(
             'content/files' => array(
                 'path' => 'content/files',
-                'url' => 'artefact/file/',
+                'url' => 'artefact/file/index.php',
                 'title' => get_string('Files', 'artefact.file'),
                 'weight' => 30,
             ),
@@ -1443,7 +1443,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         return array(
             '_default' => $wwwroot . 'artefact/file/download.php?file=' . $id,
-            get_string('folder', 'artefact.file') => $wwwroot . 'artefact/file/?folder=' . $id,
+            get_string('folder', 'artefact.file') => $wwwroot . 'artefact/file/index.php?folder=' . $id,
         );
     }
 
@@ -1688,7 +1688,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $wwwroot = get_config('wwwroot');
 
         return array(
-            '_default' => $wwwroot . 'artefact/file/?folder=' . $id,
+            '_default' => $wwwroot . 'artefact/file/index.php?folder=' . $id,
         );
     }
 

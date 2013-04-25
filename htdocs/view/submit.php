@@ -130,7 +130,7 @@ function returnto() {
         $goto = 'view/view.php?id=' . $viewid;
     }
     else {
-        $goto = 'view/';
+        $goto = 'view/index.php';
     }
     return $goto;
 }

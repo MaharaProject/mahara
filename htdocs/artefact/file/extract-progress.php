@@ -31,7 +31,7 @@ safe_require('artefact', 'file');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 if (!$unzip = $SESSION->get('unzip')) {
-    redirect('/artefact/file/');
+    redirect('/artefact/file/index.php');
 }
 
 if (function_exists('apache_setenv')) {

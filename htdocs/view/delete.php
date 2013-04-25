@@ -88,5 +88,5 @@ function deleteview_submit(Pieform $form, $values) {
     if ($institution) {
         redirect('/view/institutionviews.php?institution='.$institution);
     }
-    redirect('/view/');
+    redirect('/view/index.php');
 }

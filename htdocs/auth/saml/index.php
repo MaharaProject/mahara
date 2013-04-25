@@ -249,7 +249,7 @@ function auth_saml_loginlink_submit(Pieform $form, $values) {
     ));
     db_commit();
     @session_write_close();
-    redirect('/auth/saml/');
+    redirect('/auth/saml/index.php');
 }
 
 
@@ -418,7 +418,7 @@ function saml_auth_generate_login_form() {
                     . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
             ),
             'loginsaml' => array(
-                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
+                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/index.php" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
             ),
         )
     )));
@@ -542,13 +542,13 @@ function auth_saml_login_submit(Pieform $form, $values) {
         $authenticated = login_test_all_user_authinstance($username, $password);
         if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
-            redirect('/auth/saml/');
+            redirect('/auth/saml/index.php');
         }
 
     }
     catch (AuthUnknownUserException $e) {
         $SESSION->add_error_msg(get_string('loginfailed'));
-        redirect('/auth/saml/');
+        redirect('/auth/saml/index.php');
     }
 
     auth_check_admin_section();
@@ -585,5 +585,5 @@ function auth_saml_login_submit(Pieform $form, $values) {
     auth_check_required_fields();
 
     // all happy - carry on now
-    redirect('/auth/saml/');
+    redirect('/auth/saml/index.php');
 }

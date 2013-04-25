@@ -29,7 +29,7 @@
             {/if}
           {/foreach}
           {if $USER->get('admin')}
-            <a href="{$WWWROOT}admin/">{str tag="siteadministration"}</a> |
+            <a href="{$WWWROOT}admin/index.php">{str tag="siteadministration"}</a> |
           {elseif $USER->is_institutional_admin()}
             <a href="{$WWWROOT}admin/users/search.php">{str tag="institutionadministration"}</a> |
           {/if}

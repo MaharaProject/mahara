@@ -110,7 +110,7 @@ function publish_submit(Pieform $form, $values) {
     $blogpost->publish();
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('blogpostpublished', 'artefact.blog'),
-        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['publish'],
     ));
 }
@@ -124,7 +124,7 @@ function delete_submit(Pieform $form, $values) {
     $blogpost->delete();
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('blogpostdeleted', 'artefact.blog'),
-        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['delete'],
     ));
 }

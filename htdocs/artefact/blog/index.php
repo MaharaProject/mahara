@@ -35,7 +35,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
 if (!$USER->get_account_preference('multipleblogs')) {
-    redirect(get_config('wwwroot') . 'artefact/blog/view/');
+    redirect(get_config('wwwroot') . 'artefact/blog/view/index.php');
 }
 
 define('TITLE', get_string('blogs','artefact.blog'));
@@ -70,5 +70,5 @@ function delete_blog_submit(Pieform $form, $values) {
         $blog->delete();
         $SESSION->add_ok_msg(get_string('blogdeleted', 'artefact.blog'));
     }
-    redirect('/artefact/blog/');
+    redirect('/artefact/blog/index.php');
 }
