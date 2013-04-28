@@ -110,13 +110,27 @@ $form = pieform(array(
 ));
 
 function edit_comment_submit(Pieform $form, $values) {
-    global $viewid, $comment, $SESSION, $goto;
+    global $viewid, $comment, $SESSION, $goto, $USER;
 
     db_begin();
 
     $comment->set('description', $values['message']);
     $comment->set('rating', valid_rating($values['rating']));
-    $comment->set('private', 1 - (int) $values['ispublic']);
+    require_once(get_config('libroot') . 'view.php');
+    $view = new View($viewid);
+    $owner = $view->get('owner');
+    $group = $comment->get('group');
+    $approvecomments = $view->get('approvecomments');
+    if (!empty($group) && ($approvecomments || (!$approvecomments && $view->user_comments_allowed($USER) == 'private')) && $values['ispublic'] && !$USER->can_edit_view($view)) {
+        $comment->set('requestpublic', 'author');
+    }
+    else if (($approvecomments || (!$approvecomments && $view->user_comments_allowed($USER) == 'private')) && $values['ispublic'] && (!empty($owner) && $owner != $comment->get('author'))) {
+        $comment->set('requestpublic', 'author');
+    }
+    else {
+        $comment->set('private', 1 - (int) $values['ispublic']);
+        $comment->set('requestpublic', null);
+    }
     $comment->commit();
 
     require_once('activity.php');
@@ -126,11 +140,51 @@ function edit_comment_submit(Pieform $form, $values) {
     );
 
     activity_occurred('feedback', $data, 'artefact', 'comment');
+    if ($comment->get('requestpublic') == 'author') {
+        if (!empty($owner)) {
+            edit_comment_notify($view, $comment->get('author'), $owner);
+        }
+        else if (!empty($group)) {
+            $group_admins = group_get_admin_ids($group);
+            // TO DO: need to notify the group admins bug #1197197
+        }
+    }
 
     db_commit();
 
     $SESSION->add_ok_msg(get_string('commentupdated', 'artefact.comment'));
     redirect($goto);
+}
+
+function edit_comment_notify($view, $author, $owner) {
+    global $comment, $SESSION;
+
+    $data = (object) array(
+        'subject'   => false,
+        'message'   => false,
+        'strings'   => (object) array(
+            'subject' => (object) array(
+                'key'     => 'makepublicrequestsubject',
+                'section' => 'artefact.comment',
+                'args'    => array(),
+            ),
+            'message' => (object) array(
+                'key'     => 'makepublicrequestbyauthormessage',
+                'section' => 'artefact.comment',
+                'args'    => array(hsc(display_name($author, $owner))),
+            ),
+            'urltext' => (object) array(
+                'key'     => 'Comment',
+                'section' => 'artefact.comment',
+            ),
+        ),
+        'users'     => array($owner),
+        'url'       => $comment->get_view_url($view->get('id'), true, false),
+    );
+    if (!empty($owner)) {
+        $SESSION->add_ok_msg(get_string('makepublicrequestsent', 'artefact.comment', display_name($owner)));
+    }
+    activity_occurred('maharamessage', $data);
 }
 
 $stylesheets = array('style/jquery.rating.css');

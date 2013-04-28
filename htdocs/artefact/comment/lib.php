@@ -339,7 +339,7 @@ class ArtefactTypeComment extends ArtefactType {
 
             $comments = get_records_sql_assoc('
                 SELECT
-                    a.id, a.author, a.authorname, a.ctime, a.mtime, a.description,
+                    a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
                     c.private, c.deletedby, c.requestpublic, c.rating,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
                     u.deleted, u.profileicon, u.urlid
@@ -468,7 +468,7 @@ class ArtefactTypeComment extends ArtefactType {
             // private comment be made public
             if (!$item->deletedby && $item->private && $item->author && $data->owner
                 && ($item->isauthor || $data->isowner)) {
-                if (empty($item->requestpublic)
+                if ((empty($item->requestpublic) && $data->isowner)
                     || $item->isauthor && $item->requestpublic == 'owner'
                     || $data->isowner && $item->requestpublic == 'author') {
                     $item->makepublicform = pieform(self::make_public_form($item->id));
@@ -481,6 +481,21 @@ class ArtefactTypeComment extends ArtefactType {
             else if (!$item->deletedby && $item->private && !$item->author
                 && $data->owner && $data->isowner && $item->requestpublic == 'author') {
                 $item->makepublicform = pieform(self::make_public_form($item->id));
+            }
+            else if (!$item->deletedby && $item->private && !$data->owner
+                && $item->group && $item->requestpublic == 'author') {
+                // no owner as comment is on a group view / artefact
+                if ($item->isauthor) {
+                    $item->makepublicrequested = 1;
+                }
+                else {
+                    if (($data->artefact && $data->canedit) || ($data->view && $data->canedit)) {
+                        $item->makepublicform = pieform(self::make_public_form($item->id));
+                    }
+                    else {
+                        $item->makepublicrequested = 1;
+                    }
+                }
             }
 
             if ($item->author) {
@@ -749,8 +764,25 @@ function make_public_validate(Pieform $form, $values) {
     $author    = $comment->get('author');
     $owner     = $comment->get('owner');
     $requester = $USER->get('id');
+    $group     = $comment->get('group');
 
-    if (!$owner || !$requester || ($requester != $owner && $requester != $author)) {
+    if (!$owner && !$group) {
+        $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
+    }
+    else if (!$owner && $group) {
+        if ($requester) {
+            $allowed = false;
+            // check to see if the requester is a group admin
+            $group_admins = group_get_admin_ids($group);
+            if (array_search($requester,$group_admins) === false) {
+                $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
+            }
+        }
+        else {
+            $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
+        }
+    }
+    else if (!$owner || !$requester || ($requester != $owner && $requester != $author)) {
         $form->set_error('comment', get_string('makepublicnotallowed', 'artefact.comment'));
     }
 }
@@ -765,10 +797,16 @@ function make_public_submit(Pieform $form, $values) {
 
     $author    = $comment->get('author');
     $owner     = $comment->get('owner');
+    $groupid   = $comment->get('group');
+    $group_admins = array();
+    if ($groupid) {
+        $group_admins = group_get_admin_ids($groupid);
+    }
     $requester = $USER->get('id');
 
     if (($author == $owner && $requester == $owner)
         || ($requester == $owner  && $comment->get('requestpublic') == 'author')
+        || (array_search($requester,$group_admins) !== false && $comment->get('requestpublic') == 'author')
         || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
         $comment->set('private', 0);
         $comment->set('requestpublic', null);
@@ -791,6 +829,13 @@ function make_public_submit(Pieform $form, $values) {
         $arg = display_name($author, $owner);
         $userid = $owner;
         $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($owner));
+    }
+    else if (array_search($requester,$group_admins) !== false) {
+        $comment->set('requestpublic', 'owner');
+        $message = 'makepublicrequestbyownermessage';
+        $arg = display_name($requester, $author);
+        $userid = $author;
+        $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
     }
     else {
         redirect($url); // Freak out?
