@@ -1,0 +1,13 @@
+PDF.js in Mahara
+==================
+
+Website: https://github.com/mozilla/pdf.js/wiki
+Version: 0.8.75 (updated 25 Apr 2013)
+License: Apache License 2.0
+
+PDF.js is used in the Mahara to provide a javascript library for 
+viewing PDF file
+ 
+Changes:
+
+* by Son Nguyen, 26 Apr 13: updated location of pdfjs.js in viewer.html and viewer.js
