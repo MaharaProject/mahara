@@ -227,7 +227,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
             }
         }
-        if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url'])) {
+        if (!$form->get_error('url')) {
             try {
                 self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $values['authpassword']);
                 return;
