@@ -177,7 +177,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 'defaultvalue' => $authuser,
             ),
             'authpassword' => array(
-                'type' => 'text',
+                'type' => 'passwordnoread',
                 'title' => get_string('authpassword', 'blocktype.externalfeed'),
                 'description' => get_string('authpassworddesc', 'blocktype.externalfeed'),
                 'width' => '90%',
