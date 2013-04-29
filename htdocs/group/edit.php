@@ -470,7 +470,7 @@ function editgroup_submit(Pieform $form, $values) {
         'editwindowend'  => db_format_timestamp($values['editwindowend'])
     );
 
-    if (get_config('cleanurls') && isset($values['urlid'])) {
+    if (get_config('cleanurls') && '' !== (string) $values['urlid']) {
         $newvalues['urlid'] = $values['urlid'];
     }
 
