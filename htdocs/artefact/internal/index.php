@@ -38,9 +38,9 @@ safe_require('artefact', 'internal');
 
 $fieldset = param_alpha('fs', 'aboutme');
 
-$element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+$element_list = ArtefactTypeProfile::get_all_fields();
 $element_data = ArtefactTypeProfile::get_field_element_data();
-$element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
+$element_required = ArtefactTypeProfile::get_mandatory_fields();
 
 // load existing profile information
 $profilefields = array();
