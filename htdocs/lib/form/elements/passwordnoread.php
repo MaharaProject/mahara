@@ -62,3 +62,29 @@ function pieform_element_passwordnoread(Pieform $form, $element) {
         return $html . '<input type="password" name="' . hsc($element['name'] . '_placeholder') . '" '. $form->element_attributes($element, array('name')) . ' value="">';
     }
 }
+
+/**
+ * Return the value of the element. This returns an array with the defaultvalue (if supplied),
+ * and the value newly submitted in this form (if supplied)
+ *
+ * @param Pieform $form
+ * @param array $element
+ * @return array with two keys, 'defaultvalue' and 'submittedvalue'
+ */
+function pieform_element_passwordnoread_get_value(Pieform $form, $element) {
+    $ret = array();
+    if (isset($element['defaultvalue'])) {
+        $ret['defaultvalue'] = $element['defaultvalue'];
+    }
+    else {
+        $ret['defaultvalue'] = null;
+    }
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if ($form->is_submitted() && isset($global[$element['name']])) {
+        $ret['submittedvalue'] = $global[$element['name']];
+    }
+    else {
+        $ret['submittedvalue'] = null;
+    }
+    return $ret;
+}
