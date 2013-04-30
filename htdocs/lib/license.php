@@ -38,6 +38,7 @@ define('LICENSE_INSTITUTION_DEFAULT', '(institution default)');
 function license_form_el_basic($artefact, $always_allow_none=false) {
     if (!get_config('licensemetadata')) {
         return array(
+            'type' => 'hidden',
             'ignore' => true,
         );
     }
@@ -130,6 +131,7 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
 function license_form_el_advanced($artefact, $prefix = '') {
     if (!get_config('licensemetadata')) {
         return array(
+            'type' => 'hidden',
             'ignore' => true,
         );
     }

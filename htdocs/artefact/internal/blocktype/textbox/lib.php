@@ -316,9 +316,11 @@ EOF;
             $artefact = new ArtefactTypeHtml(0, $data);
             $artefact->set('title', $title);
             $artefact->set('description', $values['text']);
-            $artefact->set('license', $values['license']);
-            $artefact->set('licensor', $values['licensor']);
-            $artefact->set('licensorurl', $values['licensorurl']);
+            if (get_config('licensemetadata')) {
+                $artefact->set('license', $values['license']);
+                $artefact->set('licensor', $values['licensor']);
+                $artefact->set('licensorurl', $values['licensorurl']);
+            }
         }
         else {
             $artefact = new ArtefactTypeHtml((int)$values['artefactid']);
@@ -338,9 +340,11 @@ EOF;
                 && !$artefact->get('locked')
                 && $USER->can_edit_artefact($artefact)) {
                 $artefact->set('description', $values['text']);
-                $artefact->set('license', $values['license']);
-                $artefact->set('licensor', $values['licensor']);
-                $artefact->set('licensorurl', $values['licensorurl']);
+                if (get_config('licensemetadata')) {
+                    $artefact->set('license', $values['license']);
+                    $artefact->set('licensor', $values['licensor']);
+                    $artefact->set('licensorurl', $values['licensorurl']);
+                }
             }
         }
 
