@@ -46,6 +46,10 @@ h6 {
     color: #5c8727;
 }
 
+span.error {
+  color: #CA0000;
+}
+
 /**************************** Tables ****************************/
 .main-column thead th {
     color: #333;
