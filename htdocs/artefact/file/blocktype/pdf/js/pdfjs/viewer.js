@@ -18,7 +18,7 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/sample.pdf';
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -28,7 +28,7 @@ var SCROLLBAR_PADDING = 40;
 var VERTICAL_PADDING = 5;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 4.0;
-var IMAGE_DIR = './images/';
+var IMAGE_DIR = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/images/';
 var SETTINGS_MEMORY = 20;
 var ANNOT_MIN_SIZE = 10;
 var RenderingStates = {
@@ -44,7 +44,7 @@ var FindStates = {
   FIND_PENDING: 3
 };
 
-  PDFJS.workerSrc = 'pdf.js';
+  PDFJS.workerSrc = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/pdf.js';
 
 var mozL10n = document.mozL10n || document.webL10n;
 
@@ -3095,10 +3095,10 @@ document.addEventListener('DOMContentLoaded', function webViewerLoad(evt) {
       PDFView.fullscreen();
     });
 
-  document.getElementById('openFile').addEventListener('click',
-    function() {
-      document.getElementById('fileInput').click();
-    });
+//  document.getElementById('openFile').addEventListener('click',
+//    function() {
+//      document.getElementById('fileInput').click();
+//    });
 
   document.getElementById('print').addEventListener('click',
     function() {
