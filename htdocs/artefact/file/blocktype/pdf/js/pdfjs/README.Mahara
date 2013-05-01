@@ -18,4 +18,5 @@ Build Instructions:
 
 Changes:
 
-* by Son Nguyen, 26 Apr 13: updated location of pdf.js in viewer.html and viewer.js
+* Change location of sample PDF file
+* Remove "open file" button

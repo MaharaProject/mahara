@@ -23,7 +23,7 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = wwwroot + '/artefact/file/blocktype/pdf/js/pdfjs/web/sample.pdf';
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -5243,8 +5243,8 @@ function webViewerInitialized() {
   document.getElementById('presentationMode').addEventListener('click',
     SecondaryToolbar.presentationModeClick.bind(SecondaryToolbar));
 
-  document.getElementById('openFile').addEventListener('click',
-    SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
+//  document.getElementById('openFile').addEventListener('click',
+//    SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
 
   document.getElementById('print').addEventListener('click',
     SecondaryToolbar.printClick.bind(SecondaryToolbar));
