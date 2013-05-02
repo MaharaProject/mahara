@@ -290,18 +290,19 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     continue;
                 }
             }
+
             try {
+                unset($data);
                 $data = self::parse_feed($feed->url, $feed->insecuresslmode, $feed->authuser, $feed->authpassword);
             }
             catch (XML_Feed_Parser_Exception $e) {
-                // The feed must have changed in such a way as to become 
-                // invalid since it was added. We ignore this case in the hope 
+                // The feed must have changed in such a way as to become
+                // invalid since it was added. We ignore this case in the hope
                 // the feed will become valid some time later
-            }
-            if (isset($data) && $data instanceof XML_Feed_Parser_Exception) {
                 continue;
             }
-            else if (isset($data)) {
+
+            if (isset($data)) {
                 if (!isset($data->image)) {
                     $data->image = null;
                 }
@@ -356,6 +357,9 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             $cache = array();
         }
         if (array_key_exists($source, $cache)) {
+            if ($cache[$source] instanceof Exception) {
+               throw $cache[$source];
+            }
             return $cache[$source];
         }
 
