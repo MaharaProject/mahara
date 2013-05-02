@@ -342,9 +342,11 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
         $artefact->set('tags', $values['tags']);
-        $artefact->set('license', $values['license']);
-        $artefact->set('licensor', $values['licensor']);
-        $artefact->set('licensorurl', $values['licensorurl']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
         $artefact->commit();
     }
 
@@ -363,13 +365,15 @@ class ArtefactTypeBlog extends ArtefactType {
         if ($user->get('id') != $artefact->get('owner')) {
             return;
         }
-        
+
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('tags', $values['tags']);
-        $artefact->set('license', $values['license']);
-        $artefact->set('licensor', $values['licensor']);
-        $artefact->set('licensorurl', $values['licensorurl']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
         $artefact->commit();
     }
 
@@ -844,9 +848,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('published', $values['published']);
         $artefact->set('tags', $values['tags']);
-        $artefact->set('license', $values['license']);
-        $artefact->set('licensor', $values['licensor']);
-        $artefact->set('licensorurl', $values['licensorurl']);
+        if (get_config('licensemetadata')) {
+            $artefact->set('license', $values['license']);
+            $artefact->set('licensor', $values['licensor']);
+            $artefact->set('licensorurl', $values['licensorurl']);
+        }
         $artefact->commit();
         return true;
     }

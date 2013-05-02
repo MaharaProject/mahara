@@ -73,9 +73,11 @@ function resumelicense_submit(Pieform $form, $values) {
             'title' => get_string('personalinformation', 'artefact.resume'),
         ));
     }
-    $personalinformation->set('license', $values['license']);
-    $personalinformation->set('licensor', $values['licensor']);
-    $personalinformation->set('licensorurl', $values['licensorurl']);
+    if (get_config('licensemetadata')) {
+        $personalinformation->set('license', $values['license']);
+        $personalinformation->set('licensor', $values['licensor']);
+        $personalinformation->set('licensorurl', $values['licensorurl']);
+    }
     $personalinformation->commit();
 
     $result = array(
