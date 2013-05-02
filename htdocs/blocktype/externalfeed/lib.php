@@ -227,9 +227,26 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
             }
         }
+
+        // If you're changing the URL on an authenticated feed, force them to re-enter the password
+        if (!empty($values['blockconfig'])) {
+            $instance = new BlockInstance($values['blockconfig']);
+            $configdata = $instance->get('configdata');
+            if (!empty($configdata['feedid'])) {
+                $olddata = $instance->get_data('feed', $configdata['feedid']);
+                if ($olddata) {
+                    if ($values['url'] <> $olddata->url && $olddata->authpassword != '' && $values['authpassword']['submittedvalue'] === null) {
+                        $form->set_error('authpassword', get_string('reenterpassword', 'blocktype.externalfeed'));
+                        return;
+                    }
+                }
+            }
+        }
+
         if (!$form->get_error('url')) {
             try {
-                self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $values['authpassword']);
+                $authpassword = ($values['authpassword']['submittedvalue'] !== null) ? $values['authpassword']['submittedvalue'] : $values['authpassword']['defaultvalue'];
+                self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $authpassword);
                 return;
             }
             catch (XML_Feed_Parser_Exception $e) {
@@ -246,7 +263,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         }
         // We know this is safe because self::parse_feed caches its result and
         // the validate method would have failed if the feed was invalid
-        $data = self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $values['authpassword']);
+        $authpassword = ($values['authpassword']['submittedvalue'] !== null) ? $values['authpassword']['submittedvalue'] : $values['authpassword']['defaultvalue'];
+        $data = self::parse_feed($values['url'], $values['insecuresslmode'], $values['authuser'], $authpassword);
         $data->content  = serialize($data->content);
         $data->image    = serialize($data->image);
         $data->lastupdate = db_format_timestamp(time());
