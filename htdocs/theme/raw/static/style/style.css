@@ -1403,6 +1403,11 @@ div.info {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+form#files div.error {
+	padding: 2px 5px;
+	font-size: .9167em;
+	background-image: none;
+}
 .fileupload div.info {
     margin: 0 0 5px 0;
 }
