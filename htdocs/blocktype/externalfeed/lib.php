@@ -517,14 +517,16 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         if (!empty($config['feedid']) and $record = get_record('blocktype_externalfeed_data', 'id', $config['feedid'])) {
             $url =  $record->url;
             $authuser = $record->authuser;
-            $authpassword = $record->authpassword;
             $insecuresslmode = (bool)$record->insecuresslmode;
         }
 
+        // Note: We don't include authpassword, because that would mean printing out the
+        // RSS password in plain text. The user will have to re-enter the password when
+        // they import this archive.
         return array(
             'url' => $url,
             'authuser' => $authuser,
-            'authpassword' => $authpassword,
+            'authpassword' => '',
             'insecuresslmode' => $insecuresslmode ? 1 : 0,
             'full' => isset($config['full']) ? ($config['full'] ? 1 : 0) : 0,
         );
