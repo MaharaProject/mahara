@@ -1,3 +1,21 @@
+1.7.1 (2013-05-02)
+- Bug #1171714: Bug that can cause RSS feeds to be randomly copied between users
+- Bug #1016253: Don't include RSS block passwords in Leap2A archives
+- Bug #1016253: Fix terminal error when there's a mistake in an authenticated RSS feed
+- Bug #1016253: Don't send RSS block passwords to the browser in plain text
+- Bug #1172096: If the URL of an RSS feed block is changed, force password re-entry
+- Bug #1088609: Fix moderation of anonymous comments
+- Bug #1170587: Potential artefacts installation issue
+- Bug #1171641: Correct license code's support for $cfg->dbprefix
+- Bug #1168617: Add missing tooltip text to group admin page
+- Bug #1165587: Updating YouTube favicon for externalmedia block
+- Bug #788882: Fix decompression of ZIP files containing subdirectories
+- Bug #1173440: Address bug in group edit form when cleanurls toggled on & off
+- Bug #1051792: Fix a warning when uploading users via CSV
+- Bug #1101984: Make filebrowser error messages have a red background
+- Bug #1174540: Fix warnings when licenses are disabled
+- 
+
 1.7.0 (2013-04-19)
 - Bug 1100187: First option under "manage institutions", institution is not capitalised
 - Bug 1100024: Relocate "Shared pages" menu item
