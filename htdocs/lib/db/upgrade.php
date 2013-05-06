@@ -3197,5 +3197,14 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('usr_account_preference', 'value', LICENSE_INSTITUTION_DEFAULT, 'field', 'licensedefault', 'value', '-');
     }
 
+    if ($oldversion < 2013050700) {
+        $table = new XMLDBTable('collection_tag');
+        $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('tag', XMLDB_TYPE_CHAR, 128, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('collection', 'tag'));
+        $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+        create_table($table);
+    }
+
     return $status;
 }

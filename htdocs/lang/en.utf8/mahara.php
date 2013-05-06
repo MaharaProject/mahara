@@ -137,6 +137,7 @@ $string['tagfilter_file'] = 'Files';
 $string['tagfilter_image'] = 'Images';
 $string['tagfilter_text'] = 'Text';
 $string['tagfilter_view'] = 'Pages';
+$string['tagfilter_collection'] = 'Collections';
 $string['edittags'] = 'Edit tags';
 $string['selectatagtoedit'] = 'Select a tag to edit';
 $string['edittag'] = 'Edit <a href="%s">%s</a>';

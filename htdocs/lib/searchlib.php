@@ -616,10 +616,13 @@ function get_portfolio_types_from_param($filter) {
         return null;
     }
     if ($filter == 'view') {
-        return array('view' => true, 'artefact' => false);
+        return array('view' => true, 'collection' => false, 'artefact' => false);
+    }
+    if ($filter == 'collection') {
+        return array('view' => false, 'collection' => true, 'artefact' => false);
     }
     require_once(get_config('docroot') . 'artefact/lib.php');
-    return array('view' => false, 'artefact' => artefact_get_types_from_filter($filter));
+    return array('view' => false, 'collection' => false, 'artefact' => artefact_get_types_from_filter($filter));
 }
 
 function get_portfolio_items_by_tag($tag, $owner, $limit, $offset, $sort='name', $type=null, $returntags=true) {

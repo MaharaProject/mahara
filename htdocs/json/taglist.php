@@ -31,6 +31,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 if ($USER->is_logged_in()) {
     $usertags = "";
+    $userid = $USER->get('id');
     if ($USER->get('admin')) {
         $usertags = "
             UNION ALL
@@ -47,13 +48,15 @@ if ($USER->is_logged_in()) {
         FROM (
             SELECT tag,COUNT(*) AS count FROM {artefact_tag} t INNER JOIN {artefact} a ON t.artefact=a.id WHERE a.owner=? GROUP BY 1
             UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {view_tag} t INNER JOIN {view} v ON t.view=v.id WHERE v.owner=? GROUP BY 1" .
-            $usertags . "
+            SELECT tag,COUNT(*) AS count FROM {view_tag} t INNER JOIN {view} v ON t.view=v.id WHERE v.owner=? GROUP BY 1
+            UNION ALL
+            SELECT tag,COUNT(*) AS count FROM {collection_tag} t INNER JOIN {collection} c ON t.collection=c.id WHERE c.owner=? GROUP BY 1
+            " . $usertags . "
         ) tags
         GROUP BY tag 
         ORDER BY LOWER(tag)
         ",
-        array($USER->get('id'), $USER->get('id'))
+        array($userid, $userid, $userid)
     );
 }
 

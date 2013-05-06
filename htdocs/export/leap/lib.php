@@ -225,12 +225,20 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('content',     $collection->get('description'));
             $this->smarty->assign('leaptype',    'selection');
 
-            $this->smarty->assign('categories', array(
-                array(
-                    'scheme' => 'selection_type',
-                    'term' => 'Website',
-                )
-            ));
+            $tags = $collection->get('tags');
+            if ($tags) {
+                $tags = array_map(function ($a) {
+                    return array(
+                        'term'  => LeapExportElement::normalise_tag($a),
+                        'label' => $a
+                    );}, $tags);
+            }
+            $this->smarty->assign('categories', array_merge(array(
+                    array(
+                        'scheme' => 'selection_type',
+                        'term'   => 'Website',
+                    )
+            ), $tags));
 
             $links = array();
             if (!empty($this->links->collectionview[$id])) {
@@ -288,11 +296,11 @@ class PluginExportLeap extends PluginExport {
 
             $tags = array();
             if ($config['tags']) {
-                $tags = array_map(create_function('$a',
-                    'return array(
-                        \'term\' => LeapExportElement::normalise_tag($a),
-                        \'label\' => $a
-                    );'), $config['tags']);
+                $tags = array_map(function ($a) {
+                    return array(
+                        'term' => LeapExportElement::normalise_tag($a),
+                        'label' => $a
+                    );}, $config['tags']);
             }
             $this->smarty->assign('categories', array_merge(array(
                 array(

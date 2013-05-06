@@ -933,6 +933,7 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function portfolio_search_by_tag($tag, $owner, $limit, $offset, $sort, $types, $returntags) {
         $viewfilter = is_null($types) || $types['view'] == true ? 'AND TRUE' : 'AND FALSE';
+        $collectionfilter = is_null($types) || $types['collection'] == true ? 'AND TRUE' : 'AND FALSE';
 
         if (is_null($types)) {
             $artefacttypefilter = '';
@@ -947,13 +948,15 @@ class PluginSearchInternal extends PluginSearch {
         if (!is_null($tag)) {
             $artefacttypefilter .= ' AND at.tag = ?';
             $viewfilter .= ' AND vt.tag = ?';
-            $values = array($owner->id, $tag, $owner->id, $tag);
+            $collectionfilter .= ' AND ct.tag = ?';
+            $values = array($owner->id, $tag, $owner->id, $tag, $owner->id, $tag);
         }
         else {
-            $values = array($owner->id, $owner->id);
+            $values = array($owner->id, $owner->id, $owner->id);
         }
 
-        $from = "FROM (
+        $from = "
+        FROM (
            (SELECT a.id, a.title, a.description, 'artefact' AS type, a.artefacttype, " . db_format_tsfield('a.ctime', 'ctime') . ",
                 a.owner, a.group, a.institution, NULL AS urlid
             FROM {artefact} a JOIN {artefact_tag} at ON (a.id = at.artefact)
@@ -963,6 +966,11 @@ class PluginSearchInternal extends PluginSearch {
                 v.owner, v.group, v.institution, v.urlid
             FROM {view} v JOIN {view_tag} vt ON (v.id = vt.view)
             WHERE v.owner = ? " . $viewfilter . ")
+           UNION
+           (SELECT c.id, c.name, c.description, 'collection' AS type, NULL AS artefacttype, " . db_format_tsfield('c.ctime', 'ctime') . ",
+                c.owner, c.group, c.institution, NULL AS urlid
+            FROM {collection} c JOIN {collection_tag} ct ON (c.id = ct.collection)
+            WHERE c.owner = ? " . $collectionfilter . ")
         ) p";
 
         $result = (object) array(
@@ -980,7 +988,7 @@ class PluginSearchInternal extends PluginSearch {
             $sort = $sort == 'date' ? 'ctime DESC' : 'title ASC';
             if ($data = get_records_sql_assoc("SELECT type || ':' || id AS tid, p.* " . $from . ' ORDER BY ' . $sort, $values, $offset, $limit)) {
                 if ($returntags) {
-                    $ids = array('view' => array(), 'artefact' => array());
+                    $ids = array('view' => array(), 'collection' => array(), 'artefact' => array());
                     foreach ($data as &$d) {
                         $ids[$d->type][$d->id] = 1;
                     }
@@ -988,6 +996,13 @@ class PluginSearchInternal extends PluginSearch {
                         if ($viewtags = get_records_select_array('view_tag', 'view IN (' . join(',', array_keys($ids['view'])) . ')')) {
                             foreach ($viewtags as &$vt) {
                                 $data['view:' . $vt->view]->tags[] = $vt->tag;
+                            }
+                        }
+                    }
+                    if (!empty($ids['collection'])) {
+                        if ($collectiontags = get_records_select_array('collection_tag', 'collection IN (' . join(',', array_keys($ids['collection'])) . ')')) {
+                            foreach ($collectiontags as &$ct) {
+                                $data['collection:' . $ct->collection]->tags[] = $ct->tag;
                             }
                         }
                     }

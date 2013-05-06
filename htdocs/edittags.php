@@ -89,6 +89,10 @@ function edit_tag_submit(Pieform $form, $values) {
         array($values['tagname'], $tag, $userid)
     );
     execute_sql(
+        "UPDATE {collection_tag} SET tag = ? WHERE tag = ? AND \"collection\" IN (SELECT id FROM {collection} WHERE \"owner\" = ?)",
+        array($values['tagname'], $tag, $userid)
+    );
+    execute_sql(
         "UPDATE {artefact_tag} SET tag = ? WHERE tag = ? AND artefact IN (SELECT id FROM {artefact} WHERE \"owner\" = ?)",
         array($values['tagname'], $tag, $userid)
     );
@@ -105,6 +109,10 @@ function delete_tag_submit(Pieform $form, $values) {
     db_begin();
     execute_sql(
         "DELETE FROM {view_tag} WHERE tag = ? AND view IN (SELECT id FROM {view} WHERE \"owner\" = ?)",
+        array($tag, $userid)
+    );
+    execute_sql(
+        "DELETE FROM {collection_tag} WHERE tag = ? AND collection IN (SELECT id FROM {collection} WHERE \"owner\" = ?)",
         array($tag, $userid)
     );
     execute_sql(

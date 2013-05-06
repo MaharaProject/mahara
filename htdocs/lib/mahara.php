@@ -2624,10 +2624,14 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq') {
            (SELECT vt.tag, v.id, 'view' AS type
             FROM {view_tag} vt JOIN {view} v ON v.id = vt.view
             WHERE v.owner = ?)
-        ) t
+           UNION
+           (SELECT ct.tag, c.id, 'collection' AS type
+            FROM {collection_tag} ct JOIN {collection} c ON c.id = ct.collection
+            WHERE c.owner = ?)
+    ) t
         GROUP BY t.tag
         ORDER BY " . $sort . (is_null($limit) ? '' : " LIMIT $limit"),
-        array($id, $id)
+        array($id, $id, $id)
     );
     if (!$tagrecords) {
         return false;
@@ -3014,6 +3018,7 @@ function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');
     require_once('view.php');
+    require_once('collection.php');
     foreach ($data->data as &$item) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
@@ -3022,6 +3027,12 @@ function build_portfolio_search_html(&$data) {
             $v = new View(0, (array)$item);
             $v->set('dirty', false);
             $item->url = $v->get_url();
+        }
+        else if ($item->type == 'collection') {
+            $item->typestr = get_string('Collection', 'collection');
+            $item->icon    = $THEME->get_url('images/icon-collection.gif');
+            $c = new Collection(0, (array)$item);
+            $item->url = $c->get_url();
         }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
@@ -3040,11 +3051,12 @@ function build_portfolio_search_html(&$data) {
     $data->baseurl = get_config('wwwroot') . 'tags.php' . (is_null($data->tag) ? '' : '?tag=' . urlencode($data->tag));
     $data->sortcols = array('name', 'date');
     $data->filtercols = array(
-        'all'   => get_string('tagfilter_all'),
-        'file'  => get_string('tagfilter_file'),
-        'image' => get_string('tagfilter_image'),
-        'text'  => get_string('tagfilter_text'),
-        'view'  => get_string('tagfilter_view'),
+        'all'        => get_string('tagfilter_all'),
+        'file'       => get_string('tagfilter_file'),
+        'image'      => get_string('tagfilter_image'),
+        'text'       => get_string('tagfilter_text'),
+        'view'       => get_string('tagfilter_view'),
+        'collection' => get_string('tagfilter_collection'),
     );
 
     $smarty = smarty_core();

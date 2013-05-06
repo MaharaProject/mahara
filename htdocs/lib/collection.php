@@ -42,6 +42,7 @@ class Collection {
     private $submittedhost;
     private $submittedtime;
     private $views;
+    private $tags;
 
     public function __construct($id=0, $data=null) {
 
@@ -80,6 +81,9 @@ class Collection {
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        if ($field == 'tags') {
+            return $this->get_tags();
         }
         if ($field == 'views') {
             return $this->views();
@@ -138,6 +142,7 @@ class Collection {
         }
 
         delete_records('collection_view','collection',$this->id);
+        delete_records('collection_tag','collection',$this->id);
         delete_records('collection','id',$this->id);
 
         // Secret url records belong to the collection, so remove them from the view.
@@ -172,6 +177,15 @@ class Collection {
             $id = insert_record('collection', $fordb, 'id', true);
             if ($id) {
                 $this->set('id', $id);
+            }
+        }
+
+        if (isset($this->tags)) {
+            delete_records('collection_tag', 'collection', $this->get('id'));
+            foreach ($this->get_tags() as $tag) {
+                //truncate the tag before insert it into the database
+                $tag = substr($tag, 0, 128);
+                insert_record('collection_tag', (object)array( 'collection' => $this->get('id'), 'tag' => $tag));
             }
         }
 
@@ -243,6 +257,7 @@ class Collection {
             $data->name = $collectiondata['name'];
         }
         $data->description = $colltemplate->get('description');
+        $data->tags = $colltemplate->get('tags');
         $data->navigation = $colltemplate->get('navigation');
         if (!empty($collectiondata['group'])) {
             $data->group = $collectiondata['group'];
@@ -430,6 +445,13 @@ class Collection {
                 'defaultvalue' => null,
                 'title' => get_string('description', 'collection'),
             ),
+            'tags'        => array(
+                'type'         => 'tags',
+                'title'        => get_string('tags'),
+                'description'  => get_string('tagsdescprofile'),
+                'defaultvalue' => null,
+                'help'         => true,
+            ),
             'navigation' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('viewnavigation','collection'),
@@ -441,7 +463,12 @@ class Collection {
         // populate the fields with the existing values if any
         if (!empty($this->id)) {
             foreach ($elements as $k => $element) {
-                $elements[$k]['defaultvalue'] = $this->$k;
+                if ($k === 'tags') {
+                    $elements[$k]['defaultvalue'] = $this->get_tags();
+                }
+                else {
+                    $elements[$k]['defaultvalue'] = $this->$k;
+                }
             }
             $elements['id'] = array(
                 'type' => 'hidden',
@@ -894,4 +921,17 @@ class Collection {
             )
         );
     }
+
+    /**
+     * Returns the collection tags
+     *
+     * @return mixed
+     */
+    public function get_tags() {
+        if (!isset($this->tags)) {
+            $this->tags = get_column('collection_tag', 'tag', 'collection', $this->get('id'));
+        }
+        return $this->tags;
+    }
+
 }

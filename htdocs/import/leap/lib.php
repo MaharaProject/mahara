@@ -725,6 +725,7 @@ class PluginImportLeap extends PluginImport {
             $collectiondata = array(
                 'name'        => (string)$entry->title,
                 'description' => (string)$entry->summary,
+                'tags'        => self::get_entry_tags($entry),
                 'owner'       => $this->get('usr'),
             );
             if ($published = strtotime((string)$entry->published)) {
