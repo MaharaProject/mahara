@@ -69,6 +69,12 @@ $form = array(
             'cols'         => 70,
             'defaultvalue' => $artefact->get('description'),
         ),
+        'tags' => array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdescprofile'),
+            'defaultvalue' => $artefact->get('tags'),
+        ),
         'license' => license_form_el_basic($artefact),
         'licensing_advanced' => license_form_el_advanced($artefact),
         'allowcomments' => array(
@@ -105,6 +111,7 @@ function editnote_submit(Pieform $form, array $values) {
     global $SESSION, $artefact, $goto;
     $artefact->set('title', $values['title']);
     $artefact->set('description', $values['description']);
+    $artefact->set('tags', $values['tags']);
     $artefact->set('allowcomments', (int) $values['allowcomments']);
     if (isset($values['perms'])) {
         $artefact->set('rolepermissions', $values['perms']);

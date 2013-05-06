@@ -700,7 +700,8 @@ class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 /* Artefact type for generic html fragments */
 class ArtefactTypeHtml extends ArtefactType {
     public static function get_icon($options=null) {
-
+        global $THEME;
+        return $THEME->get_url('images/note.gif', false, 'artefact/internal');
     }
 
     public static function is_singular() {
@@ -708,5 +709,8 @@ class ArtefactTypeHtml extends ArtefactType {
     }
 
     public static function get_links($id) {
+        return array(
+            '_default' => get_config('wwwroot') . 'artefact/internal/editnote.php?id=' . $id,
+        );
     }
 }

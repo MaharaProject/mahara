@@ -140,3 +140,4 @@ $string['editnote'] = 'Edit note';
 $string['confirmdeletenote'] = 'This note is used in %d blocks and %d pages. If you delete it, all the blocks which currently contain the text will appear empty.';
 $string['notedeleted'] = 'Note deleted';
 $string['noteupdated'] = 'Note updated';
+$string['html'] = 'Note';

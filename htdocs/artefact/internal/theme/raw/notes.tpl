@@ -17,6 +17,9 @@
       {else}
         <h4><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h4>
       {/if}
+        {if $n->tags}
+        <div>{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
+        {/if}
         <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
       </td>
       <td>

@@ -41,8 +41,8 @@ function pieform_element_tags(Pieform $form, $element) {
         $value = $element['defaultvalue'];
     }
 
-    if ($form->get_value($element)) {
-        $value = $form->get_value($element);
+    if ($tempvalue = $form->get_value($element)) {
+        $value = $tempvalue;
     }
 
     if (isset($element['value']) && is_array($element['value'])) {

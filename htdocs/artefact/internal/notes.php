@@ -159,6 +159,9 @@ if ($data) {
             if (!isset($data[$b->artefact]->blocks[$b->block])) {
                 $data[$b->artefact]->blocks[$b->block] = $b;
             }
+            if (!isset($data[$b->artefact]->tags)) {
+                $data[$b->artefact]->tags = ArtefactType::artefact_get_tags($b->artefact);
+            }
         }
     }
     foreach ($data as $id => $n) {
@@ -177,7 +180,7 @@ $pagination = build_pagination(array(
 
 $js = '
 $j(function() {
-    $j(".notetitle").click(function(e) {
+    $j("a.notetitle").click(function(e) {
         e.preventDefault();
         $j("#" + this.id + "_desc").toggleClass("hidden");
     });

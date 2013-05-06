@@ -101,7 +101,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'selectjscallback' => 'updateTextContent',
             'getblocks'        => true,
             'ownerinfo'        => true,
-            'returnfields'     => array('id', 'title', 'description', 'license', 'licensor', 'licensorurl', 'safedescription', 'safelicense', 'editable'),
+            'returnfields'     => array('id', 'title', 'description', 'tags', 'license', 'licensor', 'licensorurl', 'safedescription', 'safetags', 'safelicense', 'editable'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
         );
@@ -112,6 +112,8 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         require_once('license.php');
         $artefactobj = artefact_instance_from_id($artefact->id);
         $artefact->safelicense = render_license($artefactobj);
+        $artefact->tags = ArtefactType::artefact_get_tags($artefact->id);
+        $artefact->safetags = is_array($artefact->tags) ? hsc(join(', ', $artefact->tags)) : '';
 
         return $artefact;
     }
@@ -130,6 +132,9 @@ function updateTextContent(a) {
     setNodeAttribute('instconf_licensorurl', 'value', a.licensorurl);
     $('instconf_textreadonly_display').innerHTML = a.safedescription;
     $('instconf_licensereadonly_display').innerHTML = a.safelicense;
+    setNodeAttribute('instconf_tags', 'value', a.tags);
+    $('instconf_textreadonly_display').innerHTML = a.safedescription;
+    $('instconf_tagsreadonly_display').innerHTML = a.safetags;
     $('instconf_makecopy').checked = false;
     if (a.editable == 1) {
         addElementClass('instconf_textreadonly_header', 'hidden');
@@ -137,12 +142,17 @@ function updateTextContent(a) {
         addElementClass('instconf_readonlymsg_container', 'hidden');
         addElementClass('instconf_licensereadonly_header', 'hidden');
         addElementClass('instconf_licensereadonly_container', 'hidden');
+        addElementClass('instconf_tagsreadonly_header', 'hidden');
+        addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
         removeElementClass('instconf_license_header', 'hidden');
         removeElementClass('instconf_license_container', 'hidden');
         removeElementClass('instconf_license_description', 'hidden');
         removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        removeElementClass('instconf_tags_header', 'hidden');
+        removeElementClass('instconf_tags_container', 'hidden');
+        removeElementClass('instconf_tags_description', 'hidden');
         var blockcountmsg = $('instconf_otherblocksmsg_container');
         if (blockcountmsg && $('textbox_blockcount')) {
             var otherblockcount = 0;
@@ -170,11 +180,16 @@ function updateTextContent(a) {
         addElementClass('instconf_license_container', 'hidden');
         addElementClass('instconf_license_description', 'hidden');
         addElementClass('instconf_license_advanced_fieldset', 'hidden');
+        addElementClass('instconf_tags_header', 'hidden');
+        addElementClass('instconf_tags_container', 'hidden');
+        addElementClass('instconf_tags_description', 'hidden');
         removeElementClass('instconf_textreadonly_header', 'hidden');
         removeElementClass('instconf_textreadonly_container', 'hidden');
         removeElementClass('instconf_readonlymsg_container', 'hidden');
         removeElementClass('instconf_licensereadonly_header', 'hidden');
         removeElementClass('instconf_licensereadonly_container', 'hidden');
+        removeElementClass('instconf_tagsreadonly_header', 'hidden');
+        removeElementClass('instconf_tagsreadonly_container', 'hidden');
     }
     if (table = getFirstParentByTagAndClassName($('instconf_text_container'), 'table', 'maharatable')) {
         update_width(getFirstParentByTagAndClassName(table, 'div', 'blockinstance'), getElementDimensions(table).w);
@@ -200,14 +215,20 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
         addElementClass('instconf_otherblocksmsg_container', 'hidden');
         addElementClass('instconf_licensereadonly_header', 'hidden');
         addElementClass('instconf_licensereadonly_container', 'hidden');
+        addElementClass('instconf_tagsreadonly_header', 'hidden');
+        addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
         removeElementClass('instconf_license_header', 'hidden');
         removeElementClass('instconf_license_container', 'hidden');
         removeElementClass('instconf_license_description', 'hidden');
         removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        removeElementClass('instconf_tags_header', 'hidden');
+        removeElementClass('instconf_tags_container', 'hidden');
+        removeElementClass('instconf_tags_description', 'hidden');
     });
 });
+augment_tags_control('instconf_tags');
 removeElementClass('instconf_license', 'hidden');
 removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
 EOF;
@@ -230,6 +251,7 @@ EOF;
         $otherblockcount = 0;
         $readonly = false;
         $text = '';
+        $tags = '';
         $view = $instance->get_view();
 
         if (!empty($configdata['artefactid'])) {
@@ -244,6 +266,7 @@ EOF;
                     || !$USER->can_edit_artefact($artefact);
 
                 $text = $artefact->get('description');
+                $tags = $artefact->get('tags');
 
                 if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefactid)) {
                     $blocks = array_unique($blocks);
@@ -292,12 +315,34 @@ EOF;
                 'defaultvalue' => $text,
                 'rules' => array('maxlength' => 65536),
             ),
+            'tags' => array(
+                'type' => 'tags',
+                'class' => $readonly ? 'hidden' : '',
+                'title' => get_string('tags'),
+                'description' => get_string('tagsdescprofile'),
+                'defaultvalue' => $tags,
+            ),
             'textreadonly' => array(
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+            ),
+            'tags' => array(
+                'type' => 'tags',
+                'class' => $readonly ? 'hidden' : '',
+                'width' => '100%',
+                'title' => get_string('tags'),
+                'description' => get_string('tagsdescprofile'),
+                'defaultvalue' => $tags,
+            ),
+            'tagsreadonly' => array(
+                'type' => 'html',
+                'class' => $readonly ? '' : 'hidden',
+                'width' => '100%',
+                'title' => get_string('tags'),
+                'value' => '<div id="instconf_tagsreadonly_display">' . (is_array($tags) ? hsc(join(', ', $tags)) : '') . '</div>',
             ),
             'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
             'license_advanced' => license_form_el_advanced(isset($artefact) ? $artefact : null),
@@ -364,6 +409,7 @@ EOF;
                 $artefact->set('licensor', $values['licensor']);
                 $artefact->set('licensorurl', $values['licensorurl']);
             }
+            $artefact->set('tags', $values['tags']);
         }
         else {
             $artefact = new ArtefactTypeHtml((int)$values['artefactid']);
@@ -388,6 +434,7 @@ EOF;
                     $artefact->set('licensor', $values['licensor']);
                     $artefact->set('licensorurl', $values['licensorurl']);
                 }
+                $artefact->set('tags', $values['tags']);
             }
         }
 
@@ -438,6 +485,7 @@ EOF;
                 'license' => $configdata['license'],
                 'licensor' => $configdata['licensor'],
                 'licensorurl' => $configdata['licensorurl'],
+                'tags'        => $configdata['tags'],
                 'owner'       => $viewconfig['owner'],
             );
             $artefact = new ArtefactTypeHtml(0, $data);
@@ -472,17 +520,20 @@ EOF;
         $license = '';
         $licensor = '';
         $licensorurl = '';
+        $tags = '';
 
         if (!empty($configdata['artefactid'])) {
             $result['artefactid'] = json_encode(array($configdata['artefactid']));
             $note = $bi->get_artefact_instance($configdata['artefactid']);
             $text = $note->get('description');
+            $tags = $note->get('tags');
             $license = $note->get('license');
             $licensor = $note->get('licensor');
             $licensorurl = $note->get('licensorurl');
         }
 
         $result['text'] = json_encode(array($text));
+        $result['tags'] = json_encode(array($tags));
         $result['license '] = json_encode(array($license));
         $result['licensor'] = json_encode(array($licensor));
         $result['licensorurl'] = json_encode(array($licensorurl));

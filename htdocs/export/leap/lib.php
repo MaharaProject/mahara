@@ -728,11 +728,11 @@ class LeapExportElement {
         $this->smarty->assign('dates', $this->get_dates());
 
         if ($tags = $this->artefact->get('tags')) {
-            $tags = array_map(create_function('$a',
-                'return array(
-                    \'term\' => LeapExportElement::normalise_tag($a),
-                    \'label\' => $a
-                );'), $tags);
+            $tags = array_map(function ($a) {
+                return array(
+                    'term' => LeapExportElement::normalise_tag($a),
+                    'label' => $a
+                );}, $tags);
         }
         if (!$categories = $this->get_categories()) {
             $categories = array();
