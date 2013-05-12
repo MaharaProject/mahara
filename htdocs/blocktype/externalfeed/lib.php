@@ -268,7 +268,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
         $data->content  = serialize($data->content);
         $data->image    = serialize($data->image);
         $data->lastupdate = db_format_timestamp(time());
-        $wheredata = array('url' => $values['url'], 'authuser' => $values['authuser'], 'authpassword' => $values['authpassword']);
+        $wheredata = array('url' => $values['url'], 'authuser' => $values['authuser'], 'authpassword' => $authpassword);
         $id = ensure_record_exists('blocktype_externalfeed_data', $wheredata, $data, 'id', true);
         $values['feedid'] = $id;
         unset($values['url']);
