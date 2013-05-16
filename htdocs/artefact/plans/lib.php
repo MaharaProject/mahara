@@ -54,6 +54,11 @@ class PluginArtefactPlans extends PluginArtefact {
         );
     }
 
+    public static function get_artefact_type_content_types() {
+        return array(
+            'task' => array('text'),
+        );
+    }
 }
 
 class ArtefactTypePlan extends ArtefactType {
@@ -66,7 +71,9 @@ class ArtefactTypePlan extends ArtefactType {
     }
 
     public static function get_links($id) {
-        return array();
+        return array(
+            '_default' => get_config('wwwroot') . 'artefact/plans/plan.php?id=' . $id,
+        );
     }
 
     public function delete() {
@@ -80,6 +87,8 @@ class ArtefactTypePlan extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/plan.gif', false, 'artefact/plans');
     }
 
     public static function is_singular() {
@@ -101,6 +110,11 @@ class ArtefactTypePlan extends ArtefactType {
                                         WHERE owner = ? AND artefacttype = 'plan'
                                         ORDER BY title ASC", array($USER->get('id')), $offset, $limit))
                                         || ($plans = array());
+        foreach ($plans as &$plan) {
+            if (!isset($plan->tags)) {
+                $plan->tags = ArtefactType::artefact_get_tags($plan->id);
+            }
+        }
         $result = array(
             'count'  => count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', 'plan'),
             'data'   => $plans,
@@ -174,6 +188,7 @@ class ArtefactTypePlan extends ArtefactType {
             $artefact->set('licensor', $values['licensor']);
             $artefact->set('licensorurl', $values['licensorurl']);
         }
+        $artefact->set('tags', $values['tags']);
         $artefact->commit();
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));
@@ -233,6 +248,11 @@ class ArtefactTypePlan extends ArtefactType {
                 'resizable' => false,
                 'defaultvalue' => null,
                 'title' => get_string('description', 'artefact.plans'),
+            ),
+            'tags'        => array(
+                'type'        => 'tags',
+                'title'       => get_string('tags'),
+                'description' => get_string('tagsdescprofile'),
             ),
         );
 
@@ -294,6 +314,8 @@ class ArtefactTypePlan extends ArtefactType {
         else {
             $smarty->assign('license', false);
         }
+        $smarty->assign('owner', $this->get('owner'));
+        $smarty->assign('tags', $this->get('tags'));
 
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
     }
@@ -329,10 +351,14 @@ class ArtefactTypeTask extends ArtefactType {
     }
 
     public static function get_links($id) {
-        return array();
+        return array(
+            '_default' => get_config('wwwroot') . 'artefact/plans/edit/task.php?id=' . $id,
+        );
     }
 
     public static function get_icon($options=null) {
+        global $THEME;
+        return $THEME->get_url('images/plantask.gif', false, 'artefact/plans');
     }
 
     public static function is_singular() {
@@ -475,6 +501,11 @@ class ArtefactTypeTask extends ArtefactType {
                 'defaultvalue' => null,
                 'title' => get_string('description', 'artefact.plans'),
             ),
+            'tags'        => array(
+                'type'        => 'tags',
+                'title'       => get_string('tags'),
+                'description' => get_string('tagsdescprofile'),
+            ),
             'completed' => array(
                 'type' => 'checkbox',
                 'defaultvalue' => null,
@@ -538,6 +569,7 @@ class ArtefactTypeTask extends ArtefactType {
             $artefact->set('licensor', $values['licensor']);
             $artefact->set('licensorurl', $values['licensorurl']);
         }
+        $artefact->set('tags', $values['tags']);
         $artefact->commit();
 
         $SESSION->add_ok_msg(get_string('plansavedsuccessfully', 'artefact.plans'));

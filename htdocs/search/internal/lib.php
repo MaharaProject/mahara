@@ -992,7 +992,7 @@ class PluginSearchInternal extends PluginSearch {
                         }
                     }
                     if (!empty($ids['artefact'])) {
-                        if ($artefacttags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($ids['artefact'])) . ')')) {
+                        if ($artefacttags = get_records_select_array('artefact_tag', 'artefact IN (' . join(',', array_keys($ids['artefact'])) . ')', NULL, 'tag')) {
                             foreach ($artefacttags as &$at) {
                                 $data['artefact:' . $at->artefact]->tags[] = $at->tag;
                             }

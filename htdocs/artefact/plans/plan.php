@@ -61,6 +61,8 @@ EOF;
 $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('tasks', $tasks);
 $smarty->assign_by_ref('plan', $id);
+$smarty->assign_by_ref('tags', $plan->get('tags'));
+$smarty->assign_by_ref('owner', $plan->get('owner'));
 $smarty->assign('strnotasksaddone',
     get_string('notasksaddone', 'artefact.plans',
     '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php?id='.$plan->get('id').'">', '</a>'));

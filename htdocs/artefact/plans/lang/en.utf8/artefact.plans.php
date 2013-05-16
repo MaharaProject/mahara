@@ -68,6 +68,7 @@ $string['notasks'] = 'No tasks to display.';
 $string['notasksaddone'] = 'No tasks yet. %sAdd one%s.';
 $string['savetask'] = 'Save task';
 $string['task'] = 'task';
+$string['Task'] = 'Task';
 $string['tasks'] = 'tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
 $string['tasksavedsuccessfully'] = 'Task saved successfully.';

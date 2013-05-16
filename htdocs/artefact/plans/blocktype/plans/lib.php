@@ -74,6 +74,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
 
         $smarty = smarty_core();
         if (isset($configdata['artefactid'])) {
+            $plan = artefact_instance_from_id($configdata['artefactid']);
             $tasks = ArtefactTypeTask::get_tasks($configdata['artefactid']);
             $template = 'artefact:plans:taskrows.tpl';
             $blockid = $instance->get('id');
@@ -97,7 +98,9 @@ class PluginBlocktypePlans extends PluginBlocktype {
                     . '&view=' . $instance->get('view');
                 $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
             }
-            $smarty->assign('tasks',$tasks);
+            $smarty->assign('owner', $plan->get('owner'));
+            $smarty->assign('tags', $plan->get('tags'));
+            $smarty->assign('tasks', $tasks);
         }
         else {
             $smarty->assign('noplans','blocktype.plans/plans');

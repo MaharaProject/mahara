@@ -8,7 +8,9 @@
             </div>
 
             <h3><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{$plan->title}</a></h3>
-
+        {if $plan->tags}
+        <div>{str tag=tags}: {list_tags tags=$plan->tags owner=$plan->owner}</div>
+        {/if}
         <div class="codesc">{$plan->description}</div>
         </td>
     </tr>

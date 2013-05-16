@@ -196,10 +196,7 @@ abstract class ArtefactType {
 
         // load tags
         if ($this->id) {
-            $tags = get_column('artefact_tag', 'tag', 'artefact', $this->id);
-            if (is_array($tags)) {
-                $this->tags = $tags;
-            }
+            $this->tags = ArtefactType::artefact_get_tags($this->id);
         }
 
         // load group permissions
@@ -694,6 +691,8 @@ abstract class ArtefactType {
     public function render_self($options) {
         $smarty = smarty_core();
         $smarty->assign('title', $this->get('title'));
+        $smarty->assign('owner', $this->get('owner'));
+        $smarty->assign('tags', $this->get('tags'));
         $smarty->assign('description', $this->get('description'));
         if (!empty($options['details']) and get_config('licensemetadata')) {
             $smarty->assign('license', render_license($this));
@@ -1182,6 +1181,24 @@ abstract class ArtefactType {
         }
         set_field_select('artefact', 'locked', 0, $select, array($userid));
         db_commit();
+    }
+
+    /**
+     * Return an array of tags associated to an artefact
+     *
+     * @param int  ID of the artefact
+     *
+     * @return array of strings
+     */
+    public static function artefact_get_tags($id) {
+        if (empty($id)) {
+            return array();
+        }
+        $tags = get_column_sql('SELECT tag FROM {artefact_tag} WHERE artefact = ? ORDER BY tag', array($id));
+        if (!$tags) {
+            return array();
+        }
+        return $tags;
     }
 }
 

@@ -3028,7 +3028,12 @@ function build_portfolio_search_html(&$data) {
             $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
             $item->url     = $links['_default'];
             $item->icon    = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
-            $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
+            if ($item->artefacttype == 'task') {
+                $item->typestr = get_string('Task', 'artefact.plans');
+            }
+            else {
+                $item->typestr = get_string($item->artefacttype, 'artefact.' . $artefacttypes[$item->artefacttype]->plugin);
+            }
         }
     }
 
