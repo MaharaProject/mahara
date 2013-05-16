@@ -2,7 +2,7 @@
 
 
 /*
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
          Contributed by Ross Smith (adodb@netebb.com). 
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
@@ -154,7 +154,7 @@ class ADODB_Session {
 	*/
 	/*!
 	*/
-	static function driver($driver = null)
+	static function driver($driver = null) 
 	{
 		static $_driver = 'mysql';
 		static $set = false;
@@ -193,7 +193,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function user($user = null)
+	static function user($user = null) 
 	{
 		static $_user = 'root';
 		static $set = false;
@@ -213,7 +213,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function password($password = null)
+	static function password($password = null) 
 	{
 		static $_password = '';
 		static $set = false;
@@ -233,7 +233,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function database($database = null)
+	static function database($database = null) 
 	{
 		static $_database = '';
 		static $set = false;
@@ -252,7 +252,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function persist($persist = null)
+	static function persist($persist = null) 
 	{
 		static $_persist = true;
 
@@ -265,7 +265,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function lifetime($lifetime = null)
+	static function lifetime($lifetime = null) 
 	{
 		static $_lifetime;
 		static $set = false;
@@ -293,7 +293,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function debug($debug = null)
+	static function debug($debug = null) 
 	{
 		static $_debug = false;
 		static $set = false;
@@ -318,7 +318,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function expireNotify($expire_notify = null)
+	static function expireNotify($expire_notify = null) 
 	{
 		static $_expire_notify;
 		static $set = false;
@@ -338,7 +338,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function table($table = null)
+	static function table($table = null) 
 	{
 		static $_table = 'sessions2';
 		static $set = false;
@@ -358,7 +358,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function optimize($optimize = null)
+	static function optimize($optimize = null) 
 	{
 		static $_optimize = false;
 		static $set = false;
@@ -507,7 +507,7 @@ class ADODB_Session {
 			return;
 		}
 		$rs = $conn->_rs2rs($rs);
-
+		
 		require_once ADODB_SESSION.'/../tohtml.inc.php';
 		rs2html($rs);
 		$rs->MoveFirst();
@@ -537,7 +537,7 @@ class ADODB_Session {
 
 		If $conn already exists, reuse that connection
 	*/
-	static function open($save_path, $session_name, $persist = null)
+	static function open($save_path, $session_name, $persist = null) 
 	{
 		$conn = ADODB_Session::_conn();
 
@@ -594,7 +594,7 @@ class ADODB_Session {
 	/*!
 		Close the connection
 	*/
-	static function close()
+	static function close() 
 	{
 /*
 		$conn = ADODB_Session::_conn();
@@ -606,7 +606,7 @@ class ADODB_Session {
 	/*
 		Slurp in the session variables and return the serialized string
 	*/
-	static function read($key)
+	static function read($key) 
 	{
 		$conn	= ADODB_Session::_conn();
 		$filter	= ADODB_Session::filter();
@@ -620,7 +620,10 @@ class ADODB_Session {
 
 		$binary = $conn->dataProvider === 'mysql' ? '/*! BINARY */' : '';
 	
-		$sql = "SELECT sessdata FROM $table WHERE sesskey = $binary ".$conn->Param(0)." AND expiry >= " . $conn->sysTimeStamp;
+		global $ADODB_SESSION_SELECT_FIELDS;
+		if (!isset($ADODB_SESSION_SELECT_FIELDS)) $ADODB_SESSION_SELECT_FIELDS = 'sessdata';		
+		$sql = "SELECT $ADODB_SESSION_SELECT_FIELDS FROM $table WHERE sesskey = $binary ".$conn->Param(0)." AND expiry >= " . $conn->sysTimeStamp;		
+		
 		/* Lock code does not work as it needs to hold transaction within whole page, and we don't know if 
 		  developer has commited elsewhere... :(
 		 */
@@ -657,7 +660,7 @@ class ADODB_Session {
 
 		If the data has not been modified since the last read(), we do not write.
 	*/
-	static function write($key, $oval)
+	static function write($key, $oval) 
 	{
 	global $ADODB_SESSION_READONLY;
 	
@@ -687,7 +690,7 @@ class ADODB_Session {
 
 		// crc32 optimization since adodb 2.1
 		// now we only update expiry date, thx to sebastian thom in adodb 2.32
-		if ($crc !== false && $crc == (strlen($oval) . crc32($oval))) {
+		if ($crc !== '00' && $crc !== false && $crc == (strlen($oval) . crc32($oval))) {
 			if ($debug) {
 				echo '<p>Session: Only updating date - crc32 not changed</p>';
 			}
@@ -727,7 +730,7 @@ class ADODB_Session {
 			if ($rs) $rs->Close();
 					
 			if ($rs && reset($rs->fields) > 0) {
-				$sql = "UPDATE $table SET expiry=$expiry, sessdata=".$conn->Param(0).", expireref= ".$conn->Param(1).",modified=$sysTimeStamp WHERE sesskey = ".$conn->Param('2');
+				$sql = "UPDATE $table SET expiry=$expiry, sessdata=".$conn->Param(0).", expireref= ".$conn->Param(1).",modified=$sysTimeStamp WHERE sesskey = ".$conn->Param(2);
 				
 			} else {
 				$sql = "INSERT INTO $table (expiry, sessdata, expireref, sesskey, created, modified) 
@@ -846,7 +849,7 @@ class ADODB_Session {
 
 	/*!
 	*/
-	static function gc($maxlifetime)
+	static function gc($maxlifetime) 
 	{
 		$conn			= ADODB_Session::_conn();
 		$debug			= ADODB_Session::debug();
@@ -866,7 +869,7 @@ class ADODB_Session {
 		} else {
 			$COMMITNUM = 20;
 		}
-
+		
 		//assert('$table');
 
 		$time = $conn->OffsetDate(-$maxlifetime/24/3600,$conn->sysTimeStamp);
@@ -882,8 +885,8 @@ class ADODB_Session {
 		$savem = $conn->SetFetchMode(ADODB_FETCH_NUM);
 		$sql = "SELECT expireref, sesskey FROM $table WHERE expiry < $time ORDER BY 2"; # add order by to prevent deadlock
 		$rs = $conn->SelectLimit($sql,1000);
-		ADODB_Session::_dumprs($rs);
-		if ($debug) $conn->SetFetchMode($savem);
+		if ($debug) ADODB_Session::_dumprs($rs);
+		$conn->SetFetchMode($savem);
 		if ($rs) {
 			$tr = $conn->hasTransactions;
 			if ($tr) $conn->BeginTrans();
@@ -903,10 +906,10 @@ class ADODB_Session {
 				}
 			}
 			$rs->Close();
-
+			
 			if ($tr) $conn->CommitTrans();
 		}
-
+		
 
 		// suggested by Cameron, "GaM3R" <gamr@outworld.cx>
 		if ($optimize) {

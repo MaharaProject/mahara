@@ -1,6 +1,6 @@
 <?php
 /* 
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -204,7 +204,7 @@ class ADODB_ado extends ADOConnection {
 
 	
 	/* returns queryID or false */
-	function _query($sql,$inputarr=false)
+	function _query($sql,$inputarr=false) 
 	{
 		
 		$dbc = $this->_connectionID;
@@ -238,9 +238,9 @@ class ADODB_ado extends ADOConnection {
 					$len=1;
 				else
 					$this->adoParameterType = 130;
-
+				
 				// name, type, direction 1 = input, len,
-			$p = $oCmd->CreateParameter('name',$this->adoParameterType,1,$len,$val);
+        		$p = $oCmd->CreateParameter('name',$this->adoParameterType,1,$len,$val);
 
 				$oCmd->Parameters->Append($p);
 			}
@@ -610,7 +610,7 @@ class ADORecordSet_ado extends ADORecordSet {
 					else $val = 0;
 				}
 				if(is_null($f->value)) $val = null;
-
+				
 				$this->fields[] = $val;
 				break;
 			default:

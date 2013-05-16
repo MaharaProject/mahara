@@ -1,6 +1,6 @@
 <?php
 /* 
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -101,7 +101,7 @@ class ADODB_pdo extends ADOConnection {
 		$this->random = $d->random;
 		$this->concat_operator = $d->concat_operator;
 		$this->nameQuote = $d->nameQuote;
-
+				
 		$this->hasGenID = $d->hasGenID;
 		$this->_genIDSQL = $d->_genIDSQL;
 		$this->_genSeqSQL = $d->_genSeqSQL;
@@ -175,15 +175,15 @@ class ADODB_pdo extends ADOConnection {
 		return false;
 	}
 	
-	function Concat()
+	function Concat() 
 	{
 		$args = func_get_args();
-		if(method_exists($this->_driver, 'Concat'))
-			return call_user_func_array(array($this->_driver, 'Concat'), $args);
-
-		return call_user_func_array(array($this,'parent::Concat'), $args);
+		if(method_exists($this->_driver, 'Concat')) 
+			return call_user_func_array(array($this->_driver, 'Concat'), $args); 
+		
+		return call_user_func_array(array($this,'parent::Concat'), $args); 
 	}
-
+	
 	// returns true or false
 	function _pconnect($argDSN, $argUsername, $argPassword, $argDatabasename)
 	{
@@ -227,7 +227,7 @@ class ADODB_pdo extends ADOConnection {
 	}
 	
 	function OffsetDate($dayFraction,$date=false)
-    {
+    {   
         return $this->_driver->OffsetDate($dayFraction,$date);
     }
 	
@@ -241,7 +241,7 @@ class ADODB_pdo extends ADOConnection {
 		
 		if ($arr) {
 		 	if (sizeof($arr)<2) return '';
-			if ((integer)$arr[1]) return $arr[2];
+			if ((integer)$arr[0]) return $arr[2];
 			else return '';
 		} else return '-1';
 	}
@@ -262,19 +262,19 @@ class ADODB_pdo extends ADOConnection {
 		return $err;
 	}
 
-	function SetTransactionMode($transaction_mode)
+	function SetTransactionMode($transaction_mode) 
 	{
-		if(method_exists($this->_driver, 'SetTransactionMode'))
-			return $this->_driver->SetTransactionMode($transaction_mode);
-
-		return parent::SetTransactionMode($seqname);
+		if(method_exists($this->_driver, 'SetTransactionMode')) 
+			return $this->_driver->SetTransactionMode($transaction_mode); 
+		
+		return parent::SetTransactionMode($seqname); 
 	}
 
 	function BeginTrans()
 	{	
-		if(method_exists($this->_driver, 'BeginTrans'))
-			return $this->_driver->BeginTrans();
-
+		if(method_exists($this->_driver, 'BeginTrans')) 
+			return $this->_driver->BeginTrans(); 
+		
 		if (!$this->hasTransactions) return false;
 		if ($this->transOff) return true; 
 		$this->transCnt += 1;
@@ -285,9 +285,9 @@ class ADODB_pdo extends ADOConnection {
 	
 	function CommitTrans($ok=true) 
 	{ 
-		if(method_exists($this->_driver, 'CommitTrans'))
-			return $this->_driver->CommitTrans($ok);
-
+		if(method_exists($this->_driver, 'CommitTrans')) 
+			return $this->_driver->CommitTrans($ok); 
+		
 		if (!$this->hasTransactions) return false;
 		if ($this->transOff) return true; 
 		if (!$ok) return $this->RollbackTrans();
@@ -301,9 +301,9 @@ class ADODB_pdo extends ADOConnection {
 	
 	function RollbackTrans()
 	{
-		if(method_exists($this->_driver, 'RollbackTrans'))
-			return $this->_driver->RollbackTrans();
-
+		if(method_exists($this->_driver, 'RollbackTrans')) 
+			return $this->_driver->RollbackTrans(); 
+		
 		if (!$this->hasTransactions) return false;
 		if ($this->transOff) return true; 
 		if ($this->transCnt) $this->transCnt -= 1;
@@ -332,26 +332,26 @@ class ADODB_pdo extends ADOConnection {
 	
 	function CreateSequence($seqname='adodbseq',$startID=1)
 	{
-		if(method_exists($this->_driver, 'CreateSequence'))
-			return $this->_driver->CreateSequence($seqname, $startID);
-
-		return parent::CreateSequence($seqname, $startID);
+		if(method_exists($this->_driver, 'CreateSequence')) 
+			return $this->_driver->CreateSequence($seqname, $startID); 
+		
+		return parent::CreateSequence($seqname, $startID); 
 	}
-
+	
 	function DropSequence($seqname='adodbseq')
 	{
-		if(method_exists($this->_driver, 'DropSequence'))
-			return $this->_driver->DropSequence($seqname);
-
-		return parent::DropSequence($seqname);
+		if(method_exists($this->_driver, 'DropSequence')) 
+			return $this->_driver->DropSequence($seqname); 
+		
+		return parent::DropSequence($seqname); 
 	}
 
 	function GenID($seqname='adodbseq',$startID=1)
 	{
-		if(method_exists($this->_driver, 'GenID'))
-			return $this->_driver->GenID($seqname, $startID);
-
-		return parent::GenID($seqname, $startID);
+		if(method_exists($this->_driver, 'GenID')) 
+			return $this->_driver->GenID($seqname, $startID); 
+		
+		return parent::GenID($seqname, $startID); 
 	}
 
 	
@@ -417,30 +417,30 @@ class ADODB_pdo_base extends ADODB_pdo {
 
 	var $sysDate = "'?'";
 	var $sysTimeStamp = "'?'";
-
+	
 
 	function _init($parentDriver)
 	{
 		$parentDriver->_bindInputArray = true;
 		#$parentDriver->_connectionID->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY,true);
 	}
-
+	
 	function ServerInfo()
 	{
 		return ADOConnection::ServerInfo();
 	}
-
+	
 	function SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0)
 	{
 		$ret = ADOConnection::SelectLimit($sql,$nrows,$offset,$inputarr,$secs2cache);
 		return $ret;
 	}
-
+	
 	function MetaTables()
 	{
 		return false;
 	}
-
+	
 	function MetaColumns()
 	{
 		return false;
@@ -563,7 +563,7 @@ class ADORecordSet_pdo extends ADORecordSet {
 	}
 
 	// returns the field object
-	function FetchField($fieldOffset = -1)
+	function FetchField($fieldOffset = -1) 
 	{
 		$off=$fieldOffset+1; // offsets begin at 1
 		

@@ -1,6 +1,6 @@
 <?php
 /*
-  V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+  V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
  
   First cut at the Netezza Driver by Josh Eldridge joshuae74#hotmail.com
  Based on the previous postgres drivers.
@@ -53,7 +53,7 @@ class ADODB_netezza extends ADODB_postgres64 {
 	
 	}
 	
-	function MetaColumns($table,$upper=true)
+	function MetaColumns($table,$upper=true) 
 	{
 	
 	// Changed this function to support Netezza which has no concept of keys

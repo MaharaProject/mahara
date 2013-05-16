@@ -1,6 +1,6 @@
 <?php
 /*
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -23,7 +23,7 @@ class ADODB_mysql extends ADOConnection {
 	var $dataProvider = 'mysql';
 	var $hasInsertID = true;
 	var $hasAffectedRows = true;	
-	var $metaTablesSQL = "SHOW TABLES";	
+	var $metaTablesSQL = "SELECT TABLE_NAME, CASE WHEN TABLE_TYPE = 'VIEW' THEN 'V' ELSE 'T' END FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA()";
 	var $metaColumnsSQL = "SHOW COLUMNS FROM `%s`";
 	var $fmtTimeStamp = "'Y-m-d H:i:s'";
 	var $hasLimit = true;
@@ -36,6 +36,7 @@ class ADODB_mysql extends ADOConnection {
 	var $forceNewConnect = false;
 	var $poorAffectedRows = true;
 	var $clientFlags = 0;
+	var $charSet = '';
 	var $substr = "substring";
 	var $nameQuote = '`';		/// string to use to quote identifiers and names
 	var $compat323 = false; 		// true if compat with mysql 3.23
@@ -44,7 +45,25 @@ class ADODB_mysql extends ADOConnection {
 	{			
 		if (defined('ADODB_EXTENSION')) $this->rsPrefix .= 'ext_';
 	}
-	
+
+
+  // SetCharSet - switch the client encoding
+  function SetCharSet($charset_name)
+  {
+    if (!function_exists('mysql_set_charset'))
+    	return false;
+
+	if ($this->charSet !== $charset_name) {
+      $ok = @mysql_set_charset($charset_name,$this->_connectionID);
+      if ($ok) {
+		$this->charSet = $charset_name;
+        return true;
+      }
+	  return false;
+    }
+	return true;
+  }
+  
 	function ServerInfo()
 	{
 		$arr['description'] = ADOConnection::GetOne("select version()");
@@ -57,8 +76,67 @@ class ADODB_mysql extends ADOConnection {
 		return " IFNULL($field, $ifNull) "; // if MySQL
 	}
 	
+    function MetaProcedures($NamePattern = false, $catalog  = null, $schemaPattern  = null)
+    {
+        // save old fetch mode
+        global $ADODB_FETCH_MODE;
+
+        $false = false;
+        $save = $ADODB_FETCH_MODE;
+        $ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+
+        if ($this->fetchMode !== FALSE) {
+               $savem = $this->SetFetchMode(FALSE);
+        }
+
+        $procedures = array ();
+
+        // get index details
+
+        $likepattern = '';
+        if ($NamePattern) {
+           $likepattern = " LIKE '".$NamePattern."'";
+        }
+        $rs = $this->Execute('SHOW PROCEDURE STATUS'.$likepattern);
+        if (is_object($rs)) {
+
+	    // parse index data into array
+	    while ($row = $rs->FetchRow()) {
+		    $procedures[$row[1]] = array(
+				    'type' => 'PROCEDURE',
+				    'catalog' => '',
+
+				    'schema' => '',
+				    'remarks' => $row[7],
+			    );
+	    }
+	}
+
+        $rs = $this->Execute('SHOW FUNCTION STATUS'.$likepattern);
+        if (is_object($rs)) {
+            // parse index data into array
+            while ($row = $rs->FetchRow()) {
+                $procedures[$row[1]] = array(
+                        'type' => 'FUNCTION',
+                        'catalog' => '',
+                        'schema' => '',
+                        'remarks' => $row[7]
+                    );
+            }
+	    }
+
+        // restore fetchmode
+        if (isset($savem)) {
+                $this->SetFetchMode($savem);
+
+        }
+        $ADODB_FETCH_MODE = $save;
+
+
+        return $procedures;
+    }
 	
-	function MetaTables($ttype=false,$showSchema=false,$mask=false)
+	function MetaTables($ttype=false,$showSchema=false,$mask=false) 
 	{	
 		$save = $this->metaTablesSQL;
 		if ($showSchema && is_string($showSchema)) {
@@ -182,7 +260,7 @@ class ADODB_mysql extends ADOConnection {
 			return mysql_affected_rows($this->_connectionID);
 	}
   
-	 // See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
+ 	 // See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
 	// Reference on Last_Insert_ID on the recommended way to simulate sequences
  	var $_genIDSQL = "update %s set id=LAST_INSERT_ID(id+1);";
 	var $_genSeqSQL = "create table %s (id int not null)";
@@ -230,7 +308,7 @@ class ADODB_mysql extends ADOConnection {
 		return $this->genID;
 	}
 	
-	function MetaDatabases()
+  	function MetaDatabases()
 	{
 		$qid = mysql_list_dbs($this->_connectionID);
 		$arr = array();
@@ -395,7 +473,7 @@ class ADODB_mysql extends ADOConnection {
 		return $this->_connect($argHostname, $argUsername, $argPassword, $argDatabasename);
 	}
 	
-	function MetaColumns($table, $normalize=true)
+ 	function MetaColumns($table, $normalize=true) 
 	{
 		$this->_findschema($table,$schema);
 		if ($schema) {
@@ -530,6 +608,8 @@ class ADODB_mysql extends ADOConnection {
 	function _close()
 	{
 		@mysql_close($this->_connectionID);
+		
+		$this->charSet = '';
 		$this->_connectionID = false;
 	}
 
@@ -561,7 +641,7 @@ class ADODB_mysql extends ADOConnection {
          }
          $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
 		 if ($associative) {
-			$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
+		 	$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
          } else $create_sql  = $a_create_table[1];
 
          $matches = array();
@@ -635,7 +715,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 		$this->_numOfFields = @mysql_num_fields($this->_queryID);
 	}
 	
-	function FetchField($fieldOffset = -1)
+	function FetchField($fieldOffset = -1) 
 	{	
 		if ($fieldOffset != -1) {
 			$o = @mysql_fetch_field($this->_queryID, $fieldOffset);
@@ -644,10 +724,10 @@ class ADORecordSet_mysql extends ADORecordSet{
 			//$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
 			if ($o) $o->binary = (strpos($f,'binary')!== false);
 		}
-		else if ($fieldOffset == -1) {	/*	The $fieldOffset argument is not provided thus its -1 	*/
+		else  {	/*	The $fieldOffset argument is not provided thus its -1 	*/
 			$o = @mysql_fetch_field($this->_queryID);
-			if ($o) $o->max_length = @mysql_field_len($this->_queryID); // suggested by: Jim Nicholson (jnich#att.com)
-		//$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
+			//if ($o) $o->max_length = @mysql_field_len($this->_queryID); // suggested by: Jim Nicholson (jnich#att.com)
+			$o->max_length = -1; // mysql returns the max length less spaces -- so it is unrealiable
 		}
 			
 		return $o;

@@ -1,6 +1,6 @@
 <?php
 /* 
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012   (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -74,7 +74,7 @@ function adodb_log_sql(&$connx,$sql,$inputarr)
 
 	if (!empty($connx->_logsql) && (empty($connx->_logsqlErrors) || !$rs)) {
 	global $ADODB_LOG_CONN;
-
+	
 		if (!empty($ADODB_LOG_CONN)) {
 			$conn = $ADODB_LOG_CONN;
 			if ($conn->databaseType != $connx->databaseType)
@@ -85,7 +85,7 @@ function adodb_log_sql(&$connx,$sql,$inputarr)
 			$conn = $connx;
 			$prefix = '';
 		}
-
+		
 		$conn->_logsql = false; // disable logsql error simulation
 		$dbT = $conn->databaseType;
 		
@@ -161,13 +161,13 @@ function adodb_log_sql(&$connx,$sql,$inputarr)
 			if ($dbT == 'db2') $arr['f'] = (float) $arr['f'];
 			$isql = "insert into $perf_table (created,sql0,sql1,params,tracer,timer) values( $d,?,?,?,?,?)";
 		}
-
+		
 		global $ADODB_PERF_MIN;
 		if ($errN != 0 || $time >= $ADODB_PERF_MIN) {
 			$ok = $conn->Execute($isql,$arr);
 		} else
 			$ok = true;
-
+		
 		$conn->debug = $saved;
 		
 		if ($ok) {
@@ -266,17 +266,17 @@ processes 69293
 			
 			static $FAIL = false;
 			if ($FAIL) return false;
-
-			$objName = "winmgmts:{impersonationLevel=impersonate}!\\\\.\\root\\CIMV2";
+			
+			$objName = "winmgmts:{impersonationLevel=impersonate}!\\\\.\\root\\CIMV2";	
 			$myQuery = "SELECT * FROM Win32_PerfFormattedData_PerfOS_Processor WHERE Name = '_Total'";
-
+			
 			try {
 				@$objWMIService = new COM($objName);
 				if (!$objWMIService) {
 					$FAIL = true;
 					return false;
 				}
-
+		
 				$info[0] = -1;
 				$info[1] = 0;
 				$info[2] = 0;
@@ -284,7 +284,7 @@ processes 69293
 				foreach($objWMIService->ExecQuery($myQuery) as $objItem)  {
 						$info[0] = $objItem->PercentProcessorTime();
 				}
-
+			
 			} catch(Exception $e) {
 				$FAIL = true;
 				echo $e->getMessage();
@@ -362,17 +362,17 @@ Committed_AS:   348732 kB
 				$this->_lastLoad = $info;
 				$info = $this->_CPULoad();
 			}
-
+			
 			$last = $this->_lastLoad;
 			$this->_lastLoad = $info;
-
+			
 			$d_user = $info[0] - $last[0];
 			$d_nice = $info[1] - $last[1];
 			$d_system = $info[2] - $last[2];
 			$d_idle = $info[3] - $last[3];
-
+			
 			//printf("Delta - User: %f  Nice: %f  System: %f  Idle: %f<br>",$d_user,$d_nice,$d_system,$d_idle);
-
+		
 			$total=$d_user+$d_nice+$d_system+$d_idle;
 			if ($total<1) $total=1;
 			return 100*($d_user+$d_nice+$d_system)/$total; 
@@ -734,7 +734,7 @@ Committed_AS:   348732 kB
 				echo "<p>&nbsp; <a href=\"?do=viewsql&clearsql=1\">Clear SQL Log</a><br>";
 			echo $this->HealthCheck();
 			//$this->conn->debug=1;
-			echo $this->CheckMemory();
+			echo $this->CheckMemory();		
 			break;
 		case 'poll':
 			$self = htmlspecialchars($_SERVER['PHP_SELF']);

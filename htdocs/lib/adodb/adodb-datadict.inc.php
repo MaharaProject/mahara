@@ -1,7 +1,7 @@
 <?php
 
 /**
-  V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+  V5.18 3 Sep 2012   (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -216,7 +216,7 @@ class ADODB_DataDict {
 	}
 	
 	function MetaType($t,$len=-1,$fieldobj=false)
-	{
+	{		
 		static $typeMap = array(
 		'VARCHAR' => 'C',
 		'VARCHAR2' => 'C',
@@ -263,7 +263,7 @@ class ADODB_DataDict {
 		'TIMESTAMP WITHOUT TIME ZONE' => 'T', // postgresql
 		##
 		'BOOL' => 'L',
-		'BOOLEAN' => 'L',
+		'BOOLEAN' => 'L', 
 		'BIT' => 'L',
 		'L' => 'L',
 		##
@@ -296,21 +296,21 @@ class ADODB_DataDict {
 		'NUM' => 'N',
 		'NUMERIC' => 'N',
 		'MONEY' => 'N',
-
+		
 		## informix 9.2
-		'SQLINT' => 'I',
-		'SQLSERIAL' => 'I',
-		'SQLSMINT' => 'I',
-		'SQLSMFLOAT' => 'N',
-		'SQLFLOAT' => 'N',
-		'SQLMONEY' => 'N',
-		'SQLDECIMAL' => 'N',
-		'SQLDATE' => 'D',
-		'SQLVCHAR' => 'C',
-		'SQLCHAR' => 'C',
-		'SQLDTIME' => 'T',
-		'SQLINTERVAL' => 'N',
-		'SQLBYTES' => 'B',
+		'SQLINT' => 'I', 
+		'SQLSERIAL' => 'I', 
+		'SQLSMINT' => 'I', 
+		'SQLSMFLOAT' => 'N', 
+		'SQLFLOAT' => 'N', 
+		'SQLMONEY' => 'N', 
+		'SQLDECIMAL' => 'N', 
+		'SQLDATE' => 'D', 
+		'SQLVCHAR' => 'C', 
+		'SQLCHAR' => 'C', 
+		'SQLDTIME' => 'T', 
+		'SQLINTERVAL' => 'N', 
+		'SQLBYTES' => 'B', 
 		'SQLTEXT' => 'X',
 		 ## informix 10
 		"SQLINT8" => 'I8',
@@ -320,7 +320,7 @@ class ADODB_DataDict {
 		"SQLLVARCHAR" => 'X',
 		"SQLBOOL" => 'L'
 		);
-
+		
 		if (!$this->connection->IsConnected()) {
 			$t = strtoupper($t);
 			if (isset($typeMap[$t])) return $typeMap[$t];
@@ -576,7 +576,7 @@ class ADODB_DataDict {
         // we avoid passing REPLACE to trigger creation code. This prevents
         // creating sql that double-drops the sequence
         if ($this->autoIncrement && isset($taboptions['REPLACE']))
-		unset($taboptions['REPLACE']);
+        	unset($taboptions['REPLACE']);
 		$tsql = $this->_Triggers($tabname,$taboptions);
 		foreach($tsql as $s) $sql[] = $s;
 		
@@ -589,8 +589,8 @@ class ADODB_DataDict {
 
 		return $sql;
 	}
-
-
+		
+	
 	
 	function _GenFields($flds,$widespacing=false)
 	{
@@ -642,7 +642,7 @@ class ADODB_DataDict {
 		$idxs = array();
 		foreach($flds as $fld) {
 			$fld = _array_change_key_case($fld);
-
+			
 			$fname = false;
 			$fdefault = false;
 			$fautoinc = false;
@@ -785,12 +785,12 @@ class ADODB_DataDict {
 			
 			// add index creation
 			if ($widespacing) $fname = str_pad($fname,24);
-
+			
 			 // check for field names appearing twice
             if (array_key_exists($fid, $lines)) {
-		 ADOConnection::outp("Field '$fname' defined twice");
+            	 ADOConnection::outp("Field '$fname' defined twice");
             }
-
+			
 			$lines[$fid] = $fname.' '.$ftype.$suffix;
 			
 			if ($fautoinc) $this->autoIncrement = true;
@@ -915,7 +915,7 @@ class ADODB_DataDict {
 		return $newopts;
 	}
 	
-
+	
 	function _getSizePrec($size)
 	{
 		$fsize = false;
@@ -929,7 +929,7 @@ class ADODB_DataDict {
 		}
 		return array($fsize, $fprec);
 	}
-
+	
 	/**
 	"Florian Buzin [ easywe ]" <florian.buzin#easywe.de>
 	
@@ -969,16 +969,16 @@ class ADODB_DataDict {
 					$obj = $cols[$k];
 					if (isset($obj->not_null) && $obj->not_null)
 						$v = str_replace('NOT NULL','',$v);
-					if (isset($obj->auto_increment) && $obj->auto_increment && empty($v['AUTOINCREMENT']))
+					if (isset($obj->auto_increment) && $obj->auto_increment && empty($v['AUTOINCREMENT'])) 
 					    $v = str_replace('AUTOINCREMENT','',$v);
-
+					
 					$c = $cols[$k];
 					$ml = $c->max_length;
 					$mt = $this->MetaType($c->type,$ml);
-
+					
 					if (isset($c->scale)) $sc = $c->scale;
 					else $sc = 99; // always force change if scale not known.
-
+					
 					if ($sc == -1) $sc = false;
 					list($fsize, $fprec) = $this->_getSizePrec($v['SIZE']);
 
@@ -1013,8 +1013,8 @@ class ADODB_DataDict {
 				 && (isset($flds[0][2]) && is_numeric($flds[0][2]))) {
 					if ($this->debug) ADOConnection::outp(sprintf("<h3>%s cannot be changed to %s currently</h3>", $flds[0][0], $flds[0][1]));
 					#echo "<h3>$this->alterCol cannot be changed to $flds currently</h3>";
-					continue;
-				}
+					continue;	 
+	 			}
 				$sql[] = $alter . $this->alterCol . ' ' . $v;
 			} else {
 				$sql[] = $alter . $this->addCol . ' ' . $v;
@@ -1023,7 +1023,7 @@ class ADODB_DataDict {
 		
 		if ($dropOldFlds) {
 			foreach ( $cols as $id => $v )
-			    if ( !isset($lines[$id]) )
+			    if ( !isset($lines[$id]) ) 
 					$sql[] = $alter . $this->dropCol . ' ' . $v->name;
 		}
 		return $sql;

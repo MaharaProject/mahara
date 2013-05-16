@@ -2,13 +2,12 @@ adodb
 -----
 
 Source: http://adodb.sourceforge.net/
-Version: 5.11
+Version: 5.18
 
 Modifications:
 
-- drivers/adodb-mysql.inc.php (24465d23e2ccb3a89629e250a3caab1ee051e90d)
-- drivers/adodb-postgres7.inc.php (af59ab96086a319785ed682420d22dbfcbacb9bc)
-- adodb/drivers/adodb-postgres64.inc.php (d6d8884fabc598aec58e633a6a1e258cd07b3da1)
-- Add check for valid columns in MetaIndexes function of
-  adodb/drivers/adodb-postgres64.inc.php (see bug #796102)
-- adodb/adodb.inc.php add wakeup suppport (see bug #841711)
+- fix MySQL bug on installing Mahara (e7029e5fc1fd3329a3a817f26b2ad5c3f61239cf)
+- RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
+- check for Postgres 8.1 (c6dfccadfae432147fff99fa15b0985dcae7e503)
+- Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
+- add __wakeup to connection object (417077459037550239fe9b09bd20b50d4c19b57f)
