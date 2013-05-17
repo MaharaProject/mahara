@@ -252,7 +252,7 @@ class Session {
 
     /**
      * Escape a message for HTML output
-     * 
+     *
      * @param string $message The message to escape
      * @return string         The message, escaped for output as HTML
      */
@@ -279,7 +279,7 @@ function insert_messages() {
  * Delete all sessions belonging to a given user except for the current one
  */
 function remove_user_sessions($userid) {
-    global $sessionpath, $USER;
+    global $sessionpath, $USER, $SESSION;
 
     $sessionids = get_column('usr_session', 'session', 'usr', (int) $userid);
 
@@ -289,7 +289,16 @@ function remove_user_sessions($userid) {
 
     $alive = array();
     $dead = array();
-    $sid = $USER->get('sessionid');
+
+    // Keep track of the current session id so we can return to it at the end
+    if ($SESSION->is_live()) {
+        $sid = $USER->get('sessionid');
+    }
+    else {
+        // The user has no session (this function is being called by a CLI script)
+        $sid = false;
+    }
+
     foreach ($sessionids as $sessionid) {
         if ($sessionid == $sid) {
             continue;
@@ -325,8 +334,10 @@ function remove_user_sessions($userid) {
         }
     }
 
-    session_id($sid);
-    session_start();
+    if ($sid !== false) {
+        session_id($sid);
+        session_start();
+    }
 
     delete_records_select('usr_session', 'session IN (' . join(',', array_map('db_quote', $alive)) . ')');
 }
