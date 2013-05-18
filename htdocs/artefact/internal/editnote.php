@@ -52,7 +52,10 @@ else {
 }
 
 $form = array(
-    'name' => 'editnote',
+    'name'       => 'editnote',
+    'method'     => 'post',
+    'plugintype' => 'artefact',
+    'pluginname' => 'internal',
     'elements' => array(
         'title' => array(
             'type'         => 'text',
