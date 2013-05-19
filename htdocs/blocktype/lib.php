@@ -1150,6 +1150,7 @@ class BlockInstance {
             }
         }
         foreach ($blocklist as $blockid => $blockdata) {
+            $change = false;
             if (isset($blockdata->configdata['artefactid'])) {
                 if ($change = $blockdata->configdata['artefactid'] == $blockdata->artefacts[0]) {
                     $blockdata->configdata['artefactid'] = null;
