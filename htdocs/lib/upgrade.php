@@ -67,9 +67,19 @@ function check_upgrades($name=null) {
         }
         if (empty($coreversion)) {
             if (is_mysql()) { // Show a more informative error message if using mysql with skip-innodb
+                // In MySQL 5.6.x, we run the command 'SHOW ENGINES' to check if InnoDB is enabled or not
                 global $db;
-                $result = $db->Execute("SHOW VARIABLES LIKE 'have_innodb'");
-                if ($result->fields['Value'] != 'YES') {
+                $result = $db->Execute("SHOW ENGINES");
+                $hasinnodb = false;
+                while (!$result->EOF) {
+                    if ($result->fields['Engine'] == 'InnoDB' && ($result->fields['Support'] == 'YES' || $result->fields['Support'] == 'DEFAULT')) {
+                        $hasinnodb = true;
+                        break;
+                    }
+                    $result->MoveNext();
+                }
+
+                if (!$hasinnodb) {
                     throw new ConfigSanityException("Mahara requires InnoDB tables.  Please ensure InnoDB tables are enabled in your MySQL server.");
                 }
             }
