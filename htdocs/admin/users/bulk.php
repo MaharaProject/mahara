@@ -195,7 +195,7 @@ function changeauth_validate(Pieform $form, $values) {
 }
 
 function changeauth_submit(Pieform $form, $values) {
-    global $users, $SESSION, $authinstances;
+    global $users, $SESSION, $authinstances, $USER;
 
     $newauth = AuthFactory::create($values['authinstance']);
     $needspassword = method_exists($newauth, 'change_password');
@@ -205,19 +205,44 @@ function changeauth_submit(Pieform $form, $values) {
 
     db_begin();
 
-    foreach ($users as $user) {
-        if ($user->authinstance != $values['authinstance']) {
+    $newauthinst = get_records_select_assoc('auth_instance', 'id = ?', array($values['authinstance']));
+    if ($USER->get('admin') || $USER->is_institutional_admin($newauthinst[$values['authinstance']]->institution)) {
+        foreach ($users as $user) {
+            if ($user->authinstance != $values['authinstance']) {
+                // Authinstance can be changed by institutional admins if both the
+                // old and new authinstances belong to the admin's institutions
+                $authinst = get_records_select_assoc('auth_instance', 'id = ?',
+                                                     array($user->authinstance));
+                if ($USER->get('admin') || $USER->is_institutional_admin($authinst[$user->authinstance]->institution)) {
+                    // determine the current remoteusername
+                    $current_remotename = get_field('auth_remote_user', 'remoteusername',
+                                                    'authinstance', $user->authinstance, 'localusr', $user->id);
+                    if (!$current_remotename) {
+                        $current_remotename = $user->username;
+                    }
+                    // remove row if new authinstance row already exists to avoid doubleups
+                    if ($remoteuserexists = get_records_select_assoc('auth_remote_user', 'localusr = ? AND authinstance = ?',
+                                                                     array($user->id, $values['authinstance']))) {
+                        delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
+                    }
+                    insert_record('auth_remote_user', (object) array(
+                        'authinstance'   => $values['authinstance'],
+                        'remoteusername' => $current_remotename,
+                        'localusr'       => $user->id,
+                    ));
+                }
 
-            if ($user->haspassword && !$needspassword) {
-                $user->password = '';
-            }
-            else if ($needspassword && !$user->haspassword) {
-                $needpassword++;
-            }
+                if ($user->haspassword && !$needspassword) {
+                    $user->password = '';
+                }
+                else if ($needspassword && !$user->haspassword) {
+                    $needpassword++;
+                }
 
-            $user->authinstance = $values['authinstance'];
-            update_record('usr', $user, 'id');
-            $updated++;
+                $user->authinstance = $values['authinstance'];
+                update_record('usr', $user, 'id');
+                $updated++;
+            }
         }
     }
 

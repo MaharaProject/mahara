@@ -2171,8 +2171,8 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
         $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
     }
-
-    if (!empty($remoteauth)) {
+    $authobj = get_record('auth_instance', 'id', $user->authinstance);
+    if (!empty($remoteauth) && $authobj->authname != 'internal') {
         if (isset($remotename) && strlen($remotename) > 0) {
             $un = $remotename;
         }
