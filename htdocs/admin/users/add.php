@@ -301,11 +301,15 @@ function adduser_submit(Pieform $form, $values) {
     }
 
     $authinstance = get_record('auth_instance', 'id', $values['authinstance']);
+    $remoteauth = false;
+    if ($authinstance->authname != 'internal') {
+        $remoteauth = true;
+    }
     if (!isset($values['remoteusername'])){
         $values['remoteusername'] = null;
     }
 
-    $user->id = create_user($user, array(), $authinstance->institution, $authinstance, $values['remoteusername'], $values);
+    $user->id = create_user($user, array(), $authinstance->institution, $remoteauth, $values['remoteusername'], $values);
 
     if (isset($user->admin) && $user->admin) {
         require_once('activity.php');
