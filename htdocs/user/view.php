@@ -105,16 +105,6 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 
 $name = display_name($user);
 define('TITLE', $name);
-$smarty = smarty(
-    $javascript,
-    $stylesheets,
-    array(),
-    array(
-        'stylesheets' => array('style/views.css'),
-        'sidebars'    => false,
-    )
-);
-$smarty->assign('restrictedview', $restrictedview);
 
 $sql = "SELECT g.*, a.type FROM {group} g JOIN (
 SELECT gm.group, 'invite' AS type
@@ -132,6 +122,15 @@ ORDER BY g.name";
 if (!$allusergroups = get_records_sql_assoc($sql, array($userid, $userid, $userid))) {
     $allusergroups = array();
 }
+$groupinvitedlist = false;
+$groupinvitedlistform = false;
+$grouprequestedlist = false;
+$grouprequestedlistform = false;
+$remoteusermessage = false;
+$remoteuseracceptform = false;
+$remoteusernewfriendform = false;
+$remoteuserfriendscontrol = false;
+$remoteuserrelationship = false;
 if (!empty($loggedinid) && $loggedinid != $userid) {
 
     $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
@@ -173,7 +172,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                 $invitelist[$group->id] = $group->name;
             }
         }
-        $smarty->assign('invitedlist', join(', ', $invitedlist));
+        $groupinvitedlist = join(', ', $invitedlist);
         if (count($invitelist) > 0) {
             $default = array_keys($invitelist);
             $default = $default[0];
@@ -199,10 +198,10 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                     ),
                 ),
             ));
-            $smarty->assign('inviteform',$inviteform);
+            $groupinvitedlistform = $inviteform;
         }
 
-        $smarty->assign('requestedlist', join(', ', $requestedlist));
+        $grouprequestedlist = join(', ', $requestedlist);
         if (count($controlledlist) > 0) {
             $default = array_keys($controlledlist);
             $default = $default[0];
@@ -229,7 +228,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                     ),
                 ),
             ));
-            $smarty->assign('addform',$addform);
+            $grouprequestedlistform = $addform;
         } 
     }
 
@@ -241,19 +240,18 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     }
     else if ($record = get_record('usr_friend_request', 'requester', $userid, 'owner', $loggedinid)) {
         $relationship = 'pending';
-        $smarty->assign('message', $record->message);
-        $smarty->assign('acceptform', acceptfriend_form($userid));
+        $remoteusermessage = $record->message;
+        $remoteuseracceptform = acceptfriend_form($userid);
     }
     else {
         $relationship = 'none';
         $friendscontrol = get_account_preference($userid, 'friendscontrol');
         if ($friendscontrol == 'auto') {
-            $smarty->assign('newfriendform', addfriend_form($userid));
+            $remoteusernewfriendform = addfriend_form($userid);
         }
-        $smarty->assign('friendscontrol', $friendscontrol);
+        $remoteuserfriendscontrol = $friendscontrol;
     }
-    $smarty->assign('relationship', $relationship);
-
+    $remoteuserrelationship = $relationship;
 }
 
 if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
@@ -261,6 +259,44 @@ if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($U
 } else {
     $loginas = null;
 }
+$smarty = smarty(
+    $javascript,
+    $stylesheets,
+    array(),
+    array(
+        'stylesheets' => array('style/views.css'),
+        'sidebars'    => false,
+    )
+);
+$smarty->assign('restrictedview', $restrictedview);
+if ($groupinvitedlist) {
+    $smarty->assign('invitedlist', $groupinvitedlist);
+}
+if ($groupinvitedlistform) {
+    $smarty->assign('inviteform',$groupinvitedlistform);
+}
+if ($grouprequestedlist) {
+    $smarty->assign('requestedlist', $grouprequestedlist);
+}
+if ($grouprequestedlistform) {
+    $smarty->assign('addform',$grouprequestedlistform);
+}
+if ($remoteusermessage) {
+    $smarty->assign('message', $record->message);
+}
+if ($remoteuseracceptform) {
+    $smarty->assign('acceptform', acceptfriend_form($userid));
+}
+if ($remoteusernewfriendform) {
+    $smarty->assign('newfriendform', addfriend_form($userid));
+}
+if ($remoteuserfriendscontrol) {
+    $smarty->assign('friendscontrol', $friendscontrol);
+}
+if ($remoteuserrelationship) {
+    $smarty->assign('relationship', $relationship);
+}
+
 $smarty->assign('loginas', $loginas);
 
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
