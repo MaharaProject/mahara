@@ -118,7 +118,7 @@ $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
 
 $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) ;
 if ($blogcount != 1 && $prefs->multipleblogs == 1) {
-    $elements['multipleblogs']['disabled'] = true;
+    $elements['multipleblogs']['readonly'] = true;
 }
 
 $elements['submit'] = array(
