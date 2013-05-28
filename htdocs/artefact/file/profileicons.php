@@ -90,6 +90,10 @@ $profileiconattachedtoportfolioitems = json_encode(get_string('profileiconattach
 $profileiconappearsinviews = json_encode(get_string('profileiconappearsinviews', 'artefact.file'));
 $confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
 $IJS = <<<EOF
+formchangemanager.add('settings');
+
+var profileiconschecker = formchangemanager.find('settings');
+
 var table = new TableRenderer(
     'profileicons',
     'profileicons.json.php',
@@ -142,6 +146,10 @@ table.updatecallback = function(response) {
     }
 };
 
+table.postupdatecallback = function(response) {
+    profileiconschecker.init();
+};
+
 var uploadingMessage = TR(null,
     TD(null, {$struploadingfile})
 );
@@ -162,6 +170,8 @@ function postSubmit(form, data) {
 
 addLoadEvent( function() {
     connect('settings_delete', 'onclick', function(e) {
+        profileiconschecker.set(FORM_SUBMITTED);
+
         // Find form
         var form = getFirstParentByTagAndClassName(e, 'form', 'pieform');
         forEach (getElementsByTagAndClassName('input', 'checkbox', form), function (profileicon) {

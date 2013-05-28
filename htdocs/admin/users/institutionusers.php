@@ -86,6 +86,7 @@ if ($usertype == 'lastinstitution') {
 
 $usertypeselector = pieform(array(
     'name' => 'usertypeselect',
+    'checkdirtychange' => false,
     'elements' => $usertypeselectorelements,
 ));
 
@@ -153,6 +154,7 @@ $userlistelement['searchparams']['institution'] = $institution;
 
 $userlistform = array(
     'name' => 'institutionusers',
+    'checkdirtychange' => false,
     'elements' => array(
         'institution' => $institutionelement,
         'users' => $userlistelement,
@@ -296,6 +298,10 @@ addLoadEvent(function() {
     if ($('institutionusers_institution')) {
         connect($('institutionusers_institution'), 'onchange', reloadUsers);
     }
+    formchangemanager.add('institutionusers');
+    // Unbind the handler for standard pieform input
+    // The JS code for updating the userlist will also update the formchangechecker state
+    formchangemanager.unbindForm('institutionusers');
 });
 EOF;
 

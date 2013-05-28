@@ -55,6 +55,7 @@ $adminusers = get_column_sql('SELECT ui.usr
 
 $form = array(
     'name' => 'adminusers',
+    'checkdirtychange' => false,
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
@@ -104,7 +105,11 @@ function adminusers_submit(Pieform $form, $values) {
 }
 
 $smarty->assign('institutionselector', $s['institutionselector']);
-$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
+$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . '
+addLoadEvent(function() {
+    formchangemanager.add(\'adminusers\');
+    formchangemanager.unbindForm(\'adminusers\');
+});');
 $smarty->assign('adminusersform', pieform($form));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/institutionadmins.tpl');

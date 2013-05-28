@@ -77,6 +77,10 @@
             collayouts += '_row' + [i+1] + '_' + $('#selectcollayoutrow_' + (i+1)).val();
         }
 
+        if (typeof formchangemanager !== 'undefined') {
+            formchangemanager.setFormState($('#viewlayout'), FORM_CHANGED);
+        }
+
         var pd   = {
              'id': $('#viewlayout_viewid').val(),
              'change': 1
@@ -227,6 +231,10 @@
                 $('#custompreview').html(pi);
             }
          });
+
+        if (typeof formchangemanager !== 'undefined') {
+            formchangemanager.setFormState($('#viewlayout'), FORM_CHANGED);
+        }
     }
 
     $(document).ready(function() {

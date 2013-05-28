@@ -51,6 +51,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         if (self.config.edit || self.config.editmeta) {
             self.edit_init();
         }
+
     }
 
     this.submitform = function () {
@@ -247,8 +248,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.hide_edit_form = function () {
+
         var editrow = $(self.id + '_edit_row');
         if (!hasElementClass(editrow, 'hidden')) {
+            if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
+                return false;
+            }
             addElementClass(editrow, 'hidden');
             // Reconnect the old edit button to open the form
             if (editrow.previousSibling) {
@@ -261,13 +266,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 });
             }
         }
+        return true;
     }
 
     this.edit_form = function (e) {
         e.stop();
+
         // In IE, this.value is set to the button text
         var id = getNodeAttribute(this, 'name').replace(/.*_edit\[(\d+)\]$/, '$1');
-        self.hide_edit_form();
+        if (!self.hide_edit_form()) {
+            return;
+        }
         $(self.id + '_edit_heading').innerHTML = self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile');
         var descriptionrow = getFirstParentByTagAndClassName($(self.id + '_edit_description'), 'tr');
         if (self.filedata[id].artefacttype == 'profileicon') {
@@ -322,9 +331,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         disconnectAll(this);
         connect(this, 'onclick', function (e) {
             e.stop();
-            addElementClass(self.id + '_edit_row', 'hidden');
-            disconnectAll(this);
-            connect(this, 'onclick', self.edit_form);
+            // Check if there are some dirty changes before close the edit form
+            if ((typeof formchangemanager !== 'undefined') && formchangemanager.confirmLeavingForm()) {
+                addElementClass(self.id + '_edit_row', 'hidden');
+                disconnectAll(this);
+                connect(this, 'onclick', self.edit_form);
+            }
             return false;
         });
 
@@ -437,6 +449,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
         forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_upload_browse'), function (elem) {
             connect(elem, 'onclick', function (e) {
+                if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
+                    e.stop();
+                    return false;
+                }
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
                 $(self.id + '_changefolder').value = params.folder;
@@ -837,3 +853,5 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
 
 }
 
+// This variable = true if the users has updated the field 'Tags' by clicking the tag.
+var tags_changed = false;

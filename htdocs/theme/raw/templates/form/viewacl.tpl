@@ -198,6 +198,10 @@ function renderAccessListItem(item) {
         if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
             renderAccessListDefault();
         }
+        // Update the formchangechecker state
+        if (typeof formchangemanager !== 'undefined') {
+            formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
+        }
     });
     appendChildNodes('accesslistitems', row);
     addElementClass('accesslisttabledefault', 'hidden');
@@ -218,6 +222,10 @@ function renderAccessListItem(item) {
         $j(row).find('.pieform-calendar-toggle').hide();
     }
     count++;
+    // Update the formchangechecker state
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
+    }
 }
 
 function makeCalendarInput(item, type, disabled) {
@@ -278,8 +286,15 @@ function setupCalendar(item, type) {
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,
         //"onSelect"       : selectedFunc
+        "onUpdate"  : updateFormChangeChecker,
         "showsTime" : true
     });
+}
+
+function updateFormChangeChecker() {
+    if (typeof formchangemanager !== 'undefined') {
+        formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
+    }
 }
 
 // SETUP

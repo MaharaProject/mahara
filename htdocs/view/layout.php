@@ -112,6 +112,10 @@ function get_max_custom_rows() {
     return {$maxlayoutrows};
 }
 
+addLoadEvent(function () {
+    formchangemanager.add("viewlayout");
+});
+
 JAVASCRIPT;
 
 $elements = array(
