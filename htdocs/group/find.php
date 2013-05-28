@@ -76,6 +76,7 @@ $elements['search'] = array(
             'value' => get_string('search'));
 $searchform = pieform(array(
     'name'   => 'search',
+    'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'oneline',
     'elements' => $elements

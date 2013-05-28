@@ -94,6 +94,7 @@ foreach ($shareoptions as $k => &$v) {
 
 $searchform = pieform(array(
     'name' => 'search',
+    'checkdirtychange' => false,
     'dieaftersubmit' => false,
     'renderer'       => 'div',
     'class'          => 'search',

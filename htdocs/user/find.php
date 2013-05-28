@@ -68,6 +68,7 @@ build_userlist_html($data, 'find', $admingroups);
 
 $searchform = array(
     'name' => 'search',
+    'checkdirtychange' => false,
     'renderer' => 'oneline',
     'elements' => array(),
 );

@@ -55,6 +55,7 @@ build_userlist_html($data, 'myfriends', $admingroups);
 
 $filterform = pieform(array(
     'name' => 'filter',
+    'checkdirtychange' => false,
     'renderer' => 'oneline',
     'elements' => array(
         'filter' => array(

@@ -70,6 +70,7 @@ $elements['submit'] = array(
             'value' => get_string('filter'));
 $form = pieform(array(
     'name'   => 'filter',
+    'checkdirtychange' => false,
     'method' => 'post',
     'renderer' => 'oneline',
     'elements' => $elements

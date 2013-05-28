@@ -111,6 +111,7 @@ if ('admin' == $role) {
 
 $searchform = pieform(array(
     'name' => 'search',
+    'checkdirtychange' => false,
     'renderer' => 'oneline',
     'elements' => array(
         'id' => array(

@@ -3376,6 +3376,7 @@ class View {
 
         $searchform = array(
             'name' => 'searchviews',
+            'checkdirtychange' => false,
             'renderer' => 'oneline',
             'elements' => array(
                 'query' => array(

@@ -123,6 +123,7 @@ $elements['submit'] = array(
 
 $form = pieform(array(
     'name' => 'export',
+    'checkdirtychange' => false,
     'template' => 'export.php',
     'templatedir' => pieform_template_dir('export.php'),
     'autofocus' => false,
