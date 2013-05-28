@@ -58,12 +58,24 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     // Build the configuring javascript
     $options = array_merge($element['caloptions'], array('inputField' => $id, 'button' => $id . '_btn'));
 
+    // Update the formchangechecker when the user selects a date
+    $onselectfunction = 'updateFormChangerChecker_' . $id;
+    $options['onUpdate'] = empty($options['onUpdate']) ? $onselectfunction : $options['onUpdate'] . $onselectfunction;
+
     $encodedoptions = json_encode($options);
     // Some options are callbacks and need their quoting removed
     foreach (array('dateStatusFunc', 'flatCallback', 'onSelect', 'onClose', 'onUpdate') as $function) {
-        $encodedoptions = preg_replace('/("' . $function . '"):"([a-zA-Z0-9$]+)"/', '\1:\2', $encodedoptions);
+        $encodedoptions = preg_replace('/("' . $function . '"):"([a-zA-Z0-9_$]+)"/', '\1:\2', $encodedoptions);
     }
-    $result .= '<script type="text/javascript">Calendar.setup(' . $encodedoptions . ');</script>';
+    $result .= '<script type="text/javascript">
+        var updateFormChangerChecker_' . $id . ' = function () {
+            if (typeof formchangemanager !== \'undefined\') {
+                var form = jQuery("input#' . $id . '").closest(\'form\')[0];
+                formchangemanager.setFormState(form, FORM_CHANGED);
+            }
+        }
+        Calendar.setup(' . $encodedoptions . ');
+    </script>';
 
     return $result;
 }/*}}}*/

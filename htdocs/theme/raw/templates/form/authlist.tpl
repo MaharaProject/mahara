@@ -13,6 +13,10 @@
             }
         }
         rebuildInstanceList(outputArray);
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery('div#instanceList').closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
+        }
     }
 
     function move_down(id) {
@@ -29,6 +33,10 @@
             }
         }
         rebuildInstanceList(outputArray);
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery('div#instanceList').closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
+        }
     }
 
     function rebuildInstanceList(outputArray) {
@@ -80,12 +88,12 @@
             return false;
         }
 
-		for(i = 0; i < inuseArray.length; i++) {
-			if (id == inuseArray[i]) {
-				alert({{$cannotremoveinuse|safe}});
-				return false;
-			}
-		}
+        for(i = 0; i < inuseArray.length; i++) {
+            if (id == inuseArray[i]) {
+                alert({{$cannotremoveinuse|safe}});
+                return false;
+            }
+        }
 
         for(i = 0; i < instanceArray.length; i++) {
             if(instanceArray[i] == id) {
@@ -98,6 +106,10 @@
 
         document.getElementById('deleteList').value = deleteArray.join(',');
         rebuildInstanceList(instanceArray);
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery('div#instanceList').closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
+        }
     }
 
     function emptyThisNode(node) {
@@ -159,7 +171,10 @@
         }
         instanceArray.push(id);
         rebuildInstanceList(instanceArray);
-
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery('div#instanceList').closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
+        }
         replaceChildNodes('messages');
     }
 

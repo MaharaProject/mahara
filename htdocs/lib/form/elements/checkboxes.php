@@ -94,6 +94,10 @@ function pieform_element_checkboxes_update(p, v) {
             e.checked = v;
         }
     });
+    if (typeof formchangemanager !== 'undefined') {
+        var form = jQuery('div#' + p).closest('form')[0];
+        formchangemanager.setFormState(form, FORM_CHANGED);
+    }
 }
 EOF;
 }/*}}}*/

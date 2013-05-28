@@ -574,7 +574,7 @@ function toggleChecked(c) {
     var e = getElementsByTagAndClassName(null, c);
     if (e) {
         for (cb in e) {
-	    if (e[cb].checked == true) {
+        if (e[cb].checked == true) {
                 e[cb].checked = '';
             } 
             else {
@@ -632,9 +632,15 @@ function augment_tags_control(elem, returnContainer) {
             else {
                 var tagData = [];
                 forEach(data, function(tag) {
-                    var tagLink = A({'href':''}, tag.tag);
+                    var tagLink = A({'href':'', 'class':'tag'}, tag.tag);
                     connect(tagLink, 'onclick', function(e) {
                         e.stop();
+
+                        if (typeof formchangemanager !== 'undefined') {
+                            // Get the form which contains the tag input
+                            var form = jQuery(elem).closest('form')[0];
+                            formchangemanager.setFormState(form, FORM_CHANGED);
+                        }
 
                         if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
                             // If at the start of the string, remove it and the comma/spaces after

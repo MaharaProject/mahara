@@ -99,6 +99,10 @@
             list.push(opt);
         });
 
+        if (list.length === 0) {
+            return;
+        }
+
         forEach(list, function(node) {
             to.appendChild(node);
             node.selected = false;
@@ -124,6 +128,10 @@
         });
 
         $('{{$name}}').value=members.join(',');
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery('select#{{$name}}_members').closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
+        }
     };
 
     addLoadEvent(function () {

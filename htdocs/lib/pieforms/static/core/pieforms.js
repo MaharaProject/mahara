@@ -205,8 +205,22 @@ function Pieform(data) {//{{{
                 // javascript references being lost
                 replaceChildNodes($(self.data.name), tmp.childNodes[0].childNodes);
 
+                // data.replaceHTML may contain inline javascript code which need to be evaluated
+                // Append any inline js code to data.javascript and evaluate them
+                var temp = jQuery('<div>' + data.replaceHTML + '</div>');
+                data.javascript = '';
+                for (i in temp) {
+                    if (temp[i].nodeName === 'SCRIPT' && temp[i].src === '') {
+                        data.javascript += temp[i].innerHTML;
+                    }
+                }
+                eval(data.javascript);
+
                 self.connectSubmitButtons();
                 self.clickedButton = null;
+                if (self.data.checkDirtyChange) {
+                    formchangemanager.rebindForm(self.data.name);
+                }
                 PieformManager.signal('onload', self.data.name);
             }
 

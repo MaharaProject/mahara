@@ -393,6 +393,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             });
             connect(self.id + '_edit_cancel', 'onclick', function (e) {
                 e.stop();
+                if (typeof formchangemanager !== 'undefined') {
+                    var form = jQuery(this).closest('form')[0];
+                    formchangemanager.setFormState(form, FORM_INIT);
+                }
                 self.hide_edit_form();
                 return false;
             });

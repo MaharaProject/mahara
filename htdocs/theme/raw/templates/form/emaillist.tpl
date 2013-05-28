@@ -34,6 +34,10 @@
                     A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
                     ' ' + {{$validationemailstr|safe}}
                 ));
+                if (typeof formchangemanager !== 'undefined') {
+                    var form = jQuery(this).closest('form')[0];
+                    formchangemanager.setFormState(form, FORM_CHANGED);
+                }
             }
         }
         {{$name}}_newrefinput = null;
@@ -54,6 +58,13 @@
 
         {{$name}}_newrefinput.focus();
 
+        connect({{$name}}_newrefinput, 'onchange', function(k) {
+            if (typeof formchangemanager !== 'undefined') {
+                var form = jQuery(this).closest('form')[0];
+                formchangemanager.setFormState(form, FORM_CHANGED);
+            }
+        });
+
         connect({{$name}}_newrefsubmit, 'onclick', function(k) {
             {{$name}}_addedemail();
             k.stop();
@@ -71,6 +82,11 @@
         if (radio[0] && radio[0].checked) {
             alert(get_string('cannotremovedefaultemail'));
             return;
+        }
+
+        if (typeof formchangemanager !== 'undefined') {
+            var form = jQuery(div).closest('form')[0];
+            formchangemanager.setFormState(form, FORM_CHANGED);
         }
 
         removeElement(x.parentNode);
