@@ -141,6 +141,10 @@ function Pieform(data) {//{{{
     var self = this;
 
     this.init = function() {//{{{
+        if (self.data.checkDirtyChange) {
+            formchangemanager.add(self.data.name);
+        }
+
         connect(self.data.name, 'onsubmit', self.processForm);
 
         self.connectSubmitButtons();
@@ -287,4 +291,3 @@ function Pieform(data) {//{{{
 
     addLoadEvent(self.init);
 }//}}}
-

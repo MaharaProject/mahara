@@ -796,6 +796,7 @@ class Pieform {/*{{{*/
                 'globalJsErrorCallback' => $this->data['globaljserrorcallback'],
                 'postSubmitCallback'    => $this->data['postsubmitcallback'],
                 'newIframeOnSubmit'     => $this->data['newiframeonsubmit'],
+                'checkDirtyChange'      => $this->data['checkdirtychange'],
             ));
             $result .= "<script type=\"text/javascript\">new Pieform($data);</script>\n";
         }
@@ -1557,6 +1558,9 @@ EOF;
             // Whether to show the description as well as the error message 
             // when displaying errors
             'showdescriptiononerror' => true,
+
+            // Check dirty change when leaving away
+            'checkdirtychange' => true,
         );
     }/*}}}*/
 
