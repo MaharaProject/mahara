@@ -347,12 +347,23 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         db_begin(); 
 
         $data = new StdClass;
+        $have_composites = false;
         foreach ($this->composites as $field => $value) {
+            if ($field != 'artefact' && !empty($value)) {
+                $have_composites = true;
+            }
             if ($field == 'dateofbirth' && !empty($value)) {
                 $value = db_format_timestamp($value);
             }
             $data->{$field} = $value;
-        }   
+        }
+        if (!$have_composites) {
+            if (!empty($this->id)) {
+                // need to delete empty personal information
+                $this->delete();
+            }
+            return true;
+        }
         $inserting = empty($this->id);
         parent::commit();
         $data->artefact = $this->id;
