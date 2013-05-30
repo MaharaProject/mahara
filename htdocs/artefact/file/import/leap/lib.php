@@ -57,7 +57,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
                 // Files' area
                 $strategies[] = array(
                     'strategy' => self::STRATEGY_IMPORT_AS_FILE,
-                    'score'    => 100,
+                    'score'    => 110, // attached files need to imported before their parent artefact so need higher score
                     'other_required_entries' => array(),
                 );
             }
