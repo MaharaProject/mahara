@@ -151,8 +151,8 @@ function pieform_element_fieldset_get_headdata() {/*{{{*/
 
 
 /**
- * Extension by Mahara. This api function returns the javascript required to 
- * set up the element, assuming the element has been placed in the page using 
+ * Extension by Mahara. This api function returns the javascript required to
+ * set up the element, assuming the element has been placed in the page using
  * javascript. This feature is used in the views interface.
  *
  * In theory, this could go upstream to pieforms itself
@@ -168,6 +168,13 @@ function pieform_element_fieldset_views_js(Pieform $form, $element) {
         $result .= pieform_element_fieldset_js();
     }
     $result .= "pieform_update_legends('instconf');";
+
+    foreach ($element['elements'] as $subelement) {
+        $function = 'pieform_element_' . $subelement['type'] . '_views_js';
+        if (is_callable($function)) {
+            $result .= "\n" . call_user_func_array($function, array($form, $subelement));
+        }
+    }
 
     return $result;
 }
