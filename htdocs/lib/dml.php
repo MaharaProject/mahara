@@ -1472,7 +1472,14 @@ function configure_dbconnection() {
         $db->Execute("SET SQL_BIG_SELECTS=1");
     }
 
-    // more later..
+    if (!empty($CFG->dbtimezone)) {
+        if (is_postgres()) {
+            $db->Execute("SET SESSION TIME ZONE '{$CFG->dbtimezone}'");
+        }
+        if (is_mysql()) {
+            $db->Execute("SET time_zone='{$CFG->dbtimezone}'");
+        }
+    }
 }
 
 function is_postgres() {
