@@ -179,7 +179,7 @@ $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 
 $extrastylesheets = array('style/views.css');
-  
+
 // If the view has comments turned off, tutors can still leave
 // comments if the view is submitted to their group.
 if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))) {
@@ -221,6 +221,15 @@ if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
 }
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+
+$viewgroupform = false;
+if ($owner && $owner == $USER->get('id')) {
+    if ($tutorgroupdata = group_get_user_course_groups()) {
+        if (!$view->is_submitted()) {
+            $viewgroupform = view_group_submission_form($view, $tutorgroupdata, 'view');
+        }
+    }
+}
 
 $smarty = smarty(
     $javascript,
@@ -331,15 +340,8 @@ if (isset($objectionform)) {
 }
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
-if ($owner && $owner == $USER->get('id')) {
-    if ($tutorgroupdata = group_get_user_course_groups()) {
-        if (!$view->is_submitted()) {
-            $smarty->assign(
-                'view_group_submission_form',
-                view_group_submission_form($view, $tutorgroupdata, 'view')
-            );
-        }
-    }
+if ($viewgroupform) {
+    $smarty->assign('view_group_submission_form', $viewgroupform);
 }
 
 $smarty->display('view/view.tpl');
