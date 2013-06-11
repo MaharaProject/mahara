@@ -89,6 +89,12 @@
     <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
 {/if}
 
+<div id="file_dropzone_container" class="{$prefix}">
+  <div id="fileDropzone" class="dropzone-previews" style="display:none;">
+    <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
+  </div>
+</div>
+
 <div id="{$prefix}_foldernav" class="foldernav">
 {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
 </div>

@@ -91,12 +91,32 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         connect(self.id + '_userfile', 'onchange', self.upload_submit);
     }
 
+    this.upload_validate_dropzone = function () {
+        if ($(self.id + '_notice') && !$(self.id + '_notice').checked) {
+            return get_string('youmustagreetothecopyrightnotice');
+        }
+        return false;
+    }
+
     this.upload_validate = function () {
         if ($(self.id + '_notice') && !$(self.id + '_notice').checked) {
             appendChildNodes(self.id+'_upload_messages', DIV({'class':'error'}, get_string('youmustagreetothecopyrightnotice')));
             return false;
         }
         return !isEmpty($(self.id + '_userfile').value);
+    }
+
+    this.upload_presubmit_dropzone = function (e) {
+        // Display upload status
+        self.nextupload++;
+        var message = makeMessage(DIV(null,
+            IMG({'src':get_themeurl('images/loading.gif')}), ' ',
+            get_string('uploadingfiletofolder',e.name,self.foldername)
+            ), 'info');
+        setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
+        appendChildNodes(self.id + '_upload_messages', message);
+        $(self.id+'_uploadnumber').value = self.nextupload;
+        return true;
     }
 
     this.upload_presubmit = function (e) {

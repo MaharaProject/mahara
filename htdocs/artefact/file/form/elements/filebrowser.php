@@ -575,6 +575,11 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
 
     if (!empty($_FILES['userfile']['name'])) {
         if (!is_array($_FILES['userfile']['name'])) {
+            if (!empty($_POST['_userfile']) && is_array($_POST['_userfile'])) {
+                // renaming file for drag and drop
+                $_FILES['userfile']['name'] = $_POST['_userfile']['name'];
+                $_FILES['userfile']['type'] = $_POST['_userfile']['type'];
+            }
             if (strlen($_FILES['userfile']['name']) > 1024) {
                 return array(
                     'error'   => true,
@@ -595,7 +600,16 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
                 'uploadfoldername' => param_variable($prefix . '_foldername'),
                 'resizeonuploaduserenable' => $resizeimage,
             );
-            if (get_config('licensemetadata')) {
+            if (get_config('licensemetadata') && param_variable('dropzone')) {
+                $data = array_merge($data, array(
+                    'license'     => license_coalesce(null,
+                        param_variable($prefix . '_license'),
+                        param_variable($prefix . '_license_other', null)),
+                    'licensor'    => param_variable($prefix . '_licensor'),
+                    'licensorurl' => param_variable($prefix . '_licensorurl'),
+                ));
+            }
+            else if (get_config('licensemetadata')) {
                 $data = array_merge($data, array(
                     'license'     => license_coalesce(null,
                         param_variable($prefix . '_edit_license'),
@@ -1410,7 +1424,9 @@ function pieform_element_filebrowser_views_js(Pieform $form, $element) {
 function pieform_element_filebrowser_get_headdata($element) {
     global $THEME;
     $headdata = array('<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
-
+    $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
+    $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
+    $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
     $strings = PluginArtefactFile::jsstrings('filebrowser');
     $jsstrings = '';
     foreach ($strings as $section => $sectionstrings) {

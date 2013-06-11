@@ -85,6 +85,7 @@ $string['Details'] = 'Details';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';
+$string['dragdrophere'] = 'Drop files here to upload';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['editingfailed'] = 'Editing failed: file or folder does not exist any more';

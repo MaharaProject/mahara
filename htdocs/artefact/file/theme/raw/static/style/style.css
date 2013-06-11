@@ -95,3 +95,26 @@ tr.folderhover a,
 #instconf_folder_selectlist {
     margin: 0 0 15px 0;
 }
+/* Drop file upload */
+#file_dropzone_container {
+    border-radius: 5px;
+    border: 2px solid #EBF0F4;
+    margin-bottom: 3px;
+}
+#file_dropzone_container .dz-message {
+    height: 30px;
+    padding: 15px 0 0;
+    margin: 0;
+    opacity: 1;
+    position: relative;
+    transition: opacity 0.3s ease-in-out 0s;
+    text-align: center;
+    font-size: 2em;
+    color: #CBCBCB;
+}
+#file_dropzone_container .dz-preview {
+    display: none;
+}
+#file_dropzone_container.dragover {
+    background-color: #EBF0F4;
+}

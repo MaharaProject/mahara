@@ -150,6 +150,15 @@ class Pieform {/*{{{*/
     /*}}}*/
 
     /**
+     * Whether the form has been submitted by dropzone.
+     *
+     * @var bool
+     */
+    private $submitted_by_dropzone = false;
+
+    /*}}}*/
+
+    /**
      * Processes the form. Called by the {@link pieform} function. It simply
      * builds the form (processing it if it has been submitted), and returns
      * the HTML to display the form.
@@ -458,6 +467,11 @@ class Pieform {/*{{{*/
                 // present, then the form was submitted by JS
                 if (!empty($global['pieform_jssubmission'])) {
                     $this->submitted_by_js = true;
+                }
+
+                // If the form was submitted via the dropzone
+                if (!empty($global['dropzone'])) {
+                    $this->submitted_by_dropzone = true;
                 }
 
                 // Check if the form has been cancelled
@@ -906,7 +920,10 @@ class Pieform {/*{{{*/
         }
 
         $result = json_encode($data);
-
+        if ($this->submitted_by_dropzone) {
+            echo $result;
+            exit;
+        }
         echo <<<EOF
 <html><head><script type="text/javascript">function sendResult() { parent.pieformHandlers["{$this->name}"]($result); }</script></head><body onload="sendResult(); "></body></html>
 EOF;
