@@ -79,6 +79,10 @@ while (<>) {
             bad_line("a require_once statement should look like a function call, ".
                      "without a space between the keyword and the bracket.", $_);
         }
+        if (/\b(from|join)\s[^({]/i) {
+            bad_line("this sql table is not surrounded by curly braces {}, ".
+                     "or is not an anonymous inner select", $_);
+        }
     }
 
     #Implement aging of the stack to prevent
