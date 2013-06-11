@@ -112,7 +112,7 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
     );
     if (get_config('licenseallowcustom')) {
         $res['allowother'] = true;
-        $res['options']['other'] = 'Other license (enter URL)';
+        $res['options']['other'] = get_string('licenseother');
     }
     if (!isset($options[''])) {
         $res['rules'] = array('required' => true);
