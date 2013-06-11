@@ -153,6 +153,7 @@ $string['resultsperpage'] = 'Results per page';
 
 // License metadata
 $string['license'] = 'License';
+$string['licenseother'] = 'Other license (enter URL)';
 $string['licensedesc'] = 'The license for this content.';
 $string['licensenone'] = 'None selected';
 $string['licensingadvanced'] = 'Advanced licensing';
