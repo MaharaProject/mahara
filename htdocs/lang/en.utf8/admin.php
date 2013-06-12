@@ -1045,9 +1045,9 @@ $string['lastlogin'] = 'Last login';
 
 // Masquerading reasons and notification
 $string['masqueradingreasonrequired'] = 'Require reason for masquerading';
-$string['masqueradingreasonrequireddescription'] = 'If checked, administrators will be required to enter a reason for masquerading as other users. This will be logged, and if the setting "Notify users of masquerading" is enabled, included in the notification to the user about the masquerading.';
+$string['masqueradingreasonrequireddescription1'] = 'If checked, administrators will be required to enter a reason for masquerading as other users. If the setting "Notify users of masquerading" is enabled, the reason will be included in the notification to the user about the masquerading. The logging of masquerading sessions needs to be turned on in the "Logging settings" for this to work.';
 $string['masqueradingnotified'] = 'Notify users of masquerading';
-$string['masqueradingnotifieddescription'] = 'If checked, users will be notified when an administrator masqueraded as them. The notification will include who, when and - if enabled under "Require reason for masquerading" - why.';
+$string['masqueradingnotifieddescription1'] = 'If checked, users will be notified when an administrator masqueraded as them. The notification will include who, when and - if enabled under "Require reason for masquerading" - why. The logging of masquerading sessions needs to be turned on in the "Logging settings" for this to work.';
 
 $string['masquerade'] = 'Continue';
 $string['masqueradereason'] = 'Reason';

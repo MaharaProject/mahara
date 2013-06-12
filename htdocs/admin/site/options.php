@@ -207,14 +207,14 @@ $siteoptionform = array(
                 'masqueradingreasonrequired' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('masqueradingreasonrequired', 'admin'),
-                    'description'  => get_string('masqueradingreasonrequireddescription', 'admin'),
+                    'description'  => get_string('masqueradingreasonrequireddescription1', 'admin'),
                     'defaultvalue' => get_config('masqueradingreasonrequired'),
                     'disabled'     => in_array('masqueradingreasonrequired', $OVERRIDDEN),
                 ),
                 'masqueradingnotified' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('masqueradingnotified', 'admin'),
-                    'description'  => get_string('masqueradingnotifieddescription', 'admin'),
+                    'description'  => get_string('masqueradingnotifieddescription1', 'admin'),
                     'defaultvalue' => get_config('masqueradingnotified'),
                     'disabled'     => in_array('masqueradingnotified', $OVERRIDDEN),
                 ),
