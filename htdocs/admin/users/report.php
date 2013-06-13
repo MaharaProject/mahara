@@ -162,7 +162,7 @@ else if ($selected == 'loginaslog') {
     $ph = array_merge($userids, $userids);
     $log = get_records_sql_array('
         SELECT *
-        FROM event_log
+        FROM {event_log}
         WHERE (usr IN (' . join(',', array_fill(0, count($userids), '?')) . ')
            OR realusr IN (' . join(',', array_fill(0, count($userids), '?')) . '))
           AND event = \'loginas\'
