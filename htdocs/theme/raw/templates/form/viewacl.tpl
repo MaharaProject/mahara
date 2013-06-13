@@ -44,6 +44,21 @@
   </tbody>
 </table>
 
+<table id="accesslisttabledefault" class="fr hidden fullwidth">
+  <thead>
+    <tr class="accesslist-head1">
+      <th>{{str tag=Added section=view}}</th>
+    </tr>
+    <tr class="accesslist-head2">
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody id="accesslistitems">
+    <tr>
+      <td>{{str tag=defaultaccesslistmessage section=view}}</td>
+    </tr>
+  </tbody>
+</table>
 
 <div class="cb"></div>
 </div>
@@ -81,6 +96,11 @@ function renderPotentialPresetItem(item) {
     appendChildNodes('potentialpresetitems', row);
 
     return row;
+}
+
+function renderAccessListDefault() {
+    addElementClass('accesslisttable', 'hidden');
+    removeElementClass('accesslisttabledefault', 'hidden');
 }
 
 // Given a row, render it on the right hand side
@@ -177,10 +197,11 @@ function renderAccessListItem(item) {
     connect(removeButton, 'onclick', function() {
         removeElement(row);
         if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
-            addElementClass('accesslisttable', 'hidden');
+            renderAccessListDefault();
         }
     });
     appendChildNodes('accesslistitems', row);
+    addElementClass('accesslisttabledefault', 'hidden');
     removeElementClass('accesslisttable', 'hidden');
 
     if (notpublicorallowed) {
@@ -425,12 +446,16 @@ function search(e) {
 
 // Right hand side
 addLoadEvent(function () {
+    {{if $defaultaccesslist}}
+    renderAccessListDefault();
+    {{else}}
     var accesslist = {{$accesslist|safe}};
     if (accesslist) {
         forEach(accesslist, function(item) {
             renderAccessListItem(item);
         });
     }
+    {{/if}}
     update_loggedin_access();
 });
 

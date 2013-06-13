@@ -2297,7 +2297,7 @@ table.secreturls table tr td {
 #viewacl-advanced #results thead, #viewacl-advanced #results tfoot {
 	font-weight: bold;
 }
-#accesslisttable {
+#accesslisttable, #accesslisttabledefault {
 	margin: 5px 0;
 }
 #accesslistitem1 td {

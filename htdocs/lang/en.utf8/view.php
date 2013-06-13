@@ -159,6 +159,7 @@ $string['share'] = 'Share';
 $string['sharedbyme'] = 'Shared by me';
 $string['sharewith'] = 'Share with';
 $string['accesslist'] = 'Access list';
+$string['defaultaccesslistmessage'] = 'Nobody besides you can view your selected pages / collections. Add people to give them access.';
 $string['sharewithmygroups'] = 'Share with my groups';
 $string['sharewithmyinstitutions'] = 'Share with my institutions';
 $string['sharewithusers'] = 'Share with users';
