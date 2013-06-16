@@ -94,7 +94,7 @@ $elements = array(
         ),
     ),
     'password' => array(
-        'type' => 'text',
+        'type' => 'password',
         'title' => get_string('password'),
         'rules' => array('required' => true),
     ),

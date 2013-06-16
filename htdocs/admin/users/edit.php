@@ -77,7 +77,7 @@ if (method_exists($authobj, 'change_username')) {
 if (method_exists($authobj, 'change_password')) {
     // Only show the password options if the plugin allows for the functionality
     $elements['password'] = array(
-        'type'         => 'text',
+        'type'         => 'password',
         'title'        => get_string('resetpassword','admin'),
         'description'  => get_string('resetpassworddescription','admin'),
     );
