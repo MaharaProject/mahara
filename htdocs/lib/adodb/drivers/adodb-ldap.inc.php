@@ -1,6 +1,6 @@
 <?php
 /*
-  V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+  V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
    Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -42,7 +42,7 @@ class ADODB_ldap extends ADOConnection {
 
 	# error on binding, eg. "Binding: invalid credentials"
 	var $_bind_errmsg = "Binding: %s";
-
+	
 	function ADODB_ldap() 
 	{		
 	}
@@ -55,14 +55,14 @@ class ADODB_ldap extends ADOConnection {
 		
 		if ( !function_exists( 'ldap_connect' ) ) return null;
 		
-		if (strpos('ldap://',$host) === 0 || strpos('ldaps://',$host) === 0) {
+		if (strpos($host,'ldap://') === 0 || strpos($host,'ldaps://') === 0) {
 			$this->_connectionID = @ldap_connect($host);
 		} else {
 			$conn_info = array( $host,$this->port);
 		
 			if ( strstr( $host, ':' ) ) {
 			    $conn_info = explode( ':', $host );
-			}
+			} 
 		
 			$this->_connectionID = @ldap_connect( $conn_info[0], $conn_info[1] );
 		}
@@ -80,7 +80,7 @@ class ADODB_ldap extends ADOConnection {
 		    $bind = @ldap_bind( $this->_connectionID, $username, $password );
 		} else {
 			$username = 'anonymous';
-		    $bind = @ldap_bind( $this->_connectionID );
+		    $bind = @ldap_bind( $this->_connectionID );		
 		}
 		
 		if (!$bind) {
@@ -165,12 +165,12 @@ class ADODB_ldap extends ADOConnection {
 	{
 		return $this->_errorMsg;
 	}
-
+	
 	function ErrorNo()
 	{
 		return @ldap_errno($this->_connectionID);
 	}
-
+	
     /* closes the LDAP connection */
 	function _close()
 	{
@@ -328,7 +328,7 @@ class ADORecordSet_ldap extends ADORecordSet{
     /*
     Return whole recordset as a multi-dimensional associative array
 	*/
-	function GetAssoc($force_array = false, $first2cols = false)
+	function GetAssoc($force_array = false, $first2cols = false) 
 	{
 		$records = $this->_numOfRows;
         $results = array();

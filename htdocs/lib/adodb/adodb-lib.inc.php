@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 // security - hide paths
 if (!defined('ADODB_DIR')) die();
 
@@ -10,7 +6,7 @@ global $ADODB_INCLUDED_LIB;
 $ADODB_INCLUDED_LIB = 1;
 
 /* 
- @version V5.06 16 Oct 2008  (c) 2000-2010 John Lim (jlim\@natsoft.com.my). All rights reserved.
+  @version V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -39,7 +35,7 @@ function adodb_strip_order_by($sql)
 			}
 			$sql = substr($sql,0,$at).substr($sql,$i);
 		} else
-			$sql = str_replace($arr[0], '', $sql);
+			$sql = str_replace($arr[0], '', $sql); 
 	return $sql;
  }
 
@@ -89,7 +85,7 @@ function adodb_probetypes(&$array,&$types,$probe=8)
 			
 		}
 	}
-
+	
 }
 
 function  adodb_transpose(&$arr, &$newarr, &$hdr, &$fobjs)
@@ -112,7 +108,7 @@ function  adodb_transpose(&$arr, &$newarr, &$hdr, &$fobjs)
 			$newarr[] = array($o->name);
 		} else
 			$newarr[] = array();
-
+			
 		for ($y = 0; $y < $oldY; $y++) {
 			$newarr[$x-$startx][] = $arr[$y][$x];
 		}
@@ -159,7 +155,7 @@ function _adodb_replace(&$zthis, $table, $fieldArray, $keyCol, $autoQuote, $has_
 			} else
 				$uSet .= ",$k=$v";
 		}
-
+		
 		$where = false;
 		foreach ($keyCol as $v) {
 			if (isset($fieldArray[$v])) {
@@ -405,9 +401,9 @@ function _adodb_getcount(&$zthis, $sql,$inputarr=false,$secs2cache=0)
 	 if (!empty($zthis->_nestedSQL) || preg_match("/^\s*SELECT\s+DISTINCT/is", $sql) || 
 	 	preg_match('/\s+GROUP\s+BY\s+/is',$sql) || 
 		preg_match('/\s+UNION\s+/is',$sql)) {
-
+		
 		$rewritesql = adodb_strip_order_by($sql);
-
+		
 		// ok, has SELECT DISTINCT or GROUP BY so see if we can use a table alias
 		// but this is only supported by oracle and postgresql...
 		if ($zthis->dataProvider == 'oci8') {
@@ -451,7 +447,7 @@ function _adodb_getcount(&$zthis, $sql,$inputarr=false,$secs2cache=0)
 	
 	// strip off unneeded ORDER BY if no UNION
 	if (preg_match('/\s*UNION\s*/is', $sql)) $rewritesql = $sql;
-	else $rewritesql = $rewritesql = adodb_strip_order_by($sql);
+	else $rewritesql = $rewritesql = adodb_strip_order_by($sql); 
 	
 	if (preg_match('/\sLIMIT\s+[0-9]+/i',$sql,$limitarr)) $rewritesql .= $limitarr[0];
 		
@@ -493,7 +489,7 @@ function _adodb_getcount(&$zthis, $sql,$inputarr=false,$secs2cache=0)
 	data will get out of synch. use CachePageExecute() only with tables that
 	rarely change.
 */
-function _adodb_pageexecute_all_rows(&$zthis, $sql, $nrows, $page,
+function _adodb_pageexecute_all_rows(&$zthis, $sql, $nrows, $page, 
 						$inputarr=false, $secs2cache=0) 
 {
 	$atfirstpage = false;
@@ -547,7 +543,7 @@ function _adodb_pageexecute_all_rows(&$zthis, $sql, $nrows, $page,
 }
 
 // Iván Oliva version
-function _adodb_pageexecute_no_last_page(&$zthis, $sql, $nrows, $page, $inputarr=false, $secs2cache=0)
+function _adodb_pageexecute_no_last_page(&$zthis, $sql, $nrows, $page, $inputarr=false, $secs2cache=0) 
 {
 
 	$atfirstpage = false;
@@ -647,9 +643,17 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 						$type = 'C';
 					}
 					
-					if ((strpos($upperfname,' ') !== false) || ($ADODB_QUOTE_FIELDNAMES))
-						$fnameq = $zthis->nameQuote.$upperfname.$zthis->nameQuote;
-					else
+					if ((strpos($upperfname,' ') !== false) || ($ADODB_QUOTE_FIELDNAMES)) {
+						switch (ADODB_QUOTE_FIELDNAMES) {
+						case 'LOWER':
+							$fnameq = $zthis->nameQuote.strtolower($field->name).$zthis->nameQuote;break;
+						case 'NATIVE':
+							$fnameq = $zthis->nameQuote.$field->name.$zthis->nameQuote;break;
+						case 'UPPER':
+						default:
+							$fnameq = $zthis->nameQuote.$upperfname.$zthis->nameQuote;break;
+						}
+					} else
 						$fnameq = $upperfname;
 					
 					
@@ -811,9 +815,17 @@ static $cacheCols;
 		$upperfname = strtoupper($field->name);
 		if (adodb_key_exists($upperfname,$arrFields,$force)) {
 			$bad = false;
-			if ((strpos($upperfname,' ') !== false) || ($ADODB_QUOTE_FIELDNAMES))
-				$fnameq = $zthis->nameQuote.$upperfname.$zthis->nameQuote;
-			else
+			if ((strpos($upperfname,' ') !== false) || ($ADODB_QUOTE_FIELDNAMES)) {
+				switch (ADODB_QUOTE_FIELDNAMES) {
+				case 'LOWER':
+					$fnameq = $zthis->nameQuote.strtolower($field->name).$zthis->nameQuote;break;
+				case 'NATIVE':
+					$fnameq = $zthis->nameQuote.$field->name.$zthis->nameQuote;break;
+				case 'UPPER':
+				default:
+					$fnameq = $zthis->nameQuote.$upperfname.$zthis->nameQuote;break;
+				}
+			} else
 				$fnameq = $upperfname;
 			
 			$type = $recordSet->MetaType($field->type);
@@ -843,7 +855,7 @@ static $cacheCols;
 						default:
                         case 3:
                             //Set the value that was given in array, so you can give both null and empty values
-							if (is_null($arrFields[$upperfname]) || $arrFields[$upperfname] === $zthis->null2null) {
+							if (is_null($arrFields[$upperfname]) || $arrFields[$upperfname] === $zthis->null2null) { 
 								$values  .= "null, ";
 							} else {
                         		$values .= _adodb_column_sql($zthis, 'I', $type, $upperfname, $fnameq, $arrFields, $magicq);
@@ -1004,7 +1016,7 @@ function _adodb_column_sql(&$zthis, $action, $type, $fname, $fnameq, $arrFields,
 		case "T":
 			$val = $zthis->DBTimeStamp($arrFields[$fname]);
 			break;
-
+			
 		case "N":
 		    $val = $arrFields[$fname];
 			if (!is_numeric($val)) $val = str_replace(',', '.', (float)$val);
@@ -1074,21 +1086,21 @@ function _adodb_debug_execute(&$zthis, $sql, $inputarr)
 	*/
 	if ($zthis->databaseType == 'mssql') { 
 	// ErrorNo is a slow function call in mssql, and not reliable in PHP 4.0.6
-
+	
 		if($emsg = $zthis->ErrorMsg()) {
 			if ($err = $zthis->ErrorNo()) {
-				if ($zthis->debug === -99)
+				if ($zthis->debug === -99) 
 					ADOConnection::outp( "<hr>\n($dbt): ".htmlspecialchars($sqlTxt)." &nbsp; $ss\n<hr>\n",false);
-
+		
 				ADOConnection::outp($err.': '.$emsg);
 			}
 		}
 	} else if (!$qID) {
-
-		if ($zthis->debug === -99)
+	
+		if ($zthis->debug === -99) 
 				if ($inBrowser) ADOConnection::outp( "<hr>\n($dbt): ".htmlspecialchars($sqlTxt)." &nbsp; $ss\n<hr>\n",false);
 				else ADOConnection::outp("-----<hr>\n($dbt): ".$sqlTxt."$ss\n-----<hr>\n",false);
-
+				
 		ADOConnection::outp($zthis->ErrorNo() .': '. $zthis->ErrorMsg());
 	}
 	
@@ -1103,7 +1115,7 @@ function _adodb_backtrace($printOrArr=true,$levels=9999,$skippy=0,$ishtml=null)
 	 
 	if ($ishtml === null) $html =  (isset($_SERVER['HTTP_USER_AGENT']));
 	else $html = $ishtml;
-
+	
 	$fmt =  ($html) ? "</font><font color=#808080 size=-1> %% line %4d, file: <a href=\"file:/%s\">%s</a></font>" : "%% line %4d, file: %s";
 
 	$MAXSTRLEN = 128;

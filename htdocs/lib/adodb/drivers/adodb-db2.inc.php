@@ -1,6 +1,6 @@
 <?php
 /* 
-  V5.11 5 May 2010   (c) 2000-2010 (jlim#natsoft.com). All rights reserved.
+  V5.18 3 Sep 2012  (c) 2000-2012 (jlim#natsoft.com). All rights reserved.
 
   This is a version of the ADODB driver for DB2.  It uses the 'ibm_db2' PECL extension
   for PHP (http://pecl.php.net/package/ibm_db2), which in turn requires DB2 V8.2.2 or
@@ -55,7 +55,7 @@ class ADODB_db2 extends ADOConnection {
 	var $uCaseTables = true; // for meta* functions, uppercase table names
 	var $hasInsertID = true;
 	
-
+	
     function _insertid()
     {
         return ADOConnection::GetOne('VALUES IDENTITY_VAL_LOCAL()');
@@ -80,7 +80,7 @@ class ADODB_db2 extends ADOConnection {
 		ini_set('ibm_db2.binmode', $this->binmode);
 
 		if ($argDatabasename && empty($argDSN)) {
-
+		
 			if (stripos($argDatabasename,'UID=') && stripos($argDatabasename,'PWD=')) $this->_connectionID = db2_connect($argDatabasename,null,null);
 			else $this->_connectionID = db2_connect($argDatabasename,$argUsername,$argPassword);
 		} else {
@@ -115,7 +115,7 @@ class ADODB_db2 extends ADOConnection {
 		$this->_errorMsg = isset($php_errormsg) ? $php_errormsg : '';
 		
 		if ($argDatabasename && empty($argDSN)) {
-
+		
 			if (stripos($argDatabasename,'UID=') && stripos($argDatabasename,'PWD=')) $this->_connectionID = db2_pconnect($argDatabasename,null,null);
 			else $this->_connectionID = db2_pconnect($argDatabasename,$argUsername,$argPassword);
 		} else {
@@ -210,18 +210,18 @@ class ADODB_db2 extends ADOConnection {
 	
 	function ServerInfo()
 	{
-		$row = $this->GetRow("SELECT service_level, fixpack_num FROM TABLE(sysproc.env_get_inst_info())
+		$row = $this->GetRow("SELECT service_level, fixpack_num FROM TABLE(sysproc.env_get_inst_info()) 
 			as INSTANCEINFO");
 
-
-		if ($row) {
+		
+		if ($row) {		
 			$info['version'] = $row[0].':'.$row[1];
 			$info['fixpack'] = $row[1];
 			$info['description'] = '';
 		} else {
 			return ADOConnection::ServerInfo();
 		}
-
+		
 		return $info;
 	}
 	
@@ -254,10 +254,10 @@ class ADODB_db2 extends ADOConnection {
 			}
 			$rs = ADOConnection::SelectLimit($sql,-1,$offset,$inputArr);
 		}
-
+		
 		return $rs;
 	}
-
+	
 	/*
 		This algorithm is not very efficient, but works even if table locking
 		is not available.
@@ -610,7 +610,7 @@ See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/db2/htm/db2
 		return $retarr;
 	}
 	
-
+		
 	function Prepare($sql)
 	{
 		if (! $this->_bindInputArray) return $sql; // no binding
@@ -739,7 +739,7 @@ class ADORecordSet_db2 extends ADORecordSet {
 
 
 	// returns the field object
-	function FetchField($offset = -1)
+	function FetchField($offset = -1) 
 	{
 		$o= new ADOFieldObject();
 		$o->name = @db2_field_name($this->_queryID,$offset);
@@ -781,7 +781,7 @@ class ADORecordSet_db2 extends ADORecordSet {
 	}
 	
 	// speed up SelectLimit() by switching to ADODB_FETCH_NUM as ADODB_FETCH_ASSOC is emulated
-	function GetArrayLimit($nrows,$offset=-1)
+	function GetArrayLimit($nrows,$offset=-1) 
 	{
 		if ($offset <= 0) {
 			$rs = $this->GetArray($nrows);

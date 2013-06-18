@@ -1,6 +1,6 @@
 <?php
 /* 
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -52,9 +52,13 @@ class ADODB_odbc extends ADOConnection {
 		
 		if (!function_exists('odbc_connect')) return null;
 		
-		if ($this->debug && $argDatabasename && $this->databaseType != 'vfp') {
-			ADOConnection::outp("For odbc Connect(), $argDatabasename is not used. Place dsn in 1st parameter.");
+		if (!empty($argDatabasename) && stristr($argDSN, 'Database=') === false) {
+			$argDSN = trim($argDSN);
+			$endDSN = substr($argDSN, strlen($argDSN) - 1);
+			if ($endDSN != ';') $argDSN .= ';';
+			$argDSN .= 'Database='.$argDatabasename;
 		}
+		
 		if (isset($php_errormsg)) $php_errormsg = '';
 		if ($this->curmode === false) $this->_connectionID = odbc_connect($argDSN,$argUsername,$argPassword);
 		else $this->_connectionID = odbc_connect($argDSN,$argUsername,$argPassword,$this->curmode);
@@ -620,7 +624,7 @@ class ADORecordSet_odbc extends ADORecordSet {
 
 
 	// returns the field object
-	function FetchField($fieldOffset = -1)
+	function FetchField($fieldOffset = -1) 
 	{
 		
 		$off=$fieldOffset+1; // offsets begin at 1
@@ -667,7 +671,7 @@ class ADORecordSet_odbc extends ADORecordSet {
 	}
 	
 	// speed up SelectLimit() by switching to ADODB_FETCH_NUM as ADODB_FETCH_ASSOC is emulated
-	function GetArrayLimit($nrows,$offset=-1)
+	function GetArrayLimit($nrows,$offset=-1) 
 	{
 		if ($offset <= 0) {
 			$rs = $this->GetArray($nrows);

@@ -73,6 +73,9 @@ These should be posted to the ADOdb forums at
 
 FUNCTION DESCRIPTIONS
 
+** FUNCTION adodb_time()
+
+Returns the current time measured in the number of seconds since the Unix Epoch (January 1 1970 00:00:00 GMT) as an unsigned integer.
 
 ** FUNCTION adodb_getdate($date=false)
 
@@ -241,24 +244,32 @@ b. Implement daylight savings, which looks awfully complicated, see
 
 
 CHANGELOG
+- 16 Jan 2011 0.36
+Added adodb_time() which returns current time. If > 2038, will return as float
+
+- 7 Feb 2011 0.35
+Changed adodb_date to be symmetric with adodb_mktime. See $jan1_71. fix for bc. 
+
+- 13 July 2010 0.34
+Changed adodb_get_gm_diff to use DateTimeZone().
 
 - 11 Feb 2008 0.33
 * Bug in 0.32 fix for hour handling. Fixed.
 
 - 1 Feb 2008 0.32
-* Now adodb_mktime(0,0,0,12+$m,20,2040) works properly.
+* Now adodb_mktime(0,0,0,12+$m,20,2040) works properly. 
 
 - 10 Jan 2008 0.31
 * Now adodb_mktime(0,0,0,24,1,2037) works correctly.
 
 - 15 July 2007 0.30
-Added PHP 5.2.0 compatability fixes.
+Added PHP 5.2.0 compatability fixes. 
  * gmtime behaviour for 1970 has changed. We use the actual date if it is between 1970 to 2038 to get the
  * timezone, otherwise we use the current year as the baseline to retrieve the timezone.
- * Also the timezone's in php 5.2.* support historical data better, eg. if timezone today was +8, but
+ * Also the timezone's in php 5.2.* support historical data better, eg. if timezone today was +8, but 
    in 1970 it was +7:30, then php 5.2 return +7:30, while this library will use +8.
- *
-
+ * 
+ 
 - 19 March 2006 0.24
 Changed strftime() locale detection, because some locales prepend the day of week to the date when %c is used.
 
@@ -386,7 +397,7 @@ First implementation.
 /*
 	Version Number
 */
-define('ADODB_DATE_VERSION',0.33);
+define('ADODB_DATE_VERSION',0.35);
 
 $ADODB_DATETIME_CLASS = (PHP_VERSION >= 5.2);
 
@@ -432,13 +443,13 @@ function adodb_date_test_strftime($fmt)
 
 /**
 	 Test Suite
-*/
+*/	
 function adodb_date_test()
 {
 	
 	for ($m=-24; $m<=24; $m++)
 		echo "$m :",adodb_date('d-m-Y',adodb_mktime(0,0,0,1+$m,20,2040)),"<br>";
-
+	
 	error_reporting(E_ALL);
 	print "<h4>Testing adodb_date and adodb_mktime. version=".ADODB_DATE_VERSION.' PHP='.PHP_VERSION."</h4>";
 	@set_time_limit(0);
@@ -448,14 +459,14 @@ function adodb_date_test()
 	if (!defined('ADODB_TEST_DATES')) define('ADODB_TEST_DATES',1);
 	
 	$t = time();
-
-
+	
+	
 	$fmt = 'Y-m-d H:i:s';
 	echo '<pre>';
 	echo 'adodb: ',adodb_date($fmt,$t),'<br>';
 	echo 'php  : ',date($fmt,$t),'<br>';
 	echo '</pre>';
-
+	
 	adodb_date_test_strftime('%Y %m %x %X');
 	adodb_date_test_strftime("%A %d %B %Y");
 	adodb_date_test_strftime("%H %M S");
@@ -515,7 +526,7 @@ function adodb_date_test()
 	
 	// Test string formating
 	print "<p>Testing date formating</p>";
-
+	
 	$fmt = '\d\a\t\e T Y-m-d H:i:s a A d D F g G h H i j l L m M n O \R\F\C2822 r s t U w y Y z Z 2003';
 	$s1 = date($fmt,0);
 	$s2 = adodb_date($fmt,0);
@@ -599,6 +610,12 @@ function adodb_date_test()
 	echo "Tested $cnt dates<br>";
 	if (!$fail) print "<p>Passed !</p>";
 	else print "<p><b>Failed</b> :-(</p>";
+}
+
+function adodb_time()
+{
+	$d = new DateTime();
+	return $d->format('U');
 }
 
 /**
@@ -693,24 +710,24 @@ function adodb_year_digit_check($y)
 	return $y;
 }
 
-function adodb_get_gmt_diff_ts($ts)
+function adodb_get_gmt_diff_ts($ts) 
 {
 	if (0 <= $ts && $ts <= 0x7FFFFFFF) { // check if number in 32-bit signed range) {
 		$arr = getdate($ts);
 		$y = $arr['year'];
 		$m = $arr['mon'];
 		$d = $arr['mday'];
-		return adodb_get_gmt_diff($y,$m,$d);
+		return adodb_get_gmt_diff($y,$m,$d);	
 	} else {
 		return adodb_get_gmt_diff(false,false,false);
 	}
-
+	
 }
 
 /**
  get local time zone offset from GMT. Does not handle historical timezones before 1970.
 */
-function adodb_get_gmt_diff($y,$m,$d)
+function adodb_get_gmt_diff($y,$m,$d) 
 {
 static $TZ,$tzo;
 global $ADODB_DATETIME_CLASS;
@@ -729,9 +746,17 @@ global $ADODB_DATETIME_CLASS;
 	} else {
 		if (isset($TZ)) return $TZ;
 		$y = date('Y');
-		$TZ = mktime(0,0,0,12,2,$y,0) - gmmktime(0,0,0,12,2,$y,0);
+		/*
+		if (function_exists('date_default_timezone_get') && function_exists('timezone_offset_get')) {
+			$tzonename = date_default_timezone_get();
+			if ($tzonename) {
+				$tobj = new DateTimeZone($tzonename);
+				$TZ = -timezone_offset_get($tobj,new DateTime("now",$tzo));
+			}
+		} 
+		*/
+		if (empty($TZ)) $TZ = mktime(0,0,0,12,2,$y) - gmmktime(0,0,0,12,2,$y);
 	}
-	
 	return $TZ;
 }
 
@@ -994,18 +1019,18 @@ global $_month_table_normal,$_month_table_leaf;
 }
 /*
 		if ($isphp5)
-				$dates .= sprintf('%s%04d',($gmt<=0)?'+':'-',abs($gmt)/36);
+				$dates .= sprintf('%s%04d',($gmt<=0)?'+':'-',abs($gmt)/36); 
 			else
-				$dates .= sprintf('%s%04d',($gmt<0)?'+':'-',abs($gmt)/36);
+				$dates .= sprintf('%s%04d',($gmt<0)?'+':'-',abs($gmt)/36); 
 			break;*/
 function adodb_tz_offset($gmt,$isphp5)
 {
 	$zhrs = abs($gmt)/3600;
 	$hrs = floor($zhrs);
-	if ($isphp5)
-		return sprintf('%s%02d%02d',($gmt<=0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60);
+	if ($isphp5) 
+		return sprintf('%s%02d%02d',($gmt<=0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60); 
 	else
-		return sprintf('%s%02d%02d',($gmt<0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60);
+		return sprintf('%s%02d%02d',($gmt<0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60); 
 }
 
 
@@ -1040,11 +1065,19 @@ function adodb_date($fmt,$d=false,$is_gmt=false)
 {
 static $daylight;
 global $ADODB_DATETIME_CLASS;
+static $jan1_1971;
 
+
+	if (!isset($daylight)) {
+		$daylight = function_exists('adodb_daylight_sv');
+		if (empty($jan1_1971)) $jan1_1971 = mktime(0,0,0,1,1,1971); // we only use date() when > 1970 as adodb_mktime() only uses mktime() when > 1970
+	}
+	
 	if ($d === false) return ($is_gmt)? @gmdate($fmt): @date($fmt);
 	if (!defined('ADODB_TEST_DATES')) {
 		if ((abs($d) <= 0x7FFFFFFF)) { // check if number in 32-bit signed range
-			if (!defined('ADODB_NO_NEGATIVE_TS') || $d >= 0) // if windows, must be +ve integer
+		
+			if (!defined('ADODB_NO_NEGATIVE_TS') || $d >= $jan1_1971) // if windows, must be +ve integer
 				return ($is_gmt)? @gmdate($fmt,$d): @date($fmt,$d);
 
 		}
@@ -1053,7 +1086,6 @@ global $ADODB_DATETIME_CLASS;
 	
 	$arr = _adodb_getdate($d,true,$is_gmt);
 	
-	if (!isset($daylight)) $daylight = function_exists('adodb_daylight_sv');
 	if ($daylight) adodb_daylight_sv($arr, $is_gmt);
 	
 	$year = $arr['year'];
@@ -1077,7 +1109,7 @@ global $ADODB_DATETIME_CLASS;
 		case 'e':
 			$dates .= date('e');
 			break;
-		case 'T':
+		case 'T': 
 			if ($ADODB_DATETIME_CLASS) {
 				$dt = new DateTime();
 				$dt->SetDate($year,$month,$day);
@@ -1101,10 +1133,10 @@ global $ADODB_DATETIME_CLASS;
 			if ($secs < 10) $dates .= ':0'.$secs; else $dates .= ':'.$secs;
 			
 			$gmt = adodb_get_gmt_diff($year,$month,$day);
-
+			
 			$dates .= ' '.adodb_tz_offset($gmt,$isphp5);
 			break;
-
+			
 		case 'Y': $dates .= $year; break;
 		case 'y': $dates .= substr($year,strlen($year)-2,2); break;
 		// MONTH
@@ -1219,11 +1251,11 @@ function adodb_mktime($hr,$min,$sec,$mon=false,$day=false,$year=false,$is_dst=fa
 		// 1 Jan 1970 could generate negative timestamp, which is illegal
 		$usephpfns = (1970 < $year && $year < 2038
 			|| !defined('ADODB_NO_NEGATIVE_TS') && (1901 < $year && $year < 2038)
-			);
-
-
+			); 
+			
+		
 		if ($usephpfns && ($year + $mon/12+$day/365.25+$hr/(24*365.25) >= 2038)) $usephpfns = false;
-
+			
 		if ($usephpfns) {
 				return $is_gmt ?
 					@gmmktime($hr,$min,$sec,$mon,$day,$year):

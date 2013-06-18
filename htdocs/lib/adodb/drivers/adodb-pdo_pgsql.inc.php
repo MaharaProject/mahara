@@ -1,7 +1,7 @@
 <?php
 
 /*
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -69,19 +69,19 @@ WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
 		return $arr;
 	}
 	
-	function SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0)
+	function SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0) 
 	{
 		 $offsetStr = ($offset >= 0) ? " OFFSET $offset" : '';
 		 $limitStr  = ($nrows >= 0)  ? " LIMIT $nrows" : '';
 		 if ($secs2cache)
-			$rs = $this->CacheExecute($secs2cache,$sql."$limitStr$offsetStr",$inputarr);
+		  	$rs = $this->CacheExecute($secs2cache,$sql."$limitStr$offsetStr",$inputarr);
 		 else
-			$rs = $this->Execute($sql."$limitStr$offsetStr",$inputarr);
+		  	$rs = $this->Execute($sql."$limitStr$offsetStr",$inputarr);
 		
 		return $rs;
 	}
 	
-	function MetaTables($ttype=false,$showSchema=false,$mask=false)
+	function MetaTables($ttype=false,$showSchema=false,$mask=false) 
 	{
 		$info = $this->ServerInfo();
 		if ($info['version'] >= 7.3) {
@@ -112,7 +112,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 		return $ret;
 	}
 	
-	function MetaColumns($table,$normalize=true)
+	function MetaColumns($table,$normalize=true) 
 	{
 	global $ADODB_FETCH_MODE;
 	

@@ -1,6 +1,6 @@
 <?php
 /* 
-V5.11 5 May 2010   (c) 2000-2010 John Lim (jlim#natsoft.com). All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim (jlim#natsoft.com). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -70,7 +70,7 @@ class ADODB_ado extends ADOConnection {
 		 } else {
 		 	$argDatabasename = '';
 		 	if ($argDBorProvider) $argProvider = $argDBorProvider;
-			else if (stripos($argHostname,'PROVIDER') === false) /* full conn string is not in $argHostname */
+			else if (stripos($argHostname,'PROVIDER') === false) /* full conn string is not in $argHostname */ 
 				$argProvider = 'MSDASQL';
 		}
 		
@@ -226,7 +226,7 @@ class ADODB_ado extends ADOConnection {
 	}
 	
 	/* returns queryID or false */
-	function _query($sql,$inputarr=false)
+	function _query($sql,$inputarr=false) 
 	{
 		try { // In PHP5, all COM errors are exceptions, so to maintain old behaviour...
 		
@@ -261,13 +261,13 @@ class ADODB_ado extends ADOConnection {
 					$len=1;
 				else
 					$this->adoParameterType = 130;
-
+				
 				// name, type, direction 1 = input, len,
-			$p = $oCmd->CreateParameter('name',$this->adoParameterType,1,$len,$val);
+        		$p = $oCmd->CreateParameter('name',$this->adoParameterType,1,$len,$val);
 
 				$oCmd->Parameters->Append($p);
 			}
-
+			
 			$p = false;
 			$rs = $oCmd->Execute();
 			$e = $dbc->Errors;
@@ -393,7 +393,7 @@ class ADORecordSet_ado extends ADORecordSet {
 		$o= new ADOFieldObject();
 		$rs = $this->_queryID;
 		if (!$rs) return false;
-
+		
 		$f = $rs->Fields($fieldOffset);
 		$o->name = $f->Name;
 		$t = $f->Type;
@@ -642,8 +642,8 @@ class ADORecordSet_ado extends ADORecordSet {
 				break;
 			case 20:
 			case 21: // bigint (64 bit)
-			$this->fields[] = (float) $f->value; // if 64 bit PHP, could use (int)
-			break;
+    			$this->fields[] = (float) $f->value; // if 64 bit PHP, could use (int)
+    			break;
 			case 6: // currency is not supported properly;
 				ADOConnection::outp( '<b>'.$f->Name.': currency type not supported by PHP</b>');
 				$this->fields[] = (float) $f->value;
@@ -655,7 +655,7 @@ class ADORecordSet_ado extends ADORecordSet {
 					else $val = 0;
 				}
 				if(is_null($f->value)) $val = null;
-
+				
 				$this->fields[] = $val;
 				break;
 			default:
