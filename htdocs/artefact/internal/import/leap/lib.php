@@ -383,6 +383,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         if (!in_array($email, $seen)) {
             $id = self::create_artefact($importer, 'email', $email);
             if (!$firstdone) {
+                // The first email address will be primary
                 update_record('artefact_internal_profile_email', (object)array(
                     'principal' => 1,
                 ), (object)array(
@@ -593,19 +594,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      */
     private static function create_artefact(PluginImportLeap $importer, $artefacttype, $title) {
         $classname = generate_artefact_class_name($artefacttype);
-        $artefact = null;
-        if ($artefacttype == 'email') {
-            // this type is a bit special. just check if we have one with this value already
-            if ($a = get_record('artefact', 'artefacttype', 'email', 'owner', $importer->get('usr'), 'title', $title)) {
-                $artefact = new $classname($a->id, $a);
-            }
+        if (($artefacttype == 'email')
+            && ($a = get_record('artefact', 'artefacttype', 'email', 'owner', $importer->get('usr'), 'title', $title))) {
+            // email is a bit special. just check if we have one with this value already
+            // User may have several email addresses but they must be UNIQUE
+            return $a->id;
         }
-        if (empty($artefact)) {
-            try {
-                $artefact = artefact_instance_from_type($artefacttype, $importer->get('usr'));
-            } catch (Exception $e) {
-                $artefact = new $classname(0, array('owner' => $importer->get('usr')));
-            }
+        try {
+            $artefact = artefact_instance_from_type($artefacttype, $importer->get('usr'));
+        }
+        catch (Exception $e) {
+            $artefact = new $classname(0, array('owner' => $importer->get('usr')));
         }
         $artefact->set('title', $title);
         $artefact->commit();

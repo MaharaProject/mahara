@@ -571,6 +571,10 @@ class ArtefactTypeFirstname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeLastname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeEmail extends ArtefactTypeProfileField {
+    public static function is_singular() {
+        return false;
+    }
+
     public function commit() {
 
         parent::commit();
