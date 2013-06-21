@@ -120,7 +120,8 @@ var Paginator = function(id, datatable, script, extradata) {
             if ((document.all && !window.opera) || (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
                 var temp = DIV({'id':'ie-workaround'});
                 if (container.tagName == 'TBODY') {
-                    temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                    temp = DIV({'id':'ie-workaround'},TABLE(null, TBODY(null, '')));
+                    temp.childNodes[0].childNodes[0].innerHTML = data.data.tablerows;
                     swapDOM(container, temp.childNodes[0].childNodes[0]);
                 }
                 else {
