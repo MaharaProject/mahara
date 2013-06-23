@@ -256,7 +256,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
                 artefacttype = \'email\'
                 AND LOWER(title) IN (
                     SELECT LOWER(title)
-                    FROM artefact
+                    FROM {artefact}
                     WHERE artefacttype = \'email\'
                     GROUP BY LOWER(title)
                     HAVING count(id) > 1
