@@ -357,6 +357,14 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
     $prefix = $form->get_name() . '_' . $element['name'];
 
 
+    // Cancel edit a file artefact
+    // This value only available when the filebrowser was submitted by non-js web browser
+    $canceledit = param_variable($prefix . '_canceledit', null);
+    if (!empty($canceledit)) {
+        redirect($element['page']);
+    }
+
+
     // The value of this element is the list of selected artefact ids
     $selected = param_variable($prefix . '_selected', null);
     if (is_array($selected)) {
