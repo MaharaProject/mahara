@@ -435,6 +435,9 @@ EOF;
             $data = array(
                 'title'       => $biconfig['title'],
                 'description' => $configdata['text'],
+                'license' => $configdata['license'],
+                'licensor' => $configdata['licensor'],
+                'licensorurl' => $configdata['licensorurl'],
                 'owner'       => $viewconfig['owner'],
             );
             $artefact = new ArtefactTypeHtml(0, $data);
@@ -466,14 +469,23 @@ EOF;
         $result = array();
 
         $text = '';
+        $license = '';
+        $licensor = '';
+        $licensorurl = '';
 
         if (!empty($configdata['artefactid'])) {
             $result['artefactid'] = json_encode(array($configdata['artefactid']));
             $note = $bi->get_artefact_instance($configdata['artefactid']);
             $text = $note->get('description');
+            $license = $note->get('license');
+            $licensor = $note->get('licensor');
+            $licensorurl = $note->get('licensorurl');
         }
 
         $result['text'] = json_encode(array($text));
+        $result['license '] = json_encode(array($license));
+        $result['licensor'] = json_encode(array($licensor));
+        $result['licensorurl'] = json_encode(array($licensorurl));
 
         return $result;
     }
