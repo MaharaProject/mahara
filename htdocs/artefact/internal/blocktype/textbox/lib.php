@@ -101,10 +101,19 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'selectjscallback' => 'updateTextContent',
             'getblocks'        => true,
             'ownerinfo'        => true,
-            'returnfields'     => array('id', 'title', 'description', 'safedescription', 'editable'),
+            'returnfields'     => array('id', 'title', 'description', 'license', 'licensor', 'licensorurl', 'safedescription', 'safelicense', 'editable'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
         );
+    }
+
+    public static function artefactchooser_get_element_data($artefact) {
+
+        require_once('license.php');
+        $artefactobj = artefact_instance_from_id($artefact->id);
+        $artefact->safelicense = render_license($artefactobj);
+
+        return $artefact;
     }
 
     public static function get_instance_config_javascript($instance) {
@@ -116,12 +125,24 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
 function updateTextContent(a) {
     setNodeAttribute('instconf_title', 'value', a.title);
     tinyMCE.activeEditor.setContent(a.description);
+    setNodeAttribute('instconf_license', 'value', a.license);
+    setNodeAttribute('instconf_licensor', 'value', a.licensor);
+    setNodeAttribute('instconf_licensorurl', 'value', a.licensorurl);
     $('instconf_textreadonly_display').innerHTML = a.safedescription;
+    $('instconf_licensereadonly_display').innerHTML = a.safelicense;
     $('instconf_makecopy').checked = false;
     if (a.editable == 1) {
+        addElementClass('instconf_textreadonly_header', 'hidden');
         addElementClass('instconf_textreadonly_container', 'hidden');
         addElementClass('instconf_readonlymsg_container', 'hidden');
+        addElementClass('instconf_licensereadonly_header', 'hidden');
+        addElementClass('instconf_licensereadonly_container', 'hidden');
+        removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
+        removeElementClass('instconf_license_header', 'hidden');
+        removeElementClass('instconf_license_container', 'hidden');
+        removeElementClass('instconf_license_description', 'hidden');
+        removeElementClass('instconf_license_advanced_fieldset', 'hidden');
         var blockcountmsg = $('instconf_otherblocksmsg_container');
         if (blockcountmsg && $('textbox_blockcount')) {
             var otherblockcount = 0;
@@ -142,10 +163,21 @@ function updateTextContent(a) {
         }
     }
     else {
+        addElementClass('instconf_text_header', 'hidden');
         addElementClass('instconf_text_container', 'hidden');
         addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        addElementClass('instconf_license_header', 'hidden');
+        addElementClass('instconf_license_container', 'hidden');
+        addElementClass('instconf_license_description', 'hidden');
+        addElementClass('instconf_license_advanced_fieldset', 'hidden');
+        removeElementClass('instconf_textreadonly_header', 'hidden');
         removeElementClass('instconf_textreadonly_container', 'hidden');
         removeElementClass('instconf_readonlymsg_container', 'hidden');
+        removeElementClass('instconf_licensereadonly_header', 'hidden');
+        removeElementClass('instconf_licensereadonly_container', 'hidden');
+    }
+    if (table = getFirstParentByTagAndClassName($('instconf_text_container'), 'table', 'maharatable')) {
+        update_width(getFirstParentByTagAndClassName(table, 'div', 'blockinstance'), getElementDimensions(table).w);
     }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
@@ -162,12 +194,22 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
             }
         });
         $('instconf_makecopy').checked = true;
+        addElementClass('instconf_textreadonly_header', 'hidden');
         addElementClass('instconf_textreadonly_container', 'hidden');
         addElementClass('instconf_readonlymsg_container', 'hidden');
         addElementClass('instconf_otherblocksmsg_container', 'hidden');
+        addElementClass('instconf_licensereadonly_header', 'hidden');
+        addElementClass('instconf_licensereadonly_container', 'hidden');
+        removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
+        removeElementClass('instconf_license_header', 'hidden');
+        removeElementClass('instconf_license_container', 'hidden');
+        removeElementClass('instconf_license_description', 'hidden');
+        removeElementClass('instconf_license_advanced_fieldset', 'hidden');
     });
 });
+removeElementClass('instconf_license', 'hidden');
+removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
 EOF;
     }
 
@@ -253,8 +295,18 @@ EOF;
             'textreadonly' => array(
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
+                'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+            ),
+            'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
+            'license_advanced' => license_form_el_advanced(isset($artefact) ? $artefact : null),
+            'licensereadonly' => array(
+                'type' => 'html',
+                'class' => $readonly ? '' : 'hidden',
+                'width' => '100%',
+                'title' => get_string('license'),
+                'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
             ),
             'makecopy' => array(
                 'type' => 'checkbox',
@@ -276,17 +328,8 @@ EOF;
             ),
         );
         if ($readonly) {
-            if ($license = render_license(isset($artefact) ? $artefact : null)) {
-                $elements['license'] = array(
-                    'type' => 'html',
-                    'title' => get_string('license'),
-                    'value' => $license,
-                );
-            }
-        }
-        else {
-            $elements['license'] = license_form_el_basic(isset($artefact) ? $artefact : null);
-            $elements['license_advanced'] = license_form_el_advanced(isset($artefact) ? $artefact : null);
+            $elements['license']['class'] = 'hidden';
+            $elements['license_advanced']['class'] = 'hidden';
         }
         return $elements;
     }
@@ -392,6 +435,9 @@ EOF;
             $data = array(
                 'title'       => $biconfig['title'],
                 'description' => $configdata['text'],
+                'license' => $configdata['license'],
+                'licensor' => $configdata['licensor'],
+                'licensorurl' => $configdata['licensorurl'],
                 'owner'       => $viewconfig['owner'],
             );
             $artefact = new ArtefactTypeHtml(0, $data);
@@ -423,13 +469,23 @@ EOF;
         $result = array();
 
         $text = '';
+        $license = '';
+        $licensor = '';
+        $licensorurl = '';
 
         if (!empty($configdata['artefactid'])) {
             $result['artefactid'] = json_encode(array($configdata['artefactid']));
-            $text = $bi->get_artefact_instance($configdata['artefactid'])->get('description');
+            $note = $bi->get_artefact_instance($configdata['artefactid']);
+            $text = $note->get('description');
+            $license = $note->get('license');
+            $licensor = $note->get('licensor');
+            $licensorurl = $note->get('licensorurl');
         }
 
         $result['text'] = json_encode(array($text));
+        $result['license '] = json_encode(array($license));
+        $result['licensor'] = json_encode(array($licensor));
+        $result['licensorurl'] = json_encode(array($licensorurl));
 
         return $result;
     }
