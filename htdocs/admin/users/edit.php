@@ -151,7 +151,10 @@ if (count($authinstances) > 1) {
     // setting to the XMLRPC plugin only, making the UI a bit more consistent
     $external = false;
     foreach ($authinstances as $authinstance) {
-        if ($USER->can_edit_institution($authinstance->name)) {
+        // If a user has a "No Institution" auth method (institution "mahara", id = 1) and he belongs to an Institution,
+        // his Institution Admin will be able to change his auth method away to one of the Institution's auth methods
+        // that's the second part of the "if"
+        if ($USER->can_edit_institution($authinstance->name) || ($authinstance->id == 1 && $user->authinstance == 1)) {
             $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
             if ($authinstance->authname != 'internal') {
                 $external = true;
@@ -168,7 +171,7 @@ if (count($authinstances) > 1) {
             'defaultvalue' => $user->authinstance,
             'help'         => true,
         );
-        if ($external) {
+        //if ($external) {
             $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
             $elements['remoteusername'] = array(
                 'type'         => 'text',
@@ -177,7 +180,7 @@ if (count($authinstances) > 1) {
                 'defaultvalue' => $un ? $un : $user->username,
                 'help'         => true,
             );
-        }
+        //}
     }
 
 }
@@ -344,7 +347,7 @@ function edituser_site_submit(Pieform $form, $values) {
                                              array($values['authinstance'], $user->authinstance));
         if ($USER->get('admin') || 
             ($USER->is_institutional_admin($authinst[$values['authinstance']]->institution) &&
-             $USER->is_institutional_admin($authinst[$user->authinstance]->institution))) {
+             ($USER->is_institutional_admin($authinst[$user->authinstance]->institution) || $user->authinstance == 1))) {
             // determine the current remoteuser
             $current_remotename = get_field('auth_remote_user', 'remoteusername',
                                             'authinstance', $user->authinstance, 'localusr', $user->id);
