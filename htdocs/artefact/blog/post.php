@@ -280,7 +280,7 @@ $smarty->display('artefact:blog:editpost.tpl');
  */
 function editpost_cancel_submit() {
     global $blog;
-    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $blog);
+    redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog);
 }
 
 function editpost_submit(Pieform $form, $values) {

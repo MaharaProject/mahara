@@ -117,7 +117,7 @@ function returnto() {
         }
     }
     else {
-        $goto = 'view/';
+        $goto = 'view/index.php';
     }
     return $goto;
 }

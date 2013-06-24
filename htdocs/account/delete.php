@@ -54,7 +54,7 @@ function account_delete_submit(Pieform $form, $values) {
     $USER->logout();
     delete_user($userid);
     $SESSION->add_ok_msg(get_string('accountdeleted', 'account'));
-    redirect('/');
+    redirect('/index.php');
 }
 
 $smarty = smarty();

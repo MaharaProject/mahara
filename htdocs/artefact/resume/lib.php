@@ -62,7 +62,7 @@ class PluginArtefactResume extends Plugin {
             'content/resume' => array(
                 'path' => 'content/resume',
                 'title' => get_string('resume', 'artefact.resume'),
-                'url' => 'artefact/resume/',
+                'url' => 'artefact/resume/index.php',
                 'weight' => 50,
             ),
         );
@@ -1274,6 +1274,9 @@ function compositeformedit_submit(Pieform $form, $values) {
     $goto = get_config('wwwroot') . '/artefact/resume/';
     if (isset($tabs[$values['compositetype']])) {
         $goto .= $tabs[$values['compositetype']] . '.php';
+    }
+    else {
+        $goto .='index.php';
     }
 
     try {

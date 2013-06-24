@@ -131,7 +131,7 @@ function changepoststatus_submit(Pieform $form, $values) {
     }
     $form->reply(PIEFORM_OK, array(
         'message' => $strmessage,
-        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['changepoststatus'],
     ));
 }
@@ -145,7 +145,7 @@ function delete_submit(Pieform $form, $values) {
     $blogpost->delete();
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('blogpostdeleted', 'artefact.blog'),
-        'goto' => get_config('wwwroot') . 'artefact/blog/view/?id=' . $blogpost->get('parent'),
+        'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['delete'],
     ));
 }

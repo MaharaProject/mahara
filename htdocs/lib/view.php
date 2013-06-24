@@ -2738,7 +2738,7 @@ class View {
             }
         }
         else {
-            $url = get_config('wwwroot') . 'view/';
+            $url = get_config('wwwroot') . 'view/index.php';
         }
 
         if (!empty($queryparams)) {
@@ -4441,7 +4441,7 @@ function createview_cancel_submit(Pieform $form, $values) {
     if (isset($values['institution'])) {
         redirect(get_config('wwwroot') . 'view/institutionviews.php?institution=' . $values['institution']);
     }
-    redirect(get_config('wwwroot') . 'view/');
+    redirect(get_config('wwwroot') . 'view/index.php');
 }
 
 function searchviews_submit(Pieform $form, $values) {

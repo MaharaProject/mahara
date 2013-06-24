@@ -125,7 +125,7 @@ class PluginArtefactInternal extends PluginArtefact {
         return array(
             'content/profile' => array(
                 'path' => 'content/profile',
-                'url' => 'artefact/internal/',
+                'url' => 'artefact/internal/index.php',
                 'title' => get_string('profile', 'artefact.internal'),
                 'weight' => 10,
             ),
@@ -521,7 +521,7 @@ class ArtefactTypeProfile extends ArtefactType {
         $wwwroot = get_config('wwwroot');
 
         return array(
-            '_default' => $wwwroot . 'artefact/internal/',
+            '_default' => $wwwroot . 'artefact/internal/index.php',
         );
     }
 

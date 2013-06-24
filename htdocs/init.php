@@ -368,7 +368,7 @@ if (!get_config('installed')) {
     && false === strpos($scriptfilename, 'admin/upgrade.json.php')
     && false === strpos($scriptfilename, 'admin/cli/install.php')
     && false === strpos($scriptfilename, 'admin/cli/upgrade.php')) {
-        redirect('/admin/');
+        redirect('/admin/index.php');
     }
 }
 

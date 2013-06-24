@@ -138,13 +138,16 @@ function files_page($file) {
     else if ($group = $file->get('group')) {
         $url .= 'groupfiles.php?group=' . $group;
     }
-    if ($institution = $file->get('institution')) {
+    else if ($institution = $file->get('institution')) {
         if ($institution == 'mahara') {
             $url .= 'sitefiles.php';
         }
         else {
             $url .= 'institutionfiles.php?institution=' . $institution;
         }
+    }
+    else {
+        $url .= 'index.php';
     }
     return $url;
 }
