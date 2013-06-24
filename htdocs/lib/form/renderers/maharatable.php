@@ -53,18 +53,22 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
         }
         $builtelement = substr($builtelement, 0, -12) . '</table></fieldset>';
 
-        $result = "\t<tr>\n\t\t<td colspan=\"2\">";
+        $result = "\t<tr id=\"{$formname}_{$element['name']}_fieldset\"";
+        if (isset($element['class'])) {
+            $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+        }
+        $result .= ">\n\t\t<td colspan=\"2\">";
         $result .= $builtelement;
         $result .= "</td>\n\t</tr>";
         return $result;
     }
-    
+
     $result = '';
     if (isset($element['labelhtml']) && $element['labelhtml'] !== '') {
         $result .= "\t<tr";
         $result .= ' id="' . $formname . '_' . Pieform::hsc($element['name']) . '_header"';
         // Set the class of the enclosing <tr> to match that of the element
-        if ($element['class']) {
+        if (isset($element['class'])) {
             $result .= ' class="' . Pieform::hsc($element['class']) . '"';
         }
         $result .= ">\n\t\t";
@@ -93,8 +97,8 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
 
     // Contextual help
     if (!empty($element['help'])) {
-        $result .= get_help_icon($form->get_property('plugintype'), 
-                                 $form->get_property('pluginname'), 
+        $result .= get_help_icon($form->get_property('plugintype'),
+                                 $form->get_property('pluginname'),
                                  $form->get_name(), $element['name']);
         if ($element['type'] == 'wysiwyg') {
             $result .= '</td></tr></table>';
@@ -104,9 +108,13 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
     $result .= "</td>\n\t</tr>\n";
 
     // Description - optional description of the element, or other note that should be visible
-    // on the form itself (without the user having to hover over contextual help 
+    // on the form itself (without the user having to hover over contextual help
     if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-        $result .= "\t<tr>\n\t\t<td class=\"description\">";
+        $result .= "\t<tr id=\"{$formname}_{$element['name']}_description\"";
+        if (isset($element['class'])) {
+            $result .= ' class="' . Pieform::hsc($element['class']) . '"';
+        }
+        $result .= ">\n\t\t<td class=\"description\">";
         $result .= $element['description'];
         $result .= "</td>\n\t</tr>\n";
     }
