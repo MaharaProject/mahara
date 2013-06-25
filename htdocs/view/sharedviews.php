@@ -107,7 +107,7 @@ $searchform = pieform(array(
         'search' => array(
             'type'         => 'submit',
             'class'        => 'inline',
-            'value'        => get_string('search')
+            'value'        => get_string('go')
         ),
         'advanced' => array(
             'type'        => 'fieldset',
