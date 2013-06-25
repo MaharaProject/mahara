@@ -108,6 +108,7 @@ $string['fileexistsoverwritecancel'] =  'A file with that name already exists. Y
 $string['filelistloaded'] = 'File list loaded';
 $string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required';
+$string['filenamefieldisrequired1'] = 'The file/folder name is required';
 $string['fileinstructions'] = 'Upload your images, documents or other files for inclusion in pages. You can select multiple files to upload them at once. Drag and drop the icons to move files between folders.';
 $string['filethingdeleted'] = '%s deleted';
 $string['filewithnameexists'] = 'A file or folder with the name "%s" already exists.';
