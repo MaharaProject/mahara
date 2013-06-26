@@ -410,8 +410,29 @@ EOF;
         $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
     }
 
-    // disable drop-downs if a handheld device detected
-    $dropdownmenu = $SESSION->get('handheld_device') ? false : get_config('dropdownmenu');
+    $dropdownmenu = get_config('dropdownmenu');
+    // disable drop-downs if overridden at institution level
+    $sitethemeprefs = get_config('sitethemeprefs');
+    $institutions = $USER->institutions;
+    if (!empty($institutions)) {
+        foreach ($institutions as $i) {
+            if (!empty($sitethemeprefs)) {
+                if (!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution) {
+                    $dropdownmenu = $i->dropdownmenu;
+                }
+            }
+            else {
+                if ((!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution)
+                  || (empty($USER->accountprefs) && $i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution)) {
+                      $dropdownmenu = $i->dropdownmenu;
+                }
+            }
+        }
+    }
+
+    // and/or disable drop-downs if a handheld device detected
+    $dropdownmenu = $SESSION->get('handheld_device') ? false : $dropdownmenu;
+
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
     }

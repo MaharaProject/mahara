@@ -248,6 +248,7 @@ if ($institution || $add) {
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
         $data->licensemandatory = 0;
         $data->licensedefault = '';
+        $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -385,6 +386,13 @@ if ($institution || $add) {
             'defaultvalue' => $data->theme ? $data->theme : 'sitedefault',
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
+            'help'         => true,
+        );
+        $elements['dropdownmenu'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('dropdownmenu', 'admin'),
+            'description'  => get_string('dropdownmenudescriptioninstitution','admin'),
+            'defaultvalue' => $data->dropdownmenu,
             'help'         => true,
         );
         $elements['customthemefs'] = array(
@@ -639,6 +647,7 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->registerconfirm              = ($values['registerconfirm']) ? 1 : 0;
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
+    $newinstitution->dropdownmenu                 = ($values['dropdownmenu']) ? 1 : 0;
 
     if ($newinstitution->theme == 'custom') {
         if (!empty($oldinstitution->style)) {

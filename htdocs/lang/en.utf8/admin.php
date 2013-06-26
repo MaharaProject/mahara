@@ -305,6 +305,7 @@ $string['antispam'] = 'Anti-spam';
 $string['antispamdescription'] = 'The type of anti-spam measures used on publicly visible forms';
 $string['dropdownmenu'] = 'Drop-down navigation';
 $string['dropdownmenudescription'] = 'If checked, the main Mahara navigation will use a drop-down format for the sub-navigation.';
+$string['dropdownmenudescriptioninstitution'] = 'If checked, the main navigation for the chosen institution theme will use a drop-down format.';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
 $string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
 $string['defaultaccountinactivewarn'] = 'Warning time for inactivity / expiry';

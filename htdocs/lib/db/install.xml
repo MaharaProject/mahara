@@ -79,6 +79,7 @@
                 <FIELD NAME="style" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="licensemandatory" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="licensedefault" TYPE="char" LENGTH="255" NOTNULL="false"/>
+                <FIELD NAME="dropdownmenu" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
