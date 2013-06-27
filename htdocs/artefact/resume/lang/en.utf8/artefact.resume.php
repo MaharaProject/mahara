@@ -51,6 +51,7 @@ $string['visastatus'] = 'Visa status';
 $string['female'] = 'Female';
 $string['male'] = 'Male';
 $string['gender'] = 'Gender';
+$string['gendernotspecified'] = '(Not specified)';
 $string['maritalstatus'] = 'Marital status';
 $string['resumesaved'] = 'Résumé saved';
 $string['resumesavefailed'] = 'Failed to update your résumé';

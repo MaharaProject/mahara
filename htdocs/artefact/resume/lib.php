@@ -355,6 +355,9 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
             if ($field == 'dateofbirth' && !empty($value)) {
                 $value = db_format_timestamp($value);
             }
+            if ($field == 'gender' && $value=='') {
+                $value = null;
+            }
             $data->{$field} = $value;
         }
         if (!$have_composites) {
