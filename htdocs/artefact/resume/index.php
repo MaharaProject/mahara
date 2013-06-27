@@ -69,8 +69,11 @@ $personalinformationform = pieform(array(
                         'showsTime'      => false,
                         'ifFormat'       => get_string('strfdateofbirth', 'langconfig')
                         ),
-                    'defaultvalue' => ((!empty($personalinformation)) 
-                                       ? $personalinformation->get_composite('dateofbirth')+3600 : null),
+                    'defaultvalue' => (
+                            (!empty($personalinformation) && null !== $personalinformation->get_composite('dateofbirth'))
+                            ? $personalinformation->get_composite('dateofbirth')+3600
+                            : null
+                    ),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
                     'description' => get_string('dateofbirthformatguide'),
                 ),
