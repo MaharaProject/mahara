@@ -150,6 +150,7 @@ $js = <<< EOJS
 
                 if (!element) {
                     $('finished').style.visibility = 'visible';
+                    window.scrollTo(0, 5000000);
                     return; // done
                 }
 
