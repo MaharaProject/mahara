@@ -101,6 +101,7 @@ $personalinformationform = pieform(array(
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('gender') : null),
                     'options' => array(
+                        '' => get_string('gendernotspecified', 'artefact.resume'),
                         'female' => get_string('female', 'artefact.resume'),
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
