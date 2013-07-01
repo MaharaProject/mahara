@@ -131,8 +131,10 @@ $posts = get_records_sql_array(
     $offset,
     $limit
 );
+
 // Get extra info of posts
-foreach ($posts as $post) {
+$prevdeletedid = false;
+foreach ($posts as $postid => $post) {
     // Get the number of posts
     $post->postcount = get_postcount($post->poster);
 
@@ -144,7 +146,23 @@ foreach ($posts as $post) {
     $post->moderator = is_moderator($post->poster)? $post->poster : null;
     // Update the subject of posts
     $post->subject = !empty($post->subject) ? $post->subject : get_string('re', 'interaction.forum', get_ancestorpostsubject($post->id));
+
+    // Consolidate deleted message posts by the same author into one "X posts by Spammer Joe were deleted"
+    if ($post->deleted) {
+        if ($prevdeletedid && $posts[$prevdeletedid]->poster == $post->poster) {
+            $posts[$prevdeletedid]->deletedcount++;
+            unset($posts[$postid]);
+        }
+        else {
+            $prevdeletedid = $postid;
+            $post->deletedcount = 1;
+        }
+    }
+    else {
+        $prevdeletedid = false;
+    }
 }
+
 // If the user has internal notifications for this topic, mark them
 // all as read.  Obviously there's no guarantee the user will actually
 // read all the posts on this page, but better than letting the unread
