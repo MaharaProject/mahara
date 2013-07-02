@@ -888,39 +888,74 @@ function set_config($key, $value) {
 
 /**
  * This function returns a value for $CFG for a plugin
- * or null if it is not found
- * note that it may go and look in the database
+ * or null if it is not found.
+ *
+ * It will give precedence to config values set in config.php like so:
+ * $cfg->plugin->{$plugintype}->{$pluginname}->{$key} = 'whatever';
+ *
+ * If it doesn't find one of those, it will look for the config value in
+ * the database.
  *
  * @param string $plugintype eg artefact
  * @param string $pluginname eg blog
  * @param string $key the config setting to look for
+ * @return mixed The value of the key if found, or NULL if not found
  */
 function get_config_plugin($plugintype, $pluginname, $key) {
     global $CFG;
 
-    $CFG->plugin = new StdClass;
-
-    // Suppress NOTICE with @ in case $key is not yet cached
-    @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
-    if (isset($CFG->plugin->{$plugintype})) {
-        return $value;
+    // If we've already fetched this value, then return it
+    if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
+        return $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
     }
+    // If we have already fetched this plugin's data from the database, then return NULL.
+    // (Note that some values may come from config.php before we hit the database.)
+    else if (isset($CFG->plugin->pluginsfetched->{$plugintype}->{$pluginname})) {
+        return null;
+    }
+    // We haven't fetched this plugin's data yet. So do it!
+    else {
 
-    $CFG->plugin = new stdClass();
-    $CFG->plugin->{$plugintype} = new StdClass;
+        // First build the object structure for it.
+        if (!isset($CFG->plugin)) {
+            $CFG->plugin = new stdClass();
+        }
+        if (!isset($CFG->plugin->{$plugintype})) {
+            $CFG->plugin->{$plugintype} = new stdClass();
+        }
+        if (!isset($CFG->plugin->{$plugintype}->{$pluginname})) {
+            $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
+        }
 
-    $records = get_records_array($plugintype . '_config');
-    if (!empty($records)) {
-        foreach($records as $record) {
-            $CFG->plugin->{$plugintype}->{$record->plugin} = new stdClass();
-            $CFG->plugin->{$plugintype}->{$record->plugin}->{$record->field} = $record->value;
-            if ($record->field == $key && $record->plugin == $pluginname) {
-                $value = $record->value;
+        // To minimize database calls, get all the records for this plugin from the database at once.
+        $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field');
+        if (!empty($records)) {
+            foreach ($records as $record) {
+                if (!isset($CFG->plugin->{$plugintype}->{$pluginname}->{$record->field})) {
+                    $CFG->plugin->{$plugintype}->{$pluginname}->{$record->field} = $record->value;
+                }
             }
         }
-    }
 
-    return $value;
+        // Make a note that we've now hit the database over this one.
+        if (!isset($CFG->plugin->pluginsfetched)) {
+            $CFG->plugin->pluginsfetched = new stdClass();
+        }
+        if (!isset($CFG->plugin->pluginsfetched->{$plugintype})) {
+            $CFG->plugin->pluginsfetched->{$plugintype} = new stdClass();
+        }
+        $CFG->plugin->pluginsfetched->{$plugintype}->{$pluginname} = true;
+
+        // Now, return it if we found it, otherwise null.
+        // (This could be done by a recursive call to get_config_plugin(), but it's
+        // less error-prone to do it this way and it doesn't cause that much duplication)
+        if (isset($CFG->plugin->{$plugintype}->{$pluginname}->{$key})) {
+            return $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
+        }
+        else {
+            return null;
+        }
+    }
 }
 
 function set_config_plugin($plugintype, $pluginname, $key, $value) {
@@ -940,16 +975,18 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
         $pconfig->value  = $value;
         $status = insert_record($table, $pconfig);
     }
+    // Now update the cached version
     if ($status) {
         if (!isset($CFG->plugin)) {
             $CFG->plugin = new stdClass();
         }
-
         if (!isset($CFG->plugin->{$plugintype})) {
             $CFG->plugin->{$plugintype} = new stdClass();
         }
+        if (!isset($CFG->plugin->{$plugintype}->{$pluginname})) {
+            $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
+        }
 
-        $CFG->plugin->{$plugintype}->{$pluginname} = new stdClass();
         $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
         return true;
     }
