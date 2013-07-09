@@ -9,7 +9,7 @@
 {/if}
         <ul>
 {if $sbdata.invitedgroups}
-            <li id="invitedgroups"><a href="{$WWWROOT}group/mygroups.php?filter=invite">
+            <li id="invitedgroups"><a href="{$WWWROOT}group/mygroups.php?filter=invite" class="btn-group">
                 <span id="invitedgroupscount">{$sbdata.invitedgroups}</span>
                 <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
             </a></li>
@@ -54,7 +54,7 @@
             </li>
 {/if}
         </ul>
-{if $sbdata.peer}                <div class="center"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name}</a></div>
+{if $sbdata.peer}                <div id="sbdatapeer"><a href="{$sbdata.peer.wwwroot}">{$sbdata.peer.name}</a></div>
 {/if}
 {if $USERMASQUERADING}        <div id="changeuser">{$becomeyouagain|safe}</div>
 {/if}

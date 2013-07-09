@@ -1,2 +1,0 @@
-put back the search icon on the homepage box
-figure out why the profile fieldsets are so specific (edit profile page)

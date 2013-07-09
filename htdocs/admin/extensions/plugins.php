@@ -155,8 +155,8 @@ foreach (array_keys($plugins) as $plugin) {
 
 global $THEME;
 $loadingicon = $THEME->get_url('images/loading.gif');
-$successicon = $THEME->get_url('images/success.gif');
-$failureicon = $THEME->get_url('images/failure.gif');
+$successicon = $THEME->get_url('images/success.png');
+$failureicon = $THEME->get_url('images/failure.png');
 
 $loadingstring = json_encode(get_string('upgradeloading', 'admin'));
 $successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));

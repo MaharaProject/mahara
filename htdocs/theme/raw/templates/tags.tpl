@@ -17,27 +17,28 @@
 {/if}
 
          <div id="results_container" class="rel tag-results">
+             <h2 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a></h2>
            <div class="rbuttons"><a class="btn edit-tag{if !$tag} hidden{/if}" href="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}">{str tag=editthistag}</a></div>
-             <h3 id="results_heading">{str tag=searchresultsfor} <a class="tag" href="{$WWWROOT}tags.php{if $tag}{$results->queryprefix}tag={$tag|urlencode|safe}{/if}">{if $tag}{$tag|str_shorten_text:50}{else}{str tag=alltags}{/if}</a></h3>
-           <div id="results_sort" class="fl">{str tag=sortresultsby}
+           
+           <div id="results_sort"><label>{str tag=sortresultsby}</label>
 {foreach from=$results->sortcols item=sortfield name=sortcols}
            <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
 {/foreach}
            </div>
-           <div id="results_filter" class="fr">{str tag=filterresultsby}
+           <div id="resultswrap">
+           <div id="results_filter">
+            <div class="filtertitle">{str tag=filterresultsby}</div>
 {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-           <a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a>{if !$.foreach.filtercols.last} <span class="sep">|</span> {/if}
+            <div class="filtername"><a href="{$results->baseurl}{$results->queryprefix}sort={$results->sort}&type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a></div>
 {/foreach}
-           </div>
-           <div class="cb"></div>
-           <table id="results" class="tablerenderer fullwidth">
-             <tbody>
+            </div>
+            <div id="results" class="tablerenderer fullwidth listing">
 {if $results->data}
               {$results->tablerows|safe}
 {/if}
-             </tbody>
-           </table>
-           {$results->pagination|safe}
+            </div>
+            {$results->pagination|safe}
+           </div>
          </div>
 
 {include file="footer.tpl"}

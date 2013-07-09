@@ -1,11 +1,7 @@
 {include file="header.tpl"}
-<div id="friendslistcontainer">
             {$form|safe}
-            <table id="friendslist" class="fullwidth listing">
-                <tbody>
+            <div id="friendslist" class="fullwidth listing">
 {$results.tablerows|safe}
-                </tbody>
-            </table>
             </div>
 {$results.pagination|safe}
 {include file="footer.tpl"}

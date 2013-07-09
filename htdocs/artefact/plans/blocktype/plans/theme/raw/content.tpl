@@ -1,12 +1,11 @@
 {if $tags}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</p>{/if}
 {if $tasks.data}
-<table id="tasktable_{$blockid}" class="plansblocktable">
-    <colgroup width="50%" span="2"></colgroup>
+<table id="tasktable_{$blockid}" class="plansblocktable fullwidth">
     <thead>
         <tr>
             <th class="c1">{str tag='completiondate' section='artefact.plans'}</th>
             <th class="c2">{str tag='title' section='artefact.plans'}</th>
-            <th class="c3">{str tag='completed' section='artefact.plans'}</th>
+            <th class="c3 center">{str tag='completed' section='artefact.plans'}</th>
         </tr>
     </thead>
     <tbody>

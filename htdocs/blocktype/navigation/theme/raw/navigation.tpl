@@ -1,12 +1,12 @@
 {if $views}
-    <table id="userviewstable">
+    <table id="userviewstable" class="fullwidth">
     {foreach from=$views item=item name=view}
         <tr>
             <td class="{cycle values='r0,r1'}">
                 {if $currentview == $item->view}
-                    <h4>{$item->title}</h4>
+                    <h3 class="title">{$item->title}</h3>
                 {else}
-                    <h4><a href="{$item->fullurl}">{$item->title}</a></h4>
+                    <h3 class="title"><a href="{$item->fullurl}">{$item->title}</a></h3>
                 {/if}
             </td>
         </tr>

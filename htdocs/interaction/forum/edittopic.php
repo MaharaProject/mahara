@@ -154,7 +154,7 @@ $editform = array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($topic) ? get_string('edit') : get_string('Post','interaction.forum'),
+                isset($topic) ? get_string('save') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) && $returnto != 'view'  ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)

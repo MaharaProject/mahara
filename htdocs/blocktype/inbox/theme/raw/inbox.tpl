@@ -6,17 +6,17 @@
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
   {if $i->read && $i->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/read' $i->type '.gif')}" alt="{$i->strtype}" />
+        <img src="{theme_url filename=cat('images/read' $i->type '.png')}" alt="{$i->strtype}" />
   {elseif $i->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/' $i->type '.gif')}" class="unreadmessage" />
+        <img src="{theme_url filename=cat('images/' $i->type '.png')}" class="unreadmessage" />
   {else}
-        <img src="{theme_url filename=cat('images/' $i->type '.gif')}" alt="{$i->strtype}" />
+        <img src="{theme_url filename=cat('images/' $i->type '.png')}" alt="{$i->strtype}" />
   {/if}
     </td>
     <td>
   {if $i->message}
       <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
-      <div class="inbox-message hidden messagebody messagebody-{$i->type}" id="inbox-message-{$i->id}">{$i->message|safe}
+      <div class="inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->id}">{$i->message|safe}
       {if $i->url}<br><a href="{$WWWROOT}{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
   {elseif $i->url}

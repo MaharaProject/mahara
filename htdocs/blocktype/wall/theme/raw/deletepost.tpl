@@ -1,5 +1,5 @@
 {include file="header.tpl"}
 
-<div class="message">{$deleteform|safe}</div>
+<div class="message attentionmessage">{$deleteform|safe}</div>
 
 {include file="footer.tpl"}

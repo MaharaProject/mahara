@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<div class="message delete">
+<div class="message deletemessage">
   <p>{str tag="deleteviewconfirm1" section="view"}
     {if $view->get('owner')}<br>{str tag="deleteviewconfirmbackup" section="view" arg1=$WWWROOT}{/if}
   </p>

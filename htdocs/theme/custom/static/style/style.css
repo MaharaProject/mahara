@@ -334,17 +334,15 @@ span.btn a.icon, a span.icon {
 }
 
 /**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs,
-ul.edit-view-tabs {
+ul.in-page-tabs {
 	height: 28px;
 	line-height: 28px;
 }
-ul.in-page-tabs li,
-ul.edit-view-tab li {
+ul.in-page-tabs li {
   margin: 0 5px 0 0 !important;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
-ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn {
   text-decoration: none;
   background: none;
   color: #d66800;
@@ -352,12 +350,11 @@ ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visi
 	line-height: 28px;
     padding: 5px 10px;
 }
-ul.in-page-tabs li a:hover, ul.in-page-tabs li input.linkbtn:hover,
-ul.edit-view-tabs li a:hover {
+ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
   color: #d66800;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab,
-ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li input.current-tab {
   color: #000000;
   background: #eeeeee;
   border: 0;

@@ -6,15 +6,10 @@
 {if !$blogs->data}
            <div>{str tag=youhavenoblogs section=artefact.blog}</div>
 {else}
-           <table id="bloglist" class="tablerenderer fullwidth">
-             <thead>
-               <tr><th></th><th></th></tr>
-             </thead>
-             <tbody>
+           <div id="bloglist" class="fullwidth listing">
               {$blogs->tablerows|safe}
-             </tbody>
-           </table>
+           </div>
            {$blogs->pagination|safe}
 {/if}
-                </div>
+         </div>
 {include file="footer.tpl"}

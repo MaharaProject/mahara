@@ -11,25 +11,20 @@
 </div>
 {/if}
 
-<div id="adminhome">
-{if $register}
-<div class="message" id="register-site">
-    <h3>{str tag=registeryourmaharasite section=admin}</h3>
-    {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
-</div>
-{/if}
-
 {if $upgrades}
 <div class="message" id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
-<div class="fr"><span class="upgradeicon"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
+<div class="fr"><span class="upgrade"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
-<table id="upgradestable">
+<table id="upgradestable" class="fullwidth">
+    <thead>
     <tr>
         <th>{str tag=Plugin section=admin}</th>
         <th>{str tag=From}</th>
         <th>{str tag=To}</th>
     </tr>
+    </thead>
+    <tbody>
 {foreach from=$upgrades key=key item=upgrade}
 {if $key != 'disablelogin'}
     <tr>
@@ -39,7 +34,16 @@
     </tr>
 {/if}
 {/foreach}
+    </tbody>
 </table>
+</div>
+{/if}
+
+<div id="adminhome">
+{if $register}
+<div class="message" id="register-site">
+    <h3>{str tag=registeryourmaharasite section=admin}</h3>
+    {str tag=registeryourmaharasitesummary section=admin args=$WWWROOT}
 </div>
 {/if}
 

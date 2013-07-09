@@ -12,9 +12,9 @@
         <td>{$group->categorytitle}</td>
     {/if}
     <td>{$group->visibility}</td>
-    <td class="right"><a title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}"><img src="{theme_url filename="images/manage.gif"}" alt="{str tag="groupmanage" section="admin"}"></a>
+    <td class="right"><a title="{str tag="groupmanage" section="admin"}" href="{$WWWROOT}admin/groups/manage.php?id={$group->id}"><img src="{theme_url filename="images/btn_configure.png"}" alt="{str tag="groupmanage" section="admin"}"></a>
       <a title="{str tag="delete"}" href="{$WWWROOT}admin/groups/delete.php?id={$group->id}">
-        <img src="{theme_url filename="images/icon_close.gif"}" alt="[x]">
+        <img src="{theme_url filename="images/btn_deleteremove.png"}" alt="[x]">
       </a>
     </td>
 </tr>

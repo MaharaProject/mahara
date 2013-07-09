@@ -7,7 +7,7 @@
 	{/if}
 	{if $membership}{$forum->subscribe|safe}{/if}
 </div>
-<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h2>
+<h2>{str tag=nameplural section=interaction.forum} &gt; {$subheading}{if $publicgroup}<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h2>
 <div id="forumdescription">{$forum->description|clean_html|safe}</div>
 <div id="viewforum" class="rel">
 	<h3>{str tag=Topics section="interaction.forum"}</h3>
@@ -38,7 +38,7 @@
     {/if}
     </table>
     {if $regulartopics}
-    	<div class="right">{$pagination|safe}</div>
+    	<div>{$pagination|safe}</div>
     {/if}
     {if $membership && (!$forum->subscribed || $moderator)}
     <div class="forumselectwrap"><select name="type">

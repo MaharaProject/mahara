@@ -1,68 +1,47 @@
 /**
  * CSS rules for the blog artefact plugin
  *
- * Copyright (C) 2006-2012 Catalyst IT
+ * Copyright (C) 2006-2013 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
  
  /* Blog list */
-#bloglist h4 {
-	margin: 0 0 3px 0;
-}
 #bloglist #blogdesc p {
-	margin: 0;
-	font-size: .9167em;
-	line-height: 1.25em;
+    margin: 5px 0;
 }
-#blogdescription {
-	margin: 0 0 10px 0;
+#bloglist .buttonscell form,
+#postlist form {
+    display: inline;
+    vertical-align: top;
+    margin: 0 0 0 5px;
 }
-#blogdescription p {
-	margin: 5px 0 0 0;
-}
-#bloglist .buttonscell form, #bloglist .buttonscell form div, #postlist form, #postlist form div {
-	display: inline;
-	vertical-align: top;
+#bloglist .buttonscell form div,
+#postlist form div {
+    display: inline;
+    vertical-align: top;
 }
 /* Post list */
+#blogdescription {
+    margin: 0 0 10px 0;
+}
+#postlist {
+    margin: 10px 0 0 0;
+}
 #postlist .poststatus {
-	font-weight: bold;
-	font-style: italic;
-	white-space: nowrap;
-	margin: 1px 10px 0 10px;
-	display: block;
-	float: left;
+    vertical-align: top;
 }
-#postlist .changepoststatus {
-	font-size: .9167em;
-	vertical-align: top;
+#postlist input.publish {
+    vertical-align: top;
 }
-#postlist .changepoststatus input {
-	padding: 0 3px;
-	height: 16px;
-}
-#postlist .published {
-	padding: 10px;
-	margin-bottom: 15px;
-}
+#postlist .published,
 #postlist .draft {
-	padding: 10px;
-	margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
 }
-#postlist .postdescription h1, #postlist .postdescription h2, #postlist .postdescription h3, #postlist .postdescription h4, #postlist .postdescription h5, #postlist .postdescription h6 {
-	margin: 5px 0 0 0;
-}
-#postlist .postdescription p {
-	margin: 5px 0 15px 0;
-}
-#postlist .postdetails {
-	font-size: .9167em;
-	padding-top: 5px;
-}
-.attachments input.unselect, .filebrowser input.unselect {
-	font-size: .9167em;
+.attachments input.unselect {
+    font-size: .9167em;
 }
 /* Insert Image Dialog */
 #img_src[disabled=""] {
-	background-color: #F0F0EE;
+    background-color: #F0F0EE;
 }

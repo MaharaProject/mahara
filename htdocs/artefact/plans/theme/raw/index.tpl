@@ -6,11 +6,9 @@
 {if !$plans.data}
     <div class="message">{$strnoplansaddone|safe}</div>
 {else}
-<table id="planslist" class="fullwidth listing">
-    <tbody>
+<div id="planslist" class="fullwidth listing">
         {$plans.tablerows|safe}
-    </tbody>
-</table>
+</div>
    {$plans.pagination|safe}
 {/if}
 </div>

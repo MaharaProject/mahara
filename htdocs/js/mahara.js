@@ -344,7 +344,7 @@ badIE = false;
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
         {'href': null},
-        IMG({'alt': '?', 'src': get_themeurl('images/icon_help.gif')})
+        IMG({'alt': '?', 'src': get_themeurl('images/help.png')})
     );
     connect(link, 'onclick', function (e) {
         e.stop();
@@ -479,7 +479,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  * help closing the box
  */
 function buildContextualHelpBox(content) {
-    var result = '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/icon_close.gif'] + '" alt="X"></a></div>';
+    var result = '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/btn_close.png'] + '" alt="X"></a></div>';
     result += '<div id="helpstop">';
     result += content;
     result += '</div>';

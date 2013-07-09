@@ -6,10 +6,12 @@
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}><!--<![endif]-->
 {include file="header/head.tpl"}
 <body id="micro">
-<div id="containerX">
+<div id="container">
     <div id="loading-box"></div>
     <div id="top-wrapper">
-        <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
+        <div id="header">
+            <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
+        </div>
     </div>
     <div id="mainmiddlewrap">
         <div id="mainmiddle">

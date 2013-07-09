@@ -770,8 +770,8 @@ EOF;
         global $THEME;
         $editstr = get_string('edit');
         $delstr = get_string('delete');
-        $imagemoveblockup   = json_encode($THEME->get_url('images/move-up.gif'));
-        $imagemoveblockdown = json_encode($THEME->get_url('images/move-down.gif'));
+        $imagemoveblockup   = json_encode($THEME->get_url('images/btn_moveup.png'));
+        $imagemoveblockdown = json_encode($THEME->get_url('images/btn_movedown.png'));
         $upstr = get_string('moveup', 'artefact.resume');
         $downstr = get_string('movedown', 'artefact.resume');
 
@@ -813,13 +813,13 @@ EOF;
 
         $js .= <<<EOF
         function (r, d) {
-            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': '{$editstr}'}, IMG({'src': config.theme['images/edit.gif'], 'alt':'{$editstr}'}));
-            var dellink = A({'href': '', 'title': '{$delstr}'}, IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'}));
+            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': '{$editstr}'}, IMG({'src': config.theme['images/btn_edit.png'], 'alt':'{$editstr}'}));
+            var dellink = A({'href': '', 'title': '{$delstr}'}, IMG({'src': config.theme['images/btn_deleteremove.png'], 'alt': '[x]'}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);
             });
-            return TD({'class':'right'}, null, editlink, ' ', dellink);
+            return TD({'class':'btns2'}, null, editlink, ' ', dellink);
         }
     ]
 );

@@ -1,9 +1,9 @@
 <table class="templateresults tablerenderer fullwidth">
   <thead>
     <tr>
-      <th class="collectiontitle">{str tag=collectiontitle section=collection}</th>
-      <th class="viewname">{str tag=viewname section=view}</th>
-      <th class="ownericon">{str tag=Owner section=view}</th>
+      <th>{str tag=collectiontitle section=collection}</th>
+      <th>{str tag=viewname section=view}</th>
+      <th>{str tag=Owner section=view}</th>
       <th class="right"></th>
     </tr>
   </thead>
@@ -11,13 +11,13 @@
 {if $results}
 {foreach from=$results item=row}
     <tr class="{cycle values='r0,r1'}">
-      <td class="collectiontitle">
+      <td>
 {if $row.collid}
-        <strong><a class="collectionlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.name}</a></strong>
+        <h3 class="title"><a class="collectionlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.name}</a></h3>
 {/if}
       </td>
-      <td class="viewname">
-        <strong><a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a></strong>
+      <td>
+        <h3 class="title"><a class="viewlink" href="{$WWWROOT}view/view.php?id={$row.id}" target="_blank">{$row.title}</a></h3>
       </td>
 {if $row.institution}
       <td class="owner s">{$row.sharedby}</td>
@@ -26,7 +26,7 @@
 {elseif $row.owner}
       <td class="ownericon s">
         <a class="userlink" href="{profile_url($row.user, true, true)}" target="_blank">
-           <span class="profile-icon-container"><img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt=""></span>
+           <img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt="" class="profile-icon-container">
            {$row.sharedby}
         </a>
       </td>

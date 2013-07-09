@@ -1,65 +1,33 @@
 /**
  * CSS rules for the resume artefact plugin
  *
- * Copyright (C) 2006-2012 Catalyst IT
+ * Copyright (C) 2006-2013 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
-#resumewrap .tablerenderer th.resumedate {
-	width: 100px;
-}
-#resumefieldform table, #personalinformation table {
-	width: 100%;
-}
-#resumewrap table.resumecomposite .right {
-	width: 40px;
-	padding: 5px 5px 3px 5px;
-}
-#resumewrap table.resumecomposite .movebuttons {
-	padding: 5px 5px 3px 5px;
-}
-#resumewrap table.resumecomposite .movebuttons a {
-	display: block;
-	float: left;
-}
-#resumewrap table.resumecomposite .movebuttons a.movedown {
-	float: right;
-}
-#resumewrap table tr#coverletter_save_container td,
-#resumewrap table tr#interests_save_container td {
-	padding-top: 5px;
+#resumefieldform table,
+#personalinformation table {
+    width: 100%;
 }
 #resumewrap table.resumecomposite {
-	margin: 5px 0;
-}
-#resumewrap table.resumecomposite td {
-	padding: 5px 5px;
-}
-#resumewrap .pieform-fieldset table tr.wysiwyg th, #resumewrap .pieform-fieldset table tr.submitcancel th {
-	padding: 0;
-}
-#resumewrap .pieform-fieldset table tr.html th, #resumewrap .pieform-fieldset table tr.html td {
-	padding: 0 1px;
-}
-#resumewrap .pieform-fieldset table tr.html td p {
-	margin: 5px 0 10px 0;
-}
-#resumewrap .pieform-fieldset table tr.button th, #resumewrap .pieform-fieldset table tr.button td {
-	padding: 3px 1px;
-}
-.pieform table tbody tr.textarea th {
-	padding: 9px 5px 3px 5px;
-}
-#personalinformation table table td,
-#personalinformation table table tbody th {
-	padding: 3px;
+    margin: 5px 0;
 }
 #resumewrap table table {
-	width: auto;
-	margin: 0;
+    width: auto;
+    margin: 0;
 }
-#resumewrap form {
-	margin: 0;
+.movebuttons a {
+    display: block;
+    float: left;
+}
+.movebuttons a.movedown {
+    float: right;
+}
+#resumewrap table.tablerenderer th.resumedate {
+    width: 15%;
+}
+#resumefieldform .pieform-fieldset table tr th {
+    padding: 0;
 }
 #container #resumewrap table td.errmsg {
-	padding-left: 20px;
+    padding-left: 20px;
 }

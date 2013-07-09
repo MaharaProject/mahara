@@ -1,23 +1,24 @@
 {if $views}
-  <table class="viewlist">
+  <table class="viewlist fullwidth">
   {foreach from=$views item=view}
     <tr class="{cycle values='r0,r1'}">
-            <td><h4><a href="{$view.fullurl}">{$view.title}</a></h4>
-              <div class="details">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div></td>
+            <td><h3 class="title"><a href="{$view.fullurl}">{$view.title}</a></h3>
+            <div class="detail">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
             {if $view.sharedby}
-            <td class="right">
+            <div class="groupuserdate">
                 {if $view.group && $loggedin}
-                  <a href="{group_homepage_url($view.groupdata)}" class="s">{$view.sharedby}</a>
+                  <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
                 {elseif $view.owner && $loggedin}
-                  <a href="{profile_url($view.user)}" class="s">{$view.sharedby}</a>
+                  <a href="{profile_url($view.user)}">{$view.sharedby}</a>
                 {else}
                   {$view.sharedby}
                 {/if}
-             	<div class="postedon nowrap">
-                  {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
-                  {$view.mtime|strtotime|format_date:'strftimedate'}</div>
-            </td>
+             	<span class="postedon">
+                  - {if $view.mtime == $view.ctime}{str tag=Created}{else}{str tag=Updated}{/if}
+                  {$view.mtime|strtotime|format_date:'strftimedate'}</span>
+            </div>
             {/if}
+            </td>
         </tr>
   {/foreach}
   </table>

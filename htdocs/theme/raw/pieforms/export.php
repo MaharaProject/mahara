@@ -121,7 +121,7 @@ if ($body) {
 
 echo '<div id="includefeedback">';
 echo $elements['includefeedback']['html'] . ' ' . $elements['includefeedback']['labelhtml'];
-echo '<div class="radio-description">' . $elements['includefeedback']['description'] . '</div>';
+echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
 echo '<div id="export_submit_container">';
 echo $elements['submit']['html'];

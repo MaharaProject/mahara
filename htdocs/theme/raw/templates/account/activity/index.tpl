@@ -16,7 +16,7 @@
 			<table id="activitylist" class="fullwidth">
 				<thead>
 					<tr>
-						<th class="inboxicon"></th>
+						<th></th>
 						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='date'}</th>
 						<th class="center">{str section='activity' tag='read'}<br><a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}</a></th>

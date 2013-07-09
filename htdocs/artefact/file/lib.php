@@ -1227,7 +1227,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/file.gif');
+        return $THEME->get_url('images/file.png');
     }
 
     public static function get_config_options() {
@@ -1670,7 +1670,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/folder.gif');
+        return $THEME->get_url('images/folder.png');
     }
 
     public static function collapse_config() {
@@ -1905,7 +1905,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $url .= '&size=' . $options['size'];
         }
         else {
-            $url .= '&maxheight=20&maxwidth=20';
+            $url .= '&maxheight=24&maxwidth=24';
         }
 
         return $url;
@@ -1953,7 +1953,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             return array('html' => $smarty->fetch('artefact:file:image_render_self.tpl'), 'javascript' => '');
         }
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fl filedata-icon"><h4>'
+        $result['html'] = '<div class="fl filedata-icon"><h4 class="title">'
             . get_string('Preview', 'artefact.file') . '</h4><a href="'
             . hsc($url) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
             . '" alt=""></a></div>' . $result['html'];
@@ -2109,7 +2109,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/archive.gif');
+        return $THEME->get_url('images/archive.png');
     }
 
     public function open_archive() {
@@ -2399,7 +2399,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/video.gif');
+        return $THEME->get_url('images/video.png');
     }
 
 }
@@ -2443,6 +2443,6 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function get_icon($options=null) {
         global $THEME;
-        return $THEME->get_url('images/audio.gif');
+        return $THEME->get_url('images/audio.png');
     }
 }

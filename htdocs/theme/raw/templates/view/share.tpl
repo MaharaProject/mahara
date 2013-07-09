@@ -10,8 +10,8 @@
 <table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th class="cv">{str tag=Collections section=collection}</th>
-      <th class="al">{str tag=accesslist section=view}</th>
+      <th>{str tag=Collections section=collection}</th>
+      <th>{str tag=accesslist section=view}</th>
       <th class="al-edit">{str tag=editaccess section=view}</th>
       <th class="secreturls">{str tag=secreturls section=view}</th>
     </tr>
@@ -29,13 +29,13 @@
 <table class="fullwidth accesslists">
   <thead>
     <tr>
-      <th class="cv">{str tag=Views section=view}</th>
+      <th>{str tag=Views section=view}</th>
     {if $accesslists.collections}
-      <th class="al"></th>
+      <th></th>
       <th class="al-edit"></th>
       <th class="secreturls"></th>
     {else}
-      <th class="al">{str tag=accesslist section=view}</th>
+      <th>{str tag=accesslist section=view}</th>
       <th class="al-edit">{str tag=editaccess section=view}</th>
       <th class="secreturls">{str tag=secreturls section=view}</th>
     {/if}

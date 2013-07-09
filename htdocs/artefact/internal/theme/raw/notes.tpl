@@ -13,14 +13,14 @@
     <tr class="{cycle values=r0,r1}">
       <td class="notetitle">
       {if $n->locked}
-        <h4><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h4>
+        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h3>
       {else}
-        <h4><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h4>
+        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h3>
       {/if}
         {if $n->tags}
         <div>{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
         {/if}
-        <div id="n{$n->id}_desc" class="hidden desc">{$n->description|clean_html|safe}</div>
+        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}</div>
       </td>
       <td>
       {foreach from=$n->views item=v}
@@ -34,7 +34,7 @@
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}
-        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}
       {/if}
       </td>

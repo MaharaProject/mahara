@@ -1,35 +1,29 @@
 {if $data}
-<table id="{$listtype}list" class="fullwidth listing">
-    <tbody>
+<div id="{$listtype}list" class="fullwidth listing">
     {foreach from=$data item=user}
-        <tr class="{cycle values='r0,r1'}">
+        <div class="{cycle values='r0,r1'}">
             {include file="institution/staff.tpl" user=$user page=$page}
-        </tr>
+        </div>
     {/foreach}
-    </tbody>
-</table>
+</div>
 {elseif $columnleft && $columnright}
 <div id="{$listtype}_left" class="leftdiv">
-    <table id="{$listtype}list" class="fullwidth listing">
-        <tbody>
+    <div id="{$listtype}list" class="fullwidth listing">
         {foreach from=$columnleft item=leftuser}
-            <tr class="{cycle values='r0,r1'}">
+            <div class="{cycle values='r0,r1'}">
                 {include file="institution/staff.tpl" user=$leftuser page=$page}
-            </tr>
+            </div>
         {/foreach}
-        </tbody>
-    </table>
+    </div>
 </div>
 <div id="{$listtype}_right" class="rightdiv">
-    <table id="{$listtype}list" class="fullwidth listing">
-        <tbody>
+    <div id="{$listtype}list" class="fullwidth listing">
         {foreach from=$columnright item=rightuser}
-            <tr class="{cycle values='r0,r1'}">
+            <div class="{cycle values='r1,r0'}">
                 {include file="institution/staff.tpl" user=$rightuser page=$page}
-            </tr>
+            </div>
         {/foreach}
-        </tbody>
-    </table>
+    </div>
 </div>
 {else}
     <div class="message">

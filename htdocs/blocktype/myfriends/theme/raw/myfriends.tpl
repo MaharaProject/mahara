@@ -1,6 +1,6 @@
 <div class="friends">
 {if $friends}
-    <div id="userfriendstable" class="center fullwidth">
+    <div id="userfriendstable" class="fullwidth">
       {$friends.tablerows|safe}
     </div>
 	<div id="myfriends_page_container" class="hidden">{$friends.pagination|safe}</div>

@@ -3,7 +3,7 @@
             <table id="notificationstable" class="fullwidth table">
 			<thead>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th></th>
                     <th></th>
                     <th>{str tag='institution'}</th>
 {foreach from=$types item='type'}

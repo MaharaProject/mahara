@@ -3692,18 +3692,18 @@ class View {
         if ($this->type == 'profile') {
             $title = hsc(display_name($this->owner, null, true));
             if ($long) {
-                return '<strong>' . get_string('usersprofile', 'mahara', $title) . '</strong>';
+                return get_string('usersprofile', 'mahara', $title);
             }
             return $title;
         }
         if ($this->type == 'dashboard') {
-            return '<strong>' . get_string('dashboardviewtitle', 'view') . '</strong>';
+            return get_string('dashboardviewtitle', 'view');
         }
 
         $ownername = hsc($this->formatted_owner());
 
         if ($this->type == 'grouphomepage') {
-            return '<strong>' . get_string('aboutgroup', 'group', $ownername) . '</strong>';
+            return get_string('aboutgroup', 'group', $ownername);
         }
 
         $ownerlink = null;
@@ -3715,7 +3715,7 @@ class View {
             $title = '<a href="' . $this->get_url() . '">' . hsc($this->title) . '</a>';
         }
         else {
-            $title = '<strong>' . hsc($this->title) . '</strong>';
+            $title = hsc($this->title);
         }
 
         if (isset($ownerlink)) {

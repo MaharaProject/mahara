@@ -1,20 +1,26 @@
-/*  Views  */
-#page #bottom-pane {
-    background-color: #FFFFFF;
-	padding: 20px 0 10px 0;
-	border-width: 0 10px 10px 10px;
-	border-style: solid;
-	border-color: #1D499F;
+/**
+ * Views stylesheet - for Mahara's Aqua theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+/******************** Collection navigation ********************/
+#collectionnavwrap {
+    background: #F4F7F9;
 }
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+    background: #00084F;
+    color: #FFFFFF;
+}
+/******************** Top pane of edit page ********************/
 #top-pane {
     padding: 10px 10px 0 10px;
     background: #1D499F;
 }
-/* The tabs that allow you to select a blocktype category */
-#category-list li {
-    margin: 0;
-    color: #1E6297;
-}
+/******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
@@ -30,87 +36,24 @@
 #category-list li.current a:visited,
 #category-list li.current a:active {
     background-color: #f4f7f9;
-	color: #1e6297;
+    color: #1E6297;
 }
-
-/* The panel that contains the blocktype icons */
+/******************** Blocktype icons panel ********************/
 #blocktype-list {
     color: #1D499F !important;
     background-color: #f4f7f9;
     border: 0;
 }
+/******************** Blocktype name & description panel ********************/
 #middle-pane {
-    background: #e1ecf4;
+    background: #f4f7f9;
     border-left: 10px solid #1D499F;
     border-right: 10px solid #1D499F;
 }
-#current_bt_description {
-    color: #333;
-}
-
-
-/********************** Blockinstance ***********************************/
-/* header*/
-.blockinstance-header h4 {
-    border-bottom: 2px solid #d2d2d2;
-    color: #1E6297;
-}
-
-/* Wall */
-.wallpost {
-    background-color: #F4F7F9;
-}
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-    font-weight: bold;
-    padding-left: 1em;
-    background: none;
-}
-ul.artefactchooser-tabs li {
-    color: #FFF;
-}
-ul.artefactchooser-tabs li a,
-ul.artefactchooser-tabs li a:link,
-ul.artefactchooser-tabs li a:visited,
-ul.artefactchooser-tabs li a:active {
-    color: #FFF;
-    background: #1D499F;
-    margin: 0 3px 0 0;
-}
-ul.artefactchooser-tabs li.current a,
-ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
-ul.artefactchooser-tabs li.current a:active {
-    color: #000;
-    background: #F5F9FC;
-}
-#artefactchooser-body {
-    background: #F5F9FC;
-    border: 0;
-}
-.submissionform {
-	background: #F4F7F9;
-}
-
-
-
-/* table */
-.maharatable thead th {
-    color: #186194;
-}
-#artefactchooser-body th label {
-	color: #14336F;
-}
-.maharatable td label {
-	color: #14336F;
-}
-#collection .collection-title {
-    color: #FFFFFF;
-}
-#collection {
-	color: #FFF;
-}
-ul.colnav li a {
-	background: #00084F;
-    color: #FFF;
+/******************** Bottom pane of edit page ********************/
+#page #bottom-pane {
+    background-color: #FFFFFF;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: #1D499F;
 }

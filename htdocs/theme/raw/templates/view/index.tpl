@@ -18,36 +18,33 @@
 {$searchform|safe}
 
 {if $views}
-            <table id="myviews" class="fullwidth listing">
-                <tbody>
+                <div id="myviews" class="listing">
 {foreach from=$views item=view}
-                    <tr class="{cycle values='r0,r1'}">
-                        <td>
-                            <h4><a href="{$view.fullurl}">{$view.displaytitle}</a></h4>
-{if $view.submittedto}
-                              <div class="submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
-{elseif $view.type == 'profile'}
-                              <div class="videsc">{str tag=profiledescription}</div>
-{elseif $view.type == 'dashboard'}
-                              <div class="videsc">{str tag=dashboarddescription}</div>
-{elseif $view.type == 'grouphomepage'}
-                              <div class="videsc">{str tag=grouphomepagedescription section=view}</div>
-{elseif $view.description}
-                              <div class="videsc">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
-{/if}
-                        </td>
-                        <td class="right buttonscell btns2">
+                    <div class="listrow {cycle values='r0,r1'}">
+                        <div class="fr btns2">
 {if !$view.submittedto && (!$view.locked || $editlocked)}
-                                <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/edit.gif'}" alt="{str tag=edit}"></a>
+                            <a href="{$WWWROOT}view/blocks.php?id={$view.id}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
 {/if}
 {if !$view.submittedto && $view.removable && (!$view.locked || $editlocked)}
-                                <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/icon_close.gif'}" alt="{str tag=delete}"></a>
+                            <a href="{$WWWROOT}view/delete.php?id={$view.id}" title="{str tag=deletethisview section=view}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str tag=delete}"></a>
 {/if}
-                        </td>{* rbuttons *}
-                    </tr>
+                        </div>{* rbuttons *}
+                        <h3 class="title"><a href="{$view.fullurl}">{$view.displaytitle}</a></h3>
+{if $view.submittedto}
+                        <div class="detail submitted-viewitem">{$view.submittedto|clean_html|safe}</div>
+{elseif $view.type == 'profile'}
+                        <div class="detail">{str tag=profiledescription}</div>
+{elseif $view.type == 'dashboard'}
+                        <div class="detail">{str tag=dashboarddescription}</div>
+{elseif $view.type == 'grouphomepage'}
+                        <div class="detail">{str tag=grouphomepagedescription section=view}</div>
+{elseif $view.description}
+                        <div class="detail">{$view.description|str_shorten_html:110:true|strip_tags|safe}</div>
+{/if}
+                        <div class="cb"></div>
+                    </div>
 {/foreach}
-                </tbody>
-            </table>
+                </div>
 {$pagination|safe}
             </div>
 {else}

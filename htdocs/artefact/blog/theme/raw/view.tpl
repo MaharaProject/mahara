@@ -8,11 +8,11 @@
                 {/if}
 				</div>
 
-                <div id="blogdescription">{clean_html($blog->get('description'))|safe}
-                {if $blog->get('tags')}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</p>{/if}</div>
+                <div id="blogdescription">{clean_html($blog->get('description'))|safe}</div>
+                {if $blog->get('tags')}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}</div>{/if}
 
                 {if $posts}
-				<div id="postlist">
+				<div id="postlist" class="fullwidth">
                     {$posts.tablerows|safe}
 				</div>
                 <div id="blogpost_page_container" class="hidden">{$posts.pagination|safe}</div>
@@ -29,10 +29,10 @@ addLoadEvent(function() {literal}{{/literal}
                 {/if}
 
                 {if $enablemultipleblogstext}
-                <p class="s dull center">{str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
+                <p class="dull center">{str tag=enablemultipleblogstext section=artefact.blog arg1=$WWWROOT}</p>
                 {/if}
                 {if $hiddenblogsnotification}
-                <p class="s dull center">{str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>
+                <p class="dull center">{str tag=hiddenblogsnotification section=artefact.blog arg1=$WWWROOT}</p>
                 {/if}
             </div>
 {include file="footer.tpl"}

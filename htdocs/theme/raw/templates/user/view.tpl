@@ -9,7 +9,7 @@
   {/if}
   </h1>
   {if $ownprofile}
-  <div class="userviewrbuttons">
+  <div class="rbuttons userviewrbuttons">
     <a title="{str tag=editthisview section=view}" href="{$WWWROOT}view/blocks.php?profile=1" class="btn">{str tag=editthisview section=view}</a>
   </div>
   {/if}
@@ -17,9 +17,9 @@
 
 
 {if $relationship == 'pending'}
-                    	<div class="message">
+                    	<div class="message attentionmessage">
                             <label>{str tag='whymakemeyourfriend' section='group'}</label>: {$message}
-                            <div>
+                            <div class="attentionform">
                               {$acceptform|safe}
                               <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">{str tag=denyrequest section=group}</a>
                             </div>

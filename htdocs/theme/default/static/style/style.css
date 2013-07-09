@@ -548,20 +548,18 @@ h3.rd-tab-title {
     display: none;
     background: #d1d1d1 url(../images/tabs.gif) repeat-x left top;
 }
-ul.in-page-tabs,
-ul.edit-view-tabs {
+ul.in-page-tabs {
     border-top: 1px solid #d1d1d1;
     border-left: 1px solid #d1d1d1;
     border-right: 1px solid #d1d1d1;
     border-bottom: 0;
     background: #d1d1d1 url(../images/tabs.gif) repeat-x left top;
 }
-ul.in-page-tabs li.current-tab,
-ul.edit-view-tabs li.current-tab {
+ul.in-page-tabs li.current-tab {
     background: #FFFFFF url(../images/tabs-active.gif) repeat-x left top;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn,
-ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn {
     color: #1E6297;
     text-decoration: none;
     background: none;
@@ -570,12 +568,11 @@ ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visi
     border-right: 1px solid #d1d1d1;
     border-bottom: 0;
 }
-ul.in-page-tabs li a:hover, ul.in-page-tabs li input.linkbtn:hover,
-ul.edit-view-tabs li a:hover {
+ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
   color: #7E7327;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab,
-ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li input.current-tab {
     color: #000;
     background: none;
     border-left: 1px solid #FFFFFF;
@@ -583,7 +580,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
     border-right: 1px solid #d1d1d1;
     border-bottom: 0;
 }
-.ie7 ul.in-page-tabs li a, .ie7 ul.edit-view-tabs li a, .ie7 ul.in-page-tabs li a.current-tab, .ie7 ul.edit-view-tabs li a.current-tab {
+.ie7 ul.in-page-tabs li a, .ie7 ul.in-page-tabs li a.current-tab {
     border: 0 !important;
 }
 /* responsive tabs */
@@ -619,22 +616,23 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 #mainmiddle .expand .rd-tab {
     background: #95A8B7 url(../images/collapse-arrows.png) no-repeat 3px 5px;
 }
-.rd-navmenu ul.in-page-tabs, .rd-navmenu ul.edit-view-tabs {
+.rd-navmenu ul.in-page-tabs {
     font-size: 1.25em;
     height: auto;
 }
-.rd-navmenu ul.in-page-tabs li, .rd-navmenu ul.edit-view-tabs li {
+.rd-navmenu ul.in-page-tabs li {
     float: none;
     margin: 0 !important;
     display: none;
 }
-.expand ul.in-page-tabs li, .expand ul.edit-view-tabs li {
+.expand ul.in-page-tabs li {
     display: block;
 }
 .expand.tabswrap {
     height: auto;
 }
-.rd-navmenu ul.in-page-tabs li a, .rd-navmenu ul.in-page-tabs li a:link, .rd-navmenu ul.in-page-tabs li a:visited, .rd-navmenu ul.in-page-tabs li a:active, .rd-navmenu ul.in-page-tabs li input.linkbtn, .rd-navmenu ul.edit-view-tabs li a, .rd-navmenu ul.edit-view-tabs li a:link, .rd-navmenu ul.edit-view-tabs li a:visited, .rd-navmenu ul.edit-view-tabs li a:active {
+.rd-navmenu ul.in-page-tabs li a, .rd-navmenu ul.in-page-tabs li a:link, .rd-navmenu ul.in-page-tabs li a:visited, .rd-navmenu ul.in-page-tabs li a:active,
+.rd-navmenu ul.in-page-tabs li input.linkbtn {
     background: #e0e8ee;
     color: #1e6297;
     border-left: 0;
@@ -645,7 +643,8 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
     margin: 0;
     padding: 10px;
 }
-.rd-navmenu ul.in-page-tabs li a.current-tab, .rd-navmenu ul.in-page-tabs li a.current-tab:link, .rd-navmenu ul.in-page-tabs li a.current-tab:visited, .rd-navmenu ul.in-page-tabs li a.current-tab:active, .rd-navmenu ul.in-page-tabs li input.linkbtn.current-tab, .rd-navmenu ul.edit-view-tabs li a.current-tab, .rd-navmenu ul.in-page-tabs li a.current-tab:link, .rd-navmenu ul.edit-view-tabs li a.current-tab:visited, .rd-navmenu ul.edit-view-tabs li a.current-tab:active {
+.rd-navmenu ul.in-page-tabs li a.current-tab, .rd-navmenu ul.in-page-tabs li a.current-tab:link, .rd-navmenu ul.in-page-tabs li a.current-tab:visited, .rd-navmenu ul.in-page-tabs li a.current-tab:active,
+.rd-navmenu ul.in-page-tabs li input.current-tab {
     background: #95a8b7;
     color: #FFFFFF;
     border-left: 0;
@@ -655,7 +654,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
 }
 /* js fallback for page tabs */
 @media screen and (max-width: 600px) {
-		h3.rd-tab-title,
+	h3.rd-tab-title,
     .no-js h3.rd-tab-title {
         cursor: pointer;
         display: block;
@@ -667,7 +666,7 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
         border: 1px solid #d1d1d1;
         border-bottom: 0;
     }
-		#mainmiddle .rd-tab,
+	#mainmiddle .rd-tab,
     .no-js #mainmiddle .rd-tab {
         display: block;
         background: #95A8B7 url(../images/collapse-arrows.png) no-repeat 3px 5px;
@@ -682,23 +681,23 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
         border-radius: 2px;
         cursor: pointer;
     }
-		ul.in-page-tabs, .rd-navmenu ul.edit-view-tabs,
-    .no-js ul.in-page-tabs, .no-js .rd-navmenu ul.edit-view-tabs {
+	ul.in-page-tabs,
+    .no-js ul.in-page-tabs {
         font-size: 1.25em;
         height: auto;
     }
-		ul.in-page-tabs li, ul.edit-view-tabs li,
-    .no-js ul.in-page-tabs li, .no-js ul.edit-view-tabs li {
+	ul.in-page-tabs li, 
+    .no-js ul.in-page-tabs li {
         float: none;
         margin: 0 !important;
         display: block;
     }
-		.tabswrap,
+	.tabswrap,
     .no-js .tabswrap {
         height: auto;
     }
-		ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn, ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active,
-    .no-js ul.in-page-tabs li a, .no-js ul.in-page-tabs li a:link, .no-js ul.in-page-tabs li a:visited, .no-js ul.in-page-tabs li a:active, .no-js ul.in-page-tabs li input.linkbtn, .no-js ul.edit-view-tabs li a, .no-js ul.edit-view-tabs li a:link, .no-js ul.edit-view-tabs li a:visited, .no-js ul.edit-view-tabs li a:active {
+	ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.in-page-tabs li input.linkbtn, 
+    .no-js ul.in-page-tabs li a, .no-js ul.in-page-tabs li a:link, .no-js ul.in-page-tabs li a:visited, .no-js ul.in-page-tabs li a:active, .no-js ul.in-page-tabs li input.linkbtn {
         background: #e0e8ee;
         color: #1e6297;
         border-left: 0;
@@ -709,8 +708,8 @@ ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.ed
         margin: 0;
         padding: 10px;
     }
-		ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.linkbtn.current-tab, ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active,
-    .no-js ul.in-page-tabs li a.current-tab, .no-js ul.in-page-tabs li a.current-tab:link, .no-js ul.in-page-tabs li a.current-tab:visited, .no-js ul.in-page-tabs li a.current-tab:active, .no-js ul.in-page-tabs li input.linkbtn.current-tab, .no-js ul.edit-view-tabs li a.current-tab, .no-js ul.in-page-tabs li a.current-tab:link, .no-js ul.edit-view-tabs li a.current-tab:visited, .no-js ul.edit-view-tabs li a.current-tab:active {
+	ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.in-page-tabs li input.current-tab, 
+    .no-js ul.in-page-tabs li a.current-tab, .no-js ul.in-page-tabs li a.current-tab:link, .no-js ul.in-page-tabs li a.current-tab:visited, .no-js ul.in-page-tabs li a.current-tab:active, .no-js ul.in-page-tabs li input.current-tab {
         background: #95a8b7;
         color: #FFFFFF;
         border-left: 0;

@@ -469,27 +469,29 @@ form#profileform {
 	background: url(../images/inpage-right.png) no-repeat right top;
  * background: url(../images/inpage-right.png) no-repeat right 10px;
 }
-ul.in-page-tabs, ul.edit-view-tabs {
+ul.in-page-tabs {
 	height: 34px;
 	line-height: 30px;
 	background: url(../images/inpage-left.png) no-repeat left top;
 	padding-left: 10px;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active, ul.edit-view-tabs li a, ul.edit-view-tabs li a:link, ul.edit-view-tabs li a:visited, ul.edit-view-tabs li a:active {
+ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn {
 	color: #FFF;
 	background: none;
 	height: 34px;
 	line-height: 38px;
 	padding: 0 10px;
 }
-ul.in-page-tabs li a:hover {
+ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
 	text-decoration: none;
 	color: #ffd850;
 }
 ul.in-page-tabs li.current-tab {
 	background: url(../images/inpage-active-right.png) no-repeat right top;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active, ul.edit-view-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.edit-view-tabs li a.current-tab:visited, ul.edit-view-tabs li a.current-tab:active {
+ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li input.current-tab {
 	color: #000000;
 	background: url(../images/inpage-active-left.png) no-repeat left top;
 	height: 34px;

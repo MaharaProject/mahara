@@ -1,6 +1,6 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $notrudeform}<div class="message delete narrow">{$notrudeform|safe}</div>{/if}
+{if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
 
 {if !$microheaders && ($mnethost || $editurl)}
 <div class="viewrbuttons">
@@ -38,12 +38,10 @@
     {if $releaseform}<div class="releaseviewform">{$releaseform|safe}</div>{/if}
     {if $view_group_submission_form}<div class="submissionform">{$view_group_submission_form|safe}</div>{/if}
     {if $feedback->count || $enablecomments}
-    <table id="feedbacktable" class="fullwidth table">
-      <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
-      <tbody>
+    <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
+    <div id="feedbacktable" class="fullwidth">
         {$feedback->tablerows|safe}
-      </tbody>
-    </table>
+    </div>
     {$feedback->pagination|safe}
     {/if}
 	<div id="viewmenu">

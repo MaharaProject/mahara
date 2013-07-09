@@ -1,9 +1,9 @@
 {if $data}
 {foreach from=$data item=user}
-    <tr class="{cycle values='r0,r1'}">
+    <div class="{cycle values='r0,r1'}">
         {include file="user/user.tpl" user=$user page=$page admingroups=$admingroups}
-    </tr>
+    </div>
 {/foreach}
 {elseif $query}
-    <tr><td><div class="message">{str tag=nosearchresultsfound section=group}</div></td></tr>
+    <div class="message">{str tag=nosearchresultsfound section=group}</div>
 {/if}

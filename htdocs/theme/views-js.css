@@ -1,34 +1,34 @@
 /**
  * CSS rules that only apply to the JS version of the views interface
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
  */
-
-.blocktype, .blocktype-clone {
+.blocktype,
+.blocktype-clone {
     cursor: move;
 }
-
 form .blockinstance-header {
     cursor: move;
 }
-
 /* This file is loaded by IE6 as it does support javascript - although the
    interface itself is disabled in IE. So we unset the cursor styles here if in
    IE6 */
-* html .blocktype, * html .blocktype-clone, * html .blockinstance-header {
+* html .blocktype,
+* html .blocktype-clone,
+* html .blockinstance-header {
     cursor: default;
 }
-
 .blocktype-radio {
     display: none;
 }
 * html .blocktype-radio {
     display: block;
 }
-
 /* This will be hidden until loading is finished */
 #bottom-pane {
     display: none;
 }
-
 #blocktype-list li {
     width: 80px !important;
 }

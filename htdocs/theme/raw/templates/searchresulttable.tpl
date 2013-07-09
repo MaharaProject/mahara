@@ -1,5 +1,5 @@
 {if $results.data}
-    <div id="setlimit" class="setlimit fr">
+    <div id="setlimit" class="setlimit">
       {str tag=resultsperpage}:
     {foreach from=$limitoptions item=l}
       <a href="{$searchurl}&limit={$l}"{if $l == $results.limit} class="selected"{/if}>{$l}</a>

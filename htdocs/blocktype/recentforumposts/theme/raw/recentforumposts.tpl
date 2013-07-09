@@ -3,9 +3,9 @@
                 <table class="fullwidth">
                 {foreach from=$foruminfo item=postinfo}
                 <tr class="{cycle values='r0,r1'}">
-                    <td><strong><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}&post={$postinfo->id}">{$postinfo->topicname}</a></strong><br />
-                    <div class="s">{$postinfo->body|str_shorten_html:100:true|safe}</div></td>
-                    <td class="valign s center"><a href="{profile_url($postinfo->author)}"><img src="{profile_icon_url user=$postinfo->author maxheight=20 maxwidth=20}" alt=""><br />{$postinfo->author|display_name}</a></td>
+                    <td><h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}&post={$postinfo->id}">{$postinfo->topicname}</a></h3>
+                    <div class="detail">{$postinfo->body|str_shorten_html:100:true|safe}</div></td>
+                    <td class="poster valign right"><a href="{profile_url($postinfo->author)}"><img src="{profile_icon_url user=$postinfo->author maxheight=20 maxwidth=20}" alt=""><br />{$postinfo->author|display_name}</a></td>
             	</tr>
                 {/foreach}
         		</table>

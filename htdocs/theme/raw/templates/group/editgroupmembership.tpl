@@ -1,6 +1,6 @@
 <div id="overlay"></div>
 <div id="groupboxwrap">
-<div class="fr"><a class="btn" href="" onclick="addElementClass('groupbox', 'hidden');return false;">{str tag=Close}</a></div>
+<div class="fr"><a href="" onclick="addElementClass('groupbox', 'hidden');return false;"><img class="close" src="{theme_url filename='images/btn_close.png'}"></a></div>
 <h3>{str tag=editmembershipforuser section=group arg1=display_name($userid)}</h3>
 {if !$data}
 <p>{str tag=nogroups section=group}</p>

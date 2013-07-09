@@ -9,25 +9,29 @@
             <div class="errmsg">{$e}</div>
         {/foreach}
     {/if}
-    <table>
-        <tr class="{cycle values='r0,r1'}">
-            <th>{str tag=licenseiconlabel section=admin}</td>
-            <th>{str tag=licensedisplaynamelabel section=admin}</td>
-            <th>{str tag=licenseshortnamelabel section=admin}</td>
-            <th>{str tag=licensenamelabel section=admin}</td>
-            <th>&nbsp;</td>
+    <table class="fullwidth">
+        <thead>
+        <tr>
+            <th>{str tag=licenseiconlabel section=admin}</th>
+            <th>{str tag=licensedisplaynamelabel section=admin}</th>
+            <th>{str tag=licenseshortnamelabel section=admin}</th>
+            <th>{str tag=licensenamelabel section=admin}</th>
+            <th>&nbsp;</th>
         </tr>
-	    {foreach from=$licenses key=i item=l}
+        </thead>
+        <tbody>
+        {foreach from=$licenses key=i item=l}
             <tr class="{cycle values='r0,r1'}">
                 <td>{if $l->icon}<img src="{license_icon_url($l->icon)}">{/if}</td>
                 <td><a href="{$l->name}">{$l->displayname}</a></td>
                 <td>{$l->shortname}</td>
                 <td><a href="{$l->name}">{$l->name}</a></td>
-                <td>
-                <a href="license-edit.php?edit={$l->name|escape:url}"><img src="{$THEME->get_url('images/edit.gif')}"></a>
-                <input type="image" title="Delete" value="" name="license_delete[{$l->name}]" src="{$THEME->get_url('images/icon_close.gif')}"></td>
+                <td class="btns2">
+                <a href="license-edit.php?edit={$l->name|escape:url}"><img src="{$THEME->get_url('images/btn_edit.png')}"></a>
+                <input type="image" title="Delete" value="" name="license_delete[{$l->name}]" src="{$THEME->get_url('images/btn_deleteremove.png')}"></td>
             </tr>
         {/foreach}
+        </tbody>
     </table>
     <a href="license-edit.php?add=add" class="btn">{str tag=addsitelicense section=admin}</a>
     {if $extralicenses}

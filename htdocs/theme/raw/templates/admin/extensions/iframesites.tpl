@@ -3,7 +3,7 @@
 <p>{str tag=allowediframesitesdescriptiondetail section=admin}</p>
 
 {if $editurls}
-<table class="iframesources">
+<table class="iframesources fullwidth">
   <thead>
     <tr>
       <th>{str tag=Site}</th>
@@ -18,7 +18,7 @@
       <td><img src="{$item.icon}" alt="{$item.name}" title="{$item.name}">&nbsp;{$item.name}</td>
       <td class="right buttonscell btns2">
         <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline" title="{str tag=edit}" href="">
-          <img src="{theme_url filename="images/edit.gif"}">
+          <img src="{theme_url filename="images/btn_edit.png"}">
         </a>
         {$item.deleteform|safe}
       </td>

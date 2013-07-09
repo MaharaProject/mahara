@@ -63,7 +63,7 @@ results.rowfunction = function (r, rownumber, d) {
 
     if (r.views) {
         var viewsList = UL(null);
-        var viewsElement = P(null, STRONG(null, $enc_pages), viewsList);
+        var viewsElement = DIV(null, LABEL(null, $enc_pages), viewsList);
         for ( var k in r.views ) {
             var link = A({'href': r.views[k]}, k);
             viewsList.appendChild(LI(null, link));
@@ -96,7 +96,7 @@ else {
     $javascript .= 'results.query = \'\';';
 }
 
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sidebars' => false));
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sidebars' => true));
 $smarty->assign('query', $query);
 $smarty->assign('artefacttype', $artefacttype);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

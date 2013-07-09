@@ -113,7 +113,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 var message = makeMessage(DIV(null,
                     IMG({'src':get_themeurl('images/loading.gif')}), ' ',
                     get_string('uploadingfiletofolder',localname,self.foldername)
-                    ), 'info');
+                    ), 'ok');
                 setNodeAttribute(message, 'id', 'uploadstatusline' + self.nextupload);
                 appendChildNodes(self.id + '_upload_messages', message);
             }
@@ -208,18 +208,17 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.callback_feedback = function (data) {
         var infoclass = 'info';
         if (data.problem) {
-            var image = 'images/icon_problem.gif';
+            infoclass = 'warning';
         }
         else if (data.error) {
-            var image = 'images/failure.gif';
             infoclass = 'error';
         }
         else {
-            var image = 'images/success.gif';
+            infoclass = 'ok';
         }
 
         quotaUpdate(data.quotaused, data.quota);
-        var newmessage = makeMessage(DIV(null,IMG({'src':get_themeurl(image)}), ' ', data.message), infoclass);
+        var newmessage = makeMessage(DIV(null,' ', data.message), infoclass);
         setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
             removeElement($('uploadstatusline'+data.uploadnumber));
@@ -570,7 +569,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     }
 
     this.update_metadata_to_selected_list = function () {
-        forEach(getElementsByTagAndClassName('input', 'btn-edit', self.id + '_filelist'), function (elem) {
+        forEach(getElementsByTagAndClassName('input', 'btn_edit', self.id + '_filelist'), function (elem) {
             var id = elem.name.replace(/.*_edit\[(\d+)\]$/, '$1');
             var row = getFirstParentByTagAndClassName(elem, 'tr');
             var newtitle = getFirstElementByTagAndClassName('a', null, row);
@@ -649,7 +648,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             }
         };
         if (!existed) {
-            var remove = INPUT({'type': 'submit', 'class':'button small unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
+            var remove = INPUT({'type': 'submit', 'class':'button submit unselect', 'name':self.id+'_unselect[' + id + ']', 'value':get_string('remove')});
             connect(remove, 'onclick', self.unselect);
             filelink = ''
             if (self.filedata[id].artefacttype == 'folder') {
@@ -662,7 +661,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                    TD(null, IMG({'src':self.filedata[id].icon})),
                    TD(null, filelink),
                    TD({'class':'filedescription'}, self.filedata[id].description),
-                   TD({'class':'valign'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
+                   TD({'class':'right s'}, remove, INPUT({'type':'hidden', 'class':'hidden', 'id':self.id+'_selected[' + id + ']', 'name':self.id+'_selected[' + id + ']', 'value':id}))
                   ));
         }
         // Display the list

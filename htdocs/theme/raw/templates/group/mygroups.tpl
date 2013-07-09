@@ -5,16 +5,17 @@
             </div>
 {/if}
 {$form|safe}
-{if $groups}<table id="mygroups" class="fullwidth listing">
+{if $groups}<div id="mygroups" class="fullwidth listing">
 {foreach from=$groups item=group}
-            <tr><td class="{cycle values='r0,r1'}">
+            <div class="listrow {cycle values='r0,r1'}">
                     {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
-                <div class="mygroupsdetails">
+                <div class="groupsdetails">
                      {include file="group/group.tpl" group=$group returnto='mygroups'}
                 </div>
-            </td></tr>
+                <div class="cb"></div>
+            </div>
 {/foreach}
-			</table>
+			</div>
 {$pagination|safe}
 {else}
             <div class="message">{str tag="trysearchingforgroups" section="group" args=$searchingforgroups}</div>

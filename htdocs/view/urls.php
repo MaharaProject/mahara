@@ -146,7 +146,7 @@ for ($i = 0; $i < count($records); $i++) {
                 ),
                 'submit' => array(
                     'type'         => 'image',
-                    'src'          => $THEME->get_url('images/icon_close.gif'),
+                    'src'          => $THEME->get_url('images/btn_deleteremove.png'),
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
                 ),

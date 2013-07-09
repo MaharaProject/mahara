@@ -2,7 +2,7 @@
 <div id="editaccesswrap">
 <div class="fl presets-container">
   <div id="potentialpresetitems">
-    <h3>{{str tag=sharewith section=view}}</h3>
+    <h3 class="title">{{str tag=sharewith section=view}}</h3>
   </div>
   <fieldset id="viewacl-advanced" class="collapsible collapsed">
     <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
@@ -32,8 +32,7 @@
       <th></th>
     </tr>
     <tr class="accesslist-head2">
-      <th></th>
-      <th></th>
+      <th colspan="2"></th>
       <th>{{str tag=From}}:</th>
       <th>{{str tag=To}}:</th>
       <th colspan="2" class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Allow section=artefact.comment}} {{str tag=Moderate section=artefact.comment}}</th>
@@ -146,7 +145,7 @@ function renderAccessListItem(item) {
     }
     var icon = null;
     if (item.type == 'user') {
-        icon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=20&maxheight=20'});
+        icon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&id=' + item.id + '&maxwidth=25&maxheight=25'});
     }
 
     // if this item is 'public' and public pages are disabled
@@ -161,8 +160,8 @@ function renderAccessListItem(item) {
     var notpublicorallowed = (item.accesstype != 'public' || item.publicallowed);
 
     var row = TR({'class': cssClass, 'id': 'accesslistitem' + count},
-        TD(null, icon),
-        TH({'class': 'accesslistname'}, name),
+        TD({'class': 'icon-container'}, icon),
+        TD({'class': 'accesslistname'}, name),
         TD(null, makeCalendarInput(item, 'start', notpublicorallowed), makeCalendarLink(item, 'start', notpublicorallowed)),
         TD(null, makeCalendarInput(item, 'stop', notpublicorallowed), makeCalendarLink(item, 'stop', notpublicorallowed)),
         TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, allowfdbk),
@@ -242,7 +241,7 @@ function makeCalendarLink(item, type) {
         'onclick': 'return false;', // @todo do with mochikit connect
         'class'  : 'pieform-calendar-toggle'},
         IMG({
-            'src': '{{theme_url filename='images/calendar.gif'}}',
+            'src': '{{theme_url filename='images/btn_calendar.png'}}',
             'alt': ''})
     );
 
@@ -292,7 +291,7 @@ forEach(potentialPresets, function(preset) {
 });
 var myInstitutions = {{$myinstitutions|safe}};
 if (myInstitutions.length) {
-    appendChildNodes('potentialpresetitems', H6(null, '{{str tag=sharewithmyinstitutions section=view}}'));
+    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, '{{str tag=sharewithmyinstitutions section=view}}'));
     var i = 0;
     var maxInstitutions = 5;
     forEach(myInstitutions, function(preset) {
@@ -315,7 +314,7 @@ if (myInstitutions.length) {
 var allGroups = {{$allgroups|safe}};
 var myGroups = {{$mygroups|safe}};
 if (myGroups) {
-    appendChildNodes('potentialpresetitems', H6(null, {{jstr tag=sharewithmygroups section=view}}));
+    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, {{jstr tag=sharewithmygroups section=view}}));
     renderPotentialPresetItem(allGroups);
     var i = 0;
     var maxGroups = 10;
@@ -337,7 +336,7 @@ if (myGroups) {
 }
 var faves = {{$faves|safe}};
 if (faves) {
-    appendChildNodes('potentialpresetitems', H6(null, {{jstr tag=sharewithusers section=view}}));
+    appendChildNodes('potentialpresetitems', H3({'class': 'title'}, {{jstr tag=sharewithusers section=view}}));
     forEach(faves, renderPotentialPresetItem);
 }
 var loggedinindex = {{$loggedinindex}};
@@ -397,7 +396,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     rowdata.type = searchTable.type;
     rowdata.type = rowdata.type == 'friend' ? 'user' : rowdata.type;
 
-    var buttonTD = TD({'style': 'white-space:nowrap;'});
+    var buttonTD = TD({'class': 'buttontd'});
 
     var addButton = BUTTON({'type': 'button', 'class': 'button'}, {{jstr tag=add}});
     connect(addButton, 'onclick', function() {
@@ -407,7 +406,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     var identityNodes = [], profileIcon = null, roleSelector = null;
     if (rowdata.type == 'user') {
-        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=20&maxheight=20&id=' + rowdata.id});
+        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&maxwidth=25&maxheight=25&id=' + rowdata.id});
         identityNodes.push(A({'href': rowdata.url, 'target': '_blank'}, rowdata.name));
     }
     else if (rowdata.type == 'group') {
@@ -430,8 +429,8 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
 
     return TR({'class': 'r' + (rownumber % 2)},
         buttonTD,
-        TD({'style': 'vertical-align: middle;'}, identityNodes),
-        TD({'class': 'center', 'style': 'vertical-align:top;width:20px;'}, profileIcon)
+        TD({'class': 'sharewithusersname'}, identityNodes),
+        TD({'class': 'right icon-container'}, profileIcon)
     );
 }
 searchTable.updateOnLoad();

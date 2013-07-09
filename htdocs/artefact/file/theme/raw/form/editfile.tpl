@@ -27,7 +27,7 @@
           </tr>
           <tr>
             <td></td>
-            <td>{str tag=tagsdescprofile}</td>
+            <td class="description">{str tag=tagsdescprofile}</td>
           </tr>
 {if $groupinfo}
           <tr>

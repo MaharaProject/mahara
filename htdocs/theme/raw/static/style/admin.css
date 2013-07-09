@@ -1,7 +1,7 @@
 /**
  * CSS rules for the administration section
  *
- * Copyright (C) 2006-2012 Catalyst IT
+ * Copyright (C) 2006-2013 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
 
@@ -17,18 +17,8 @@
     margin: 0 auto;
     width: 90%;
 }
-#installer tr {
-    height: 20px;
-}
-#installer th {
-    vertical-align: middle;
-    border-bottom: 1px solid #aaa;
-}
-#installer tr:last-child td {
-    border-bottom: 1px solid #aaa;
-}
 #finished {
-    font-size: 1.6667em;
+    font-size: 1.667em;
     font-weight: bold;
     margin: 10px 0;
     text-align: center;
@@ -37,790 +27,9 @@
 #msgscol {
     width: 50%;
 }
-
-/* ADMIN HOME */
-
-
-/* delete/close buttons */
-#close_site_submit,
-#suspenddelete #delete #edituser_delete_submit,
-#institution_suspend_submit,
-#networkingform_deletesubmit,
-input#buttons_delete,
-input#delete_delete {
-	border-color: #950000;
-	background: #ae0101 url(../images/btn-red-bkgd.gif) repeat-x left top;
-	color: #FFF;
-}
-#close_site_submit:hover,
-#suspenddelete #delete #edituser_delete_submit:hover,
-#institution_suspend_submit:hover,
-#networkingform_deletesubmit:hover,
-input#delete_delete:hover {
-	border-color: #950000;
-	background: #a40101 url(../images/btn-red-bkgd-hover.gif) repeat-x left top;
-	color: #FFF;
-}
-#close_site_submit:active, #suspenddelete #delete #edituser_delete_submit:active, #institution_suspend_submit:active, #networkingform_deletesubmit:active, input#delete_delete:active {
-    border-color: #f23131;
-    background: #f23131 url(../images/btn-red-bkgd-focus.gif) repeat-x left top;
-    color: #FFF;
-}
-
-/* close site box */
-#close-site {
-	border: 1px solid #e98a88;
-	background: #fbeceb;
-    text-align: left;
-	padding: 10px 1%;
-	width: 22%;
-	float: left;
-	margin: 0 0 0 1.8%;
-	min-height: 170px;
-}
-#close-site h3 {
-	color: #ca0000;
-}
-
-#close_site {
-	margin-top: 5px;
-}
-
-
-/* register site box */
-#register-site {
-    text-align: left;
-	padding: 10px 1%;
-	margin: 0 1.8% 10px 0;
-	float: left;
-	width: 25%;
-	min-height: 170px;
-}
-#register-site-full {
-	text-align: left;
-	padding: 10px 15px;
-}
-#register-site-full #register table {
-	margin-top: 0;
-}
-#register-site-full #register table table table td {
-	text-align: left;
-	border-bottom: 1px dotted #d1d1d1;
-}
-#register-site-full #register_sendweeklyupdates_container th,
-#register-site-full #register_sendweeklyupdates_container td {
-	float: left;
-}
-#register-site form fieldset.collapsed {
-	border: 0;
-	font-size: .9167em;
-}
-#register-site form fieldset.collapsible {
-	border: 0;
-	font-size: .9167em;
-	margin: 0;
-	padding: 0;
-}
-#register-site table {
-	margin-left: 0;
-	margin-top: 10px;
-	width: 100%;
-}
-#register-site table th {
-	text-align: left;
-	padding: 5px;
-	width: 140px;
-}
-#register-site table td {
-	padding: 0 10px 0 0;
-}
-#register-site table table {
-	margin-left: 8px;
-	margin-top: 0;
-	width: 100%;
-}
-#register-site form table {
-	margin: 0;
-}
-#register-site table fieldset table td {
-	padding: 0 0 0 15px;
-}
-#register-site table fieldset table table th {
-    border-bottom: 1px solid #ccc;
-	background: none;
-}
-#register-site table fieldset table table td {
-    border-bottom: 1px solid #eee;
-	padding: 0 5px;
-	background: #fefefe;
-}
-#register-site fieldset legend a {
-	font-size: .9167em;
-}
-#register_register_container th {
-	display: none;
-}
-#register_register_container td {
-	float: left;
-	margin-left:5px;
-}
-input#register_register {
-	* margin-bottom: 10px;
-}
-
-/* run upgrade box */
-#runupgrade {
-    padding: 10px 15px;
-    background: #f6f6f6;
-    border: 1px solid #ddd;
-    margin: 0 0 10px 0;
-    float: left;
-}
-#runupgrade h4 {
-    margin: 0;
-	font-size: 1em;
-}
-#upgradestable {
-    border: none;
-	font-size: .9167em;
-	width: 100%;
-}
-#upgradestable th {
-    padding: 5px 5px 3px 5px;
-	text-align: left;
-    border-bottom: 1px solid #ccc;
-}
-#upgradestable td {
-    border-bottom: 1px solid #eee;
-	background: #fefefe;
-}
-
-#site-stats {
-  margin: 0 0 10px 0;
-  padding: 10px 1%;
-  text-align: left;
-  float: left;
-  width: 42%;
-	min-height: 170px;
-}
-#site-stats .icon-sitestats {
-	background: url(../images/icon-sitestats.png) no-repeat left;
-	padding-left: 18px;
-}
-#site-stats p:first-child,
-#site-stats p:last-child,
-#site-stats p {
-  margin: 1px;
-}
-#site-stats-graph {
-  margin: 0 0 10px 0;
-}
-#site-stats-graph img {
-	width: 265px;
-}
-#site-stats-wrap {
-	margin-left: 280px;
-}
-.site-stats-left {
-	width: 265px;
-	float: left;
-	margin-left: -280px;
-}
-.site-stats-right {
-	margin-left: 0;
-	float: left;
-	width: 100%;
-}
-.site-stats-table div {
-	padding: 3px 5px;
-	border-bottom: 1px solid #FFF;
-	background: #F8F8F8;
-}
-#site-stats .site-stats-table {
-	margin-top: 5px;
-}
-#site-stats .site-stats-table div {
-	border-bottom: 0;
-	background: none;
-	padding: 0;
-}
-#site-stats-wrap2 {
-	margin-left: 320px;
-}
-.statistics-subpage-full-column {
-	float: none;
-	margin-left: -320px;
-    margin-right: 0;
-}
-.statistics-subpage-left-column {
-	width: 320px;
-	float: left;
-	margin-left: -320px;
-}
-.statistics-subpage-right-column {
-	margin-left: 0;
-	float: left;
-	width: 100%;
-}
-.statistics-subpage-left-column p {
-	margin: 0 0 10px 0;
-}
-#clearingsitestats {
-	position: absolute;
-	margin-bottom: 20px;
-}
-.admin-home-column {
-  width: 49%;
-  margin: 10px 1px 0 1px;
-}
-* html .admin-home-column {
-	width: 47%;
-}
-
-/* CONFIGURE SITE SITE OPTIONS */
-#siteoptions th label {
-	white-space: nowrap;
-}
-#siteoptions legend {
-	font-size: 1em;
-}
-#siteoptions th label {
-	font-weight: bold;
-	font-size: 1em;
-}
-#siteoptions_submit_container th,
-#siteoptions_submit_container td {
-	padding-top: 10px;
-	float: left;
-}
-
-/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
-#menuitemlist {
-	margin: 10px 0;
-}
-#menuitemlist table {
-	width: 100%;
-}
-#menuitemlist table th {
-    border-bottom: 1px solid #d1d1d1;
-}
-#menuitemlist table td {
-	vertical-align: middle;
-    border-bottom: 1px dotted #d1d1d1;
-	line-height: 2em;
-}
-
-/* CONFIGURE SITE > NETWORKING */
-#networkingform_pubkey_container td {
-	line-height: .9167em;
-}
-#networkingform fieldset table th label {
-	font-weight: bold;
-}
-
-
-/* USERS > USER SEARCH */
-#initials {
-	margin: 0 0 5px 0;
-	line-height: 2em;
-}
-#initials span {
-	padding: 0 3px;
-    font-weight: bold;
-}
-#initials span.selected a {
-    color: #000 !important;
-    text-decoration: none;
-	cursor: default;
-}
-.withselectedusers {
-    margin: 0;
-    float: right;
-    padding-top: 60px;
-}
-.searchform-gap {
-    height: 30px;
-}
-.searchform .institutions {
-	margin-left: 10px;
-}
-#bulkactions {
-	font-weight: bold;
-}
-#results {
-    clear: both;
-}
-#results h2 {
-	margin: 0 0 5px 0;
-}
-#results thead tr.search-results-pages {
-    display:none;
-}
-#results th.nojs-hidden-table-cell a {
-    margin: 0 3px;
-}
-/* SEARCH RESULTS TABLE */
-table.tablerenderer th.asc { 
-	background: transparent url(../images/down.gif) no-repeat left;
-	padding-left: 15px;
-}
-table.tablerenderer th.desc { 
-    background: transparent url(../images/up.gif) no-repeat left;
-	padding-left: 15px;
-}
-.search-results-sort-column {
-	cursor: pointer;
-}
-#searchresults td {
-	vertical-align: middle;
-}
-#searchresults thead tr.search-results-pages div.pagination {
-	margin: 10px 0 5px 0;
-	padding: 0;
-}
-#searchresults thead tr.search-results-pages div.pagination .results {
-	display: inline;
-}
-
-
-/* USERS > EDIT USER */
-#edituser .suspendederror {
-    font-size: .9167em;
-    padding: 10px;
-    color: #dd0221;
-    background: #ffeded;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-#edituser .suspendederror h4 {
-    margin: 0;
-}
-#edituser_institution td {
-	padding: 0;
-}
-#edituser_institution td h4 {
-	font-size: 1.1667em;
-}
-#edituser_institution th label {
-	font-size: 1em;
-	font-weight: bold;
-}
-#edituser .message {
-	margin-left: 155px;
-}
-#profilepict {
-	padding: 10px;
-	font-size: .9167em;
-	margin-right: 10px;
-	text-align: center;
-	border: 1px solid #ccc;
-	background: #f6f6f6;
-}
-#profilepict a img {
-    width: 100px;
-    height: 100px;
-	padding: 0;
-}
-#profilename {
-	margin: 10px 0 0 0;
-}
-#loginas {
-	margin-right: 10px;
-	margin-top: 10px;
-}
-
-#useraccountsettingsleft {
-	padding-right: 20px;
-}
-#useraccountsettingsright {
-	width: 254px;
-}
-#useraccountsettingsleft h2 {
-	margin-top: 0;
-}
-#useraccountsettingsleft .pieform tr.checkbox label {
-	white-space: normal !important;
-}
-
-
-#suspenddelete,
-#institutions {
-	margin-bottom: 20px;
-}
-#suspenddelete p {
-	font-size: .9167em;
-	line-height: 1.4em;
-}
-/* suspend user */
-#suspenddelete #suspend {
-	border: 1px solid #d1d1d1;
-	padding: 10px;
-	background: #f6f6f6;
-	margin-bottom: 10px;
-}
-#suspenddelete #suspend table th {
-	float: left;
-	display: block;
-	padding: 3px 0;
-}
-#suspenddelete #suspend table td {
-	display: block;
-	clear: left;
-	padding: 0;
-}
-#suspenddelete #suspend .resizable-textarea {
-	width: 225px !important;
-	* width: 180px !important;
-	width: 180px\0/ !important;
-}
-#suspenddelete #suspend table td.description {
-	* width: 180px;
-}
-
-/* delete user */
-#suspenddelete #delete {
-	border: 1px solid #e98a88;
-	background: #fbeceb;
-	padding: 10px;
-}
-#suspenddelete #delete h3 {
-	margin-top: 0;
-	color: #ca0000;
-}
-#edituser_institution_addinstitution_container,
-#edituser_institution_add_container {
-	display: inline;
-}
-#edituser_site_passwordchange_container th label {
-	white-space: nowrap;
-}
-#edituser_site th,
-#networkingform_pubkey_container th,
-#institution_authplugin_container th {
-	vertical-align: top;
-	padding-top: 8px !important;
-}
-#edituser_site td {
-	vertical-align: top;
-}
-#edituser_site #edituser_site_tags_container #edituser_site_tags {
-	width: 200px !important;
-}
-
-/* USERS > SUSPENDED USERS */
-#suspendedlist {
-	margin: 10px 0;
-}
-form#usertype {
-    float: left;
-}
-form#buttons div span {
-    float: right;
-}
-form#buttons div span input {
-    margin-top: 3px;
-    margin-bottom: 3px;
-}
-form#buttons table#suspendedlist {
-    clear: both;
-}
-
-
-/* USERS > SITE ADMINS */
-.userlistform table {
-    width: 100%;
-}
-* html .userlistform table,
-* html .userlisttable {
-	width: 96%;
-}
-.userlisttable td {
-	padding: 3px 0;
-}
-.userlisttable td label {
-	font-size: 1em;
-	font-weight: bold;
-}
-
-
-/* USERS > ADMIN NOTIFICATIONS */
-#notificationstable td {
-	vertical-align: middle;
-}
-
-
-/* USERS > ADD USER */
-#adduser-t {
-    min-width: 800px;
-}
-#adduser thead th {
-    text-align: left;
-    font-size: 1.333em;
-    border-bottom: none !important;
-}
-#adduser td.step1 {
-	background: #f6f6f6;
-	border: 1px solid #ccc;
-    width: 30%;
-	padding: 10px 5px;
-}
-#adduser td.step1 table,
-#adduser td.step1 #adduser_leap2afile {
-	margin-left: 20px;
-}
-#adduser div.choice {
-    padding-bottom: 5px;
-}
-#adduser label {
-    font-weight: bold;
-    font-size: 1em;
-}
-#adduser #or {
-	color: #8D8D8D;
-	padding: 8px 3px 10px 3px;
-	font-weight: bold;
-	font-size: 2em;
-	text-align: center;
-	text-transform: uppercase;
-}
-#adduser td.step2 {
-	background: #f6f6f6;
-	border: 1px solid #ccc;
-    width: 36%;
-	padding: 10px 5px;
-	text-align: center;
-}
-#adduser td.step2 th {
-	white-space: nowrap;
-}
-#adduser td.step2 td {
-	text-align: left;
-}
-#adduser td.step3 {
-	background: #efefef;
-	border: 1px solid #ccc;
-    width: 25%;
-    text-align: center;
-	padding: 10px 5px;
-	vertical-align: middle;
-}
-#adduser #adduser_submit {
-	font-size: 1.6667em;
-	font-weight: bold;
-}
-#adduser #step3info {
-	margin-top: 20px;
-}
-#adduser td.filler {
-    padding: 20px 3px 0 3px;
-    font-size: 3.8em;
-    width: 3%;
-	color: #8d8d8d;
-}
-#adduser table table label {
-    font-size: .9167em;
-}
-
-
-/* USERS > ADD USERS BY CSV */
-ul.fieldslist li {
-	float: left;
-	width: 150px;
-}
-form#uploadcsv {
-	clear: both;
-}
-#institution table fieldset {
-	width: 50%;
-}
-#institutionselect_institution_container td,
-#usertypeselect_institution_container td {
-	vertical-align: inherit;
-}
-#adduser_mobileuploadtoken_list, #adduser_mobileuploadtoken_list div,
-#uploadcsv_mobileuploadtoken_list, #uploadcsv_mobileuploadtoken_list div {
-    display: inline;
-}
-
-/* GROUPS */
-#editmenus #menuitemlist table {
-	width: auto;
-}
-#groupquotasform {
-    border: 1px solid #d1d1d1;
-    background: #f6f6f6;
-    padding: 10px;
-}
-
-/* MANAGE GROUPS > GROUP ADMINS */
-#groupadminsform {
-	border: 1px solid #d1d1d1;
-	background: #f6f6f6;
-	padding: 10px;
-}
-#groupadminsform table #groupadminsform_admins_container td th {
-	width: auto !important;
-	white-space: nowrap;
-	font-weight: bold;
-}
-#groupadminsform table #groupadminsform_admins_container th {
-	width: 80px !important;
-}
-#groupcategories #groupcategories_submit_container th {
-    display: inline;
-    float: left;
-    padding: 0;
-}
-#groupcategories #groupcategories_submit_container td {
-    display: inline;
-    float: left;
-}
-
-/* MANAGE INSTITUTIONS > INSTITUTIONS */
-#adminstitutionslist .controls {
-    width: 35px;
-}
-#adminstitutionslist .controls form {
-    display: inline;
-}
-.customtheme {
-    margin: 0 auto 1em;
-}
-
-/* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
-#usertypeselect table td,
-#usertypeselect table th,
-#institutionselect table td,
-#institutionselect table th {
-	padding: 0 5px 3px 0;
-	text-align: left;
-}
-.institutionedituserbuttons form {
-	display: inline;
-}
-#institution_maxuseraccounts_container th {
-	width: 220px;
-}
-#instanceList .authIcons a {
-	color: #ca0000;
-	font-size: .9167em;
-}
-#institution #lockedfieldshelp {
-	float: right;
-}
-#institution table tr td fieldset {
-    width: 50%;
-    text-align: center;
-    margin: 0 auto;
-}
-#institution tr#institution_description_container th {
-    display: none;
-}
-#suspendinstitution {
-	border: 1px solid #e98a88;
-	background: #fbeceb;
-	padding: 10px 10px 10px 0;
-    float: right;
-	width: 220px;
-    margin: 10px 0 0 10px;
-}
-#suspendinstitution h3#suspend {
-	color: #ca0000;
-	margin-left: 10px;
-}
-
-
-/* MANAGE INSTITUTIONS > INSTITUTION MEMBERS */
-#institutionusers,
-#staffusers,
-#adminusers {
-	border: 1px solid #d1d1d1;
-	background: #f6f6f6;
-	padding: 10px;
-}
-#usertypeselect_institution_container th,
-#institutionselect_institution_container th,
-#institutionselect_institution_container th {
-	padding: 0 5px 5px 0 !important;
-	font-size: 1.5em;
-}
-#usertypeselect_institution_container td,
-#institutionselect_institution_container td {
-	padding: 0 0 5px 0 !important;
-}
-#usertypeselect_institution_container td select,
-#institutionselect_institution_container td select {
-	max-width: 100%;
-}
-#institutionusers table #institutionusers_users_container th {
-	width: 120px;
-	white-space: nowrap;
-}
-#institutionusers table #institutionusers_users_container td th,
-#adminusers table #adminusers_users_container td th,
-#staffusers table #staffusers_users_container td th {
-	width: auto !important;
-	white-space: nowrap;
-	font-weight: bold;
-}
-#staffusers table #staffusers_users_container th {
-	width: 80px !important;
-}
-#adminusers table #adminusers_users_container th {
-	width: 90px !important;
-}
-
-
-/* MANAGE INSTITUTIONS > VIEWS */
-#editaccess_accesslist_container {
-	clear: both;
-	margin-top: 20px;
-}
-
-
-/* ADMINISTER EXTENSIONS */
-#adminplugin h4 {
-	margin-bottom: 3px;
-}
-#adminplugin ul.adminpluginstypes li {
-	float: left;
-	list-style: none;
-	margin: 10px 20px 10px 0;
-	padding: 0;
-}
-#adminplugin ul.adminpluginstypes,
-#adminplugin ul.adminpluginstypes ul,
-#adminplugin ul.adminpluginstypes ul li,
-#adminplugin ul.adminpluginstypes ul ul,
-#adminplugin ul.adminpluginstypes ul ul li,
-#adminplugin ul.adminpluginstypes ul ul ul {
-	margin: 0;
-	padding: 0;
-}
-#adminplugin ul.adminpluginstypes ul li,
-#adminplugin ul.adminpluginstypes ul ul li {
-	float: none;
-	list-style: none;
-	font-size: .9167em;
-}
-#adminplugin ul.adminpluginstypes ul ul ul li {
-	list-style: disc;
-	margin: 0 0 0 15px;
-	font-size: 1em;
-}
-#adminplugin ul.adminpluginstypes ul ul li form {
-	* zoom: 1;
-}
-
-#edituser_institution tr.submit td {
-	padding-top: 5px;
-}
-
-/* warnings for the admin screen */
+/* Admin home > Overview */
 .admin-warning-box {
-    background: #fbeceb;
+    background: #FFF3E0;
     margin-bottom: 15px;
     padding: 10px;
     -webkit-border-radius: 5px;
@@ -828,52 +37,698 @@ form#uploadcsv {
     border-radius: 5px;
     color: #333333;
 }
+.admin-warning-box h3 {
+    background: url(../images/warning.png) no-repeat 0 50%;
+    padding-left: 22px;
+}
 .admin-warning-box ul {
     margin-bottom: 0;
 }
-
-.admin-warning-box h3 {
+/* Run upgrade box */
+#runupgrade {
+    padding: 10px 15px;
+    background: #F6F6F6;
+    margin: 0 0 15px 0;
+    text-align: left;
+}
+#runupgrade h4 {
+    margin: 5px 0;
+    font-size: 1.167em;
+}
+#upgradestable td {
+    border-bottom: 1px dotted #D1D1D1;
+}
+/* Register site box */
+#register-site {
+    text-align: left;
+    padding: 10px 1%;
+    margin: 0 1.8% 10px 0;
+    float: left;
+    width: 25%;
+    min-height: 170px;
+}
+/* Site information box */
+#site-stats {
+    margin: 0 1.8% 10px 0;
+    padding: 10px 1%;
+    text-align: left;
+    float: left;
+    width: 39%;
+    min-height: 170px;
+}
+.site-stats-table {
+    margin-top: 5px;
+}
+/* close site box */
+#close-site {
+    background: #F8F3F2;
+    text-align: left;
+    padding: 10px 1%;
+    width: 25%;
+    float: left;
+    margin: 0;
+    min-height: 170px;
+}
+#close-site h3 {
     color: #CA0000;
 }
-
-form#suspend, form#changeauth {
-    float: left;
-    margin: 0 1% 5px 0;
-    background: #f6f6f6;
-    padding: 10px 1%;
+form#close_site {
+    margin-top: 5px;
 }
-form#delete {
-    float: left;
-    margin: 0 1% 5px 0;
-    padding: 10px;
-    background: #fbeceb;
+/* Overview */
+.admin-home-column {
+    width: 49%;
+    margin: 10px 1px 0 1px;
 }
-form#suspend span#suspend_reason_container {
+/* Register */
+#register-site-full fieldset th {
+    border-bottom: 1px solid #CCCCCC;
+}
+#register-site-full fieldset table table td {
+    border-bottom: 1px dotted #D1D1D1;
+}
+#register-site-full #register_sendweeklyupdates_container th,
+#register-site-full #register_sendweeklyupdates_container td {
     white-space: nowrap;
     display: inline-block;
-    margin-top: 3px;
-    margin-left: 3px;
 }
-form#suspend span#suspend_reason_container label {
-    font-weight: normal;
-    font-size: 0.9167em;
+#register_register_container th {
+    display: none;
 }
-.bulkactionform {
-    margin: 0;
+/* Site statistics */
+#site-stats-wrap {
+    margin-left: 280px;
+}
+.site-stats-left {
+    width: 265px;
+    float: left;
+    margin-left: -280px;
+}
+#site-stats-graph {
+    margin: 0 0 10px 0;
+}
+#site-stats-graph img {
+    width: 265px;
+}
+.site-stats-table div {
+    padding: 3px 5px;
+    border-bottom: 1px solid #FFFFFF;
+    background: #F8F8F8;
+}
+.site-stats-right {
+    margin-left: 0;
+    float: left;
+    width: 100%;
+}
+#site-stats-wrap2 {
+    margin-left: 320px;
+}
+.statistics-subpage-left-column {
+    width: 300px;
+    float: left;
+    margin-left: -320px;
+}
+#site-stats-wrap2 .fr {
+    margin-top: 5px;
 }
 .bulkaction-title {
     font-weight: bold;
-    margin: 0 .25em 0 0;
+    margin: 0 3px 0 0;
 }
-table.iframesources {
+.statistics-subpage-right-column {
+    margin-left: 0;
+    float: left;
     width: 100%;
 }
-table.iframesources .pieform table tr,
-table.iframesources .pieform table tr td {
-    border-bottom: 0;
+.statistics-subpage-right-column h3 {
+    margin: 15px 0 5px 0;
 }
-#newurl {
-    background: #f1f1f1;
-    padding: 3px;
-    border-top: 2px solid #FFFFFF;
+.statistics-subpage-full-column {
+    float: none;
+    margin-left: -320px;
+    margin-right: 0;
 }
+/* Configure site > Site options */
+#siteoptions table {
+    width: 100%;
+}
+#siteoptions th {
+    width: 20%;
+}
+#siteoptions th label {
+    white-space: nowrap;
+}
+#siteoptions legend {
+    font-size: 1em;
+}
+#siteoptions_submit_container th {
+    display: none;
+}
+#siteoptions_submit_container td {
+    padding-top: 10px;
+}
+/* Configure site > Edit site pages */
+
+/* Configure site > Menus */
+#menuitemlist {
+    margin: 10px 0;
+}
+#menuitemlist table th {
+    border-bottom: 1px solid #D1D1D1;
+}
+#menuitemlist table td {
+    vertical-align: middle;
+    border-bottom: 1px dotted #D1D1D1;
+}
+#menuitemlist table #rownew td div {
+    line-height: 2em;
+}
+#menuitemlist label {
+    margin-right: 5px;
+}
+/* Configure site > Networking */
+#networkingform_pubkey_container td {
+    line-height: 0.917em;
+}
+#networkingform_pubkey_container td pre {
+    margin: 3px 0 0 0;
+}
+#networkingform .html th {
+    padding-top: 3px;
+}
+#networkingform_deletesubmit_container {
+    background: #FEE7E7;
+}
+#networkingform_deletesubmit_container th {
+    padding: 11px 0 0 10px;
+}
+/* Configure site > Licenses */
+#sitelicenses table {
+    margin: 0 0 10px 0;
+}
+#sitelicenses table td {
+    vertical-align: middle;
+}
+/* Configure site > Pages */
+
+/* Configure site > Collections */
+
+/* Configure site > Share */
+#newurl_submit_container th {
+    padding-top: 12px;
+}
+/* Configure site > Files */
+
+/* Users > User search */
+#initials {
+    line-height: 2.5em;
+}
+#initials span {
+    padding: 0 3px;
+    font-weight: bold;
+}
+#initials .selected a {
+    color: #000000;
+    text-decoration: none;
+    cursor: default;
+}
+.withselectedusers,
+.loggedin-filter,
+.duplicateemail-filter,
+.usersearchform {
+    line-height: 2.5em;
+}
+.usersearchform .institutions {
+    margin-left: 10px;
+}
+.setlimit {
+    float: right;
+    margin: 5px 5px 0 0;
+    font-size: 1em;
+}
+.setlimit a {
+    margin-left: 5px;
+}
+.setlimit a.selected {
+    font-weight: bold;
+    text-decoration: none;
+}
+#results thead tr.search-results-pages {
+    display: none;
+}
+#results th.nojs-hidden-table-cell a {
+    margin: 0 3px;
+}
+table.tablerenderer th.asc a {
+    background: transparent url(../images/sort_descend.png) no-repeat right;
+    padding-right: 12px;
+}
+table.tablerenderer th.desc a {
+    background: transparent url(../images/sort_ascend.png) no-repeat right;
+    padding-right: 12px;
+}
+#searchresults td {
+    vertical-align: middle;
+}
+/* Users > User Search > Edit user */
+#edituser .suspendederror {
+    padding: 5px 10px;
+    background: #FFEDED;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#edituser .title {
+    color: #DD0221;
+}
+#useraccountsettingsright {
+    width: 250px;
+    float: right;
+    margin-left: 10px;
+}
+#suspenddelete #suspend {
+    padding: 10px;
+    background: #F6F6F6;
+    margin-bottom: 10px;
+}
+#suspenddelete #suspend table th {
+    float: left;
+    padding: 3px 0;
+}
+#suspenddelete #suspend table td {
+    display: block;
+    clear: left;
+    padding: 0;
+}
+#suspenddelete #delete {
+    background: #F8F3F2;
+    padding: 10px;
+}
+#suspenddelete #delete h3 {
+    color: #CA0000;
+}
+#useraccountsettingsleft {
+    margin-left: 140px;
+    margin-right: 260px;
+}
+#profilepict {
+    padding: 10px 10px 15px 10px;
+    margin-left: -150px;
+    text-align: center;
+    background: #F6F6F6;
+    float: left;
+    width: 120px;
+}
+#profilename {
+    margin: 10px 0;
+}
+#institutions {
+    margin-top: 20px;
+}
+#edituser_institution th,
+#edituser_institution td {
+    padding: 0 5px 0 0;
+    vertical-align: middle;
+}
+#edituser_institution td h4 {
+    margin: 0 0 5px 0;
+}
+#edituser_institution tr.submit td {
+    padding-top: 5px;
+}
+#edituser_site #edituser_site_tags_container #edituser_site_tags {
+    width: 200px !important;
+}
+/* Users > User search > Bulk edit */
+form#suspend {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+form#changeauth {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
+form#delete {
+    margin: 0 0 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #FEE7E7;
+    display: inline-block;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+/* Users > Suspended and expired users */
+form#usertype {
+    float: left;
+}
+form#buttons div {
+    text-align: right;
+}
+form#buttons td div {
+    text-align: left;
+}
+form#buttons div span input {
+    margin: 0 0 0 8px;
+}
+form#buttons table#suspendedlist {
+    clear: both;
+    margin: 10px 0;
+}
+/* Users > Site staff */
+.userlistform table {
+    width: 100%;
+}
+/* Users > Site administrators */
+
+/* Users > Add user */
+#adduser-t {
+    width: 100%;
+}
+#adduser thead th {
+    font-size: 1.333em;
+    border-bottom: none;
+}
+#adduser td.step1 {
+    background: #F6F6F6;
+    width: 30%;
+    padding: 10px 5px;
+}
+#adduser td.step1 table {
+    margin-left: 20px;
+}
+#adduser td table th {
+    white-space: nowrap;
+    padding-top: 8px;
+}
+#adduser td.step1 table th label {
+    font-weight: normal;
+}
+#adduser td.step1 table input.text {
+    width: 90%;
+}
+#adduser #or {
+    color: #8D8D8D;
+    padding: 10px 3px 15px 3px;
+    font-weight: bold;
+    font-size: 2em;
+    text-transform: uppercase;
+}
+#adduser td.step1 #adduser_leap2afile {
+    margin-left: 25px;
+}
+#adduser td.filler {
+    padding: 0 3px;
+    font-size: 3.8em;
+    width: 3%;
+    color: #8D8D8D;
+    vertical-align: middle;
+    text-align: center;
+}
+#adduser td.step2 {
+    background: #F6F6F6;
+    width: 36%;
+    padding: 5px;
+}
+#adduser td.step3 {
+    background: #EFEFEF;
+    width: 25%;
+    text-align: center;
+    padding: 10px 5px;
+}
+#adduser #adduser_submit {
+    font-size: 1.667em;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+/* Users > Add users by CSV */
+ul.fieldslist li {
+    float: left;
+    width: 170px;
+}
+#uploadcsv {
+    clear: both;
+}
+/* Groups > Administer groups */
+#admgroupslist td {
+    vertical-align: middle;
+}
+#admgroupslist td.right {
+    padding: 3px 5px 0 5px;
+    white-space: nowrap;
+}
+#admgroupslist td.right a {
+    margin-left: 7px;
+}
+/* Groups > Administer groups > Manage */
+#groupquotasform {
+    background: #F6F6F6;
+    padding: 10px;
+}
+#groupadminsform table th {
+    width: 120px;
+    padding: 0;
+    font-size: 1.167em;
+}
+#groupadminsform table table th {
+    width: auto;
+    font-size: 1em;
+}
+/* Groups > Group categories */
+#groupcategories {
+    background: #F6F6F6;
+    padding: 10px;
+}
+/* Groups > Add groups by CSV */
+
+/* Groups > Update group members by CSV */
+
+/* Institutions > Institutions */
+#adminstitutionslist td {
+    vertical-align: middle;
+}
+#adminstitutionslist .controls {
+    white-space: nowrap;
+    width: 70px;
+    padding: 3px 0 0 5px;
+}
+#adminstitutionslist .controls form {
+    display: inline;
+    margin-left: 5px;
+}
+.institutionedituserbuttons form {
+    display: inline;
+}
+/* Institutions > Institutions > Edit */
+#institution th {
+    white-space: nowrap;
+}
+.authInstance {
+    margin-bottom: 3px;
+}
+.authInstance label {
+    font-weight: normal;
+}
+#instanceList .authIcons a {
+    color: #CA0000;
+}
+#institution fieldset {
+    width: 300px;
+}
+#institution fieldset table {
+    margin: 0;
+}
+.customtheme {
+    margin: 0 0 10px 200px;
+}
+.customtheme #institution_resetcustom_container td {
+    padding-top: 5px;
+}
+.customtheme .nojs-hidden-inline .description {
+    padding: 7px 0 0 0 !important;
+}
+#institution fieldset.collapsible table tr.checkbox {
+    border-top: 1px dotted #D1D1D1;
+}
+#institution_description_container th {
+    display: none;
+}
+#suspendinstitution {
+    background: #F8F3F2;
+    padding: 10px;
+    float: right;
+    width: 220px;
+    margin: 0 0 10px 10px;
+}
+#suspendinstitution .title {
+    color: #CA0000;
+    font-size: 1.333em;
+}
+#suspendinstitution th,
+#suspendinstitution td {
+    padding: 0;
+}
+input#institution_suspend_submit {
+    margin-bottom: 5px;
+}
+/* Institutions > Institutions > Edit members/staff/administrators */
+.userlistform {
+    background: #F6F6F6;
+    padding: 10px;
+}
+.userlistform th {
+    width: 120px;
+}
+.userlistform td th {
+    width: auto;
+}
+/* Institutions > Members */
+#institutionusers_institution_container label,
+#institutionusers_users_container label {
+    font-size: 1.167em;
+}
+#institutionusers_users_container td th {
+    padding-top: 6px;
+}
+#institutionusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Staff */
+#staffusers_users_container label {
+    font-size: 1.167em;
+}
+#staffusers_users_container td th {
+    padding-top: 6px;
+}
+#staffusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Administrators */
+#adminusers_users_container label {
+    font-size: 1.167em;
+}
+#adminusers_users_container td th {
+    padding-top: 6px;
+}
+#adminusers_users_container td td {
+    padding: 3px 0;
+}
+/* Institutions > Admin notifications */
+#notificationstable td {
+    vertical-align: middle;
+}
+/* Institutions > Pages */
+#institutionselect {
+    margin-bottom: 5px;
+}
+#institutionselect_institution_container th {
+    padding: 0 5px 0 0;
+    font-size: 1.333em;
+    vertical-align: middle;
+}
+#institutionselect_institution_container td {
+    padding: 0;
+    vertical-align: middle;
+}
+/* Institutions > Collections */
+
+/* Institutions > Share */
+
+/* Institutions > Files */
+
+/* Institutions > Statistics */
+#usertypeselect {
+    margin: 10px 0;
+}
+#usertypeselect_institution_container th {
+    padding: 0 5px 0 0;
+    font-size: 1.333em;
+    vertical-align: middle;
+}
+#usertypeselect_institution_container td {
+    padding: 0;
+    vertical-align: middle;
+}
+/* Institutions > Pending registrations */
+#pendinglist td.right {
+    padding: 8px 3px;
+    white-space: nowrap;
+}
+/* Extensions > Plugin administration */
+#adminplugin h4 {
+    margin-bottom: 3px;
+}
+#adminplugin ul.adminpluginstypes li {
+    float: left;
+    list-style: none;
+    margin: 0 0 15px 0;
+    padding: 0;
+    width: 250px;
+}
+#adminplugin ul.adminpluginstypes ul,
+#adminplugin ul.adminpluginstypes ul li {
+    margin: 0;
+    padding: 0;
+}
+#adminplugin ul.adminpluginstypes ul li,
+#adminplugin ul.adminpluginstypes ul ul li {
+    float: none;
+    list-style: none;
+    margin: 3px 0 0 0;
+}
+#adminplugin ul.adminpluginstypes ul ul ul li {
+    list-style: disc;
+    margin: 0 0 3px 15px;
+}
+/* Extensions > Plugin administration > Configure */
+#pluginconfig table td fieldset table {
+    margin: 0;
+}
+#pluginconfig table td fieldset th,
+#pluginconfig_mandatory_container th,
+#pluginconfig_searchable_container th {
+    white-space: nowrap;
+}
+#pluginconfig_institutionaloverride_container th,
+#pluginconfig_institutionaloverride_container td,
+#pluginconfig_maxquotaenabled_container th,
+#pluginconfig_maxquotaenabled_container td,
+#pluginconfig_maxquota_container th,
+#pluginconfig_maxquota_container td {
+    float: left;
+}
+#pluginconfig_commentdefault_container td a,
+#pluginconfig_mandatory_container td a,
+#pluginconfig_searchable_container td a {
+    margin: 0 3px;
+}
+#pluginconfig_commentdefault_container td .checkboxes-option,
+#pluginconfig_mandatory_container td .checkboxes-option,
+#pluginconfig_searchable_container td .checkboxes-option {
+    float: left;
+    margin: 5px 25px 0 0;
+    width: 150px;
+}
+#pluginconfig_save_container th {
+    display: none;
+}
+/* Extensions > HTML filters */
+
+/* Extensions > Allowed iframe sources */
+table.iframesources td {
+    vertical-align: middle;
+}
+table.iframesources td img {
+    vertical-align: middle;
+}
+/* Extensions > Clean URLs */

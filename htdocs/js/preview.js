@@ -25,7 +25,7 @@
 var preview = DIV({'id':'viewpreview', 'class':'hidden main-column'},
     DIV({'id':'viewpreviewinner'},
         DIV({'id':'viewpreviewclose'},
-            A({'href':'','id':'closepreview'}, 'Close')
+            A({'href':'','id':'closepreview', 'class':'btn-big-close'}, 'Close')
         ),
         DIV({'id':'viewpreviewcontent'})
     )
@@ -47,6 +47,7 @@ function showPreview(size, data) {
     setElementDimensions(preview, {'w': width});
     setElementPosition(preview, {'x': xpos, 'y': vpos.y + 200});
     showElement(preview);
+    appendChildNodes(document.body, DIV({id: 'overlay'}));
 }
 
 addLoadEvent(function() {
@@ -55,6 +56,9 @@ addLoadEvent(function() {
     connect('closepreview', 'onclick', function (e) {
         e.stop();
         fade(preview, {'duration': 0.2});
+        if ($('overlay')) {
+            removeElement('overlay');
+        }
     });
     connect('viewpreviewcontent', 'onclick', function (e) {
         e.stop();

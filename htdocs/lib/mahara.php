@@ -1753,7 +1753,7 @@ function pieform_element_calendar_configure($element) {
     global $THEME;
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
     $element['themefile'] = $THEME->get_url('style/calendar.css');
-    $element['imagefile'] = $THEME->get_url('images/calendar.gif');
+    $element['imagefile'] = $THEME->get_url('images/btn_calendar.png');
     $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
@@ -3023,7 +3023,7 @@ function build_portfolio_search_html(&$data) {
         $item->ctime = format_date($item->ctime);
         if ($item->type == 'view') {
             $item->typestr = get_string('view');
-            $item->icon    = $THEME->get_url('images/view.gif');
+            $item->icon    = $THEME->get_url('images/page.png');
             $v = new View(0, (array)$item);
             $v->set('dirty', false);
             $item->url = $v->get_url();

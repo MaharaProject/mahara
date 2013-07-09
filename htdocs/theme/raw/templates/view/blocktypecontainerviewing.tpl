@@ -3,7 +3,7 @@
             {if $retractable}
                 <span class="arrow"></span>
             {/if}
-            <h4>{if $viewartefacturl}<a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}">{/if}{$title}{if $viewartefacturl}</a>{/if}{if $feedlink}&nbsp;<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/rss.gif'}"></a>{/if}</h4>
+            <h2 class="title">{if $viewartefacturl}<a href="{$viewartefacturl}" title="{str tag=clickformoreinformation section=view}">{/if}{$title}{if $viewartefacturl}</a>{/if}{if $feedlink}&nbsp;<a href="{$feedlink}"><img class="feedicon" src="{theme_url filename='images/feed.png'}"></a>{/if}</h2>
             <span class="cb"></span>
         </div>{/if}
         <div class="blockinstance-content{if $retractable && $retractedonload} js-hidden{/if}">

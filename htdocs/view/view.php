@@ -293,7 +293,7 @@ if (get_config('viewmicroheaders')) {
             $microheaderlinks = array(
                 array(
                     'name' => get_string('editthisview', 'view'),
-                    'image' => $THEME->get_url('images/edit.gif'),
+                    'image' => $THEME->get_url('images/btn_edit.png'),
                     'url' => get_config('wwwroot') . 'view/blocks.php?id=' . $viewid,
                 ),
             );

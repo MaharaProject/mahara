@@ -1,40 +1,31 @@
 /**
  * CSS rules for the internal artefact plugin
  *
- * Copyright (C) 2006-2009 Catalyst IT
+ * Copyright (C) 2006-2013 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
 input#myfriends_addfriend_add {
     font-weight: bold;
 }
-
 #userfriendstable a {
     display: block;
-	font-size: .9167em;
 }
-
 #sendmessage input,
 #invitetogroup #invitetogroup_submit_container input {
-	margin: 0;
+    margin: 0;
 }
-
 #email_list {
-	line-height: 2em;
+    line-height: 2em;
 }
 #email_list a {
-  color: #ca0000;
-  text-decoration: none;
-  margin-left: 5px;
+    color: #ca0000;
+    text-decoration: none;
+    margin-left: 5px;
 }
-#profileform_email_container a {
-	font-size: .9167em;
-}
-
 .profile-fieldsets fieldset {
-	border: none;
-	padding: 0;
+    border: none;
+    padding: 0;
 }
-
 fieldset.safe-hidden .mceEditor {
-	display: none;
+    display: none;
 }

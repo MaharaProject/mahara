@@ -4,7 +4,7 @@
 {foreach from=$groups item=group}
             <tr><td class="{cycle values='r0,r1'}">
                     {include file="group/groupuserstatus.tpl" group=$group returnto='find'}
-                <div class="findgroupsdetails">
+                <div class="groupsdetails">
                      {include file="group/group.tpl" group=$group returnto='mygroups'}
                 </div>
             </td></tr>

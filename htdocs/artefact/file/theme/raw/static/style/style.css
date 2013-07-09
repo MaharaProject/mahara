@@ -1,121 +1,91 @@
 /**
  * CSS rules for the file artefact plugin
  *
- * Copyright (C) 2006-2012 Catalyst IT
+ * Copyright (C) 2006-2013 Catalyst IT
  * This file is distributed under the same terms as Mahara itself
  */
 #profileicons tfoot td.right input.submit {
-	font-weight: bold;
+    font-weight: bold;
 }
 #profileicons tfoot td.right input#settings_delete {
-	font-weight: normal;
+    font-weight: normal;
 }
 /* File upload box */
 .fileupload {
-	margin-bottom: 10px;
-	padding: 5px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
 }
 .uploaddisabled {
-	margin-bottom: 10px;
-	padding: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
-#upload label, .fileupload label, .pieform .uploadform label {
-	white-space: nowrap;
-	font-weight: bold;
+.uploadform label {
+    width: 80px;
+    display: inline-block;
 }
-.uploadform td {
-	font-size: .9167em;
-	line-height: 1.3333em;
+#files_filebrowser_agreement {
+    margin-bottom: 10px;
+    margin-left: 80px;
+}
+#files_filebrowser_agreement label {
+    margin-left: -80px;
+}
+input#files_filebrowser_notice {
+    margin: 2px 1px 0 0;
 }
 .createfolder-message div {
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 #createfolder {
-	padding: 5px;
-	margin: 10px 0 5px 0;
-}
-td.filethumb {
-	width: 25px;
-}
-td.filedescription,
-td.filesize,
-td.filedate,
-td.filetags {
-	font-size: .9167em;
-}
-td.filedescription {
-	padding-top: 5px;
+    padding: 5px;
+    margin: 10px 0 5px 0;
 }
 /* File list */
-.filelist table th {
-	border-bottom: 0;
-}
 tr.folder td.filename {
-	font-weight: bold;
+    font-weight: bold;
 }
+tr.editrow table th,
 tr.editrow table td {
-	border: 0;
-	background: none;
+    border: 0;
+    background: none;
 }
-tr.folderhover a, .foldernav a.folderhover {
-	text-decoration: none;
+tr.folderhover a,
+.foldernav a.folderhover {
+    text-decoration: none;
 }
 .icon-drag {
-	width: 1.5em;
-	height: 1.5em;
-	cursor: move;
-	display: table-cell;
-	vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    cursor: move;
+    display: table-cell;
+    vertical-align: top;
 }
 /* File list edit box */
-#files_filebrowser_edit_row td.fileedittablewrap {
-	padding-left: 0;
-}
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
-	font-size: 1.3333em;
-	padding-bottom: 0;
+    font-size: 1.3333em;
 }
-#files_filebrowser_edit_row table th {
-	border: 0;
-	text-align: left;
-}
-#files_filebrowser_edit_row table th label {
-	font-weight: bold;
-}
-#files_filebrowser_edit_row td td {
-	border: none;
-}
-.fileedittable tbody th {
-	padding-top: 8px;
-}
-/* Edit post File list */
+/* Edit journal post file list */
 #editpost_filebrowser_upload_container {
-	margin-top: 10px;
-}
-.attachments th {
-	text-align: left !important;
-}
-/* Edit post selected file list */
-#editpost_filebrowser_empty_selectlist {
-	margin: 0;
-}
-.filelist table table.editpermissions th, .filelist table table.editpermissions td {
-	font-size: .9167em;
-}
-#editpost_filebrowser_selectlist input.unselect {
-	float: right;
-}
-input#upload_submit {
-	font-weight: bold;
+    margin-top: 10px;
 }
 #editpost_filebrowser_upload_browse,
 #editpost_filebrowser_open_upload_browse_container {
-	padding: 5px;
+    padding: 5px;
 }
-#instconf_folder_selectlist input.button {
-	font-size: 0.9167em;
-	float: right;
+#editpost_filebrowser_agreement {
+    margin-bottom: 10px;
+    margin-left: 80px;
 }
-#instconf_artefactid_selectlist input.button {
-	float: right;
+#editpost_filebrowser_agreement label {
+    margin-left: -80px;
+}
+/* Edit journal post selected file list */
+#editpost_filebrowser_empty_selectlist {
+    margin: 5px 0;
+}
+#editpost_filebrowser_selectlist {
+    margin: 0 0 10px 0;
+}
+#instconf_folder_selectlist {
+    margin: 0 0 15px 0;
 }

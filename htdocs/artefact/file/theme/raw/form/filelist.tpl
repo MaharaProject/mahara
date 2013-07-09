@@ -4,27 +4,27 @@
 <table id="{$prefix}_filelist" class="tablerenderer filelist fullwidth">
  <thead>
   <tr>
-   <th class="filethumb"></th>
-   <th class="filename">{str tag=Name section=artefact.file}</th>
-   <th class="filedescription">{str tag=Description section=artefact.file}</th>
+   <th></th>
+   <th>{str tag=Name section=artefact.file}</th>
+   <th>{str tag=Description section=artefact.file}</th>
   {if !$showtags && !$editmeta}
    <th class="filesize">{str tag=Size section=artefact.file}</th>
    <th class="filedate">{str tag=Date section=artefact.file}</th>
   {/if}
   {if $showtags}
-   <th class="filetags"><div>{str tag=tags}</div></th>
+   <th class="filetags">{str tag=tags}</th>
   {/if}
   {if $editmeta}
    <th class="right"></th>
   {/if}
-   <th class="right btns3"></th>
+   <th class="right nowrap"></th>
   </tr>
  </thead>
  <tbody>
   {foreach from=$filelist item=file}
     {if !$publishing || !$file->permissions || $file->can_republish}{assign var=publishable value=1}{else}{assign var=publishable value=0}{/if}
   <tr id="file:{$file->id}" class="{cycle values='r0,r1'} directory-item{if $file->isparent} parentfolder{/if}{if $file->artefacttype == 'folder'} folder{elseif $file->artefacttype == 'profileicon'} profileicon{/if}{if $highlight && $highlight == $file->id} highlight-file{/if}{if $edit == $file->id} hidden{/if}{if !$publishable && $file->artefacttype != 'folder'} disabled{/if}" {if !$publishable && $file->artefacttype != 'folder'} title="{str tag=notpublishable section=artefact.file}"{/if}>
-    <td class="filethumb">
+    <td class="icon-container">
     {if !$file->isparent}
       {if $editable}
       <div class="icon-drag" id="drag:{$file->id}">
@@ -54,27 +54,27 @@
     <td class="filetags">{if $file->tags}<span>{list_tags tags=$file->tags owner=$showtags}</span>{/if}</td>
     {/if}
     {if $editmeta}
-    <td class="right s">
+    <td class="right s nowrap">
       {if $file->locked}
-        <span class="s dull">{str tag=Submitted section=view}</span>
+        <span class="dull">{str tag=Submitted section=view}</span>
       {elseif !$file->isparent}
-        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="icon btn-edit tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" />{/if}
+        {if !isset($file->can_edit) || $file->can_edit !== 0}<input type="submit" class="btn-big-edit tag-edit submit" name="{$prefix}_edit[{$file->id}]" value="{str tag=edit}" title="{str tag=edit}" />{/if}
       {/if}
     </td>
     {/if}
     <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
-    <td class="right s btns3">
+    <td class="right s nowrap">
     {if $editable && !$file->isparent}
       {if $file->locked}
-        <span class="s dull">{str tag=Submitted section=view}</span>
+        <span class="dull">{str tag=Submitted section=view}</span>
       {elseif !isset($file->can_edit) || $file->can_edit != 0}
-        {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/unzip.gif"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
-        <input type="image" src="{theme_url filename="images/edit.gif"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}"/>
-        <input type="image" src="{theme_url filename="images/icon_close.gif"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}"/>
+        {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/btn_extract.png"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
+        <input type="image" src="{theme_url filename="images/btn_edit.png"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}"/>
+        <input type="image" src="{theme_url filename="images/btn_deleteremove.png"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}"/>
       {/if}
     {/if}
     {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
-      <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" />
+      <input type="submit" class="select small" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" value="{str tag=select}" title="{str tag=select}" />
     {/if}
     </td>
   </tr>

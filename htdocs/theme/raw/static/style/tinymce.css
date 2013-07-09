@@ -1,15 +1,16 @@
 body {
-	font-family: Arial,"Nimbus Sans L",Helvetica,sans-serif !important;
-	font-size: 75% !important;
-	padding: 0 !important;
-	color: #333333 !important;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
+    font-size: 75% !important;
+    padding: 0 !important;
+    color: #333333 !important;
     line-height: 1.333em !important;
     background-color: #FFFFFF !important;
 }
-td, th {
-	font-family: Arial,"Nimbus Sans L",Helvetica,sans-serif !important;
-	font-size: 1em !important;
-	padding: 3px 5px !important;
+td,
+th {
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif !important;
+    font-size: 1em !important;
+    padding: 3px 5px !important;
 }
 pre {
     font: 1em monospace !important;
@@ -38,13 +39,13 @@ h2 {
 h3 {
     font-weight: bold !important;
     margin: 15px 0 10px 0 !important;
-    font-size: 1.3333em !important;
+    font-size: 1.333em !important;
     line-height: 1.25em !important;
 }
 h4 {
     font-weight: bold !important;
     margin: 15px 0 10px 0 !important;
-    font-size: 1.1667em !important;
+    font-size: 1.167em !important;
     line-height: 1.25em !important;
 }
 h5 {
@@ -56,7 +57,7 @@ h5 {
 h6 {
     font-weight: bold !important;
     margin: 15px 0 10px 0 !important;
-    font-size: .9167em !important;
+    font-size: 0.917em !important;
     line-height: 1.25em !important;
 }
 ul {
@@ -68,12 +69,13 @@ ol {
     padding: 0 !important;
     margin: 5px 0 10px 0 !important;
 }
-ul li, ol li {
+ul li,
+ol li {
     margin: 0 0 3px 20px !important;
 }
 p {
     margin: 10px 0 !important;
 }
 p span {
-    line-height: 1.08em !important;
+    line-height: 1.083em !important;
 }

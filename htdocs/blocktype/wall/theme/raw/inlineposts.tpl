@@ -1,15 +1,15 @@
 <div id="wall" class="wall">
     {if $wallmessage}
-        <p class="message">{$wallmessage}</p>
+        <div class="message">{$wallmessage}</div>
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}
-            <div class="wallpost{if $wallpost->private} private{/if}">
+            <div class="wallpost{if $wallpost->private} private{/if} {cycle name=rows values='r0,r1'}">
             {if $wallpost->deletable}
-                    <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="wallpostdelete">{str tag='delete' section='blocktype.wall'}</a>
+                    <div class="wallpostdeletebutton"><a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn-big-del">{str tag='delete' section='blocktype.wall'}</a></div>
         {/if}
-                <div class="userinfo"><img src="{profile_icon_url user=$wallpost maxheight=25 maxwidth=25}" alt="Profile Picture"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a><span class="postedon"> - {$wallpost->postdate|format_date}</span></div>
-                <div class="text">{$wallpost->text|parse_bbcode|safe}</div>
+                <div class="userinfo"><img src="{profile_icon_url user=$wallpost maxheight=25 maxwidth=25}" alt="Profile Picture"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a> - <span class="postedon">{$wallpost->postdate|format_date}</span></div>
+                <div class="detail">{$wallpost->text|parse_bbcode|safe}</div>
                 <div class="controls">
        {* {if $ownwall}
                     <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}" class="btn-reply">{str tag='reply' section='blocktype.wall'}</a>

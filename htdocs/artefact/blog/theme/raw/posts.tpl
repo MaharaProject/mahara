@@ -19,29 +19,26 @@
                 {else}
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
                       <input type="hidden" name="id" value="{$post->id}">
-                      <input type="image" src="{theme_url filename="images/edit.gif"}" title="{str tag=edit}">
+                      <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
                     </form>
                     {$post->delete|safe}
                 {/if}
             </span>
         </div>
-        <h1 class="posttitle">{$post->title}</h1>
+        <h2>{$post->title}</h2>
         <div id="postdescription_{$post->id}" class="postdescription">
             {$post->description|clean_html|safe}
         </div>
         {if $post->files}
             <div id="postfiles_{$post->id}">
                 <table class="attachments fullwidth">
-                    <col width="5%">
-                    <col width="40%">
-                    <col width="55%">
                     <tbody>
                         <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
                         {foreach from=$post->files item=file}
                             <tr class="{cycle values='r1,r0'}">
-                                <td><img src="{$file->icon}" alt=""></td>
-                                <td class="valign"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-                                <td class="valign">{$file->description}</td>
+                                <td class="icon-container"><img src="{$file->icon}" alt=""></td>
+                                <td><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
+                                <td>{$file->description}</td>
                             </tr>
                         {/foreach}
                     </tbody>

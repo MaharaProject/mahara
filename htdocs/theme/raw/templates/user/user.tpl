@@ -1,22 +1,72 @@
-<td class="friendinfo{if $user->pending} pending rel{/if}">
+<div class="listrow {if $user->pending} pending{/if}">
+
+    <ul class="actionlist">
+      {if $user->institutions}<li class="notbtn">{$user->institutions|safe}</li>{/if}
+      {if $user->pending}
+        <li class="approvefriend">{$user->accept|safe}</li>
+        <li class="denyrequest">
+            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" class="btn-deny">
+                {str tag='denyrequest' section='group'}
+            </a>
+        </li>
+      {/if}
+      {if $user->friend}
+        <li class="removefriend">
+            <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" class="btn-del">
+                {str tag='removefromfriendslist' section='group'}
+            </a>
+        </li>
+      {elseif $user->requestedfriendship}
+        <li class="notbtn">
+            <span class="btn-pending">{str tag='friendshiprequested' section='group'}</span>
+        </li>
+      {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
+        {if $user->friendscontrol == 'auth'}
+        <li class="friend">
+            <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" class="btn-request">
+                {str tag='sendfriendrequest' section='group'}
+            </a>
+        </li>
+        {elseif $user->friendscontrol == 'auto'}
+        <li class="friend">
+            {$user->makefriend|safe}
+        </li>
+        {else}
+        <li class="nofriend">
+            {str tag='userdoesntwantfriends' section='group'}
+        </li>
+        {/if}
+      {/if}
+      {if $user->messages}
+        <li class="messages">
+            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" class="btn-message">
+                {str tag='sendmessage' section='group'}
+            </a>
+        </li>
+      {/if}
+      {if $admingroups}
+      <li class="editgroup"><a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a></li>
+      {/if}
+    </ul>
+
 <div class="peoplelistinfo">
     <div class="leftdiv" id="friendinfo_{$user->id}">
           <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
     </div>
  
     <div class="rightdiv">
-        <h4><a href="{profile_url($user)}">{$user->display_name}</a>
+        <h3 class="title"><a href="{profile_url($user)}">{$user->display_name}</a>
         {if $user->pending}
           <span class="pendingfriend"> - {str tag='pending' section='group'}</span>
         {elseif $user->friend && $page == 'find'}
           <span class="existingfriend"> - {str tag='existingfriend' section='group'}</span>
         {/if}
-        </h4>
-      {if $user->introduction}<div class="userintro">{$user->introduction|str_shorten_html:100:true|safe}</div>{/if}
+        </h3>
+      {if $user->introduction}<div class="detail">{$user->introduction|str_shorten_html:100:true|safe}</div>{/if}
       {if $user->friend && $page == 'myfriends' && $user->views}
         <ul class="viewlist">
-          <li class="label">
-            <strong>{str tag='Views' section='group'}</strong>
+          <li>
+            <label>{str tag='Views' section='group'}:</label>
           </li>
           {foreach from=$user->views item=view}
           <li>
@@ -26,7 +76,7 @@
         </ul>
       {/if}
       {if $user->pending}
-        <div class="btn-pending s">
+        <div class="whymakemeyourfriend">
           <label>
             {str tag='whymakemeyourfriend' section='group'}
           </label>
@@ -35,51 +85,5 @@
       {/if}
     </div>
   </div>
-</td>
-<td class="friendinfo{if $user->pending} pending rel{/if} actionlisttd">
-	<ul class="actionlist">
-      {if $user->institutions}<li>{$user->institutions|safe}</li>{/if}
-      {if $user->pending}
-		<li class="approvefriend">{$user->accept|safe}</li>
-		<li>
-			<a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" class="btn-deny">
-				{str tag='denyrequest' section='group'}
-			</a>
-		</li>
-      {/if}
-      {if $user->messages}
-		<li>
-			<a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" class="btn-message">
-				{str tag='sendmessage' section='group'}
-			</a>
-		</li>
-      {/if}
-      {if $user->friend}
-		<li>
-			<a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" class="btn-del">
-				{str tag='removefromfriendslist' section='group'}
-			</a>
-		</li>
-      {elseif $user->requestedfriendship}
-		<li>
-			<i>{str tag='friendshiprequested' section='group'}</i>
-		</li>
-      {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
-		<li class="friend">
-			{if $user->friendscontrol == 'auth'}
-			<a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" class="btn-request">
-				{str tag='sendfriendrequest' section='group'}
-			</a>
-			{elseif $user->friendscontrol == 'auto'}
-				{$user->makefriend|safe}
-			{else}
-				{str tag='userdoesntwantfriends' section='group'}
-			{/if}
-		</li>
-      {/if}
-      {if $admingroups}
-      <li><a href="" onclick="showGroupBox(event, {$user->id})" class="btn-edit">{str tag='editgroupmembership' section='group'}</a></li>
-      {/if}
-	</ul>
-
-</td>
+  <div class="cb"></div>
+</div>

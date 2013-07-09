@@ -1,291 +1,214 @@
-/*  Views  */
-#views-loading {
-    color: #666;
+/**
+ * Views stylesheet - for Mahara's Raw theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+/******************** Collection navigation ********************/
+#collectionnavwrap {
+    background: #F4F4F4;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
-#page {
-	padding: 0 10px 10px 10px;
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+    background: #DDDDDD;
+    font-weight: bold;
 }
-
-/********************** Top pane of Edit View *************************/
+ul.colnav li.selected span {
+    color: #333333;
+    background: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+/******************** Top pane of edit page ********************/
 #top-pane {
-	background: #EEE;
-	padding: 0;
+    background: #EEEEEE;
 }
-.rd-edittab {
-    display: none;
-}
-
-/* The tabs that allow you to select a blocktype category */
+/******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-    background-color: #eee;
+    background-color: #EEEEEE;
+}
+#category-list li a:hover {
+    background-color: #F9F9F9;
 }
 #category-list li.current a,
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-    background: #d1d1d1;
-    color: #333;
+    background: #D1D1D1;
+    color: #333333;
+    font-weight: bold;
 }
-
-/* The panel that contains the blocktype icons */
+/******************** Blocktype icons panel ********************/
 #blocktype-list {
-	background: #D1D1D1;
+    background: #D1D1D1;
 }
-#noblocks {
-    color: #666;
+/******************** Blocktype name & description panel ********************/
+#middle-pane {
+    background: #DDDDDD;
 }
-/******************* Between Panes **************************************/
 #layout-link {
-	background: url(../images/icon-change.gif) no-repeat left center;
-	padding-left: 1.5em;
-	padding-top: 1px;
-	font-weight: bold;
+    font-weight: bold;
 }
 #layout-link.disabled {
-    color: #aaa;
-	cursor: default;
+    color: #AAAAAA;
+    cursor: default;
 }
 #layout-link.disabled:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
-#middle-pane {
-	background: #dddddd;
-}
-
-/********************** Bottom pane of Edit View *************************/
+/******************** Bottom pane of edit page ********************/
 #page #bottom-pane {
-    padding: 20px 10px 10px 10px;
-    background: #EEE url(../images/bottompane-shad.png) repeat-x top left;
-}
-#blocksinstruction {
-    color: #888;
-    padding: 5px;
-}
-#column-container {
-	background: #FFF;
-}
-#column-container .column-header input[disabled="disabled"] {
-    color: #ccc;
-}
-.column-header {
+    padding: 10px;
     background: #EEEEEE;
 }
-
-#block-placeholder {
-    border: 2px dashed #bfbfbf;
-    margin-bottom: 2px;
+/******************** Column layout ********************/
+#column-container {
+    background: #FFFFFF;
 }
-
-/**************** Blockinstance **********************/
-/* Configure blockinstance */
+#column-container .column-header input[disabled="disabled"] {
+    color: #CCCCCC;
+}
+/******************** Blocks ********************/
+/* retractable blocks */
+.blockinstance-header .arrow {
+    background: url(../images/retractable.png) no-repeat 0 0;
+    width: 24px;
+    height: 24px;
+}
+.retractable .retracted .arrow {
+    background: url(../images/retracted.png) no-repeat 0 0;
+}
+/* block header */
+.blockinstance-header .title {
+    margin: 0;
+    font-size: 1.5em;
+    border-bottom: 2px solid #D1D1D1;
+    padding-bottom: 3px;
+}
+.blockinstance-header .title a {
+    text-decoration: none;
+}
+/******************** Configure blockinstance ********************/
 .blockinstance.configure {
-  border: 7px solid #eee;
-  background: #fff;
+    border: 7px solid #EEEEEE;
+    background: #FFFFFF;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
- }
-.blockinstance-content p.noartefacts,
-.blockinstance-content .description {
-    color: #808080;
 }
-
-/* tabs for the artefact chooser */
+/******************** Block config tabs ********************/
 ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  background: #eee;
+    padding: 10px;
+    border: 1px solid #D4D4D4;
+    background: #EEEEEE;
+    -webkit-border-radius: 3px 3px 0 0;
+    -moz-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+    margin: 0 0 0 7px;
+    color: #333333;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
-ul.artefactchooser-tabs li.current a:active {
-  background: #ddd;
-  color: #333;
+ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
+    color: #333333;
+    font-weight: bold;
+    border-bottom: 1px solid #FFFFFF;
+    background: none;
 }
+/******************** Block config sub tabs ********************/
 ul.artefactchooser-subtabs li {
-  border-right: 1px solid #d1d1d1;
+    border-right: 1px solid #D1D1D1;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
 ul.artefactchooser-subtabs li.current a:visited,
 ul.artefactchooser-subtabs li.current a:active {
-  color: #333;
+    color: #333333;
 }
+/******************** Block config tab body ********************/
 #artefactchooser-body {
-    border: 1px solid #ddd;
+    border: 1px solid #D4D4D4;
+    margin-top: -1px;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
 }
-
-/* pagination */
-.ac-pagination .results {
-	background: #eee;
-}
-
-/* attachments */
-.attachments {
-    background-color: #fff;
-}
-#instconf_artefactid_selectlist,
-#instconf_artefactids_selectlist,
-#instconf_artefactid_selectlist th,
-#instconf_artefactids_selectlist th {
-	border-bottom: 1px solid #ccc;
-}
-
-
-#copyview .searchquery {
-	background: #eee;
-	border: 1px solid #d1d1d1;
-	padding: 5px 10px;
-	line-height: 2.4em;
-	margin-bottom: 10px;
-}
-
-.column-content .add-button {
-    margin: 5px 0;
-}
-.column-content .add-button input, #feedbacktable .makepublicbtn input {
-    font-size: .9167em;
-    border: 1px solid #5d5d5d;
-    background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
-    color: #333333 !important;
-    padding: 0 3px;
-    line-height: 16px;
-    height: 16px;
-    vertical-align: text-bottom;
-    margin: 0;
-}
-.column-content .add-button input:hover, #feedbacktable .makepublicbtn input:hover {
-    border: 1px solid #454545;
-    background: #e8e8e8 url(../images/btn-bkgd-small-hover.png) repeat-x bottom left;
-}
-.column-content .add-button input:active, #feedbacktable .makepublicbtn input:active {
-    border: 1px solid #454545;
-    background: #e2e2e2 url(../images/btn-bkgd-small.png) repeat-x bottom left;
-}
-.add-button input.newblockhere {
-    width: 100%;
-    margin: 0;
-}
-/* this rule compresses and centers the buttons better in konqueror and safari */
-body:last-child:not(:root:root) .newblockhere {
-    color: #547C22;
-}
-
-/* VIEWS */
-#feedbacktable .fr {
-	margin-top: 2px;
-    white-space: nowrap;
-    vertical-align: top;
-}
-#feedbacktable input {
-	border: 0;
-	cursor: pointer;
-	margin-left: 3px;
-}
-
-/* views footer */
+/******************** Page ********************/
+/* page footer */
 .viewfooter {
-	border: 1px solid #eee;
+    border: 1px solid #EEEEEE;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-#viewmenu {
-	color: #d1d1d1;
+/* feedback */
+#feedbacktable .commentrightwrap {
+    -webkit-border-radius: 0 5px 5px 5px;
+    -moz-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
+    background-color: #F9F9F9;
 }
-#feedbacktable .details {
-	color: #d1d1d1;
+#feedbacktable .private .commentrightwrap {
+    background: #FFF9F9 url(../images/private_bkgd.png) repeat 0 0;
 }
-#feedbacktable .details span {
-	color: #9e9e9e;
+#feedbacktable .attachmessage,
+#feedbacktable .privatemessage,
+#feedbacktable .requestmessage,
+#feedbacktable .deleteddetails {
+    color: #666666;
 }
-#feedback_pagination {
-	border-top: 1px solid #ccc;
-	background: #eee;
+/* view menu */
+.feedback {
+    background: url(../images/feedback.png) no-repeat 0 0;
+    padding-left: 21px !important;
 }
-
-/** viewing artefact */
+.objection {
+    background: url(../images/objectionable.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+.print {
+    background: url(../images/print.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+.watchlist {
+    background: url(../images/watchlist.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+/* feedback/objection form */
+#add_feedback_form,
+#objection_form {
+    background: #EEEEEE;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+/******************** Blocks ********************/
+/* Folder block */
+#commentfiles {
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+/* More link */
+.morelinkwrap {
+    background: #EEEEEE;
+}
+/******************** Viewing artefact ********************/
 #view .filedata-icon {
-	background: #F6F6F6;
-	border: 1px solid #CCCCCC;
-}
-
-/* posted or last update */
-.postdetails {
-	color: #888;
-}
-#blocktype_externalfeed_lastupdate {
-	padding-top: 5px !important;
-	padding-bottom: 5px !important;
-	font-size: .9167em;
-	color: #888;
-	line-height: 1.1667em;
-}
-
-
-/* My Views / Latest Views*/
-#userviewstable {
-	width: 100%;
-}
-.viewlist {
-	width: 100%;
-}
-.viewlist h4 {
-	margin-bottom: 0;
-}
-#userviewstable .details,
-.viewlist .details {
-	line-height: 1.3333em;
-	padding-top: 3px;
-	font-size: .9167em;
-}
-
-#usergroupstable h4 {
-	margin-bottom: 0;
-}
-#usergroupstable .details {
-	line-height: 1.3333em;
-	padding-top: 3px;
-	font-size: .9167em;
-}
-
-input.addcolumn, input.removecolumn {
-    background: none;
-    border: none;
-}
-.ie7 div.blockinstance div.blockinstance-content select {
-    width: 80%;
-}
-
-/* Collection navigation */
-ul.colnav li a {
-	background: #DDDDDD;
-	font-weight: bold;
-}
-ul.colnav li.selected span {
-    color: #333;
-	background: #fff;
-	text-decoration: none;
-	font-weight: bold;
-}
-
-/* License icon */
-img.license-icon {
-    float: left;
-    margin-right: 2ex;
-}
-/* Retractable blocks */
-div.blockinstance.retractable div.blockinstance-header .arrow {
-    background: url(../images/retractable.png) no-repeat 0 2px;
-    width: 16px;
-    height: 16px;
-    margin-top: 2px;
-}
-div.blockinstance.retractable div.blockinstance-header.retracted .arrow {
-    background: url(../images/retracted.png) no-repeat 4px 0;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }

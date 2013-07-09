@@ -106,8 +106,6 @@ function getitems(user_id, successfunction) {
         $('groupbox').innerHTML = data.data.html;
 
         var jt = getElementsByTagAndClassName('div', 'jointype', 'groupbox');
-        var jtwidth = 300;
-        forEach(jt, function(elem) { setStyle(elem, {'width': jtwidth + 'px'}); });
 
         var gbwidth = jt.length == 2 ? 640 : 315;
         var d = getElementDimensions('groupbox');

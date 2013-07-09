@@ -951,13 +951,14 @@ function themepaths() {
     if (empty($paths)) {
         $paths = array(
             'mahara' => array(
-                'images/icon_close.gif',
-                'images/edit.gif',
-                'images/failure.gif',
+                'images/btn_close.png',
+                'images/btn_deleteremove.png',
+                'images/btn_edit.png',
+                'images/failure.png',
                 'images/loading.gif',
-                'images/success.gif',
-                'images/icon_problem.gif',
-                'images/icon_help.gif',
+                'images/success.png',
+                'images/warning.png',
+                'images/help.png',
                 'style/js.css',
             ),
         );
@@ -1787,7 +1788,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' . 
             json_encode($section)
             . ',this); return false;'
-        ) . '"><img src="' . $THEME->get_url('images/icon_help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
+        ) . '"><img src="' . $THEME->get_url('images/help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -2454,7 +2455,7 @@ function right_nav() {
         'inbox' => array(
             'path' => 'inbox',
             'url' => 'account/activity/index.php',
-            'icon' => $THEME->get_url($unread ? 'images/newemail.gif' : 'images/email.gif'),
+            'icon' => $THEME->get_url($unread ? 'images/newmail.png' : 'images/message.png'),
             'alt' => get_string('inbox'),
             'count' => $unread,
             'countclass' => 'unreadmessagecount',

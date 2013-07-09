@@ -76,7 +76,7 @@ require_once('activity.php');
 $activitylist = activitylist_html($type);
 
 $star = json_encode($THEME->get_url('images/star.png'));
-$readicon = json_encode($THEME->get_url('images/readusermessage.gif'));
+$readicon = json_encode($THEME->get_url('images/readusermessage.png'));
 $strread = json_encode(get_string('read', 'activity'));
 
 $javascript = <<<JAVASCRIPT

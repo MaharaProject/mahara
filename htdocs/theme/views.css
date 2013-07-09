@@ -1,144 +1,257 @@
 /**
  * Views stylesheet - common between all themes
  *
- * Copyright (C) 2006-2012 Catalyst IT Ltd
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
  * This file is licensed under the same terms as Mahara itself
  */ 
-
-.viewtitledesc h1 {
-    display: inline;
-}
-.viewtitledesc .editviewtitle a img,
-.viewtitledesc .editviewtitle a span {
-    padding: 5px 0 0 1px;
-}
-.editviewtitle a img {
-    vertical-align: top;
-    padding: 4px 0 0 1px;
-}
 
 /* The loading spinner/message that pops up before the view is loaded */
 #views-loading {
     text-align: center;
     margin: 10px;
     font-size: 100%;
+    color: #666666;
 }
-/* just the bottom pane when not editing */
-#bottom-pane {
-    margin: 0 0 5px 0;
+/******************** Collection navigation ********************/
+#collectionnavwrap {
+    padding: 10px 10px 0 10px;
 }
-.ie7 #bottom-pane {
-    padding-top: 10px;
+ul.colnav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
-/********************** Top pane of Edit View *************************/
+ul.colnav li {
+    padding: 0;
+    margin: 0 0 10px 0;
+    float: left;
+    font-size: 1.167em;
+}
+ul.colnav li a,
+ul.colnav li.selected span {
+    padding: 10px;
+    margin: 0 8px 0 0;
+    display: block;
+    white-space: nowrap;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+/* Collection navigation small header */
+#micro #collectionnavwrap {
+    padding: 0;
+    background: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+#micro div.colnav1 {
+    margin: 0;
+    padding: 0;
+    display: block;
+    background: none;
+    clear: none;
+}
+#micro ul.colnav li {
+    margin: 10px 0 0 0;
+}
+#micro ul.colnav li a,
+#micro ul.colnav li.selected span {
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+/******************** Page ********************/
 #page {
-	margin: 20px 0 0 0;
-	clear: both;
+    padding: 0 10px 10px 10px;
+    margin: 20px 0 0 0;
+    clear: both;
 }
-#page #top-pane {
+.viewrbuttons {
+    float: right;
 }
-/* The tabs that allow you to select a blocktype category */
+/* page footer */
+.viewfooter {
+    clear: both;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.viewfooter .tags {
+    margin-bottom: 10px;
+}
+.viewfooter .submissionform {
+    margin-bottom: 10px;
+}
+.viewfooter .releaseviewform {
+    background: #EEEEEE;
+    margin-bottom: 10px;
+}
+.viewfooter .releaseviewform tr {
+    display: inline-block;
+}
+.viewfooter .releaseviewform th {
+    padding: 0;
+}
+.viewfooter .releaseviewform tr#releaseview_submittedview_container td {
+    padding: 8px 5px;
+}
+/* feedback */
+#feedbacktable .r0,
+#feedbacktable .r1 {
+    background: none;
+    margin: 0 0 15px 0;
+}
+#feedbacktable .commentleft {
+    float: left;
+    width: 50px;
+    padding: 0 5px 0 0;
+}
+#feedbacktable .commentrightwrap {
+    margin-left: 50px;
+    padding: 5px;
+}
+#feedbacktable .commentrightwrap p span {
+    line-height: 1.333em;
+}
+#feedbacktable .commentrightwrap .fr {
+    white-space: nowrap;
+    margin: 0 0 3px 3px;
+}
+#feedbacktable .commentrightwrap .fr .makepublicbtn {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px;
+}
+#feedbacktable .commentrightwrap .fr .makepublicbtn input {
+    margin: 0 0 0 5px;
+    padding: 3px 5px 2px 5px;
+}
+#feedbacktable .commentrightwrap .author {
+    margin: 0 0 3px 0;
+}
+#feedbacktable .commentrightwrap .commentrating {
+    margin: 0 0 3px 0;
+}
+#feedbacktable p {
+    margin: 5px 0;
+}
+#feedbacktable .attachmessage,
+#feedbacktable .privatemessage,
+#feedbacktable .requestmessage,
+#feedbacktable .deleteddetails {
+    margin: 3px 0 0 0;
+}
+#feedbacktable .undercomment {
+    margin: 3px 0 0 55px;
+}
+#feedbacktable form,
+#feedbacktable form div {
+    display: inline;
+    vertical-align: top;
+}
+/* view menu */
+#viewmenu {
+    margin-top: 10px;
+    line-height: 24px;
+}
+#viewmenu a {
+    margin: 0 15px 0 5px;
+    padding: 3px 0;
+}
+#viewmenu .help a {
+    padding: 0;
+}
+/* feedback/objection form */
+#add_feedback_form,
+#objection_form {
+    margin-top: 5px;
+    padding: 10px;
+}
+/******************** Blocktype tabs ********************/
 #category-list ul {
     list-style: none;
     margin: 0;
     padding: 0;
-	font-size: 1em;
-  	position: relative;
-  	z-index: 0;
-	height: 1%;
+    position: relative;
+    z-index: 0;
+    height: 1%;
 }
 #category-list li {
-    padding: 0;
-	position: static;
-	z-index: 5;
+    position: static;
+    z-index: 5;
     margin: 0;
+    padding: 0;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     white-space: nowrap;
 }
-.ie7 #category-list li {
-    display: inline;
-}
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-    padding: 5px 10px;
+#category-list li a {
+    padding: 8px 10px;
+    margin: 0;
     display: inline-block;
-    background: #EEEEEE;
     text-decoration: none;
 }
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
+#category-list li.current a {
     cursor: default;
-  color: #333;
-  text-decoration: none;
-  background: #D1D1D1;
-    font-weight: bold;
+    text-decoration: none;
 }
-/* The panel that contains the blocktype icons */
+/******************** Blocktype icons panel ********************/
 #blocktype-list {
-	clear: left;
-    font-size: .9167em;
-    padding: 0 20px;
+    clear: left;
+    padding: 0 10px;
 }
 #blocktype-list ul {
-    list-style-type: none;
+    list-style: none;
     margin: 0;
 }
 #blocktype-list li {
     display: table-cell;
     vertical-align: top;
     text-align: center;
-    padding: 10px 5px 5px 5px;
+    padding: 10px 5px;
     margin: 0 0 5px 0;
     width: 100px;
-	line-height: 1.4em;
-	white-space: normal;
-}
-.ie7 #blocktype-list li {
-    z-index: 100;
-    display: inline;
-    float: left;
 }
 #blocktype-list .blocktype-radio {
-    border: none;
     cursor: default; /* ie fix */
 }
-#blocktype-list .blocktype h4 {
+#blocktype-list .blocktype-title {
     margin: 3px 0;
+    font-size: 1.167em;
 }
 #noblocks {
-    font-size: larger;
-    margin-top: 40px;
+    font-size: 1.167em;
     text-align: center;
+    padding: 10px;
 }
-/* Between top and bottom pane */
-#middle-pane {
-    padding: 3px 5px 3px 10px;
-}
+/******************** Blocktype name & description panel ********************/
 #middle-pane #themeselect {
-	float: right;
+    float: right;
+    margin-right: 10px;
 }
 #current_bt_description {
-    min-height: 1.333em;
-    margin: 3px 0;
+    margin: 3px 10px;
     float: left;
+    line-height: 25px;
+    min-height: 25px;
 }
-/********************** Bottom pane of Edit View *************************/
-.ie7 #column-container {
-	width: 98%;
-}
+/******************** Bottom pane of edit page ********************/
 #blocksinstruction {
-    padding: 3px 10px;
-	font-style: italic;
-	margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1.167em;
+    color: #888888;
+    font-style: italic;
 }
-
-/* These column width rules are required only for when a column is
+/******************** Column layout ********************/
+.column {
+    vertical-align: top;
+    float: left;
+    margin: 0;
+    padding: 10px 0.9% 10px 0.9%;
+    position: relative;
+}
+/* these column width rules are required only for when a column is
    added/removed dynamically (users have to turn this on in their
    preferences) */
 .columns1 {
@@ -156,206 +269,279 @@
 .columns5 {
     width: 18%;
 }
-
-.column {
-    vertical-align: top;
-    float: left;
-    margin: 0;
-    padding: 10px 0.9% 10px 0.9%;
-	position: relative;
-}
-
-/* An explicit height for when there is one column and no remove button */
+/* an explicit height for when there is one column and no remove button */
 .column-header {
     padding: 3px;
     position: relative;
     margin-bottom: 5px;
+    background: #EEEEEE;
 }
 .add-button {
+    background: #EEEEEE;
     text-align: center;
+    margin: 0 0 20px 0;
+    padding: 5px 0;
 }
-/* contains the left-most 'add column' button */
+input.newblockhere {
+    width: 96%;
+    margin: 0 !important;
+}
 .add-column-left {
     position: absolute;
     top: 3px;
     left: 3px;
 }
-/* contains all add column buttons in the middle of two columns */
 .add-column-center {
     position: absolute;
     top: 3px;
-    right: 0;
+    right: 3px;
 }
-/* contains the right most 'add column' button */
 .add-column-right {
     position: absolute;
     top: 3px;
     right: 3px;
 }
-/* contains the 'remove column' buttons */
 .remove-column {
     text-align: center;
 }
-.ie7 .remove-column {
-    position: absolute;
-    top: 3px;
-    left: 40%;
-}
-/* needed for when there are no add/remove buttons so the column doesn't disappear */
 .column-header-empty {
     height: 1px;
-	line-height: 1px;
+    line-height: 1px;
 }
 .column-content {
     min-height: 20px;
 }
-.column-content .add-button input {
-	font-size: .9167em;
-}
 #block-placeholder {
-    margin-top: 10px;
+    margin: 10px 0 2px 0;
+    border: 2px dashed #BFBFBF;
 }
-
-/**************** Blockinstance **********************/
+/******************** Blocks ********************/
 .blockinstance {
     margin: 0 0 20px 0;
     padding: 0;
     position: relative;
 }
-/* Configure blockinstance */
-.blockinstance.configure {
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
-  font-size: .75em;
-    z-index: 12 !important;
-}
-
-.blockinstance.configure .mceEditor {
-  width: 100%;
-}
-
-/* header */
-.blockinstance-header {
-    width: 100%;
-	margin-bottom: 3px;
-}
-.blockinstance-header h4 {
-    margin: 0 !important;
-	font-size: 1.3333em !important;
-	border-bottom: 2px solid #d1d1d1;
-	padding-bottom: 3px;
-}
-.blockinstance-header h4 a {
-	text-decoration: none;
-}
-/* control */
+/* block control */
 .blockinstance-controls {
-    display: inline;
     float: right;
     margin-left: 10px;
 }
 .blockinstance-controls input,
 .blockinstance-controls input.submit,
 .blockinstance-controls input.cancel {
-    height: 16px;
-    width: 16px;
-    border: 0;
-    background: none;
+    height: 24px;
+    width: 24px;
     padding: 0;
     cursor: pointer;
-	margin: 0 0 0 1px;
+    margin: 0 0 0 5px;
 }
-/* Retractable blocks */
-div.blockinstance.retractable div.blockinstance-header .arrow {
+/* retractable blocks */
+img.retractablebtn {
+    margin: 0 0 0 5px;
+}
+.subpage .retractable .blockinstance-controls img.retractablebtn {
+    opacity: 0.3;
+}
+div.blockinstance-header .arrow {
     float: right;
     cursor: pointer;
 }
-
-/* content */
-.blockinstance-content #userviewstable h4 {
-	margin-bottom: 0 !important;
+/* block header */
+.blockinstance-header {
+    margin-bottom: 3px;
 }
-.blockinstance-content h1, .blockinstance-content h2, .blockinstance-content h3, .blockinstance-content h4, .blockinstance-content h5, .blockinstance-content h6 {
-    margin: 10px 0 0 0;
+/* block content */
+.blockinstance-content .shortcut {
+    padding: 5px;
+    background: #EEEEEE;
+    text-align: center;
+    margin-bottom: 10px;
 }
-.blockinstance-content td h1, .blockinstance-content td h2, .blockinstance-content td h3, .blockinstance-content td h4, .blockinstance-content td h5, .blockinstance-content td h6 {
-    margin: 0;
-}
-.subpage .blockinstance-content h2 {
-    margin-top: 10px !important;
-}
-.blockinstance-content p {
-	margin: 0 0 10px 0;
+.blockinstance-content .shortcut span {
+    margin: 5px;
+    display: block;
 }
 .blockinstance-content p.noartefacts {
     text-align: center;
-    padding: 5px;
-}
-.blockinstance-content .description {
-	font-size: .9167em;
+    margin: 0 0 5px 0;
 }
 .blockinstance-content fieldset {
-	padding: 5px;
-}
-.blockinstance-content fieldset table th {
-	padding: 0 5px;
+    padding: 5px;
 }
 .blockinstance-content fieldset table {
-	width: 100%;
     margin: 5px 0;
 }
-.ie7 .blockinstance-content fieldset table {
-    width: 98%;
-}
-
-
-/* Wall */
-.blockinstance-content form #wall {
-	margin: 0 0 10px 0;
-}
-
-/* Image Blockinstance */
 .blockinstance-content div a img {
-	max-width: 98%;
+    max-width: 100%;
 }
-.bt-image .blockinstance-content div a img {
-	max-width: 100%;
+.blockconfig-background {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
 }
-
-/* External Feed */
-#blocktype_externalfeed_title {
-	font-weight: bold;
+table.maharatable tr#instconf_readonlymsg_container td,
+table.maharatable tr#instconf_otherblocksmsg_container td {
+    background-color: #FEE7E7;
+}
+#instconf_artefactid_selectlist,
+#instconf_artefactids_selectlist {
+    margin-bottom: 10px;
+}
+#instconf_textreadonly_display {
+    background: #F4F4F4;
+    border: 1px solid #CCCCCC;
+    margin: 5px 0;
+    padding: 5px;
+    height: 10em;
+    overflow-y: auto;
+}
+/* table */
+.maharatable {
+    margin: 0;
+    width: 100%;
+}
+.maharatable td label {
+    font-weight: normal;
+}
+.radio td label {
+    line-height: 1.667em;
+}
+/******************** Block config tabs ********************/
+ul.artefactchooser-tabs {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: 1.167em;
+    position: relative;
+    z-index: 1;
+    clear: both;
+}
+ul.artefactchooser-tabs li {
+    padding: 0;
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+ul.artefactchooser-tabs li a,
+ul.artefactchooser-tabs li a:link,
+ul.artefactchooser-tabs li a:visited,
+ul.artefactchooser-tabs li a:active {
+    text-decoration: none;
+    display: inline-block;
+}
+ul.artefactchooser-tabs li.current a,
+ul.artefactchooser-tabs li.current a:link,
+ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
+    text-decoration: none;
+    cursor: default;
+}
+/******************** Block config sub tabs ********************/
+ul.artefactchooser-subtabs {
+    margin: 10px 0;
+    padding: 0;
+    line-height: 2em;
+    list-style: none;
+}
+ul.artefactchooser-subtabs li {
+    display: inline;
+    padding: 0 5px;
+    margin: 0;
+}
+ul.artefactchooser-subtabs li.current a,
+ul.artefactchooser-subtabs li.current a:link,
+ul.artefactchooser-subtabs li.current a:visited,
+ul.artefactchooser-subtabs li.current a:active {
+    font-weight: bold;
+    text-decoration: none;
+}
+/******************** Block config tab body ********************/
+#artefactchooser-body {
+    clear: left;
+    margin-bottom: 5px;
+    display: block;
+    padding: 10px;
+}
+#artefactchooser-body .artefactchooser-data th label {
+    font-weight: bold;
+}
+#artefactchooser-body .artefactchooser-data td {
+    padding-top: 0;
+}
+#artefactchooser-body .artefactchooser-data td.iconcell {
+    padding-top: 3px;
+}
+#artefactchooser-body .artefactchooser-data td p {
+    margin: 0 0 5px 0;
+}
+#artefactchooser-body .artefactchooser-data td br {
+    line-height: 1px;
+    height: 1px;
+}
+#artefactchooser-searchform {
+    margin-bottom: 10px;
+}
+/******************** Blocks pagination ********************/
+.ac-pagination {
+    white-space: nowrap;
+}
+.ac-pagination .results {
+    background: #EEEEEE;
+}
+.ac-pagination a,
+.ac-pagination .disabled {
+    margin: 0 1px;
+    padding: 1px 3px;
+}
+.blockinstance-content .center .pagination {
+    background-color: #EEEEEE;
+}
+/******************** Configure blockinstance ********************/
+.blockinstance.configure {
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    z-index: 12 !important;
+    max-width: 75%;
+    font-size: 0.75em;
+}
+#micro .configure {
+    font-size: 0.75em;
+    line-height: 1.333em;
+}
+#micro .subpage .configure {
     font-size: 1em;
-    margin: 5px 0 0 0;
+}
+/******************** Different blocktype styles ********************/
+/* External feed block */
+#blocktype_externalfeed_title {
+    font-weight: bold;
+    margin: 5px 0;
 }
 #blocktype_externalfeed_title a img {
-    vertical-align: baseline;
+    vertical-align: middle;
+}
+#blocktype_externalfeed_feed .feedlogoimage {
+    margin: 10px 0;
 }
 #blocktype_externalfeed_desc {
     padding-bottom: 5px;
-    border-bottom: 1px dotted #d1d1d1;
+    border-bottom: 1px dotted #D1D1D1;
 }
-#blocktype_externalfeed_entries {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-#blocktype_externalfeed_entries h4 {
-	margin: 15px 0 10px 0;
-    font-size: 1.3333em;
+#blocktype_externalfeed_entries .title {
+    margin: 10px 0;
 }
 #blocktype_externalfeed_entries ol,
 #blocktype_externalfeed_entries ul {
-	margin: 0;
+    margin: 10px 0 0 0;
 }
 .feedcontent {
-    border-bottom: 1px dotted #d1d1d1;
+    border-bottom: 1px dotted #D1D1D1;
     padding-bottom: 10px;
 }
 .feedcontent h1,
 .feedcontent h2 {
-    font-size: 1.3333em;
+    font-size: 1.333em;
 }
 .feedcontent h3 {
     font-size: 1.25em;
@@ -364,698 +550,268 @@ div.blockinstance.retractable div.blockinstance-header .arrow {
     font-size: 1.167em;
 }
 .feedcontent h5 {
-    font-size: 1em;
+    font-size: 1.083em;
 }
 .feedcontent h6 {
-    font-size: 0.9167em;
+    font-size: 1em;
 }
-
-/* Inbox */
-.bt-inbox td.icon-container {
-  vertical-align: top;
-  width: 16px;
+#blocktype_externalfeed_lastupdate {
+    padding: 5px 0 0 0;
 }
-.ie7 .bt-inbox td.icon-container {
-    width: 26px;
+/* External media block */
+.mediaplayer-container embed,
+.mediaplayer-container object,
+.blockinstance-content iframe {
+    max-width: 100%;
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-.bt-inbox td.icon-container {
-    width: 26px;
+/* list in configure external media */
+.inlinelist li {
+    display: inline;
+    margin: 0 20px 0 0;
 }
+/* Files to download block */
+.filedownload-item {
+    margin-bottom: 10px;
 }
-.bt-inbox td.icon-container .icon {
-  vertical-align: bottom;
-  display: table-cell;
+.filedownload-item p {
+    margin: 3px 0;
 }
-.ie7 .bt-inbox td.icon-container .icon {
-    margin-left: 0;
-    zoom: 1;
+.filedownload-item .description {
+    margin: 3px 0;
 }
-.inbox-showmessage.unread {
-  font-weight: bold;
+#artefactchooser-body .fileupload label {
+    font-weight: bold;
 }
-
-.blockinstance-content table.postlist td {
-  padding: 0;
+#instconf_artefactids_agreement,
+#instconf_artefactid_agreement {
+    margin-bottom: 10px;
+    margin-left: 83px;
 }
-.postlist td h3 {
-	border-bottom: 1px dotted #d1d1d1;
-	font-size: 1.3333em !important;
-	padding-bottom: 3px;
+#instconf_artefactids_agreement label,
+#instconf_artefactid_agreement label {
+    margin-left: -83px;
 }
-.blockinstance-content .postlist td h3 {
-	margin-top: 15px;
+#artefactchooser-body .filelist th label {
+    font-weight: bold;
 }
-.postlist td h3 a {
-	text-decoration: none;
+#artefactchooser-body .filelist #instconf_artefactids_edit_heading,
+#artefactchooser-body .filelist #instconf_artefactid_edit_heading,
+#artefactchooser-body .filelist #instconf_folder_edit_heading {
+    font-size: 1.333em;
 }
-.blockinstance-content .tags {
+/* Folder block */
+#commentfiles {
+    padding: 10px;
+    margin-top: 5px;
 }
-.blockinstance-content div.artefacts {
-	font-size: .9167em;
-	margin-top: 5px;
-	line-height: 1.5em;
-}
-.blockinstance-content .postlist .postdetails {
-	padding: 3px 3px 10px 3px !important;
-	font-size: .9167em;
-	line-height: 1.1667em;
-}
-.postlist td div h1,
-.postlist td div h2 {
-	font-size: 1.1667em !important;
-	margin: 5px 0 0 0 !important;
-}
-.postlist td div h3,
-.postlist td div h4 {
-	font-size: 1em !important;
-	margin: 5px 0 0 0 !important;
-	border: 0 !important;
-}
-#blogpost .tags {
-	font-size: .9167em;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	margin-bottom: 0 !important;
-}
-#blogpost .postdetails {
-	padding: 3px 3px 10px 3px !important;
-	font-size: .9167em;
-	line-height: 1.1667em;
-}
-
-/* group homepage */
-.grouphomepage {
-  width: 100%;
-}
-.grouphomepage .bt-groupviews h5 {
-  margin: 0;
-}
-.grouphomepage .bt-groupviews .groupviewsection {
-  margin: 5px 0 10px 0;
-}
-.groupviewsection h4 {
-	margin: 0 0 3px 3px;
-}
-.groupviewsection h5 {
-	margin: 0 3px 3px 3px;
-}
-
-/* Slideshow */
-.slideshow {
-    padding: 5px 0;
-    text-align: center;
-    width: 100%;
-}
-.slideshow table.images {
-    margin: 0 auto;
-    vertical-align: middle;
-}
-.slideshow .control {
-  vertical-align: middle;
-  font-size: 2em;
-  padding: 0;
-}
-.slideshow .control .disabled:hover,
-.slideshow .control .disabled {
-  color: #ddd;
-  cursor: default;
-}
-.slideshow .control span:hover {
-  color: #888;
-  cursor: pointer;
-}
+/* Gallery block */
 .thumbnails {
-  text-align: center;
-}
-.thumbnails img {
-  padding: 5px;
-  vertical-align: middle;
+    text-align: center;
+    padding: 3px 0;
+    vertical-align: middle;
 }
 .thumbnails a {
     display: block;
 }
-
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-  padding: 0 !important;
-  margin: 0;
-  font-weight: bold;
-  list-style: none;
-  font-size: 1em;
-}
-ul.artefactchooser-tabs li {
-  padding: 0;
-  margin: 0;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-.ie7 ul.artefactchooser-tabs li {
-    display: inline;
-}
-ul.artefactchooser-tabs li a,
-ul.artefactchooser-tabs li a:link,
-ul.artefactchooser-tabs li a:visited,
-ul.artefactchooser-tabs li a:active {
-  padding: 5px 10px;
-  text-decoration: none;
-  background: #EEEEEE;
-  display: inline-block;
-}
-ul.artefactchooser-tabs li.current a,
-ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
-ul.artefactchooser-tabs li.current a:active {
-  color: #333;
-  text-decoration: none;
-  background: #D1D1D1;
-  cursor: default;
-}
-ul.artefactchooser-subtabs {
-  margin: 0 0 15px 0;
-  padding: 0;
-  font-size: .9167em;
-    line-height: 1.5em;
-  list-style: none;
-}
-ul.artefactchooser-subtabs li {
-  display: inline;
-  padding: 0 5px;
-  margin: 0;
-}
-ul.artefactchooser-subtabs li.current a,
-ul.artefactchooser-subtabs li.current a:link,
-ul.artefactchooser-subtabs li.current a:visited,
-ul.artefactchooser-subtabs li.current a:active {
-  font-weight: bold;
-}
-
-#artefactchooser-body {
-	clear: left;
-	margin-bottom: 5px;
-	padding: 5px;
-}
-
-/* table */
-.maharatable {
+.frame {
+    padding: 3px;
     margin: 0;
-    width: 100%;
+    border: 1px solid #CCCCCC;
+    background: #FFFFFF;
 }
-.maharatable thead th {
-	font-size: 1em !important;
-	text-align: left !important;
-    padding: 3px 0 0 0;
-}
-.pieform .maharatable tbody th {
-	font-size: 1.1667em;
-	text-align: left;
-	padding: 3px 0 0 0;
-}
-.maharatable tbody td {
-	padding: 0 0 5px 0;
-}
-.maharatable .filebrowser tbody td {
-	padding: 3px 5px;
-}
-.maharatable tbody td.errmsg {
-	padding: 3px 5px 3px 24px;
-}
-.maharatable #artefactchooser-body table,
-.maharatable #artefactchooser-body table th,
-.maharatable #artefactchooser-body table td {
-	padding: 3px 5px;
-}
-.maharatable #artefactchooser-body .artefactchooser-data,
-.maharatable #artefactchooser-body .artefactchooser-data th,
-.maharatable #artefactchooser-body .artefactchooser-data td {
-	padding: 3px 5px;
-}
-#artefactchooser-body th label {
-	font-size: .9167em;
-}
-.artefactchooser-data td.iconcell input.radio,
-.artefactchooser-data td.iconcell input.checkbox {
-    margin: 0;
-}
-.maharatable td label {
-	font-weight: normal;
-}
-.blockconfig-background {
-    width: 100%;
-    text-align: center;
-    margin-top: 20px;
-}
-.fileedittable th {
-	font-size: 1em !important;
-}
-#instconf_artefactid_selectlist,
-#instconf_artefactids_selectlist {
-	margin-bottom: 10px;
-}
-#instconf_artefactid_selectlist td,
-#instconf_artefactids_selectlist td {
-	padding: 3px;
-}
-#instconf_artefactid_selectlist td input.button,
-#instconf_artefactids_selectlist td input.button {
-	font-size: .9167em;
-}
-#instconf_textreadonly_display {
-    background: #eee;
-    border: 1px solid #888;
-    margin: .5em 0;
-    padding: .5em;
-    height: 10em;
-    overflow-y: auto;
-}
-.blockinstance-content iframe {
-    max-width: 100%;
-}
-
-/* pagination */
-.ac-pagination {
-    white-space: nowrap;
-	margin: 0 !important;
-}
-.ac-pagination .results {
-	margin: 0;
-	display: block !important;
-}
-.ac-pagination a,
-.ac-pagination .disabled {
-    margin: 0 1px;
-    padding: 1px 3px;
-}
-.blockinstance-content div.center div.pagination {
-	background-color: #EEEEEE;
-}
-
-/* attachments */
-.attachments {
-    border: 0;
-	margin: 0;
-	font-size: .9167em;
-}
-.attachments td {
-	padding: 3px 5px !important;
-}
-.attachments td input.small {
-    font-size: .9167em;
-}
-
-/* upload */
-.uploadform td {
-	font-size: .9167em;
-}
-.uploadform th label {
-	font-weight: bold !important;
-}
-.fileupload th {
-	padding: 3px 0;
-	text-align: left !important;
-}
-.fileupload td {
-	padding: 3px 5px;
-}
-.fileupload .filelist td {
-	padding: 3px 5px;
-}
-.fileupload .filelist td input.small {
-	font-size: .9167em;
-}
-.upload_browse #artefactchooser-body {
-	padding: 10px;
-	margin-bottom: 5px;
-}
-.upload_browse .uploadform td {
-	line-height: 1.1667em;
-}
-
-#view-wizard-controls form {
-    display: inline;
-}
-#view-wizard-controls {
-    padding-bottom: 5px;
-}
-
-#view-description {
-    margin: 0;
-	padding: 0;
-}
-
-.defaultSkin table.mceToolbar, .defaultSkin tr.mceFirst .mceToolbar tr td, .defaultSkin tr.mceLast .mceToolbar tr td {
-	border: 0; 
-	margin:0; 
-	padding:0; 
-	width: auto;
-}
-
-/* view head */
-.viewrbuttons {
-    float: right;
-}
-.viewrbuttons a {
-    display: inline-block;
-}
-h1#viewh1 {
-    margin-top: 0;
-}
-/* Collection navigation normal header */
-#collectionnavwrap {
-    padding: 5px 5px 0 5px;
-    background: #EEE;
+/* Group info block */
+.group-info {
+    background-color: #EEEEEE;
+    padding: 10px;
+    margin: 0 0 10px 0;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-div.colnav1 {
-    clear: both;
+.group-info ul {
     margin: 0;
-    padding: 0;
-}
-ul.colnav {
     list-style: none;
-    padding: 0;
-    margin: 0;
 }
-ul.colnav li {
+.group-info ul li {
+    margin: 0;
+    line-height: 2em;
+}
+.group-info li img {
+    vertical-align: middle;
+}
+.group-info ul li span {
+    margin: 0 25px 0 0;
+}
+/* Group pages block */
+.groupviewsection {
+    margin: 10px 0 15px 0;
+}
+.groupviewsection .title {
+    font-size: 1.333em;
+    margin-left: 5px;
+}
+.groupviewsection .owner {
+    font-weight: normal;
+    font-size: 0.857em;
+}
+.groupviewsection .listrow .title {
+    margin: 3px 0;
+    font-size: 1.167em;
+}
+.groupviewsection .tags {
+    margin: 3px 0;
+}
+/* Image block */
+.bt-image .blockinstance-content div a img {
+    max-width: 100%;
+}
+/* Journal / Tagged journal block */
+.blockinstance-content .shortcut select {
+    max-width: 42%;
+}
+#blogpost .tags {
+    margin: 3px 0;
+}
+#blogpost .postdetails {
+    margin: 3px 0 10px 0;
+}
+#blogdescription {
+    margin: 0 0 10px 0;
+}
+.postlist .post {
     padding: 0;
+    border-top: 1px dotted #D1D1D1;
+}
+.postlist .title {
+    margin-top: 10px;
+    font-size: 1.333em;
+}
+.postlist .tags {
     margin: 0 0 5px 0;
+}
+.postlist .postdetails {
+    padding: 0 0 10px 0;
+}
+/* Latest forum posts block */
+#latestforumposts .right a img {
+    vertical-align: middle;
+}
+/* Recent forum posts block */
+#recentforumpostsblock {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#recentforumpostsblock .poster {
+    font-size: 0.917em;
+    line-height: 1.25em;
+}
+#recentforumpostsblock .poster img {
+    vertical-align: middle;
+}
+/* License block */
+.license .licenseicon {
     float: left;
+    margin: 0 5px 5px 0;
 }
-ul.colnav li a, ul.colnav li.selected span {
-    padding: 5px 7px;
-    margin: 0 5px 0 0;
-    display: block;
-    white-space: nowrap;
-}
-div.colnav-extra {
-    margin: 0;
-}
-.colnav-showmore ul li {
+img.license-icon {
     float: left;
+    margin-right: 2ex;
 }
-
-/* Collection navigation small header */
-#collection {
-	margin: 0;
-	height: auto;
+/* More link */
+.morelink {
+    font-weight: bold;
 }
-#collection .collection-title {
-    margin: 0;
-    text-align: center;
+.morelinkwrap {
+    padding: 5px;
+    text-align: right;
 }
-#containerX #collectionnavwrap {
-	background: none;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-}
-#containerX div.colnav1 {
-	margin: 0;
-	padding: 0;
-	display: block;
-	background: none;
-	clear: none;
-}
-#containerX ul.colnav {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-	float: none;
-}
-#containerX ul.colnav li {
-    padding: 0;
-    margin: 5px 0 0 0;
-	float: left;
-}
-#containerX ul.colnav li a,
-#containerX ul.colnav li.selected span {
-	padding: 5px 7px;
-	margin: 0 5px 0 0;
-	display: block;
-    -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    border-radius: 5px 5px 0 0;
-}
-#containerX div.colnav-extra {
-    margin: 0;
-	float: none;
-}
-#containerX div.colnav-showmore {
-	margin: 0;
-    float: none;
-}
-
-.submissionform {
-	background: #eee;
-	padding: 3px 5px;
-}
-.submissionform select {
-	font-size: 1em;
-}
-.submissionform .submit {
-	margin-left: 3px;
-}
-.submittedform {
-	background: #eee;
-	padding: 3px 5px;
-}
-
-/* VIEWS */
-/* views footer */
-.viewfooter {
-	clear: both;
-	padding: 10px;
-	margin-bottom: 10px;
-}
-.viewfooter .tags {
-	margin-bottom: 10px;
-	font-size: .9167em;
-}
-.viewfooter .submissionform {
-	margin-bottom: 10px;
-}
-.viewfooter .releaseviewform {
-	background: #eee;
-	margin-bottom: 5px;
-}
-.viewfooter .releaseviewform tr#releaseview_submittedview_container th,
-.viewfooter .releaseviewform tr#releaseview_submit_container th {
-	padding: 0 !important;
-}
-.viewfooter .releaseviewform tr#releaseview_submittedview_container td {
-	padding-top: 6px;
-}
-.viewfooter .releaseviewform tr {
-	display: inline;
-	float: left;
-}
-.viewfooter .releaseviewform tr th {
-	padding: 3px !important;
-}
-#viewmenu {
-	font-size: .9167em;
-	margin-top: 5px;
-}
-#viewmenu a {
-	margin: 0 5px;
-	padding-bottom: 2px;
-	line-height: 1.6667em;
-}
-#viewmenu .help a {
-	padding: 0;
-}
-#feedbacktable th {
-	padding: 3px 0 0 0;
-	font-size: 1.1667em;
-}
-#feedbacktable td {
-	padding: 3px 5px 0 5px;
-}
-#feedbacktable .details {
-	font-size: .9167em;
-	line-height: 2em;
-}
-#feedbacktable .commentleft {
-	float: left;
-	width: 100px;
-	text-align: center;
-    padding: 3px 5px;
-}
-#feedbacktable .commentrightwrap {
-	margin-left: 110px;
-}
-#feedbacktable .commentrightwrap p span {
-    line-height: 1.333em;
-}
-#feedbacktable .makepublicbtn {
-    margin: 0 0 3px 3px;
+/* My friends / Members block */
+.friendcell {
     display: inline-block;
-    vertical-align: top;
+    width: 100px;
+    height: 90px;
+    padding: 2px;
+    overflow-y: hidden;
 }
-.ie7 #feedbacktable .makepublicbtn {
+.friendcell a {
+    height: 60px;
+    display: block;
+}
+.membername {
+    font-size: 0.917em;
+    line-height: 1.25em;
+    margin-top: 3px;
+}
+.membername a {
+    height: auto;
     display: inline;
 }
-#feedbacktable .icon {
-	margin: 0 0 3px 0;
+/* My groups block */
+#usergroupstable .roledisplay {
+    font-weight: normal;
 }
-#feedbacktable .icon a {
-    display: inline-block;
+/* My pages / Latest pages block */
+.viewlist .groupuserdate {
+    margin: 3px 0;
 }
-#feedbacktable .undercomment {
-	font-size: .9167em;
-    margin-left: 110px;
+.viewlist .tags {
+    margin: 3px 0;
 }
-#feedbacktable .username {
-	line-height: 1.167em;
+/* My plans block */
+.plansblocktable .c1 {
+    width: 100px;
 }
-#feedbacktable .details span {
-	margin: 0 3px;
+.plansblocktable .c3 {
+    width: 70px;
 }
-#feedbacktable .attachmessage {
-	font-size: .9167em;
-	font-style: italic;
-	color: #888;
+.plan_incomplete {
+    background: #FEE7E7;
 }
-#feedbacktable p {
-    margin: 5px 0;
+td.completed,
+td.incomplete {
+    text-align: center;
+    padding-top: 4px;
 }
-#feedback_pagination {
-	margin: 0;
+/* Slideshow block */
+.slideshow {
+    text-align: center;
 }
-#feedbacktable form,
-#feedbacktable form div {
-	display: inline;
-    vertical-align: top;
+.slideshow table td {
+    vertical-align: middle;
 }
-#add_feedback_form {
-	margin-top: 10px;
+.slideshow table td a {
+    display: block;
 }
-#add_feedback_form tr#add_feedback_form_attachments_container th {
-    vertical-align: top;
+.slideshow .control {
+    font-size: 3em;
+    width: 20px;
 }
-
-/** viewing artefact */
+.slideshow .control .disabled:hover,
+.slideshow .control .disabled {
+    color: #DDDDDD;
+    cursor: default;
+}
+.slideshow .control span:hover {
+    color: #888888;
+    cursor: pointer;
+}
+/* Wall block */
+.bt-wall form {
+    margin: 0 0 10px 0;
+}
+/******************** View wizard controls ********************/
+#view-wizard-controls {
+    padding-bottom: 5px;
+}
+#view-wizard-controls form {
+    display: inline;
+}
+/******************** Viewing artefact ********************/
 #view .filedata-icon {
-	padding: 5px 10px 10px 10px;
-	margin: 0 15px 10px 0;
-	text-align: center;
-}
-#view .filedata-icon h4 {
-	font-size: .9167em;
-	margin: 0;
+    padding: 5px 10px 10px 10px;
+    margin: 0 15px 10px 0;
+    text-align: center;
 }
 #view .filedata-thumb {
-	margin: 0;
-}
-#view table.filedata th {
-	padding: 3px 5px 3px 0;
-	line-height: 1.3333em;
-}
-#view table.filedata td {
-	padding: 3px 5px;
-}
-
-
-#publicfeedback {
-	clear: both;
-}
-
-/* My Plans incomplete/complete styling */
-table tr.plan_incomplete {
-    background: #FFD3D9;
-    color: #DD0221;
-	border-bottom: 2px solid #FFF;
-}
-table td div.plan_completed {
-    text-align:center;
-    width: 60px;
-}
-
-.blockinstance .blockinstance-content table.postlist {
-	width: 100%;
-}
-.ie7 .blockinstance .blockinstance-content table.postlist {
-    width: 98%;
-}
-
-.license {
-	margin: 0;
-}
-.license .licenseicon {
-	vertical-align: top;
-	float: left;
-	width: 100px;
-	display: inline;
-}
-.license .licensedesc {
-	font-size: .9167em;
-	line-height: 1.1667em;
-	display: inline;
-}
-
-.plansblocktable {
-	margin: 0;
-}
-
-#recentforumpostsblock {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-#recentforumpostsblock td.s img {
-	vertical-align: top;
-}
-#recentforumpostsblock td.s {
-    line-height: 1.167em;
-}
-#latestforumposts td h5 {
-	margin: 0;
-}
-#latestforumposts td div.s br {
-	line-height: .5em;
-}
-
-table.resumecomposite {
-	width: 100%;
-}
-
-.filedownload-item {
-	margin-bottom: 5px;
-}
-.filedownload-item h4 {
-	margin-bottom: 0 !important;
-}
-.filedownload-item p {
-	margin: 0;
-	font-size: .9167em;
-}
-
-.filedownload-item h4 a {
-        display:block;
-}
-
-#blogdescription {
-	margin: 0 0 10px 0;
-}
-#blogdescription p {
-	margin: 0 0 10px 0;
-}
-td.icon-container {
-  vertical-align: top;
-  width: 16px;
-}
-.ie7 td.icon-container {
-    width: 25px;
-}
-table.maharatable tr#instconf_otherblocksmsg_container {
-    font-size: 1em;
-    border: 0;
-    background-color: #ffeded;
-	color: #dd0221;
-}
-table.maharatable tr#instconf_otherblocksmsg_container td {
-    padding: 5px;
-    font-style: italic;
+    margin: 0 5px;
 }

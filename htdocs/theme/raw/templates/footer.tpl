@@ -20,8 +20,7 @@
     </div><!-- mainmiddlewrap -->
     <div id="footer-wrap">
       <div id="footer">
-		<div class="cb"></div>
-        <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered-by-mahara.png'}" border="0" alt=""></a></div>
+        <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered_by_mahara.png'}" border="0" alt="Powered by Mahara"></a></div>
         <!-- This site is powered by Mahara, an Open Source
              ePortfolio system. See http://mahara.org/ for more
              details.

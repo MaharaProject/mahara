@@ -1,5 +1,5 @@
 <div>
-    <div class="fl">
+    <div class="profile-icon-left">
         <img src="{profile_icon_url user=$user maxwidth=50 maxheight=50}" alt="">
     </div>
     <h3><a href="{profile_url($user)}">{$user|display_name}</a></h3>

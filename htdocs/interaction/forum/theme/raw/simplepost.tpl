@@ -12,11 +12,11 @@
     </td>
     <td class="postedits">
     {if $post->subject && !$nosubject}
-        <div class="forumsubject"><h5>{if $post->id}<a href="#post{$post->id}">{$post->subject}</a>{else}{$post->subject}{/if}</h5></div>
+        <div class="forumsubject"><h3 class="title">{if $post->id}<a href="#post{$post->id}">{$post->subject}</a>{else}{$post->subject}{/if}</h3></div>
     {/if}
     <div class="posttime">{$post->ctime}</div>{$post->body|clean_html|safe}
 {if $post->edit}
-        <div class="editstopost"><h5>{str tag="editstothispost" section="interaction.forum"}</h5>
+        <div class="editstopost"><h4 class="title">{str tag="editstothispost" section="interaction.forum"}</h4>
         <ul>
             {foreach from=$post->edit item=edit}
             <li>

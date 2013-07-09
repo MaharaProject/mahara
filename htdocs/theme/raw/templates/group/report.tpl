@@ -25,8 +25,8 @@
 {if $sharedviews}
 {foreach from=$sharedviews item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td><a href="{$view.baseurl}">{$view.title}</a></td>
-      <td>
+      <td><h3 class="title"><a href="{$view.baseurl}">{$view.title}</a></h3></td>
+      <td class="s">
 {if $view.owner}
         <a href="{$WWWROOT}user/view.php?id={$view.owner}">{$view.user->id|display_name:null:true|escape}</a>
 {elseif $view.group}
@@ -41,7 +41,7 @@
         {if $info.member}<li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span class="right">{$info.count}</span></li>{/if}
 {/foreach}
         </ul>
-{if $view.mcomments > 0}<p class="right">{$view.mcomments} {str tag=comments section=artefact.comment}</p>{/if}
+{if $view.mcomments > 0}<div class="detail">{$view.mcomments} {str tag=comments section=artefact.comment}</div>{/if}
       </td>
       <td>
         <ul>
@@ -53,7 +53,7 @@
         {/if}
 {/foreach}
         </ul>
-{if $view.ecomments > 0}<p class="right">{$view.ecomments} {str tag=comments section=artefact.comment}</p>{/if}
+{if $view.ecomments > 0}<div class="detail">{$view.ecomments} {str tag=comments section=artefact.comment}</div>{/if}
       </td>
     </tr>
 {/foreach}
@@ -64,8 +64,6 @@
 {/if}
   </tbody>
 </table>
-
-<br/><br/>
 
 <table class="fullwidth groupviewsreport">
   <thead>
@@ -86,7 +84,7 @@
 {if $groupviews}
 {foreach from=$groupviews item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td><a href="{$view.fullurl}">{$view.title}</a></td>
+      <td><h3 class="title"><a href="{$view.fullurl}">{$view.title}</a></h3></td>
       <td>
         <ul>
 {foreach from=$view.comments key=commenter item=info}
