@@ -460,7 +460,7 @@ class PluginSearchInternal extends PluginSearch {
                     }
                     else {
                         // No duplicate email is found, return empty list
-                        $where .= 'AND FALSE';
+                        $where .= ' AND FALSE';
                     }
                 }
                 else {
