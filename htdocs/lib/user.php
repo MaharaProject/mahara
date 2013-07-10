@@ -2142,6 +2142,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         if (empty($user->quota)) {
             $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
         }
+        if (get_config('defaultaccountlifetime')) {
+            // we need to set the user expiry to the site default one
+            $user->expiry = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d'), date('Y')) + (int)get_config('defaultaccountlifetime'));
+        }
         $user->id = insert_record('usr', $user, 'id', true);
     }
     // Bypass access check for 'copynewuser' institution/site views, because this user may not be logged in yet

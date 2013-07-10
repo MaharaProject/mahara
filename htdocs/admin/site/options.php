@@ -341,6 +341,19 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('defaultaccountlifetime', $OVERRIDDEN),
                 ),
+                'defaultaccountlifetimeupdate' => array(
+                    'type'         => 'radio',
+                    'title'        => get_string('defaultaccountlifetimeupdate', 'admin'),
+                    'description'  => get_string('defaultaccountlifetimeupdatedescription', 'admin'),
+                    'defaultvalue' => get_config('defaultaccountlifetimeupdate'),
+                    'separator'    => '<br>',
+                    'options'      => array(
+                        'none'     => get_string('defaultaccountlifetimeupdatenone', 'admin'),
+                        'some'     => get_string('defaultaccountlifetimeupdatesome', 'admin'),
+                        'all'      => get_string('defaultaccountlifetimeupdateall', 'admin')
+                    ),
+                    'help'         => true,
+                ),
                 'defaultaccountinactiveexpire' => array(
                     'type'         => 'expiry',
                     'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
@@ -679,7 +692,7 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
         'sitename','lang','theme', 'dropdownmenu',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
-        'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
+        'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
@@ -691,7 +704,42 @@ function siteoptions_submit(Pieform $form, $values) {
         'masqueradingreasonrequired', 'masqueradingnotified',
         'eventloglevel', 'eventlogexpiry',
     );
-
+    $count = 0;
+    $where_sql = " WHERE admin = 0 AND id != 0";
+    // if default account lifetime expiry has no end date
+    if (empty($values['defaultaccountlifetime'])) {
+        if ($values['defaultaccountlifetimeupdate'] == 'all') {
+            // need to remove user expiry
+            db_begin();
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
+            execute_sql("UPDATE {usr} SET expiry = NULL $where_sql");
+            db_commit();
+        }
+        else {
+            // make the 'some' option the same as 'none' as it is meaningless to
+            // update existing users without expiry date to having 'no end date'
+            $values['defaultaccountlifetimeupdate'] = 'none';
+        }
+    }
+    else {
+        // fetch all the users that are not siteadmins
+        $user_expiry = mktime(0, 0, 0, date('n'), date('j'), date('Y')) + (int)$values['defaultaccountlifetime'];
+        if ($values['defaultaccountlifetimeupdate'] == 'some') {
+            // and the user's expiry is not set
+            $where_sql .= " AND expiry IS NULL";
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
+            db_begin();
+            execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
+            db_commit();
+        }
+        else if ($values['defaultaccountlifetimeupdate'] == 'all') {
+            // and the user's expiry is set
+            db_begin();
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
+            execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
+            db_commit();
+        }
+    }
     // if public views are disabled, sitemap generation must also be disabled.
     if ($values['allowpublicviews'] == false) {
         $values['generatesitemap'] = false;
@@ -740,11 +788,54 @@ function siteoptions_submit(Pieform $form, $values) {
         $message .= '  ' . get_string('usersseenewthemeonlogin', 'admin');
         $USER->reset_institutions();
     }
+    if ($count) {
+        $message .= ' ' . get_string('numberusersupdated','admin', $count);
+    }
     $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/options.php'));
 }
+
+$js = <<<EOF
+jQuery(document).ready(function() {
+    var j = jQuery.noConflict();
+    var overrideuseraccountlifetime = j('#siteoptions input[name=defaultaccountlifetimeupdate]');
+    var defaultaccountlifetime = j('#siteoptions_defaultaccountlifetime_units');
+    function overrideuseraccountlife(v) {
+        // if default account lifetime is set to 'noenddate' disable the override options
+        if (v == 'noenddate') {
+            var value = j('#siteoptions input[name=defaultaccountlifetimeupdate]:checked').val();
+            j('#siteoptions input[name=defaultaccountlifetimeupdate][value=some]').attr('disabled',true);
+            j('#siteoptions input[name=defaultaccountlifetimeupdate][value=some]').attr('checked', false);
+            if (value != 'some') {
+                j('#siteoptions input[name=defaultaccountlifetimeupdate][value=' + value + ']').attr('checked', true);
+            }
+        }
+        else {
+            // enable the radio buttons
+            overrideuseraccountlifetime.attr('disabled',false);
+            if (!j('#siteoptions input[name=defaultaccountlifetimeupdate]:checked').val()) {
+                overrideuseraccountlifetime.each(function() {
+                    if (typeof j(this).attr('checked') === 'undefined' || j(this).attr('checked') === false) {
+                        // if no radio button already selected then choose the 'only for new users' option by default
+                        if (j(this).val() == 'none') {
+                            j(this).attr('checked',true);
+                        }
+                    }
+                });
+            }
+        }
+    }
+    // when default account lifetime changes rerun the override account lifetime checks
+    defaultaccountlifetime.change(function() {
+        overrideuseraccountlife(defaultaccountlifetime.val());
+    });
+    // initial setup
+    overrideuseraccountlife(defaultaccountlifetime.val());
+});
+EOF;
 
 $thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
 $smarty = smarty(array('adminsiteoptions'));
 $smarty->assign('siteoptionform', $siteoptionform);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/site/options.tpl');

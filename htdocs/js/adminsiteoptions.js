@@ -23,7 +23,9 @@
  */
 
 // Add here as appropriate
-var forceReloadElements = ['sitename', 'lang', 'theme'];
+var forceReloadElements = ['sitename', 'lang', 'theme',
+                           'defaultaccountlifetime_units',
+                           'defaultaccountlifetimeupdate'];
 var isReloadRequired = false;
 
 // Disconnects the pieform submit handler and changes the form target back to
