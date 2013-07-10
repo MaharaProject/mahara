@@ -468,23 +468,26 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
 
     $update = param_variable($prefix . '_update', null);
     if (is_array($update)) {
+        $keys = array_keys($update);
+        $artefactid = (int) ($keys[0]);
         $edit_title = param_variable($prefix . '_edit_title');
         $namelength = strlen($edit_title);
         if (!$namelength) {
             return array(
+                'edit'    => $artefactid,
                 'error'   => true,
-                'message' => get_string('filenamefieldisrequired', 'artefact.file')
+                'message' => get_string('filenamefieldisrequired1', 'artefact.file')
             );
         }
         else if ($namelength > 1024) {
             return array(
+                'edit'    => $artefactid,
                 'error'   => true,
                 'message' => get_string('nametoolong', 'artefact.file'),
             );
         }
-        $keys = array_keys($update);
         $data = array(
-            'artefact'    => (int) ($keys[0]),
+            'artefact'    => $artefactid,
             'title'       => $edit_title,
             'description' => param_variable($prefix . '_edit_description'),
             'tags'        => param_variable($prefix . '_edit_tags'),
