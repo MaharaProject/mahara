@@ -87,7 +87,8 @@ function pieform_element_viewacl(Pieform $form, $element) {
             }
         }
     }
-    
+
+    $defaultaccesslist = ($accesslist) ? 0 : 1;
     $myinstitutions = array();
     foreach ($USER->get('institutions') as $i) {
         $myinstitutions[] = array(
@@ -155,6 +156,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('potentialpresets', json_encode($allowedpresets));
     $smarty->assign('loggedinindex', $loggedinindex);
     $smarty->assign('accesslist', json_encode($accesslist));
+    $smarty->assign('defaultaccesslist', $defaultaccesslist);
     $smarty->assign('viewid', $form->get_property('viewid'));
     $smarty->assign('formname', $form->get_property('name'));
     $smarty->assign('myinstitutions', json_encode($myinstitutions));
