@@ -182,6 +182,12 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $csverrors->add($i, get_string('uploadgroupcsverrorshortnamealreadytaken', 'admin', $i, $shortname));
             }
         }
+        else if ($values['updategroups']) {
+            // The groupname needs to exist
+            if (!record_exists('group', 'shortname', $shortname, 'institution', $institution)) {
+                $csverrors->add($i, get_string('uploadgroupcsverrorshortnamemissing', 'admin', $i, $shortname));
+            }
+        }
         $shortnames[$shortname] = array(
                 'shortname'   => $shortname,
                 'displayname' => $displayname,
