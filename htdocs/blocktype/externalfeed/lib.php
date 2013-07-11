@@ -75,13 +75,13 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
             }
 
             // only keep the number of entries the user asked for
-            if (count($data->content)) {
+            if (count($data->content) && !empty($data->content) && is_array($data->content)) {
                 $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
                 $data->content = $chunks[0];
-            }
 
-            foreach ($data->content as $k => $c) {
-                $data->content[$k]->link =  sanitize_url($c->link);
+                foreach ($data->content as $k => $c) {
+                    $data->content[$k]->link =  sanitize_url($c->link);
+                }
             }
 
             // Attempt to fix relative URLs in the feeds
@@ -91,12 +91,14 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     'src="' . $data->image['link'] . '$1"',
                     $data->description
                 );
-                foreach ($data->content as &$entry) {
-                    $entry->description = preg_replace(
-                        '/src="(\/[^"]+)"/',
-                        'src="' . $data->image['link'] . '$1"',
-                        $entry->description
-                    );
+                if (!empty($data->content) && is_array($data->content)) {
+                    foreach ($data->content as &$entry) {
+                        $entry->description = preg_replace(
+                            '/src="(\/[^"]+)"/',
+                            'src="' . $data->image['link'] . '$1"',
+                            $entry->description
+                        );
+                    }
                 }
             }
 
