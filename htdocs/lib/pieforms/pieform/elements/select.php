@@ -35,7 +35,7 @@
  * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_element_select(Pieform $form, $element) {/*{{{*/
+function pieform_element_select(Pieform $form, $element) {
     if (!empty($element['multiple'])) {
         $element['name'] .= '[]';
     }
@@ -64,13 +64,15 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . (!empty($element['allowother']) ? ' onChange="pieform_select_other(this);"' : '')
+        . (!empty($element['width']) ? ' style="width: ' . $element['width'] . 'px;' : 'style="')
+        . (!empty($element['height']) ? ' height: ' . $element['height'] . 'px;"' : '"')
         . ">\n";
     if (!$optionsavailable) {
         $result .= "\t<option></option>\n</select>";
         return $result;
     }
 
-    $values = $form->get_value($element); 
+    $values = $form->get_value($element);
     $optionselected = false;
     if (!empty($element['allowother'])) {
         $use_other = $values;
@@ -120,9 +122,9 @@ function pieform_element_select(Pieform $form, $element) {/*{{{*/
                 . ">\n";
     }
     return $result;
-}/*}}}*/
+}
 
-function pieform_element_select_render_options($options, $values, &$optionselected, $element) {/*{{{*/
+function pieform_element_select_render_options($options, $values, &$optionselected, $element) {
     $result = '';
 
     foreach ($options as $key => $value) {
@@ -131,7 +133,7 @@ function pieform_element_select_render_options($options, $values, &$optionselect
         if (
             (!is_array($values) && $key == $values)
             ||
-            (is_array($values) && 
+            (is_array($values) &&
                 (in_array($key, $values)
                 || (isset($values[0]) && $values[0] === null && !$optionselected)))) {
             $selected = ' selected="selected"';
@@ -158,6 +160,14 @@ function pieform_element_select_render_options($options, $values, &$optionselect
             $label = '';
         }
 
+        // Add a CSS style for option
+        if (is_array($value) && isset($value['style'])) {
+            $style = ' style="' . Pieform::hsc($value['style']) . '"';
+        }
+        else {
+            $style = '';
+        }
+
         // Get the value to display/put in the value attribute
         if (is_array($value)) {
             if (!isset($value['value'])) {
@@ -169,13 +179,13 @@ function pieform_element_select_render_options($options, $values, &$optionselect
             }
         }
 
-        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}>" . Pieform::hsc($value) . "</option>\n";
+        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}{$style}>" . Pieform::hsc($value) . "</option>\n";
     }
 
     return $result;
-}/*}}}*/
+}
 
-function pieform_element_select_set_attributes($element) {/*{{{*/
+function pieform_element_select_set_attributes($element) {
     if (!isset($element['collapseifoneoption'])) {
         $element['collapseifoneoption'] = true;
     }
@@ -183,9 +193,9 @@ function pieform_element_select_set_attributes($element) {/*{{{*/
         $element['rules']['validateoptions'] = true;
     }
     return $element;
-}/*}}}*/
+}
 
-function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
+function pieform_element_select_get_value(Pieform $form, $element) {
     if (empty($element['multiple'])) {
         $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
         if (isset($element['value'])) {
@@ -232,9 +242,9 @@ function pieform_element_select_get_value(Pieform $form, $element) {/*{{{*/
     }
 
     return $values;
-}/*}}}*/
+}
 
-function pieform_element_select_get_options($element) {/*{{{*/
+function pieform_element_select_get_options($element) {
     if (!isset($element['options']) && !isset($element['optgroups'])) {
         return false;
     }
@@ -250,9 +260,9 @@ function pieform_element_select_get_options($element) {/*{{{*/
     }
 
     return $options;
-}/*}}}*/
+}
 
-function pieform_element_select_get_inlinejs() {/*{{{*/
+function pieform_element_select_get_inlinejs() {
     $result  = 'function pieform_select_other(el) {//{{{' . "\n";
     $result .= '    var $el = $(el),' . "\n";
     $result .= '        $$other = jQuery(\'#\' + $el.id + \'_other\');' . "\n";
@@ -264,10 +274,11 @@ function pieform_element_select_get_inlinejs() {/*{{{*/
     $result .= '    }' . "\n";
     $result .= '}//}}}' . "\n";
     return $result;
-}/*}}}*/
-function pieform_element_select_get_headdata() {/*{{{*/
+}
+
+function pieform_element_select_get_headdata() {
     $result  = '<script type="text/javascript">' . "\n";
     $result .= pieform_element_select_get_inlinejs();
     $result .= '</script>' . "\n";
     return array($result);
-}/*}}}*/
+}
