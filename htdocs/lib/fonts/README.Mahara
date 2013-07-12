@@ -1,0 +1,34 @@
+Fonts in Mahara
+======================
+
+This directory contains several fonts used primarily in the "page skins" feature.
+These font files are generally only used for generating preview images of skins.
+(It's assumed they'll look similar to the system fonts that users' browsers will use)
+
+Font: AurulentSans.ttf
+License: Aurulent-OFL.txt
+Website: http://www.fontsquirrel.com/fonts/Aurulent-Sans
+Version: n/a
+
+Font: CharisSILR.ttf
+License: Charis SIL Open Font License.txt
+Website: http://scripts.sil.org/cms/scripts/page.php?item_id=CharisSIL
+Version: 4.114
+
+Font: DejaVuSans.ttf
+License: DejaVu Fonts License.txt
+Website: http://www.fontsquirrel.com/fonts/DejaVu-Sans
+Version: 2.29
+
+Font: GhostScript fonts (converted to ttf)
+- CenturySchoolbookL.ttf
+- NimbusMonoL.ttf
+- NimbusRomanNo9L.ttf
+- NimbusSansL.ttf
+- URWBookmanL.ttf
+- URWChanceryL.ttf
+- URWGothicL.ttf
+- URWPalladioL.ttf
+License: GPL3 (via the GPL2 "any later version" clause)
+Website: http://sourceforge.net/projects/gs-fonts/
+Version: 8.11
