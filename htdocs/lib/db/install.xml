@@ -737,6 +737,7 @@
                 <FIELD NAME="numrows" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
                 <FIELD NAME="layout" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="skin" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="template" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
                 <FIELD NAME="retainview" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
@@ -1103,6 +1104,55 @@
             <KEY NAME="primary" TYPE="primary" FIELDS="registration_id,field"/>
             <KEY NAME="regdatafk" TYPE="foreign" FIELDS="registration_id" REFTABLE="institution_registration" REFFIELDS="id"/>
           </KEYS>
+        </TABLE>
+        <!-- skin related tables -->
+        <TABLE NAME="skin">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="private" />
+                <FIELD NAME="viewskin" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="bodybgimg" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="viewbgimg" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="skin_favorites">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="favorites" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="skin_fonts">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="licence" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="notice" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="previewfont" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="variants" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="fonttype" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="site" />
+                <FIELD NAME="onlyheading" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="fontstack" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="genericfont" TYPE="char" LENGTH="10" NOTNULL="true" ENUM="true" ENUMVALUES="'cursive', 'fantasy', 'monospace', 'sans-serif', 'serif'" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="nameuk" TYPE="unique" FIELDS="name"/>
+            </KEYS>
         </TABLE>
     </TABLES>
 </XMLDB>

@@ -207,6 +207,15 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
 }
 $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
 
+// Set up skin, if the page has one
+$viewskin = $view->get('skin');
+if ($viewskin) {
+    $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
+}
+else {
+    $skin = false;
+}
+
 if (!$view->is_public()) {
     $headers[] = '<meta name="robots" content="noindex">';  // Tell search engines not to index non-public views
 }
@@ -238,6 +247,7 @@ $smarty = smarty(
     array(
         'stylesheets' => $extrastylesheets,
         'sidebars' => false,
+        'skin' => $skin
     )
 );
 
@@ -278,6 +288,15 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
 
     $smarty->assign('microheadertitle', $titletext);
+
+    // Support for normal or white small Mahara logo - to use with skins
+    $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
+    if ($viewskin) {
+        $skindata = unserialize(get_field('skin', 'viewskin', 'id', $viewskin));
+        if ($skindata['header_logo_image'] == 'white') {
+            $smarty->assign('maharalogofilename', 'images/site-logo-small-white.png');
+        }
+    }
 
     if ($can_edit) {
         if ($new) {

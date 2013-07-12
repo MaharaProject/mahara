@@ -1,0 +1,161 @@
+<?php
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    mahara
+ * @subpackage skin
+ * @author     Gregor Anzelj
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2010-2013 Gregor Anzelj <gregor.anzelj@gmail.com>
+ *
+ */
+
+define('INTERNAL', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'configsite/sitefonts');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'sitefonts');
+
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once(get_config('libroot') . 'skin.php');
+require_once('pieforms/pieform.php');
+define('TITLE', get_string('sitefonts', 'skin'));
+
+$fontpreview  = !is_null($SESSION->get('fontpreview')) ? $SESSION->get('fontpreview') : 21;
+$fontsize     = !is_null($SESSION->get('fontsize')) ? $SESSION->get('fontsize') : 28;
+$fonttype     = !is_null($SESSION->get('fonttype')) ? $SESSION->get('fonttype') : 'all'; // possible values: all, site, google
+
+$limit   = param_integer('limit', 10);
+$offset  = param_integer('offset', 0);
+
+$previewform = pieform(array(
+    'name' => 'preview',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'fontpreview' => array(
+            'type' => 'select',
+            'title' => get_string('sampletext', 'skin') . ': ',
+            'options' => array(
+                10 => get_string('samplefonttitle', 'skin'),
+                11 => get_string('sampletitle11', 'skin'),
+                12 => get_string('sampletitle12', 'skin'),
+                13 => get_string('sampletitle13', 'skin'),
+                14 => get_string('sampletitle14', 'skin'),
+                15 => get_string('sampletitle15', 'skin'),
+                18 => get_string('sampletitle18', 'skin'),
+                19 => get_string('sampletitle19', 'skin'),
+                20 => get_string('sampletitle20', 'skin'),
+                21 => get_string('sampletitle21', 'skin'),
+                22 => get_string('sampletitle22', 'skin'),
+            ),
+            'defaultvalue' => $fontpreview,
+        ),
+        'fontsize' => array(
+            'type' => 'select',
+            'title' => get_string('samplesize', 'skin') . ': ',
+            'options' => array(
+                9 => '9',
+                10 => '10',
+                12 => '12',
+                13 => '13',
+                14 => '14',
+                16 => '16',
+                18 => '18',
+                24 => '24',
+                28 => '28',
+                36 => '36',
+                48 => '48',
+                64 => '64',
+                72 => '72',
+            ),
+            'defaultvalue' => $fontsize,
+        ),
+        'fonttype' => array(
+            'type' => 'select',
+            'title' => get_string('showfonts', 'skin') . ': ',
+            'options' => array(
+                'all'    => get_string('fonttypes.all', 'skin'),
+                'site'   => get_string('fonttypes.site', 'skin'),
+                'google' => get_string('fonttypes.google', 'skin'),
+            ),
+            'defaultvalue' => $fonttype,
+        ),
+        'limit' => array(
+            'type'  => 'hidden',
+            'value' => $limit,
+        ),
+        'offset' => array(
+            'type'  => 'hidden',
+            'value' => $offset,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('preview', 'skin')
+        )
+    )
+));
+$data = Skin::get_sitefonts_data($limit, $offset, $fonttype);
+$sitefonts = '';
+$googlefonts = '';
+foreach ($data->data as $font) {
+    if ($font['fonttype'] == 'site') {
+        $sitefonts .= $font['title'] . '|';
+    }
+    if ($font['fonttype'] == 'google') {
+        $googlefonts .= urlencode($font['title']) . '|';
+    }
+}
+$sitefonts = rtrim($sitefonts, '|');
+$googlefonts = rtrim($googlefonts, '|');
+
+$css = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'admin/site/font/css.php">');
+if (!empty($sitefonts)) {
+    $css[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'admin/site/font/css.php?family=' . $sitefonts . '">';
+}
+if (!empty($googlefonts)) {
+    $css[] = '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=' . $googlefonts . '">';
+}
+
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'admin/site/fonts.php',
+    'count' => $data->count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('font', 'skin'),
+    'resultcounttextplural' => get_string('fonts', 'skin')
+));
+
+$smarty = smarty(array(), $css, array(), array());
+$smarty->assign('sitefonts', $data->data);
+$smarty->assign('form', $previewform);
+$smarty->assign('preview', $fontpreview); // Transfer $SESSION value into template
+$smarty->assign('size', $fontsize);       // Transfer $SESSION value into template
+$smarty->assign('pagination', $pagination['html']);
+$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->display('skin/sitefonts.tpl');
+
+
+function preview_submit(Pieform $form, $values) {
+    global $SESSION;
+    $SESSION->set('fontpreview', $values['fontpreview']);
+    $SESSION->set('fontsize', $values['fontsize']);
+    $SESSION->set('fonttype', $values['fonttype']);
+    redirect(get_config('wwwroot') . 'admin/site/fonts.php?offset=' . $values['offset'] . '&limit=' . $values['limit']);
+}

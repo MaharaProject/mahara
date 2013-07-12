@@ -3210,7 +3210,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('institution');
         $field = new XMLDBField('dropdownmenu');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
-        add_field($table, $field);
     }
 
     if ($oldversion < 2013081400) {
@@ -3357,6 +3356,59 @@ function xmldb_core_upgrade($oldversion=0) {
             set_time_limit(30);
         }
 
+    }
+
+    if ($oldversion < 2013091900) {
+        // Create skin table...
+        $table = new XMLDBTable('skin');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT);
+        $table->addFieldInfo('owner', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('type', XMLDB_TYPE_CHAR, 10, 'private', XMLDB_NOTNULL);
+        $table->addFieldInfo('viewskin', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('bodybgimg', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('viewbgimg', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME);
+        $table->addFieldInfo('mtime', XMLDB_TYPE_DATETIME);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('ownerfk', XMLDB_KEY_FOREIGN, array('owner'), 'usr', array('id'));
+        create_table($table);
+
+        // Create skin_favorites table...
+        $table = new XMLDBTable('skin_favorites');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('user', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('favorites', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('userfk', XMLDB_KEY_FOREIGN, array('user'), 'usr', array('id'));
+        create_table($table);
+
+        // Create skin_fonts table...
+        $table = new XMLDBTable('skin_fonts');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('licence', XMLDB_TYPE_CHAR, 255);
+        $table->addFieldInfo('notice', XMLDB_TYPE_TEXT);
+        $table->addFieldInfo('previewfont', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('variants', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('fonttype', XMLDB_TYPE_CHAR, 10, 'site', XMLDB_NOTNULL);
+        $table->addFieldInfo('onlyheading', XMLDB_TYPE_INTEGER, 1, 0, XMLDB_NOTNULL);
+        $table->addFieldInfo('fontstack', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('genericfont', XMLDB_TYPE_CHAR, 10, null, XMLDB_NOTNULL, null, XMLDB_ENUM, array('cursive', 'fantasy', 'monospace', 'sans-serif', 'serif'));
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('nameuk', XMLDB_KEY_UNIQUE, array('name'));
+        create_table($table);
+
+        // Set column 'skin' to 'view' table...
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('skin');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+
+        require_once(get_config('libroot').'skin.php');
+        install_skins_default();
     }
 
     return $status;

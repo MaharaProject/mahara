@@ -2240,10 +2240,15 @@ function artefact_in_view($artefact, $view) {
             UNION
             SELECT c.parent 
             FROM {view_artefact} top JOIN {artefact_parent_cache} c
-              ON c.parent = top.artefact 
-            WHERE top.view = ? AND c.artefact = ?';
+              ON c.parent = top.artefact
+            WHERE top.view = ? AND c.artefact = ?
+            UNION
+            SELECT s.id
+            FROM {view} v INNER JOIN {skin} s ON v.skin = s.id
+            WHERE v.id = ? AND ? in (s.bodybgimg, s.viewbgimg)
+    ';
 
-    return record_exists_sql($sql, array($view, $artefact, $view, $artefact));
+    return record_exists_sql($sql, array($view, $artefact, $view, $artefact, $view, $artefact));
 }
 
 function get_dir_contents($directory) {

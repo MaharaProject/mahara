@@ -78,11 +78,13 @@
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=editsitepages section=admin}</a></strong> - {str tag=editsitepagesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/licenses.php">{str tag=sitelicenses section=admin}</a></strong> - {str tag=sitelicensesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=menus section=admin}</a></strong> - {str tag=menusdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/views.php">{str tag=siteviews section=admin}</a></strong> - {str tag=siteviewsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}artefact/file/sitefiles.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/licenses.php">{str tag=sitelicenses section=admin}</a></strong> - {str tag=sitelicensesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/skins.php">{str tag=siteskins section=admin}</a></strong> - {str tag=siteskinsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/fonts.php">{str tag=sitefonts section=admin}</a></strong> - {str tag=sitefontsdescription section=admin}</li>
     </ul>
 
 <h3>{str tag=configusers section=admin}</h3>

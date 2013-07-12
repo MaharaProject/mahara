@@ -395,6 +395,14 @@ EOF;
         $stylesheets = array_merge($stylesheets, $sheets);
     }
 
+    // Give the skin a chance to affect the page
+    if (!empty($extraconfig['skin'])) {
+        require_once(get_config('docroot').'/lib/skin.php');
+        $skinobj = new Skin($extraconfig['skin']['skinid']);
+        $viewid = isset($extraconfig['skin']['viewid']) ? $extraconfig['skin']['viewid'] : null;
+        $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
+    }
+
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
         $smarty->assign('LANGDIRECTION', 'rtl');
@@ -424,8 +432,8 @@ EOF;
             }
             else {
                 if ((!empty($USER->accountprefs['theme']) && $USER->accountprefs['theme'] == $THEME->basename . '/' . $i->institution)
-                  || (empty($USER->accountprefs) && $i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution)) {
-                      $dropdownmenu = $i->dropdownmenu;
+                    || (empty($USER->accountprefs) && $i->theme == $THEME->basename && $USER->institutiontheme->institutionname == $i->institution)) {
+                    $dropdownmenu = $i->dropdownmenu;
                 }
             }
         }
@@ -1908,6 +1916,18 @@ function admin_nav() {
             'title'  => get_string('share', 'view'),
             'weight' => 70,
         ),
+        'configsite/siteskins' => array(
+           'path'   => 'configsite/siteskins',
+           'url'    => 'admin/site/skins.php',
+           'title'  => get_string('siteskinmenu', 'skin'),
+           'weight' => 75,
+       ),
+       'configsite/sitefonts' => array(
+           'path'   => 'configsite/sitefonts',
+           'url'    => 'admin/site/fonts.php',
+           'title'  => get_string('sitefontsmenu', 'skin'),
+           'weight' => 76,
+       ),
         'configsite/sitefiles' => array(
             'path'   => 'configsite/sitefiles',
             'url'    => 'artefact/file/sitefiles.php',
@@ -2340,6 +2360,12 @@ function mahara_standard_nav() {
             'url' => 'view/sharedviews.php',
             'title' => get_string('sharedwithme', 'view'),
             'weight' => 60,
+        ),
+        'myportfolio/skins' => array(
+           'path' => 'myportfolio/skins',
+           'url' => 'skin/index.php',
+           'title' => get_string('myskins', 'skin'),
+           'weight' => 65,
         ),
         'myportfolio/export' => array(
             'path' => 'myportfolio/export',
@@ -3801,4 +3827,27 @@ function append_version_number($urls) {
         $urls .= '?v=' . get_config('release');
     }
     return $urls;
+}
+
+/**
+ * Escape a string so that it's suitable to be used as a CSS quote-enclosed string
+ * If it's single-quoted, preface single-quotes with a backslash. If it's double-quoted,
+ * preface double-quotes with a backslash. Preface non-escaping backslashes with a
+ * backslash. Remove newlines.
+ * @param string $string The string to escape
+ * @param bool $singlequote True to escape for single quotes, False to escape for double
+ * @return string
+ */
+function escape_css_string($string, $singlequote=true) {
+    if ($singlequote) {
+        $delim = "'";
+    }
+    else {
+        $delim = '"';
+    }
+    return str_replace(
+        array('\\', "\n", $delim),
+        array('\\\\', '', "\\$delim"),
+        $string
+    );
 }

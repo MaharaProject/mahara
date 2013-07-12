@@ -48,6 +48,9 @@ $string['element.expiry.noenddate'] = 'No end date';
 
 $string['element.select.other'] = 'Other';
 
+$string['element.color.or'] = 'or';
+$string['element.color.transparent'] = 'Transparent';
+
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 
 $string['rule.email.email'] = 'Email address is invalid';

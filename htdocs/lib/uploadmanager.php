@@ -25,6 +25,7 @@
  *
  */
 
+defined('INTERNAL') || die();
 
 class upload_manager {
 
@@ -32,42 +33,61 @@ class upload_manager {
     * Array to hold local copy of stuff in $_FILES
     * @var array $file
     */
-    var $file;
+    public $file;
 
    /**
     * Name of the file input
-    * @var string $inputname 
+    * @var string $inputname
     */
-    var $inputname;
+    public $inputname;
 
    /**
     * Whether to try to rename files when they already exist
     * @var bool $handlecollisions
     */
-    var $handlecollisions;
+    public $handlecollisions;
+
+    /**
+     * Indicates whether this file is optional to the form.
+     * @var bool $optional
+     */
+    public $optional;
+
+    /**
+     * Indicates that the file input was optional and was skipped on purpose.
+     * @var bool $optional
+     */
+    public $optionalandnotsupplied = false;
 
     /**
      * Constructor.
      *
      * @param string $inputname Name in $_FILES.
      */
-    function upload_manager($inputname, $handlecollisions=false, $inputindex=null) {
+    public function __construct($inputname, $handlecollisions=false, $inputindex=null, $optional=false) {
         $this->inputname = $inputname;
         $this->handlecollisions = $handlecollisions;
         $this->inputindex = $inputindex;
+        $this->optional = $optional;
     }
 
-    /** 
+    /**
      * Gets file information out of $_FILES and stores it locally in $files.
      * Checks file against max upload file size.
      * Scans file for viruses.
      * @return false for no errors, or a string describing the error
      */
-    function preprocess_file() {
+    public function preprocess_file() {
 
         $name = $this->inputname;
         if (!isset($_FILES[$name])) {
-            return get_string('noinputnamesupplied');
+            if ($this->optional) {
+                $this->optionalandnotsupplied = true;
+                return false;
+            }
+            else {
+                return get_string('noinputnamesupplied');
+            }
         }
         $file = $_FILES[$name];
 
@@ -105,7 +125,13 @@ class upload_manager {
         }
 
         if (!is_uploaded_file($tmpname)) {
-            return get_string('notphpuploadedfile');
+            if ($this->optional) {
+                $this->optionalandnotsupplied = true;
+                return false;
+            }
+            else {
+                return get_string('notphpuploadedfile');
+            }
         }
 
         if (get_config('viruschecking')) {
@@ -121,11 +147,11 @@ class upload_manager {
         }
 
         $this->file = $file;
-        return false; 
+        return false;
     }
 
 
-    /** 
+    /**
      * Moves the file to the destination directory.
      *
      * @uses $CFG
@@ -133,7 +159,12 @@ class upload_manager {
      * @param string $newname The filename
      * @return false if no errors, or a string describing the error
      */
-    function save_file($destination, $newname) {
+    public function save_file($destination, $newname) {
+
+        // It's an optional file that was not uploaded.
+        if ($this->optional && $this->optionalandnotsupplied) {
+            return false;
+        }
 
         if (!isset($this->file)) {
             return get_string('unknownerror');
@@ -176,7 +207,7 @@ class upload_manager {
         }
         return get_string('failedmovingfiletodataroot');
     }
-    
+
 
     /**
      * Wrapper function that calls {@link preprocess_files()} and {@link viruscheck_files()} and then {@link save_files()}
@@ -184,8 +215,8 @@ class upload_manager {
      * @parameter string $destination Where to save the uploaded file to.
      * @parameter string $newname What to call the saved file.
      * @return false for no errors, or a string describing the error.
-     */ 
-    function process_file_upload($destination, $newname) {
+     */
+    public function process_file_upload($destination, $newname) {
         $error = $this->preprocess_file();
         if (!$error) {
             return $this->save_file($destination, $newname);
@@ -200,9 +231,9 @@ class upload_manager {
      * @param string $format The printf style format to rename the file to (defaults to filename_number.extn)
      * @return string The new filename.
      */
-    function rename_duplicate_file($destination, $filename, $format='%s_%d.%s') {
+    public function rename_duplicate_file($destination, $filename, $format='%s_%d.%s') {
         // If there's no dot or more than one dot we get yucky stuff like 'foo_1.', 'foo_1.bar.baz'
-        $bits = explode('.', $filename);  
+        $bits = explode('.', $filename);
         // check for collisions and append a nice numberydoo.
         for ($i = 1; true; $i++) {
             $try = sprintf($format, $bits[0], $i, $bits[1]);
@@ -239,7 +270,7 @@ UPLOAD_PRINT_FORM_FRAGMENT DOESN'T REALLY BELONG IN THE CLASS BUT CERTAINLY IN T
 ***************************************************************************************/
 
 /**
- * Deals with an infected file - either moves it to a quarantinedir 
+ * Deals with an infected file - either moves it to a quarantinedir
  * (specified in CFG->quarantinedir) or deletes it.
  *
  * If moving it fails, it deletes it.
@@ -261,7 +292,7 @@ function clam_handle_infected_file($file) {
     if (is_dir($quarantinedir) && is_writable($quarantinedir)) {
         $now = date('YmdHis');
         $newname = $quarantinedir .'/'. $now .'-user-'. $userid .'-infected';
-        if (rename($file, $newname)) { 
+        if (rename($file, $newname)) {
             clam_log_infected($file, $newname);
             return get_string('clammovedfile');
         }
@@ -279,7 +310,7 @@ function clam_handle_infected_file($file) {
  *
  * @param mixed $file The file to scan from $files. or an absolute path to a file.
  * @return false if no errors, or a string if there's an error.
- */ 
+ */
 function mahara_clam_scan_file($file, $inputindex=null) {
 
     if (isset($inputindex)) {
@@ -300,7 +331,11 @@ function mahara_clam_scan_file($file, $inputindex=null) {
 
     $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
 
-    if (!$pathtoclam || !file_exists($pathtoclam) || !is_executable($pathtoclam)) {
+    if (!$pathtoclam) {
+        return false;
+    }
+
+    if (!file_exists($pathtoclam) || !is_executable($pathtoclam)) {
         clam_mail_admins(get_string('clamlost', 'mahara', $pathtoclam));
         clam_handle_infected_file($fullpath);
         return get_string('clambroken');
@@ -324,7 +359,7 @@ function mahara_clam_scan_file($file, $inputindex=null) {
     case 1:  // bad wicked evil, we have a virus.
         global $USER;
         $userid = $USER->get('id');
-        clam_handle_infected_file($fullpath); 
+        clam_handle_infected_file($fullpath);
         // Notify admins if user has uploaded more than 3 infected
         // files in the last month
         if (count_records_sql('
@@ -343,7 +378,7 @@ function mahara_clam_scan_file($file, $inputindex=null) {
         $data = (object) array('usr' => $userid, 'time' => db_format_timestamp(time()));
         insert_record('usr_infectedupload', $data, 'id');
         return get_string('virusfounduser', 'mahara', display_name($USER));
-    default: 
+    default:
         // error - clam failed to run or something went wrong
         $notice = get_string('clamfailed', 'mahara', get_clam_error_code($return));
         $notice .= "\n\n". implode("\n", $output);
@@ -399,7 +434,7 @@ function get_clam_error_code($returncode) {
     $returncodes[58] = 'I/O error, please check your filesystem.';
     $returncodes[59] = 'Can\'t get information about current user from /etc/passwd.';
     $returncodes[60] = 'Can\'t get information about user \'clamav\' (default name) from /etc/passwd.';
-    $returncodes[61] = 'Can\'t fork.'; 
+    $returncodes[61] = 'Can\'t fork.';
     $returncodes[63] = 'Can\'t create temporary files/directories (check permissions).';
     $returncodes[64] = 'Can\'t write to temporary directory (please specify another one).';
     $returncodes[70] = 'Can\'t allocate and clear memory (calloc).';
@@ -425,7 +460,7 @@ function clam_log_infected($oldfilepath='', $newfilepath='', $userid=0) {
 
     $errorstr = 'Clam AV has found a file that is infected with a virus. It was uploaded by '
         . full_name()
-        . ((empty($oldfilepath)) ? '. The infected file was caught on upload ('.$oldfilepath.')' 
+        . ((empty($oldfilepath)) ? '. The infected file was caught on upload ('.$oldfilepath.')'
            : '. The original file path of the infected file was '. $oldfilepath)
         . ((empty($newfilepath)) ? '. The file has been deleted ' : '. The file has been moved to a quarantine directory and the new path is '. $newfilepath);
 

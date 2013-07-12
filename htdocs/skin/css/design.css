@@ -1,0 +1,116 @@
+#showHideBar {
+    background-color: #666666;
+    text-align: center;
+    padding: 5px 5px 2px 5px;
+    margin: 0;
+}
+#showHideBtn {
+    font-size: 0.8em;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#body_background {
+    background: none repeat scroll 0 0 #EEEEEE;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+    border: 3px solid #666666;
+}
+#view {
+    width: 90%;
+    text-align: left;
+}
+#view_header {
+    background: none repeat scroll 0 0 #EEEEEE;
+    padding: 5px;
+}
+#view_header_logo {
+    float: left;
+}
+#view_header_links {
+    color: #919191;
+    font-size: 1.5em;
+    padding: 10px 0px 0px 0px;
+    text-align: center;
+}
+#view_background {
+    background: none repeat scroll 0 0 #FFFFFF;
+    padding: 10px 15px;
+}
+.blockinstance-header h4 {
+    border-bottom: 2px solid #D2D2D2;
+    font-size: 1.4em !important;
+    margin: 0 !important;
+    padding-bottom: 3px;
+}
+.column {
+    float: left;
+    margin: 0;
+    padding: 0 0.9% 10px;
+    position: relative;
+    vertical-align: top;
+}
+.columns2 {
+    width: 48%;
+}
+/*
+.columns3 {
+    width: 31%;
+}
+*/
+
+.viewfooter {
+    border: 1px solid #EEEEEE;
+    clear: both;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#feedbacktable th {
+    font-size: 1.1667em;
+    padding: 3px 0 0;
+    border-bottom: 1px solid #CCCCCC;
+    color: #186194;
+}
+
+#feedback_pagination {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-top: 1px solid #CCCCCC;
+    font-size: 0.85em;
+    margin: 0;
+    text-align: center;
+}
+
+#viewmenu {
+    color: #D1D1D1;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+#viewmenu a {
+    line-height: 1.6667em;
+    margin: 0 5px;
+    padding-bottom: 2px;
+}
+
+.feedback {
+    background: url("design/feedback.png") no-repeat scroll left top transparent;
+    padding-left: 20px !important;
+}
+.objection {
+    background: url("design/objectionable.png") no-repeat scroll left top transparent;
+    padding-left: 20px !important;
+}
+.print {
+    background: url("design/print.png") no-repeat scroll left top transparent;
+    padding-left: 20px !important;
+}
+.watchlist {
+    background: url("design/watchlist.png") no-repeat scroll left top transparent;
+    padding-left: 20px !important;
+}
+
+.help, .help a, .help a img {
+    vertical-align: top;
+}

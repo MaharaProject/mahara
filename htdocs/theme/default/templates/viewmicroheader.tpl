@@ -26,7 +26,7 @@
           <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>
         </div>
         <div class="fl">
-          <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>
+          <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename=$maharalogofilename}" alt="{$sitename}"></a>
         </div>
 {if $LOGGEDIN}
         <div id="mainnav-container" class="nav">

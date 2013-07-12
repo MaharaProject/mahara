@@ -76,6 +76,7 @@ class View {
     private $accessconf;
     private $locked;
     private $urlid;
+    private $skin;
 
     /**
      * Valid view column layouts. These are read at install time and inserted into

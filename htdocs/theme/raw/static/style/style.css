@@ -953,7 +953,11 @@ input#edituser_institution_massey_remove,
 .pagetabs .btn,
 .pagetabs input.submit,
 input#usertype_typesubmit,
-#pluginconfig table tr td fieldset table tr.submit input.submit {
+#pluginconfig table tr td fieldset table tr.submit input.submit,
+input#designskinform_body_background_image_open_upload_browse,
+input#designskinform_body_background_image_close_upload_browse,
+input#designskinform_view_background_image_open_upload_browse,
+input#designskinform_view_background_image_close_upload_browse {
     padding: 4px 5px 3px 5px;
     font-size: 1em;
 }

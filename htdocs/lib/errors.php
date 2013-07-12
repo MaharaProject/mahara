@@ -879,6 +879,11 @@ class CollectionNotFoundException extends NotFoundException {}
 class FileNotFoundException extends NotFoundException {}
 
 /**
+ * Exception - For when a skin is not found
+ */
+class SkinNotFoundException extends NotFoundException {}
+
+/**
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
 class AccessDeniedException extends UserException {

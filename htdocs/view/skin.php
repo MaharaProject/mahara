@@ -1,0 +1,191 @@
+<?php
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    mahara
+ * @subpackage core
+ * @author     Gregor Anzelj
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2010-2013 Gregor Anzelj <gregor.anzelj@gmail.com>
+ *
+ */
+
+define('INTERNAL', 1);
+require_once(dirname(dirname(__FILE__)) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('skin.php');
+require_once('view.php');
+require_once(get_config('libroot') . 'group.php');
+define('TITLE', get_string('chooseviewskin', 'skin'));
+
+$id = param_integer('id');
+$new = param_boolean('new');
+$view = new View($id);
+$view->set_edit_nav();
+$view->set_user_theme();
+// Is page skin already saved/set for current page?
+$skin = param_integer('skin', null);
+$saved = false;
+if (!isset($skin)) {
+    $skin = $view->get('skin');
+    $saved = true;
+}
+
+if (!$skin || !($currentskin = get_record('skin', 'id', $skin))) {
+    $currentskin = new stdClass();
+    $currentskin->id = 0;
+    $currentskin->title = get_string('skinnotselected', 'skin');
+}
+$userskins   = Skin::get_user_skins();
+$favorskins  = Skin::get_favorite_skins();
+$siteskins   = Skin::get_site_skins();
+
+if (!$USER->can_edit_view($view)) {
+    throw new AccessDeniedException();
+}
+
+
+$skinform = pieform(array(
+    'name' => 'viewskin',
+    'elements' => array(
+        'skin'  => array(
+            'type' => 'hidden',
+            'value' => $currentskin->id,
+        ),
+        'view' => array(
+            'type' => 'hidden',
+            'value' => $view->get('id'),
+        ),
+        'new' => array(
+            'type' => 'hidden',
+            'value' => $new,
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('save'),
+        ),
+    ),
+));
+
+// SEE: http://valums.com/scroll-menu-jquery/
+$js = <<<EOF
+jQuery(function($){
+    // Get our elements for faster access and set overlay width
+    var usrdiv = $('div.userskins'),
+        usrul = $('ul.userskins'),
+        favdiv = $('div.favorskins'),
+        favul = $('ul.favorskins'),
+        sitediv = $('div.siteskins'),
+        siteul = $('ul.siteskins'),
+        ulPadding = 10;
+
+    // Get menu width
+    var usrdivWidth = usrdiv.width();
+    var favdivWidth = favdiv.width();
+    var sitedivWidth = sitediv.width();
+
+    // Remove scrollbars
+    usrdiv.css({overflow: 'hidden'});
+    favdiv.css({overflow: 'hidden'});
+    sitediv.css({overflow: 'hidden'});
+
+    // Find last image container
+    var usrlastLi = usrul.find('li:last-child');
+    var favlastLi = favul.find('li:last-child');
+    var sitelastLi = siteul.find('li:last-child');
+
+    // When user move mouse over menu
+    usrdiv.mousemove(function(e){
+        // As images are loaded ul width increases,
+        // so we recalculate it each time
+        var usrulWidth = usrlastLi[0].offsetLeft + usrlastLi.outerWidth() + ulPadding;
+        var left = (e.pageX - usrdiv.offset().left) * (usrulWidth-usrdivWidth) / usrdivWidth;
+        usrdiv.scrollLeft(left);
+    });
+
+    // When user move mouse over menu
+    favdiv.mousemove(function(e){
+        // As images are loaded ul width increases,
+        // so we recalculate it each time
+        var favulWidth = favlastLi[0].offsetLeft + favlastLi.outerWidth() + ulPadding;
+        var left = (e.pageX - favdiv.offset().left) * (favulWidth-favdivWidth) / favdivWidth;
+        favdiv.scrollLeft(left);
+    });
+
+    // When user move mouse over menu
+    sitediv.mousemove(function(e){
+        // As images are loaded ul width increases,
+        // so we recalculate it each time
+        var siteulWidth = sitelastLi[0].offsetLeft + sitelastLi.outerWidth() + ulPadding;
+        var left = (e.pageX - sitediv.offset().left) * (siteulWidth-sitedivWidth) / sitedivWidth;
+        sitediv.scrollLeft(left);
+    });
+});
+EOF;
+
+$css = array(
+    '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
+);
+
+$displaylink = $view->get_url();
+if ($new) {
+    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
+}
+
+$smarty = smarty(array(), $css, array(), array('sidebars' => false));
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('saved', $saved);
+$smarty->assign('currentskin', $currentskin->id);
+$smarty->assign('currenttitle', $currentskin->title);
+$smarty->assign('userskins', $userskins);
+$smarty->assign('favorskins', $favorskins);
+$smarty->assign('siteskins', $siteskins);
+$smarty->assign('form', $skinform);
+$smarty->assign('viewid', $view->get('id'));
+$smarty->assign('viewtype', $view->get('type'));
+$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('edittitle', $view->can_edit_title());
+$smarty->assign('displaylink', $displaylink);
+$smarty->assign('new', $new);
+if (get_config('viewmicroheaders')) {
+    $smarty->assign('microheaders', true);
+    $smarty->assign('microheadertitle', $view->display_title(true, false, false));
+}
+$smarty->display('view/skin.tpl');
+
+function viewskin_validate(Pieform $form, $values) {
+    $skinid = $values['skin'];
+    if ($skinid) {
+        $skin = new Skin($values['skin']);
+        if (!$skin->can_use()) {
+            throw new AcessDeniedException();
+        }
+    }
+}
+
+function viewskin_submit(Pieform $form, $values) {
+    global $SESSION;
+
+    $view = new View($values['view']);
+    $new = $values['new'];
+    $view->set('skin', $values['skin']);
+    $view->commit();
+    handle_event('saveview', $view->get('id'));
+    $SESSION->add_ok_msg(get_string('viewskinchanged', 'skin'));
+    redirect('/view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
+}

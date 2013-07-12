@@ -18,21 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
- * @author     Catalyst IT Ltd
+ * @subpackage skin
+ * @author     Gregor Anzelj
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2010-2013 Gregor Anzelj <gregor.anzelj@gmail.com>
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('NOCHECKPASSWORDCHANGE', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-$config = new stdClass();
 
-// See https://wiki.mahara.org/index.php/Developer_Area/Version_Numbering_Policy
-// For upgrades on stable branches, increment the version by one.  On master, use the date.
-$config->version = 2013091900;
-$config->release = '1.8.0dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
-$config->disablelogin = true;
+$id = param_integer('id', 0);
+
+//Set no caching for thumbnails...
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");  // Date in the past
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+
+$thumbfile = get_config('dataroot') . 'skins/' . $id . '.png';
+if ($id <> 0 and file_exists($thumbfile)) {
+    header('Content-type: image/png');
+    readfile($thumbfile);
+    exit;
+}
+else {
+    header('Content-type: image/png');
+    readfile(get_config('wwwroot') . 'skin/no-thumb.png');
+    exit;
+}

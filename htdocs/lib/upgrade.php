@@ -736,6 +736,9 @@ function core_install_lastcoredata_defaults() {
     require_once('license.php');
     install_licenses_default();
 
+    require_once('skin.php');
+    install_skins_default();
+
     // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';

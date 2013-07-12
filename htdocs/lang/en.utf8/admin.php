@@ -92,10 +92,14 @@ $string['editsitepagesdescription'] = 'Edit the content of various pages around 
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
+$string['sitefonts'] = 'Fonts';
+$string['sitefontsdescription'] = 'Upload and manage fonts usable in skins by all users in the site';
 $string['sitelicenses']     = 'Licenses';
 $string['sitelicensesdescription']     = 'Configure the list of licenses that users can use for content.';
 $string['sitelicensesdisablednote']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "General settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to specify licenses.';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
+$string['siteskins'] = 'Site skins';
+$string['siteskinsdescription'] = 'Create and administer page skins usable by all users in the site';
 $string['siteviews']          = 'Site pages';
 $string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
 $string['networking']          = 'Networking';
