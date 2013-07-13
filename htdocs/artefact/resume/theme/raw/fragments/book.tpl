@@ -17,7 +17,7 @@
         <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
             {if $controls}<td class="buttonscell"></td>{/if}
             <td class="toggle">{$row->date}</td>
-            <td>{$row->title}</td>
+            <td>{if $row->url}<a href="{$row->url}" target="_blank">{$row->title}</a>{else}{$row->title}{/if}</td>
             {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
         <tr class="{cycle values='r0,r0,r1,r1'} expandable-body">

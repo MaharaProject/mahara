@@ -688,6 +688,7 @@ function compositeSaveCallback(form, data) {
             element.value = '';
         }
     });
+    formSuccess(form, data);
 }
 
 function deleteComposite(type, id, artefact) {
@@ -1137,7 +1138,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "r.description";
+        return "TD(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url, 'target':'_blank'}, r.url)))";
     }
 
     public static function get_addform_elements() {
@@ -1173,6 +1174,12 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'cols' => 50,
                 'resizable' => false,
                 'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
+            ),
+            'url' => array(
+                'type' => 'text',
+                'title' => get_string('bookurl', 'artefact.resume'),
+                'size' => 70,
+                'help' => true,
             ),
         );
     }
@@ -1259,6 +1266,25 @@ class ArtefactTypePersonalskill extends ArtefactTypeResumeGoalAndSkill { }
 class ArtefactTypeAcademicskill extends ArtefactTypeResumeGoalAndSkill { }
 class ArtefactTypeWorkskill extends ArtefactTypeResumeGoalAndSkill { }
 
+
+function book_validate(Pieform $form, $values) {
+    // Check if string enter by user is valid URL
+    if (array_key_exists('url', $values) && !empty($values['url'])) {
+        if (filter_var($values['url'], FILTER_VALIDATE_URL) === false) {
+            $form->set_error('url', get_string('notvalidurl', 'artefact.resume'));
+        }
+    }
+}
+
+function addbook_validate(Pieform $form, $values) {
+    // Check if string enter by user is valid URL
+    if (array_key_exists('url', $values) && !empty($values['url'])) {
+        if (filter_var($values['url'], FILTER_VALIDATE_URL) === false) {
+            $form->set_error('url', get_string('notvalidurl', 'artefact.resume'));
+        }
+    }
+}
+
 function compositeform_submit(Pieform $form, $values) {
     try {
         call_static_method(generate_artefact_class_name($values['compositetype']), 
@@ -1274,7 +1300,7 @@ function compositeformedit_submit(Pieform $form, $values) {
     global $SESSION;
 
     $tabs = PluginArtefactResume::composite_tabs();
-    $goto = get_config('wwwroot') . '/artefact/resume/';
+    $goto = get_config('wwwroot') . 'artefact/resume/';
     if (isset($tabs[$values['compositetype']])) {
         $goto .= $tabs[$values['compositetype']] . '.php';
     }

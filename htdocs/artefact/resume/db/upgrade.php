@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_artefact_resume_upgrade($oldversion=0) {
-    
+
     $status = true;
 
     if ($oldversion < 2008012200) {
@@ -43,8 +43,8 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             'artefact_resume_educationhistory',
             'artefact_resume_membership') as $table) {
             $records = get_records_array($table, '', '', 'startdate DESC', 'id,startdate,enddate');
-            // Sigh. table_column is screwed beyond belief. We let it do its 
-            // work (in the case of start and stopdate at least because it does 
+            // Sigh. table_column is screwed beyond belief. We let it do its
+            // work (in the case of start and stopdate at least because it does
             // cast the columns OK), then fix its bugs
             execute_sql('ALTER TABLE {' . $table . '} ADD displayorder ' . $inttype);
             table_column($table, 'startdate', 'startdate', 'text', null, null, '', 'not null');
@@ -64,10 +64,10 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
-                    set_field($table, 'startdate', 
+                    set_field($table, 'startdate',
                               format_date(strtotime($r->startdate), 'strftimedate', 'current', 'artefact.resume'),
                               'id', $r->id);
-                    set_field($table, 'enddate', 
+                    set_field($table, 'enddate',
                               format_date(strtotime($r->enddate), 'strftimedate', 'current', 'artefact.resume'),
                               'id', $r->id);
                 }
@@ -93,7 +93,7 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
-                    set_field($table, 'date', 
+                    set_field($table, 'date',
                               format_date(strtotime($r->date), 'strftimedate', 'current', 'artefact.resume'),
                               'id', $r->id);
                 }
@@ -130,6 +130,13 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         $field = new XMLDBField('qualname');
         $field->setAttributes(XMLDB_TYPE_TEXT);
         change_field_notnull($table, $field);
+    }
+
+    if ($oldversion < 2013071300) {
+        $table = new XMLDBTable('artefact_resume_book');
+        $field = new XMLDBField('url');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
     }
 
     return $status;

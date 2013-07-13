@@ -54,7 +54,7 @@ $elements = call_static_method(generate_artefact_class_name($type), 'get_addform
 $elements['submit'] = array(
     'type' => 'submitcancel',
     'value' => array(get_string('save'), get_string('cancel')),
-    'goto' => get_config('wwwroot') . '/artefact/resume/' . $tabs[$type] . '.php',
+    'goto' => get_config('wwwroot') . 'artefact/resume/' . $tabs[$type] . '.php',
 );
 $elements['compositetype'] = array(
     'type' => 'hidden',
