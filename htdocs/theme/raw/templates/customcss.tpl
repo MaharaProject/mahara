@@ -2,12 +2,6 @@ body,
 body#micro {
     background: {$data.background};
 }
-
-a, a:visited, a:link, a:active,
-a:hover, a:focus {
-    color: {$data.link};
-}
-
 h1,
 h2,
 h3,
@@ -16,16 +10,17 @@ h5,
 h6 {
    color: {$data.headings};
 }
-
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-    color: {$data.headings} !important;
+a,
+a:visited,
+a:link,
+a:active,
+a:hover,
+a:focus {
+    color: {$data.link};
 }
-
+.title a {
+    color: {$data.headings};
+}
 .r0,
 .r0 td,
 .d0,
@@ -34,49 +29,45 @@ h6 {
 .d1 {
     background-color: {$data.rowbg};
 }
-
-label,
-legend {
-    color: {$data.headings};
-}
-
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active,
-legend a:hover {
-    color: {$data.link} !important;
-}
-
-
-.icon,
 .linkbtn {
     color: {$data.link};
 }
-
-#languageselect label {
+#header-right label {
     color: {$data.backgroundfg};
 }
-
-#main-nav {
+#right-nav li a,
+#right-nav li.identity a {
+    color: {$data.backgroundfg};
+}
+#micro .viewtitle,
+#micro .collection-title {
+    color: {$data.backgroundfg};
+}
+.viewheadertop #mainnav-container #mainnav a,
+.viewheadertop #mainnav-container #mainnav a:link,
+.viewheadertop #mainnav-container #mainnav a:visited,
+.viewheadertop #mainnav-container #mainnav a:active,
+.viewheadertop #mainnav-container #mainnav a:hover {
+    color: {$data.backgroundfg};
+}
+.main-nav ul {
     background: {$data.navbg};
 }
-#main-nav li,
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active,
-#main-nav li a:hover {
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active,
+.main-nav li a:hover {
     color: {$data.navfg};
 }
-#main-nav li.selected a,
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active,
+.main-nav li.selected a:hover {
     color: {$data.subfg};
     background: {$data.subbg};
 }
-
 #sub-nav {
     background-color: {$data.subbg};
 }
@@ -87,66 +78,53 @@ legend a:hover {
 #sub-nav li a:hover {
     color: {$data.subfg};
 }
-
-div.sideblock {
+.main-nav .dropdown-sub li a,
+.main-nav .dropdown-sub li a:link,
+.main-nav .dropdown-sub li a:visited,
+.main-nav .dropdown-sub li a:active {
+    color: {$data.navfg} !important;
+    background: {$data.navbg} !important;
+}
+.main-nav .dropdown-sub li a:hover {
+    color: {$data.subfg} !important;
+    background: {$data.subbg} !important;
+}
+.sideblock {
     background-color: {$data.sidebarbg};
 }
-div.sideblock .sidebar-content {
+.sideblock .sidebar-content {
     background: {$data.sidebarfg};
 }
-div.sideblock h3,
-div.sideblock h3 a,
-div.sideblock h3 a:link,
-div.sideblock h3 a:visited,
-div.sideblock h3 a:active,
-div.sideblock h3 a:hover,
-div.sideblock #lastminutes {
+.sideblock h3,
+.sideblock h3 a,
+.sideblock h3 a:link,
+.sideblock h3 a:visited,
+.sideblock h3 a:active,
+.sideblock h3 a:hover,
+.sideblock #lastminutes {
     color: {$data.sidebarfg};
 }
-
-div.sideblock .sidebar-content a,
-div.sideblock .sidebar-content a:link,
-div.sideblock .sidebar-content a:visited,
-div.sideblock .sidebar-content a:active,
-div.sideblock .sidebar-content a:hover,
+.sideblock .sidebar-content a,
+.sideblock .sidebar-content a:link,
+.sideblock .sidebar-content a:visited,
+.sideblock .sidebar-content a:active,
+.sideblock .sidebar-content a:hover,
 #quota_used,
 #quota_total {
     color: {$data.sidebarlink};
 }
-
 #footer-wrap,
-#footernav,
-#footernav a,
-#footernav a:link,
-#footernav a:active,
-#footernav a:visited,
-#footernav a:hover,
-#performance-info,
-#performance-info span,
-#right-nav li a,
-#right-nav li.identity a,
-#version {
+#footer a,
+#footer a:link,
+#footer a:visited,
+#footer a:active,
+#footer a:hover {
     color: {$data.backgroundfg};
 }
-
-.viewheader .title,
-.viewheader a {
-    color: {$data.backgroundfg};
-}
-
-#main-nav .dropdown-sub li a,
-#main-nav .dropdown-sub li a:link,
-#main-nav .dropdown-sub li a:visited,
-#main-nav .dropdown-sub li a:active {
-    color: {$data.navfg} !important;
-    background: {$data.navbg} !important;
-}
-#main-nav .dropdown-sub li a:hover{
-    color: {$data.subfg} !important;
-    background: {$data.subbg} !important;
-}
-
-ul.colnav li a {
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
     color: {$data.navfg} !important;
     background: {$data.navbg} !important;
 }

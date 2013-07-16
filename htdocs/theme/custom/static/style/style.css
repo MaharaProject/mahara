@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2011-2013 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,16 @@
  *
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2012 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2011-2013 Catalyst IT Ltd http://catalyst.net.nz
  */
 
-/* General rules */
+/******************** Body ********************/
 body,
 body#micro {
     background: #182768;
 	color: #333333;
 }
-a, a:visited, a:link, a:active {
-    color: #d66800;
-    text-decoration: none;
-}
-a:hover, a:focus {
-    text-decoration: underline;
-}
+/******************** General headings ********************/
 h1,
 h2,
 h3,
@@ -41,174 +35,93 @@ h5,
 h6 {
     color: #182768;
 }
-.description,
-.unvalidated,
-.postdetails,
-.postedon {
-    color: #838383;
+/******************** General text ********************/
+a,
+a:visited,
+a:link,
+a:active {
+    color: #d66800;
+    text-decoration: none;
 }
-
-/**************************** Tables ****************************/
-.main-column thead th {
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+/* some common listing text styles */
+.title a {
+	color: #182768;
+}
+/******************** Tables ********************/
+thead th {
     color: #414141;
 	border-bottom: 1px solid #888888;
 }
-.main-column tbody th {
-    color: #414141;
-	border-bottom: none;
-}
-/* table with th border-bottom */
-#searchresults thead th,
-.filelist,
-.tag-results #results {
-	border-bottom: 1px solid #888888;
-}
-/* table with tfoot border-top */
-#searchresults tfoot td,
-#adminstitutionslist tfoot td,
-#profileicons tfoot td,
-#activitylist tfoot td {
-	border-top: 1px solid #888888;
-}
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-	color: #182768 !important;
-}
-.tablerenderer-loading {
-    border: 1px solid #888888;
-	background-color: #000000;
-    color: #FFFFFF;
-}
-/* table with th border-bottom */
-#searchresults thead th {
-	border-bottom: 1px solid #888888;
-}
-/* table with border-bottom */
-#searchresults tfoot td {
-	border-top: 1px solid #888888;
-}
-/* Alternative row background colours */
+/* Alternative row background */
 .r0,
 .r0 td,
-.d0,
-.friends {
-    background-color: #fff4ea;
+.d0 {
+    background-color: #FFF4EA;
+    border-bottom: 1px solid #FFFFFF;
 }
 .r1,
 .r1 td,
 .d1 {
-    background-color: #fff4ea;
+    background-color: #FFF4EA;
+    border-bottom: 1px solid #FFFFFF;
 }
-
-/**************************** Pagination ****************************/
-div.pagination a {
-	background-color: #ececec;
-	border: 0;
-}
-
-/**************************** Forms ****************************/
-/* Label */
-label {
-    color: #414141;
-}
-/* required */
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #c81511;
-}
-/* override required colour to normal colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-	color: #414141;
-}
-
-/* Legend */
-legend {
-	color: #414141;
-	font-size: 15px;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active,
-legend a:hover {
-	color: #d66800 !important;
-}
-
-/* Select */
-select {
-    border: 1px solid #d1d1d1;
-    padding: 2px;
-}
-
-/* Fieldset */
+/******************** Forms ********************/
+/* fieldset */
 fieldset {
-    border: 1px solid #d1d1d1;
+    border: 1px solid #D1D1D1;
 }
-
-
-/****************************** Buttons ****************************/
-/** input buttons **/
-.btn,
-input.submit,
-input.cancel,
-button,
-.buttondk,
-input.button,
-input.select,
-input#files_filebrowser_edit_artefact,
-ul.groupuserstatus li a {
-	background: #cfcfcf url(../images/btn-bkgd.png) repeat-x top;
-	border-color: #626262 #000000 #000000 #626262;
-	color: #000000 !important;
-}
-/** hover for buttons **/
-.btn:hover,
-input.submit:hover,
-input.cancel:hover,
-button:hover,
-.buttondk:hover,
-input.button:hover,
-input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-ul.groupuserstatus li a:hover {
-	background: #a7d9f5 url(../images/btn-bkgd-hover.png) repeat-x top;
-	border-color: #626262 #000000 #000000 #626262;
-	color: #000000;
-}
-/** Depress for buttons **/
-.btn:active,
-input.submit:active,
-input.cancel:active,
-button:active,
-.buttondk:active,
-input.button:active,
-input.select:active,
-input#files_filebrowser_edit_artefact:active,
-ul.groupuserstatus li a:active {
-	background: #a7d9f5 url(../images/btn-bkgd-hover.png) repeat-x 1px;
-	border-color: #000000 #626262 #626262 #000000;
-	color: #000000;
-}
-/* buttons that look like links with icons */
-.icon {
+/******************** Buttons ********************/
+/* buttons that look like links */
+.linkbtn {
 	color: #182768;
 }
-/* buttons that look like links */
-.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
-	color: #182768 !important;
-    text-decoration: none;
+/******************** Pagination ********************/
+div.pagination a {
+	background-color: #ECECEC;
 }
-/* links that need to look like buttons */
-span.btn a.icon, a span.icon {
-    color: #FFFFFF;
+/******************** Layout ********************/
+#header,
+#mainmiddle,
+#footer {
+    width: 95%;
 }
-
-/* Search buttons */
+.main-nav,
+#sub-nav {
+    max-width: 1280px;
+    min-width: 960px;
+    margin: 0 auto;
+    width: 95%;
+}
+#mainmiddlewrap {
+    background: none;
+}
+#mainmiddle {
+    background: #FFFFFF;
+}
+/******************** Header ********************/
+/* site logo */
+#site-logo {
+	margin: 10px 10px 10px 0;
+}
+/* header right */
+#header-right label {
+	color: #FFFFFF;
+}
+/* top navigation */
+#right-nav li a {
+	color: #FFFFFF;
+}
+#right-nav li.identity a {
+	color: #FFFFFF;
+  text-decoration: underline;
+}
+/* search */
 #usf {
-	background: #FFF;
+	background: #FFFFFF;
 }
 #usf_submit,
 #usf_submit:hover {
@@ -223,108 +136,69 @@ span.btn a.icon, a span.icon {
 	width: 23px;
 	margin-left: 0;
 }
-
-/**************************** Top of page elements ****************************/
-#container, #containerX {
-    width: 95%;
-    max-width: 1232px;
-}
-#loading-box {
-    background-color: #000000 !important;
-	color: #FFFFFF;
-}
-#site-logo {
-	margin: 10px 10px 10px 0;
-}
-#languageselect label {
-    color: #FFFFFF;
-}
-/* Search and language bar */
 #usf_query_container input {
     color: #888888;
 	width: 205px;
 	border-width: 1px;
 	border: #888888;
 }
-
-/**************** TOP NAVIGATION ****************/
-#right-nav li a,
-#right-nav li.identity a {
-  color: #FFFFFF;
+/******************** Small header ********************/
+#micro .viewtitle,
+#micro .collection-title {
+    color: #FFFFFF;
 }
-#right-nav li.selected a {
-  color: #fff;
-  text-decoration: underline;
+.viewheadertop #mainnav-container #mainnav a,
+.viewheadertop #mainnav-container #mainnav a:link,
+.viewheadertop #mainnav-container #mainnav a:visited,
+.viewheadertop #mainnav-container #mainnav a:active,
+.viewheadertop #mainnav-container #mainnav a:hover {
+    color: #FFFFFF;
 }
-
-#main-nav {
-	height: 32px;
-	background: #f6871f;
+/******************** Main navigation ********************/
+.main-nav ul {
+	background: #F6871F;
 	border-left: 2px solid #FFFFFF;
 	border-top: 2px solid #FFFFFF;
 	border-right: 2px solid #FFFFFF;
+    max-width: auto;
+    min-width: 0;
 }
-#main-nav li {
-    color: #FFFFFF;
-    text-decoration: none;
-    line-height: 32px;
-    font-weight: bold;
-	background-color: none;
-}
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	padding: 0px 15px;
-	background-color: none;
+.main-nav li {
     color: #FFFFFF;
 }
-#main-nav li a:hover {
-    text-decoration: underline;
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active {
+	background: none;
+    color: #FFFFFF;
+}
+.main-nav li a:hover {
 	background: none;
 }
-#main-nav li.selected a,
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active {
     color: #333333;
-	background: #fff4ea;
+	background: #FFF4EA;
 }
-/**************** SUB NAVIGATION ****************/
-#sub-nav {
-    padding: 0 0 12px 0;
-	line-height: 29px;
-    font-weight: bold;
-    text-align: left;
-    height: 29px;
+/******************** Sub navigation ********************/
+#sub-nav ul {
+    padding: 3px 0 12px 0;
+	background: #FFF4EA url(../images/subnav-bkgd.png) repeat-x bottom left;
 	border-left: 2px solid #FFFFFF;
 	border-top: 0;
 	border-right: 2px solid #FFFFFF;
 	border-bottom: 0;
-	background: #fff4ea url(../images/subnav-bkgd.png) repeat-x bottom left;
-}
-#sub-nav ul {
-	line-height: 29px;
-	padding: 0;
-	background: none;
-}
-#sub-nav li {
-    height: 29px;
-    margin: 0 !important;
+    max-width: auto;
+    min-width: 0;
 }
 #sub-nav li a,
 #sub-nav li a:link,
 #sub-nav li a:visited,
 #sub-nav li a:active {
     color: #14336F;
-	font-weight: normal;
-    padding: 0 10px;
-}
-#sub-nav li a:hover {
-    text-decoration: underline;
-}
-#sub-nav li.selected {
-	background: transparent;
 }
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
@@ -332,180 +206,83 @@ span.btn a.icon, a span.icon {
 #sub-nav li.selected a:active {
 	font-weight: bold;
 }
-
-/**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
-	height: 28px;
-	line-height: 28px;
+/******************** Dropdown sub navigation ********************/
+.main-nav .dropdown-sub {
+    border: 0;
 }
-ul.in-page-tabs li {
-  margin: 0 5px 0 0 !important;
+.main-nav .dropdown-sub li a,
+.main-nav .dropdown-sub li a:link,
+.main-nav .dropdown-sub li a:visited,
+.main-nav .dropdown-sub li a:active {
+    color: #FFFFFF;
+    background: #F6871F;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
+.main-nav .dropdown-sub li a:hover {
+    color: #1A428F;
+    background: #FFF4EA;
+}
+/******************** Tabs ********************/
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active,
 ul.in-page-tabs li input.linkbtn {
-  text-decoration: none;
-  background: none;
-  color: #d66800;
-	height: 28px;
-	line-height: 28px;
-    padding: 5px 10px;
+	color: #333333;
 }
-ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
-  color: #d66800;
-}
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
-ul.in-page-tabs li input.current-tab {
-  color: #000000;
-  background: #eeeeee;
-  border: 0;
-}
-
-.subpage {
-	border: 10px solid #eeeeee;
-	background: #FFFFFF;
-}
-
-/**************** MAIN CONTENT *****************/
-#mainmiddle {
-	background: #FFF;
-}
-
-/**************** SIDEBAR ******************/
+/******************** Sidebar ********************/
+/* general sidebar styles */
 #left-column,
 #right-column {
-	background: none;
     margin-top: 15px;
 }
-div.sideblock {
+.sideblock {
 	background: #182768 url(../images/sidebar-bottom.png) no-repeat bottom left;
     margin: 0 0 15px 0;
 	padding: 0 0 20px 0;
 	width: 240px;
 }
-div.sideblock .sidebar-header {
+.sideblock .sidebar-header {
 	background: transparent url(../images/sidebar-top.png) no-repeat top left;
 	padding: 10px 7px 5px 7px;
 }
-div.sideblock .sidebar-content {
+.sideblock .sidebar-content {
 	padding: 5px 7px 5px 7px;
-	background: #f1f2f8;
+	background: #F1F2F8;
 }
-div.sideblock h3 {
+.sideblock h3 {
 	color: #FFFFFF;
 }
-div.sideblock h3 a,
-div.sideblock h3 a:link,
-div.sideblock h3 a:visited,
-div.sideblock h3 a:active,
-div.sideblock h3 a:hover {
+.sideblock h3 a,
+.sideblock h3 a:link,
+.sideblock h3 a:visited,
+.sideblock h3 a:active,
+.sideblock h3 a:hover {
 	color: #FFFFFF;
 }
-div.sideblock #lastminutes {
+.sideblock #lastminutes {
 	color: #FFFFFF;
 }
-
-div.sideblock .sidebar-content a,
-div.sideblock .sidebar-content a:link,
-div.sideblock .sidebar-content a:visited,
-div.sideblock .sidebar-content a:active,
-div.sideblock .sidebar-content a:hover,
+.sideblock .sidebar-content a,
+.sideblock .sidebar-content a:link,
+.sideblock .sidebar-content a:visited,
+.sideblock .sidebar-content a:active,
+.sideblock .sidebar-content a:hover,
 #quota_used,
 #quota_total {
 	color: #182768;
 }
-
+/* Sidebar profile */
 #sb-profile .sidebar-header {
 	min-height:	57px;
 }
-#quota_message {
-	margin: 0;
-}
-
-/******************** FOOTER ****************************/
+/******************** Footer ********************/
 #footer-wrap {
-    border: 0;
-	padding: .5em 0 1.5em 0;
-  color: #FFFFFF;
+	color: #FFFFFF;
 }
 #footer a,
 #footer a:link,
-#footer a:active,
 #footer a:visited,
+#footer a:active,
 #footer a:hover {
     color: #FFFFFF;
-}
-
-/****************************** PAGE BY PAGE STYLES **********************************/
-/* Settings > Preferences */
-#accountprefs table h3 {
-	border-bottom: 1px dotted #888888
-}
-
-
-/* Home page info boxes */
-.home-info {
-    border: solid 2px #cccccc;
-    background: #eeeeee;
-}
-.home-info p.subtitle {
-    border-top: solid 1px #cccccc;
-    border-bottom: solid 1px #cccccc;
-}
-.home-info-table {
-	border: 0;
-}
-.viewheader a {
-	color: #FFF;
-}
-.viewheader .title {
-	color: #FFF;
-}
-
-
-#containerX #top-wrapper a,
-#containerX #top-wrapper a:hover,
-#containerX #top-wrapper a:active {
-	color: #ffffff;
-}
-
-/* collection */
-ul.colnav li a {
-	color: #FFF;
-	background: #F6871F;
-}
-
-/**************** DROPDOWN NAVIGATION ****************/
-#main-nav .dropdown-sub {
-    top: 32px;
-    font-size: .9167em;
-}
-#main-nav .dropdown-sub li {
-    line-height: normal;
-}
-#main-nav .dropdown-sub li a,
-#main-nav .dropdown-sub li a:link,
-#main-nav .dropdown-sub li a:visited,
-#main-nav .dropdown-sub li a:active {
-    color: #FFFFFF;
-    background: #f6871f;
-    padding: 6px 15px;
-    text-decoration: none;
-}
-#main-nav .dropdown-sub li a:hover {
-    color: #1A428F;
-    text-decoration: none;
-    background: #fff4ea;
-}
-
-
-.group-info {
-    border: 0;
-}
-
-.morelinkwrap {
-	text-transform: uppercase;
-	font-size: .9167em;
-}
-#allonline {
-	text-transform: uppercase;
 }

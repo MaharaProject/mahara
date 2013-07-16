@@ -30,6 +30,12 @@
 #files_filebrowser_agreement label {
     margin-left: -80px;
 }
+.fileuploadlicense {
+    margin-bottom: 10px;
+}
+.fileuploadlicense th {
+    padding-left: 0;
+}
 input#files_filebrowser_notice {
     margin: 2px 1px 0 0;
 }

@@ -93,7 +93,10 @@ ul.colnav li.selected span {
     border-bottom: 2px solid #D1D1D1;
     padding-bottom: 3px;
 }
-.blockinstance-header .title a {
+.blockinstance-header .title a,
+.blockinstance-header .title a:link,
+.blockinstance-header .title a:visited,
+.blockinstance-header .title a:active {
     text-decoration: none;
 }
 /******************** Configure blockinstance ********************/

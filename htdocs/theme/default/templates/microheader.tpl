@@ -6,20 +6,22 @@
 <!--[if (gt IE 9)|!(IE)]><!-->  <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}><!--<![endif]-->
 {include file="header/head.tpl"}
 <body id="micro" class="no-js">
-{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
-{if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
-{if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
-    <div id="containerX">
+{if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
+    {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
+    {if !$PRODUCTIONMODE}<div class="sitemessage center">{str tag=notproductionsite section=error}</div>{/if}
+    {if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
+    {if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
+{if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}</div>{/if}
+<div id="container">
     <div id="loading-box"></div>
-    <div id="top-wrapper">
+    <div id="top-wrapper"><div id="header">
         <h1 class="hidden"><a href="{$WWWROOT}">{$hiddenheading|default:"Mahara"|escape}</a></h1>
-    </div>
+    </div></div>
     <div id="mainmiddlewrap">
         <div id="mainmiddle">
             <div id="main-wrapper">
-            <div id="main-column" class="main-column">
-            <div id="main-column-container">
-            {dynamic}{insert_messages}{/dynamic}
-{if isset($PAGEHEADING)}
-                            <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
+                <div id="main-column" class="main-column">
+                    <div id="main-column-container">
+                        {dynamic}{insert_messages}{/dynamic}
+{if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
 {/if}

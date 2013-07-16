@@ -21,7 +21,8 @@
  */
 
 /******************** Body ********************/
-body, body#micro {
+body,
+body#micro {
     background: #0B1960 url(../images/bg.jpg) repeat-x top center;
 }
 /******************** General headings ********************/
@@ -34,11 +35,15 @@ h6 {
     color: #1A428F;
 }
 /******************** General text ********************/
-a, a:visited, a:link, a:active {
+a,
+a:visited,
+a:link,
+a:active {
     color: #024ac3;
     text-decoration: none;
 }
-a:hover, a:focus {
+a:hover,
+a:focus {
     text-decoration: underline;
 }
 /* some common listing text styles */
@@ -66,6 +71,7 @@ fieldset {
     border: 1px solid #14436F;
 }
 /******************** Buttons ********************/
+/* Buttons to override with colour */
 /* input buttons */
 tr.submitcancel input.submit,
 tr.submitcancel input.cancel,
@@ -94,7 +100,9 @@ input#instconf_artefactid_edit_cancel,
 #collectiondonewrap .btn:link,
 input#export_submit,
 #sitelicenses .btn,
-#adduser #adduser_submit {
+#adduser #adduser_submit,
+input#login_submit,
+.login-externallink a.btn {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
     border-color: #0b1962;
     color: #FFFFFF;
@@ -123,7 +131,9 @@ input#instconf_artefactid_edit_cancel:hover,
 #collectiondonewrap .btn:hover,
 input#export_submit:hover,
 #sitelicenses .btn:hover,
-#adduser #adduser_submit:hover {
+#adduser #adduser_submit:hover,
+input#login_submit:hover,
+.login-externallink a.btn:hover {
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
     border-color: #0b1962;
     color: #FFFFFF;
@@ -152,13 +162,15 @@ input#instconf_artefactid_edit_cancel:active,
 #collectiondonewrap .btn:active,
 input#export_submit:active,
 #sitelicenses .btn:active,
-#adduser #adduser_submit:active {
+#adduser #adduser_submit:active,
+input#login_submit:active,
+.login-externallink a.btn:active {
     background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
     border-color: #3C7FB1;
     color: #FFFFFF;
 }
 /* made to look like default grey buttons to match graphic icon buttons */
-input#subscribe_forum_submit,
+#forumslist input.btn-subscribe,
 input#addviews_submit,
 input#edituser_suspend_submit,
 input#friendscontrol_submit {
@@ -166,7 +178,7 @@ input#friendscontrol_submit {
     background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
     color: #333333;
 }
-input#subscribe_forum_submit:hover,
+#forumslist input.btn-subscribe:hover,
 input#addviews_submit:hover,
 input#edituser_suspend_submit:hover,
 input#friendscontrol_submit:hover {
@@ -174,7 +186,7 @@ input#friendscontrol_submit:hover {
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
 }
-input#subscribe_forum_submit:active,
+#forumslist input.btn-subscribe:active,
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
 input#friendscontrol_submit:active {
@@ -329,7 +341,7 @@ div.pagination a {
     background: #00084F;
     color: #FFFFFF;
 }
-#main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover {
     background: #1F97D5;
 }
 /******************** Tabs ********************/

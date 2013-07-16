@@ -6,7 +6,7 @@
 	<div id="footer-wrap">
 		<div id="footer">
             <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered_by_mahara_small.png'}" border="0" alt="Powered by Mahara"></a></div>
-			{mahara_performance_info}<div id="performance-info">performance</div>
+			{mahara_performance_info}
             <div class="cb"></div>
 		</div>
 	</div>

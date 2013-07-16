@@ -202,6 +202,7 @@ form#close_site {
 }
 #menuitemlist table #rownew td div {
     line-height: 2em;
+    white-space: nowrap;
 }
 #menuitemlist label {
     margin-right: 5px;
@@ -328,7 +329,7 @@ table.tablerenderer th.desc a {
     color: #CA0000;
 }
 #useraccountsettingsleft {
-    margin-left: 140px;
+    margin-left: 150px;
     margin-right: 260px;
 }
 #profilepict {
@@ -414,26 +415,23 @@ form#buttons table#suspendedlist {
 #adduser-t {
     width: 100%;
 }
-#adduser thead th {
-    font-size: 1.333em;
-    border-bottom: none;
-}
-#adduser td.step1 {
+#adduser .step1 {
     background: #F6F6F6;
     width: 30%;
-    padding: 10px 5px;
+    padding: 10px;
+    display: table-cell;
 }
-#adduser td.step1 table {
+#adduser .step1 table {
     margin-left: 20px;
 }
-#adduser td table th {
+#adduser table th {
     white-space: nowrap;
     padding-top: 8px;
 }
-#adduser td.step1 table th label {
+#adduser .step1 table th label {
     font-weight: normal;
 }
-#adduser td.step1 table input.text {
+#adduser .step1 table input.text {
     width: 90%;
 }
 #adduser #or {
@@ -443,33 +441,38 @@ form#buttons table#suspendedlist {
     font-size: 2em;
     text-transform: uppercase;
 }
-#adduser td.step1 #adduser_leap2afile {
+#adduser .step1 #adduser_leap2afile {
     margin-left: 25px;
 }
-#adduser td.filler {
+#adduser .filler {
     padding: 0 3px;
     font-size: 3.8em;
     width: 3%;
     color: #8D8D8D;
     vertical-align: middle;
     text-align: center;
+    display: table-cell;
 }
-#adduser td.step2 {
+#adduser .step2 {
     background: #F6F6F6;
     width: 36%;
-    padding: 5px;
+    padding: 10px;
+    display: table-cell;
 }
-#adduser td.step3 {
+#adduser .step3 {
     background: #EFEFEF;
     width: 25%;
-    text-align: center;
-    padding: 10px 5px;
+    padding: 10px;
+    display: table-cell;
 }
 #adduser #adduser_submit {
     font-size: 1.667em;
     font-weight: bold;
     padding: 5px 10px;
     margin-bottom: 10px;
+}
+#adduseroptions {
+    margin: 10px 0;
 }
 /* Users > Add users by CSV */
 ul.fieldslist li {

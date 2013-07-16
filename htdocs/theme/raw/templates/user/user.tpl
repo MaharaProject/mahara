@@ -1,4 +1,17 @@
 <div class="listrow {if $user->pending} pending{/if}">
+  <div class="peoplelistinfo">
+    <div class="leftdiv" id="friendinfo_{$user->id}">
+          <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
+    </div>
+
+    <div class="rightdiv">
+        <h3 class="title"><a href="{profile_url($user)}">{$user->display_name}</a>
+        {if $user->pending}
+          <span class="pendingfriend"> - {str tag='pending' section='group'}</span>
+        {elseif $user->friend && $page == 'find'}
+          <span class="existingfriend"> - {str tag='existingfriend' section='group'}</span>
+        {/if}
+        </h3>
 
     <ul class="actionlist">
       {if $user->institutions}<li class="notbtn">{$user->institutions|safe}</li>{/if}
@@ -49,19 +62,6 @@
       {/if}
     </ul>
 
-<div class="peoplelistinfo">
-    <div class="leftdiv" id="friendinfo_{$user->id}">
-          <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
-    </div>
- 
-    <div class="rightdiv">
-        <h3 class="title"><a href="{profile_url($user)}">{$user->display_name}</a>
-        {if $user->pending}
-          <span class="pendingfriend"> - {str tag='pending' section='group'}</span>
-        {elseif $user->friend && $page == 'find'}
-          <span class="existingfriend"> - {str tag='existingfriend' section='group'}</span>
-        {/if}
-        </h3>
       {if $user->introduction}<div class="detail">{$user->introduction|str_shorten_html:100:true|safe}</div>{/if}
       {if $user->friend && $page == 'myfriends' && $user->views}
         <ul class="viewlist">

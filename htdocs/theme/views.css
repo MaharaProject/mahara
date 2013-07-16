@@ -69,6 +69,7 @@ ul.colnav li.selected span {
 }
 .viewrbuttons {
     float: right;
+    margin-top: 10px;
 }
 /* page footer */
 .viewfooter {
@@ -206,7 +207,7 @@ ul.colnav li.selected span {
     margin: 0;
 }
 #blocktype-list li {
-    display: table-cell;
+    display: inline-block;
     vertical-align: top;
     text-align: center;
     padding: 10px 5px;
@@ -351,6 +352,9 @@ div.blockinstance-header .arrow {
     margin-bottom: 3px;
 }
 /* block content */
+.blockinstance-content {
+    overflow-x: hidden;
+}
 .blockinstance-content .shortcut {
     padding: 5px;
     background: #EEEEEE;

@@ -7,12 +7,15 @@
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
 <body id="micro" class="no-js">
-{if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
-{if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
-{if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
-<div id="containerX">
+{if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
+    {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
+    {if !$PRODUCTIONMODE}<div class="sitemessage center">{str tag=notproductionsite section=error}</div>{/if}
+    {if $SITECLOSED}<div class="sitemessage center">{if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}</div>{/if}
+    {if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
+{if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}</div>{/if}
+<div id="container">
     <div id="loading-box"></div>
-    <div id="top-wrapper">
+    <div id="top-wrapper"><div id="header">
       <div class="viewheadertop">
         <div class="fr links">
           {if $microheaderlinks}
@@ -20,7 +23,7 @@
               <a class="btn" href="{$item.url}">{$item.name}</a>
             {/foreach}
           {/if}
-          <a class="btn nojs-hidden-inline" href="javascript:history.back()">{str tag=back}</a>
+          <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>
         </div>
         <div class="fl">
           <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename='images/site-logo-small.png'}" alt="{$sitename}"></a>
@@ -51,15 +54,15 @@
 {if $collection}
         <div id="collection"><h1 class="collection-title">{$microheadertitle|safe}<span class="rd-coltab"></span></h1>{include file=collectionnav.tpl}<div class="cb"></div></div>
 {else}
-        <h1 class="center title">{$microheadertitle|safe}</h1>
+        <h1 class="center viewtitle">{$microheadertitle|safe}</h1>
 {/if}
         <div class="cb"></div>
       </div>
-    </div>
+    </div></div>
     <div class="cb"></div>
   <div id="mainmiddlewrap">
-  <div id="mainmiddle">
-    <div id="main-wrapper">
-        <div class="main-column">
-            <div id="main-column-container">
-            {dynamic}{insert_messages}{/dynamic}
+    <div id="mainmiddle">
+      <div id="main-wrapper">
+          <div class="main-column">
+              <div id="main-column-container">
+              {dynamic}{insert_messages}{/dynamic}

@@ -25,7 +25,6 @@ button {
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
 #container,
-#containerX,
 .sitemessage,
 #switchwrap {  /* Use a 12px base font size with a 16px line height */
     font-size: 0.75em; /* 16px x .75 = 12px */
@@ -404,7 +403,8 @@ thead th {
 .expiry th,
 .bytes th,
 .date th,
-.password th {
+.password th,
+.multitext th {
     padding-top: 8px;
 }
 td {
@@ -511,14 +511,10 @@ form {
 }
 /* resizable textbox */
 div.grippie {
-    border-top: 0;
-    border-right: 1px solid #DBDFE6;
-    border-bottom: 1px solid #E3E9EF;
-    border-left: 1px solid #E2E3EA;
     background: #EEEEEE url(../images/grippie.png) no-repeat scroll 100% 50%;
     cursor: s-resize;
     height: 14px;
-    padding: 3px 0 0 3px;
+    padding: 3px 0 0 0;
 }
 /* label */
 label {
@@ -1214,6 +1210,7 @@ div.rel {
 }
 #usf_submit {
     margin: 0 0 0 3px;
+    padding: 5px 5px 4px 5px;
 }
 /******************** Small header ********************/
 #micro #header {
@@ -2140,6 +2137,9 @@ tr.incomplete td {
     border-radius: 5px;
     padding: 3px 10px;
 }
+#copyview #searchowners {
+    white-space: nowrap;
+}
 #templatesearch_table tbody td.right {
     white-space: nowrap;
 }
@@ -2461,8 +2461,9 @@ form#search {
     margin: 5px 10px 0 0;
 }
 #search_advanced_container #search_share_container .checkboxes-option {
-    display: inline;
+    display: inline-block;
     margin-right: 25px;
+    white-space: nowrap;
 }
 #sharedviewlist .groupdate {
     margin: 3px 0;
@@ -2595,7 +2596,7 @@ ul.groupuserstatus li table td {
 }
 /* overriding group statuses for listing page */
 .listing ul.groupuserstatus {
-    margin: 3px 0;
+    margin: 0 0 5px 0;
     width: 180px;
     float: right;
     background: none;
@@ -2644,7 +2645,7 @@ ul.groupuserstatus li.admincontrol {
 }
 /* status invite */
 ul.groupuserstatus li.invite form {
-    margin-top: 5px;
+    margin: 5px 0;
     float: right;
 }
 ul.groupuserstatus li.invite span {
@@ -2671,7 +2672,9 @@ ul.groupuserstatus li.jointhisgroup form {
     display: inline-block;
     margin: 0;
 }
-ul.groupuserstatus li.jointhisgroup table td input {
+ul.groupuserstatus li.jointhisgroup table td input,
+ul.groupuserstatus li.jointhisgroup table td input:hover,
+ul.groupuserstatus li.jointhisgroup table td input:active {
     background: url(../images/join_small.png) no-repeat 0 50%;
     border: 0;
     padding: 0 0 0 15px;
@@ -2894,15 +2897,14 @@ form#search #search_query {
 /* Groups > My/Find Friends */
 div.peoplelistinfo {
     margin-left: 50px;
-    margin-right: 210px;
 }
 div.peoplelistinfo .leftdiv {
     float: left;
     width: 50px;
     margin-left: -50px;
 }
-div.peoplelistinfo .rightdiv {
-    float: left;
+div.peoplelistinfo .rightdiv .detail {
+    margin-right: 210px;
 }
 .pendingfriend,
 .existingfriend {
@@ -2920,6 +2922,7 @@ div.peoplelistinfo .rightdiv {
 /* page list */
 ul.viewlist {
     margin: 0;
+    margin-right: 210px;
 }
 ul.viewlist li {
     display: inline;
@@ -3095,6 +3098,9 @@ form#requestfriendship {
 }
 #accountprefs table tr.radio td {
     line-height: 2em;
+}
+#accountprefs_mobileuploadtoken_list div {
+    margin-bottom: 3px;
 }
 /* Settings > Delete account page */
 #deleteaccount {

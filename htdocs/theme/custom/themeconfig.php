@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2011 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2011-2013 Catalyst IT Ltd and others; see:
  *                    http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify

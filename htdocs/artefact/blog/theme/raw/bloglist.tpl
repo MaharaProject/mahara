@@ -1,5 +1,6 @@
 {foreach from=$blogs->data item=blog}
     <div class="{cycle name=rows values='r0,r1'} listrow">
+            <h3 class="title"><a href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">{$blog->title}</a></h3>
             <div class="fr nowrap">
                 <span class="entries"><a href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">{str tag=nposts section=artefact.blog arg1=$blog->postcount}</a></span>
                 <span class="newentry"><a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn">{str tag=addpost section=artefact.blog}</a></span>
@@ -12,7 +13,6 @@
                     {/if}
                 </span>
             </div>
-            <h3 class="title"><a href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">{$blog->title}</a></h3>
             <div id="blogdesc">{$blog->description|clean_html|safe}</div>
             <div class="cb"></div>
     </div>

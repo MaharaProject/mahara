@@ -1,8 +1,8 @@
 {if $views}
-  <table class="viewlist fullwidth">
+  <div class="viewlist fullwidth listing">
   {foreach from=$views item=view}
-    <tr class="{cycle values='r0,r1'}">
-            <td><h3 class="title"><a href="{$view.fullurl}">{$view.title}</a></h3>
+    <div class="{cycle values='r0,r1'} listrow">
+            <h3 class="title"><a href="{$view.fullurl}">{$view.title}</a></h3>
             <div class="detail">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
             {if $view.sharedby}
             <div class="groupuserdate">
@@ -18,10 +18,9 @@
                   {$view.mtime|strtotime|format_date:'strftimedate'}</span>
             </div>
             {/if}
-            </td>
-        </tr>
+        </div>
   {/foreach}
-  </table>
+  </div>
 {else}
   {str tag=noviews section=view}
 {/if}

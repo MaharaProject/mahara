@@ -1,28 +1,28 @@
-
-/********************** Top pane of Edit View *************************/
+/**
+ * Views stylesheet - for Custom theme.
+ *
+ * Copyright (C) 2011-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */
+/******************** Collection navigation ********************/
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+	color: #FFFFFF;
+	background: #F6871F;
+}
+/******************** Top pane of edit page ********************/
 #top-pane {
     background: #565656;
 }
-#page #bottom-pane {
-    background-color: #acacac;
-}
-#middle-pane label {
-	color: #FFFFFF;
-}
-/* The tabs that allow you to select a blocktype category */
-#category-list ul {
-	height: 28px;
-	line-height: 28px;
-}
+/******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
     background: none;
-	color: #d5d5d5;
-	padding: 0 15px;
-	height: 28px;
-	line-height: 28px;
+	color: #D5D5D5;
 }
 #category-list li a:hover {
 	text-decoration: underline;
@@ -31,103 +31,24 @@
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-    background-color: #2e2e2e;
+    background-color: #2E2E2E;
 	color: #FFFFFF;
 }
-
-/* The panel that contains the blocktype icons */
+/******************** Blocktype icons panel ********************/
 #blocktype-list {
-  color: #FFF !important;
-  background-color: #2e2e2e;
-  border: 0;
-}
-#blocktype-list .blocktype h4 {
-    color: #FFFFFF;
-}
-.blocktype-description {
-    color: #FFFFFF;
-}
-#middle-pane {
-	background: #1c1c1c;
-  color: #FFF;
-}
-
-/********************** Blockinstance ***********************************/
-/* header*/
-.blockinstance-header h4 {
-    border-bottom: 2px solid #d2d2d2;
-	font-size: 15px !important;
-}
-
-/* Wall */
-.wallpost {
-    background-color: #f4f4f4;
-}
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-    font-weight: bold;
-    font-size: 12px !important;
-    padding-left: 1em !important;
-    background: none;
-}
-ul.artefactchooser-tabs li {
-    margin: 0 3px 0 0 !important;
-    color: #FFF !important;
-}
-ul.artefactchooser-tabs li a,
-ul.artefactchooser-tabs li a:link,
-ul.artefactchooser-tabs li a:visited,
-ul.artefactchooser-tabs li a:active {
-    color: #FFF !important;
-    background: #acacac;
-}
-ul.artefactchooser-tabs li.current a,
-ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
-ul.artefactchooser-tabs li.current a:active {
-    color: #000 !important;
-    background: #e9e9e9;
-	border-bottom: 0;
-}
-ul.artefactchooser-subtabs li {
-  padding: 0;
-  margin: 0 3px 0 0 !important;
-  border-right: 0;
-}
-ul.artefactchooser-subtabs li a,
-ul.artefactchooser-subtabs li a:link,
-ul.artefactchooser-subtabs li a:visited,
-ul.artefactchooser-subtabs li a:active {
-  text-decoration: none;
-  padding: 3px 5px;
-}
-ul.artefactchooser-subtabs li a:hover {
-	text-decoration: none;
-}
-ul.artefactchooser-subtabs li.current a,
-ul.artefactchooser-subtabs li.current a:link,
-ul.artefactchooser-subtabs li.current a:visited,
-ul.artefactchooser-subtabs li.current a:active {
-  color: #333;
-  font-weight: bold;
-}
-ul.artefactchooser-subtabs li.current a:hover {
-	text-decoration: none;
-}
-
-#artefactchooser-body {
-    background: #e9e9e9;
+	color: #FFFFFF;
+	background-color: #2E2E2E;
 	border: 0;
 }
-
-
-
-#collection {
-	color: #FFF;
+.blocktype-title {
+	color: #FFFFFF;
 }
-#collection .collection-title {
-    color: #FFF;
+/******************** Blocktype name & description panel ********************/
+#middle-pane {
+	background: #1C1C1C;
+	color: #FFFFFF;
 }
-ul.colnav li a {
-	background: #565656;
+/******************** Bottom pane of edit page ********************/
+#page #bottom-pane {
+    background-color: #ACACAC;
 }

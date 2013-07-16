@@ -40,7 +40,7 @@ ul.colnav li a:active {
 }
 /******************** Blocktype icons panel ********************/
 #blocktype-list {
-    color: #1D499F !important;
+    color: #1D499F;
     background-color: #f4f7f9;
     border: 0;
 }

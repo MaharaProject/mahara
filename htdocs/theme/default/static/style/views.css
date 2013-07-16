@@ -1,12 +1,25 @@
-/*  Views  */
-#page #bottom-pane {
-	background-color: #F3F7EC;
+/**
+ * Views stylesheet - for Mahara's Aqua theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */ 
+/******************** Collection navigation ********************/
+/* Collections */
+#collectionnavwrap {
+	background: #F3F7EC;
 }
-/* The tabs that allow you to select a blocktype category */
-#category-list ul {
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+    background: #d6e0c5;
+}
+/******************** Top pane of edit page ********************/
+#top-pane {
     background: #F3F7EC;
-    padding-left: 10px;
 }
+/******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
@@ -31,196 +44,47 @@
     border-right: 1px solid #e0e8ee;
     border-bottom: 0;
 }
-.ie7 #category-list li a, .ie7 #category-list li.current a {
-    border: 0 !important;
-}
-
-/* The panel that contains the blocktype icons */
+/******************** Blocktype icons panel ********************/
 #blocktype-list {
     background-color: #f5f9fc;
 }
-#blocktype-list li {
-    display: inline-block;
-    float: left;
-}
-.no-js #blocktype-list li {
-    min-height: 160px;
-}
+/******************** Blocktype name & description panel ********************/
 #middle-pane {
 	background: #ddebf5;
 }
-/* header*/
-.blockinstance-header h4 {
-    border-bottom: 2px solid #d2d2d2;
+/******************** Bottom pane of edit page ********************/
+#page #bottom-pane {
+	background-color: #F3F7EC;
 }
-.blockinstance-header h4 a,
-.blockinstance-header h4 a:link,
-.blockinstance-header h4 a:visited,
-.blockinstance-header h4 a:active {
-    text-decoration: none;
+/******************** Blocks ********************/
+.blockinstance-header .title a,
+.blockinstance-header .title a:link,
+.blockinstance-header .title a:visited,
+.blockinstance-header .title a:active {
 	color: #1E6297;
 }
-.blockinstance-header h4 a:hover {
+.blockinstance-header .title a:hover {
 	color: #267bbd;
+    text-decoration: none;
 }
-
-.blockinstance-content h3 {
-	color: #333;
-}
-.blockinstance-content fieldset table th {
-	color: #888;
-}
-
-
-/* Wall */
-.wallpost {
-    background-color: #F8FBFD;
-}
-
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-    font-weight: bold;
-    background: #d1d1d1 url(../images/tabs.gif) repeat-x left top;
-    padding-left: 10px !important;
-}
-ul.artefactchooser-tabs li {
-    color: #1E6297 !important;
-}
-ul.artefactchooser-tabs li a,
-ul.artefactchooser-tabs li a:link,
-ul.artefactchooser-tabs li a:visited,
-ul.artefactchooser-tabs li a:active {
-    background: #d1d1d1 url(../images/tabs.gif) repeat-x left top;
-    color: #474220 !important;
-    border-left: 1px solid #FFFFFF;
-    border-top: 0;
-    border-right: 1px solid #d1d1d1;
-    border-bottom: 1px solid #d1d1d1;
-}
-ul.artefactchooser-tabs li a:hover {
-    color: #7E7327 !important;
-}
-ul.artefactchooser-tabs li.current a,
-ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited
-ul.artefactchooser-tabs li.current a:active {
-    background: #FFFFFF url(../images/tabs-active.gif) repeat-x left top;
-    color: #1E6297 !important;
-    border-left: 1px solid #FFFFFF;
-    border-top: 0;
-    border-right: 1px solid #d1d1d1;
-    border-bottom: 1px solid #FFFFFF;
-}
-ul.artefactchooser-subtabs {
-  padding: 0 !important;
-}
-ul.artefactchooser-subtabs li {
-  padding: 0;
-  margin: 0 3px !important;
-}
-ul.artefactchooser-subtabs li a,
-ul.artefactchooser-subtabs li a:link,
-ul.artefactchooser-subtabs li a:visited,
-ul.artefactchooser-subtabs li a:active {
-  text-decoration: none;
-  padding: 3px 5px;
-  font-weight: bold;
-}
-ul.artefactchooser-subtabs li a:hover {
-	text-decoration: none;
-}
-ul.artefactchooser-subtabs li.current a,
-ul.artefactchooser-subtabs li.current a:link,
-ul.artefactchooser-subtabs li.current a:visited,
-ul.artefactchooser-subtabs li.current a:active {
-  color: #333;
-  font-weight: bold;
-}
-ul.artefactchooser-subtabs li.current a:hover {
-	text-decoration: none;
-}
-
-/* table */
-.maharatable thead th {
-    color: #186194;
-}
-
-
-.plan_incomplete td {
-	background: #e9f0f5;
-}
-
-/* View Page footer menu */
-.feedback {
-	background: url(../images/feedback.gif) no-repeat left top;
-	padding-left: 20px !important;
-}
-.objection {
-	background: url(../images/objectionable.gif) no-repeat left top;
-	padding-left: 20px !important;
-}
-.print {
-	background: url(../images/icon-print.gif) no-repeat left top;
-	padding-left: 20px !important;
-}
-.watchlist {
-	background: url(../images/watchlist.gif) no-repeat left top;
-	padding-left: 20px !important;
-}
-
-/* Collection navigation */
-ul.colnav li a {
-	background: #d6e0c5;
-}
-
-.blockinstance-content .groupviewsection h5 {
-	color: #333;
-}
-
-/* copy a page */
-#copyview .searchquery {
-	background-color: #EBF0F4;
-	border: 0;
-}
-/******************** RESPONSIVE DESIGN ************************/
-/* responsive design */
-#page #category-list h3.rd-edittab-title {
+/******************** Responsive design ********************/
+/* responsive blocktype tabs */
+#category-list .rd-edittab-title {
     display: none;
 }
-#page .rd-navmenu #category-list h3.rd-edittab-title {
+.rd-navmenu #category-list .rd-edittab-title {
     background: #F5F9FC;
-    border: 0;
     padding: 9px;
     margin: 0;
     display: block;
 }
-#page .rd-navmenu #category-list ul {
-    display: none;
-}
-#page .rd-navmenu .edittab-expand ul {
-    display: block !important;
-    padding: 0;
-}
-#page .rd-navmenu #category-list li {
-    float: none;
-    margin: 0;
-    text-align: left;
-    border: 0;
-    border-top: 1px solid #FFFFFF;
-    display: block;
-}
-#page .rd-navmenu #category-list li a {
-    padding: 10px;
-    display: block;
-    border: 0;
-}
-#page .rd-navmenu h3.rd-edittab-title .rd-edittab {
+.rd-navmenu .rd-edittab-title .rd-edittab {
     display: block;
     background: #1E6297 url(../images/collapse-arrows.png) no-repeat 2px -37px;
     padding: 9px;
     position: absolute;
-    right: 7px;
-    top: 7px;
+    right: 9px;
+    top: 10px;
     z-index: 1;
     border: 1px solid #1E6297;
     -webkit-border-radius: 2px;
@@ -228,56 +92,55 @@ ul.colnav li a {
     border-radius: 2px;
     cursor: pointer;
 }
-#page .edittab-expand h3.rd-edittab-title .rd-edittab {
+.edittab-expand .rd-edittab-title .rd-edittab {
     background: #1E6297 url(../images/collapse-arrows.png) no-repeat 3px 5px;
 }
-/* for 950px or less */
-@media screen and (max-width: 950px) {
-    .columns4,  .columns5 {
-        width: 31% !important;
-    }
-    .blockinstance-content {
-        overflow-x: hidden;
-    }
+.rd-navmenu #category-list ul {
+    display: none;
 }
-/* for 768px or less */
-@media screen and (max-width: 768px) {
-    .columns3,  .columns4,  .columns5 {
-        width: 48% !important;
-    }
+.rd-navmenu #category-list.edittab-expand ul {
+    display: block;
 }
-/* for 600px or less */
+.rd-navmenu #category-list li {
+    float: none;
+    margin: 0;
+    text-align: left;
+    border: 0;
+    border-top: 1px solid #FFFFFF;
+    display: block;
+    font-size: 1.167em;
+}
+.rd-navmenu #category-list li a,
+.rd-navmenu #category-list li a:link,
+.rd-navmenu #category-list li a:visited,
+.rd-navmenu #category-list li a:active {
+    padding: 10px;
+    display: block;
+    border: 0;
+}
+.rd-navmenu #category-list li a:hover {
+	background: #e4ecd6;
+}
+.rd-navmenu #category-list li.current a,
+.rd-navmenu #category-list li.current a:link,
+.rd-navmenu #category-list li.current a:visited,
+.rd-navmenu #category-list li.current a:active {
+    border: 0;
+    background: #1E6297;
+    color: #FFFFFF;
+}
+/* js fallback for 600px or less */
 @media screen and (max-width: 600px) {
-    .blockinstance.configure {
-        width: 80% !important;
-        left: 5% !important;
-    }
-    .filelist thead {
-        display: none;
-    }
-    .filelist .btn-edit {
-        display: none;
-    }
-
-    body.no-js #category-list ul {
-        display: block !important;
-        padding: 0;
-    }
-    body.no-js #category-list li {
-        float: none;
+    #category-list .rd-edittab-title {
+        background: #F5F9FC;
+        padding: 9px;
         margin: 0;
-        text-align: left;
-        border: 0;
-        border-top: 1px solid #FFFFFF;
         display: block;
+        position: relative;
     }
-    body.no-js #category-list li a {
-        padding: 10px;
+    .rd-edittab-title .rd-edittab {
         display: block;
-        border: 0 !important;
-    }
-    body.no-js h3.rd-edittab-title .rd-edittab {
-        display: block;
+    	background: #1E6297 url(../images/collapse-arrows.png) no-repeat 3px 5px;
         padding: 9px;
         position: absolute;
         right: 7px;
@@ -288,40 +151,84 @@ ul.colnav li a {
         -moz-border-radius: 2px;
         border-radius: 2px;
         cursor: pointer;
-        background: #1E6297 url(../images/collapse-arrows.png) no-repeat 3px 5px;
+    }
+    #category-list li {
+        float: none;
+        margin: 0;
+        text-align: left;
+        border: 0;
+        border-top: 1px solid #FFFFFF;
+        display: block;
+        font-size: 1.167em;
+    }
+    #category-list li a,
+    #category-list li a:link,
+    #category-list li a:visited,
+    #category-list li a:active {
+        padding: 10px;
+        display: block;
+        border: 0;
+        border-top: 1px solid #FFFFFF;
+    }
+    #category-list li a:hover {
+        background: #e4ecd6;
+    }
+    #category-list li.current a,
+    #category-list li.current a:link,
+    #category-list li.current a:visited,
+    #category-list li.current a:active {
+        border: 0;
+        background: #1E6297;
+        color: #FFFFFF;
+    }
+}
+/* for 950px or less */
+@media screen and (max-width: 950px) {
+    .columns4,
+    .columns5 {
+        width: 31% !important;
+    }
+}
+/* for 768px or less */
+@media screen and (max-width: 768px) {
+    .columns3,
+    .columns4,
+    .columns5 {
+        width: 48% !important;
+    }
+    .blockinstance.configure {
+        width: 80% !important;
+        left: 5% !important;
+    }
+}
+/* for 600px or less */
+@media screen and (max-width: 600px) {
+    .column {
+        width: 98% !important;
+        padding: 0 0.9% 3px 0.9%;
+        float: none;
     }
 }
 /* for 540px or less */
 @media screen and (max-width: 540px) {
-    .column {
-        width: 98% !important;
-        padding: 0 1% 3px 1%;
-        float: none;
-    }
-    .blockinstance {
-        margin: 0 0 10px 0;
-    }
-    #viewmenu {
-        font-size: 1em;
-    }
-    #toggle_watchlist_link, #print_link, #objection_link {
+    #toggle_watchlist_link,
+    #print_link,
+    #objection_link {
         display: none;
     }
     #middle-pane #themeselect {
         float: none;
         text-align: center;
     }
-    #feedbacktable .commentleft {
-        float: none;
+    /* Latest forum posts block (on groups page) */
+    #latestforumposts td {
+        float: left;
         width: 98%;
-        padding: 3px 1%;
+        padding: 3px 0.9% 0 0.9%;
+        border-bottom: 0;
     }
-    #feedbacktable .commentrightwrap {
-        margin-left: 1%;
-    }
-    #feedbacktable .icon {
-    }
-    #feedbacktable .undercomment {
-        margin-left: 1%;
+    #latestforumposts td.right {
+        text-align: left;
+        padding: 0 0.9% 3px 0.9%;
     }
 }
