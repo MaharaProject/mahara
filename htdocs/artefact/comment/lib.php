@@ -993,19 +993,24 @@ function add_feedback_form_submit(Pieform $form, $values) {
     }
 
     if ($author = $USER->get('id')) {
+        $anonymous = false;
         $data->author = $author;
     }
     else {
+        $anonymous = true;
         $data->authorname = $values['authorname'];
     }
 
     if (isset($values['moderate']) && $values['ispublic'] && !$USER->can_edit_view($view)) {
         $data->private = 1;
         $data->requestpublic = 'author';
+        $moderated = true;
     }
     else {
         $data->private = (int) !$values['ispublic'];
+        $moderated = false;
     }
+    $private = $data->private;
 
     if (get_config('licensemetadata')) {
         $data->license       = $values['license'];
@@ -1124,8 +1129,21 @@ function add_feedback_form_submit(Pieform $form, $values) {
 
     $newlist = ArtefactTypeComment::get_comments(10, 0, 'last', $view, $artefact);
 
+    // If you're anonymous and your message is moderated or private, then you won't
+    // be able to tell what happened to it. So we'll provide some more explanation in
+    // the feedback message.
+    if ($anonymous && $moderated) {
+        $message = get_string('feedbacksubmittedmoderatedanon', 'artefact.comment');
+    }
+    else if ($anonymous && $private) {
+        $message = get_string('feedbacksubmittedprivateanon', 'artefact.comment');
+    }
+    else {
+        $message = get_string('feedbacksubmitted', 'artefact.comment');
+    }
+
     $form->reply(PIEFORM_OK, array(
-        'message' => get_string('feedbacksubmitted', 'artefact.comment'),
+        'message' => $message,
         'goto' => $goto,
         'data' => $newlist,
     ));
