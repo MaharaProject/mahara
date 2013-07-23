@@ -211,9 +211,8 @@ function changeauth_submit(Pieform $form, $values) {
             if ($user->authinstance != $values['authinstance']) {
                 // Authinstance can be changed by institutional admins if both the
                 // old and new authinstances belong to the admin's institutions
-                $authinst = get_records_select_assoc('auth_instance', 'id = ?',
-                                                     array($user->authinstance));
-                if ($USER->get('admin') || $USER->is_institutional_admin($authinst[$user->authinstance]->institution)) {
+                $authinst = get_field('auth_instance', 'institution', 'id', $user->authinstance);
+                if ($USER->get('admin') || $USER->is_institutional_admin($authinst)) {
                     // determine the current remoteusername
                     $current_remotename = get_field('auth_remote_user', 'remoteusername',
                                                     'authinstance', $user->authinstance, 'localusr', $user->id);
@@ -221,10 +220,7 @@ function changeauth_submit(Pieform $form, $values) {
                         $current_remotename = $user->username;
                     }
                     // remove row if new authinstance row already exists to avoid doubleups
-                    if ($remoteuserexists = get_records_select_assoc('auth_remote_user', 'localusr = ? AND authinstance = ?',
-                                                                     array($user->id, $values['authinstance']))) {
-                        delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
-                    }
+                    delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
                     insert_record('auth_remote_user', (object) array(
                         'authinstance'   => $values['authinstance'],
                         'remoteusername' => $current_remotename,
