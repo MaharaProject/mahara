@@ -1,3 +1,16 @@
+1.5.11 (2013-07-24)
+- Bug #1177187: Program code error when create new rss feed in mahara
+- Bug #1132660: "invite user to group" form on user profile page throws headdata error
+- Bug #1166879: Multiple blogs parameter uncheck when profile is updated
+- Bug #1171310: Can bypass comment moderation by editing a comment
+- Bug #1180194: Changing the auth method requires info about remoteuser getting lost
+- Bug #1180243: Installation hangs on "Mahara requires InnoDB tables" for MySql 5.6
+- Bug #1191453: Don't show password in cleartext
+- Bug #1055239: ClamAV doesn't support scanning multifile uploads
+- Bug #1132370: Remove create_function() from dml.php to save memory
+- Bug #1150831: Trailing slash missing in directory URL
+- 
+
 1.5.10 (2013-05-02)
 - Bug #1171714: Bug that can cause RSS feeds to be randomly copied between users
 - Bug #1016253: Don't include RSS block passwords in Leap2A archives
