@@ -1652,9 +1652,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);
                 $child->title = $child->hovertitle = $c->get('title');
-                if (!empty($options['simpledisplay'])) {
-                    $child->title = str_shorten_text($child->title, 20);
-                }
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
             }
