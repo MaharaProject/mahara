@@ -149,6 +149,7 @@ class ArtefactTypeComment extends ArtefactType {
     protected $deletedby;
     protected $requestpublic;
     protected $rating;
+    protected $lastcontentupdate;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -160,6 +161,23 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
         }
+    }
+
+
+    /**
+     * For comments, the artefact.mtime property is displayed to users, as the "Update on" date,
+     * if it is later than the artefact's creation time. The purpose of this is for transparency
+     * in communication, so that people will know that a later comment may be in response to one
+     * that no longer exists.
+     *
+     * So, we don't want the publishing
+     * @see ArtefactType::set()
+     */
+    public function set($field, $value) {
+        if (($field == 'title' || $field == 'description') && $this->{$field} != $value) {
+            $this->lastcontentupdate = $this->mtime;
+        }
+        return parent::set($field, $value);
     }
 
     public function commit() {
@@ -182,6 +200,9 @@ class ArtefactTypeComment extends ArtefactType {
             'requestpublic' => $this->get('requestpublic'),
             'rating'        => $this->get('rating'),
         );
+        if ($this->get('lastcontentupdate')) {
+            $data->lastcontentupdate = db_format_timestamp($this->get('lastcontentupdate'));
+        }
 
         if ($new) {
             insert_record('artefact_comment_comment', $data);
@@ -340,7 +361,7 @@ class ArtefactTypeComment extends ArtefactType {
             $comments = get_records_sql_assoc('
                 SELECT
                     a.id, a.author, a.authorname, a.ctime, a.mtime, a.description, a.group,
-                    c.private, c.deletedby, c.requestpublic, c.rating,
+                    c.private, c.deletedby, c.requestpublic, c.rating, c.lastcontentupdate,
                     u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff, u.admin,
                     u.deleted, u.profileicon, u.urlid
                 FROM {artefact} a
@@ -425,8 +446,8 @@ class ArtefactTypeComment extends ArtefactType {
         foreach ($data->data as &$item) {
             $item->ts = strtotime($item->ctime);
             $item->date = format_date($item->ts, 'strftimedatetime');
-            if ($item->ts < strtotime($item->mtime)) {
-                $item->updated = format_date(strtotime($item->mtime), 'strftimedatetime');
+            if ($item->ts < strtotime($item->lastcontentupdate)) {
+                $item->updated = format_date(strtotime($item->lastcontentupdate), 'strftimedatetime');
             }
             $item->isauthor = $item->author && $item->author == $USER->get('id');
             if (!empty($item->attachments)) {
