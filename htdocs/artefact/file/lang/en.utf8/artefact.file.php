@@ -246,6 +246,7 @@ $string['profileicons'] = 'Profile pictures';
 $string['Default'] = 'Default';
 $string['defaultprofileicon'] = 'This is currently set as your default profile picture.';
 $string['deleteselectedicons'] = 'Delete selected profile pictures';
+$string['editprofileicon'] = 'Edit profile picture';
 $string['profileicon'] = 'Profile picture';
 $string['noimagesfound'] = 'No images found';
 $string['profileiconaddedtoimagesfolder'] = "Your profile picture has been uploaded to your '%s' folder.";
