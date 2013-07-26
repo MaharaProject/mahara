@@ -32,7 +32,7 @@ ul.colnav li.selected span {
     padding: 10px;
     margin: 0 8px 0 0;
     display: block;
-    white-space: nowrap;
+    white-space: normal;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
