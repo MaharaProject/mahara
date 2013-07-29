@@ -1,2 +1,8 @@
 <h3>Path to clam</h3>
-<p>The file system path to <code>clamscan</code> or <code>clamdscan</code> for virus checking. It is assumed that a failure of clam to run will mean that a file should be treated as a virus, and a quarantine directory will be automatically set up by your Mahara installation.</p>
+<p>The file system path to <code>clamscan</code> or <code>clamdscan</code> for
+virus checking. It is assumed that a failure of clam to run will mean that a file
+should be treated as a virus, and a quarantine directory will be automatically set
+up by your Mahara installation.</p>
+<p>For security reasons this setting cannot be changed via the web. You will need to
+set it in your <tt>config.php</tt> file, as follows:<p>
+<p><tt>$cfg->pathtoclam = '/path/to/your/clamscan';</tt></p>

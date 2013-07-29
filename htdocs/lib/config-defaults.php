@@ -209,10 +209,12 @@ $cfg->imagemaxheight = 1024;
 $cfg->maximageresizememory = 104857600;
 
 // paths and arguments for various system commands
+$cfg->pathtoaspell = '/usr/bin/aspell';
+// The path to the ClamAV executable (clamscan or clamdscan); disabled by default
+$cfg->pathtoclam = '';
 $cfg->pathtogzip = '/bin/gzip';
 $cfg->pathtounzip = '/usr/bin/unzip';
 $cfg->pathtozip   = '/usr/bin/zip';
-$cfg->pathtoaspell = '/usr/bin/aspell';
 $cfg->ziprecursearg = '-r';
 $cfg->unzipdirarg = '-d';
 $cfg->unziplistarg = '-l';

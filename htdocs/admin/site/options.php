@@ -386,6 +386,13 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('viruschecking', $OVERRIDDEN),
                 ),
+                'pathtoclam' => array(
+                    'type' => 'html',
+                    'title' => get_string('pathtoclam', 'admin'),
+                    'description' => get_string('pathtoclamdescription', 'admin'),
+                    'value' => (get_config('pathtoclam') ? get_config('pathtoclam') : get_string('pathtoclamnotset', 'admin')),
+                    'help' => true,
+                ),
                 'antispam' => array(
                     'type'         => 'select',
                     'title'        => get_string('antispam', 'admin'),
@@ -760,7 +767,7 @@ function siteoptions_submit(Pieform $form, $values) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_public_folder_name($oldlanguage, $values['lang']);
     }
-    
+
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
         siteoptions_fail($form, 'sessionlifetime');
@@ -774,7 +781,13 @@ function siteoptions_submit(Pieform $form, $values) {
 
     if ($values['viruschecking'] == 'on') {
         $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
-        if (!$pathtoclam || !file_exists($pathtoclam) && !is_executable($pathtoclam)) {
+        if (!$pathtoclam ) {
+            $form->reply(PIEFORM_ERR, array(
+                'message' => get_string('clamnotset', 'mahara', $pathtoclam),
+                'goto'    => '/admin/site/options.php',
+            ));
+        }
+        else if (!file_exists($pathtoclam) && !is_executable($pathtoclam)) {
             $form->reply(PIEFORM_ERR, array(
                 'message' => get_string('clamlost', 'mahara', $pathtoclam),
                 'goto'    => '/admin/site/options.php',
