@@ -41,6 +41,10 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
         return array('general');
     }
 
+    public function can_have_attachments() {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
 
@@ -54,6 +58,24 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
 
             $smarty = smarty_core();
             $smarty->assign('text', $text);
+
+            $attachments = $artefact->get_attachments();
+            if ($attachments) {
+                $artefact->add_to_render_path($options);
+                require_once(get_config('docroot') . 'artefact/lib.php');
+                foreach ($attachments as &$attachment) {
+                    $f = artefact_instance_from_id($attachment->id);
+                    $attachment->size = $f->describe_size();
+                    $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                    $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($viewid) ? $viewid : 0);
+                    $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                    if (isset($viewid)) {
+                        $attachment->downloadpath .= '&view=' . $viewid;
+                    }
+                }
+                $smarty->assign('attachments', $attachments);
+                $smarty->assign('count', count($attachments));
+            }
 
             if ($artefact->get('allowcomments')) {
                 $commentcount = ArtefactTypeComment::count_comments(null, array($configdata['artefactid']));
@@ -254,6 +276,7 @@ EOF;
     public static function instance_config_form($instance) {
         global $USER;
         require_once('license.php');
+        safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'internal');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
@@ -347,6 +370,7 @@ EOF;
                     . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
             ),
             'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
+            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'right hidden',
@@ -424,9 +448,9 @@ EOF;
                 throw new AccessDeniedException(get_string('nopublishpermissiononartefact', 'mahara', hsc($artefact->get('title'))));
             }
 
-            // Stop users from editing html artefacts whose owner is not the same as the
+            // Stop users from editing textbox artefacts whose owner is not the same as the
             // view owner, even if they would normally be allowed to edit the artefact.
-            // It's too confusing.  Html artefacts with other owners *can* be included in
+            // It's too confusing.  Textbox artefacts with other owners *can* be included in
             // the view read-only, provided the artefact has the correct republish
             // permission.
             if ($artefact->get('owner') === $data['owner']
@@ -445,6 +469,28 @@ EOF;
         }
 
         $artefact->commit();
+
+        // Add attachments, if there are any...
+        $old = $artefact->attachment_id_list();
+        $new = is_array($values['artefactids']) ? $values['artefactids'] : array();
+        if (!empty($new) || !empty($old)) {
+            foreach ($old as $o) {
+                if (!in_array($o, $new)) {
+                    try {
+                        $artefact->detach($o);
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+            foreach ($new as $n) {
+                if (!in_array($n, $old)) {
+                    try {
+                        $artefact->attach($n);
+                    }
+                    catch (ArtefactNotFoundException $e) {}
+                }
+            }
+        }
 
         $values['artefactid'] = $artefact->get('id');
         $instance->save_artefact_instance($artefact);
@@ -466,6 +512,14 @@ EOF;
         ));
 
         return $values;
+    }
+
+    public static function filebrowser_element(&$instance, $default=array()) {
+        $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
+        $element['title'] = get_string('attachments', 'artefact.blog');
+        $element['name'] = 'artefactids';
+        $element['config']['selectone'] = false;
+        return $element;
     }
 
     public static function default_copy_type() {

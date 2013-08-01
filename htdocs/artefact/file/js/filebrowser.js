@@ -841,7 +841,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             location.href = data.goto;
         }
         else if (typeof(data.replaceHTML) == 'string') {
-            formSuccess(form, data);
+            if (data.returnCode == -1) {
+                formError(form, data);
+            }
+            else {
+                formSuccess(form, data);
+            }
             self.init();
         }
         // Recalculate the width of config block

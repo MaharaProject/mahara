@@ -1,8 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
- *                         http://wiki.mahara.org/Contributors
+ * Copyright (C) 2006-2013 Catalyst IT Ltd and others; see:
+ *                    http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,38 +21,38 @@
  * @subpackage artefact-resume
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
- *
  */
 
-define('INTERNAL', true);
+define('INTERNAL', 1);
 define('MENUITEM', 'content/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
-define('RESUME_SUBPAGE', 'goals');
+define('RESUME_SUBPAGE', 'goalsandskills');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('pieforms/pieform.php');
-safe_require('artefact', 'resume');
 define('TITLE', get_string('resume', 'artefact.resume'));
+safe_require('artefact', 'resume');
 
-$defaults = array(
-    'personalgoal' => array(
-        'default' => get_string('defaultpersonalgoal', 'artefact.resume'),
-    ),
-    'academicgoal' => array(
-        'default' => get_string('defaultacademicgoal', 'artefact.resume'),
-    ),
-    'careergoal' => array(
-        'default' => get_string('defaultcareergoal', 'artefact.resume'),
-    ),
-);
-$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/goals.php'));
+$goals  = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('goals');
+$skills = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('skills');
 
-$smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
-$smarty->assign('goalform', $form);
-$smarty->assign('INLINEJAVASCRIPT', '$j(simple_resumefield_init);');
+$js = '
+$j(function() {
+    $j("a.goaltitle").click(function(e) {
+        e.preventDefault();
+        $j("#" + this.id + "_desc").toggleClass("hidden");
+    });
+    $j("a.skilltitle").click(function(e) {
+        e.preventDefault();
+        $j("#" + this.id + "_desc").toggleClass("hidden");
+    });
+});';
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign_by_ref('goals', $goals);
+$smarty->assign_by_ref('skills', $skills);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
-$smarty->display('artefact:resume:goals.tpl');
+$smarty->display('artefact:resume:goalsandskills.tpl');

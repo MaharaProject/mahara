@@ -291,7 +291,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'description'   => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'certification'),
             );
-            ArtefactTypeResumeComposite::ensure_composite_value($values, 'certification', $importer->get('usr'));
+            ArtefactTypeResumeComposite::ensure_composite_value(null, $values, 'certification', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_EMPLOYMENT:
             $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
@@ -312,7 +312,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'positiondescription' => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'employmenthistory'),
             );
-            ArtefactTypeResumeComposite::ensure_composite_value($values, 'employmenthistory', $importer->get('usr'));
+            ArtefactTypeResumeComposite::ensure_composite_value(null, $values, 'employmenthistory', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_BOOK:
             $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
@@ -340,7 +340,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'description'  => $description,
                 'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'book'),
             );
-            ArtefactTypeResumeComposite::ensure_composite_value($values, 'book', $importer->get('usr'));
+            ArtefactTypeResumeComposite::ensure_composite_value(null, $values, 'book', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_EDUCATION:
             $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
@@ -373,7 +373,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'qualdescription' => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder'  => self::get_display_order_for_entry($entry, $importer, 'educationhistory'),
             );
-            ArtefactTypeResumeComposite::ensure_composite_value($values, 'educationhistory', $importer->get('usr'));
+            ArtefactTypeResumeComposite::ensure_composite_value(null, $values, 'educationhistory', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_MEMBERSHIP:
             $dates = PluginImportLeap::get_leap_dates($entry, $importer->get_namespaces(), $importer->get_leap2a_namespace());
@@ -387,7 +387,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'description' => PluginImportLeap::get_entry_content($entry, $importer),
                 'displayorder' => self::get_display_order_for_entry($entry, $importer, 'membership'),
             );
-            ArtefactTypeResumeComposite::ensure_composite_value($values, 'membership', $importer->get('usr'));
+            ArtefactTypeResumeComposite::ensure_composite_value(null, $values, 'membership', $importer->get('usr'));
             break;
         case self::STRATEGY_IMPORT_AS_SELECTION:
             // This space intentionally left blank

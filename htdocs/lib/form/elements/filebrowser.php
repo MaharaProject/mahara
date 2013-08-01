@@ -51,10 +51,12 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $smarty->assign('tabs', $tabdata);
         if (!$group && $tabdata['owner'] == 'group') {
             $group = $tabdata['ownerid'];
-        } else if (!$institution) {
+        }
+        else if (!$institution) {
             if ($tabdata['owner'] == 'institution') {
                 $institution = $tabdata['ownerid'];
-            } else if ($tabdata['owner'] == 'site') {
+            }
+            else if ($tabdata['owner'] == 'site') {
                 $institution = 'mahara';
             }
         }
@@ -332,7 +334,7 @@ function pieform_element_filebrowser_configure_tabs($viewowner, $prefix) {
         }
         if ($institutions = $USER->get('institutions')) {
             $tabs['institution'] = get_string('institutionfiles', 'admin');
-            $institutions = get_records_select_array('institution', 'name IN (' 
+            $institutions = get_records_select_array('institution', 'name IN ('
                 . join(',', array_map('db_quote', array_keys($institutions))) . ')');
             if ($selectedtab == 'institution') {
                 if (!$selectedsubtab = param_variable($prefix . '_ownerid', '')) {
@@ -413,7 +415,7 @@ function pieform_element_filebrowser_get_value(Pieform $form, $element) {
         }
 
         $result['goto'] = $element['page'];
-        if (!empty($params)) { 
+        if (!empty($params)) {
             $result['goto'] .= (strpos($element['page'], '?') === false ? '?' : '&') . join('&', $params);
         }
 
@@ -827,7 +829,8 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
             return $result;
         }
         $data->institution = $institution;
-    } else if ($group) {
+    }
+    else if ($group) {
         if (!group_within_edit_window($group)) {
             return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
         }
@@ -837,7 +840,8 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
             }
         }
         $data->group = $group;
-    } else {
+    }
+    else {
         $data->owner = $USER->get('id');
     }
 
@@ -944,11 +948,11 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
 
     if ($parentfoldername) {
         if ($data->title == $originalname) {
-            $result['message'] = get_string('uploadoffiletofoldercomplete', 'artefact.file', 
+            $result['message'] = get_string('uploadoffiletofoldercomplete', 'artefact.file',
                                             $originalname, $parentfoldername);
         }
         else {
-            $result['message'] = get_string('fileuploadedtofolderas', 'artefact.file', 
+            $result['message'] = get_string('fileuploadedtofolderas', 'artefact.file',
                                             $originalname, $parentfoldername, $data->title);
         }
     }
@@ -986,7 +990,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
 function prepare_upload_failed_message(&$result, $exception, $parentfoldername, $title) {
     $result['error'] = true;
     if ($parentfoldername) {
-        $result['message'] = get_string('uploadoffiletofolderfailed', 'artefact.file', 
+        $result['message'] = get_string('uploadoffiletofolderfailed', 'artefact.file',
                                         $title, $parentfoldername);
     }
     else {
@@ -1022,7 +1026,8 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
     }
     if ($institution) {
         $data->institution = $institution;
-    } else if ($group) {
+    }
+    else if ($group) {
         if (!group_within_edit_window($group)) {
             return array('error' => true, 'message' => get_string('cannoteditfolder', 'artefact.file'));
         }
@@ -1032,7 +1037,8 @@ function pieform_element_filebrowser_createfolder(Pieform $form, $element, $data
             }
         }
         $data->group = $group;
-    } else {
+    }
+    else {
         $data->owner = $USER->get('id');
     }
 
@@ -1266,11 +1272,13 @@ function pieform_element_filebrowser_move(Pieform $form, $element, $data) {
             if ($nextparentid != $artefactid) {
                 $ancestor = artefact_instance_from_id($nextparentid);
                 $nextparentid = $ancestor->get('parent');
-            } else {
+            }
+            else {
                 return array('error' => true, 'message' => get_string('movefaileddestinationinartefact', 'artefact.file'));
             }
         }
-    } else { // $newparentid === 0
+    }
+    else { // $newparentid === 0
         if ($artefact->get('parent') == null) {
             return array('error' => false, 'message' => get_string('filealreadyindestination', 'artefact.file'));
         }
@@ -1371,7 +1379,7 @@ function pieform_element_filebrowser_changeowner(Pieform $form, $element) {
     }
 
     return array(
-        'error'         => false, 
+        'error'         => false,
         'changedowner'  => true,
         'changedfolder' => true,
         'editmeta'      =>  (int) ($user && !$element['config']['edit'] && !empty($element['config']['tag'])),
@@ -1396,7 +1404,8 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
             if ($owner == 'site') {
                 $owner = 'institution';
                 $institution = $ownerid = 'mahara';
-            } else if ($ownerid = param_variable($prefix . '_ownerid', null)) {
+            }
+            else if ($ownerid = param_variable($prefix . '_ownerid', null)) {
                 if ($owner == 'group') {
                     $group = (int) $ownerid;
                 }
@@ -1409,7 +1418,7 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
             }
         }
     }
-    
+
     // If changing to a group folder, check whether the user can edit it
     if ($g = ($owner ? $group : $form->get_property('group'))) {
         if (!pieform_element_filebrowser_view_group_folder($g, $folder)) {
@@ -1422,7 +1431,7 @@ function pieform_element_filebrowser_changefolder(Pieform $form, $element, $fold
     }
 
     return array(
-        'error'         => false, 
+        'error'         => false,
         'changedfolder' => true,
         'folder'        => $folder,
         'disableedit'   => isset($editgroupfolder) && $editgroupfolder == false,

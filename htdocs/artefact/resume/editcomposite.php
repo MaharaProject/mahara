@@ -35,6 +35,9 @@ require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
+safe_require('artefact', 'resume');
+safe_require('artefact', 'file');
+
 define('TITLE', get_string('resume', 'artefact.resume'));
 
 $id = param_integer('id');
@@ -50,8 +53,40 @@ if ($a->get('owner') != $USER->get('id')) {
     throw new AccessDeniedException(get_string('notartefactowner', 'error'));
 }
 
+$folder = param_integer('folder', 0);
+$browse = (int) param_variable('browse', 0);
+$highlight = null;
+if ($file = param_integer('file', 0)) {
+    $highlight = array($file);
+}
+
 $elements = call_static_method(generate_artefact_class_name($type), 'get_addform_elements');
-$elements['submit'] = array(
+// Replace 'files' pieform element with 'filebrowser' one.
+unset($elements['attachments']);
+$elements['filebrowser'] = array(
+    'type'         => 'filebrowser',
+    'title'        => get_string('attachments', 'artefact.blog'),
+    'folder'       => $folder,
+    'highlight'    => $highlight,
+    'browse'       => $browse,
+    'page'         => get_config('wwwroot') . 'artefact/resume/editcomposite.php?id=' . $id . '&artefact=' . $artefact . '&browse=1',
+    'browsehelp'   => 'browsemyfiles',
+    'config'       => array(
+        'upload'          => true,
+        'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+        'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+        'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+        'createfolder'    => false,
+        'edit'            => false,
+        'select'          => true,
+    ),
+    'defaultvalue'       => $a->attachment_id_list_with_item($id),
+    'selectlistcallback' => 'artefact_get_records_by_id',
+    'selectcallback'     => 'add_resume_attachment',
+    'unselectcallback'   => 'delete_resume_attachment',
+);
+// Add other necessary pieform elements
+$elements['submitform'] = array(
     'type' => 'submitcancel',
     'value' => array(get_string('save'), get_string('cancel')),
     'goto' => get_config('wwwroot') . 'artefact/resume/' . $tabs[$type] . '.php',
@@ -61,17 +96,30 @@ $elements['compositetype'] = array(
     'value' => $type,
 );
 $cform = array(
-    'name' => $type,
-    'plugintype' => 'artefact',
-    'pluginname' => 'resume',
-    'elements' => $elements,
-    'successcallback' => 'compositeformedit_submit',
+    'name'              => 'editcomposite',
+    'method'            => 'post',
+    'jsform'            => true,
+    'newiframeonsubmit' => true,
+    'jssuccesscallback' => 'editcomposite_callback',
+    'jserrorcallback'   => 'editcomposite_callback',
+    'plugintype'        => 'artefact',
+    'pluginname'        => 'resume',
+    'successcallback'   => 'compositeformedit_submit',
+    'configdirs'        => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
+    'elements'          => $elements,
 );
 
 $a->populate_form($cform, $id, $type);
 $compositeform = pieform($cform);
 
+$javascript = <<<EOF
+function editcomposite_callback(form, data) {
+    editcomposite_filebrowser.callback(form, data);
+};
+EOF;
+
 $smarty = smarty();
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('compositeform', $compositeform);
 $smarty->assign('composite', $type);
 $smarty->assign('PAGEHEADING', TITLE);

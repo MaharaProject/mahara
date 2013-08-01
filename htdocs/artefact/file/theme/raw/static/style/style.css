@@ -71,25 +71,52 @@ tr.folderhover a,
     font-size: 1.3333em;
 }
 /* Edit journal post file list */
-#editpost_filebrowser_upload_container {
+/* Edit note file list */
+/* Edit goals and skill file list */
+/* Edit resume composite file list */
+#editpost_filebrowser_upload_container,
+#editnote_filebrowser_upload_container,
+#editgoalsandskills_filebrowser_upload_container,
+#editcomposite_filebrowser_upload_container {
     margin-top: 10px;
 }
 #editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
+#editpost_filebrowser_open_upload_browse_container,
+#editnote_filebrowser_upload_browse,
+#editnote_filebrowser_open_upload_browse_container,
+#editgoalsandskills_filebrowser_upload_browse,
+#editgoalsandskills_filebrowser_open_upload_browse_container,
+#editcomposite_filebrowser_upload_browse,
+#editcomposite_filebrowser_open_upload_browse_container {
     padding: 5px;
 }
-#editpost_filebrowser_agreement {
+#editpost_filebrowser_agreement,
+#editnote_filebrowser_agreement,
+#editgoalsandskills_filebrowser_agreement,
+#editcomposite_filebrowser_agreement {
     margin-bottom: 10px;
     margin-left: 80px;
 }
-#editpost_filebrowser_agreement label {
+#editpost_filebrowser_agreement label,
+#editnote_filebrowser_agreement label,
+#editgoalsandskills_filebrowser_agreement label,
+#editcomposite_filebrowser_agreement label {
     margin-left: -80px;
 }
 /* Edit journal post selected file list */
-#editpost_filebrowser_empty_selectlist {
+/* Edit note selected file list */
+/* Edit goals and skill selected file list */
+/* Edit resume composite selected file list */
+#editpost_filebrowser_empty_selectlist,
+#editnote_filebrowser_empty_selectlist,
+#editgoalsandskills_filebrowser_empty_selectlist,
+#editcomposite_filebrowser_empty_selectlist {
     margin: 5px 0;
 }
-#editpost_filebrowser_selectlist {
+#editpost_filebrowser_selectlist,
+#editnote_filebrowser_selectlist,
+#editgoalsandskills_filebrowser_selectlist,
+#editcomposite_filebrowser_selectlist {
     margin: 0 0 10px 0;
 }
 #instconf_folder_selectlist {

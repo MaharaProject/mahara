@@ -169,6 +169,26 @@ if ($data) {
     }
 }
 
+// Get the attached files.
+$noteids = array();
+if ($data) {
+    $noteids = array_keys($data);
+}
+$files = ArtefactType::attachments_from_id_list($noteids);
+if ($files) {
+    safe_require('artefact', 'file');
+    foreach ($files as $file) {
+        $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
+        $data[$file->artefact]->files[] = $file;
+    }
+}
+// Add Attachments count for each Note
+if ($data) {
+    foreach ($data as $item) {
+        $item->count = isset($item->files) ? count($item->files) : 0;
+    }
+}
+
 $pagination = build_pagination(array(
     'id'        => 'notes_pagination',
     'url'       => $baseurl,

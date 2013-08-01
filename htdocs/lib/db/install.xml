@@ -469,6 +469,7 @@
             <FIELDS>
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="attachment" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="item" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="artefact_attachmentpk" TYPE="primary" FIELDS="artefact,attachment" />

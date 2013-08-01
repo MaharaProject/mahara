@@ -1,8 +1,8 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2011 Catalyst IT Ltd and others; see:
- *                    http://wiki.mahara.org/Contributors
+ * Copyright (C) 2006-2009 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,42 +18,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage artefact-internal
+ * @subpackage artefact-resume
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006-2009 Catalyst IT Ltd http://catalyst.net.nz
+ *
  */
 
-define('INTERNAL', 1);
+define('INTERNAL', true);
+define('MENUITEM', 'content/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
-define('SECTION_PLUGINNAME', 'internal');
-define('SECTION_PAGE', 'editnote');
+define('SECTION_PLUGINNAME', 'resume');
+define('RESUME_SUBPAGE', 'goalsandskills');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('license.php');
-safe_require('artefact', 'internal');
+require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 safe_require('artefact', 'file');
 
-define('TITLE', get_string('editnote', 'artefact.internal'));
+define('TITLE', get_string('resume', 'artefact.resume'));
 
-$note = param_integer('id');
-$artefact = new ArtefactTypeHtml($note);
-if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
-}
+$id = param_integer('id', 0);
+$type = param_variable('type', '');
 
-$goto = get_config('wwwroot') . 'artefact/internal/notes.php';
-if ($group = $artefact->get('group')) {
-    define('MENUITEM', 'groups');
-    define('GROUP', $group);
-    $goto .= '?group=' . $group;
+if ($id > 0) {
+    $artefact = artefact_instance_from_id($id);
+    $type = $artefact->get('artefacttype');
 }
-else if ($institution = $artefact->get('institution')) {
-    define('INSTITUTIONALADMIN', 1);
-    define('MENUITEM', 'manageinstitutions');
-    $goto .= '?institution=' . $institution;
+else if ($id == 0 && !empty($type)) {
+    $classname = generate_artefact_class_name($type);
+    try {
+        $artefact = artefact_instance_from_type($type);
+    }
+    catch (Exception $e) {
+        $artefact = new $classname(0, array('owner' => $USER->get('id')));
+        $artefact->commit();
+    }
 }
 else {
-    define('MENUITEM', 'content/notes');
+    throw new ArtefactNotFoundException(get_string('cannotfindcreateartefact', 'artefact.resume'));
+}
+
+if ($artefact->get('owner') != $USER->get('id')) {
+    throw new AccessDeniedException(get_string('notartefactowner', 'error'));
 }
 
 $folder = param_integer('folder', 0);
@@ -64,44 +72,32 @@ if ($file = param_integer('file', 0)) {
 }
 
 
-$form = array(
-    'name'              => 'editnote',
+$form = pieform(array(
+    'name'              => 'editgoalsandskills',
     'method'            => 'post',
     'jsform'            => true,
     'newiframeonsubmit' => true,
-    'jssuccesscallback' => 'editnote_callback',
-    'jserrorcallback'   => 'editnote_callback',
+    'jssuccesscallback' => 'editgoalsandskills_callback',
+    'jserrorcallback'   => 'editgoalsandskills_callback',
     'plugintype'        => 'artefact',
-    'pluginname'        => 'internal',
+    'pluginname'        => 'resume',
     'configdirs'        => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
     'elements' => array(
-        'title' => array(
-            'type'         => 'text',
-            'title'        => get_string('Title', 'artefact.internal'),
-            'defaultvalue' => $artefact->get('title'),
-        ),
         'description' => array(
-            'type'         => 'wysiwyg',
-            'title'        => get_string('Note', 'artefact.internal'),
-            'rows'         => 10,
-            'cols'         => 70,
+            'type' => 'wysiwyg',
+            'title' => get_string('description', 'artefact.resume'),
+            'rows' => 20,
+            'cols' => 65,
             'defaultvalue' => $artefact->get('description'),
+            'rules' => array('maxlength' => 65536),
         ),
-        'tags' => array(
-            'type'         => 'tags',
-            'title'        => get_string('tags'),
-            'description'  => get_string('tagsdescprofile'),
-            'defaultvalue' => $artefact->get('tags'),
-        ),
-        'license' => license_form_el_basic($artefact),
-        'licensing_advanced' => license_form_el_advanced($artefact),
         'filebrowser' => array(
             'type'         => 'filebrowser',
             'title'        => get_string('attachments', 'artefact.blog'),
             'folder'       => $folder,
             'highlight'    => $highlight,
             'browse'       => $browse,
-            'page'         => get_config('wwwroot') . 'artefact/internal/editnote.php?id=' . $note . '&browse=1',
+            'page'         => get_config('wwwroot') . 'artefact/resume/editgoalsandskills.php?id=' . $artefact->get('id') . '&browse=1',
             'browsehelp'   => 'browsemyfiles',
             'config'       => array(
                 'upload'          => true,
@@ -114,37 +110,24 @@ $form = array(
             ),
             'defaultvalue'       => $artefact->attachment_id_list(),
             'selectlistcallback' => 'artefact_get_records_by_id',
-            'selectcallback'     => 'add_note_attachment',
-            'unselectcallback'   => 'delete_note_attachment',
+            'selectcallback'     => 'add_resume_attachment',
+            'unselectcallback'   => 'delete_resume_attachment',
         ),
-        'allowcomments' => array(
-            'type'         => 'checkbox',
-            'title'        => get_string('allowcomments', 'artefact.comment'),
-            'defaultvalue' => $artefact->get('allowcomments'),
+        'artefacttype' => array(
+            'type' => 'hidden',
+            'value' => $artefact->get('artefacttype'),
         ),
-        'perms' => array(
-            'type'         => 'rolepermissions',
-            'title'        => get_string('Permissions'),
-            'defaultvalue' => $artefact->get('rolepermissions'),
-            'group'        => $group,
-            'ignore'       => !$group,
+        'submitform' => array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('save'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'artefact/resume/goalsandskills.php',
         ),
-        'submitnote' => array(
-            'type'         => 'submitcancel',
-            'value'        => array(get_string('save'), get_string('cancel')),
-            'goto'         => $goto,
-        ),
-    ),
-);
-if (!get_config('licensemetadata')) {
-    unset($form['elements']['license']);
-    unset($form['elements']['licensing_advanced']);
-}
-$form = pieform($form);
+    )
+));
 
 /*
  * Javascript specific to this page.  Creates the list of files
- * attached to the note.
+ * attached to the resume goals or skills.
  */
 $wwwroot = get_config('wwwroot');
 $noimagesmessage = json_encode(get_string('noimageshavebeenattachedtothispost', 'artefact.blog'));
@@ -153,14 +136,14 @@ $javascript = <<<EOF
 // Override the image button on the tinyMCE editor.  Rather than the
 // normal image popup, open up a modified popup which allows the user
 // to select an image from the list of image files attached to the
-// note.
+// resume goals or skills.
 
 // Get all the files in the attached files list that have been
 // recognised as images.  This function is called by the the popup
 // window, but needs access to the attachment list on this page
 function attachedImageList() {
     var images = [];
-    var attachments = editnote_filebrowser.selecteddata;
+    var attachments = editgoalsandskills_filebrowser.selecteddata;
     for (var a in attachments) {
         if (attachments[a].artefacttype == 'image' || attachments[a].artefacttype == 'profileicon') {
             images.push({
@@ -188,7 +171,7 @@ function imageIdFromSrc(src) {
 
 var imageList = {};
 
-function noteImageWindow(ui, v) {
+function goalsandskillsImageWindow(ui, v) {
     var t = tinyMCE.activeEditor;
 
     imageList = attachedImageList();
@@ -207,14 +190,14 @@ function noteImageWindow(ui, v) {
     t.windowManager.open(template);
 }
 
-function editnote_callback(form, data) {
-    editnote_filebrowser.callback(form, data);
+function editgoalsandskills_callback(form, data) {
+    editgoalsandskills_filebrowser.callback(form, data);
 };
 
 EOF;
 
 $smarty = smarty(array(), array(), array(), array(
-    'tinymcesetup' => "ed.addCommand('mceImage', noteImageWindow);",
+    'tinymcesetup' => "ed.addCommand('mceImage', goalsandskillsImageWindow);",
     'sideblocks' => array(
         array(
             'name'   => 'quota',
@@ -224,28 +207,19 @@ $smarty = smarty(array(), array(), array(), array(
     ),
 ));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign_by_ref('form', $form);
-$smarty->assign('PAGEHEADING', $artefact->get('title'));
-$smarty->display('form.tpl');
+$smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
+$smarty->assign_by_ref('artefactform', $form);
+$smarty->assign('artefacttype', $type);
+$smarty->display('artefact:resume:editgoalsandskills.tpl');
 
 
-function editnote_submit(Pieform $form, array $values) {
-    global $SESSION, $artefact, $goto;
+function editgoalsandskills_submit(Pieform $form, array $values) {
+    global $SESSION, $artefact;
 
     db_begin();
-    $artefact->set('title', $values['title']);
+    $artefact->set('title', get_string($values['artefacttype'], 'artefact.resume'));
     $artefact->set('description', $values['description']);
-    $artefact->set('tags', $values['tags']);
-    $artefact->set('allowcomments', (int) $values['allowcomments']);
-    if (isset($values['perms'])) {
-        $artefact->set('rolepermissions', $values['perms']);
-        $artefact->set('dirty', true);
-    }
-    if (get_config('licensemetadata')) {
-        $artefact->set('license', $values['license']);
-        $artefact->set('licensor', $values['licensor']);
-        $artefact->set('licensorurl', $values['licensorurl']);
-    }
     $artefact->commit();
 
     // Attachments
@@ -273,27 +247,13 @@ function editnote_submit(Pieform $form, array $values) {
 
     $result = array(
         'error'   => false,
-        'message' => get_string('noteupdated', 'artefact.internal'),
-        'goto'    => $goto,
+        'message' => get_string('goalandskillsaved', 'artefact.resume'),
+        'goto'    => get_config('wwwroot') . 'artefact/resume/goalsandskills.php',
     );
     if ($form->submitted_by_js()) {
-        // Redirect back to the note page from within the iframe
+        // Redirect back to the resume goals and skills page from within the iframe
         $SESSION->add_ok_msg($result['message']);
         $form->json_reply(PIEFORM_OK, $result, false);
     }
     $form->reply(PIEFORM_OK, $result);
-}
-
-function add_note_attachment($attachmentid) {
-    global $artefact;
-    if ($artefact) {
-        $artefact->attach($attachmentid);
-    }
-}
-
-function delete_note_attachment($attachmentid) {
-    global $artefact;
-    if ($artefact) {
-        $artefact->detach($attachmentid);
-    }
 }

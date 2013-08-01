@@ -1,4 +1,4 @@
-{$text|clean_html|safe}
+{$description|clean_html|safe}
 {if isset($attachments)}
 <table class="cb attachments fullwidth">
   <thead class="expandable-head">
@@ -19,11 +19,4 @@
     {/foreach}
   </tbody>
 </table>
-{if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
 {/if}
-{if $commentcount || $commentcount === 0}
-<div class="comments">
-  <a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a>
-</div>
-{/if}
-

@@ -703,6 +703,15 @@ class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
 /* Artefact type for generic html fragments */
 class ArtefactTypeHtml extends ArtefactType {
+
+    public function describe_size() {
+        return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
+    }
+
+    public function can_have_attachments() {
+        return true;
+    }
+
     public static function get_icon($options=null) {
         global $THEME;
         return $THEME->get_url('images/note.png', false, 'artefact/internal');

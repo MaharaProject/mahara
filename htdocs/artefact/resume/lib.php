@@ -98,15 +98,10 @@ class PluginArtefactResume extends Plugin {
                 'url'   => 'artefact/resume/achievements.php',
                 'title' => get_string('achievements', 'artefact.resume'),
             ),
-            'goals' => array(
-                'page'  => 'goals',
-                'url'   => 'artefact/resume/goals.php',
-                'title' => get_string('goals', 'artefact.resume'),
-            ),
-            'skills' => array(
-                'page'  => 'skills',
-                'url'   => 'artefact/resume/skills.php',
-                'title' => get_string('skills', 'artefact.resume'),
+            'goalsandskills' => array(
+                'page'  => 'goalsandskills',
+                'url'   => 'artefact/resume/goalsandskills.php',
+                'title' => get_string('goalsandskills', 'artefact.resume'),
             ),
             'interests' => array(
                 'page'  => 'interests',
@@ -445,6 +440,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         return true;
     }
 
+    public function can_have_attachments() {
+        return true;
+    }
+
     public static function get_composite_artefact_types() {
         return array(
             'employmenthistory',
@@ -465,6 +464,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public static abstract function get_tablerenderer_title_js_string();
 
     public static abstract function get_tablerenderer_body_js_string();
+
+    public static abstract function get_tablerenderer_attachments_js_string();
 
     /**
      * Can be overridden to format data retrieved from artefact tables for 
@@ -487,14 +488,14 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     */
     public static function process_compositeform(Pieform $form, $values) {
         global $USER;
-        self::ensure_composite_value($values, $values['compositetype'], $USER->get('id'));
+        self::ensure_composite_value($form, $values, $values['compositetype'], $USER->get('id'));
     }
 
     /**
      * Ensures that the given value for the given composite is present
      * TODO: expand on these docs.
      */
-    public static function ensure_composite_value($values, $compositetype, $owner) {
+    public static function ensure_composite_value($form, $values, $compositetype, $owner) {
         if (!in_array($compositetype, self::get_composite_artefact_types())) {
             throw new SystemException("ensure_composite_value called with invalid composite type");
         }
@@ -517,6 +518,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
         $table = 'artefact_resume_' . $compositetype;
         if (!empty($values['id'])) {
+            $itemid = $values['id'];
             update_record($table, (object)$values, 'id');
         }
         else {
@@ -527,7 +529,100 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                 $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
                 $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
             }
-            insert_record($table, (object)$values);
+            $itemid = insert_record($table, (object)$values, 'id', true);
+        }
+
+        // If there are any attachments, attach them to your Resume...
+        if ($compositetype == 'educationhistory' || $compositetype == 'employmenthistory') {
+            $goto = get_config('wwwroot') . 'artefact/resume/employment.php';
+        }
+        else {
+            $goto = get_config('wwwroot') . 'artefact/resume/achievements.php';
+        }
+
+        // Attachments via 'files' pieform element
+        // This happens when adding new resume composite...
+        if (array_key_exists('attachments', $values)) {
+            require_once(get_config('libroot') . 'uploadmanager.php');
+            safe_require('artefact', 'file');
+
+            $folderid = null;
+            $attachment = (object) array(
+                'owner'         => $owner,
+                'group'         => null, // Group
+                'institution'   => null, // Institution
+                'author'        => $owner,
+                'allowcomments' => 0,
+                'parent'        => $folderid,
+                'description'   => null,
+            );
+
+            foreach ($values['attachments'] as $filesindex) {
+                $originalname = $_FILES[$filesindex]['name'];
+                $attachment->title = ArtefactTypeFileBase::get_new_file_title(
+                    $originalname,
+                    $folderid,
+                    $owner,
+                    null, // Group
+                    null  // Institution
+                );
+
+                try {
+                    $fileid = ArtefactTypeFile::save_uploaded_file($filesindex, $attachment);
+                }
+                catch (QuotaExceededException $e) {
+                    $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                    redirect($goto);
+                }
+                catch (UploadException $e) {
+                    $form->reply(PIEFORM_ERR, array('message' => $e->getMessage()));
+                    redirect($goto);
+                }
+
+                $a->attach($fileid, $itemid);
+            }
+        }
+
+        // Attachments via 'filebrowser' pieform element
+        // This happens when editing resume composite...
+        if (array_key_exists('filebrowser', $values)) {
+            $old = $a->attachment_id_list_with_item($itemid);
+            $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+            if (!empty($new) || !empty($old)) {
+                foreach ($old as $o) {
+                    if (!in_array($o, $new)) {
+                        try {
+                            $a->detach($o, $itemid);
+                        }
+                        catch (ArtefactNotFoundException $e) {}
+                    }
+                }
+                $is_error = false;
+                foreach ($new as $n) {
+                    if (!in_array($n, $old)) {
+                        // check the new item is not already attached to the
+                        // artefact under a different $itemid
+                        if (record_exists('artefact_attachment', 'artefact', $a->get('id'), 'attachment', $n)) {
+                            $artefactfile = artefact_instance_from_id($n);
+                            $is_error[] = $artefactfile->get('title');
+                        }
+                        else {
+                            try {
+                                $a->attach($n, $itemid);
+                            }
+                            catch (ArtefactNotFoundException $e) {}
+                        }
+                    }
+                }
+                if (!empty($is_error)) {
+                    if (sizeof($is_error) > 1) {
+                        $form->reply(PIEFORM_ERR, array('message' => get_string('duplicateattachments', 'artefact.resume', implode('\', \'', $is_error))));
+                    }
+                    else {
+                        $form->reply(PIEFORM_ERR, array('message' => get_string('duplicateattachment', 'artefact.resume', implode(', ', $is_error))));
+                    }
+                }
+            }
         }
     }
 
@@ -570,7 +665,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         }
         $datetypes = array('date', 'startdate', 'enddate');
         foreach ($form['elements'] as $k => $element) {
-            if ($k == 'submit' || $k == 'compositetype') {
+            if ($k == 'submit' || $k == 'submitform' ||$k == 'compositetype') {
                 continue;
             }
             if (isset($composite->{$k})) {
@@ -610,9 +705,14 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public function render_self($options) {
         global $USER;
         $suffix = '_' . substr(md5(microtime()), 0, 4);
+        $attachmessage = get_string('fileattachmessage', 'artefact.resume',
+                         get_string('fileattachdirname', 'artefact.resume'));
         $smarty = smarty_core();
+        $smarty->assign('user', $USER->get('id'));
+        $smarty->assign('viewid', $options['viewid']);
         $smarty->assign('hidetitle', true);
         $smarty->assign('suffix', $suffix);
+        $smarty->assign('attachmessage', $attachmessage);
         $type = $this->get('artefacttype');
         $othertable = 'artefact_resume_' . $type;
         $owner = $USER->get('id');
@@ -635,7 +735,42 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
         // Give the artefact type a chance to format the data how it sees fit
         $data = call_static_method(generate_artefact_class_name($type), 'format_render_self_data', $data);
-        $smarty->assign('rows', $data);
+
+        // Add artefact attachments it there are any
+        $datawithattachments = array();
+        foreach ($data as $record) {
+            // Cannot use $this->get_attachments() as it would return
+            // all the attachments for specified resume composite.
+            // Instead we want only attachments for single item of the
+            // specified resume composite...
+            $sql = 'SELECT a.title, a.id, af.size
+                    FROM {artefact} a
+                    JOIN {artefact_file_files} af ON af.artefact = a.id
+                    JOIN {artefact_attachment} at ON at.attachment = a.id
+                    WHERE at.artefact = ? AND at.item = ?
+                    ORDER BY a.title';
+            $attachments = get_records_sql_array($sql, array($record->artefact, $record->id));
+            if ($attachments) {
+                foreach ($attachments as &$attachment) {
+                    $f = artefact_instance_from_id($attachment->id);
+                    $attachment->size = $f->describe_size();
+                    $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                    $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
+                    $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                    $attachment->description = $f->description;
+                }
+            }
+            $record->attachments = $attachments;
+            if (!is_array($attachments)) {
+                $record->clipcount = 0;
+            }
+            else {
+                $record->clipcount = count($attachments);
+            }
+            $datawithattachments[] = $record;
+        }
+
+        $smarty->assign('rows', $datawithattachments);
         $this->render_license($options, $smarty);
 
         $content = array(
@@ -725,16 +860,16 @@ EOF;
         return $js;
     }
 
-    static function get_tablerenderer_title_js($titlestring, $bodystring) {
+    static function get_tablerenderer_title_js($titlestring, $bodystring, $attachstring) {
         return "
                 function (r, d) {
-                    if (!{$bodystring}) {
+                    if (!{$bodystring} && !{$attachstring}) {
                         return TD(null, {$titlestring});
                     }
                     var link = A({'href': ''}, {$titlestring});
                     connect(link, 'onclick', function (e) {
                         e.stop();
-                        return showhideComposite(r, {$bodystring});
+                        return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
                     return TD({'id': 'composite-' + r.artefact + '-' + r.id}, link);
                 },
@@ -743,7 +878,7 @@ EOF;
 
     static function get_showhide_composite_js() {
         return "
-            function showhideComposite(r, content) {
+            function showhideComposite(r, content, attachments) {
                 // get the reference for the title we just clicked on
                 var titleTD = $('composite-' + r.artefact + '-' + r.id);
                 var theRow = titleTD.parentNode;
@@ -759,8 +894,14 @@ EOF;
                 }
                 // we have to actually create the dom node too
                 var colspan = theRow.childNodes.length;
-                var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id}, 
-                    TD({'colspan': colspan}, content)); 
+                if (attachments) {
+                    var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id},
+                        TD({'colspan': colspan}, DIV({'class':'compositedesc'}, content), attachments));
+                }
+                else {
+                    var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id},
+                        TD({'colspan': colspan}, DIV({'class':'compositedesc'}, content)));
+                }
                 insertSiblingNodesAfter(theRow, newRow);
             }
         ";
@@ -834,7 +975,28 @@ EOF;
     }
 
     static function get_composite_js() {
+        $attachmentsstr = json_encode(get_string('Attachments', 'artefact.resume').': ');
+        return <<<EOF
+function listAttachments(attachments) {
+    if (attachments.length > 0) {
+        list = DIV({'class': 'attachments'}, SPAN({'class': 'composite-attachments'}, STRONG({$attachmentsstr})));
+        for (var i=0; i < attachments.length; i++) {
+            var link = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
+            if (i+1 < attachments.length) {
+                appendChildNodes(list, A({'href': link}, attachments[i].title), ', ');
+            }
+            else {
+                appendChildNodes(list, A({'href': link}, attachments[i].title));
+            }
+        }
+        return list;
+    }
+    else {
+        // No attachments
         return '';
+    }
+}
+EOF;
     }
 
     static function get_forms(array $compositetypes) {
@@ -878,8 +1040,12 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'enddate',
                 " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
-                    self::get_tablerenderer_body_js_string()
-                ) . "
+                    self::get_tablerenderer_body_js_string(),
+                    self::get_tablerenderer_attachments_js_string()
+                ) . ",
+                function (r, d) {
+                    return TD({'style':'text-align:center'}, r.clipcount);
+                },
         ";
     }
 
@@ -889,6 +1055,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_body_js_string() {
         return " r.positiondescription";
+    }
+
+    public static function get_tablerenderer_attachments_js_string() {
+        return " listAttachments(r.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -935,6 +1105,12 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'resizable' => false,
                 'title' =>  get_string('jobdescription', 'artefact.resume'),
             ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
         );
     }
 
@@ -957,8 +1133,12 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 'enddate',
                 " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
-                    self::get_tablerenderer_body_js_string()
-                ) . "
+                    self::get_tablerenderer_body_js_string(),
+                    self::get_tablerenderer_attachments_js_string()
+                ) . ",
+                function (r, d) {
+                    return TD({'style':'text-align:center'}, r.clipcount);
+                },
         ";
     }
 
@@ -988,7 +1168,12 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
         return " r.qualdescription"; 
     }
 
+    public static function get_tablerenderer_attachments_js_string() {
+        return " listAttachments(r.attachments)";
+    }
+
     public static function get_addform_elements() {
+        global $USER;
         return array(
             'startdate' => array(
                 'type' => 'text',
@@ -1034,6 +1219,18 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 'resizable' => false,
                 'title' => get_string('qualdescription', 'artefact.resume'),
             ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
         );
     }
 
@@ -1071,8 +1268,12 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'date',
                 " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
-                    self::get_tablerenderer_body_js_string()
-                ) . "
+                    self::get_tablerenderer_body_js_string(),
+                    self::get_tablerenderer_attachments_js_string()
+                ) . ",
+                function (r, d) {
+                    return TD({'style':'text-align:center'}, r.clipcount);
+                },
         ";
     }
 
@@ -1082,6 +1283,10 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_body_js_string() {
         return "r.description";
+    }
+
+    public static function get_tablerenderer_attachments_js_string() {
+        return " listAttachments(r.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1110,6 +1315,12 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'resizable' => false,
                 'title' => get_string('description'),
             ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
         );
     }
 
@@ -1128,8 +1339,12 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'date',
                 " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
-                    self::get_tablerenderer_body_js_string()
-                ) . "
+                    self::get_tablerenderer_body_js_string(),
+                    self::get_tablerenderer_attachments_js_string()
+                ) . ",
+                function (r, d) {
+                    return TD({'style':'text-align:center'}, r.clipcount);
+                },
         ";
     }
 
@@ -1138,7 +1353,11 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     }
 
     public static function get_tablerenderer_body_js_string() {
-        return "TD(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url, 'target':'_blank'}, r.url)))";
+        return "DIV(r.description, DIV({'id':'composite-book-url'}, A({'href':r.url, 'target':'_blank'}, r.url)))";
+    }
+
+    public static function get_tablerenderer_attachments_js_string() {
+        return " listAttachments(r.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1175,6 +1394,12 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'resizable' => false,
                 'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
             ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
             'url' => array(
                 'type' => 'text',
                 'title' => get_string('bookurl', 'artefact.resume'),
@@ -1200,8 +1425,12 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'enddate',
                 " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
-                    self::get_tablerenderer_body_js_string()
-                ) . "
+                    self::get_tablerenderer_body_js_string(),
+                    self::get_tablerenderer_attachments_js_string()
+                ) . ",
+                function (r, d) {
+                    return TD({'style':'text-align:center'}, r.clipcount);
+                },
         ";
     }
 
@@ -1211,6 +1440,10 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
    
     public static function get_tablerenderer_body_js_string() {
         return "r.description";
+    }
+
+    public static function get_tablerenderer_attachments_js_string() {
+        return " listAttachments(r.attachments)";
     }
 
     public static function get_addform_elements() {
@@ -1244,6 +1477,12 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'resizable' => false,
                 'title' => get_string('description', 'artefact.resume'),
             ),
+            'attachments' => array(
+                'type'         => 'files',
+                'title'        => get_string('attachfile', 'artefact.resume'),
+                'defaultvalue' => array(),
+                'maxfilesize'  => get_max_upload_size(false),
+            ),
         );
     }
 
@@ -1257,6 +1496,80 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
     public static function is_singular() {
         return true;
     }
+
+    public function can_have_attachments() {
+        return true;
+    }
+
+    public function render_self($options) {
+        global $USER;
+        $smarty = smarty_core();
+        $smarty->assign('description', $this->get('description'));
+
+        $attachments = $this->get_attachments();
+        if ($attachments) {
+            foreach ($attachments as &$attachment) {
+                $f = artefact_instance_from_id($attachment->id);
+                $attachment->size = $f->describe_size();
+                $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
+                $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                $attachment->description = $f->description;
+            }
+            $smarty->assign('attachments', $attachments);
+            $smarty->assign('count', count($attachments));
+        }
+
+        $result = array(
+            'html' => $smarty->fetch('artefact:resume:fragments/goalsandskills.tpl')
+        );
+        return $result;
+    }
+
+    public function get_goals_and_skills($type='') {
+        global $USER;
+        switch ($type) {
+            case 'goals':
+                $artefacts = array('personalgoal', 'academicgoal', 'careergoal');
+                break;
+            case 'skills':
+                $artefacts = array('personalskill', 'academicskill', 'workskill');
+                break;
+            default:
+                $artefacts = array('personalgoal', 'academicgoal', 'careergoal',
+                                   'personalskill', 'academicskill', 'workskill');
+        }
+
+        $data = array();
+        foreach ($artefacts as $artefact) {
+            $record = get_record('artefact', 'artefacttype', $artefact, 'owner', $USER->get('id'));
+            if ($record) {
+                $record->exists = 1;
+                // Add attachments
+                $files = ArtefactType::attachments_from_id_list(array($record->id));
+                if ($files) {
+                    safe_require('artefact', 'file');
+                    foreach ($files as &$file) {
+                        $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
+                        $record->files[] = $file;
+                    }
+                    $record->count = count($files);
+                }
+                else {
+                    $record->count = 0;
+                }
+            }
+            else {
+                $record = new stdClass();
+                $record->artefacttype = $artefact;
+                $record->exists = 0;
+                $record->count = 0;
+            }
+            $data[] = $record;
+        }
+        return $data;
+    }
+
 }
 
 class ArtefactTypePersonalgoal extends ArtefactTypeResumeGoalAndSkill { }
@@ -1305,7 +1618,7 @@ function compositeformedit_submit(Pieform $form, $values) {
         $goto .= $tabs[$values['compositetype']] . '.php';
     }
     else {
-        $goto .='index.php';
+        $goto .= 'index.php';
     }
 
     try {
@@ -1316,12 +1629,23 @@ function compositeformedit_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('compositesavefailed', 'artefact.resume'));
         redirect($goto);
     }
-    $SESSION->add_ok_msg(get_string('compositesaved', 'artefact.resume'));
-    redirect($goto);
+
+    $result = array(
+        'error'   => false,
+        'message' => get_string('compositesaved', 'artefact.resume'),
+        'goto'    => $goto,
+    );
+    if ($form->submitted_by_js()) {
+        // Redirect back to the resume composite page from within the iframe
+        $SESSION->add_ok_msg($result['message']);
+        $form->json_reply(PIEFORM_OK, $result, false);
+    }
+    $form->reply(PIEFORM_OK, $result);
 }
 
 function simple_resumefield_form($defaults, $goto) {
-    global $simple_resume_artefacts, $simple_resume_types;
+    safe_require('artefact', 'file');
+    global $USER, $simple_resume_artefacts, $simple_resume_types;
     $simple_resume_artefacts = array();
     $simple_resume_types = array_keys($defaults);
 
@@ -1333,6 +1657,7 @@ function simple_resumefield_form($defaults, $goto) {
         'successcallback'   => 'simple_resumefield_submit',
         'jssuccesscallback' => 'simple_resumefield_success',
         'jserrorcallback'   => 'simple_resumefield_error',
+        'configdirs'        => array(get_config('libroot') . 'form/', get_config('docroot') . 'artefact/file/form/'),
         'elements'          => array(),
     );
 
@@ -1344,29 +1669,31 @@ function simple_resumefield_form($defaults, $goto) {
         catch (Exception $e) {
             $content = $defaults[$t]['default'];
         }
+
         $fieldset = $t . 'fs';
         $form['elements'][$fieldset] = array(
             'type' => 'fieldset',
             'legend' => get_string($t, 'artefact.resume'),
             'elements' => array(
                 $t => array(
-                    'type' => 'wysiwyg',
+                    'type'  => 'wysiwyg',
                     'class' => 'js-hidden',
-                    'rows' => 20,
-                    'cols' => 65,
+                    'title' => get_string('description', 'artefact.resume'),
+                    'rows'  => 20,
+                    'cols'  => 65,
                     'defaultvalue' => $content,
                     'rules' => array('maxlength' => 65536),
+                ),
+                $t . 'display' => array(
+                    'type' => 'html',
+                    'class' => 'nojs-hidden-block',
+                    'value' => $content,
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
                     'class' => 'js-hidden',
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
-                ),
-                $t . 'display' => array(
-                    'type' => 'html',
-                    'class' => 'nojs-hidden-block',
-                    'value' => $content,
                 ),
                 $t . 'edit' => array(
                     'type' => 'button',
@@ -1390,6 +1717,7 @@ function simple_resumefield_form($defaults, $goto) {
 
 function simple_resumefield_submit(Pieform $form, $values) {
     global $simple_resume_types, $simple_resume_artefacts, $USER;
+    $owner = $USER->get('id');
 
     foreach ($simple_resume_types as $t) {
         if (isset($values[$t . 'submit']) && isset($values[$t])) {
@@ -1402,6 +1730,7 @@ function simple_resumefield_submit(Pieform $form, $values) {
             }
             $simple_resume_artefacts[$t]->set('description', $values[$t]);
             $simple_resume_artefacts[$t]->commit();
+
             $data = array(
                 'message' => get_string('goalandskillsaved', 'artefact.resume'),
                 'update'  => $t,
@@ -1413,4 +1742,18 @@ function simple_resumefield_submit(Pieform $form, $values) {
     }
 
     $form->reply(PIEFORM_OK, array('goto' => get_config('wwwroot') . $values['goto']));
+}
+
+function add_resume_attachment($attachmentid) {
+    global $artefact;
+    if ($artefact) {
+        $artefact->attach($attachmentid);
+    }
+}
+
+function delete_resume_attachment($attachmentid) {
+    global $artefact;
+    if ($artefact) {
+        $artefact->detach($attachmentid);
+    }
 }

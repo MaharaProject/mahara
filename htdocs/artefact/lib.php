@@ -1015,6 +1015,16 @@ abstract class ArtefactType {
         return array();
     }
 
+    public function attachment_id_list_with_item($itemid) {
+        // If artefact attachment table has 'item' column utilised.
+        if ($this->can_have_attachments()) {
+            if ($list = get_column('artefact_attachment', 'attachment', 'artefact', $this->get('id'), 'item', $itemid)) {
+                return $list;
+            }
+        }
+        return array();
+    }
+
     public function attachments_from_id_list($artefactids) {
         if (empty($artefactids)) {
             return array();
@@ -1080,7 +1090,7 @@ abstract class ArtefactType {
         return array_values($list);
     }
 
-    public function attach($attachmentid) {
+    public function attach($attachmentid, $itemid=null) {
         if (record_exists('artefact_attachment', 'artefact', $this->get('id'), 'attachment', $attachmentid)) {
             return;
         }
@@ -1090,6 +1100,7 @@ abstract class ArtefactType {
         $data = new StdClass;
         $data->artefact = $this->get('id');
         $data->attachment = $attachmentid;
+        $data->item = $itemid;
         insert_record('artefact_attachment', $data);
 
         $data = new StdClass;

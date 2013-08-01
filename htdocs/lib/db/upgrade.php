@@ -3401,5 +3401,18 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2013092600) {
+        //  When uploading file as attachment and attaching it to an artefact, the artefact id
+        //  (in artefact field) and uploaded file artefact id (in attachment filed) are stored.
+        //  For Resume composite types (educationhistory, employmenthistory, books, etc.) this
+        //  is not enough. So we have to add item field to differentiate between e.g. different
+        //  employments in employmenhistory and to which employment the user actually whishes to
+        //  attach certain attachment...
+        $table = new XMLDBTable('artefact_attachment');
+        $field = new XMLDBField('item');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+    }
+
     return $status;
 }

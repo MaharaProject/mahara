@@ -5,6 +5,7 @@
     <tr>
       <th>{str tag=Note section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
+      <th class="center"><img src="{theme_url filename="images/icon_attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
       <th></th>
     </tr>
   </thead>
@@ -20,7 +21,27 @@
         {if $n->tags}
         <div>{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
         {/if}
-        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}</div>
+        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
+        {if $n->files}
+            <div id="notefiles_{$n->id}">
+                <table class="attachments fullwidth">
+                    <col width="5%">
+                    <col width="40%">
+                    <col width="55%">
+                    <tbody>
+                        <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
+                        {foreach from=$n->files item=file}
+                            <tr class="{cycle values='r1,r0'}">
+                                <td><img src="{$file->icon}" alt=""></td>
+                                <td class="valign"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
+                                <td class="valign">{$file->description}</td>
+                            </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {/if}
       </td>
       <td>
       {foreach from=$n->views item=v}
@@ -30,6 +51,7 @@
         </div>
       {/foreach}
       </td>
+      <td align="center">{$n->count}</td>
       <td class="right buttonscell btns2">
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>

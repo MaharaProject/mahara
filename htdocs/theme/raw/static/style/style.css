@@ -492,7 +492,7 @@ td.icon-container img {
     white-space: normal;
 }
 /* expandable */
-td.toggle {
+tr.toggle, td.toggle {
     width: 10px;
     height: 10px;
     padding-left: 18px;
@@ -500,13 +500,19 @@ td.toggle {
     background-repeat: no-repeat;
     background-position: 3px 4px;
 }
-td.expandable {
+td.toggle-padding {
+    padding-left: 18px;
+}
+.valign-middle {
+    vertical-align: middle;
+}
+tr.expandable, td.expandable {
     cursor: pointer;
     background-image: url(../images/expand.png);
     background-repeat: no-repeat;
     background-position: 3px 5px;
 }
-td.expanded {
+tr.expanded, td.expanded {
     cursor: pointer;
     background-image: url(../images/expanded.png);
     background-repeat: no-repeat;
@@ -1054,7 +1060,10 @@ ul.groupuserstatus li .btn {
     display: inline-block;
 }
 .btn-big-close,
-input#editpost_filebrowser_close_upload_browse {
+input#editpost_filebrowser_close_upload_browse,
+input#editnote_filebrowser_close_upload_browse,
+input#editgoalsandskills_filebrowser_close_upload_browse,
+input#editcomposite_filebrowser_close_upload_browse {
     background: transparent url(../images/btn_close.png) no-repeat 0 0;
     border: 0 !important;
     margin-right: 0 !important;
@@ -2208,8 +2217,18 @@ table.attachments {
     margin: 3px 0;
 }
 /* Content > Journals > Edit */
+/* Content > Notes > Edit */
+/* Content > Resume > Education and employment > Edit */
+/* Content > Resume > Achievements > Edit */
+/* Content > Resume > Goals and skills > Edit */
 #editpost_filebrowser_upload_browse,
-#editpost_filebrowser_open_upload_browse_container {
+#editpost_filebrowser_open_upload_browse_container,
+#editnote_filebrowser_upload_browse,
+#editnote_filebrowser_open_upload_browse_container,
+#editgoalsandskills_filebrowser_upload_browse,
+#editgoalsandskills_filebrowser_open_upload_browse_container,
+#editcomposite_filebrowser_upload_browse,
+#editcomposite_filebrowser_open_upload_browse_container {
     background: #EEEEEE;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -3791,4 +3810,10 @@ ul.searchtab li span.inactive {
 }
 .wallpost .controls a {
     margin: 0 0 0 5px;
+}
+/* For styling attachment notice in Resume fieldsets */
+.attachmessage {
+	font-size: .9167em;
+	font-style: italic;
+	color: #888;
 }

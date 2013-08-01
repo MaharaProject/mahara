@@ -35,6 +35,7 @@ $string['educationandemployment'] = 'Education and employment';
 $string['achievements'] = 'Achievements';
 $string['goals'] = 'Goals';
 $string['skills'] = 'Skills';
+$string['goalsandskills'] = 'Goals and skills';
 $string['interests'] = 'Interests';
 $string['license'] = 'License';
 
@@ -100,3 +101,11 @@ $string['viewyourresume'] = 'View your résumé';
 $string['resumeofuser'] = 'Résumé of %s';
 $string['employeraddress'] = 'Employer address';
 $string['institutionaddress'] = 'Institution address';
+
+$string['attachfile'] = 'Attach file';
+$string['Attachments'] = 'Attachments';
+$string['attachmentdesc'] = 'Attachment to %s';
+$string['nodescription'] = '(No description)';
+$string['cannotfindcreateartefact'] = 'Cannot find or create artefact.';
+$string['duplicateattachment'] = 'File \'%s\' has already been used on another entry in this section. You cannot use the same file twice.';
+$string['duplicateattachments'] = 'Files \'%s\' have already been used on another entry in this section. You cannot use the same files twice.';

@@ -52,6 +52,26 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
     $data = array();
 }
 
+// Add artefact attachments it there are any
+$datawithattachments = array();
+foreach ($data as $record) {
+    $sql = 'SELECT a.title, a.id, af.size
+            FROM {artefact} a
+            JOIN {artefact_file_files} af ON af.artefact = a.id
+            JOIN {artefact_attachment} at ON at.attachment = a.id
+            WHERE at.artefact = ? AND at.item = ?
+            ORDER BY a.title';
+    $attachments = get_records_sql_array($sql, array($record->artefact, $record->id));
+    $record->attachments = $attachments;
+    if (!is_array($attachments)) {
+        $record->clipcount = 0;
+    }
+    else {
+        $record->clipcount = count($attachments);
+    }
+    $datawithattachments[] = $record;
+}
+
 $count = count_records('artefact', 'owner', $owner, 'artefacttype', $type);
 
 json_reply(false, array(

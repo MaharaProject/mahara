@@ -165,6 +165,9 @@ ul.groupuserstatus li.jointhisgroup form,
 .btn-big-del,
 .btn-big-close,
 input#editpost_filebrowser_close_upload_browse,
+input#editnote_filebrowser_close_upload_browse,
+input#editgoalsandskills_filebrowser_close_upload_browse,
+input#editcomposite_filebrowser_close_upload_browse,
 .btn-big-add {
     display: none;
 }
