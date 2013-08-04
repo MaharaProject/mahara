@@ -28,6 +28,6 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Folder';
-$string['description'] = 'A single folder from your files area';
+$string['description'] = 'A single folder from your files area (see Content -> Files)';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the folder will be used';

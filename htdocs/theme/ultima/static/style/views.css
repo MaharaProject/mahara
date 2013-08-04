@@ -1,14 +1,25 @@
-/*  Views  */
-#top-pane {
-	background: none;
+/**
+ * Views stylesheet - for Mahara's Ultima theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */ 
+/******************** Collection navigation ********************/
+#collectionnavwrap {
+	background: #F4E7F5;
 }
-/********************** Top pane of Edit View *************************/
-/* The tabs that allow you to select a blocktype category */
-#category-list li {
-	margin: 0 1px 0 0;
-	display: inline-block;
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+	background: url(../images/mainnav-bg.png) repeat-x 0 50%;
+	color: #FFFFFF;
 }
-#category-list li a, #category-list li a:link, #category-list li a:visited, #category-list li a:active {
+/******************** Blocktype tabs ********************/
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
 	color: #ffffff;
 	font-weight: normal;
 	background-color: #5c0758;
@@ -18,45 +29,29 @@
 	background-color: #5c0758;
 	text-decoration: underline;
 }
-#category-list li.current a, #category-list li.current a:link, #category-list li.current a:visited, #category-list li.current a:active {
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
 	color: #ffffff;
 	font-weight: bold;
 	background-color: #841c7f;
 }
-/* The panel that contains the blocktype icons */
-#blocktype-list {
-	border: 0;
-	background: #841C7F;
+/******************** Blocktype icons panel ********************/
+#editcontent-sidebar {
+	background-color: #FAEEFB;
 }
-#middle-pane {
-	background: #5C0758;
-	color: #fbebfc;
-}
-#middle-pane label {
-	color: #FFFFFF;
-}
-#blocktype-list .blocktype h4 {
-	color: #FFFFFF;
-}
-.blocktype-description {
-	color: #FFFFFF;
-}
-/********************** Bottom pane of Edit View *************************/
-#page #bottom-pane {
-	background-color: #FAEEFB !important;
-}
-/**************** Blockinstance **********************/
-.upload_browse #artefactchooser-body {
-	border: 1px solid #1C3740;
-}
-/* pagination */
-#feedback_pagination {
-	border-top: 1px dotted #360435;
-}
-#collection {
-	color: #FFF;
-}
-ul.colnav li a {
-	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x center;
-	color: #FFFFFF;
+#blocktype-common,
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog,
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background-color: #ecd2ee;
+    border-color: #f8e9f9;
 }

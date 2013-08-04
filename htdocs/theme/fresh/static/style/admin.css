@@ -1,83 +1,79 @@
-/* ADMIN HOME */
-/* Administration Home styles */
+/**
+ * CSS rules for the administration section
+ *
+ * Copyright (C) 2006-2013 Catalyst IT
+ * This file is distributed under the same terms as Mahara itself
+ */
+/* Admin home > Overview */
+#runupgrade,
 #register-site,
-#runupgrade {
+#site-stats {
     background-color: #1A292F;
-    border: 0;
+    color: #BEE3F1;
 }
-#register-site fieldset table table th,
-#upgradestable th {
-    background-color: #10171A;
-    border-bottom: 1px dotted #BEE3F1;
-}
-#register-site fieldset table table td,
-#upgradestable td {
-    background-color: #10171A;
-}
-
-#suspenddelete #suspend {
-	background: #1A292F;
-	border: 0;
-}
-
-#register-site-full {
-	width: auto;
-}
-
-/* delete suspend boxes */
-#close-site,
-#suspendinstitution,
-#suspenddelete #delete {
-	color: #333;
+#close-site {
+	color: #333333;
 	background: #eccccc;
 }
+/* Admin home > Site statistics */
 .site-stats-table div {
 	background: none;
-	border-bottom: 1px dotted #BEE3F1;
+	border-bottom: 1px dotted #24353c;
 }
-#suspendinstitution .description {
-	color: #333;
+/* Admin home > Register */
+#register-site-full fieldset table table td {
+	border-bottom: 1px dotted #24353c;
 }
-
-/* CONFIGURE SITE > LINKS AND RESOURCES MENU */
-
-#institutionusers, 
-#staffusers, 
-#adminusers {
-	background: #1b3b46;
-	border: 0;
+/* Configure site > Menus */
+#menuitemlist table td {
+    border-bottom: 1px dotted #24353c;  
 }
-
-/* add user */
-#adduser td.step1 {
-	background-color: #1b3b46;
-	border: 0;
+/* Configure site > Networking */
+#networkingform_deletesubmit_container {
+    background: #ECCCCC;
 }
-#adduser td.step2 {
-	background-color: #1b3b46;
-	border: 0;
+#networkingform_deletesubmit_container label {
+    color: #CA0000;
 }
-#adduser td.step3 {
-	background-color: #254e5c;
-	border: 0;
+/* Users > User search > User account settings */
+#profilepict {
+	background: #000000;
+}
+#suspenddelete #suspend {
+    background-color: #1A292F;
+}
+#suspenddelete #delete {
+	color: #333333;
+	background: #eccccc;
+}
+/* Users > Site staff */
+.userlistform {
+	background: #10171A;
+}
+/* Users > Add user */
+#adduser .step1,
+#adduser .step2,
+#adduser .step3 {
+	background-color: #1A292F;
 }
 #adduser #or {
 	color: #FFFFFF;
 }
-
-#groupadminsform {
-	background:#10171A;
-	border: 1px solid #0C2839;
+/* Groups > Adminster groups > Configure */
+#groupquotasform {
+	background-color: #10171A;
 }
-
-#profilepict {
-	background: #000000;
-	border: 0;
+/* Groups > Group categories */
+#groupcategories {
+	background-color: #10171A;
 }
-
-
-#groupquotasform,
-#newurl {
-  border-color: #080D0F;
-  background: #1A292F;
+/* Institutions > Institutions > Edit */
+#suspendinstitution {
+	background: #eccccc;
+}
+#suspendinstitution .description {
+	color: #333333;
+}
+#institution fieldset.collapsible table tr.checkbox {
+    border-top: 1px dotted #24353c;
 }

@@ -3068,7 +3068,7 @@ function build_portfolio_search_html(&$data) {
         }
         else if ($item->type == 'collection') {
             $item->typestr = get_string('Collection', 'collection');
-            $item->icon    = $THEME->get_url('images/icon-collection.gif');
+            $item->icon    = $THEME->get_url('images/collection.png');
             $c = new Collection(0, (array)$item);
             $item->url = $c->get_url();
         }

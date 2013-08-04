@@ -56,8 +56,8 @@
         {else}
             <h1 class="center viewtitle">{$microheadertitle|safe}</h1>
         {/if}
-            <div class="cb"></div>
-        </div>
+        <div class="cb"></div>
+      </div>
     </div>
 </div>
 <div class="cb"></div>

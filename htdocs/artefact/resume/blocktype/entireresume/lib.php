@@ -38,7 +38,7 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('resume');
+        return array('internal');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {

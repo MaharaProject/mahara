@@ -1,0 +1,12 @@
+jQuery UI in Mahara
+===================
+
+This javascript library is required for the flexible page layout feature developed by Mike Kelly.
+
+Website: http://jqueryui.com/
+Version: 1.8.19
+Dependency package: jquery 1.7.2
+
+Changes:
+
+* None

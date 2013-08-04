@@ -25,7 +25,7 @@
     <div id="mainmiddlewrap">
         <div id="mainmiddle">
             <div id="{if $SIDEBARS}{if $SIDEBLOCKS.right}main-wrapper-narrow-right{else}main-wrapper-narrow-left{/if}{else}main-wrapper{/if}">
-                    <div id="main-column" class="main-column{if $SIDEBARS} main-column-narrow{/if}">
+                    <div id="main-column" class="main-column{if $SIDEBARS} main-column-narrow{/if}{if $selected == 'content'} editcontent{/if}">
                         <div id="main-column-container">
                             {dynamic}{insert_messages}{/dynamic}
 {if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>

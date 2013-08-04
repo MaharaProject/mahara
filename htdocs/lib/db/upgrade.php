@@ -3232,5 +3232,145 @@ function xmldb_core_upgrade($oldversion=0) {
         update_safe_iframe_regex();
     }
 
+    if ($oldversion < 2013082100) {
+        // Update database for flexible page layouts feature (introduced by Mike Kelly)
+        // 1. Create table view_rows_columns
+        $table = new XMLDBTable('view_rows_columns');
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('row', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        create_table($table);
+
+        // 2. Rename the table view_layout to view_layout_columns
+        $table = new XMLDBTable('view');
+        $key = new XMLDBKey('view_lay_fk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('layout'), 'view_layout', array('id'));
+        drop_key($table, $key);
+        $table = new XMLDBTable('view_layout');
+        drop_table($table);
+        $table = new XMLDBTable('view_layout_columns');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('widths', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('columnwidthuk', XMLDB_KEY_UNIQUE, array('columns', 'widths'));
+        create_table($table);
+
+        // 3. Create new table view_layout
+        $table = new XMLDBTable('view_layout');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('rows', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('iscustom', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        // 4. Create table view_layout_rows_columns
+        $table = new XMLDBTable('view_layout_rows_columns');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('viewlayout', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('row', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('rowfk', XMLDB_KEY_FOREIGN, array('viewlayout'), 'view_layout', array('id'));
+        $table->addKeyInfo('columnsfk', XMLDB_KEY_FOREIGN, array('columns'), 'view_layout_columns', array('id'));
+        create_table($table);
+
+        // 5. Create table usr_custom_layout
+        $table = new XMLDBTable('usr_custom_layout');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('layout', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('layoutfk', XMLDB_KEY_FOREIGN, array('layout'), 'view_layout', array('id'));
+        create_table($table);
+
+        // 6. Update default values for tables view_layout, view_layout_columns and view_layout_rows_columns
+        install_view_column_widths();
+        install_view_layout_defaults();
+
+        // 7. Update the table 'block_instance'
+        $table = new XMLDBTable('block_instance');
+        $field = new XMLDBField('row');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+        $key = new XMLDBKey('viewcolumnorderuk');
+        $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'column', 'order'));
+        drop_key($table, $key);
+        $key = new XMLDBKey('viewrowcolumnorderuk');
+        $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'row', 'column', 'order'));
+        add_key($table, $key);
+
+        // 8. Update the table 'view'
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('numrows');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+        $key = new XMLDBKey('layoutfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('layout'), 'view_layout', array('id'));
+        add_key($table, $key);
+
+        // 9. Update the table 'view_rows_columns' for existing pages
+        // In the previous Mahara version, we applied the view layouts:
+        /*
+            id   columns    width
+            1    1    100
+            2    2    50,50
+            3    2    67,33
+            4    2    33,67
+            5    3    33,33,33
+            6    3    25,50,25
+            7    3    15,70,15
+            8    4    25,25,25,25
+            9    4    20,30,30,20
+            10    5    20,20,20,20,20
+        */
+        // In this version, we introduced 2 more layouts (id=8 and 9)
+        /*
+            id   columns    width
+            1    1    100
+            2    2    50,50
+            3    2    67,33
+            4    2    33,67
+            5    3    33,33,33
+            6    3    25,50,25
+            7    3    25,25,50
+            8    3    50,25,25
+            9    3    15,70,15
+            10    4    25,25,25,25
+            11    4    20,30,30,20
+            12    5    20,20,20,20,20
+         */
+        $sql = "
+        FROM {view} v";
+        $pwcount = count_records_sql("SELECT COUNT(v.id) " . $sql);
+        $sql = "
+        SELECT v.id, v.numcolumns, v.layout " . $sql . " WHERE v.id > ?
+        ORDER BY v.id";
+        $done = 0;
+        $lastid = 0;
+        $limit = 4000;
+        while ($views = get_records_sql_array($sql, array($lastid), 0, $limit)) {
+            foreach ($views as $view) {
+                $columns = $view->numcolumns;
+                if ($view->layout !== NULL) {
+                    // Update the new layout in database
+                    $layout = $view->layout;
+                    if ($layout > 7) {
+                        $layout += 2;
+                    }
+                    $newview = clone $view;
+                    $newview->layout = $layout;
+                    update_record('view', $newview);
+                }
+                insert_record('view_rows_columns', (object) array('view' => $view->id, 'row' => 1, 'columns' => $columns));
+                $lastid = $view->id;
+            }
+            $done += count($views);
+            log_debug("Upgrading pages: $done/$pwcount");
+            set_time_limit(30);
+        }
+
+    }
+
     return $status;
 }

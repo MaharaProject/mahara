@@ -15,10 +15,6 @@ ul.colnav li a:visited,
 ul.colnav li a:active {
     background: #d6e0c5;
 }
-/******************** Top pane of edit page ********************/
-#top-pane {
-    background: #F3F7EC;
-}
 /******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
@@ -45,16 +41,35 @@ ul.colnav li a:active {
     border-bottom: 0;
 }
 /******************** Blocktype icons panel ********************/
-#blocktype-list {
-    background-color: #f5f9fc;
-}
-/******************** Blocktype name & description panel ********************/
-#middle-pane {
-	background: #ddebf5;
-}
-/******************** Bottom pane of edit page ********************/
-#page #bottom-pane {
-	background-color: #F3F7EC;
+/* for 600px or less */
+@media screen and (max-width: 600px) {
+    #editcontent-sidebar {
+        width: 39px;
+        top: 0;
+    }
+    body.no-js #editcontent-sidebar {
+        width: 64px;
+    }
+    #tabcontent #page,
+    #tabcontent #page.open {
+        margin-left: 46px;
+    }
+    body.no-js #tabcontent #page,
+    body.no-js #tabcontent #page.open {
+        margin-left: 71px;
+    }
+    .block-category-title .withjs,
+    .block-category-title .nonjs {
+    	text-indent: -9999px;
+    }
+    .blocktypetitle,
+    .open #content-editor-header,
+    #content-editor-header {
+        display: none;
+    }
+    .ui-draggable-dragging .blocktype .blocktypetitle {
+    	display: inline;
+    }
 }
 /******************** Blocks ********************/
 .blockinstance-header .title a,
@@ -119,7 +134,7 @@ ul.colnav li a:active {
     border: 0;
 }
 .rd-navmenu #category-list li a:hover {
-	background: #e4ecd6;
+    background: #e4ecd6;
 }
 .rd-navmenu #category-list li.current a,
 .rd-navmenu #category-list li.current a:link,
@@ -215,10 +230,6 @@ ul.colnav li a:active {
     #print_link,
     #objection_link {
         display: none;
-    }
-    #middle-pane #themeselect {
-        float: none;
-        text-align: center;
     }
     /* Latest forum posts block (on groups page) */
     #latestforumposts td {

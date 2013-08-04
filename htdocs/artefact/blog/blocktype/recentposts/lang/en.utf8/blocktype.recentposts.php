@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Recent journal entries';
-$string['description'] = 'Display the most recent journal entries';
+$string['description'] = 'Display the most recent journal entries (see Content -> Journal)';
 $string['itemstoshow'] = 'Entries to show';
 $string['postedin'] = 'in';
 $string['postedon'] = 'on';

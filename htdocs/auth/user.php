@@ -539,6 +539,7 @@ class User {
             'blocktype'  => 'profileinfo',
             'title'      => get_string('aboutme', 'blocktype.internal/profileinfo'),
             'view'       => $view->get('id'),
+            'row'        => 1,
             'column'     => 1,
             'order'      => 1,
         ));

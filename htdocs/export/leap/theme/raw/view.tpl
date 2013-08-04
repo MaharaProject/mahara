@@ -1,6 +1,8 @@
 {include file="export:leap:entry.tpl" skipfooter=true}
         <mahara:view{if $layout} mahara:layout="{$layout}"{/if}{if $type} mahara:type="{$type}"{/if} mahara:ownerformat="{$ownerformat}">
-{foreach from=$viewdata item=column}
+{foreach from=$viewdata item=row}
+          <mahara:row>
+{foreach from=$row['columns'] item=column}
             <mahara:column>
 {foreach from=$column item=blockinstance}
                 <mahara:blockinstance mahara:blocktype="{$blockinstance.blocktype}" mahara:blocktitle="{$blockinstance.title}">
@@ -10,6 +12,8 @@
                 </mahara:blockinstance>
 {/foreach}
             </mahara:column>
+{/foreach}
+         </mahara:row>
 {/foreach}
         </mahara:view>
 {include file="export:leap:entryfooter.tpl"}

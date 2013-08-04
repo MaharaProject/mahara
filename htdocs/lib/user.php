@@ -2343,6 +2343,8 @@ function install_system_profile_view() {
         'type'        => 'profile',
         'owner'       => 0,
         'numcolumns'  => 2,
+        'numrows'     => 1,
+        'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
         'description' => get_string('profiledescription'),
@@ -2361,6 +2363,7 @@ function install_system_profile_view() {
                 'blocktype'  => $blocktype,
                 'title'      => get_string('title', 'blocktype.' . $blocktype),
                 'view'       => $view->get('id'),
+                'row'        => 1,
                 'column'     => $blocktypes[$blocktype],
                 'order'      => $weights[$blocktypes[$blocktype]],
             ));
@@ -2386,6 +2389,8 @@ function install_system_dashboard_view() {
         'type'        => 'dashboard',
         'owner'       => 0,
         'numcolumns'  => 2,
+        'numrows'     => 1,
+        'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
         'ownerformat' => FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('dashboardviewtitle', 'view'),
         'template'    => 1,
@@ -2397,6 +2402,7 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'newviews',
             'title' => '',
+            'row'   => 1,
             'column' => 1,
             'config' => array(
                 'limit' => 5,
@@ -2405,12 +2411,14 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'myviews',
             'title' => '',
+            'row'   => 1,
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'inbox',
             'title' => '',
+            'row'   => 1,
             'column' => 2,
             'config' => array(
                 'feedback' => true,
@@ -2426,6 +2434,7 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'inbox',
             'title' => '',
+            'row'   => 1,
             'column' => 2,
             'config' => array(
                 'newpost' => true,
@@ -2442,6 +2451,7 @@ function install_system_dashboard_view() {
                 'blocktype'  => $blocktype['blocktype'],
                 'title'      => $blocktype['title'],
                 'view'       => $view->get('id'),
+                'row'        => $blocktype['row'],
                 'column'     => $blocktype['column'],
                 'order'      => $weights[$blocktype['column']],
                 'configdata' => $blocktype['config'],

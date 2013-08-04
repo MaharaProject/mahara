@@ -261,13 +261,23 @@ $string['removethisblock'] = 'Remove this block';
 $string['blocktitle'] = 'Block title';
 
 $string['changemyviewlayout'] = 'Change my page layout';
+$string['createcustomlayout'] = 'Create custom layout';
+$string['createnewlayout'] = 'Create new layout';
+$string['basicoptions'] = 'Basic options';
+$string['advancedoptions'] = 'Advanced options';
 $string['viewcolumnspagedescription'] = 'First, select the number of columns in your page. In the next step, you will be able to change the widths of the columns.';
-$string['viewlayoutpagedescription'] = 'Select how you would like the columns in your page to be laid out.';
+$string['viewlayoutpagedescription'] = 'Select how you would like your page to be laid out.';
 $string['changeviewlayout'] = 'Change my page\'s column layout';
 $string['viewlayoutchanged'] = 'Page layout changed';
 $string['numberofcolumns'] = 'Number of columns';
 $string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time. Please try again later.';
-
+$string['changerowlayoutfailed'] = 'Could not change the row layout. Someone else may have been editing the layout at the same time. Please try again later.';
+$string['Row'] = 'Row';
+$string['addarow'] = 'Add a row';
+$string['removethisrow'] = 'Remove this row';
+$string['columnlayout'] = 'Column layout';
+$string['layoutpreview'] = 'Layout preview';
+$string['Help'] = 'Help';
 
 $string['by'] = 'by';
 $string['viewtitleby'] = '%s by <a href="%s">%s</a>';
@@ -277,20 +287,34 @@ $string['noblocks'] = 'Sorry, no blocks in this category.';
 $string['timeofsubmission'] = 'Time of submission';
 
 $string['column'] = 'column';
+$string['row'] = 'row';
 $string['columns'] = 'columns';
-$string['100'] = $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = $string['20,20,20,20,20'] = 'Equal widths';
-$string['67,33'] = 'Larger left column';
-$string['33,67'] = 'Larger right column';
-$string['25,50,25'] = 'Larger centre column';
-$string['15,70,15'] = 'Much larger centre column';
-$string['20,30,30,20'] = 'Larger centre columns';
+$string['rows'] = 'rows';
+$string['100'] = '100';
+$string['50,50'] = '50-50';
+$string['33,33,33'] = '33-33-33';
+$string['25,25,25,25'] = '25-25-25-25';
+$string['20,20,20,20,20'] = '20-20-20-20-20';
+$string['67,33'] = '67-33';
+$string['33,67'] = '33-67';
+$string['25,25,50'] = '25-25-50';
+$string['50,25,25'] = '50-25-25';
+$string['25,50,25'] = '25-50-25';
+$string['15,70,15'] = '15-70-15';
+$string['20,30,30,20'] = '20-30-30-20';
 $string['noviewlayouts'] = 'There are no layouts for a %s column page.';
 $string['cantaddcolumn'] = 'You cannot add any more columns to this page.';
 $string['cantremovecolumn'] = 'You cannot remove the last column from this page.';
 
-$string['blocktypecategory.external'] = 'External content';
-$string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
+$string['blocktypecategory.external'] = 'External';
+$string['blocktypecategory.fileimagevideo'] = 'Media';
 $string['blocktypecategory.general'] = 'General';
+$string['blocktypecategory.internal'] = 'Personal info';
+$string['blocktypecategorydesc.external'] = 'Click for external options';
+$string['blocktypecategorydesc.fileimagevideo'] = 'Click for media options';
+$string['blocktypecategorydesc.general'] = 'Click for general options';
+$string['blocktypecategorydesc.internal'] = 'Click for personal info options';
+$string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback.';
@@ -378,3 +402,11 @@ $string['retractable'] = 'Retractable';
 $string['retractabledescription'] = 'Select to allow this block to be retracted when the header is clicked.';
 $string['retractedonload'] = 'Automatically retract';
 $string['retractedonloaddescription'] = 'Select to automatically retract this block.';
+
+// Artefact chooser panel
+$string['textbox'] = 'Text box';
+$string['textboxtooltip'] = 'Add a text box';
+$string['image'] = 'Image';
+$string['imagetooltip'] = 'Add a single image';
+$string['addcontent'] = 'Add Content';
+$string['theme'] = 'Theme';

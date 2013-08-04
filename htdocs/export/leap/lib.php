@@ -259,8 +259,6 @@ class PluginExportLeap extends PluginExport {
      * Export the views
      */
     private function export_views() {
-        $layouts = get_records_assoc('view_layout');
-
         $progressstart = 10;
         $progressend   = 50;
         $views = $this->get('views');
@@ -284,11 +282,16 @@ class PluginExportLeap extends PluginExport {
                 $this->smarty->assign('summary',     $content);
             }
             $this->smarty->assign('contenttype', 'xhtml');
-            if ($viewcontent = self::parse_xhtmlish_content($view->build_columns(), $view->get('id'))) {
+            if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(), $view->get('id'))) {
                 $this->smarty->assign('content', $viewcontent);
             }
-            $this->smarty->assign('viewdata',    $config['columns']);
-            $this->smarty->assign('layout',      $view->get_layout()->widths);
+            $this->smarty->assign('viewdata',    $config['rows']);
+            $layout = $view->get_layout();
+            foreach ($layout->rows as $row){
+                $widths .= $row['widths'] . '-';
+            }
+            $widths = substr($widths, 0, -1);
+            $this->smarty->assign('layout',      $widths);
             $this->smarty->assign('type',        $config['type']);
             $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
             $this->smarty->assign('ownerformat', $ownerformat);
@@ -448,23 +451,25 @@ class PluginExportLeap extends PluginExport {
      * this limitation later.
      */
     private function rewrite_artefact_ids($config) {
-        foreach ($config['columns'] as &$column) {
-            foreach ($column as &$blockinstance) {
-                if (isset($blockinstance['config']['artefactid'])) {
-                    $id = json_decode($blockinstance['config']['artefactid']);
-                    if ($id[0] != null) {
-                        $blockinstance['config']['artefactid'] = json_encode(array('portfolio:artefact' . $id[0]));
+        foreach ($config['rows'] as &$row) {
+            foreach ($row['columns'] as &$column) {
+                foreach ($column as &$blockinstance) {
+                    if (isset($blockinstance['config']['artefactid'])) {
+                        $id = json_decode($blockinstance['config']['artefactid']);
+                        if ($id[0] != null) {
+                            $blockinstance['config']['artefactid'] = json_encode(array('portfolio:artefact' . $id[0]));
+                        }
+                        else {
+                            $blockinstance['config']['artefactid'] = null;
+                        }
                     }
-                    else {
-                        $blockinstance['config']['artefactid'] = null;
+                    else if (isset($blockinstance['config']['artefactids'])) {
+                        $ids = json_decode($blockinstance['config']['artefactids']);
+                        $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
                     }
                 }
-                else if (isset($blockinstance['config']['artefactids'])) {
-                    $ids = json_decode($blockinstance['config']['artefactids']);
-                    $blockinstance['config']['artefactids'] = json_encode(array(array_map(array($this, 'prepend_artefact_identifier'), $ids[0])));
-                }
-            }
-        }
+            } // cols
+        } //rows
         return $config;
     }
 

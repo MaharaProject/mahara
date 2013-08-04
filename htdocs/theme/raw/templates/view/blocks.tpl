@@ -6,46 +6,38 @@
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='content' new=$new}
-<div class="subpage rel cl">
+<div class="subpage rel cl" id="tabcontent" selected='content'>
+
+  <form action="{$formurl}" method="post">
+  <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
+  <input type="hidden" id="viewid" name="id" value="{$view}">
+  <input type="hidden" name="change" value="1">
+  <input type="hidden" id="category" name="c" value="{$category}">
+  <input type="hidden" name="sesskey" value="{$SESSKEY}">
+  {if $new}<input type="hidden" name="new" value="1">{/if}
+  <div id="editcontent-sidebar-wrapper">
+    <div id="editcontent-sidebar">
+    {include file="view/contenteditor.tpl" selected='content' new=$new}
+    {if $viewthemes}
+        <div id="select-theme">
+            <div id="select-theme-header">{str tag=theme section=view}</div>
+            <select id="viewtheme-select" name="viewtheme">
+            {foreach from=$viewthemes key=themeid item=themename}
+                <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
+            {/foreach}
+            </select>
+        </div>
+    {/if}
+    </div>
+  </div>
 
 {if $columns}
-    {str tag="editblockspagedescription" section="view"}
-    <form action="{$formurl}" method="post">
-        <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
-        <input type="hidden" id="viewid" name="id" value="{$view}">
-        <input type="hidden" name="change" value="1">
-        <input type="hidden" id="category" name="c" value="{$category}">
-        <input type="hidden" name="sesskey" value="{$SESSKEY}">
-        {if $new}<input type="hidden" name="new" value="1">{/if}
         <div id="page">
-            <div id="top-pane">
-                <div id="category-list">
-                    {$category_list|safe}
-                </div>
-                <div id="blocktype-list">
-                    {$blocktype_list|safe}
-                </div>
-            </div>
-            <div id="middle-pane">
-{if $viewthemes}
-              <div id="themeselect">
-                  <label for="viewtheme-select">{str tag=theme}: </label>
-                  <select id="viewtheme-select" name="viewtheme">
-{foreach from=$viewthemes key=themeid item=themename}
-                      <option value="{$themeid}"{if $themeid == $viewtheme} selected="selected" style="font-weight: bold;"{/if}>{$themename}</option>
-{/foreach}
-                  </select>
-              </div>
-{/if}
-              <div class="nojs-hidden-block" id="current_bt_description"></div>
-              <div class="cb"></div>
-            </div>
-
             <div id="bottom-pane">
                 <div id="column-container">
-                	<div id="blocksinstruction" class="center">
-                	    {str tag='blocksintructionnoajax' section='view'}
-                	</div>
+                    <div id="blocksinstruction" class="center">
+                        {str tag='blocksintructionnoajax' section='view'}
+                    </div>
                         {$columns|safe}
                     <div class="cb"></div>
                 </div>

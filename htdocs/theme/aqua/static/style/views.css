@@ -15,11 +15,6 @@ ul.colnav li a:active {
     background: #00084F;
     color: #FFFFFF;
 }
-/******************** Top pane of edit page ********************/
-#top-pane {
-    padding: 10px 10px 0 10px;
-    background: #1D499F;
-}
 /******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
@@ -39,21 +34,20 @@ ul.colnav li a:active {
     color: #1E6297;
 }
 /******************** Blocktype icons panel ********************/
-#blocktype-list {
-    color: #1D499F;
-    background-color: #f4f7f9;
-    border: 0;
+#editcontent-sidebar {
+    background-color: #afbbd2;
 }
-/******************** Blocktype name & description panel ********************/
-#middle-pane {
-    background: #f4f7f9;
-    border-left: 10px solid #1D499F;
-    border-right: 10px solid #1D499F;
-}
-/******************** Bottom pane of edit page ********************/
-#page #bottom-pane {
-    background-color: #FFFFFF;
-    border-width: 0 10px 10px 10px;
-    border-style: solid;
-    border-color: #1D499F;
+#blocktype-common,
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog,
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background-color: #d8deea;
+    border-color: #c6cedd;
 }

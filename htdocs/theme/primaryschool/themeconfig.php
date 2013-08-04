@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2012 Catalyst IT Ltd
+ * Copyright (C) 2012-2013 Catalyst IT Ltd
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Evonne Cheung
+ * @author     Catalyst IT Ltd
   */
 
 $theme = new StdClass;

@@ -734,6 +734,11 @@ function core_install_lastcoredata_defaults() {
         insert_record('usr', $user);
     }
 
+    // install the view column widths
+    install_view_column_widths();
+    // install the default layout options
+    install_view_layout_defaults();
+
     require_once('group.php');
     install_system_profile_view();
     install_system_dashboard_view();
@@ -920,9 +925,6 @@ function core_install_firstcoredata_defaults() {
         $cron->dayofweek    = $times[4];
         insert_record('cron', $cron);
     }
-
-    // install the view column widths
-    install_view_column_widths();
 
     $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage');
     foreach ($viewtypes as $vt) {
@@ -1129,9 +1131,35 @@ function install_view_column_widths() {
         foreach ($widths as $width) {
             $layout->columns = $column;
             $layout->widths = $width;
-            insert_record('view_layout', $layout);
+            insert_record('view_layout_columns', $layout);
         }
     }
+    db_commit();
+}
+
+function install_view_layout_defaults() {
+    db_begin();
+    require_once('view.php');
+
+    foreach (View::$defaultlayoutoptions as $id => $rowscols) {
+        $vlid = insert_record('view_layout', (object)array(
+            'iscustom' => 0,
+            'rows'     => count($rowscols),
+        ), 'id', true);
+        insert_record('usr_custom_layout', (object)array(
+            'usr'    => 0,
+            'layout' => $vlid,
+        ));
+
+        foreach ($rowscols as $row => $col) {
+            insert_record('view_layout_rows_columns', (object)array(
+                'viewlayout'      => $id,
+                'row'     => $row,
+                'columns' => $col,
+            ));
+        }
+    }
+
     db_commit();
 }
 

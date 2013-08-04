@@ -86,7 +86,7 @@ JAVASCRIPT;
     }
 
     $smarty->assign('dashboardview', true);
-    $smarty->assign('viewcontent', $view->build_columns());
+    $smarty->assign('viewcontent', $view->build_rows());
     $smarty->assign('viewid', $view->get('id'));
 }
 else {

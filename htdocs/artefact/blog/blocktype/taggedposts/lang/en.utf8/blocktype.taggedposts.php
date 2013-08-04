@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Tagged journal entries';
-$string['description'] = 'Display journal entries with a particular tag';
+$string['description'] = 'Display journal entries with a particular tag (see Content -> Journal)';
 $string['blockheading'] = 'Journal entries tagged';
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
 $string['postsperpage'] = 'Entries per page';

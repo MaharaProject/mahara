@@ -1,174 +1,93 @@
-/********************** Top pane of Edit View *************************/
-#page {
-	margin-bottom: 0;
-}
-#page #bottom-pane {
-	background: #dfe1f0 url(../images/bottom-pane-shad.png) repeat-x left top;
-	padding: 20px 10px 10px 10px;
-	border-width: 0;
-	border-style: solid;
-	border-color: #dfe1f0;
-}
-#top-pane {
-	padding: 0;
-	background: #f9f9f9;
-}
-/* The tabs that allow you to select a blocktype category */
-#category-list ul {
-	height: 34px;
-	line-height: 30px;
-}
-#category-list li {
-	color: #1E6297;
-	background: url(../images/blocklist-tab-right.png) no-repeat right top;
-	display: inline-block;
-}
-#category-list li a, #category-list li a:link, #category-list li a:visited, #category-list li a:active {
-	background: url(../images/blocklist-tab-left.png) no-repeat left top;
-	color: #FFF;
-	height: 34px;
-	line-height: 40px;
-	padding: 0 10px;
-	margin: 0;
-}
-#category-list li a:hover {
-	text-decoration: none;
-	color: #ffae03;
-}
-#category-list li.current {
-	background: url(../images/blocklist-active-right.png) no-repeat right top;
-}
-#category-list li.current a, #category-list li.current a:link, #category-list li.current a:visited, #category-list li.current a:active {
-	background: url(../images/blocklist-active-left.png) no-repeat left top;
-	color: #FFFFFF;
-	line-height: 36px;
-}
-/* The panel that contains the blocktype icons */
-#blocktype-list {
-	color: #b1b5db !important;
-	background-color: #252c66;
-	border: 0;
-}
-#blocktype-list ul li {
-	background: url(../images/blocklist-divider.png) no-repeat right bottom;
-	margin: 0;
-	padding: 10px;
-}
-#blocktype-list .blocktype h4 {
-	color: #FFFFFF;
-}
-#current_bt_description {
-	color: #b1b5db;
-}
-#current_bt_description strong {
-	color: #ffae03;
-}
-#middle-pane {
-	background: #394189;
-}
-#themeselect label {
-	color: #ffae03;
-}
-/********************** Blockinstance ***********************************/
-/* header*/
-.blockinstance-header h4 {
-	border-bottom: 2px solid #111641;
-}
-/* Wall */
-.wallpost {
-	background-color: #dfe1f0;
-}
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-	padding-left: 1em !important;
-	background: none;
-}
-ul.artefactchooser-tabs li {
-	margin: 0;
-	color: #FFF;
-	display: inline-block;
-}
-ul.artefactchooser-tabs li a, ul.artefactchooser-tabs li a:link, ul.artefactchooser-tabs li a:visited, ul.artefactchooser-tabs li a:active {
-	color: #FFF;
-	background: #394189;
-}
-ul.artefactchooser-tabs li a:hover {
-	color: #ffae03;
-}
-ul.artefactchooser-tabs li.current a, ul.artefactchooser-tabs li.current a:link, ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
-	color: #000;
-	background: #dfe1f0;
-}
-ul.artefactchooser-subtabs li {
-	border-right: 1px solid #9da2d0;
-}
-ul.artefactchooser-subtabs li a, ul.artefactchooser-subtabs li a:link, ul.artefactchooser-subtabs li a:visited, ul.artefactchooser-subtabs li a:active {
-	text-decoration: none;
-	background: none;
-}
-ul.artefactchooser-subtabs li a:hover {
-	text-decoration: none;
-}
-ul.artefactchooser-subtabs li.current a, ul.artefactchooser-subtabs li.current a:link, ul.artefactchooser-subtabs li.current a:visited, ul.artefactchooser-subtabs li.current a:active {
-	color: #333;
-	font-weight: bold;
-	background: none;
-	text-decoration: underline;
-}
-ul.artefactchooser-subtabs li.current a:hover {
-	text-decoration: underline;
-}
-#artefactchooser-body {
-	background: #dfe1f0;
-	border: 0;
-}
-/* table */
-.maharatable thead th {
-	color: #182768;
-}
-#artefactchooser-body th label {
-	color: #182768;
-}
-.maharatable td label {
-	color: #182768;
-}
+/**
+ * Views stylesheet - for Mahara's Primary School theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */ 
+/******************** Collection navigation ********************/
 #collectionnavwrap {
 	background: #F7F7FB;
 }
-.viewheadertop {
-	padding: 5px 0;
-}
-#containerX .viewheader {
-	padding: 0;
-}
-#containerX #collectionnavwrap {
-	padding: 0;
-}
-#collection {
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
 	color: #FFF;
+	background: #5b6eae;
 }
-ul.colnav li a {
-	background: #394189;
+/******************** Blocktype tabs ********************/
+#category-list li {
+	color: #1E6297;
+	background: url(../images/blocklist-tab-right.png) no-repeat right 0;
+    display: inline-block;
 }
+#category-list li a,
+#category-list li a:link,
+#category-list li a:visited,
+#category-list li a:active {
+	background: url(../images/blocklist-tab-left.png) no-repeat 0 0;
+	color: #FFFFFF;
+	height: 34px;
+	line-height: 40px;
+	padding: 0 10px;
+}
+#category-list li a:hover {
+	color: #ffae03;
+}
+#category-list li.current {
+	background: url(../images/blocklist-active-right.png) no-repeat right 0;
+}
+#category-list li.current a,
+#category-list li.current a:link,
+#category-list li.current a:visited,
+#category-list li.current a:active {
+	background: url(../images/blocklist-active-left.png) no-repeat 0 0;
+	color: #FFFFFF;
+	line-height: 36px;
+}
+/******************** Blocktype icons panel ********************/
+#editcontent-sidebar {
+    background-color: #bcc8e9;
+}
+#blocktype-common,
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog,
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background-color: #dcdfe9;
+    border-color: #cbd3ec;
+}
+/******************** Blocks ********************/
+/* block header */
+.blockinstance-header .title {
+	border-bottom: 2px solid #111641;
+}
+/******************** Page ********************/
+/* page footer */
 .viewfooter {
 	border: 0;
-	background: #f7f7fb url(../images/feedback-shad.png) repeat-x top;
+	background: #f7f7fb url(../images/feedback-shad.png) repeat-x 0 0;
+    padding-top: 15px;
 	-webkit-border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
 }
-.submissionform {
-	background: #ced0e0;
+/* feedback */
+#feedbacktable .commentrightwrap {
+    background: #FFFFFF;
 }
-#feedback_pagination {
-	background: #f7f7fb;
-	border-top: 1px solid #f4f5fa;
-}
+/* view menu */
 #viewmenu a {
-	color: #182768;
+	color: #2144a8;
 }
-#copyview .searchquery {
-	background: none;
-	border: 0;
-	padding: 0;
+/******************** Blocks ********************/
+/* More link */
+.morelinkwrap {
+	background: transparent;
 }

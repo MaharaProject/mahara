@@ -106,7 +106,7 @@ if ($restrictedview && !$USER->is_logged_in()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
 if (!$restrictedview) {
-    $viewcontent = $view->build_columns();
+    $viewcontent = $view->build_rows();
 }
 
 $javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');

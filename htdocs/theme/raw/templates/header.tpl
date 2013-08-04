@@ -5,7 +5,7 @@
 <!--[if IE 9 ]><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} class="ie ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}><!--<![endif]-->
 {include file="header/head.tpl"}
-<body>
+<body class="no-js">
 {if $ADDITIONALHTMLTOPOFBODY}{$ADDITIONALHTMLTOPOFBODY|safe}{/if}
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
     {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
@@ -25,18 +25,23 @@
     <div id="mainmiddlewrap">
         <div id="mainmiddle">
             <div id="{if $SIDEBARS}{if $SIDEBLOCKS.right}main-wrapper-narrow-right{else}main-wrapper-narrow-left{/if}{else}main-wrapper{/if}">
-                    <div id="main-column" class="main-column{if $SIDEBARS} main-column-narrow{/if}">
-                        <div id="main-column-container">
+                    <div id="main-column" class="main-column{if $SIDEBARS} main-column-narrow{/if}{if $selected == 'content'} editcontent{/if}">
+                    <div id="main-column-container">
                         {dynamic}{insert_messages}{/dynamic}
-{if isset($PAGEHEADING)}                    <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
+{if isset($PAGEHEADING)}
+                       <h1>{$PAGEHEADING}{if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}</h1>
 {/if}
 
-{if $SUBPAGENAV}
-  {if $SUBPAGETOP}{include file=$SUBPAGETOP}{/if}
-{* Tabs and beginning of page container for group info pages *}                        <div class="tabswrap"><ul class="in-page-tabs">
+{if $SUBPAGENAV}{if $SUBPAGETOP}
+                       {include file=$SUBPAGETOP}
+{/if}
+{* Tabs and beginning of page container for group info pages *}
+                       <div class="tabswrap">
+                           <ul class="in-page-tabs">
 {foreach from=$SUBPAGENAV item=item}
-                            <li {if $item.selected}class="current-tab"{/if}><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}</a></li>
+                               <li {if $item.selected}class="current-tab"{/if}><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}</a></li>
 {/foreach}
-                        </ul></div>
+                           </ul>
+                       </div>
                         <div class="subpage rel">
 {/if}

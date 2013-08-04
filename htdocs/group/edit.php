@@ -505,7 +505,7 @@ function editgroup_submit(Pieform $form, $values) {
 $js = '
 $j(function() {
     $j("#editgroup_controlled").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             $j("#editgroup_request").removeAttr("disabled");
             $j("#editgroup_open").removeAttr("checked");
             if (!$j("#editgroup_request").attr("checked")) {
@@ -515,7 +515,7 @@ $j(function() {
         }
     });
     $j("#editgroup_open").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             $j("#editgroup_controlled").removeAttr("checked");
             $j("#editgroup_request").removeAttr("checked");
             $j("#editgroup_request").attr("disabled", true);
@@ -530,7 +530,7 @@ $j(function() {
         }
     });
     $j("#editgroup_request").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             $j("#editgroup_suggestfriends").removeAttr("disabled");
         }
         else {
@@ -541,7 +541,7 @@ $j(function() {
         }
     });
     $j("#editgroup_invitefriends").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             if ($j("#editgroup_request").attr("checked") || $j("#editgroup_open").attr("checked")) {
                 $j("#editgroup_suggestfriends").removeAttr("disabled");
             }
@@ -549,12 +549,12 @@ $j(function() {
         }
     });
     $j("#editgroup_suggestfriends").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             $j("#editgroup_invitefriends").removeAttr("checked");
         }
     });
     $j("#editgroup_hidemembersfrommembers").click(function() {
-        if ($(this).checked) {
+        if (this.checked) {
             $j("#editgroup_hidemembers").attr("checked", true);
             $j("#editgroup_hidemembers").attr("disabled", true);
         }

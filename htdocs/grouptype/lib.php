@@ -71,6 +71,10 @@ abstract class GroupType {
         }
     }
 
+    public static abstract function allowed_join_types();
+
+    public static abstract function user_allowed_join_types($user);
+
     /**
      * Returns whether the currently logged in user can create a group of this 
      * grouptype
@@ -80,9 +84,19 @@ abstract class GroupType {
     }
 
     /**
+     * Returns whether a user can be promoted to admin of a group of this
+     * grouptype (by an existing group admin, on the 'change role' page)
+     */
+    public static function can_become_admin($userid) {
+        return true;
+    }
+
+    /**
      * Returns the roles this group type implements
      */
     public static abstract function get_roles();
+
+    public static abstract function get_view_editing_roles();
 
     public static abstract function get_view_moderating_roles();
 
@@ -91,4 +105,7 @@ abstract class GroupType {
     public static function get_group_artefact_plugins() {
         return array('file');
     }
+
+    public static abstract function default_artefact_rolepermissions();
+
 }

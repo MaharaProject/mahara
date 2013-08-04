@@ -1,124 +1,126 @@
-/*  Views  */
-/********************** Top pane of Edit View *************************/
-#page #bottom-pane {
-    background: #080D0F;
-    padding: 10px;
+/**
+ * Views stylesheet - for Mahara's Fresh theme.
+ *
+ * Copyright (C) 2006-2013 Catalyst IT Ltd
+ * This file is licensed under the same terms as Mahara itself
+ */ 
+/******************** Collection navigation ********************/
+#collectionnavwrap {
+	background: #0C2839;
 }
-#top-pane {
-    background: none;
+ul.colnav li a,
+ul.colnav li a:link,
+ul.colnav li a:visited,
+ul.colnav li a:active {
+	color: #FFFFFF;
+    background: url(../images/subnav-bg.png) repeat-x 0 50%;
 }
-/* The tabs that allow you to select a blocktype category */
-#category-list li {
-    display: inline-block;
+ul.colnav li.selected span {
+	background: #080D0F;
+	color: #FFFFFF;
 }
+/******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
 #category-list li a:visited,
 #category-list li a:active {
-  color: #FFF;
-  font-weight: normal;
-  background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
+    color: #FFFFFF;
+    font-weight: normal;
+    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
 }
 #category-list li a:hover {
-  color: #FFF;
-  background: #1C3740 url(../images/mainnav-bg.gif) repeat-x center;
-  text-decoration: underline;
+    color: #FFFFFF;
+    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
+    text-decoration: underline;
 }
 #category-list li.current a,
 #category-list li.current a:link,
 #category-list li.current a:visited,
 #category-list li.current a:active {
-  color: #FFF;
-  font-weight: bold;
-  background: #00AEF1 url(../images/subnav-bg.gif) repeat-x center;
+    color: #FFFFFF;
+    font-weight: bold;
+    background: url(../images/subnav-bg.png) repeat-x 0 50%;
 }
-
-/* The panel that contains the blocktype icons */
-#blocktype-list {
-    background-color: #009ad5;
+/******************** Blocktype icons panel ********************/
+.collapsed #content-editor-header {
+    background: url("../images/contenteditor/expand.png") no-repeat right 0;
 }
-.blocktype div {
-	color: #BEE3F1;
+.open #content-editor-header {
+    background: url("../images/contenteditor/collapse.png") no-repeat right 0;
 }
+#editcontent-sidebar {
+    background: #009ad5;
+}
+#blocktype-common,
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog,
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background-color: #78d9ff;
+    border: 1px solid #66d0f9;
+}
+.blocktype {
+    background: #bcecff;
+    border: 1px solid #abe8ff;
+}
+/******************** Bottom pane of edit page ********************/
+#page #bottom-pane {
+    background: #080D0F;
+    -webkit-box-shadow: 0 0 1px 1px #2b3032;
+	box-shadow: 0 0 1px 1px #2b3032;
+}
+/******************** Column layout ********************/
 #column-container {
 	background: #080D0F;
 }
-
-#middle-pane {
-    background: #00aef1;
-    color: #FFF;
+.column-content {
+	background: #080D0F !important;
 }
-#current_bt_description strong {
-    color: #ffffff;
+/******************** Blocks ********************/
+/* block header */
+.blockinstance-header .title {
+	border-bottom: 1px dotted #E0E8EE;
 }
-.column-header {
-    background: #000000;
+/******************** Configure blockinstance ********************/
+.blockinstance.configure {
+    border: 10px solid #000000;
+    background: #10171A;
 }
-#blocktype-list .blocktype h4 {
-    color: #FFFFFF;
+.no-js .blockconfig-background {
+    background: #10171A;
 }
-
+.add-button {
+    background: #10171A;
+}
 /********************** Bottom pane of Edit View *************************/
 #blocksinstruction {
     color: #BEE3F1;
 }
-
-
-/********************** Blockinstance ************************************/
-.blockinstance.configure {
-    border: 4px solid #1C3740;
-    background: #10171A;
-}
-
-/* header*/
-.blockinstance-header h4 {
-	border-bottom: 1px dotted #E0E8EE;
-}
-.blockinstance-header h4 a,
-.blockinstance-header h4 a:link,
-.blockinstance-header h4 a:visited,
-.blockinstance-header h4 a:active {
-    text-decoration: none;
-}
-
-/* content */
-.blockinstance-content {
-	padding: 0;
-}
-
-/* Wall */
-.wallpost {
-    border-bottom: 1px solid #080D0F;
-	background: #1C3740;
-}
-#wall .private {
-    background: #274f5c;
-}
-
-
-/* tabs for the artefact chooser */
-ul.artefactchooser-tabs {
-  border-bottom: 1px solid #1C3740;
-}
-ul.artefactchooser-tabs li {
-    display: inline-block;
-}
+/******************** Block config tabs ********************/
 ul.artefactchooser-tabs li a,
 ul.artefactchooser-tabs li a:link,
 ul.artefactchooser-tabs li a:visited,
 ul.artefactchooser-tabs li a:active {
-  background: #1C3740;
-  color: #BEE3F1;
-    padding: 4px 10px;
+	background: #1C3740;
+	color: #BEE3F1;
+	border: 0;
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
 ul.artefactchooser-tabs li.current a:visited
 ul.artefactchooser-tabs li.current a:active {
-  background: #00AEF1;
-  color: #FFF;
-  font-weight: bold;
+	background: #00AEF1;
+	color: #FFFFFF !important;
+	border: 0;
+	font-weight: bold;
 }
+/******************** Block config sub tabs ********************/
 ul.artefactchooser-subtabs li {
 	border-right: 1px solid #1C3740;
 }
@@ -126,70 +128,66 @@ ul.artefactchooser-subtabs li a,
 ul.artefactchooser-subtabs li a:link,
 ul.artefactchooser-subtabs li a:visited,
 ul.artefactchooser-subtabs li a:active {
-  color: #BEE3F1;
+	color: #BEE3F1;
 }
 ul.artefactchooser-subtabs li.current a,
 ul.artefactchooser-subtabs li.current a:link,
 ul.artefactchooser-subtabs li.current a:visited,
 ul.artefactchooser-subtabs li.current a:active {
-  color: #FFFFFF;
-  font-weight: bold;
+	color: #FFFFFF;
+	font-weight: bold;
 }
-
-
+/******************** Block config tab body ********************/
 #artefactchooser-body {
     border: 1px solid #00AEF1;
+    margin-top: 0;
 }
-
-
-.ac-pagination .results {
-	background: #000000;
-}
-
-/* attachments */
-.attachments {
-	background-color: #10171A;
-}
-
-/** When viewing an artefact */
-#view .filedata-icon.fr {
-	background: #0C2839;
-}
-
-#copyview .searchquery {
-	background: #0C2839;
-	border: 0;
-}
-
-
-/* View Page footer menu */
-#view .viewfooter {
+/******************** Page ********************/
+/* page footer */
+.viewfooter {
 	border: 1px solid #10171A;
 	background: #000000;
 }
-
-/* Collection navigation */
-ul.colnav li a {
-  color: #FFF;
-	background: #00aef1;
+/* Feedback */
+#feedbacktable .commentrightwrap {
+    background-color: #10171A;
 }
-ul.colnav li.selected span {
-	background: #080D0F;
-	color: #FFFFFF;
+#feedbacktable .private .commentrightwrap {
+    background: #400d0d;
+    color: #FFFFFF;
 }
-.submissionform {
+#add_feedback_form,
+#objection_form {
+    background: #10171A;
+}
+/******************** Blocks ********************/
+.blockinstance-content .shortcut {
+    background: #10171A;
+}
+/* Folder block */
+#commentfiles {
+	background: #1C3740;
+}
+/* More link */
+.morelinkwrap {
+    background: #10171A;
+}
+.morelinkwrap a,
+.morelinkwrap a:link,
+.morelinkwrap a:visited,
+.morelinkwrap a:hover {
+    color: #00AEF1;
+}
+/* pagination */
+.blockinstance-content .center .pagination,
+.ac-pagination .results {
 	background: #10171A;
 }
-
-table tr.plan_incomplete {
-	color: #FFF;
-	background: #b0172c;
-	border-bottom: 1px solid #080D0F;
+/* Plans block */
+.plan_incomplete {
+    background: #400d0d;
 }
-#feedback_pagination {
-    background: none;
-    border: 0;
-}
-.blockinstance-content div.center div.pagination {
-    background: none;
+/* Group info block */
+.group-info {
+    background-color: #000000;
 }

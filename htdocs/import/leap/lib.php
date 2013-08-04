@@ -690,7 +690,7 @@ class PluginImportLeap extends PluginImport {
                     'type'        => 'portfolio', // TODO
                     'layout'      => null, // TODO
                     'tags'        => self::get_entry_tags($entry),
-                    'numcolumns'  => 1,
+                    'numrows'     => 1,
                     'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
                     'owner'       => $this->get('usr'),
                 );
@@ -708,6 +708,7 @@ class PluginImportLeap extends PluginImport {
                     array(
                         'blocktype'  => 'textbox',
                         'title'      => '',
+                        'row'        => 1,
                         'column'     => 1,
                         'order'      => 1,
                         'configdata' => array(
@@ -772,7 +773,7 @@ class PluginImportLeap extends PluginImport {
      */
     private function import_entry_as_mahara_view(SimpleXMLElement $entry) {
         static $blocktypes_installed = null;
-        static $viewlayouts = null;
+        static $columnlayouts = null;
         static $viewtypes = null;
         $viewelement = $entry->xpath('mahara:view[1]');
 
@@ -781,8 +782,8 @@ class PluginImportLeap extends PluginImport {
             return false;
         }
 
-        if (is_null($viewlayouts)) {
-            $viewlayouts = get_records_assoc('view_layout', '', '', '', 'widths, id');
+        if (is_null($columnlayouts)) {
+            $columnlayouts = get_records_assoc('view_layout_columns');
         }
         if (is_null($viewtypes)) {
             $viewtypes = get_column('view_type', 'type');
@@ -790,10 +791,6 @@ class PluginImportLeap extends PluginImport {
 
         $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);
 
-        $layout = null;
-        if (isset($viewlayouts[$maharaattributes['layout']])) {
-            $layout = $viewlayouts[$maharaattributes['layout']]->id;
-        }
         $type = 'portfolio';
         if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $viewtypes)) {
             $type = $maharaattributes['type'];
@@ -803,68 +800,130 @@ class PluginImportLeap extends PluginImport {
             $ownerformat = FORMAT_NAME_DISPLAYNAME;
         }
 
-        $columns = $entry->xpath('mahara:view[1]/mahara:column');
-        $columncount = count($columns);
-        if ($columncount < 1 || $columncount > 5) {
-            // Whoops, invalid number of columns
-            $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+        $rows = $entry->xpath('mahara:view[1]/mahara:row');
+        $rowcount = count($rows);
+        if ($rowcount < 1 || $rowcount > View::$maxlayoutrows) {
+            // Whoops, invalid number of rows
+            $this->trace("Invalid number of rows specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
             return false;
+        }
+
+        $layout = null;
+        if (isset($maharaattributes['layout'])) {
+            $rowwidths = explode('-', $maharaattributes['layout']);
+            if (count($rowwidths) != $rowcount) {
+                $this->trace("Row widths and number of rows do not match for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                return false;
+            }
+            $columnids = array();
+
+            foreach ($columnlayouts as $columnlayout) {
+                foreach ($rowwidths as $key => $widths) {
+                    if ($columnlayout->widths == $widths) {
+                        $columnids[$key+1] = $columnlayout->id;
+                        $sql .= ' AND (rc.row =' . ($key+1) . ' AND rc.columns=' . $columnlayout->id .')';
+                    }
+                }
+            }
+
+            if (count($columnids) != $rowcount) {
+                $this->trace("Invalid row widths were specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                return false;
+            }
+
+            for ($i=0; $i<count($columnids); $i++) {
+                $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $columnids[$i+1] . ')';
+                if ($i != (count($columnids)-1)) {
+                    $rowscolssql .= ' OR ';
+                }
+            }
+
+            // search in default layout options for a match
+            $sql = 'SELECT vlr.id
+                    FROM {view_layout_rows} vlr
+                    JOIN (SELECT id, count(*) rec_count
+                          FROM {view_layout_rows_columns}
+                          WHERE ' . $rowscolssql . '
+                          GROUP BY viewlayout
+                          HAVING rec_count = ?) vlrc
+                    ON vlr.id = vlrc.viewlayout
+                    WHERE vlr.rows = ?
+                    AND vlr.owner = 0';
+
+            $layout = get_record_sql($sql, array($rowcount, $rowcount));
+            if (!$layout) {
+                $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                return false;
+            }
         }
 
         $config = array(
             'title'       => (string)$entry->title,
             'description' => (string)$entry->summary,
             'type'        => $type,
-            'layout'      => $layout,
+            'layout'      => $layout->id,
             'tags'        => self::get_entry_tags($entry),
-            'numcolumns'  => $columncount,
+            'numrows'      => $rowcount,
             'owner'       => $this->get('usr'),
             'ownerformat' => $ownerformat,
         );
 
-        $col = 1;
-        foreach ($columns as $column) {
-            $blockinstances = $column->xpath('mahara:blockinstance');
-            $row = 1;
-            $config['columns'][$col] = array();
-            foreach ($blockinstances as $blockinstance) {
-                $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
-                if (!isset($attrs['blocktype'])) {
-                    $this->trace("  No mahara:blocktype attribute set for blockinstance at col $col, row $row: skipping");
-                    continue;
-                }
-                $this->trace("  Found block with type {$attrs['blocktype']} at [$col][$row]", self::LOG_LEVEL_VERBOSE);
+        $rowindex = 1;
+        foreach ($rows as $row) {
 
-                if ($blocktypes_installed === null) {
-                    $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
-                }
+            $columns = $row->xpath('mahara:column');
+            $columncount = count($columns);
+            if ($columncount < 1 || $columncount > 5) {
+            // Whoops, invalid number of columns
+            $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+            return false;
+            }
 
-                if (in_array($attrs['blocktype'], $blocktypes_installed)) {
-                    $configelements = $blockinstance->xpath('mahara:*');
-                    $config['columns'][$col][$row] = array(
-                        'type'   => $attrs['blocktype'],
-                        'title'  => $attrs['blocktitle'],
-                        'config' => array()
-                    );
-                    foreach ($configelements as $element) {
-                        $value = json_decode((string)$element);
-                        if (is_array($value) && isset($value[0])) {
-                            $config['columns'][$col][$row]['config'][$element->getName()] = $value[0];
-                        }
-                        else {
-                            $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
-                            $this->trace($value);
-                        }
+            $colindex = 1;
+            foreach ($columns as $column) {
+                $blockinstances = $column->xpath('mahara:blockinstance');
+                $order = 1;
+                $config['rows'][$rowindex]['columns'][$colindex] = array();
+                foreach ($blockinstances as $blockinstance) {
+                    $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                    if (!isset($attrs['blocktype'])) {
+                        $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
+                        continue;
+                    }
+                    $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
+
+                    if ($blocktypes_installed === null) {
+                        $blocktypes_installed = array_map(create_function('$a', 'return $a->name;'), plugins_installed('blocktype'));
                     }
 
-                    $row++;
+                    if (in_array($attrs['blocktype'], $blocktypes_installed)) {
+                        $configelements = $blockinstance->xpath('mahara:*');
+                        $config['rows'][$rowindex]['columns'][$colindex][$order] = array(
+                            'type'   => $attrs['blocktype'],
+                            'title'  => $attrs['blocktitle'],
+                            'config' => array()
+                        );
+                        foreach ($configelements as $element) {
+                            $value = json_decode((string)$element);
+                            if (is_array($value) && isset($value[0])) {
+                                $config['rows'][$rowindex]['columns'][$colindex][$order]['config'][$element->getName()] = $value[0];
+                            }
+                            else {
+                                $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
+                                $this->trace($value);
+                            }
+                        }
+
+                        $order++;
+                    }
+                    else {
+                        $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
+                    }
                 }
-                else {
-                    $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
-                }
-            }
-            $col++;
-        }
+                $colindex++;
+            } // cols
+            $rowindex++;
+        } //rows
 
         $view = View::import_from_config($this->rewrite_artefact_ids($config), $this->get('usr'), 'leap');
 
@@ -887,46 +946,48 @@ class PluginImportLeap extends PluginImport {
      * artefact IDs.
      */
     private function rewrite_artefact_ids($config) {
-        foreach ($config['columns'] as &$column) {
-            foreach ($column as &$blockinstance) {
-                if (isset($blockinstance['config']['artefactid'])) {
-                    $artefactid = $blockinstance['config']['artefactid'];
-                    if (isset($this->artefactids[$artefactid])) {
-                        if (count($this->artefactids[$artefactid]) == 1) {
-                            $blockinstance['config']['artefactid'] = intval($this->artefactids[$artefactid][0]);
-                        }
-                        else {
-                            $this->trace('WARNING: View config specified one artefact, but loadmapping says more than one artefact was loaded for ' . $artefactid);
-                            $this->trace($this->artefactids[$artefactid]);
-                            unset($blockinstance['config']['artefactid']);
-                        }
-                    }
-                    else {
-                        $this->trace('WARNING: View config specified an artefact, but loadmapping does not say one was loaded for '. $artefactid);
-                        unset($blockinstance['config']['artefactid']);
-                    }
-                }
-                else if (isset($blockinstance['config']['artefactids'])) {
-                    $ids = $blockinstance['config']['artefactids'];
-                    foreach ($blockinstance['config']['artefactids'] as $key => $artefactid) {
+        foreach ($config['rows'] as &$row) {
+            foreach ($row['columns'] as &$column) {
+                foreach ($column as &$blockinstance) {
+                    if (isset($blockinstance['config']['artefactid'])) {
+                        $artefactid = $blockinstance['config']['artefactid'];
                         if (isset($this->artefactids[$artefactid])) {
                             if (count($this->artefactids[$artefactid]) == 1) {
-                                $blockinstance['config']['artefactids'][$key] = intval($this->artefactids[$artefactid][0]);
+                                $blockinstance['config']['artefactid'] = intval($this->artefactids[$artefactid][0]);
                             }
                             else {
                                 $this->trace('WARNING: View config specified one artefact, but loadmapping says more than one artefact was loaded for ' . $artefactid);
                                 $this->trace($this->artefactids[$artefactid]);
-                                unset($blockinstance['config']['artefactids'][$key]);
+                                unset($blockinstance['config']['artefactid']);
                             }
                         }
                         else {
                             $this->trace('WARNING: View config specified an artefact, but loadmapping does not say one was loaded for '. $artefactid);
-                            unset($blockinstance['config']['artefactids'][$key]);
+                            unset($blockinstance['config']['artefactid']);
+                        }
+                    }
+                    else if (isset($blockinstance['config']['artefactids'])) {
+                        $ids = $blockinstance['config']['artefactids'];
+                        foreach ($blockinstance['config']['artefactids'] as $key => $artefactid) {
+                            if (isset($this->artefactids[$artefactid])) {
+                                if (count($this->artefactids[$artefactid]) == 1) {
+                                    $blockinstance['config']['artefactids'][$key] = intval($this->artefactids[$artefactid][0]);
+                                }
+                                else {
+                                    $this->trace('WARNING: View config specified one artefact, but loadmapping says more than one artefact was loaded for ' . $artefactid);
+                                    $this->trace($this->artefactids[$artefactid]);
+                                    unset($blockinstance['config']['artefactids'][$key]);
+                                }
+                            }
+                            else {
+                                $this->trace('WARNING: View config specified an artefact, but loadmapping does not say one was loaded for '. $artefactid);
+                                unset($blockinstance['config']['artefactids'][$key]);
+                            }
                         }
                     }
                 }
-            }
-        }
+            } // cols
+        } // rows
         return $config;
     }
 

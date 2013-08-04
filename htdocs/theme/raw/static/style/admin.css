@@ -40,6 +40,7 @@
 .admin-warning-box h3 {
     background: url(../images/warning.png) no-repeat 0 50%;
     padding-left: 22px;
+    color: #333333;
 }
 .admin-warning-box ul {
     margin-bottom: 0;
@@ -101,6 +102,12 @@ form#close_site {
     margin: 10px 1px 0 1px;
 }
 /* Register */
+form#register table {
+    width: 100%;
+}
+form#register table table {
+    width: auto;
+}
 #register-site-full fieldset th {
     border-bottom: 1px solid #CCCCCC;
 }
@@ -180,6 +187,9 @@ form#close_site {
 }
 #siteoptions legend {
     font-size: 1em;
+}
+#siteoptions fieldset {
+    border-color: #D1D1D1;
 }
 #siteoptions_submit_container th {
     display: none;
@@ -391,6 +401,14 @@ form#delete {
 /* Users > Suspended and expired users */
 form#usertype {
     float: left;
+}
+form#usertype tr#usertype_typesubmit_container th {
+    display: none;
+}
+form#usertype tr,
+form#usertype th,
+form#usertype td {
+    display: inline-block;
 }
 form#buttons div {
     text-align: right;

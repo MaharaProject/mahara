@@ -187,6 +187,11 @@ abstract class PluginBlocktype extends Plugin {
         return get_string('pluginname', 'artefact.' . $name);
     }
 
+    public static function category_description_from_name($name) {
+        $description = get_string('blocktypecategorydesc.'. $name, 'view');
+        return $description;
+    }
+
     public static function get_blocktypes_for_category($category, View $view) {
         $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
@@ -431,6 +436,7 @@ class BlockInstance {
     private $dirty;
     private $view;
     private $view_obj;
+    private $row;
     private $column;
     private $order;
     private $canmoveleft;
@@ -694,6 +700,7 @@ class BlockInstance {
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('viewid', $this->get('view'));
         $smarty->assign('title',  $title);
+        $smarty->assign('row',    $this->get('row'));
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
 
@@ -943,7 +950,7 @@ class BlockInstance {
         $js .= '
         $j(function() {
             $j("#instconf_retractable").click(function() {
-                if ($(this).checked) {
+                if (this.checked) {
                     $j("#instconf_retractedonload").removeAttr("disabled");
                     $j("#instconf_retractedonload").removeAttr("checked");
                 }
@@ -1062,7 +1069,8 @@ class BlockInstance {
             case 'left':
                 return ($this->column > 1);
             case 'right':
-                return ($this->column < $this->get_view()->get('numcolumns'));
+                $colsperrow = $this->get_view()->get('columnsperrow');
+                return ($this->column < $colsperrow[$this->row]->columns);
             case 'up':
                 return ($this->order > 1);
                 break;
@@ -1241,6 +1249,7 @@ class BlockInstance {
             'title'      => $this->get('title'),
             'view'       => $view->get('id'),
             'view_obj'   => $view,
+            'row'        => $this->get('row'),
             'column'     => $this->get('column'),
             'order'      => $this->get('order'),
         ));

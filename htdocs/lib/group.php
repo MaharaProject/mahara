@@ -2195,45 +2195,44 @@ function install_system_grouphomepage_view() {
     $dbtime = db_format_timestamp(time());
     // create a system template for group homepage views
     require_once(get_config('libroot') . 'view.php');
-    $viewdata = (object) array(
+    $view = View::create(array(
         'type'        => 'grouphomepage',
         'owner'       => 0,
-        'numcolumns'  => 1,
+        'numcolumns'  => 2,
+        'numrows'     => 1,
+        'columnsperrow' => array((object)array('row' => 1, 'columns' => 1)),
         'template'    => 1,
         'title'       => get_string('grouphomepage', 'view'),
-        'ctime'       => $dbtime,
-        'atime'       => $dbtime,
-        'mtime'       => $dbtime,
-    );
-    $id = insert_record('view', $viewdata, 'id', true);
-    $accessdata = (object) array(
-        'view'       => $id,
-        'accesstype' => 'loggedin',
-        'ctime'      => db_format_timestamp(time()),
-    );
-    insert_record('view_access', $accessdata);
+    ));
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
     $blocktypes = array(
         array(
             'blocktype' => 'groupinfo',
             'title' => '',
+            'row'    => 1,
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'recentforumposts',
             'title' => '',
+            'row'    => 1,
             'column' => 1,
             'config' => null,
         ),
         array(
             'blocktype' => 'groupviews',
             'title' => '',
+            'row'    => 1,
             'column' => 1,
             'config' => array('showgroupviews' => 1, 'showsharedviews' => 1),
         ),
         array(
             'blocktype' => 'groupmembers',
             'title' => '',
+            'row'    => 1,
             'column' => 1,
             'config' => null,
         ),
@@ -2243,18 +2242,20 @@ function install_system_grouphomepage_view() {
     foreach ($blocktypes as $blocktype) {
         if (in_array($blocktype['blocktype'], $installed)) {
             $weights[$blocktype['column']]++;
-            insert_record('block_instance', (object) array(
-                'blocktype'  => $blocktype['blocktype'],
-                'title'      => $blocktype['title'],
-                'view'       => $id,
-                'column'     => $blocktype['column'],
-                'order'      => $weights[$blocktype['column']],
-                'configdata' => serialize($blocktype['config']),
+            $newblock = new BlockInstance(0, array(
+                    'blocktype'  => $blocktype['blocktype'],
+                    'title'      => $blocktype['title'],
+                    'view'       => $view->get('id'),
+                    'row'        => $blocktype['row'],
+                    'column'     => $blocktype['column'],
+                    'order'      => $weights[$blocktype['column']],
+                    'configdata' => $blocktype['config'],
             ));
+            $newblock->commit();
         }
     }
 
-    return $id;
+    return $view->get('id');
 }
 
 function get_forum_list($groupid, $userid = 0) {

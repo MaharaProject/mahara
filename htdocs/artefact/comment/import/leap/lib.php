@@ -57,7 +57,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
             'owner'      => $user,
             'title'      => '--',
             'type'       => 'portfolio',
-            'numcolumns' => 1,
+            'numrows'    => 1,
             'ctime'      => $time,
             'mtime'      => $time,
             'atime'      => $time,

@@ -328,7 +328,7 @@ if ($mnetviewlist = $SESSION->get('mnetviewaccess')) {
 }
 
 $smarty->assign('viewdescription', $view->get('description'));
-$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('viewcontent', $view->build_rows());
 $smarty->assign('releaseform', $releaseform);
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);

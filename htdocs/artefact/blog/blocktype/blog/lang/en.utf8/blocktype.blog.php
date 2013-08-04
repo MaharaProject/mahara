@@ -28,7 +28,7 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'Journal';
-$string['description'] = 'Display an entire journal';
+$string['description'] = 'A complete journal (see Content -> Journal)';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the journal will be used';
 $string['postsperpage'] = 'Entries per page';

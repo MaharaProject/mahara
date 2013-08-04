@@ -43,7 +43,7 @@ $smarty->assign('viewid', $id);
 $smarty->assign('collectiontitle', $collection->get('name'));
 $smarty->assign('ownername', $firstview->formatted_owner());
 $smarty->assign('collectiondescription', $collection->get('description'));
-$smarty->assign('viewcontent', $firstview->build_columns());
+$smarty->assign('viewcontent', $firstview->build_rows());
 $smarty->assign('tags', $firstview->get('tags'));
 
 $shownav = $collection->get('navigation');

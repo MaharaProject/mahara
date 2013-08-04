@@ -109,6 +109,8 @@ $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that does 
 $string['viewnotfound'] = 'Page with id %s not found.';
 $string['viewnotfoundbyname'] = 'Page %s by %s not found.';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile.';
+$string['invalidlayoutselection'] = 'You tried to select a layout that didn\'t exist!';
+$string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['artefactnotfound'] = 'Artefact with id %s not found';
@@ -123,6 +125,7 @@ $string['invalidviewaction'] = 'Invalid page control action: %s';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first.';
 $string['missingparamcolumn'] = 'Missing column specification';
+$string['missingparamrow'] = 'Missing row specification';
 $string['missingparamorder'] = 'Missing order specification';
 $string['missingparamid'] = 'Missing id';
 

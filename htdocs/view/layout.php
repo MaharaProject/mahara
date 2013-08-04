@@ -32,105 +32,221 @@ require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
 require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'layoutpreviewimage.php');
 define('TITLE', get_string('changemyviewlayout', 'view'));
 
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
-$numcolumns = $view->get('numcolumns');
-$currentlayout = $view->get('layout');
-$view->set_edit_nav();
-$view->set_user_theme();
 
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
 
+$view->set_edit_nav();
+$view->set_user_theme();
+$numrows = $view->get('numrows');
+$numcolumns = $view->get('numcolumns');
+$layoutcolumns = View::$layoutcolumns; // static, all possible column width combinations
+$layoutrows = $view->get_layoutrows();
+$maxlayoutrows = View::$maxlayoutrows; // static, max possible rows for custom layouts
+$basicoptionids = array(1,2,3,4,5,6,14,17,19,21); // most commonly used layouts - present these as basic option
+$currentlayout = $view->get('layout');
 // if not set, use equal width layout for that number of columns
 if (!$currentlayout) {
+    // if columns have been dynamically added or removed from a multi-row layout,
+    // there may be no valid layout id, in which case none of the layout options will be selected
     $currentlayout = $view->get_layout()->id;
 }
-
-$layouts = get_records_assoc('view_layout', '', '', 'columns,id');
-$options = array();
-foreach ($layouts as $layout) {
-    $options[$layout->id] = get_string($layout->widths, 'view');
+if (!in_array($currentlayout, $basicoptionids)) {
+    $basicoptionids[] = $currentlayout;
 }
-$layoutform = new Pieform(array(
-    'name' => 'viewlayout',
-    'elements' => array(
-        'layout'  => array(
-            'type' => 'radio',
-            'options' => $options,
-            'defaultvalue' => $currentlayout,
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
-        ),
+
+$layoutoptions = array();
+$basiclayoutoptions = array();
+$maxrows = 3;
+foreach ($layoutrows as $key => $layout) {
+    $maxrows = (count($layout) > $maxrows)? count($layout) : $maxrows;
+    $layoutoptions[$key]['rows'] = count($layout);
+    $layoutoptions[$key]['text'] = '';
+
+    for ($r=0; $r<count($layout); $r++) {
+        // store multi-row column widths for each option - used as img titles in layout.tpl
+        if ($r==0) {
+            $layoutoptions[$key]['columns'] = get_string($layoutcolumns[$layout[$r+1]]->widths, 'view');
+        }
+        else {
+            $layoutoptions[$key]['columns'] .= ' / ' . get_string($layoutcolumns[$layout[$r+1]]->widths, 'view');
+        }
+    }
+}
+
+foreach ($basicoptionids as $id) {
+    if (array_key_exists($id, $layoutoptions)) {
+        $basiclayoutoptions[$id] = $layoutoptions[$id];
+    }
+}
+
+$clnumcolumnsoptions = array();
+for ($i=1; $i<6; $i++) {
+    $clnumcolumnsoptions[$i] = $i;
+}
+
+$columnlayoutoptions = array();
+$columnlayouts = get_records_assoc('view_layout_columns');
+foreach ($columnlayouts as $layout => $percents) {
+    $percentswidths = str_replace(',', ' - ', $percents->widths);
+    $columnlayoutoptions[$layout] = $percentswidths;
+}
+
+// provide a simple default to build custom layouts with
+$defaultcustomlayout = array(1 => 5); // row => column layout id
+$customlayout = $defaultcustomlayout[1];
+$defaultlayout = get_record('view_layout_columns', 'id', $customlayout );
+$clnumcolumnsdefault = $defaultlayout->columns;
+$clwidths = $defaultlayout->widths;
+
+$inlinejavascript = <<<JAVASCRIPT
+
+function get_max_custom_rows() {
+    return {$maxlayoutrows};
+}
+
+JAVASCRIPT;
+
+$elements = array(
+    'viewid' => array(
+            'type' => 'hidden',
+            'value' => $view->get('id'),
     ),
-));
+);
+$elements['customlayoutnumrows'] = array(
+     'type'  => 'hidden',
+     'value' => 1,
+);
+$elements['layoutselect'] = array(
+        'type'  => 'hidden',
+        'value' => $currentlayout,
+        'sesskey' =>  $USER->get('sesskey'),
+);
+$elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('save'),
+);
 
-$displaylink = $view->get_url();
-if ($new) {
-    $displaylink .= (strpos($displaylink, '?') === false ? '?' : '&') . 'new=1';
-}
+$templatedata = array(
+        'id' => $id,
+        'basiclayoutoptions' => $basiclayoutoptions,
+        'layoutoptions' => $layoutoptions,
+        'currentlayout' => $currentlayout,
+        'clnumcolumnsoptions' => $clnumcolumnsoptions,
+        'clnumcolumnsdefault' => $clnumcolumnsdefault,
+        'columnlayoutoptions' => $columnlayoutoptions,
+        'customlayout' => $customlayout,
+        'clwidths' => $clwidths,
+        'maxrows' => $maxrows
+        );
 
-$smarty = smarty(array(), array(), array(), array('sidebars' => false));
-$smarty->assign('layouts', $layouts);
-$smarty->assign('currentlayout', $currentlayout);
+$layoutform = array(
+        'name' => 'viewlayout',
+        'template' => 'viewlayout.php',
+        'templatedir' => pieform_template_dir('viewlayout.php'),
+        'autofocus' => false,
+        'templatedata' => $templatedata,
+        'elements' => $elements
+);
+
+$layoutform = pieform($layoutform);
+
+$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.8.19.custom.min.js', 'js/customlayout.js','js/jquery/modernizr.custom.js');
+$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/custom-theme/jquery-ui-1.8.20.custom.css">';
+
+$smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow')), array('sidebars' => false));
+
+$smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->assign('form', $layoutform);
-$smarty->assign('form_start_tag', $layoutform->get_form_tag());
-$smarty->assign('options', $options);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('edittitle', $view->can_edit_title());
-$smarty->assign('displaylink', $displaylink);
+$smarty->assign('displaylink', $view->get_url());
 $smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
-    $smarty->assign('microheadertitle', $view->display_title(true, false, false));
+    $smarty->assign('microheadertitle', $view->display_title(true, false));
 }
 $smarty->display('view/layout.tpl');
 
 function viewlayout_validate(Pieform $form, $values) {
-    global $layouts;
-    if (!isset($layouts[$values['layout']])) {
+    global $layoutrows;
+    if (!isset($layoutrows[$values['layoutselect']]) ) {
         $form->set_error('invalidlayout');
     }
 }
 
 function viewlayout_submit(Pieform $form, $values) {
-    global $view, $SESSION, $new, $layouts;
+    global $view, $SESSION, $new, $layoutrows, $layoutcolumns;
 
-    $oldcolumns = $view->get('numcolumns');
-    $newcolumns = $layouts[$values['layout']]->columns;
+    $oldrows = $view->get('numrows');
+    $oldlayout = $view->get_layout();
+    $newlayout = $values['layoutselect'];
+    if (!isset($layoutrows[$newlayout])) {
+        throw new ParamOutOfRangeException(get_string('invalidlayoutselection', 'error', $action));
+    }
+    else {
+        $newrows = count($layoutrows[$newlayout]);
+    }
 
     db_begin();
 
-    if ($oldcolumns > $newcolumns) {
-        for ($i = $oldcolumns; $i > $newcolumns; $i--) {
-            $view->removecolumn(array('column' => $i));
+    // for each existing row which will still exist after the update, check whether to add or remove columns
+    for ($i = 0; $i < min(array($oldrows, $newrows)); $i++) {
+        // compare oldlayout column structure with newlayout
+        $oldcolumns = $oldlayout->rows[$i+1]['columns'];
+        $newcolumnindex = $layoutrows[$newlayout][$i+1];
+        $newcolumns = $layoutcolumns[$newcolumnindex]->columns;
+
+        // Specify row when adding or removing columns
+        if ($oldcolumns > $newcolumns) {
+            for ($j = $oldcolumns; $j > $newcolumns; $j--) {
+                $view->removecolumn(array('row' => $i+1, 'column' => $j));
+            }
+        }
+        else if ($oldcolumns < $newcolumns) {
+            for ($j = $oldcolumns; $j < $newcolumns; $j++) {
+                $view->addcolumn(array('row' => $i+1, 'before' => $j+1, 'returndata' => false));
+            }
+        }
+
+        $dbcolumns = get_field('view_rows_columns', 'columns', 'view', $view->get('id'), 'row', $i+1);
+
+        if ($dbcolumns != $newcolumns) {
+            db_rollback();
+            $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
+            redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
         }
     }
-    else if ($oldcolumns < $newcolumns) {
-        for ($i = $oldcolumns; $i < $newcolumns; $i++) {
-            $view->addcolumn(array('before' => $i + 1, 'returndata' => false));
+    // add or remove rows and move content accordingly if required
+    if ($oldrows > $newrows) {
+        for ($i = $oldrows; $i > $newrows; $i--) {
+            $view->removerow(array('row' => $i, 'layout' => $oldlayout));
+        }
+    }
+    else if ($oldrows < $newrows) {
+        for ($i = $oldrows; $i < $newrows; $i++) {
+            $view->addrow(array('before' => $i + 1, 'newlayout' => $newlayout, 'returndata' => false));
         }
     }
 
-    $dbcolumns = get_field('view', 'numcolumns', 'id', $view->get('id'));
-
-    if ($dbcolumns != $newcolumns) {
+    if ($view->get('numrows') != $newrows) {
         db_rollback();
-        $SESSION->add_error_msg(get_string('changecolumnlayoutfailed', 'view'));
+        $SESSION->add_error_msg(get_string('changerowlayoutfailed', 'view'));
         redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
     }
 
     db_commit();
 
-    $view->set('layout', $values['layout']);
+    $view->set('layout', $newlayout);
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
     redirect('/view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));

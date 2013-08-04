@@ -18,7 +18,7 @@
         </div><!-- main-wrapper -->
     </div><!-- mainmiddle -->
     </div><!-- mainmiddlewrap -->
-    <div id="footer-wrap">
+    <div id="footer-wrap" {if $editing == true}class="editcontent"{/if}>
       <div id="footer">
         <div id="powered-by"><a href="http://mahara.org/"><img src="{theme_url filename='images/powered_by_mahara.png'}" border="0" alt="Powered by Mahara"></a></div>
         <!-- This site is powered by Mahara, an Open Source
@@ -27,12 +27,12 @@
              NOTE: this image and link are a way that you can
              support the Mahara project. Please consider
              displaying them on your site to spread the word! -->
-        <div id="footernav">
+        <div id="footer-nav">
         {foreach from=$FOOTERMENU item=item name=footermenu}
           {if !$.foreach.footermenu.first}| {/if}<a href="{$item.url}">{$item.title}</a>
         {/foreach}
         </div>
-		<!-- there is a div id="performance-info" wrapping this -->{mahara_performance_info}
+        <!-- there is a div id="performance-info" wrapping this -->{mahara_performance_info}
 		<div id="version">{mahara_version}</div>
 		<div class="cb"></div>
       </div><!-- footer -->

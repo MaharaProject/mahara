@@ -769,3 +769,10 @@ function is_FF() {
     }
     return false;
 }
+
+/**
+* Allow the js / no-js toggle on all pages for theme styling
+*/
+jQuery(document).ready(function() {
+    jQuery('body').removeClass('no-js').addClass('js');
+});

@@ -139,5 +139,9 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2013072900) {
+        execute_sql("UPDATE {blocktype_installed_category} SET category = 'internal' WHERE category = 'resume'");
+    }
+
     return $status;
 }
