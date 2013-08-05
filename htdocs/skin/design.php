@@ -35,6 +35,10 @@ require_once('skin.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'file');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $fieldset = param_alpha('fs', 'viewskin');
 
 $designsiteskin = param_boolean('site', false);

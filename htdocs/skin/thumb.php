@@ -30,6 +30,9 @@ define('PUBLIC', 1);
 define('NOCHECKPASSWORDCHANGE', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
 
 $id = param_integer('id', 0);
 

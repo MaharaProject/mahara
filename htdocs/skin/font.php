@@ -30,6 +30,10 @@ define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('file.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $family = param_variable('family');
 $variant = param_variable('variant');
 $format = param_variable('format');

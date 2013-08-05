@@ -37,6 +37,10 @@ require_once(get_config('libroot') . 'skin.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('sitefonts', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $fontpreview  = !is_null($SESSION->get('fontpreview')) ? $SESSION->get('fontpreview') : 21;
 $fontsize     = !is_null($SESSION->get('fontsize')) ? $SESSION->get('fontsize') : 28;
 $fonttype     = !is_null($SESSION->get('fonttype')) ? $SESSION->get('fonttype') : 'all'; // possible values: all, site, google

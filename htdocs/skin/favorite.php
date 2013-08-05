@@ -29,6 +29,10 @@ define('INTERNAL', true);
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 global $USER;
 $add = param_integer('add', 0); // id of skin to add to favorites...
 $del = param_integer('del', 0); // id of skin to remove from favorites...

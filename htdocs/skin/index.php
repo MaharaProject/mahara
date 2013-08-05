@@ -36,6 +36,10 @@ require_once('skin.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('myskins', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $filter = param_alpha('filter', 'all');
 $limit  = param_integer('limit', 6); // For 2x3 grid, showing thumbnails of view skins (2 rows with 3 thumbs each).
 $offset = param_integer('offset', 0);

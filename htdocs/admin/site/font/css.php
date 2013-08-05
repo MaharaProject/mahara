@@ -31,6 +31,10 @@ define('NOCHECKPASSWORDCHANGE', 1);
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once(get_config('libroot') . 'skin.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 // We use the font title as the "family" name for the font
 $family = param_variable('family', false);
 if (!empty($family)) {

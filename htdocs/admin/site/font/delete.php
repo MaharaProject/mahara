@@ -35,6 +35,10 @@ define('SECTION_PAGE', 'deletefont');
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $font = param_alphanum('font');
 
 $fontdata = null;

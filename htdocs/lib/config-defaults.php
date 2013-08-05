@@ -534,3 +534,9 @@ $cfg->additionalhtlmfooter = '';
  * could simply pick usernames of people's accounts they wished to steal.
  */
 $cfg->usersuniquebyusername = false;
+
+/**
+ * @global bool $cfg->skins Activates the "page skins" feature, which allows users to customize the CSS
+ * on individual pages.
+ */
+// $cfg->skins = false;

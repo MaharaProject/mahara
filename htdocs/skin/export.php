@@ -30,6 +30,10 @@ require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 require_once(get_config('docroot') . 'artefact/file/lib.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 global $USER;
 $exportid = param_integer('id', 0); // id(s) of skin(s) to be exported...
 $exportsiteskins = param_boolean('site', false);

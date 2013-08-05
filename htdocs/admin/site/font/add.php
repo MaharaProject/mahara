@@ -37,6 +37,10 @@ require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'skin.php');
 define('TITLE', get_string('addfontvariant', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $font = param_alphanum('font');
 $fonttitle = get_field('skin_fonts', 'title', 'name', $font);
 

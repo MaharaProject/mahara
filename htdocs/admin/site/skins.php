@@ -37,6 +37,10 @@ require_once(get_config('libroot') . 'skin.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('siteskins', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $limit   = param_integer('limit', 6); // For 2x3 grid, showing thumbnails of view skins (2 rows with 3 thumbs each).
 $offset  = param_integer('offset', 0);
 

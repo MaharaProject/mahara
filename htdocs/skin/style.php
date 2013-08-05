@@ -31,6 +31,9 @@ define('NOCHECKPASSWORDCHANGE', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
 
 $id = param_integer('skin', 0);
 if ($id == 0) {

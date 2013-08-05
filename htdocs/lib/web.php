@@ -1916,18 +1916,6 @@ function admin_nav() {
             'title'  => get_string('share', 'view'),
             'weight' => 70,
         ),
-        'configsite/siteskins' => array(
-           'path'   => 'configsite/siteskins',
-           'url'    => 'admin/site/skins.php',
-           'title'  => get_string('siteskinmenu', 'skin'),
-           'weight' => 75,
-       ),
-       'configsite/sitefonts' => array(
-           'path'   => 'configsite/sitefonts',
-           'url'    => 'admin/site/fonts.php',
-           'title'  => get_string('sitefontsmenu', 'skin'),
-           'weight' => 76,
-       ),
         'configsite/sitefiles' => array(
             'path'   => 'configsite/sitefiles',
             'url'    => 'artefact/file/sitefiles.php',
@@ -2110,6 +2098,21 @@ function admin_nav() {
         ),
     );
 
+    // Add the menu items for skins, if that feature is enabled
+    if (get_config('skins')) {
+        $menu['configsite/siteskins'] = array(
+           'path'   => 'configsite/siteskins',
+           'url'    => 'admin/site/skins.php',
+           'title'  => get_string('siteskinmenu', 'skin'),
+           'weight' => 75,
+        );
+        $menu['configsite/sitefonts'] = array(
+           'path'   => 'configsite/sitefonts',
+           'url'    => 'admin/site/fonts.php',
+           'title'  => get_string('sitefontsmenu', 'skin'),
+           'weight' => 76,
+        );
+    }
     return $menu;
 }
 

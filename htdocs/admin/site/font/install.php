@@ -37,6 +37,10 @@ require_once('pieforms/pieform.php');
 require_once(get_config('libroot') . 'skin.php');
 define('TITLE', get_string('installfont', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $form = pieform(array(
     'name' => 'addfontform',
 //    'jsform' => true,

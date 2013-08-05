@@ -33,6 +33,10 @@ require_once('view.php');
 require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('chooseviewskin', 'skin'));
 
+if (!get_config('skins')) {
+    throw new FeatureNotEnabledException();
+}
+
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
