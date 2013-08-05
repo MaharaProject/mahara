@@ -1,0 +1,11 @@
+Elastica in Mahara
+======================
+
+Website: http://elastica.io
+Version: 0.90.1.0
+
+This library is used for for interfacing with an elasticsearch server.
+
+Changes:
+
+ * Removed build & test files not needed for Mahara.
