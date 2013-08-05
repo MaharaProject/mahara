@@ -1911,12 +1911,6 @@ function admin_nav() {
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 80,
         ),
-        'configsite/additionalhtml' => array(
-            'path'   => 'configsite/additionalhtml',
-            'url'    => 'admin/site/additionalhtml.php',
-            'title'  => get_string('additionalhtml', 'admin'),
-            'weight' => 90
-        ),
         'configusers' => array(
             'path'   => 'configusers',
             'url'    => 'admin/users/search.php',
