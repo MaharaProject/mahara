@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2013 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,16 @@
  *
  * @author     Paul Walker <paul.walker@catalyst-eu.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
+ * @copyright  (C) 2006-2013 Catalyst IT Europe http://catalyst-eu.net
  */
 
-/* General rules */
-body, body#micro {
+/******************** Body ********************/
+body,
+body#micro {
     background: #f7be23 url(../images/bg.jpg) repeat-x top center;
 	color: #000000;
 }
-acronym {
-    border-bottom: 1px dotted #d4d1c0;
-}
-a, a:visited, a:link, a:active {
-    color: #9a4c01;
-    text-decoration: none;
-}
-a:hover, a:focus {
-    color: #8E1901;
-    text-decoration: underline;
-}
+/******************** General headings ********************/
 h1,
 h2 {
     color: #8E1901;
@@ -48,161 +39,219 @@ h5,
 h6 {
     color: #8E1901;
 }
-.description,
-.unvalidated,
-.postdetails,
-.postedon {
+/******************** General text ********************/
+a,
+a:visited,
+a:link,
+a:active {
+    color: #9a4c01;
+    text-decoration: none;
+}
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+/* some common listing text styles */
+.title a {
     color: #8E1901;
 }
-
-/**************************** Tables ****************************/
-.main-column thead th {
-    color: #8E1901;
+/******************** Tables ********************/
+thead th {
 	border-bottom: 1px dotted #8E1901;
 }
-.main-column tbody th {
-    color: #8E1901;
-	border-bottom: none;
-}
-/* table with th border-bottom */
-#searchresults thead th,
-.filelist,
-.tag-results #results {
-	border-bottom: 1px dotted #8E1901;
-}
-/* table with tfoot border-top */
-#searchresults tfoot td,
-#adminstitutionslist tfoot td,
-#profileicons tfoot td,
-#activitylist tfoot td {
-	border-top: 1px dotted #8E1901;
-}
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-    color: #8E1901 !important;
-}
-.tablerenderer-loading {
-    border: 1px solid #8E1901;
-	background-color: #ffffff;
-    color: #ffffff;
-}
-/* table with th border-bottom */
-#searchresults thead th {
-	border-bottom: 1px solid #8E1901;
-}
-/* table with border-bottom */
-#searchresults tfoot td {
-	border-top: 1px solid #8E1901;
-}
-/* Alternative row background colours */
-.r0, .r0 td, .d0, .friends {
+/* Alternative row background */
+.r0,
+.r0 td,
+.d0 {
     background-color: #fff9ea;
 }
-.r1, .r1 td, .d1 {
+.r1,
+.r1 td,
+.d1 {
     background-color: #f0e8e0;
 }
-
-/**************************** Pagination ****************************/
-div.pagination a {
-	border: 0;
-	background: #fff7d8;
-}
-
-/**************************** Forms ****************************/
-/* Label */
-label {
-    color: #8E1901;
-}
-/* required */
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #8E1901;
-}
-/* override required colour to normal colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-	color: #000000;
-}
-
-/* Legend */
-legend {
-	color: #8E1901;
-	margin-bottom:5px;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active,
-legend a:hover {
-	color: #8E1901 !important;
-}
-
-/* Fieldset */
+/******************** Forms ********************/
+/* fieldset */
 fieldset {
     border: 1px solid #8E1901;
 }
-
-/****************************** Buttons ****************************/
-/** input buttons **/
-.btn,
-input.submit,
-input.cancel,
-button,
-.buttondk,
-input.button,
-input.select,
+/******************** Buttons ********************/
+/* Buttons to override with colour */
+/* input buttons */
+tr.submitcancel input.submit,
+tr.submitcancel input.cancel,
+tr.submit input.submit,
+tr.submit input.cancel,
+input#profileform_submit,
 input#files_filebrowser_edit_artefact,
-ul.groupuserstatus li a {
-	background: #cc7414 url(../images/btn-bkgd.gif) repeat-x top;
-	border-color: #f7be23 #8E1901 #8E1901 #f7be23;
-	color: #FFF !important;
+input#files_filebrowser_edit_cancel,
+input#instconf_folder_edit_artefact,
+input#instconf_folder_edit_cancel,
+input#instconf_artefactids_edit_artefact,
+input#instconf_artefactids_edit_cancel,
+input#instconf_artefactid_edit_artefact,
+input#instconf_artefactid_edit_cancel,
+.rbuttons .btn, 
+.rbuttons .btn:visited,
+.rbuttons .btn:link,
+.rbuttons input.submit,
+#resumewrap input.openedit,
+#resumewrap button,
+#view-wizard-controls input.submit,
+.submitwrap input.submit,
+#editaccess_submit_container input.submitcancel,
+#collectiondonewrap .btn,
+#collectiondonewrap .btn:visited,
+#collectiondonewrap .btn:link,
+input#export_submit,
+#sitelicenses .btn,
+#adduser #adduser_submit,
+input#login_submit,
+.login-externallink a.btn {
+	background: url(../images/btn_bkgd.png) repeat-x 0 50%;
+	border-color: #be680b;
+	color: #FFFFFF;
 }
-/** hover for buttons **/
-.btn:hover,
-input.submit:hover,
-input.cancel:hover,
-button:hover,
-.buttondk:hover,
-input.button:hover,
-input.select:hover,
+/* hover for buttons */
+tr.submitcancel input.submit:hover,
+tr.submitcancel input.cancel:hover,
+tr.submit input.submit:hover,
+tr.submit input.cancel:hover,
+input#profileform_submit:hover,
 input#files_filebrowser_edit_artefact:hover,
-ul.groupuserstatus li a:hover {
-	background: #df9c1d url(../images/btn-bkgd-hover.gif) repeat-x top;
-	border-color: #8E1901 #f7be23 #f7be23 #8E1901;
-	color: #FFF;
+input#files_filebrowser_edit_cancel:hover,
+input#instconf_folder_edit_artefact:hover,
+input#instconf_folder_edit_cancel:hover,
+input#instconf_artefactids_edit_artefact:hover,
+input#instconf_artefactids_edit_cancel:hover,
+input#instconf_artefactid_edit_artefact:hover,
+input#instconf_artefactid_edit_cancel:hover,
+.rbuttons .btn:hover,
+.rbuttons input.submit:hover,
+#resumewrap input.openedit:hover,
+#resumewrap button:hover,
+#view-wizard-controls input.submit:hover,
+.submitwrap input.submit:hover,
+#editaccess_submit_container input.submitcancel:hover,
+#collectiondonewrap .btn:hover,
+input#export_submit:hover,
+#sitelicenses .btn:hover,
+#adduser #adduser_submit:hover,
+input#login_submit:hover,
+.login-externallink a.btn:hover {
+	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+	border-color: #be680b;
+	color: #FFFFFF;
 }
-/** Depress for buttons **/
-.btn:active,
-input.submit:active,
-input.cancel:active,
-button:active,
-.buttondk:active,
-input.button:active,
-input.select:active,
+/* depress for buttons */
+tr.submitcancel input.submit:active,
+tr.submitcancel input.cancel:active,
+tr.submit input.submit:active,
+tr.submit input.cancel:active,
+input#profileform_submit:active,
 input#files_filebrowser_edit_artefact:active,
-ul.groupuserstatus li a:active {
-	background: #df9c1d url(../images/btn-bkgd-hover.gif) repeat-x 1px;
-	border-color: #8E1901 #f7be23 #f7be23 #8E1901;
-	color: #FFF;
+input#files_filebrowser_edit_cancel:active,
+input#instconf_folder_edit_artefact:active,
+input#instconf_folder_edit_cancel:active,
+input#instconf_artefactids_edit_artefact:active,
+input#instconf_artefactids_edit_cancel:active,
+input#instconf_artefactid_edit_artefact:active,
+input#instconf_artefactid_edit_cancel:active,
+.rbuttons .btn:active,
+.rbuttons input.submit:active,
+#resumewrap input.openedit:active,
+#resumewrap button:active,
+#view-wizard-controls input.submit:active,
+.submitwrap input.submit:active,
+#editaccess_submit_container input.submitcancel::active,
+#collectiondonewrap .btn:active,
+input#export_submit:active,
+#sitelicenses .btn:active,
+#adduser #adduser_submit:active,
+input#login_submit:active,
+.login-externallink a.btn:active {
+	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+	border-color: #8E1901;
+	color: #FFFFFF;
 }
-
-/* buttons that look like links with icons */
-.icon {
-	color: #9a4c01;
+/* made to look like default grey buttons to match graphic icon buttons */
+#forumslist input.btn-subscribe,
+input#addviews_submit,
+input#edituser_suspend_submit,
+input#friendscontrol_submit,
+input#usertype_typesubmit {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:hover,
+input#addviews_submit:hover,
+input#edituser_suspend_submit:hover,
+input#friendscontrol_submit:hover,
+input#usertype_typesubmit:hover {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:active,
+input#addviews_submit:active,
+input#edituser_suspend_submit:active,
+input#friendscontrol_submit:active,
+input#usertype_typesubmit:active {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
+/* reset some that need grey button colour text */
+ul.groupuserstatus li .submit input.submit,
+ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:active {
+    color: #333333;
 }
 /* buttons that look like links */
-.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
-	color: #9a4c01 !important;
+.linkbtn {
+	color: #9a4c01;
 	text-decoration: none;
 }
-/* links that need to look like buttons */
-span.btn a.icon, a span.icon {
+/******************** Pagination ********************/
+div.pagination a {
+	background: #fff7d8;
+}
+/******************** Layout ********************/
+#header,
+.main-nav,
+#sub-nav,
+#mainmiddle,
+#footer {
+    width: 95%;
+}
+#mainmiddlewrap {
+    background: none;
+	margin-top: 15px;
+}
+#micro #mainmiddlewrap {
+    margin-top: 0;
+}
+#main-column-container {
+    background: #FFFFFF;
+}
+/******************** Header ********************/
+/* site logo */
+#site-logo {
+    margin: 15px 0 0 0;
+}
+/* header right */
+#header-right label {
     color: #FFFFFF;
 }
-
-/* Search buttons */
+/* top navigation */
+#right-nav li a {
+	color: #f7be23;
+}
+#right-nav li.identity a {
+	color: #D1D1D1;
+}
+/* search */
 #usf_submit,
 #usf_submit:hover {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
@@ -216,102 +265,60 @@ span.btn a.icon, a span.icon {
 	width: 24px;
 	margin-left: 2px;
 }
-
-
-/**************************** Top of page elements ****************************/
-#container, #containerX {
-    width: 90%;
+/******************** Small header ********************/
+#micro .viewtitle,
+#micro .collection-title {
+    color: #FFFFFF;
+}
+.viewheadertop #mainnav-container #mainnav a,
+.viewheadertop #mainnav-container #mainnav a:link,
+.viewheadertop #mainnav-container #mainnav a:visited,
+.viewheadertop #mainnav-container #mainnav a:active,
+.viewheadertop #mainnav-container #mainnav a:hover {
+    color: #F7BE23;
+}
+/******************** Main navigation ********************/
+.main-nav {
+    background: transparent url(../images/transparency.png) repeat 0 0;
+    margin: 0 auto;
+    max-width: 1280px;
     min-width: 960px;
 }
-#loading-box {
-    color: #fff;
-    background-color: #8E1901;
-}
-#site-logo {
-    margin: 15px 0 0 0;
-}
-/* Search and language bar */
-#languageselect {
-	margin: 0;
-}
-#usf {
-	margin: 5px 0 0 0;
-}
-#usf_query_container input {
-    color: #8E1901;
-    width: 200px;
-}
-#header-right label {
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active {
     color: #FFFFFF;
 }
-#right-nav li a {
-	color: #f7be23;
-}
-#right-nav li.identity a {
-	color: #D1D1D1;
-}
-#right-nav li.selected a {
-  color: #f7be23;
-  font-weight: normal;
-  text-decoration: underline;
-}
-
-/**************** TOP NAVIGATION ****************/
-#main-nav {
-    padding: 0;
-    margin: 0;
-    height: 33px;
-    background: transparent url(../images/transparency.png) repeat center center;
-}
-#main-nav li {
+.main-nav li a:hover {
     color: #FFFFFF;
-    text-decoration: none;
-    font-weight: bold;
-    line-height: 20px;
-}
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	margin: 0;
-    padding: 6px 15px 7px 15px;
-    color: #FFFFFF;
-}
-#main-nav li a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
 	background: none;
 }
-#main-nav li.selected a,
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active {
     color: #8E1901;
-    font-weight: bold;
 	background: #FFFFFF;
-    padding: 6px 15px 7px 15px;
 }
-
-/**************** SUB NAVIGATION ****************/
+/******************** Sub navigation ********************/
 #sub-nav {
     font-weight: bold;
-    text-align: left;
     background: #ffffff url(../images/subnav-bg.jpg) repeat-x bottom center;
-    height: 35px;
+    height: 36px;
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 960px;
 }
 #sub-nav ul {
     background: transparent;
-}
-#sub-nav li {
-    padding: 0 7px;
-    line-height: 20px;
-    height: 35px;
 }
 #sub-nav li a,
 #sub-nav li a:link,
 #sub-nav li a:visited,
 #sub-nav li a:active {
     color: #8E1901;
+    padding: 10px;
 }
 #sub-nav li a:hover {
     color: #8E1901;
@@ -327,66 +334,78 @@ span.btn a.icon, a span.icon {
     color: #8E1901;
     text-decoration: underline;
 }
-
-/**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
-    background: none;
+/******************** Dropdown sub navigation ********************/
+.main-nav .dropdown-sub li a,
+.main-nav .dropdown-sub li a:link,
+.main-nav .dropdown-sub li a:visited,
+.main-nav .dropdown-sub li a:active {
+    color: #8E1901;
+    background: #e1cfa1;
 }
-ul.in-page-tabs li {
-    display: inline-block;
-    margin: 0 1px 0 0;
+.main-nav .dropdown-sub li a:hover {
+    color: #FFFFFF;
+    background: #c66c14;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
-  color: #fadc8a;
-  background-color: #c66c14;
+/******************** Tabs ********************/
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn,
+ul.searchtab li span.inactive {
+    color: #fadc8a;
+    background-color: #c66c14;
+    border: 0;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active,
 ul.in-page-tabs li input.current-tab {
-  color: #ffffff;
-  background-color: #8E1901;
+    color: #ffffff;
+    background-color: #8E1901;
+    border: 0;
 }
-
+/* tab body */
 .subpage {
-  border: 1px solid #8E1901;
-  border-top: 10px solid #8E1901;
+    border: 1px solid #8E1901;
+    border-top: 10px solid #8E1901;
 }
-
-
-/**************** MAIN CONTENT *****************/
-#mainmiddlewrap {
-	margin-top: 15px;
+/******************** Sidebar ********************/
+/* general sidebar styles */
+#left-column {
+    margin-right: 10px;
+    width: 246px;
 }
-#containerX #mainmiddlewrap {
-    margin-top: 0;
+#right-column {
+    margin-left: 10px;
+    width: 246px;
 }
-#main-column-container {
-    background: #FFF;
-}
-.ie7 .main-column-narrow {
-    padding-right: 10px;
-}
-
-/**************** SIDEBAR *********/
-div.sideblock {
+.sideblock {
     margin: 0 0 10px 0;
     background: #FFFFFF;
 }
-div.sideblock .sidebar-header {
-    padding: 10px 10px 7px 10px;
-    background: #FFFFFF url(../images/subnav-bg.jpg) repeat-x bottom left;
+.sideblock .sidebar-header {
+    padding: 10px;
+    background: #ecddc0;
 }
-div.sideblock h3,
-div.sideblock h3 a,
-div.sideblock h3 a:link,
-div.sideblock h3 a:visited,
-div.sideblock h3 a:active {
-	color: #8E1901 !important;
+.sideblock h3,
+.sideblock h3 a,
+.sideblock h3 a:link,
+.sideblock h3 a:visited,
+.sideblock h3 a:active {
+	color: #8E1901;
 }
-
-/* Side Profile */
-#user-profileicon {
-	margin-top: 35px;
+.sideblock .sidebar-content {
+    padding: 10px;
+}
+/* Sidebar login */
+#sb-loginbox .sidebar-content {
+    padding: 5px;
+}
+/* Sidebar profile */
+#sb-profile .sidebar-header {
+    min-height: 53px;
 }
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
@@ -394,11 +413,7 @@ div.sideblock h3 a:active {
 #sb-profile ul ul a:active {
 	color: #8E1901;
 }
-#sb-profile .sidebar-content {
-	min-height: 60px;
-}
-
-/* Side Quota Bar */
+/* Sidebar quota/group quota bar */
 #quota_used {
     color: #c66c14;
 }
@@ -412,106 +427,20 @@ div.sideblock h3 a:active {
 #quota_fill {
     background-image: url(../images/quota_bar_highlight.gif);
 }
-
-
-
-/******************** FOOTER ****************************/
-#footer {
+/******************** Footer ********************/
+#footer-wrap {
     color: #8E1901;
 }
-#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
+#footer a,
+#footer a:link,
+#footer a:visited,
+#footer a:active,
+#footer a:hover {
     color: #8E1901;
 }
-/****************************** PAGE BY PAGE STYLES **********************************/
-
-/* Settings > Preferences */
-#accountprefs table h3 {
-    color: #8E1901;
-	border-bottom: 1px solid #8E1901;
-}
-.viewheader .title {
-	color: #FFF;
-}
-.viewheader a {
-	color: #f7be23;
-}
-.viewheader .nav {
-	color: #a5400c;
-}
-#containerX #top-wrapper a,
-#containerX #top-wrapper a:hover,
-#containerX #top-wrapper a:active {
-	color: #ffffff;
-}
-
-.group-info {
-	border: 0;
-	background: #ffeebf;
-}
-
-/* Forum */
-/* Forum list */
-#forumslist {
-    border-bottom: 1px solid #8E1901;
-}
-#forumslist th {
-    border-bottom: 1px solid #8E1901;
-}
-/* Topic list */
-#forumtopicstable {
-    border-bottom: 1px solid #8E1901;
-}
-#forumtopicstable th {
-    border-bottom: 1px solid #8E1901;
-}
-/* topic types */
-.stickytopic td {
-    background-color: #f7be23;
-    border-bottom: 1px solid #FFF;
-}
-/* admin & moderator */
-.groupadmin {
-    color: #3366CC;
-}
-.moderator {
-    color: #993399;
-}
-/* Posts */
-.forumpost {
-    border-color: #f9f5ec;
-    background-color: #f9f5ec;
-}
-.forumpostleft {
-    background-color: #f9f5ec;
-}
-.posttime {
-    color: #8e1901;
-}
-
-/**************** DROPDOWN NAVIGATION ****************/
-#main-nav .dropdown-sub {
-    top: 33px;
-    font-size: .9167em;
-}
-#main-nav .dropdown-sub li a, #main-nav .dropdown-sub li a:link, #main-nav .dropdown-sub li a:visited, #main-nav .dropdown-sub li a:active {
-    color: #8E1901;
-    background: #e1cfa1;
-    padding: 3px 15px;
-    text-decoration: none;
-}
-#main-nav .dropdown-sub li a:hover {
-    color: #FFFFFF;
-    background: #c66c14;
-    text-decoration: underline;
-}
-#main-nav #dropdown-nav li.selected ul.dropdown-sub li a {
-    font-weight: normal;
-}
-#main-nav #dropdown-nav li.selected ul.dropdown-sub li.selected a {
-    font-weight: bold;
-}
-
-/* Persona button */
+/******************** Page by page styles (listed by navigation order) ********************/
+/* Login page */
+/* persona button */
 a.persona-button span:before{ /* Icon BG */
     background: #cc7314;
     background: -moz-linear-gradient(top, #e09d1d, #cc7314);
@@ -527,4 +456,84 @@ a.persona-button:before{ /* Triangle */
     background: -o-linear-gradient(-45deg, #e09d1d, #cc7314);
     background: -webkit-linear-gradient(-45deg, #e09d1d, #cc7314);
     background: linear-gradient(-45deg, #cc7314, #e09d1d); /* flipped for updated spec */
+}
+/* Dashboard */
+.home-info-table {
+    border: 3px solid #fffbf0;
+    background: #fff8e5; /* Old browsers */
+    background: -moz-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff8e5), color-stop(100%, #FFFFFF)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #fff8e5 0%, #FFFFFF 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #fff8e5 0%, #FFFFFF 100%); /* W3C */
+}
+.home-info p.subtitle {
+    border-top: 2px solid #e8bf8d;
+    border-bottom: 2px solid #e8bf8d;
+}
+/* Content > Journals */
+table.attachments {
+    background-color: #e8bf8d;
+    border: 2px solid #e8bf8d;
+}
+/* Portfolio > Collections > Edit */
+#collectionpageswrap {
+    background: #f4e5d3;  
+}
+#collectionpages {
+    border-color: #f4e5d3;
+}
+/* Portfolio > Shared by me > Edit access */
+#editaccess #editaccess_collections_container,
+#editaccess #editaccess_views_container,
+#editaccess #editaccess_accesslist_container,
+#editaccess #editaccess_more_container {
+    background: #f4e5d3;  
+}
+/* Groups > Group's about page */
+.group-info {
+	background: #ffeebf;
+}
+/* Groups > Group's forums */
+.forumpost {
+    border-color: #f9f5ec;
+    background-color: #f9f5ec;
+}
+.forumpostleft {
+    background-color: #f9f5ec;
+}
+/* Groups > My/Find Friends */
+ul.actionlist li.denyrequest a,
+ul.actionlist li.editgroup a,
+ul.actionlist li.friend a,
+ul.actionlist li.messages a,
+ul.actionlist li.removefriend a,
+ul.actionlist li form input.submit {
+    border: 1px solid #f2dea8;
+    color: #333333;
+    background-color: #f2dea8;
+}
+ul.actionlist li.denyrequest a:hover,
+ul.actionlist li.editgroup a:hover,
+ul.actionlist li.friend a:hover,
+ul.actionlist li.messages a:hover,
+ul.actionlist li.removefriend a:hover,
+ul.actionlist li form input.submit:hover {
+    background-color: #efd690;
+    color: #000000;
+}
+ul.actionlist li.denyrequest a:active,
+ul.actionlist li.editgroup a:active,
+ul.actionlist li.friend a:active,
+ul.actionlist li.messages a:active,
+ul.actionlist li.removefriend a:active,
+ul.actionlist li form input.submit:active {
+    background-color: #f7be23;
+    color: #000000;
+    border: 1px solid #ffcf4d;
+}
+/* Universal search */
+ul.searchtab li span.inactive {
+    color: #a85402;
 }

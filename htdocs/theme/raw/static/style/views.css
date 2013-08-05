@@ -24,10 +24,6 @@ ul.colnav li.selected span {
     text-decoration: none;
     font-weight: bold;
 }
-/******************** Top pane of edit page ********************/
-#top-pane {
-    background: #EEEEEE;
-}
 /******************** Blocktype tabs ********************/
 #category-list li a,
 #category-list li a:link,
@@ -47,27 +43,59 @@ ul.colnav li.selected span {
     font-weight: bold;
 }
 /******************** Blocktype icons panel ********************/
-#blocktype-list {
-    background: #D1D1D1;
+#editcontent-sidebar {
+    background: #BEBEBE;
 }
-/******************** Blocktype name & description panel ********************/
-#middle-pane {
-    background: #DDDDDD;
-}
-#layout-link {
-    font-weight: bold;
-}
-#layout-link.disabled {
-    color: #AAAAAA;
-    cursor: default;
-}
-#layout-link.disabled:hover {
-    text-decoration: none;
-}
-/******************** Bottom pane of edit page ********************/
-#page #bottom-pane {
-    padding: 10px;
+#blocktype-common {
     background: #EEEEEE;
+    border: 1px solid #B3B3B3;
+}
+.blocktype {
+    background: #F7F7F7;
+    border: 1px solid #DADADA;
+    color: #333333;
+}
+.blocktype:hover {
+    background: #FFFFFF;
+}
+.ui-draggable-dragging .blocktype {
+    background: #989898;
+    color: #FFFFFF;
+}
+.block-category-title .withjs,
+.block-category-title .nonjs {
+    color: #333333;
+}
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog {
+    background-color: #EEEEEE;
+    border: 1px solid #B3B3B3;
+}
+#block-category-general:hover,
+#block-category-internal:hover,
+#block-category-fileimagevideo:hover,
+#block-category-external:hover,
+#block-category-blog:hover {
+    background-color: #FFFFFF;
+}
+/* container around blocktypes under each category */
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background: #EEEEEE;
+    border: 1px solid #B3B3B3;
+    border-top: 0;
+    overflow: hidden;
+}
+/* theme selector */
+#select-theme {
+    background-color: #EEEEEE;
+    border: 1px solid #B3B3B3;
 }
 /******************** Column layout ********************/
 #column-container {
@@ -75,6 +103,16 @@ ul.colnav li.selected span {
 }
 #column-container .column-header input[disabled="disabled"] {
     color: #CCCCCC;
+}
+#column-container.page-edit {
+    background: #FFFFFF;
+    border: 2px dotted #999999;
+    padding-bottom: 10px;
+}
+.block-placeholder {
+    border: 2px dashed #bfbfbf;
+    background: #fffadf;
+    height: 35px;
 }
 /******************** Blocks ********************/
 /* retractable blocks */
@@ -85,6 +123,9 @@ ul.colnav li.selected span {
 }
 .retractable .retracted .arrow {
     background: url(../images/retracted.png) no-repeat 0 0;
+}
+.column-content .add-button input {
+    border: 1px solid #919191;
 }
 /* block header */
 .blockinstance-header .title {
@@ -123,7 +164,8 @@ ul.artefactchooser-tabs li a:active {
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited ul.artefactchooser-tabs li.current a:active {
+ul.artefactchooser-tabs li.current a:visited,
+ul.artefactchooser-tabs li.current a:active {
     color: #333333;
     font-weight: bold;
     border-bottom: 1px solid #FFFFFF;
@@ -148,6 +190,28 @@ ul.artefactchooser-subtabs li.current a:active {
     border-radius: 0 0 5px 5px;
 }
 /******************** Page ********************/
+#page #bottom-pane {
+    -webkit-border-radius: 0 5px 5px 5px;
+    -moz-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
+    -webkit-box-shadow: 0 0 1px 1px #888888;
+	box-shadow: 0 0 1px 1px #888888;
+}
+/* IE9-IE10 compatibility hack */
+@media screen and (min-width:0\0) {
+    #page #bottom-pane {
+        -webkit-box-shadow: 0 0 1px 0 #888888;
+        box-shadow: 0 0 1px 0 #888888;
+    }
+}
+/* give IE8 a border as box-shadow doesn't work */
+#page #bottom-pane/*\**/ {
+    border: 1px solid #a4a4a4\9;
+}
+#blocksinstruction {
+    font-size: 1.167em;
+    color: #888888;
+}
 /* page footer */
 .viewfooter {
     border: 1px solid #EEEEEE;

@@ -34,6 +34,33 @@ defined('INTERNAL') || die();
 abstract class PluginSearch extends Plugin {
 
     /**
+     * This function gets called when the sitewide search plugin is switched to
+     * this one. It's the chance for the plugin to do any post-configuration
+     * initialization it might need. (The same stuff you'd probably do after
+     * changing the plugin's configuration via its extension config page.)
+     */
+    public static function initialize_sitewide() {
+        return true;
+    }
+
+    /**
+     * This function gets called when the sitewide search plugin is switched AWAY
+     * from this one. It's the chance for the plugin to disable anything that would
+     * cause problems now that the search is no longer in use.
+     */
+    public static function cleanup_sitewide() {
+        return true;
+    }
+
+    /**
+     * This function determines whether the plugin is currently available to be chosen
+     * as the sitewide search plugin (i.e. get_config('searchplugin'))
+     */
+    public static function is_available_for_site_setting() {
+        return true;
+    }
+
+    /**
      * Given a query string and limits, return an array of matching users
      *
      * NOTE: user with ID zero or that are NOT active should never be returned
@@ -108,6 +135,26 @@ abstract class PluginSearch extends Plugin {
      */
     public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
 
+
+    /**
+     * Returns search results for users in a particular group
+     *
+     * It's called by and tightly coupled with get_group_user_search_results() in searchlib.php. Look there for
+     * the exact meaning of its parameters and expected return values.
+     */
+    public static abstract function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null);
+
+    /**
+     * This function indicates whether the plugin should take the raw $query string
+     * when its group_search_user function is called, or whether it should get the
+     * parsed query string.
+     *
+     * @return boolean
+     */
+    public static function can_process_raw_group_search_user_queries() {
+        return false;
+    }
+
     /**
      * Given a query string and limits, return an array of matching objects
      * owned by the current user.  Possible return types are ...
@@ -123,7 +170,7 @@ abstract class PluginSearch extends Plugin {
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
      * @param string  Type to search for (either 'all' or one of the types above).
-     * 
+     *
      */
     public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
 
@@ -159,5 +206,34 @@ abstract class PluginSearch extends Plugin {
                 }
             }
         }
+    }
+
+
+    /**
+     * Generates the search form used in the page headers
+     * @return string
+     */
+    public static function header_search_form() {
+        require_once('pieforms/pieform.php');
+
+        return pieform(array(
+                'name'                => 'usf',
+                'action'              => get_config('wwwroot') . 'user/find.php',
+                'renderer'            => 'oneline',
+                'autofocus'           => false,
+                'validate'            => false,
+                'presubmitcallback'   => '',
+                'elements'            => array(
+                        'query' => array(
+                                'type'           => 'text',
+                                'defaultvalue'   => get_string('searchusers'),
+                                'class'          => 'emptyonfocus',
+                        ),
+                        'submit' => array(
+                                'type' => 'submit',
+                                'value' => get_string('go'),
+                        )
+                )
+        ));
     }
 }

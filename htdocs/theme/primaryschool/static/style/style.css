@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2013 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,193 +17,231 @@
  *
  * @author     Catalyst IT Limited <www.catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2012 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2013 Catalyst IT Ltd http://catalyst.net.nz
  */
 
-/* General rules */
+/******************** Body ********************/
 body {
 	background: #182768;
 	color: #333333;
 }
 body#micro {
 	background: #25387E;
-	color: #333333;
 }
-a, a:visited, a:link, a:active {
-	color: #d66800;
-	text-decoration: none;
-}
-a:hover, a:focus {
-	color: #d66800;
-	text-decoration: underline;
-}
-h1, h2 {
-	color: #252c66;
-}
-h3 {
-	color: #252c66;
-}
-h4 {
-	color: #252c66;
-}
-h5 {
-	color: #252c66;
-}
+/******************** General headings ********************/
+h1,
+h2,
+h3,
+h4,
+h5,
 h6 {
 	color: #252c66;
 }
-.description, .unvalidated, .postdetails, .postedon {
-	color: #838383;
+/******************** General text ********************/
+a,
+a:visited,
+a:link,
+a:active {
+	color: #b25700;
+	text-decoration: none;
 }
-/**************************** Tables ****************************/
-.main-column thead th {
+a:hover,
+a:focus {
+	color: #d66800;
+	text-decoration: underline;
+}
+/* some common listing text styles */
+.title a {
+    color: #2144a8;
+}
+/******************** Tables ********************/
+thead th {
 	border-bottom: 1px solid #111641;
 }
-.main-column tbody th {
-	border-bottom: none;
+/* Alternative row background */
+.r0,
+.r0 td,
+.d0 {
+	background-color: #fffcf3;
 }
-/* table with th border-bottom */
-#searchresults thead th, .filelist, .tag-results #results {
-	border-bottom: 1px solid #111641;
+.r1,
+.r1 td,
+.d1 {
+	background-color: #fff9e6;
 }
-/* table with tfoot border-top */
-#searchresults tfoot td, #adminstitutionslist tfoot td, #profileicons tfoot td, #activitylist tfoot td {
-	border-top: 1px solid #111641;
-}
-.main-column table h3 a, .main-column table h3 a:visited, .main-column table h3 a:link, .listing div h3 a, .listing div h3 a:visited, .listing div h3 a:link {
-	color: #182768 !important;
-}
-.tablerenderer-loading {
-	border: 1px solid #f4f7f9;
-	background-color: #f4f7f9;
-	color: #182768;
-}
-/* table with th border-bottom */
-#searchresults thead th {
-	border-bottom: 1px solid #111641;
-}
-/* table with border-bottom */
-#searchresults tfoot td {
-	border-top: 1px solid #111641;
-}
-/* Alternative row background colours */
-.r0, .r0 td, .d0, .friends {
-	background-color: #fff8e2;
-}
-.r1, .r1 td, .d1 {
-	background-color: #fff4cf;
-}
-.morelinkwrap {
-	background: transparent;
-}
-/**************************** Pagination ****************************/
-div.pagination a {
-	background-color: #fffcf2;
-}
-/**************************** Forms ****************************/
-/* required */
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-	color: #c81511;
-}
-/* override required colour to normal colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-	color: #333333;
-}
-/* Fieldset */
+/******************** Forms ********************/
+/* fieldset */
 fieldset {
 	border: 1px solid #14436F;
 }
-/****************************** Buttons ****************************/
-/** input buttons **/
-.btn, input.submit, input.cancel, button, .buttondk, input.button, input.select, input#files_filebrowser_edit_artefact, ul.groupuserstatus li a {
-	background: #f6891d url(../images/btn-bkgd.png) repeat-x top;
-	border-color: #f6871f #c86100 #c86100 #f6871f;
-	color: #000 !important;
-}
-/** hover for buttons **/
-.btn:hover, input.submit:hover, input.cancel:hover, button:hover, .buttondk:hover, input.button:hover, input.select:hover, input#files_filebrowser_edit_artefact:hover, ul.groupuserstatus li a:hover {
-	background: #f6891d url(../images/btn-bkgd-hover.png) repeat-x bottom;
-	border-color: #f6871f #c86100 #c86100 #f6871f;
-	color: #000;
-}
-/** Depress for buttons **/
-.btn:active, input.submit:active, input.cancel:active, button:active, .buttondk:active, input.button:active, input.select:active, input#files_filebrowser_edit_artefact:active, ul.groupuserstatus li a:active {
-	background: #f6891d url(../images/btn-bkgd-hover.png) repeat-x 1px;
-	border-color: #c86100 #f6871f #f6871f #c86100;
-	color: #000;
-}
-/* buttons that look like links with icons */
-.icon {
-	color: #D66800;
-}
-/* buttons that look like links */
-.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
-	color: #D66800 !important;
-	text-decoration: none;
-}
-/* links that need to look like buttons */
-span.btn a.icon, a span.icon {
+/******************** Buttons ********************/
+/* Buttons to override with colour */
+/* input buttons */
+tr.submitcancel input.submit,
+tr.submitcancel input.cancel,
+tr.submit input.submit,
+tr.submit input.cancel,
+input#profileform_submit,
+input#files_filebrowser_edit_artefact,
+input#files_filebrowser_edit_cancel,
+input#instconf_folder_edit_artefact,
+input#instconf_folder_edit_cancel,
+input#instconf_artefactids_edit_artefact,
+input#instconf_artefactids_edit_cancel,
+input#instconf_artefactid_edit_artefact,
+input#instconf_artefactid_edit_cancel,
+.rbuttons .btn, 
+.rbuttons .btn:visited,
+.rbuttons .btn:link,
+.rbuttons input.submit,
+#resumewrap input.openedit,
+#resumewrap button,
+#view-wizard-controls input.submit,
+.submitwrap input.submit,
+#editaccess_submit_container input.submitcancel,
+#collectiondonewrap .btn,
+#collectiondonewrap .btn:visited,
+#collectiondonewrap .btn:link,
+input#export_submit,
+#sitelicenses .btn,
+#adduser #adduser_submit,
+input#login_submit,
+.login-externallink a.btn {
+    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
+	border: 1px solid #ab650f;
 	color: #000000;
 }
-/* Search buttons */
-#usf_submit, #usf_submit:hover {
-	background: transparent url(../images/btn-search.gif) no-repeat !important;
-	border: 0;
-	color: #2b4189;
-	text-indent: -999px;
-	font-size: 1%;
-	cursor: pointer;
-	vertical-align: bottom;
-	height: 21px;
-	width: 21px;
-	margin: 0 0 5px 0;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
+/* hover for buttons */
+tr.submitcancel input.submit:hover,
+tr.submitcancel input.cancel:hover,
+tr.submit input.submit:hover,
+tr.submit input.cancel:hover,
+input#profileform_submit:hover,
+input#files_filebrowser_edit_artefact:hover,
+input#files_filebrowser_edit_cancel:hover,
+input#instconf_folder_edit_artefact:hover,
+input#instconf_folder_edit_cancel:hover,
+input#instconf_artefactids_edit_artefact:hover,
+input#instconf_artefactids_edit_cancel:hover,
+input#instconf_artefactid_edit_artefact:hover,
+input#instconf_artefactid_edit_cancel:hover,
+.rbuttons .btn:hover,
+.rbuttons input.submit:hover,
+#resumewrap input.openedit:hover,
+#resumewrap button:hover,
+#view-wizard-controls input.submit:hover,
+.submitwrap input.submit:hover,
+#editaccess_submit_container input.submitcancel:hover,
+#collectiondonewrap .btn:hover,
+input#export_submit:hover,
+#sitelicenses .btn:hover,
+#adduser #adduser_submit:hover,
+input#login_submit:hover,
+.login-externallink a.btn:hover {
+	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+	border: 1px solid #ab650f;
+	color: #000000;
 }
-.ie8 #usf_submit, .ie8 #usf_submit:hover {
-	height: 20px;
+/* depress for buttons */
+tr.submitcancel input.submit:active,
+tr.submitcancel input.cancel:active,
+tr.submit input.submit:active,
+tr.submit input.cancel:active,
+input#profileform_submit:active,
+input#files_filebrowser_edit_artefact:active,
+input#files_filebrowser_edit_cancel:active,
+input#instconf_folder_edit_artefact:active,
+input#instconf_folder_edit_cancel:active,
+input#instconf_artefactids_edit_artefact:active,
+input#instconf_artefactids_edit_cancel:active,
+input#instconf_artefactid_edit_artefact:active,
+input#instconf_artefactid_edit_cancel:active,
+.rbuttons .btn:active,
+.rbuttons input.submit:active,
+#resumewrap input.openedit:active,
+#resumewrap button:active,
+#view-wizard-controls input.submit:active,
+.submitwrap input.submit:active,
+#editaccess_submit_container input.submitcancel::active,
+#collectiondonewrap .btn:active,
+input#export_submit:active,
+#sitelicenses .btn:active,
+#adduser #adduser_submit:active,
+input#login_submit:active,
+.login-externallink a.btn:active {
+	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+	border: 1px solid #ca7711;
+	color: #000000;
 }
-/********************* THEME SWITCHER ***************************/
+/* made to look like default grey buttons to match graphic icon buttons */
+#forumslist input.btn-subscribe,
+input#addviews_submit,
+input#edituser_suspend_submit,
+input#friendscontrol_submit,
+input#usertype_typesubmit {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:hover,
+input#addviews_submit:hover,
+input#edituser_suspend_submit:hover,
+input#friendscontrol_submit:hover,
+input#usertype_typesubmit:hover {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:active,
+input#addviews_submit:active,
+input#edituser_suspend_submit:active,
+input#friendscontrol_submit:active,
+input#usertype_typesubmit:active {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
+/* reset some that need grey button colour text */
+ul.groupuserstatus li .submit input.submit,
+ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:active {
+    color: #333333;
+}
+/* buttons that look like links */
+.linkbtn {
+	color: #D66800;
+	text-decoration: none;
+}
+/******************** Pagination ********************/
+div.pagination a {
+	background-color: #fffcf2;
+}
+/******************** Layout ********************/
 #switch-mode {
 	width: 100%;
 }
 #switch-mode ul {
 	width: 960px;
 }
-/**************************** Top of page elements ****************************/
 #container {
 	background: transparent url(../images/header-bkgd.png) repeat-x top left;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	min-width: 100%;
-	max-width: 100%;
 }
-#containerX {
+#micro #container {
 	background: #25387e url(../images/header-bkgd-small.png) repeat-x top left;
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	min-width: 100%;
-	max-width: 100%;
 }
 #top-wrapper {
 	background: transparent url(../images/header-swirl.png) no-repeat right top;
-	border: none;
 	width: 960px;
 	margin: 0 auto;
 	height: 150px;
 }
-#containerX #top-wrapper {
-	height: 87px;
-	background: transparent url(../images/header-swirl.png) no-repeat right top;
+#micro #top-wrapper {
+    background: none;
+    height: auto;
 }
 #mainmiddle {
-	background: #FFFFFF;
-}
-#containerX #main-wrapper {
-	background: #FFFFFF;
+	width: 960px;
+	margin: 0 auto;
 }
 .main-column {
 	width: 955px;
@@ -213,17 +251,36 @@ span.btn a.icon, a span.icon {
 	width: 690px;
 	padding: 10px 0 20px 0;
 }
-#containerX #main-wrapper .main-column {
+#micro #main-wrapper .main-column {
 	margin: 0 auto;
 }
-#loading-box {
-	background-color: #ECF3D4 !important;
+#main-column-container {
+	padding: 10px 0;
 }
+/******************** Header ********************/
+/* site logo */
 #site-logo {
 	padding: 16px 25px 7px 0;
 	margin: 0;
 }
-/* Search and language bar */
+/* header right */
+#header-right {
+    padding: 15px 10px 10px 10px;
+}
+#header-right label {
+	color: #FFFFFF;
+}
+/* top navigation */
+#right-nav li {
+	color: #D1D1D1;
+}
+#right-nav li a {
+	color: #ffd64d;
+}
+#right-nav li.identity a {
+	color: #D1D1D1;
+}
+/* search */
 #usf {
 	height: 21px;
 }
@@ -239,415 +296,433 @@ span.btn a.icon, a span.icon {
  * line-height: 18px;
 	line-height: 18px\0/;
 }
-#header-right {
-	padding: 0 5px 0 0;
- * padding: 0 5px 0 0;
+#usf_submit,
+#usf_submit:hover {
+	background: transparent url(../images/btn-search.gif) no-repeat !important;
+	border: 0;
+	color: #2b4189;
+	text-indent: -999px;
+	font-size: 1%;
+	cursor: pointer;
+	vertical-align: bottom;
+	height: 21px;
+	width: 21px;
+	margin: 0 0 5px 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
-#header-right form {
-	margin: 0;
-	padding: 0;
+.ie8 #usf_submit,
+.ie8 #usf_submit:hover {
+	height: 20px;
 }
-#header-right label {
-	color: #FFFFFF;
+/******************** Small header ********************/
+#micro .viewtitle,
+#micro .collection-title {
+    color: #FFFFFF;
 }
-/**************** TOP NAVIGATION ****************/
-#right-nav ul {
-	margin: 1.5em 0 1em 0;
+.viewheadertop #mainnav-container #mainnav a,
+.viewheadertop #mainnav-container #mainnav a:link,
+.viewheadertop #mainnav-container #mainnav a:visited,
+.viewheadertop #mainnav-container #mainnav a:active,
+.viewheadertop #mainnav-container #mainnav a:hover {
+    color: #FFD64D;
 }
-#right-nav li a {
-	color: #ffd64d;
-}
-#right-nav li.selected a {
-	color: #ffd64d;
-	text-decoration: underline;
-}
-#right-nav li.identity a {
-	color: #D1D1D1;
-}
-#main-nav {
-	padding: 0;
-	margin: 0;
-	height: 38px;
-	border-bottom: 0;
+/******************** Main navigation ********************/
+.main-nav {
 	background: none;
 }
-#main-nav ul {
-	margin: 0;
-	padding: 0;
-	height: 38px;
-}
-#main-nav li {
+.main-nav li {
 	color: #252c66;
-	text-decoration: none;
 	margin: 0 0 0 3px;
-	padding: 0;
-    font-size: 14px;
+    font-size: 13px;
 }
-#main-nav li span {
+.main-nav li span {
 	background: transparent url(../images/nav-divider.png) no-repeat right 5px;
-	height: 38px;
 }
-#main-nav li a, #main-nav li a:link, #main-nav li a:visited, #main-nav li a:active {
-	margin: 0;
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active {
 	padding: 0 12px 0 10px;
 	color: #252c66;
 	height: 38px;
 	line-height: 40px;
+	background-color: transparent;
 }
-#main-nav li a:hover {
+.main-nav li a:hover {
 	color: #f6871f;
 	background-color: transparent;
-	text-decoration: none;
 }
-#main-nav li.selected {
-	background: url(../images/mainnav-right.png) no-repeat right top;
+.main-nav li.selected {
+	background: url(../images/mainnav-right.png) no-repeat right 0;
 	margin-left: -5px;
 	margin-right: -5px;
 }
-#main-nav li.selected span {
-	background: url(../images/mainnav-left.png) no-repeat left top;
+.main-nav li.selected span {
+	background: url(../images/mainnav-left.png) no-repeat 0 0;
 }
-#main-nav li.selected a, #main-nav li.selected a:link, #main-nav li.selected a:visited, #main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active {
 	color: #FFFFFF;
 	line-height: 40px;
 	padding: 0 17px;
 }
 /* navigation icons */
-#main-nav li a.dashboard {
-	background: url(../images/nav-dashboard.png) no-repeat left 6px;
+.main-nav li a.dashboard {
+	background: url(../images/nav-dashboard.png) no-repeat 0 6px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.dashboard {
+.main-nav li.selected a.dashboard {
 	background: url(../images/nav-dashboard.png) no-repeat 13px 6px;
 	padding-left: 47px;
 }
-#main-nav li a.content {
-	background: url(../images/nav-content.png) no-repeat left 5px;
+.main-nav li a.content {
+	background: url(../images/nav-content.png) no-repeat 0 5px;
 	padding-left: 34px;
 }
-#main-nav li.selected a.content {
+.main-nav li.selected a.content {
 	padding-left: 47px;
 	background: url(../images/nav-content.png) no-repeat 13px 5px;
 }
-#main-nav li a.myportfolio {
+.main-nav li a.myportfolio {
 	background: url(../images/nav-portfolio.png) no-repeat 2px 5px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.myportfolio {
+.main-nav li.selected a.myportfolio {
 	padding-left: 47px;
 	background: url(../images/nav-portfolio.png) no-repeat 13px 5px;
 }
-#main-nav li a.groups {
+.main-nav li a.groups {
 	background: url(../images/nav-groups.png) no-repeat 5px 7px;
 	padding-left: 37px;
 }
-#main-nav li.selected a.groups {
+.main-nav li.selected a.groups {
 	padding-left: 47px;
 	background: url(../images/nav-groups.png) no-repeat 13px 7px;
 }
-#main-nav li a.admin-site {
-	background: url(../images/nav-siteadmin.png) no-repeat left 7px;
+.main-nav li a.admin-site {
+	background: url(../images/nav-siteadmin.png) no-repeat 0 7px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.admin-site {
+.main-nav li.selected a.admin-site {
 	padding-left: 47px;
 	background: url(../images/nav-siteadmin.png) no-repeat 13px 7px;
 }
-#main-nav li a.adminhome {
-	background: url(../images/nav-siteadmin.png) no-repeat left 7px;
+.main-nav li a.adminhome {
+	background: url(../images/nav-siteadmin.png) no-repeat 0 7px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.adminhome {
+.main-nav li.selected a.adminhome {
 	padding-left: 47px;
 	background: url(../images/nav-adminhome.png) no-repeat 13px 7px;
 }
-#main-nav li a.configsite {
-	background: url(../images/nav-configuresite.png) no-repeat left 7px;
+.main-nav li a.configsite {
+	background: url(../images/nav-configuresite.png) no-repeat 0 7px;
 	padding-left: 32px;
 }
-#main-nav li.selected a.configsite {
+.main-nav li.selected a.configsite {
 	padding-left: 44px;
 	background: url(../images/nav-configuresite.png) no-repeat 13px 7px;
 }
-#main-nav li a.institutions {
-	background: url(../images/nav-institutions.png) no-repeat left 7px;
+.main-nav li a.institutions {
+	background: url(../images/nav-institutions.png) no-repeat 0 7px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.institutions {
+.main-nav li.selected a.institutions {
 	padding-left: 47px;
 	background: url(../images/nav-institutions.png) no-repeat 13px 7px;
 }
-#main-nav li a.configextensions {
-	background: url(../images/nav-extensions.png) no-repeat left 7px;
+.main-nav li a.configextensions {
+	background: url(../images/nav-extensions.png) no-repeat 0 7px;
 	padding-left: 30px;
 }
-#main-nav li.selected a.configextensions {
+.main-nav li.selected a.configextensions {
 	padding-left: 42px;
 	background: url(../images/nav-extensions.png) no-repeat 13px 7px;
 }
-#main-nav li a.return-site {
-	background: url(../images/nav-return-site.png) no-repeat left 9px;
+.main-nav li a.return-site {
+	background: url(../images/nav-return-site.png) no-repeat 0 9px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.return-site {
+.main-nav li.selected a.return-site {
 	padding-left: 47px;
 	background: url(../images/nav-return-site.png) no-repeat 13px 9px;
 }
-#main-nav li a.admin-user {
-	background: url(../images/nav-admin-user.png) no-repeat left 9px;
+.main-nav li a.admin-user {
+	background: url(../images/nav-admin-user.png) no-repeat 0 9px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.admin-user {
+.main-nav li.selected a.admin-user {
 	padding-left: 47px;
 	background: url(../images/nav-admin-user.png) no-repeat 13px 9px;
 }
-#main-nav li a.configusers {
-	background: url(../images/nav-manageusers.png) no-repeat left 7px;
+.main-nav li a.configusers {
+	background: url(../images/nav-manageusers.png) no-repeat 0 7px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.configusers {
+.main-nav li.selected a.configusers {
 	padding-left: 47px;
 	background: url(../images/nav-manageusers.png) no-repeat 13px 7px;
 }
-#main-nav li a.managegroups {
+.main-nav li a.managegroups {
 	background: url(../images/nav-managegroups.png) no-repeat 5px 7px;
 	padding-left: 40px;
 }
-#main-nav li.selected a.managegroups {
+.main-nav li.selected a.managegroups {
 	padding-left: 47px;
 	background: url(../images/nav-managegroups.png) no-repeat 13px 7px;
 }
-#main-nav li a.manageinstitutions {
-	background: url(../images/nav-manageinstitutions.png) no-repeat left 9px;
+.main-nav li a.manageinstitutions {
+	background: url(../images/nav-manageinstitutions.png) no-repeat 0 9px;
 	padding-left: 35px;
 }
-#main-nav li.selected a.manageinstitutions {
+.main-nav li.selected a.manageinstitutions {
 	padding-left: 47px;
 	background: url(../images/nav-manageinstitutions.png) no-repeat 13px 9px;
 }
-/**************** SUB NAVIGATION ****************/
+/******************** Sub navigation ********************/
 #sub-nav {
-	padding: 0;
-	margin: 0;
-	font-size: 14px;
-	font-weight: normal;
-	text-align: left;
+	font-size: 13px;
 	background: none;
-	height: 30px;
-	line-height: 30px;
-	border:none;
-	border-bottom: 0;
 }
-#sub-nav ul {
-}
-#sub-nav li {
-	margin: 0 !important;
-}
-#sub-nav li a, #sub-nav li a:link, #sub-nav li a:visited, #sub-nav li a:active {
+#sub-nav li a,
+#sub-nav li a:link,
+#sub-nav li a:visited,
+#sub-nav li a:active {
 	color: #14336F;
-	height: 30px;
-	line-height: 30px;
-	padding: 0 10px;
+    padding: 7px 10px;
 }
 #sub-nav li a:hover {
 	color: #1A428F;
 	text-decoration: underline;
 }
-#sub-nav li.selected {
-	margin: 0;
-	background: transparent;
-}
-#sub-nav li.selected a, #sub-nav li.selected a:link, #sub-nav li.selected a:visited, #sub-nav li.selected a:active {
+#sub-nav li.selected a,
+#sub-nav li.selected a:link,
+#sub-nav li.selected a:visited,
+#sub-nav li.selected a:active {
 	color: #FFFFFF;
 	text-decoration: none;
 }
-/**************** IN PAGE TAB NAVIGATION ****************/
+/******************** Dropdown sub navigation ********************/
+.main-nav .dropdown-sub {
+	top: 37px;
+	left: -4px;
+}
+.main-nav ul li.selected ul.dropdown-sub {
+	left: 7px;
+}
+.main-nav .dropdown-sub li {
+    margin: 0;
+}
+.main-nav .dropdown-sub li a,
+.main-nav .dropdown-sub li a:link,
+.main-nav .dropdown-sub li a:visited,
+.main-nav .dropdown-sub li a:active {
+	background: #00084f;
+	color: #FFFFFF;
+	height: auto;
+    padding: 8px 10px;
+	line-height: 1.333em;
+	border-top: 1px solid #0f1978;
+	border-bottom: 1px solid #000533;
+}
+.main-nav .dropdown-sub li a:hover {
+	background: #0b1960;
+	color: #ffd64d;
+}
+/******************** Tabs ********************/
 div.tabswrap {
-	background: url(../images/inpage-right.png) no-repeat right top;
+	background: url(../images/inpage-right.png) no-repeat right 0;
 }
 form#profileform {
-	background: url(../images/inpage-right.png) no-repeat right top;
- * background: url(../images/inpage-right.png) no-repeat right 10px;
+	background: url(../images/inpage-right.png) no-repeat right 0;
+}
+.no-js form#profileform {
+    background: none;
 }
 ul.in-page-tabs {
-	height: 34px;
-	line-height: 30px;
-	background: url(../images/inpage-left.png) no-repeat left top;
+	background: url(../images/inpage-left.png) no-repeat 0 0;
 	padding-left: 10px;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
-	color: #FFF;
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn,
+ul.searchtab li span.inactive {
+	color: #FFFFFF;
 	background: none;
 	height: 34px;
 	line-height: 38px;
 	padding: 0 10px;
+    border: 0;
+    margin: 0;
 }
-ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
-	text-decoration: none;
+ul.in-page-tabs li a:hover,
+ul.in-page-tabs li input:hover {
 	color: #ffd850;
 }
 ul.in-page-tabs li.current-tab {
 	background: url(../images/inpage-active-right.png) no-repeat right top;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active,
 ul.in-page-tabs li input.current-tab {
 	color: #000000;
 	background: url(../images/inpage-active-left.png) no-repeat left top;
 	height: 34px;
 	line-height: 36px;
+    border: 0;
+    margin: 0 0 0 -3px;
 }
+/* tab body */
 .subpage {
-	border: 1px solid #f9f9f9;
-	border-top: 10px solid #f9f9f9;
+    border: 0;
 	background: #f9f9f9;
+    margin-top: 0;
 }
-/**************** MAIN CONTENT *****************/
-#mainmiddlewrap {
-	background: #FFFFFF;
-}
-#mainmiddle {
-	width: 960px;
-	margin: 0 auto;
-}
-#main-column-container {
-	padding: 10px 0;
-}
-/**************** SIDEBAR ******************/
-#left-column, #right-column {
-	background: none;
+/******************** Sidebar ********************/
+/* general sidebar styles */
+#left-column,
+#right-column {
 	padding: 20px 0 0 0;
 	width: 251px;
 }
-div.sideblock {
-	border-bottom: 0;
+.sideblock {
 	padding: 0 0 5px 0;
 	margin: 0 0 20px 0;
-	background: url(../images/sidebar-blue-bottom.png) no-repeat bottom left;
+	background: url(../images/sidebar-blue-bottom.png) no-repeat 0 bottom;
 }
-div.sideblock .sidebar-header {
-	background: url(../images/sidebar-blue-top.png) no-repeat top left;
+.sideblock .sidebar-header {
+	background: url(../images/sidebar-blue-top.png) no-repeat 0 0;
 	color: #FFFFFF;
-	padding: 10px 15px 2px 15px;
+	padding: 10px 15px 5px 15px;
 }
-div.sideblock h3, div.sideblock h3 a, div.sideblock h3 a:link, div.sideblock h3 a:visited, div.sideblock h3 a:active {
+.sideblock h3,
+.sideblock h3 a,
+.sideblock h3 a:link,
+.sideblock h3 a:visited,
+.sideblock h3 a:active {
 	color: #FFFFFF;
 }
-div.sideblock h3 a:hover {
+.sideblock h3 a:hover {
 	color: #FFFFFF;
 	text-decoration: none;
 }
-div.sideblock .sidebar-content {
+.sideblock .sidebar-content {
 	background: #f1f2f8;
-	margin: 0 14px 0 10px;
+	margin: 0 10px 0 10px;
 	padding: 5px;
 }
-.ie7 div.sideblock .sidebar-content {
+.ie7 .sideblock .sidebar-content {
 	width: 220px;
 }
-div.sideblock .sidebar-content a {
+.sideblock .sidebar-content a,
+.sideblock .sidebar-content a:link,
+.sideblock .sidebar-content a:visited,
+.sideblock .sidebar-content a:active {
 	color: #182768;
 }
-/* Side Login */
+/* Sidebar login */
 #sb-loginbox label {
 	color: #1A428F;
 }
-#sb-loginbox #login_login_container {
-    border: 0;
-    margin-top: 0;
-    background: #e5e6f1;
-}
-#sb-loginbox #login_login_extra_container {
-    border: 0;
-    margin-top: 5px;
-    background: #e5e6f1;
-}
-/* Side Profile */
+/* Sidebar profile */
 #sb-profile {
-	background: url(../images/sidebar-yellow-bottom.png) no-repeat bottom left;
+	background: url(../images/sidebar-yellow-bottom.png) no-repeat 0 bottom;
 }
 #sb-profile .sidebar-header {
-	background: url(../images/sidebar-yellow-top.png) no-repeat top left;
-	height: 55px;
+	background: url(../images/sidebar-yellow-top.png) no-repeat 0 0;
+	min-height: 57px;
 }
 #sb-profile .sidebar-content {
 	background: #fff4cf;
-	padding: 0 10px;
+	padding: 0 5px;
+    min-height: 0;
 }
 .ie7 #sb-profile .sidebar-content {
 	width: 210px;
 }
-#sb-profile #unreadmessages {
-	margin-bottom: 3px;
+#sb-profile .sidebar-content ul {
+    padding: 5px 0 0 0;
 }
-#sb-profile #unreadmessages a {
-	color: #8391fc;
-}
-#sb-profile #user-profileicon {
-	padding: 0
-}
-#sb-profile .sidebar-content ul li#groups, #sb-profile .sidebar-content #changeuser {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-#sb-profile ul a, #sb-profile ul a:link, #sb-profile ul a:visited, #sb-profile ul a:active {
-	color: #000000;
-}
-#sb-profile ul ul {
-	padding: 0;
+#sb-profile .sidebar-content ul ul {
+    padding: 3px 0 0 0;
 }
 #sb-profile ul ul li {
 	list-style-image: url(../images/bullet.png);
 	list-style-position: inside;
 	border-top: 1px dashed #ffd850;
-	padding: 5px 0 3px 0;
 }
-.ie7 #sb-profile ul ul li {
-	list-style-image: none !important;
-	list-style: disc inside !important;
-}
-#sb-profile ul ul a, #sb-profile ul ul a:link, #sb-profile ul ul a:visited, #sb-profile ul ul a:active {
+#sb-profile ul ul a,
+#sb-profile ul ul a:link,
+#sb-profile ul ul a:visited,
+#sb-profile ul ul a:active {
 	color: #d66800;
 }
-#sb-profile li#pendingfriends a, #sb-profile li#pendingfriends a:link, #sb-profile li#pendingfriends a:visited, #sb-profile li#pendingfriends a:active {
-	color: #d66800 !important;
-}
-/* online users */
+/* Sidebar online users */
 #sb-onlineusers li {
 	border-bottom: 1px dashed #8391fc;
 }
-/* Side Quota Bar */
+/* Sidebar quota/group quota bar */
 #quota_used {
 	color: #252c66;
 }
 #quota_total {
 	color: #252c66;
 }
-#quota_bar, #quota_bar_100 {
-	background: url(../images/quota_bar_bg.gif) no-repeat left top;
-	color: #FFF;
+/* Sidebar tags */
+#sb-tags .sidebar-content {
+    overflow: hidden;
 }
-#quota_fill {
-	background: url(../images/quota_bar_highlight.gif) repeat-x;
-}
-/******************** FOOTER ****************************/
+/******************** Footer ********************/
 #footer-wrap {
-	background-color: #182768;
 	color: #636d9b;
 }
 #footer {
 	width: 960px;
-	margin: 0 auto;
 }
-#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
+#footer a,
+#footer a:link,
+#footer a:visited,
+#footer a:active,
+#footer a:hover {
 	color: #FFFFFF;
 }
-/****************************** PAGE BY PAGE STYLES **********************************/
-/* Settings > Preferences */
-#accountprefs table h3 {
-	border-bottom: 1px dotted #888888
+/******************** Page by page styles (listed by navigation order) ********************/
+/* Login page */
+#loginform_container #login_login_container,
+#login_login_extra_container {
+    background: #e5e6f1;
 }
-/* Home page info boxes */
+#sb-loginbox #loginform_container #login_login_container,
+#sb-loginbox #login_login_extra_container {
+    padding: 5px;
+}
+/* persona button */
+/* link body */
+a.persona-button span:before{ /* Icon BG */
+    background: #f58f14;
+    background: -moz-linear-gradient(top, #fed54c, #f58f14);
+    background: -ms-linear-gradient(top, #fed54c, #f58f14);
+    background: -o-linear-gradient(top, #fed54c, #f58f14);
+    background: -webkit-linear-gradient(top, #fed54c, #f58f14);
+    background: linear-gradient(top, #fed54c, #f58f14);
+}
+a.persona-button:before{ /* Triangle */
+    background: #f58f14;
+    background: -moz-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -ms-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -o-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: -webkit-linear-gradient(-45deg, #fed54c, #f58f14);
+    background: linear-gradient(-45deg, #f58f14, #fed54c); /* flipped for updated spec */
+}
+/* Dashboard */
 #home-info-container {
 	background: #ececec;
 	padding: 10px;
@@ -656,7 +731,7 @@ div.sideblock .sidebar-content a {
 }
 #home-info {
 	border: 0;
-	background: url(../images/home-info-bkgd.png) no-repeat left top;
+	background: url(../images/home-info-bkgd.png) no-repeat 0 0;
 	width: 669px;
 	height: 331px;
 	margin: 0;
@@ -674,7 +749,7 @@ div.sideblock .sidebar-content a {
 }
 #homebox .btn-logintoexplore {
 	position: relative;
-	background: url(../images/home-logintoexplore.png) no-repeat left top;
+	background: url(../images/home-logintoexplore.png) no-repeat 0 0;
 	width: 178px;
 	height: 67px;
 	display: block;
@@ -685,7 +760,7 @@ div.sideblock .sidebar-content a {
 }
 #homebox .btn-findfriends a {
 	position: relative;
-	background: url(../images/home-findfriends.png) no-repeat left top;
+	background: url(../images/home-findfriends.png) no-repeat 0 0;
 	width: 101px;
 	height: 116px;
 	display: block;
@@ -695,11 +770,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-findfriends a:hover {
-	background: url(../images/home-findfriends.png) no-repeat left bottom;
+	background: url(../images/home-findfriends.png) no-repeat 0 bottom;
 }
 #homebox .btn-mygroups a {
 	position: relative;
-	background: url(../images/home-mygroups.png) no-repeat left top;
+	background: url(../images/home-mygroups.png) no-repeat 0 0;
 	width: 147px;
 	height: 125px;
 	display: block;
@@ -709,11 +784,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-mygroups a:hover {
-	background: url(../images/home-mygroups.png) no-repeat left bottom;
+	background: url(../images/home-mygroups.png) no-repeat 0 bottom;
 }
 #homebox .btn-updateprofile a {
 	position: relative;
-	background: url(../images/home-updateprofile.png) no-repeat left top;
+	background: url(../images/home-updateprofile.png) no-repeat 0 0;
 	width: 85px;
 	height: 108px;
 	display: block;
@@ -723,11 +798,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-updateprofile a:hover {
-	background: url(../images/home-updateprofile.png) no-repeat left bottom;
+	background: url(../images/home-updateprofile.png) no-repeat 0 bottom;
 }
 #homebox .btn-discuss a {
 	position: relative;
-	background: url(../images/home-discuss.png) no-repeat left top;
+	background: url(../images/home-discuss.png) no-repeat 0 0;
 	width: 103px;
 	height: 90px;
 	display: block;
@@ -737,11 +812,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-discuss a:hover {
-	background: url(../images/home-discuss.png) no-repeat left bottom;
+	background: url(../images/home-discuss.png) no-repeat 0 bottom;
 }
 #homebox .btn-uploadfiles a {
 	position: relative;
-	background: url(../images/home-uploadfiles.png) no-repeat left top;
+	background: url(../images/home-uploadfiles.png) no-repeat 0 0;
 	width: 86px;
 	height: 102px;
 	display: block;
@@ -751,11 +826,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-uploadfiles a:hover {
-	background: url(../images/home-uploadfiles.png) no-repeat left bottom;
+	background: url(../images/home-uploadfiles.png) no-repeat 0 bottom;
 }
 #homebox .btn-createpages a {
 	position: relative;
-	background: url(../images/home-createpages.png) no-repeat left top;
+	background: url(../images/home-createpages.png) no-repeat 0 0;
 	width: 83px;
 	height: 101px;
 	display: block;
@@ -765,11 +840,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-createpages a:hover {
-	background: url(../images/home-createpages.png) no-repeat left bottom;
+	background: url(../images/home-createpages.png) no-repeat 0 bottom;
 }
 #homebox .btn-writejournal a {
 	position: relative;
-	background: url(../images/home-writejournal.png) no-repeat left top;
+	background: url(../images/home-writejournal.png) no-repeat 0 0;
 	width: 125px;
 	height: 82px;
 	display: block;
@@ -779,11 +854,11 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-writejournal a:hover {
-	background: url(../images/home-writejournal.png) no-repeat left bottom;
+	background: url(../images/home-writejournal.png) no-repeat 0 bottom;
 }
 #homebox .btn-sharepages a {
 	position: relative;
-	background: url(../images/home-sharepages.png) no-repeat left top;
+	background: url(../images/home-sharepages.png) no-repeat 0 0;
 	width: 86px;
 	height: 94px;
 	display: block;
@@ -793,93 +868,64 @@ div.sideblock .sidebar-content a {
 	text-indent: -9999px;
 }
 #homebox .btn-sharepages a:hover {
-	background: url(../images/home-sharepages.png) no-repeat left bottom;
+	background: url(../images/home-sharepages.png) no-repeat 0 bottom;
 }
-#micro #footer-wrap {
-	width: 960px;
+/* Content > Files */
+.uploaddisabled,
+.fileupload,
+#createfolder {
+    background-color: #ecf0fc;
 }
-.viewheader a {
-	color: #FFF;
+/* Portfolio > Pages */
+/* page/collection submission form */
+.submissionform {
+    background: #ced0e0;
 }
-.viewheader .title {
-	color: #FFF;
+/* Portfolio > Collections > Edit collection */
+#collectionpageswrap {
+    background: #ecf0fc;
 }
-#containerX #top-wrapper a, #containerX #top-wrapper a:hover, #containerX #top-wrapper a:active {
-	color: #ffffff;
+#collectionpages {
+    border: 3px solid #ecf0fc;
 }
-/* collection */
-ul.colnav li a {
-	color: #FFF;
+/* Portfolio > Shared by me > Edit access */
+#editaccess #editaccess_collections_container,
+#editaccess #editaccess_views_container,
+#editaccess #editaccess_accesslist_container,
+#editaccess #editaccess_more_container {
+    background: #ecf0fc;
 }
+/* Groups > Group's about page */
 .group-info {
 	background:	#FFFFFF;
-	border: 0;
 }
-/**************** DROPDOWN NAVIGATION ****************/
-#main-nav .dropdown-sub {
-	top: 37px;
-	left: -4px;
+/* Groups > Group's forums */
+.forumpost {
+    border: 2px solid #ecf0fc;
+    background: #ecf0fc;
 }
-#main-nav ul li.selected ul.dropdown-sub {
-	left: 7px;
+.forumpostleft {
+    background: #ecf0fc;
 }
-#main-nav .dropdown-sub li {
-	margin: 0;
+/* Groups > My/Find friends */
+ul.actionlist li.denyrequest a,
+ul.actionlist li.editgroup a,
+ul.actionlist li.friend a,
+ul.actionlist li.messages a,
+ul.actionlist li.removefriend a,
+ul.actionlist li form input.submit {
+    background-color: #edeff5;
+    border-color: #CBD3EC;
 }
-#main-nav .dropdown-sub li span {
-	border-top: 1px solid #0f1978;
-	border-bottom: 1px solid #000533;
-	height: 30px;
+/* Universal search */
+ul.searchtab li span.inactive {
+    color: #909090;
 }
-#main-nav .dropdown-sub li a, #main-nav .dropdown-sub li a:link, #main-nav .dropdown-sub li a:visited, #main-nav .dropdown-sub li a:active {
-	background: #00084f;
-	color: #FFF;
-	height: 30px;
-	line-height: 30px;
-	text-decoration: none;
+/* My tags */
+#results_filter {
+    background: #BCC8E9;
 }
-#main-nav .dropdown-sub li a:hover {
-	background: #0b1960;
-	color: #ffd64d;
-	text-decoration: none;
-}
-#main-nav .dropdown-sub li.selected {
-	background: none;
-	margin: 0;
-}
-#main-nav .dropdown-sub li.selected span {
-	background: none;
-}
-#viewforum {
-	background: #FFFFFF;
-}
-.grouppageswrap, .memberswrap {
-	background: #FFFFFF;
-}
-/****************** SMALL HEADER *****************/
-#containerX #top-wrapper a, #containerX #top-wrapper a:hover, #containerX #top-wrapper a:active {
-	color: #ffd64d;
-}
-#collection .collection-title {
-	color: #FFFFFF;
-}
-#containerX ul.colnav li a {
-	background: #5b6eae;
-}
-/* Persona button */
-a.persona-button span:before{ /* Icon BG */
-    background: #f58f14;
-    background: -moz-linear-gradient(top, #fed54c, #f58f14);
-    background: -ms-linear-gradient(top, #fed54c, #f58f14);
-    background: -o-linear-gradient(top, #fed54c, #f58f14);
-    background: -webkit-linear-gradient(top, #fed54c, #f58f14);
-    background: linear-gradient(top, #fed54c, #f58f14);
-}
-a.persona-button:before{ /* Triangle */
-    background: #f58f14;
-    background: -moz-linear-gradient(-45deg, #fed54c, #f58f14);
-    background: -ms-linear-gradient(-45deg, #fed54c, #f58f14);
-    background: -o-linear-gradient(-45deg, #fed54c, #f58f14);
-    background: -webkit-linear-gradient(-45deg, #fed54c, #f58f14);
-    background: linear-gradient(-45deg, #f58f14, #fed54c); /* flipped for updated spec */
+#results_filter .filtername a {
+	background-color: #DCDFE9;
+    border-color: #CBD3EC;
 }

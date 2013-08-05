@@ -49,11 +49,11 @@ results.rowfunction = function (r, rownumber, d) {
 
     var titleElement;
     if (r.links && r.links._default) {
-        titleElement = [H3(null, A({'href': r.links._default}, r.title))];
+        titleElement = [H3({'class': 'title'}, A({'href': r.links._default}, r.title))];
         delete r.links._default;
     }
     else {
-        titleElement = [H3(null, r.title)];
+        titleElement = [H3({'class': 'title'}, r.title)];
     }
 
     for ( var k in r.links ) {

@@ -47,6 +47,10 @@ a:hover, a:focus {
     color: #84aa00;
     text-decoration: underline;
 }
+/* some common listing text styles */
+.title {
+    color: #474220;
+}
 /******************** Tables ********************/
 thead th {
 	border-bottom: 1px solid #ccc;
@@ -68,6 +72,7 @@ legend {
 	color: #1e6297;
 }
 /* label */
+th,
 th label,
 #files_filebrowser_agreement label,
 .uploadform label {
@@ -176,7 +181,8 @@ input#login_submit:active,
 #forumslist input.btn-subscribe,
 input#addviews_submit,
 input#edituser_suspend_submit,
-input#friendscontrol_submit {
+input#friendscontrol_submit,
+input#usertype_typesubmit {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
     color: #333333;
@@ -184,7 +190,8 @@ input#friendscontrol_submit {
 #forumslist input.btn-subscribe:hover,
 input#addviews_submit:hover,
 input#edituser_suspend_submit:hover,
-input#friendscontrol_submit:hover {
+input#friendscontrol_submit:hover,
+input#usertype_typesubmit:hover {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
@@ -192,7 +199,8 @@ input#friendscontrol_submit:hover {
 #forumslist input.btn-subscribe:active,
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
-input#friendscontrol_submit:active {
+input#friendscontrol_submit:active,
+input#usertype_typesubmit:active {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
     color: #333333;
@@ -653,7 +661,8 @@ ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
+ul.in-page-tabs li input.linkbtn,
+ul.searchtab li span.inactive {
     color: #1E6297;
     background: none;
     border-left: 1px solid #FFFFFF;
@@ -821,6 +830,46 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-bottom: 1px solid #6a8091;
     }
 }
+/* override universal search result tabs */
+ul.searchtab li span.inactive {
+    color: #9c9c9c;
+}
+.rd-navmenu ul.searchtab {
+    display: block;
+}
+.rd-navmenu ul.searchtab li {
+    display: table-cell;
+}
+.rd-navmenu ul.searchtab li a,
+.rd-navmenu ul.searchtab li a:link,
+.rd-navmenu ul.searchtab li a:visited,
+.rd-navmenu ul.searchtab li a:active {
+    color: #1E6297;
+    background: none;
+    border-left: 1px solid #FFFFFF;
+    border-top: 0;
+    border-right: 1px solid #bcbcbc;
+    border-bottom: 0;
+    margin: 0;
+    text-align: center;
+}
+.rd-navmenu ul.searchtab li a:hover {
+	color: #7E7327;
+}
+.rd-navmenu ul.searchtab li a.current-tab,
+.rd-navmenu ul.searchtab li a.current-tab:link,
+.rd-navmenu ul.searchtab li a.current-tab:visited,
+.rd-navmenu ul.searchtab li a.current-tab:active {
+    color: #000;
+    background: #FFFFFF url(../images/tabs-active.gif) repeat-x 0 0;
+    border-left: 1px solid #FFFFFF;
+    border-top: 0;
+    border-right: 1px solid #d1d1d1;
+    border-bottom: 0;
+}
+.rd-navmenu ul.searchtab li:first-child a {
+    border-left: 0;
+}
 /******************** Sidebar ********************/
 /* general sidebar styles */
 .sideblock {
@@ -830,17 +879,17 @@ ul.in-page-tabs li:first-child a.current-tab {
 .sideblock h3 a:link,
 .sideblock h3 a:visited,
 .sideblock h3 a:active {
-	color: #1E6297;
+    color: #1E6297;
 }
 .sideblock h3 a:hover {
-	color: #267bbd;
+    color: #267bbd;
 }
 /* Sidebar profile */
 #sb-profile ul ul a,
 #sb-profile ul ul a:link,
 #sb-profile ul ul a:visited,
 #sb-profile ul ul a:active {
-	color: #7f9d16;
+    color: #7f9d16;
 }
 /* Sidebar quota/group quota bar */
 #quota_used {
@@ -862,7 +911,7 @@ ul.in-page-tabs li:first-child a.current-tab {
 #footer a:visited,
 #footer a:active,
 #footer a:hover {
-    color: #768c9d;
+    color: #1E6297;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
 /* Login page */
@@ -893,11 +942,12 @@ a.persona-button:before {
 .uploaddisabled, .fileupload, #createfolder {
     background-color: #ebf0f4;
 }
-/* Content > Journals > Journal posts */
-/* attachments */
-table.attachments {
-    border-color: #d1dcbd;
-    background-color: #d1dcbd;
+/* Portfolio > Collections > Configure access */
+#collectionpageswrap {
+	background: #FAFBF7;
+}
+#collectionpages {
+    border-color: #FAFBF7;
 }
 /* Portfolio > Shared by me > Edit access */
 #editaccess #editaccess_collections_container,
@@ -1001,6 +1051,18 @@ table.mceLayout td.mceToolbar td {
         float: none;
         width: auto;
     }
+    /* Universal search */
+    .thumbnail-right {
+        margin-left: 65px;
+        min-height: 50px;
+    }
+    .thumbnail-image {
+        margin-left: -65px;
+        width: 50px;
+    }
+    .thumbnail-image img {
+        width: 50px;
+    }
 }
 /* for 660px or less */
 @media screen and (max-width: 660px) {
@@ -1022,6 +1084,14 @@ table.mceLayout td.mceToolbar td {
     /* Dashboard */
     .home-info-2 div a img {
         width: 90%;
+    }
+    /* Universal search */
+    #universal-search-container {
+        width: 96%;
+        padding: 10px 1.9%;
+    }
+    #universal-search-container input#search_query {
+        width: 58%;
     }
 }
 /* for 600px or less */
@@ -1091,10 +1161,6 @@ table.mceLayout td.mceToolbar td {
     .rbuttons input.submit,
     .rbuttons a {
         margin: 0 8px 3px 0;
-    }
-    /* Pagination */
-    div.pagination span {
-        white-space: normal;
     }
     /* Header */
     #top-wrapper {
@@ -1167,6 +1233,12 @@ table.mceLayout td.mceToolbar td {
     #powered-by {
         display: none;
     }
+    #footer-nav,
+    #performance-info,
+    #version {
+        float: none;
+        text-align: center;
+    }
     /* Content > Résumé */
     form#educationhistory table th,
     form#book table th,
@@ -1218,27 +1290,26 @@ table.mceLayout td.mceToolbar td {
         display: none;
     }
     /* Content > Files */
+    #files_filebrowser_agreement label {
+        margin-left: 0 !important;
+        width: auto;
+    }
+    #files_filebrowser_agreement {
+        margin-left: 0 !important;
+    }
+    .fileuploadlicense {
+        margin-bottom: 0 !important;
+    }
     #files_filebrowser_userfile_maxuploadsize {
         display: inline-block;
-        margin-left: 80px;
+        margin-left: 0 !important;
+        margin-bottom: 10px;
     }
     .foldernav {
         margin-bottom: 5px;
     }
     #createfolder #files_filebrowser_createfolder_name {
         max-width: 50%;
-    }
-    .filebrowser td table th {
-        display: none;
-    }
-    .filebrowser td table td {
-        float: none;
-        width: auto;
-        padding: 3px 0.9%;
-        display: table-cell;
-    }
-    .filebrowser td table td.icon-container {
-        width: 25px;
     }
     .filelist th {
         display: none;
@@ -1255,12 +1326,26 @@ table.mceLayout td.mceToolbar td {
         display: inline-block;
         width: 25px;
         padding-top: 3px;
+        vertical-align: middle;
+    }
+    .filelist td.icon-container .icon-drag {
+        vertical-align: middle;
     }
     .filelist td.filename,
     .filebrowser td .filelist td.filename {
         display: inline-block;
-        width: 80%;
+        width: auto;
         padding-top: 8px;
+    }
+    .filelist td.filedescription,
+    .filebrowser td .filelist td.filedescription,
+    .filelist td.filesize,
+    .filebrowser td .filelist td.filesize,
+    .filelist td.filedate,
+    .filebrowser td .filelist td.filedate {
+        padding: 0 0.9% 1px 40px;
+        width: auto;
+        clear: left;
     }
     .filelist td.right,
     .filebrowser td .filelist td.right {
@@ -1272,11 +1357,14 @@ table.mceLayout td.mceToolbar td {
         background: none;
     }
     tr.editrow table th,
-    tr.editrow table td {
+    tr.editrow table td,
+    tr#files_filebrowser_edit_row table th,
+    tr#files_filebrowser_edit_row table td {
         float: left;
         width: 98%;
         padding: 3px 0.9% 0 0.9%;
         display: block;
+        border-bottom: 0;
     }
     #search #search_query,
     #searchviews #searchviews_query {
@@ -1288,6 +1376,7 @@ table.mceLayout td.mceToolbar td {
     /* Content > Journals */
     #bloglist .fr {
         float: none;
+        tetx-align: right;
     }
     #bloglist span.entries {
         margin-left: 0;
@@ -1349,19 +1438,36 @@ table.mceLayout td.mceToolbar td {
     #viewlayout {
         text-align: center;
     }
-    #viewlayout .columnoption {
-        float: none;
+    .advancedlayoutselect .title {
+        display: block;
+        padding-left: 0;
+        padding-top: 7px;
         width: auto;
+        text-align: center;
     }
-    #viewlayout .layoutoptions {
-        width: 70px;
+    #viewlayout_advancedlayoutselect_row1,
+    #viewlayout_advancedlayoutselect_row2,
+    #viewlayout_advancedlayoutselect_row3,
+    #viewlayout_advancedlayoutselect_row4,
+    #viewlayout_advancedlayoutselect_row5,
+    #viewlayout_advancedlayoutselect_row6 {
+        display: block;
+        text-align: center;
+    }
+    #createcustomlayoutpane {
         float: none;
-        display: inline-block;
-        margin: 0 5px;
-        vertical-align: top;
+        clear: both;
     }
-    #viewlayout .layoutoptions .layoutimg img {
-        width: 50px;
+    #previewcustomlayoutpane {
+        float: none;
+        clear: both;
+    }
+    .customrowoptions {
+        display: block;
+    }
+    .customrow label {
+        display: block;
+        margin-left: 0;
     }
     /* Portfolio > Shared with me */
     #sharedviewlist thead {
@@ -1390,10 +1496,11 @@ table.mceLayout td.mceToolbar td {
         float: left;
         display: block;
         width: 98%;
-        padding: 3px 0.9%;
+        padding: 3px 0.9% 0 0.9%;
     }
     .accesslists .accesslist {
         width: 98%;
+        padding: 0 0.9%;
     }
     .accesslists .al-edit {
         width: auto;
@@ -1430,6 +1537,10 @@ table.mceLayout td.mceToolbar td {
         width: auto;
         display: table-cell;
         float: none;
+    }
+    /* Portfolio > Shared with me */
+    #search_advanced_container #search_share_container {
+        padding-left: 0;
     }
     /* Groups > My/Find groups */
     .listing ul.groupuserstatus {
@@ -1581,6 +1692,43 @@ table.mceLayout td.mceToolbar td {
     #activitylist tfoot {
         display: none;
     }
+    /* Universal search */
+    #universalsearchresults-filter-wrap {
+        float: none;
+        margin-left: 0;
+        width: 100%;
+	}
+    #universalsearchresults-filter-wrap #results_filter {
+        width: 98%;
+        padding: 3px 0.9%;
+    }
+    #results_filter .filtertitle {
+        padding: 3px;
+    }
+    #search-filter-license {
+        margin: 0;
+        width: 90%;
+    }
+    .universalsearch {
+        padding: 10px;
+    }
+    .universalsearch .selectboxes {
+        text-align: left;
+    }
+    #universalsearch-results-sort,
+    #universalsearch-filter-owner {
+        margin: 0 0.9% 5px 0;
+    }
+    #results_filter .filtername {
+        width: 48%;
+    }
+    #results_filter.search-filter-license .filtertitle {
+        display: inline-block;
+    }
+    /* My tags */
+    #results_sort {
+        float: none;
+    }
 }
 /* for 480px or less */
 @media screen and (max-width: 480px) {
@@ -1591,6 +1739,36 @@ table.mceLayout td.mceToolbar td {
     /* Content > Profile pictures */
     .pieform #profileicons tr {
         width: 100%;
+    }
+    /* Universal search */
+    ul.searchtab {
+        font-size: 1em;
+    }
+}
+/* for 450px or less */
+@media screen and (max-width: 400px) {
+    /* Universal search */
+    ul.searchtab li a,
+    ul.searchtab li a:link,
+    ul.searchtab li a:visited,
+    ul.searchtab li a:active {
+        padding: 5px 3px;
+    }
+    #universalsearchresults .listrowright {
+        margin-left: 30px;
+    }
+    #universalsearchresults .listrowright .counter {
+        margin-left: -30px;
+    }
+    .thumbnail-image {
+        margin-left: -35px;
+    	width: 30px;
+    }
+    .thumbnail-image img {
+        width: 30px;
+    }
+    .thumbnail-right {
+        margin-left: 35px;
     }
 }
 /* for 360px or less */

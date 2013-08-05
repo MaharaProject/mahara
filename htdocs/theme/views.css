@@ -32,7 +32,7 @@ ul.colnav li.selected span {
     padding: 10px;
     margin: 0 8px 0 0;
     display: block;
-    white-space: normal;
+    white-space: nowrap;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -64,7 +64,7 @@ ul.colnav li.selected span {
 /******************** Page ********************/
 #page {
     padding: 0 10px 10px 10px;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     clear: both;
 }
 .viewrbuttons {
@@ -125,7 +125,6 @@ ul.colnav li.selected span {
 }
 #feedbacktable .commentrightwrap .fr .makepublicbtn input {
     margin: 0 0 0 5px;
-    padding: 3px 5px 2px 5px;
 }
 #feedbacktable .commentrightwrap .author {
     margin: 0 0 3px 0;
@@ -157,7 +156,7 @@ ul.colnav li.selected span {
 }
 #viewmenu a {
     margin: 0 15px 0 5px;
-    padding: 3px 0;
+    padding: 3px 0
 }
 #viewmenu .help a {
     padding: 0;
@@ -198,50 +197,265 @@ ul.colnav li.selected span {
     text-decoration: none;
 }
 /******************** Blocktype icons panel ********************/
-#blocktype-list {
-    clear: left;
-    padding: 0 10px;
+#editcontent-sidebar-wrapper {
+    position: absolute;
+    padding: 0 0 0 6px;
+    z-index: 2;
 }
-#blocktype-list ul {
-    list-style: none;
+#editcontent-sidebar {
+    width: 170px;
+    left: 0px;
+    top: 15px;
+    position: relative;
+    padding: 7px 3px 7px 7px;
+    border-radius: 5px 0 0 5px;
+}
+.no-js #editcontent-sidebar {
+    top: 5px;
+}
+#editcontent-sidebar.collapsed {
+    width: 42px;
+}
+#editcontent-sidebar.collapsed .withjs {
+    text-indent: -9999px;
+}
+#content-editor-header {
+    height: 38px;
+    text-indent: -9999px;
+    width: 38px;
+    float: right;
+    margin-top: -24px;
+    margin-right: -5px;
+    margin-bottom: 3px;
+    cursor: pointer;
+}
+/* fix IE8 position */
+#content-editor-header/*\**/ {
+    margin-top: -23px\9;
+}
+.no-js #content-editor-header {
+    height: 5px;
+    margin: 0;
+    cursor: default;
+}
+.collapsed #content-editor-header {
+    background: url("raw/static/images/contenteditor/expand.png") no-repeat right 0;
+}
+.open #content-editor-header {
+    background: url("raw/static/images/contenteditor/collapse.png") no-repeat right 0;
+}
+#content-editor-header div {
+    font-size: 1.167em;
+    font-weight: bold;
+    padding: 10px;
+}
+.no-js #content-editor-header div {
+    display: none;
+}
+#blocktype-common {
+    clear: both;
+    text-align: left;
+    padding: 2px 2px 0 2px;
+    margin-bottom: 4px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.blocktype {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    font-size: 1.083em;
+    line-height: 1em;
+    padding: 4px 4px 4px 30px;
+    vertical-align: middle;
+}
+.no-js .blocktype {
+    padding-left: 50px;
+}
+.blocktype-list .blocktype-radio {
+    cursor: default; /* ie fix */
+    margin: 0 0 0 -44px;
+    vertical-align: middle;
+}
+.blocktype img {
+    vertical-align: middle;
+    margin-left: -26px;
+}
+.no-js .blocktype img {
+	margin: 0;
+}
+.blocktypetitle {
+    margin-left: 2px;
+}
+#editcontent-sidebar.collapsed .blocktype .blocktypetitle {
+    display: none;
+}
+/* dragging */
+.ui-draggable-dragging {
+    font-size: 0.750em;
+}
+.ui-draggable-dragging .blocktype {
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    border: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-indent: 0 !important;
+    width: auto !important;
+}
+/* accordion */
+#accordion {
+    clear: both;
+    font-size: 1em;
+}
+.block-category-title .withjs {
+    background: url("raw/static/images/contenteditor/arrow.png") no-repeat right bottom;
+    font-weight: bold;
+    font-size: 1.167em;
+    text-align: left;
+    padding: 7px 5px 7px 32px;
+    text-decoration: none;
+}
+.block-category-title .nonjs {
+    background: url("raw/static/images/contenteditor/arrow.png") no-repeat right bottom;
+    font-weight: bold;
+    font-size: 1.167em;
+    text-align: left;
+    padding: 7px 5px 7px 32px;
+    display: block;
+    text-decoration: none;
+}
+.block-category-title .withjs:hover,
+.block-category-title .nonjs:hover {
+    text-decoration: none;
+}
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-top: 4px;
+}
+#block-category-general.ui-state-active,
+#block-category-internal.ui-state-active,
+#block-category-fileimagevideo.ui-state-active,
+#block-category-external.ui-state-active,
+#block-category-blog.ui-state-active {
+    margin-bottom: 0;
+    -webkit-border-radius: 3px 3px 0 0;
+    -moz-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+    border-bottom: 0;
+}
+#block-category-general {
+    background-image: url("raw/static/images/contenteditor/general.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+#block-category-internal {
+    background-image: url("raw/static/images/contenteditor/personalinfo.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+#block-category-fileimagevideo {
+    background-image: url("raw/static/images/contenteditor/media.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+#block-category-external {
+    background-image: url("raw/static/images/contenteditor/external.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+#block-category-blog {
+    background-image: url("raw/static/images/contenteditor/journal.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+/* container around blocktypes under each category */
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    text-align: left;
+    padding: 2px;
+    margin-bottom: 4px;
+    -webkit-border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+.no-js #blog,
+.no-js #internal,
+.no-js #general,
+.no-js #fileimagevideo,
+.no-js #external { 
+	margin-top: -2px;
+}
+/* theme selector */
+#select-theme {
+    clear: both;
+    background-image: url("raw/static/images/contenteditor/theme.png");
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    padding: 4px;
+}
+#select-theme-header {
+    font-size: 1.167em;
+    font-weight: bold;
+    clear: both;
+    padding: 4px 0 4px 28px;
+}
+#select-theme select {
+    width: 160px;
     margin: 0;
 }
-#blocktype-list li {
-    display: inline-block;
-    vertical-align: top;
-    text-align: center;
-    padding: 10px 5px;
-    margin: 0 0 5px 0;
-    width: 100px;
+#editcontent-sidebar.collapsed #select-theme-header {
+    display: none;
 }
-#blocktype-list .blocktype-radio {
-    cursor: default; /* ie fix */
+#editcontent-sidebar.collapsed #select-theme select {
+    width: 28px;
+    margin-top: 26px;
 }
-#blocktype-list .blocktype-title {
-    margin: 3px 0;
-    font-size: 1.167em;
-}
+/******************** Bottom pane of edit page ********************/
 #noblocks {
     font-size: 1.167em;
     text-align: center;
     padding: 10px;
 }
-/******************** Blocktype name & description panel ********************/
-#middle-pane #themeselect {
-    float: right;
-    margin-right: 10px;
+#tabcontent {
+    min-height: 435px;
 }
-#current_bt_description {
-    margin: 3px 10px;
-    float: left;
-    line-height: 25px;
-    min-height: 25px;
+#tabcontent #page,
+#tabcontent #page.open {
+    margin-left: 177px;
 }
-/******************** Bottom pane of edit page ********************/
-#blocksinstruction {
+#tabcontent #page.collapsed {
+    margin-left: 49px;
+}
+#page #bottom-pane {
     padding: 10px;
-    font-size: 1.167em;
-    color: #888888;
+    min-height: 435px;
+    background: #FFFFFF;
+}
+.no-js #page #bottom-pane {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    min-height: 415px;
+}
+#blocksinstruction {
+    padding: 10px 10px 0 10px;
     font-style: italic;
 }
 /******************** Column layout ********************/
@@ -280,11 +494,11 @@ ul.colnav li.selected span {
 .add-button {
     background: #EEEEEE;
     text-align: center;
-    margin: 0 0 20px 0;
-    padding: 5px 0;
+    margin: 0;
+    padding: 10px 0;
 }
 input.newblockhere {
-    width: 96%;
+    width: 90%;
     margin: 0 !important;
 }
 .add-column-left {
@@ -312,17 +526,19 @@ input.newblockhere {
 .column-content {
     min-height: 20px;
 }
-#block-placeholder {
-    margin: 10px 0 2px 0;
-    border: 2px dashed #BFBFBF;
+.rowspacer {
+    background: #FFF;
 }
 /******************** Blocks ********************/
 .blockinstance {
-    margin: 0 0 20px 0;
-    padding: 0;
+    margin: 0;
+    padding: 10px;
     position: relative;
 }
 /* block control */
+#main-column.edit-content .blockinstance-header {
+    cursor: move;
+}
 .blockinstance-controls {
     float: right;
     margin-left: 10px;
@@ -342,6 +558,7 @@ img.retractablebtn {
 }
 .subpage .retractable .blockinstance-controls img.retractablebtn {
     opacity: 0.3;
+    filter: alpha(opacity=30);
 }
 div.blockinstance-header .arrow {
     float: right;
@@ -377,11 +594,6 @@ div.blockinstance-header .arrow {
 }
 .blockinstance-content div a img {
     max-width: 100%;
-}
-.blockconfig-background {
-    width: 100%;
-    text-align: center;
-    margin-top: 20px;
 }
 table.maharatable tr#instconf_readonlymsg_container td,
 table.maharatable tr#instconf_otherblocksmsg_container td {
@@ -506,7 +718,7 @@ ul.artefactchooser-subtabs li.current a:active {
     margin-right: auto;
     padding: 10px;
     z-index: 12 !important;
-    max-width: 75%;
+    max-width: 85%;
     font-size: 0.75em;
 }
 #micro .configure {
@@ -515,6 +727,34 @@ ul.artefactchooser-subtabs li.current a:active {
 }
 #micro .subpage .configure {
     font-size: 1em;
+}
+.no-js .blockconfig-background {
+    background: #FFFFFF;
+    position: relative;
+   	z-index: 11;
+}
+.no-js .blockinstance.configure {
+    font-size: 1em;
+}
+/******************** View wizard controls ********************/
+#view-wizard-controls {
+    padding-bottom: 5px;
+}
+#view-wizard-controls form {
+    display: inline;
+}
+/******************** Viewing artefact ********************/
+#view .filedata-icon {
+    padding: 5px 10px 10px 10px;
+    margin: 0 15px 10px 0;
+    text-align: center;
+}
+#view .filedata-thumb {
+    margin: 0 5px;
+}
+table.maharatable tr#instconf_otherblocksmsg_container td {
+    padding: 5px;
+    font-style: italic;
 }
 /******************** Different blocktype styles ********************/
 /* External feed block */
@@ -802,20 +1042,4 @@ td.incomplete {
 /* Wall block */
 .bt-wall form {
     margin: 0 0 10px 0;
-}
-/******************** View wizard controls ********************/
-#view-wizard-controls {
-    padding-bottom: 5px;
-}
-#view-wizard-controls form {
-    display: inline;
-}
-/******************** Viewing artefact ********************/
-#view .filedata-icon {
-    padding: 5px 10px 10px 10px;
-    margin: 0 15px 10px 0;
-    text-align: center;
-}
-#view .filedata-thumb {
-    margin: 0 5px;
 }
