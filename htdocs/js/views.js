@@ -63,7 +63,15 @@
     ViewManager.replaceConfigureBlock = function(data) {
         var oldblock = $('#blockinstance_' + data.blockid);
         if (oldblock.length) {
-            var temp = $('<div>').html(data.data.html);
+            // doing it this way stop inline js in the
+            // data.data.html breaking things
+            var temp = $('<div>' + data.data.html + '</div>');
+            // Append any inline js to data.data.javascript
+            for (i in temp) {
+                if (temp[i].nodeName === 'SCRIPT' && temp[i].src === '') {
+                    data.data.javascript += temp[i].innerHTML;
+                }
+            }
             var newblock = temp.find('div.blockinstance');
 
             $('.blockinstance-header', newblock).mousedown(function() {
