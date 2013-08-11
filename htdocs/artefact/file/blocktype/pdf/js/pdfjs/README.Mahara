@@ -37,3 +37,4 @@ Changes:
 * Minify js files for faster loading
 * Use absolute paths in viewer.js
 * Open fileurl if defined
+* viewer.css additions to support viewing by non-JS users

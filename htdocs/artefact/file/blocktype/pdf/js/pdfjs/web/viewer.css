@@ -219,12 +219,36 @@ body {
   background-image: url(images/texture.png);
 }
 
+body.no-js {
+  background-color: #FFFFFF;
+  background-image: none;
+}
+
 body,
 input,
 button,
 select {
   font: message-box;
   outline: none;
+}
+
+.js {
+    display: none;
+}
+
+#nojsdownload {
+    text-align: center;
+}
+
+#nojsdownload a {
+    color: #6E8E00;
+    text-decoration: none;
+    font-size: 0.85em;
+    line-height: 1.333em;
+}
+#nojsdownload a:hover {
+    color: #84AA00;
+    text-decoration: underline;
 }
 
 .hidden {
