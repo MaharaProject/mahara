@@ -146,10 +146,13 @@ function updateTextContent(a) {
         addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
-        removeElementClass('instconf_license_header', 'hidden');
-        removeElementClass('instconf_license_container', 'hidden');
-        removeElementClass('instconf_license_description', 'hidden');
-        removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        if ($('instconf_license_header')) {
+            // only deal with these if the license metadata is enabled
+            removeElementClass('instconf_license_header', 'hidden');
+            removeElementClass('instconf_license_container', 'hidden');
+            removeElementClass('instconf_license_description', 'hidden');
+            removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        }
         removeElementClass('instconf_tags_header', 'hidden');
         removeElementClass('instconf_tags_container', 'hidden');
         removeElementClass('instconf_tags_description', 'hidden');
@@ -176,10 +179,13 @@ function updateTextContent(a) {
         addElementClass('instconf_text_header', 'hidden');
         addElementClass('instconf_text_container', 'hidden');
         addElementClass('instconf_otherblocksmsg_container', 'hidden');
-        addElementClass('instconf_license_header', 'hidden');
-        addElementClass('instconf_license_container', 'hidden');
-        addElementClass('instconf_license_description', 'hidden');
-        addElementClass('instconf_license_advanced_fieldset', 'hidden');
+        if ($('instconf_license_header')) {
+            // only deal with these if the license metadata is enabled
+            addElementClass('instconf_license_header', 'hidden');
+            addElementClass('instconf_license_container', 'hidden');
+            addElementClass('instconf_license_description', 'hidden');
+            addElementClass('instconf_license_advanced_fieldset', 'hidden');
+        }
         addElementClass('instconf_tags_header', 'hidden');
         addElementClass('instconf_tags_container', 'hidden');
         addElementClass('instconf_tags_description', 'hidden');
@@ -219,10 +225,13 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
         addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
-        removeElementClass('instconf_license_header', 'hidden');
-        removeElementClass('instconf_license_container', 'hidden');
-        removeElementClass('instconf_license_description', 'hidden');
-        removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        if ($('instconf_license_header')) {
+            // only deal with these if the license metadata is enabled
+            removeElementClass('instconf_license_header', 'hidden');
+            removeElementClass('instconf_license_container', 'hidden');
+            removeElementClass('instconf_license_description', 'hidden');
+            removeElementClass('instconf_license_advanced_fieldset', 'hidden');
+        }
         removeElementClass('instconf_tags_header', 'hidden');
         removeElementClass('instconf_tags_container', 'hidden');
         removeElementClass('instconf_tags_description', 'hidden');
@@ -315,19 +324,30 @@ EOF;
                 'defaultvalue' => $text,
                 'rules' => array('maxlength' => 65536),
             ),
-            'tags' => array(
-                'type' => 'tags',
-                'class' => $readonly ? 'hidden' : '',
-                'title' => get_string('tags'),
-                'description' => get_string('tagsdescprofile'),
-                'defaultvalue' => $tags,
-            ),
             'textreadonly' => array(
                 'type' => 'html',
                 'class' => $readonly ? '' : 'hidden',
                 'title' => get_string('blockcontent', 'blocktype.internal/textbox'),
                 'width' => '100%',
                 'value' => '<div id="instconf_textreadonly_display">' . $text . '</div>',
+            ),
+            'makecopy' => array(
+                'type' => 'checkbox',
+                'class' => 'hidden',
+                'defaultvalue' => false,
+            ),
+            'chooseartefact' => array(
+                'type'  => 'html',
+                'class' => 'nojs-hidden-block',
+                'value' => '<a id="chooseartefactlink" href="">'
+                    . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
+            ),
+            'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
+            'managenotes' => array(
+                'type'  => 'html',
+                'class' => 'right hidden',
+                'value' => '<a href="' . $manageurl . '" target="_blank">'
+                    . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
             'tags' => array(
                 'type' => 'tags',
@@ -352,24 +372,6 @@ EOF;
                 'width' => '100%',
                 'title' => get_string('license'),
                 'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
-            ),
-            'makecopy' => array(
-                'type' => 'checkbox',
-                'class' => 'hidden',
-                'defaultvalue' => false,
-            ),
-            'chooseartefact' => array(
-                'type'  => 'html',
-                'class' => 'nojs-hidden-block',
-                'value' => '<a id="chooseartefactlink" href="">'
-                    . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
-            ),
-            'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
-            'managenotes' => array(
-                'type'  => 'html',
-                'class' => 'right hidden',
-                'value' => '<a href="' . $manageurl . '" target="_blank">'
-                    . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
             ),
         );
         if ($readonly) {
