@@ -225,6 +225,11 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
         if (!filter_var($values['videoid'], FILTER_VALIDATE_URL)) {
             // Not a url, treat the input as html to be sanitised when rendered.
+            if (preg_match('/youtu(be|\.be)/',$values['videoid'])) {
+                // dealing with youtube not having protocol in the iframe embed code
+                (is_https()) ? $protocol = 'https://' : $protocol = 'http://';
+                $values['videoid'] = preg_replace('#//#',$protocol,$values['videoid']);
+            }
             $values['html'] = $values['videoid'];
             return $values;
         }
