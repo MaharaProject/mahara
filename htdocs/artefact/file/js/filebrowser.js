@@ -310,8 +310,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
 
         // Recalculate the width of config block
-        var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
-        update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+        if ($('artefactchooser-body')) {
+            var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
+            update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+        }
 
         return false;
     }
@@ -802,8 +804,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             self.init();
         }
         // Recalculate the width of config block
-        var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
-        update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+        if ($('artefactchooser-body')) {
+            var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
+            update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+        }
     }
 
 }
