@@ -1166,7 +1166,9 @@ function update_safe_iframe_regex() {
                 throw new SystemException('Invalid site passed to update_safe_iframe_regex');
             }
         }
-        $iframeregexp = '%^https?://(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
+        // Allowed iframe URLs should be one of the partial URIs in iframe_source,
+        // prefaced by http:// or https:// or just // (which is a protocol-relative URL)
+        $iframeregexp = '%^(http:|https:|)//(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
     }
     set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
 }
