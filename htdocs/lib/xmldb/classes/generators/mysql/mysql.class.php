@@ -233,7 +233,7 @@ class XMLDBmysql extends XMLDBGenerator {
     }
 
     function getTableExtraSQL($xmldb_table) {
-        return 'TYPE=innodb'; // mahara only ever wants innodb because we want foreign keys!
+        return 'ENGINE=innodb'; // mahara only ever wants innodb because we want foreign keys!
     }
 
 
