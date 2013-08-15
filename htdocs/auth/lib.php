@@ -1084,7 +1084,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
 }
 
 /**
- * Returns the definition of the login form.
+ * Returns the definition of the login form, for display on the transient login page.
  *
  * @return array   The login form definition array.
  * @access private
@@ -1852,7 +1852,7 @@ function auth_remove_old_session_files() {
 }
 
 /**
- * Generates the login form for the sideblock
+ * Generates the login form for the sideblock.
  *
  * {@internal{Not sure why this form definition doesn't use 
  * auth_get_login_form, but keep that in mind when making changes.}}
