@@ -337,6 +337,7 @@ $string['onlineuserssideblockmaxusersdescription'] = 'The maximum number of user
 $string['country'] = 'Country';
 $string['pathtoclam'] = 'Path to ClamAV';
 $string['pathtoclamdescription'] = 'The file system path to clamscan or clamdscan';
+$string['pathtoclamnotset'] = '(not set)';
 $string['registerterms'] = 'Registration agreement';
 $string['registertermsdescription'] = "Force users to agree to the terms and conditions before registration. You should edit your site's terms and conditions page before enabling this option.";
 $string['licensemetadata'] = 'License metadata';

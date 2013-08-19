@@ -261,7 +261,7 @@ If you wish to extend your account access or have any questions regarding the ab
 
 Regards, %s site administrator';
 $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
-    
+
 <p>Your account on %s will expire within %s.</p>
 
 <p>We recommend you save the contents of your portfolio using the export tool. Instructions on using this feature may be found within the user guide.</p>
@@ -689,6 +689,7 @@ $string['clamdeletedfilefailed'] = 'The file could not be deleted.';
 $string['clambroken'] = 'Your administrator has enabled virus checking for file uploads but has misconfigured something. Your file upload was NOT successful. Your administrator was notified so they can fix it. Maybe try uploading this file later.';
 $string['clamemailsubject'] = '%s :: ClamAV notification';
 $string['clamlost'] = 'ClamAV is configured to run on file upload, but the path supplied to ClamAV, %s, is invalid.';
+$string['clamnotset'] = 'You have activated virus checking, but have not set a "Path to ClamAV" value. Virus checking will not take effect until you configure the path to ClamAV by adding a $cfg->pathtoclam value to your config.php file.';
 $string['clamfailed'] = 'ClamAV has failed to run. The return error message was %s. Here is the output from ClamAV:';
 $string['clamunknownerror'] = 'There was an unknown error with ClamAV.';
 $string['image'] = 'Image';
