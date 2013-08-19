@@ -110,7 +110,9 @@ input#export_submit,
 #sitelicenses .btn,
 #adduser #adduser_submit,
 input#login_submit,
-.login-externallink a.btn {
+.login-externallink a.btn,
+input#viewlayout_submit,
+input#files_filebrowser_upload {
 	border-color: #51732f;
 	background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	color: #FFFFFF;
@@ -141,7 +143,9 @@ input#export_submit:hover,
 #sitelicenses .btn:hover,
 #adduser #adduser_submit:hover,
 input#login_submit:hover,
-.login-externallink a.btn:hover {
+.login-externallink a.btn:hover,
+input#viewlayout_submit:hover,
+input#files_filebrowser_upload:hover {
     border-color: #73b332;
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	color: #FFFFFF;
@@ -172,7 +176,9 @@ input#export_submit:active,
 #sitelicenses .btn:active,
 #adduser #adduser_submit:active,
 input#login_submit:active,
-.login-externallink a.btn:active {
+.login-externallink a.btn:active,
+input#viewlayout_submit:active,
+input#files_filebrowser_upload:active {
 	border-color: #244700;
 	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	color: #FFFFFF;
@@ -941,6 +947,9 @@ a.persona-button:before {
 /* Content > Files */
 .uploaddisabled, .fileupload, #createfolder {
     background-color: #ebf0f4;
+}
+#file_dropzone_container {
+    background-color: #f7f7f7;
 }
 /* Portfolio > Collections > Configure access */
 #collectionpageswrap {

@@ -64,6 +64,11 @@
       {contextualhelp plugintype='artefact' pluginname='file' form='files_filebrowser' element='resizeonuploaduseroption'}
   </div>
   {/if}
+  <div id="file_dropzone_container" class="{$prefix}">
+      <div id="fileDropzone" class="dropzone-previews" style="display:none;">
+        <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
+      </div>
+  </div>
   <div class="uploadform">
     <div id="{$prefix}_uploadsubmit_container">{* filebrowser.js may add a submit button in here even if config.submitbutton is off *}
       {if $config.submitbutton}
@@ -72,11 +77,13 @@
       <noscript><input type="submit" class="submit" name="{$prefix}_upload" id="{$prefix}_upload" value="{str tag=upload section=artefact.file}" /></noscript>
     </div>
   </div>
+
 </div>
 {/if}
 {if $config.upload}
 <div id="{$prefix}_upload_disabled" class="uploaddisabled{if !$uploaddisabled} hidden{/if}">{str tag="cannoteditfolder" section=artefact.file}</div>
 {/if}
+
 
 {if $config.edit}
 <input type="hidden" name="{$prefix}_move" id="{$prefix}_move" value="" />
@@ -88,12 +95,6 @@
     <input type="text" class="text" name="{$prefix}_createfolder_name" id="{$prefix}_createfolder_name" size="40" />
     <input type="submit" class="submit" name="{$prefix}_createfolder" id="{$prefix}_createfolder" value="{str tag=createfolder section=artefact.file}" /></div>
 {/if}
-
-<div id="file_dropzone_container" class="{$prefix}">
-  <div id="fileDropzone" class="dropzone-previews" style="display:none;">
-    <div class="dz-message">{str tag=dragdrophere section=artefact.file}</div>
-  </div>
-</div>
 
 <div id="{$prefix}_foldernav" class="foldernav">
 {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}

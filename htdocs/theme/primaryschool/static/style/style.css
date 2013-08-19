@@ -106,7 +106,9 @@ input#export_submit,
 #sitelicenses .btn,
 #adduser #adduser_submit,
 input#login_submit,
-.login-externallink a.btn {
+.login-externallink a.btn,
+input#viewlayout_submit,
+input#files_filebrowser_upload {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -137,7 +139,9 @@ input#export_submit:hover,
 #sitelicenses .btn:hover,
 #adduser #adduser_submit:hover,
 input#login_submit:hover,
-.login-externallink a.btn:hover {
+.login-externallink a.btn:hover,
+input#viewlayout_submit:hover,
+input#files_filebrowser_upload:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -168,7 +172,9 @@ input#export_submit:active,
 #sitelicenses .btn:active,
 #adduser #adduser_submit:active,
 input#login_submit:active,
-.login-externallink a.btn:active {
+.login-externallink a.btn:active,
+input#viewlayout_submit:active,
+input#files_filebrowser_upload:active {
 	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border: 1px solid #ca7711;
 	color: #000000;
@@ -875,6 +881,9 @@ a.persona-button:before{ /* Triangle */
 .fileupload,
 #createfolder {
     background-color: #ecf0fc;
+}
+#file_dropzone_container {
+    background-color: #f3f6fe;
 }
 /* Portfolio > Pages */
 /* page/collection submission form */

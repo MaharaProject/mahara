@@ -73,7 +73,7 @@ p span {
     line-height: 1.333em;
 }
 .backtrace {
-    font: normal 100% monospace;
+    font: normal 110%/1.5em monospace;
 }
 /******************** Body ********************/
 body {
@@ -272,7 +272,7 @@ span.error {
 }
 div.info {
     background: #E5ECF4 url(../images/info.png) no-repeat 4px 4px;
-    padding: 5px 5px 5px 26px;
+    padding: 5px 5px 5px 27px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -886,7 +886,10 @@ input#account_delete_submit:active {
 #viewforum a.newforumtopic,
 #forumbtns a.newforum,
 .groupuserstatus .admincontrol .btn-editgroup,
-input#login_submit {
+input#login_submit,
+input#files_filebrowser_upload,
+input#instconf_artefactids_upload,
+input#instconf_artefactid_upload {
     font-weight: bold;
 }
 /* bigger buttons */
@@ -917,7 +920,11 @@ input#instconf_artefactids_edit_artefact,
 input#instconf_artefactids_edit_cancel,
 input#instconf_artefactid_edit_artefact,
 input#instconf_artefactid_edit_cancel,
-#addlayout {
+#addlayout,
+input#viewlayout_submit,
+input#files_filebrowser_upload,
+input#instconf_artefactids_upload,
+input#instconf_artefactid_upload {
     padding: 5px 10px;
     font-size: 1.167em
 }
@@ -2033,6 +2040,30 @@ a.persona-button:after {
     font-size: 1.333em;
     background: url(../images/foldernav.png) no-repeat 0 0;
     margin-top: 20px;
+}
+#files_filebrowser_uploadsubmit_container,
+#instconf_artefactids_uploadsubmit_container,
+#instconf_artefactid_uploadsubmit_container {
+    margin: 10px 0 5px 0;
+}
+/* drop file upload */
+#file_dropzone_container {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #EEEEEE;
+    -webkit-box-shadow: inset 0px 0px 3px 0px #888888;
+	box-shadow: inset 0px 0px 3px 0px #888888;
+}
+.no-js #file_dropzone_container {
+    display: none;
+}
+#file_dropzone_container.dragover {
+    background-color: #FFFFF7;
+}
+#file_dropzone_container .dz-message {
+    font-size: 2em;
+    color: #888888;
 }
 /* edit row background */
 tr.editrow,

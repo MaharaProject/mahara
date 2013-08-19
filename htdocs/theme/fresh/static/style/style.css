@@ -118,7 +118,9 @@ input#export_submit,
 #sitelicenses .btn,
 #adduser #adduser_submit,
 input#login_submit,
-.login-externallink a.btn {
+.login-externallink a.btn,
+input#viewlayout_submit,
+input#files_filebrowser_upload {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border-color: #1c3c47;
 	color: #FFFFFF;
@@ -149,7 +151,9 @@ input#export_submit:hover,
 #sitelicenses .btn:hover,
 #adduser #adduser_submit:hover,
 input#login_submit:hover,
-.login-externallink a.btn:hover {
+.login-externallink a.btn:hover,
+input#viewlayout_submit:hover,
+input#files_filebrowser_upload:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border-color: #1c3c47;
 	color: #FFFFFF;
@@ -180,7 +184,9 @@ input#export_submit:active,
 #sitelicenses .btn:active,
 #adduser #adduser_submit:active,
 input#login_submit:active,
-.login-externallink a.btn:active {
+.login-externallink a.btn:active,
+input#viewlayout_submit:active,
+input#files_filebrowser_upload:active {
 	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border-color: #1c3c47;
 	color: #FFFFFF;
@@ -509,6 +515,14 @@ a.persona-button:before{ /* Triangle */
 .fileupload,
 #createfolder {
     background: #13282f;
+}
+#file_dropzone_container {
+    background-color: #344f58;
+    -webkit-box-shadow: inset 0px 0px 5px 0px #13282f;
+	box-shadow: inset 0px 0px 5px 0px #13282f;
+}
+#file_dropzone_container .dz-message {
+    color: #8ebacb;
 }
 /* edit row background */
 tr.editrow,
