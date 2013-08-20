@@ -259,7 +259,8 @@ div.ok {
     margin-bottom: 3px;
     font-size: 1em;
 }
-div.error {
+div.error,
+span.error {
     background: #FEE7E7 url(../images/failure.png) no-repeat 4px 4px;
     padding: 5px 5px 5px 27px;
     -webkit-border-radius: 5px;
