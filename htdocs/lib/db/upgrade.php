@@ -3213,19 +3213,6 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
-    if ($oldversion < 2013071200) {
-        $additionalhtmlitems = site_content_additional_html_items();
-        $now = db_format_timestamp(time());
-        foreach ($additionalhtmlitems as $name) {
-            $page = new stdClass();
-            $page->name = $name;
-            $page->ctime = $now;
-            $page->mtime = $now;
-            $page->content = '';
-            insert_record('site_content', $page);
-        }
-    }
-
     if ($oldversion < 2013081400) {
         // We've made a change to how update_safe_iframe_regex() generates the regex
         // Call this function to make sure the stored value reflects that change.

@@ -661,15 +661,14 @@ EOF;
 
     // Define additional html content
     if (get_config('installed')) {
-        $additionalhtmlitemnames = site_content_additional_html_items();
-        $additionalhtmlitems = get_records_select_array(
-            'site_content',
-            'name IN (' . join(',', array_fill(0, count($additionalhtmlitemnames), '?')) . ')',
-            $additionalhtmlitemnames
+        $additionalhtmlitems = array(
+            'ADDITIONALHTMLHEAD'      => get_config('additionalhtmlhead'),
+            'ADDITIONALHTMLTOPOFBODY' => get_config('additionalhtmltopofbody'),
+            'ADDITIONALHTMLFOOTER'    => get_config('additionalhtmlfooter')
         );
         if ($additionalhtmlitems) {
-            foreach ($additionalhtmlitems as $item) {
-                $smarty->assign(strtoupper($item->name), $item->content);
+            foreach ($additionalhtmlitems as $name=>$content) {
+                $smarty->assign($name, $content);
             }
         }
     }
@@ -2640,14 +2639,6 @@ function site_menu() {
  */
 function site_content_pages() {
     return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions');
-}
-
-/**
- * Returns the list of additional html itmes (site content pages)
- * @return array of names
- */
-function site_content_additional_html_items() {
-    return array('additionalhtmlhead', 'additionalhtmltopofbody', 'additionalhtmlfooter');
 }
 
 function get_site_page_content($pagename) {

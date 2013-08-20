@@ -343,3 +343,26 @@ $cfg->cleanurlusereditable = true;
 // @$cfg->plugin->search->elasticsearch->bypassindexname = null;
 // @$cfg->plugin->search->elasticsearch->analyzer = 'mahara_analyzer';
 // @$cfg->plugin->search->elasticsearch->types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';
+
+// Additional HTML: Use these settings to put snippets of HTML at the top of every page on the site.
+// This is useful for e.g. Google Analytics. If you need to enter a multi-line snippet, it may be best
+// to use a PHP nowdoc: http://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.nowdoc
+// Example:
+// $cfg->additionalhtmlhead = <<<'HTML'
+// <script type="text/javascript">
+//   var _gaq = _gaq || [];
+//   _gaq.push(['_setAccount', 'UA-XXXXX-X']);
+//   _gaq.push(['_trackPageview']);
+//   (function() {
+//     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+//     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+//     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+//   })();
+// </script>
+// HTML;
+// additionalhtmlhead: Last item before the closing </head> tag
+$cfg->additionalhtmlhead = '';
+// additionalhtmltopofbody: Immediately after the opening <body> tag
+$cfg->additionalhtmltopofbody = '';
+// additionalhtmlfooter: Last item before the closing </body> tag
+$cfg->additionalhtlmfooter = '';

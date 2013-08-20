@@ -535,7 +535,6 @@ function upgrade_plugin($upgrade) {
 function core_postinst() {
     $status = true;
     $pages = site_content_pages();
-    $additionalhtmlitems = site_content_additional_html_items();
     $now = db_format_timestamp(time());
     foreach ($pages as $name) {
         $page = new stdClass();
@@ -543,16 +542,6 @@ function core_postinst() {
         $page->ctime = $now;
         $page->mtime = $now;
         $page->content = get_string($page->name . 'defaultcontent', 'install');
-        if (!insert_record('site_content', $page)) {
-            $status = false;
-        }
-    }
-    foreach ($additionalhtmlitems as $name) {
-        $page = new stdClass();
-        $page->name = $name;
-        $page->ctime = $now;
-        $page->mtime = $now;
-        $page->content = '';
         if (!insert_record('site_content', $page)) {
             $status = false;
         }
