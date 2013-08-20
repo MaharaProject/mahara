@@ -19,28 +19,6 @@ ul.colnav li.selected span {
 	background: #080D0F;
 	color: #FFFFFF;
 }
-/******************** Blocktype tabs ********************/
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-    color: #FFFFFF;
-    font-weight: normal;
-    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
-}
-#category-list li a:hover {
-    color: #FFFFFF;
-    background: url(../images/mainnav-bg.png) repeat-x 0 50%;
-    text-decoration: underline;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-    color: #FFFFFF;
-    font-weight: bold;
-    background: url(../images/subnav-bg.png) repeat-x 0 50%;
-}
 /******************** Blocktype icons panel ********************/
 .collapsed #content-editor-header {
     background: url("../images/contenteditor/expand.png") no-repeat right 0;

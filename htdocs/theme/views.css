@@ -167,35 +167,6 @@ ul.colnav li.selected span {
     margin-top: 5px;
     padding: 10px;
 }
-/******************** Blocktype tabs ********************/
-#category-list ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    z-index: 0;
-    height: 1%;
-}
-#category-list li {
-    position: static;
-    z-index: 5;
-    margin: 0;
-    padding: 0;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    white-space: nowrap;
-}
-#category-list li a {
-    padding: 8px 10px;
-    margin: 0;
-    display: inline-block;
-    text-decoration: none;
-}
-#category-list li.current a {
-    cursor: default;
-    text-decoration: none;
-}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar-wrapper {
     position: absolute;

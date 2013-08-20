@@ -24,24 +24,6 @@ ul.colnav li.selected span {
     text-decoration: none;
     font-weight: bold;
 }
-/******************** Blocktype tabs ********************/
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-    background-color: #EEEEEE;
-}
-#category-list li a:hover {
-    background-color: #F9F9F9;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-    background: #D1D1D1;
-    color: #333333;
-    font-weight: bold;
-}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
     background: #BEBEBE;

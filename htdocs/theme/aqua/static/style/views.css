@@ -15,24 +15,6 @@ ul.colnav li a:active {
     background: #00084F;
     color: #FFFFFF;
 }
-/******************** Blocktype tabs ********************/
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-    background: none;
-	color: #FFF;
-}
-#category-list li a:hover {
-	text-decoration: underline;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-    background-color: #f4f7f9;
-    color: #1E6297;
-}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
     background-color: #afbbd2;

@@ -15,36 +15,6 @@ ul.colnav li a:active {
 	color: #FFF;
 	background: #5b6eae;
 }
-/******************** Blocktype tabs ********************/
-#category-list li {
-	color: #1E6297;
-	background: url(../images/blocklist-tab-right.png) no-repeat right 0;
-    display: inline-block;
-}
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-	background: url(../images/blocklist-tab-left.png) no-repeat 0 0;
-	color: #FFFFFF;
-	height: 34px;
-	line-height: 40px;
-	padding: 0 10px;
-}
-#category-list li a:hover {
-	color: #ffae03;
-}
-#category-list li.current {
-	background: url(../images/blocklist-active-right.png) no-repeat right 0;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-	background: url(../images/blocklist-active-left.png) no-repeat 0 0;
-	color: #FFFFFF;
-	line-height: 36px;
-}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
     background-color: #bcc8e9;

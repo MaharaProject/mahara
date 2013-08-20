@@ -15,28 +15,6 @@ ul.colnav li a:active {
 	background: url(../images/mainnav-bg.png) repeat-x 0 50%;
 	color: #FFFFFF;
 }
-/******************** Blocktype tabs ********************/
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-	color: #ffffff;
-	font-weight: normal;
-	background-color: #5c0758;
-}
-#category-list li a:hover {
-	color: #ffffff;
-	background-color: #5c0758;
-	text-decoration: underline;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-	color: #ffffff;
-	font-weight: bold;
-	background-color: #841c7f;
-}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
 	background-color: #FAEEFB;

@@ -15,24 +15,6 @@ ul.colnav li a:active {
 	background: #8e1901;
 	color: #FFFFFF;
 }
-/******************** Blocktype tabs ********************/
-#category-list li a,
-#category-list li a:link,
-#category-list li a:visited,
-#category-list li a:active {
-	color: #fadc8a;
-	background-color: #c66c14;
-}
-#category-list li a:hover {
-	color: #ffffff;
-}
-#category-list li.current a,
-#category-list li.current a:link,
-#category-list li.current a:visited,
-#category-list li.current a:active {
-	color: #ffffff;
-	background-color: #8E1901;
-}
 /******************** Blocks ********************/
 /* block header */
 .blockinstance-header .title {
