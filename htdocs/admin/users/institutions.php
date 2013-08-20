@@ -748,6 +748,8 @@ function institution_submit(Pieform $form, $values) {
             delete_records('auth_remote_user', 'authinstance', $instanceid);
             delete_records('auth_instance_config', 'instance', $instanceid);
             delete_records('auth_instance', 'id', $instanceid);
+            // Make it no longer be the parent authority to any auth instances
+            delete_records('auth_instance_config', 'field', 'parent', 'value', $instanceid);
         }
     }
 
