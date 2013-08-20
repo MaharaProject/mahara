@@ -6,13 +6,10 @@ Mahara, but each one must be associated with a different external
 authentication method.</p>
 <p>The current rules for the update of this field are as follows:</p>
 <ul>
-  <li>If you wipe the contents of this field and submit your changes, any external username associated with this user and the selected authentication method will be deleted.</li>
-  <li>If you update the contents of this field to anything other than
-  the default, the external username will be reset, or a new one will
-  be created if it doesn't exist yet.</li>
-  <li>If you leave the contents of this field on the default and
-  submit, a new external username will be created if one doesn't exist
-  yet. However, if the user already has an external username for the
-  selected authentication method, and it is different to the default,
-  it will not be overwritten.</li>
+  <li>If you wipe the contents of this field and submit your changes,
+  the external username associated with the selected authentication
+  method will be reset to the default (username).</li>
+  <li>If you update the contents of this field the external username
+  will be reset for this authentication method, or a new one will be
+  created if it doesn't exist yet.</li>
 </ul>
