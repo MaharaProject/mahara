@@ -72,6 +72,7 @@ jQuery(document).ready(function() {
         formData.append(prefix + '_update', '');
         formData.append(prefix + '_edit', '');
         formData.append(prefix + '_delete', '');
+        formData.append(prefix + '_canceledit', '');
         j('#file_dropzone_container').removeClass('dragover');
     });
 
