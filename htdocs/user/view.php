@@ -48,7 +48,13 @@ $loggedinid = $USER->get('id');
 
 if ($profileurlid = param_alphanumext('profile', null)) {
     if (!$user = get_record('usr', 'urlid', $profileurlid, 'deleted', 0)) {
-        throw new UserNotFoundException("User $profileurlid not found");
+        if ($USER->is_logged_in()) {
+            throw new UserNotFoundException("User $profileurlid not found");
+        }
+        else {
+            // For logged-out users we show "access denied" in order to prevent an enumeration attack
+            throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
+        }
     }
     $userid = $user->id;
 }
@@ -65,7 +71,13 @@ if ($userid == 0) {
 // Get the user's details
 if (!isset($user)) {
     if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
-        throw new UserNotFoundException("User with id $userid not found");
+        if ($USER->is_logged_in()) {
+            throw new UserNotFoundException("User with id $userid not found");
+        }
+        else {
+            // For logged-out users we show "access denied" in order to prevent an enumeration attack
+            throw new AccessDeniedException(get_string('youcannotviewthisusersprofile', 'error'));
+        }
     }
 }
 $is_friend = is_friend($userid, $loggedinid);
@@ -86,7 +98,13 @@ if (!$view) {
 }
 
 $viewid = $view->get('id');
+// Special behaviour: Logged in users who the page hasn't been shared with, see a special page
+// with the user's name, icon, and little else.
 $restrictedview = !can_view_view($viewid);
+// Logged-out users can't see any details, though
+if ($restrictedview && !$USER->is_logged_in()) {
+    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+}
 if (!$restrictedview) {
     $viewcontent = $view->build_columns();
 }
