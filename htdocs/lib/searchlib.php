@@ -77,9 +77,22 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
     return $results;
 }
 
+/*
+*   The elastic search plug-in is for now only used in the "Universal Search" page.
+*   Search is performed using the internal plug-in in all other case.
+*   This might change in the future.
+*/
+function search_all($query_string, $limit, $offset = 0, $data = array(), $type = null) {
+    if (record_exists('search_installed', 'name', 'elasticsearch', 'active', 1)) {
+        safe_require('search', 'elasticsearch');
+        $plugin = 'elasticsearch';
+        $results = call_static_method(generate_class_name('search', $plugin), 'search_all', $query_string, $limit, $offset, $data, $type);
+        return $results;
+    }
+}
 
 
-/* 
+/*
  * Institutional admin queries:
  *
  * These are only used to populate user lists on the Institution
@@ -109,7 +122,7 @@ function get_institutional_admin_search_results($search, $limit) {
 function institutional_admin_user_search($query, $institution, $limit) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
-    return call_static_method(generate_class_name('search', $plugin), 'institutional_admin_search_user', 
+    return call_static_method(generate_class_name('search', $plugin), 'institutional_admin_search_user',
                               $query, $institution, $limit);
 }
 
@@ -297,7 +310,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
                                'type' => 'equals',
                                'string' => $search->institution);
     }
-    
+
     $results = call_static_method(
         generate_class_name('search', $plugin), 'admin_search_user',
         $queries, $constraints, $offset, $limit, $search->sortby, $search->sortdir
@@ -502,9 +515,10 @@ function build_admin_user_search_results($search, $offset, $limit) {
 function get_group_user_search_results($group, $query, $offset, $limit, $membershiptype, $order=null, $friendof=null, $sortoptionidx=null) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
+    $searchclass = generate_class_name('search', $plugin);
 
     $constraints = array();
-    if ($plugin == 'internal') {
+    if (call_static_method($searchclass, 'can_process_raw_group_search_user_queries')) {
         // Pass the raw query string through to group_search_user; parsing of the
         // query depends on the plugin configuration.
         $queries = $query;
@@ -541,7 +555,8 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
     }
 
     $results = call_static_method(
-        generate_class_name('search', $plugin), 'group_search_user',
+        $searchclass,
+        'group_search_user',
         $group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx
     );
 
@@ -649,11 +664,16 @@ function get_search_plugins() {
 
     if ($searchplugins = plugins_installed('search')) {
         foreach ($searchplugins as $plugin) {
+            safe_require_plugin('search', $plugin->name, 'lib.php');
+            if (!call_static_method(generate_class_name('search', $plugin->name), 'is_available_for_site_setting')) {
+                continue;
+            }
+
             $searchpluginoptions[$plugin->name] = $plugin->name;
 
             $config_path = get_config('docroot') . 'search/' . $plugin->name . '/version.php';
             if (is_readable($config_path)) {
-                $config = new StdClass;
+                $config = new stdClass();
                 require_once($config_path);
                 if (isset($config->name)) {
                     $searchpluginoptions[$plugin->name] = $config->name;

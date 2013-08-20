@@ -725,6 +725,27 @@ input#institution_suspend_submit {
 #pluginconfig_save_container th {
     display: none;
 }
+/* Extensions > Plugin administration > search: elasticsearch config */
+#pluginconfig table th {
+    white-space: nowrap;
+}
+#pluginconfig table .html th {
+    padding-top: 3px;
+}
+#pluginconfig tr#pluginconfig_artefacttypes_container td .checkboxes-option {
+    float: left;
+    margin: 0 15px 0 0;
+    width: 150px;
+}
+#pluginconfig table tr td fieldset table tr.submit {
+    border-top: 1px dotted #D1D1D1;
+}
+#pluginconfig table tr td fieldset table tr.submit th {
+    vertical-align: middle;
+}
+#pluginconfig table tr td fieldset table tr.submit td {
+    text-align: right;
+}
 /* Extensions > HTML filters */
 
 /* Extensions > Allowed iframe sources */

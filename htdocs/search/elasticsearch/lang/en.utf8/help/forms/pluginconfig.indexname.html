@@ -1,0 +1,12 @@
+<h3>Index name</h3>
+
+<p>This is the name of the elasticsearch index that will be used by the search 
+functionality of the site. It is unlikely you will need to change this from its
+default value, unless you are using the same elasticsearch cluster as an index
+for multiple Mahara sites; or if you have done a reindex using the "Bypass index"
+setting.</p>
+<p>If you change this to a new value, you may need to use the "reset ALL indexes"
+button to trigger the creation of the new index.</p>
+<p>This setting cannot be changed from the web interface. You may change it by adding
+a line to your config.php setting the value of
+<code>$cfg->plugin->search->elasticsearch->indexname</code>.</p>

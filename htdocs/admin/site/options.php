@@ -756,6 +756,7 @@ function siteoptions_submit(Pieform $form, $values) {
         $values['allowpublicprofiles'] = 1;
     }
 
+    $oldsearchplugin = get_config('searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
     foreach ($fields as $field) {
@@ -766,6 +767,16 @@ function siteoptions_submit(Pieform $form, $values) {
     if ($oldlanguage != $values['lang']) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_public_folder_name($oldlanguage, $values['lang']);
+    }
+
+    // If they've changed the search plugin, give the new plugin a chance to initialize.
+    if ($oldsearchplugin != $values['searchplugin']) {
+        // Call the old search plugin's sitewide cleanup method
+        safe_require('search', $oldsearchplgin);
+        call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
+        // Call the new search plugin's sitewide initialize method
+        safe_require('search', $values['searchplugin']);
+        call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
     }
 
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds

@@ -26,12 +26,24 @@
  */
 
 defined('INTERNAL') || die();
+require_once(get_config('docroot') . 'search/lib.php');
 
 /**
  * The internal search plugin which searches against the
  * Mahara database.
  */
 class PluginSearchInternal extends PluginSearch {
+
+    /**
+     * This function indicates whether the plugin should take the raw $query string
+     * when its group_search_user function is called, or whether it should get the
+     * parsed query string.
+     *
+     * @return boolean
+     */
+    public static function can_process_raw_group_search_user_queries() {
+        return true;
+    }
 
     public static function can_be_disabled() {
         return false;
@@ -331,7 +343,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         return $options;
     }
-    
+
 
     private static function match_expression($op, $string, &$values, $ilike) {
         switch ($op) {
@@ -464,7 +476,7 @@ class PluginSearchInternal extends PluginSearch {
                     }
                 }
                 else {
-                    $where .= ' AND u.' . $f['field'] 
+                    $where .= ' AND u.' . $f['field']
                         . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
                 }
             }
@@ -474,7 +486,7 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($count > 0) {
             $data = get_records_sql_assoc('
-                SELECT 
+                SELECT
                     u.id, u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
                     u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname
                 FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $where . '
@@ -484,7 +496,7 @@ class PluginSearchInternal extends PluginSearch {
                 $limit);
 
             if ($data) {
-                $inst = get_records_select_array('usr_institution', 
+                $inst = get_records_select_array('usr_institution',
                                                  'usr IN (' . join(',', array_keys($data)) . ')',
                                                  null, '', 'usr,institution');
                 if ($inst) {
@@ -702,8 +714,8 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($count > 0) {
             $data = get_records_sql_array('
-                SELECT 
-                    u.id, u.firstname, u.lastname, u.username, u.preferredname, 
+                SELECT
+                    u.id, u.firstname, u.lastname, u.username, u.preferredname,
                     u.admin, u.staff' . $studentid . $sql . $where . '
                 GROUP BY u.id, u.firstname, u.lastname, u.username, u.preferredname, u.admin, u.staff' . $studentid . '
                 ORDER BY u.firstname ASC',
@@ -840,7 +852,7 @@ class PluginSearchInternal extends PluginSearch {
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
      * @param string  Type to search for (either 'all' or one of the types above).
-     * 
+     *
      */
     public static function self_search($querystring, $limit, $offset, $type = 'all') {
         global $USER;
@@ -1022,7 +1034,7 @@ class PluginSearchInternal extends PluginSearch {
 
 
     /**
-     * Parses a query string into SQL fragments for searching. Supports 
+     * Parses a query string into SQL fragments for searching. Supports
      * phrases, AND/OR etc.
      *
      * Lifted from drupal 5.1, (C) 2007 Drupal
@@ -1086,7 +1098,7 @@ class PluginSearchInternal extends PluginSearch {
         //$query2 = array();
         $arguments = array();
         $arguments2 = array();
-        //$matches = 0; 
+        //$matches = 0;
         // Positive matches
         foreach ($keys['positive'] as $key) {
           // Group of ORed terms
@@ -1167,18 +1179,18 @@ class PluginSearchInternal extends PluginSearch {
     private static function search_simplify($text) {
       // Decode entities to UTF-8
       $text = self::decode_entities($text);
-    
+
       // Lowercase
       $text = strtolower($text);
-    
+
       // Call an external processor for word handling.
       //search_preprocess($text);
-    
+
       // Simple CJK handling
       //if (variable_get('overlap_cjk', TRUE)) {
       //  $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
       //}
-    
+
       // To improve searching for numerical data such as dates, IP addresses
       // or version numbers, we consider a group of numerical characters
       // separated only by punctuation characters to be one piece.
@@ -1186,15 +1198,15 @@ class PluginSearchInternal extends PluginSearch {
       // results with '20-03-1984' in them.
       // Readable regexp: ([number]+)[punctuation]+(?=[number])
       $text = preg_replace('/(['. PREG_CLASS_NUMBERS .']+)['. PREG_CLASS_PUNCTUATION .']+(?=['. PREG_CLASS_NUMBERS .'])/u', '\1', $text);
-    
+
       // The dot, underscore and dash are simply removed. This allows meaningful
       // search behaviour with acronyms and URLs.
       $text = preg_replace('/[._-]+/', '', $text);
-    
+
       // With the exception of the rules above, we consider all punctuation,
       // marks, spacers, etc, to be a word boundary.
       $text = preg_replace('/['. PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $text);
-    
+
       return $text;
     }
 
@@ -1204,15 +1216,15 @@ class PluginSearchInternal extends PluginSearch {
      *
      * @param $text
      *   The text to decode entities in.
-     * @param $exclude 
+     * @param $exclude
      *   An array of characters which should not be decoded. For example,
      *   array('<', '&', '"'). This affects both named and numerical entities.
      */
     function decode_entities($text, $exclude = array()) {
       static $table;
       // We store named entities in a table for quick processing.
-      if (!isset($table)) { 
-        // Get all named HTML entities. 
+      if (!isset($table)) {
+        // Get all named HTML entities.
         $table = array_flip(get_html_translation_table(HTML_ENTITIES));
         // PHP gives us ISO-8859-1 data, we need UTF-8.
         $table = array_map('utf8_encode', $table);
@@ -1236,12 +1248,12 @@ class PluginSearchInternal extends PluginSearch {
         }
         else {
           return $original;
-        } 
-      }   
+        }
+      }
       // Hexadecimal numerical entity
       if ($prefix == '#x') {
         $codepoint = base_convert($codepoint, 16, 10);
-      } 
+      }
       // Decimal numerical entity (strip leading zeros to avoid PHP octal notation)
       else {
         $codepoint = preg_replace('/^0+/', '', $codepoint);
@@ -1269,7 +1281,7 @@ class PluginSearchInternal extends PluginSearch {
       if (in_array($str, $exclude)) {
         return $original;
       }
-      else { 
+      else {
         return $str;
       }
     }

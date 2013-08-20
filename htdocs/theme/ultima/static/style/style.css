@@ -1,6 +1,6 @@
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2006-2013 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +20,13 @@
  * @copyright  (C) 2006-2012 Catalyst IT Europe http://catalyst-eu.net
  */
 
-/* General rules */
-body, body#micro {
-  background: #e99adb url(../images/bg1.jpg) no-repeat top center;	
+/******************** Body ********************/
+body,
+body#micro {
+	background: #e99adb url(../images/bg1.jpg) no-repeat center 0;	
 	color: #360435;
 }
-acronym {
-    border-bottom: 1px dotted #d4d1c0;
-}
-a, a:visited, a:link, a:active {
-    color: #5A0757;
-    text-decoration: none;
-}
-a:hover, a:focus {
-    color: #5A0757;
-    text-decoration: underline;
-}
+/******************** General headings ********************/
 h1,
 h2 {
     color: #3C083F;
@@ -48,145 +39,216 @@ h5,
 h6 {
     color: #5A0757;
 }
-.description, .unvalidated, .postdetails, .postedon {
+/******************** General text ********************/
+a,
+a:visited,
+a:link,
+a:active {
+    color: #5A0757;
+    text-decoration: none;
+}
+a:hover,
+a:focus {
+    color: #5A0757;
+    text-decoration: underline;
+}
+/* some common listing text styles */
+.title a {
     color: #5A0757;
 }
-
-
-/**************************** Tables ****************************/
-.main-column thead th {
-    color: #360435;
+/******************** Tables ********************/
+thead th {
 	border-bottom: 1px dotted #360435;
 }
-.main-column tbody th {
-	color: #360435;
-	border-bottom: none;
-}
-/* table with th border-bottom */
-#searchresults thead th,
-.filelist,
-.tag-results #results {
-	border-bottom: 1px dotted #360435;
-}
-/* table with tfoot border-top */
-#searchresults tfoot td,
-#adminstitutionslist tfoot td,
-#profileicons tfoot td,
-#activitylist tfoot td {
-	border-top: 1px dotted #360435;
-}
-.main-column table h3 a,
-.main-column table h3 a:visited,
-.main-column table h3 a:link,
-.listing div h3 a,
-.listing div h3 a:visited,
-.listing div h3 a:link {
-	color: #5A0757 !important;
-}
-.tablerenderer-loading {
-    border: 1px solid #490647;
-	background-color: #FFF;
-    color: #FFF;
-}
-/* table with th border-bottom */
-#searchresults thead th {
-	border-bottom: 1px solid #360435;
-}
-/* table with border-bottom */
-#searchresults tfoot td {
-	border-top: 1px solid #360435;
-}
-/* Alternative row background colours */
-.r0, .r0 td, .d0, .friends {
+/* Alternative row background */
+.r0,
+.r0 td,
+.d0 {
     background-color: #f4e7f5;
 }
-.r1, .r1 td, .d1 {
+.r1,
+.r1 td,
+.d1 {
     background-color: #faeefb;
 }
-
-/**************************** Forms ****************************/
-/* Label */
-label {
-    color: #360435;
-}
-/* required */
-.required th, .required label, .requiredmarker, #register_tandc_container th {
-    color: #360435;
-}
-/* override required colour to normal colour */
-.required label.plain, .required.radio td label, .required.emaillist td label {
-	color: #474220;
-}
-/* Legend */
-legend {
-	color: #5A0757;
-	margin-bottom:5px;
-}
-legend a,
-legend a:link,
-legend a:visited,
-legend a:active {
-	color: #5A0757 !important;
-}
-/* Fieldset */
+/******************** Forms ********************/
+/* fieldset */
 fieldset {
     border: 1px solid #5c0758;
 }
-
-/****************************** Buttons ****************************/
-/** input buttons **/
-.btn,
-input.submit,
-input.cancel,
-button,
-.buttondk,
-input.button,
-input.select,
+/******************** Buttons ********************/
+/* Buttons to override with colour */
+/* input buttons */
+tr.submitcancel input.submit,
+tr.submitcancel input.cancel,
+tr.submit input.submit,
+tr.submit input.cancel,
+input#profileform_submit,
 input#files_filebrowser_edit_artefact,
-ul.groupuserstatus li a {
-    background: #861d80 url(../images/btn-bkgd.gif) repeat-x top;
-	border-color: #e675d3 #3C083F #3C083F #e675d3;
-	color: #FFF !important;
-}
-/** hover for buttons **/
-.btn:hover, input.submit:hover,
-input.cancel:hover, button:hover,
-.buttondk:hover, input.button:hover,
-input.select:hover,
-input#files_filebrowser_edit_artefact:hover,
-ul.groupuserstatus li a:hover {
-	color: #FFF;
-	border-color: #3C083F #e675d3 #e675d3 #3C083F;;
-    background: #c94cb4 url(../images/btn-bkgd-hover.gif) repeat-x top;
-}
-/** Depress for buttons **/
-.btn:active,
-input.submit:active,
-input.cancel:active,
-button:active,
-.buttondk:active,
-input.button:active,
-input.select:active,
-input#files_filebrowser_edit_artefact:active,
-ul.groupuserstatus li a:active {
-	border-color: #3C083F #e675d3 #e675d3 #3C083F;
-    background: #c94cb4 url(../images/btn-bkgd-hover.gif) repeat-x 1px;
-	color: #FFF;
-}
-/* buttons that look like links with icons */
-.icon {
-	color: #5A0757;
-}
-/* buttons that look like links */
-.linkbtn, #main-column-container ul.actionlist li.friend form input, #main-column-container ul.actionlist li.approvefriend form input, #userview .user-icon form div.submit input.submit {
-	color: #5A0757 !important;
-	text-decoration: none;
-}
-/* links that need to look like buttons */
-span.btn a.icon, a span.icon {
+input#files_filebrowser_edit_cancel,
+input#instconf_folder_edit_artefact,
+input#instconf_folder_edit_cancel,
+input#instconf_artefactids_edit_artefact,
+input#instconf_artefactids_edit_cancel,
+input#instconf_artefactid_edit_artefact,
+input#instconf_artefactid_edit_cancel,
+.rbuttons .btn, 
+.rbuttons .btn:visited,
+.rbuttons .btn:link,
+.rbuttons input.submit,
+#resumewrap input.openedit,
+#resumewrap button,
+#view-wizard-controls input.submit,
+.submitwrap input.submit,
+#editaccess_submit_container input.submitcancel,
+#collectiondonewrap .btn,
+#collectiondonewrap .btn:visited,
+#collectiondonewrap .btn:link,
+input#export_submit,
+#sitelicenses .btn,
+#adduser #adduser_submit,
+input#login_submit,
+.login-externallink a.btn {
+    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
+	border-color: #861d80;
 	color: #FFFFFF;
 }
-/* Search buttons */
+/* hover for buttons */
+tr.submitcancel input.submit:hover,
+tr.submitcancel input.cancel:hover,
+tr.submit input.submit:hover,
+tr.submit input.cancel:hover,
+input#profileform_submit:hover,
+input#files_filebrowser_edit_artefact:hover,
+input#files_filebrowser_edit_cancel:hover,
+input#instconf_folder_edit_artefact:hover,
+input#instconf_folder_edit_cancel:hover,
+input#instconf_artefactids_edit_artefact:hover,
+input#instconf_artefactids_edit_cancel:hover,
+input#instconf_artefactid_edit_artefact:hover,
+input#instconf_artefactid_edit_cancel:hover,
+.rbuttons .btn:hover,
+.rbuttons input.submit:hover,
+#resumewrap input.openedit:hover,
+#resumewrap button:hover,
+#view-wizard-controls input.submit:hover,
+.submitwrap input.submit:hover,
+#editaccess_submit_container input.submitcancel:hover,
+#collectiondonewrap .btn:hover,
+input#export_submit:hover,
+#sitelicenses .btn:hover,
+#adduser #adduser_submit:hover,
+input#login_submit:hover,
+.login-externallink a.btn:hover {
+    background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+	border-color: #861d80;
+	color: #FFFFFF;
+}
+/* depress for buttons */
+tr.submitcancel input.submit:active,
+tr.submitcancel input.cancel:active,
+tr.submit input.submit:active,
+tr.submit input.cancel:active,
+input#profileform_submit:active,
+input#files_filebrowser_edit_artefact:active,
+input#files_filebrowser_edit_cancel:active,
+input#instconf_folder_edit_artefact:active,
+input#instconf_folder_edit_cancel:active,
+input#instconf_artefactids_edit_artefact:active,
+input#instconf_artefactids_edit_cancel:active,
+input#instconf_artefactid_edit_artefact:active,
+input#instconf_artefactid_edit_cancel:active,
+.rbuttons .btn:active,
+.rbuttons input.submit:active,
+#resumewrap input.openedit:active,
+#resumewrap button:active,
+#view-wizard-controls input.submit:active,
+.submitwrap input.submit:active,
+#editaccess_submit_container input.submitcancel::active,
+#collectiondonewrap .btn:active,
+input#export_submit:active,
+#sitelicenses .btn:active,
+#adduser #adduser_submit:active,
+input#login_submit:active,
+.login-externallink a.btn:active {
+    background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
+	border-color: #3C083F;
+	color: #FFFFFF;
+}
+/* made to look like default grey buttons to match graphic icon buttons */
+#forumslist input.btn-subscribe,
+input#addviews_submit,
+input#edituser_suspend_submit,
+input#friendscontrol_submit,
+input#usertype_typesubmit {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:hover,
+input#addviews_submit:hover,
+input#edituser_suspend_submit:hover,
+input#friendscontrol_submit:hover,
+input#usertype_typesubmit:hover {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
+    color: #333333;
+}
+#forumslist input.btn-subscribe:active,
+input#addviews_submit:active,
+input#edituser_suspend_submit:active,
+input#friendscontrol_submit:active,
+input#usertype_typesubmit:active {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
+    color: #333333;
+}
+/* reset some that need grey button colour text */
+ul.groupuserstatus li .submit input.submit,
+ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:active {
+    color: #333333;
+}
+/* buttons that look like links */
+.linkbtn {
+	color: #5A0757;
+	text-decoration: none;
+}
+/******************** Layout ********************/
+#header,
+.main-nav,
+#sub-nav,
+#mainmiddle,
+#footer {
+    width: 95%;
+}
+#mainmiddlewrap {
+    margin-top: 15px;
+    background: none;
+}
+#micro #mainmiddlewrap {
+    margin-top: 0;
+}
+#main-column-container {
+    background: #FFFFFF;
+}
+/******************** Header ********************/
+/* site logo */
+#site-logo {
+    margin: 10px 25px 0 0
+}
+/* header right */
+#header-right label {
+	color: #FFFFFF;
+}
+/* top navigation */
+#right-nav li a {
+	color: #FFFFFF;
+}
+#right-nav li.identity a {
+	color: #5C0758;
+}
+/* search */
 #usf_submit,
 #usf_submit:hover {
 	background: transparent url(../images/btn-search.png) no-repeat !important;
@@ -200,90 +262,53 @@ span.btn a.icon, a span.icon {
 	width: 24px;
 	margin-left: 2px;
 }
-
-/**************************** Top of page elements ****************************/
-#container, #containerX {
-    width: 90%;
-    max-width: 1232px;
+/******************** Small header ********************/
+#micro .viewtitle,
+#micro .collection-title {
+    color: #FFFFFF;
 }
-#loading-box {
-    color: #fff;
-    background-color: #8E1901;
+.viewheadertop #mainnav-container #mainnav a,
+.viewheadertop #mainnav-container #mainnav a:link,
+.viewheadertop #mainnav-container #mainnav a:visited,
+.viewheadertop #mainnav-container #mainnav a:active,
+.viewheadertop #mainnav-container #mainnav a:hover {
+    color: #FFFFFF;
 }
-#site-logo {
-    margin: 25px 25px 0 0
-}
-#usf_query_container input {
-    color: #490647;
-}
-#header-right label {
-	color: #FFFFFF;
-}
-
-#right-nav li a {
-  color: #FFF;
-}
-#right-nav li.identity a {
-	color: #aa56ae;
-}
-#right-nav li.selected a {
-	color: #FFF;
-	text-decoration: underline;
-}
-
-/**************** TOP NAVIGATION ****************/
-#main-nav {
-    height: 33px;
+/******************** Main navigation ********************/
+.main-nav {
     background: none;
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 960px;
 }
-#main-nav ul {
-	float: right;
+.main-nav li {
+	margin: 0 5px 0 0;
 }
-#main-nav li {
+.main-nav li a,
+.main-nav li a:link,
+.main-nav li a:visited,
+.main-nav li a:active {
+	background: url(../images/mainnav-bg.png) repeat-x 0 50%;
     color: #FFFFFF;
-    text-decoration: none;
     font-weight: normal;
-    line-height: 20px;
-	margin: 0 0 0 5px;
-	padding: 0;
 }
-#main-nav li a,
-#main-nav li a:link,
-#main-nav li a:visited,
-#main-nav li a:active {
-	margin: 0;
-    padding: 6px 15px 7px;
-	background: #5A0757 url(../images/mainnav-bg.gif) repeat-x top center;
+.main-nav li a:hover {
     color: #FFFFFF;
 }
-#main-nav li a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-#main-nav li.selected a,
-#main-nav li.selected a:link,
-#main-nav li.selected a:visited,
-#main-nav li.selected a:active {
+.main-nav li.selected a,
+.main-nav li.selected a:link,
+.main-nav li.selected a:visited,
+.main-nav li.selected a:active {
     color: #FFFFFF;
     font-weight: bold;
-    padding: 6px 15px 7px;
 	background: #5c0758;
 }
-
-/**************** SUB NAVIGATION ****************/
+/******************** Sub navigation ********************/
 #sub-nav {
-    font-weight: bold;
-    background: #5c0758 url(../images/subnav-bg.gif) repeat-x top center;
-    height: 35px;
-}
-#sub-nav ul {
-    float: right;
-	background: transparent;
-}
-#sub-nav li {
-    line-height: 20px;
-    height: 35px;
-    margin: 0 !important;
+    background: #5c0758;
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 960px;
 }
 #sub-nav li a,
 #sub-nav li a:link,
@@ -295,114 +320,98 @@ span.btn a.icon, a span.icon {
     color: #FFFFFF;
     text-decoration: underline;
 }
-#sub-nav li.selected {
-    margin: 0;
-    background: transparent;
-}
 #sub-nav li.selected a,
 #sub-nav li.selected a:link,
 #sub-nav li.selected a:visited,
 #sub-nav li.selected a:active {
     color: #FFFFFF;
-    text-decoration: underline;
 }
-/**************** IN PAGE TAB NAVIGATION ****************/
-ul.in-page-tabs {
-    background: none;
+/******************** Dropdown sub navigation ********************/
+.main-nav .dropdown-sub li a,
+.main-nav .dropdown-sub li a:link,
+.main-nav .dropdown-sub li a:visited,
+.main-nav .dropdown-sub li a:active {
+    color: #5C0758;
+    background: #F3D2F4;
+    font-weight: normal;
 }
-ul.in-page-tabs li {
-    display: inline-block;
-    margin: 0 1px 0 0;
+.main-nav .dropdown-sub li a:hover {
+    color: #FFFFFF;
+    background: #ab57af;
 }
-ul.in-page-tabs li a, ul.in-page-tabs li a:link, ul.in-page-tabs li a:visited, ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
-  color: #ffffff;
-  font-weight: normal;
-  background-color: #5c0758;
+.main-nav .dropdown-sub li.selected a,
+.main-nav .dropdown-sub li.selected a:link,
+.main-nav .dropdown-sub li.selected a:visited,
+.main-nav .dropdown-sub li.selected a:active {
+    font-weight: bold;
 }
-ul.in-page-tabs li a:hover, ul.in-page-tabs li input:hover {
-  color: #ffffff;
-  background-color: #5c0758;
-  text-decoration: underline;
+/******************** Tabs ********************/
+ul.in-page-tabs li a,
+ul.in-page-tabs li a:link,
+ul.in-page-tabs li a:visited,
+ul.in-page-tabs li a:active,
+ul.in-page-tabs li input.linkbtn,
+ul.searchtab li span.inactive {
+    color: #ffffff;
+    background-color: #5c0758;
+    border: 0;
 }
-ul.in-page-tabs li a.current-tab, ul.in-page-tabs li a.current-tab:link, ul.in-page-tabs li a.current-tab:visited, ul.in-page-tabs li a.current-tab:active,
+ul.in-page-tabs li a:hover,
+ul.in-page-tabs li input:hover {
+    color: #ffffff;
+    background-color: #5c0758;
+}
+ul.in-page-tabs li a.current-tab,
+ul.in-page-tabs li a.current-tab:link,
+ul.in-page-tabs li a.current-tab:visited,
+ul.in-page-tabs li a.current-tab:active,
 ul.in-page-tabs li input.current-tab {
-  color: #ffffff;
-  font-weight: bold;
-  background-color: #841c7f;
+    color: #ffffff;
+    background-color: #841c7f;
+    border: 0;
 }
+/* tab body */
 .subpage {
-  border: 1px solid #841c7f;
+    border: 1px solid #841c7f;
 }
-
-
-/**************** MAIN CONTENT *****************/
-#mainmiddlewrap {
-    margin-top: 10px;
+/******************** Sidebar ********************/
+/* general sidebar styles */
+#left-column {
+    margin-right: 10px;
+    width: 246px;
 }
-#containerX #mainmiddlewrap {
-    margin-top: 0;
+#right-column {
+    margin-left: 10px;
+    width: 246px;
 }
-#main-column-container {
-    background: #FFF;
-}
-.ie7 .main-column-narrow {
-    padding-right: 10px;
-}
-/* system messages between nav and main content */
-/* different message types */
-#messages .ok,
-div.ok {
-    color: #3C083F;
-    background-color: #f7d4fa;
-}
-#messages .error,
-div.error {
-    color: #dd0221;
-    background-color: #f7d4fa;
-}
-#messages .info {
-    color: #1666a9;
-    background-color: #f7d4fa;
-}
-/* system messages */
-.message {
-	color: #360435;
-    background-color: #e8c1ea;
-    border: 1px dotted #360435;
-}
-
-
-/**************** SIDEBAR *********/
-div.sideblock {
+.sideblock {
 	color: #e8c1ea;
 	background: #490647 url(../images/bg-block.jpg) repeat-x top center;
 	margin: 0 0 10px 0;
 	color: #e8c1ea;
 }
-div.sideblock h3 {
+.sideblock h3,
+.sideblock h3 a,
+.sideblock h3 a:link,
+.sideblock h3 a:visited,
+.sideblock h3 a:active {
     color: #e8c1ea;
 }
-div.sideblock a,
-div.sideblock a:link,
-div.sideblock a:visited,
-div.sideblock a:active {
+.sideblock .sidebar-content a,
+.sideblock .sidebar-content a:link,
+.sideblock .sidebar-content a:visited,
+.sideblock .sidebar-content a:active {
+	color: #FFFFFF;
+}
+/* Sidebar login */
+#sb-loginbox label {
 	color: #e8c1ea;
 }
-div.sideblock label {
-	color: #e8c1ea;
+/* Sidebar group navigation */
+#sb-groupnav ul li a.selected {
+    color: #FFFFFF;
 }
-
-
-/* Side Login */
-#sb-loginbox #login_login_container,
-#sb-loginbox #login_login_extra_container {
-    border: 0;
-    background: #000000;
-}
-
-
-/* Side Quota Bar */
+/* Sidebar quota/group quota bar */
 #quota_used {
     color: #A955AD;
 }
@@ -416,118 +425,24 @@ div.sideblock label {
 #quota_fill {
     background-image: url(../images/quota_bar_highlight.gif);
 }
-/* Friends control sideblock */
-div.sideblock #friendscontrol label {
-	color: #fff;
-}
-
-
-/******************** FOOTER ****************************/
+/******************** Footer ********************/
 #footer-wrap {
     color: #5A0757;
 }
-#footer a, #footer a:link, #footer a:visited, #footer a:active, #footer a:hover {
+#footer a,
+#footer a:link,
+#footer a:visited,
+#footer a:active,
+#footer a:hover {
     color: #5A0757;
 }
-/****************************** PAGE BY PAGE STYLES **********************************/
-
-
-/* Settings > Preferences */
-#accountprefs table h3 {
-    border-bottom: 1px dotted #360435 !important;
+/******************** Page by page styles (listed by navigation order) ********************/
+/* Login page */
+#loginform_container #login_login_container,
+#login_login_extra_container {
+    background: #000000;
 }
-
-
-/* Home page info boxes */
-
-.home-info {
-    border: solid 2px #F4E7F5;
-    background: #FAEEFB;
-}
-#containerX #top-wrapper .selected a {
-	color: #333;
-}
-#containerX #top-wrapper a,
-#containerX #top-wrapper a:hover,
-#containerX #top-wrapper a:active {
-	color: #ffffff;
-}
-.viewheader .title {
-	color: #FFF;
-}
-#containerX #top-wrapper .viewheader .title a {
-	color: #FFF;
-}
-/* Forum */
-/* Forum list */
-#forumslist {
-    border-bottom: 1px dotted #5c0758;
-}
-#forumslist th {
-    border-bottom: 1px dotted #5c0758;
-}
-/* Topic list */
-#forumtopicstable {
-    border-bottom: 1px dotted #5c0758;
-}
-#forumtopicstable th {
-    border-bottom: 1px dotted #5c0758;
-}
-/* topic types */
-.stickytopic td {
-    background-color: #e99adb;
-    border-bottom: 1px solid #FFF;
-}
-/* admin & moderator */
-.groupadmin {
-    color: #3366CC;
-}
-.moderator {
-    color: #993399;
-}
-/* Posts */
-.forumpost {
-    background-color: #f7f7f7;
-    border-top: 1px dotted #5c0758;
-    border-bottom: 1px dotted #5c0758;
-}
-
-
-/* collection */
-#collectionnavwrap {
-	background: #F4E7F5;
-}
-#collection .collection-title {
-	color: #FFFFFF;
-}
-.group-info {
-	background: #F4E7F5;
-	border: 1px solid #aa55ae;
-}
-
-/**************** DROPDOWN NAVIGATION ****************/
-
-#main-nav .dropdown-sub {
-    top: 33px;
-    left: -5px;
-}
-#main-nav .dropdown-sub li a,
-#main-nav .dropdown-sub li a:link,
-#main-nav .dropdown-sub li a:visited,
-#main-nav .dropdown-sub li a:active {
-    color: #5C0758;
-    background: #F3D2F4;
-    text-decoration: none;
-}
-#main-nav .dropdown-sub li a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-    background: #ab57af;
-}
-#main-nav li.selected .dropdown-sub li a, #main-nav li.selected .dropdown-sub li a:link, #main-nav li.selected .dropdown-sub li a:visited, #main-nav li.selected .dropdown-sub li a:active {
-    font-weight: normal;
-}
-/* Persona button */
+/* persona button */
 a.persona-button span:before{ /* Icon BG */
     background: #861d80;
     background: -moz-linear-gradient(top, #c94cb4, #861d80);
@@ -543,4 +458,37 @@ a.persona-button:before{ /* Triangle */
     background: -o-linear-gradient(-45deg, #c94cb4, #861d80);
     background: -webkit-linear-gradient(-45deg, #c94cb4, #861d80);
     background: linear-gradient(-45deg, #861d80, #c94cb4); /* flipped for updated spec */
+}
+/* Dashboard */
+.home-info-table {
+    border: 3px solid #F4E7F5;
+    background: #FAEEFB; /* Old browsers */
+    background: -moz-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FAEEFB), color-stop(100%, #FFFFFF)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #FAEEFB 0%, #FFFFFF 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #FAEEFB 0%, #FFFFFF 100%); /* W3C */
+}
+/* Content > Journals > Journal posts */
+/* attachments */
+table.attachments {
+    border-color: #d9bddb;
+    background-color: #d9bddb;
+}
+/* Groups > Group's about page */
+.group-info {
+	background: #F4E7F5;
+}
+/* Groups > Group's forums */
+.forumpostleft {
+    background: #f0e3ef;
+}
+.forumpost {
+    background-color: #f0e3ef;
+    border-color: #f0e3ef;
+}
+/* Universal search */
+ul.searchtab li span.inactive {
+    color: #855683;
 }

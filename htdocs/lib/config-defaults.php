@@ -332,3 +332,14 @@ $cfg->cleanurlusereditable = true;
 
 // Turn on caching of HTTP requests
 // $cfg->nocache = true;
+
+// Settings used by the "elasticsearch" search plugin.
+// See the helpfiles on the plugin's configuration page for details.
+// @$cfg->plugin->search->elasticsearch->host = '127.0.0.1';
+// @$cfg->plugin->search->elasticsearch->port = 9200;
+// @$cfg->plugin->search->elasticsearch->username = '';
+// @$cfg->plugin->search->elasticsearch->password = '';
+// @$cfg->plugin->search->elasticsearch->indexname = 'mahara';
+// @$cfg->plugin->search->elasticsearch->bypassindexname = null;
+// @$cfg->plugin->search->elasticsearch->analyzer = 'mahara_analyzer';
+// @$cfg->plugin->search->elasticsearch->types = 'usr,interaction_instance,interaction_forum_post,group,view,artefact';

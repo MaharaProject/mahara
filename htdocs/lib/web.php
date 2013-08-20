@@ -2704,30 +2704,15 @@ function hsc ($text) {
 }
 
 /**
- * Builds the pieform for the user search, normally found in the header of most 
- * themes
+ * Builds the pieform for the search field in the page header
  */
-function user_search_form() {
-    require_once('pieforms/pieform.php');
-    return pieform(array(
-        'name'                => 'usf',
-        'action'              => get_config('wwwroot') . 'user/find.php',
-        'renderer'            => 'oneline',
-        'autofocus'           => false,
-        'validate'            => false,
-        'presubmitcallback'   => '',
-        'elements'            => array(
-            'query' => array(
-                'type'           => 'text',
-                'defaultvalue'   => get_string('searchusers'),
-                'class'          => 'emptyonfocus',
-            ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('go'),
-            )
-        )
-    ));
+function header_search_form() {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(
+        generate_class_name('search', $plugin),
+        'header_search_form'
+    );
 }
 
 

@@ -1,4 +1,29 @@
 <?php
+/**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2013 Catalyst IT Ltd and others; see:
+ *                         http://wiki.mahara.org/Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    mahara
+ * @subpackage dwoo
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2013 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
 
 // loading all dependencies
 require 'Dwoo_Template_Mahara.php';
@@ -6,35 +31,36 @@ require 'Dwoo_Template_Mahara_Artefact.php';
 require 'Dwoo_Template_Mahara_Blocktype.php';
 require 'Dwoo_Template_Mahara_Export.php';
 require 'Dwoo_Template_Mahara_Interaction.php';
+require 'Dwoo_Template_Mahara_Search.php';
 
 /**
- * implements some of the Smarty interface to support old code 
+ * implements some of the Smarty interface to support old code
  * using Smarty and sets up the Dwoo object to work with Mahara
- * 
+ *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class Dwoo_Mahara extends Dwoo {
-    
+
     /**
      * stores the data in the dwoo object, smarty style
-     * 
+     *
      * @var array
      */
     protected $_data;
-    
+
     /**
      * stores the templates directories
-     * 
+     *
      * @var array
      */
     protected $includePath;
-    
+
     /**
      * stores the template delimiters since some code relies on that
      */
     public $left_delimiter = '{';
     public $right_delimiter = '}';
-    
+
     public function __construct() {
         global $THEME;
 
@@ -48,17 +74,18 @@ class Dwoo_Mahara extends Dwoo {
         $compileDir = get_config('dataroot') . 'dwoo/compile/' . $THEME->basename;
         $cacheDir = get_config('dataroot') . 'dwoo/cache/' . $THEME->basename;
         parent::__construct($compileDir, $cacheDir);
-        
+
         // add plugins dir to the loader
         $this->getLoader()->addDirectory(get_config('libroot') . 'dwoo/mahara/plugins/');
-    
+
         // adds mahara resources and compiler factory
         $this->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
         $this->addResource('artefact', 'Dwoo_Template_Mahara_Artefact', array($this, 'compilerFactory'));
         $this->addResource('blocktype', 'Dwoo_Template_Mahara_Blocktype', array($this, 'compilerFactory'));
         $this->addResource('export', 'Dwoo_Template_Mahara_Export', array($this, 'compilerFactory'));
         $this->addResource('interaction', 'Dwoo_Template_Mahara_Interaction', array($this, 'compilerFactory'));
-        
+        $this->addResource('search', 'Dwoo_Template_Mahara_Search', array($this, 'compilerFactory'));
+
         // set base data
         $theme_list = array();
         $themepaths = themepaths();
@@ -72,39 +99,40 @@ class Dwoo_Mahara extends Dwoo {
             'THEMELIST' => json_encode($theme_list),
         );
     }
-    
+
     /**
      * implements smarty api to assign data
      */
     public function assign($key, $value) {
         $this->_data[$key] = $value;
     }
-    
+
     /**
      * implements smarty api to assign data
      */
     public function assign_by_ref($key, &$value) {
         $this->_data[$key] =& $value;
     }
-    
+
     /**
      * implements smarty api to read data
      */
     public function get_template_vars($name = null) {
         if (!$name) {
             return $this->_data;
-        } elseif (isset($this->_data[$name])) {
+        }
+        else if (isset($this->_data[$name])) {
             return $this->_data[$name];
         }
     }
-    
+
     /**
      * implements smarty api to render and display a template
      */
     public function display($file) {
         echo $this->fetch($file);
     }
-    
+
     /**
      * implements smarty api to render and return a template's ouptut
      */
@@ -117,10 +145,10 @@ class Dwoo_Mahara extends Dwoo {
         }
         return $this->get(new $class($file, null, null, null, $this->template_dir), $this->_data);
     }
-    
+
     /**
      * returns a compiler object when one is required
-     * 
+     *
      * @return Dwoo_Compiler
      */
     public function compilerFactory() {

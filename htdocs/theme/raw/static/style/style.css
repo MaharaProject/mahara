@@ -11,6 +11,13 @@ html {
     margin: 0;
     padding: 0;
 }
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
 body,
 caption,
 th,
@@ -179,6 +186,10 @@ form.oneline.inline div,
     padding: 5px 10px;
     position: absolute;
     top: 0;
+    color: #333333;
+    left: 48%;
+    -webkit-box-shadow: 0px 0px 5px 0px #333333;
+    box-shadow: 0px 0px 5px 0px #333333;
 }
 /******************** Overlay ********************/
 #overlay {
@@ -367,6 +378,9 @@ a:focus {
 .listing .listrow {
     padding: 3px 5px;
 }
+.listing .tags {
+    margin: 3px 0;
+}
 /******************** Tables ********************/
 table {
     border-spacing: 0;
@@ -509,13 +523,6 @@ form {
 .pieform td.description {
     padding-top: 0 !important;
 }
-/* resizable textbox */
-div.grippie {
-    background: #EEEEEE url(../images/grippie.png) no-repeat scroll 100% 50%;
-    cursor: s-resize;
-    height: 14px;
-    padding: 3px 0 0 0;
-}
 /* label */
 label {
     font-weight: bold;
@@ -531,14 +538,28 @@ fieldset {
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
+    border: 1px solid #d1d1d1;
 }
 fieldset.collapsible {
     padding: 10px 15px;
+    margin: 5px 0;
 }
 fieldset.collapsed {
-    padding: 0;
-    margin: 0;
-    border: 0;
+    padding: 0 15px;
+    margin: 5px 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+.no-js fieldset.collapsed {
+    padding: 10px 15px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border: 1px solid #d1d1d1;
 }
 fieldset.collapsed div,
 fieldset.collapsed table {
@@ -547,6 +568,11 @@ fieldset.collapsed table {
     padding: 0;
     border: 0;
     margin: 0;
+}
+.no-js fieldset.collapsed div,
+.no-js fieldset.collapsed table {
+    display: inherit;
+    position: inherit;
 }
 /* legend */
 legend {
@@ -566,6 +592,9 @@ fieldset legend a:hover {
 }
 fieldset.collapsed legend a {
     background: url(../images/expand.png) 0 center no-repeat;
+}
+.no-js fieldset.collapsed legend a {
+    background: url(../images/expanded.png) 0 center no-repeat;
 }
 /* select */
 select {
@@ -589,7 +618,8 @@ select {
 .ie7 select {
     height: 25px;
 }
-div.select {
+div.select,
+.no-js div.select {
     margin-bottom: 3px;
 }
 .column select {
@@ -619,10 +649,30 @@ hr {
     border-right: 0;
     border-left: 0;
 }
-/* inputs & textarea */
+/* textarea */
+textarea {
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #ABADB3;
+    border-right: 1px solid #DBDFE6;
+    border-bottom: 1px solid #E3E9EF;
+    border-left: 1px solid #E2E3EA;
+    resize: none;
+    font-size: 1em;
+}
+/* resizable textbox */
+.resizable-textarea {
+    max-width: 100% !important;
+}
+div.grippie {
+    background: #EEEEEE url(../images/grippie.png) no-repeat scroll 100% 50%;
+    cursor: s-resize;
+    height: 14px;
+    padding: 3px 0 0 0;
+}
+/* inputs */
 input.text,
 input.password,
-textarea,
 input[type=text],
 input[type=password] {
     padding: 3px 3px 4px 3px;
@@ -639,19 +689,33 @@ input {
 input::-moz-focus-inner {
     border: 0;
 }
-textarea {
-    resize: none;
-    font-size: 1em;
+/* disabled inputs */
+input[disabled="disabled"],
+input[disabled="disabled"]:hover {
+    border-color: #aaaaaa;
+    color: #aaaaaa;
+    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 }
-.resizable-textarea {
-    max-width: 100% !important;
-    width: auto !important;
-}
-.resizable-textarea textarea {
+input.text[disabled="disabled"],
+input.text[disabled="disabled"]:hover,
+input[type="text"][disabled="disabled"],
+input[type="text"][disabled="disabled"]:hover {
+    background: #f0f0f0;
     border-top: 1px solid #ABADB3;
     border-right: 1px solid #DBDFE6;
     border-bottom: 1px solid #E3E9EF;
     border-left: 1px solid #E2E3EA;
+}
+/* hidden */
+.no-js .nojs-hidden-inline {
+    display: none;
+}
+/* file browser in IE */
+input.file/*\**/ {
+    background: #FFFFFF\9;
+}
+input.file[disabled="disabled"] {
+    background/*\**/: #f0f0f0\9;
 }
 /* input error */
 input.error,
@@ -847,11 +911,12 @@ input#close_site_submit,
 input#login_submit,
 input#delete_tag_submit,
 .upgrade .btn,
-.viewrbuttons a,
+.viewrbuttons .btn, .viewrbuttons .btn:link, .viewrbuttons .btn:visited,
 input#instconf_artefactids_edit_artefact,
 input#instconf_artefactids_edit_cancel,
 input#instconf_artefactid_edit_artefact,
-input#instconf_artefactid_edit_cancel {
+input#instconf_artefactid_edit_cancel,
+#addlayout {
     padding: 5px 10px;
     font-size: 1.167em
 }
@@ -872,7 +937,9 @@ input#institution_suspend_submit,
 input#edituser_institution_massey_submit,
 input#edituser_institution_massey_remove,
 .pagetabs .btn,
-.pagetabs input.submit {
+.pagetabs input.submit,
+input#usertype_typesubmit,
+#pluginconfig table tr td fieldset table tr.submit input.submit {
     padding: 4px 5px 3px 5px;
     font-size: 1em;
 }
@@ -953,7 +1020,8 @@ ul.groupuserstatus li .btn {
     vertical-align: top;
     cursor: pointer !important;
 }
-.btn-big-del {
+.btn-big-del,
+.customrow input {
     background: transparent url(../images/btn_deleteremove.png) no-repeat 0 0 !important;
     border: 0 !important;
     margin-right: 0 !important;
@@ -1045,11 +1113,11 @@ input#editpost_filebrowser_close_upload_browse {
 div.pagination {
     text-align: center;
     margin: 3px 0;
-    line-height: 2.5em;
+    line-height: 2em;
 }
 div.pagination span {
     margin: 0 3px;
-    white-space: nowrap;
+    display: inline-block;
 }
 div.pagination .selected {
     font-weight: bold;
@@ -1059,10 +1127,12 @@ div.pagination a {
     text-decoration: none;
     padding: 3px 5px;
     background: #EEEEEE;
+    white-space: nowrap;
 }
 div.pagination .disabled {
     color: #C1C1C1;
     padding: 3px 5px;
+    white-space: nowrap;
 }
 div.pagination .results {
     color: #838383;
@@ -1071,6 +1141,9 @@ div.pagination .results {
 }
 div.pagination .results a {
     border: 0;
+}
+form.pagination {
+    margin: 5px 0;
 }
 /******************** Layout ********************/
 #container {
@@ -1219,6 +1292,7 @@ div.rel {
 /* buttons on the right */
 .viewheadertop .links {
     text-align: right;
+    margin-right: 10px;
 }
 .viewheadertop .links a.btn {
     margin: 0 0 0 8px;
@@ -1226,6 +1300,7 @@ div.rel {
 /* site logo */
 .viewheadertop a.small-logo {
     display: block;
+    margin-left: 10px;
 }
 /* main navigation */
 .viewheadertop #mainnav-container {
@@ -1239,13 +1314,16 @@ div.rel {
 }
 /* header heading and tabs */
 .viewheader {
-    padding: 10px 0 0 0;
+    padding: 10px 10px 0 10px;
     clear: both;
 }
 .viewheader .viewtitle,
 .viewheader .collection-title {
     padding: 5px 0;
     margin: 0;
+}
+#micro .viewtitle, #micro .collection-title {
+    text-align: center;
 }
 /******************** Main navigation ********************/
 .main-nav {
@@ -1266,7 +1344,7 @@ div.rel {
     list-style-type: none;
     display: inline-block;
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 .main-nav li.selected {
     background: #DDDDDD;
@@ -1326,7 +1404,7 @@ div.rel {
     display: none;
     position: absolute;
     left: 0;
-    z-index: 2;
+    z-index: 3;
     clear: both;
     padding: 0;
     margin: 0;
@@ -1377,7 +1455,7 @@ ul.in-page-tabs li {
     display: table-cell;
     padding: 0;
     margin: 0;
-    vertical-align: middle;
+    vertical-align: bottom;
 }
 .ie7 ul.in-page-tabs li {
     display: inline;
@@ -1386,7 +1464,8 @@ ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
+ul.in-page-tabs li input.linkbtn,
+ul.searchtab li span.inactive {
     text-decoration: none;
     display: inline-block;
     padding: 10px;
@@ -1463,8 +1542,11 @@ ul.in-page-tabs li input.current-tab {
 #sb-loginbox #login_submit_container input#login_submit {
     padding: 5px;
 }
+.main-column.editcontent {
+    width: auto;
+}
 /* Sidebar profile */
-#user-profileicon {
+#user-profileicon, #main-wrapper-narrow-left .main-column-narrow {
     float: right;
     padding-left: 3px;
     padding-bottom: 3px;
@@ -1639,18 +1721,18 @@ ul.in-page-tabs li input.current-tab {
 #footer a:hover {
     padding: 0 5px;
 }
-#footernav {
+#footer-nav {
     margin: 0;
     float: left;
     margin: 10px;
 }
 #powered-by {
-    margin: 0;
+    margin: 0 0 0 5px;
     float: left;
 }
 #performance-info {
     float: right;
-    margin: 10px 0 10px 10px;
+    margin: 0 10px 0 0;
     text-align: right;
     width: 450px;
 }
@@ -1661,11 +1743,12 @@ ul.in-page-tabs li input.current-tab {
 #version {
     clear: right;
     float: right;
-    margin: 10px 0 10px 10px;
+    margin: 10px 10px 5px 0;
 }
 #micro #performance-info,
 #micro #version {
-    margin: 5px 0 5px 10px;
+    margin: 5px 10px 5px 0;
+    width: auto;
 }
 /******************** Page by page styles (listed by navigation order) ********************/
 /* Login page */
@@ -1908,7 +1991,10 @@ a.persona-button:after {
     line-height: 1.25em;
 }
 /* Content > Profile */
-
+#profileform_topsubmit_container th,
+#profileform_submit_container th {
+    display: none;
+}
 /* Content > Profile pictures */
 #profileicons .profileiconcell {
     width: 110px;
@@ -1949,7 +2035,9 @@ a.persona-button:after {
 }
 /* edit row background */
 tr.editrow,
-tr.editrow td {
+tr.editrow td,
+tr#files_filebrowser_edit_row,
+tr#files_filebrowser_edit_row td {
     background-color: #FFFFF7 !important;
     border-bottom: 2px solid #FFFFFF;
 }
@@ -2083,6 +2171,9 @@ table.attachments {
 .movebuttons {
     width: 58px;
 }
+#resumelicense_submit_container th {
+    display: none;
+}
 /* Content > Plans */
 tr.incomplete td {
     background: #FEE7E7;
@@ -2166,13 +2257,118 @@ table.templateresults td.right input.submit {
 /* Portfolio > Pages > Edit page (see views.css in theme folder and in raw folder) */
 
 /* Portfolio > Pages > Edit page > Edit layout tab */
-#viewlayout .fl {
-    margin: 0 10px;
-    text-align: center;
-    width: 120px;
+#viewlayout_basic_container,
+#viewlayout_adv_container {
+    padding: 10px;
+    margin: 5px 0;
 }
-#viewlayout .fl img {
-    padding: 5px 0 0 0;
+#viewlayout_basic_container fieldset,
+#viewlayout_adv_container fieldset {
+    margin: 0;
+}
+#basiclayouthelp {
+    margin-left: 5px;
+}
+#viewlayout .layoutoption {
+    display: inline-block;
+    margin: 5px 15px 0 0;
+    text-align: center;
+    vertical-align: top;
+}
+#viewlayout .layoutthumb {
+    display: block;
+}
+#viewlayout .layoutthumb img {
+    margin-top: 5px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    cursor: pointer;
+}
+.advancedlayoutselect .title {
+    display: table-cell;
+    width: 80px;
+    vertical-align: top;
+    padding-top: 7px;
+    padding-left: 5px;
+}
+#viewlayout_advancedlayoutselect_row1,
+#viewlayout_advancedlayoutselect_row2,
+#viewlayout_advancedlayoutselect_row3,
+#viewlayout_advancedlayoutselect_row4,
+#viewlayout_advancedlayoutselect_row5,
+#viewlayout_advancedlayoutselect_row6 {
+    display: table-cell;
+}
+#viewlayout_createcustomlayout_container {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+#createcustomlayouttitle {
+    display: inline;
+}
+#viewlayout_createcustomlayout_container #createcustomlayouttitle a {
+    background: url("../images/expand.png") no-repeat 0 50%;
+    padding-left: 15px;
+    text-decoration: none;
+}
+#viewlayout_createcustomlayout_container.collapsed #createcustomlayouttitle a {
+    background: url("../images/expanded.png") no-repeat 0 50%;
+}
+.no-js #viewlayout_createcustomlayout_container #createcustomlayouttitle a {
+    background: url("../images/expanded.png") no-repeat 0 50%;
+}
+#createcustomlayouttitle a:hover {
+    text-decoration: none;
+}
+#customlayouthelp {
+    margin-left: 5px;
+}
+#togglecustomlayoutoptions {
+    background: #FFFFFF;
+    border: 3px solid #D1D1D1;
+    margin-top: 3px;
+}
+#createcustomlayoutpane {
+    padding: 2px 5px;
+    background: #FFFFFF;
+}
+.customrow,
+.no-js .customrow {
+    padding: 3px 5px;
+    border-bottom: 1px dotted #d1d1d1;
+}
+.customrowtitle {
+    display: inline-block;
+    vertical-align: middle;
+}
+.customrowoptions {
+    display: inline-block;
+}
+.no-js fieldset.collapsed .customrowtitle,
+.no-js fieldset.collapsed .customrowoptions {
+    display: inline-block;
+}
+.customrow label {
+    margin-left: 20px;
+    vertical-align: middle;
+}
+#addrow {
+    margin: 3px 0;
+}
+#previewcustomlayoutpane {
+    text-align: center;
+    padding: 10px;
+    background: #f2f2f2;
+}
+#custompreview {
+    margin: 5px 5px 10px 5px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+}
+#addlayout {
+    margin: 0;
 }
 /* Portfolio > Pages > Delete page */
 
@@ -2236,9 +2432,6 @@ fieldset#pagestoadd .pieform tr.checkbox {
 }
 fieldset#pagestoadd .pieform tr.checkbox th {
     vertical-align: middle;
-}
-fieldset#pagestoadd .pieform tr.checkbox td {
-    width: 20px;
 }
 fieldset#pagestoadd tr#addviews_submit_container th,
 fieldset#pagestoadd tr#addviews_submit_container td {
@@ -2885,10 +3078,9 @@ table.sharedviewsreport .detail {
 }
 .groupsdetails .groupadmin {
     margin: 3px 0 0 0;
-    font-size: 0.917em;
 }
 .groupsdetails .membernumber {
-    font-size: 0.917em;
+    margin: 3px 0 0 0;
 }
 /* Groups > Find groups */
 form#search #search_query {
@@ -3089,9 +3281,6 @@ form#requestfriendship {
 
 /********** Pages outside of navigation ***************/
 /* Settings */
-#accountprefs table td {
-    padding-left: 0;
-}
 #accountprefs table h3 {
     margin: 10px 0 0 0;
     border-bottom: 1px dotted #D1D1D1;
@@ -3150,6 +3339,122 @@ form#requestfriendship {
 }
 .inbox-message {
     margin: 3px 0;
+}
+/* Universal search (from the top) */
+#universal-search-container {
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    width: 480px;
+    padding: 10px;
+}
+#universal-search-container form#search {
+    margin: 0;
+}
+#universal-search-container form#search #search_tagsonly_container {
+    display: block;
+    margin: 10px 0 0 0;
+    line-height: 1.667em;
+}
+.universalsearch {
+    padding: 20px;
+}
+#universal-search-container input#search_query {
+    font-size: 1.5em;
+    padding: 4px 5px;
+    width: 75%;
+}
+#universal-search-container input#search_submit {
+    font-size: 1.5em;
+	padding: 4px 10px;
+}
+@media screen and (min-width:0\0) {
+    #universal-search-container input#search_submit {
+        padding: 3px 10px 2px 10px;
+    }
+}
+#universal-search-container input#search_submit {
+    padding/*\**/: 3px 10px 2px 10px\9;
+}
+#universalsearchresult {
+    margin: 20px 0 0 0;
+}
+#universalsearchresult .totalresults {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+#universalsearchresult .totalresults a {
+    font-weight: bold;
+}
+ul.searchtab li span.inactive {
+    color: #D4D4D4;
+}
+.universalsearch .selectboxes {
+    text-align: right;
+}
+#universalsearch-results-sort,
+#universalsearch-filter-owner {
+    font-size: 1.167em;
+    display: inline-block;
+    margin: 0 0 10px 10px;
+}
+#resultswrap {
+    clear: both;
+    margin-left: 180px;
+}
+#resultswrap.nofilter {
+    margin-left: 0;
+}
+/* search filter on left */
+#universalsearchresults-filter-wrap {
+    width: 156px;
+    margin-left: -180px;
+    float: left;
+}
+.nofilter #universalsearchresults-filter-wrap {
+    display: none;
+}
+#universalsearchresults-filter-wrap #results_filter {
+    margin-bottom: 8px;
+    margin-left: 0;
+    float: none;
+}
+#search-filter-license {
+    width: 152px;
+    margin: 0 2px 4px 2px;
+}
+#universalsearchresults .listrow {
+    padding: 10px;
+}
+#universalsearchresults .listrowright {
+    margin-left: 40px;
+}
+#universalsearchresults .listrowright .counter {
+    float: left;
+    margin-left: -40px;
+    width: 25px;
+}
+.artefacttype {
+    font-weight: normal;
+}
+.thumbnail-right {
+    margin-left: 95px;
+    min-height: 80px;
+}
+.thumbnail-image {
+    margin-left: -95px;
+    width: 80px;
+    float: left;
+}
+.createdby {
+    margin: 6px 0;
+}
+.usedon {
+    margin: 10px 0 3px 0;
+}
+.usedon ul {
+    margin: 0 0 10px 0;
 }
 /* Search my portfolio page (from the sidebar) */
 .searchform {
@@ -3228,6 +3533,7 @@ form#requestfriendship {
 }
 .tag-results #results_heading {
     display: inline;
+    margin-right: 5px;
 }
 .tag-results .rbuttons {
     float: none;
@@ -3255,11 +3561,6 @@ form#requestfriendship {
     color: #CCCCCC;
     padding: 0 3px;
 }
-#resultswrap {
-    clear: both;
-    margin-left: 180px;
-}
-/* search filter on left */
 #results_filter {
     padding: 3px;
     width: 156px;
@@ -3274,6 +3575,7 @@ form#requestfriendship {
     font-weight: bold;
     font-size: 1.167em;
     padding: 10px;
+    display: block;
 }
 #results_filter .filtername a {
     background: #F7F7F7;
@@ -3297,6 +3599,10 @@ form#requestfriendship {
     font-weight: bold;
 }
 /* search results */
+#resultswrap {
+    clear: both;
+    margin-left: 180px;
+}
 #results .listrowright {
     margin-left: 40px;
 }
