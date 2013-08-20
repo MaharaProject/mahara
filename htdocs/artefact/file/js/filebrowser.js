@@ -776,7 +776,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 if (data.changedowner && data.newtabs && data.newtabdata) {
                     self.tabdata = data.newtabdata;
                     $(self.id+'_ownertabs').innerHTML = data.newtabs;
-                    $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
+                    if ($(self.id+'_ownersubtabs')) {
+                        $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
+                    }
                     if (data.newtabdata.upload) {
                         removeElementClass(self.id + '_upload_container', 'hidden');
                     } else {
