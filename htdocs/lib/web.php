@@ -2744,7 +2744,7 @@ function clean_html($text, $xhtml=false) {
     $config->set('Output.FlashCompat', true);
     $config->set('HTML.SafeIframe', true);
     $config->set('URI.SafeIframeRegexp',
-                 '%^https?://('.implode('|', $safeiframesources).')%');
+                 '%^(http:|https:|)//('.implode('|', $safeiframesources).')%');
 
     // Allow namespaced IDs
     // see http://htmlpurifier.org/docs/enduser-id.html
