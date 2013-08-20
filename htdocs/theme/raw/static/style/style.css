@@ -1386,7 +1386,7 @@ div.rel {
 	padding: 0;
 	margin: 10px 0 0 0;
 }
-div.ok, div.error {
+div.ok, div.error, span.error {
     padding: 2px 5px 2px 30px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -1419,7 +1419,7 @@ div.info img {
 	color: #547c22;
     background: #e7f1c3 url(../images/success.gif) no-repeat 7px 1px;
 }
-#messages .error, div.error {
+#messages .error, div.error, span.error {
 	color: #dd0221;
     background: #ffeded url(../images/failure.gif) no-repeat 7px 1px;
 }
