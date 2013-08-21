@@ -51,4 +51,5 @@ if (!($file instanceof ArtefactTypeFile)) {
 
 $smarty = smarty();
 $smarty->assign('url', get_config('wwwroot') . 'artefact/file/download.php?file=' . $fileid);
+$smarty->assign('title', $file->get('title'));
 $smarty->display('blocktype:pdf:pdf.tpl');

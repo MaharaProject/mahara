@@ -12,6 +12,13 @@
     <script type="text/javascript">
         var wwwroot = '{$WWWROOT}';
         var fileurl = "{$url|safe}";
+        // to handle showing download link when javascript is turned off
+        window.onload = function() {
+            document.body.className = 'js';
+            document.body.style.display = 'block';
+            document.getElementById('nojsdownload').style.display = 'none';
+            document.getElementById('outerContainer').className = 'loadingInProgress';
+        }
     </script>
 
     <link rel="resource" type="application/l10n" href="js/pdfjs/locale/locale.properties"/>
@@ -21,8 +28,9 @@
     <script type="text/javascript" src="js/pdfjs/viewer.js"></script>
   </head>
 
-  <body>
-    <div id="outerContainer" class="loadingInProgress">
+  <body class="no-js">
+    <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
+    <div id="outerContainer" class="loadingInProgress js">
 
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
