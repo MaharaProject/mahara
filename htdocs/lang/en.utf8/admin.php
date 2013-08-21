@@ -611,7 +611,7 @@ $string['uploadgroupmemberscsverrornoadminlisted'] = 'Error on line %s of your f
 $string['uploadgroupmemberscsverrornosuchshortname'] = 'Error on line %s of your file: The group shortname "%s" does not exist or is not part of the institution "%s".';
 $string['uploadgroupmemberscsverrornosuchusername'] = 'Error on line %s of your file: The username "%s" does not exist.';
 $string['uploadgroupmemberscsverrorusernotininstitution'] = 'Error on line %s of your file: The username "%s" is not part of the institution "%s".';
-$string['uploadgroupmemberscsvpagedescription2'] = '<p>You may use this facility to update group members in groups controlled by this institution. You can upload new members via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadgroupmemberscsvpagedescription3'] = '<p>You may use this facility to update group members in groups controlled by this institution. You can upload new members via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
@@ -621,7 +621,9 @@ $string['uploadgroupmemberscsvpagedescription2'] = '<p>You may use this facility
 
 <p>The shortname field must be the same as the shortname you used to create the group <a href="%s" title="%s">here</a>.</p>
 
-<p>The role field can have any of the following, depending on the type of group: <tt>admin</tt>, <tt>member</tt>, or <tt>tutor</tt></p>';
+<p>The role field can have any of the following, depending on the type of group: <tt>admin</tt>, <tt>member</tt>, or <tt>tutor</tt>.</p>
+
+<div class="warning"> Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file.</div>';
 $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some users could not be emailed. Their email addresses may be invalid, or the server Mahara is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file. The number of users in the institution would have exceeded the maximum number allowed.';
 $string['updateusers'] = 'Update users';

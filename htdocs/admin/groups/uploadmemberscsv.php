@@ -229,7 +229,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     redirect('/admin/groups/uploadmemberscsv.php');
 }
 
-$uploadcsvpagedescription = get_string('uploadgroupmemberscsvpagedescription2', 'admin',
+$uploadcsvpagedescription = get_string('uploadgroupmemberscsvpagedescription3', 'admin',
                                             get_config('wwwroot') . 'admin/groups/uploadcsv.php',
                                             get_string('uploadgroupcsv', 'admin'));
 
