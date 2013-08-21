@@ -37,6 +37,7 @@ jQuery(document).ready(function() {
     var dropzone_uploadnumber = 0;
 
     var prefix = j('#file_dropzone_container').attr('class');
+    var enclosingform = j('#file_dropzone_container').closest('form');
 
     // allow the whole page to be droppable
     // and display the previews below upload file selector
@@ -56,18 +57,19 @@ jQuery(document).ready(function() {
     // on sending the file append the form field data and the
     // fields that Pieform would normally create
     myDropzone.on("sending", function(userfile, xhr, formData) {
-        j('#files input').each(function() {
+        enclosingform.find('input').each(function() {
+            var reg = /^cancel_/;
             if (this.type == 'checkbox') {
                 if (this.checked == true) {
                     formData.append(this.name, this.value);
                 }
             }
-            else {
+            else if (!reg.test(this.name)) {
                 formData.append(this.name, this.value);
             }
         });
-        j('#files select').each(function() {
-            formData.append(this.name, j('#files select[name="' + this.name + '"] option:selected').val());
+        enclosingform.find('select').each(function() {
+            formData.append(this.name, enclosingform.find('select[name="' + this.name + '"] option:selected').val());
         });
         formData.append(prefix + '_upload', '1');
         formData.append('dropzone', '1');
@@ -103,6 +105,9 @@ jQuery(document).ready(function() {
             catch(error) {
                 myDropzone.errorProcessing(userfile,error);
             }
+        }
+        if (data.returnCode == '-2') {
+            myDropzone.errorProcessing(userfile,'An error has occurred');
         }
         dropzone_uploadnumber ++;
         data['uploadnumber'] = dropzone_uploadnumber;
