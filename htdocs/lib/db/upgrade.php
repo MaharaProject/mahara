@@ -3197,7 +3197,7 @@ function xmldb_core_upgrade($oldversion=0) {
         set_field('usr_account_preference', 'value', LICENSE_INSTITUTION_DEFAULT, 'field', 'licensedefault', 'value', '-');
     }
 
-    if ($oldversion < 2013081400) {
+    if ($oldversion < 2013032211) {
         // We've made a change to how update_safe_iframe_regex() generates the regex
         // Call this function to make sure the stored value reflects that change.
         update_safe_iframe_regex();
