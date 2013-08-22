@@ -52,7 +52,7 @@ $sharedviews = $sharedviews->data;
 foreach ($sharedviews as &$data) {
 
     if (isset($data['group'])) {
-        $sharedviews[$id]['groupname'] = get_field('group', 'name', 'id', $data['group']);
+        $data['groupname'] = get_field('group', 'name', 'id', $data['group']);
     }
 
     $view = new View($data['id']);
