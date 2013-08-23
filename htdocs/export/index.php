@@ -193,7 +193,7 @@ function export_submit(Pieform $form, $values) {
 
 $smarty = smarty(
     $jsfiles,
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">'),
     array(),
     array('stylesheets' => array('style/views.css'))
 );

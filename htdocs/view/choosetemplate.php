@@ -137,7 +137,7 @@ EOF;
 
 $smarty = smarty(
     array('js/preview.js', 'searchtable'),
-    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">'),
     array(),
     array('stylesheets' => array('style/views.css'))
 );
