@@ -252,7 +252,7 @@ ul.groupuserstatus li .submit input.submit:active {
 	color: #FFFFFF;
 }
 #right-nav li.identity a {
-	color: #5C0758;
+	color: #d9d9d9;
 }
 /* search */
 #usf_submit,
@@ -271,6 +271,9 @@ ul.groupuserstatus li .submit input.submit:active {
 /******************** Small header ********************/
 #micro .viewtitle,
 #micro .collection-title {
+    color: #FFFFFF;
+}
+#micro .viewtitle a {
     color: #FFFFFF;
 }
 .viewheadertop #mainnav-container #mainnav a,
@@ -412,6 +415,9 @@ ul.in-page-tabs li input.current-tab {
 /* Sidebar login */
 #sb-loginbox label {
 	color: #e8c1ea;
+}
+#changeuser a {
+	color: #5C0758;
 }
 /* Sidebar group navigation */
 #sb-groupnav ul li a.selected {

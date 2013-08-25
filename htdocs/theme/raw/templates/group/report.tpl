@@ -38,7 +38,7 @@
       <td>
         <ul>
 {foreach from=$view.comments key=commenter item=info}
-        {if $info.member}<li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span class="right">{$info.count}</span></li>{/if}
+        {if $info.member}<li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span> ({$info.count})</span></li>{/if}
 {/foreach}
         </ul>
 {if $view.mcomments > 0}<div class="detail">{$view.mcomments} {str tag=comments section=artefact.comment}</div>{/if}
@@ -47,9 +47,9 @@
         <ul>
 {foreach from=$view.comments key=commenter item=info}
         {if $info.commenter|is_string}
-          <li>{$info.commenter}<span class="right">{$info.count}</span></li>
+          <li>{$info.commenter}<span> ({$info.count})</span></li>
         {elseif ! $info.member}
-          <li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span class="right">{$info.count}</span></li>
+          <li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span> ({$info.count})</span></li>
         {/if}
 {/foreach}
         </ul>
@@ -88,22 +88,22 @@
       <td>
         <ul>
 {foreach from=$view.comments key=commenter item=info}
-        {if $info.member}<li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span class="right">{$info.count}</span></li>{/if}
+        {if $info.member}<li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span> ({$info.count})</span></li>{/if}
 {/foreach}
         </ul>
-{if $view.mcomments > 0}<p class="right">{$view.mcomments} {str tag=comments section=artefact.comment}</p>{/if}
+{if $view.mcomments > 0}<div class="detail">{$view.mcomments} {str tag=comments section=artefact.comment}</div>{/if}
       </td>
       <td>
         <ul>
 {foreach from=$view.comments key=commenter item=info}
         {if $info.commenter|is_string}
-          <li>{$info.commenter}<span class="right">{$info.count}</span></li>
+          <li>{$info.commenter}<span> ({$info.count})</span></li>
         {elseif ! $info.member}
-          <li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span class="right">{$info.count}</span></li>
+          <li><a href="{$WWWROOT}user/view.php?id={$info.commenter}">{$info.commenter|display_name:null:true|escape}</a><span> ({$info.count})</span></li>
         {/if}
 {/foreach}
         </ul>
-{if $view.ecomments > 0}<p class="right">{$view.ecomments} {str tag=comments section=artefact.comment}</p>{/if}
+{if $view.ecomments > 0}<div class="detail">{$view.ecomments} {str tag=comments section=artefact.comment}</div>{/if}
       </td>
     </tr>
 {/foreach}

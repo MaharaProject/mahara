@@ -15,6 +15,13 @@ ul.colnav li a:active {
 	color: #FFF;
 	background: #5b6eae;
 }
+#micro ul.colnav li a,
+#micro ul.colnav li a:link,
+#micro ul.colnav li a:visited,
+#micro ul.colnav li a:active {
+	color: #FFFFFF;
+	background: #ff870e url(../images/colnav_bkgd.png) repeat-x 0 0;
+}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
     background-color: #bcc8e9;

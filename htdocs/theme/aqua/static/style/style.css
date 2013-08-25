@@ -276,6 +276,9 @@ div.pagination a {
 #micro .collection-title {
     color: #FFFFFF;
 }
+#micro .viewtitle a {
+    color: #9ddeff;
+}
 .viewheadertop #mainnav-container #mainnav a,
 .viewheadertop #mainnav-container #mainnav a:link,
 .viewheadertop #mainnav-container #mainnav a:visited,

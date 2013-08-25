@@ -15,6 +15,7 @@
 {/if}
 </div>
 </div>
-<p>Click on an activity above</p>
+{if $USER->is_logged_in()}<p>Click on an activity above</p>
+{/if}
 <div class="cb"></div>
 </div>

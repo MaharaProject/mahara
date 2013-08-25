@@ -1279,9 +1279,19 @@ div.rel {
     text-decoration: none;
 }
 /* language bar */
+#right-nav li#language {
+    display: inline-block;
+}
 #languageselect {
     display: inline;
     margin: 0 3px 0 20px;
+}
+/* login link */
+#right-nav li#loginlink {
+    display: inline-block;
+}
+#right-nav li#loginlink a {
+    margin: 0 0 1px 8px;
 }
 /* search */
 #usf {
@@ -3088,6 +3098,7 @@ table.groupviewsreport li,
 table.sharedviewsreport li {
     clear: both;
     font-size: 0.917em;
+    margin-bottom: 0;
 }
 table.groupviewsreport li span.right,
 table.sharedviewsreport li span.right {
@@ -3095,8 +3106,9 @@ table.sharedviewsreport li span.right {
 }
 table.groupviewsreport .detail,
 table.sharedviewsreport .detail {
-    margin: 0 0 0 18px;
+    margin: 0;
     font-size: 0.917em;
+    font-weight: bold;
 }
 /* Groups > My groups */
 #filter {

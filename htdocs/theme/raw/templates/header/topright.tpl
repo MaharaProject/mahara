@@ -10,11 +10,11 @@
 {/if}
             {/strip}
 {if !$nosearch && !$LOGGEDIN && $languageform}
-                <li>
+                <li id="language">
                     {$languageform|safe}
                 </li>
 {/if}
-{if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}        <li><a href="{$WWWROOT}?login" accesskey="l">{str tag="login"}</a></li> {/if}
+{if !$LOGGEDIN && !$SIDEBARS && !$LOGINPAGE}        <li id="loginlink"><a href="{$WWWROOT}?login" accesskey="l">{str tag="login"}</a></li> {/if}
             </ul>
         </div>
 

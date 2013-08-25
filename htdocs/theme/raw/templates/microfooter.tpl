@@ -10,7 +10,7 @@
             <div class="cb"></div>
 		</div>
 	</div>
-</div>{* containerX *}
+</div>
 </body>
 </html>
 
