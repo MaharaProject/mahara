@@ -169,13 +169,13 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
     $initjs .= "addLoadEvent({$prefix}.init);";
+    $initjs .= "upload_max_filesize = '" . get_real_size(ini_get('upload_max_filesize')) . "';";
 
     $smarty->assign('initjs', $initjs);
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
 
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
-
 
 function pieform_element_filebrowser_get_groupinfo($group) {
     require_once('group.php');

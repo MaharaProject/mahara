@@ -43,8 +43,8 @@ jQuery(document).ready(function() {
     var myDropzone = new Dropzone(document.body, {
         url: document.URL,
         previewsContainer: 'div#fileDropzone',
-        maxFilesize: 2,
-        dictFileTooBig: strings.maxuploadsize + ' 2mb',
+        maxFilesize: (upload_max_filesize / 1048576),
+        dictFileTooBig: strings.maxuploadsize + ' ' + (upload_max_filesize / 1048576) + 'mb',
         maxThumbnailFilesize: 1,
         clickable: false,
         createImageThumbnails: false,
