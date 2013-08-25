@@ -360,7 +360,8 @@ a:focus {
     outline: none;
 }
 /* some common listing text styles */
-.title {
+.title,
+.title:first-child {
     font-size: 1.167em;
     margin: 3px 0;
 }
@@ -741,7 +742,8 @@ input.calendar.required {
     display: block;
 }
 /******************** Buttons ********************/
-/* input buttons */
+/* Default buttons */
+/* default state */
 input.submit,
 input.cancel,
 button,
@@ -766,7 +768,7 @@ ul.groupuserstatus li.jointhisgroup form {
     border-radius: 3px;
     white-space: nowrap;
 }
-/* hover for buttons */
+/* hover state */
 input.submit:hover,
 input.cancel:hover,
 button:hover,
@@ -783,7 +785,7 @@ ul.groupuserstatus li.jointhisgroup form:hover {
     cursor: default;
     color: #333333;
 }
-/* depress for buttons */
+/* depress state */
 input.submit:active,
 input.cancel:active,
 button:active,
@@ -812,7 +814,8 @@ ul.groupuserstatus li.jointhisgroup form:active {
     overflow: visible;
     padding: 3px 5px 2px 5px;
 }
-/* red delete buttons */
+/* Delete/suspend buttons (red) */
+/* default state */
 .deletemessage a.delete,
 #delete_tag_submit,
 #close_site_submit,
@@ -832,6 +835,7 @@ input#account_delete_submit {
     background: url(../images/btn_bkgd_red.png) repeat-x 0 50%;
     color: #000000;
 }
+/* hover state */
 .deletemessage a.delete:hover,
 #delete_tag_submit:hover,
 #close_site_submit:hover,
@@ -851,6 +855,7 @@ input#account_delete_submit:hover {
     background: url(../images/btn_bkgd_red_hover.png) repeat-x 0 50%;
     color: #FFFFFF;
 }
+/* depress state */
 .deletemessage a.delete:active,
 #delete_tag_submit:active,
 #close_site_submit:active,
@@ -870,6 +875,7 @@ input#account_delete_submit:active {
     background: url(../images/btn_bkgd_red_focus.png) repeat-x 0 50%;
     color: #FFFFFF;
 }
+/* Other button customisation */
 /* bolding some buttons */
 #editgroup #editgroup_submit,
 #editblog #editblog_submit,
@@ -1199,13 +1205,6 @@ form.pagination {
     min-height: 0;  /* IE layout hack */
     padding: 10px 20px 20px 20px;
 }
-/* Fixes IE7 layout */
-.ie7 #mainmiddle {
-    overflow-x: hidden;
-}
-.ie7 #main-wrapper-narrow-right {
-    margin-right: 256px;
-}
 #left-column {
     width: 256px;
     margin-left: -256px;
@@ -1254,6 +1253,10 @@ div.rel {
     white-space: nowrap;
     display: block;
 }
+#header-right label {
+    margin-right: 5px;
+    color: #666666;
+}
 /* top navigation */
 #right-nav ul {
     text-align: right;
@@ -1283,8 +1286,7 @@ div.rel {
     display: inline-block;
 }
 #languageselect {
-    display: inline;
-    margin: 0 3px 0 20px;
+    margin: 15px 0 0 0;
 }
 /* login link */
 #right-nav li#loginlink {

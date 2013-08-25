@@ -169,8 +169,8 @@ input#export_submit:active,
 #adduser #adduser_submit:active,
 input#login_submit:active,
 .login-externallink a.btn:active,
-input#viewlayout_submit:hover,
-input#files_filebrowser_upload:hover {
+input#viewlayout_submit:active,
+input#files_filebrowser_upload:active {
     background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
     border-color: #3C7FB1;
     color: #FFFFFF;
