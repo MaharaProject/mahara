@@ -57,7 +57,14 @@ jQuery(document).ready(function() {
     // fields that Pieform would normally create
     myDropzone.on("sending", function(userfile, xhr, formData) {
         j('#files input').each(function() {
-            formData.append(this.name, this.value);
+            if (this.type == 'checkbox') {
+                if (this.checked == true) {
+                    formData.append(this.name, this.value);
+                }
+            }
+            else {
+                formData.append(this.name, this.value);
+            }
         });
         j('#files select').each(function() {
             formData.append(this.name, j('#files select[name="' + this.name + '"] option:selected').val());
