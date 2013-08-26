@@ -332,6 +332,35 @@ abstract class Auth {
     public function logout() {
     }
 
+    /**
+     * Indicates whether this auth instance is parent to another auth instance
+     * @return boolean (For backwards-compatibility reasons, it actually returns $this or null)
+     */
+    public function is_parent_authority() {
+        if (count_records('auth_instance_config', 'field', 'parent', 'value', $this->instanceid)) {
+            return $this;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the ID of this instance's parent authority; or FALSE if it has no parent authority
+     * @return int|false
+     */
+    public function get_parent_authority() {
+        return get_field('auth_instance_config', 'value', 'instance', $this->id, 'field', 'parent');
+    }
+
+
+    /**
+     * Indicates whether or not this auth instance uses the remote username. Most auth instances
+     * will only use it if they are the parent to another auth instance.
+     */
+    public function needs_remote_username() {
+        return (boolean) $this->is_parent_authority();
+    }
 }
 
 
@@ -1353,7 +1382,7 @@ class AuthFactory {
      * Take an instanceid and create an auth object for that instance. 
      * 
      * @param  int      $id     The id of the auth instance
-     * @return mixed            An intialised auth object or false, if the
+     * @return Auth            An intialised auth object or false, if the
      *                          instance doesn't exist (Should never happen)
      */
     public static function create($id) {
@@ -1491,7 +1520,7 @@ function login_submit(Pieform $form, $values) {
                 try {
                     // If this authinstance is a parent auth for some xmlrpc authinstance, pass it along to create_user
                     // so that this username also gets recorded as the username for sso from the remote sites.
-                    $remoteauth = count_records('auth_instance_config', 'field', 'parent', 'value', $authinstance->id) ? $authinstance : null;
+                    $remoteauth = $auth->is_parent_authority();
                     create_user($USER, $profilefields, $institution, $remoteauth);
                     $USER->reanimate($USER->id, $authinstance->id);
                 }

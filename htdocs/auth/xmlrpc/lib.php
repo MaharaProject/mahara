@@ -576,6 +576,9 @@ class AuthXmlrpc extends Auth {
         $SESSION->set('mnetuser', null);
     }
 
+    public function needs_remote_username() {
+        return true;
+    }
 }
 
 /**

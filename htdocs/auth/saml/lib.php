@@ -268,6 +268,10 @@ class AuthSaml extends Auth {
     public function after_auth_setup_page_hook() {
         return;
     }
+
+    public function needs_remote_username() {
+        return $this->config['remoteuser'] || parent::needs_remote_username();
+    }
 }
 
 /**
