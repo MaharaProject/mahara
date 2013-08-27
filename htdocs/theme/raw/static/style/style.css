@@ -3148,14 +3148,16 @@ div.peoplelistinfo .rightdiv .detail {
 .existingfriend {
     font-weight: normal;
 }
-.whymakemeyourfriend,
-.hasrequestedmembership,
-.hasbeeninvitedtojoin {
+.whymakemeyourfriend {
     background: #FFFFFF;
     padding: 5px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+}
+.hasrequestedmembership,
+.hasbeeninvitedtojoin {
+    padding: 5px 5px 5px 0;
 }
 /* page list */
 ul.viewlist {
