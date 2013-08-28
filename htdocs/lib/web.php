@@ -2789,26 +2789,45 @@ function get_script_path() {
 function get_requested_host_name() {
     global $CFG;
 
-    if (!empty($_SERVER['SERVER_NAME'])) {
-        return $_SERVER['SERVER_NAME'];
+    $hostname = false;
+    if (false === $hostname && !empty($_SERVER['SERVER_NAME'])) {
+        $hostname = $_SERVER['SERVER_NAME'];
     }
-    if (!empty($_ENV['SERVER_NAME'])) {
-        return $_ENV['SERVER_NAME'];
+    if (false === $hostname && !empty($_ENV['SERVER_NAME'])) {
+        $hostname = $_ENV['SERVER_NAME'];
     }
-    if (!empty($_SERVER['HTTP_HOST'])) {
-        return $_SERVER['HTTP_HOST'];
+    if (false === $hostname && !empty($_SERVER['HTTP_HOST'])) {
+        $hostname = $_SERVER['HTTP_HOST'];
     }
-    if (!empty($_ENV['HTTP_HOST'])) {
-        return $_ENV['HTTP_HOST'];
+    if (false === $hostname && !empty($_ENV['HTTP_HOST'])) {
+        $hostname = $_ENV['HTTP_HOST'];
     }
-    if (!empty($CFG->wwwroot)) {
+    if (false === $hostname && !empty($CFG->wwwroot)) {
         $url = parse_url($CFG->wwwroot);
         if (!empty($url['host'])) {
-            return $url['host'];
+            $hostname = $url['host'];
         }
     }
-    log_warn('Warning: could not find the name of this server!');
-    return false;
+
+    if (false === $hostname) {
+        log_warn('Warning: could not find the name of this server!');
+        return false;
+    }
+    else {
+        $hostname = strtolower($hostname);
+        // Because the hostname can be user provided data (from the HTTP request), we
+        // should whitelist it.
+        if (!preg_match(
+                '/^([a-z0-9]|[a-z0-9][a-z0-9-]*[a-z0-9])(\\.([a-z0-9]|[a-z0-9][a-z0-9-]*[a-z0-9]))*$/',
+                $hostname
+            )
+        ) {
+            log_warn('Warning: invalid hostname found in get_requested_host_name.');
+            return false;
+        }
+
+        return $hostname;
+    }
 }
 
 /**
