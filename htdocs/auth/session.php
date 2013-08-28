@@ -33,8 +33,7 @@ defined('INTERNAL') || die();
 session_name(get_config('cookieprefix') . 'mahara');
 ini_set('session.save_path', '3;' . get_config('dataroot') . 'sessions');
 ini_set('session.gc_divisor', 1000);
-// Session timeout is stored in minutes in the database
-ini_set('session.gc_maxlifetime', get_config('session_timeout') * 60);
+ini_set('session.gc_maxlifetime', get_config('session_timeout'));
 ini_set('session.use_only_cookies', true);
 if ($domain = get_config('cookiedomain')) {
     ini_set('session.cookie_domain', $domain);
