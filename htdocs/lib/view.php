@@ -2231,7 +2231,7 @@ class View {
                 $baseurl .= hsc($key) . '=' . hsc($value) . '&';
             }
         }
-        $baseurl = substr($baseurl, 0, -5);
+        $baseurl = substr($baseurl, 0, -1);
         return $baseurl;
     }
 
