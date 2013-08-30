@@ -4,7 +4,7 @@
 {* TODO at this point we have now $blocktype.singleonly *}
     <div class="blocktype">
         <input type="radio" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
-        <img src="{$blocktype.thumbnail_path}" title="{$blocktype.description}" alt="{str tag='Preview' section='view'}" width="24" height="24"><span class="blocktypetitle">{$blocktype.title}</span>
+        <img src="{$blocktype.thumbnail_path}" title="{$blocktype.description}" alt="{$blocktype.description}" width="24" height="24"><span class="blocktypetitle">{$blocktype.title}</span>
     </div>
 {/foreach}
 </div>
