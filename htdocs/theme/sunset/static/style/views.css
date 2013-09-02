@@ -15,6 +15,28 @@ ul.colnav li a:active {
 	background: #8e1901;
 	color: #FFFFFF;
 }
+/******************** Blocktype icons panel ********************/
+#editcontent-sidebar {
+	background-color: #ca7113;
+}
+#blocktype-common,
+#block-category-general,
+#block-category-internal,
+#block-category-fileimagevideo,
+#block-category-external,
+#block-category-blog,
+#blog,
+#internal,
+#general,
+#fileimagevideo,
+#external {
+    background-color: #fbcd50;
+    border-color: #ebc254;
+}
+.blocktype {
+    background: #fff2d0;
+    border-color: #f1e6c8;
+}
 /******************** Blocks ********************/
 /* block header */
 .blockinstance-header .title {

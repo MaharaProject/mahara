@@ -453,6 +453,7 @@ ul.in-page-tabs li input.current-tab {
 #loginform_container #login_login_container,
 #login_login_extra_container {
     background: #000000;
+    padding: 7px 7px 10px 7px;
 }
 /* persona button */
 a.persona-button span:before{ /* Icon BG */

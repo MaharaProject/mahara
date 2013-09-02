@@ -2775,24 +2775,40 @@ div.progress-bar {
     height: 40px;
     color: #333333;
     text-align: center;
-    background: #DBDBDB; /* Old browsers */
-    background: -moz-linear-gradient(top, #DBDBDB 0%, #AFAFAF 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #DBDBDB), color-stop(100%, #AFAFAF)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #DBDBDB 0%, #AFAFAF 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #DBDBDB 0%, #AFAFAF 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #DBDBDB 0%, #AFAFAF 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #DBDBDB 0%, #AFAFAF 100%); /* W3C */
+    background-color: #d4d4d4;
+}
+div.progress-bar-progress {
+    background: #cff253; /* Old browsers */
+    background: -moz-linear-gradient(top, #cff253 0%, #9dc70d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cff253), color-stop(100%, #9dc70d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #cff253 0%, #9dc70d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #cff253 0%, #9dc70d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #cff253 0%, #9dc70d 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #cff253 0%, #9dc70d 100%); /* W3C */
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 40px;
+    color: #333333;
+    text-align: center;
 }
 p.progress-text {
     position: absolute;
     top: 0;
     left: 0;
     text-align: center;
-    color: #FFFFFF;
+    color: #000000;
     width: 100%;
 }
 #progressbar {
     height: 40px;
+}
+div.progress-bar p {
+    color: #333333;
+}
+div.progress-bar a {
+    color: #000000;
+    text-decoration: underline;
 }
 /* Groups > Group's about page */
 /* group description */

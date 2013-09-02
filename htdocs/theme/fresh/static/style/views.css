@@ -41,11 +41,11 @@ ul.colnav li.selected span {
 #fileimagevideo,
 #external {
     background-color: #78d9ff;
-    border: 1px solid #66d0f9;
+    border-color: #78cff1;
 }
 .blocktype {
-    background: #bcecff;
-    border: 1px solid #abe8ff;
+    background: #cff1ff;
+    border-color: #c9e7f2;
 }
 /******************** Bottom pane of edit page ********************/
 #page #bottom-pane {
