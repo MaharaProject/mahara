@@ -50,6 +50,7 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('querystring', get_querystring());
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
