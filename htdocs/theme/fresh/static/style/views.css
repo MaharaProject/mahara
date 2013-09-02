@@ -29,7 +29,6 @@ ul.colnav li.selected span {
 #editcontent-sidebar {
     background: #009ad5;
 }
-#blocktype-common,
 #block-category-general,
 #block-category-internal,
 #block-category-fileimagevideo,
@@ -44,8 +43,8 @@ ul.colnav li.selected span {
     border-color: #78cff1;
 }
 .blocktype {
-    background: #cff1ff;
-    border-color: #c9e7f2;
+    background: #f0fbff;
+    border-color: #eaf3f7;
 }
 /******************** Bottom pane of edit page ********************/
 #page #bottom-pane {

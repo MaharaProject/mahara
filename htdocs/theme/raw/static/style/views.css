@@ -28,10 +28,6 @@ ul.colnav li.selected span {
 #editcontent-sidebar {
     background: #BEBEBE;
 }
-#blocktype-common {
-    background: #EEEEEE;
-    border: 1px solid #B3B3B3;
-}
 .blocktype {
     background: #F7F7F7;
     border: 1px solid #DADADA;
@@ -53,7 +49,7 @@ ul.colnav li.selected span {
 #block-category-fileimagevideo,
 #block-category-external,
 #block-category-blog {
-    background-color: #EEEEEE;
+    background-color: #DDDDDD;
     border: 1px solid #B3B3B3;
 }
 #block-category-general:hover,
@@ -69,14 +65,14 @@ ul.colnav li.selected span {
 #general,
 #fileimagevideo,
 #external {
-    background: #EEEEEE;
+    background: #DDDDDD;
     border: 1px solid #B3B3B3;
     border-top: 0;
     overflow: hidden;
 }
 /* theme selector */
 #select-theme {
-    background-color: #EEEEEE;
+    background-color: #DDDDDD;
     border: 1px solid #B3B3B3;
 }
 /******************** Column layout ********************/

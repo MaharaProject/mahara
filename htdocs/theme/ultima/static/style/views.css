@@ -19,7 +19,6 @@ ul.colnav li a:active {
 #editcontent-sidebar {
 	background-color: #FAEEFB;
 }
-#blocktype-common,
 #block-category-general,
 #block-category-internal,
 #block-category-fileimagevideo,
@@ -31,9 +30,5 @@ ul.colnav li a:active {
 #fileimagevideo,
 #external {
     background-color: #ecd2ee;
-    border-color: #dfc9e1;
-}
-.blocktype {
-    background: #d3abd5;
     border-color: #dfc9e1;
 }
