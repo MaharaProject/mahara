@@ -1,11 +1,9 @@
-<h3>Elasticsearch Analyzer</h3>
+<h3>Elasticsearch analyzer</h3>
 
-<p>Performs the analysis process of the search database.</p>
+<p>The Elasticsearch analyzer performs the analysis process of the search database.</p>
 <p>The Maraha system uses the built-in <strong>mahara_analyzer</strong>.</p>
-<p>if you wish to use a different analyzer here are instructions on making a custom analyzer
-<href="http://www.elasticsearch.org/guide/reference/index-modules/analysis/custom-analyzer/">http://www.elasticsearch.org/guide/reference/index-modules/analysis/custom-analyzer/</a>
-<p>This setting cannot be changed from the web interface. You may change it by adding
-a line to your config.php setting the value of
-<code>$cfg->plugin->search->elasticsearch->analyzer</code>.</p>
-<p>It is recommended that you don't change from the default "mahara_analyzer"
-unless you know what you are doing</p>
+<p><a href="http://www.elasticsearch.org/guide/reference/index-modules/analysis/custom-analyzer/">Read the Elasticsearch instructions</a> if you wish to use a different analyzer.</p>
+<p>This setting cannot be changed through the web interface. You may change it by setting a value in your config.php file for the following config variable:</p>
+<p><code>$cfg->plugin->search->elasticsearch->analyzer</code>.</p>
+<p>It is recommended that you don't change the default "mahara_analyzer"
+unless you know what you are doing.</p>
