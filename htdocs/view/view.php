@@ -205,7 +205,7 @@ $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
-$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+$headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
 
 if (!$view->is_public()) {
     $headers[] = '<meta name="robots" content="noindex">';  // Tell search engines not to index non-public views
@@ -215,8 +215,8 @@ if (!$view->is_public()) {
 if (get_config_plugin('blocktype', 'gallery', 'useslimbox2')) {
     $langdir = (get_string('thisdirection', 'langconfig') == 'rtl' ? '-rtl' : '');
     $headers = array_merge($headers, array(
-        '<script type="text/javascript" src="' . get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js"></script>',
-        '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css">'
+        '<script type="text/javascript" src="' . get_config('wwwroot') . 'lib/slimbox2/js/slimbox2.js?v=' . get_config('release'). '"></script>',
+        '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'lib/slimbox2/css/slimbox2' . $langdir . '.css?v=' . get_config('release'). '">'
     ));
 }
 

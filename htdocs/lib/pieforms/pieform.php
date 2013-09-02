@@ -1671,7 +1671,7 @@ function pieform_get_headdata() {/*{{{*/
     // TODO: jsdirectory should be independent of ANY form
     if ($GLOBALS['_PIEFORM_REGISTRY']) {
         array_unshift($htmlelements, '<script type="text/javascript" src="'
-            . Pieform::hsc($form->get_property('jsdirectory')) . 'pieforms.js"></script>');
+            . Pieform::hsc($form->get_property('jsdirectory')) . 'pieforms.js?v=' . get_config('release'). '"></script>');
         array_unshift($htmlelements, '<script type="text/javascript">pieformPath = "'
             . Pieform::hsc($form->get_property('jsdirectory')) . '";</script>');
     }

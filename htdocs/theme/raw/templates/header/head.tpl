@@ -31,10 +31,10 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-    <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}" media="print">
-    <script type="text/javascript" src="{$WWWROOT}js/css.js"></script>
-    <link rel="shortcut icon" href="{$WWWROOT}favicon.ico" type="image/vnd.microsoft.icon">
-    <link rel="image_src" href="{$sitelogo}">
+    <link rel="stylesheet" type="text/css" href="{theme_url filename='style/print.css'}?v={$RELEASE}" media="print">
+    <script type="text/javascript" src="{$WWWROOT}js/css.js?v={$RELEASE}"></script>
+    <link rel="shortcut icon" href="{$WWWROOT}favicon.ico?v={$RELEASE}" type="image/vnd.microsoft.icon">
+    <link rel="image_src" href="{$sitelogo}?v={$RELEASE}">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}
 </head>
 {dynamic}{flush}{/dynamic}

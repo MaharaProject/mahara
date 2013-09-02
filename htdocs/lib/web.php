@@ -404,7 +404,7 @@ EOF;
     }
 
     $smarty->assign('STRINGJS', $stringjs);
-
+    $stylesheets = append_version_number($stylesheets);
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
         // this gets assigned in smarty_core, but do it again here if it's changed locally
@@ -504,7 +504,9 @@ EOF;
 
     $smarty->assign_by_ref('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
+    $javascript_array = append_version_number($javascript_array);
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
+    $smarty->assign('RELEASE', get_config('release'));
     $siteclosedforupgrade = get_config('siteclosed');
     if ($siteclosedforupgrade && get_config('disablelogin')) {
         $smarty->assign('SITECLOSED', 'logindisabled');
@@ -3749,4 +3751,32 @@ function sorttablearraydesc($a, $b) {
         return strcmp(strtolower($b[$sortvalue]), strtolower($a[$sortvalue]));
     }
     return ($b[$sortvalue] < $a[$sortvalue]) ? -1 : 1;
+}
+
+/**
+ * Add version number to url
+ * This allows auto refreshing of cache when upgrading
+ * or updating Mahara to different version
+ */
+function append_version_number($urls) {
+    if (is_array($urls)) {
+        $formattedurls = array();
+        foreach ($urls as $url) {
+            if (preg_match('/\?/',$url)) {
+                $url .= '&v=' . get_config('release');
+            }
+            else {
+                $url .= '?v=' . get_config('release');
+            }
+            $formattedurls[] = $url;
+        }
+        return $formattedurls;
+    }
+    if (preg_match('/\?/',$urls)) {
+        $urls .= '&v=' . get_config('release');
+    }
+    else {
+        $urls .= '?v=' . get_config('release');
+    }
+    return $urls;
 }

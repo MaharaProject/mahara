@@ -51,7 +51,7 @@ if ($USER->is_logged_in()) {
     $blocktype_js = $view->get_all_blocktype_javascript();
     $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
     $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
-    $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">');
+    $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
     $smarty = smarty(
         $javascript,
         $stylesheets,
