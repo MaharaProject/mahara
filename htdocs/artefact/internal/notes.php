@@ -100,7 +100,8 @@ if ($data) {
             JOIN {view_artefact} va ON bi.id = va.block
             JOIN {view} v ON va.view = v.id
         WHERE
-            va.artefact IN (' . join(',', array_fill(0, count($data), '?')) . ')',
+            va.artefact IN (' . join(',', array_fill(0, count($data), '?')) . ')
+        ORDER BY va.view, bi.title',
         array_keys($data)
     );
     if ($blocks) {
@@ -157,7 +158,8 @@ if ($data) {
                 $data[$b->artefact]->blocks = array();
             }
             if (!isset($data[$b->artefact]->blocks[$b->block])) {
-                $data[$b->artefact]->blocks[$b->block] = $b;
+                $data[$b->artefact]->blocks[$b->block] = (array)$b;
+                (!isset($data[$b->artefact]->views[$b->view]['extrablocks'])) ? $data[$b->artefact]->views[$b->view]['extrablocks'] = 0 : $data[$b->artefact]->views[$b->view]['extrablocks'] ++;
             }
             if (!isset($data[$b->artefact]->tags)) {
                 $data[$b->artefact]->tags = ArtefactType::artefact_get_tags($b->artefact);

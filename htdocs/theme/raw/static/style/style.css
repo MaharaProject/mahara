@@ -2246,9 +2246,6 @@ tr.incomplete td {
     background: #FEE7E7;
 }
 /* Content > My notes */
-#notes td.notetitle {
-    width: 60%;
-}
 #notes td.notetitle .detail iframe {
     overflow-x: hidden;
     width: 100%!important;
