@@ -729,6 +729,14 @@ ul.artefactchooser-subtabs li.current a:active {
     margin: 5px 0 0 0 !important;
 	float: left;
 }
+#blocktype_externalfeed_feed .feedlogoimage img {
+    max-width: 144px;
+    max-height: 400px;
+}
+#blocktype_externalfeed_desc {
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #D1D1D1;
+}
 #containerX ul.colnav li a,
 #containerX ul.colnav li.selected span {
 	padding: 5px 7px;
