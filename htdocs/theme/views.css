@@ -739,6 +739,10 @@ table.maharatable tr#instconf_otherblocksmsg_container td {
 #blocktype_externalfeed_feed .feedlogoimage {
     margin: 10px 0;
 }
+#blocktype_externalfeed_feed .feedlogoimage img {
+    max-width: 144px;
+    max-height: 400px;
+}
 #blocktype_externalfeed_desc {
     padding-bottom: 5px;
     border-bottom: 1px dotted #D1D1D1;
