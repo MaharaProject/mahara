@@ -1461,6 +1461,37 @@ function artefact_instance_from_id($id) {
     safe_require('artefact', $data->plugin);
     return new $classname($id, $data);
 }
+/**
+ * This function returns the current title(s) of an artefact instance
+ * The one(s) in block_inatance table rather than the one in artefact table.
+ * If $viewid and $blockid are provided it will return exact instance title
+ * otherwise it will return a comma separated string of all instance titles
+ * of the artefact.
+ */
+function artefact_title_from_view_and_id($artefactid, $viewid = false, $blockid = false) {
+    $sql = "SELECT bi.title AS currenttitle
+            FROM {artefact} a
+            JOIN {view_artefact} va ON va.artefact = a.id
+            JOIN {block_instance} bi ON bi.id = va.block
+            WHERE va.artefact = ?";
+    if ($viewid && $blockid) {
+        $sql .= " AND va.view = ? AND va.block = ?";
+        if (!$data = get_record_sql($sql, array($artefactid, $viewid, $blockid))) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
+        }
+        return $data->currenttitle;
+    }
+    else {
+        if (!$data = get_records_sql_array($sql, array($artefactid))) {
+            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
+        }
+        $currenttitles = array();
+        foreach ($data as $key => $title) {
+            $currenttitles[$key] = $title->currenttitle;
+        }
+        return implode(', ', $currenttitles);
+    }
+}
 
 /**
  * This function will return an instance of any "0 or 1" artefact. That is any
