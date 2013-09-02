@@ -31,5 +31,9 @@ ul.colnav li a:active {
 #fileimagevideo,
 #external {
     background-color: #ecd2ee;
-    border-color: #f8e9f9;
+    border-color: #dfc9e1;
+}
+.blocktype {
+    background: #d3abd5;
+    border-color: #dfc9e1;
 }

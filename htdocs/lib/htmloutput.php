@@ -40,13 +40,13 @@ function print_export_head($stylesheets) {
             html, body {
                 margin: 0;
                 padding: 0;
-                background-color: #808080;
+                background-color: #d4d4d4;
             }
         </style>
     </head>
     <body>
-    <div style="width: 100%; background-color: #808080;" class="progress-bar"></div>
-    <p class="progress-text"><?php echo get_string('Starting', 'export'); ?></p>
+    <div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>
+    <p class="progress-text" style="color: #000000;"><?php echo get_string('Starting', 'export'); ?></p>
 <?php
 }
 
@@ -60,11 +60,11 @@ function print_export_iframe_die($message, $link=null) {
 
 function print_iframe_progress_handler($percent, $status) {
     // "Erase" the current output with a new background div
-    echo '<div style="width: 100%; background-color: #808080;" class="progress-bar"></div>';
+    echo '<div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>';
     // The progress bar itself
-    echo '<div class="progress-bar" style="width: ' . intval($percent) . '%;"></div>' . "\n";
+    echo '<div class="progress-bar-progress" style="width: ' . intval($percent) . '%; background-color: #cff253;"></div>' . "\n";
     // The status text
-    echo '<p class="progress-text">' . hsc($status) . "</p>\n";
+    echo '<p class="progress-text" style="color: #000000;">' . hsc($status) . "</p>\n";
 }
 
 function print_export_footer($strexportgenerated, $continueurl, $continueurljs, $jsmessages=array(), $newlocation) {
@@ -103,13 +103,13 @@ function print_extractprogress_head($stylesheets, $artefacts) {
             html, body {
                 margin: 0;
                 padding: 0;
-                background-color: #808080;
+                background-color: #d4d4d4;
             }
         </style>
     </head>
     <body>
-    <div style="width: 100%; background-color: #808080;" class="progress-bar"></div>
-    <p class="progress-text"><?php echo get_string('unzipprogress', 'artefact.file', '0/' . $artefacts); ?></p>
+    <div style="width: 100%; background-color: #d4d4d4;" class="progress-bar"></div>
+    <p class="progress-text" style="color: #000000;"><?php echo get_string('unzipprogress', 'artefact.file', '0/' . $artefacts); ?></p>
 <?php
 }
 
