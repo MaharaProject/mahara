@@ -130,12 +130,12 @@ function updateTextContent(a) {
     setNodeAttribute('instconf_license', 'value', a.license);
     setNodeAttribute('instconf_licensor', 'value', a.licensor);
     setNodeAttribute('instconf_licensorurl', 'value', a.licensorurl);
-    $('instconf_textreadonly_display').innerHTML = a.safedescription;
-    $('instconf_licensereadonly_display').innerHTML = a.safelicense;
+    jQuery('#instconf_textreadonly_display').innerHTML = a.safedescription;
+    jQuery('#instconf_licensereadonly_display').innerHTML = a.safelicense;
     setNodeAttribute('instconf_tags', 'value', a.tags);
-    $('instconf_textreadonly_display').innerHTML = a.safedescription;
-    $('instconf_tagsreadonly_display').innerHTML = a.safetags;
-    $('instconf_makecopy').checked = false;
+    jQuery('#instconf_textreadonly_display').innerHTML = a.safedescription;
+    jQuery('#instconf_tagsreadonly_display').innerHTML = a.safetags;
+    jQuery('#instconf_makecopy').prop('checked', false);
     if (a.editable == 1) {
         addElementClass('instconf_textreadonly_header', 'hidden');
         addElementClass('instconf_textreadonly_container', 'hidden');
@@ -146,7 +146,7 @@ function updateTextContent(a) {
         addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
-        if ($('instconf_license_header')) {
+        if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
             removeElementClass('instconf_license_header', 'hidden');
             removeElementClass('instconf_license_container', 'hidden');
@@ -156,8 +156,8 @@ function updateTextContent(a) {
         removeElementClass('instconf_tags_header', 'hidden');
         removeElementClass('instconf_tags_container', 'hidden');
         removeElementClass('instconf_tags_description', 'hidden');
-        var blockcountmsg = $('instconf_otherblocksmsg_container');
-        if (blockcountmsg && $('textbox_blockcount')) {
+        var blockcountmsg = jQuery('#instconf_otherblocksmsg_container');
+        if (blockcountmsg && jQuery('#textbox_blockcount')) {
             var otherblockcount = 0;
             if (a.blocks && a.blocks.length > 0) {
                 for (var i = 0; i < a.blocks.length; i++) {
@@ -168,10 +168,10 @@ function updateTextContent(a) {
             }
             if (otherblockcount) {
                 replaceChildNodes('textbox_blockcount', otherblockcount);
-                removeElementClass(blockcountmsg, 'hidden');
+                jQuery(blockcountmsg).removeClass('hidden');
             }
             else {
-                addElementClass(blockcountmsg, 'hidden');
+                jQuery(blockcountmsg).addClass('hidden');
             }
         }
     }
@@ -179,7 +179,7 @@ function updateTextContent(a) {
         addElementClass('instconf_text_header', 'hidden');
         addElementClass('instconf_text_container', 'hidden');
         addElementClass('instconf_otherblocksmsg_container', 'hidden');
-        if ($('instconf_license_header')) {
+        if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
             addElementClass('instconf_license_header', 'hidden');
             addElementClass('instconf_license_container', 'hidden');
@@ -214,7 +214,7 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
                 i.checked = false;
             }
         });
-        $('instconf_makecopy').checked = true;
+        jQuery('#instconf_makecopy').prop('checked', true);
         addElementClass('instconf_textreadonly_header', 'hidden');
         addElementClass('instconf_textreadonly_container', 'hidden');
         addElementClass('instconf_readonlymsg_container', 'hidden');
@@ -225,7 +225,7 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
         addElementClass('instconf_tagsreadonly_container', 'hidden');
         removeElementClass('instconf_text_header', 'hidden');
         removeElementClass('instconf_text_container', 'hidden');
-        if ($('instconf_license_header')) {
+        if (jQuery('#instconf_license_header').length) {
             // only deal with these if the license metadata is enabled
             removeElementClass('instconf_license_header', 'hidden');
             removeElementClass('instconf_license_container', 'hidden');
