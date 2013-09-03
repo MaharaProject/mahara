@@ -193,73 +193,74 @@ if (ul) {
                 showElement('artefactchooser-searchform');
                 removeElementClass(browseA.parentNode, 'current');
                 addElementClass(searchA.parentNode, 'current');
+
+                connect('artefactchooser-searchfield', 'onkeypress', function(e) {
+                    if (e.key().code == 13) { // enter pressed - submitting form
+                        e.stop();
+                        signal('artefactchooser-searchsubmit', 'onclick', true);
+                    }
+                });
+
+                // Wire up the search button
+                connect('artefactchooser-searchsubmit', 'onclick', function(e) {
+                    if (e._event != true) {
+                        e.stop();
+                    }
+
+                    var loc = searchA.href.indexOf('?');
+                    var queryData = [];
+                    if (loc != -1) {
+                        queryData = parseQueryString(searchA.href.substring(loc + 1, searchA.href.length));
+                        queryData.extradata = serializeJSON(p.extraData);
+                        // need to do this old school as the mochikit js is being called on a jquery page
+                        queryData.search = document.getElementById('artefactchooser-searchfield').value;
+                    }
+
+                    sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
+                        var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
+                        if (tbody) {
+                            if (
+                                (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
+                                ||
+                                (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                                var temp = DIV({'id':'ie-workaround'});
+                                temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
+                                swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                            }
+                            else {
+                                // This does not work in IE and Konqueror, the tbody
+                                // innerHTML property is readonly.
+                                // http://www.ericvasilik.com/2006/07/code-karma.html
+                                tbody.innerHTML = data['data']['tablerows'];
+                            }
+                        }
+
+                        {$artefactchooserdata}
+                        {$artefactchooserselect}
+
+                        // Update the pagination
+                        if ($(p.id)) {
+                            var tmp = DIV();
+                            tmp.innerHTML = data['data']['pagination'];
+                            swapDOM(p.id, tmp.firstChild);
+
+                            // Run the pagination js to make it live
+                            eval(data['data']['pagination_js']);
+
+                            // Update the result count
+                            var results = getFirstElementByTagAndClassName('div', 'results', p.id);
+                            if (results) {
+                                results.innerHTML = data['data']['results'];
+                            }
+                        }
+                    });
+                });
                 $('artefactchooser-searchfield').focus();
                 if (browseTabCurrent) {
                     {$artefactchooserdata}
                     browseTabCurrent = false;
                 }
                 e.stop();
-            });
-
-            connect('artefactchooser-searchfield', 'onkeypress', function(e) {
-                if (e.key().code == 13) { // enter pressed - submitting form
-                    e.stop();
-                    signal('artefactchooser-searchsubmit', 'onclick', true);
-                }
-            });
-
-            // Wire up the search button
-            connect('artefactchooser-searchsubmit', 'onclick', function(e) {
-                if (e._event != true) {
-                    e.stop();
-                }
-
-                var loc = searchA.href.indexOf('?');
-                var queryData = [];
-                if (loc != -1) {
-                    queryData = parseQueryString(searchA.href.substring(loc + 1, searchA.href.length));
-                    queryData.extradata = serializeJSON(p.extraData);
-                    queryData.search = $('artefactchooser-searchfield').value;
-                }
-
-                sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
-                    var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
-                    if (tbody) {
-                        if (
-                            (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
-                            ||
-                            (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
-                            var temp = DIV({'id':'ie-workaround'});
-                            temp.innerHTML = '<table><tbody>' + data.data.tablerows + '</tbody></table>';
-                            swapDOM(tbody, temp.childNodes[0].childNodes[0]);
-                        }
-                        else {
-                            // This does not work in IE and Konqueror, the tbody 
-                            // innerHTML property is readonly.
-                            // http://www.ericvasilik.com/2006/07/code-karma.html
-                            tbody.innerHTML = data['data']['tablerows'];
-                        }
-                    }
-
-                    {$artefactchooserdata}
-                    {$artefactchooserselect}
-
-                    // Update the pagination
-                    if ($(p.id)) {
-                        var tmp = DIV();
-                        tmp.innerHTML = data['data']['pagination'];
-                        swapDOM(p.id, tmp.firstChild);
-
-                        // Run the pagination js to make it live
-                        eval(data['data']['pagination_js']);
-
-                        // Update the result count
-                        var results = getFirstElementByTagAndClassName('div', 'results', p.id);
-                        if (results) {
-                            results.innerHTML = data['data']['results'];
-                        }
-                    }
-                });
             });
         }
     });
