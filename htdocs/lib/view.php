@@ -4425,7 +4425,7 @@ class View {
             $url = '';
         }
         else if ($this->type == 'grouphomepage') {
-            if (!$useid) {
+            if (!$useid && $this->get('group')) {
                 return group_homepage_url($this->get_group_object(), $full);
             }
             $url = 'group/view.php?id=' . $this->group;
