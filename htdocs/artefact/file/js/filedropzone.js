@@ -35,6 +35,7 @@ jQuery(document).ready(function() {
     // Dropzone uploads it's file queue one at a time so to keep
     // a count of uploads we need to override the data.uploadnumber
     var dropzone_uploadnumber = 0;
+    var current_drop_number = 0;
 
     var prefix = j('#file_dropzone_container').attr('class');
     var enclosingform = j('#file_dropzone_container').closest('form');
@@ -52,7 +53,6 @@ jQuery(document).ready(function() {
         paramName: 'userfile'
 
     });
-
 
     // on sending the file append the form field data and the
     // fields that Pieform would normally create
@@ -85,7 +85,12 @@ jQuery(document).ready(function() {
         j('#file_dropzone_container').removeClass('dragover');
     });
 
+    myDropzone.on("selectedfiles", function(userfile) {
+        dropzone_uploadnumber = window[prefix].nextupload - current_drop_number;
+    });
+
     myDropzone.on("addedfile", function(userfile) {
+        current_drop_number ++;
         window[prefix].dragdrop = true;
         window[prefix].upload_presubmit_dropzone(userfile);
         var response = window[prefix].upload_validate();
@@ -98,6 +103,7 @@ jQuery(document).ready(function() {
     // return pieform data - which could contain
     // error, problem or success
     myDropzone.on("success", function(userfile,data) {
+        current_drop_number = 0;
         if (data) {
             try {
                 data = JSON.parse(data);
@@ -116,11 +122,14 @@ jQuery(document).ready(function() {
 
     // handling errors stemming from dropzone itself
     myDropzone.on("error", function(userfile, errmsg, errxhr) {
+        current_drop_number = 0;
         var data = {'error':'true'};
         data['message'] = errmsg;
         if (undefined != errxhr) {
             data['message'] += errxhr;
         }
+        dropzone_uploadnumber ++;
+        data['uploadnumber'] = dropzone_uploadnumber;
         window[prefix].callback(window[prefix].form, data);
     });
 
