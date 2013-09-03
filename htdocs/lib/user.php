@@ -2118,7 +2118,7 @@ function addfriend_submit(Pieform $form, $values) {
  * @param object $user stdclass or User object for the usr table
  * @param array  $profile profile field/values to set
  * @param string|object $institution Institution the user should joined to (name or Institution object)
- * @param stdclass $remoteauth authinstance record for a remote authinstance
+ * @param bool $remoteauth authinstance record for a remote authinstance
  * @param string $remotename username on the remote site
  * @param array $accountprefs user account preferences to set
  * @return integer id of the new user
@@ -2177,7 +2177,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
     }
     $authobj = get_record('auth_instance', 'id', $user->authinstance);
-    if (!empty($remoteauth) && $authobj->authname != 'internal') {
+    $authinstance = AuthFactory::create($authobj->id);
+    // For legacy compatibility purposes, we'll also put the remote auth on there if it has been
+    // specifically requested.
+    if ($authinstance->needs_remote_username() || (!empty($remoteauth))) {
         if (isset($remotename) && strlen($remotename) > 0) {
             $un = $remotename;
         }
@@ -2186,7 +2189,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
         // remote username must not already exist
         if (record_exists('auth_remote_user', 'remoteusername', $un, 'authinstance', $user->authinstance)) {
-            throw new InvalidArgumentException("user_create: remoteusername already exists: ".$un);
+            throw new InvalidArgumentException("user_create: remoteusername already exists: ({$un}, {$user->authinstance})");
         }
         insert_record('auth_remote_user', (object) array(
             'authinstance'   => $user->authinstance,

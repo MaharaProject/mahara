@@ -157,7 +157,8 @@ if (count($authinstances) > 1) {
         // that's the second part of the "if"
         if ($USER->can_edit_institution($authinstance->name) || ($authinstance->id == 1 && $user->authinstance == 1)) {
             $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
-            if ($authinstance->authname != 'internal' && $authinstance->authname != 'none') {
+            $authobj = AuthFactory::create($authinstance->id);
+            if ($authobj->needs_remote_username()) {
                 $externalauthjs[] = $authinstance->id;
                 $external = true;
             }
@@ -178,9 +179,11 @@ if (count($authinstances) > 1) {
             'type'         => 'text',
             'title'        => get_string('remoteusername', 'admin'),
             'description'  => get_string('remoteusernamedescription1', 'admin', hsc(get_config('sitename'))),
-            'defaultvalue' => $un ? $un : $user->username,
             'help'         => true,
         );
+        if ($un) {
+            $elements['remoteusername']['defaultvalue'] = $un;
+        }
     }
     $remoteusernames = json_encode(get_records_menu('auth_remote_user', 'localusr', $id));
     $js = "<script type='text/javascript'>
@@ -205,6 +208,9 @@ if (count($authinstances) > 1) {
                   if (remoteusernames[id]) {
                       // if value exists in auth_remote_user display it
                       jQuery('#edituser_site_remoteusername').val(remoteusernames[id]);
+                  }
+                  else {
+                      jQuery('#edituser_site_remoteusername').val('');
                   }
               }
               else {
@@ -382,9 +388,20 @@ function edituser_site_submit(Pieform $form, $values) {
         // old and new authinstances belong to the admin's institutions
         $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?',
                                              array($values['authinstance'], $user->authinstance));
-        if ($USER->get('admin') ||
-            ($USER->is_institutional_admin($authinst[$values['authinstance']]->institution) &&
-             ($USER->is_institutional_admin($authinst[$user->authinstance]->institution) || $user->authinstance == 1))) {
+        // But don't bother if the auth instance doesn't take a remote username
+        $authobj = AuthFactory::create($values['authinstance']);
+        if (
+                $authobj->needs_remote_username() && (
+                        $USER->get('admin')
+                        || (
+                                $USER->is_institutional_admin($authinst[$values['authinstance']]->institution)
+                                && (
+                                        $USER->is_institutional_admin($authinst[$user->authinstance]->institution)
+                                        || $user->authinstance == 1
+                                )
+                        )
+                )
+        ) {
             // determine the current remoteuser
             $current_remotename = get_field('auth_remote_user', 'remoteusername',
                                             'authinstance', $user->authinstance, 'localusr', $user->id);
@@ -395,34 +412,30 @@ function edituser_site_submit(Pieform $form, $values) {
             if (strlen(trim($values['remoteusername'])) == 0) {
                 delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
             }
-            // we do not create a remoteuser record for internal ai's
-            if ($authinst[$values['authinstance']]->authname != 'internal' &&
-                $authinst[$values['authinstance']]->authname != 'none') {
-                // what should the new remoteuser be
-                $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
-                                            'authinstance', $values['authinstance'], 'localusr', $user->id);
-                // save the remotename for the target existence check
-                $target_remotename = $new_remoteuser;
-                if (!$new_remoteuser) {
-                    $new_remoteuser = $user->username;
+            // what should the new remoteuser be
+            $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
+                                        'authinstance', $values['authinstance'], 'localusr', $user->id);
+            // save the remotename for the target existence check
+            $target_remotename = $new_remoteuser;
+            if (!$new_remoteuser) {
+                $new_remoteuser = $user->username;
+            }
+            if (strlen(trim($values['remoteusername'])) > 0) {
+                // value changed on page - use it
+                if ($values['remoteusername'] != $current_remotename) {
+                    $new_remoteuser = $values['remoteusername'];
                 }
-                if (strlen(trim($values['remoteusername'])) > 0) {
-                    // value changed on page - use it
-                    if ($values['remoteusername'] != $current_remotename) {
-                        $new_remoteuser = $values['remoteusername'];
-                    }
-                }
-                // only update remote name if the input actually changed on the page  or it doesn't yet exist
-                if ($current_remotename != $new_remoteuser || !$target_remotename) {
-                    // only remove the ones related to this traget authinstance as we now allow multiple
-                    // for dual login mechanisms
-                    delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
-                    insert_record('auth_remote_user', (object) array(
-                        'authinstance'   => $values['authinstance'],
-                        'remoteusername' => $new_remoteuser,
-                        'localusr'       => $user->id,
-                    ));
-                }
+            }
+            // only update remote name if the input actually changed on the page  or it doesn't yet exist
+            if ($current_remotename != $new_remoteuser || !$target_remotename) {
+                // only remove the ones related to this traget authinstance as we now allow multiple
+                // for dual login mechanisms
+                delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
+                insert_record('auth_remote_user', (object) array(
+                    'authinstance'   => $values['authinstance'],
+                    'remoteusername' => $new_remoteuser,
+                    'localusr'       => $user->id,
+                ));
             }
             // update the ai on the user master
             $user->authinstance = $values['authinstance'];
