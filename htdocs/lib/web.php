@@ -3483,8 +3483,8 @@ function build_pagination($params) {
             $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
     }
 
-    // Build limitoptions dropbox
-    if ($params['setlimit']) {
+    // Build limitoptions dropbox if results are more than 10 (minimum dropbox pagination)
+    if ($params['setlimit'] && $params['count'] > 10) {
         $strlimitoptions = array();
         $limit = $params['limit'];
         for ($i = 0; $i < count($limitoptions); $i++) {
