@@ -729,6 +729,14 @@ h1#viewh1 {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+#blocktype_externalfeed_feed .feedlogoimage img {
+    max-width: 144px;
+    max-height: 400px;
+}
+#blocktype_externalfeed_desc {
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #D1D1D1;
+}
 div.colnav1 {
     clear: both;
     margin: 0;
