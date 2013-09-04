@@ -369,3 +369,14 @@ $cfg->additionalhtlmfooter = '';
 
 // Whether to display extended debugging messages in the auth/ldap user & group synchronization cron task.
 // $cfg->auth_ldap_debug_sync_cron = false;
+
+// When turned on, this setting means that it doesn't matter which other application the user SSOs from, the same
+// username string from a remote SSO will be given the same account in Mahara.
+//
+// This setting is one that has security implications unless only turned on by people who know what they're doing. In
+// particular, every system linked to Mahara should be making sure that same username == same person.  This happens for
+// example if two Moodles are using the same LDAP server for authentication.
+//
+// If this setting is on, it must NOT be possible to self register on the site for ANY institution - otherwise users
+// could simply pick usernames of people's accounts they wished to steal.
+$cfg->usersuniquebyusername = false;
