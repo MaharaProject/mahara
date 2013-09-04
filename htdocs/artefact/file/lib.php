@@ -2382,11 +2382,14 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
     public static function is_valid_file($path, $data) {
         $validtypes = self::video_mime_types();
-        if (!isset($validtypes[$data->guess])) {
-            return false;
+        if (isset($validtypes[$data->guess])) {
+            $data->filetype = $data->guess;
+            return true;
         }
-        $data->filetype = $data->guess;
-        return true;
+        else if (!empty($validtypes[$data->filetype])) {
+            return true;
+        }
+        return false;
     }
 
     public static function video_file_descriptions() {
@@ -2425,11 +2428,14 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function is_valid_file($path, $data) {
         $validtypes = self::audio_mime_types();
-        if (!isset($validtypes[$data->guess])) {
-            return false;
+        if (isset($validtypes[$data->guess])) {
+            $data->filetype = $data->guess;
+            return true;
         }
-        $data->filetype = $data->guess;
-        return true;
+        else if (!empty($validtypes[$data->filetype])) {
+            return true;
+        }
+        return false;
     }
 
     public static function audio_file_descriptions() {
