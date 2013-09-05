@@ -849,6 +849,9 @@ class BlockInstance {
                     'type'  => 'hidden',
                     'value' => $new,
                 ),
+            ),
+            $elements,
+            array (
                 'retractable' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('retractable', 'view'),
@@ -862,8 +865,7 @@ class BlockInstance {
                     'defaultvalue' => $retractedonload,
                     'disabled'     => !$retractable,
                 ),
-            ),
-            $elements
+            )
         );
 
         if ($new) {
