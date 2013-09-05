@@ -32,6 +32,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
+require_once(get_config('docroot') . '/artefact/lib.php');
 
 $fileid = param_integer('file');
 $viewid = param_integer('view');
@@ -50,6 +51,6 @@ if (!($file instanceof ArtefactTypeFile)) {
 }
 
 $smarty = smarty();
-$smarty->assign('url', get_config('wwwroot') . 'artefact/file/download.php?file=' . $fileid);
+$smarty->assign('url', get_config('wwwroot') . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid);
 $smarty->assign('title', $file->get('title'));
 $smarty->display('blocktype:pdf:pdf.tpl');
