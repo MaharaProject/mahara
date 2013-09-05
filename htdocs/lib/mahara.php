@@ -45,13 +45,15 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
     }
     switch (get_config('dbtype')) {
-    case 'postgres8':
+    case 'postgres':
+    case 'postgres8': // for legacy purposes we also accept "postgres8"
         if (!extension_loaded('pgsql')) {
             throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
         }
         break;
-    case 'mysql5':
-        if (!extension_loaded('mysql')) {
+    case 'mysql':
+    case 'mysql5': // for legacy purposes we also accept "mysql5"
+        if (!extension_loaded('mysqli') && !extension_loaded('mysql')) {
             throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
         }
         break;

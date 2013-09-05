@@ -120,13 +120,20 @@ try {
     // the error is instead.
     ob_start();
 
+    // Transform $CFG->dbtype into the name of the ADODB driver we will use
     if (is_postgres()) {
         $CFG->dbtype = 'postgres7';
     }
     else if (is_mysql()) {
-        $CFG->dbtype = 'mysql';
+        // If they have mysqli, use it. Otherwise, fall back to the older "mysql" extension.
+        if (extension_loaded('mysqli')) {
+            $CFG->dbtype = 'mysqli';
+        }
+        else {
+            $CFG->dbtype = 'mysql';
+        }
     }
-    
+
     $db = &ADONewConnection($CFG->dbtype);
     if (empty($CFG->dbhost)) {
         $CFG->dbhost = '';

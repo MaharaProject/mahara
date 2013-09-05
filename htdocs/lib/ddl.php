@@ -119,6 +119,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
 
         case 'mysql':
         case 'mysqlt':
+        case 'mysqli':
 
             switch (strtolower($type)) {
                 case 'text':

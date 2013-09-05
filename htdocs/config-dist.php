@@ -45,9 +45,9 @@ $cfg = new stdClass();
 
 /**
  * database connection details
- * valid values for dbtype are 'postgres8' and 'mysql5'
+ * valid values for dbtype are 'postgres' and 'mysql'
  */
-$cfg->dbtype   = 'postgres8';
+$cfg->dbtype   = 'postgres';
 $cfg->dbhost   = 'localhost';
 $cfg->dbport   = null;
 $cfg->dbname   = '';

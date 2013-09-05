@@ -1349,5 +1349,9 @@ function site_warnings() {
         $warnings[] = get_string('mbstringneeded', 'error');
     }
 
+    if (get_config('dbtype') == 'mysql') {
+        $warnings[] = get_string('switchtomysqli', 'error');
+    }
+
     return $warnings;
 }

@@ -28,7 +28,7 @@
 /// It extends XMLDBgenerator so everything can be
 /// overriden as needed to generate correct SQL.
 
-class XMLDBmysql extends XMLDBGenerator {
+class XMLDBmysqli extends XMLDBGenerator {
 
 /// Only set values that are different from the defaults present in XMLDBgenerator
 
@@ -76,9 +76,9 @@ class XMLDBmysql extends XMLDBGenerator {
     var $unique_keys = true;  // Does the generator build unique keys
     var $foreign_keys = true; // Does the generator build foreign keys
     /**
-     * Creates one new XMLDBmysql
+     * Creates one new XMLDBmysqli
      */
-    function XMLDBmysql() {
+    function XMLDBmysqli() {
         parent::XMLDBGenerator();
         global $CFG;
         $this->prefix = '';
