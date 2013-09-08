@@ -2829,6 +2829,28 @@ function get_relative_script_path() {
 }
 
 /**
+ * Get query string from url
+ *
+ * Takes in a URL and returns the querystring portion
+ * or returns $_SERVER['QUERY_STRING']) if set
+ *
+ * @param string $url the url which may have a query string attached
+ * @return string
+ */
+function get_querystring($url = null) {
+
+    if (!empty($url) && $commapos = strpos($url, '?')) {
+        return substr($url, $commapos + 1);
+    }
+    else if (!empty($_SERVER['QUERY_STRING'])) {
+        return $_SERVER['QUERY_STRING'];
+    }
+    else {
+        return '';
+    }
+}
+
+/**
  * Remove query string from url
  *
  * Takes in a URL and returns it without the querystring portion

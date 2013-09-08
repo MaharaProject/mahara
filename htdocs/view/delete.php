@@ -51,7 +51,10 @@ else if ($institution) {
     $goto = 'institutionviews.php?institution=' . $institution;
 }
 else {
-    $goto = 'index.php';
+    $query = get_querystring();
+    // remove the id
+    $query = preg_replace('/id=([0-9]+)\&/','',$query);
+    $goto = 'index.php?' . $query;
 }
 
 define('TITLE', get_string('deletespecifiedview', 'view', $view->get('title')));
@@ -77,7 +80,7 @@ $smarty->assign('form', $form);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $viewid, $groupid, $institution;
+    global $SESSION, $USER, $viewid, $groupid, $institution, $goto;
     $view = new View($viewid, null);
     if (View::can_remove_viewtype($view->get('type')) || $USER->get('admin')) {
         $view->delete();
@@ -92,5 +95,5 @@ function deleteview_submit(Pieform $form, $values) {
     if ($institution) {
         redirect('/view/institutionviews.php?institution='.$institution);
     }
-    redirect('/view/index.php');
+    redirect('/view/' . $goto);
 }
