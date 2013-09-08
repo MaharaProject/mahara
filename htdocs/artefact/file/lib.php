@@ -354,8 +354,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     // Sort folders before files; then use nat sort order.
     public static function my_files_cmp($a, $b) {
-        return strnatcasecmp((-2 * isset($a->isparent) + ($a->artefacttype != 'folder')) . $a->title,
-                             (-2 * isset($b->isparent) + ($b->artefacttype != 'folder')) . $b->title);
+        return strnatcasecmp((-2 * isset($a->isparent) + ($a->artefacttype != 'folder')) . 'a' . $a->title,
+                             (-2 * isset($b->isparent) + ($b->artefacttype != 'folder')) . 'a' . $b->title);
     }
 
 
