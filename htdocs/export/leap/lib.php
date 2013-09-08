@@ -287,6 +287,7 @@ class PluginExportLeap extends PluginExport {
             }
             $this->smarty->assign('viewdata',    $config['rows']);
             $layout = $view->get_layout();
+            $widths = '';
             foreach ($layout->rows as $row){
                 $widths .= $row['widths'] . '-';
             }
