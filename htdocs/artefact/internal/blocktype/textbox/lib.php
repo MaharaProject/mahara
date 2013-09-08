@@ -484,9 +484,9 @@ EOF;
             $data = array(
                 'title'       => $biconfig['title'],
                 'description' => $configdata['text'],
-                'license' => $configdata['license'],
-                'licensor' => $configdata['licensor'],
-                'licensorurl' => $configdata['licensorurl'],
+                'license' => (!empty($configdata['license'])) ? $configdata['license'] : '',
+                'licensor' => (!empty($configdata['licensor'])) ? $configdata['licensor'] : '',
+                'licensorurl' => (!empty($configdata['licensorurl'])) ? $configdata['licensorurl'] : '',
                 'tags'        => $configdata['tags'],
                 'owner'       => $viewconfig['owner'],
             );

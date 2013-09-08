@@ -816,21 +816,18 @@ class PluginImportLeap extends PluginImport {
                 return false;
             }
             $columnids = array();
-
             foreach ($columnlayouts as $columnlayout) {
                 foreach ($rowwidths as $key => $widths) {
                     if ($columnlayout->widths == $widths) {
                         $columnids[$key+1] = $columnlayout->id;
-                        $sql .= ' AND (rc.row =' . ($key+1) . ' AND rc.columns=' . $columnlayout->id .')';
                     }
                 }
             }
-
             if (count($columnids) != $rowcount) {
                 $this->trace("Invalid row widths were specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
                 return false;
             }
-
+            $rowscolssql = '';
             for ($i=0; $i<count($columnids); $i++) {
                 $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $columnids[$i+1] . ')';
                 if ($i != (count($columnids)-1)) {
@@ -839,18 +836,25 @@ class PluginImportLeap extends PluginImport {
             }
 
             // search in default layout options for a match
-            $sql = 'SELECT vlr.id
-                    FROM {view_layout_rows} vlr
-                    JOIN (SELECT id, count(*) rec_count
+            // this will return first possible match with exact match (if any)
+            // at front of possibles. More than one possible match can occur
+            // if there are 3 or more rows in leap2a layout and 2 of those rows
+            // match more than one possible view layout.
+            $sql = 'SELECT vlrc.viewlayout AS id
+                    FROM {view_layout} vl, {view_layout_rows_columns} vlrc
+                    JOIN (SELECT viewlayout, COUNT(*)
                           FROM {view_layout_rows_columns}
-                          WHERE ' . $rowscolssql . '
                           GROUP BY viewlayout
-                          HAVING rec_count = ?) vlrc
-                    ON vlr.id = vlrc.viewlayout
-                    WHERE vlr.rows = ?
-                    AND vlr.owner = 0';
+                          HAVING COUNT(viewlayout) = ?) vlrc2
+                    ON vlrc.viewlayout = vlrc2.viewlayout
+                    WHERE ' . $rowscolssql . '
+                    AND vl.id = vlrc.viewlayout
+                    AND vl.iscustom = 0
+                    GROUP BY vlrc.viewlayout
+                    ORDER BY COUNT(vlrc.viewlayout) DESC
+                    LIMIT 1';
+            $layout = get_record_sql($sql, array($rowcount));
 
-            $layout = get_record_sql($sql, array($rowcount, $rowcount));
             if (!$layout) {
                 $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
                 return false;
