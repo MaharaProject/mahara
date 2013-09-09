@@ -309,6 +309,13 @@ function editpost_submit(Pieform $form, $values) {
     $old = $postobj->attachment_id_list();
     // $new = is_array($values['filebrowser']['selected']) ? $values['filebrowser']['selected'] : array();
     $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+    // only allow the attaching of files that exist and are editable by user
+    foreach ($new as $key => $fileid) {
+        $file = artefact_instance_from_id($fileid);
+        if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+            unset($new[$key]);
+        }
+    }
     if (!empty($new) || !empty($old)) {
         foreach ($old as $o) {
             if (!in_array($o, $new)) {

@@ -579,6 +579,21 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         );
     }
 
+    public static function instance_config_validate($form, $values) {
+        global $USER;
+
+        if (!empty($values['images'])) {
+            foreach ($values['images'] as $id) {
+                $image = new ArtefactTypeImage($id);
+                if (!($image instanceof ArtefactTypeImage) || !$USER->can_publish_artefact($image)) {
+                    $result['message'] = get_string('unrecoverableerror', 'error');
+                    $form->set_error(null, $result['message']);
+                    $form->reply(PIEFORM_ERR, $result);
+                }
+            }
+        }
+    }
+
     public static function instance_config_save($values) {
         if ($values['select'] == 0) {
             $values['artefactid'] = $values['folder'];
