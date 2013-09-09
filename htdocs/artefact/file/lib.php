@@ -477,7 +477,13 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
                 if ($group) {
-                    if ($item->author == $USER->get('id')) {
+                    // site public files
+                    if ($institution == 'mahara' && ArtefactTypeFolder::admin_public_folder_id() == $parentfolderid) {
+                        $item->can_edit = 0;
+                        $item->can_view = 1;
+                        $item->can_republish = 1;
+                    }
+                    else if (!empty($item->author) && $item->author == $USER->get('id')) {
                         $item->can_edit = 1;
                         $item->can_view = 1;
                         $item->can_republish = 1;
@@ -488,8 +494,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                         $item->can_republish = $can_view_parent && $item->can_republish;
                     }
                 }
-                if ($group && $item->author == $USER->get('id')) {
-                    $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
+                if (!empty($item->author)) {
+                    if ($group && $item->author == $USER->get('id')) {
+                        $item->can_edit = 1;    // This will show the delete, edit buttons in filelist, but doesn't change the actual permissions in the checkbox
+                    }
                 }
             }
             $where = 'artefact IN (' . join(',', array_keys($filedata)) . ')';
