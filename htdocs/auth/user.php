@@ -945,6 +945,8 @@ class User {
     }
 
     public function can_view_artefact($a) {
+        global $USER;
+
         $parent = $a->get_parent_instance();
         if ($parent) {
             if (!$this->can_view_artefact($parent)) {
@@ -955,6 +957,15 @@ class User {
             || ($this->get('id') and $this->get('id') == $a->get('owner'))
             || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))) {
             return true;
+        }
+        // public site files
+        else if ($a->get('institution') == 'mahara') {
+            $thisparent = $a->get('parent');
+            // if we are looking at the public folder or items in it
+            if (($a->get('id') == ArtefactTypeFolder::admin_public_folder_id())
+                ||  (!empty($thisparent) && $thisparent == ArtefactTypeFolder::admin_public_folder_id())) {
+                return true;
+            }
         }
         if ($a->get('group')) {
             // Only group artefacts can have artefact_access_role & artefact_access_usr records

@@ -215,7 +215,7 @@ $smarty->display('artefact:resume:editgoalsandskills.tpl');
 
 
 function editgoalsandskills_submit(Pieform $form, array $values) {
-    global $SESSION, $artefact;
+    global $SESSION, $artefact, $USER;
 
     db_begin();
     $artefact->set('title', get_string($values['artefacttype'], 'artefact.resume'));
@@ -225,6 +225,13 @@ function editgoalsandskills_submit(Pieform $form, array $values) {
     // Attachments
     $old = $artefact->attachment_id_list();
     $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+    // only allow the attaching of files that exist and are editable by user
+    foreach ($new as $key => $fileid) {
+        $file = artefact_instance_from_id($fileid);
+        if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+            unset($new[$key]);
+        }
+    }
     if (!empty($new) || !empty($old)) {
         foreach ($old as $o) {
             if (!in_array($o, $new)) {

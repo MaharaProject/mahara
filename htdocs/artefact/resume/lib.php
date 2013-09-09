@@ -595,6 +595,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
      * TODO: expand on these docs.
      */
     public static function ensure_composite_value($values, $compositetype, $owner) {
+        global $USER;
         if (!in_array($compositetype, self::get_composite_artefact_types())) {
             throw new SystemException("ensure_composite_value called with invalid composite type");
         }
@@ -685,6 +686,13 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         if (array_key_exists('filebrowser', $values)) {
             $old = $a->attachment_id_list_with_item($itemid);
             $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+            // only allow the attaching of files that exist and are editable by user
+            foreach ($new as $key => $fileid) {
+                $file = artefact_instance_from_id($fileid);
+                if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+                    unset($new[$key]);
+                }
+            }
             if (!empty($new) || !empty($old)) {
                 foreach ($old as $o) {
                     if (!in_array($o, $new)) {

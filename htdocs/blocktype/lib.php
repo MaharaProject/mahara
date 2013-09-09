@@ -514,8 +514,31 @@ class BlockInstance {
         throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
     }
 
+    // returns false if it finds a bad attachment
+    // returns true if all attachments are allowed
+    private function verify_attachment_permissions($id) {
+        global $USER;
+
+        if (is_array($id)) {
+            foreach ($id as $id) {
+                $file = artefact_instance_from_id($id);
+                if (!$USER->can_publish_artefact($file)) {
+                    // bail out now as at least one attachment is bad
+                    return false;
+                }
+            }
+        }
+        else {
+            $file = artefact_instance_from_id($id);
+            if (!$USER->can_publish_artefact($file)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function instance_config_store(Pieform $form, $values) {
-        global $SESSION;
+        global $SESSION, $USER;
 
         // Destroy form values we don't care about
         unset($values['sesskey']);
@@ -525,6 +548,22 @@ class BlockInstance {
         unset($values['id']);
         unset($values['change']);
         unset($values['new']);
+
+        // make sure that user is allowed to publish artefact. This is to stop
+        // hacking of form value to attach other users private data.
+        $badattachment = false;
+        if (!empty($values['artefactid'])) {
+            $badattachment = !$this->verify_attachment_permissions($values['artefactid']);
+        }
+        if (!empty($values['artefactids'])) {
+            $badattachment = !$this->verify_attachment_permissions($values['artefactids']);
+        }
+        if ($badattachment) {
+            $result['message'] = get_string('unrecoverableerror', 'error');
+            $form->set_error(null, $result['message']);
+            $form->reply(PIEFORM_ERR, $result);
+            exit();
+        }
 
         $redirect = '/view/blocks.php?id=' . $this->get('view');
         if (param_boolean('new', false)) {

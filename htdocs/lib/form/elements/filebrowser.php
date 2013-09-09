@@ -100,6 +100,16 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             else {
                 $value = null;
             }
+            // check to see if attached artefact items in $value array are actually allowed
+            // to be seen by this user
+            if (!empty($value)) {
+                foreach ($value as $k => $v) {
+                    $file = artefact_instance_from_id($v);
+                    if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+                        unset($value[$k]);
+                    }
+                }
+            }
             $selected = $element['selectlistcallback']($value);
         }
         $smarty->assign('selectedlist', $selected);
