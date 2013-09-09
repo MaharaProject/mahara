@@ -59,8 +59,12 @@ else { // edit post
     $parentid = $post->parent;
 }
 
+if (!$parentid) {
+    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
+}
+
 $parent = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, p.deleted, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group AS "group", f.title AS forumtitle, g.name AS groupname, COUNT(p3.id)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -71,18 +75,14 @@ $parent = get_record_sql(
         INNER JOIN {usr} u ON (m.user = u.id AND u.deleted = 0)
     ) m ON (m.forum = f.id AND m.user = p.poster)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
-    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
+    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
-    AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15',
     array(0, $parentid)
 );
 
-if (!$parent) {
-    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
-}
 
 define('GROUP', $parent->group);
 
@@ -90,6 +90,9 @@ $membership = user_can_access_forum((int)$parent->forum);
 $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!isset($postid)) { // post reply
+    if ($parent->deleted) {
+        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
+    }
     if (!group_within_edit_window($parent->group)) {
         throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
     }
