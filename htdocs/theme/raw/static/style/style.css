@@ -3698,8 +3698,7 @@ ul.searchtab li span.inactive {
     background: #F8F3F2;
     margin-bottom: 10px;
 }
-.deletetag h3,
-.deletetag h3 a {
+.deletetag h3 {
     color: #CA0000;
 }
 /* User profile page */

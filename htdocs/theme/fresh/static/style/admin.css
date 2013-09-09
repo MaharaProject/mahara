@@ -12,8 +12,8 @@
     color: #BEE3F1;
 }
 #close-site {
-	color: #333333;
-	background: #eccccc;
+    color: #BEE3F1;
+	background: #3e0000;
 }
 /* Admin home > Site statistics */
 .site-stats-table div {
@@ -30,7 +30,7 @@
 }
 /* Configure site > Networking */
 #networkingform_deletesubmit_container {
-    background: #ECCCCC;
+	background: #3e0000;
 }
 #networkingform_deletesubmit_container label {
     color: #CA0000;
@@ -43,8 +43,8 @@
     background-color: #1A292F;
 }
 #suspenddelete #delete {
-	color: #333333;
-	background: #eccccc;
+    color: #BEE3F1;
+	background: #3e0000;
 }
 /* Users > Site staff */
 .userlistform {
@@ -69,10 +69,7 @@
 }
 /* Institutions > Institutions > Edit */
 #suspendinstitution {
-	background: #eccccc;
-}
-#suspendinstitution .description {
-	color: #333333;
+	background: #3e0000;
 }
 #institution fieldset.collapsible table tr.checkbox {
     border-top: 1px dotted #24353c;
