@@ -305,9 +305,36 @@ class Institution {
             require_once('activity.php');
             activity_occurred('institutionmessage', $message);
             handle_event('updateuser', $user->id);
+            // If the total number of accounts has been reached, send an email to the institution
+            // and site administrators notifying them of the fact.
+            if ($this->isFull()) {
+                $this->send_admin_institution_is_full_message();
+            }
             db_commit();
         } else if ($request->confirmedinstitution) {
             $this->addUserAsMember($user);
+        }
+    }
+
+    public function send_admin_institution_is_full_message(){
+        // get the site admin and institution admin user records.
+        $admins = $this->institution_and_site_admins();
+        // check if there are admins - otherwise there are no site admins?!?!?
+        if (count($admins) > 0) {
+            require_once('activity.php');
+            // send an email/message to each amdininistrator based on their specific language.
+            foreach ($admins as $index => $id) {
+                $lang = get_user_language($id);
+                $user = new User();
+                $user->find_by_id($id);
+                $message = (object) array(
+                    'users'   => array($id),
+                    'subject' => get_string_from_language($lang, 'institutionmembershipfullsubject'),
+                    'message' => get_string_from_language($lang, 'institutionmembershipfullmessagetext', 'mahara',
+                            $user->firstname, $this->displayname, get_config('sitename'), get_config('sitename')),
+                );
+                activity_occurred('maharamessage', $message);
+            }
         }
     }
 
@@ -552,13 +579,30 @@ class Institution {
     /**
      * Returns the current institution admin member records
      *
-     * @return array  A data structure containing admins
+     * @return array  A data structure containing site admins
      */
     public function admins() {
         if ($results = get_records_sql_array('
             SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
             WHERE i.institution = ? AND u.deleted = 0 AND i.admin = 1', array($this->name))) {
-            return array_map(create_function('$a', 'return $a->id;'), $results);
+            return array_map('extract_institution_user_id', $results);
+        }
+        return array();
+    }
+
+    /**
+     * Returns the current institution and site admin records
+     *
+     * @return array  A data structure containing site and institution admins
+     */
+    public function institution_and_site_admins() {
+        if ($results = get_records_sql_array('
+            SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0 AND i.admin = 1
+            UNION
+            SELECT u.id FROM {usr} u
+            WHERE u.deleted = 0 AND u.admin = 1', array($this->name))) {
+            return array_map('extract_institution_user_id', $results);
         }
         return array();
     }
@@ -572,7 +616,7 @@ class Institution {
         if ($results = get_records_sql_array('
             SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
             WHERE i.institution = ? AND u.deleted = 0 AND i.staff = 1', array($this->name))) {
-            return array_map(create_function('$a', 'return $a->id;'), $results);
+            return array_map('extract_institution_user_id', $results);
         }
         return array();
     }
@@ -805,4 +849,12 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
 
 function institution_display_name($name) {
     return get_field('institution', 'displayname', 'name', $name);
+}
+
+/**
+ * Callback function to extract user ID from an object.
+ * @param object $input
+ */
+function extract_institution_user_id($input) {
+    return $input->id;
 }

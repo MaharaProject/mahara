@@ -617,6 +617,15 @@ $string['noinstitutionadminfound'] = 'No institution administrators were found.'
 $string['Memberships'] = 'Memberships';
 $string['Requests'] = 'Requests';
 $string['Invitations'] = 'Invitations';
+$string['institutionmembershipfullsubject'] = 'Institution membership quota reached';
+$string['institutionmembershipfullmessagetext'] = 'Hello %s,
+
+The maximum number of users for %s on %s has been reached.
+
+Please clean up existing user accounts or ask to have the maximum number of allowed user accounts increased for this institution. Any site administrator can increase the limit.
+
+Regards,
+The %s Team';
 
 $string['config'] = 'Configuration';
 
