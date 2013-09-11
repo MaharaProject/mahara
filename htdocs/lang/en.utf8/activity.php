@@ -56,6 +56,8 @@ $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessage'] = 'New activity on your watchlist';
 $string['newwatchlistmessageview1'] = 'The page "%s" belonging to %s has been changed';
+$string['blockinstancenotification'] = 'The block "%s" has been added or changed';
+$string['nonamegiven'] = 'no name given';
 
 $string['newviewsubject'] = 'New page created';
 $string['newviewmessage'] = '%s has created a new page "%s"';

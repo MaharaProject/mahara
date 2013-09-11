@@ -1112,6 +1112,10 @@ class BlockInstance {
             $this->dirty = false;
             return;
         }
+
+        //Propagate the deletion of the block
+        handle_event('deleteblockinstance', $this);
+
         db_begin();
         safe_require('blocktype', $this->get('blocktype'));
         call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);

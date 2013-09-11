@@ -1767,8 +1767,6 @@ class View {
             $data = (object)array(
                 'view' => $this->get('id'),
             );
-            require_once('activity.php');
-            activity_occurred('watchlist', $data);
 
             if (!defined('JSON')) {
                 $message = $this->get_viewcontrol_ok_string($action);
@@ -2700,6 +2698,7 @@ class View {
                 }
                 $this->set('theme', $theme);
                 $this->commit();
+                handle_event('saveview', $this->get('id'));
             }
         }
     }

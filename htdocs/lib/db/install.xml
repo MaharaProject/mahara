@@ -1203,5 +1203,20 @@
                 <KEY NAME="nameuk" TYPE="unique" FIELDS="name"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="watchlist_queue">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key"/>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="The User whose data are appended"/>
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="the block that has been comitted"/>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="the view where the block resides"/>
+                <FIELD NAME="changed_on" TYPE="datetime" NOTNULL="true" COMMENT="the time of the change"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id"/>
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
