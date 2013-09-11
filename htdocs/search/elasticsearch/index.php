@@ -84,6 +84,7 @@ PluginSearchElasticsearch::build_results_html($data);
 $searchform = array(
     'name' => 'search',
     'renderer' => 'oneline',
+    'checkdirtychange' => false,
     'elements' => array(),
 );
 

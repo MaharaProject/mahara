@@ -3595,6 +3595,10 @@ function build_pagination($params) {
             <input class="pagination js-hidden" type="submit" name="submit" value="' . get_string('change') . '"/>
         </form>';
     }
+    // if $params['count'] is less than 10 add the setlimitselect as a hidden field so that elasticsearch js can access it
+    else if ($params['setlimit']) {
+        $output .= '<input type="hidden" id="setlimitselect" name="limit" value="' . $params['limit'] . '">';
+    }
 
     // Work out what javascript we need for the paginator
     $js = '';
