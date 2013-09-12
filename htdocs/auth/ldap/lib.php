@@ -249,13 +249,22 @@ class AuthLdap extends Auth {
                 continue;
             }
 
-            $lastcolon = strrpos($server, ":");
-            if ($lastcolon !== FALSE && preg_match('/^([0-9]+)$/', $port = substr($server, $lastcolon + 1))) {
-                $server = substr($server, 0, $lastcolon);
-                $connresult = ldap_connect($server, $port);
-            }
-            else {
+            // If ldap_connect's first argument has a protocol (ldap://, ldaps://, ldapi://, etc)
+            // in front of it, it ignores the second argument.
+            if (preg_match('#^[a-z]+://#i', $server)) {
                 $connresult = ldap_connect($server);
+            }
+            // ... but if ldap_connect's first argument doesn't have a protocol, the port number
+            // needs to be sent separately, as the second argument
+            else {
+                $lastcolon = strrpos($server, ":");
+                if ($lastcolon !== FALSE && preg_match('/^([0-9]+)$/', $port = substr($server, $lastcolon + 1))) {
+                    $server = substr($server, 0, $lastcolon);
+                    $connresult = ldap_connect($server, $port);
+                }
+                else {
+                    $connresult = ldap_connect($server);
+                }
             }
             // ldap_connect returns ALWAYS true
 
