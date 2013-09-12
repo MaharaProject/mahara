@@ -238,8 +238,12 @@ forEach(getElementsByTagAndClassName('a', 'copytextboxnote', 'instconf'), functi
     });
 });
 augment_tags_control('instconf_tags');
-removeElementClass('instconf_license', 'hidden');
-removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
+if (jQuery('#instconf_license').length) {
+    removeElementClass('instconf_license', 'hidden');
+}
+if (jQuery('#instconf_license_advanced_fieldset').length) {
+    removeElementClass(getFirstElementByTagAndClassName('fieldset', null, 'instconf_license_advanced_fieldset'), 'hidden');
+}
 EOF;
     }
 
