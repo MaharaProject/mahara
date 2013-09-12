@@ -400,6 +400,8 @@ $string['eventlogexpirydescription'] = 'How long to keep the event log.';
 $string['eventloglevelnone'] = 'None';
 $string['eventloglevelmasq'] = 'Masquerading';
 $string['eventloglevelall'] = 'All';
+$string['sitefilesaccess'] = 'Access to site files';
+$string['sitefilesaccessdescription'] = 'If checked, logged-in users will have access to site files in subfolders. By default, only files in the top level directory are accessible to them.';
 
 // Site content
 $string['about']               = 'About';
