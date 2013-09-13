@@ -50,7 +50,15 @@ $numcolumns = $view->get('numcolumns');
 $layoutcolumns = View::$layoutcolumns; // static, all possible column width combinations
 $layoutrows = $view->get_layoutrows();
 $maxlayoutrows = View::$maxlayoutrows; // static, max possible rows for custom layouts
-$basicoptionids = array(1,2,3,4,5,6,14,17,19,21); // most commonly used layouts - present these as basic option
+$basicoptionids = array_keys(
+        get_records_select_assoc(
+                'view_layout',
+                'layoutmenuorder > 0 AND iscustom = 0',
+                array(),
+                'layoutmenuorder',
+                'id, id'
+        )
+);
 $currentlayout = $view->get('layout');
 // if not set, use equal width layout for that number of columns
 if (!$currentlayout) {

@@ -79,12 +79,26 @@ class View {
     private $skin;
 
     /**
+     * Which view layout is considered the "default" for views with the given
+     * number of columns. Must be present in $layouts of course.
+     */
+    public static $defaultcolumnlayouts = array(
+            1 => '100',
+            2 => '50,50',
+            3 => '33,33,33',
+            4 => '25,25,25,25',
+            5 => '20,20,20,20,20',
+    );
+
+    /**
      * Valid view column layouts. These are read at install time and inserted into
      * view_layout_columns, but not updated afterwards, so if you're changing one
      * you'll need to do that manually.
-     * A hash of columns => list of view widths
+     *
+     * The key represents the number of columns, and the value is an array of all the
+     * view_layout_columns records that have that number of columns
      */
-    public static $layouts = array(
+    public static $basic_column_layouts = array(
         1 => array(
             '100',
         ),
@@ -110,108 +124,109 @@ class View {
     );
 
     /**
-     * Which view layout is considered the "default" for views with the given
-     * number of columns. Must be present in $layouts of course.
-     */
-    public static $defaultcolumnlayouts = array(
-            1 => '100',
-            2 => '50,50',
-            3 => '33,33,33',
-            4 => '25,25,25,25',
-            5 => '20,20,20,20,20',
-    );
-    /**
      * The default layout options to be read at install time.
      * Each view_layout record is based on the array key and the count of its values.
      * Each view_layout_rows_columns record is based on the sub array.
      * For example:
      *  18 => array(
-     *              1 => 1,
-     *              2 => 2,
-     *              3 => 1
-     *              ),
+     *              1 => '100',
+     *              2 => '50,50',
+     *              3 => '100'
+     *              'order' => 3
+     *  ),
      * will insert a record in view_layout with id = 18 and rows = 3
      * and will insert 3 records in view_layout_rows_columns:
      *  - viewlayout = 18, rows = 1, columns = 1
      *  - viewlayout = 18, rows = 2, columns = 2
      *  - viewlayout = 18, rows = 3, columns = 1
+     * And the "order" key indicates that this should be the 3rd option in the layout menu
      */
     public static $defaultlayoutoptions = array(
         1 => array(
-                1 => 1
+                1 => '100',
+                'order' => 1,
             ),
         2 => array(
-                1 => 2
+                1 => '50,50',
+                'order' => 2,
             ),
         3 => array(
-                1 => 3
+                1 => '67,33',
+                'order' => 3,
             ),
         4 => array(
-                1 => 4
+                1 => '33,67',
+                'order' => 4,
             ),
         5 => array(
-                1 => 5
+                1 => '33,33,33',
+                'order' => 5,
             ),
         6 => array(
-                1 => 6
+                1 => '25,50,25',
+                'order' => 6,
             ),
         7 => array(
-                1 => 7
+                1 => '25,25,50'
             ),
         8 => array(
-                1 => 8
+                1 => '50,25,25'
             ),
         9 => array(
-                1 => 9
+                1 => '15,70,15'
             ),
         10 => array(
-                1 => 10
+                1 => '25,25,25,25'
             ),
         11 => array(
-                1 => 11
+                1 => '20,30,30,20'
             ),
         12 => array(
-                1 => 12
+                1 => '20,20,20,20,20'
             ),
         13 => array(
-                1 => 1,
-                2 => 6
+                1 => '100',
+                2 => '25,50,25'
             ),
         14 => array(
-                1 => 1,
-                2 => 4
+                1 => '100',
+                2 => '33,67',
+                'order' => 7
             ),
         15 => array(
-                1 => 1,
-                2 => 3
+                1 => '100',
+                2 => '67,33'
             ),
         16 => array(
-                1 => 1,
-                2 => 2
+                1 => '100',
+                2 => '50,50'
             ),
         17 => array(
-                1 => 1,
-                2 => 5
+                1 => '100',
+                2 => '33,33,33',
+                'order' => 8
             ),
         18 => array(
-                1 => 1,
-                2 => 2,
-                3 => 1
+                1 => '100',
+                2 => '50,50',
+                3 => '100'
             ),
         19 => array(
-                1 => 1,
-                2 => 5,
-                3 => 1
+                1 => '100',
+                2 => '33,33,33',
+                3 => '100',
+                'order' => 9
             ),
         20 => array(
-                1 => 1,
-                2 => 6,
-                3 => 1
+                1 => '100',
+                2 => '25,50,25',
+                3 => '100'
             ),
         21 => array(
-                1 => 1,
-                2 => 2,
-                3 => 5
+                1 => '100',
+                2 => '50,50',
+                3 => '33,33,33',
+                'order' => 10
             ),
     );
 
