@@ -27,15 +27,21 @@
 /**
  * Renders a set of radio buttons for a form
  *
- * @param array    $element The element to render
- * @param Pieform  $form    The form to render the element for
+ * @param Pieform $form  The form to render the element for
+ * @param array $element The element to render. In addition to the standard Pieform
+ *                       element attributes, it can also take the following optional
+ *                       attributes:
+ *                       - separator: The HTML string that should separate the radio
+ *                         buttons (defaults to \n, always has \n appended to it)
+ *                       - rowsize: How many radio buttons to print per row (defaults to 1)
+ *                       - nolabels: Don't print the labels next to the individual radio buttons.
  * @return string           The HTML for the element
  */
-function pieform_element_radio(Pieform $form, $element) {/*{{{*/
+function pieform_element_radio(Pieform $form, $element) {
     if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
         throw new PieformException('Radio elements should have at least one option');
     }
-    
+
     $result = '';
     $form_value = $form->get_value($element);
     $id = $element['id'];
@@ -45,6 +51,10 @@ function pieform_element_radio(Pieform $form, $element) {/*{{{*/
         $separator = $element['separator'] . $separator;
     }
 
+    $rowsize = isset($element['rowsize']) ? (int) $element['rowsize'] : 1;
+    $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
+
+    $i = 0;
     foreach ($element['options'] as $value => $data) {
         $uid = $id . substr(md5(microtime()), 0, 4);
         $element['id'] = $uid;
@@ -60,16 +70,25 @@ function pieform_element_radio(Pieform $form, $element) {/*{{{*/
             . $form->element_attributes($element)
             . ' value="' . Pieform::hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
-            . '> <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>"
-            . ($description != '' ? '<div class="description">' . $description . '</div>' : '')
-            . $separator;
+            . '>';
+            if (!$nolabels) {
+                $result .= ' <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>"
+                . ($description != '' ? '<div class="description">' . $description . '</div>' : '');
+            }
+        $i++;
+        if ($rowsize <= 1 || $i % $rowsize == 0) {
+            $result .= $separator;
+        }
     }
-    $result = substr($result, 0, -strlen($separator));
-    
-    return $result;
-}/*}}}*/
+    // If there was a separator printed on the end, then remove it
+    if ($rowsize <= 1 || $i % $rowsize == 0) {
+        $result = substr($result, 0, -strlen($separator));
+    }
 
-function pieform_element_radio_set_attributes($element) {/*{{{*/
+    return $result;
+}
+
+function pieform_element_radio_set_attributes($element) {
     $element['rules']['validateoptions'] = true;
     return $element;
-}/*}}}*/
+}
