@@ -214,6 +214,8 @@ $string['invalidcolumn'] = 'Column %s out of range';
 
 $string['confirmcancelcreatingview'] = 'This page has not been completed. Do you really want to cancel?';
 
+$string['groupviewurltaken'] = 'A page with this URL already exists.';
+
 // view control stuff
 
 $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your page.</p>';
