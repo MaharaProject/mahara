@@ -71,7 +71,7 @@ class ElasticsearchType_group extends ElasticsearchType
 
     public static function getRecordById($type, $id){
         $record = parent::getRecordById($type, $id);
-        if (!$record) {
+        if (!$record || $record->deleted) {
             return false;
         }
         $record->sort = strtolower(strip_tags($record->name));

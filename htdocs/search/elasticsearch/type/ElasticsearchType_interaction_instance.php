@@ -83,7 +83,7 @@ class ElasticsearchType_interaction_instance extends ElasticsearchType
 
     public static function getRecordById($type, $id){
         $record = parent::getRecordById($type, $id);
-        if (!$record) {
+        if (!$record || $record->deleted) {
             return false;
         }
 
@@ -92,6 +92,15 @@ class ElasticsearchType_interaction_instance extends ElasticsearchType
         $record->mainfacetterm = self::$mainfacetterm;
         $record->secfacetterm = 'Forum';
         $record->sort = strtolower(strip_tags($record->title));
+        return $record;
+    }
+
+    public static function getRecordDataById($type, $id) {
+        $record = parent::getRecordDataById($type, $id);
+        if (!$record || $record->deleted) {
+            return false;
+        }
+
         return $record;
     }
 }
