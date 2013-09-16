@@ -3738,8 +3738,8 @@ ul.searchtab li span.inactive {
     border: 0;
     background: transparent url(../images/friend_small.png) no-repeat 0 50%;
     padding: 0 0 0 12px;
-    cursor: pointer;
     color: #0000CC;
+    cursor: pointer;
     text-decoration: underline;
 }
 #userview .invitedtojoin,

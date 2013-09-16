@@ -210,7 +210,8 @@ ul.groupuserstatus li .submit input.submit:active {
     color: #333333;
 }
 /* buttons that look like links */
-.linkbtn {
+.linkbtn,
+#userview .user-icon .linkbtn {
     color: #024ac3;
     text-decoration: none;
 }
