@@ -29,7 +29,7 @@ define('INTERNAL', true);
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 
-if (!get_config('skins')) {
+if (!can_use_skins()) {
     throw new FeatureNotEnabledException();
 }
 

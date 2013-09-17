@@ -1064,6 +1064,67 @@ function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $
 }
 
 /**
+ * Fetch an institution configuration
+ * TODO: If needed, create a corresponding set_config_institution()
+ * @param string $institutionname
+ * @param string $key
+ * @return mixed The value of the key or NULL if the key is not valid
+ */
+function get_config_institution($institutionname, $key) {
+    require_once(get_config('docroot').'/lib/institution.php');
+    // Note that this
+    static $fetchedinst = array();
+    if (isset($fetchedinst[$institutionname])) {
+        $inst = $fetchedinst[$institutionname];
+    }
+    else {
+        try {
+            $inst = new Institution($institutionname);
+        }
+        catch (ParamOutOfRangeException $e) {
+            return null;
+        }
+    }
+    // Use the magical __get() function of the Institution class
+    return $inst->{$key};
+}
+
+
+/**
+ * Fetch a config setting for the specified user's institution.
+ * @param string $key
+ * @param int $userid (Optional) If not supplied, fetch for the current user's institution
+ */
+function get_config_user_institution($key, $userid = null) {
+    global $USER;
+    if ($userid === null) {
+        $userid = $USER->id;
+    }
+
+    static $cache = array();
+    if (isset($cache[$userid][$key])) {
+        return $cache[$userid][$key];
+    }
+    if ($userid == null) {
+        $institutions = $USER->get('institutions');
+    }
+    else {
+        $institutions = load_user_institutions($userid);
+    }
+    // If the user belongs to no institution, check the Mahara institution
+    if (!$institutions) {
+        $institutions = get_records_assoc('institution', 'name', 'mahara');
+    }
+    $results = array();
+    foreach ($institutions as $instname => $inst) {
+        $results[$instname] = get_config_institution($instname, $key);
+    }
+    $cache[$userid][$key] = $results;
+    return $results;
+}
+
+
+/**
  * This function prints an array or object
  * wrapped inside <pre></pre>
  * 

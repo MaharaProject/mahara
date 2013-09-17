@@ -3355,7 +3355,6 @@ function xmldb_core_upgrade($oldversion=0) {
             log_debug("Upgrading pages: $done/$pwcount");
             set_time_limit(30);
         }
-
     }
 
     if ($oldversion < 2013091900) {
@@ -3409,6 +3408,14 @@ function xmldb_core_upgrade($oldversion=0) {
 
         require_once(get_config('libroot').'skin.php');
         install_skins_default();
+    }
+
+    if ($oldversion < 2013091901) {
+        // Add a "skins" table to institutions to record whether they've enabled skins or not
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('skins');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1, 'dropdownmenu');
+        add_field($table, $field);
     }
 
     return $status;

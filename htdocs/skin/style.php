@@ -44,6 +44,10 @@ if ($id == 0) {
 $viewid = param_integer('view', null);
 
 $skin = get_record('skin', 'id', $id);
+$skinobj = new Skin($id);
+if (!$skinobj->can_view()) {
+    throw new AccessDeniedException();
+}
 $skin->viewskin = unserialize($skin->viewskin);
 
 // Set no caching for thumbnails...

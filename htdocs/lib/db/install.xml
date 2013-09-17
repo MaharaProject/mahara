@@ -80,6 +80,7 @@
                 <FIELD NAME="licensemandatory" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="licensedefault" TYPE="char" LENGTH="255" NOTNULL="false"/>
                 <FIELD NAME="dropdownmenu" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="skins" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />

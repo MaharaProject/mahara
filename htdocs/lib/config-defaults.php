@@ -536,7 +536,7 @@ $cfg->additionalhtlmfooter = '';
 $cfg->usersuniquebyusername = false;
 
 /**
- * @global bool $cfg->skins Activates the "page skins" feature, which allows users to customize the CSS
+ * @global bool $cfg->skins Activates the experimental "page skins" feature, which allows users to customize the CSS
  * on individual pages.
  */
 // $cfg->skins = false;

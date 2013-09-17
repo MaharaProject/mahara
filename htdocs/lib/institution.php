@@ -44,10 +44,11 @@ class Institution {
         'registerallowed' => 1,
         'theme' => 'default',
         'defaultmembershipperiod' => 0,
-        'maxuseraccounts' => null
-        ); 
+        'maxuseraccounts' => null,
+        'skins' => 1,
+        );
 
-    function __construct($name = null) {
+    public function __construct($name = null) {
         if (is_null($name)) {
             return $this;
         }
@@ -57,7 +58,7 @@ class Institution {
         }
     }
 
-    function __get($name) {
+    public function __get($name) {
         if (array_key_exists($name, $this->members)) {
             return $this->members[$name];
         }
@@ -72,31 +73,39 @@ class Institution {
             if (!is_string($value) || empty($value) || strlen($value) > 255) {
                 throw new ParamOutOfRangeException("'name' should be a string between 1 and 255 characters in length");
             }
-        } elseif ($name == 'displayname') {
+        }
+        else if ($name == 'displayname') {
             if (!is_string($value) || empty($value) || strlen($value) > 255) {
                 throw new ParamOutOfRangeException("'displayname' ($value) should be a string between 1 and 255 characters in length");
             }
-        } elseif ($name == 'registerallowed') {
+        }
+        else if ($name == 'registerallowed') {
             if (!is_numeric($value) || $value < 0 || $value > 1) {
                 throw new ParamOutOfRangeException("'registerallowed' should be zero or one");
             }
-        } elseif ($name == 'theme') {
+        }
+        else if ($name == 'theme') {
             if (!empty($value) && is_string($value) && strlen($value) > 255) {
                 throw new ParamOutOfRangeException("'theme' ($value) should be less than 255 characters in length");
             }
-        } elseif ($name == 'defaultmembershipperiod') {
+        }
+        else if ($name == 'defaultmembershipperiod') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
                 throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
             }
-        } elseif ($name == 'maxuseraccounts') {
+        }
+        else if ($name == 'maxuseraccounts') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
                 throw new ParamOutOfRangeException("'maxuseraccounts' should be a number between 1 and 9,999,999,999");
             }
         }
+        else if ($name == 'skins') {
+            $value = (bool) $value;
+        }
         $this->members[$name] = $value;
     }
 
-    function findByName($name) {
+    public function findByName($name) {
 
         if (!is_string($name) || strlen($name) < 1 || strlen($name) > 255) {
             throw new ParamOutOfRangeException("'name' must be a string.");
@@ -114,7 +123,7 @@ class Institution {
         return $this;
     }
 
-    function initialise($name, $displayname) {
+    public function initialise($name, $displayname) {
         if (empty($name) || !is_string($name)) {
             return false;
         }
@@ -129,7 +138,7 @@ class Institution {
         return true;
     }
 
-    function verifyReady() {
+    public function verifyReady() {
         if (empty($this->members['name']) || !is_string($this->members['name'])) {
             return false;
         }
@@ -140,7 +149,7 @@ class Institution {
         return true;
     }
 
-    function commit() {
+    public function commit() {
         if (!$this->verifyReady()) {
             throw new SystemException('Commit failed');
         }
@@ -151,6 +160,7 @@ class Institution {
         $record->theme                        = $this->theme;
         $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
         $record->maxuseraccounts              = $this->maxuseraccounts;
+        $record->skins                        = $this->skins;
 
         if ($this->initialized == self::INITIALIZED) {
             return insert_record('institution', $record);
@@ -168,6 +178,7 @@ class Institution {
         $this->theme                        = $result->theme;
         $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
         $this->maxuseraccounts              = $result->maxuseraccounts;
+        $this->skins                        = $result->skins;
         $this->verifyReady();
     }
 

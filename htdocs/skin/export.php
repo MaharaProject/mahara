@@ -30,7 +30,7 @@ require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 require_once(get_config('docroot') . 'artefact/file/lib.php');
 
-if (!get_config('skins')) {
+if (!can_use_skins()) {
     throw new FeatureNotEnabledException();
 }
 
@@ -69,7 +69,11 @@ $topnode = $xmldoc->appendChild($topelement);
 
 if (!empty($exportskins)) {
     foreach ($exportskins as $exportskin) {
-
+        $skinobj = new Skin($exportskin->id);
+        // Only allow a user to export skins they have edit permissions for
+        if (!$skinobj->can_edit()) {
+            continue;
+        }
         $viewskin = unserialize($exportskin->viewskin);
 
         $rootelement = $xmldoc->createElement('skin');
@@ -155,24 +159,26 @@ if (!empty($exportskins)) {
         if (!empty($bodybg) && $bodybg > 0) {
             // Get existing skin background image data...
             $artefactobj = new ArtefactTypeImage($bodybg);
-            $artefact = get_record('artefact', 'id', $bodybg, null, null, null, null, 'artefacttype,title,description,note');
-            $artefactfilefiles = get_record('artefact_file_files', 'artefact', $bodybg);
-            $artefactfileimage = get_record('artefact_file_image', 'artefact', $bodybg);
+            if ($USER->can_view_artefact($artefactobj)) {
+                $artefact = get_record('artefact', 'id', $bodybg, null, null, null, null, 'artefacttype,title,description,note');
+                $artefactfilefiles = get_record('artefact_file_files', 'artefact', $bodybg);
+                $artefactfileimage = get_record('artefact_file_image', 'artefact', $bodybg);
 
-            // Open and read the contents of each file...
-            $bodybgimage = $artefactobj->get_path();
-            $fp = fopen($bodybgimage, 'rb');
-            $filesize = filesize($bodybgimage);
-            $contents = fread($fp, $filesize);
-            fclose($fp);
-            // Export each file...
-            $childelement = $xmldoc->createElement('image');
-            $itemnode = $rootelement->appendChild($childelement);
-            $itemnode->setAttribute('type', 'body-background-image');
-            $itemnode->setAttribute('artefact', serialize($artefact));
-            $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
-            $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
-            $itemnode->setAttribute('contents', base64_encode($contents));
+                // Open and read the contents of each file...
+                $bodybgimage = $artefactobj->get_path();
+                $fp = fopen($bodybgimage, 'rb');
+                $filesize = filesize($bodybgimage);
+                $contents = fread($fp, $filesize);
+                fclose($fp);
+                // Export each file...
+                $childelement = $xmldoc->createElement('image');
+                $itemnode = $rootelement->appendChild($childelement);
+                $itemnode->setAttribute('type', 'body-background-image');
+                $itemnode->setAttribute('artefact', serialize($artefact));
+                $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
+                $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
+                $itemnode->setAttribute('contents', base64_encode($contents));
+            }
         }
 
         // Page background image element...
@@ -181,23 +187,25 @@ if (!empty($exportskins)) {
             // Get existing page background image data...
             // Get existing skin background image data...
             $artefactobj = new ArtefactTypeImage($viewbg);
-            $artefact = get_record('artefact', 'id', $viewbg, null, null, null, null, 'artefacttype,title,description,note');
-            $artefactfilefiles = get_record('artefact_file_files', 'artefact', $viewbg);
-            $artefactfileimage = get_record('artefact_file_image', 'artefact', $viewbg);
-            // Open and read the contents of each file...
-            $viewbgimage = $artefactobj->get_path();
-            $fp = fopen($viewbgimage, 'rb');
-            $filesize = filesize($viewbgimage);
-            $contents = fread($fp, $filesize);
-            fclose($fp);
-            // Export each file...
-            $childelement = $xmldoc->createElement('image');
-            $itemnode = $rootelement->appendChild($childelement);
-            $itemnode->setAttribute('type', 'view-background-image');
-            $itemnode->setAttribute('artefact', serialize($artefact));
-            $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
-            $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
-            $itemnode->setAttribute('contents', base64_encode($contents));
+            if ($USER->can_view_artefact($artefactobj)) {
+                $artefact = get_record('artefact', 'id', $viewbg, null, null, null, null, 'artefacttype,title,description,note');
+                $artefactfilefiles = get_record('artefact_file_files', 'artefact', $viewbg);
+                $artefactfileimage = get_record('artefact_file_image', 'artefact', $viewbg);
+                // Open and read the contents of each file...
+                $viewbgimage = $artefactobj->get_path();
+                $fp = fopen($viewbgimage, 'rb');
+                $filesize = filesize($viewbgimage);
+                $contents = fread($fp, $filesize);
+                fclose($fp);
+                // Export each file...
+                $childelement = $xmldoc->createElement('image');
+                $itemnode = $rootelement->appendChild($childelement);
+                $itemnode->setAttribute('type', 'view-background-image');
+                $itemnode->setAttribute('artefact', serialize($artefact));
+                $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
+                $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
+                $itemnode->setAttribute('contents', base64_encode($contents));
+            }
         }
 
         // Fonts element...

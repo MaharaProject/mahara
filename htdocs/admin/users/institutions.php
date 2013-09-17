@@ -249,6 +249,7 @@ if ($institution || $add) {
         $data->licensemandatory = 0;
         $data->licensedefault = '';
         $data->dropdownmenu = get_config('dropdownmenu') ? 1 : 0;
+        $data->skins = get_config('skins') ? 1 : 0;
         $lockedprofilefields = array();
 
         $authtypes = auth_get_available_auth_types();
@@ -395,6 +396,14 @@ if ($institution || $add) {
             'defaultvalue' => $data->dropdownmenu,
             'help'         => true,
         );
+        if (get_config('skins')) {
+            $elements['skins'] = array(
+                'type' => 'checkbox',
+                'title' => get_string('skins', 'admin'),
+                'description' => get_string('skinsinstitutiondescription', 'admin'),
+                'defaultvalue' => $data->skins,
+            );
+        }
         $elements['customthemefs'] = array(
             'type'         => 'fieldset',
             'class'        => 'customtheme' . ($elements['theme']['defaultvalue'] != 'custom' ? ' js-hidden' : ''),
@@ -506,7 +515,7 @@ if ($institution || $add) {
     }
     $elements['lockedfieldshelp'] = array(
         'value' => '<tr id="lockedfieldshelp"><th colspan="2">'
-        . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
+        . get_help_icon('core', 'admin', 'institution', 'lockedfields')
         . '</th></tr>'
     );
 
@@ -648,6 +657,7 @@ function institution_submit(Pieform $form, $values) {
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     $newinstitution->dropdownmenu                 = ($values['dropdownmenu']) ? 1 : 0;
+    $newinstitution->skins                 = ($values['skins']) ? 1 : 0;
 
     if ($newinstitution->theme == 'custom') {
         if (!empty($oldinstitution->style)) {

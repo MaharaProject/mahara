@@ -209,8 +209,8 @@ $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('w
 
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
-if ($viewskin && get_config('skins')) {
-    $skin = $viewskin;
+if ($viewskin && get_config('skins') && can_use_skins($owner)) {
+    $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
 }
 else {
     $skin = false;

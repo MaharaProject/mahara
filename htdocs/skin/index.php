@@ -36,7 +36,7 @@ require_once('skin.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('myskins', 'skin'));
 
-if (!get_config('skins')) {
+if (!can_use_skins()) {
     throw new FeatureNotEnabledException();
 }
 

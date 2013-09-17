@@ -2364,12 +2364,6 @@ function mahara_standard_nav() {
             'title' => get_string('sharedwithme', 'view'),
             'weight' => 60,
         ),
-        'myportfolio/skins' => array(
-           'path' => 'myportfolio/skins',
-           'url' => 'skin/index.php',
-           'title' => get_string('myskins', 'skin'),
-           'weight' => 65,
-        ),
         'myportfolio/export' => array(
             'path' => 'myportfolio/export',
             'url' => 'export/index.php',
@@ -2422,6 +2416,14 @@ function mahara_standard_nav() {
         ),
     );
 
+    if (can_use_skins()) {
+        $menu['myportfolio/skins'] = array(
+           'path' => 'myportfolio/skins',
+           'url' => 'skin/',
+           'title' => get_string('myskins', 'skin'),
+           'weight' => 65,
+        );
+    }
     return $menu;
 }
 
@@ -3853,4 +3855,26 @@ function escape_css_string($string, $singlequote=true) {
         array('\\\\', '', "\\$delim"),
         $string
     );
+}
+
+/**
+ * Indicates whether a particular user can use skins on their pages or not. This is in
+ * lib/web.php instead of lib/skin.php so that we can use it while generating the main nav.
+ * @param int $userid The Id of the user to check. Null checks the current user.
+ * @return bool
+ */
+function can_use_skins($userid = null) {
+    if (!get_config('skins')) {
+        return false;
+    }
+
+    // A user can belong to multiple institutions. If any of their institutions allow it, then
+    // let them use skins!
+    $results = get_config_user_institution('skins', $userid);
+    foreach ($results as $r) {
+        if ($r) {
+            return true;
+        }
+    }
+    return false;
 }

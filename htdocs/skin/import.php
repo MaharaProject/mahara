@@ -37,7 +37,7 @@ require_once('file.php');
 require_once('uploadmanager.php');
 define('TITLE', get_string('importskins', 'skin'));
 
-if (!get_config('skins')) {
+if (!can_use_skins()) {
     throw new FeatureNotEnabledException();
 }
 

@@ -33,13 +33,12 @@ require_once('view.php');
 require_once(get_config('libroot') . 'group.php');
 define('TITLE', get_string('chooseviewskin', 'skin'));
 
-if (!get_config('skins')) {
-    throw new FeatureNotEnabledException();
-}
-
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
+if (!can_use_skins()) {
+    throw new FeatureNotEnabledException();
+}
 $view->set_edit_nav();
 $view->set_user_theme();
 // Is page skin already saved/set for current page?

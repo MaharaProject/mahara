@@ -29,12 +29,17 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('NOCHECKPASSWORDCHANGE', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('docroot') . '/lib/skin.php');
 
 if (!get_config('skins')) {
     throw new FeatureNotEnabledException();
 }
 
 $id = param_integer('id', 0);
+$skinobj = new Skin($id);
+if (!$skinobj->can_use()) {
+    throw new AccessDeniedException();
+}
 
 //Set no caching for thumbnails...
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");  // Date in the past

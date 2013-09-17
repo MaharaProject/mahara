@@ -1221,6 +1221,16 @@ class Skin {
         global $USER;
         return $this->type == 'public' || $this->type == 'site' || ($this->owner == $USER->get('id'));
     }
+
+    /**
+     * Indicates whether or not the current user is allowed to see this skin at all
+     * @return boolean
+     */
+    public function can_view() {
+        // TODO: For tighter control of views, it might be good to implement this. It would have to check for whether it's
+        // public, or whether it's used in a view that you are allowed to look at
+        return true;
+    }
 }
 
 
