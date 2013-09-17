@@ -120,7 +120,7 @@ function deletepost_submit(Pieform $form, $values) {
     $postrec = new stdClass();
     $postrec->parent = $values['parent'];
     do {
-        $postrec = get_record('interaction_forum_post', 'id', $postrec->parent, '', '', '', '', 'id, deleted, parent');
+        $postrec = get_record('interaction_forum_post', 'id', $postrec->parent, null, null, null, null, 'id, deleted, parent');
     } while ($postrec && $postrec->deleted && $postrec->parent);
     $redirecturl = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'];
     if ($postrec && $postrec->parent) {
