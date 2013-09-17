@@ -1,6 +1,6 @@
 function addNewPostShortcut(blockid) {
     forEach(
-        getElementsByTagAndClassName('a', 'shortcut', 'blockinstance_' + blockid),
+        getElementsByTagAndClassName('a', 'btnshortcut', 'blockinstance_' + blockid),
         function(a) {
             disconnectAll(a);
             connect(a, 'onclick', function(e) {

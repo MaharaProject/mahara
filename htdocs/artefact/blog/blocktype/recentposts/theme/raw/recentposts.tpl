@@ -7,9 +7,9 @@
                 <option value="{$blog->id}"> {$blog->title} </option>
             {/foreach}
             </select>
-            <a class="btn">{str tag='shortcutgo' section='artefact.blog'}</a>
+            <a class="btn btnshortcut">{str tag='shortcutgo' section='artefact.blog'}</a>
         </div>
-        <a class="btn{if (count($blogs) != 1)} hidden{/if}">{str tag='shortcutnewentry' section='artefact.blog'}</a>
+        <a class="btn btnshortcut{if (count($blogs) != 1)} hidden{/if}">{str tag='shortcutnewentry' section='artefact.blog'}</a>
     </div>
 {/if}
 <ul class="recentblogpost">
