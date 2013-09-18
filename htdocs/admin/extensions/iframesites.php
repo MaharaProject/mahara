@@ -196,7 +196,7 @@ function newurl_validate(Pieform $form, $values) {
         $form->set_error('url', get_string('iframeinvalidsite', 'admin'));
     }
     if (isset($iframesources[$urldata['key']])) {
-        $form->set_error('url', get_string('urlalreadyexists'));
+        $form->set_error('url', get_string('urlalreadyexists', 'admin'));
     }
 }
 

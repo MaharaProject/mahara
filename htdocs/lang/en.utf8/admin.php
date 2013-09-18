@@ -162,6 +162,7 @@ $string['iframeurldescription'] = "Text to match at the beginning of the iframe 
 $string['iframedisplaynamedescription'] = 'The name of the site to be displayed to users.';
 $string['iframeinvalidsite'] = "This field should contain a valid host and an optional path. It can contain only letters, digits, '.', '/', '_', and '-'.";
 $string['iframeiconhost'] = 'Icon host';
+$string['urlalreadyexists'] = 'This URL already exists. You cannot add it twice.';
 $string['iframeiconhostdescription'] = 'If you wish, you may specify a different host for the favicon image. All sites with the same name will use this icon.';
 
 $string['cleanurls'] = 'Clean URLs';
