@@ -641,8 +641,19 @@ $elements = array(
      ),
 );
 
+function is_institute_admin($institution) {
+    return $institution->admin;
+}
+
+$institutions = $user->get('institutions');
+if ( !$USER->get('admin') ) { // for institution admins
+    $admin_institutions = $USER->get('institutions');
+    $admin_institutions = array_filter($admin_institutions, "is_institute_admin");
+    $institutions = array_intersect_key($institutions, $admin_institutions);
+}
+
 $allinstitutions = get_records_assoc('institution', '', '', 'displayname');
-foreach ($user->get('institutions') as $i) {
+foreach ($institutions as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
         'legend' => $allinstitutions[$i->institution]->displayname,
