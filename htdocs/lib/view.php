@@ -129,7 +129,7 @@ class View {
      *              2 => 2,
      *              3 => 1
      *              ),
-     * will insert a record in view_layout with id = 18 and rows = 3 
+     * will insert a record in view_layout with id = 18 and rows = 3
      * and will insert 3 records in view_layout_rows_columns:
      *  - viewlayout = 18, rows = 1, columns = 1
      *  - viewlayout = 18, rows = 2, columns = 2
@@ -322,8 +322,8 @@ class View {
 
     /**
      * Creates a new View for the given user/group/institution.
-     * 
-     * You can specify who the view is being created _by_ with the second 
+     *
+     * You can specify who the view is being created _by_ with the second
      * parameter. This defaults to the current logged in user's ID.
      *
      * @param array $viewdata See View::_create
@@ -340,21 +340,21 @@ class View {
     }
 
     /**
-     * Creates a View for the given user, based off a given template and other 
+     * Creates a View for the given user, based off a given template and other
      * View information supplied.
      *
-     * Will set a default title of 'Copy of $viewtitle' if title is not 
+     * Will set a default title of 'Copy of $viewtitle' if title is not
      * specified in $viewdata and $titlefromtemplate == false.
      *
      * @param array $viewdata See View::_create
      * @param int $templateid The ID of the View to copy
-     * @param int $userid     The user who has issued the command to create the 
+     * @param int $userid     The user who has issued the command to create the
      *                        view. See View::_create
      * @param int $checkaccess Whether to check that the user can see the view before copying it
-     * @return array A list consisting of the new view, the template view and 
-     *               information about the copy - i.e. how many blocks and 
+     * @return array A list consisting of the new view, the template view and
+     *               information about the copy - i.e. how many blocks and
      *               artefacts were copied
-     * @throws SystemException under various circumstances, see the source for 
+     * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
     public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
@@ -443,33 +443,33 @@ class View {
     }
 
     /**
-     * Creates a new View for the given user, based on the given information 
+     * Creates a new View for the given user, based on the given information
      * about the view.
      *
-     * Validation of the view data is performed, then the View is created. If 
+     * Validation of the view data is performed, then the View is created. If
      * the View is to be owned by a group, that group is given access to it.
      *
-     * @param array $viewdata Data about the view. You can pass in most fields 
+     * @param array $viewdata Data about the view. You can pass in most fields
      *                        that appear in the view table.
      *
-     *                        Note that you set who owns the View by setting 
-     *                        either the owner, group or institution field as 
+     *                        Note that you set who owns the View by setting
+     *                        either the owner, group or institution field as
      *                        approriate.
      *
-     *                        Currently, you cannot pass in access data. Use 
-     *                        $view->set_access() after retrieving the $view 
+     *                        Currently, you cannot pass in access data. Use
+     *                        $view->set_access() after retrieving the $view
      *                        object.
      *
-     * @param int $userid The user who has issued the command to create the 
-     *                    View (note: this is different from the "owner" of the 
+     * @param int $userid The user who has issued the command to create the
+     *                    View (note: this is different from the "owner" of the
      *                    View - a group or institution could be the "owner",
      *                    but it's a _user_ who requests a View is created for it)
      * @return View The created View
-     * @throws SystemException if the View data is invalid - mostly this is due 
+     * @throws SystemException if the View data is invalid - mostly this is due
      *                         to owner information being specified incorrectly.
      */
     private static function _create(&$viewdata, $userid) {
-        // If no owner information is provided, assume that the view is being 
+        // If no owner information is provided, assume that the view is being
         // created by the user for themself
         if (!isset($viewdata['owner']) && !isset($viewdata['group']) && !isset($viewdata['institution'])) {
             $viewdata['owner'] = $userid;
@@ -643,13 +643,13 @@ class View {
         if ($this->deleted) {
             return;
         }
-      
+
         if (!empty($this->dirty)) {
             return $this->commit();
         }
     }
 
-    /** 
+    /**
      * This method updates the contents of the view table only.
      */
     public function commit() {
@@ -735,7 +735,7 @@ class View {
 
     public function find_artefact_children($artefact, $allchildren, &$refs) {
 
-        $children = array();        
+        $children = array();
         if ($allchildren) {
             foreach ($allchildren as $child) {
                 if ($child->parent != $artefact->id) {
@@ -744,7 +744,7 @@ class View {
                 $children[$child->id] = array();
                 $children[$child->id]['artefact'] = $child;
                 $refs[$child->id] = $child;
-                $children[$child->id]['children'] = $this->find_artefact_children($child, 
+                $children[$child->id]['children'] = $this->find_artefact_children($child,
                                                             $allchildren, $refs);
             }
         }
@@ -1407,7 +1407,7 @@ class View {
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
         require_once('activity.php');
-        activity_occurred('maharamessage', 
+        activity_occurred('maharamessage',
             array(
                 'users' => array($this->get('owner')),
                 'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject', 'group', $this->get('title'),
@@ -1466,7 +1466,7 @@ class View {
                 $classes[] = 'current';
             }
             if ($classes) {
-                $cat['class'] = hsc(implode(' ', $classes)); 
+                $cat['class'] = hsc(implode(' ', $classes));
             }
         }
 
@@ -1486,8 +1486,8 @@ class View {
     /**
      * Gets the name of the first blocktype category for this View.
      *
-     * This can change based on what blocktypes allow themselves to be in what 
-     * types of View. For example, in a group View, blog blocktypes aren't 
+     * This can change based on what blocktypes allow themselves to be in what
+     * types of View. For example, in a group View, blog blocktypes aren't
      * allowed (yet), so the first blocktype category shown won't be "blog"
      */
     public function get_default_category() {
@@ -1496,13 +1496,13 @@ class View {
     }
 
     /**
-     * Gets information about blocktype categories for blocks that can be put 
+     * Gets information about blocktype categories for blocks that can be put
      * in this View
      *
-     * For each category, returns its name, a localised title and the number of 
+     * For each category, returns its name, a localised title and the number of
      * blocktypes in the category that can be put in this View.
      *
-     * If a category has no blocktypes that can be put in this View, it is not 
+     * If a category has no blocktypes that can be put in this View, it is not
      * returned
      */
     private function get_category_data() {
@@ -1546,8 +1546,8 @@ class View {
      * Returns HTML for the blocktype list for a particular category
      *
      * @param string $category   The category to build the blocktype list for
-     * @param bool   $javascript Set to true if the caller is a json script, 
-     *                           meaning that nothing for the standard HTML version 
+     * @param bool   $javascript Set to true if the caller is a json script,
+     *                           meaning that nothing for the standard HTML version
      *                           alone should be output
      */
     public function build_blocktype_list($category, $javascript=false) {
@@ -1561,14 +1561,14 @@ class View {
     }
 
     /**
-     * Process view changes. This function is used both by the json stuff and 
+     * Process view changes. This function is used both by the json stuff and
      * by normal posts
      */
     public function process_changes($category='', $new=0) {
         global $SESSION, $USER;
 
         // Security
-        // TODO this might need to be moved below the requestdata check below, to prevent non owners of the view being 
+        // TODO this might need to be moved below the requestdata check below, to prevent non owners of the view being
         // rejected
         if (!$USER->can_edit_view($this)) {
             throw new AccessDeniedException(get_string('canteditdontown', 'view'));
@@ -1590,8 +1590,8 @@ class View {
                 break;
             }
         }
-        // TODO Scan GET for an action. The only action that is GETted is 
-        // confirming deletion of a blockinstance. It _should_ be a POST, but 
+        // TODO Scan GET for an action. The only action that is GETted is
+        // confirming deletion of a blockinstance. It _should_ be a POST, but
         // that can be fixed later.
         if (!$action) {
             foreach ($_GET as $key => $value) {
@@ -1646,7 +1646,7 @@ class View {
                             . '<input type="submit" class="submit" name="removeblock_submit" value="' . get_string('yes') . '">'
                             . '</form>';
                         $baselink = get_config('wwwroot') . 'view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
-                        $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
+                        $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view')
                             . '&nbsp;' . $yesform . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
                         redirect($baselink);
                         exit;
@@ -1709,7 +1709,7 @@ class View {
         return array('message' => $message, 'data' => $returndata);
     }
 
-    /** 
+    /**
      * Parses the string and returns a hash of values
      *
      * @param string $action expects format name_value_name_value
@@ -1724,7 +1724,7 @@ class View {
         }
         $lastkey = null;
         foreach ($bits as $index => $bit) {
-            if ($index % 2 == 0) { 
+            if ($index % 2 == 0) {
                 $lastkey = $bit;
             }
             else {
@@ -1832,7 +1832,7 @@ class View {
     }
 
     // ******** functions to do with the view creation ui ************** //
-    
+
     /**
      * small wrapper around get_string to return a success string
      * for the given view control function
@@ -1954,12 +1954,12 @@ class View {
 
     /**
      * adds a block with the given type to a view
-     * 
+     *
      * @param array $values parameters for this function
      *                      blocktype => string name of blocktype to add
      *                      column    => int column to add to
      *                      order     => position in column
-     * 
+     *
      */
     public function addblocktype($values) {
         $requires = array('blocktype', 'row', 'column', 'order');
@@ -2034,7 +2034,7 @@ class View {
         $bi->commit();
     }
 
-    /** 
+    /**
      * deletes a block instance from the view
      *
      * @param array $values parameters for this function
@@ -2132,27 +2132,29 @@ class View {
     public function get_all_blocktype_javascript() {
         $javascriptfiles = array();
         $initjavascripts = array();
-        $view_data = $this->get_column_datastructure();
-        foreach($view_data as $column) {
-            foreach($column['blockinstances'] as $blockinstance) {
-                $pluginname = $blockinstance->get('blocktype');
-                if (!safe_require_plugin('blocktype', $pluginname)) {
-                    continue;
-                }
-                $instancejs = call_static_method(
-                    generate_class_name('blocktype', $pluginname),
-                    'get_instance_javascript',
-                    $blockinstance
-                );
-                foreach($instancejs as $jsfile) {
-                    if (is_array($jsfile) && isset($jsfile['file'])) {
-                        $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);;
-                        if (isset($jsfile['initjs'])) {
-                            $initjavascripts[] = $jsfile['initjs'];
-                        }
+        $view_data = $this->get_row_datastructure();
+        foreach ($view_data as $row_data) {
+            foreach($row_data as $column) {
+                foreach($column['blockinstances'] as $blockinstance) {
+                    $pluginname = $blockinstance->get('blocktype');
+                    if (!safe_require_plugin('blocktype', $pluginname)) {
+                        continue;
                     }
-                    else if (is_string($jsfile)) {
-                        $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                    $instancejs = call_static_method(
+                        generate_class_name('blocktype', $pluginname),
+                        'get_instance_javascript',
+                        $blockinstance
+                    );
+                    foreach($instancejs as $jsfile) {
+                        if (is_array($jsfile) && isset($jsfile['file'])) {
+                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);;
+                            if (isset($jsfile['initjs'])) {
+                                $initjavascripts[] = $jsfile['initjs'];
+                            }
+                        }
+                        else if (is_string($jsfile)) {
+                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                        }
                     }
                 }
             }
@@ -2245,7 +2247,7 @@ class View {
      *
      * @param array $values parameters for this function
      *                      before => int column to insert the new column before
-     *                      returndata => boolean whether to return the html 
+     *                      returndata => boolean whether to return the html
      *                                    for the new column or not (ajax requests need this)
      *
      */
@@ -2297,7 +2299,7 @@ class View {
      *
      * @param array $values parameters for this function
      *                      column => int column to remove
-     * 
+     *
      */
     public function removecolumn($values) {
         if (!array_key_exists('column', $values) || empty($values['column']) || !array_key_exists('row', $values) || empty($values['row'])) {
@@ -2539,18 +2541,18 @@ class View {
         }
 
         // first move them one but switch to negtaive
-        $sql = 'UPDATE {block_instance} 
-                    SET "' . $field .'" = (-1 * ("' . $field . '") ' . (($direction == 'up') ? '-' : '+') . ' 1) 
+        $sql = 'UPDATE {block_instance}
+                    SET "' . $field .'" = (-1 * ("' . $field . '") ' . (($direction == 'up') ? '-' : '+') . ' 1)
                     WHERE "view" = ? AND "' . $field . '"' . $operator . ' ? ' . $extrawhere;
 
-        execute_sql($sql, array_merge(array($this->get('id'), $value), $extravalues)); 
+        execute_sql($sql, array_merge(array($this->get('id'), $value), $extravalues));
 
         // and now flip to positive again
-        $sql = 'UPDATE {block_instance} 
-                    SET "' . $field . '" = ("' . $field . '" * -1) 
+        $sql = 'UPDATE {block_instance}
+                    SET "' . $field . '" = ("' . $field . '" * -1)
                 WHERE "view" = ? AND "' . $field . '" < 0 ' . $extrawhere;
 
-        execute_sql($sql, array_merge(array($this->get('id')), $extravalues)); 
+        execute_sql($sql, array_merge(array($this->get('id')), $extravalues));
 
     }
 
@@ -2851,7 +2853,7 @@ class View {
         $search = '';
         if (!empty($data['search']) && param_boolean('s')) {
             $search = param_variable('search', '');
-            // Maybe later, depending on performance - don't search if there's 
+            // Maybe later, depending on performance - don't search if there's
             // not enough characters. Prompts should be added to the UI too.
             //if (strlen($search) < 3) {
             //    $search = '';
@@ -3930,7 +3932,7 @@ class View {
                 GROUP BY ownertype, display, g.id
             UNION
                 SELECT 'institution' AS ownertype, i.displayname AS display, i.name AS id, COUNT(v.id)
-                FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution) 
+                FROM {institution} i INNER JOIN {view} v ON (i.name = v.institution)
                 WHERE TRUE $tsql
                 GROUP BY ownertype, display, i.name ORDER BY display";
 
@@ -3953,7 +3955,7 @@ class View {
     }
 
 
-    /** 
+    /**
      * Get views which have been explicitly shared to a group and are
      * not owned by the group
      */
