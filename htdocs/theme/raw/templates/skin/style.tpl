@@ -81,7 +81,8 @@ a:active {
 #containerX #column-container,
 #container #column-container,
 #containerX #main-column-container,
-#container #main-column-container {
+#container #main-column-container,
+div#mainmiddlewrap {
     background: {$view_background_color} {$view_background_image|safe} {$view_background_repeat} {$view_background_attachment} {$view_background_position};
 }
 /** VIEW BLOCKTYPE CATEGORIES **/
