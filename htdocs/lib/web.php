@@ -2980,29 +2980,6 @@ function format_whitespace($text) {
 }
 
 /**
- * Get the list of custom filters to be used in HTMLPurifier
- * @return array
- */
-function get_htmlpurifier_custom_filters() {
-    $customfilters = array();
-    if (get_config('filters')) {
-        foreach (unserialize(get_config('filters')) as $filter) {
-            // These filters are no longer necessary and have been removed
-            $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
-
-            if (!in_array($filter->file, $builtinfilters)) {
-                include_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
-                $classname = 'HTMLPurifier_Filter_' . $filter->file;
-                if (class_exists($classname)) {
-                    $customfilters[] = new $classname();
-                }
-            }
-        }
-    }
-    return $customfilters;
-}
-
-/**
  * Given raw html (eg typed in by a user), this function cleans it up
  * and removes any nasty tags that could mess up pages.
  *
@@ -3039,13 +3016,25 @@ function clean_html($text, $xhtml=false) {
     $config->set('Attr.EnableID', true);
     $config->set('Attr.IDPrefix', 'user_');
 
-    $customfilters = get_htmlpurifier_custom_filters();
-    if (!empty($customfilters)) {
+    $customfilters = array();
+    if (get_config('filters')) {
+        foreach (unserialize(get_config('filters')) as $filter) {
+            // These filters are no longer necessary and have been removed
+            $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
+
+            if (!in_array($filter->file, $builtinfilters)) {
+                include_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
+                $classname = 'HTMLPurifier_Filter_' . $filter->file;
+                if (class_exists($classname)) {
+                    $customfilters[] = new $classname();
+                }
+            }
+        }
         $config->set('Filter.Custom', $customfilters);
     }
 
-    // These settings help identify the configuration definition. If the
-    // definition (the $def object below) is changed (e.g. new method calls
+    // These settings help identify the configuration definition. If the 
+    // definition (the $def object below) is changed (e.g. new method calls 
     // made on it), the DefinitionRev needs to be increased. See
     // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
@@ -3057,52 +3046,6 @@ function clean_html($text, $xhtml=false) {
     $purifier = new HTMLPurifier($config);
     return $purifier->purify($text);
 }
-
-/**
- * Like clean_html(), but for CSS!
- *
- * Much of the code in this function was taken from the sample code in this post:
- * http://stackoverflow.com/questions/3241616/sanitize-user-defined-css-in-php#5209050
- *
- * @param string $input_css
- * @return string The cleaned CSS
- */
-function clean_css($input_css) {
-    require_once('htmlpurifier/HTMLPurifier.auto.php');
-    require_once('csstidy/class.csstidy.php');
-
-    // Create a new configuration object
-    $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
-
-    $config->set('Filter.ExtractStyleBlocks', true);
-
-    if (get_config('disableexternalresources')) {
-        $config->set('URI.DisableExternalResources', true);
-    }
-
-    $customfilters = get_htmlpurifier_custom_filters();
-    if (!empty($customfilters)) {
-        $config->set('Filter.Custom', $customfilters);
-    }
-
-    $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
-    $config->set('HTML.DefinitionRev', 1);
-
-    // Create a new purifier instance
-    $purifier = new HTMLPurifier($config);
-
-    // Wrap our CSS in style tags and pass to purifier.
-    // we're not actually interested in the html response though
-    $html = $purifier->purify('<style>'.$input_css.'</style>');
-
-    // The "style" blocks are stored seperately
-    $output_css = $purifier->context->get('StyleBlocks');
-
-    // Get the first style block
-    return $output_css[0];
-}
-
 
 /**
  * Given HTML, converts and formats it as text
