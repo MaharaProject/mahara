@@ -78,7 +78,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
-    // NOTE: not using jswwwroot - it seems to wreck image paths if you 
+    // NOTE: not using jswwwroot - it seems to wreck image paths if you
     // drag them around the wysiwyg editor
     $jswwwroot = json_encode($wwwroot);
 
@@ -98,7 +98,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     }
 
     $theme_list = array();
-    
+
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
         if (!defined('PIEFORM_GOT_HEADDATA')) {
@@ -106,7 +106,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
         }
     }
 
-    // Insert the appropriate javascript tags 
+    // Insert the appropriate javascript tags
     $javascript_array = array();
     $jsroot = $wwwroot . 'js/';
 
@@ -307,7 +307,7 @@ EOF;
             // A local .js file with a fully specified path
             $javascript_array[] = $wwwroot . $jsfile;
             // If $jsfile is from a plugin (i.e. plugintype/pluginname/js/foo.js)
-            // Then get js strings from static function jsstrings in plugintype/pluginname/lib.php 
+            // Then get js strings from static function jsstrings in plugintype/pluginname/lib.php
             $bits = explode('/', $jsfile);
             if (count($bits) == 4) {
                 safe_require($bits[0], $bits[1]);
@@ -416,7 +416,7 @@ EOF;
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
         // this gets assigned in smarty_core, but do it again here if it's changed locally
-        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
+        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list)));
     }
 
     $dropdownmenu = get_config('dropdownmenu');
@@ -643,8 +643,8 @@ EOF;
 
         usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
 
-        // Place all sideblocks on the right. If this structure is munged 
-        // appropriately, you can put blocks on the left. In future versions of 
+        // Place all sideblocks on the right. If this structure is munged
+        // appropriately, you can put blocks on the left. In future versions of
         // Mahara, we'll make it easy to do this.
         $sidebars = $sidebars && !empty($SIDEBLOCKS);
         $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
@@ -690,7 +690,7 @@ EOF;
 /**
  * Manages theme configuration.
  *
- * Does its best to give the user _a_ theme, even if it's not the theme they 
+ * Does its best to give the user _a_ theme, even if it's not the theme they
  * want to use (e.g. the theme they want has been uninstalled)
  */
 class Theme {
@@ -764,11 +764,11 @@ class Theme {
     /**
      * Initialises a theme object based on the theme 'hint' passed.
      *
-     * If arg is a string, it's taken to be a theme name. If it's a user 
-     * object, we ask it for a theme name. If it's an integer, we pretend 
+     * If arg is a string, it's taken to be a theme name. If it's a user
+     * object, we ask it for a theme name. If it's an integer, we pretend
      * that's a user ID and ask for the theme for that user.
      *
-     * If the theme they want doesn't exist, the object is initialised for the 
+     * If the theme they want doesn't exist, the object is initialised for the
      * default theme. This means you can initialise one of these for a user
      * and then use it without worrying if the theme exists.
      *
@@ -826,7 +826,7 @@ class Theme {
 
         $themeconfigfile = get_config('docroot') . 'theme/' . $this->basename . '/themeconfig.php';
         if (!is_readable($themeconfigfile)) {
-            // We can safely assume that the default theme is installed, users 
+            // We can safely assume that the default theme is installed, users
             // should never be able to remove it
             $this->basename = 'default';
             $themeconfigfile = get_config('docroot') . 'theme/default/themeconfig.php';
@@ -850,7 +850,7 @@ class Theme {
 
         $this->templatedirs[] = get_config('docroot') . 'local/theme/templates/';
 
-        // Now go through the theme hierarchy assigning variables from the 
+        // Now go through the theme hierarchy assigning variables from the
         // parent themes
         $currenttheme = $this->basename;
         while ($currenttheme != 'raw') {
@@ -928,9 +928,9 @@ class Theme {
 }
 
 
-/** 
+/**
  * Returns the lists of strings used in the .js files
- * @return array                   
+ * @return array
  */
 
 function jsstrings() {
@@ -991,7 +991,7 @@ function themepaths() {
     return $paths;
 }
 
-/** 
+/**
  * Takes an array of string identifiers and returns an array of the
  * corresponding strings, quoted for use in inline javascript here
  * docs.
@@ -1007,7 +1007,7 @@ function quotestrings($strings) {
     return $qstrings;
 }
 
-/** 
+/**
  * This function sets up and caches info about the current selected theme
  * contains inheritance path (used for locating images) and template dirs
  * and potentially more stuff later ( like mime header to send (html vs xhtml))
@@ -1019,7 +1019,7 @@ function theme_setup() {
     return $THEME;
 }
 
-/** 
+/**
  * This function returns the full url to an image
  * Always use it to get image urls
  * @param $imagelocation path to image relative to theme/$theme/static/
@@ -1036,7 +1036,7 @@ function theme_get_url($location, $pluginlocation='', $all = false) {
     return $THEME->get_url($location, $all, $plugintype, $pluginname);
 }
 
-/** 
+/**
  * This function returns the full path to an image
  * Always use it to get image paths
  * @param $imagelocation path to image relative to theme/$theme/static/
@@ -1085,7 +1085,7 @@ function _param_retrieve($name) {
     // prefer post
     if (isset($_POST[$name])) {
         $value = $_POST[$name];
-    } 
+    }
     else if (isset($_GET[$name])) {
         $value = $_GET[$name];
     }
@@ -1330,7 +1330,7 @@ function param_integer_list($name) {
  *
  */
 function param_boolean($name) {
-    
+
     list ($value) = _param_retrieve($name, false);
 
     if (!is_null($value)) {
@@ -1349,7 +1349,7 @@ function param_boolean($name) {
  * NOTE: this function is only meant to be used by get_imagesize_parameters(),
  * which you should use in your scripts.
  *
- * It expects the parameter to be a string, in the form /\d+x\d+/ - e.g. 
+ * It expects the parameter to be a string, in the form /\d+x\d+/ - e.g.
  * 200x150.
  *
  * @param string The GET or POST parameter you want checked
@@ -1376,7 +1376,7 @@ function param_imagesize($name) {
 /**
  * Works out what size a requested image should be, based on request parameters
  *
- * The result of this function can be passed to get_dataroot_image_path to 
+ * The result of this function can be passed to get_dataroot_image_path to
  * retrieve the filesystem path of the appropriate image
  */
 function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heightparam='height',
@@ -1393,17 +1393,17 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
 }
 
 /**
- * Given sizing information, converts it to a form that get_dataroot_image_path 
+ * Given sizing information, converts it to a form that get_dataroot_image_path
  * can use.
  *
- * @param mixed $size    either an array with 'w' and 'h' keys, or a string 'WxH'. 
+ * @param mixed $size    either an array with 'w' and 'h' keys, or a string 'WxH'.
  *                       Image will be exactly this size
  * @param int $width     Width. Image will be scaled to be exactly this wide
  * @param int $height    Height. Image will be scaled to be exactly this high
  * @param int $maxsize   The longest side will be scaled to be this size
- * @param int $maxwidth  Use with maxheight - image dimensions will be made as 
+ * @param int $maxwidth  Use with maxheight - image dimensions will be made as
  *                       large as possible but not exceed either one
- * @param int $maxheight Use with maxwidth - image dimensions will be made as 
+ * @param int $maxheight Use with maxwidth - image dimensions will be made as
  *                       large as possible but not exceed either one
  * @return mixed         A sizing parameter that can be used with get_dataroot_image_path()
  */
@@ -1797,7 +1797,7 @@ function getoptions_country() {
 }
 
 /**
- * 
+ *
  */
 
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
@@ -1806,11 +1806,11 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
     // I see no reason why IE has to drag the quality of the interwebs down with it
 
     $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
-    return ' <span class="help"><a href="" onclick="'. 
+    return ' <span class="help"><a href="" onclick="'.
         hsc(
-            'contextualHelp(' . json_encode($form) . ',' . 
-            json_encode($element) . ',' . json_encode($plugintype) . ',' . 
-            json_encode($pluginname) . ',' . json_encode($page) . ',' . 
+            'contextualHelp(' . json_encode($form) . ',' .
+            json_encode($element) . ',' . json_encode($plugintype) . ',' .
+            json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
         ) . '"><img src="' . $THEME->get_url('images/help.' . $imageext) . '" alt="' . get_string('Help') . '" title="' . get_string('Help') . '"></a></span>';
@@ -2594,8 +2594,8 @@ function footer_menu($all=false) {
 
 
 /**
- * Given a menu structure and a path, returns a data structure representing all 
- * of the child menu items of the path, and removes those items from the menu 
+ * Given a menu structure and a path, returns a data structure representing all
+ * of the child menu items of the path, and removes those items from the menu
  * structure
  *
  * Used by main_nav()
@@ -2685,18 +2685,18 @@ function get_site_page_content($pagename) {
 
 
 
-/** 
+/**
  * Redirects the browser to a new location. The path to redirect to can take
  * two forms:
- *  
+ *
  * - http[something]: will redirect the user to that exact URL
  * - /[something]: will redirect to WWWROOT/[something]
- *       
+ *
  * Any other form is illegal and will cause an error.
- *      
+ *
  * @param string $location The location to redirect the user to. Defaults to
  *                         the application home page.
- */     
+ */
 function redirect($location='/') {
     $file = $line = null;
     if (headers_sent($file, $line)) {
@@ -2959,11 +2959,11 @@ function parse_bbcode($text) {
 }
 
 /**
- * Given some plain text, adds the appropriate HTML to it to make it appear in 
+ * Given some plain text, adds the appropriate HTML to it to make it appear in
  * an HTML document with the same formatting
  *
- * This includes escaping entities, replacing newlines etc. It is not 
- * particularly intelligent about paragraphs, it just adds <br> to every 
+ * This includes escaping entities, replacing newlines etc. It is not
+ * particularly intelligent about paragraphs, it just adds <br> to every
  * newline
  *
  * @param string $text The text to format
@@ -2977,6 +2977,29 @@ function format_whitespace($text) {
     $text = str_replace('  ', ' &nbsp;', $text);
     $text = str_replace("\n", "<br>\n", $text);
     return $text;
+}
+
+/**
+ * Get the list of custom filters to be used in HTMLPurifier
+ * @return array
+ */
+function get_htmlpurifier_custom_filters() {
+    $customfilters = array();
+    if (get_config('filters')) {
+        foreach (unserialize(get_config('filters')) as $filter) {
+            // These filters are no longer necessary and have been removed
+            $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
+
+            if (!in_array($filter->file, $builtinfilters)) {
+                include_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
+                $classname = 'HTMLPurifier_Filter_' . $filter->file;
+                if (class_exists($classname)) {
+                    $customfilters[] = new $classname();
+                }
+            }
+        }
+    }
+    return $customfilters;
 }
 
 /**
@@ -3016,25 +3039,13 @@ function clean_html($text, $xhtml=false) {
     $config->set('Attr.EnableID', true);
     $config->set('Attr.IDPrefix', 'user_');
 
-    $customfilters = array();
-    if (get_config('filters')) {
-        foreach (unserialize(get_config('filters')) as $filter) {
-            // These filters are no longer necessary and have been removed
-            $builtinfilters = array('YouTube', 'TeacherTube', 'SlideShare', 'SciVee', 'GoogleVideo');
-
-            if (!in_array($filter->file, $builtinfilters)) {
-                include_once(get_config('libroot') . 'htmlpurifiercustom/' . $filter->file . '.php');
-                $classname = 'HTMLPurifier_Filter_' . $filter->file;
-                if (class_exists($classname)) {
-                    $customfilters[] = new $classname();
-                }
-            }
-        }
+    $customfilters = get_htmlpurifier_custom_filters();
+    if (!empty($customfilters)) {
         $config->set('Filter.Custom', $customfilters);
     }
 
-    // These settings help identify the configuration definition. If the 
-    // definition (the $def object below) is changed (e.g. new method calls 
+    // These settings help identify the configuration definition. If the
+    // definition (the $def object below) is changed (e.g. new method calls
     // made on it), the DefinitionRev needs to be increased. See
     // http://htmlpurifier.org/live/configdoc/plain.html#HTML.DefinitionID
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config');
@@ -3046,6 +3057,55 @@ function clean_html($text, $xhtml=false) {
     $purifier = new HTMLPurifier($config);
     return $purifier->purify($text);
 }
+
+/**
+ * Like clean_html(), but for CSS!
+ *
+ * Much of the code in this function was taken from the sample code in this post:
+ * http://stackoverflow.com/questions/3241616/sanitize-user-defined-css-in-php#5209050
+ *
+ * @param string $input_css
+ * @return string The cleaned CSS
+ */
+function clean_css($input_css) {
+    require_once('htmlpurifier/HTMLPurifier.auto.php');
+    require_once('csstidy/class.csstidy.php');
+
+    // Create a new configuration object
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
+
+    $config->set('Filter.ExtractStyleBlocks', true);
+
+    if (get_config('disableexternalresources')) {
+        $config->set('URI.DisableExternalResources', true);
+    }
+
+    $customfilters = get_htmlpurifier_custom_filters();
+    if (!empty($customfilters)) {
+        $config->set('Filter.Custom', $customfilters);
+    }
+
+    $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
+    $config->set('HTML.DefinitionRev', 1);
+
+    // Create a new purifier instance
+    $purifier = new HTMLPurifier($config);
+
+    // Wrap our CSS in style tags and pass to purifier.
+    // we're not actually interested in the html response though
+    $html = $purifier->purify('<style>'.$input_css.'</style>');
+
+    // The "style" blocks are stored seperately
+    $output_css = $purifier->context->get('StyleBlocks');
+
+    // Get the first style block
+    if (is_array($output_css) && count($output_css)) {
+        return $output_css[0];
+    }
+    return '';
+}
+
 
 /**
  * Given HTML, converts and formats it as text
@@ -3068,10 +3128,10 @@ function html2text($html, $fragment=true) {
  * @param string $text The text to locate URLs in
  * @return string
  *
- * {@internal{Note, it's perhaps unreasonably expected that the input to this 
- * function is HTML escaped already. Especially because it's expected that 
- * there are no <a href="...">s in there. This works for now because the bbcode 
- * parser breaks things out into tokens, but this function might need reworking 
+ * {@internal{Note, it's perhaps unreasonably expected that the input to this
+ * function is HTML escaped already. Especially because it's expected that
+ * there are no <a href="...">s in there. This works for now because the bbcode
+ * parser breaks things out into tokens, but this function might need reworking
  * to be more useful in other places.}}
  */
 function autolink_text($text) {
@@ -3086,12 +3146,12 @@ function autolink_text($text) {
 /**
  * Helps autolink_text by providing the HTML to link up URLs found.
  *
- * Intelligently decides what parts of the matched URL should be linked up, to 
- * get around issues where URLs are surrounded by brackets or have trailing 
+ * Intelligently decides what parts of the matched URL should be linked up, to
+ * get around issues where URLs are surrounded by brackets or have trailing
  * punctuation on them
  *
  * @param string $potentialurl     The URL to check. It should already have been run through hsc()
- * @param string $leadingcharacter The character (if any) before the URL. Used 
+ * @param string $leadingcharacter The character (if any) before the URL. Used
  *                                 to check for URLs surrounded by brackets
  */
 function _autolink_text_helper($potentialurl, $leadingcharacter) {
@@ -3099,29 +3159,29 @@ function _autolink_text_helper($potentialurl, $leadingcharacter) {
     $trailingcharacter = substr($potentialurl, -1);
     $startofurl = substr($potentialurl, 0, -1);
 
-    // Attempt to intelligently handle several annoyances that happen with URL 
-    // auto linking. We don't want to link up brackets if the URL is enclosed 
+    // Attempt to intelligently handle several annoyances that happen with URL
+    // auto linking. We don't want to link up brackets if the URL is enclosed
     // in them. We also don't want to link up punctuation after URLs
     if (in_array($leadingcharacter, array_keys($brackets)) &&
         in_array($trailingcharacter, $brackets)) {
         // The URL was surrounded by brackets
-        return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter; 
+        return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter;
     }
     else {
         foreach($brackets as $opener => $closer) {
             if ($trailingcharacter == $closer &&
                 false === strpos($startofurl, $opener)) {
                 // The URL ended in a bracket and didn't contain one
-                // Note that we can't just use this clause without using the clause 
-                // about URLs surrounded by brackets, because otherwise we won't catch 
+                // Note that we can't just use this clause without using the clause
+                // about URLs surrounded by brackets, because otherwise we won't catch
                 // URLs with balanced brackets in them like http://url/?(foo)&bar=1
-                return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter; 
+                return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter;
             }
         }
 
         // Check for trailing punctuation
         if (in_array($trailingcharacter, array('.', ',', '!', '?'))) {
-            return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter; 
+            return $leadingcharacter . '<a href="' . $startofurl . '">' . $startofurl . '</a>' . $trailingcharacter;
         }
         else {
             return $leadingcharacter . '<a href="' . $potentialurl . '">' . $potentialurl . '</a>';
@@ -3184,7 +3244,7 @@ function bbcode_format_post_message() {
 
 /**
  * Displays purified html on a page with an explanatory message.
- * 
+ *
  * @param string $html     The purified html.
  * @param string $filename The filename to serve the file as
  * @param array $params    Parameters previously passed to serve_file
@@ -3208,7 +3268,7 @@ function display_cleaned_html($html, $filename, $params) {
  *
  * It also strips all tags except <br> and <p>.
  *
- * This version is appropriate for use on HTML. See str_shorten_text() for use 
+ * This version is appropriate for use on HTML. See str_shorten_text() for use
  * on text strings.
  *
  * @param string $str    The string to shorten
@@ -3262,10 +3322,10 @@ function str_shorten_html($str, $maxlen=100, $truncate=false, $newlines=true) {
 }
 
 /**
- * Takes a string and a length, and ensures that the string is no longer than 
+ * Takes a string and a length, and ensures that the string is no longer than
  * this length, by putting '...' in it somewhere.
  *
- * This version is appropriate for use on plain text. See str_shorten_html() 
+ * This version is appropriate for use on plain text. See str_shorten_html()
  * for use on HTML strings.
  *
  * @param string $str    The string to shorten
@@ -3295,10 +3355,10 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
 /**
  * Builds pagination links for HTML display.
  *
- * The pagination is quite configurable, but at the same time gives a consistent 
+ * The pagination is quite configurable, but at the same time gives a consistent
  * look and feel to all pagination.
  *
- * This function takes one array that contains the options to configure the 
+ * This function takes one array that contains the options to configure the
  * pagination. Required options include:
  *
  * - url: The base URL to use for all links (it should not contain special characters)
@@ -3316,7 +3376,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  * - previoustext: The text to use for the 'previous page' link
  * - nexttext: The text to use for the 'next page' link
  * - lasttext: The text to use for the 'last page' link
- * - numbersincludefirstlast: Whether the page numbering should include links 
+ * - numbersincludefirstlast: Whether the page numbering should include links
  *   for the first and last pages
  * - numbersincludeprevnext: The number of pagelinks, adjacent the the current page,
  *   to include per side
@@ -3328,12 +3388,12 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  *
  * Optional options to support javascript pagination include:
  *
- * - datatable: The ID of the table whose TBODY's rows will be replaced with the 
+ * - datatable: The ID of the table whose TBODY's rows will be replaced with the
  *   resulting rows
- * - jsonscript: The script to make a json request to in order to retrieve 
- *   both the new rows and the new pagination. See js/artefactchooser.json.php 
- *   for an example. Note that the paginator javascript library is NOT 
- *   automatically included just because you call this function, so make sure 
+ * - jsonscript: The script to make a json request to in order to retrieve
+ *   both the new rows and the new pagination. See js/artefactchooser.json.php
+ *   for an example. Note that the paginator javascript library is NOT
+ *   automatically included just because you call this function, so make sure
  *   that your smarty() call hooks it in.
  *
  * @param array $params Options for the pagination
@@ -3562,7 +3622,7 @@ function build_pagination($params) {
 }
 
 /**
- * Used by build_pagination to build individual links. Shouldn't be used 
+ * Used by build_pagination to build individual links. Shouldn't be used
  * elsewhere.
  */
 function build_pagination_pagelink($class, $url, $setlimit, $limit, $offset, $text, $title, $disabled=false, $offsetname='offset') {

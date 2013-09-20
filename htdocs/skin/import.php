@@ -210,7 +210,7 @@ function importskinform_submit(Pieform $form, $values) {
         // Custom CSS element...
         $items = $skindata->getElementsByTagName('customcss');
         foreach ($items as $item) {
-            $skin = array_merge($skin, array('view_custom_css' => unserialize($item->getAttribute('contents'))));
+            $skin['view_custom_css'] = clean_css(unserialize($item->getAttribute('contents')));
         }
 
         // Image element...
