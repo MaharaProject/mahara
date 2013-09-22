@@ -5,6 +5,9 @@
     height: 180px;
     padding: 0px 20px 40px 20px;
 }
+.skinthumb h3 {
+    margin-bottom: 2px;
+}
 img.skinthumb {
     border: 1px solid #333;
 }
@@ -18,6 +21,11 @@ img.skinthumb {
 }
 #skinactions .btn-add {
     float: right;
+}
+.editskin {
+    float: right;
+    margin-right: 30px;
+    color: #aaaaaa;
 }
 
 /* ====== CSS for page skin selection tab ====== */

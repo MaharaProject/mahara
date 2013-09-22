@@ -2419,7 +2419,7 @@ function mahara_standard_nav() {
     if (can_use_skins()) {
         $menu['myportfolio/skins'] = array(
            'path' => 'myportfolio/skins',
-           'url' => 'skin/',
+           'url' => 'skin/index.php',
            'title' => get_string('myskins', 'skin'),
            'weight' => 65,
         );

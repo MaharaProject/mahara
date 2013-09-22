@@ -48,6 +48,7 @@ $string['editskin'] = 'Edit skin';
 $string['skinsaved'] = 'Skin saved successfully';
 $string['skinimported'] = 'Skin imported successfully';
 $string['clicktoedit'] = 'Click to edit skin';
+$string['clickimagetoedit'] = 'Click image to edit';
 $string['addtofavorites'] = 'Add to favorites';
 $string['removefromfavorites'] = 'Remove from favorites';
 $string['skinaddedtofavorites'] = 'Skin added to favorites';

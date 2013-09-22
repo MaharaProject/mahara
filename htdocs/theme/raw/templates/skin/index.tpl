@@ -19,7 +19,9 @@
 {foreach from=$skins item=skin}
             <div class="skinthumb">
                 <h3>{$skin.title|escape}</h3>
-                {if $skin.editable}<a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}"><img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135" style="border:1px solid #333"></a>
+                {if $skin.editable}
+                <span class="editskin"><a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}">{str tag="clickimagetoedit" section="skin"}</a></span>
+                <a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}"><img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135" style="border:1px solid #333"></a>
                 {else}<img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135">{/if}
                 {if $skin.removable}<div class="skinactions" id="skinactions">
                     <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-del">{str tag="deletethisskin" section="skin"}</a>
