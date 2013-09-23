@@ -232,6 +232,7 @@ function importskinform_submit(Pieform $form, $values) {
                     (array)unserialize($item->getAttribute('artefact_file_image'))
                 );
                 unset($artefact->id);
+                unset($artefact->fileid);
                 $artefact->owner  = $USER->get('id');
                 $artefact->author = $USER->get('id');
                 $artefact->atime = $now;
