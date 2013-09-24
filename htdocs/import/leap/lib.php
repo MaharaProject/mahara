@@ -802,10 +802,22 @@ class PluginImportLeap extends PluginImport {
 
         $rows = $entry->xpath('mahara:view[1]/mahara:row');
         $rowcount = count($rows);
+        // A flag that indicates whether this is an old-style one-row layout, or a new-style multi-row layout
+        $onerowlayout = false;
         if ($rowcount < 1 || $rowcount > View::$maxlayoutrows) {
-            // Whoops, invalid number of rows
-            $this->trace("Invalid number of rows specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-            return false;
+            // Check for a pre-1.8 (one-row) layout
+            $columns = $entry->xpath('mahara:view[1]/mahara:column');
+            $columncount = count($columns);
+            if ($columncount < 1 || $columncount > 5) {
+                // Whoops, invalid number of rows
+                $this->trace("Invalid number of rows specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                return false;
+            }
+            else {
+                $onerowlayout = true;
+                $rows = array($columns);
+                $rowcount = 1;
+            }
         }
 
         $layout = null;
@@ -875,12 +887,15 @@ class PluginImportLeap extends PluginImport {
         $rowindex = 1;
         foreach ($rows as $row) {
 
-            $columns = $row->xpath('mahara:column');
-            $columncount = count($columns);
-            if ($columncount < 1 || $columncount > 5) {
-            // Whoops, invalid number of columns
-            $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-            return false;
+            // If this is the old one-row layout, we'll have handled that earlier, and have the one row's columns be in $columns
+            if (!$onerowlayout) {
+                $columns = $row->xpath('mahara:column');
+                $columncount = count($columns);
+                if ($columncount < 1 || $columncount > 5) {
+                    // Whoops, invalid number of columns
+                    $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                    return false;
+                }
             }
 
             $colindex = 1;
