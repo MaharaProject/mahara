@@ -85,7 +85,7 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
         WHERE p.id = ?';
 
         $record = get_record_sql($sql, array($id));
-        if (!$record) {
+        if (!$record || $record->deleted) {
             return false;
         }
 
@@ -109,7 +109,7 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
         WHERE p1.id = ?';
 
         $record = get_record_sql($sql, array($id));
-        if (!$record) {
+        if (!$record || $record->deleted) {
             return false;
         }
 
