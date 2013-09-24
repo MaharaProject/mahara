@@ -3210,6 +3210,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('institution');
         $field = new XMLDBField('dropdownmenu');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
     }
 
     if ($oldversion < 2013081400) {
