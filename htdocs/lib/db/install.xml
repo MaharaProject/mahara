@@ -678,8 +678,9 @@
         <TABLE NAME="view_layout">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="rows" TYPE="int" LENGTH="1" NOTNULL="true"/>
-                <FIELD NAME="iscustom" TYPE="int" LENGTH="1" NOTNULL="true"/>
+                <FIELD NAME="rows" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+                <FIELD NAME="iscustom" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="layoutmenuorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
