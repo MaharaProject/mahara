@@ -449,9 +449,11 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         });
         forEach(getElementsByTagAndClassName('a', 'changefolder', self.id + '_upload_browse'), function (elem) {
             connect(elem, 'onclick', function (e) {
-                if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
-                    e.stop();
-                    return false;
+                if (self.config.edit) {
+                    if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
+                        e.stop();
+                        return false;
+                    }
                 }
                 var href = getNodeAttribute(this, 'href');
                 var params = parseQueryString(href.substring(href.indexOf('?')+1));
