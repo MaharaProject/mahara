@@ -853,23 +853,78 @@ class PluginImportLeap extends PluginImport {
             // if there are 3 or more rows in leap2a layout and 2 of those rows
             // match more than one possible view layout.
             $sql = 'SELECT vlrc.viewlayout AS id
-                    FROM {view_layout} vl, {view_layout_rows_columns} vlrc
-                    JOIN (SELECT viewlayout, COUNT(*)
-                          FROM {view_layout_rows_columns}
-                          GROUP BY viewlayout
-                          HAVING COUNT(viewlayout) = ?) vlrc2
-                    ON vlrc.viewlayout = vlrc2.viewlayout
-                    WHERE ' . $rowscolssql . '
-                    AND vl.id = vlrc.viewlayout
-                    AND vl.iscustom = 0
+                    FROM
+                        {view_layout} vl
+                        INNER JOIN {view_layout_rows_columns} vlrc
+                            ON vl.id = vlrc.viewlayout
+                        INNER JOIN (
+                            SELECT
+                                viewlayout, COUNT(*)
+                            FROM {view_layout_rows_columns}
+                            GROUP BY viewlayout
+                            HAVING COUNT(*) = ?
+                        ) vlrc2
+                            ON vlrc.viewlayout = vlrc2.viewlayout
+                        INNER JOIN {usr_custom_layout} ucl
+                            ON ucl.layout = vl.id
+                    WHERE (' . $rowscolssql . ')
+                        AND (
+                            vl.iscustom = 0
+                            OR (
+                                vl.iscustom = 1 AND ucl.usr = ?
+                            )
+                        )
                     GROUP BY vlrc.viewlayout
-                    ORDER BY COUNT(vlrc.viewlayout) DESC
+                    HAVING count(*) = ?
                     LIMIT 1';
-            $layout = get_record_sql($sql, array($rowcount));
+            $layout = get_record_sql($sql, array($rowcount, $this->get('usr'), $rowcount));
 
             if (!$layout) {
-                $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                return false;
+                require_once(get_config('docroot') . 'lib/layoutpreviewimage.php');
+                // No existing layout matches their page. This probably means they used a custom layout. So, create a new custom layout for them.
+
+                // First check to see whether the custom layout they're using is acceptable in our system
+                // TODO: A clever way to squeeze their page into one of the standard layouts if it isn't acceptable.
+                // Maybe just put everything into a one-column layout and let them rearrange it?
+                if (count ($rowwidths) < 1 || count($rowwidths) > View::$maxlayoutrows) {
+                    $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                    return false;
+                }
+
+                $i = 1;
+                $layoutdata = array();
+                $layoutdata['numrows'] = count($rowwidths);
+                foreach ($rowwidths as $row) {
+                    // First, check to see whether this row matches a valid row layout in the DB
+                    $rowcolid = get_field('view_layout_columns', 'id', 'widths', $row);
+                    if (!$rowcolid) {
+                        $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                        return false;
+                    }
+
+                    // Data to help us generate the layout
+                    $layoutdata["row{$i}"] = $rowcolid;
+                    $i++;
+                }
+
+                // Now that we know the layout is valid, generate a record and a thumbnail image for it.
+                db_begin();
+                // An empty view object, since this view isn't present in the DB yet. We need this in order to access the layout methods
+                $viewobj = new View(0, array(
+                    'owner' => $this->get('usr'),
+                    'deleted' => true // To prevent it from being stored in the DB by the View destructor
+                ));
+                $layoutresult = $viewobj->addcustomlayout($layoutdata);
+                if (empty($layoutresult['layoutid'])) {
+                    $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                    db_rollback();
+                    return false;
+                }
+                else {
+                    $viewobj->updatecustomlayoutpreview($layoutdata);
+                    $layout = (object) array('id' => $layoutresult['layoutid']);
+                    db_commit();
+                }
             }
         }
 
