@@ -18,30 +18,40 @@
 {if $skins}
 {foreach from=$skins item=skin}
             <div class="skinthumb">
-                <h3>{$skin.title|escape}</h3>
-                {if $skin.editable}
-                <span class="editskin"><a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}">{str tag="clickimagetoedit" section="skin"}</a></span>
-                <a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}"><img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135" style="border:1px solid #333"></a>
-                {else}<img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135">{/if}
-                {if $skin.removable}<div class="skinactions" id="skinactions">
-                    <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-del">{str tag="deletethisskin" section="skin"}</a>
-                    <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-add">{str tag="exportthisskin" section="skin"}</a>
-                </div>{else}
-                    {if $skin.type == 'public' && $skin.owner != $user}
-                        {if !$skin.favorite}
-                            <div class="skinactions">
-                            <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" class="btn-add">{str tag="addtofavorites" section="skin"}</a>
-                            </div>
-                        {else}
-                            <div class="skinactions">
-                            <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" class="btn-del">{str tag="removefromfavorites" section="skin"}</a>
-                            </div>
+                <div class="skin-controls">
+                    {if $skin.editable}
+                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='clickimagetoedit' section='skin'}">{str tag="clickimagetoedit" section="skin"}</a>
+                    {/if}
+                    {if $skin.removable}
+                        <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">{str tag="exportthisskin" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">{str tag="deletethisskin" section="skin"}</a>
+                    {else}
+                        {if $skin.type == 'public' && $skin.owner != $user}
+                            {if !$skin.favorite}
+                                <div class="skinactions">
+                                <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" class="btn-addtofavourites" title="{str tag='addtofavorites' section='skin'}">{str tag="addtofavorites" section="skin"}</a>
+                                </div>
+                            {else}
+                                <div class="skinactions">
+                                <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" class="btn-removefromfavourites" title="{str tag='removefromfavorites' section='skin'}">{str tag="removefromfavorites" section="skin"}</a>
+                                </div>
+                            {/if}
                         {/if}
                     {/if}
-                {/if}
+                </div>
+                <div class="skin-header">
+                    <h2 class="title">{$skin.title|escape}</h2>
+                </div>
+                <div class="skin-content">
+                    {if $skin.editable}
+                    <a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" title="{str tag='clickimagetoedit' section='skin'}"><img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135"></a>
+                    {else}
+                    <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135">
+                    {/if}
+                </div>
             </div>
 {/foreach}
-<div style="clear:both;">{$pagination}</div>
+<div class="cb">{$pagination}</div>
 {else}
             <div class="message">{str tag="noskins" section="skin"}</div>
 {/if}

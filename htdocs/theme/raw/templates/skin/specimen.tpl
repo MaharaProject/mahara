@@ -6,57 +6,54 @@
     font-family: '{$fonttitle|escape_css_string|safe}';
 }
 body {
-    color: #222222;
-    font: 13px/1.2 Arial,sans-serif;
-    padding-right: 20px;
-    background: #fff;
-    background: -moz-linear-gradient(top, rgba(255,255,255,.2) 30%, rgba(3,68,165,.2) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%, rgba(255,255,255,.2)), color-stop(100%, rgba(3,68,165,.2)));
+    color: #333333;
+    font: 13px/1.333 Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    background: #FFFFFF;
 }
 .superspecimen {
     max-width: 700px;
-    padding: 20px 0 80px 20px;
+    padding: 15px;
 }
 .superspecimen .superheader {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .superspecimen h1 {
-    font-family: arial;
-    font-size: 16px;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
+    font-size: 2em;
     font-weight: bold;
-    margin-bottom: 3px;
+    margin: 3px 0;
 }
 .superspecimen .fontcard {
     margin-top: 15px;
-    overflow: hidden;
     padding: 20px;
 }
 .fontcard {
     background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #BBBBBB;
-    border-radius: 5px 5px 5px 5px;
-    box-shadow: 0 1px 1px #EEEEEE;
-    margin: 0 3px 10px 0;
+    border: 1px solid #D1D1D1;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     position: relative;
 }
 .superspecimen .supersample {
     font-size: 64px;
-    line-height: 1.1em;
+    line-height: 1.08em;
     margin-bottom: 20px;
 }
 .superspecimen .styles {
     font-size: 32px;
+    line-height: 1.25em;
     margin-bottom: 20px;
-    white-space: nowrap;
 }
 .superspecimen .identifier {
     color: #777777;
     display: block;
-    font-family: arial;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
     font-size: 11px;
+    line-height: 1.25em;
 }
 p {
-    line-height: 1.4em;
+    line-height: 1.333em;
     margin-bottom: 1em;
 }
 .sample {
@@ -76,7 +73,7 @@ p {
 .sample div .defaultCharacter {
     color: #CCCCCC;
     display: block;
-    font-family: arial,sans-serif;
+    font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
     font-size: 0.4em;
 }
 </style>

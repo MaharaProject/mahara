@@ -50,6 +50,7 @@ addLoadEvent(function() {
                 else {
                     removeElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     removeElementClass(fieldset.tabLink, 'current-tab');
+                    addElementClass(fieldset, 'safe-hidden');
                     addElementClass(fieldset, 'collapsed');
                 }
             });
