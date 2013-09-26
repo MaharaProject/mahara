@@ -2852,7 +2852,6 @@ table#designskinform_view_background_image_selectlist {
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 5px;
-    display: block;
     margin: 10px 0;
 }
 #designskinform_body_background_position_container td,
@@ -2886,18 +2885,20 @@ textarea#designskinform_view_custom_css {
     -webkit-border-radius: 10px;
     border: 1px solid #d1d1d1;
 }
-.no-js table#designskinform_body_background_image_selectlist,
-.no-js table#designskinform_view_background_image_selectlist {
-    display: table;
-}
+.no-js form#designskinform fieldset.collapsed div#designskinform_body_background_image_open_upload_browse_container,
+.no-js form#designskinform fieldset.collapsed div#designskinform_view_background_image_open_upload_browse_container,
 .no-js input#designskinform_body_background_image_close_upload_browse,
 .no-js input#designskinform_view_background_image_close_upload_browse {
     display: none;
 }
+.no-js form#designskinform fieldset.collapsed table {
+    display: table;
+}
 .no-js #designskinform_body_background_image_foldernav,
 .no-js #designskinform_view_background_image_foldernav {
     padding: 3px 0 0 24px;
-    margin: 0
+    display: block;
+    margin-top: 0px;
 }
 /* Portfolio > Export */
 #export .element div label,
