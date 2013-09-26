@@ -47,13 +47,13 @@ $string['createskin'] = 'Create skin';
 $string['editskin'] = 'Edit skin';
 $string['skinsaved'] = 'Skin saved successfully';
 $string['skinimported'] = 'Skin imported successfully';
-$string['clicktoedit'] = 'Click to edit skin';
+$string['clicktoedit'] = 'Click to edit this skin';
 $string['clickimagetoedit'] = 'Click image to edit';
-$string['addtofavorites'] = 'Add to favorites';
-$string['removefromfavorites'] = 'Remove from favorites';
-$string['skinaddedtofavorites'] = 'Skin added to favorites';
-$string['skinremovedfromfavorites'] = 'Skin removed from favorites';
-$string['cantremoveskinfromfavorites'] = 'Can\'t remove skin from favorites';
+$string['addtofavorites'] = 'Add to favourites';
+$string['removefromfavorites'] = 'Remove from favourites';
+$string['skinaddedtofavorites'] = 'Skin added to favourites';
+$string['skinremovedfromfavorites'] = 'Skin removed from favourites';
+$string['cantremoveskinfromfavorites'] = 'Can\'t remove skin from favourites';
 
 $string['noskins'] = 'There are no skins';
 $string['skin'] = 'skin';
@@ -62,11 +62,11 @@ $string['skins'] = 'skins';
 $string['allskins'] = 'All skins';
 $string['siteskins'] = 'Site skins';
 $string['userskins'] = 'My skins';
-$string['favoriteskins'] = 'Favorite skins';
+$string['favoriteskins'] = 'Favourite skins';
 $string['publicskins'] = 'Public skins';
 $string['currentskin'] = 'Current skin';
 $string['skinnotselected'] = 'Skin not selected';
-$string['skindefault'] = 'Default site skin';
+$string['noskin'] = 'No skin';
 
 // Create Skin Form Fieldsets
 $string['skingeneraloptions'] = 'General';
@@ -150,12 +150,12 @@ $string['manageskins'] = 'Manage skins';
 /* SKINS - SITE FONTS */
 $string['sitefontsmenu'] = 'Fonts';
 $string['sitefonts'] = 'Fonts';
-$string['sitefontsdescription'] = '<p>The following fonts have been installed in your site, for use in skins.</p>';
+$string['sitefontsdescription'] = '<p>The following fonts have been installed on your site for use in skins.</p>';
 $string['installfontinstructions'] = '<p>
-Add fonts, which allow font embedding into web pages via the CSS @font-face rule. Remember that not all authors / foundries allow this.
+Add fonts, which allow font embedding into web pages, via the CSS @font-face rule. Remember that not all authors / foundries allow this.
 </p>
 <p>
-When you find an appropriate free font that you are allowed to embed into a web page, you must convert it into the formats:
+When you find an appropriate free font that you are allowed to embed into a web page, you must convert it into the following formats:
 <br />TrueType Font, Embedded OpenType Font, Web Open Font Format Font and Scalable Vector Graphic Font.
 </p>
 <p>
@@ -180,14 +180,14 @@ $string['fontdeleted'] = 'Font deleted';
 $string['cantdeletefont'] = 'You cannot delete this font.';
 
 $string['fontname'] = 'Font name';
-$string['invalidfonttitle'] = 'Invalid font title. (Must contain at least one alphanumeric character.)';
+$string['invalidfonttitle'] = 'Invalid font title. It must contain at least one alphanumeric character.';
 $string['genericfontfamily'] = 'Generic font family';
 
 $string['fontstyle'] = 'Font style';
 $string['regular'] = 'Regular';
 $string['bold'] = 'Bold';
 $string['italic'] = 'Italic';
-$string['bolditalic'] = 'Bold Italic';
+$string['bolditalic'] = 'Bold italic';
 
 $string['fonttype'] = 'Font type';
 $string['headingandtext'] = 'Heading and text';
@@ -204,7 +204,7 @@ $string['fontfilettf'] = 'TTF font file';
 $string['ttfdescription'] = 'TrueType font (for Firefox 3.5+, Opera 10+, Safari 3.1+, Chrome 4.0.249.4+)';
 $string['fontfilewoff'] = 'WOFF font file';
 $string['woffdescription'] = 'Web Open Font Format font (for Firefox 3.6+, Internet Explorer 9+, Chrome 5+)';
-$string['fontfilelicence'] = 'Licence file';
+$string['fontfilelicence'] = 'License file';
 $string['fontnotice'] = 'Font notice';
 $string['fontnoticedescription'] = 'One line added to the CSS file describing the font and the author.';
 $string['filepathnotwritable'] = 'Cannot write the files to \'%s\'';
@@ -221,7 +221,7 @@ $string['preview'] = 'Preview';
 $string['samplesize'] = 'Size';
 $string['samplesort'] = 'Sorting';
 $string['sampletext'] = 'Text';
-$string['samplefonttitle'] = 'Font Name';
+$string['samplefonttitle'] = 'Font name';
 $string['sampletitle11'] = 'Latin alphabet (ASCII only)';
 $string['sampletext11'] = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
 $string['sampletitle12'] = 'Latin alphabet (ISO/IEC 8859-1)';
@@ -245,23 +245,23 @@ $string['sampletext22'] = 'The quick brown fox jumps over the lazy dog.';
 
 /* SKINS - GOOGLE WEB FONTS */
 $string['installgwfont'] = 'Install Google font(s)';
-$string['archivereadingerror'] = 'Error reading ZIP archive!';
+$string['archivereadingerror'] = 'Error reading ZIP archive.';
 $string['gwfontadded'] = 'Google font(s) installed successfully';
-$string['gwfontsnotavailable'] = 'Google Fonts are currently not available.';
+$string['gwfontsnotavailable'] = 'Google fonts are currently not available.';
 
 $string['gwfinstructions'] = '<ol>
-<li>Visit <a href="http://www.google.com/fonts/" target="_blank">Google Fonts</a></li>
-<li>Select fonts and add them to collection</li>
+<li>Visit <a href="http://www.google.com/fonts/" target="_blank">Google fonts</a></li>
+<li>Select fonts and add them to your collection</li>
 <li>Download fonts in a collection as a ZIP file</li>
 <li>Upload that ZIP file in this form</li>
 <li>Install Google font(s)</li>
 </ol>';
 $string['gwfzipfile'] = 'Valid ZIP file';
-$string['gwfzipdescription'] = 'A valid ZIP file which contains all selected Google fonts which will be installed.';
-$string['notvalidzipfile'] = 'This is not a valid ZIP file';
+$string['gwfzipdescription'] = 'A valid ZIP file that contains all selected Google fonts to be installed.';
+$string['notvalidzipfile'] = 'This is not a valid ZIP file.';
 
-$string['fontlicence'] = 'Font licence';
-$string['fontlicencenotfound'] = 'Font licence not found';
+$string['fontlicence'] = 'Font license';
+$string['fontlicencenotfound'] = 'Font license not found';
 
 $string['fontsort.alpha'] = 'Alphabet';
 $string['fontsort.date'] = 'Date added';

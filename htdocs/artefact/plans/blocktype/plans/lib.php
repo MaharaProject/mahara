@@ -34,7 +34,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.plans/plans');
+        return get_string('description1', 'blocktype.plans/plans');
     }
 
     public static function get_categories() {

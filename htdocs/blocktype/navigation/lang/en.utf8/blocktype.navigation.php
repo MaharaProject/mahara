@@ -30,5 +30,5 @@ defined('INTERNAL') || die();
 $string['defaulttitledescription'] = 'If no title is provided here, the title of the collection will be used.';
 $string['collection'] = 'Collection';
 $string['title'] = 'Navigation';
-$string['description'] = 'Navigation for a collection of pages (see Portfolio -> Collections, or the Collections tab when inside a Group)';
+$string['description'] = 'Navigation for a collection of pages (see Portfolio -> Collections, or the Collections tab when inside a group)';
 $string['nocollections1'] = 'No collections. <a href="%s">Create one</a>.';

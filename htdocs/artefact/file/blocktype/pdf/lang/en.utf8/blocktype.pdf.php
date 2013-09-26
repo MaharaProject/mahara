@@ -28,4 +28,4 @@
 defined('INTERNAL') || die();
 
 $string['title'] = 'PDF';
-$string['description'] = 'A single pdf file from your files area';
+$string['description'] = 'A single PDF file from your files area';

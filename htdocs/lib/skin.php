@@ -399,7 +399,7 @@ class Skin {
         // to be able to choose no skin.
         $defaultskin = new stdClass();
         $defaultskin->id = 0;
-        $defaultskin->title = get_string('skindefault', 'skin');
+        $defaultskin->title = get_string('noskin', 'skin');
         $site_skins[] = $defaultskin;
         return $site_skins;
     }

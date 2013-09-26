@@ -109,7 +109,7 @@ $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that does 
 $string['viewnotfound'] = 'Page with id %s not found.';
 $string['viewnotfoundbyname'] = 'Page %s by %s not found.';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile.';
-$string['invalidlayoutselection'] = 'You tried to select a layout that didn\'t exist!';
+$string['invalidlayoutselection'] = 'You tried to select a layout that doesn\'t exist.';
 $string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
@@ -135,7 +135,7 @@ $string['timezoneidentifierunusable'] = 'PHP on your website host does not retur
 $string['postmaxlessthanuploadmax'] = 'Your PHP post_max_size setting (%s) is smaller than your upload_max_filesize setting (%s). Uploads larger than %s will fail without displaying an error. Usually, post_max_size should be much larger than upload_max_filesize.';
 $string['smallpostmaxsize'] = 'Your PHP post_max_size setting (%s) is very small. Uploads larger than %s will fail without displaying an error.';
 $string['notenoughsessionentropy'] = 'Your PHP session.entropy_length setting is too small. Set it to at least 16 in your php.ini to ensure that generated session IDs are random and unpredictable enough.';
-$string['switchtomysqli'] = 'The <strong>mysqli</strong> PHP extension is not installed on your server, so Mahara is falling back to the deprecated original <strong>mysql</strong> PHP extension. We recommend installing <a href="http://php.net/manual/en/book.mysqli.php">mysqli</a>.';
+$string['switchtomysqli'] = 'The <strong>mysqli</strong> PHP extension is not installed on your server. Thus, Mahara is falling back to the deprecated original <strong>mysql</strong> PHP extension. We recommend installing <a href="http://php.net/manual/en/book.mysqli.php">mysqli</a>.';
 $string['noreplyaddressmissingorinvalid'] = 'The noreply address setting is either empty or has an invalid email address. Please check the configuration in the <a href="%s">site options in the email settings</a>.';
 $string['openbasedirenabled'] = 'Your server has the php open_basedir restriction enabled.';
 $string['openbasedirpaths'] = 'Mahara can only open files within the following path(s): %s.';
