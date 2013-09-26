@@ -109,7 +109,9 @@ input#export_submit,
 input#login_submit,
 .login-externallink a.btn,
 input#viewlayout_submit,
-input#files_filebrowser_upload {
+input#files_filebrowser_upload,
+input#designskinform_submit,
+input#cancel_designskinform_submit {
 	background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border-color: #be680b;
 	color: #FFFFFF;
@@ -142,7 +144,9 @@ input#export_submit:hover,
 input#login_submit:hover,
 .login-externallink a.btn:hover,
 input#viewlayout_submit:hover,
-input#files_filebrowser_upload:hover {
+input#files_filebrowser_upload:hover,
+input#designskinform_submit:hover,
+input#cancel_designskinform_submit:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border-color: #be680b;
 	color: #FFFFFF;
@@ -175,7 +179,9 @@ input#export_submit:active,
 input#login_submit:active,
 .login-externallink a.btn:active,
 input#viewlayout_submit:active,
-input#files_filebrowser_upload:active {
+input#files_filebrowser_upload:active,
+input#designskinform_submit:active,
+input#cancel_designskinform_submit:active {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border-color: #8E1901;
 	color: #FFFFFF;
@@ -185,7 +191,8 @@ input#files_filebrowser_upload:active {
 input#addviews_submit,
 input#edituser_suspend_submit,
 input#friendscontrol_submit,
-input#usertype_typesubmit {
+input#usertype_typesubmit,
+.subpage .skinsbtns .btn {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
     color: #333333;
@@ -194,7 +201,8 @@ input#usertype_typesubmit {
 input#addviews_submit:hover,
 input#edituser_suspend_submit:hover,
 input#friendscontrol_submit:hover,
-input#usertype_typesubmit:hover {
+input#usertype_typesubmit:hover,
+.subpage .skinsbtns .btn:hover {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
@@ -203,7 +211,8 @@ input#usertype_typesubmit:hover {
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
 input#friendscontrol_submit:active,
-input#usertype_typesubmit:active {
+input#usertype_typesubmit:active,
+.subpage .skinsbtns .btn:active {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
     color: #333333;
@@ -486,6 +495,10 @@ a.persona-button:before{ /* Triangle */
 table.attachments {
     background-color: #e8bf8d;
     border: 2px solid #e8bf8d;
+}
+/* Portfolio > Pages > Edit page > Choose skin tab */
+div.currentskin {
+    background: #f4e5d3;
 }
 /* Portfolio > Collections > Edit */
 #collectionpageswrap {

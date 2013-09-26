@@ -901,7 +901,9 @@ input#account_delete_submit:active {
 input#login_submit,
 input#files_filebrowser_upload,
 input#instconf_artefactids_upload,
-input#instconf_artefactid_upload {
+input#instconf_artefactid_upload,
+input#designskinform_submit,
+input#viewskin_submit {
     font-weight: bold;
 }
 /* bigger buttons */
@@ -936,7 +938,9 @@ input#instconf_artefactid_edit_cancel,
 input#viewlayout_submit,
 input#files_filebrowser_upload,
 input#instconf_artefactids_upload,
-input#instconf_artefactid_upload {
+input#instconf_artefactid_upload,
+input#designskinform_submit,
+input#cancel_designskinform_submit {
     padding: 5px 10px;
     font-size: 1.167em
 }
@@ -1087,9 +1091,29 @@ input#editcomposite_filebrowser_close_upload_browse {
     vertical-align: top;
     cursor: pointer !important;
 }
+.btn-big-export {
+    background: transparent url(../images/btn_export.png) no-repeat 0 0 !important;
+    border: 0 !important;
+    margin-right: 0 !important;
+    width: 24px;
+    height: 24px;
+    padding: 0px;
+    text-indent: -9999px;
+    font-size: 1%;
+    vertical-align: top;
+    cursor: pointer !important;
+}
 /* links or buttons with icons **/
+.btn-add {
+    background: transparent url(../images/add_small.png) no-repeat 0 50%;
+    padding-left: 15px;
+}
 .btn-approve {
     background: transparent url(../images/approve_small.png) no-repeat 0 50%;
+    padding-left: 15px;
+}
+.btn-config {
+    background: transparent url(../images/config_small.png) no-repeat 0 50%;
     padding-left: 15px;
 }
 .btn-del {
@@ -1099,6 +1123,9 @@ input#editcomposite_filebrowser_close_upload_browse {
 .btn-deny {
     background: transparent url(../images/deny_small.png) no-repeat 0 50%;
     padding-left: 15px;
+}
+.btn-display {
+    background: transparent url(../images/display_small.png) no-repeat 0 50%;
 }
 .btn-edit {
     background: transparent url(../images/edit_small.png) no-repeat 0 50%;
@@ -1501,7 +1528,7 @@ ul.in-page-tabs li input.linkbtn,
 ul.searchtab li span.inactive {
     text-decoration: none;
     display: inline-block;
-    padding: 10px;
+    padding: 10px 6px;
     border: 1px solid #D4D4D4;
     background: #EEEEEE;
     -webkit-border-radius: 3px 3px 0 0;
@@ -2434,6 +2461,26 @@ table.templateresults td.right input.submit {
 #addlayout {
     margin: 0;
 }
+/* Portfolio > Pages > Edit page > Choose skin tab */
+.skinsbtns {
+    margin: 0;
+}
+div.currentskin {
+    padding: 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+ul.userskins,
+ul.siteskins,
+ul.favorskins {
+    background: #f2f2f2;
+}
+.favouriteskins {
+    background: url(../images/rating_star.png) no-repeat 0 -38px;
+    padding-left: 20px;
+}
 /* Portfolio > Pages > Delete page */
 
 /* Portfolio > Collections */
@@ -2733,6 +2780,124 @@ form#search {
 }
 #sharedviewlist .lastcomment .poster {
     font-size: 0.917em;
+}
+/* Portfolio > Skins */
+.skinthumb {
+    width: 280px;
+    background: #F3F3F3;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px;
+}
+.skinthumb .skin-controls a.btn-addtofavourites {
+    background: url(../images/rating_star.png) no-repeat 0 0;
+    width: 19px;
+    height: 19px;
+    text-indent: -9999px;
+    border: 0;
+    cursor: pointer;
+}
+.skinthumb .skin-controls a.btn-addtofavourites:hover {
+    background: url(../images/rating_star.png) no-repeat 0 -38px;
+}
+.skinthumb .skin-controls a.btn-removefromfavourites {
+    background: url(../images/rating_star.png) no-repeat 0 -38px;
+    width: 19px;
+    height: 19px;
+    text-indent: -9999px;
+    border: 0;
+    cursor: pointer;
+}
+.skinthumb .skin-controls a.btn-removefromfavourites:hover {
+    background: url(../images/rating_delete.png) no-repeat 0 -19px;
+}
+/* Portfolio > Skins > Edit skin */
+form#designskinform fieldset {
+    padding: 0;
+    border: 0;
+}
+form#designskinform fieldset table {
+    width: 100%;
+}
+form#designskinform fieldset table th {
+    width: 190px;
+}
+form#designskinform fieldset table .color th {
+    vertical-align: middle;
+}
+form#designskinform fieldset table thead th {
+    width: auto;
+}
+form#designskinform fieldset p#designskinform_view_background_image_empty_selectlist {
+    margin: 5px 0;
+}
+form#designskinform fieldset textarea#designskinform_viewskin_description {
+    padding: 3px;
+}
+form#designskinform fieldset textarea#designskinform_view_custom_css {
+    font-size: 1.333em;
+    padding: 3px;
+}
+table#designskinform_body_background_image_selectlist,
+table#designskinform_view_background_image_selectlist {
+    margin-bottom: 10px;
+}
+#designskinform_view_background_image_open_upload_browse_container,
+#designskinform_view_background_image_upload_browse,
+#designskinform_body_background_image_open_upload_browse_container,
+#designskinform_body_background_image_upload_browse {
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px;
+    display: block;
+    margin: 10px 0;
+}
+#designskinform_body_background_position_container td,
+#designskinform_view_background_position_container td {
+    background: url(../images/position.png) no-repeat 5px 5px;
+}
+#designskinform_body_background_position_container td input,
+#designskinform_view_background_position_container td input {
+    opacity: 0;
+}
+#designskinform_body_background_position_container td input:hover,
+#designskinform_view_background_position_container td input:hover {
+    opacity: 1;
+}
+#designskinform_body_background_position_container td input:checked,
+#designskinform_view_background_position_container td input:checked {
+    opacity: 1;
+}
+form#designskinform fieldset table tr#designskinform_view_custom_css_container th {
+    width: auto;
+    white-space: nowrap;
+}
+textarea#designskinform_view_custom_css {
+    width: 99%;
+}
+.no-js form#designskinform fieldset {
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border: 1px solid #d1d1d1;
+}
+.no-js table#designskinform_body_background_image_selectlist,
+.no-js table#designskinform_view_background_image_selectlist {
+    display: table;
+}
+.no-js input#designskinform_body_background_image_close_upload_browse,
+.no-js input#designskinform_view_background_image_close_upload_browse {
+    display: none;
+}
+.no-js #designskinform_body_background_image_foldernav,
+.no-js #designskinform_view_background_image_foldernav {
+    padding: 3px 0 0 24px;
+    margin: 0
 }
 /* Portfolio > Export */
 #export .element div label,

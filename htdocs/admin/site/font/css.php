@@ -48,26 +48,44 @@ if (!empty($family)) {
 else {
 
     $stylesheet = <<< EOF
-/* table with gap between rows */
-#fontlist td {
-    border-bottom: 2px solid #FFF;
-    font-size: .9167em;
-}
 #fontlist ul.actionlist {
-    margin: 0 0 0 10px;
-    float: right;
-    width: 180px;
-    font-size: 1em;
+    margin: 0;
+    width: 200px;
 }
 #fontlist ul.actionlist li {
     list-style: none;
-    margin: 0;
-    border-top: 1px solid #d1d1d1;
-    padding: 2px 3px;
-    line-height: 1.2em;
+    margin: 1px 0 2px 0;
+    line-height: 1.25em;
+}
+#fontlist ul.actionlist li a {
+    border: 1px solid #DADADA;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 7px 5px 7px 25px;
+    display: block;
+    color: #333333;
+    text-decoration: none;
+    background-color: #F7F7F7;
+    background-position: 7px 50%;
+    background-repeat: no-repeat;
+}
+#fontlist ul.actionlist li a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+#fontlist ul.actionlist li a:active {
+    background-color: #989898;
+    color: #FFFFFF;
+    opacity: 0.9;
+    border: 1px solid #e3e3e3;
 }
 #fontlist ul.actionlist li:first-child {
-    border-top: none;
+    font-weight: bold;
+    padding: 5px 0 3px 0;
+}
+#preview {
+    margin: 10px 0;
 }
 
 EOF;

@@ -108,7 +108,9 @@ input#export_submit,
 input#login_submit,
 .login-externallink a.btn,
 input#viewlayout_submit,
-input#files_filebrowser_upload {
+input#files_filebrowser_upload,
+input#designskinform_submit,
+input#cancel_designskinform_submit {
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -141,7 +143,9 @@ input#export_submit:hover,
 input#login_submit:hover,
 .login-externallink a.btn:hover,
 input#viewlayout_submit:hover,
-input#files_filebrowser_upload:hover {
+input#files_filebrowser_upload:hover,
+input#designskinform_submit:hover,
+input#cancel_designskinform_submit:hover {
 	background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
 	border: 1px solid #ab650f;
 	color: #000000;
@@ -174,7 +178,9 @@ input#export_submit:active,
 input#login_submit:active,
 .login-externallink a.btn:active,
 input#viewlayout_submit:active,
-input#files_filebrowser_upload:active {
+input#files_filebrowser_upload:active,
+input#designskinform_submit:active,
+input#cancel_designskinform_submit:active {
 	background: url(../images/btn_bkgd_focus.png) repeat-x 0 50%;
 	border: 1px solid #ca7711;
 	color: #000000;
@@ -184,7 +190,8 @@ input#files_filebrowser_upload:active {
 input#addviews_submit,
 input#edituser_suspend_submit,
 input#friendscontrol_submit,
-input#usertype_typesubmit {
+input#usertype_typesubmit,
+.subpage .skinsbtns .btn {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey.png) repeat-x 0 50%;
     color: #333333;
@@ -193,7 +200,8 @@ input#usertype_typesubmit {
 input#addviews_submit:hover,
 input#edituser_suspend_submit:hover,
 input#friendscontrol_submit:hover,
-input#usertype_typesubmit:hover {
+input#usertype_typesubmit:hover,
+.subpage .skinsbtns .btn:hover {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
@@ -202,7 +210,8 @@ input#usertype_typesubmit:hover {
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
 input#friendscontrol_submit:active,
-input#usertype_typesubmit:active {
+input#usertype_typesubmit:active,
+.subpage .skinsbtns .btn:active {
     border: 1px solid #707070;
     background: url(../images/btn_bkgd_grey_focus.png) repeat-x 0 50%;
     color: #333333;
@@ -518,15 +527,20 @@ div.pagination a {
 div.tabswrap {
 	background: url(../images/inpage-right.png) no-repeat right 0;
 }
-form#profileform {
+form#profileform,
+form#designskinform {
 	background: url(../images/inpage-right.png) no-repeat right 0;
 }
-.no-js form#profileform {
+.no-js form#profileform,
+.no-js form#designskinform {
     background: none;
 }
 ul.in-page-tabs {
 	background: url(../images/inpage-left.png) no-repeat 0 0;
 	padding-left: 10px;
+}
+ul.in-page-tabs li {
+    vertical-align: top;
 }
 ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
@@ -536,11 +550,10 @@ ul.in-page-tabs li input.linkbtn,
 ul.searchtab li span.inactive {
 	color: #FFFFFF;
 	background: none;
-	height: 34px;
-	line-height: 38px;
-	padding: 0 10px;
+	padding: 10px 10px;
     border: 0;
     margin: 0;
+    display: table-cell;
 }
 ul.in-page-tabs li a:hover,
 ul.in-page-tabs li input:hover {
@@ -556,8 +569,6 @@ ul.in-page-tabs li a.current-tab:active,
 ul.in-page-tabs li input.current-tab {
 	color: #000000;
 	background: url(../images/inpage-active-left.png) no-repeat left top;
-	height: 34px;
-	line-height: 36px;
     border: 0;
     margin: 0 0 0 -3px;
 }
@@ -865,6 +876,10 @@ a.persona-button:before{ /* Triangle */
 /* page/collection submission form */
 .submissionform {
     background: #ced0e0;
+}
+/* Portfolio > Pages > Edit page > Choose skin tab */
+div.currentskin {
+    background: #ecf0fc;
 }
 /* Portfolio > Collections > Edit collection */
 #collectionpageswrap {
