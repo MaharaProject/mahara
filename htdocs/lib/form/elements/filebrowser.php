@@ -1460,9 +1460,12 @@ function pieform_element_filebrowser_views_js(Pieform $form, $element) {
 function pieform_element_filebrowser_get_headdata($element) {
     global $THEME;
     $headdata = array('<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
-    $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
-    $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
-    $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
+    if ($element['config']['upload']) {
+        // only add dropzone if filebrowser is allowed to upload
+        $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
+        $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
+        $headdata[] = '<script type="text/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
+    }
     $strings = PluginArtefactFile::jsstrings('filebrowser');
     $jsstrings = '';
     foreach ($strings as $section => $sectionstrings) {
