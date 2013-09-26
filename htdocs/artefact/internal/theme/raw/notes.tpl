@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>{str tag=Note section=artefact.internal}</th>
+      <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
       <th class="center"><img src="{theme_url filename="images/icon_attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
       <th></th>
@@ -44,11 +45,23 @@
         {/if}
       </td>
       <td>
+      {foreach from=$n->blocks item=b}
+        <div>
+          {$b.blocktitle|str_shorten_text:30:true}
+        </div>
+      {/foreach}
+      </td>
+      <td>
       {foreach from=$n->views item=v}
         <div>
           <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
           {if $v.ownername} - {str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
         </div>
+        {if $v.extrablocks}
+            {for i 1 $v.extrablocks}
+            <div>&nbsp;</div>
+            {/for}
+        {/if}
       {/foreach}
       </td>
       <td align="center">{$n->count}</td>
