@@ -132,6 +132,22 @@ class PluginArtefactResume extends Plugin {
             'membership'        => 'achievements',
         );
     }
+
+    public static function artefact_export_extra_artefacts($artefactids) {
+        if (!$artefacts = get_column_sql("
+            SELECT artefact
+            FROM {artefact_attachment}
+            WHERE artefact IN (" . join(',', $artefactids) . ')', array())) {
+            return array();
+        }
+        if ($attachments = get_column_sql('
+            SELECT attachment
+            FROM {artefact_attachment}
+            WHERE artefact IN (' . join(',', $artefacts). ')')) {
+            $artefacts = array_merge($artefacts, $attachments);
+        }
+        return $artefacts;
+    }
 }
 
 class ArtefactTypeResume extends ArtefactType {

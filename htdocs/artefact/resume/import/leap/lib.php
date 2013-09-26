@@ -495,6 +495,79 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Attach files to their resume composite
+     * TODO: this is experimental and is not actually working correctly.
+     * This may be due to the structure of the export for resume items or
+     * due to this import function being wrong or both.
+     */
+    public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $newartefactmapping = array();
+        $class = false;
+        switch ($strategy) {
+        case self::STRATEGY_IMPORT_AS_ENTRY:
+        case self::STRATEGY_IMPORT_AS_ABILITY:
+            if ($strategy == self::STRATEGY_IMPORT_AS_ENTRY) {
+                $types = array(
+                    'careergoal',
+                    'academicgoal',
+                    'personalgoal',
+                    'interest',
+                    'coverletter',
+                );
+            }
+            else {
+                $types = array(
+                    'workskill',
+                    'academicskill',
+                    'personalskill',
+                );
+            }
+            // do stuff here
+            break;
+        case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
+            $class = 'ArtefactTypeCertification';
+            break;
+        case self::STRATEGY_IMPORT_AS_EMPLOYMENT:
+            $class = 'ArtefactTypeEmploymenthistory';
+            break;
+        case self::STRATEGY_IMPORT_AS_BOOK:
+            $class = 'ArtefactTypeBook';
+            break;
+        case self::STRATEGY_IMPORT_AS_EDUCATION:
+            $class = 'ArtefactTypeEducationhistory';
+            break;
+        case self::STRATEGY_IMPORT_AS_MEMBERSHIP:
+            $class = 'ArtefactTypeMembership';
+            break;
+        case self::STRATEGY_IMPORT_AS_SELECTION:
+            // This space intentionally left blank
+            break;
+        default:
+            throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+
+        foreach ($otherentries as $entryid) {
+            $compositeentry = $importer->get_entry_by_id($entryid);
+            $composite = null;
+            foreach ($compositeentry->link as $compositelink) {
+                if (class_exists($class)) {
+                    if (!$composite) {
+                        $artefactids = $importer->get_artefactids_imported_by_entryid((string)$compositeentry->id);
+                        $composite = new $class($artefactids[0],array('owner' => $importer->get('usr')));
+                    }
+                    if ($id = $importer->create_attachment($entry, $compositelink, $composite)) {
+                        $newartefactmapping[$link['href']][] = $id;
+                    }
+                    if ($composite) {
+                        $composite->commit();
+                    }
+                }
+            }
+        }
+        return $newartefactmapping;
+    }
+
+    /**
      * Given an entry link, see whether it's a relationship referring to a 
      * supporting organization, and if so, returns the ID of the organization
      *

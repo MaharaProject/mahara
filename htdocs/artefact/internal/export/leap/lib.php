@@ -247,3 +247,11 @@ class LeapExportElementInternalNonPerson extends LeapExportElement {
 
 class LeapExportElementIndustry extends LeapExportElementInternalNonPerson { }
 class LeapExportElementOccupation extends LeapExportElementInternalNonPerson { }
+
+// We have to give this one a LeapExportElement subclass in order for its
+// attachments to be exported.
+class LeapExportElementHtml extends LeapExportElement{
+    public function override_plugin_specialcase() {
+        return true;
+    }
+};
