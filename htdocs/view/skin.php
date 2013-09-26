@@ -190,5 +190,5 @@ function viewskin_submit(Pieform $form, $values) {
     $view->commit();
     handle_event('saveview', $view->get('id'));
     $SESSION->add_ok_msg(get_string('viewskinchanged', 'skin'));
-    redirect('/view/blocks.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
+    redirect('/view/view.php?id=' . $view->get('id') . ($new ? '&new=1' : ''));
 }
