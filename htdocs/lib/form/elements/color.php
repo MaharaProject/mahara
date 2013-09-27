@@ -43,7 +43,7 @@ function pieform_element_color(Pieform $form, $element) {
     // Color Picker (Chooser)
     $result = '<input type="text" name="' . $name . '_color" id="' . $name . '_color"'
         . ($transparent && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
-        . ($transparent ? 'class="color {hash:true,required:false}"' : 'class="color {hash:true}"')
+        . ($transparent ? ' class="color {hash:true,required:false}"' : ' class="color {hash:true}"')
         . ' value="' . ($value == 'transparent' ? '' : $value) . '">';
 
     // Transparency optional control
