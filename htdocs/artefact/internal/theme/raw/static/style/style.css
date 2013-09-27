@@ -1,8 +1,9 @@
 /**
  * CSS rules for the internal artefact plugin
  *
- * Copyright (C) 2006-2013 Catalyst IT
- * This file is distributed under the same terms as Mahara itself
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 input#myfriends_addfriend_add {
     font-weight: bold;

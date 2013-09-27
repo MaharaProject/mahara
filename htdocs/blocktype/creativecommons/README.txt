@@ -1,5 +1,5 @@
 Creative Commons Blocktype for Mahara
-Copyright (C) 2009 Catalyst IT
+(For copyright information on Mahara, please see the README file distributed with this software.)
 
 Author: Francois Marier <francois@catalyst.net.nz>
 

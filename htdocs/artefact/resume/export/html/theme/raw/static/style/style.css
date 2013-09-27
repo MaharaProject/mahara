@@ -1,8 +1,9 @@
 /**
  * CSS rules for resume artefact plugin HTML export
  *
- * Copyright (C) 2009 Catalyst IT
- * This file is licensed under the same terms as Mahara itself
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 h2 {
     margin: 1em 0 0.25em 0;

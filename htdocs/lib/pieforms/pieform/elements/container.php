@@ -19,7 +19,7 @@
  * @package    pieforms
  * @subpackage element
  * @author     Hugh Davenport <hugh@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  (C) 2012 Catalyst IT Ltd http://catalyst.net.nz
  *
  */

@@ -1,8 +1,9 @@
 /**
  * Stylesheet for static HTML export
  *
- * (C) 2009 Catalyst IT Ltd.
- * This file is licensed under the same terms as Mahara itself
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
 html {
     max-width: 1280px;
