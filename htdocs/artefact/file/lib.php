@@ -796,6 +796,17 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         );
     }
 
+    /**
+     * returns duplicated file/folder artefacts
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        return array();
+    }
+    public static function get_existing_artefacts(array $values) {
+        return array();
+    }
 }
 
 

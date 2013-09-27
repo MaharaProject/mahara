@@ -152,6 +152,12 @@ h6:first-child {
 .fullwidth {
     width: 100%;
 }
+.halfwidth {
+    width: 50%;
+}
+.onethirdwidth {
+    width: 33%;
+}
 form.oneline.inline div,
 .inline {
     display: inline;
@@ -3974,6 +3980,31 @@ ul.searchtab li span.inactive {
 .wallpost .controls a {
     margin: 0 0 0 5px;
 }
+
+/* Import */
+.importcolumn {
+    vertical-align: top;
+    float: left;
+    margin: 0;
+    padding: 5px 0.5% 5px 0.5%;
+    position: relative;
+}
+.importcolumn1 {
+    width: 40%;
+}
+.importcolumn2 {
+    width: 40%;
+}
+.importcolumn3 {
+    width: 15%;
+}
+.indent1 {
+    padding-left: 10px;
+}
+.indent2 {
+    padding-left: 20px;
+}
+
 /* For styling attachment notice in Resume fieldsets */
 .attachmessage {
 	font-size: .9167em;

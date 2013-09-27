@@ -3401,6 +3401,28 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2013092300) {
+        $table = new XMLDBTable('import_entry_requests');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null,
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('importid', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('entryid', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('entryparent', XMLDB_TYPE_CHAR, 255, null, null);
+        $table->addFieldInfo('strategy', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ownerid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('entrytype', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('entrytitle', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('entrycontent', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('duplicateditemids', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('existingitemids', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('artefactmapping', XMLDB_TYPE_TEXT, null, null, null);
+        $table->addFieldInfo('decision', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('owneridfk', XMLDB_KEY_FOREIGN, array('ownerid'), 'usr', array('id'));
+        create_table($table);
+    }
+
     if ($oldversion < 2013092600) {
         //  When uploading file as attachment and attaching it to an artefact, the artefact id
         //  (in artefact field) and uploaded file artefact id (in attachment filed) are stored.

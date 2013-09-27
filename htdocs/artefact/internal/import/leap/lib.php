@@ -69,6 +69,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static $persondatafields = array(
         'country' => array(
             // TODO: we use leap:country inside leap:spatial, but should fall back to this
+            'unique' => true,
         ),
         'website' => array(
             'helper_method' => true,
@@ -180,65 +181,262 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         return array();
     }
 
+    /**
+     * Find and update duplicates of imported data about the feed author.
+     * TODO: Refactor this to combine it with import_author_data()
+     *
+     * @param PluginImportLeap $importer The importer
+     * @param string $persondataid       The ID of the person entry corresponding
+     *                                   to the author, if there is one
+     * @return updated DB table 'import_authordata_requests'
+     */
+    public static function add_import_entry_request_author_data(PluginImportLeap $importer, $persondataid) {
+
+        $namespaces = $importer->get_namespaces();
+        $ns = $namespaces[$importer->get_leap2a_namespace()];
+        if ($persondataid) {
+            // Grab all the leap:persondata elements and import them
+            $person = $importer->get_entry_by_id($persondataid);
+            $importid = $importer->get('importertransport')->get('importid');
+            $ownerid = $importer->get('usr');
+
+            // The introduction comes from the entry content
+            if (!self::$personcontentblank) {
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'introduction',
+                    'content' => array(
+                        'title'       => PluginImportLeap::get_entry_content($person, $importer),
+                    ),
+                ));
+            }
+
+            // Most of the rest of the profile data comes from leap:persondata elements
+            $persondata = $person->xpath($ns.':persondata');
+            foreach ($persondata as $item) {
+                $leapattributes = PluginImportLeap::get_attributes($item, $importer->get_leap2a_namespace());
+
+                if (isset($leapattributes['field'])) {
+                    self::add_import_entry_request_persondata($importer, $persondataid, $item, $leapattributes);
+                }
+            }
+
+            // The information about someone's name is much more comprehensive
+            // in Leap than what Mahara has, so we have to piece it together
+            self::add_import_entry_request_namedata($importer, $persondataid, $persondata);
+
+            // People can have address info associated with them
+            $addressdata = $person->xpath($ns.':spatial');
+            if (is_array($addressdata) && count($addressdata) == 1) {
+                self::add_import_entry_request_addressdata($importer, $persondataid, $addressdata[0]);
+            }
+        }
+        else {
+            $author = $importer->get('xml')->xpath('//a:feed/a:author[1]');
+            $author = $author[0];
+
+            if (!isset($author->name)) {
+                throw new ImportException($importer, 'TODO: get_string: <author> must include <name> - http://wiki.cetis.ac.uk/2009-03/Leap2A_relationships#Author');
+            }
+
+            $name = (string)$author->name;
+            if (false !== strpos($name, ' ')) {
+                list($firstname, $lastname) = explode(' ', $name, 2);
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'firstname',
+                    'content' => array(
+                        'title'       => trim($firstname),
+                    ),
+                ));
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'lastname',
+                    'content' => array(
+                        'title'       => trim($lastname),
+                    ),
+                ));
+            }
+            else {
+                // Blatant assumption that the <name> is a first name
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'firstname',
+                    'content' => array(
+                        'title'       => trim($name),
+                    ),
+                ));
+            }
+
+            if (isset($author->email)) {
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'email',
+                    'content' => array(
+                        'title'       => (string)$author->email,
+                    ),
+                ));
+            }
+
+            if (isset($author->uri)) {
+                $uri = (string)$author->uri;
+                if (preg_match('#^https?://#', $uri)) {
+                    PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                        'owner'   => $importer->get('usr'),
+                        'type'    => 'officialwebsite',
+                        'content' => array(
+                            'title'       => (string)$author->uri,
+                        ),
+                    ));
+                }
+            }
+        }
+    }
+
+
+    /**
+     * get data of the imported entry using strategy
+     *
+     * @param SimpleXMLElement $entry
+     * @param PluginImportLeap $importer
+     * @param int              $strategy
+     * @param array            $otherentries
+     */
+    protected static function get_entry_data_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        switch ($strategy) {
+            case self::STRATEGY_IMPORT_AS_PROFILE_FIELD:
+                // Based on the mahara:type, we might be able to import it as
+                // something useful - otherwise, there is nothing we can do. The
+                // entry already claimed it was mahara:plugin="internal", so it's
+                // perfectly fine for us to not import it if we don't recognise it
+                $types = array(
+                    'occupation',
+                    'industry',
+                );
+                $typexpath = join('" or @mahara:type="', $types);
+                $artefactpluginelement = $entry->xpath('mahara:artefactplugin[@mahara:type="' . $typexpath . '"]');
+                if (count($artefactpluginelement) == 1) {
+                    $artefactpluginelement = $artefactpluginelement[0];
+
+                    $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
+                    if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
+                        $type = $maharaattributes['type'];
+                        $title = PluginImportLeap::get_entry_content($entry, $importer);
+                        break;
+                    }
+                }
+
+                // Try importing as a Note
+                try {
+                    $content = PluginImportLeap::get_entry_content($entry, $importer);
+                }
+                catch (SystemException $e) {
+                    $content = false;
+                }
+                if ($content) {
+                    return array (
+                            'owner' => $importer->get('usr'),
+                            'type' => 'note',
+                            'content' => array (
+                                    'title' => isset($entry->title) ? string($entry->title) : '',
+                                    'ctime' => strtotime((string)$entry->published),
+                                    'mtime' => strtotime((string)$entry->updated),
+                                    'descirption' => $content
+                            )
+                    );
+                    // TODO: Make this work in interactive import
+//                     if (isset($entry->link)) {
+//                         foreach($entry->link as $link) {
+//                             if ($id = $importer->create_attachment($entry, $link, $note)) {
+//                                 $artefactmapping[$link['href']][] = $id;
+//                             }
+//                         }
+//                         $note->commit();
+//                     }
+                }
+                break;
+            case self::STRATEGY_IMPORT_AS_INTRODUCTION:
+                // The introduction comes from the entry content
+                $type = 'introduction';
+                $title = PluginImportLeap::get_entry_content($entry, $importer);
+                break;
+            default:
+                throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+        return isset($type) ?
+            array(
+                'owner'   => $importer->get('usr'),
+                'type'    => $type,
+                'content' => array(
+                    'title'    => $title,
+                ),
+            )
+            : null;
+    }
+
+    /**
+     * find and update existing artefacts of the imported entry
+     *
+     * @param SimpleXMLElement $entry
+     * @return updated DB table 'import_entry_requests'
+     */
+    public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $entrydata = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
+        if (!empty($entrydata)) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'internal', $entrydata);
+        }
+    }
+
+    /**
+     * Import from entry requests for Mahara user profile fields
+     *
+     * @param PluginImportLeap $importer
+     * @return updated DB
+     * @throw    ImportException
+     */
+    public static function import_from_requests(PluginImportLeap $importer) {
+        if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND plugin = ?', array($importer->get('importertransport')->get('importid'), 'internal'))) {
+            foreach ($entry_requests as $entry_request) {
+                self::create_artefact_from_request($importer, $entry_request);
+            }
+        }
+    }
+
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $artefactmapping = array();
-        switch ($strategy) {
-        case self::STRATEGY_IMPORT_AS_PROFILE_FIELD:
-            // Based on the mahara:type, we might be able to import it as
-            // something useful - otherwise, there is nothing we can do. The
-            // entry already claimed it was mahara:plugin="internal", so it's
-            // perfectly fine for us to not import it if we don't recognise it
-            $types = array(
-                'occupation',
-                'industry',
-            );
-            $typexpath = join('" or @mahara:type="', $types);
-            $artefactpluginelement = $entry->xpath('mahara:artefactplugin[@mahara:type="' . $typexpath . '"]');
-            if (count($artefactpluginelement) == 1) {
-                $artefactpluginelement = $artefactpluginelement[0];
-
-                $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
-                if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
-                    $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $maharaattributes['type'], PluginImportLeap::get_entry_content($entry, $importer)));
+        $entrydata = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
+        if (!empty($entrydata)) {
+            switch ($entrydata['type']) {
+                case 'introduction':
+                    $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
+                    $introduction->set('title', $entrydata['content']['title']);
+                    $introduction->commit();
+                    $artefactmapping[(string)$entry->id] = array($introduction->get('id'));
                     break;
-                }
-            }
-
-            // Try importing as a Note
-            try {
-                $content = PluginImportLeap::get_entry_content($entry, $importer);
-            }
-            catch (SystemException $e) {
-                $content = false;
-            }
-            if ($content) {
-                $note = new ArtefactTypeHtml();
-                $note->set('title', (isset($entry->title)?(string)$entry->title:''));
-                $note->set('description', $content);
-                $note->set('ctime', strtotime((string)$entry->published));
-                $note->set('mtime', strtotime((string)$entry->updated));
-                $note->set('owner', $importer->get('usr'));
-                $note->commit();
-                $artefactmapping[(string)$entry->id] = array($note->get('id'));
-
-                if (isset($entry->link)) {
-                    foreach($entry->link as $link) {
-                        if ($id = $importer->create_attachment($entry, $link, $note)) {
-                            $artefactmapping[$link['href']][] = $id;
-                        }
-                    }
+                case 'note':
+                    $note = new ArtefactTypeHtml();
+                    $note->set('title', $entrydata['content']['title']);
+                    $note->set('description', $entrydata['content']['description']);
+                    $note->set('ctime', $entrydata['content']['ctime']);
+                    $note->set('mtime', $entrydata['content']['mtime']);
+                    $note->set('owner', $entrydata['content']['owner']);
                     $note->commit();
-                }
+                    $artefactmapping[(string)$entry->id] = array($note->get('id'));
+
+                        // Check for note's attachments
+                        if (isset($entry->link)) {
+                            foreach($entry->link as $link) {
+                                if ($id = $importer->create_attachment($entry, $link, $note)) {
+                                    $artefactmapping[$link['href']][] = $id;
+                                }
+                            }
+                            $note->commit();
+                        }
+                    break;
+                default:
+                    $artefactmapping[(string)$entry->id] = array(self::create_artefact($importer, $entrydata['type'], $entrydata['content']['title']));
+                    break;
             }
-            break;
-        case self::STRATEGY_IMPORT_AS_INTRODUCTION:
-            // The introduction comes from the entry content
-            $introduction = new ArtefactTypeIntroduction(0, array('owner' => $importer->get('usr')));
-            $introduction->set('title', PluginImportLeap::get_entry_content($entry, $importer));
-            $introduction->commit();
-            break;
-        default:
-            throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
         return $artefactmapping;
     }
@@ -250,6 +448,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * different information about them into Mahara's profile section.
      * Otherwise, we can only import some very basic information from the
      * <author> element.
+     *
+     * TODO: Refactor this to combine it with add_import_entry_request_author_data()
      *
      * @param PluginImportLeap $importer The importer
      * @param string $persondataid       The ID of the person entry corresponding
@@ -346,7 +546,38 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Find and update duplicates with imported persondata
+     * TODO: Refactor this to combine it with import_persondata()
+     */
+    private static function add_import_entry_request_persondata(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
+        $field = $leapattributes['field'];
+
+        if (isset(self::$persondatafields[$field]['mahara_fieldname'])) {
+            static $seen = array();
+            if (isset($seen[$field])) {
+                return;
+            }
+            $seen[$field] = true;
+
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => self::$persondatafields[$field]['mahara_fieldname'],
+                'content' => array(
+                    'title'       => (string)$item,
+                ),
+            ));
+            return;
+        }
+
+        if (!empty(self::$persondatafields[$field]['helper_method'])) {
+            $method = 'add_import_entry_request_persondata_' . $field;
+            self::$method($importer, $persondataid, $item, $leapattributes);
+        }
+    }
+
+    /**
      * Attempts to import a persondata element
+     * TODO: Refactor this to combine it with add_import_entry_request_persondata()
      */
     private static function import_persondata(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         $field = $leapattributes['field'];
@@ -374,7 +605,34 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Find duplicates with imported persondata with leap:field="id"
+     * TODO: Refactor this to combine it with import_persondata_id()
+     */
+    private static function add_import_entry_request_persondata_id(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
+        if ($leapattributes['field'] == 'id' && !isset($leapattributes['service'])) {
+            // 'id' must have a service set
+            // http://wiki.cetis.ac.uk/2009-03/Leap2A_personal_data#service
+            throw new ImportException($importer, "TODO: get_string: persondata field was 'id' but had no service set");
+        }
+
+        // Lack of 'grep' and closures is annoying...
+        foreach (self::$services as $service) {
+            if ($service['service'] == $leapattributes['service'] || $service['uri']  == $leapattributes['service']) {
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => strtolower($service['artefact_type']),
+                    'content' => array(
+                        'title'       => (string)$item,
+                    ),
+                ));
+                return;
+            }
+        }
+    }
+
+    /**
      * Attempts to import a persondata field with leap:field="id"
+     * TODO: Refactor this to combine it with add_import_entry_request_persondata_id()
      */
     private static function import_persondata_id(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         if ($leapattributes['field'] == 'id' && !isset($leapattributes['service'])) {
@@ -396,7 +654,22 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Find duplicates with imported persondata with leap:field="email"
+     * TODO: refactor this to combine it with import_persondata_email()
+     */
+    private static function add_import_entry_request_persondata_email(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
+        PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+            'owner'   => $importer->get('usr'),
+            'type'    => 'email',
+            'content' => array(
+                'title'       => (string)$item,
+            ),
+        ));
+    }
+
+    /**
      * Attempts to import a persondata field with leap:field="email"
+     * TODO: Refactor this to combine it with add_import_entry_request_persondata_email()
      */
     private static function import_persondata_email(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         static $firstdone = false;
@@ -429,7 +702,53 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Find duplicates with imported persondata with leap:field="website"
+     * TODO: Refactor this to combine it with import_persondata_website()
+     */
+    private static function add_import_entry_request_persondata_website(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
+        // We've been given a 'website' field, but Mahara has three profile
+        // fields for website. So we need to examine it deeper to establish
+        // which field it should import into
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+
+        if (isset($maharaattributes['artefactplugin'])
+            && isset($maharaattributes['artefacttype'])
+            && $maharaattributes['artefactplugin'] == 'internal') {
+            switch ($maharaattributes['artefacttype']) {
+            case 'blogaddress':
+            case 'personalwebsite':
+            case 'officialwebsite':
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => $maharaattributes['artefacttype'],
+                    'content' => array(
+                        'title'       => (string)$item,
+                    ),
+                ));
+                return;
+            }
+        }
+
+        // No mahara: namespaced attributes to help us :(
+        // For now, just import as officialwebsite. Later, we might import into
+        // the other fields as well based on the order we encounter them in the
+        // import file
+        static $seen = false;
+        if (!$seen) {
+            $seen = true;
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'officialwebsite',
+                'content' => array(
+                    'title'       => (string)$item,
+                ),
+            ));
+        }
+    }
+
+    /**
      * Attempts to import a persondata field with leap:field="website"
+     * TODO: Refactor this to combine it with add_import_entry_request_persondata_website()
      */
     private static function import_persondata_website(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         // We've been given a 'website' field, but Mahara has three profile
@@ -461,7 +780,34 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     }
 
     /**
+     * Find duplicates with imported persondata with leap:field="other"
+     * TODO: Refactor this to combine it with import_persondata_other()
+     */
+    private static function add_import_entry_request_persondata_other(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
+        // The only 'other' field we can actually import is one we recognise as
+        // 'student ID'
+        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+
+        if (isset($maharaattributes['artefactplugin'])
+            && isset($maharaattributes['artefacttype'])
+            && $maharaattributes['artefactplugin'] == 'internal') {
+            switch ($maharaattributes['artefacttype']) {
+            case 'studentid':
+                PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                    'owner'   => $importer->get('usr'),
+                    'type'    => 'studentid',
+                    'content' => array(
+                        'title'       => (string)$item,
+                    ),
+                ));
+                return;
+            }
+        }
+    }
+
+    /**
      * Attempts to import a persondata field with leap:field="other"
+     * TODO: Refactor this to combine it with add_import_entry_request_persondata_other()
      */
     private static function import_persondata_other(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as
@@ -487,7 +833,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * Imports info from a leap:spatial element as a user's address-related
      * profile fields
      */
-    private static function import_addressdata(PluginImportLeap $importer, SimpleXMLElement $addressdata) {
+    private static function get_addressfields(PluginImportLeap $importer, SimpleXMLElement $addressdata) {
         // TODO: this xpath doesn't respect the namespace prefix - we should
         // look it up from $importer->namespaces[NS_LEAP]
         $namespaces = $importer->get_namespaces();
@@ -498,6 +844,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // separate fields for those. The rest get thrown in the
         // 'address' field
         $personaddress = '';
+        $address = array();
         foreach ($addresslines as $addressline) {
             $maharaattributes = PluginImportLeap::get_attributes($addressline, PluginImportLeap::NS_MAHARA);
 
@@ -506,7 +853,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 case 'address':
                 case 'town':
                 case 'city':
-                    self::create_artefact($importer, $maharaattributes['artefacttype'], (string)$addressline);
+                    $address[$maharaattributes['artefacttype']] = (string)$addressline;
                 }
             }
             else {
@@ -515,7 +862,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         }
 
         if ($personaddress != '') {
-            self::create_artefact($importer, 'address', substr($personaddress, 0, -1));
+            $address['address'] = substr($personaddress, 0, -1);
         }
 
         // Now deal with country
@@ -536,14 +883,61 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             if (!$countrycode) {
                 $countrycode = Country::countryname_to_iso3166_alpha2((string)$country);
             }
+        }
+        return array(
+            'address' => $address,
+            'country' => isset($countrycode) ? $countrycode : null,
+        );
+    }
 
-            if ($countrycode) {
-                self::create_artefact($importer, 'country', $countrycode);
-            }
+    /**
+     * Find and update duplicates with imported addressdata
+     * TODO: Refactor this to combine it with import_addressdata()
+     */
+    private static function add_import_entry_request_addressdata(PluginImportLeap $importer, $persondataid, SimpleXMLElement $addressdata) {
+
+        $addressfields = self::get_addressfields($importer, $addressdata);
+        foreach ($addressfields['address'] as $addresstype => $addressvalue) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => $addresstype,
+                'content' => array(
+                    'title'       => $addressvalue,
+                ),
+            ));
+        }
+
+        if (!empty($addressfields['country'])) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'country',
+                'content' => array(
+                    'title'       => $addressfields['country'],
+                ),
+            ));
+        }
+    }
+    /**
+     * Imports info from a leap:spatial element as a user's address-related
+     * profile fields
+     * TODO: Refactor this to combine it with add_import_entry_request_addressdata()
+     */
+    private static function import_addressdata(PluginImportLeap $importer, SimpleXMLElement $addressdata) {
+
+        $addressfields = self::get_addressfields($importer, $addressdata);
+        foreach ($addressfields['address'] as $addresstype => $addressvalue) {
+            self::create_artefact($importer, $addresstype, $addressvalue);
+        }
+
+        if (!empty($addressfields['country'])) {
+            self::create_artefact($importer, 'country', $addressfields['country']);
         }
     }
 
-    private static function import_namedata(PluginImportLeap $importer, array $persondata) {
+    /**
+     * Get name fields from imported namedata
+     */
+    private static function get_namefields(PluginImportLeap $importer, array $persondata) {
         $namefields = array(
             'full_name' => false,
             'legal_family_name' => false,
@@ -598,13 +992,60 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
             $lastname  = (string)$namefields['legal_family_name'] . ' ' . (string)$namefields['name_suffix'];
             $preferredname = (string)$namefields['preferred_given_name'] . ' ' . (string)$namefields['preferred_family_name'];
         }
-        $firstname = trim($firstname);
-        $lastname  = trim($lastname);
-        $preferredname = trim($preferredname);
+        return array(
+            'firstname'     => trim($firstname),
+            'lastname'      => trim($lastname),
+            'preferredname' => trim($preferredname),
+        );
 
-        self::create_artefact($importer, 'firstname', $firstname);
-        self::create_artefact($importer, 'lastname', $lastname);
-        self::create_artefact($importer, 'preferredname', $preferredname);
+    }
+    /**
+     * Find and update duplicates with imported namedata
+     * TODO: Refactor this to combine it with import_namedata();
+     */
+    private static function add_import_entry_request_namedata(PluginImportLeap $importer, $persondataid, array $persondata) {
+
+        $namefields = self::get_namefields($importer, $persondata);
+        if (!empty($namefields['firstname'])) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'firstname',
+                'content' => array(
+                    'title'       => $namefields['firstname'],
+                ),
+            ));
+        }
+        if (!empty($namefields['lastname'])) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'lastname',
+                'content' => array(
+                    'title'       => $namefields['lastname'],
+                ),
+            ));
+        }
+        if (!empty($namefields['preferredname'])) {
+            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
+                'owner'   => $importer->get('usr'),
+                'type'    => 'preferredname',
+                'content' => array(
+                    'title'       => $namefields['preferredname'],
+                ),
+            ));
+        }
+    }
+
+    /**
+     * TODO: Refactor this to combine it with add_import_entry_request_namedata()
+     * @param PluginImportLeap $importer
+     * @param array $persondata
+     */
+    private static function import_namedata(PluginImportLeap $importer, array $persondata) {
+
+        $namefields = self::get_namefields($importer, $persondata);
+        self::create_artefact($importer, 'firstname', $namefields['firstname']);
+        self::create_artefact($importer, 'lastname', $namefields['lastname']);
+        self::create_artefact($importer, 'preferredname', $namefields['preferredname']);
         $importer->get('usrobj')->firstname = $firstname;
         $importer->get('usrobj')->lastname = $lastname;
         $importer->get('usrobj')->preferredname = $preferredname;
@@ -638,6 +1079,101 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         $artefact->set('title', $title);
         $artefact->commit();
         return $artefact->get('id');
+    }
+
+    /**
+     * Render import entry requests for Mahara user's profile fields
+     * @param PluginImportLeap $importer
+     * @return HTML code for displaying user's profile fields and choosing how to import them
+     */
+    public static function render_import_entry_requests(PluginImportLeap $importer) {
+        $importid = $importer->get('importertransport')->get('importid');
+        $profilefields = array(
+            'profile' => array(
+                'legend' => get_string('aboutme', 'artefact.internal'),
+                'fields' => array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'),
+            ),
+            'contact' => array(
+                'legend' => get_string('contact', 'artefact.internal'),
+                'fields' => array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'),
+            ),
+            'messaging' => array(
+                'legend' => get_string('messaging', 'artefact.internal'),
+                'fields' => array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername'),
+            ),
+            'general' => array(
+                'legend' => get_string('general'),
+                'fields' => array('occupation', 'industry'),
+            ),
+        );
+        // Get import entry requests for Mahara profile fields
+        $profilegroups = array();
+        foreach ($profilefields as $gr_key => $group) {
+            $profilegroup = array();
+            $profilegroup['id'] = $gr_key;
+            $profilegroup['legend'] = $group['legend'];
+            foreach ($group['fields'] as $f) {
+                if ($iers = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, $f))) {
+                    $profilefieldvalues = array();
+                    foreach ($iers as $ier) {
+                        $profilefieldvalue = unserialize($ier->entrycontent);
+                        $profilefieldvalue['id'] = $ier->id;
+                        $profilefieldvalue['decision'] = $ier->decision;
+                        $classname = generate_artefact_class_name($f);
+                        $profilefieldvalue['html'] = $classname::render_import_entry_request($profilefieldvalue);
+                        if (is_string($ier->duplicateditemids)) {
+                            $ier->duplicateditemids = unserialize($ier->duplicateditemids);
+                        }
+                        if (is_string($ier->existingitemids)) {
+                            $ier->existingitemids = unserialize($ier->existingitemids);
+                        }
+                        $profilefieldvalue['disabled'][PluginImport::DECISION_IGNORE] = false;
+                        if (!empty($ier->duplicateditemids)) {
+                            $duplicated_pfield = artefact_instance_from_id($ier->duplicateditemids[0]);
+                            $profilefieldvalue['duplicateditem']['id'] = $duplicated_pfield->get('id');
+                            $res = $duplicated_pfield->render_self(array());
+                            $profilefieldvalue['duplicateditem']['html'] = $res['html'];
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = true;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                        }
+                        else if (!empty($ier->existingitemids)) {
+                            foreach ($ier->existingitemids as $id) {
+                                $existing_pfield = artefact_instance_from_id($id);
+                                $res = $existing_pfield->render_self(array());
+                                $profilefieldvalue['existingitems'][] = array(
+                                    'id'    => $existing_pfield->get('id'),
+                                    'html'  => $res['html'],
+                                );
+                            }
+                            if ($f == 'email') {
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            }
+                            else {
+                                $is_singular = call_static_method(generate_artefact_class_name($ier->entrytype), 'is_singular');
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = $is_singular;
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = !$is_singular;
+                                $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = !$is_singular;
+                            }
+                        }
+                        else {
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
+                            $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                        }
+                        $profilefieldvalues[] = $profilefieldvalue;
+                    }
+                    $profilegroup['fields'][$f] = $profilefieldvalues;
+                }
+            }
+            $profilegroups[] = $profilegroup;
+        }
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign_by_ref('profilegroups', $profilegroups);
+        return $smarty->fetch('artefact:internal:import/profilefields.tpl');
     }
 
 }

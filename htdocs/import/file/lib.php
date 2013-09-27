@@ -48,7 +48,7 @@ class PluginImportFile extends PluginImport {
         return true; // nothing to do , we're just importing files to the file artefact plugin
     }
 
-    public function process() {
+    public function process($step = PluginImport::STEP_NON_INTERACTIVE) {
     //    $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
         $this->verify_file_contents();
         $this->add_artefacts();

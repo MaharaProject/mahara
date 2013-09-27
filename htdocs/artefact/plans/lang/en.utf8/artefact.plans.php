@@ -72,3 +72,11 @@ $string['Task'] = 'Task';
 $string['tasks'] = 'tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
 $string['tasksavedsuccessfully'] = 'Task saved successfully.';
+$string['ntasks'] = array(
+        '1 task',
+        '%s tasks',
+);
+$string['duplicatedplan'] = 'Duplicated plan';
+$string['existingplans'] = 'Existing plans';
+$string['duplicatedtask'] = 'Duplicated task';
+$string['existingtasks'] = 'Existing tasks';

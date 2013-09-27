@@ -13,7 +13,7 @@
 {/foreach}
             </mahara:column>
 {/foreach}
-         </mahara:row>
+          </mahara:row>
 {/foreach}
         </mahara:view>
 {include file="export:leap:entryfooter.tpl"}

@@ -542,6 +542,13 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
     public function render_self($options) {
         return array('html' => hsc($this->title), 'javascript' => null);
     }
+
+    /**
+     * Render the import entry request for profile fields
+     */
+    public static function render_import_entry_request($entry_content) {
+        return clean_html($entry_content['title']);
+    }
 }
 
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
@@ -686,6 +693,13 @@ class ArtefactTypeCountry extends ArtefactTypeProfileField {
     public function render_self($options) {
           $countries = getoptions_country();
           return array('html' => $countries[$this->title], 'javascript' => null);
+    }
+    /**
+     * Render the import entry request for country fields
+     */
+    public static function render_import_entry_request($entry_content) {
+        $countries = getoptions_country();
+        return (isset($countries[$entry_content['title']]) ? $countries[$entry_content['title']] : '');
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}

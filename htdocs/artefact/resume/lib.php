@@ -239,6 +239,13 @@ class ArtefactTypeResume extends ArtefactType {
             $smarty->assign('license', false);
         }
     }
+
+    /**
+     * Render the import entry request for resume fields
+     */
+    public static function render_import_entry_request($entry_content) {
+        return clean_html($entry_content['description']);
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
@@ -376,6 +383,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
                 // need to delete empty personal information
                 $this->delete();
             }
+            db_commit();
             return true;
         }
         $inserting = empty($this->id);
@@ -407,11 +415,29 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         return true;
     }
 
-    public function render_self($options) {
+    public static function render_fields(ArtefactTypePersonalInformation $a=null, $options=array(), $values=null) {
         $smarty = smarty_core();
         $fields = array();
         foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
-            $value = $this->get_composite($field);
+            if ($values && isset($values[$field])) {
+                $value = $values[$field];
+                // TODO: Make this be a call to a subclass instead of a hard-coded listing
+                // of special behaviors for particular fields
+                if ($field == 'dateofbirth') {
+                    if (empty($value)) {
+                        $value = '';
+                    }
+                    else {
+                        $value = strtotime($value);
+                    }
+                }
+            }
+            else if ($a) {
+                $value = $a->get_composite($field);
+            }
+            else {
+                continue;
+            }
             if ($field == 'gender' && !empty($value)) {
                 $value = get_string($value, 'artefact.resume');
             }
@@ -421,8 +447,18 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
             $fields[get_string($field, 'artefact.resume')] = $value;
         }
         $smarty->assign('fields', $fields);
-        $this->render_license($options, $smarty);
-        return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
+        if ($a) {
+            $a->render_license($options, $smarty);
+        }
+        return $smarty->fetch('artefact:resume:fragments/personalinformation.tpl');
+    }
+
+    public function render_self($options) {
+        return array('html' => self::render_fields($this, $options), 'javascript' => '');
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return self::render_fields(null, array(), $entry_content);
     }
 
     public function delete() {
@@ -446,6 +482,45 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         parent::bulk_delete($artefactids);
         db_commit();
     }
+
+    /**
+     * returns duplicated artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type
+     *  - content which has:
+     *      - dateofbirth
+     *      - placeofbirth
+     *      - citizenship
+     *      - visastatus
+     *      - gender
+     *      - maritalstatus
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('dateofbirth', 'placeofbirth', 'citizenship', 'visastatus', 'gender', 'maritalstatus');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?';
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                $wherestr .= ' AND ar.' . $f . ' IS NULL';
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr .= (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+            INNER JOIN {artefact_resume_personal_information} AS ar
+            ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
 }
 
 
@@ -453,7 +528,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public static function is_singular() {
-        return true;
+        return false;
     }
 
     public function can_have_attachments() {
@@ -733,7 +808,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                          get_string('fileattachdirname', 'artefact.resume'));
         $smarty = smarty_core();
         $smarty->assign('user', $USER->get('id'));
-        $smarty->assign('viewid', $options['viewid']);
         $smarty->assign('hidetitle', true);
         $smarty->assign('suffix', $suffix);
         $smarty->assign('attachmessage', $attachmessage);
@@ -749,6 +823,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
         if (!empty($options['viewid'])) {
             require_once('view.php');
+            $smarty->assign('viewid', $options['viewid']);
             $v = new View($options['viewid']);
             $owner = $v->get('owner');
         }
@@ -802,6 +877,16 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             'javascript'   => $this->get_showhide_composite_js()
         );
         return $content;
+    }
+
+    public static function render_import_entry_request($entry_content, $renderfields) {
+        $smarty = smarty_core();
+        $fields = array();
+        foreach ($renderfields as $field) {
+            $fields[get_string($field, 'artefact.resume')] = isset($entry_content[$field]) ? $entry_content[$field] : '';
+        }
+        $smarty->assign('fields', $fields);
+        return $smarty->fetch('artefact:resume:import/resumecompositefields.tpl');
     }
 
     public static function get_js(array $compositetypes) {
@@ -1141,6 +1226,48 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     public static function bulk_delete($artefactids) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'employmenthistory');
     }
+
+    /**
+     * returns the employmenthistory artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type
+     *  - content which has
+     *      - startdate
+     *      - enddate
+     *      - employer
+     *      - jobtitle
+     *      - positiondescription
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('startdate', 'enddate', 'employer', 'jobtitle', 'positiondescription');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                return array();
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?' . (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+            INNER JOIN {artefact_resume_employmenthistory} AS ar
+            ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
+    }
+
 }
 
 class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
@@ -1281,6 +1408,48 @@ EOF;
     public static function bulk_delete($artefactids) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'educationhistory');
     }
+
+    /**
+     * returns the artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type == 'educationhistory'
+     *  - content, which has
+     *      - startdate
+     *      - enddate
+     *      - institution
+     *      - qualtype
+     *      - qualname
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('startdate', 'enddate', 'institution', 'qualtype', 'qualname');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                return array();
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?' . (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+                INNER JOIN {artefact_resume_educationhistory} AS ar
+                    ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
+    }
+
 }
 
 class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
@@ -1351,6 +1520,46 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     public static function bulk_delete($artefactids) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'certification');
     }
+
+    /**
+     * returns certificate artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type
+     *  - content which has:
+     *      - date
+     *      - title
+     *      - description
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('date', 'title', 'description');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                return array();
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?' . (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+            INNER JOIN {artefact_resume_certification} AS ar
+            ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
+    }
+
 }
 
 class ArtefactTypeBook extends ArtefactTypeResumeComposite {
@@ -1436,6 +1645,45 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     public static function bulk_delete($artefactids) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'book');
     }
+    /**
+     * returns the book artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type
+     *  - content which has:
+     *      - date
+     *      - title
+     *      - contribution
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('date', 'title', 'contribution');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                return array();
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?' . (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+            INNER JOIN {artefact_resume_book} AS ar
+            ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
+    }
+
 }
 
 class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
@@ -1513,6 +1761,47 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
     public static function bulk_delete($artefactids) {
         ArtefactTypeResumeComposite::bulk_delete_composite($artefactids, 'membership');
     }
+
+    /**
+     * returns membership artefacts which have the same values of the following fields:
+     *  - owner
+     *  - type
+     *  - content which has:
+     *      - startdate
+     *      - enddate
+     *      - title
+     *      - description
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        $fields = array('startdate', 'enddate', 'title', 'description');
+        $where = array();
+        $wherevalues = array($values['owner'], $values['type']);
+        $contentvalues = $values['content'];
+        foreach ($fields as $f) {
+            if (!isset($contentvalues[$f])) {
+                return array();
+            }
+            if (!empty($contentvalues[$f])) {
+                $where[] = "ar.$f = ?";
+                $wherevalues[] = $contentvalues[$f];
+            }
+        }
+        $wherestr = 'WHERE a.owner = ? AND a.artefacttype = ?' . (!empty($where) ? ' AND ' . join(' AND ', $where) : '');
+        return get_column_sql('
+            SELECT DISTINCT a.id
+            FROM {artefact} AS a
+            INNER JOIN {artefact_resume_membership} AS ar
+            ON a.id = ar.artefact
+            ' . $wherestr, $wherevalues
+        );
+    }
+
+    public static function render_import_entry_request($entry_content) {
+        return parent::render_import_entry_request($entry_content, array_keys(self::get_addform_elements()));
+    }
+
 }
 
 class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {

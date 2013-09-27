@@ -60,6 +60,42 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         return $strategies;
     }
 
+    public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        if ($strategy != self::STRATEGY_IMPORT_AS_PLAN) {
+            throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
+        }
+        self::add_import_entry_request_plan($entry, $importer);
+    }
+
+/**
+ * Import from entry requests for Mahara plans and their tasks
+ *
+ * @param PluginImportLeap $importer
+ * @return updated DB
+ * @throw    ImportException
+ */
+    public static function import_from_requests(PluginImportLeap $importer) {
+        $importid = $importer->get('importertransport')->get('importid');
+        if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND plugin = ? AND entrytype = ?', array($importid, 'plans', 'plan'))) {
+            foreach ($entry_requests as $entry_request) {
+                if ($planid = self::create_artefact_from_request($importer, $entry_request)) {
+                    if ($plantask_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entryparent = ? AND entrytype = ?', array($importid, $entry_request->entryid, 'task'))) {
+                        foreach ($plantask_requests as $plantask_request) {
+                            self::create_artefact_from_request($importer, $plantask_request, $planid);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param SimpleXMLElement $entry
+     * @param PluginImportLeap $importer
+     * @param unknown_type $strategy
+     * @param array $otherentries
+     * @throws ImportException
+     */
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
 
         if ($strategy != self::STRATEGY_IMPORT_AS_PLAN) {
@@ -112,7 +148,70 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
 
 
     /**
+     * Add import entry request for a plan or a task from the given entry
+     * TODO: Refactor this to combine it with create_plan()
+     *
+     * @param SimpleXMLElement $entry    The entry for the plan or task
+     * @param PluginImportLeap $importer The importer
+     */
+    private static function add_import_entry_request_plan(SimpleXMLElement $entry, PluginImportLeap $importer) {
+
+        // First decide if it's going to be a plan or a task depending
+        // on whether it has any ancestral plans.
+
+        if ($ancestorid = self::get_ancestor_entryid($entry, $importer)) {
+            $type = 'task';
+        }
+        else {
+            $type = 'plan';
+        }
+
+        if (isset($entry->author->name) && strlen($entry->author->name)) {
+            $authorname = $entry->author->name;
+        }
+        else {
+            $author = $importer->get('usr');
+        }
+
+        // Set completiondate and completed status if we can find them
+        if ($type === 'task') {
+
+            $namespaces = $importer->get_namespaces();
+            $ns = $importer->get_leap2a_namespace();
+
+            $dates = PluginImportLeap::get_leap_dates($entry, $namespaces, $ns);
+            if (!empty($dates['target']['value'])) {
+                $completiondate = strtotime($dates['target']['value']);
+            }
+            $completiondate = empty($completiondate) ? $updated : $completiondate;
+
+            $completed = 0;
+            if ($entry->xpath($namespaces[$ns] . ':status[@' . $namespaces[$ns] . ':stage="completed"]')) {
+                $completed = 1;
+            }
+        }
+
+        PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, self::STRATEGY_IMPORT_AS_PLAN, 'plans', array(
+            'owner'   => $importer->get('usr'),
+            'type'    => $type,
+            'parent'  => $ancestorid,
+            'content' => array(
+                'title'       => (string)$entry->title,
+                'description' => PluginImportLeap::get_entry_content($entry, $importer),
+                'authorname'  => isset($authorname) ? $authorname : null,
+                'author'      => isset($author) ? $author : null,
+                'ctime'       => (string)$entry->published,
+                'mtime'       => (string)$entry->updated,
+                'completiondate' => ($type === 'task') ? $completiondate : null,
+                'completed'   => ($type === 'task') ? $completed : null,
+                'tags'        => PluginImportLeap::get_entry_tags($entry),
+            ),
+        ));
+    }
+
+    /**
      * Creates a plan or task from the given entry
+     * TODO: Refactor this to combine it with add_import_entry_request_plan()
      *
      * @param SimpleXMLElement $entry    The entry to create the plan or task from
      * @param PluginImportLeap $importer The importer
@@ -189,4 +288,71 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         }
     }
 
+    /**
+     * Render import entry requests for Mahara plans and their tasks
+     * @param PluginImportLeap $importer
+     * @return HTML code for displaying plans and choosing how to import them
+     */
+    public static function render_import_entry_requests(PluginImportLeap $importer) {
+        $importid = $importer->get('importertransport')->get('importid');
+        // Get import entry requests for Mahara plans
+        $entryplans = array();
+        if ($ierplans = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'plan'))) {
+            foreach ($ierplans as $ierplan) {
+                $plan = unserialize($ierplan->entrycontent);
+                $plan['id'] = $ierplan->id;
+                $plan['decision'] = $ierplan->decision;
+                if (is_string($ierplan->duplicateditemids)) {
+                    $ierplan->duplicateditemids = unserialize($ierplan->duplicateditemids);
+                }
+                if (is_string($ierplan->existingitemids)) {
+                    $ierplan->existingitemids = unserialize($ierplan->existingitemids);
+                }
+                $plan['disabled'][PluginImport::DECISION_IGNORE] = false;
+                $plan['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                $plan['disabled'][PluginImport::DECISION_APPEND] = true;
+                $plan['disabled'][PluginImport::DECISION_REPLACE] = true;
+                if (!empty($ierplan->duplicateditemids)) {
+                    $duplicated_item = artefact_instance_from_id($ierplan->duplicateditemids[0]);
+                    $plan['duplicateditem']['id'] = $duplicated_item->get('id');
+                    $plan['duplicateditem']['title'] = $duplicated_item->get('title');
+                    $res = $duplicated_item->render_self(array());
+                    $plan['duplicateditem']['html'] = $res['html'];
+                }
+                else if (!empty($ierplan->existingitemids)) {
+                    foreach ($ierplan->existingitemids as $id) {
+                        $existing_item = artefact_instance_from_id($id);
+                        $res = $existing_item->render_self(array());
+                        $plan['existingitems'][] = array(
+                            'id'    => $existing_item->get('id'),
+                            'title' => $existing_item->get('title'),
+                            'html'  => $res['html'],
+                        );
+                    }
+                }
+                // Get import entry requests of tasks in the plan
+                $entrytasks = array();
+                if ($iertasks = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ? AND entryparent = ?',
+                        array($importid, 'task', $ierplan->entryid))) {
+                    foreach ($iertasks as $iertask) {
+                        $task = unserialize($iertask->entrycontent);
+                        $task['id'] = $iertask->id;
+                        $task['decision'] = $iertask->decision;
+                        $task['completiondate'] = format_date($task['completiondate'], 'strftimedate');
+                        $task['disabled'][PluginImport::DECISION_IGNORE] = false;
+                        $task['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                        $task['disabled'][PluginImport::DECISION_APPEND] = true;
+                        $task['disabled'][PluginImport::DECISION_REPLACE] = true;
+                        $entrytasks[] = $task;
+                    }
+                }
+                $plan['entrytasks'] = $entrytasks;
+                $entryplans[] = $plan;
+            }
+        }
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign_by_ref('entryplans', $entryplans);
+        return $smarty->fetch('artefact:plans:import/plans.tpl');
+    }
 }

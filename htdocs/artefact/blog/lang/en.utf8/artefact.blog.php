@@ -156,3 +156,8 @@ $string['hiddenblogsnotification'] = 'Additional journal(s) have been made for y
 $string['shortcutaddpost'] = 'Add a new entry to';
 $string['shortcutgo'] = 'Go';
 $string['shortcutnewentry'] = 'New entry';
+
+$string['duplicatedblog'] = 'Duplicated journal';
+$string['existingblogs'] = 'Existing journals';
+$string['duplicatedpost'] = 'Duplicated journal entry';
+$string['existingposts'] = 'Existing journal entries';

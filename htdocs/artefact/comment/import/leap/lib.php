@@ -107,64 +107,121 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         return $strategies;
     }
 
-    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+/**
+ * Import from entry requests for Mahara comments
+ *
+ * @param PluginImportLeap $importer
+ * @return updated DB
+ * @throw    ImportException
+ */
+    public static function import_from_requests(PluginImportLeap $importer) {
+        if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
+            foreach ($entry_requests as $entry_request) {
+                self::create_artefact_from_request($importer, $entry_request);
+            }
+        }
+    }
 
+    /**
+     * Logic to figure out how to process an entry into a comment
+     * Used by import_using_strategy() and add_import_entry_request_using_strategy().
+     *
+     * @param SimpleXMLElement $entry
+     * @param PluginImportLeap $importer
+     * @param unknown_type $strategy
+     * @param array $otherentries
+     * @return array An array of config stuff to either create the comment, or store an import request.
+     * @throws ImportException
+     */
+    private static function get_entry_data_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         if ($strategy != self::STRATEGY_IMPORT_AS_COMMENT) {
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
 
-        $artefactmapping = array();
-        $artefactmapping[(string)$entry->id] = self::create_comment($entry, $importer);
-        return $artefactmapping;
-    }
-
-
-    /**
-     * Creates a comment from the given entry
-     *
-     * @param SimpleXMLElement $entry    The entry to create the comment from
-     * @param PluginImportLeap $importer The importer
-     * @return array A list of artefact IDs created, to be used with the artefact mapping.
-     */
-    private static function create_comment(SimpleXMLElement $entry, PluginImportLeap $importer) {
-        $createdartefacts = array();
-
-        $comment = new ArtefactTypeComment();
-        $comment->set('title', (string)$entry->title);
         $description = PluginImportLeap::get_entry_content($entry, $importer);
         $type = isset($entry->content['type']) ? (string)$entry->content['type'] : 'text';
         if ($type == 'text') {
             $description = format_whitespace($description);
         }
-        $comment->set('description', $description);
-        if ($published = strtotime((string)$entry->published)) {
-            $comment->set('ctime', $published);
-        }
-        if ($updated = strtotime((string)$entry->updated)) {
-            $comment->set('mtime', $updated);
-        }
-
-        $private = PluginImportLeap::is_correct_category_scheme($entry, $importer, 'audience', 'Private');
-        $comment->set('private', (int) $private);
-        $comment->set('owner', $importer->get('usr'));
-
         if (isset($entry->author->name) && strlen($entry->author->name)) {
-            $comment->set('authorname', $entry->author->name);
+            $authorname = (string)$entry->author->name;
         }
         else {
-            $comment->set('author', $importer->get('usr'));
+            $author = $importer->get('usr');
+        }
+
+        return array(
+            'owner'   => $importer->get('usr'),
+            'type'    => 'comment',
+            'content' => array(
+                'title'       => (string)$entry->title,
+                'description' => $description,
+                'ctime'       => (string)$entry->published,
+                'mtime'       => (string)$entry->updated,
+                'private'     => (int)PluginImportLeap::is_correct_category_scheme($entry, $importer, 'audience', 'Private'),
+                'authorname'  => isset($authorname) ? $authorname : null,
+                'author'      => isset($author) ? $author : null,
+                'tags'        => PluginImportLeap::get_entry_tags($entry),
+            ),
+        );
+    }
+
+    public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $config = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
+
+        return PluginImportLeap::add_import_entry_request(
+                $importer->get('importertransport')->get('importid'),
+                (string)$entry->id,
+                self::STRATEGY_IMPORT_AS_COMMENT,
+                'comment',
+                $config
+        );
+    }
+
+    public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+
+        $config = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
+        $content = $config['content'];
+
+        $comment = new ArtefactTypeComment();
+        $comment->set('title', $content['title']);
+        $comment->set('description', $content['title']);
+        if ($content['ctime']) {
+            $comment->set('ctime', $content['ctime']);
+        }
+        if ($content['mtime']) {
+            $comment->set('mtime', $content['mtime']);
+        }
+        $comment->set('private', $content['private']);
+        $comment->set('owner', $config['owner']);
+
+        if ($content['authorname']) {
+            $comment->set('authorname', $content['authorname']);
+        }
+        else {
+            $comment->set('author', $content['author']);
         }
 
         if (empty(self::$tempview)) {
-            self::create_temporary_view($importer->get('usr'));
+            self::create_temporary_view($config['owner']);
         }
         $comment->set('onview', self::$tempview);
-
-        $comment->set('tags', PluginImportLeap::get_entry_tags($entry));
+        $comment->set('tags', $content['tags']);
         $comment->commit();
-        array_unshift($createdartefacts, $comment->get('id'));
 
-        return $createdartefacts;
+        $artefactmapping = array();
+        $artefactmapping[(string)$entry->id] = array($comment->get('id'));
+        return $artefactmapping;
+    }
+
+
+    /**
+     * Add an import entry request as a comment from the given entry
+     *
+     * @param SimpleXMLElement $entry    The entry to create the comment from
+     * @param PluginImportLeap $importer The importer
+     */
+    private static function add_import_entry_request_comment(SimpleXMLElement $entry, PluginImportLeap $importer) {
     }
 
 
@@ -188,10 +245,23 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         return new ArtefactTypeComment($artefactids[0]);
     }
 
+    /**
+     * Relate comments to the artefacts they comment on
+     * Attach comments to comments
+     *
+     */
+    public static function setup_relationships_from_requests(PluginImportLeap $importer) {
+        if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
+            foreach ($entry_requests as $entry_request) {
+                $entry = $importer->get_entry_by_id($entry_request->entryid);
+                self::setup_relationships($entry, $importer);
+            }
+        }
+    }
 
     /**
      * Relate comments to the artefacts they comment on
-     * Attach files to comments
+     * Attach comments to comments
      */
     public static function setup_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $comment = null;
@@ -226,6 +296,35 @@ class LeapImportComment extends LeapImportArtefactPlugin {
      * appropriate in setup_relationships.  To do that we would have
      * to change that call to happen after views are created.
      */
+    public static function setup_view_relationships_from_request(PluginImportLeap $importer) {
+        if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
+            foreach ($entry_requests as $entry_request) {
+                $commentids = unserialize($entry_request->artefactmapping);
+                $comment = new ArtefactTypeComment($commentids[0]);
+
+                if ($comment->get('onartefact')) {
+                    continue;
+                }
+
+                $entry = $importer->get_entry_by_id($entry_request->entryid);
+                $referentid = self::get_referent_entryid($entry, $importer);
+                if ($viewid = $importer->get_viewid_imported_by_entryid($referentid)) {
+                    $comment->set('onview', $viewid);
+                    $comment->commit();
+                }
+                else {
+                    // Nothing to link this comment to, so leave it in the temporary view.
+                    self::$savetempview = true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Fix comments to point to the right view.  Probably more
+     * appropriate in setup_relationships.  To do that we would have
+     * to change that call to happen after views are created.
+     */
     public static function setup_view_relationships(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $comment = self::get_comment_instance($entry, $importer);
 
@@ -242,5 +341,32 @@ class LeapImportComment extends LeapImportArtefactPlugin {
             // Nothing to link this comment to, so leave it in the temporary view.
             self::$savetempview = true;
         }
+    }
+
+    /**
+     * Render import entry requests for Mahara comments
+     * @param PluginImportLeap $importer
+     * @return HTML code for displaying comments and choosing how to import them
+     */
+    public static function render_import_entry_requests(PluginImportLeap $importer) {
+        $importid = $importer->get('importertransport')->get('importid');
+        // Get import entry requests for Mahara comments
+        $entrycomments = array();
+        if ($iercomments = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'comment'))) {
+            foreach ($iercomments as $iercomment) {
+                $comment = unserialize($iercomment->entrycontent);
+                $comment['id'] = $iercomment->id;
+                $comment['decision'] = $iercomment->decision;
+                $comment['disabled'][PluginImport::DECISION_IGNORE] = false;
+                $comment['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                $comment['disabled'][PluginImport::DECISION_APPEND] = true;
+                $comment['disabled'][PluginImport::DECISION_REPLACE] = true;
+                $entrycomments[] = $comment;
+            }
+        }
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('displaydecisions', $importer->get('displaydecisions'));
+        $smarty->assign_by_ref('entrycomments', $entrycomments);
+        return $smarty->fetch('artefact:comment:import/comments.tpl');
     }
 }

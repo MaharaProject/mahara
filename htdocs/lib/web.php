@@ -2371,6 +2371,12 @@ function mahara_standard_nav() {
             'weight' => 70,
             'ignore' => !$exportenabled,
         ),
+        'myportfolio/import' => array(
+            'path' => 'myportfolio/import',
+            'url' => 'import/index.php',
+            'title' => get_string('Import', 'import'),
+            'weight' => 80,
+        ),
         'myportfolio/collection' => array(
             'path' => 'myportfolio/collection',
             'url' => 'collection/index.php',

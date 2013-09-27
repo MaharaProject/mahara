@@ -101,7 +101,8 @@ $string['viewyourresume'] = 'View your résumé';
 $string['resumeofuser'] = 'Résumé of %s';
 $string['employeraddress'] = 'Employer address';
 $string['institutionaddress'] = 'Institution address';
-
+$string['duplicatedresumefieldvalue'] = 'Duplicated value';
+$string['existingresumefieldvalues'] = 'Existing values';
 $string['attachfile'] = 'Attach file';
 $string['Attachments'] = 'Attachments';
 $string['attachmentdesc'] = 'Attachment to %s';

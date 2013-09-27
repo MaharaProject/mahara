@@ -208,6 +208,47 @@ abstract class ArtefactType {
     }
 
     /**
+     * returns duplicated artefacts which have the same value of the following fields:
+     *  - owner
+     *  - type
+     *  - content
+     *      - title
+     *      - description
+     *
+     * @param array $values
+     */
+    public static function get_duplicated_artefacts(array $values) {
+        if (!empty($values['content']['description'])) {
+            return get_column_sql('
+                SELECT id
+                FROM {artefact}
+                WHERE owner = ?
+                    AND artefacttype = ?
+                    AND title = ?
+                    AND description = ?',
+                array($values['owner'], $values['type'], $values['content']['title'], $values['content']['description'])
+            );
+        }
+        else {
+            return get_column('artefact', 'id',
+                'owner', $values['owner'],
+                'artefacttype', $values['type'],
+                'title', $values['content']['title']);
+        }
+    }
+
+    /**
+     * returns existing artefacts which have the same artefacttype and owner
+     *
+     * @param array $values
+     */
+    public static function get_existing_artefacts(array $values) {
+        return get_column('artefact', 'id',
+                        'owner', $values['owner'],
+                        'artefacttype', $values['type']);
+    }
+
+    /**
      * Returns the instances of all views where this artefact is used.
      *
      * @return array Array of view instances.

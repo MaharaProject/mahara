@@ -142,3 +142,5 @@ $string['confirmdeletenote'] = 'This note is used in %d blocks and %d pages. If 
 $string['notedeleted'] = 'Note deleted';
 $string['noteupdated'] = 'Note updated';
 $string['html'] = 'Note';
+$string['duplicatedprofilefieldvalue'] = 'Duplicated value';
+$string['existingprofilefieldvalues'] = 'Existing values';

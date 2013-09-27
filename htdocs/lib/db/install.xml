@@ -979,6 +979,28 @@
                 <KEY NAME="hostfk" TYPE="foreign" FIELDS="host" REFTABLE="host" REFFIELDS="wwwroot" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="import_entry_requests">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="importid" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="entryid" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="entryparent" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="strategy" TYPE="int" LENGTH="1" NOTNULL="true" />
+                <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="entrytype" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="entrytitle" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="entrycontent" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="duplicateditemids" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="existingitemids" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="artefactmapping" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="decision" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="owneridfk" TYPE="foreign" FIELDS="ownerid" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="site_data">
             <FIELDS>
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
