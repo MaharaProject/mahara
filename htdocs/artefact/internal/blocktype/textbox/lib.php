@@ -545,7 +545,7 @@ EOF;
                 'license' => (!empty($configdata['license'])) ? $configdata['license'] : '',
                 'licensor' => (!empty($configdata['licensor'])) ? $configdata['licensor'] : '',
                 'licensorurl' => (!empty($configdata['licensorurl'])) ? $configdata['licensorurl'] : '',
-                'tags'        => $configdata['tags'],
+                'tags'        => (!empty($configdata['tags'])) ? $configdata['tags'] : '',
                 'owner'       => $viewconfig['owner'],
             );
             $artefact = new ArtefactTypeHtml(0, $data);
