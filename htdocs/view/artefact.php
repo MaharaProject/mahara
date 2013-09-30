@@ -29,7 +29,34 @@ if (!can_view_view($view)) {
     throw new AccessDeniedException();
 }
 
-if (!artefact_in_view($artefactid, $viewid)) {
+require_once(get_config('docroot') . 'artefact/lib.php');
+$artefact = artefact_instance_from_id($artefactid);
+// Build the path to the artefact, through its parents
+$artefactpath = array();
+$parent = $artefact->get('parent');
+$artefactok = false;
+if (artefact_in_view($artefact->get('id'), $viewid)) {
+    $artefactok = true;
+    $baseobject = $artefact;
+}
+while ($parent !== null) {
+    // This loop could get expensive when there are a lot of parents. But at least
+    // it works, unlike the old attempt
+    $parentobj = artefact_instance_from_id($parent);
+    if (artefact_in_view($parent, $viewid)) {
+        array_unshift($artefactpath, array(
+            'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
+            'title' => $parentobj->display_title(),
+        ));
+    }
+
+    $parent = $parentobj->get('parent');
+    if (artefact_in_view($parentobj->get('id'), $viewid)) {
+        $artefactok = true;
+        $baseobject = $parentobj;
+    }
+}
+if ($artefactok == false) {
     throw new AccessDeniedException(get_string('artefactnotinview', 'error', $artefactid, $viewid));
 }
 
@@ -38,11 +65,10 @@ $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
 
-require_once(get_config('docroot') . 'artefact/lib.php');
-$artefact = artefact_instance_from_id($artefactid);
-if ($artefactid && $viewid && $blockid) {
+
+if ($artefact && $viewid && $blockid) {
     // use the block instance title rather than the artefact title if it exists
-    $title = artefact_title_for_view_and_block($artefactid, $viewid, $blockid);
+    $title = artefact_title_for_view_and_block($artefact, $viewid, $blockid);
 }
 else {
     $title = $artefact->display_title();
@@ -70,6 +96,18 @@ $options = array(
 if (param_integer('details', 0)) {
     $options['metadata'] = 1;
 }
+if ($artefact->get('artefacttype') == 'folder') {
+    // get folder block sort order - returns the first instance of folder on view
+    // why you'd want more than one folder block on the same view is m̶a̶d̶n̶e̶s̶s̶ user preference.
+    if ($block = get_records_sql_array('SELECT block FROM {view_artefact} WHERE view = ? AND artefact = ?', array($viewid, $baseobject->get('id')),0,1)) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $bi = new BlockInstance($block[0]->block);
+        $configdata = $bi->get('configdata');
+        if (!empty($configdata['sortorder'])) {
+            $options['sortorder'] = $configdata['sortorder'];
+        }
+    }
+}
 $rendered = $artefact->render_self($options);
 $content = '';
 if (!empty($rendered['javascript'])) {
@@ -77,28 +115,10 @@ if (!empty($rendered['javascript'])) {
 }
 $content .= $rendered['html'];
 
-// Build the path to the artefact, through its parents
-$artefactpath = array();
-$parent = $artefact->get('parent');
-while ($parent !== null) {
-    // This loop could get expensive when there are a lot of parents. But at least 
-    // it works, unlike the old attempt
-    $parentobj = artefact_instance_from_id($parent);
-    if (artefact_in_view($parent, $viewid)) {
-        array_unshift($artefactpath, array(
-            'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
-            'title' => $parentobj->display_title(),
-        ));
-    }
-
-    $parent = $parentobj->get('parent');
-}
-
 $artefactpath[] = array(
     'url' => '',
     'title' => $title,
 );
-
 
 // Feedback
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view, $artefact);

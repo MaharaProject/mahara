@@ -1507,7 +1507,7 @@ function artefact_instance_from_id($id) {
  *
  * @return str            the block instance title
  */
-function artefact_title_for_view_and_block($artefactid, $viewid, $blockid) {
+function artefact_title_for_view_and_block($artefact, $viewid, $blockid) {
     $sql = "SELECT bi.title AS blocktitle,
             a.title AS artefacttitle
             FROM {artefact} a
@@ -1515,8 +1515,10 @@ function artefact_title_for_view_and_block($artefactid, $viewid, $blockid) {
             JOIN {block_instance} bi ON bi.id = va.block
             WHERE va.artefact = ?
             AND va.view = ? AND va.block = ?";
-    if (!$data = get_record_sql($sql, array($artefactid, $viewid, $blockid))) {
-        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
+    if (!$data = get_record_sql($sql, array($artefact->get('id'), $viewid, $blockid))) {
+        // if we are traversing folders where the subfolders/files are not directly connected
+        // to the blockinstance we just return their title
+        return $artefact->display_title();
     }
     $currenttitle = (!empty($data->blocktitle)) ? $data->blocktitle : $data->artefacttitle;
     return $currenttitle;
