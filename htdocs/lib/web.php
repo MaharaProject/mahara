@@ -911,9 +911,16 @@ class Theme {
         return $returnprefix . $plugindirectory . 'theme/' . $themedir . '/static/' . $filename;
     }
 
-    public function header_logo() {
+    /**
+     * Displaying of the header logo
+     * If $name is specified the site-logo-[$name].png will be returned
+     */
+    public function header_logo($name = false) {
         if (!empty($this->headerlogo)) {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogo;
+        }
+        else if ($name) {
+            return $this->get_url('images/site-logo-' . $name . '.png');
         }
         return $this->get_url('images/site-logo.png');
     }

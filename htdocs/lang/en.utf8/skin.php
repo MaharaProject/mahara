@@ -120,8 +120,9 @@ $string['fontsizelarger'] = 'larger';
 $string['fontsizelargest'] = 'largest';
 
 $string['headerlogoimage'] = 'Mahara logo image';
-$string['headerlogoimagenormal'] = 'Normal text (suitable for lighter header backgrounds)';
-$string['headerlogoimagewhite'] = 'White text (suitable for darker header backgrounds)';
+$string['headerlogoimagenormal'] = 'Default theme logo';
+$string['headerlogoimagelight'] = 'White logo and text (suitable for darker header backgrounds)';
+$string['headerlogoimagedark'] = 'Dark logo and text (suitable for lighter header backgrounds)';
 
 $string['normallinkcolor'] = 'Normal link colour';
 $string['hoverlinkcolor'] = 'Highlighted link colour';

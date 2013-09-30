@@ -325,7 +325,8 @@ $elements['viewheader'] = array(
                         'defaultvalue' => (!empty($viewskin['header_logo_image']) ? $viewskin['header_logo_image'] : 'normal'),
                         'options' => array(
                                 'normal' => get_string('headerlogoimagenormal', 'skin'),
-                                'white' => get_string('headerlogoimagewhite', 'skin'),
+                                'light' => get_string('headerlogoimagelight', 'skin'),
+                                'dark' => get_string('headerlogoimagedark', 'skin'),
                         ),
                         'separator' => '<br />',
                 ),

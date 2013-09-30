@@ -211,6 +211,7 @@ $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('w
 $viewskin = $view->get('skin');
 if ($viewskin && get_config('skins') && can_use_skins($owner)) {
     $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
+    $skindata = unserialize(get_field('skin', 'viewskin', 'id', $viewskin));
 }
 else {
     $skin = false;
@@ -289,12 +290,14 @@ if (get_config('viewmicroheaders')) {
 
     $smarty->assign('microheadertitle', $titletext);
 
-    // Support for normal or white small Mahara logo - to use with skins
     $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
+    // Support for normal, light, or dark small Mahara logo - to use with skins
     if ($viewskin) {
-        $skindata = unserialize(get_field('skin', 'viewskin', 'id', $viewskin));
-        if ($skindata['header_logo_image'] == 'white') {
-            $smarty->assign('maharalogofilename', 'images/site-logo-small-white.png');
+        if ($skindata['header_logo_image'] == 'light') {
+            $smarty->assign('maharalogofilename', 'images/site-logo-small-light.png');
+        }
+        else if ($skindata['header_logo_image'] == 'dark') {
+            $smarty->assign('maharalogofilename', 'images/site-logo-small-dark.png');
         }
     }
 
@@ -330,6 +333,13 @@ $title = hsc(TITLE);
 
 if (!get_config('viewmicroheaders')) {
     $smarty->assign('maintitle', $titletext);
+    if ($viewskin) {
+        if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
+            // override the default $smarty->assign('sitelogo') that happens
+            // in the initial call to smarty()
+            $smarty->assign('sitelogo', $THEME->header_logo($skindata['header_logo_image']));
+        }
+    }
 }
 
 // Provide a link for roaming teachers to return
