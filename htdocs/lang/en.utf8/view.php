@@ -204,6 +204,7 @@ $string['canteditdontown'] = 'You cannot edit this page because you do not own i
 $string['canteditsubmitted'] = 'You cannot edit this page because it has been submitted for assessment to "%s". You will have to wait until a tutor releases the page.';
 $string['Submitted'] = 'Submitted';
 $string['submittedforassessment'] = 'Submitted for assessment';
+$string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
