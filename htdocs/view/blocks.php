@@ -84,6 +84,10 @@ if ($blockid = param_integer('blockconfig', 0)) {
     if (!isset($_POST['cancel_action_configureblockinstance_id_' . $blockid]) || !param_integer('removeoncancel', 0) || param_integer('pieform_jssubmission', 0)) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($blockid);
+        // Check if the block_instance belongs to this view
+        if ($bi->get('view') != $view->get('id')) {
+            throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
+        }
         $bi->build_configure_form();
     }
 }

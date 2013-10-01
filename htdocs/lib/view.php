@@ -1680,6 +1680,10 @@ class View {
         }
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']); // get it so we can reshuffle stuff
+        // Check if the block_instance belongs to this view
+        if ($bi->get('view') != $this->get('id')) {
+            throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
+        }
         db_begin();
         $bi->delete();
         $this->shuffle_column($bi->get('column'), null, $bi->get('order'));
@@ -1704,6 +1708,10 @@ class View {
         }
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']);
+        // Check if the block_instance belongs to this view
+        if ($bi->get('view') != $this->get('id')) {
+            throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
+        }
         db_begin();
         // moving within the same column
         if ($bi->get('column') == $values['column']) {
@@ -1843,6 +1851,10 @@ class View {
     public function configureblockinstance($values) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']);
+        // Check if the block_instance belongs to this view
+        if ($bi->get('view') != $this->get('id')) {
+            throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
+        }
         return $bi->render_editing(true);
     }
 
