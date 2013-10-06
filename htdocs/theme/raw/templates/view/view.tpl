@@ -37,15 +37,20 @@
     {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
     {if $releaseform}<div class="releaseviewform">{$releaseform|safe}</div>{/if}
     {if $view_group_submission_form}<div class="submissionform">{$view_group_submission_form|safe}</div>{/if}
-    {if $feedback->count || $enablecomments}
-    <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
-    <div id="feedbacktable" class="fullwidth">
-        {$feedback->tablerows|safe}
-    </div>
-    {$feedback->pagination|safe}
+    {if $feedback->position eq 'base'}
+        {if $feedback->count || $enablecomments}
+        <h3 class="title">{str tag="feedback" section="artefact.comment"}</h3>
+        <div id="feedbacktable" class="fullwidth">
+            {$feedback->tablerows|safe}
+        </div>
+        {$feedback->pagination|safe}
+        {/if}
     {/if}
 	<div id="viewmenu">
-        {include file="view/viewmenu.tpl" enablecomments=$enablecomments}
+        {if $feedback->position eq 'base' && $enablecomments}
+            <a id="add_feedback_link" class="feedback" href="">{str tag=placefeedback section=artefact.comment}</a>
+        {/if}
+        {include file="view/viewmenu.tpl"}
     </div>
     {if $addfeedbackform}<div>{$addfeedbackform|safe}</div>{/if}
     {if $objectionform}<div>{$objectionform|safe}</div>{/if}

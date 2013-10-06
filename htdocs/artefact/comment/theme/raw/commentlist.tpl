@@ -1,3 +1,7 @@
+{if $position == 'blockinstance'}
+<tr>
+  <td>
+{/if}
 {foreach from=$data item=item}
   <div class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}{if $item->makepublicform} private{/if}">
       <div class="commentleft">
@@ -55,3 +59,7 @@
       <div class="cb"></div>
   </div>
 {/foreach}
+{if $position == 'blockinstance'}
+  </td>
+</tr>
+{/if}

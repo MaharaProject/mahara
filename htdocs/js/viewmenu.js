@@ -8,6 +8,9 @@
 
 function addFeedbackSuccess(form, data) {
     addElementClass('add_feedback_form', 'hidden');
+    if ($('overlay')) {
+        removeElement('overlay');
+    }
     paginator.updateResults(data);
     // Clear rating from previous submission
     forEach(getElementsByTagAndClassName('input', 'star', 'add_feedback_form_rating_container'), function (r) {
@@ -41,6 +44,9 @@ function rewriteCancelButtons() {
                 connect(button, 'onclick', function (e) {
                     e.stop();
                     addElementClass('add_feedback_form', 'hidden');
+                    if ($('overlay')) {
+                        removeElement('overlay');
+                    }
                     return false;
                 });
             }
@@ -70,7 +76,17 @@ addLoadEvent(function () {
                 }
                 removeElementClass('add_feedback_form', 'js-hidden');
                 removeElementClass('add_feedback_form', 'hidden');
-
+                if (feedbacklinkinblock) {
+                    // need to display it as a 'popup' form
+                    addElementClass('add_feedback_form', 'blockinstance');
+                    addElementClass('add_feedback_form', 'configure');
+                    addElementClass('add_feedback_form', 'feedback_form_overlay');
+                    var formposition = new Object();
+                    formposition.x = (((getViewportDimensions().w / 2) - 300) > 0) ? (getViewportDimensions().w / 2) - 300 : 0;
+                    formposition.y = getViewportPosition().y + 30;
+                    setElementPosition('add_feedback_form', formposition);
+                    appendChildNodes(document.body, DIV({id: 'overlay'}));
+                }
                 // IE6 fails to hide tinymce properly after feedback
                 // submission, so force it to reload the page by disconnecting
                 // the submit handler

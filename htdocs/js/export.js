@@ -80,6 +80,7 @@ addLoadEvent(function() {
             e.stop();
             var href = getNodeAttribute(this, 'href');
             var params = parseQueryString(href.substring(href.indexOf('?') + 1, href.length));
+            params['export'] = 1;
             sendjsonrequest(config['wwwroot'] + 'view/viewcontent.json.php', params, 'POST', partial(showPreview, 'big'));
         });
     });
