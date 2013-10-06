@@ -34,9 +34,9 @@ $string['description'] = 'Authenticate against Mahara\'s database';
 $string['completeregistration'] = 'Complete registration';
 $string['emailalreadytaken'] = 'This email address has already been registered here.';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions.';
-$string['passwordformdescription'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different to your username.<br/>
+$string['passwordformdescription'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different from your username.<br/>
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
-$string['passwordinvalidform'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different to your username.<br/>
+$string['passwordinvalidform'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different from your username.<br/>
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hi %s,
