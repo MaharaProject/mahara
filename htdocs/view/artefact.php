@@ -37,7 +37,7 @@ safe_require('artefact', 'comment');
 
 $artefactid = param_integer('artefact');
 $viewid     = param_integer('view');
-$blockid     = param_integer('block',null);
+$blockid    = param_integer('block',null);
 $path       = param_variable('path', null);
 
 $view = new View($viewid);
@@ -56,7 +56,10 @@ $showcomment = param_integer('showcomment', null);
 
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
-$artefact->set('title', artefact_title_from_view_and_id($artefactid, $viewid, $blockid));
+if ($artefactid && $viewid && $blockid) {
+    // use the block instance title rather than the artefact title
+    $artefact->set('title', artefact_title_for_view_and_block($artefactid, $viewid, $blockid));
+}
 
 if (!$artefact->in_view_list()) {
     throw new AccessDeniedException(get_string('artefactsonlyviewableinview', 'error'));

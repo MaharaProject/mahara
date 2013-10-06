@@ -1514,35 +1514,26 @@ function artefact_instance_from_id($id) {
     return new $classname($id, $data);
 }
 /**
- * This function returns the current title(s) of an artefact instance
- * The one(s) in block_inatance table rather than the one in artefact table.
- * If $viewid and $blockid are provided it will return exact instance title
- * otherwise it will return a comma separated string of all instance titles
- * of the artefact.
+ * This function returns the current title of an artefact's blockinstance
+ * if $viewid and $blockid are provided.
+ *
+ * @param int $artefactid the id of the artefact
+ * @param int $viewid     the id of the view the artefact associated with
+ * @param int $blockid    the id of the block instance the artefact is connected to
+ *
+ * @return str            the block instance title
  */
-function artefact_title_from_view_and_id($artefactid, $viewid = false, $blockid = false) {
+function artefact_title_for_view_and_block($artefactid, $viewid, $blockid) {
     $sql = "SELECT bi.title AS currenttitle
             FROM {artefact} a
             JOIN {view_artefact} va ON va.artefact = a.id
             JOIN {block_instance} bi ON bi.id = va.block
-            WHERE va.artefact = ?";
-    if ($viewid && $blockid) {
-        $sql .= " AND va.view = ? AND va.block = ?";
-        if (!$data = get_record_sql($sql, array($artefactid, $viewid, $blockid))) {
-            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
-        }
-        return $data->currenttitle;
+            WHERE va.artefact = ?
+            AND va.view = ? AND va.block = ?";
+    if (!$data = get_record_sql($sql, array($artefactid, $viewid, $blockid))) {
+        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
     }
-    else {
-        if (!$data = get_records_sql_array($sql, array($artefactid))) {
-            throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
-        }
-        $currenttitles = array();
-        foreach ($data as $key => $title) {
-            $currenttitles[$key] = $title->currenttitle;
-        }
-        return implode(', ', $currenttitles);
-    }
+    return $data->currenttitle;
 }
 
 /**
