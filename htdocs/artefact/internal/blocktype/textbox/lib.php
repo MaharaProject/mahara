@@ -369,13 +369,21 @@ EOF;
                 'value' => '<a id="chooseartefactlink" href="">'
                     . get_string('usecontentfromanothertextbox', 'blocktype.internal/textbox') . '</a>',
             ),
-            'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
-            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
             'managenotes' => array(
                 'type'  => 'html',
                 'class' => 'right hidden',
                 'value' => '<a href="' . $manageurl . '" target="_blank">'
                     . get_string('managealltextboxcontent', 'blocktype.internal/textbox') . ' &raquo;</a>',
+            ),
+            'artefactid' => self::artefactchooser_element(isset($artefactid) ? $artefactid : null),
+            'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
+            'license_advanced' => license_form_el_advanced(isset($artefact) ? $artefact : null),
+            'licensereadonly' => array(
+                'type' => 'html',
+                'class' => $readonly ? '' : 'hidden',
+                'width' => '100%',
+                'title' => get_string('license'),
+                'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
             ),
             'tags' => array(
                 'type' => 'tags',
@@ -392,15 +400,7 @@ EOF;
                 'title' => get_string('tags'),
                 'value' => '<div id="instconf_tagsreadonly_display">' . (is_array($tags) ? hsc(join(', ', $tags)) : '') . '</div>',
             ),
-            'license' => license_form_el_basic(isset($artefact) ? $artefact : null),
-            'license_advanced' => license_form_el_advanced(isset($artefact) ? $artefact : null),
-            'licensereadonly' => array(
-                'type' => 'html',
-                'class' => $readonly ? '' : 'hidden',
-                'width' => '100%',
-                'title' => get_string('license'),
-                'value' => '<div id="instconf_licensereadonly_display">' . (isset($artefact) ? render_license($artefact) : get_string('licensenone')) . '</div>',
-            ),
+            'artefactids' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null),
         );
         if ($readonly) {
             $elements['license']['class'] = 'hidden';
