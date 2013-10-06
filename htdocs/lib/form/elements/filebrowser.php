@@ -105,7 +105,8 @@ function pieform_element_filebrowser(Pieform $form, $element) {
             if (!empty($value)) {
                 foreach ($value as $k => $v) {
                     $file = artefact_instance_from_id($v);
-                    if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+                    if ((!($file instanceof ArtefactTypeFile) && !($file instanceof ArtefactTypeFolder))
+                        || !$USER->can_publish_artefact($file)) {
                         unset($value[$k]);
                     }
                 }
