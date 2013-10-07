@@ -579,6 +579,15 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 }
             }
         }
+
+        if (!empty($values['folder'])) {
+            $folder = artefact_instance_from_id($values['folder']);
+            if (!($folder instanceof ArtefactTypeFolder) || !$USER->can_publish_artefact($folder)) {
+                $result['message'] = get_string('unrecoverableerror', 'error');
+                $form->set_error(null, $result['message']);
+                $form->reply(PIEFORM_ERR, $result);
+            }
+        }
     }
 
     public static function instance_config_save($values) {
