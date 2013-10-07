@@ -43,9 +43,9 @@ if ($a->get('owner') != $USER->get('id')) {
 
 $table = $a->get_other_table_name();
 $ids = get_column_sql('
-    SELECT id FROM {'.$table.'}
-    WHERE artefact = ?
-    ORDER BY displayorder', array($artefact));
+    SELECT r.id FROM {artefact} a, {'.$table.'} r
+    WHERE a.id = r.artefact AND a.artefacttype = ? AND a.owner = ?
+    ORDER BY r.displayorder', array($a->get('artefacttype'), $a->get('owner')));
 
 foreach ($ids as $k => $v) {
     if ($v == $id) {
