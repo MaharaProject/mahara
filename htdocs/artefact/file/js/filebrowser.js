@@ -801,10 +801,13 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                     if ($(self.id+'_ownersubtabs')) {
                         $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
                     }
-                    if (data.newtabdata.upload) {
-                        removeElementClass(self.id + '_upload_container', 'hidden');
-                    } else {
-                        addElementClass(self.id + '_upload_container', 'hidden');
+                    if ($(self.id + '_upload_container')) {
+                        if (data.newtabdata.upload) {
+                            removeElementClass(self.id + '_upload_container', 'hidden');
+                        }
+                        else {
+                            addElementClass(self.id + '_upload_container', 'hidden');
+                        }
                     }
                     self.config.editmeta = data.editmeta;
                 }
