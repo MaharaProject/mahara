@@ -1083,19 +1083,32 @@ class View {
         }
 
         // check for existing layout
-        $sql = 'SELECT vl.id
-                FROM {view_layout} vl
-                JOIN {usr_custom_layout} ucl
-                ON ((vl.id = ucl.layout) AND (ucl.usr = 0 OR ucl.usr = ?))
-                JOIN (SELECT viewlayout, count(*) AS rec_count
-                       FROM {view_layout_rows_columns}
-                       WHERE ' . $rowscolssql . '
-                       GROUP BY viewlayout, id
-                       HAVING count(*) = ?) vlrc
+        $sql = 'SELECT vlrc.viewlayout AS id
+                FROM
+                {view_layout} vl
+                INNER JOIN {view_layout_rows_columns} vlrc
                 ON vl.id = vlrc.viewlayout
-                WHERE vl.rows = ?';
-
-        $layoutids = get_records_sql_array($sql, array($this->owner, $numrows, $numrows));
+                INNER JOIN (
+                    SELECT
+                    viewlayout, COUNT(*)
+                    FROM {view_layout_rows_columns}
+                    GROUP BY viewlayout
+                    HAVING COUNT(*) = ?
+                    ) vlrc2
+                ON vlrc.viewlayout = vlrc2.viewlayout
+                INNER JOIN {usr_custom_layout} ucl
+                ON ucl.layout = vl.id
+                WHERE (' . $rowscolssql . ')
+                AND (
+                   vl.iscustom = 0
+                   OR (
+                       vl.iscustom = 1 AND ucl.usr = ?
+                      )
+                )
+                GROUP BY vlrc.viewlayout
+                HAVING count(*) = ?
+                LIMIT 1';
+        $layoutids = get_records_sql_array($sql, array($numrows, $this->owner, $numrows));
 
         if ($layoutids) {
             $data = array('layoutid' => $layoutids[0]->id, 'newlayout' => 0);
