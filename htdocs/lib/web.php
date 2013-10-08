@@ -3976,10 +3976,10 @@ function escape_css_string($string, $singlequote=true) {
  * @return bool
  */
 function can_use_skins($userid = null) {
+    global $THEME;
     if (!get_config('skins')) {
         return false;
     }
-
     // A user can belong to multiple institutions. If any of their institutions allow it, then
     // let them use skins!
     $results = get_configs_user_institutions('skins', $userid);

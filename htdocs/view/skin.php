@@ -33,11 +33,15 @@ if (!isset($skin)) {
     $skin = $view->get('skin');
     $saved = true;
 }
-
 if (!$skin || !($currentskin = get_record('skin', 'id', $skin))) {
     $currentskin = new stdClass();
     $currentskin->id = 0;
     $currentskin->title = get_string('skinnotselected', 'skin');
+}
+$incompatible = (isset($THEME->skins) && $THEME->skins === false && $currentskin->id != 0);
+if ($incompatible) {
+    $incompatible = ($view->get('theme')) ? 'notcompatiblewithpagetheme' : 'notcompatiblewiththeme';
+    $incompatible = get_string($incompatible, 'skin', $THEME->displayname);
 }
 $metadata = array();
 if (!empty($currentskin->id)) {
@@ -150,6 +154,7 @@ if ($new) {
 $smarty = smarty(array(), $css, array(), array('sidebars' => false));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('saved', $saved);
+$smarty->assign('incompatible', $incompatible);
 $smarty->assign('currentskin', $currentskin->id);
 $smarty->assign('currenttitle', $currentskin->title);
 $smarty->assign('currentmetadata', (!empty($currentskin->metadata)) ? $currentskin->metadata : null);
