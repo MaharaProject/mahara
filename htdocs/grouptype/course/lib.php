@@ -62,10 +62,6 @@ class GroupTypeCourse extends GroupType {
         return array('member', 'tutor', 'admin');
     }
 
-    public static function get_view_editing_roles() {
-        return array('tutor', 'admin');
-    }
-
     public static function get_view_moderating_roles() {
         return array('tutor', 'admin');
     }

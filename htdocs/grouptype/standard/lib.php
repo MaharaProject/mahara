@@ -60,10 +60,6 @@ class GroupTypeStandard extends GroupType {
         return array('member', 'admin');
     }
 
-    public static function get_view_editing_roles() {
-        return array('member', 'admin');
-    }
-
     public static function get_view_moderating_roles() {
         return array('admin');
     }
