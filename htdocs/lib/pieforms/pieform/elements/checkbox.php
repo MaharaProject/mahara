@@ -46,6 +46,9 @@ function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
     else if (!$form->is_submitted() && !empty($element['defaultvalue'])) {
         $checked = true;
     }
+    else if (!empty($element['readonly']) && !empty($element['defaultvalue'])) {
+        $checked = true;
+    }
 
     return '<input type="checkbox"'
         . $form->element_attributes($element)

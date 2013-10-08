@@ -812,6 +812,9 @@ class Pieform {/*{{{*/
      *                        is available for the element.
      */
     public function get_value($element) {/*{{{*/
+        if (isset($element['readonly']) && $element['readonly'] && isset($element['defaultvalue'])) {
+            return $element['defaultvalue'];
+        }
         $function = 'pieform_element_' . $element['type'] . '_get_value';
         if (function_exists($function)) {
             return $function($this, $element);
@@ -1127,7 +1130,7 @@ EOF;
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
             if (!empty($element[$attribute])) {
-                $result .= " $attribute=\"$attribute\"";
+                $result .= ($attribute == 'readonly') ? ' readonly="readonly" disabled="disabled"' : " $attribute=\"$attribute\"";
             }
         }
         
