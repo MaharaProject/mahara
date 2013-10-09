@@ -485,14 +485,17 @@
             },
 
             start: function(event, ui) {
-                // Temporary(?) fix for dragging wide blocks to narrow divs:
-                // wide elements must be centred on narrow divs to make droppable.
+                // Fix for dragging blocks to narrow divs:
+                // Wide elements must be centred on narrow divs to make droppable.
                 // This is not always evident to the user.
                 // Instead set a standard small width when starting to sort.
                 // Dynamically setting width on over event doesn't work, as
                 // Sortable seems to cache helper proportions.
+                // Also if height of dragging block is greater than height
+                // row(s) above it then it can't be dropped in that row.
                 // Could use a custom version of Sortable in future?
                 ui.helper.width(200);
+                ui.helper.height(80);
             }
         });
     } // end of makeNewBlocksSortable()
