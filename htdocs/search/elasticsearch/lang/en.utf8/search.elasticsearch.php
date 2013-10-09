@@ -45,8 +45,6 @@ $string['license'] = 'License';
 $string['Media'] = 'Media';
 $string['noticeenabled'] = 'The Elasticsearch plugin is currently active. To deactivate it, deselect it in the <a href="%s">site options search settings</a>.';
 $string['noticenotenabled'] = 'The Elasticsearch plugin is not currently enabled. To activate it, select it in the <a href="%s">site options in the search settings</a>.';
-$string['noticepostgresrequired'] = 'The Elasticsearch plugin only works with a PostgreSQL database at this time.';
-$string['noticepostgresrequiredtitle'] = 'Feature not available';
 $string['owner'] = 'Owner';
 $string['page'] = 'Page';
 $string['pages'] = 'Pages';
