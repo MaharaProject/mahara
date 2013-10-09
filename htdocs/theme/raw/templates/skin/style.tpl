@@ -113,7 +113,9 @@ input.select:active,
     background: {$header_background_color};
 }
 .viewheadertop,
-.viewheadertop .title {
+.viewheadertop .title,
+#micro .viewtitle,
+#micro .collection-title {
     color: {$header_text_font_color};
 }
 .viewheadertop a,

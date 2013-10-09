@@ -3131,7 +3131,11 @@ ul.groupuserstatus li.leavegroup {
     float: right;
     display: inline;
 }
-.listing ul.groupuserstatus li.leavegroup {
+ul.groupuserstatus li.leavegroup a {
+    line-height: 2.167em;
+}
+.listing ul.groupuserstatus li.leavegroup,
+.listing ul.groupuserstatus li.leavegroup a {
     line-height: 2.5em;
 }
 /* Groups > Group's Edit */
