@@ -31,3 +31,6 @@
 #container #resumewrap table td.errmsg {
     padding-left: 20px;
 }
+th.resumeattachments {
+    width: 30px;
+}
