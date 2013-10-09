@@ -7,7 +7,7 @@
     <thead>
         <tr>
             <th>{str tag='skills' section='artefact.resume'}</th>
-            <th style="text-align:center;width:24px;"><img src="{theme_url filename="images/icon_attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
             <th></th>
         </tr>
     </thead>

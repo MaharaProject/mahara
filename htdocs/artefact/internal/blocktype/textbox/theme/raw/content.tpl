@@ -3,9 +3,8 @@
 <table class="cb attachments fullwidth">
   <thead class="expandable-head">
     <tr class="toggle">
-      <td colspan="2" class="toggle-padding"><strong>{str tag=attachedfiles section=artefact.blog}</strong>
-      <img class="fr" src="{theme_url filename='images/icon_attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
-      <span class="fr">{$count}&nbsp;</span>
+      <td {if $icons}colspan="2"{/if} class="toggle-padding"><strong>{str tag=attachedfiles section=artefact.blog}</strong>
+      <span class="fr"><img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">&nbsp;{$count}</span>
       </td>
     </tr>
   </thead>
