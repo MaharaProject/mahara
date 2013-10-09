@@ -136,7 +136,7 @@ class PluginSearchElasticsearch extends PluginSearch {
 
         if (!is_postgres()) {
             $smarty = smarty_core();
-            $smarty->assign('header', get_string('noticepostgresrequiredheader', 'search.elasticsearch'));
+            $smarty->assign('header', get_string('noticepostgresrequiredtitle', 'search.elasticsearch'));
             $smarty->assign('notice', get_string('noticepostgresrequired', 'search.elasticsearch'));
             $requirepostgreshtml = $smarty->fetch('Search:elasticsearch:configwarning.tpl');
             unset($smarty);
