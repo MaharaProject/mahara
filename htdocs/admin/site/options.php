@@ -772,7 +772,7 @@ function siteoptions_submit(Pieform $form, $values) {
     // If they've changed the search plugin, give the new plugin a chance to initialize.
     if ($oldsearchplugin != $values['searchplugin']) {
         // Call the old search plugin's sitewide cleanup method
-        safe_require('search', $oldsearchplgin);
+        safe_require('search', $oldsearchplugin);
         call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
         // Call the new search plugin's sitewide initialize method
         safe_require('search', $values['searchplugin']);
