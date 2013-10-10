@@ -2448,7 +2448,7 @@ class View {
             throw new ParamOutOfRangeException(get_string('exceededmaxrows', 'error'));
         }
 
-        if ($values['before'] >= self::$maxlayoutrows) {
+        if ($values['before'] > self::$maxlayoutrows) {
             throw new ParamOutOfRangeException(get_string('invalidnumrows', 'error'));
         }
 
