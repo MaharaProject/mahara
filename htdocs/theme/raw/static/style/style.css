@@ -1073,7 +1073,9 @@ ul.groupuserstatus li .btn {
 input#editpost_filebrowser_close_upload_browse,
 input#editnote_filebrowser_close_upload_browse,
 input#editgoalsandskills_filebrowser_close_upload_browse,
-input#editcomposite_filebrowser_close_upload_browse {
+input#editcomposite_filebrowser_close_upload_browse,
+input#designskinform_body_background_image_close_upload_browse,
+input#designskinform_view_background_image_close_upload_browse {
     background: transparent url(../images/btn_close.png) no-repeat 0 0;
     border: 0 !important;
     margin-right: 0 !important;
