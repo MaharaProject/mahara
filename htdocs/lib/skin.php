@@ -920,9 +920,15 @@ class Skin {
         imagealphablending($img, true);
         imagesavealpha($img, true);
 
-        list($r, $g, $b) = self::get_rgb_from_hex($skin['body_background_color']);
-        $bodybackgroundcolor = imagecolorallocate($img, $r, $g, $b);
-        imagefill($img, 0, 0, $bodybackgroundcolor);
+        if ($skin['body_background_color'] != 'transparent') {
+            list($r, $g, $b) = self::get_rgb_from_hex($skin['body_background_color']);
+            $bodybackgroundcolor = imagecolorallocate($img, $r, $g, $b);
+            imagefill($img, 0, 0, $bodybackgroundcolor);
+        }
+        else {
+            $transparentcolor = imagecolorallocatealpha($img, 255, 255, 255, 127);
+            imagefill($img, 0, 0, $transparentcolor);
+        }
 
         // ========== BODY BACKGROUND IMAGE ==========
         if ($skin['body_background_image'] <> null) {

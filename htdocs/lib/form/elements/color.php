@@ -38,8 +38,7 @@ function pieform_element_color(Pieform $form, $element) {
     $result = '';
     $name = Pieform::hsc($element['name']);
     $value = Pieform::hsc($element['defaultvalue']);
-    $transparent = (!empty($element['options']['transparent']) and $element['options']['transparent'] == true);
-
+    $transparent = (!empty($element['options']['transparent']) && $element['options']['transparent'] == true);
     // Color Picker (Chooser)
     $result = '<input type="text" name="' . $name . '_color" id="' . $name . '_color"'
         . ($transparent && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
