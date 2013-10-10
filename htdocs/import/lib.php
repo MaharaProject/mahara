@@ -223,7 +223,7 @@ abstract class PluginImport extends Plugin {
     }
 
     /**
-     * Add an import request of an LEAP entry as an Mahara view+collection or artefact.
+     * Add an import request of an interactive import entry as an Mahara view+collection or artefact.
      * For view import
      *    If the entry is for Profile or Dashboard page, the decision is APPEND(default), IGNORE or REPLACE
      *    If there is a duplicated view (same title and description), the decision is APPEND(default), IGNORE, REPLACE, or ADDNEW
@@ -263,6 +263,12 @@ abstract class PluginImport extends Plugin {
             $classname = generate_artefact_class_name($entrydata['type']);
             if ($duplicatedartefactids = call_static_method($classname, 'get_duplicated_artefacts', $entrydata)) {
                 $decision = PluginImport::DECISION_IGNORE;
+            }
+            // If the import entry comes with a defaultdecision filled in,
+            // use that. (This provides a way for the plugins to override the usual
+            // decision logic)
+            else if (isset($entrydata['defaultdecision'])) {
+                $decision = $entrydata['defaultdecision'];
             }
             else {
                 $existingartefactids = call_static_method($classname, 'get_existing_artefacts', $entrydata);

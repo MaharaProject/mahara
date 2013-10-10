@@ -528,7 +528,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public static function is_singular() {
-        return false;
+        return true;
     }
 
     public function can_have_attachments() {
@@ -593,6 +593,11 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     /**
      * Ensures that the given value for the given composite is present
      * TODO: expand on these docs.
+     * @param unknown_type $values
+     * @param unknown_type $compositetype
+     * @param unknown_type $owner
+     * @return int If successful, the ID of the composite artefact
+     * @throws SystemException
      */
     public static function ensure_composite_value($values, $compositetype, $owner) {
         global $USER;
@@ -730,7 +735,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                 }
             }
         }
-        return true;
+        return $a->id;
     }
 
     public function delete() {

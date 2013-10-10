@@ -267,13 +267,15 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     case self::STRATEGY_IMPORT_AS_ABILITY:
                         self::create_artefact_from_request($importer, $entry_request);
                         break;
-                    case self::STRATEGY_IMPORT_AS_PERSONALINFORMATION:
                     case self::STRATEGY_IMPORT_AS_ACHIEVEMENT:
                     case self::STRATEGY_IMPORT_AS_EMPLOYMENT:
                     case self::STRATEGY_IMPORT_AS_BOOK:
                     case self::STRATEGY_IMPORT_AS_EDUCATION:
                     case self::STRATEGY_IMPORT_AS_MEMBERSHIP:
                         self::create_composite_artefact_from_request($importer, $entry_request);
+                        break;
+                    case self::STRATEGY_IMPORT_AS_PERSONALINFORMATION:
+                        self::create_personalinformation_artefact_from_request($importer, $entry_request);
                         break;
                     case self::STRATEGY_IMPORT_AS_SELECTION:
                         // This space intentionally left blank
@@ -506,6 +508,10 @@ class LeapImportResume extends LeapImportArtefactPlugin {
             default:
                 throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
+        // Composite types should always be appended or ignored
+        if (isset($values['type']) && in_array($values['type'], ArtefactTypeResumeComposite::get_composite_artefact_types())) {
+            $values['defaultdecision'] = PluginImportLeap::DECISION_APPEND;
+        }
         return $values;
     }
 
@@ -601,14 +607,16 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     }
 
     /**
-     * Create or update a composite artefact for resume from an import entry request
+     * Imports data for the "Personal Information" section of the resume.
+     * TODO: Currently the user has to make  one decision about all of it -- it would be nice if
+     * they could make a separate decision about each field.
      * @param PluginImport $importer
-     * @param unknown_type $entry_request
+     * @param array $entry_request
+     * @return int The ID of the artefact created or updated, or 0 if none was touched
      */
-    private static function create_composite_artefact_from_request(PluginImport $importer, $entry_request) {
+    private static function create_personalinformation_artefact_from_request(PluginImport $importer, $entry_request) {
         global $USER;
         $aid = 0;
-        $classname = generate_artefact_class_name($entry_request->entrytype);
         $values = unserialize($entry_request->entrycontent);
         switch ($entry_request->decision) {
             case PluginImport::DECISION_IGNORE:
@@ -632,6 +640,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
                 break;
             case PluginImport::DECISION_APPEND:
+                // We will literally append the content of each text field to each existing text field
+                // We ignore numeric and date fields
                 $existingids = unserialize($entry_request->existingitemids);
                 if (!empty($existingids)) {
                     try {
@@ -639,64 +649,91 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                         if ($USER->get('id') != $a->get('owner')) {
                             return 0;
                         }
-                        foreach ($values as $field => &$value) {
-                            if (!empty($value) && !is_numeric($value)
-                                 && ($field !== 'dateofbirth')
-                                 && ($field !== 'date')
-                                 && ($field !== 'startdate')
-                                 && ($field !== 'enddate')
-                                ) {
-                                $value = $a->get($field) . $value;
+                        foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $fieldname) {
+                            if (!empty($values[$fieldname]) && !is_numeric($values[$fieldname]) && $fieldname !== 'dateofbirth') {
+                                $values[$fieldname] = $a->get_composite($fieldname) . ' ' . $values[$fieldname];
                             }
-                        };
+                        }
+                    }
+                    catch (ArtefactNotFoundException $e) {
+                        $a = new ArtefactTypePersonalinformation(
+                                0,
+                                array(
+                                        'owner' => $importer->get('usr'),
+                                        'title' => get_string($entry_request->entrytype, 'artefact.resume')
+                                )
+                        );
+                        $a->commit();
                     }
                     catch (Exception $e) {
                         return 0;
                     }
+                    break;
                 }
                 break;
             case PluginImport::DECISION_ADDNEW:
-            default:
                 try {
-                    $a = artefact_instance_from_type($entry_request->entrytype, $importer->get('usr'));
+                    $a = artefact_instance_from_type('personalinformation', $USER->get('id'));
                     $a->set('mtime', time());
                 }
-                catch (Exception $e) {
-                    $classname = generate_artefact_class_name($entry_request->entrytype);
-                    $a = new $classname(0, array(
-                        'owner' => $importer->get('usr'),
-                        'title' => get_string($entry_request->entrytype, 'artefact.resume'),
-                    ));
+                catch (ArtefactNotFoundException $e) {
+                    $a = new ArtefactTypePersonalinformation(
+                            0,
+                            array(
+                                    'owner' => $importer->get('usr'),
+                                    'title' => get_string($entry_request->entrytype, 'artefact.resume')
+                            )
+                    );
                 }
-                $a->commit();
+                catch (Exception $e) {
+                    return 0;
+                }
+                break;
+            default:
                 break;
         }
-        // Update the resume table
-       if (isset($a)) {
-            if ($entry_request->entrytype == 'personalinformation') {
-                foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
-                    if (!empty($values[$field])) {
-                        $a->set_composite($field, $values[$field]);
-                    }
-                };
-                $a->commit();
-            }
-            else {
-                db_begin();
-                $values['artefact'] = $aid;
-                $table = 'artefact_resume_' . $entry_request->entrytype;
-                if (!empty($values['id'])) {
-                    $itemid = $values['id'];
-                    update_record($table, (object)$values, 'id');
+        if (isset($a)) {
+            foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $field) {
+                if (!empty($values[$field])) {
+                    $a->set_composite($field, $values[$field]);
                 }
-                else {
-                    $max = get_field($table, 'MAX(displayorder)', 'artefact', $values['artefact']);
-                    $values['displayorder'] = is_numeric($max) ? $max + 1 : 0;
-                    $itemid = insert_record($table, (object)$values, 'id', true);
-                }
-                db_commit();
             }
+            $a->commit();
             $aid = $a->get('id');
+        }
+        if ($aid) {
+            $importer->add_artefactmapping($entry_request->entryid, $aid);
+        }
+        return $aid;
+    }
+
+    /**
+     * Create or update a composite artefact for resume from an import entry request
+     * @param PluginImport $importer
+     * @param unknown_type $entry_request
+     */
+    private static function create_composite_artefact_from_request(PluginImport $importer, $entry_request) {
+        global $USER;
+        $aid = 0;
+        $classname = generate_artefact_class_name($entry_request->entrytype);
+        $values = unserialize($entry_request->entrycontent);
+        switch ($entry_request->decision) {
+            case PluginImport::DECISION_IGNORE:
+                $duplicatedids = unserialize($entry_request->duplicateditemids);
+                if (!empty($duplicatedids)) {
+                    $aid = $duplicatedids[0];
+                }
+                break;
+            // For composite artefacts, it only makes sense to ignore or replace them, and those are
+            // the only options the form should have shown! To make things less crashy, though, we'll
+            // just default to the same behavior as long as you specified anything other than
+            // DECISION_IGNORE
+            case PluginImport::DECISION_REPLACE:
+            case PluginImport::DECISION_ADDNEW:
+            case PluginImport::DECISION_APPEND:
+            default:
+                $aid = ArtefactTypeResumeComposite::ensure_composite_value($values, $entry_request->entrytype, $USER->get('id'));
+                break;
         }
         if ($aid) {
             $importer->add_artefactmapping($entry_request->entryid, $aid);
@@ -790,15 +827,32 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                                     );
                                 }
                             }
-                            $is_singular = call_static_method(generate_artefact_class_name($ier->entrytype), 'is_singular');
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = $is_singular;
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = !$is_singular;
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = !$is_singular;
+                            // Composite artefacts: There's just one "artefact" and then multiple entries
+                            // in an associated artefact_resume_* table. So, you want to disable everything
+                            // except for "Append"
+                            if (in_array($ier->entrytype, ArtefactTypeResumeComposite::get_composite_artefact_types())) {
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = true;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = false;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            }
+                            else {
+                                $is_singular = call_static_method(generate_artefact_class_name($ier->entrytype), 'is_singular');
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = $is_singular;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = !$is_singular;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = !$is_singular;
+                            }
                         }
                         else {
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = false;
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
-                            $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            if (in_array($ier->entrytype, ArtefactTypeResumeComposite::get_composite_artefact_types())) {
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = true;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = false;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            }
+                            else {
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = false;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
+                                $resumefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                            }
                         }
                         $resumefieldvalues[] = $resumefieldvalue;
                     }
