@@ -3322,9 +3322,22 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('row');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 1);
         add_field($table, $field);
+
+        // Refactor the block_instance.viewcolumnorderuk key so it includes row.
         $key = new XMLDBKey('viewcolumnorderuk');
         $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'column', 'order'));
-        drop_key($table, $key);
+        // If this particular site has been around since before Mahara 1.2, this
+        // will actually have been created as a unique index rather than a unique
+        // key, so check for that first.
+        $indexname = find_index_name($table, $key);
+        if (preg_match('/uix$/', $indexname)) {
+            $index = new XMLDBIndex($indexname);
+            $index->setAttributes(XMLDB_INDEX_UNIQUE, array('view', 'column', 'order'));
+            drop_index($table, $index);
+        }
+        else {
+            drop_key($table, $key);
+        }
         $key = new XMLDBKey('viewrowcolumnorderuk');
         $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'row', 'column', 'order'));
         add_key($table, $key);
