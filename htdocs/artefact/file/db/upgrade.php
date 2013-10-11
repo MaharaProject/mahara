@@ -272,18 +272,20 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2010012703) {
-        $baseiter = new DirectoryIterator(get_config('dataroot') . 'artefact/file/originals/');
-        foreach ($baseiter as $dir) {
-            if ($dir->isDot()) continue;
-            $dirpath = $dir->getPath() . '/' . $dir->getFilename();
-            $fileiter = new DirectoryIterator($dirpath);
-            foreach ($fileiter as $file) {
-                if ($file->isDot()) continue;
-                if (!$file->isFile()) {
-                    log_error("Something was wrong about the dataroot in artefact/file/originals/$dir. Unexpected folder $file");
-                    continue;
+        if (check_dir_exists(get_config('dataroot') . 'artefact/file/originals/', false)) {
+            $baseiter = new DirectoryIterator(get_config('dataroot') . 'artefact/file/originals/');
+            foreach ($baseiter as $dir) {
+                if ($dir->isDot()) continue;
+                $dirpath = $dir->getPath() . '/' . $dir->getFilename();
+                $fileiter = new DirectoryIterator($dirpath);
+                foreach ($fileiter as $file) {
+                    if ($file->isDot()) continue;
+                    if (!$file->isFile()) {
+                        log_error("Something was wrong about the dataroot in artefact/file/originals/$dir. Unexpected folder $file");
+                        continue;
+                    }
+                    chmod($file->getPathname(), $file->getPerms() & 0666);
                 }
-                chmod($file->getPathname(), $file->getPerms() & 0666);
             }
         }
     }
