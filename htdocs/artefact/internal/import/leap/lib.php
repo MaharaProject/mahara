@@ -336,12 +336,12 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 if ($content) {
                     return array (
                             'owner' => $importer->get('usr'),
-                            'type' => 'note',
+                            'type' => 'html',
                             'content' => array (
-                                    'title' => isset($entry->title) ? string($entry->title) : '',
+                                    'title' => isset($entry->title) ? (string) $entry->title : '',
                                     'ctime' => strtotime((string)$entry->published),
                                     'mtime' => strtotime((string)$entry->updated),
-                                    'descirption' => $content
+                                    'description' => $content
                             )
                     );
                     // TODO: Make this work in interactive import
