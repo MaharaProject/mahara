@@ -328,8 +328,8 @@ class ADODB_mysqli extends ADOConnection {
 		}
 		
 		// get index details
-		$rs = $this->Execute(sprintf('SHOW INDEXES FROM %s',$table));
-		
+		$rs = $this->Execute(sprintf('SHOW INDEXES FROM "%s"',$table));
+
 		// restore fetchmode
 		if (isset($savem)) {
 		        $this->SetFetchMode($savem);
