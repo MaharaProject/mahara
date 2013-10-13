@@ -119,10 +119,10 @@ $string['fontsizelarge'] = 'large';
 $string['fontsizelarger'] = 'larger';
 $string['fontsizelargest'] = 'largest';
 
-$string['headerlogoimage'] = 'Mahara logo image';
+$string['headerlogoimage1'] = 'Logo';
 $string['headerlogoimagenormal'] = 'Default theme logo';
-$string['headerlogoimagelight'] = 'White logo and text (suitable for darker header backgrounds)';
-$string['headerlogoimagedark'] = 'Dark logo and text (suitable for lighter header backgrounds)';
+$string['headerlogoimagelight1'] = 'White Mahara logo and text (suitable for darker header backgrounds)';
+$string['headerlogoimagedark1'] = 'Dark Mahara logo and text (suitable for lighter header backgrounds)';
 
 $string['normallinkcolor'] = 'Normal link colour';
 $string['hoverlinkcolor'] = 'Highlighted link colour';
@@ -131,8 +131,8 @@ $string['linkunderlined'] = 'Underline link';
 $string['tableborder'] = 'Table border colour';
 $string['tableheader'] = 'Header background colour';
 $string['tableheadertext'] = 'Header text colour';
-$string['tableoddlines'] = 'Background colour for odd lines';
-$string['tableevenlines'] = 'Background colour for even lines';
+$string['tableoddrows'] = 'Background colour for odd rows';
+$string['tableevenrows'] = 'Background colour for even rows';
 
 $string['normalbuttoncolor'] = 'Normal button colour';
 $string['hoverbuttoncolor'] = 'Highlighted button colour';

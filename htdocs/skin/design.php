@@ -321,12 +321,12 @@ $elements['viewheader'] = array(
                 'header_logo_image' => array(
                         'type' => 'radio',
                         'id' => 'designskinform_header_logo',
-                        'labelhtml' => get_string('headerlogoimage', 'skin'),
+                        'labelhtml' => get_string('headerlogoimage1', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_logo_image']) ? $viewskin['header_logo_image'] : 'normal'),
                         'options' => array(
                                 'normal' => get_string('headerlogoimagenormal', 'skin'),
-                                'light' => get_string('headerlogoimagelight', 'skin'),
-                                'dark' => get_string('headerlogoimagedark', 'skin'),
+                                'light' => get_string('headerlogoimagelight1', 'skin'),
+                                'dark' => get_string('headerlogoimagedark1', 'skin'),
                         ),
                         'separator' => '<br />',
                 ),
@@ -437,13 +437,13 @@ $elements['viewtable'] = array(
                 ),
                 'view_table_odd_row_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableoddlines', 'skin'),
+                        'labelhtml' => get_string('tableoddrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_odd_row_color']) ? $viewskin['view_table_odd_row_color'] : '#EEEEEE'),
                         'size' => 7,
                 ),
                 'view_table_even_row_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableevenlines', 'skin'),
+                        'labelhtml' => get_string('tableevenrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_even_row_color']) ? $viewskin['view_table_even_row_color'] : '#FFFFFF'),
                         'size' => 7,
                 ),
