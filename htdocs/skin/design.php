@@ -151,7 +151,7 @@ if (!$designsiteskin) {
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
-                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=1&fs=skinbg',
+                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=skinbg',
                 'config'       => array(
                         'upload'          => false,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
@@ -219,7 +219,7 @@ if (!$designsiteskin) {
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
-                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=1&fs=viewbg',
+                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=viewbg',
                 'config'       => array(
                         'upload'          => false,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
