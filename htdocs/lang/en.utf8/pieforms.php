@@ -33,7 +33,7 @@ $string['element.expiry.noenddate'] = 'No end date';
 $string['element.select.other'] = 'Other';
 
 $string['element.color.or'] = 'or';
-$string['element.color.transparent'] = 'Transparent';
+$string['element.color.transparent'] = 'Use theme colour';
 
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 

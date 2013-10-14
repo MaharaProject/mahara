@@ -4,7 +4,11 @@
 {$view_heading_font_face|safe}
 body,
 body#micro {
-    background: {$body_background_color} {$body_background_image|safe} {$body_background_repeat} {$body_background_attachment} {$body_background_position};
+    background-color: {$body_background_color};
+    background-image: {$body_background_image|safe};
+    background-repeat: {$body_background_repeat};
+    background-attachment: {$body_background_attachment};
+    background-position: {$body_background_position};
     font-family: {$view_text_font_family|safe};
     font-size: {$view_text_font_size};
     color: {$view_text_font_color};
@@ -157,7 +161,11 @@ ul.colnav li a:active {
 /* Middle content */
 #column-container,
 #mainmiddlewrap {
-    background: {$view_background_color} {$view_background_image|safe} {$view_background_repeat} {$view_background_attachment} {$view_background_position};
+    background-color: {$view_background_color};
+    background-image: {$view_background_image|safe};
+    background-repeat: {$view_background_repeat};
+    background-attachment: {$view_background_attachment};
+    background-position: {$view_background_position};
 }
 /* Blocks */
 .blockinstance-header .title {

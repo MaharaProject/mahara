@@ -123,6 +123,9 @@ $elements['skinbg'] = array(
                     'labelhtml' => get_string('bodybgcolor', 'skin'),
                     'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
                     'size' => 7,
+                    'options' => array(
+                        'transparent' => true,
+                    ),
             )
     )
 );
@@ -193,6 +196,9 @@ $elements['viewbg'] = array(
                     'labelhtml' => get_string('viewbgcolor', 'skin'),
                     'defaultvalue' => (!empty($viewskin['view_background_color']) ? $viewskin['view_background_color'] : '#FFFFFF'),
                     'size' => 7,
+                    'options' => array(
+                        'transparent' => true,
+                    ),
             )
     )
 );
@@ -274,18 +280,27 @@ $elements['viewheader'] = array(
                         'labelhtml' => get_string('backgroundcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : '#CCCCCC'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'header_text_font_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('textcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_text_font_color']) ? $viewskin['header_text_font_color'] : '#000000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'header_link_normal_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('normallinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_link_normal_color']) ? $viewskin['header_link_normal_color'] : '#0000EE'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'header_link_normal_underline' => array(
                         'type' => 'checkbox',
@@ -297,6 +312,9 @@ $elements['viewheader'] = array(
                         'labelhtml' => get_string('hoverlinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_link_hover_color']) ? $viewskin['header_link_hover_color'] : '#EE0000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'header_link_hover_underline' => array(
                         'type' => 'checkbox',
@@ -358,6 +376,9 @@ $elements['viewcontent'] = array(
                         'description' => get_string('textcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_color']) ? $viewskin['view_text_font_color'] : '#000000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_text_heading_color' => array(
                         'type' => 'color',
@@ -365,6 +386,9 @@ $elements['viewcontent'] = array(
                         'description' => get_string('headingcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] : '#000000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_text_emphasized_color' => array(
                         'type' => 'color',
@@ -372,12 +396,18 @@ $elements['viewcontent'] = array(
                         'description' => get_string('emphasizedcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_emphasized_color']) ? $viewskin['view_text_emphasized_color'] : '#000000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_link_normal_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('normallinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_link_normal_color']) ? $viewskin['view_link_normal_color'] : '#0000EE'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_link_normal_underline' => array(
                         'type' => 'checkbox',
@@ -389,6 +419,9 @@ $elements['viewcontent'] = array(
                         'labelhtml' => get_string('hoverlinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_link_hover_color']) ? $viewskin['view_link_hover_color'] : '#EE0000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_link_hover_underline' => array(
                         'type' => 'checkbox',
@@ -407,45 +440,69 @@ $elements['viewtable'] = array(
                         'labelhtml' => get_string('tableborder', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_border_color']) ? $viewskin['view_table_border_color'] : '#CCCCCC'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_table_header_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('tableheader', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_header_color']) ? $viewskin['view_table_header_color'] : '#CCCCCC'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_table_header_text_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('tableheadertext', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_header_text_color']) ? $viewskin['view_table_header_text_color'] : '#000000'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_table_odd_row_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('tableoddrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_odd_row_color']) ? $viewskin['view_table_odd_row_color'] : '#EEEEEE'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_table_even_row_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('tableevenrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_even_row_color']) ? $viewskin['view_table_even_row_color'] : '#FFFFFF'),
                         'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_button_normal_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('normalbuttoncolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_normal_color']) ? $viewskin['view_button_normal_color'] : '#CCCCCC'),
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_button_hover_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('hoverbuttoncolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_hover_color']) ? $viewskin['view_button_hover_color'] : '#EEEEEE'),
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_button_text_color' => array(
                         'type' => 'color',
                         'labelhtml' => get_string('buttontextcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_text_color']) ? $viewskin['view_button_text_color'] : '#FFFFFF'),
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
         ),
 );
