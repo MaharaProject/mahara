@@ -69,7 +69,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
     }
 
     if (!empty($element['error'])) {
-        $result .= '<div class="errmsg">' . hsc($element['error']) . '</div>';
+        $result .= '<div class="errmsg">' . ((!empty($element['isescaped'])) ? hsc($element['error']) : $element['error']) . '</div>';
     }
 
     $result .= "</div>\n";
