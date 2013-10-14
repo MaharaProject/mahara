@@ -3449,5 +3449,35 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2013100800) {
+        // Prior to Mahara 1.4, we did not delete group data when the group was deleted.
+        // So, let's just take a moment to clear that out now.
+        $deletedgroups = get_column('group', 'id', 'deleted', 1);
+        if ($deletedgroups) {
+            require_once(get_config('libroot') . 'group.php');
+            foreach ($deletedgroups as $groupid) {
+                // Temporarily set the group's "deleted" flag to 0 so that the group_delete()
+                // function can process it properly. By putting this inside a transaction we
+                // can make sure no page loads will see it as an active group. It should get
+                // set back to 0 by group_delete()
+                db_begin();
+                set_field('group', 'deleted', 0, 'id', $groupid);
+                try {
+                    // Delete any remaining records for this group. Don't notify group members.
+                    // This will have the side effect of double-munging the deleted group's
+                    // name, but I think that's acceptable.
+                    group_delete($groupid, null, null, false);
+                }
+                catch (Exception $e) {
+                    // Out of an abundance of caution, try to catch any Exception that
+                    // might happen while cleaning out these groups, and make sure the
+                    // group remains set deleted at the end.
+                    set_field('group', 'deleted', 1, 'id', $groupid);
+                }
+                db_commit();
+            }
+        }
+    }
+
     return $status;
 }
