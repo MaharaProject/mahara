@@ -34,5 +34,5 @@
         <a href="{$WWWROOT}view/access.php?id={$item.viewid}" title="{str tag=editaccess section=view}"><img src="{theme_url filename='images/btn_access.png'}" alt="{str tag=editaccess}"></a>
       </td>
       <td class="secreturls">
-        {$item.secreturls} <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+        {$item.secreturls} <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}"><img src="{theme_url filename='images/btn_secreturl.png'}" alt="{str tag=edit}"></a>
       </td>
