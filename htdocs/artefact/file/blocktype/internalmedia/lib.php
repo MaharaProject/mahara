@@ -64,6 +64,13 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         return true;
     }
 
+    public static function get_instance_config_javascript() {
+        $result = self::get_js_source(true);
+        if (!empty($result)) {
+            return $result;
+        }
+    }
+
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
@@ -432,11 +439,16 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             . ($wmp ? '&download=1' : '');
     }
 
-    private static function get_js_source() {
+    private static function get_js_source($asarray = false) {
         if (defined('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED')) {
             return '';
         }
         define('BLOCKTYPE_INTERNALMEDIA_JS_INCLUDED', true);
+        if ($asarray) {
+            return array(get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer-3.2.6.js',
+                         get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js',
+                         );
+        }
         return '<script src="'.get_config('wwwroot').'artefact/file/blocktype/internalmedia/mahara-flashplayer/mahara-flashplayer-3.2.6.js"></script>
              <script src="' . get_config('wwwroot') . 'artefact/file/blocktype/internalmedia/swfobject.js" type="text/javascript"></script>';
     }
