@@ -50,7 +50,7 @@ $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsu
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken.';
 $string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols and must be from 3 to 30 characters long. Spaces are not allowed.';
 $string['usernameinvalidadminform'] = 'Usernames may contain letters, numbers and most common symbols and must be from 3 to 236 characters long. Spaces are not allowed.';
-$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>.';
+$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="#user_acceptterms">Terms and Conditions</a>.';
 
 // pending institution registrations
 $string['confirmcancelregistration'] = 'Are you sure you want to cancel this registration? Doing so will result in your request being removed from the system.';

@@ -202,7 +202,7 @@ $smarty = smarty();
 $smarty->assign('register_form', $formhtml);
 $smarty->assign('registerdescription', $registerdescription);
 if ($registerterms) {
-    $smarty->assign('termsandconditions', get_site_page_content('termsandconditions'));
+    $smarty->assign('termsandconditions', '<a name="user_acceptterms"></a>' . get_site_page_content('termsandconditions'));
 }
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);

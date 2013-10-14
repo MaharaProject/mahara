@@ -2199,7 +2199,7 @@ function auth_register_validate(Pieform $form, $values) {
 
     // If the user hasn't agreed to the terms and conditions, don't bother
     if ($registerterms && $values['tandc'] != 'yes') {
-        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
+        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'), false);
     }
 
     $institution = get_record_sql('
