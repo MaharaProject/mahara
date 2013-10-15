@@ -1193,6 +1193,10 @@
      */
     $(document).ready(function() {
         init();
+        /**
+         * changes the intructions so they are for ajax
+         */
+        $('#blocksinstruction').html(strings['blocksinstructionajax']);
     });
 
 }( window.ViewManager = window.ViewManager || {}, jQuery ));
