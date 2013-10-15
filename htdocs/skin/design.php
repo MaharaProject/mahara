@@ -48,6 +48,18 @@ if ($id > 0) {
     $skinobj = new Skin($id);
     if ($skinobj->can_edit()) {
         $viewskin = $skinobj->get('viewskin');
+        // check to see if any background images being referenced have not
+        // been deleted from site and if they have set the value to false
+        if (!empty($viewskin['body_background_image'])) {
+            if (!record_exists('artefact', 'id', $viewskin['body_background_image'])) {
+                $viewskin['body_background_image'] = false;
+            }
+        }
+        if (!empty($viewskin['view_background_image'])) {
+            if (!record_exists('artefact', 'id', $viewskin['view_background_image'])) {
+                $viewskin['view_background_image'] = false;
+            }
+        }
     }
     else {
         throw new AccessDeniedException("You can't access and/or edit Skin with id $id");
