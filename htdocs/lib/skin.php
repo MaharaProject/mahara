@@ -416,16 +416,12 @@ class Skin {
         $userid = $USER->get('id');
 
         $favorites = unserialize(get_field('skin_favorites', 'favorites', 'user', $userid));
-        $favlist = '';
-        if ($favorites) {
-            $favlist = implode(",", $favorites);
-        }
 
-        if (!empty($favlist)) {
+        if (!empty($favorites)) {
             $data = get_records_sql_array('SELECT s.id, s.title, s.owner, s.type
                 FROM {skin} s
-                WHERE s.id IN (?)
-                ORDER BY s.title, s.id', array($favlist));
+                WHERE s.id IN (' . join(',', array_map('intval', $favorites)) . ')
+                ORDER BY s.title, s.id', array());
             return $data;
         }
         return false;
