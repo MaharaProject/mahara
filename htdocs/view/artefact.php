@@ -41,10 +41,12 @@ $showcomment = param_integer('showcomment', null);
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 if ($artefactid && $viewid && $blockid) {
-    // use the block instance title rather than the artefact title
-    $artefact->set('title', artefact_title_for_view_and_block($artefactid, $viewid, $blockid));
+    // use the block instance title rather than the artefact title if it exists
+    $title = artefact_title_for_view_and_block($artefactid, $viewid, $blockid);
 }
-
+else {
+    $title = $artefact->display_title();
+}
 if (!$artefact->in_view_list()) {
     throw new AccessDeniedException(get_string('artefactsonlyviewableinview', 'error'));
 }
@@ -57,7 +59,7 @@ else if (param_variable('delete_comment_submit_x', null)) {
     pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment')));
 }
 
-define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
+define('TITLE', $title . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
 
 // Render the artefact
 $options = array(
@@ -94,7 +96,7 @@ while ($parent !== null) {
 
 $artefactpath[] = array(
     'url' => '',
-    'title' => $artefact->display_title(),
+    'title' => $title,
 );
 
 
