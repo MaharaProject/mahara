@@ -274,6 +274,10 @@ class Institution {
             $this->addUserAsMember($user);
         }
         db_commit();
+
+        foreach ($users as $user) {
+            remove_user_sessions($user->id);
+        }
     }
 
     public function addRequestFromUser($user, $studentid = null) {
