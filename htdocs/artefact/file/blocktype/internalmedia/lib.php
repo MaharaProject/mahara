@@ -385,6 +385,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
      <param name="AnimationAtStart" value="false">
      <param name="ShowGotoBar" value="false">
      <param name="EnableFullScreenControls" value="true">
+     <param name="Wmode" value="opaque">
     <!--[if !IE]>-->
       <object data="' . $url . '" type="' . $mimetype . '" ' . $size . '>
        <param name="src" value="' . $url . '">
@@ -393,6 +394,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
        <param name="autoplay" value="' . $autostart . '">
        <param name="autostart" value="' . $autostart . '">
        <param name="resize" value="scale">
+       <param name="wmode" value="opaque">
       </object>
     <!--<![endif]-->
     </object></span>';
