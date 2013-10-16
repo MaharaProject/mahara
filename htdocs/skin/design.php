@@ -83,9 +83,9 @@ else {
             'public' => get_string('publicskinaccess', 'skin'),
     );
 }
-
-$folder = param_integer('folder', 0);
-$browse = (int) param_variable('browse', 0);
+// because the page has two artefact choosers in the form
+// we need to handle how the browse works differently from normal
+$folder = param_integer('folder', null);
 $highlight = null;
 if ($file = param_integer('file', 0)) {
     $highlight = array($file);
@@ -148,13 +148,13 @@ if (!$designsiteskin) {
         'body_background_image' => array(
                 'type'         => 'filebrowser',
                 'title'        => get_string('bodybgimage', 'skin'),
-                'folder'       => $folder,
+                'folder'       => ((isset($folder)) ? $folder : 0),
                 'highlight'    => $highlight,
-                'browse'       => $browse,
+                'browse'       => ((isset($folder)) ? 1 : 0),
                 'filters'      => array(
                          'artefacttype' => array('image', 'profileicon'),
                 ),
-                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=skinbg',
+                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&fs=skinbg',
                 'config'       => array(
                         'upload'          => false,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
@@ -222,13 +222,13 @@ if (!$designsiteskin) {
         'view_background_image' => array(
                 'type'         => 'filebrowser',
                 'title'        => get_string('viewbgimage', 'skin'),
-                'folder'       => $folder,
+                'folder'       => ((isset($folder)) ? $folder : 0),
                 'highlight'    => $highlight,
-                'browse'       => $browse,
+                'browse'       => ((isset($folder)) ? 1 : 0),
                 'filters'      => array(
                          'artefacttype' => array('image', 'profileicon'),
                 ),
-                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=viewbg',
+                'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&fs=viewbg',
                 'config'       => array(
                         'upload'          => false,
                         'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),

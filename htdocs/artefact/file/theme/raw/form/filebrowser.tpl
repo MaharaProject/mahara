@@ -10,8 +10,8 @@
 <input type="hidden" name="{$prefix}_changefolder" id="{$prefix}_changefolder" value="" />
 <input type="hidden" name="{$prefix}_foldername" id="{$prefix}_foldername" value="{$foldername}" />
 
-{if $config.select && !$browse}
-<div id="{$prefix}_open_upload_browse_container">
+{if $config.select}
+<div id="{$prefix}_open_upload_browse_container"{if $browse} class="hidden"{/if}>
 <input type="submit" class="buttondk" id="{$prefix}_open_upload_browse" name="browse" value="{if $config.selectone}{str tag=selectafile section=artefact.file}{else}{str tag=addafile section=artefact.file}{/if}" />{if $config.browsehelp}{contextualhelp plugintype=$config.plugintype pluginname=$config.pluginname section=$config.browsehelp}{/if}
 </div>
 {/if}
