@@ -99,6 +99,7 @@ class ArtefactTypePlan extends ArtefactType {
             if (!isset($plan->tags)) {
                 $plan->tags = ArtefactType::artefact_get_tags($plan->id);
             }
+            $plan->description = '<p>' . preg_replace('/\n\n/','</p><p>', $plan->description) . '</p>';
         }
         $result = array(
             'count'  => count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', 'plan'),
@@ -591,6 +592,7 @@ class ArtefactTypeTask extends ArtefactType {
                     }
                     $result->completiondate = format_date($result->completiondate, 'strftimedate');
                 }
+                $result->description = '<p>' . preg_replace('/\n\n/','</p><p>', $result->description) . '</p>';
             }
         }
 

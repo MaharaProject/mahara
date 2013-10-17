@@ -3,13 +3,13 @@
         <tr class="incomplete">
             <td class="completiondate">{$task->completiondate}</td>
             <td class="plantasktitle">{$task->title}</td>
-            <td class="plantaskdescription">{$task->description}</td>
+            <td class="plantaskdescription">{$task->description|clean_html|safe}</td>
             <td class="incomplete"><img src="{$WWWROOT}theme/raw/static/images/failure_small.png" alt="" /></td>
     {else}
         <tr class="{cycle values='r0,r1'}">
             <td class="completiondate">{$task->completiondate}</td>
             <td class="plantasktitle">{$task->title}</td>
-            <td class="plantaskdescription">{$task->description}</td>
+            <td class="plantaskdescription">{$task->description|clean_html|safe}</td>
             {if $task->completed == 1}
                 <td class="completed"><img src="{$WWWROOT}theme/raw/static/images/success_small.png" alt="" /></td>
             {else}
