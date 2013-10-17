@@ -20,6 +20,14 @@
 </div>
 <script type="text/javascript">
 var slideshow{$instanceid} = new Slideshow({$instanceid}, {$count});
+$j(function() {
+    if (($j('#slideshow{$instanceid}').width() - 60) < {$width}) {
+        // adjust max-width of images to fit within slider
+        $j('#slideshow{$instanceid} img').each(function() {
+            $j(this).css('max-width',$j('#slideshow{$instanceid}').width() - 60);
+        });
+    }
+});
 </script>
 {else}
   {str tag=noimagesfound section=artefact.file}
