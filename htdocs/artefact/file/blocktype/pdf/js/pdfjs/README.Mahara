@@ -38,3 +38,4 @@ Changes:
 * Use absolute paths in viewer.js
 * Open fileurl if defined
 * viewer.css additions to support viewing by non-JS users
+* viewer.css tweak to get the bottom of the display to show
