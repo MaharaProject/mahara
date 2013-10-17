@@ -22,3 +22,4 @@ Changes:
 * Change location of sample PDF file
 * Remove "open file" button
 * viewer.css additions to support viewing by non-JS users
+* viewer.css tweak to get the bottom of the display to show
