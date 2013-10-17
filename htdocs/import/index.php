@@ -114,7 +114,7 @@ function print_upload_form() {
 function import_validate(Pieform $form, $values) {
     global $USER, $TRANSPORTER;
 
-    if (!$values['leap2afile']) {
+    if (!isset($values['leap2afile'])) {
         $form->set_error('leap2afile', $form->i18n('rule', 'required', 'required'));
         return;
     }
