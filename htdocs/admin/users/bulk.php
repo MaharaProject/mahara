@@ -112,18 +112,13 @@ $suspendform = pieform(array(
     'renderer' => 'oneline',
     'elements' => array(
         'users' => $userelement,
-        'title'        => array(
-            'type'         => 'html',
-            'class'        => 'bulkaction-title',
-            'value'        => get_string('suspendusers', 'admin') . ': ',
+        'reason' => array(
+            'type'        => 'text',
+            'title'       => get_string('suspendedreason', 'admin') . ': ',
         ),
         'suspend' => array(
             'type'        => 'submit',
             'value'       => get_string('Suspend', 'admin'),
-        ),
-        'reason' => array(
-            'type'        => 'text',
-            'title'       => ' ' . get_string('reason') . ': ',
         ),
     ),
 ));
