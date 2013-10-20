@@ -151,6 +151,9 @@ if (!$designsiteskin) {
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
+                'filters'      => array(
+                         'artefacttype' => array('image', 'profileicon'),
+                ),
                 'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=skinbg',
                 'config'       => array(
                         'upload'          => false,
@@ -222,6 +225,9 @@ if (!$designsiteskin) {
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
+                'filters'      => array(
+                         'artefacttype' => array('image', 'profileicon'),
+                ),
                 'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&browse=' . $browse . '&fs=viewbg',
                 'config'       => array(
                         'upload'          => false,
