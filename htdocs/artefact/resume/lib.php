@@ -1209,7 +1209,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'rows' => 10,
                 'cols' => 50,
                 'resizable' => false,
-                'title' =>  get_string('jobdescription', 'artefact.resume'),
+                'title' =>  get_string('positiondescription', 'artefact.resume'),
             ),
             'attachments' => array(
                 'type'         => 'files',
