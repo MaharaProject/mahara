@@ -70,6 +70,8 @@ class LeapExportElementFolder extends LeapExportElement {
 }
 
 class LeapExportElementImage extends LeapExportElementFile { }
+class LeapExportElementVideo extends LeapExportElementFile { }
+class LeapExportElementAudio extends LeapExportElementFile { }
 class LeapExportElementProfileIcon extends LeapExportElementFile {
 
     public function add_links() {

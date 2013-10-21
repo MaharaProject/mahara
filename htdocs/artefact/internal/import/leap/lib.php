@@ -323,8 +323,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                             'type' => 'html',
                             'content' => array (
                                     'title' => isset($entry->title) ? (string) $entry->title : '',
-                                    'ctime' => strtotime((string)$entry->published),
-                                    'mtime' => strtotime((string)$entry->updated),
+                                    'ctime' => (string)$entry->published,
+                                    'mtime' => (string)$entry->updated,
                                     'description' => $content
                             )
                     );
@@ -397,13 +397,13 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                     $introduction->commit();
                     $artefactmapping[(string)$entry->id] = array($introduction->get('id'));
                     break;
-                case 'note':
+                case 'html':
                     $note = new ArtefactTypeHtml();
                     $note->set('title', $entrydata['content']['title']);
                     $note->set('description', $entrydata['content']['description']);
-                    $note->set('ctime', $entrydata['content']['ctime']);
-                    $note->set('mtime', $entrydata['content']['mtime']);
-                    $note->set('owner', $entrydata['content']['owner']);
+                    $note->set('ctime', strtotime($entrydata['content']['ctime']));
+                    $note->set('mtime', strtotime($entrydata['content']['mtime']));
+                    $note->set('owner', $entrydata['owner']);
                     $note->commit();
                     $artefactmapping[(string)$entry->id] = array($note->get('id'));
 
