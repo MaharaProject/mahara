@@ -1508,7 +1508,8 @@ function artefact_instance_from_id($id) {
  * @return str            the block instance title
  */
 function artefact_title_for_view_and_block($artefactid, $viewid, $blockid) {
-    $sql = "SELECT bi.title AS currenttitle
+    $sql = "SELECT bi.title AS blocktitle,
+            a.title AS artefacttitle
             FROM {artefact} a
             JOIN {view_artefact} va ON va.artefact = a.id
             JOIN {block_instance} bi ON bi.id = va.block
@@ -1517,7 +1518,8 @@ function artefact_title_for_view_and_block($artefactid, $viewid, $blockid) {
     if (!$data = get_record_sql($sql, array($artefactid, $viewid, $blockid))) {
         throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $artefactid));
     }
-    return $data->currenttitle;
+    $currenttitle = (!empty($data->blocktitle)) ? $data->blocktitle : $data->artefacttitle;
+    return $currenttitle;
 }
 
 /**
