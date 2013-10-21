@@ -11,7 +11,7 @@ function Slideshow(id, count) {
         $j(this.id + " img:eq(" + this.current + ")").fadeOut(500, function() {
             self.current = to;
             $j(self.id + " img:eq(" + self.current + ")").fadeIn(500);
-            $j(self.id).height($j(self.id + " img:eq(" + self.current + ")").height());
+            $j(self.id).height($j(self.id + " img:eq(" + self.current + ")").height() + 10);
         });
         $j(this.id + ' td.control span').removeClass('disabled');
         $j(this.id + ' td.control span.first').addClass('hidden');
