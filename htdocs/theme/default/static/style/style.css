@@ -500,8 +500,8 @@ div.pagination a {
     background: none;
     border: 0;
 }
-/* js fallback for 600px or less */
-@media screen and (max-width: 600px) {
+/* js fallback for 768px or less */
+@media screen and (max-width: 768px) {
     #top-wrapper {
         padding-bottom: 10px;
     }
@@ -771,7 +771,7 @@ ul.in-page-tabs li:first-child a.current-tab {
     border-bottom: 1px solid #6a8091;
 }
 /* js fallback for page tabs */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
 	.rd-tab-title {
         cursor: pointer;
         display: block;

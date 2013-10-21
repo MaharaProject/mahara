@@ -265,6 +265,7 @@ div.ok {
     line-height: 1.333em;
     margin-bottom: 3px;
     font-size: 1em;
+    color: #333333;
 }
 div.error,
 span.error {
@@ -276,6 +277,7 @@ span.error {
     line-height: 1.333em;
     margin-bottom: 3px;
     font-size: 1em;
+    color: #333333;
 }
 div.info {
     background: #E5ECF4 url(../images/info.png) no-repeat 4px 4px;
@@ -286,6 +288,7 @@ div.info {
     line-height: 1.333em;
     margin-bottom: 3px;
     font-size: 1em;
+    color: #333333;
 }
 div.warning,
 .errmsg {
@@ -297,6 +300,7 @@ div.warning,
     line-height: 1.333em;
     margin-bottom: 3px;
     font-size: 1em;
+    color: #333333;
 }
 /* system messages between nav and main content */
 #messages {
@@ -308,6 +312,7 @@ div.warning,
     margin: 5px 0;
     padding: 5px;
     background: #F6F6F6;
+    color: #333333;
     text-align: center;
 }
 .message p:first-child {

@@ -38,6 +38,7 @@
 {/if}
             </div>
             {$results->pagination|safe}
+            <div class="cb"></div>
         </div>
     </div>
 

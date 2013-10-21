@@ -12,7 +12,7 @@ $j(document).ready(function(){
     $j('body').removeClass('no-js').addClass('js');
     function navClass(navTarget, wrapper) {
         // This is from theme/default/static/style/style.css (a media query)
-        var navBuffer = 600;
+        var navBuffer = 768;
         $j(window).bind('load resize orientationchange', function() {
             // get window width
             var windowWidth = $j(window).width();
@@ -28,6 +28,7 @@ $j(document).ready(function(){
     navClass($j('#main-nav > ul > li'), $j('#top-wrapper'));
     navClass($j('.tabswrap li'), $j('.tabswrap'));
     navClass($j('#category-list li'), $j('#top-pane'));
+    navClass($j('#main-nav-footer > ul > li'), $j('#footer'));
     // adds expand when click on menu title in responsive menu
     $j(".rd-nav-title").click(function(event) {
         $j(".main-nav").toggleClass("nav-expand");
@@ -39,5 +40,9 @@ $j(document).ready(function(){
     // adds expand when click on arrow to expand tabs
     $j(".rd-edittab").click(function(event) {
         $j("#category-list").toggleClass("edittab-expand");
+    });
+    // adds expand when click on menu title in responsive footer menu
+    $j(".rd-nav-footer-title").click(function(event) {
+        $j(".main-nav-footer").toggleClass("nav-footer-expand");
     });
 });

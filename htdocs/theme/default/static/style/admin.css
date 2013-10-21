@@ -117,6 +117,15 @@
 }
 /* for 660px or less */
 @media screen and (max-width: 660px) {
+    /* Configure site > Fonts */
+    #fontlist td {
+        float: left;
+        width: 98%;
+        padding: 3px 0.9%;
+    }
+    #fontlist ul.actionlist {
+        width: 100%;
+    }
     /* Users > Suspended and expired users */
     form#usertype {
         float: none;
