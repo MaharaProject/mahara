@@ -373,21 +373,6 @@ if ($institution || $add) {
             'options'      => $themeoptions,
             'help'         => true,
         );
-        $elements['dropdownmenu'] = array(
-            'type'         => 'checkbox',
-            'title'        => get_string('dropdownmenu', 'admin'),
-            'description'  => get_string('dropdownmenudescriptioninstitution','admin'),
-            'defaultvalue' => $data->dropdownmenu,
-            'help'         => true,
-        );
-        if (get_config('skins')) {
-            $elements['skins'] = array(
-                'type' => 'checkbox',
-                'title' => get_string('skins', 'admin'),
-                'description' => get_string('skinsinstitutiondescription', 'admin'),
-                'defaultvalue' => $data->skins,
-            );
-        }
         $elements['customthemefs'] = array(
             'type'         => 'fieldset',
             'class'        => 'customtheme' . ($elements['theme']['defaultvalue'] != 'custom' ? ' js-hidden' : ''),
@@ -407,6 +392,21 @@ if ($institution || $add) {
             'title'        => get_string('resetcolours', 'admin'),
             'description'  => get_string('resetcoloursdesc', 'admin'),
         );
+        $elements['dropdownmenu'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('dropdownmenu', 'admin'),
+            'description'  => get_string('dropdownmenudescriptioninstitution','admin'),
+            'defaultvalue' => $data->dropdownmenu,
+            'help'         => true,
+        );
+        if (get_config('skins')) {
+            $elements['skins'] = array(
+                'type' => 'checkbox',
+                'title' => get_string('skins', 'admin'),
+                'description' => get_string('skinsinstitutiondescription', 'admin'),
+                'defaultvalue' => $data->skins,
+            );
+        }
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
             'disabled'              => get_config('showonlineuserssideblock') ? '' : 'disabled',
