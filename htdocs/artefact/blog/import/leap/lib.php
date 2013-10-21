@@ -210,7 +210,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                 $artefactmapping[$item['oldentryid']] = self::create_blogpost(
                         $item['blogentry'],
                         $importer,
-                        $item['newentryid']
+                        $blog->get('id')
                 );
             }
             break;
@@ -567,7 +567,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      *               content associated with the blogpost
      */
     private static function create_blogpost(SimpleXMLElement $entry, PluginImportLeap $importer, $blogid) {
-        $config = self::get_blogpost_entry_data($entry, $importer, $blogentryid);
+        $config = self::get_blogpost_entry_data($entry, $importer, $blogid);
 
         $createdartefacts = array();
         $blogpost = new ArtefactTypeBlogPost();
