@@ -1294,6 +1294,7 @@ if (typeof jQuery == 'function') {
 			// flashembed defaults
 			allowfullscreen: true,
 			allowscriptaccess: 'always',
+            wmode: 'opaque',
 			quality: 'high',	
 			
 			// flashembed specific options
