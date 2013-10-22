@@ -10,7 +10,7 @@
             {if $plan->tags}
             <div>{str tag=tags}: {list_tags tags=$plan->tags owner=$plan->owner}</div>
             {/if}
-            <div class="detail">{$plan->description}</div>
+            <div class="detail">{$plan->description|clean_html|safe}</div>
             <div class="cb"></div>
     </div>
 {/foreach}
