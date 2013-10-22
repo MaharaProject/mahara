@@ -3247,8 +3247,10 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // 5. Create table usr_custom_layout
         $table = new XMLDBTable('usr_custom_layout');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         $table->addFieldInfo('layout', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         $table->addKeyInfo('layoutfk', XMLDB_KEY_FOREIGN, array('layout'), 'view_layout', array('id'));
         create_table($table);
