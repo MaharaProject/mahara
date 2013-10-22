@@ -960,11 +960,12 @@ EOF;
      * This method should be used to set an error on an element in a custom
      * validation function, if one has occurred.
      *
-     * @param string $name    The name of the element to set an error on
-     * @param string $message The error message
+     * @param string $name      The name of the element to set an error on
+     * @param string $message   The error message
+     * @param bool   $isescaped Whether to display error string as escaped or not
      * @throws PieformException  If the element could not be found
      */
-    public function set_error($name, $message) {/*{{{*/
+    public function set_error($name, $message, $isescaped = true) {/*{{{*/
         if (is_null($name) && !empty($message)) {
             $this->error = $message;
             return;
@@ -974,6 +975,7 @@ EOF;
                 foreach ($element['elements'] as &$subelement) {
                     if ($subelement['name'] == $name) {
                         $subelement['error'] = $message;
+                        $subelement['isescaped'] = ($isescaped) ? true : false;
                         return;
                     }
                 }
@@ -981,6 +983,7 @@ EOF;
             else {
                 if ($key == $name) {
                     $element['error'] = $message;
+                    $element['isescaped'] = ($isescaped) ? true : false;
                     return;
                 }
             }
