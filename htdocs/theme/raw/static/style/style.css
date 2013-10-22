@@ -709,23 +709,6 @@ input {
 input::-moz-focus-inner {
     border: 0;
 }
-/* disabled inputs */
-input[disabled="disabled"],
-input[disabled="disabled"]:hover {
-    border-color: #aaaaaa;
-    color: #aaaaaa;
-    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
-}
-input.text[disabled="disabled"],
-input.text[disabled="disabled"]:hover,
-input[type="text"][disabled="disabled"],
-input[type="text"][disabled="disabled"]:hover {
-    background: #f0f0f0;
-    border-top: 1px solid #ABADB3;
-    border-right: 1px solid #DBDFE6;
-    border-bottom: 1px solid #E3E9EF;
-    border-left: 1px solid #E2E3EA;
-}
 /* hidden */
 .no-js .nojs-hidden-inline {
     display: none;
@@ -1003,6 +986,23 @@ input#releaseview_submit {
     font-size: 1em;
     color: #0000EE;
     text-decoration: underline;
+}
+/* disabled inputs */
+input[disabled="disabled"],
+input[disabled="disabled"]:hover {
+    border-color: #aaaaaa;
+    color: #aaaaaa;
+    background: url(../images/btn_bkgd.png) repeat-x 0 50%;
+}
+input.text[disabled="disabled"],
+input.text[disabled="disabled"]:hover,
+input[type="text"][disabled="disabled"],
+input[type="text"][disabled="disabled"]:hover {
+    background: #f0f0f0;
+    border-top: 1px solid #ABADB3;
+    border-right: 1px solid #DBDFE6;
+    border-bottom: 1px solid #E3E9EF;
+    border-left: 1px solid #E2E3EA;
 }
 /* placement of buttons */
 .rbuttons {
