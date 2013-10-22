@@ -1004,6 +1004,11 @@ input[type="text"][disabled="disabled"]:hover {
     border-bottom: 1px solid #E3E9EF;
     border-left: 1px solid #E2E3EA;
 }
+input[type="image"][disabled="disabled"],
+input[type="image"][disabled="disabled"]:hover {
+    opacity: 0.5;
+   filter: alpha(opacity=50);
+}
 /* placement of buttons */
 .rbuttons {
     float: right;
