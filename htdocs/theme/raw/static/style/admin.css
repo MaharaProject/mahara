@@ -306,6 +306,10 @@ table.tablerenderer th.desc a {
 #searchresults td {
     vertical-align: middle;
 }
+a#loggedinform_loggedindate_btn img {
+    vertical-align: middle;
+    margin-left: 3px;
+}
 /* Users > User Search > Edit user */
 #edituser .suspendederror {
     padding: 5px 10px;
@@ -402,6 +406,9 @@ form#delete {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+form#suspend input#suspend_suspend {
+    margin-left: 3px;
 }
 /* Users > Suspended and expired users */
 form#usertype {
