@@ -168,6 +168,7 @@ $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $view->get_url());
 $smarty->assign('new', $new);
 if (get_config('viewmicroheaders')) {
+    $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 }
