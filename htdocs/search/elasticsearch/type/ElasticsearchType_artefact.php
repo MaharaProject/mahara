@@ -225,6 +225,7 @@ class ElasticsearchType_artefact extends ElasticsearchType
             switch ($record->artefacttype) {
                 case 'image':
                 case 'video':
+                case 'audio':
                 case 'file':
                     $record->link = 'artefact/file';
                     if (isset($record->parent) && intval($record->parent) > 0) {
@@ -233,7 +234,46 @@ class ElasticsearchType_artefact extends ElasticsearchType
                     break;
                 case 'blogpost':
                     if (isset($record->parent) && intval($record->parent) > 0) {
-                        $record->link = 'artefact/blog/view/?id=' . $record->parent;
+                        $record->link = 'artefact/blog/view/index.php?id=' . $record->parent;
+                    }
+                    break;
+                case 'blog':
+                    $record->link = 'artefact/blog/view/index.php';
+                    if ($USER->get_account_preference('multipleblogs')) {
+                        $record->link .= '?id=' . $record->id;
+                    }
+                    break;
+                case 'coverletter':
+                case 'personalinformation':
+                    $record->link = 'artefact/resume/index.php';
+                    break;
+                case 'educationhistory':
+                case 'employmenthistory':
+                    $record->link = 'artefact/resume/employment.php';
+                    break;
+                case 'book':
+                case 'certification':
+                case 'membership':
+                    $record->link = 'artefact/resume/achievements.php';
+                    break;
+                case 'academicgoal':
+                case 'careergoal':
+                case 'personalgoal':
+                case 'personalinformation':
+                case 'academicskill':
+                case 'personalskill':
+                case 'workskill':
+                    $record->link = 'artefact/resume/goalsandskills.php';
+                    break;
+                case 'interest':
+                    $record->link = 'artefact/resume/interests.php';
+                    break;
+                case 'plan':
+                    $record->link = 'artefact/plans/plan.php?id=' . $record->id;
+                    break;
+                case 'task':
+                    if (isset($record->parent) && intval($record->parent) > 0) {
+                        $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
                     }
                     break;
             }
