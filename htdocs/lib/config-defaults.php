@@ -347,6 +347,12 @@ $cfg->leapovermnetloglevel = 0;
 $cfg->sslproxy = false;
 
 /**
+ * @global string $cfg->cacertinfo The name of a file holding one or more certificates to verify the peer
+ * when Mahara does HTTPS requests using the PHP Curl library.
+ */
+// $cfg->cacertinfo = null;
+
+/**
  * External login page
  * @global string $cfg->externallogin Use this config option when you want users to be redirected to another
  * login page, for example a moodle instance that has mnet to this mahara
