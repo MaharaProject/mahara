@@ -302,14 +302,14 @@ class PluginSearchElasticsearch extends PluginSearch {
                     'value' => $count_in_queue,
 //                    'title'        =>   $type . $count_in_queue,
 //                    'type'         => 'submit',
-//                    'defaultvalue' => 'reset',
+//                    'defaultvalue' => get_string('reset', 'search.elasticsearch'),
                 );
             }
             // And on the end, a special one to reset all the indexes.
             $resetelements['allreset'] = array(
                 'title' => get_string('resetallindexes', 'search.elasticsearch'),
                 'type' => 'submit',
-                'defaultvalue' => 'reset',
+                'defaultvalue' => get_string('reset', 'search.elasticsearch'),
             );
 
             $config['elements']['resetindex'] = array(
