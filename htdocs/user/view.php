@@ -313,6 +313,7 @@ $smarty->assign('user', $user);
 if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
+    $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
     if ($loggedinid && $loggedinid == $userid) {
         $microheaderlinks = array(
             array(
