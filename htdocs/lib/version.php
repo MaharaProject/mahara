@@ -17,6 +17,6 @@ $config = new stdClass();
 // For upgrades on stable branches, increment the version by one.  On master, use the date.
 $config->version = 2013101401;
 $config->release = '1.8rc3dev';
-$config->minupgradefrom = 2008040200;
-$config->minupgraderelease = '1.0.0 (release tag 1.0.0_RELEASE)';
+$config->minupgradefrom = 2009022600;
+$config->minupgraderelease = '1.1.0 (release tag 1.1.0_RELEASE)';
 $config->disablelogin = true;
