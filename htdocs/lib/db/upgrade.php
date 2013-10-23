@@ -3204,8 +3204,8 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2013082100) {
-        // Update database for flexible page layouts feature (introduced by Mike Kelly)
-        // 1. Create table view_rows_columns
+        log_debug('Update database for flexible page layouts feature');
+        log_debug('1. Create table view_rows_columns');
         $table = new XMLDBTable('view_rows_columns');
         $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         $table->addFieldInfo('row', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
@@ -3213,7 +3213,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
         create_table($table);
 
-        // 2. Remake the table view_layout as view_layout_columns
+        log_debug('2. Remake the table view_layout as view_layout_columns');
         $table = new XMLDBTable('view_layout_columns');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL);
@@ -3222,7 +3222,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('columnwidthuk', XMLDB_KEY_UNIQUE, array('columns', 'widths'));
         create_table($table);
 
-        // 3. Alter table view_layout
+        log_debug('3. Alter table view_layout');
         $table = new XMLDBTable('view_layout');
         $field = new XMLDBField('rows');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 1);
@@ -3234,7 +3234,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
         add_field($table, $field);
 
-        // 4. Create table view_layout_rows_columns
+        log_debug('4. Create table view_layout_rows_columns');
         $table = new XMLDBTable('view_layout_rows_columns');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('viewlayout', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
@@ -3245,7 +3245,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('columnsfk', XMLDB_KEY_FOREIGN, array('columns'), 'view_layout_columns', array('id'));
         create_table($table);
 
-        // 5. Create table usr_custom_layout
+        log_debug('5. Create table usr_custom_layout');
         $table = new XMLDBTable('usr_custom_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
@@ -3255,7 +3255,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('layoutfk', XMLDB_KEY_FOREIGN, array('layout'), 'view_layout', array('id'));
         create_table($table);
 
-        // 6. Convert existing view_layout records into new-style view_layouts with just one row
+        log_debug('6. Convert existing view_layout records into new-style view_layouts with just one row');
         $oldlayouts = get_records_array('view_layout', '', '', 'id', 'id, columns, widths');
         foreach ($oldlayouts as $layout) {
             // We don't actually need to populate the "rows", "iscustom" or "layoutmenuorder" columns,
@@ -3293,21 +3293,24 @@ function xmldb_core_upgrade($oldversion=0) {
 
         }
 
-        // 7. Now we can drop the obsolete view_layout.columns and view_layout.widths fields
+        log_debug('7. Drop the obsolete view_layout.columns and view_layout.widths fields');
         $table = new XMLDBTable('view_layout');
         $field = new XMLDBField('columns');
         drop_field($table, $field);
         $field = new XMLDBField('widths');
         drop_field($table, $field);
 
-        // 8. Update default values for tables view_layout, view_layout_columns and view_layout_rows_columns
+        log_debug('8. Update default values for tables view_layout, view_layout_columns and view_layout_rows_columns');
         install_view_layout_defaults();
 
-        // 9. Update the table 'block_instance'
+        log_debug('9. Update the table "block_instance"');
         $table = new XMLDBTable('block_instance');
         $field = new XMLDBField('row');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 1);
+        // This one tends to take a while...
+        set_time_limit(30);
         add_field($table, $field);
+        set_time_limit(30);
 
         // Refactor the block_instance.viewcolumnorderuk key so it includes row.
         $key = new XMLDBKey('viewcolumnorderuk');
@@ -3328,14 +3331,15 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_UNIQUE, array('view', 'row', 'column', 'order'));
         add_key($table, $key);
 
-        // 10. Add a "numrows" column to the views table. The default value of "1" will be correct
+        log_debug('10. Add a "numrows" column to the views table.');
+        // The default value of "1" will be correct
         // for all existing views, because they're using the old one-row layout style
         $table = new XMLDBTable('view');
         $field = new XMLDBField('numrows');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 2, null, XMLDB_NOTNULL, null, null, null, 1);
         add_field($table, $field);
 
-        // 11. Update the table 'view_rows_columns' for existing pages
+        log_debug('11. Update the table "view_rows_columns" for existing pages');
         execute_sql('INSERT INTO {view_rows_columns} ("view", "row", "columns") SELECT v.id, 1, v.numcolumns FROM {view} v');
     }
 
