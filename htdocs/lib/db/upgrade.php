@@ -1452,6 +1452,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // Restore index that may be missing due to upgrade 2011050600.
         $table = new XMLDBTable('usr');
         $index = new XMLDBIndex('usr_use_uix');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username'));
         if (!index_exists($table, $index)) {
             if (is_postgres()) {
                 // For postgres, create the index on the lowercase username, the way it's
@@ -1527,6 +1528,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if (is_postgres()) {
             $table = new XMLDBTable('usr');
             $index = new XMLDBIndex('usr_fir_ix');
+            $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('firstname', 'lastname', 'preferredname', 'studentid', 'email'));
             if (!index_exists($table, $index)) {
                 execute_sql('CREATE INDEX {usr_fir_ix} ON {usr}(LOWER(firstname))');
                 execute_sql('CREATE INDEX {usr_las_ix} ON {usr}(LOWER(lastname))');
