@@ -154,9 +154,14 @@ $js = <<< EOJS
                                 message = {$installsuccessstring};
                             }
                             else {
-                                message = {$successstring};
+                                if (data.message) {
+                                    message = data.message;
+                                }
+                                else {
+                                    message = {$successstring};
+                                }
                             }
-                            message += data.newversion ? data.newversion : '?';
+                            message += data.newversion ? data.newversion : '';
                         }
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                         if (data.feedback) {
