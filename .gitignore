@@ -11,6 +11,9 @@ mahara-*.zip
 /test/selenium/TestSuite.html
 /test/selenium/results.html
 /test/selenium/*/index.html
+/test/.project
+/test/.buildpath
+/test/.settings
 /configure-stamp
 /debian/files
 /debian/mahara-apache.postinst.debhelper
