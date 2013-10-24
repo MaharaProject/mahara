@@ -1,3 +1,92 @@
+1.8.0 (2013-10-24)
+- New features: 
+-- Turned the block chooser vertical and scrolling, to accomodate longer Pages
+-- The Image block and Text Box block are now conveniently at the top of the block chooser
+-- Page layouts can now have rows as well as columns
+-- Users can import leap2a files into their existing Mahara account
+-- PDF block allows PDFs to be viewed inline in a Page
+-- Resume elements can have attachments
+-- Notes (and text box blocks) can have attachments
+-- Users are notified when they try to navigate away from a page with unsaved changes
+-- Many more types of user content can have tags
+-- Resume entries for electronic publications can now be hotlinks
+-- Drag-and-drop to upload files
+-- Page skins, which give individual users the ability to change the CSS of their Pages
+-- Admins can search for users with duplicate email addresses
+-- Admins can filter user search by auth method
+-- Elasticsearch search plugin
+-- "Additional HTML" config option for things such as Google Analytics
+-- A cron job in the LDAP auth plugin to synchronize Mahara accounts with LDAP
+- Security Bug #1034180: A group member with no access rights to folder can still view it
+- Security Bug #1236636: Can attach other users' Folders to your Image Gallery block 
+- Bug #1180625: Update ADOdb library to version 5.18 
+- Bug #1187964: Use adodb "mysqli" instead of "mysql" 
+- Bug #1180624: Add support for SQL temp tables 
+- Bug #1184450: Add mysql collation mode to pre-install sanity check 
+- Bug #1235305: Image slideshow fails first time when selecting 'Style:  Slideshow' 
+- Bug #1045563: Email address in the 'Required profile fields' form must be validated 
+- Bug #1097565: Automatic account expiry doesn't happen 
+- Bug #1140836: 'Max. items per page' doesn't work for group pages 
+- Bug #1160093: Don't display a remote username on /admin/users/edit.php if no remote username exists 
+- Bug #1187963: Updating group members by CSV caused existing group admins removed 
+- Bug #1211621: Centralized license and copyright info from file headers into README
+- Bug #1214124: Improve stylesheet cacheing 
+- Bug #1239539: Registration:  Force Terms and Conditions - error text 
+- Bug #993676: Members did not show up in second search if the first search found no results 
+- Bug #1046114: Errors when adding new institution members 
+- Bug #1127801: consecutive deleted forum posts for same user should be grouped 
+- Bug #1158086: Forum:  error after deleting a post that is the child of another deleted post 
+- Bug #1187571: Updating groups by CSV caused 'Not found' page 
+- Bug #1193757: Institution admin needs tob e able to change auth method "No institution" to one of their own 
+- Bug #1203965: Increase number of characters in collection tabs 
+- Bug #1204309: Edit forum post error if parent is deleted 
+- Bug #1220639: mp4 file has wrong icon 
+- Bug #1223063: Deleting display name does not remove it 
+- Bug #1234487: Put the system requirements for each Mahara release into README 
+- Bug #1238407: Mahara 1.0 upgrade path depends on no-longer-supported "ENGINE=INNODB" 
+- Bug #1240746: Plans page displaying 1 block of text when I used 3 paragraphs  
+- Bug #1242263: Switch suspension reason and "Suspend" button around 
+- Bug #703980: personal information pulled into add resume even if there is nothing in it 
+- Bug #959926: No warning when deleting a profile picture that is used in a portfolio page 
+- Bug #1017281: The pagination drop down shows when less than 10 entries on the page. 
+- Bug #1078591: ClamAV path missing/not detected. No option to provide path to Clamav 
+- Bug #1114790: masqueradingreasonrequireddescription string is misleading about settings 
+- Bug #1165300: Year not shown for post dates on "Topics" 
+- Bug #1166578: auth/session.php incorrectly multiplies $cfg->session_timeout by 60 
+- Bug #1168422: clamdscan permission issues 
+- Bug #1182649: uploading multiple files - only last one gets marked complete 
+- Bug #1191605: blocktype/externalfeed/lib.php throws array_chunk errors 
+- Bug #1201052: Notification to anonymous user when comment was submitted 
+- Bug #1201055: Change lang string for updated comments when moderation is turned on 
+- Bug #1208287: Clarify error message in Mahara syntax checker about table names with {} 
+- Bug #1211161: Creating a new group with cleanurls active, throws a warning 
+- Bug #1220108: 'usersuniquebyusername' config option not in lib/config-defaults.php 
+- Bug #1222200: Make the masquerade "Log in anyway" link more noticeable to admins
+- Bug #1230044: Wording in password reset phrase in English 
+- Bug #547386: Linking to electronic publications 
+- Bug #680710: Revive the Solr plugin using elasticsearch 
+- Bug #1036556: Embed PDF 
+- Bug #1046750: Show more of the file name 
+- Bug #1050297: drag & drop content from desktop 
+- Bug #1073625: Add additional html interface 
+- Bug #1083263: Filter by auth method in "User search" 
+- Bug #1103942: Allow uploading attachments to Resume composites 
+- Bug #1117237: Allow uploading attachments to Textboxes/Notes 
+- Bug #1166499: Filter out accounts with duplicate email address 
+- Bug #1168213: Wishlist/Feature Request:  Customise page themes (skins) 
+- Bug #1180622: Integrate Patrick Pollet's ldap sync plugin into the core auth/ldap plugin 
+- Bug #1180997: Add tagging feature for all user's content 
+- Bug #1182739: Display a warning message when navigating away without saving 
+- Bug #1183612: Make it easier to change a user's profile picture 
+- Bug #1185209: Allow existing users to import LEAP2A content into their portfolio 
+- Bug #1190720: Edit access page needs default share with text 
+- Bug #1194672: Drop-down navigation option be overridden at institutional level 
+- Bug #1197154: Hide or move the "Retractable" and "Automatically retract" controls for blocks 
+- Bug #1201258: artefact chooser panel 
+- Bug #1193936: License info is NOT updated when using content from other text boxes 
+- Bug #1235813: "Your entire resume" should be "My entire resume" 
+- Bug #959926: No warning when deleting a profile picture that is used in a portfolio page
+
 1.7.3 (2013-10-03)
 - Bug #1211758 Security bug: Arbitrary image download
 - Bug #1175446 Security bug: user supplied $_SERVER['HTTP_HOST'] can be used for injections
