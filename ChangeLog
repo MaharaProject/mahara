@@ -1,5 +1,23 @@
 1.7.3 (2013-10-03)
-- 
+- Bug #1211758 Security bug: Arbitrary image download
+- Bug #1175446 Security bug: user supplied $_SERVER['HTTP_HOST'] can be used for injections
+- Bug #1233500 Security bug: Not checking ownership of blocks before editing them
+- Bug #1158625 Make profile information not avaialble for public when not shared
+- Bug #1207140 The embedded iframe filter doesn't support scheme-relative URLs such as "//youtube.com" (now used in the YouTube and Vi$
+- Bug #1218091 Pager in search in a block doesn't work
+- Bug #1195489 After installation, make the installer "jump" to the "Continue" link at the bottom of the page
+- Bug #1214647 When an auth instance is deleted, disable it as a parent authority
+- Bug #1215190 LDAP support for non-standard port LDAP Urls
+- Bug #1215702 Reduce false positives in syntax checker for unbracketed SQL tables
+- Bug #1218684 Alt tag in the artefact chooser panel only says "Preview"
+- Bug #1219499 Some RSS feed channel images are rendered too large in External feeds block
+- Bug #1222368 Missing lang string for group page with clean URL
+- Bug #1227372 Missing lang string for existing URL on allowed iframes
+- Bug #1095208 uploading a file - "Loading" message remains
+- Bug #1165592 "Cron is not running" not displayed in red anymous
+- Bug #1188001 Page view throws headdata warning, if group submissions enabled
+- Bug #1213908 Undefined variable $id in group/report.php
+- Bug #1072972 Internal search ignores 'KATAKANA-HIRAGANA PROLONGED SOUND MARK'
 
 1.7.2 (2013-07-25)
 - Bug #1177187: program code error when create new rss feed in mahara 1.7.1
@@ -17,7 +35,6 @@
 - Bug #1185661: HTML export doesn't list Pages on the index page
 - Bug #1195269: Resume "birthdate" field, if empty auto-fills to 1 Jan 1970
 - Bug #1150831: Trailing slash missing in directory URL
-- 
 
 1.7.1 (2013-05-02)
 - Bug #1171714: Bug that can cause RSS feeds to be randomly copied between users
