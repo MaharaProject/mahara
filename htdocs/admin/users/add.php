@@ -221,8 +221,14 @@ function adduser_validate(Pieform $form, $values) {
         $form->set_error('firstname', null);
         $form->set_error('lastname', null);
         $form->set_error('email', null);
-
-        if (!$values['leap2afile']) {
+        if (!$values['leap2afile'] && ($_FILES['leap2afile']['error'] == UPLOAD_ERR_INI_SIZE || $_FILES['leap2afile']['error'] == UPLOAD_ERR_FORM_SIZE)) {
+            $form->reply(PIEFORM_ERR, array(
+                'message' => get_string('uploadedfiletoobig'),
+                'goto'    => '/admin/users/add.php'));
+            $form->set_error('leap2afile', get_string('uploadedfiletoobig'));
+            return;
+        }
+        else if (!$values['leap2afile']) {
             $form->set_error('leap2afile', $form->i18n('rule', 'required', 'required'));
             return;
         }
