@@ -72,8 +72,14 @@ if (!$can_edit) {
         'limit' => $limit,
         'offset' => $offset,
     ));
+    $js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+});
+EOF;
 
-    $smarty = smarty();
+    $smarty = smarty(array('paginator'));
+    $smarty->assign('INLINEJAVASCRIPT', $js);
     $smarty->assign('views', $data->data);
     $smarty->assign('pagination', $pagination['html']);
     $smarty->display('view/groupviews.tpl');
@@ -82,10 +88,16 @@ if (!$can_edit) {
 }
 
 list($searchform, $data, $pagination) = View::views_by_owner($group->id);
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+});
+EOF;
 
 $createviewform = pieform(create_view_form($group->id));
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editlocked', $role == 'admin');
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
