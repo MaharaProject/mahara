@@ -1,3 +1,6 @@
+1.7.4 (2013-10-29)
+- 
+
 1.7.3 (2013-10-03)
 - Bug #1211758 Security bug: Arbitrary image download
 - Bug #1175446 Security bug: user supplied $_SERVER['HTTP_HOST'] can be used for injections
