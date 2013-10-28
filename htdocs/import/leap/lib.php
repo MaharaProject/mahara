@@ -1322,7 +1322,7 @@ class PluginImportLeap extends PluginImport {
     public static function get_leap_myrole(SimpleXMLElement $entry, $namespaces, $ns) {
         $myrole = $entry->xpath($namespaces[$ns].':myrole');
         // we only expect one role
-        if($myrole[0]) {
+        if (isset($myrole[0])) {
             return $myrole[0];
         }
         return '';
