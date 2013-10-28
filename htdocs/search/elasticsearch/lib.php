@@ -340,6 +340,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         // but it was not very reliable. According to the docs:  it is not recommended to delete "large chunks of the data in an index".
         // So I decided to remove data by Id.
 
+        set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', $values['artefacttypesmap']);
         // to be valid, artefact types need a hierarchy
         $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
         $values['artefacttypes'] = array_intersect($values['artefacttypes'], array_keys($artefacttypesmap_array));

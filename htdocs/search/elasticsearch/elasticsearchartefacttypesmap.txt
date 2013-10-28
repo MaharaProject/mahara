@@ -25,7 +25,7 @@ file|Document|Media
 firstname|Profile|Text
 folder|Folder|Media
 homenumber|Profile|Text
-html|Document|Media
+html|Document|Text
 icqnumber|Profile|Text
 image|Image|Media
 industry|Profile|Text
