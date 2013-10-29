@@ -141,11 +141,11 @@ function displayMessage(message, type, hideprevmsg) {
         type = 'info';
     }
 
+    var oldmessage = getFirstElementByTagAndClassName('div', null, 'messages');
     var message = makeMessage(message, type);
     appendChildNodes('messages', message);
 
     if (typeof hideprevmsg === 'undefined' || hideprevmsg == true) {
-        var oldmessage = getFirstElementByTagAndClassName('div', null, 'messages');
         if (oldmessage) {
             fade(oldmessage, {afterFinish: partial(removeElement, oldmessage)});
         }
