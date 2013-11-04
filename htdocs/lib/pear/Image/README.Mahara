@@ -1,0 +1,18 @@
+PEAR Image
+==========
+
+This directory contains PEAR packages under PEAR::Image. Those which have their
+own subdirectory will contain their own README.Mahara file in the subdirectory.
+Those that don't, are documented in this file.
+
+
+PEAR Image_Color
+===============
+
+Website: http://pear.php.net/package/Image_Color/
+Version: 1.0.4
+
+This class is a dependency of Image_Canvas
+
+Changes:
+ - None
