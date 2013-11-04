@@ -1,0 +1,14 @@
+PEAR Base System
+================
+
+Website: http://pear.php.net/package/PEAR
+Version: 1.9.4
+
+This directory holds PEAR libraries. The PEAR.php, PEAR5.php, and PEAR/ directory
+contain code needed by the other PEAR libraries but not used directly by Mahara.
+Information about each individual PEAR library will be in the library's
+subdirectory.
+
+Changes:
+  - None
+
