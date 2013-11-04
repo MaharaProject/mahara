@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: RSS11.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -121,7 +121,7 @@ class XML_Feed_Parser_RSS11 extends XML_Feed_Parser_Type
     function __construct(DOMDocument $model, $strict = false)
     {
         $this->model = $model;
-
+        $this->setSanitizer(new XML_Feed_Parser_Unsafe_Sanitizer());
         if ($strict) {
             if (! $this->relaxNGValidate()) {
                 throw new XML_Feed_Parser_Exception('Failed required validation');
@@ -133,6 +133,7 @@ class XML_Feed_Parser_RSS11 extends XML_Feed_Parser_Type
             $this->xpath->registerNamespace($key, $value);
         }            
         $this->numberEntries = $this->count('item');
+
     }
 
     /**
@@ -155,8 +156,7 @@ class XML_Feed_Parser_RSS11 extends XML_Feed_Parser_Type
 
         $entries = $this->xpath->query("//rss:item[@rdf:about='$id']");
         if ($entries->length > 0) {
-            $classname = $this->itemClass;
-            $entry = new $classname($entries->item(0), $this);
+            $entry = new XML_Feed_Parser_RSS1Element($entries->item(0), $this);
             return $entry;
         }
         return false;

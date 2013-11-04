@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: AtomElement.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -90,11 +90,15 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
      */
     function __construct(DOMElement $element, $parent, $xmlBase = '')
     {
+
+        $this->setSanitizer($parent->getSanitizer());
         $this->model = $element;
         $this->parent = $parent;
         $this->xmlBase = $xmlBase;
+        // $this->id is doing magic work in the constructor :(
         $this->xpathPrefix = "//atom:entry[atom:id='" . $this->id . "']/";
         $this->xpath = $this->parent->xpath;
+
     }
 
     /**
@@ -198,6 +202,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
      */
     function getEnclosure($method, $arguments = array())
     {
+
         $offset = isset($arguments[0]) ? $arguments[0] : 0;
         $query = "//atom:entry[atom:id='" . $this->getText('id', false) . 
             "']/atom:link[@rel='enclosure']";

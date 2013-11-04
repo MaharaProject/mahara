@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: RSS2.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -114,7 +114,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
     function __construct(DOMDocument $model, $strict = false)
     {
         $this->model = $model;
-
+        $this->setSanitizer(new XML_Feed_Parser_Unsafe_Sanitizer());
         if ($strict) {
             if (! $this->relaxNGValidate()) {
                 throw new XML_Feed_Parser_Exception('Failed required validation');
@@ -149,7 +149,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
 
         $entries = $this->xpath->query("//item[guid='$id']");
         if ($entries->length > 0) {
-            $entry = new $this->itemElement($entries->item(0), $this);
+            $entry = new XML_Feed_Parser_RSS2Element($entries->item(0), $this);
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::item)", $entries->item(0));
                 $this->entries[$offset] = $entry;

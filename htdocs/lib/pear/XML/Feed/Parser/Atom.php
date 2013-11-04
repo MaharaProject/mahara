@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Atom.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
 */
 
@@ -112,7 +112,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
      * @param    DOMDocument    $xml    A DOM object representing the feed
      * @param    bool (optional) $string    Whether or not to validate this feed
      */
-    function __construct(DOMDocument $model, $strict = false)
+    public function __construct(DOMDocument $model, $strict = false)
     {
         $this->model = $model;
 
@@ -125,6 +125,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         $this->xpath = new DOMXPath($this->model);
         $this->xpath->registerNamespace('atom', 'http://www.w3.org/2005/Atom');
         $this->numberEntries = $this->count('entry');
+        $this->setSanitizer(new XML_Feed_Parser_Unsafe_Sanitizer());
     }
 
     /**
@@ -148,7 +149,9 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
         if ($entries->length > 0) {
             $xmlBase = $entries->item(0)->baseURI;
-            $entry = new $this->itemClass($entries->item(0), $this, $xmlBase);
+            /** @todo Avoid instantiating classes we can't keep track of */
+            $entry = new XML_Feed_Parser_AtomElement($entries->item(0), $this, $xmlBase);
+            $entry->setSanitizer($this->getSanitizer());
             
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::atom:entry)", $entries->item(0));
@@ -190,7 +193,15 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         if ($param->length == 0) {
             return false;
         }
-        return $param->item(0)->nodeValue;
+
+        $email = $section->item($offset)->getElementsByTagName('email');
+        if ($email->length > 0 && $parameter == 'name') {
+            $email_sanitized = $this->sanitizer->sanitize($email->item(0)->nodeValue);
+            $person_sanitized = $this->sanitizer->sanitize($param->item(0)->nodeValue);
+            return $person_sanitized . ' (' . $email_sanitized . ')';
+        }
+
+        return $this->sanitizer->sanitize($param->item(0)->nodeValue);
     }
 
     /**
@@ -218,13 +229,18 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
 
         $content = $tags->item($offset);
 
+        if (empty($attribute)) {
+            return $this->parseTextConstruct($content);
+        }
+
         if (! $content->hasAttribute('type')) {
             $content->setAttribute('type', 'text');
         }
         $type = $content->getAttribute('type');
 
-        if (! empty($attribute) and 
-            ! ($method == 'generator' and $attribute == 'name')) {
+
+        if (!($method == 'generator' && $attribute == 'name')) {
+
             if ($content->hasAttribute($attribute)) {
                 return $content->getAttribute($attribute);
             } else if ($attribute == 'href' and $content->hasAttribute('uri')) {
@@ -263,7 +279,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
         switch ($type) {
             case 'text':
             case 'html':
-                return $content->textContent;
+                return $this->sanitizer->sanitize($content->textContent);
                 break;
             case 'xhtml':
                 $container = $content->getElementsByTagName('div');
@@ -288,6 +304,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
                 return base64_decode(trim($content->nodeValue));
                 break;
         }
+
         return false;
     }
     /**

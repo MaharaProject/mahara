@@ -1,5 +1,6 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+require_once 'XML/Feed/Parser/Sanitizer.php';
 
 /**
  * Abstract class providing common methods for XML_Feed_Parser feeds.
@@ -17,7 +18,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: Type.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -31,6 +32,7 @@
  */
 abstract class XML_Feed_Parser_Type
 {
+    protected $sanitizer;
     /**
      * Where we store our DOM object for this feed 
      * @var DOMDocument
@@ -106,6 +108,17 @@ abstract class XML_Feed_Parser_Type
         }
 
         return false;
+    }
+
+    public function setSanitizer(XML_Feed_Parser_Sanitizer $sanitizer) {
+        $this->sanitizer = $sanitizer;
+
+        foreach ($this->entries as $entry) {
+            $entry->setSanizier($sanitizer);
+        }
+    } 
+    public function getSanitizer() {
+        return $this->sanitizer;
     }
 
     /**
@@ -197,6 +210,8 @@ abstract class XML_Feed_Parser_Type
             $entries = $this->model->getElementsByTagName($this->itemElement);
             if ($entries->length > $offset) {
                 $xmlBase = $entries->item($offset)->baseURI;
+                /** @todo Remove this behaviour - each driver should control this better */
+                /** @todo Try to avoid new here */
                 $this->entries[$offset] = new $this->itemClass(
                     $entries->item($offset), $this, $xmlBase);
                 if ($id = $this->entries[$offset]->id) {
@@ -242,7 +257,7 @@ abstract class XML_Feed_Parser_Type
         $tags = $this->model->getElementsByTagName($method);
         if ($tags->length > 0) {
             $value = $tags->item(0)->nodeValue;
-            return $value;
+            return $this->sanitizer->sanitize($value);
         }
         return false;
     }
@@ -274,11 +289,11 @@ abstract class XML_Feed_Parser_Type
         if ($array) {
             $list = array();
             foreach ($categories as $category) {
-                array_push($list, $category->nodeValue);
+                array_push($list, $this->sanitizer->sanitize($category->nodeValue));
             }
             return $list;
         }
-        return $categories->item($offset)->nodeValue;
+        return $this->sanitizer->sanitize($categories->item($offset)->nodeValue);
     }
 
     /**
@@ -333,17 +348,27 @@ abstract class XML_Feed_Parser_Type
      */
     function processEntitiesForNodeValue($node) 
     {
+        $current_encoding = $node->ownerDocument->encoding;
+
+        // Charset left blank to trigger autodetection
+        $decoded = html_entity_decode($node->nodeValue);
+        $value = htmlentities($decoded, null, strtoupper($current_encoding));
+
         if (function_exists('iconv')) {
-          $current_encoding = $node->ownerDocument->encoding;
-          $value = iconv($current_encoding, 'UTF-8', $node->nodeValue);
-        } else if ($current_encoding == 'iso-8859-1') {
-          $value = utf8_encode($node->nodeValue);
-        } else {
-          $value = $node->nodeValue;
+            return $this->sanitizer->sanitize(
+                iconv(
+                    strtoupper($current_encoding),
+                    'UTF-8',
+                    $value
+                )
+            );
+        } else if (strtoupper($current_encoding) == 'ISO-8859-1') {
+            return $this->sanitizer->sanitize(
+                utf8_encode($value)
+            );
         }
 
-        $decoded = html_entity_decode($value, NULL, 'UTF-8');
-        return htmlentities($decoded, NULL, 'UTF-8');
+        return $this->sanitizer->sanitize($value);
     }
 
     /**
@@ -408,7 +433,7 @@ abstract class XML_Feed_Parser_Type
                 $value = '';
                 foreach ($test->item(0)->childNodes as $child) {
                     if ($child instanceof DOMText) {
-                        $value .= $child->nodeValue;
+                        $value .= $this->sanitizer->sanitize($child->nodeValue);
                     } else {
                         $simple = simplexml_import_dom($child);
                         $value .= $simple->asXML();
@@ -416,7 +441,7 @@ abstract class XML_Feed_Parser_Type
                 }
                 return $value;
             } else if ($test->length > 0) {
-                return $test->item(0)->nodeValue;
+                return $this->sanitizer->sanitize($test->item(0)->nodeValue);
             }
         }
         return false;
@@ -471,5 +496,3 @@ abstract class XML_Feed_Parser_Type
         return $this->model->relaxNGValidate($path);
     }
 }
-
-?>
