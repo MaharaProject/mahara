@@ -1229,7 +1229,12 @@ class ElasticsearchPseudotype_all
         if ($sort[0] == 'score') {
             $sort[0] = '_score';
         }
-        $elasticaQuery->setSort(array(array($sort[0] => array('order' => (isset($sort[1]) ? $sort[1] : 'desc')))));
+        // set the second column to sort by the score (to break any 'ties').
+        $elasticaQuery->setSort(array(
+            array($sort[0] => array('order' => (isset($sort[1]) ? $sort[1] : 'desc'))),
+            array('_score' => array('order' => 'desc')),
+            )
+        );
 
         $elasticaResultSet  = $elasticaIndex->search($elasticaQuery);
         $result['count']    = $elasticaResultSet->getTotalHits();
