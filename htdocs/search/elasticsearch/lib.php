@@ -812,8 +812,8 @@ class PluginSearchElasticsearch extends PluginSearch {
             ':'
         );
         foreach ($badchars as $bad) {
-            // delete it!
-            $query = preg_replace('/\\'.$bad.'/','',$query);
+            // Replace with a space.
+            $query = preg_replace('/\\'.$bad.'/',' ',$query);
         }
         return $query;
     }
