@@ -1006,6 +1006,7 @@ td.incomplete {
 .slideshow .control {
     font-size: 3em;
     width: 20px;
+    line-height: 90%;
 }
 .slideshow .control .disabled:hover,
 .slideshow .control .disabled {

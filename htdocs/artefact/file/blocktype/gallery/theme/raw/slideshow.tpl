@@ -3,8 +3,8 @@
     <table class="images fullwidth">
     <tr>
     <td class="control">
-        <span class="first hidden">&laquo;</span>
         <span class="prev disabled">&lsaquo;</span>
+        <span class="first disabled">&laquo;</span>
     </td>
     <td>
     {foreach from=$images item=image name=images}
@@ -13,7 +13,7 @@
     </td>
     <td class="control">
         <span class="next disabled">&rsaquo;</span>
-        {*<span class="last">&raquo;</span>*}
+        <span class="last disabled">&raquo;</span>
     </td>
     </tr>
     </table>
