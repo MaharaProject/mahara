@@ -1038,6 +1038,11 @@ abstract class ElasticsearchType
                         if ($type == 'group') {
                             $role = isset($record->role) ? $record->role : 'all';
                             $access[$type . 's'][$role][] = $record->$type;
+                            if ($role == 'all') {
+                                // add member and admin roles. 'all' does not seem to find them.
+                                $access[$type . 's']['member'][] = $record->$type;
+                                $access[$type . 's']['admin'][] = $record->$type;
+                            }
                         }
                         else
                             $access[$type . 's'][] = $record->$type;
