@@ -1,0 +1,11 @@
+PEAR Archive_Tar
+================
+
+Website: http://pear.php.net/package/Archive_Tar/
+Version: 1.3.11
+
+This class provides handling of tar files in PHP.
+
+Changes:
+  - None
+
