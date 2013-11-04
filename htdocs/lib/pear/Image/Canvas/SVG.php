@@ -12,9 +12,8 @@
  * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  * General Public License for more details. You should have received a copy of
- * the GNU Lesser General Public License along with this library; if not, write
- * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- * 02111-1307 USA
+ * the GNU Lesser General Public License along with this library; if not, see
+ * <http://www.gnu.org/licenses/>
  *
  * @category  Images
  * @package   Image_Canvas
@@ -22,7 +21,7 @@
  * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
  * @copyright 2003-2009 The PHP Group
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   SVN: $Id: SVG.php 292672 2009-12-26 19:33:25Z neufeind $
+ * @version   SVN: $Id$
  * @link      http://pear.php.net/package/Image_Canvas
  */
 
@@ -228,13 +227,44 @@ class Image_Canvas_SVG extends Image_Canvas
 
         // TODO Linestyles (i.e. fx. dotted) does not work
 
-        if (($lineStyle != 'transparent') && ($lineStyle !== false)) {
-            $result = 'stroke-width:' . $this->_thickness . ';';
-            $result .= 'stroke:' .$this->_color($lineStyle) . ';';
-            if ($opacity = $this->_opacity($lineStyle)) {
-                $result .= 'stroke-opacity:' . $opacity . ';';
+        if (!is_array($lineStyle)) {
+            if (($lineStyle != 'transparent') && ($lineStyle !== false)) {
+                $result = 'stroke-width:' . $this->_thickness . ';';
+                $result .= 'stroke:' .$this->_color($lineStyle) . ';';
+                if ($opacity = $this->_opacity($lineStyle)) {
+                    $result .= 'stroke-opacity:' . $opacity . ';';
+                }
             }
+            return $result;
         }
+
+        //the following if-blocks are when $lineStyle is an array
+        //dotted line
+        if (count($lineStyle) == 2) {
+            if (($lineStyle[0] != 'transparent') && ($lineStyle[0] !== false)) {
+                $result = 'stroke-width:' . $this->_thickness . ';';
+                $result .= 'stroke:' .$this->_color($lineStyle[0]) . ';';
+                if ($opacity = $this->_opacity($lineStyle[0])) {
+                    $result .= 'stroke-opacity:' . $opacity . ';';
+                }
+                $result .= 'stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:1,4;stroke-dashoffset:1;';
+            }
+            return $result;
+        }
+
+        //dashed line
+        if (count($lineStyle) == 6) {
+            if (($lineStyle[0] != 'transparent') && ($lineStyle[0] !== false)) {
+                $result = 'stroke-width:' . $this->_thickness . ';';
+                $result .= 'stroke:' .$this->_color($lineStyle[0]) . ';';
+                if ($opacity = $this->_opacity($lineStyle[0])) {
+                    $result .= 'stroke-opacity:' . $opacity . ';';
+                }
+                $result .= 'stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:4,4;stroke-dashoffset:1;';
+            }
+            return $result;
+        }
+
         return $result;
     }
 
@@ -740,7 +770,8 @@ class Image_Canvas_SVG extends Image_Canvas
 
         $attrs = (isset($params['attrs']) && is_array($params['attrs'])) ? $this->_getAttributes($params['attrs']) : null;
         
-        $textHeight = $this->textHeight($text);
+        $lines = explode("\n", $text);
+        $textHeight = $this->textHeight($lines[0]);
 
         if (!is_array($alignment)) {
             $alignment = array('vertical' => 'top', 'horizontal' => 'left');

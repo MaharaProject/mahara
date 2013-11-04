@@ -20,9 +20,8 @@
  * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  * General Public License for more details. You should have received a copy of
- * the GNU Lesser General Public License along with this library; if not, write
- * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- * 02111-1307 USA
+ * the GNU Lesser General Public License along with this library; if not, see
+ * <http://www.gnu.org/licenses/>
  *
  * @category  Images
  * @package   Image_Canvas
@@ -30,7 +29,7 @@
  * @author    Stefan Neufeind <pear.neufeind@speedpartner.de>
  * @copyright 2003-2009 The PHP Group
  * @license   http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version   SVN: $Id: GD.php 292673 2009-12-26 20:11:28Z neufeind $
+ * @version   SVN: $Id$
  * @link      http://pear.php.net/package/Image_Canvas
  */
 
@@ -927,6 +926,20 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
     }
 
     /**
+     * Get the line thickness
+     *
+     * @param mixed $lineStyle The line style to return the thickness of,
+     * false if the one explicitly set
+     *
+     * @return float A line thickness
+     * @access private
+     */
+    function _getLineThickness($lineStyle = false)
+    {
+        return $this->_thickness;
+    }
+ 
+    /**
      * Parameter array:
      * 
      * 'connect': bool [optional] Specifies whether the start point should be
@@ -1079,20 +1092,22 @@ class Image_Canvas_GD extends Image_Canvas_WithMap
                 }
             } else {
                 $prev_point = false;
-                if ($this->_antialias === 'driver') {
-                    reset($polygon);
-                    while (list(, $x) = each($polygon)) {
-                        list(, $y) = each($polygon);
-                        if ($prev_point) {
-                            $this->_antialiasedLine(
-                                $prev_point['X'],
-                                $prev_point['Y'],
-                                $x,
-                                $y,
-                                $lineColor
-                            );                            
+                if ($this->_getLineThickness() !== '0') {
+                    if ($this->_antialias === 'driver' && $this->_getLineThickness() == '') {
+                        reset($polygon);
+                        while (list(, $x) = each($polygon)) {
+                            list(, $y) = each($polygon);
+                            if ($prev_point) {
+                                $this->_antialiasedLine(
+                                    $prev_point['X'],
+                                    $prev_point['Y'],
+                                    $x,
+                                    $y,
+                                    $lineColor
+                                );                            
+                            }
+                            $prev_point = array('X' => $x, 'Y' => $y);;
                         }
-                        $prev_point = array('X' => $x, 'Y' => $y);;
                     }
                 } elseif (($line = $this->_getLineStyle($lineColor)) !== false) {
                     reset($polygon);

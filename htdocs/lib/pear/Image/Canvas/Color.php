@@ -14,9 +14,8 @@
  * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
  * General Public License for more details. You should have received a copy of
- * the GNU Lesser General Public License along with this library; if not, write
- * to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- * 02111-1307 USA
+ * the GNU Lesser General Public License along with this library; if not, see
+ * <http://www.gnu.org/licenses/>
  *
  * @category  Images
  * @package   Image_Canvas
@@ -27,15 +26,6 @@
  * @version   SVN: $Id$
  * @link      http://pear.php.net/package/Image_Canvas
  */
-
-/**
-* Class for color-handling
-*
-* @author   Stefan Neufeind <pear.neufeind@speedpartner.de>
-* @package  Image_Canvas
-* @category images
-* @license  The PHP License, version 2.02
-*/
 
 /**
 * Color class to be extended; from package PEAR::Image_Color
