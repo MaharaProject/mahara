@@ -44,7 +44,7 @@ require_once 'Image/Graph/Figure/Ellipse.php';
  * @author     Stefan Neufeind <pear.neufeind@speedpartner.de>
  * @copyright  2003-2009 The PHP Group
  * @license    http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
- * @version    Release: @package_version@
+ * @version    Release: 0.8.0
  * @link       http://pear.php.net/package/Image_Graph
  */
 class Image_Graph_Figure_Circle extends Image_Graph_Figure_Ellipse
