@@ -4587,6 +4587,9 @@ function objection_form() {
         'title' => get_string('complaint', 'view'),
         'rows'  => 5,
         'cols'  => 80,
+        'rules' => array(
+            'required' => true
+        )
     );
     $form['elements']['submit'] = array(
         'type'  => 'submitcancel',
