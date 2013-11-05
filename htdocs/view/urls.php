@@ -244,17 +244,11 @@ function newurl_submit(Pieform $form, $values) {
     $viewid = $view->get('id');
 
     if ($collection) {
-        $viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'));
+        $collection->new_token();
+        $viewid = reset($collection->get_viewids());
     }
     else {
-        $viewids = array($viewid);
-    }
-
-    $access = View::new_token($viewids[0]);
-    for ($i = 1; $i < count($viewids); $i++) {
-        $access->view  = $viewids[$i];
-        $access->ctime = db_format_timestamp(time());
-        insert_record('view_access', $access);
+        View::new_token($viewid);
     }
 
     redirect('/view/urls.php?id=' . $viewid);

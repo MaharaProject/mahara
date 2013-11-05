@@ -570,7 +570,18 @@ function get_views_for_user($username, $query=null) {
 
     $USER->reanimate($user->id, $authinstance->instanceid);
     require_once('view.php');
-    $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')));
+    $data = View::view_search($query, null, (object) array('owner' => $USER->get('id')), null, null, 0, true, null, null, true);
+    require_once('collection.php');
+    $data->collections = Collection::get_mycollections_data(0, 0, $USER->get('id'));
+    foreach ($data->collections->data as $c) {
+        $cobj = new Collection($c->id);
+        if ($c->numviews > 0) {
+            $c->url = $cobj->get_url();
+        }
+        else {
+            $c->url = '';
+        }
+    }
     $data->displayname = display_name($user);
     return $data;
 }
@@ -677,7 +688,15 @@ function get_watchlist_for_user($username, $maxitems) {
     return $data;
 }
 
-function submit_view_for_assessment($username, $viewid) {
+/**
+ * Submits a view or collection for assessment by a remote service
+ *
+ * @param string $username
+ * @param int $id The ID of the view or collection to be submitted
+ * @param boolean $iscollection Indicates whether it's a view or a collection
+ * @return array An array of data for the web service to consume
+ */
+function submit_view_for_assessment($username, $id, $iscollection = false) {
     global $REMOTEWWWROOT;
 
     list ($user, $authinstance) = find_remote_user($username, $REMOTEWWWROOT);
@@ -685,67 +704,123 @@ function submit_view_for_assessment($username, $viewid) {
         return false;
     }
 
-    $viewid = (int) $viewid;
-    if (!$viewid) {
+    $id = (int) $id;
+    if (!$id) {
         return false;
     }
 
     require_once('view.php');
-    $view = new View($viewid);
+    $remotehost = $authinstance->config['wwwroot'];
+    $userid = $user->get('id');
 
-    $view->set('submittedhost', $authinstance->config['wwwroot']);
-    $view->set('submittedtime', db_format_timestamp(time()));
+    db_begin();
+    if ($iscollection) {
+        require_once('collection.php');
+        $collection = new Collection($id);
+        $title = $collection->get('name');
+        $description = $collection->get('description');
 
-    // Create secret key
-    $access = View::new_token($view->get('id'), false);
+        // Check whether the collection is already submitted
+        if ($collection->is_submitted()) {
+            // If this is already submitted to something else, throw an exception
+            if ($collection->get('submittedgroup') || $collection->get('submittedhost') !== $REMOTEWWWROOT) {
+                throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
+            }
+
+            // It may have been submitted to a different assignment in the same remote
+            // site, but there's no way we can tell. So we'll just send the access token
+            // back.
+            $access = $collection->get_invisible_token();
+        }
+        else {
+            $collection->submit(null, $remotehost, $userid);
+            $access = $collection->new_token(false);
+        }
+
+        // If the collection is empty, $access will be false
+        if (!$access) {
+            throw new CollectionSubmissionException(get_string('cantsubmitemptycollection', 'view'));
+        }
+    }
+    else {
+        $view = new View($id);
+        $title = $view->get('title');
+        $description = $view->get('description');
+
+        if ($view->is_submitted()) {
+            // If this is already submitted to something else, throw an exception
+            if ($view->get('submittedgroup') || $view->get('submittedhost') !== $REMOTEWWWROOT) {
+                throw new ViewSubmissionException(get_string('viewalreadysubmitted', 'view'));
+            }
+
+            // It may have been submitted to a different assignment in the same remote
+            // site, but there's no way we can tell. So we'll just send the access token
+            // back.
+            $access = View::get_invisible_token($id);
+        }
+        else {
+            View::_db_submit(array($id), null, $remotehost, $userid);
+            $access = View::new_token($id, false);
+        }
+    }
 
     $data = array(
-        'id'          => $view->get('id'),
-        'title'       => $view->get('title'),
-        'description' => $view->get('description'),
-        'fullurl'     => get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') . '&mt=' . $access->token,
-        'url'         => '/view/view.php?id=' . $view->get('id') . '&mt=' . $access->token,
+        'id'          => $id,
+        'title'       => $title,
+        'description' => $description,
+        'fullurl'     => get_config('wwwroot') . 'view/view.php?mt=' . $access->token,
+        'url'         => '/view/view.php?mt=' . $access->token,
         'accesskey'   => $access->token,
     );
 
+    // Provide each artefact plugin the opportunity to handle the remote submission and
+    // provide return data for the webservice caller
     foreach (plugins_installed('artefact') as $plugin) {
         safe_require('artefact', $plugin->name);
         $classname = generate_class_name('artefact', $plugin->name);
         if (is_callable($classname . '::view_submit_external_data')) {
-            $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $view->get('id'));
+            $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $id, $iscollection);
         }
     }
-
-    $view->commit();
-
-    // Lock view contents
-    require_once(get_config('docroot') . 'artefact/lib.php');
-    ArtefactType::update_locked($user->get('id'));
+    db_commit();
 
     return $data;
 }
 
-function release_submitted_view($viewid, $assessmentdata, $teacherusername) {
+/**
+ * Releases a submission to a remote host.
+ * @param int $id A view or collection id
+ * @param mixed $assessmentdata Assessment data from the remote host, for this assignment
+ * @param string $teacherusername The username of the teacher who is releasing the assignment
+ * @param boolean $iscollection Whether the $id is a view or a collection
+ */
+function release_submitted_view($id, $assessmentdata, $teacherusername, $iscollection = false) {
     global $REMOTEWWWROOT, $USER;
-
-    require_once('view.php');
-    $view = new View($viewid);
     list ($teacher, $authinstance) = find_remote_user($teacherusername, $REMOTEWWWROOT);
 
+    require_once('view.php');
+
     db_begin();
+    if ($iscollection) {
+        require_once('collection.php');
+        $collection = new Collection($id);
+        $collection->release($teacher);
+    }
+    else {
+        $view = new View($id);
+        View::_db_release(array($id), $view->get('owner'));
+    }
+
+    // Provide each artefact plugin the opportunity to handle the remote submission release
     foreach (plugins_installed('artefact') as $plugin) {
         safe_require('artefact', $plugin->name);
         $classname = generate_class_name('artefact', $plugin->name);
         if (is_callable($classname . '::view_release_external_data')) {
-            call_static_method($classname, 'view_release_external_data', $view, $assessmentdata, $teacher ? $teacher->id : 0);
+            call_static_method($classname, 'view_release_external_data', $id, $assessmentdata, $teacher ? $teacher->id : 0, $iscollection);
         }
     }
 
     // Release the view for editing
-    $view->set('submittedhost', null);
-    $view->set('submittedtime', null);
-    $view->commit();
-    ArtefactType::update_locked($view->get('owner'));
     db_commit();
 }
 
