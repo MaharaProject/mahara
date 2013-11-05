@@ -2,4 +2,5 @@
     <div class="sidebar-content">
         <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
         <div id="loginform_container">{$sbdata.loginform|safe}</div>
+        {dynamic}{insert_messages placement='loginbox'}{/dynamic}
     </div>

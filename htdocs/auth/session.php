@@ -130,13 +130,14 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
+     * @param string $placement Place for messages to appear on page
      */
-    public function add_ok_msg($message, $escape=true) {
+    public function add_ok_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
         if ($escape) {
             $message = self::escape_message($message);
         }
-        $_SESSION['messages'][] = array('type' => 'ok', 'msg' => $message);
+        $_SESSION['messages'][] = array('type' => 'ok', 'msg' => $message, 'placement' => $placement);
     }
 
     /**
@@ -144,13 +145,14 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
+     * @param string $placement Place for messages to appear on page
      */
-    public function add_info_msg($message, $escape=true) {
+    public function add_info_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
         if ($escape) {
             $message = self::escape_message($message);
         }
-        $_SESSION['messages'][] = array('type' => 'info', 'msg' => $message);
+        $_SESSION['messages'][] = array('type' => 'info', 'msg' => $message, 'placement' => $placement);
     }
 
     /**
@@ -158,13 +160,14 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
+     * @param string $placement Place for messages to appear on page
      */
-    public function add_error_msg($message, $escape=true) {
+    public function add_error_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
         if ($escape) {
             $message = self::escape_message($message);
         }
-        $_SESSION['messages'][] = array('type' => 'error', 'msg' => $message);
+        $_SESSION['messages'][] = array('type' => 'error', 'msg' => $message, 'placement' => $placement);
     }
 
     /**
@@ -173,19 +176,24 @@ class Session {
      * This is designed to let smarty templates hook in any session messages.
      *
      * Calling this function will destroy the session messages that were
-     * rendered, so they do not inadvertently get displayed again.
+     * assigned to the $placement, so they do not inadvertently get
+     * displayed again.
+     * @param string  $placement Render only messages for this placement
      *
-     * @return string The HTML representing all of the session messages.
+     * @return string The HTML representing all of the session messages assigned
+     * to $placement.
      */
-    public function render_messages() {
+    public function render_messages($placement) {
         global $THEME;
-        $result = '<div id="messages">';
+        $result = '<div id="' . $placement . '">';
         if (isset($_SESSION['messages'])) {
-            foreach ($_SESSION['messages'] as $data) {
-                $result .= '<div class="' . $data['type'] . '"><div>';
-                $result .= $data['msg'] . '</div></div>';
+            foreach ($_SESSION['messages'] as $key => $data) {
+                if ($data['placement'] == $placement) {
+                    $result .= '<div class="' . $data['type'] . '"><div>';
+                    $result .= $data['msg'] . '</div></div>';
+                    unset($_SESSION['messages'][$key]);
+                }
             }
-            $_SESSION['messages'] = array();
         }
         $result .= '</div>';
         return $result;
@@ -252,9 +260,9 @@ class Session {
  *
  * @return string The HTML represening all of the session messages.
  */
-function insert_messages() {
+function insert_messages($placement='messages') {
     global $SESSION;
-    return $SESSION->render_messages();
+    return $SESSION->render_messages($placement);
 }
 
 

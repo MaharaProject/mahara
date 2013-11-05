@@ -1342,7 +1342,7 @@ class LiveUser extends User {
         // external application.
         if ($auth->authloginmsg != '') {
             global $SESSION;
-            $SESSION->add_info_msg(clean_html($auth->authloginmsg), false);
+            $SESSION->add_info_msg(clean_html($auth->authloginmsg), false, 'loginbox');
         }
 
         if (empty($user->logintries)) {
