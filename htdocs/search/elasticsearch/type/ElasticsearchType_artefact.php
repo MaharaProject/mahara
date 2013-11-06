@@ -188,6 +188,15 @@ class ElasticsearchType_artefact extends ElasticsearchType
         // Access: get all the views where the artefact is included
         $access = self::view_access_records($id);
         $accessObj = self::access_process($access);
+        if (!$access) {
+            // File access: get viewable group media not attached to a view
+            $groupaccess = self::group_artefact_access_records($id);
+            if ($groupaccess) {
+                foreach ($groupaccess as $access) {
+                    $accessObj['groups'][$access->role][] = $access->can_view;
+                }
+            }
+        }
         $record->access = $accessObj;
 
         // set 'mainfacetterm' & 'artefactgroup'
@@ -363,6 +372,18 @@ class ElasticsearchType_artefact extends ElasticsearchType
                 array($artefactid, $artefactid)
         );
 
+        return $records;
+    }
+
+    /**
+     * Get all access records of the group artefacts (called if not attached to view)
+     */
+    public static function group_artefact_access_records($artefactid) {
+        $records = get_records_sql_array('
+                SELECT role, can_view FROM {artefact_access_role} WHERE artefact = ?
+               ',
+               array($artefactid)
+        );
         return $records;
     }
 
