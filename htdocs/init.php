@@ -122,8 +122,10 @@ try {
     if (empty($CFG->dbhost)) {
         $CFG->dbhost = '';
     }
-    else if (!empty($CFG->dbport)) {
-        $CFG->dbhost .= ':'.$CFG->dbport;
+    // The ADODB connection function doesn't have a separate port argument, but the
+    // postgres7, mysql, and mysqli drivers all support a $this->dbport field.
+    if (!empty($CFG->dbport)) {
+        $db->port = $CFG->dbport;
     }
     if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
         $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
