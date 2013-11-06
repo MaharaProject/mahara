@@ -32,6 +32,21 @@ else {
 }
 
 if ($viewid && $fileid) {
+    $file = artefact_instance_from_id($fileid);
+    $parent = $file->get('parent');
+    $artefactok = false;
+    if (artefact_in_view($file->get('id'), $viewid)) {
+        $artefactok = true;
+    }
+    // Check to see if the artefact has a parent that is allowed to be in this view
+    // for example subdirectory of a folder artefact on a view
+    while ($parent !== null) {
+        $parentobj = artefact_instance_from_id($parent);
+        $parent = $parentobj->get('parent');
+        if (artefact_in_view($parentobj->get('id'), $viewid)) {
+            $artefactok = true;
+        }
+    }
 
     // The user may be trying to download a file that's not in the view, but which has
     // been attached to public feedback on the view
@@ -45,7 +60,7 @@ if ($viewid && $fileid) {
             throw new AccessDeniedException('');
         }
     }
-    else if (!artefact_in_view($fileid, $viewid)) {
+    else if ($artefactok == false) {
         throw new AccessDeniedException('');
     }
 
@@ -53,7 +68,6 @@ if ($viewid && $fileid) {
         throw new AccessDeniedException('');
     }
 
-    $file = artefact_instance_from_id($fileid);
     if (!($file instanceof ArtefactTypeFile)) {
         throw new NotFoundException();
     }

@@ -342,6 +342,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                              (-2 * isset($b->isparent) + ($b->artefacttype != 'folder')) . 'a' . $b->title);
     }
 
+    // Sort folders before files in descending order; then use nat sort order descending.
+    public static function my_files_cmp_desc($a, $b) {
+        return strnatcasecmp((+2 * isset($b->isparent) + ($b->artefacttype == 'folder')) . 'a' . $b->title,
+                             (+2 * isset($a->isparent) + ($a->artefacttype == 'folder')) . 'a' . $a->title);
+    }
 
     /**
      * Gets a list of files in one folder
@@ -1670,7 +1675,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);
-            usort($childrecords, array('ArtefactTypeFileBase', 'my_files_cmp'));
+            $sortorder = (isset($options['sortorder']) && $options['sortorder'] == 'desc') ? 'my_files_cmp_desc' : 'my_files_cmp';
+            usort($childrecords, array('ArtefactTypeFileBase', $sortorder));
             $children = array();
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);

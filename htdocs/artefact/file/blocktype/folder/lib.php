@@ -64,9 +64,16 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         $configdata = $instance->get('configdata');
         safe_require('artefact', 'file');
         $instance->set('artefactplugin', 'file');
-        return array(
+        $elements = array(
             'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
+            'sortorder' => array(
+                'type' => 'select',
+                'labelhtml' => get_string('sortorder'),
+                'defaultvalue' => (isset($configdata['sortorder']) && $configdata['sortorder'] == 'desc') ? 'desc' : 'asc',
+                'options' => array('asc' => get_string('ascending'), 'desc' => get_string('descending')),
+            ),
         );
+        return $elements;
     }
 
     public static function artefactchooser_element($default=null) {

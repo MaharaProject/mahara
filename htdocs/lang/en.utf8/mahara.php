@@ -45,6 +45,9 @@ $string['at'] = 'at';
 $string['From'] = 'From';
 $string['To'] = 'To';
 $string['All'] = 'All';
+$string['ascending'] = 'Ascending';
+$string['descending'] = 'Descending';
+$string['sortorder'] = 'Sort order of files';
 
 $string['enable'] = 'Enable';
 $string['disable'] = 'Disable';
