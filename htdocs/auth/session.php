@@ -183,7 +183,7 @@ class Session {
      * @return string The HTML representing all of the session messages assigned
      * to $placement.
      */
-    public function render_messages($placement) {
+    public function render_messages($placement = 'messages') {
         global $THEME;
         $result = '<div id="' . $placement . '">';
         if (isset($_SESSION['messages'])) {
