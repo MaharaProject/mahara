@@ -130,7 +130,8 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
-     * @param string $placement Place for messages to appear on page
+     * @param string $placement Place for messages to appear on page (See render_messages()
+     *     for information about placement options)
      */
     public function add_ok_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
@@ -145,7 +146,8 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
-     * @param string $placement Place for messages to appear on page
+     * @param string $placement Place for messages to appear on page (See render_messages()
+     *     for information about placement options)
      */
     public function add_info_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
@@ -160,7 +162,8 @@ class Session {
      *
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
-     * @param string $placement Place for messages to appear on page
+     * @param string $placement Place for messages to appear on page (See render_messages()
+     *     for information about placement options)
      */
     public function add_error_msg($message, $escape=true, $placement='messages') {
         $this->ensure_session();
@@ -178,7 +181,20 @@ class Session {
      * Calling this function will destroy the session messages that were
      * assigned to the $placement, so they do not inadvertently get
      * displayed again.
-     * @param string  $placement Render only messages for this placement
+     *
+     * To define where the messages for a particular $placement value should be displayed,
+     * add this code to a page template:
+     *
+     *   {dynamic}{insert_messages placement='your_placement_name_here'}{/dynamic}
+     *
+     * The default 'messages' placement is shown on every page, and is suitable for most purposes.
+     * Alternative placements should only be needed in special situations, such as showing a login-related
+     * error in the login box. Note that messages will hang around in the $SESSION until a page template
+     * with their "placement" in it is loaded. So, they should only be used in situations where you're
+     * certain their placement zone will be present on the next page load, or else the user may be
+     * confused by their appearance several page loads later.
+     *
+     * @param string $placement Render only messages for this placement
      *
      * @return string The HTML representing all of the session messages assigned
      * to $placement.
