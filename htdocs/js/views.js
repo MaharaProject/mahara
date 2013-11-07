@@ -122,8 +122,15 @@
         }
         else if (config['handheld_device'] || ViewManager.isIE6 || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
             // Unhide the radio button if the browser is iPhone, IPad or IPod
-            $('#editcontent-sidebar').css('width', ViewManager.contentEditorWidth+'px');
+            $('#editcontent-sidebar').addClass('withradio');
+            $('#page').addClass('withradio');
             $('#content-editor input.blocktype-radio').each(function() {
+                $(this).show();
+            });
+            $('#accordion a.nonjs').each(function() {
+                $(this).hide();
+            });
+            $('#accordion div.withjs').each(function() {
                 $(this).show();
             });
             $('#accordion *').css('zoom', '1');
@@ -153,10 +160,21 @@
                         makeNewBlocksDraggable();
                         showColumnBackgroundsOnSort();
                         // Unhide the radio button if the browser is iPhone, IPad or IPod
-                        if (ViewManager.isIE6) {
+                        if (config['handheld_device'] || ViewManager.isIE6 || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+                            // Unhide the radio button if the browser is iPhone, IPad or IPod
+                            $('#editcontent-sidebar').addClass('withradio');
+                            $('#page').addClass('withradio');
                             $('#content-editor input.blocktype-radio').each(function() {
                                 $(this).show();
                             });
+                            $('#accordion a.nonjs').each(function() {
+                                $(this).hide();
+                            });
+                            $('#accordion div.withjs').each(function() {
+                                $(this).show();
+                            });
+                            $('#accordion *').css('zoom', '1');
+                            $('#main-column-container .tabswrap ul li a').css('float', 'left'); // fix li elements not floating left by floating anchors
                         }
                         checkEditAreaHeight();
                     });
