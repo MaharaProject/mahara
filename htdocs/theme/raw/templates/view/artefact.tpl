@@ -25,7 +25,7 @@
         {$feedback->pagination|safe}
         {/if}
         <div id="viewmenu">
-{include file="view/viewmenu.tpl"}
+{include file="view/viewmenuartefact.tpl"}
         </div>
         <div>{$addfeedbackform|safe}</div>
         <div>{$objectionform|safe}</div>

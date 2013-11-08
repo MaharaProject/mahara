@@ -1020,3 +1020,9 @@ td.incomplete {
 .bt-wall form {
     margin: 0 0 10px 0;
 }
+.feedback_form_overlay {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    width: 600px;
+}

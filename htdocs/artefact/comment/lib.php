@@ -367,6 +367,19 @@ class ArtefactTypeComment extends ArtefactType {
             $result->data = array_values($comments);
         }
 
+        // check to see if the feedback is to be displayed in a block instance
+        // or the base of the page
+        $result->position = 'base';
+        $blocks = get_records_array('block_instance', 'view', $viewid);
+        if (!empty($blocks)) {
+            foreach ($blocks as $block) {
+                if ($block->blocktype == 'comment') {
+                    $result->position = 'blockinstance';
+                    break;
+                }
+            }
+        }
+
         self::build_html($result);
         return $result;
     }
@@ -456,16 +469,16 @@ class ArtefactTypeComment extends ArtefactType {
             if (isset($data->showcomment) && $data->showcomment == $item->id) {
                 $item->highlight = 1;
             }
-
+            $is_export_preview = param_integer('export',0);
             if ($item->deletedby) {
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
-            else if ($candelete || $item->isauthor) {
+            else if (($candelete || $item->isauthor) && !$is_export_preview) {
                 $item->deleteform = pieform(self::delete_comment_form($item->id));
             }
 
             // Comment authors can edit recent comments if they're private or if no one has replied yet.
-            if (!$item->deletedby && $item->isauthor
+            if (!$item->deletedby && $item->isauthor && !$is_export_preview
                 && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
                 $item->canedit = 1;
             }
@@ -477,7 +490,9 @@ class ArtefactTypeComment extends ArtefactType {
                 if ((empty($item->requestpublic) && $data->isowner)
                     || $item->isauthor && $item->requestpublic == 'owner'
                     || $data->isowner && $item->requestpublic == 'author') {
-                    $item->makepublicform = pieform(self::make_public_form($item->id));
+                    if (!$is_export_preview) {
+                        $item->makepublicform = pieform(self::make_public_form($item->id));
+                    }
                 }
                 else if ($item->isauthor && $item->requestpublic == 'author'
                          || $data->isowner && $item->requestpublic == 'owner') {
@@ -485,7 +500,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
             else if (!$item->deletedby && $item->private && !$item->author
-                && $data->owner && $data->isowner && $item->requestpublic == 'author') {
+                && $data->owner && $data->isowner && $item->requestpublic == 'author' && !$is_export_preview) {
                 $item->makepublicform = pieform(self::make_public_form($item->id));
             }
             else if (!$item->deletedby && $item->private && !$data->owner
@@ -495,7 +510,7 @@ class ArtefactTypeComment extends ArtefactType {
                     $item->makepublicrequested = 1;
                 }
                 else {
-                    if (($data->artefact && $data->canedit) || ($data->view && $data->canedit)) {
+                    if (($data->artefact && $data->canedit) || ($data->view && $data->canedit) && !$is_export_preview) {
                         $item->makepublicform = pieform(self::make_public_form($item->id));
                     }
                     else {
@@ -550,6 +565,7 @@ class ArtefactTypeComment extends ArtefactType {
         $smarty->assign_by_ref('data', $data->data);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('viewid', $data->view);
+        $smarty->assign('position', $data->position);
         $smarty->assign('baseurl', $data->baseurl);
         $data->tablerows = $smarty->fetch('artefact:comment:commentlist.tpl');
         $pagination = build_pagination(array(
