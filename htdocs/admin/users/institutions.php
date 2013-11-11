@@ -640,8 +640,8 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->registerconfirm              = ($values['registerconfirm']) ? 1 : 0;
     }
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
-    $newinstitution->dropdownmenu                 = ($values['dropdownmenu']) ? 1 : 0;
-    $newinstitution->skins                 = ($values['skins']) ? 1 : 0;
+    $newinstitution->dropdownmenu                 = (!empty($values['dropdownmenu'])) ? 1 : 0;
+    $newinstitution->skins                 = (!empty($values['skins'])) ? 1 : 0;
 
     if ($newinstitution->theme == 'custom') {
         if (!empty($oldinstitution->style)) {
