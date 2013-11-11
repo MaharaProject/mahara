@@ -285,7 +285,7 @@ $cfg->unzipdirarg = '-d';
 $cfg->unziplistarg = '-l';
 /**
  * @global string $cfg->unziptempdir some shared hosts have restrictions on where unzip can be used
- * dataroot is often not allowed; but /tmp is
+ * dataroot is often not allowed; but /tmp is. This path should end with a "/"
  * Note that if there is more than one mahara on this host using this setting
  * you must change this to something unique, eg /tmp/mahara1/ and /tmp/mahara2/
  */
