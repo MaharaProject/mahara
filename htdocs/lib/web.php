@@ -2090,7 +2090,7 @@ function admin_nav() {
     );
 
     // Add the menu items for skins, if that feature is enabled
-    if (get_config('skins')) {
+    if (can_use_skins()) {
         $menu['configsite/siteskins'] = array(
            'path'   => 'configsite/siteskins',
            'url'    => 'admin/site/skins.php',
@@ -3944,14 +3944,24 @@ function escape_css_string($string, $singlequote=true) {
  * @return bool
  */
 function can_use_skins($userid = null) {
+    global $USER;
+
     if (!get_config('skins')) {
         return false;
+    }
+
+    // Site admin can create site skins
+    if ($USER->get('admin')) {
+        return true;
     }
 
     // A user can belong to multiple institutions. If any of their institutions allow it, then
     // let them use skins!
     $results = get_config_user_institution('skins', $userid);
-    foreach ($results as $r) {
+    foreach ($results as $inst => $r) {
+        if (($inst == 'mahara') && get_config('skins')) {
+            return true;
+        }
         if ($r) {
             return true;
         }
