@@ -15,7 +15,8 @@ defined('INTERNAL') || die();
 // Set session settings
 //
 session_name(get_config('cookieprefix') . 'mahara');
-ini_set('session.save_path', '3;' . get_config('dataroot') . 'sessions');
+$sessionpath = get_config('sessionpath');
+ini_set('session.save_path', '3;' . $sessionpath);
 ini_set('session.gc_divisor', 1000);
 ini_set('session.gc_maxlifetime', get_config('session_timeout'));
 ini_set('session.use_only_cookies', true);
@@ -31,7 +32,6 @@ if (is_https()) {
 }
 
 // Attempt to create session directories
-$sessionpath = get_config('dataroot') . 'sessions';
 if (!is_dir("$sessionpath/0")) {
     // Create three levels of directories, named 0-9, a-f
     $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');

@@ -76,6 +76,11 @@ foreach (array('docroot', 'dataroot') as $path) {
     $CFG->{$path} = (substr($CFG->{$path}, -1) != '/') ? $CFG->{$path} . '/' : $CFG->{$path};
 }
 
+// Set default configs that are dependent on the docroot and dataroot
+if (empty($CFG->sessionpath)) {
+    $CFG->sessionpath = $CFG->dataroot . 'sessions';
+}
+
 // xmldb stuff
 $CFG->xmldbdisablenextprevchecking = true;
 $CFG->xmldbdisablecommentchecking = true;

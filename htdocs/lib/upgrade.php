@@ -532,7 +532,7 @@ function core_postinst() {
     }
 
     // Attempt to create session directories
-    $sessionpath = get_config('dataroot') . 'sessions';
+    $sessionpath = get_config('sessionpath');
     if (check_dir_exists($sessionpath)) {
         // Create three levels of directories, named 0-9, a-f
         $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');

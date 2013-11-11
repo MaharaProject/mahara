@@ -290,6 +290,15 @@ $cfg->unziplistarg = '-l';
  * you must change this to something unique, eg /tmp/mahara1/ and /tmp/mahara2/
  */
 // $cfg->unziptempdir = '/tmp/mahara/';
+/**
+ * @global string $cfg->sessionpath The directory to store session files in. Defaults to $cfg->dataroot.'sessions'.
+ * This path should NOT end with a "/"
+ *
+ * If your dataroot is stored on a slow volume (such as NFS) you may want to change this to a local directory.
+ * Although if you're using a web server cluster, be aware that session files need to be stored in a location shared
+ * by all servers, or you need to use persistence to send each user to only one server per session.
+ */
+// $cfg->sessionpath = '/tmp/mahara-sessions';
 
 /**
  * @global int $cfg->accesstimeupdatefrequency How often Mahara should update the last

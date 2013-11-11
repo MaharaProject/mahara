@@ -145,13 +145,17 @@ function ensure_sanity() {
     if (
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
-        !check_dir_exists(get_config('dataroot') . 'sessions') ||
         !check_dir_exists(get_config('dataroot') . 'temp') ||
         !check_dir_exists(get_config('dataroot') . 'langpacks') ||
         !check_dir_exists(get_config('dataroot') . 'htmlpurifier') ||
         !check_dir_exists(get_config('dataroot') . 'log') ||
         !check_dir_exists(get_config('dataroot') . 'images')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
+    }
+    // Since sessionpath can now exist outside of the the dataroot, check it separately.
+    // NOTE: If we implement separate session handlers, we may want to remove or alter this check
+    if (!check_dir_exists(get_config('sessionpath')) || !is_writable(get_config('sessionpath'))) {
+        throw new ConfigSanityException(get_string('sessionpathnotwritable', 'error', get_config('sessionpath')));
     }
 
     raise_memory_limit('128M');
