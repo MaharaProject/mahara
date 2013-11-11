@@ -276,7 +276,7 @@ if (get_config('viewmicroheaders')) {
 
     $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
     // Support for normal, light, or dark small Mahara logo - to use with skins
-    if ($viewskin) {
+    if ($skin) {
         if ($skindata['header_logo_image'] == 'light') {
             $smarty->assign('maharalogofilename', 'images/site-logo-small-light.png');
         }
@@ -317,7 +317,7 @@ $title = hsc(TITLE);
 
 if (!get_config('viewmicroheaders')) {
     $smarty->assign('maintitle', $titletext);
-    if ($viewskin) {
+    if ($skin) {
         if ($skindata['header_logo_image'] == 'light' || $skindata['header_logo_image'] == 'dark') {
             // override the default $smarty->assign('sitelogo') that happens
             // in the initial call to smarty()
