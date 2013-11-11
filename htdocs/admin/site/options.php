@@ -107,6 +107,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('homepageinfo'),
                     'disabled'     => in_array('homepageinfo', $OVERRIDDEN),
                 ),
+                'skins' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('skins', 'admin'),
+                    'description'  => get_string('skinssitedescription', 'admin'),
+                    'defaultvalue' => get_config('skins'),
+                    'disabled'     => in_array('skins', $OVERRIDDEN),
+                ),
                 'registration_sendweeklyupdates' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('sendweeklyupdates', 'admin'),
@@ -681,7 +688,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array(
-        'sitename','lang','theme', 'dropdownmenu',
+        'sitename','lang','theme', 'dropdownmenu', 'skins',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',

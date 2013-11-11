@@ -361,6 +361,7 @@ $string['siteoptionsset'] = 'Site options have been updated.';
 $string['sitethemedescription'] = 'The default theme for the site. If your theme is not listed, check the error log.';
 $string['skins'] = 'Page skins';
 $string['skinsinstitutiondescription'] = 'Allow this institution\'s users to set "skins" on their pages.';
+$string['skinssitedescription'] = 'Allow site\'s users to set "skins" on their pages.';
 $string['smallviewheaders'] = 'Small page headers';
 $string['smallviewheadersdescription'] = 'If checked, a small header and site navigation block will be displayed when viewing or editing portfolio pages created by users.';
 $string['spamhaus'] = 'Enable Spamhaus URL blacklist';
