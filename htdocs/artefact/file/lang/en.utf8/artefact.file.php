@@ -67,6 +67,7 @@ $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['Details'] = 'Details';
+$string['View'] = 'View';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';

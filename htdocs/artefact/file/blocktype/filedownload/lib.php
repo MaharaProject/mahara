@@ -62,7 +62,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 else if ($artefact instanceof ArtefactTypeFile) {
                     $file['downloadurl'] .= 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid;
                 }
-
+                $file['is_image'] = ($artefact instanceof ArtefactTypeImage) ? true : false;
                 $files[] = $file;
             }
         }
