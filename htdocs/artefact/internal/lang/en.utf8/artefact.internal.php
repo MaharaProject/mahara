@@ -23,6 +23,7 @@ $string['searchablefieldsdescription'] = 'Profile fields that can be searched on
 $string['aboutdescription'] = 'Enter your real first and last name here. If you want to show a different name to people in the system, put that name in as your display name.';
 $string['infoisprivate'] = 'This information is private until you include it in a page that is shared with others.';
 $string['viewmyprofile'] = 'View my profile';
+$string['aboutprofilelinkdescription'] = '<p>Please go to your <a href="%s">Profile</a> page to arrange the information you wish to display to other users.</p>';
 
 // profile categories
 $string['aboutme'] = 'About me';
