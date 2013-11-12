@@ -335,6 +335,7 @@ if ($institution || $add) {
         );
     }
 
+    // Some fields to hide from the default institution config screen
     if (empty($data->name) || $data->name != 'mahara') {
         $elements['defaultmembershipperiod'] = array(
             'type'         => 'expiry',
@@ -399,14 +400,18 @@ if ($institution || $add) {
             'defaultvalue' => $data->dropdownmenu,
             'help'         => true,
         );
-        if (get_config('skins')) {
-            $elements['skins'] = array(
-                'type' => 'checkbox',
-                'title' => get_string('skins', 'admin'),
-                'description' => get_string('skinsinstitutiondescription', 'admin'),
-                'defaultvalue' => $data->skins,
-            );
-        }
+    }
+    // The skins checkbox should be shown for the default institution
+    if (get_config('skins')) {
+        $elements['skins'] = array(
+            'type' => 'checkbox',
+            'title' => get_string('skins', 'admin'),
+            'description' => get_string('skinsinstitutiondescription', 'admin'),
+            'defaultvalue' => $data->skins,
+        );
+    }
+    // Some more fields that are hidden from the default institution
+    if (empty($data->name) || $data->name != 'mahara') {
         $elements['showonlineusers'] = array(
             'type'                  => 'select',
             'disabled'              => get_config('showonlineuserssideblock') ? '' : 'disabled',
