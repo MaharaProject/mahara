@@ -21,6 +21,10 @@ safe_require('artefact', 'plans');
 
 define('TITLE', get_string('Plans','artefact.plans'));
 
+if (!PluginArtefactPlans::is_active()) {
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('plans','artefact.plans')));
+}
+
 // offset and limit for pagination
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);

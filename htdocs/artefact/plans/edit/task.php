@@ -18,6 +18,10 @@ require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 safe_require('artefact','plans');
 
+if (!PluginArtefactPlans::is_active()) {
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('plans','artefact.plans')));
+}
+
 define('TITLE', get_string('edittask','artefact.plans'));
 
 $id = param_integer('id');

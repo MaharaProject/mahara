@@ -19,7 +19,12 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
+safe_require('artefact', 'resume');
 safe_require('artefact', 'file');
+
+if (!PluginArtefactResume::is_active()) {
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('resume','artefact.resume')));
+}
 
 define('TITLE', get_string('resume', 'artefact.resume'));
 

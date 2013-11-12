@@ -41,6 +41,10 @@ class PluginArtefactResume extends Plugin {
         return 'resume';
     }
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'resume');
+    }
+
     public static function menu_items() {
         return array(
             'content/resume' => array(

@@ -55,6 +55,7 @@ $string['show'] = 'Show';
 $string['hide'] = 'Hide';
 $string['pluginenabled'] = 'The plugin is now visible.';
 $string['plugindisabled'] = 'The plugin has been hidden.';
+$string['plugindisableduser'] = 'The %s plugin has been disabled. Please check with your administrator to have this feature enabled.';
 $string['pluginnotenabled'] = 'Plugin is hidden. You must make the %s plugin visible first.';
 $string['pluginexplainaddremove'] = 'Plugins in Mahara are always installed and can be accessed if users know the URLs and would otherwise have access. Rather than enabling and disabling the functionality, plugins are hidden or made visible by clicking on the \'Hide\' or \'Show\' links beside the plugins below.';
 $string['pluginexplainartefactblocktypes'] = 'When hiding an \'artefact\' type plugin, Mahara also stops the display of the blocks related to it.';

@@ -31,6 +31,10 @@ class PluginArtefactBlog extends PluginArtefact {
         return 'blog';
     }
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'blog');
+    }
+
     public static function menu_items() {
         global $USER;
         $tab = array(
