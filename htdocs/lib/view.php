@@ -387,6 +387,10 @@ class View {
             $view->set('dirty', true);
         }
 
+        $view->urlid = generate_urlid($view->title, get_config('cleanurlviewdefault'), 3, 100);
+        $viewdata['owner'] = $userid;
+        $view->urlid = self::new_urlid($view->urlid, (object)$viewdata);
+
         try {
             $copystatus = $view->copy_contents($template);
         }
