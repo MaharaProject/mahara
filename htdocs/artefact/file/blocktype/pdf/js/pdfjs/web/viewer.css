@@ -416,7 +416,7 @@ html[dir='rtl'] #outerContainer.sidebarOpen > #sidebarContainer {
   right: 0;
   bottom: 0;
   left: 0;
-  min-width: 320px;
+  min-width: 310px;
   -webkit-transition-duration: 200ms;
   -webkit-transition-timing-function: ease;
   transition-duration: 200ms;
