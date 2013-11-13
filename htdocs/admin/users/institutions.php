@@ -828,7 +828,7 @@ function institution_submit(Pieform $form, $values) {
     db_commit();
 
     if ($add) {
-        if ($newinstitution->registerallowed) {
+        if (!$newinstitution->registerallowed) {
             // If registration is not allowed, then an authinstance will not 
             // have been created, and thus cause the institution page to add 
             // its own error message on the next page load
