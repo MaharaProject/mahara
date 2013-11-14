@@ -18,14 +18,14 @@
       {if $user->pending}
         <li class="approvefriend">{$user->accept|safe}</li>
         <li class="denyrequest">
-            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}" class="btn-deny">
+            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-deny">
                 {str tag='denyrequest' section='group'}
             </a>
         </li>
       {/if}
       {if $user->friend}
         <li class="removefriend">
-            <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}" class="btn-del">
+            <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                 {str tag='removefromfriendslist' section='group'}
             </a>
         </li>
@@ -36,7 +36,7 @@
       {elseif !$user->pending} {* Not an existing, pending, or requested friend *}
         {if $user->friendscontrol == 'auth'}
         <li class="friend">
-            <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}" class="btn-request">
+            <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
                 {str tag='sendfriendrequest' section='group'}
             </a>
         </li>
@@ -52,7 +52,7 @@
       {/if}
       {if $user->messages}
         <li class="messages">
-            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}" class="btn-message">
+            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-message">
                 {str tag='sendmessage' section='group'}
             </a>
         </li>

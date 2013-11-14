@@ -27,13 +27,14 @@ $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introducti
 define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
 
 $returnto = param_alpha('returnto', 'myfriends');
-
+$offset = param_integer('offset', 0);
 switch ($returnto) {
 case 'find': $goto = 'user/find.php'; break;
 case 'view': $goto = profile_url($user, false); break;
 default:
     $goto = 'user/myfriends.php';
 }
+$goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;
 $goto = get_config('wwwroot') . $goto;
 
 if (is_friend($id, $USER->get('id'))) {

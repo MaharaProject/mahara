@@ -46,6 +46,7 @@ else if (!can_send_message($USER->to_stdclass(), $id)) {
 define('TITLE', get_string('sendmessageto', 'group', display_name($user)));
 
 $returnto = param_alpha('returnto', 'myfriends');
+$offset = param_integer('offset', 0);
 switch ($returnto) {
     case 'find':
         $goto = 'user/find.php';
@@ -64,6 +65,7 @@ switch ($returnto) {
     default:
       $goto = 'user/myfriends.php';
 }
+$goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;
 
 $form = pieform(array(
     'name' => 'sendmessage',
