@@ -19,6 +19,10 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
 safe_require('artefact', 'resume');
 
+if (!PluginArtefactResume::is_active()) {
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('resume','artefact.resume')));
+}
+
 $goals  = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('goals');
 $skills = ArtefactTypeResumeGoalAndSkill::get_goals_and_skills('skills');
 

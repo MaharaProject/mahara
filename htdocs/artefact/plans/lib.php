@@ -28,6 +28,10 @@ class PluginArtefactPlans extends PluginArtefact {
         return 'plans';
     }
 
+    public static function is_active() {
+        return get_field('artefact_installed', 'active', 'name', 'plans');
+    }
+
     public static function menu_items() {
         return array(
             'content/plans' => array(

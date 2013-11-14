@@ -19,7 +19,9 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');
 require_once(get_config('libroot') . 'pieforms/pieform.php');
-
+if (!PluginArtefactBlog::is_active()) {
+    throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('blog','artefact.blog')));
+}
 if ($changepoststatus = param_integer('changepoststatus', null)) {
     ArtefactTypeBlogpost::changepoststatus_form($changepoststatus);
 }
