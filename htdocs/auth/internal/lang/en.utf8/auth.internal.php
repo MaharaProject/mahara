@@ -22,6 +22,8 @@ $string['passwordformdescription'] = 'Your password must be at least six charact
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
 $string['passwordinvalidform'] = 'Your password must be at least six characters long. Passwords are case sensitive and must be different from your username.<br/>
 For good security, consider using a passphrase. A passphrase is a sentence rather than a single word. Consider using a favourite quote or listing two (or more!) of your favourite things separated by spaces.';
+$string['recaptcharegistertitle'] = 'reCAPTCHA challenge';
+$string['recaptcharegisterdesc'] = 'Please enter the words you see in the box, in order and separated by a space. Doing so helps prevent automated programs from abusing this service.';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hi %s,
 

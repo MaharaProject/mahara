@@ -417,6 +417,28 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('disableexternalresources', $OVERRIDDEN),
                 ),
+                'recaptchaonregisterform' => array(
+                    'type' => 'checkbox',
+                    'title' => get_string('recaptchaonregisterform', 'admin'),
+                    'description' => get_string('recaptchaonregisterformdesc', 'admin'),
+                    'defaultvalue' => get_config('recaptchaonregisterform', 'admin'),
+                    'help' => true,
+                    'disabled' => in_array('recaptchaonregisterform', $OVERRIDDEN)
+                ),
+                'recaptchapublickey' => array(
+                    'type' => 'text',
+                    'title' => get_string('recaptchapublickey', 'admin'),
+                    'description' => get_string('recaptchapublickeydesc', 'admin'),
+                    'defaultvalue' => get_config('recaptchapublickey'),
+                    'disabled' => in_array('recaptchapublickey', $OVERRIDDEN)
+                ),
+                'recaptchaprivatekey' => array(
+                    'type' => 'text',
+                    'title' => get_string('recaptchaprivatekey', 'admin'),
+                    'description' => get_string('recaptchaprivatekeydesc', 'admin'),
+                    'defaultvalue' => get_config('recaptchaprivatekey'),
+                    'disabled' => in_array('recaptchaprivatekey', $OVERRIDDEN)
+                ),
             ),
         ),
         # TODO: this should become "Network Settings" at some point
@@ -701,7 +723,8 @@ function siteoptions_submit(Pieform $form, $values) {
         'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
-        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'loggedinprofileviewaccess', 'disableexternalresources',
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
+        'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
@@ -808,6 +831,21 @@ function siteoptions_submit(Pieform $form, $values) {
                 'goto'    => '/admin/site/options.php',
             ));
         }
+    }
+
+    if (get_config('recaptchaonregisterform')
+            && !(
+                    get_config('recaptchapublickey')
+                    && get_config('recaptchaprivatekey')
+            )
+    ) {
+        $form->reply(
+            PIEFORM_ERR,
+            array(
+                'message' => get_string('recaptchakeysmissing', 'admin'),
+                'goto' => '/admin/site/options.php',
+            )
+        );
     }
 
     $message = get_string('siteoptionsset', 'admin');

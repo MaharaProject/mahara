@@ -224,26 +224,35 @@ abstract class Auth {
     }
 
     /**
-     * Returns whether the authentication instance can automatically create a 
+     * Returns whether the authentication instance can automatically create a
      * user record.
      *
-     * Auto creating users means that the authentication plugin can say that 
+     * Auto creating users means that the authentication plugin can say that
      * users who don't exist yet in Mahara's usr table are allowed, and Mahara
      * should create a user account for them. Example: the first time a user logs
      * in, when authenticating against an ldap store or similar).
      *
-     * However, if a plugin says a user can be authenticated, then it must 
-     * implement the get_user_info() method which will be called to find out 
-     * information about the user so a record in the usr table _can_ be created 
+     * However, if a plugin says a user can be authenticated, then it must
+     * implement the get_user_info() method which will be called to find out
+     * information about the user so a record in the usr table _can_ be created
      * for the new user.
      *
-     * Authentication methods must implement this method. Some may choose to 
-     * implement it by returning an instance config value that the admin user 
+     * Authentication methods must implement this method. Some may choose to
+     * implement it by returning an instance config value that the admin user
      * can set.
      *
      * @return bool
      */
     public abstract function can_auto_create_users();
+
+    /**
+     * If this plugin allows new user's to self-register, this function will be
+     * called to check whether it is okay to display a captcha method on the new
+     * user self-registration form.
+     */
+    public static function can_use_registration_captcha() {
+        return true;
+    }
 
     /**
      * Given a username, returns a hash of information about a user from the
@@ -2064,6 +2073,12 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
                 'required' => true
             ),
             'separator' => ' &nbsp; '
+        );
+    }
+
+    if (call_static_method('Auth'.ucfirst($authname), 'can_use_registration_captcha')) {
+        $elements['captcha'] = array(
+                'type' => 'captcha',
         );
     }
 

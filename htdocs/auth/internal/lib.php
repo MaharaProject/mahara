@@ -66,6 +66,10 @@ class AuthInternal extends Auth {
         return false;
     }
 
+    public static function can_use_registration_captcha() {
+        return true;
+    }
+
     /**
      * For internal authentication, passwords can contain a range of letters,
      * numbers and symbols. There is a minimum limit of six characters allowed
