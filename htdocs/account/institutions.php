@@ -196,6 +196,7 @@ if (!empty($institutions) &&
                 'collapseifoneoption' => false,
                 'options' => $options,
                 'defaultvalue' => key($options),
+                'rules'        => array( 'required' => true ),
              ),
             'studentid' => array(
                 'type'         => 'text',
