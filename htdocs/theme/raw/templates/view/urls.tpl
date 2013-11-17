@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {if !$allownew}
-  <div class="message info">{str tag=publicaccessnotallowed section=view}</div>
+    <div class="message info">{if $onprobation}{str tag=publicaccessnotallowedforprobation section=view}{else}{str tag=publicaccessnotallowed section=view}{/if}</div>
 {/if}
 
 {if $editurls}

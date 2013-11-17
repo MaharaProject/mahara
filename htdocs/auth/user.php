@@ -81,6 +81,7 @@ class User {
             'showhomeinfo'     => 1,
             'unread'           => 0,
             'urlid'            => null,
+            'probation'        => 0,
         );
         $this->attributes = array();
 

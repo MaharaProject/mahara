@@ -93,6 +93,14 @@ $form = pieform(array(
     'elements'        => $elements,
 ));
 
+function edit_comment_validate(Pieform $form, $values) {
+    require_once(get_config('libroot.php') . 'antispam.php');
+    $result = probation_validate_content($values['message']);
+    if ($result !== true) {
+        $form->set_error('message', get_string('newuserscantpostlinksorimages'));
+    }
+}
+
 function edit_comment_submit(Pieform $form, $values) {
     global $viewid, $comment, $SESSION, $goto, $USER;
 

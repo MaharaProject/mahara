@@ -584,3 +584,17 @@ $cfg->publicsearchallowed = false;
  * belong to an institution that allows self-registration.
  */
 //$cfg->alwaysallowselfdelete = true;
+
+/**
+ * @global boolean $cfg->probationenabled Determines whether or not to use the new-user probation system.
+ * If enabled, this will prevent newly self-registered users from taking certain actions that would be
+ * useful for creating spam content. Users will leave probation once non-probationary users take actions
+ * that indicate they trust the probationary user.
+ */
+$cfg->probationenabled = false;
+
+/**
+ * @global integer $cfg->probationstartingpoints If new user probation is enabled, this setting determines how
+ * many probation points new users will start with.
+ */
+$cfg->probationstartingpoints = 2;

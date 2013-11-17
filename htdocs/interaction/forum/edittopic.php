@@ -175,11 +175,19 @@ function addtopic_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
     }
+    $result = probation_validate_content($values['body']);
+    if ($result !== true) {
+        $form->set_error('body', get_string('newuserscantpostlinksorimages'));
+    }
 }
 
 function edittopic_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
+    }
+    $result = probation_validate_content($values['body']);
+    if ($result !== true) {
+        $form->set_error('body', get_string('newuserscantpostlinksorimages'));
     }
 }
 

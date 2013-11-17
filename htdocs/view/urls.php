@@ -19,6 +19,7 @@ require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
+require_once(get_config('libroot') . 'antispam.php');
 
 $view = new View(param_integer('id'));
 $collection = $view->get_collection();
@@ -235,7 +236,18 @@ function newurl_submit(Pieform $form, $values) {
     redirect('/view/urls.php?id=' . $viewid);
 }
 
-$allownew = !$view->get('owner') || (get_config('allowpublicviews') && $USER->institution_allows_public_views());
+// Determine whether
+$allownew = get_config('allowpublicviews') // Public view turned off sitewide
+            && (!$view->get('owner') || $USER->institution_allows_public_views()); // The page belongs to a user in an institution without public views
+
+// If the user would be allowed to create new views, check whether they should be prohibited because they're on probation
+if ($allownew) {
+    $onprobation = get_config('allowpublicviews') && is_probationary_user();
+    $allownew = !$onprobation;
+}
+else {
+    $onprobation = false;
+}
 $newform = $allownew ? pieform($newform) : null;
 
 $js = <<<EOF
@@ -257,5 +269,6 @@ $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('allownew', $allownew);
+$smarty->assign('onprobation', $onprobation);
 $smarty->assign('newform', $newform);
 $smarty->display('view/urls.tpl');

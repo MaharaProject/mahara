@@ -4997,11 +4997,17 @@ class View {
             return $data;
         }
 
+        if (!function_exists('is_probationary_user')) {
+            require_once(get_config('libroot') . 'antispam.php');
+        }
         foreach ($accessgroups as $access) {
             // remove 'Public' from the list if the owner isn't allowed to have them
             if ($access->accesstype == 'public'
-                && (get_config('allowpublicviews') != 1
-                    || (isset($ownerobj) && !$ownerobj->institution_allows_public_views()))
+                && (
+                    get_config('allowpublicviews') != 1
+                    || (isset($ownerobj) && !$ownerobj->institution_allows_public_views())
+                    || (isset($ownerobj) && is_probationary_user($ownerobj->id))
+                )
             ) {
                 continue;
             }

@@ -115,6 +115,15 @@ if (isset($key)) {
         $user->username         = get_new_username($user->firstname . $user->lastname);
         $user->passwordchange   = 1;
 
+        // Points that indicate the user is a "new user" who should be restricted from spammy activities.
+        // We count these down when they do good things; when they have 0 they're no longer a "new user"
+        if (is_using_probation()) {
+            $user->probation = get_config('probationstartingpoints');
+        }
+        else {
+            $user->probation = 0;
+        }
+
         if ($registration->institution != 'mahara') {
             if (count_records_select('institution', "name != 'mahara'") == 1 || $registration->pending == 2) {
                 if (get_config_plugin('artefact', 'file', 'institutionaloverride')) {

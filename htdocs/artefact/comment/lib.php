@@ -971,8 +971,8 @@ function delete_comment_submit(Pieform $form, $values) {
 }
 
 function add_feedback_form_validate(Pieform $form, $values) {
+    require_once(get_config('libroot') . 'antispam.php');
     if ($form->get_property('spam')) {
-        require_once(get_config('libroot') . 'antispam.php');
         $spamtrap = new_spam_trap(array(
             array(
                 'type' => 'body',
@@ -991,6 +991,10 @@ function add_feedback_form_validate(Pieform $form, $values) {
     }
     if (empty($values['attachments']) && empty($values['message'])) {
         $form->set_error('message', get_string('messageempty', 'artefact.comment'));
+    }
+    $result = probation_validate_content($values['message']);
+    if ($result !== true) {
+        $form->set_error('message', get_string('newuserscantpostlinksorimages'));
     }
 }
 
