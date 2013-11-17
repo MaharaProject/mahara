@@ -587,7 +587,8 @@ function institution_validate(Pieform $form, $values) {
         }
     }
 
-    if (get_config('licensemetadata') and $values['licensemandatory'] and $values['licensedefault'] == '') {
+    if (get_config('licensemetadata') && !empty($values['licensemandatory']) &&
+        (isset($values['licensedefault']) && $values['licensedefault'] == '')) {
         $form->set_error('licensedefault', get_string('licensedefaultmandatory', 'admin'));
     }
 
@@ -679,8 +680,8 @@ function institution_submit(Pieform $form, $values) {
     }
 
     if (get_config('licensemetadata')) {
-        $newinstitution->licensemandatory = ($values['licensemandatory']) ? 1 : 0;
-        $newinstitution->licensedefault = $values['licensedefault'];
+        $newinstitution->licensemandatory = (!empty($values['licensemandatory'])) ? 1 : 0;
+        $newinstitution->licensedefault = (isset($values['licensedefault'])) ? $values['licensedefault'] : '';
     }
 
     if (!empty($values['resetcustom']) && !empty($oldinstitution->style)) {
