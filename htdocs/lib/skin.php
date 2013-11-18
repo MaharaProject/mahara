@@ -272,6 +272,8 @@ class Skin {
             $this->id = insert_record('skin', $fordb, 'id', true);
         }
         else {
+            $ctime = get_field('skin', 'ctime', 'id', $this->id);
+            $fordb->ctime = ($ctime) ? $ctime : $fordb->mtime;
             update_record('skin', $fordb, 'id');
         }
 
