@@ -15,6 +15,7 @@
     padding: 0;
     width: 24px;
     display: inline-block;
+    vertical-align: middle;
     text-indent: -9999px;
 }
 .skinthumb .skin-header {
@@ -137,6 +138,10 @@ ul.favorskins {
 
 .skin-metadata div {
     margin-bottom: 5px;
+}
+
+.currentskin .skin-metadata {
+    padding-top: 10px;
 }
 
 .skin-metadata div span {
