@@ -17,6 +17,14 @@
             <h3 class="title">{$currenttitle|safe}</h3>
             <img src="{$WWWROOT}skin/thumb.php?id={$currentskin}" width="240" height="135" alt="{$currenttitle}">
             <div class="submitcancel">{$form|safe}</div>
+            {if $currentmetadata}
+            <div class="skin-metadata">
+                <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> {$currentmetadata.displayname|clean_html|safe}</div>
+                <div class="metadescription"><span>{str tag=description section=skin}:</span><br>{$currentmetadata.description|clean_html|safe}</div>
+                <div class="metacreationdate"><span>{str tag=creationdate section=skin}:</span> {$currentmetadata.ctime}</div>
+                <div class="metamodifieddate"><span>{str tag=modifieddate section=skin}:</span> {$currentmetadata.mtime}</div>
+            </div>
+            {/if}
         </div>
         <div class="skins-right">
             <h3 class="title">{str tag=userskins section=skin}</h3>
