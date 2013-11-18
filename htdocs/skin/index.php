@@ -28,6 +28,8 @@ if (!can_use_skins()) {
 $filter = param_alpha('filter', 'all');
 $limit  = param_integer('limit', 6); // For 2x3 grid, showing thumbnails of view skins (2 rows with 3 thumbs each).
 $offset = param_integer('offset', 0);
+$metadata = param_integer('metadata', null);
+$id = param_integer('id', null);
 
 $data = Skin::get_myskins_data($limit, $offset, $filter);
 
@@ -66,11 +68,58 @@ $css = array(
     '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/raw/static/style/skin.css">',
 );
 
+$inlinejs = <<<EOF
+    function toggle_metadata(el) {
+        var meta = el.closest('.skinthumb').find('.skin-metadata');
+        if (meta.is(':visible')) {
+            // need to hide 'popup' box
+            jQuery('#overlay').remove();
+        }
+        else {
+            // need to display 'popup' box
+            meta.addClass('skin_metadata_overlay');
+            meta.addClass('metadata_block');
+            getViewport = function() {
+                var viewport = jQuery(window);
+                return {
+                    l: viewport.scrollLeft(),
+                    t: viewport.scrollTop(),
+                    w: viewport.width(),
+                    h: viewport.height()
+                }
+            }
+            var scrolltop = (((getViewport().h / 2) - 100) > 0) ? (getViewport().h / 2) - 100 : 0;
+            meta.css('left', (((getViewport().w / 2) - 200) > 0) ? (getViewport().w / 2) - 200 : 0);
+            meta.css('top', (getViewport().t + scrolltop));
+            jQuery(document.body).append('<div id="overlay"></div>');
+        }
+        meta.find('.metadataclose').toggleClass('hidden');
+        meta.toggleClass('hidden');
+    }
 
+    jQuery(function() {
+        // wire up the buttons to toggle the popup information on/off
+        jQuery('a.btn-big-info').each(function() {
+            jQuery(this).click(function(i) {
+                toggle_metadata(jQuery(this));
+                return false;
+            });
+        });
+        jQuery('div.metadataclose').each(function() {
+            jQuery(this).click(function(i) {
+                toggle_metadata(jQuery(this));
+                return false;
+            });
+        });
+    });
+EOF;
 $smarty = smarty(array(), $css, array(), array());
 $smarty->assign('skins', $data->data);
 $smarty->assign('user', $USER->get('id'));
 $smarty->assign('form', $form);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('id', $id);
+$smarty->assign('metadata', $metadata);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
