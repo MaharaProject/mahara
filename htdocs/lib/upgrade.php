@@ -1194,6 +1194,7 @@ function install_view_layout_defaults() {
                 'usr_custom_layout',
                 (object)array(
                         'usr' => 0,
+                        'group' => null,
                         'layout' => $vlid,
                 )
         );

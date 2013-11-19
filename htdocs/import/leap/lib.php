@@ -1225,7 +1225,7 @@ class PluginImportLeap extends PluginImport {
                         AND (
                             vl.iscustom = 0
                             OR (
-                                vl.iscustom = 1 AND ucl.usr = ?
+                                vl.iscustom = 1 AND ucl.usr = ? AND ucl.group IS NULL
                             )
                         )
                     GROUP BY vlrc.viewlayout
