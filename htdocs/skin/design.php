@@ -20,13 +20,13 @@ require_once('skin.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'file');
 
-if (!can_use_skins()) {
+$fieldset = param_alpha('fs', 'viewskin');
+$designsiteskin = param_boolean('site', false);
+
+if (!can_use_skins(null, $designsiteskin)) {
     throw new FeatureNotEnabledException();
 }
 
-$fieldset = param_alpha('fs', 'viewskin');
-
-$designsiteskin = param_boolean('site', false);
 if ($designsiteskin) {
     define('ADMIN', 1);
     if (!$USER->get('admin')) {
@@ -588,7 +588,7 @@ $smarty->display('skin/design.tpl');
 function designskinform_validate(Pieform $form, $values) {
     global $USER;
 
-    if (!$values['viewskin_access'] == 'site') {
+    if (isset($values['viewskin_access']) && !($values['viewskin_access'] == 'site')) {
         $artefactfields = array(
             'body_background_image',
             'view_background_image'
@@ -611,7 +611,7 @@ function designskinform_validate(Pieform $form, $values) {
 function designskinform_submit(Pieform $form, $values) {
     global $USER, $SESSION, $redirect;
 
-    $siteskin = ($values['viewskin_access'] == 'site');
+    $siteskin = (isset($values['viewskin_access']) && ($values['viewskin_access'] == 'site'));
     // Only an admin can create a site skin
     if ($siteskin && !$USER->get('admin')) {
         $values['viewskin_access'] = 'private';
