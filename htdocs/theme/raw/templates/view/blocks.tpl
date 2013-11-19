@@ -5,7 +5,7 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='content' new=$new}
+{include file="view/editviewtabs.tpl" selected='content' new=$new issiteview=$issiteview}
 <div class="subpage rel cl" id="tabcontent" selected='content'>
 
   <form action="{$formurl}" method="post">

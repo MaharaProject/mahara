@@ -22,11 +22,12 @@ require_once('file.php');
 require_once('uploadmanager.php');
 define('TITLE', get_string('importskins', 'skin'));
 
-if (!can_use_skins()) {
+$importsiteskins = param_boolean('site', false);
+
+if (!can_use_skins(null, $importsiteskins)) {
     throw new FeatureNotEnabledException();
 }
 
-$importsiteskins = param_boolean('site', false);
 if ($importsiteskins) {
     if (!$USER->get('admin')) {
         $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
