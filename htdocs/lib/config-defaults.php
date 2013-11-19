@@ -539,3 +539,9 @@ $cfg->usersuniquebyusername = false;
  * on individual pages.
  */
 // $cfg->skins = false;
+
+/**
+ * @global string $cfg->opensslcnf Allows manual setting of path to openssl.cnf file for ssl key generation if not
+ * being automatically detected. Needed for extra-site networking.
+ */
+// $cfg->opensslcnf = '';
