@@ -2825,5 +2825,75 @@ function xmldb_core_upgrade($oldversion=0) {
                         id FROM {skin} s WHERE v.skin = s.id)");
     }
 
+    if ($oldversion < 2013101408) {
+        // fix issue where custom layouts saved in groups, site pages and institutions
+        // were set to have usr = 0 because view owner was null
+        $table = new XMLDBTable('usr_custom_layout');
+        $field = new XMLDBField('usr');
+        $field->setDefault(null);
+        $field->setNotNull(false);
+        change_field_default($table, $field);
+        change_field_notnull($table, $field);
+        $field = new XMLDBField('group');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, null);
+        add_field($table, $field);
+        $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+
+        // update previous records
+        // get custom layouts with usr = 0 which are not in default set
+        $groupcustomlayouts = get_records_sql_array('SELECT ucl.layout FROM {usr_custom_layout} ucl
+                                                     LEFT JOIN {view_layout} vl ON vl.id = ucl.layout
+                                                     WHERE usr = 0 AND iscustom = 1
+                                                     ORDER BY ucl.id', array());
+        if ($groupcustomlayouts != false) {
+            foreach ($groupcustomlayouts as $groupcustomlayout) {
+                // find views using this custom layout
+                $views = get_records_array('view', 'layout', $groupcustomlayout->layout, '', 'owner, "group"');
+                if ($views != false) {
+                    foreach ($views as $view) {
+                        if (isset($view->owner)) {
+                            // view owned by individual
+                            $recordexists = get_record('usr_custom_layout', 'usr', $view->owner, 'layout', $groupcustomlayout->layout);
+                            if (!$recordexists) {
+                                // add new record into usr_custom_layout table
+                                $customlayout = new stdClass();
+                                $customlayout->owner = $view->owner;
+                                $customlayout->group = null;
+                                $customlayout->layout = $groupcustomlayout->layout;
+                                insert_record('usr_custom_layout', $customlayout, 'id');
+                            }
+                        }
+                        else if (isset($view->group)) {
+                            // view owned by group
+                            $recordexists = get_record('usr_custom_layout', 'group', $view->group, 'layout', $groupcustomlayout->layout);
+                            if (!$recordexists) {
+                                // add new record into usr_custom_layout table
+                                $customlayout = new stdClass();
+                                $customlayout->owner = null;
+                                $customlayout->group = $view->group;
+                                $customlayout->layout = $groupcustomlayout->layout;
+                                insert_record('usr_custom_layout', $customlayout, 'id');
+                            }
+                        }
+                        else {
+                            // view owned by site or institution
+                            $recordexists = get_record('usr_custom_layout', 'usr', null, 'group', null, 'layout', $groupcustomlayout->layout);
+                            if (!$recordexists) {
+                                // add new record into usr_custom_layout table
+                                $customlayout = new stdClass();
+                                $customlayout->owner = null;
+                                $customlayout->group = null;
+                                $customlayout->layout = $groupcustomlayout->layout;
+                                insert_record('usr_custom_layout', $customlayout, 'id');
+                            }
+                        }
+                    }
+                }
+                // now remove this custom layout
+                $removedrecords = delete_records('usr_custom_layout', 'usr', '0', 'layout', $groupcustomlayout->layout);
+            }
+        }
+    }
+
     return $status;
 }
