@@ -401,6 +401,35 @@ class View {
 
         $view->commit();
 
+        // if layout is set, and it's not a default layout
+        // add an entry to usr_custom_layout if one does not already exist
+        if ($template->get('layout') !== null) {
+            $customlayout = get_record('view_layout', 'id', $template->get('layout'), 'iscustom', 1);
+            if ($customlayout !== false) {
+                // is the owner of the copy going to be a group or not?
+                $owner = $view->owner;
+                $group = null;
+
+                if (!empty($view->group)) {
+                    $group = $view->group;
+                    $owner = null;
+                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'group', $group);
+                }
+                else if (isset($owner)) {
+                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'usr', $owner);
+                }
+                else {
+                    // owner is null and group is null
+                    // we must be creating site or institution pages
+                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'usr', $owner, 'group', $group);
+                }
+
+                if (!$haslayout) {
+                    $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => $group, 'layout' => $template->get('layout')) );
+                }
+            }
+        }
+
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         if ($blocks) {
             foreach ($blocks as $b) {
