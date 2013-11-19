@@ -3151,6 +3151,11 @@ ul.groupuserstatus li.leavegroup a {
 .listing ul.groupuserstatus li.leavegroup a {
     line-height: 2.5em;
 }
+/* status request to join */
+ul.groupuserstatus li.requesttojoin {
+    display: block;
+    text-align: right;
+}
 /* Groups > Group's Edit */
 #editgroup fieldset tr.html {
     background: #EEEEEE;
