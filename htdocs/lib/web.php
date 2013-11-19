@@ -3940,12 +3940,22 @@ function escape_css_string($string, $singlequote=true) {
 /**
  * Indicates whether a particular user can use skins on their pages or not. This is in
  * lib/web.php instead of lib/skin.php so that we can use it while generating the main nav.
+
  * @param int $userid The Id of the user to check. Null checks the current user.
+ * @param bool $managesiteskin = true if admins try to manage the site skin
+ * @param bool $issiteview = true if admins try to use skins for site views
  * @return bool
  */
-function can_use_skins($userid = null) {
+function can_use_skins($userid = null, $managesiteskin=false, $issiteview=false) {
+    global $USER;
+
     if (!get_config('skins')) {
         return false;
+    }
+
+    // Site Admins can access site skin
+    if ($USER->get('admin') && ($managesiteskin || $issiteview)) {
+        return true;
     }
 
     // A user can belong to multiple institutions. If any of their institutions allow it, then

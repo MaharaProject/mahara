@@ -5,9 +5,9 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='title' new=$new}
+{include file="view/editviewtabs.tpl" selected='title' new=$new issiteview=$issiteview}
 <div class="subpage rel">
-			{$editview|safe}
+  {$editview|safe}
 </div>
 
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

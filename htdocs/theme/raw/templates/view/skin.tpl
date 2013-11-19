@@ -5,7 +5,7 @@
   <h1>{$viewtitle}</h1>
 {/if}
 
-{include file="view/editviewtabs.tpl" selected='skin' new=$new}
+{include file="view/editviewtabs.tpl" selected='skin' new=$new issiteview=$issiteview}
 <div class="subpage rel">
     <div class="rbuttons skinsbtns">
         <a class="btn" href="{$WWWROOT}skin/index.php"><span class="btn-config">{str tag=manageskins section=skin}</span></a>

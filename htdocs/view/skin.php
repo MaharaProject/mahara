@@ -21,7 +21,9 @@ define('TITLE', get_string('chooseviewskin', 'skin'));
 $id = param_integer('id');
 $new = param_boolean('new');
 $view = new View($id);
-if (!can_use_skins()) {
+$issiteview = $view->get('institution') == 'mahara';
+
+if (!can_use_skins(null, false, $issiteview)) {
     throw new FeatureNotEnabledException();
 }
 $view->set_edit_nav();
@@ -168,6 +170,7 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false, false));
 }
+$smarty->assign('issiteview', $issiteview);
 $smarty->display('view/skin.tpl');
 
 function viewskin_validate(Pieform $form, $values) {

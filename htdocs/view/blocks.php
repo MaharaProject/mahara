@@ -235,5 +235,6 @@ else {
     $columns = $view->build_rows(true);
     $smarty->assign('columns', $columns);
 }
+$smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
 $smarty->display('view/blocks.tpl');

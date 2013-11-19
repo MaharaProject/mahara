@@ -2,13 +2,13 @@
 {include file="header.tpl"}
 
             <div class="rbuttons">
-                <form method="post" action="{$WWWROOT}skin/design.php{if $siteskins}?site={$siteskins}{/if}">
+                <form method="post" action="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}">
                     <input type="submit" class="submit" value="{str tag=createskin section=skin}">
                 </form>
-                <form method="post" action="{$WWWROOT}skin/import.php?site={$siteskins}">
+                <form method="post" action="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}">
                     <input type="submit" class="submit" value="{str tag=importskins section=skin}">
                 </form>
-                <form method="post" action="{$WWWROOT}skin/export.php?site={$siteskins}">
+                <form method="post" action="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}">
                     <input type="submit" class="submit" value="{str tag=exportskins section=skin}">
                 </form>
             </div>

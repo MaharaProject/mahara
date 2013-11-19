@@ -15,12 +15,13 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('skin.php');
 require_once('pieforms/pieform.php');
 
-if (!can_use_skins()) {
+$skinid = param_integer('id');
+$siteskin = param_boolean('site', false);
+
+if (!can_use_skins(null, $siteskin)) {
     throw new FeatureNotEnabledException();
 }
 
-$skinid = param_integer('id');
-$siteskin = param_boolean('site', false);
 if ($siteskin) {
     $goto = 'admin/site/skins.php';
     $redirect = '/admin/site/skins.php';

@@ -172,6 +172,7 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
 }
+$smarty->assign('issiteview', $view->get('institution') == 'mahara');
 $smarty->display('view/layout.tpl');
 
 function viewlayout_validate(Pieform $form, $values) {
