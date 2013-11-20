@@ -523,10 +523,7 @@ EOF;
     }
 
     public static function get_config_options() {
-        $postdelay = get_config_plugin('interaction', 'forum', 'postdelay');
-        if (!is_numeric($postdelay)) {
-            $postdelay = 30;
-        }
+        $postdelay = (int) get_config_plugin('interaction', 'forum', 'postdelay');
 
         return array(
             'elements' => array(
@@ -535,7 +532,7 @@ EOF;
                     'description'  => get_string('postdelaydescription', 'interaction.forum'),
                     'type'         => 'text',
                     'rules'        => array('integer' => true, 'minvalue' => 0, 'maxvalue' => 10000000),
-                    'defaultvalue' => (int) $postdelay,
+                    'defaultvalue' => $postdelay,
                 ),
             ),
             'renderer' => 'table'
