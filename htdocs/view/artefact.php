@@ -92,10 +92,9 @@ $options = array(
     'viewid' => $viewid,
     'path' => $path,
     'details' => true,
+    'metadata' => 1,
 );
-if (param_integer('details', 0)) {
-    $options['metadata'] = 1;
-}
+
 if ($artefact->get('artefacttype') == 'folder') {
     // get folder block sort order - returns the first instance of folder on view
     // why you'd want more than one folder block on the same view is m̶a̶d̶n̶e̶s̶s̶ user preference.

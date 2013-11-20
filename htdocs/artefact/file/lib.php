@@ -1981,7 +1981,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         $result = parent::render_self($options);
         $result['html'] = '<div class="fl filedata-icon"><h4 class="title">'
             . get_string('Preview', 'artefact.file') . '</h4><a href="'
-            . hsc($url) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
+            . hsc($downloadpath) . '"><img src="' . hsc($downloadpath) . '&maxwidth=400&maxheight=180'
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }
