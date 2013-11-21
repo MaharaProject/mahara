@@ -311,10 +311,12 @@
                 <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="data" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="last_processed_userid" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="id" />
+                <KEY NAME="last_processed_useridfk" TYPE="foreign" FIELDS="last_processed_userid" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="grouptype">

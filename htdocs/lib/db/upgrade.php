@@ -2620,5 +2620,17 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2013112100) {
+        // Add a new column 'last_processed_userid' to the table 'activity_queue' in order to
+        // split multiple user activity notifications into chunks
+        $table = new XMLDBTable('activity_queue');
+        $field = new XMLDBField('last_processed_userid');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        add_field($table, $field);
+        $key = new XMLDBKey('last_processed_useridfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('last_processed_userid'), 'usr', array('id'));
+        add_key($table, $key);
+    }
+
     return $status;
 }
