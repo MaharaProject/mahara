@@ -1,3 +1,4 @@
+{if $log}
 <table class="fullwidth">
   <thead>
     <tr>
@@ -18,6 +19,9 @@
   {/foreach}
   </tbody>
 </table>
+{else}
+<p>{str tag=nomasquerades section=admin}</p>
+{/if}
 {if $note}
 <p>{$note|safe}</p>
 {/if}
