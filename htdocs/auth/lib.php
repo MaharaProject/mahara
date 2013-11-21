@@ -1918,7 +1918,7 @@ function password_validate(Pieform $form, $values, $user) {
     $authobj = AuthFactory::create($user->authinstance);
 
     if (!$form->get_error('password1') && !$authobj->is_password_valid($values['password1'])) {
-        $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"));
+        $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"), false);
     }
 
     $suckypasswords = array(
