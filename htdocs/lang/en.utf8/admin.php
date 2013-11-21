@@ -595,7 +595,7 @@ $string['uploadgroupcsvpagedescription2'] = '<p>You may use this facility to upl
 
 %s';
 $string['uploadgroupcsveditrolesdescription'] = '<p>The editroles field can have any of the following: %s</p>
-%s.';
+%s';
 $string['uploadgroupmemberscsverrorduplicateusername'] = 'Error on line %s of your file: The shortname "%s" and username "%s" have already been specified in this file.';
 $string['uploadgroupmemberscsverrorinvalidrole'] = 'Error on line %s of your file: The role "%s" is invalid for the specified group.';
 $string['uploadgroupmemberscsverrornoadminlisted'] = 'Error on line %s of your file: The group shortname "%s" did not have any users with the "admin" role specified.';
