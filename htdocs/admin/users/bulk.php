@@ -73,7 +73,6 @@ else {
 
 $options = array();
 $default = null;
-
 foreach ($authinstances as $authinstance) {
     $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
     if (!$default && $authinstance->name == 'mahara') {
@@ -81,29 +80,32 @@ foreach ($authinstances as $authinstance) {
     }
 }
 
-$changeauthform = pieform(array(
-    'name'           => 'changeauth',
-    'class'          => 'bulkactionform',
-    'renderer'       => 'oneline',
-    'dieaftersubmit' => false,
-    'elements'       => array(
-        'users' => $userelement,
-        'title'        => array(
-            'type'         => 'html',
-            'class'        => 'bulkaction-title',
-            'value'        => get_string('changeauthmethod', 'admin') . ': ',
+$changeauthform = null;
+if (count($options) > 1) {
+    $changeauthform = pieform(array(
+        'name'           => 'changeauth',
+        'class'          => 'bulkactionform',
+        'renderer'       => 'oneline',
+        'dieaftersubmit' => false,
+        'elements'       => array(
+            'users' => $userelement,
+            'title'        => array(
+                'type'         => 'html',
+                'class'        => 'bulkaction-title',
+                'value'        => get_string('changeauthmethod', 'admin') . ': ',
+            ),
+            'authinstance' => array(
+                'type'         => 'select',
+                'options'      => $options,
+                'defaultvalue' => $default,
+            ),
+            'changeauth' => array(
+                'type'         => 'submit',
+                'value'        => get_string('submit'),
+            ),
         ),
-        'authinstance' => array(
-            'type'         => 'select',
-            'options'      => $options,
-            'defaultvalue' => $default,
-        ),
-        'changeauth' => array(
-            'type'         => 'submit',
-            'value'        => get_string('submit'),
-        ),
-    ),
-));
+    ));
+}
 
 // Suspend users
 $suspendform = pieform(array(
