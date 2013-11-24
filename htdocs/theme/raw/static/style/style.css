@@ -648,13 +648,15 @@ div.select,
 #institution_authplugin_container select#dummySelect,
 select#edituser_site_authinstance,
 select#edituser_institution_addinstitution,
-select#uploadcsv_authinstance {
+select#uploadcsv_authinstance,
+select#adduser_authinstance {
     max-width: 380px;
 }
 .ie7 #institution_authplugin_container select#dummySelect,
 .ie7 select#edituser_site_authinstance,
 .ie7 edituser_institution_addinstitution,
-.ie7 select#uploadcsv_authinstance {
+.ie7 select#uploadcsv_authinstance,
+.ie7 select#adduser_authinstance {
     width: 380px;
 }
 /* radio & checkbox */
