@@ -33,8 +33,7 @@ $elements['options'] = array(
                 'all'     => get_string('allmygroups', 'group'),
                 'admin'   => get_string('groupsiown', 'group'),
                 'member'  => get_string('groupsimin', 'group'),
-                'invite'  => get_string('groupsiminvitedto', 'group'),
-                'request' => get_string('groupsiwanttojoin', 'group')
+                'invite'  => get_string('groupsiminvitedto', 'group')
             ),
             'defaultvalue' => $filter);
 if (get_config('allowgroupcategories')
