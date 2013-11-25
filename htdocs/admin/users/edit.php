@@ -375,51 +375,51 @@ function edituser_site_submit(Pieform $form, $values) {
         // But don't bother if the auth instance doesn't take a remote username
         $authobj = AuthFactory::create($values['authinstance']);
         if (
-                $authobj->needs_remote_username() && (
-                        $USER->get('admin')
-                        || (
-                                $USER->is_institutional_admin($authinst[$values['authinstance']]->institution)
-                                && (
-                                        $USER->is_institutional_admin($authinst[$user->authinstance]->institution)
-                                        || $user->authinstance == 1
-                                )
-                        )
+            $USER->get('admin')
+            || (
+                $USER->is_institutional_admin($authinst[$values['authinstance']]->institution)
+                && (
+                    $USER->is_institutional_admin($authinst[$user->authinstance]->institution)
+                    || $user->authinstance == 1
                 )
+            )
         ) {
-            // determine the current remoteuser
-            $current_remotename = get_field('auth_remote_user', 'remoteusername',
-                                            'authinstance', $user->authinstance, 'localusr', $user->id);
-            if (!$current_remotename) {
-                $current_remotename = $user->username;
-            }
-            // if the remoteuser is empty
-            if (strlen(trim($values['remoteusername'])) == 0) {
-                delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
-            }
-            // what should the new remoteuser be
-            $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
-                                        'authinstance', $values['authinstance'], 'localusr', $user->id);
-            // save the remotename for the target existence check
-            $target_remotename = $new_remoteuser;
-            if (!$new_remoteuser) {
-                $new_remoteuser = $user->username;
-            }
-            if (strlen(trim($values['remoteusername'])) > 0) {
-                // value changed on page - use it
-                if ($values['remoteusername'] != $current_remotename) {
-                    $new_remoteuser = $values['remoteusername'];
+            if ($authobj->needs_remote_username()) {
+                // determine the current remoteuser
+                $current_remotename = get_field('auth_remote_user', 'remoteusername',
+                                                'authinstance', $user->authinstance, 'localusr', $user->id);
+                if (!$current_remotename) {
+                    $current_remotename = $user->username;
                 }
-            }
-            // only update remote name if the input actually changed on the page  or it doesn't yet exist
-            if ($current_remotename != $new_remoteuser || !$target_remotename) {
-                // only remove the ones related to this traget authinstance as we now allow multiple
-                // for dual login mechanisms
-                delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
-                insert_record('auth_remote_user', (object) array(
-                    'authinstance'   => $values['authinstance'],
-                    'remoteusername' => $new_remoteuser,
-                    'localusr'       => $user->id,
-                ));
+                // if the remoteuser is empty
+                if (strlen(trim($values['remoteusername'])) == 0) {
+                    delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
+                }
+                // what should the new remoteuser be
+                $new_remoteuser = get_field('auth_remote_user', 'remoteusername',
+                                            'authinstance', $values['authinstance'], 'localusr', $user->id);
+                // save the remotename for the target existence check
+                $target_remotename = $new_remoteuser;
+                if (!$new_remoteuser) {
+                    $new_remoteuser = $user->username;
+                }
+                if (strlen(trim($values['remoteusername'])) > 0) {
+                    // value changed on page - use it
+                    if ($values['remoteusername'] != $current_remotename) {
+                        $new_remoteuser = $values['remoteusername'];
+                    }
+                }
+                // only update remote name if the input actually changed on the page  or it doesn't yet exist
+                if ($current_remotename != $new_remoteuser || !$target_remotename) {
+                    // only remove the ones related to this traget authinstance as we now allow multiple
+                    // for dual login mechanisms
+                    delete_records('auth_remote_user', 'authinstance', $values['authinstance'], 'localusr', $user->id);
+                    insert_record('auth_remote_user', (object) array(
+                        'authinstance'   => $values['authinstance'],
+                        'remoteusername' => $new_remoteuser,
+                        'localusr'       => $user->id,
+                    ));
+                }
             }
             // update the ai on the user master
             $user->authinstance = $values['authinstance'];
