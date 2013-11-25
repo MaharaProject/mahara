@@ -62,7 +62,11 @@ var Paginator = function(id, datatable, script, extradata) {
                     url += "?";
                 }
                 url += setlimitselect.name + "=" + setlimitselect.value;
-                url += "&" + currentoffset.name + "=" + currentoffset.value;
+                var offsetvalue = currentoffset.value;
+                if ((offsetvalue % setlimitselect.value) !== 0) {
+                    offsetvalue = Math.floor(offsetvalue / setlimitselect.value) * setlimitselect.value;
+                }
+                url += "&" + currentoffset.name + "=" + offsetvalue;
                 location.assign(url);
             });
         }
