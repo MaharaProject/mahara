@@ -2632,5 +2632,124 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
     }
 
+    if ($oldversion < 2013112600) {
+        // If a mahara site was upgraded from 1.0 then keys for the following tables
+        // may be missing so we will check for them and if missing add them.
+
+        // Normally when we create a foreign key, we create an index alongside it.
+        // If these keys were created by the 1.1 upgrade script, they will be missing
+        // those indexes. To get the index and the key in place, we have to re-create
+        // the key.
+
+        $table = new XMLDBTable('artefact_access_usr');
+
+        $index = new XMLDBIndex('usrfk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('usr'));
+        if (!index_exists($table, $index)) {
+            $field = new XMLDBField('usr');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_type($table, $field, true, true);
+            $key = new XMLDBKey('usrfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            add_key($table, $key);
+        }
+
+        $index = new XMLDBIndex('artefactfk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('artefact'));
+        if (!index_exists($table, $index)) {
+            $field = new XMLDBField('artefact');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_type($table, $field, true, true);
+            $key = new XMLDBKey('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            add_key($table, $key);
+        }
+
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('usr', 'artefact'));
+        if (!db_key_exists($table, $key)) {
+            add_key($table, $key);
+        }
+
+        $table = new XMLDBTable('artefact_access_role');
+
+        $index = new XMLDBIndex('artefactfk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('artefact'));
+        if (!index_exists($table, $index)) {
+            $field = new XMLDBField('artefact');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_type($table, $field, true, true);
+            $key = new XMLDBKey('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            add_key($table, $key);
+        }
+
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('role', 'artefact'));
+        if (!db_key_exists($table, $key)) {
+            add_key($table, $key);
+        }
+
+        $table = new XMLDBTable('artefact_attachment');
+
+        $index = new XMLDBIndex('artefactfk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('artefact'));
+        if (!index_exists($table, $index)) {
+            add_index($table, $index);
+        }
+
+        $table = new XMLDBTable('group');
+
+        $key = new XMLDBKey('grouptypefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+        if (!db_key_exists($table, $key)) {
+            add_key($table, $key);
+        }
+
+        $table = new XMLDBTable('grouptype_roles');
+
+        $index = new XMLDBIndex('grouptypefk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('grouptype'));
+        if (!index_exists($table, $index)) {
+            $key = new XMLDBKey('grouptypefk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+            add_key($table, $key);
+        }
+
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('grouptype', 'role'));
+        if (!db_key_exists($table, $key)) {
+            add_key($table, $key);
+        }
+
+        $table = new XMLDBTable('view_autocreate_grouptype');
+
+        $index = new XMLDBIndex('viewfk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('view'));
+        if (!index_exists($table, $index)) {
+            $field = new XMLDBField('view');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_type($table, $field, true, true);
+            $key = new XMLDBKey('viewfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+            add_key($table, $key);
+        }
+
+        $index = new XMLDBIndex('grouptypefk');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('grouptype'));
+        if (!index_exists($table, $index)) {
+            $key = new XMLDBKey('grouptypefk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
+            add_key($table, $key);
+        }
+
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('view', 'grouptype'));
+        if (!db_key_exists($table, $key)) {
+            add_key($table, $key);
+        }
+
+    }
+
     return $status;
 }
