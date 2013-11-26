@@ -187,8 +187,14 @@ ul.colnav li.selected span {
 .no-js #editcontent-sidebar {
     top: 5px;
 }
+#editcontent-sidebar.withradio {
+    width: 190px;
+}
 #editcontent-sidebar.collapsed {
     width: 42px;
+}
+#editcontent-sidebar.collapsed.withradio {
+    width: 62px;
 }
 #editcontent-sidebar.collapsed .withjs {
     text-indent: -9999px;
@@ -243,19 +249,19 @@ ul.colnav li.selected span {
     padding: 4px 4px 4px 32px;
     vertical-align: middle;
 }
-.no-js .blocktype {
+.no-js .blocktype, .withradio .blocktype {
     padding-left: 50px;
 }
 .blocktype-list .blocktype-radio {
     cursor: default; /* ie fix */
-    margin: 0 0 0 -44px;
+    margin: 0 0 0 -45px;
     vertical-align: middle;
 }
 .blocktype img {
     vertical-align: middle;
     margin-left: -28px;
 }
-.no-js .blocktype img {
+.no-js .blocktype img, .withradio .blocktype img {
 	margin: 0;
 }
 .blocktypetitle {
@@ -410,8 +416,14 @@ ul.colnav li.selected span {
     min-height: 435px;
 }
 #tabcontent #page,
+#tabcontent #page.open.withradio {
+    margin-left: 197px;
+}
 #tabcontent #page.open {
     margin-left: 177px;
+}
+#tabcontent #page.collapsed.withradio {
+    margin-left: 69px;
 }
 #tabcontent #page.collapsed {
     margin-left: 49px;
