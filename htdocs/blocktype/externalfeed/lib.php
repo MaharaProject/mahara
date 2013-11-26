@@ -63,8 +63,9 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
                 $data->content = $chunks[0];
 
-                foreach ($data->content as $k => $c) {
-                    $data->content[$k]->link =  sanitize_url($c->link);
+                foreach ($data->content as &$c) {
+                    $c->link =  sanitize_url($c->link);
+                    $c->pubdate = !empty($c->pubdate) ? format_date($c->pubdate) : null;
                 }
             }
 
@@ -434,7 +435,20 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                     $item->title = get_string('notitle', 'view');
                 }
             }
-            $data->content[] = (object)array('title' => $item->title, 'link' => $item->link, 'description' => $description);
+            if (!$pubdate = $item->pubDate) {
+                if (!$pubdate = $item->date) {
+                    if (!$pubdate = $item->published) {
+                        $pubdate = $item->updated;
+                    };
+                }
+            }
+
+            $data->content[] = (object)array(
+                'title'       => $item->title,
+                'link'        => $item->link,
+                'description' => $description,
+                'pubdate'     => $pubdate,
+            );
         }
         $cache[$source] = $data;
         return $data;
