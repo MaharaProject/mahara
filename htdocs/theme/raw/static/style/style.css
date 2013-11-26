@@ -1010,6 +1010,7 @@ input[type="image"][disabled="disabled"],
 input[type="image"][disabled="disabled"]:hover {
     opacity: 0.5;
    filter: alpha(opacity=50);
+   zoom: 1;
 }
 /* placement of buttons */
 .rbuttons {
