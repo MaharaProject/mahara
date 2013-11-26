@@ -875,7 +875,7 @@ class ActivityTypeWatchlist extends ActivityType {
         // mysql compatibility (sigh...)
         $casturl = 'CAST(? AS TEXT)';
         if (is_mysql()) {
-            $casturl = 'CAST(? AS CHAR)'; // note, NOT varchar
+            $casturl = '?';
         }
         $sql = 'SELECT u.*, p.method, ap.value AS lang, ' . $casturl . ' AS url
                     FROM {usr_watchlist_view} wv
