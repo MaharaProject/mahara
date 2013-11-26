@@ -44,8 +44,12 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
  * @param mixed $data must contain message to save.
  * each activity type has different requirements of $data - 
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
+ * @param $cron = true if called by a cron job
+ * @param object $queuedactivity  record of the activity in the queue (from the table activity_queue)
+ * @return int The ID of the last processed user
+ *      = 0 if all users get processed
  */
-function handle_activity($activitytype, $data, $cron=false) {
+function handle_activity($activitytype, $data, $cron=false, $queuedactivity=null) {
     $data = (object)$data;
     $activitytype = activity_locate_typerecord($activitytype);
 
@@ -58,12 +62,17 @@ function handle_activity($activitytype, $data, $cron=false) {
             ucfirst($activitytype->name);
     }
 
-    $activity = new $classname($data, $cron);
-    if (!$activity->any_users()) {
-        return;
+    if ($cron && isset($queuedactivity)) {
+        $data->last_processed_userid = $queuedactivity->last_processed_userid;
+        $data->activity_queue_id = $queuedactivity->id;
     }
 
-    $activity->notify_users();
+    $activity = new $classname($data, $cron);
+    if (!$activity->any_users()) {
+        return 0;
+    }
+
+    return $activity->notify_users();
 }
 
 /**
@@ -182,14 +191,6 @@ function activity_process_queue() {
         $watchlist = activity_locate_typerecord('watchlist');
         $viewsnotified = array();
         foreach ($toprocess as $activity) {
-            // Remove this activity from the queue to make sure we
-            // never send duplicate emails even if part of the
-            // activity handler fails for whatever reason
-            if (!delete_records('activity_queue', 'id', $activity->id)) {
-                log_warn("Unable to remove activity $activity->id from the queue. Skipping it.");
-                continue;
-            }
-
             $data = unserialize($activity->data);
             if ($activity->type == $watchlist->id && !empty($data->view)) {
                 if (isset($viewsnotified[$data->view])) {
@@ -198,16 +199,27 @@ function activity_process_queue() {
                 $viewsnotified[$data->view] = true;
             }
 
-            db_begin();
             try {
-                handle_activity($activity->type, $data, true);
+                $last_processed_userid = handle_activity($activity->type, $data, true, $activity);
             }
             catch (MaharaException $e) {
                 // Exceptions can happen while processing the queue, we just 
                 // log them and continue
                 log_debug($e->getMessage());
             }
-            db_commit();
+            // Update the activity queue
+            // or Remove this activity from the queue if all the users get processed
+            // to make sure we
+            // never send duplicate emails even if part of the
+            // activity handler fails for whatever reason
+            if (!empty($last_processed_userid)) {
+                update_record('activity_queue', array('last_processed_userid' => $last_processed_userid), array('id' => $activity->id));
+            }
+            else {
+                if (!delete_records('activity_queue', 'id', $activity->id)) {
+                    log_warn("Unable to remove activity $activity->id from the queue. Skipping it.");
+                }
+            }
         }
     }
 }
@@ -277,7 +289,11 @@ function generate_activity_class_name($name, $plugintype, $pluginname) {
 
 /** activity type classes **/
 abstract class ActivityType {
-    
+    /**
+     * The number of users in a split chunk to notify
+     */
+    const USERCHUNK_SIZE = 1000;
+
     /**
      * Who any notifications about this activity should appear to come from
      */
@@ -300,9 +316,11 @@ abstract class ActivityType {
     protected $type;
     protected $activityname;
     protected $cron;
+    protected $last_processed_userid;
+    protected $activity_queue_id;
     protected $overridemessagecontents;
     protected $parent;
-   
+
     public function get_id() {
         if (!isset($this->id)) {
             $tmp = activity_locate_typerecord($this->get_type());
@@ -489,10 +507,36 @@ abstract class ActivityType {
         safe_require('notification', 'internal');
         $this->type = $this->get_id();
 
-        while (!empty($this->users)) {
-            $user = array_shift($this->users);
-            $this->notify_user($user);
+        if ($this->cron) {
+            // Sort the list of users to notify by userid
+            uasort($this->users, function($a, $b) {return $a->id > $b->id;});
+            // Notify a chunk of users
+            $num_processed_users = 0;
+            $last_processed_userid = 0;
+            foreach ($this->users as $user) {
+                if ($this->last_processed_userid && ($user->id <= $this->last_processed_userid)) {
+                    continue;
+                }
+                if ($num_processed_users < ActivityType::USERCHUNK_SIZE) {
+                    // Immediately update the last_processed_userid in the activity_queue
+                    // to prevent duplicated notifications
+                    $last_processed_userid = $user->id;
+                    update_record('activity_queue', array('last_processed_userid' => $last_processed_userid), array('id' => $this->activity_queue_id));
+                    $this->notify_user($user);
+                    $num_processed_users++;
+                }
+                else {
+                    return $last_processed_userid;
+                }
+            }
         }
+        else {
+            while (!empty($this->users)) {
+                $user = array_shift($this->users);
+                $this->notify_user($user);
+            }
+        }
+        return 0;
     }
 
     public static function default_notification_method() {

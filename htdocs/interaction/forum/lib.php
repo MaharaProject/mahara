@@ -787,8 +787,8 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     protected $postid;
     protected $temp;
 
-    public function __construct($data) {
-        parent::__construct($data);
+    public function __construct($data, $cron=false) {
+        parent::__construct($data, $cron);
         $this->overridemessagecontents = true;
 
         $post = get_record_sql('
