@@ -427,7 +427,8 @@ function profileform_reply($form, $code, $message) {
 $smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
-        'emailtoolong'
+        'emailtoolong',
+        'tabs'
     ),
     'artefact.internal' => array(
         'loseyourchanges',

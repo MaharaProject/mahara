@@ -19,9 +19,15 @@ $j(document).ready(function(){
             // test if nav item combined width is greater than window width, add class if it is and vice versa
             if (windowWidth <= navBuffer) {
                 wrapper.addClass('rd-navmenu');
+                if ($j('#profiletabswrap')) {
+                    $j('#profiletabswrap').addClass('rd-navmenu');
+                }
             }
             if (windowWidth >= navBuffer) {
                 wrapper.removeClass('rd-navmenu');
+                if ($j('#profiletabswrap')) {
+                    $j('#profiletabswrap').removeClass('rd-navmenu');
+                }
             }
         });
     }

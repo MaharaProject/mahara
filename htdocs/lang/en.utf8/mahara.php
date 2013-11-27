@@ -37,7 +37,7 @@ $string['Close'] = 'Close';
 $string['Help'] = 'Help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
-
+$string['tabs'] = 'TABS';
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
