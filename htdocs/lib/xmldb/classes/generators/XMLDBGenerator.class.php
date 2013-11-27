@@ -734,11 +734,7 @@ class XMLDBgenerator {
 
         $results = array();
 
-    /// Get the key name (note that this doesn't introspect DB, so could cause some problems sometimes!)
-    /// TODO: We'll need to overwrite the whole getDropKeySQL() method inside each DB to do the proper queries
-    /// against the dictionary or require ADOdb to support it or change the find_key_name() method to
-    /// perform DB introspection directly. But, for now, as we aren't going to enable referential integrity
-    /// it won't be a problem at all
+    /// Get the key name
         $dbkeyname = find_key_name($xmldb_table, $xmldb_key);
 
     /// Only if such type of key generation is enabled
