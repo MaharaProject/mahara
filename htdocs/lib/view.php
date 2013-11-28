@@ -3784,7 +3784,7 @@ class View {
                     $orderby .= "COALESCE(sg.name, si.displayname, CASE WHEN su.preferredname IS NOT NULL AND su.preferredname != '' THEN su.preferredname ELSE su.firstname || ' ' || su.lastname END)";
                 }
                 else {
-                    $orderby .= 'v.' . $item['column'];
+                    $orderby .= (!empty($item['tablealias']) ? $item['tablealias'] : 'v') . '.' . $item['column'];
                 }
 
                 if ($item['desc']) {
@@ -4122,7 +4122,7 @@ class View {
         }
     }
 
-    public static function set_nav($group, $institution, $share=false) {
+    public static function set_nav($group, $institution, $share=false, $collection=false) {
         if ($group) {
             define('MENUITEM', $share ? 'groups/share' : 'groups/views');
             define('GROUP', $group);
@@ -4134,6 +4134,9 @@ class View {
         else if ($institution) {
             define('INSTITUTIONALADMIN', 1);
             define('MENUITEM', $share ? 'manageinstitutions/share' : 'manageinstitutions/institutionviews');
+        }
+        else if ($collection) {
+            define('MENUITEM', 'myportfolio/collection');
         }
         else {
             define('MENUITEM', $share ? 'myportfolio/share' : 'myportfolio/views');
@@ -4253,7 +4256,8 @@ class View {
 
     public static function get_templatesearch_data(&$search) {
         require_once(get_config('libroot') . 'pieforms/pieform.php');
-        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, null, null, true);
+        $search->sort = (isset($search->sort)) ? $search->sort : null; // for backwards compatibility
+        $results = self::view_search($search->query, $search->ownerquery, null, $search->copyableby, $search->limit, $search->offset, true, $search->sort, null, true);
 
         foreach ($results->data as &$r) {
             $r['form'] = pieform(create_view_form($search->copyableby->group, $search->copyableby->institution, $r['id'], $r['collid']));
@@ -4271,6 +4275,9 @@ class View {
         }
         if (!empty($search->institution)) {
             $params['institution'] = $search->institution;
+        }
+        if (!empty($search->collection)) {
+            $params['searchcollection'] = $search->collection;
         }
         $params['viewlimit'] = $search->limit;
 
