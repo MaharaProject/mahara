@@ -760,7 +760,13 @@ function siteoptions_submit(Pieform $form, $values) {
         call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
         // Call the new search plugin's sitewide initialize method
         safe_require('search', $values['searchplugin']);
-        call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
+        $initialize = call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
+        if (!$initialize) {
+            $form->reply(PIEFORM_ERR, array(
+                'message' => get_string('searchconfigerror', 'admin', $values['searchplugin']),
+                'goto'    => '/admin/site/options.php',
+            ));
+        }
     }
 
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
