@@ -1032,7 +1032,7 @@ class User {
             if ($i == 'mahara') {
                 return $this->get('admin');
             }
-            return $this->in_institution($i);
+            return $this->in_institution($i) || $this->can_edit_institution($i);
         }
 
         if (!$group = $a->get('group')) {
