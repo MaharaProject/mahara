@@ -631,6 +631,13 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('wysiwyg', $OVERRIDDEN),
                 ),
+                'sitefilesaccess' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('sitefilesaccess', 'admin'),
+                    'description'  => get_string('sitefilesaccessdescription', 'admin'),
+                    'defaultvalue' => get_config('sitefilesaccess'),
+                    'disabled'     => in_array('sitefilesaccess', $OVERRIDDEN),
+                ),
             ),
         ),
         'loggingsettings' => array(
@@ -693,7 +700,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection',
         'masqueradingreasonrequired', 'masqueradingnotified',
-        'eventloglevel', 'eventlogexpiry',
+        'eventloglevel', 'eventlogexpiry', 'sitefilesaccess',
     );
     $count = 0;
     $where_sql = " WHERE admin = 0 AND id != 0";

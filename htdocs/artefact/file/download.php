@@ -87,7 +87,10 @@ else {
         // If the file is in the logged in menu and the user is logged in then
         // they can view it
         $fileinloggedinmenu = $file->get('institution') == 'mahara';
-        $fileinloggedinmenu = $fileinloggedinmenu && $file->get('parent') == null;
+        // check if users are allowed to access files in subfolders
+        if (!get_config('sitefilesaccess')) {
+            $fileinloggedinmenu = $fileinloggedinmenu && $file->get('parent') == null;
+        }
         $fileinloggedinmenu = $fileinloggedinmenu && $USER->is_logged_in();
         $fileinloggedinmenu = $fileinloggedinmenu && record_exists('site_menu', 'file', $fileid, 'public', 0);
 
