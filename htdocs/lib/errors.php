@@ -292,6 +292,12 @@ function log_build_backtrace($backtrace) {
     //array_shift($backtrace);
 
     foreach ($backtrace as $bt) {
+        // Change password in args for LiveUser object to 8 stars
+        if ($bt['class'] == 'LiveUser' || $bt['class'] == 'AuthLdap') {
+            if (!empty($bt['args'][1])) {
+                $bt['args'][1] = str_repeat('*', 8);
+            }
+        }
         $bt['file']  = (isset($bt['file'])) ? $bt['file'] : 'Unknown';
         $bt['line']  = (isset($bt['line'])) ? $bt['line'] : 0;
         $bt['class'] = (isset($bt['class'])) ? $bt['class'] : '';
