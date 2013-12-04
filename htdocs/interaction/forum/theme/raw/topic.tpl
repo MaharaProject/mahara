@@ -21,6 +21,5 @@
 {/if}
 {$posts|safe}
 <div class="center">{$pagination|safe}</div>
-
 {include file="footer.tpl"}
 

@@ -83,8 +83,19 @@ $form = pieform(array(
 ));
 
 function deletetopic_submit(Pieform $form, $values) {
-    global $SESSION;
-    $topicid = param_integer('id');
+    global $SESSION, $USER, $topicid;
+    $post = get_record_sql('SELECT * FROM {interaction_forum_post} WHERE topic = ? AND parent IS NULL', $topicid);
+
+    if ($post->reported) {
+        // Trigger activity.
+        $data = new StdClass;
+        $data->postid     = $post->id;
+        $data->message    = '';
+        $data->reporter   = $USER->get('id');
+        $data->ctime      = time();
+        $data->event      = DELETE_OBJECTIONABLE_TOPIC;
+        activity_occurred('reportpost', $data, 'interaction', 'forum');
+    }
     // mark topic as deleted
     update_record(
         'interaction_forum_topic',

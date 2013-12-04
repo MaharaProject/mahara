@@ -11,6 +11,12 @@
 
 require_once('activity.php');
 
+// Contstants for objectionable content reporting events.
+define('REPORT_OBJECTIONABLE', 1);
+define('MAKE_NOT_OBJECTIONABLE', 2);
+define('DELETE_OBJECTIONABLE_POST', 3);
+define('DELETE_OBJECTIONABLE_TOPIC', 4);
+
 class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
@@ -23,12 +29,7 @@ class PluginInteractionForum extends PluginInteraction {
             $indentmode = isset($instanceconfig['indentmode']) ? $instanceconfig['indentmode']->value : null;
             $maxindent = isset($instanceconfig['maxindent']) ? $instanceconfig['maxindent']->value : null;
 
-            $moderators = get_column_sql(
-                'SELECT fm.user FROM {interaction_forum_moderator} fm
-                JOIN {usr} u ON (fm.user = u.id AND u.deleted = 0)
-                WHERE fm.forum = ?',
-                array($instance->get('id'))
-            );
+            $moderators = get_forum_moderators($instance->get('id'));
         }
 
         if ($instance === null) {
@@ -322,7 +323,14 @@ EOF;
                 'delay' => 1,
                 'allownonemethod' => 1,
                 'defaultmethod' => 'email',
-            )
+            ),
+            (object)array(
+                'name' => 'reportpost',
+                'admin' => 1,
+                'delay' => 0,
+                'allownonemethod' => 1,
+                'defaultmethod' => 'email',
+            ),
         );
     }
 
@@ -377,9 +385,22 @@ EOF;
     }
 
     public static function group_menu_items($group) {
+        global $USER;
         $role = group_user_access($group->id);
+        $hasobjectionable = false;
+        if (!$role && $USER->get('admin')) {
+            // No role, but site admin - see if there is objectionable content,
+            // so that menu item should be displayed.
+            foreach (self::get_instance_ids($group->id) as $instanceid) {
+                $instance = new InteractionForumInstance($instanceid);
+                if ($instance->has_objectionable()) {
+                    $hasobjectionable = true;
+                    break;
+                }
+            }
+        }
         $menu = array();
-        if ($group->public || $role) {
+        if ($group->public || $role || ($hasobjectionable && $USER->get('admin'))) {
             $menu['forums'] = array(// @todo: make forums an artefact plugin
                 'path' => 'groups/forums',
                 'url' => 'interaction/forum/index.php?group=' . $group->id,
@@ -778,6 +799,19 @@ EOF;
         }
         return null;
     }
+
+    /**
+     * Return IDs of plugin instances
+     *
+     * @param  int $groupid optional group ID number
+     * @return array list of the instance IDs
+     */
+    public static function get_instance_ids($groupid = null) {
+        if (isset($groupid) && $groupid > 0) {
+            return get_column('interaction_instance', 'id', 'plugin', 'forum', 'group', $groupid, 'deleted', 0);
+        }
+        return get_column('interaction_instance', 'id', 'plugin', 'forum', 'deleted', 0);
+    }
 }
 
 class InteractionForumInstance extends InteractionInstance {
@@ -795,6 +829,19 @@ class InteractionForumInstance extends InteractionInstance {
         );
     }
 
+   /**
+    * Check if forum instance contains reported content.
+    *
+    * @returns bool $reported whether forum contains reported content.
+    */
+   public function has_objectionable() {
+       $reported = count_records_sql(
+           'SELECT count(fp.id) FROM {interaction_forum_topic} ft
+            JOIN {interaction_forum_post} fp ON (ft.id = fp.topic)
+            WHERE fp.deleted = 0 AND fp.reported = 1 AND ft.forum = ?', array($this->id)
+       );
+       return (bool) $reported;
+   }
 }
 
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
@@ -951,6 +998,161 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     }
 }
 
+class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
+
+    protected $postid;
+    protected $message;
+    protected $reporter;
+    protected $ctime;
+    protected $event;
+    protected $temp;
+
+    public function __construct($data, $cron = false) {
+        parent::__construct($data, $cron);
+
+        $post = get_record_sql('
+            SELECT
+                p.subject, p.body, p.poster, p.parent, ' . db_format_tsfield('p.ctime', 'ctime') . ',
+                t.id AS topicid, fp.subject AS topicsubject, f.title AS forumtitle, g.id AS groupid, g.name AS groupname, f.id AS forumid
+            FROM {interaction_forum_post} p
+            INNER JOIN {interaction_forum_topic} t ON (t.id = p.topic AND t.deleted = 0)
+            INNER JOIN {interaction_forum_post} fp ON (fp.parent IS NULL AND fp.topic = t.id)
+            INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted = 0)
+            INNER JOIN {group} g ON (f.group = g.id AND g.deleted = 0)
+            WHERE p.id = ? AND p.deleted = 0',
+            array($this->postid)
+        );
+
+        // The post may have been deleted during the activity delay
+        if (!$post) {
+            $this->users = array();
+            return;
+        }
+
+        // Set notification to site admins.
+        $siteadmins = activity_get_users($this->get_id(), null, null, true);
+        // Get forum moderators and admins.
+        $forumadminsandmoderators = activity_get_users(
+            $this->get_id(),
+            array_merge(get_forum_moderators($post->forumid),
+            group_get_admin_ids($post->groupid)));
+        // Populate users to notify list and get rid of duplicates.
+        foreach (array_merge($siteadmins, $forumadminsandmoderators) as $user) {
+            if (!isset($this->users[$user->id])) {
+                $this->users[$user->id] = $user;
+            }
+        }
+
+        // Record who reported it.
+        $this->fromuser = $this->reporter;
+
+        $post->posttime = strftime(get_string('strftimedaydatetime'), $post->ctime);
+        $post->textbody = trim(html2text($post->body));
+        $post->htmlbody = clean_html($post->body);
+        $this->url = 'interaction/forum/topic.php?id=' . $post->topicid . '&post=' . $this->postid;
+
+        $this->add_urltext(array(
+            'key'     => 'Topic',
+            'section' => 'interaction.forum'
+        ));
+
+        if ($this->event === REPORT_OBJECTIONABLE) {
+            $this->overridemessagecontents = true;
+            $this->strings->subject = (object) array(
+                'key'     => 'objectionablecontentpost',
+                'section' => 'interaction.forum',
+                'args'    => array($post->topicsubject, display_default_name($this->reporter)),
+            );
+        }
+        else if ($this->event === MAKE_NOT_OBJECTIONABLE) {
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key' => 'postnotobjectionablesubject',
+                    'section' => 'interaction.forum',
+                    'args' => array($post->topicsubject, display_default_name($this->reporter)),
+                ),
+                'message' => (object) array(
+                    'key' => 'postnotobjectionablebody',
+                    'section' => 'interaction.forum',
+                    'args' => array(display_default_name($this->reporter), display_default_name($post->poster)),
+                ),
+            );
+        }
+        else if ($this->event === DELETE_OBJECTIONABLE_POST) {
+            $this->url = '';
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key' => 'objectionablepostdeletedsubject',
+                    'section' => 'interaction.forum',
+                    'args' => array($post->topicsubject, display_default_name($this->reporter)),
+                ),
+                'message' => (object) array(
+                    'key' => 'objectionablepostdeletedbody',
+                    'section' => 'interaction.forum',
+                    'args' => array(display_default_name($this->reporter), display_default_name($post->poster), $post->textbody),
+                ),
+            );
+        }
+        else if ($this->event === DELETE_OBJECTIONABLE_TOPIC) {
+            $this->url = '';
+            $this->strings = (object) array(
+                'subject' => (object) array(
+                    'key' => 'objectionabletopicdeletedsubject',
+                    'section' => 'interaction.forum',
+                    'args' => array($post->topicsubject, display_default_name($this->reporter)),
+                ),
+                'message' => (object) array(
+                    'key' => 'objectionabletopicdeletedbody',
+                    'section' => 'interaction.forum',
+                    'args' => array(display_default_name($this->reporter), display_default_name($post->poster), $post->textbody),
+                ),
+            );
+
+        }
+        else {
+            throw new SystemException();
+        }
+
+        $this->temp = (object) array('post' => $post);
+    }
+
+    public function get_emailmessage($user) {
+        $post = $this->temp->post;
+        $reporterurl = profile_url($this->reporter);
+        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
+        return get_string_from_language(
+            $user->lang, 'objectionablecontentviewtext', 'interaction.forum',
+            $post->topicsubject, display_default_name($this->reporter), $ctime,
+            $this->message, $post->posttime, $post->textbody, get_config('wwwroot') . $this->url, $reporterurl
+        );
+    }
+
+    public function get_htmlmessage($user) {
+        $post = $this->temp->post;
+        $reportername = hsc(display_default_name($this->reporter));
+        $reporterurl = profile_url($this->reporter);
+        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
+        return get_string_from_language(
+            $user->lang, 'objectionablecontentposthtml', 'interaction.forum',
+            hsc($post->topicsubject), $reportername, $ctime,
+            $this->message, $post->posttime, $post->htmlbody, get_config('wwwroot') . $this->url, hsc($post->topicsubject),
+            $reporterurl, $reportername
+        );
+    }
+
+    public function get_plugintype(){
+        return 'interaction';
+    }
+
+    public function get_pluginname(){
+        return 'forum';
+    }
+
+    public function get_required_parameters() {
+        return array('postid', 'message', 'reporter', 'ctime', 'event');
+    }
+}
+
 // constants for forum membership types
 define('INTERACTION_FORUM_ADMIN', 1);
 define('INTERACTION_FORUM_MOD', 2);
@@ -965,12 +1167,11 @@ define('INTERACTION_FORUM_MEMBER', 4);
  * @returns constant access level or false
  */
 function user_can_access_forum($forumid, $userid=null) {
-    if (empty($userid)) {
-        global $USER;
-        $userid = $USER->get('id');
-    }
-    else if (!is_int($userid)) {
-        throw new InvalidArgumentException("non integer user id given to user_can_access_forum: $userid");
+    global $USER;
+    $forumuser = $USER;
+    if (!empty($userid)) {
+        $forumuser = new User;
+        $forumuser->find_by_id($userid);
     }
     if (!is_int($forumid)) {
         throw new InvalidArgumentException("non integer forum id given to user_can_access_forum: $forumid");
@@ -978,8 +1179,14 @@ function user_can_access_forum($forumid, $userid=null) {
 
     $membership = 0;
 
+    // Allow site admins accessing the forum directly if it has objectionable content.
+    $instance = new InteractionForumInstance($forumid);
+    if ($instance->has_objectionable() && $forumuser->get('admin')) {
+        return $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
+    }
+
     $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
-    $groupmembership = group_user_access((int)$groupid, (int)$userid);
+    $groupmembership = group_user_access((int)$groupid, $forumuser->get('id'));
 
     if (!$groupmembership) {
         return $membership;
@@ -988,10 +1195,26 @@ function user_can_access_forum($forumid, $userid=null) {
     if ($groupmembership == 'admin') {
         $membership = $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
     }
-    if (record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $userid)) {
+    if (record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $forumuser->get('id'))) {
         $membership = $membership | INTERACTION_FORUM_MOD;
     }
     return $membership;
+}
+
+/**
+ * Get list of moderators for a given forum.
+ *
+ * @param int $forumid id of forum
+ *
+ * @returns array $moderators list of forum moderators.
+ */
+function get_forum_moderators($forumid) {
+    $moderators = get_column_sql(
+        'SELECT fm.user FROM {interaction_forum_moderator} fm
+         JOIN {usr} u ON (fm.user = u.id AND u.deleted = 0)
+         WHERE fm.forum = ?', array($forumid)
+    );
+    return (array) $moderators;
 }
 
 /**
@@ -1005,7 +1228,7 @@ function user_can_access_forum($forumid, $userid=null) {
  * @returns boolean
  */
 function user_can_edit_post($poster, $posttime, $userid=null, $verifydelay=true) {
-	if (empty($userid)) {
+    if (empty($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }

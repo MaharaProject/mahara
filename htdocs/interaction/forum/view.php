@@ -267,10 +267,17 @@ $smarty->display('interaction:forum:view.tpl');
  * format lastposttime
  */
 function setup_topics(&$topics) {
+    global $moderator;
     if ($topics) {
         foreach ($topics as $topic) {
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
             $topic->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;
+            $topic->containsobjectionable = false;
+            if ($moderator) {
+                $topic->containsobjectionable = (bool) count_records_sql(
+                    'SELECT count(fp.id) FROM {interaction_forum_post} fp
+                     WHERE fp.deleted = 0 AND fp.reported = 1 AND fp.topic = ?', array($topic->id));
+            }
         }
     }
 }
