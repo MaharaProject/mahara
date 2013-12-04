@@ -2830,15 +2830,28 @@ function xmldb_core_upgrade($oldversion=0) {
         // were set to have usr = 0 because view owner was null
         $table = new XMLDBTable('usr_custom_layout');
         $field = new XMLDBField('usr');
-        $field->setDefault(null);
-        $field->setNotNull(false);
-        change_field_default($table, $field);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
         change_field_notnull($table, $field);
+        // For PostgresSQL, change_field_notnull creates a temporary column, moves data to new temp column
+        // and then renames the temp column to 'usr'. Therefore, all indexes and foreign keys
+        // related to column 'owner' will be removed
+        if (is_postgres()) {
+            $key = new XMLDBKey('usr');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            add_key($table, $key);
+        }
         $field = new XMLDBField('group');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, null);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null, null, null, null, null, 'usr');
         add_field($table, $field);
-        $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
-
+        $key = new XMLDBKey('groupfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        add_key($table, $key);
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null, null, null, null, null, 'group');
+        add_field($table, $field);
+        $key = new XMLDBKey('institutionfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
         // update previous records
         // get custom layouts with usr = 0 which are not in default set
         $groupcustomlayouts = get_records_sql_array('SELECT ucl.layout FROM {usr_custom_layout} ucl
@@ -2848,7 +2861,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($groupcustomlayouts != false) {
             foreach ($groupcustomlayouts as $groupcustomlayout) {
                 // find views using this custom layout
-                $views = get_records_array('view', 'layout', $groupcustomlayout->layout, '', 'owner, "group"');
+                $views = get_records_array('view', 'layout', $groupcustomlayout->layout, '', 'owner, "group", institution');
                 if ($views != false) {
                     foreach ($views as $view) {
                         if (isset($view->owner)) {
@@ -2857,8 +2870,7 @@ function xmldb_core_upgrade($oldversion=0) {
                             if (!$recordexists) {
                                 // add new record into usr_custom_layout table
                                 $customlayout = new stdClass();
-                                $customlayout->owner = $view->owner;
-                                $customlayout->group = null;
+                                $customlayout->usr = $view->owner;
                                 $customlayout->layout = $groupcustomlayout->layout;
                                 insert_record('usr_custom_layout', $customlayout, 'id');
                             }
@@ -2869,20 +2881,18 @@ function xmldb_core_upgrade($oldversion=0) {
                             if (!$recordexists) {
                                 // add new record into usr_custom_layout table
                                 $customlayout = new stdClass();
-                                $customlayout->owner = null;
                                 $customlayout->group = $view->group;
                                 $customlayout->layout = $groupcustomlayout->layout;
                                 insert_record('usr_custom_layout', $customlayout, 'id');
                             }
                         }
-                        else {
-                            // view owned by site or institution
-                            $recordexists = get_record('usr_custom_layout', 'usr', null, 'group', null, 'layout', $groupcustomlayout->layout);
+                        else if (isset($view->institution)) {
+                            // view owned by group
+                            $recordexists = get_record('usr_custom_layout', 'institution', $view->institution, 'layout', $groupcustomlayout->layout);
                             if (!$recordexists) {
                                 // add new record into usr_custom_layout table
                                 $customlayout = new stdClass();
-                                $customlayout->owner = null;
-                                $customlayout->group = null;
+                                $customlayout->institution = $view->institution;
                                 $customlayout->layout = $groupcustomlayout->layout;
                                 insert_record('usr_custom_layout', $customlayout, 'id');
                             }
