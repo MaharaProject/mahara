@@ -293,6 +293,9 @@ class AuthLdap extends Auth {
                 $ldap_result = ldap_list($ldapconnection, $context, '(' . $this->config['user_attribute']
                     . '=' . $this->filter_addslashes($username) . ')', array($this->config['user_attribute']));
             }
+            if (!$ldap_result) {
+                return false;
+            }
 
             $entry = ldap_first_entry($ldapconnection,$ldap_result);
 
