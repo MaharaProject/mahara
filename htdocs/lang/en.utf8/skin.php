@@ -39,6 +39,13 @@ $string['removefromfavorites'] = 'Remove from favourites';
 $string['skinaddedtofavorites'] = 'Skin added to favourites';
 $string['skinremovedfromfavorites'] = 'Skin removed from favourites';
 $string['cantremoveskinfromfavorites'] = 'Can\'t remove skin from favourites';
+$string['viewmetadata'] = 'View skin information';
+$string['metatitle'] = 'Skin information';
+$string['title'] = 'Title';
+$string['displayname'] = 'Owner';
+$string['description'] = 'Description';
+$string['creationdate'] = 'Created';
+$string['modifieddate'] = 'Modified';
 
 $string['noskins'] = 'There are no skins';
 $string['skin'] = 'skin';

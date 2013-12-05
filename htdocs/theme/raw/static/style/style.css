@@ -1068,6 +1068,18 @@ ul.groupuserstatus li .btn {
     vertical-align: top;
     cursor: pointer !important;
 }
+.btn-big-info {
+    background: transparent url(../images/btn_info.png) no-repeat 0 0 !important;
+    border: 0 !important;
+    margin-right: 0 !important;
+    width: 24px;
+    height: 24px;
+    padding: 0px;
+    text-indent: -9999px;
+    font-size: 1%;
+    vertical-align: top;
+    cursor: pointer !important;
+}
 .btn-big-del,
 .customrow input {
     background: transparent url(../images/btn_deleteremove.png) no-repeat 0 0 !important;

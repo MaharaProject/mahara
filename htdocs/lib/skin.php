@@ -327,7 +327,7 @@ class Skin {
         if (!is_array($favorites)) { $favorites = array(); }
 
         $sort = 'title, id';
-        $cols = 'id, title, owner, type';
+        $cols = 'id, title, description, owner, type, ctime, mtime';
         switch ($filter) {
             case 'public':
                 $count = count_records('skin', 'type', 'public');
@@ -366,6 +366,13 @@ class Skin {
                 else {
                     $data[$i]['favorite'] = false;
                 }
+                $owner = new User();
+                $owner->find_by_id($skindata[$i]->owner);
+                $data[$i]['metadata'] = array('displayname' => '<a href="' . get_config('wwwroot') . 'user/view.php?id=' . $skindata[$i]->owner . '">' . display_name($owner) . '</a>',
+                                              'description' => nl2br($skindata[$i]->description),
+                                              'ctime' => format_date(strtotime($skindata[$i]->ctime)),
+                                              'mtime' => format_date(strtotime($skindata[$i]->mtime)),
+                                              );
             }
 
         }
