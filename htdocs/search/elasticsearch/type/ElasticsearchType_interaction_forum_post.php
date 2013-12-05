@@ -90,7 +90,8 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
         }
 
         $record->ctime = self::checkctime($record->ctime);
-        $record->access['general'] = 'none';
+        $public = get_field('group', 'public', 'id', $record->group);
+        $record->access['general'] = (!empty($public)) ? 'public' : 'none';
         $record->access['groups']['member'] = $record->group;
         $record->mainfacetterm = self::$mainfacetterm;
         $record->secfacetterm = 'Forumpost';

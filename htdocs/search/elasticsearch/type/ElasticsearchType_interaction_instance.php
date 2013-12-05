@@ -86,8 +86,8 @@ class ElasticsearchType_interaction_instance extends ElasticsearchType
         if (!$record || $record->deleted) {
             return false;
         }
-
-        $record->access['general'] = 'none';
+        $public = get_field('group', 'public', 'id', $record->group);
+        $record->access['general'] = (!empty($public)) ? 'public' : 'none';
         $record->access['groups']['member'] = $record->group;
         $record->mainfacetterm = self::$mainfacetterm;
         $record->secfacetterm = 'Forum';
