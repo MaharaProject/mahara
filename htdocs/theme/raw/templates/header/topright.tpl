@@ -19,7 +19,7 @@
         </div>
 
 
-{if !$nosearch && $LOGGEDIN}        {header_search_form}{/if}
+{if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}        {header_search_form}{/if}
 
 </div>
 

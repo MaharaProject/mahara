@@ -94,6 +94,15 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     /**
+     * This function determines whether the plugin allows a search box to display for
+     * non-logged in users - only useful if results returned by search are allowed to
+     * be seen by the public
+     */
+    public static function publicform_allowed() {
+        return true;
+    }
+
+    /**
      * Generates the search form used in the page headers
      * @return string
      */

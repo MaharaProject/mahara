@@ -13,6 +13,7 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', '');
+define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'pieforms/pieform.php');
 require_once(get_config('libroot') . 'searchlib.php');
@@ -31,6 +32,10 @@ define('SECTION_PLUGINNAME', 'elasticsearch');
 define('SECTION_PAGE', 'elasticsearch');
 
 global $USER;
+if (!get_config('publicsearchallowed') && !$USER->is_logged_in()) {
+    throw new AccessDeniedException();
+}
+
 $options = array();
 
 $query = param_variable('query', '');

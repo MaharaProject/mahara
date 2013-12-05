@@ -45,6 +45,15 @@ abstract class PluginSearch extends Plugin {
     }
 
     /**
+     * This function determines whether the plugin allows a search box to display for
+     * non-logged in users - only useful if results returned by search are allowed to
+     * be seen by the public
+     */
+    public static function publicform_allowed() {
+        return false;
+    }
+
+    /**
      * Given a query string and limits, return an array of matching users
      *
      * NOTE: user with ID zero or that are NOT active should never be returned

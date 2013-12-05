@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
@@ -20,6 +21,11 @@ require_once(get_config('docroot') . 'artefact/lib.php');
 require_once(get_config('docroot') . 'artefact/file/lib.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+
+global $USER;
+if (!get_config('publicsearchallowed') && !$USER->is_logged_in()) {
+    throw new AccessDeniedException();
+}
 
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);

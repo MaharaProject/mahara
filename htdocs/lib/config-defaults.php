@@ -570,3 +570,8 @@ $cfg->usersuniquebyusername = false;
  */
 // $cfg->dbtimezone = '+10:00';
 // $cfg->dbtimezone = 'Europe/Rome';
+
+/**
+ * @global bool $cfg->publicsearchallowed Activates the display of the search box for logged-out users
+ */
+$cfg->publicsearchallowed = false;

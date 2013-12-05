@@ -485,6 +485,13 @@ EOF;
     }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
+    $publicsearchallowed = false;
+    $searchplugin = get_config('searchplugin');
+    if ($searchplugin) {
+        safe_require('search', $searchplugin);
+        $publicsearchallowed = (call_static_method(generate_class_name('search', $searchplugin), 'publicform_allowed') && get_config('publicsearchallowed'));
+    }
+    $smarty->assign('publicsearchallowed', $publicsearchallowed);
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());

@@ -294,7 +294,6 @@ if (!get_config('searchplugin')) {
         $CFG->searchplugin = 'internal';
     }
 }
-
 $bcrypt_cost = get_config('bcrypt_cost');
 // bcrypt_cost is the cost parameter passed as part of the bcrypt hash
 // See http://php.net/manual/en/function.crypt.php
