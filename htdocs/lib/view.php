@@ -406,26 +406,26 @@ class View {
         if ($template->get('layout') !== null) {
             $customlayout = get_record('view_layout', 'id', $template->get('layout'), 'iscustom', 1);
             if ($customlayout !== false) {
-                // is the owner of the copy going to be a group or not?
+                // is the owner of the copy going to be a group or institution or not?
                 $owner = $view->owner;
-                $group = null;
+                $group = $view->group;
+                $institution = $view->institution;
+                $haslayout = false;
 
-                if (!empty($view->group)) {
-                    $group = $view->group;
+                if (!empty($group)) {
                     $owner = null;
                     $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'group', $group);
+                }
+                if (!empty($institution)) {
+                    $owner = null;
+                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'institution', $institution);
                 }
                 else if (isset($owner)) {
                     $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'usr', $owner);
                 }
-                else {
-                    // owner is null and group is null
-                    // we must be creating site or institution pages
-                    $haslayout = get_record('usr_custom_layout', 'layout', $template->get('layout'), 'usr', $owner, 'group', $group);
-                }
 
                 if (!$haslayout) {
-                    $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => $group, 'layout' => $template->get('layout')) );
+                    $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => $group, 'institution' => $institution, 'layout' => $template->get('layout')) );
                 }
             }
         }
@@ -1091,18 +1091,26 @@ class View {
         }
 
         $owner = $this->owner;
-        $group = null;
-        if ($this->get('group') !== null && $this->get('group') > 0) {
-            $group = $this->group;
+        $group = $this->group;
+        $institution = $this->institution;
+        if (!empty($group)) {
             $owner = null;
             $andclause = 'AND ucl.group = ?';
+            $andclausevalue = $group;
+        }
+        else if (!empty($institution)) {
+            $owner = null;
+            $andclause = 'AND ucl.institution = ?';
+            $andclausevalue = $institution;
         }
         else if (isset($owner)) {
             $andclause = 'AND ucl.usr = ?';
+            $andclausevalue = $owner;
         }
         else {
-            // no group or owner, must be site or insitution page
-            $andclause = 'AND ucl.usr IS NULL AND ucl.group IS NULL';
+            // no group or owner or institution set
+            // site pages should have institution set
+            throw new SystemException("View::addcustomlayout: No owner, group or institution set for view.");
         }
 
         // check for existing layout
@@ -1131,16 +1139,7 @@ class View {
                 GROUP BY vlrc.viewlayout
                 HAVING count(*) = ?
                 LIMIT 1';
-        if (isset($owner)) {
-            $layoutids = get_records_sql_array($sql, array($numrows, $owner, $numrows));
-        }
-        else if (isset($group)) {
-            $layoutids = get_records_sql_array($sql, array($numrows, $group, $numrows));
-        }
-        else {
-            // no user or group set
-            $layoutids = get_records_sql_array($sql, array($numrows, $numrows));
-        }
+        $layoutids = get_records_sql_array($sql, array($numrows, $andclausevalue, $numrows));
 
         if ($layoutids) {
             $data = array('layoutid' => $layoutids[0]->id, 'newlayout' => 0);
@@ -1157,13 +1156,13 @@ class View {
             }
 
             if (isset($owner)) {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => null, 'layout' => $newlayoutid));
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => null, 'institution' => null, 'layout' => $newlayoutid));
             }
             else if (isset($group)) {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => $group, 'layout' => $newlayoutid));
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => $group, 'institution' => null, 'layout' => $newlayoutid));
             }
-            else {
-                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => null, 'layout' => $newlayoutid));
+            else if (isset($institution)) {
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => null, 'institution' => $institution, 'layout' => $newlayoutid));
             }
             if (!$newcustomlayout) {
                 db_rollback();
@@ -2732,20 +2731,22 @@ class View {
         $columnsperrow = $this->get('columnsperrow');
         $owner = $this->get('owner');
         $queryarray = array($owner, $numrows);
-        $group = null;
+        $group = $this->get('group');
+        $institution = $this->get('institution');
 
         if (isset($owner)) {
             $andclause = '(ucl.usr = 0 OR ucl.usr = ?)';
         }
-        else if ($this->get('group') !== null && $this->get('group') > 0) {
-            $owner = null;
-            $group = $this->get('group');
+        else if (!empty($group)) {
             $andclause = '(ucl.usr = 0 OR ucl.group = ?)';
             $queryarray = array($group, $numrows);
         }
+        else if (!empty($institution)) {
+            $andclause = '(ucl.usr = 0 OR ucl.institution = ?)';
+            $queryarray = array($institution, $numrows);
+        }
         else {
-            $andclause = '(ucl.usr = 0 OR (ucl.usr IS NULL AND ucl.group IS NULL))';
-            $queryarray = array($numrows);
+            throw new SystemException("View::get_layout: No owner, group or institution set for view.");
         }
 
         // get all valid possible layout records
@@ -3552,7 +3553,8 @@ class View {
     public function get_layoutrows() {
         $layoutrows = array();
         $owner = $this->get('owner');
-        $group = null;
+        $group = $this->get('group');
+        $institution = $this->get('institution');
         $queryarray = array($owner);
 
         // get built-in layout options (owner=0) and any custom created layouts
@@ -3560,17 +3562,18 @@ class View {
             // view owned by individual
             $whereclause = '(ucl.usr = 0 OR ucl.usr = ?)';
         }
-        else if ($this->get('group') !== null && $this->get('group') > 0) {
+        else if (!empty($group)) {
             // view owned by group
-            $group = $this->get('group');
-            $owner = null;
             $whereclause = '(ucl.usr = 0 OR ucl.group = ?)';
             $queryarray = array($group);
         }
+        else if (!empty($institution)) {
+            // view owned by institution
+            $whereclause = '(ucl.usr = 0 OR ucl.institution = ?)';
+            $queryarray = array($institution);
+        }
         else {
-            // view owned by site or institution
-            $whereclause = '(ucl.usr = 0 OR (ucl.usr IS NULL AND ucl.group IS NULL))';
-            $queryarray = array();
+            throw new SystemException("View::get_layoutrows: No owner, group or institution set for view.");
         }
 
         $layoutsrowscols = get_records_sql_array('
