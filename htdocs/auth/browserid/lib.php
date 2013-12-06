@@ -54,6 +54,7 @@ class AuthBrowserid extends Auth {
         }
 
         // Personal details are currently not provided by the Persona API.
+        $user = new stdClass();
         $user->username = $email;
         $user->firstname = '';
         $user->lastname = '';
@@ -63,6 +64,11 @@ class AuthBrowserid extends Auth {
         $user->password = '';
         $user->passwordchange = 0;
         $user->authinstance = $this->instanceid;
+
+        // Set default values to activate this user
+        $user->deleted = 0;
+        $user->expiry = null;
+        $user->suspendedcusr = null;
 
         $user->id = create_user($user, array(), $this->institution);
 

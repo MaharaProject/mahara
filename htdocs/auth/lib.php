@@ -1041,6 +1041,18 @@ function requiredfields_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('requiredfieldsset', 'auth'));
     }
 
+    // Update the title of user's first blog if first and/or last name have been changed
+    $updatedfields = array_keys($values);
+    if (in_array('firstname', $updatedfields) || in_array('lastname', $updatedfields)) {
+        safe_require('artefact', 'blog');
+        $userblogs = get_records_select_array('artefact', 'artefacttype = \'blog\' AND owner = ?', array($USER->get('id')));
+        if ($userblogs && count($userblogs) == 1) {
+            $defaultblog = new ArtefactTypeBlog($userblogs[0]->id);
+            $defaultblog->set('title', get_string('defaultblogtitle', 'artefact.blog', display_name($USER, null, true)));
+            $defaultblog->commit();
+        }
+    }
+
     redirect();
 }
 
