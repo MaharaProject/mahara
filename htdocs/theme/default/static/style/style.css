@@ -502,10 +502,10 @@ div.pagination a {
 }
 /* js fallback for 768px or less */
 @media screen and (max-width: 768px) {
-    #top-wrapper {
+    .no-js #top-wrapper {
         padding-bottom: 10px;
     }
-    .rd-nav-title {
+    .no-js .rd-nav-title {
         display: block;
         padding: 5px 10px;
         margin: 0 10px;
@@ -518,7 +518,7 @@ div.pagination a {
         border-radius: 5px 5px 0 0;
         font-size: 1.25em;
     }
-    .rd-nav-title span.rd-arrow {
+    .no-js .rd-nav-title span.rd-arrow {
         background: url(../images/arrow-collapsed.png) no-repeat 0 50%;
         padding: 9px;
         margin: 3px 0 0 0;
@@ -527,7 +527,7 @@ div.pagination a {
         right: 5px;
         display: inline-block;
     }
-    .main-nav ul {
+    .no-js .main-nav ul {
         margin: 0 10px;
         border-left: 3px solid #547b23;
         border-right: 3px solid #547b23;
@@ -536,49 +536,49 @@ div.pagination a {
         -moz-border-radius: 0 0 5px 5px;
         border-radius: 0 0 5px 5px;
     }
-    .main-nav ul li {
+    .no-js .main-nav ul li {
         display: block;
         clear: left;
         border-top: 1px solid #FFFFFF;
         border-bottom: 1px solid #d2dcb2;
         background: #ecf3d4;
     }
-    .main-nav ul li.selected {
+    .no-js .main-nav ul li.selected {
         background: #f5f9e7;
     }
-    .main-nav ul li span {
+    .no-js .main-nav ul li span {
         display: block;
     }
-    .main-nav li a,
-    .main-nav li a:link,
-    .main-nav li a:visited,
-    .main-nav li a:active {
+    .no-js .main-nav li a,
+    .no-js .main-nav li a:link,
+    .no-js .main-nav li a:visited,
+    .no-js .main-nav li a:active {
         background: none;
         color: #4C711D;
         border: 0;
         display: block;
     }
-    .main-nav li a:hover {
+    .no-js .main-nav li a:hover {
         color: #568e0e;
     }
-    .main-nav li.selected a,
-    .main-nav li.selected a:link,
-    .main-nav li.selected a:visited,
-    .main-nav li.selected a:active {
+    .no-js .main-nav li.selected a,
+    .no-js .main-nav li.selected a:link,
+    .no-js .main-nav li.selected a:visited,
+    .no-js .main-nav li.selected a:active {
         background: none;
         border: 0;
     }
     /* responsive sub nav */
-    .main-nav .rd-subnav,
-    .main-nav .dropdown-sub {
+    .no-js .main-nav .rd-subnav,
+    .no-js .main-nav .dropdown-sub {
         display: block;
         margin: 0 10px;
         padding: 0 0 5px 0;
         position: inherit;
         border: 0;
     }
-    .main-nav .rd-subnav li,
-    .main-nav .dropdown-sub li {
+    .no-js .main-nav .rd-subnav li,
+    .no-js .main-nav .dropdown-sub li {
         clear: none;
         float: left;
         width: 48%;
@@ -588,18 +588,18 @@ div.pagination a {
         border-bottom: 0;
         left: 0;
     }
-    .main-nav .rd-subnav li span,
-    .main-nav .dropdown-sub li span {
+    .no-js .main-nav .rd-subnav li span,
+    .no-js .main-nav .dropdown-sub li span {
         display: block;
     }
-    .main-nav .rd-subnav li a,
-    .main-nav .rd-subnav li a:link,
-    .main-nav .rd-subnav li a:visited,
-    .main-nav .rd-subnav li a:active,
-    .main-nav .dropdown-sub li a,
-    .main-nav .dropdown-sub li a:link,
-    .main-nav .dropdown-sub li a:visited,
-    .main-nav .dropdown-sub li a:active {
+    .no-js .main-nav .rd-subnav li a,
+    .no-js .main-nav .rd-subnav li a:link,
+    .no-js .main-nav .rd-subnav li a:visited,
+    .no-js .main-nav .rd-subnav li a:active,
+    .no-js .main-nav .dropdown-sub li a,
+    .no-js .main-nav .dropdown-sub li a:link,
+    .no-js .main-nav .dropdown-sub li a:visited,
+    .no-js .main-nav .dropdown-sub li a:active {
         padding: 5px 0;
         font-weight: normal;
         display: block;
@@ -608,37 +608,39 @@ div.pagination a {
         width: auto;
     	color: #4C711D;
     }
-    .main-nav .rd-subnav li a:hover,
-    .main-nav .dropdown-sub li a:hover {
+    .no-js .main-nav .rd-subnav li a:hover,
+    .no-js .main-nav .dropdown-sub li a:hover {
         background: none;
         border: 0;
         color: #568e0e;
     }
-    .main-nav .rd-subnav li.selected a,
-    .main-nav .rd-subnav li.selected a:link,
-    .main-nav .rd-subnav li.selected a:visited,
-    .main-nav .rd-subnav li.selected a:active,
-    .main-nav .dropdown-sub li.selected a,
-    .main-nav .dropdown-sub li.selected a:link,
-    .main-nav .dropdown-sub li.selected a:visited,
-    .main-nav .dropdown-sub li.selected a:active {
+    .no-js .main-nav .rd-subnav li.selected a,
+    .no-js .main-nav .rd-subnav li.selected a:link,
+    .no-js .main-nav .rd-subnav li.selected a:visited,
+    .no-js .main-nav .rd-subnav li.selected a:active,
+    .no-js .main-nav .dropdown-sub li.selected a,
+    .no-js .main-nav .dropdown-sub li.selected a:link,
+    .no-js .main-nav .dropdown-sub li.selected a:visited,
+    .no-js .main-nav .dropdown-sub li.selected a:active {
         font-weight: bold;
         color: #333333;
         background: none;
         border: 0;
     }
-    .main-nav li:hover .dropdown-sub { 
+    .no-js .main-nav li:hover .dropdown-sub {
         display: block !important;
     }
     /* hide sub nav when dropdown is turn off */
-    #sub-nav {
+    .no-js #sub-nav {
         display: none;
     }
 }
 /* for 350px or less */
 @media screen and (max-width: 350px) {
-    .main-nav .rd-subnav li,
-    .main-nav .dropdown-sub li {
+    .no-js .main-nav .rd-subnav li,
+    .no-js .main-nav .dropdown-sub li,
+    .rd-navmenu .nav-expand .rd-subnav li,
+    .rd-navmenu .nav-expand .dropdown-sub li {
         clear: none;
         float: none;
         width: 100%;
@@ -772,7 +774,7 @@ ul.in-page-tabs li:first-child a.current-tab {
 }
 /* js fallback for page tabs */
 @media screen and (max-width: 768px) {
-	.rd-tab-title {
+	.no-js .rd-tab-title {
         cursor: pointer;
         display: block;
         margin: 0;
@@ -782,7 +784,7 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-bottom: 0;
         background: #d1d1d1 url(../images/tabs.gif) repeat-x 0 0;
     }
-	#mainmiddle .rd-tab {
+	.no-js #mainmiddle .rd-tab {
         display: block;
         background: #95A8B7 url(../images/collapse-arrows.png) no-repeat 3px 5px;
         padding: 9px;
@@ -796,18 +798,18 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-radius: 2px;
         cursor: pointer;
     }
-	ul.in-page-tabs {
+	.no-js ul.in-page-tabs {
         display: block;
         font-size: 1.25em;
     }
-    ul.in-page-tabs li {
+    .no-js ul.in-page-tabs li {
         display: block;
     }
-    ul.in-page-tabs li a,
-    ul.in-page-tabs li a:link,
-    ul.in-page-tabs li a:visited,
-    ul.in-page-tabs li a:active,
-    ul.in-page-tabs li input.linkbtn {
+    .no-js ul.in-page-tabs li a,
+    .no-js ul.in-page-tabs li a:link,
+    .no-js ul.in-page-tabs li a:visited,
+    .no-js ul.in-page-tabs li a:active,
+    .no-js ul.in-page-tabs li input.linkbtn {
         background: #e0e8ee;
         color: #1e6297;
         border-left: 0;
@@ -816,14 +818,14 @@ ul.in-page-tabs li:first-child a.current-tab {
         border-bottom: 1px solid #d1d1d1;
         display: block;
     }
-    ul.in-page-tabs li a:hover {
+    .no-js ul.in-page-tabs li a:hover {
         background: #cbd7e0;
     }
-    ul.in-page-tabs li a.current-tab,
-    ul.in-page-tabs li a.current-tab:link,
-    ul.in-page-tabs li a.current-tab:visited,
-    ul.in-page-tabs li a.current-tab:active,
-    ul.in-page-tabs li input.current-tab {
+    .no-js ul.in-page-tabs li a.current-tab,
+    .no-js ul.in-page-tabs li a.current-tab:link,
+    .no-js ul.in-page-tabs li a.current-tab:visited,
+    .no-js ul.in-page-tabs li a.current-tab:active,
+    .no-js ul.in-page-tabs li input.current-tab {
         background: #95a8b7;
         color: #FFFFFF;
         border-left: 0;
@@ -1042,6 +1044,25 @@ table.mceLayout td.mceToolbar td {
     #editaccesswrap #accesslisttable {
         margin-top: 20px;
         background: #FFFFFF;
+    }
+    /* Portfolio > Copy a page or collection */
+    #templatesearch_table thead th {
+        display: none;
+    }
+    #templatesearch_table tbody td {
+        display: block;
+        float: left;
+        width: 98%;
+        padding: 0 0.9%;
+    }
+    #templatesearch_table tbody td.ownericon {
+        width: 48%;
+        padding: 5px 0.9% 0 0.9%;
+    }
+    #templatesearch_table tbody td.right {
+        width: 48%;
+        float: right;
+        padding: 0 0.9% 5px 0.9%;
     }
     /* Groups > Group's edit page */
     #editgroup fieldset.sectioned {
@@ -1558,6 +1579,9 @@ table.mceLayout td.mceToolbar td {
     #search_advanced_container #search_share_container {
         padding-left: 0;
     }
+    #search_advanced_container #search_share_container label {
+        margin-left: 0;
+    }
     /* Portfolio > Skins */
     .skinthumb {
         width: 96%;
@@ -1584,6 +1608,9 @@ table.mceLayout td.mceToolbar td {
     ul.groupuserstatus li.jointhisgroup,
     ul.groupuserstatus li.admincontrol {
         text-align: left;
+    }
+    div.peoplelistinfo .rightdiv .detail {
+        margin-right: 0;
     }
     /* Groups > Group's about page */
     .group-info ul li span {

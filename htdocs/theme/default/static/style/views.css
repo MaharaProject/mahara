@@ -48,6 +48,12 @@ ul.colnav li a:active {
     .ui-draggable-dragging .blocktype .blocktypetitle {
     	display: inline;
     }
+    #select-theme-header {
+        text-indent: -9999px;
+    }
+    #select-theme select {
+        max-width: 30px;
+    }
 }
 /******************** Blocks ********************/
 .blockinstance-header .title a,
