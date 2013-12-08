@@ -15,3 +15,5 @@ $string['title'] = 'Folder';
 $string['description'] = 'A single folder from your files area (see Content -> Files)';
 
 $string['defaulttitledescription'] = 'If you leave this blank, the title of the folder will be used';
+$string['foldersettings'] = 'Folder settings';
+$string['defaultsortorder'] = 'Default sort order of files';

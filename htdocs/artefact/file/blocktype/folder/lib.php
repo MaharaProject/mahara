@@ -56,6 +56,43 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return $result;
     }
 
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements = array();
+        $elements['foldersettings'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('foldersettings', 'blocktype.file/folder'),
+            'collapsible' => false,
+            'elements' => array(
+                'sortorder' => array(
+                    'type'         => 'select',
+                    'labelhtml'    => get_string('defaultsortorder', 'blocktype.file/folder'),
+                    'defaultvalue' => get_config_plugin('blocktype', 'folder', 'sortorder'),
+                    'options'      => array(
+                        'asc' => get_string('ascending'),
+                        'desc' => get_string('descending'),
+                    )
+                )
+            ),
+        );
+        return array(
+            'elements' => $elements,
+        );
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('blocktype', 'folder', 'sortorder', $values['sortorder']);
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion < 2013120900) {
+            set_config_plugin('blocktype', 'folder', 'sortorder', 'asc');
+        }
+    }
+
     public static function has_instance_config() {
         return true;
     }
@@ -69,7 +106,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
             'sortorder' => array(
                 'type' => 'select',
                 'labelhtml' => get_string('sortorder'),
-                'defaultvalue' => (isset($configdata['sortorder']) && $configdata['sortorder'] == 'desc') ? 'desc' : 'asc',
+                'defaultvalue' => isset($configdata['sortorder']) ? $configdata['sortorder'] : get_config_plugin('blocktype', 'folder', 'sortorder'),
                 'options' => array('asc' => get_string('ascending'), 'desc' => get_string('descending')),
             ),
         );
