@@ -38,9 +38,13 @@ $string['Help'] = 'Help';
 $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
+// responsive design strings
 $string['tabs'] = 'TABS';
 $string['tab'] = 'tab';
 $string['selected'] = 'selected';
+$string['admin'] = 'ADMIN';
+$string['menu'] = 'MENU';
+
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
