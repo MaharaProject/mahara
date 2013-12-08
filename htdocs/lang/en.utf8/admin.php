@@ -1060,6 +1060,7 @@ $string['masqueradenotifiedreasondescription'] = 'Please enter a reason for logg
 $string['masqueradetime'] = 'Start of masquerading';
 $string['masquerader'] = 'Masquerading administrator';
 $string['masqueradee'] = 'User';
+$string['nomasquerades'] = 'No administrator has masqueraded yet as another user since the logging of masquerading sessions has been turned on.';
 $string['loginaslog'] = 'Masquerading sessions';
 $string['masqueradingnotloggedwarning'] = '<b>Note</b>: Logging of masquerading sessions is currently disabled. In order to see data in this table, the site administrator needs to turn it on in "Logging settings" under "<a href="%sadmin/site/options.php">Configure site</a>".';
 $string['masqueradenotificationsubject'] = 'An administrator logged in as you';
