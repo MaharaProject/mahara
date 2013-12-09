@@ -17,7 +17,7 @@
  * @author     James Stewart <james@jystewart.net>
  * @copyright  2005 James Stewart <james@jystewart.net>
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU LGPL 2.1
- * @version    CVS: $Id: RSS1.php 304308 2010-10-11 12:05:50Z clockwerx $
+ * @version    CVS: $Id$
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
 
@@ -131,6 +131,7 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
             $this->xpath->registerNamespace($key, $value);
         }
         $this->numberEntries = $this->count('item');
+        $this->setSanitizer(new XML_Feed_Parser_Unsafe_Sanitizer());
     }
 
     /**
@@ -154,8 +155,7 @@ class XML_Feed_Parser_RSS1 extends XML_Feed_Parser_Type
 
         $entries = $this->xpath->query("//rss:item[@rdf:about='$id']");
         if ($entries->length > 0) {
-            $classname = $this->itemClass;
-            $entry = new $classname($entries->item(0), $this);
+            $entry = new XML_Feed_Parser_RSS1Element($entries->item(0), $this);
             if (in_array('evaluate', get_class_methods($this->xpath))) {
                 $offset = $this->xpath->evaluate("count(preceding-sibling::rss:item)", $entries->item(0));
                 $this->entries[$offset] = $entry;

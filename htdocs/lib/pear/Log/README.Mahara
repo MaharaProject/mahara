@@ -1,0 +1,13 @@
+Pear Logging Framework in Mahara
+================================
+
+Website: http://pear.php.net/package/Log/
+Version: 1.12.7
+
+This class is included because it is a dependency of the PEAR
+XML_Feed_Parser class. If you remove that class, then please
+remove this one as well.
+
+Changes:
+ - None
+
