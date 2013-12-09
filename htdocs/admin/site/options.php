@@ -152,6 +152,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('searchusernames'),
                     'disabled'     => in_array('searchusernames', $OVERRIDDEN),
                 ),
+                'searchuserspublic' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('searchuserspublic', 'admin'),
+                    'description'  => get_string('searchuserspublicdescription', 'admin'),
+                    'defaultvalue' => get_config('searchuserspublic'),
+                    'disabled'     => in_array('searchuserspublic', $OVERRIDDEN),
+                ),
                 'anonymouscomments' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('anonymouscomments', 'admin'),
@@ -699,7 +706,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection',
-        'masqueradingreasonrequired', 'masqueradingnotified',
+        'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'sitefilesaccess',
     );
     $count = 0;

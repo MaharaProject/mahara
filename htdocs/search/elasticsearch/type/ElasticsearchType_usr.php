@@ -39,6 +39,17 @@ class ElasticsearchType_usr extends ElasticsearchType
                     'index_name' => 'institution',
                     'include_in_all' => FALSE
             ),
+            // access to user  - to be able to hide user from public search
+            'access' => array(
+                'type' => 'object',
+                'index' => 'not_analyzed',
+                'include_in_all' => FALSE,
+                'general' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+                ),
+            ),
             'ctime'  =>  array(
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
@@ -70,6 +81,7 @@ class ElasticsearchType_usr extends ElasticsearchType
                 'lastname'      => NULL,
                 'preferredname' => NULL,
                 'institutions'  => NULL,
+                'access'        => NULL,
                 'ctime'         => NULL,
                 'sort'          => NULL,
         );
@@ -117,6 +129,34 @@ class ElasticsearchType_usr extends ElasticsearchType
                 $record->email[] = $email->email;
             }
         }
+        // check to see if the user's profile page is viewable and which is the most 'open' access
+        $accessrank = array('loggedin','friends');
+        if (get_config('searchuserspublic')) {
+            array_unshift($accessrank, 'public');
+        }
+
+        // get all accesses of user's profile page ordered by the $accessrank array
+        // so that the first result will be the most 'open' access allowed
+        if (is_postgres()) {
+            $join = '';
+            $count = 0;
+            foreach ($accessrank as $key => $access) {
+                $count++;
+                $join .= "('" . $access . "'," . $key . ")";
+                if ($count != sizeof($accessrank)) {
+                    $join .= ",";
+                }
+            }
+            $sql = "SELECT va.accesstype FROM {view} v, {view_access} va
+                    JOIN (VALUES" . $join . ") AS x (access_type, ordering) ON va.accesstype = x.access_type
+                    WHERE v.id = va.view AND v.type = 'profile' AND v.owner = ? ORDER BY x.ordering";
+
+        }
+        $profileviewaccess = recordset_to_array(get_recordset_sql($sql, array($record->id)));
+        $record->access['general'] = (!empty($profileviewaccess)) ? $profileviewaccess[0]->accesstype : 'none';
+        // always allow user to search themselves for vanity reasons
+        $record->access['usrs'] = $record->id;
+
         $record->mainfacetterm = self::$mainfacetterm;
         $allowhidename = get_config('userscanhiderealnames');
         $showusername = get_config('searchusernames');
