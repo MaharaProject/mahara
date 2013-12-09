@@ -367,59 +367,183 @@ function index_exists($table, $index) {
 }
 
 /**
- * This function IS NOT IMPLEMENTED. ONCE WE'LL BE USING RELATIONAL
- * INTEGRITY IT WILL BECOME MORE USEFUL. FOR NOW, JUST CALCULATE "OFFICIAL"
- * KEY NAMES WITHOUT ACCESSING TO DB AT ALL.
- * Given one XMLDBKey, the function returns the name of the key in DB (if exists)
- * of false if it doesn't exist
+ * Given an XMLDBKey, check if it exists in the database (true/false).
+ * NOTE: I wanted to call this key_exists() to keep the pattern of index_exists() et al,
+ * but key_exists() is a PHP core alias for array_key_exists()
+ * @param XMLDBTable $table
+ * @param XMLDBKey $key
+ */
+function db_key_exists(XMLDBTable $table, XMLDBKey $key) {
+    global $CFG, $db;
+    // If find_key_name returns boolean false, the key doesn't exist. Otherwise, it does exist.
+    return (false !== find_key_name($table, $key));
+}
+
+/**
+ * Return the DB name of the key described in XMLDBKey, if it exists.
  *
  * @uses, $db
  * @param XMLDBTable the table to be searched
  * @param XMLDBKey the key to be searched
  * @return string key name of false
  */
-function find_key_name($table, $xmldb_key) {
-
+function find_key_name(XMLDBTable $table, XMLDBKey $key) {
+    /* @var $db ADOConnection */
     global $CFG, $db;
 
-/// Extract key columns
-    $keycolumns = $xmldb_key->getFields();
-
-/// Get list of keys in table
-/// first primaries (we aren't going to use this now, because the MetaPrimaryKeys is awful)
-    ///TODO: To implement when we advance in relational integrity
-/// then uniques (note that Moodle, for now, shouldn't have any UNIQUE KEY for now, but unique indexes)
-    ///TODO: To implement when we advance in relational integrity (note that AdoDB hasn't any MetaXXX for this.
-/// then foreign (note that Moodle, for now, shouldn't have any FOREIGN KEY for now, but indexes)
-    ///TODO: To implement when we advance in relational integrity (note that AdoDB has one MetaForeignKeys()
-    ///but it's far from perfect.
-/// TODO: To create the proper functions inside each generator to retrieve all the needed KEY info (name
-///       columns, reftable and refcolumns
-
-/// So all we do is to return the official name of the requested key without any confirmation!)
-    $classname = 'XMLDB' . $CFG->dbtype;
-    $generator = new $classname();
-    $generator->setPrefix($CFG->prefix);
-/// One exception, harcoded primary constraint names
-    if ($generator->primary_key_name && $xmldb_key->getType() == XMLDB_KEY_PRIMARY) {
-        return $generator->primary_key_name;
-    } else {
-    /// Calculate the name suffix
-        switch ($xmldb_key->getType()) {
-            case XMLDB_KEY_PRIMARY:
-                $suffix = 'pk';
-                break;
-            case XMLDB_KEY_UNIQUE:
-                $suffix = 'uk';
-                break;
-            case XMLDB_KEY_FOREIGN_UNIQUE:
-            case XMLDB_KEY_FOREIGN:
-                $suffix = 'fk';
-                break;
-        }
-    /// And simply, return the oficial name
-        return $generator->getNameForObject($table->getName(), implode(', ', $xmldb_key->getFields()), $suffix);
+    // Do this function silently to avoid output during the install/upgrade process
+    $olddebug = $db->debug;
+    $db->debug = false;
+    if (!table_exists($table)) {
+        $db->debug = $olddbdebug;
+        return false;
     }
+
+    $tablename = get_config('dbprefix') . $table->getName();
+    $dbname = get_config('dbname');
+
+    // TODO: upstream this to ADODB?
+    // Postgres puts the database name in the "catalog" field. Mysql puts it in "schema"
+    if (is_postgres()) {
+        $dbfield = 'catalog';
+        // The query to find all the columns for a foreign key constraint
+        $fkcolsql = "
+            SELECT
+                ku.column_name,
+                ccu.column_name AS refcolumn_name
+            FROM
+                information_schema.key_column_usage ku
+                INNER JOIN information_schema.constraint_column_usage ccu
+                    ON ku.constraint_name = ccu.constraint_name
+                    AND ccu.constraint_schema = ku.constraint_schema
+                    AND ccu.constraint_catalog = ku.constraint_catalog
+                    AND ccu.table_catalog = ku.constraint_catalog
+                    AND ccu.table_schema = ku.constraint_schema
+            WHERE
+                ku.constraint_catalog = ?
+                AND ku.constraint_name = ?
+                AND ku.table_name = ?
+                AND ku.table_catalog = ?
+                AND ccu.table_name = ?
+            ORDER BY ku.ordinal_position, ku.position_in_unique_constraint
+        ";
+    }
+    else {
+        $dbfield = 'schema';
+        // The query to find all the columns for a foreign key constraint
+        $fkcolsql = '
+            SELECT
+                ku.column_name,
+                ku.referenced_column_name AS refcolumn_name
+            FROM information_schema.key_column_usage ku
+            WHERE
+                ku.constraint_schema = ?
+                AND ku.constraint_name = ?
+                AND ku.table_name = ?
+                AND ku.table_schema = ?
+                AND ku.referenced_table_name = ?
+            ORDER BY ku.ordinal_position, ku.position_in_unique_constraint
+        ';
+    }
+    // Foreign keys have slightly different logic than primary and unique
+    $isfk = ($key->getType() == XMLDB_KEY_FOREIGN || $key->getType() == XMLDB_KEY_FOREIGN_UNIQUE);
+
+    $fields = $key->getFields();
+    if ($isfk) {
+        $reffields = $key->getRefFields();
+        $reftable = get_config('dbprefix') . $key->getRefTable();
+        // If the XMLDBKey is a foreign key without a ref table, or non-matching fields & ref fields,
+        // then it's an invalid XMLDBKey and we know it won't match
+        if (!$key->getRefTable() || count($fields) != count($reffields)) {
+            log_debug('Invalid XMLDBKey foreign key passed to find_key_name()');
+            $db->debug = $olddbdebug;
+            return false;
+        }
+    }
+
+    // Get the main record for the constraint
+    $sql = "
+        SELECT tc.constraint_name
+        FROM
+            information_schema.table_constraints tc
+        WHERE
+            tc.table_name = ?
+            AND tc.table_{$dbfield} = ?
+            AND tc.constraint_{$dbfield} = ?
+            AND tc.constraint_type = ?
+    ";
+    $keytypes = array(
+        XMLDB_KEY_PRIMARY => 'PRIMARY KEY',
+        XMLDB_KEY_UNIQUE => 'UNIQUE',
+        XMLDB_KEY_FOREIGN => 'FOREIGN KEY',
+        XMLDB_KEY_FOREIGN_UNIQUE => 'FOREIGN KEY',
+    );
+    $params = array($tablename, $dbname, $dbname, $keytypes[$key->getType()]);
+
+    $constraintrec = get_records_sql_array($sql, $params);
+    // No constraints of the correct type on this table
+    if (!$constraintrec) {
+        $db->debug = $olddebug;
+        return false;
+    }
+
+    // Check each constraint to see if it has the right columns
+    foreach ($constraintrec as $c) {
+        if ($isfk) {
+            $colsql = $fkcolsql;
+            $colparams = array($dbname, $c->constraint_name, $tablename, $dbname, $reftable);
+        }
+        else {
+            $colsql = "SELECT ku.column_name
+                FROM information_schema.key_column_usage ku
+                WHERE
+                    ku.table_name = ?
+                    AND ku.table_{$dbfield} = ?
+                    AND ku.constraint_{$dbfield} = ?
+                    AND ku.constraint_name = ?
+                ORDER BY ku.ordinal_position, ku.position_in_unique_constraint
+            ";
+            $colparams = array($tablename, $dbname, $dbname, $c->constraint_name);
+        }
+        $colrecs = get_records_sql_array($colsql, $colparams);
+
+        // Make sure they've got the same number of columns
+        if (!$colrecs || count($fields) != count($colrecs)) {
+            // No match, try the next one
+            continue;
+        }
+
+        // Make sure the columns match.
+        reset($fields);
+        reset($colrecs);
+        if ($isfk) {
+            reset($reffields);
+        }
+        while (($field = current($fields)) && ($col = current($colrecs))) {
+            if (!$field == $col->column_name) {
+                // This constraint has a non-matching column; try the next constraint
+                continue 2;
+            }
+            if ($isfk) {
+                $reffield = current($reffields);
+                if (!$reffield == $col->refcolumn_name) {
+                    // This constraint has a non-matching column; try the next constraint
+                    continue 2;
+                }
+                next($reffields);
+            }
+            next($fields);
+            next($colrecs);
+        }
+
+        // If they made it this far, then it's a match!
+        $db->debug = $olddebug;
+        return $c->constraint_name;
+    }
+
+    // None matched, so return false
+    $db->debug = $olddebug;
+    return false;
 }
 
 /**
