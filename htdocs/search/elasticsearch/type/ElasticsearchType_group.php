@@ -32,6 +32,24 @@ class ElasticsearchType_group extends ElasticsearchType
                     'index' => 'not_analyzed',
                     'include_in_all' => FALSE
             ),
+            // access to group
+            'access'        =>  array(
+                'type' => 'object',
+                'index' => 'not_analyzed',
+                'include_in_all' => FALSE,
+                'general' =>  array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed',
+                    'include_in_all' => FALSE
+                ),
+                'groups' =>  array(
+                    'member' =>  array(
+                        'type' => 'int',
+                        'index' => 'not_analyzed',
+                        'include_in_all' => FALSE
+                    ),
+                ),
+            ),
             'ctime'  =>  array(
                     'type' => 'date',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
@@ -61,6 +79,7 @@ class ElasticsearchType_group extends ElasticsearchType
                 'description'   => NULL,
                 'grouptype'     => NULL,
                 'jointype'      => NULL,
+                'access'        => NULL,
                 'ctime'         => NULL,
                 'sort'         => NULL,
         );
@@ -74,6 +93,8 @@ class ElasticsearchType_group extends ElasticsearchType
         if (!$record || $record->deleted) {
             return false;
         }
+        $record->access['general'] = ($record->public) ? 'public' : 'loggedin';
+        $record->access['groups']['member'] = $record->id;
         $record->sort = strtolower(strip_tags($record->name));
         return $record;
     }
