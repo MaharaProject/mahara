@@ -363,6 +363,7 @@ EOF;
             $stylesheets = array_merge($stylesheets, array_reverse($adminsheets));
         }
     }
+
     if (get_config('developermode') & DEVMODE_DEBUGCSS) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
@@ -496,6 +497,7 @@ EOF;
 
     $smarty->assign_by_ref('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
+    $smarty->assign('CC_ENABLED', get_config('cookieconsent_enabled'));
     $javascript_array = append_version_number($javascript_array);
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign('RELEASE', get_config('release'));
@@ -666,6 +668,12 @@ EOF;
                 $smarty->assign($name, $content);
             }
         }
+    }
+
+    // If Cookie Consent is enabled, than define conent
+    if (get_config('cookieconsent_enabled')) {
+        require_once('cookieconsent.php');
+        $smarty->assign('COOKIECONSENTCODE', get_cookieconsent_code());
     }
     return $smarty;
 }
@@ -1517,7 +1525,13 @@ function set_cookie($name, $value='', $expires=0, $access=false) {
     if (!$domain = get_config('cookiedomain')) {
         $domain = $url['host'];
     }
-    setcookie($name, $value, $expires, $url['path'], $domain, false, true);
+
+    // If Cookie Consent is enabled with cc_necessary cookie set to 'yes'
+    // or Cookie Consent is not enabled
+    if (empty($_COOKIE['cc_necessary']) || (isset($_COOKIE['cc_necessary']) && $_COOKIE['cc_necessary'] == 'yes')) {
+        setcookie($name, $value, $expires, $url['path'], $domain, false, true);
+    }
+
     if ($access) {  // View access cookies may be needed on this request
         $_COOKIE[$name] = $value;
     }
@@ -1912,6 +1926,12 @@ function admin_nav() {
             'url'    => 'artefact/file/sitefiles.php',
             'title'  => get_string('Files', 'artefact.file'),
             'weight' => 80,
+        ),
+        'configsite/cookieconsent' => array(
+            'path'   => 'configsite/cookieconsent',
+            'url'    => 'admin/site/cookieconsent.php',
+            'title'  => get_string('cookieconsent', 'cookieconsent'),
+            'weight' => 90,
         ),
         'configusers' => array(
             'path'   => 'configusers',
@@ -2771,7 +2791,8 @@ function get_script_path() {
         }
         return $_SERVER['URL'];
 
-    } else {
+    }
+    else {
         log_warn('Warning: Could not find any of these web server variables: $REQUEST_URI, $PHP_SELF, $SCRIPT_NAME or $URL');
         return false;
     }
@@ -2854,9 +2875,11 @@ function get_full_script_path() {
 
     if (isset($_SERVER['HTTPS'])) {
         $protocol = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-    } else if (isset($_SERVER['SERVER_PORT'])) { # Apache2 does not export $_SERVER['HTTPS']
+    }
+    else if (isset($_SERVER['SERVER_PORT'])) { # Apache2 does not export $_SERVER['HTTPS']
         $protocol = ($_SERVER['SERVER_PORT'] == '443') ? 'https://' : 'http://';
-    } else {
+    }
+    else {
         $protocol = 'http://';
     }
 
@@ -2909,7 +2932,8 @@ function strip_querystring($url) {
 
     if ($commapos = strpos($url, '?')) {
         return substr($url, 0, $commapos);
-    } else {
+    }
+    else {
         return $url;
     }
 }
@@ -3032,7 +3056,8 @@ function clean_html($text, $xhtml=false) {
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
     if (empty($xhtml)) {
         $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
-    } else {
+    }
+    else {
         $config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
     }
     $config->set('AutoFormat.Linkify', true);
@@ -3270,7 +3295,8 @@ function display_cleaned_html($html, $filename, $params) {
     $smarty->assign('params', $params);
     if ($params['owner']) {
         $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', hsc($filename), profile_url((int) $params['owner']), hsc(display_name($params['owner']))));
-    } else {
+    }
+    else {
         $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessagenoowner', 'artefact.file', hsc($filename)));
     }
     $smarty->assign('content', $html);

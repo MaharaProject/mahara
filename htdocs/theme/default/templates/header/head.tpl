@@ -13,7 +13,8 @@
         'loggedin': {$USER->is_logged_in()|intval},
         'userid': {$USER->get('id')},
         'mobile': {if $MOBILE}1{else}0{/if},
-        'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if}
+        'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if},
+        'cc_enabled': {$CC_ENABLED|intval}
     {literal}}{/literal};
     </script>
     {$STRINGJS|safe}
@@ -39,5 +40,6 @@
         <script type="text/javascript" src="{$WWWROOT}js/rd-nav.js?v={$RELEASE}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {if $ADDITIONALHTMLHEAD}{$ADDITIONALHTMLHEAD|safe}{/if}
+{if $COOKIECONSENTCODE}{$COOKIECONSENTCODE|safe}{/if}
 </head>
 {dynamic}{flush}{/dynamic}
