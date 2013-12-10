@@ -44,6 +44,20 @@ addLoadEvent(function() {
         tabs.push(LI(null, a));
     });
     var tabUL = UL({'class': 'in-page-tabs'}, tabs);
+    var tabTitleSpan = SPAN({'class': 'rd-tab'});
+    var tabTitle = H3({'class': 'rd-tab-title'}, get_string('tabs'), tabTitleSpan);
+    tabDIV = DIV({'id': 'profiletabswrap', 'class': 'tabswrap'}, tabTitle, tabUL);
+    var isOpen = 0;
+    connect(tabDIV, 'onclick', function(e) {
+        e.stop();
+        if (isOpen == 0) {
+            addElementClass(tabDIV, 'expand');
+        }
+        else {
+            removeElementClass(tabDIV, 'expand');
+        }
+        isOpen = 1 - isOpen;
+    });
 
     forEach(fieldsets, function(fieldset) {
         if (hasElementClass(fieldset, 'collapsed')) {
@@ -66,7 +80,7 @@ addLoadEvent(function() {
 
     // last part is the submit buttons
     appendChildNodes('profileform',
-        tabUL, DIV({'class': 'profile-fieldsets subpage'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
+        tabDIV, DIV({'class': 'profile-fieldsets subpage'}, fieldsets), getFirstElementByTagAndClassName('td', null, 'profileform_submit_container').childNodes
     );
     removeElement(
         getFirstElementByTagAndClassName('table', null, 'profileform')
