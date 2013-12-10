@@ -81,6 +81,20 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     /**
+     * This function determines if we can connect to the supplied host and port
+     */
+    public static function can_connect() {
+        $host = get_config_plugin('search', 'elasticsearch', 'host');
+        $port = get_config_plugin('search', 'elasticsearch', 'port');
+        $fp = @fsockopen($host, $port, $errno, $errstr, 5);
+        if ($fp) {
+            fclose($fp);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Generates the search form used in the page headers
      * @return string
      */
@@ -145,6 +159,12 @@ class PluginSearchElasticsearch extends PluginSearch {
             $smarty = smarty_core();
             $smarty->assign('notice', get_string('noticenotenabled', 'search.elasticsearch', get_config('wwwroot').'admin/site/options.php?fs=searchsettings'));
             $enabledhtml = $smarty->fetch('Search:elasticsearch:configwarning.tpl');
+            unset($smarty);
+        }
+        if (!self::can_connect()) {
+            $smarty = smarty_core();
+            $smarty->assign('notice', get_string('noticenotactive', 'search.elasticsearch', get_config_plugin('search', 'elasticsearch', 'host'), get_config_plugin('search', 'elasticsearch', 'port')));
+            $enabledhtml .= $smarty->fetch('Search:elasticsearch:configwarning.tpl');
             unset($smarty);
         }
 
@@ -393,7 +413,11 @@ class PluginSearchElasticsearch extends PluginSearch {
      *
      */
     public static function initialize_sitewide() {
-        self::reset_all_searchtypes();
+        if (self::can_connect()) {
+            self::reset_all_searchtypes();
+            return true;
+        }
+        return false;
     }
 
     /**
