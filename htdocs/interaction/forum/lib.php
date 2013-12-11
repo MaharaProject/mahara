@@ -308,6 +308,13 @@ EOF;
         db_commit();
     }
 
+    public static function postinst($prevversion) {
+        // On a new installation, set post delay to 30 minutes
+        if ($prevversion == 0) {
+            set_config_plugin('interaction', 'forum', 'postdelay', 30);
+        }
+    }
+
     public static function get_activity_types() {
         return array(
             (object)array(
