@@ -39,6 +39,18 @@ if (!$skin || !($currentskin = get_record('skin', 'id', $skin))) {
     $currentskin->id = 0;
     $currentskin->title = get_string('skinnotselected', 'skin');
 }
+$metadata = array();
+if (!empty($currentskin->id)) {
+    $owner = new User();
+    $owner->find_by_id($currentskin->owner);
+    $currentskin->metadata = array(
+        'displayname' => '<a href="' . get_config('wwwroot') . 'user/view.php?id=' . $currentskin->owner . '">' . display_name($owner) . '</a>',
+        'description' => nl2br($currentskin->description),
+        'ctime' => format_date(strtotime($currentskin->ctime)),
+        'mtime' => format_date(strtotime($currentskin->mtime)),
+     );
+}
+
 $userskins   = Skin::get_user_skins();
 $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
@@ -140,6 +152,7 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('saved', $saved);
 $smarty->assign('currentskin', $currentskin->id);
 $smarty->assign('currenttitle', $currentskin->title);
+$smarty->assign('currentmetadata', (!empty($currentskin->metadata)) ? $currentskin->metadata : null);
 $smarty->assign('userskins', $userskins);
 $smarty->assign('favorskins', $favorskins);
 $smarty->assign('siteskins', $siteskins);
