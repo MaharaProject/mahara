@@ -810,13 +810,39 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             return;
         }
 
-        $subscribers = get_records_sql_assoc('
-            SELECT "user" AS subscriber, \'topic\' AS type, "key" FROM {interaction_forum_subscription_topic} WHERE topic = ?
-            UNION
-            SELECT "user" AS subscriber, \'forum\' AS type, "key" FROM {interaction_forum_subscription_forum} WHERE forum = ?
-            ORDER BY type',
-            array($post->topicid, $post->forumid)
-        );
+        // A user may be subscribed via the forum or the specific topic. If they're subscribed to both, we want
+        // to focus on the topic subscription because it's more specific.
+        $sql = '
+            SELECT
+                subq2.subscriber,
+                (CASE WHEN subq2.topickey IS NOT NULL THEN subq2.topickey ELSE subq2.forumkey END) AS "key",
+                (CASE WHEN subq2.topickey IS NOT NULL THEN \'topic\' ELSE \'forum\' END) AS "type"
+            FROM (
+                SELECT subq1.subscriber, max(topickey) AS topickey, max(forumkey) AS forumkey
+                FROM (
+                    SELECT "user" AS subscriber, "key" AS topickey, NULL AS forumkey FROM {interaction_forum_subscription_topic} WHERE topic = ?
+                    UNION ALL
+                    SELECT "user" AS subscriber, NULL AS topickey, "key" AS forumkey FROM {interaction_forum_subscription_forum} WHERE forum = ?
+                ) subq1
+                GROUP BY subq1.subscriber
+            ) subq2
+            INNER JOIN {usr} u ON subq2.subscriber = u.id
+            WHERE u.deleted = 0
+        ';
+        $params = array($post->topicid, $post->forumid);
+        if ($cron) {
+            $sql .= ' AND subq2.subscriber > ? ';
+            $params[] = (int) $data->last_processed_userid;
+            $limitfrom = 0;
+            $limitnum = self::USERCHUNK_SIZE;
+        }
+        else {
+            $limitfrom = '';
+            $limitnum = '';
+        }
+        $sql .= ' ORDER BY subq2.subscriber';
+
+        $subscribers = get_records_sql_assoc($sql, $params, $limitfrom, $limitnum);
 
         $this->users = $subscribers ? activity_get_users($this->get_id(), array_keys($subscribers)) : array();
         $this->fromuser = $post->poster;

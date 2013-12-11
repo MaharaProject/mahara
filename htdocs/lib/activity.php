@@ -503,6 +503,12 @@ abstract class ActivityType {
         // because of the db trigger on notification_internal_activity.
     }
 
+    /**
+     * Sound out notifications to $this->users.
+     * Note that, although this has batching properties built into it with USERCHUNK_SIZE,
+     * it's also recommended to update a bulk ActivityType's constructor to limit the total
+     * number of records pulled from the database.
+     */
     public function notify_users() {
         safe_require('notification', 'internal');
         $this->type = $this->get_id();
@@ -526,9 +532,10 @@ abstract class ActivityType {
                     $num_processed_users++;
                 }
                 else {
-                    return $last_processed_userid;
+                    break;
                 }
             }
+            return $last_processed_userid;
         }
         else {
             while (!empty($this->users)) {
