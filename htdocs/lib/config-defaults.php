@@ -206,7 +206,6 @@ $cfg->bounces_min     = 5;
 $cfg->bounces_ratio   = 0.20;
 /**
  * @global string $cfg->bounceprefix Identity of the Mahara instance
- * This prefix must be four characters.
  * If you have several Mahara, Moodle, or other VERP processors on the same
  * bounce domain, you need to keep track of which processor belongs to
  * which domain.
