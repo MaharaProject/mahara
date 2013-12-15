@@ -202,6 +202,7 @@ $cfg->bounces_min     = 5;
  * before disabling mail for that user.
  * e.g. If using the default bounces_ratio of 0.20 and 20 mails are sent to
  * a user, at least 4 must be returned before email is disabled.
+ * (Set this to 0 to ignore bounces_ratio and rely solely on bounces_min)
  */
 $cfg->bounces_ratio   = 0.20;
 /**

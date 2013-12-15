@@ -697,7 +697,10 @@ function check_overcount($mailinfo) {
         return false;
     }
 
-    if ((! $minbounces = get_config('bounces_min')) || (! $bounceratio = get_config('bounces_ratio'))) {
+    $minbounces = get_config('bounces_min');
+    $bounceratio = get_config('bounces_ratio');
+    // If they haven't set a minbounces value, then we can't proceed
+    if (!$minbounces) {
         return false;
     }
 
