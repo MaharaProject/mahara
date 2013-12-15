@@ -2339,7 +2339,7 @@ function group_get_new_homepage_urlid($desired) {
  * @return string
  */
 function group_homepage_url($group, $full=true, $useid=false) {
-    if (!$useid && !is_null($group->urlid) && get_config('cleanurls')) {
+    if (!$useid && !empty($group->urlid) && get_config('cleanurls')) {
         $url = get_config('cleanurlgroupdefault') . '/' . $group->urlid;
     }
     else if ($group->id) {
