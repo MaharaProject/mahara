@@ -15,12 +15,11 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 require_once('file.php');
 
-if (!get_config_plugin('artefact', 'file', 'folderdownloadzip')) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
-}
-
 $folderid = param_integer('folder', 0);
 $viewid = param_integer('view', 0);
+
+$groupid = param_integer('group', 0);
+$institution = param_alpha('institution', 0);
 
 /*
 * Function to check if the specified artefact should be downloadable
@@ -28,9 +27,13 @@ $viewid = param_integer('view', 0);
 * current user can view the view)
 */
 function can_download_artefact($artefact) {
+    global $USER;
     global $viewid;
 
-    if (artefact_in_view($artefact->get('id'), $viewid)) {
+    if ($USER->can_view_artefact($artefact)) {
+        return true;
+    }
+    else if (artefact_in_view($artefact->get('id'), $viewid)) {
         return can_view_view($viewid);
     }
 
@@ -46,6 +49,19 @@ function can_download_artefact($artefact) {
 }
 
 /*
+* Function to clean up a string so that it can be used as a filename
+*/
+function zip_filename_from($name) {
+    $name = preg_replace('#\s+#', '_', strtolower($name));
+    // \pL is used to match any letter in any alphabet (http://php.net/manual/en/regexp.reference.unicode.php)
+    $name = preg_replace('#[^\pL0-9_\-]+#', '', $name);
+    if ($name != '') {
+        $name = '-' . $name;
+    }
+    return get_string('zipfilenameprefix', 'artefact.file') . $name . '.zip';
+}
+
+/*
 * Function to clean up zip file created by this script
 * from the temp directory in the dataroot.
 */
@@ -53,7 +69,7 @@ function zip_clean_temp_dir() {
     global $USER;
 
     $temp_path = get_config('dataroot').'temp/';
-    $regex = '#(^directory-([0-9]+)-([A-Za-z0-9\-_]+))-([0-9]+)\.zip#';
+    $regex = '#' . '([0-9]+)-([0-9]+)-' . get_string('zipfilenameprefix', 'artefact.file') . '-([\pL0-9_\-]+)\.zip#';
     $zipfiles = glob($temp_path.'*.zip');
     $zips = array();
 
@@ -61,8 +77,8 @@ function zip_clean_temp_dir() {
     foreach ($zipfiles as $zipfile) {
         $zip = str_replace($temp_path, '', $zipfile);
         if (preg_match($regex, $zip, $matches)) {
-            if ((int) $matches[2] == $USER->get('id')) {
-                $filename = $matches[1];
+            if ((int) $matches[1] == $USER->get('id')) {
+                $filename = $matches[3];
 
                 if (!isset($zips[$filename])) {
                     $zips[$filename] = array();
@@ -71,7 +87,7 @@ function zip_clean_temp_dir() {
 
                 $zips[$filename][] = $zipfile;
                 $zips[$filename]['count']++;
-                $zips[$filename]['timecreated'] = (int) $matches[4];
+                $zips[$filename]['timecreated'] = (int) $matches[2];
             }
         }
     }
@@ -104,11 +120,10 @@ function zip_clean_temp_dir() {
 }
 
 /*
-* Function to recursively add directories and files
-* to the zip file.
+* Function to start the process of adding directories to the zip file
+* @returns an array of all files in the directory and subdirectories
 */
 function zip_process_directory(&$zip, $folderid, $path) {
-    global $USER;
     $folderinfo = get_record('artefact', 'id', $folderid);
 
     if (empty($folderinfo)) {
@@ -118,30 +133,50 @@ function zip_process_directory(&$zip, $folderid, $path) {
     $folder = artefact_instance_from_id($folderinfo->id);
     $foldercontent = $folder->folder_contents();
 
+    return zip_process_contents($zip, $foldercontent, $path);
+}
+
+/*
+* Function to recursively add directories to the zip file
+* @returns an array of all files in this and subdirectories
+*/
+function zip_process_contents(&$zip, $foldercontent, $path) {
+    $files = array();
+
     $zip->addEmptyDir(rtrim($path, '/'));
 
-    if (!empty($foldercontent)) {
-        $folders = array();
+    if ($foldercontent) {
         foreach ($foldercontent as $content) {
             $item = artefact_instance_from_id($content->id);
+            if (!can_download_artefact($item)) {
+                continue;
+            }
+
             if ($content->artefacttype === 'folder') {
-                if (!isset($folders[$content->id]) && $content->title != get_string('parentfolder', 'artefact.file')) {
-                    $folders[$content->id] = $content;
-                }
+                $files = array_merge($files, zip_process_directory($zip, $content->id, $path . $content->title . '/'));
             }
             else {
-                if (can_download_artefact($item)) {
-                    $zip->addFile($item->get_path(), $path.$item->download_title());
-                }
+                $files[] = array($item->get_path(), $path . $item->download_title());
             }
         }
+    }
 
-        foreach ($folders as $folder) {
-            $dir = artefact_instance_from_id($folder->id);
-            if (can_download_artefact($dir)) {
-                zip_process_directory($zip, $folder->id, $path.$folder->title.'/');
-            }
+    return $files;
+}
+
+/*
+* Function to write the given files to the zip file. This assumes all required directories have been created.
+* Writes files in chunks since ZipArchive doesn't unlock files until it's closed - large numbers of files could
+* exceed the maximum number of files allowed to be open at once (eg. ulimit on Linux)
+*/
+function zip_write_contents(&$zip, $filepath, $allfiles) {
+    $chunks = array_chunk($allfiles, 500);
+    foreach ($chunks as $chunk) {
+        foreach ($chunk as $file) {
+            $zip->addFile($file[0], $file[1]);
         }
+        $zip->close();
+        $zip->open($filepath);
     }
 }
 
@@ -160,43 +195,135 @@ else {
 // Clean up the temp directory before creating anymore zip files.
 zip_clean_temp_dir();
 
-$folderinfo = get_record('artefact', 'id', $folderid);
+// Home folder
+if ($folderid === 0) {
+    if (function_exists('zip_open')) {
+        global $USER;
+        $userid = $USER->get('id');
 
-if (empty($folderinfo)) {
-    throw new NotFoundException();
-}
+        $select = '
+        SELECT a.id, a.artefacttype, a.title';
+        $from = '
+        FROM {artefact} a';
 
-if (function_exists('zip_open')) {
-    $folder = artefact_instance_from_id($folderinfo->id);
+        $in = "('".join("','", PluginArtefactFile::get_artefact_types())."')";
+        $where = "
+        WHERE artefacttype IN $in";
 
-    if (can_download_artefact($folder)) {
-        $zip = new ZipArchive();
+        $phvals = array();
 
-        $name = preg_replace('#\s+#', '_', strtolower($folderinfo->title));
-        $name = preg_replace('#[^\pL0-9_\-]+#', '', $name);
-        if ($name != '') {
-            $name = '-' . $name;
+        if ($institution) {
+            if ($institution == 'mahara' && !$USER->get('admin')) {
+                // If non-admins are browsing site files, only let them see the public folder & its contents
+                $publicfolder = ArtefactTypeFolder::admin_public_folder_id();
+                $from .= '
+                LEFT OUTER JOIN {artefact_parent_cache} pub ON (a.id = pub.artefact AND pub.parent = ?)';
+                $where .= '
+                AND (pub.parent = ? OR a.id = ?)';
+                $phvals = array($publicfolder, $publicfolder, $publicfolder);
+            }
+            $where .= '
+            AND a.institution = ? AND a.owner IS NULL';
+            $phvals[] = $institution;
         }
-        $name = get_string('zipfilenameprefix', 'artefact.file') . $name;
+        else if ($groupid) {
+            $select .= ',
+                r.can_edit, r.can_view, r.can_republish, a.author';
+            $from .= '
+                LEFT OUTER JOIN (
+                    SELECT ar.artefact, ar.can_edit, ar.can_view, ar.can_republish
+                    FROM {artefact_access_role} ar
+                    INNER JOIN {group_member} gm ON ar.role = gm.role
+                    WHERE gm.group = ? AND gm.member = ?
+                ) r ON r.artefact = a.id';
+            $phvals[] = $groupid;
+            $phvals[] = $USER->get('id');
+            $where .= '
+            AND a.group = ? AND a.owner IS NULL AND (r.can_view = 1 OR a.author = ?)';
+            $phvals[] = $groupid;
+            $phvals[] = $USER->get('id');
+        }
+        else {
+            $where .= '
+            AND a.institution IS NULL AND a.owner = ?';
+            $phvals[] = $userid;
+        }
 
-        $filename = 'directory-'.$USER->get('id').'-'.$name.'-'.time().'.zip';
-        $filepath = get_config('dataroot').'temp/'.$filename;
+        $where .= '
+        AND a.parent IS NULL';
+        $can_edit_parent = true;
+        $can_view_parent = true;
 
-        if ($zip->open($filepath, ZIPARCHIVE::CREATE) !== true) {
+        $contents = get_records_sql_assoc($select . $from . $where, $phvals);
+
+        if (!empty($contents)) {
+            $zip = new ZipArchive();
+
+            if ($groupid) {
+                $group = get_record_sql("SELECT g.name FROM {group} g WHERE g.id = ? AND g.deleted = 0", array($groupid));
+                $downloadname = zip_filename_from($group->name);
+            }
+            else if ($institution) {
+                $downloadname = zip_filename_from($institution);
+            }
+            else {
+                $downloadname = zip_filename_from(get_string('home', 'artefact.file'));
+            }
+            $filename = $USER->get('id') . '-' . time() . '-' . $downloadname;
+            $filepath = get_config('dataroot') . 'temp/' . $filename;
+
+            if ($zip->open($filepath, ZIPARCHIVE::CREATE) !== true) {
+                throw new NotFoundException();
+            }
+
+            $files = zip_process_contents($zip, $contents, '/');
+            zip_write_contents($zip, $filepath, $files);
+            $zip->close();
+
+            serve_file($filepath, $downloadname, 'application/zip', $options);
+        }
+        else {
             throw new NotFoundException();
         }
-
-        zip_process_directory($zip, $folderid, $folderinfo->title.'/');
-
-        $zip->close();
-
-        $downloadname = $name . '.zip';
-        serve_file($filepath, $downloadname, 'application/zip', $options);
     }
     else {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new SystemException(get_string('phpzipneeded', 'artefact.file'));
     }
 }
 else {
-    throw new SystemException(get_string('phpzipneeded', 'artefact.file'));
+    $folderinfo = get_record('artefact', 'id', $folderid);
+
+    if (empty($folderinfo)) {
+        throw new NotFoundException();
+    }
+
+    if (function_exists('zip_open')) {
+        $folder = artefact_instance_from_id($folderinfo->id);
+
+        if (can_download_artefact($folder)) {
+            $zip = new ZipArchive();
+
+            $foldername = $folderinfo->title;
+
+            $filename = 'directory-'.$USER->get('id').'-'.$foldername.'-'.time().'.zip';
+            $filepath = get_config('dataroot').'temp/'.$filename;
+
+            if ($zip->open($filepath, ZIPARCHIVE::CREATE) !== true) {
+                throw new NotFoundException();
+            }
+
+            $files = zip_process_directory($zip, $folderid, $folderinfo->title.'/');
+            zip_write_contents($zip, $filepath, $files);
+            $zip->close();
+
+            $downloadname = zip_filename_from($foldername);
+            serve_file($filepath, $downloadname, 'application/zip', $options);
+        }
+        else {
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        }
+    }
+    else {
+        throw new SystemException(get_string('phpzipneeded', 'artefact.file'));
+    }
 }
