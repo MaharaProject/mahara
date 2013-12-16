@@ -869,7 +869,7 @@ class ActivityTypeWatchlist extends ActivityType {
 
         require_once('view.php');
         if ($this->viewinfo = new View($this->view)) {
-            $this->ownerinfo = $this->viewinfo->get_owner_object();
+            $this->ownerinfo = hsc($this->viewinfo->formatted_owner());
         }
         if (empty($this->ownerinfo)) {
             if (!empty($this->cron)) { // probably deleted already
@@ -926,8 +926,8 @@ class ActivityTypeWatchlist extends ActivityType {
     }
 
     public function get_message($user) {
-        return get_string_from_language($user->lang, 'newwatchlistmessageview', 'activity', 
-                                        display_name($this->ownerinfo, $user), $this->viewinfo->get('title'));
+        return get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
+                                        $this->viewinfo->get('title'), $this->ownerinfo);
     }
 
     public function get_required_parameters() {
