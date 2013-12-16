@@ -1482,8 +1482,9 @@ function configure_dbconnection() {
     $db->Execute("SET NAMES 'utf8'");
 
     if (is_mysql()) {
-        $db->Execute("SET CHARACTER SET utf8");
         $db->Execute("SET SQL_MODE='POSTGRESQL'");
+        $db->Execute("SET CHARACTER SET utf8");
+        $db->Execute("SET SQL_BIG_SELECTS=1");
     }
 
     // more later..
