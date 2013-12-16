@@ -1,0 +1,15 @@
+CookieConsent
+=============
+
+Name   :    Cookie Consent
+Website:    http://sitebeam.net/cookieconsent/
+Author :    (C) 2013 Silktide Ltd.
+Source :    http://sitebeam.net/cookieconsent/documentation/changelog/
+Version:    1.0.10
+Licence:    CookieConsent is GPLv3 licensed (see: http://sitebeam.net/cookieconsent/documentation/licence/)
+
+Modifications:
+- changed 'plugin.js' line 1525 from 'Open+Sans:400,600:latin' to 'Open+Sans:400,600:latin,latin-ext' to avoid UTF-8 character display issues
+- renamed 'style.css' to 'cookieconsent.css' and copied/moved it to htdocs/raw/static/style
+- decrease all font-size properties in 'cookieconsent.css' for smaller text (all changes marked with: /*changed*/)
+- changed some height and max-height properties in 'cookieconsent.css'      (all changes marked with: /*changed*/)

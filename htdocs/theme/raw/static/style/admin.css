@@ -255,6 +255,42 @@ form#register table table {
 
 /* Configure site > Files */
 
+/* Configure site > Cookie consent */
+#cookieconsent table {
+    width: 100%;
+}
+#cookieconsent th {
+    width: 20%;
+}
+#cookieconsent th label {
+    white-space: nowrap;
+}
+#cookieconsent legend {
+    font-size: 1em;
+}
+#cookieconsent fieldset {
+    border-color: #D1D1D1;
+}
+#cookieconsent_enabled_container th,
+#directive_2009136_container th {
+    width: 15%;
+}
+#cookieconsent_enabled_container td,
+#directive_2009136_container td {
+    width: 85%;
+}
+
+#directive_2009136_container td a {
+    vertical-align: text-top;
+}
+
+#cookieconsent_submit_container th {
+    display: none;
+}
+#cookieconsent_submit_container td {
+    padding-top: 10px;
+}
+
 /* Users > User search */
 #initials {
     line-height: 2.5em;
