@@ -34,7 +34,7 @@
         </div>
         <div id="useraccountsettingsleft">
             <div id="profilepict">
-                <a href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt=""></a>
+                <a href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxheight=100 maxwidth=100}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
                 <div id="profilename"><a href="{profile_url($user)}">{$user|display_name}</a></div>
                 {if $loginas}
                    <div id="loginas"><a class="btn" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{str tag=loginas section=admin}</a></div>

@@ -2,7 +2,7 @@
         {foreach from=$results.cdata item=row}
             {foreach from=$row item=r}
             <div class="{cycle values='r0,r1'} listrow">
-              <div class="fl membericon"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt=""></div>
+              <div class="fl membericon"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}"></div>
               <div class="memberdetail">
                 <h3 class="title"><a href="{profile_url($r)}">{$r.name}</a>{if $r.role}<span class="grouprole"> - {$results.roles[$r.role]->display}
                   {if $caneditroles && $r.canchangerole} (<a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}">{str tag=changerole section=group}</a>){/if}</span>{/if}</h3>

@@ -37,9 +37,10 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             $configdata['artefactids'][] = $configdata['email'];
         }
 
+        $viewowner = get_field('view', 'owner', 'id', $instance->get('view'));
+
         // Get data about the profile fields in this blockinstance
         if (!empty($configdata['artefactids'])) {
-            $viewowner = get_field('view', 'owner', 'id', $instance->get('view'));
             foreach ($configdata['artefactids'] as $id) {
                 try {
                     $artefact = artefact_instance_from_id($id);
@@ -62,6 +63,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['profileicon'];
             $downloadpath .= '&maxwidth=80';
             $smarty->assign('profileiconpath', $downloadpath);
+            $smarty->assign('profileiconalt', get_string('profileimagetext', 'mahara', display_default_name(get_user($viewowner))));
         }
 
         // Override the introduction text if the user has any for this 

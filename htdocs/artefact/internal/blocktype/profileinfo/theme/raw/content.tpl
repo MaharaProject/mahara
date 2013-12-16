@@ -1,4 +1,4 @@
-{if $profileiconpath}<div class="fr"><img src="{$profileiconpath}" alt=""></div>{/if}
+{if $profileiconpath}<div class="fr"><img src="{$profileiconpath}" alt="{$profileiconalt}"></div>{/if}
 <p>{$profileinfo.introduction|clean_html|safe}</p>
 {if $profileinfo && (count($profileinfo) != 1 || !$profileinfo.introduction)}<ul>
 {foreach from=$profileinfo key=key item=item}

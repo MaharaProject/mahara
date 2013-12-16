@@ -6,7 +6,7 @@
   <div class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}{if $item->makepublicform} private{/if}">
       <div class="commentleft">
         <a href="{$item->author->profileurl}">
-          <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{$item->author|display_name}">
+          <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
         </a>
       </div>
       <div class="commentrightwrap">

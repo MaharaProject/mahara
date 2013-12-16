@@ -70,7 +70,7 @@
 	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
 	{foreach from=$groupadmins item=groupadmin}
     <span class="s inlinelist">
-        <a href="{profile_url($groupadmin)}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt=""></a>
+        <a href="{profile_url($groupadmin)}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></a>
         <a href="{profile_url($groupadmin)}" class="groupadmin">{$groupadmin|display_name}</a>
     </span>
     {/foreach}

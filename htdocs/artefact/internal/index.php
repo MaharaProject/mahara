@@ -188,7 +188,8 @@ function get_desired_fields(&$allfields, $desiredfields, $section) {
     global $USER;
     if ($section == 'about') {
         $r = get_record_select('view', 'type = ? AND owner = ?', array('profile', $USER->id), 'id');
-        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="' . profile_icon_url($USER, 100, 100) . '" alt=""></a></div>';
+        $label = '<div id="profileicon"><a href="' . get_config('wwwroot') . 'artefact/file/profileicons.php"><img src="'
+            . profile_icon_url($USER, 100, 100) . '" alt="' . get_string("editprofileicon", "artefact.file") . '"></a></div>';
         $descr = get_string('aboutprofilelinkdescription', 'artefact.internal', get_config('wwwroot') . 'view/blocks.php?id=' . $r->id);
         $descr .= get_string('aboutdescription', 'artefact.internal');
     }

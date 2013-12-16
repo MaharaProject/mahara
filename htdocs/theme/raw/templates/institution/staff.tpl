@@ -12,7 +12,7 @@
     {/if}
     <div class="peoplelistinfo">
       <div class="leftdiv" id="staffinfo_{$user->id}">
-          <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="">
+          <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
       </div>
       <div class="rightdiv">
         <h3 class="title">

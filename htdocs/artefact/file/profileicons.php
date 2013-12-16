@@ -84,10 +84,10 @@ var table = new TableRenderer(
     [
         function(rowdata) {
             if (rowdata.id) {
-                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
+                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$wwwroot}thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.title ? rowdata.title : rowdata.note}));
             }
             else {
-                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.note}));
+                return TD({'class': 'profileiconcell'}, null, IMG({'src': '{$ravatar}', 'alt': rowdata.title ? rowdata.title : rowdata.note}));
             }
         },
         function(rowdata) {

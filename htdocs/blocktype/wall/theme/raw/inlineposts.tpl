@@ -8,7 +8,7 @@
             {if $wallpost->deletable}
                     <div class="wallpostdeletebutton"><a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn-big-del">{str tag='delete' section='blocktype.wall'}</a></div>
         {/if}
-                <div class="userinfo"><img src="{profile_icon_url user=$wallpost maxheight=25 maxwidth=25}" alt="Profile Picture"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a> - <span class="postedon">{$wallpost->postdate|format_date}</span></div>
+                <div class="userinfo"><img src="{profile_icon_url user=$wallpost maxheight=25 maxwidth=25}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a> - <span class="postedon">{$wallpost->postdate|format_date}</span></div>
                 <div class="detail">{$wallpost->text|parse_bbcode|safe}</div>
                 <div class="controls">
        {* {if $ownwall}

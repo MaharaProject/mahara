@@ -5,7 +5,7 @@
     {foreach from=$messages item=message}
         <div class="{cycle values='r0,r1'} listrow">
           <div class="fl membericon">
-            <img src="{profile_icon_url user=$message->from maxwidth=40 maxheight=40}" alt="">
+            <img src="{profile_icon_url user=$message->from maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
           </div>
           <div class="memberdetail">
             <h3 class="title">

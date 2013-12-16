@@ -1,6 +1,6 @@
     <div class="sidebar-header">
       <div id="user-profileicon">
-        <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt=""></a>
+        <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}"><img src="{profile_icon_url user=$sbdata.id maxheight=50 maxwidth=50}" alt="{str tag="editprofileicon" section="artefact.file"}"></a>
       </div>
       <h3><a href="{$sbdata.url}">{$sbdata.myname}</a></h3>
     </div>

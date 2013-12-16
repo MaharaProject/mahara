@@ -24,7 +24,7 @@
                 <a href="{$WWWROOT}view/view.php?id={$view.id}&showcomment={$view.commentid}" title="{str tag=viewcomment section=artefact.comment}">{$view.commenttext|str_shorten_html:40:true|strip_tags|safe}</a>
             </div>
           {if $view.commentauthor}
-            <span class="poster"><a href="{profile_url($view.commentauthor)}"><img src="{profile_icon_url user=$view.commentauthor maxwidth=20 maxheight=20}" alt="" class="profile-icon-container"> {$view.commentauthor|display_name}</a> - </span>
+            <span class="poster"><a href="{profile_url($view.commentauthor)}"><img src="{profile_icon_url user=$view.commentauthor maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$view.commentauthor|display_default_name}" class="profile-icon-container"> {$view.commentauthor|display_name}</a> - </span>
           {else}
             <span class="poster">{$view.commentauthorname} - </span>
           {/if}

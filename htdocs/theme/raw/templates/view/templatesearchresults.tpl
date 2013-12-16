@@ -26,7 +26,7 @@
 {elseif $row.owner}
       <td class="ownericon s">
         <a class="userlink" href="{profile_url($row.user, true, true)}" target="_blank">
-           <img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt="" class="profile-icon-container">
+           <img src="{profile_icon_url user=$row.user maxwidth=20 maxheight=20}" alt="{str tag=profileimagetext arg1=$row.user|display_default_name}" class="profile-icon-container">
            {$row.sharedby}
         </a>
       </td>
