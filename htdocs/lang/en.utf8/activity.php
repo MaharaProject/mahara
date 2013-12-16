@@ -52,7 +52,7 @@ $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessage'] = 'New activity on your watchlist';
-$string['newwatchlistmessageview'] = '%s has changed their page "%s"';
+$string['newwatchlistmessageview1'] = 'The page "%s" belonging to %s has been changed';
 
 $string['newviewsubject'] = 'New page created';
 $string['newviewmessage'] = '%s has created a new page "%s"';
