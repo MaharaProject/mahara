@@ -1,3 +1,28 @@
+1.8.1 (2013-12-18)
+- Bug 1247715: MySQLi driver errors out with non-default port number
+- Bug 1246024: Error message fading too fast to read
+- Bug 1053708: Problems when changing the page size in the paginator
+- Bug 1058416: Properly setting the clean URL for copied pages
+- Bug 1255361: Error when a site admin tries to attach a file to an institution page
+- Bug 1250239: Errors while changing settings for "No Institution"
+- Bug 996337: Forum post delay not properly displayed
+- Bug 974855: Missing help file for "generate sitemap" option
+- Bug 1248307: When device detection is on, show radio button
+- Bug 1254394: User auth method can't be changed
+- Bug 1255378: Fill in missing "find_key-name()" method implementation
+- Bug 1081947: Removing usage of CAST() for MySQL optimization
+- Bug 1174623: Sites upgraded from 1.0 missing some keys and indexes
+- Bug 1067550: On bulk user edit page, don't show "change auth" if there's only 1 auth
+- Bug 1075760: Empty objectionable material reports not included in digest emails
+- Bug 1196213: On "my tags" page, tags not linked for most users
+- Bug 1237177: Elasticsearch: not including group content
+- Bug 1245638: Elasticsearch: Textboxes should be indexed as text rather than media
+- Bug 1247729: Elasticsearch: Set 2nd column to sort by score/relevance
+- Bug 1252497: Skins: creation date overwritten on edit
+- Bug 1249123: Skins: Allow to specify where "No Institution" should allow skins
+- Bug 1239271: Skins: description not displayed
+- 
+
 1.8.0 (2013-10-24)
 - New features: 
 -- Turned the block chooser vertical and scrolling, to accomodate longer Pages
