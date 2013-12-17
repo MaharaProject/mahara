@@ -2122,6 +2122,7 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
        ';
     }
     else {
+        $url = get_config('wwwroot') . 'json/termsandconditions.php';
         $js = '
         var registerconfirm = ' . json_encode($registerconfirm) . ';
         $j(function() {
@@ -2135,6 +2136,21 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
                     $j("#' . $reasonid . '_container").addClass("js-hidden");
                     $j("#' . $reasonid . '_container textarea").addClass("js-hidden");
                     $j("#' . $reasonid . '_container").next("tr.textarea").addClass("js-hidden");
+                }
+                // need to fetch the correct terms and conditions for the institution
+                if (this.value) {
+                    $j.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: "' . $url . '",
+                        data: {
+                            "institution": this.value,
+                        }
+                    }).done(function (data) {
+                        if (data.content) {
+                            $j("#termscontainer").html(data.content);
+                        }
+                    });
                 }
             });
         });

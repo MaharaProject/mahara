@@ -963,10 +963,12 @@
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mauthor" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name,institution" />
                 <KEY NAME="mauthorfk" TYPE="foreign" FIELDS="mauthor" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
         <!-- watchlist stuff -->

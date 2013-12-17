@@ -714,6 +714,45 @@ class User {
         }
     }
 
+    /**
+     * Get institution name by checking which 'institution theme' a user is allocated to see
+     * and if that theme has sitepages set.
+     * Or if a lastinstitution cookie is set. Or if an institution url parameter is set.
+     * Defaults to 'mahara'.
+     *
+     * @return string   Institution name
+     */
+    public function sitepages_institutionname_by_theme($page) {
+        // get institution when logged in
+        if ($this->is_logged_in()) {
+            if ($theme = $this->get('institutiontheme')) {
+                if (!empty($theme->institutionname)) {
+                    // check to see if institution is using it's own site pages or default site pages
+                    if ($institution = get_record('institution', 'name', $theme->institutionname)) {
+                        if (get_config_institution($institution->name, 'sitepages_' . $page)) {
+                            return get_config_institution($institution->name, 'sitepages_' . $page);
+                        }
+                    }
+                    else {
+                        return $theme->institutionname;
+                    }
+                }
+                else {
+                    return 'mahara';
+                }
+            }
+        }
+        // or from url
+        if ($institution = param_alphanum('institution', null)) {
+            return $institution;
+        }
+        // or from cookie
+        if ($institution = get_cookie('lastinstitution')) {
+            return $institution;
+        }
+        return 'mahara';
+    }
+
     public function in_institution($institution, $role = null) {
         $institutions = $this->get('institutions');
         return isset($institutions[$institution]) 
@@ -1398,6 +1437,9 @@ class LiveUser extends User {
      * Logs the current user out
      */
     public function logout () {
+        // add long-term cookie to record institution user last used
+        set_cookie('lastinstitution', $this->sitepages_institutionname_by_theme('loggedouthome'), '2240561472', true);
+
         require_once(get_config('libroot') . 'ddl.php');
 
         if ($this->changed == true) {
