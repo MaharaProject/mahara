@@ -13,6 +13,7 @@ defined('INTERNAL') || die();
 
 $string['typemaharamessage'] = 'System message';
 $string['typeusermessage'] = 'Message from other users';
+$string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
 $string['typeviewaccess'] = 'New page access';
 $string['typecontactus'] = 'Contact us';
@@ -22,6 +23,7 @@ $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
 $string['typeinstitutionmessage'] = 'Institution message';
 $string['typegroupmessage'] = 'Group message';
+$string['typenewpost'] = 'Forum post';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';

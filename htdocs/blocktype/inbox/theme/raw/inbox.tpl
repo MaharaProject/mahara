@@ -5,17 +5,17 @@
 {foreach from=$items item=i}
 <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
-  {if $i->read && $i->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/read' $i->type '.png')}" alt="{$i->strtype}" />
-  {elseif $i->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/' $i->type '.png')}" class="unreadmessage" />
+  {if $i->read}
+      <img src="{theme_url filename=cat('images/' $i->type '.png')}" alt="{$i->strtype}" />
   {else}
-        <img src="{theme_url filename=cat('images/' $i->type '.png')}" alt="{$i->strtype}" />
+      <img src="{theme_url filename=cat('images/' $i->type '.png')}" class="unreadmessage" alt="{$i->strtype}" />
   {/if}
     </td>
     <td>
   {if $i->message}
-      <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">{$i->subject}</a>
+      <a href="{if $i->url}{$WWWROOT}{$i->url}{else}{$WWWROOT}account/activity/index.php{/if}" class="inbox-showmessage{if !$i->read} unread{/if}">
+      {if !$i->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$i->subject}
+      </a>
       <div class="inbox-message hidden messagebody-{$i->type}" id="inbox-message-{$i->id}">{$i->message|safe}
       {if $i->url}<br><a href="{$WWWROOT}{$i->url}">{if $i->urltext}{$i->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>
@@ -43,16 +43,14 @@ addLoadEvent(function() {
         connect(element, 'onclick', function(e) {
             e.stop();
             var message = getFirstElementByTagAndClassName('div', 'inbox-message', element.parentNode);
-            var unreadicon = getFirstElementByTagAndClassName('img', 'unreadmessage', message.parentNode.parentNode);
+            var unreadText = getFirstElementByTagAndClassName(null, 'accessible-hidden', element);
             toggleElementClass('hidden', message);
             if (hasElementClass(element, 'unread')) {
                 var id = getNodeAttribute(message, 'id').replace(/inbox-message-(\d+)$/, '$1');
                 var pd = {'readone':id};
                 sendjsonrequest(config.wwwroot + 'account/activity/index.json.php', pd, 'GET', function(data) {
                     removeElementClass(element, 'unread');
-                    if (unreadicon) {
-                        swapDOM(unreadicon, IMG({'src' : {/literal}'{$readicon}'{literal}, 'alt' : getNodeAttribute(unreadicon, 'alt') + ' - ' + {/literal}'{str tag='read' section='activity'}'{literal} }));
-                    };
+                    removeElement(unreadText);
                     updateUnreadCount(data);
                 });
             }

@@ -1,17 +1,15 @@
 {foreach from=$data item=item}
   <tr class="{cycle values='r0,r1'}">
     <td class="icon-container">
-  {if $item->read && $item->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/read' $item->type '.png')}" alt="{$item->strtype} - {str tag='read' section='activity'}" />
-  {elseif $item->type == 'usermessage'}
-        <img src="{theme_url filename=cat('images/' $item->type '.png')}" alt="{$item->strtype}" class="unreadmessage" />
-  {else}
+  {if $item->read}
         <img src="{theme_url filename=cat('images/' $item->type '.png')}" alt="{$item->strtype}" />
+  {else}
+        <img src="{theme_url filename=cat('images/' $item->type '.png')}" alt="{$item->strtype}" class="unreadmessage" />
   {/if}
     </td>
     <td>
   {if $item->message}
-      <a href="" onclick="showHideMessage({$item->id}); return false;" class="inbox-showmessage">{$item->subject}</a>
+      <a href="" onclick="showHideMessage({$item->id}); return false;" class="inbox-showmessage{if !$item->read} unread{/if}">{if !$item->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$item->subject}</a>
       <div id="message-{$item->id}" class="hidden inbox-message">{$item->message|safe}
       {if $item->url}<br><a href="{$WWWROOT}{$item->url}">{if $item->urltext}{$item->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
       </div>

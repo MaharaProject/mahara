@@ -180,6 +180,13 @@ form.oneline.inline div,
     margin: 0;
     padding: 0;
 }
+/* Hides the element but leaves it accessible to screen readers */
+.accessible-hidden {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+}
 .nojs-hidden-inline,
 .nojs-hidden-block,
 .nojs-hidden-table,
