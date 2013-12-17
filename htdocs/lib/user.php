@@ -790,18 +790,21 @@ function process_email($address) {
         return $email;
     }
 
+    $mailprefix = get_config('bounceprefix');
+    $prefixlength = strlen($mailprefix);
+
     list($email->localpart,$email->domain) = explode('@',$address);
-    // The prefix is stored in the first four characters
-    $email->prefix        = substr($email->localpart,0,4);
+    // The prefix is stored in the first characters denoted by $prefixlength
+    $email->prefix        = substr($email->localpart, 0, $prefixlength);
     // The type of message received is a one letter code
-    $email->type          = substr($email->localpart,4,1);
+    $email->type          = substr($email->localpart, $prefixlength, 1);
     // The userid should be available immediately afterwards
     // Postfix and other smtp servers don't like the use of / in the extension part of an email
     // We may of replaced it with another valid email character which isn't in base64, namely '-'
     // If we didn't, then the preg_replace won't do anything
-    list(,$email->userid) = unpack('V',base64_decode(preg_replace('/-/', '/', substr($email->localpart,5,8))));
+    list(,$email->userid) = unpack('V',base64_decode(preg_replace('/-/', '/', substr($email->localpart, $prefixlength + 1, 8))));
     // Any additional arguments
-    $email->args          = substr($email->localpart,13,-16);
+    $email->args          = substr($email->localpart, $prefixlength + 9,-16);
     // And a hash of the intended recipient for authentication
     $email->addresshash   = substr($email->localpart,-16);
 
@@ -813,7 +816,6 @@ function process_email($address) {
     switch ($email->type) {
     case 'B': // E-mail bounces
         if ($user = get_record_select('artefact_internal_profile_email', '"owner" = ? AND principal = 1', array($email->userid))) {
-            $mailprefix = get_config('bounceprefix');
             $maildomain = get_config('bouncedomain');
             $installation_key = get_config('installation_key');
             // check the half md5 of their email
