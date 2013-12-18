@@ -928,6 +928,21 @@ class User {
         $this->set('grouproles', $roles);
     }
 
+    /**
+     * Indicates whether the user can see the artefact *in the artefact chooser*, and use
+     * it in Pages within its ownership context. In other words, if it's a group file, they
+     * can use it in Pages for that group, but not in their own personal Pages. The function
+     * name refers to the "view" permission for group files.
+     *
+     * WARNING: Despite the similarity in name to can_view_view(), this method DOESN'T
+     * check for general permission to "see" an artefact, i.e. to download it or view
+     * its artefact detail page. For that, you need to use artefact_in_view() followed by
+     * can_view_view().
+     *
+     * TODO: Rename this to something less misleading?
+     *
+     * @param ArtefactType $a
+     */
     public function can_view_artefact($a) {
         global $USER;
 
@@ -961,6 +976,17 @@ class User {
         return false;
     }
 
+    /**
+     * Indicates whether the user has permission to edit an artefact's contents. The name refers
+     * to the "edit" permission for group files.
+     *
+     * If a user has "edit" permission, it is assumed they also have "view" permission (i.e.
+     * can view it in the artefact chooser -- see $USER->can_view_artefact())
+     *
+     * @param ArtefactType $a
+     * @param boolean $viewparent Whether the user must also be able to "view" the artefact's parent
+     * @return boolean
+     */
     public function can_edit_artefact($a, $viewparent=false) {
         $parent = $a->get_parent_instance();
         if ($parent) {
@@ -1002,6 +1028,16 @@ class User {
         return $a->role_has_permission($role, 'edit');
     }
 
+    /**
+     * Indicates whether the user has permission to use the artefact in their own Pages. The name
+     * refers to the "publish" permission for group files.
+     *
+     * If a user has "publish" permission on an artefact, it is assumed the also have "edit" and
+     * "view" permission (i.e. can view it in the artefact chooser -- see $USER->can_view_artefact())
+     *
+     * @param ArtefactType $a
+     * @return boolean
+     */
     public function can_publish_artefact($a) {
         $parent = $a->get_parent_instance();
         if ($parent) {
