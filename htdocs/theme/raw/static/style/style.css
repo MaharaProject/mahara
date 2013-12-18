@@ -538,6 +538,7 @@ form {
 /* required */
 .requiredmarker {
     color: #FF0000;
+    font-weight: normal;
 }
 /* description */
 .pieform td.description {

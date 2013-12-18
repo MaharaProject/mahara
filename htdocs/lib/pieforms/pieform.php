@@ -1404,15 +1404,20 @@ EOF;
         // Element title
         if (isset($element['title']) && $element['title'] !== '') {
             $title = (!empty($element['labelescaped'])) ? $element['title'] : self::hsc($element['title']);
-            if (!empty($element['nolabel'])) {
-                // Don't bother with a label for the element
-                $element['labelhtml'] = $title;
+
+            if ($this->get_property('requiredmarker') && !empty($element['rules']['required'])) {
+                $requiredmarker = ' <span class="requiredmarker">*</span>';
             }
             else {
-                $element['labelhtml'] = '<label for="' . $this->name . '_' . $element['id'] . '">' . $title . '</label>';
+                $requiredmarker = '';
             }
-            if ($this->get_property('requiredmarker') && !empty($element['rules']['required'])) {
-                $element['labelhtml'] .= ' <span class="requiredmarker">*</span>';
+
+            if (!empty($element['nolabel'])) {
+                // Don't bother with a label for the element
+                $element['labelhtml'] = $title . $requiredmarker;
+            }
+            else {
+                $element['labelhtml'] = '<label for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
             }
         }
 
