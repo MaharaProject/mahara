@@ -580,7 +580,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         if (!empty($values['images'])) {
             foreach ($values['images'] as $id) {
                 $image = new ArtefactTypeImage($id);
-                if (!($image instanceof ArtefactTypeImage) || !$USER->can_publish_artefact($image)) {
+                if (!($image instanceof ArtefactTypeImage) || !$USER->can_view_artefact($image)) {
                     $result['message'] = get_string('unrecoverableerror', 'error');
                     $form->set_error(null, $result['message']);
                     $form->reply(PIEFORM_ERR, $result);
@@ -590,7 +590,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
 
         if (!empty($values['folder'])) {
             $folder = artefact_instance_from_id($values['folder']);
-            if (!($folder instanceof ArtefactTypeFolder) || !$USER->can_publish_artefact($folder)) {
+            if (!($folder instanceof ArtefactTypeFolder) || !$USER->can_view_artefact($folder)) {
                 $result['message'] = get_string('unrecoverableerror', 'error');
                 $form->set_error(null, $result['message']);
                 $form->reply(PIEFORM_ERR, $result);

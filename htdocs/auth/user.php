@@ -985,6 +985,16 @@ class User {
     public function can_view_artefact($a) {
         global $USER;
 
+        // Files in the public site folder and its subfolders
+        if ($a instanceof ArtefactTypeFileBase) {
+            $publicfolderid = ArtefactTypeFolder::admin_public_folder_id();
+            $fileispublic = ($a->get('id') == $publicfolderid)
+                         || (($a->get('institution') == 'mahara') && (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $a->get('id'), 'parent', $publicfolderid));
+            if ($fileispublic) {
+                return true;
+            }
+        }
+
         $parent = $a->get_parent_instance();
         if ($parent) {
             if (!$this->can_view_artefact($parent)) {
