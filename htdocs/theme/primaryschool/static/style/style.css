@@ -532,6 +532,7 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
 ul.in-page-tabs li input.linkbtn,
+ul.in-page-tabs li button.linkbtn,
 ul.searchtab li span.inactive {
 	color: #FFFFFF;
 	background: none;
@@ -541,7 +542,8 @@ ul.searchtab li span.inactive {
     display: table-cell;
 }
 ul.in-page-tabs li a:hover,
-ul.in-page-tabs li input:hover {
+ul.in-page-tabs li input:hover,
+ul.in-page-tabs li button:hover {
 	color: #ffd850;
 }
 ul.in-page-tabs li.current-tab {
@@ -551,7 +553,8 @@ ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active,
-ul.in-page-tabs li input.current-tab {
+ul.in-page-tabs li input.current-tab,
+ul.in-page-tabs li button.current-tab {
 	color: #000000;
 	background: url(../images/inpage-active-left.png) no-repeat left top;
     border: 0;

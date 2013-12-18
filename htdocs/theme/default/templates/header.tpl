@@ -36,7 +36,7 @@
 {* Tabs and beginning of page container for group info pages *}       <div class="tabswrap"><h3 class="rd-tab-title">{str tag=tabs}<span class="rd-tab"></span></h3>
                 <ul class="in-page-tabs">
 {foreach from=$SUBPAGENAV item=item}
-                    <li {if $item.selected}class="current-tab"{/if}><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}</a></li>
+                    <li {if $item.selected}class="current-tab"{/if}><a {if $item.selected}class="current-tab" {/if}href="{$WWWROOT}{$item.url}">{$item.title}<span class="accessible-hidden">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span></a></li>
 {/foreach}
                 </ul>
               </div>

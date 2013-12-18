@@ -8,7 +8,7 @@
 <div class="site-stats-right">
 <div class="tabswrap"><ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
-  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}</a></li>
+  <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}<span class="accessible-hidden">({str tag=tab}{if $subpage == $type} {str tag=selected}{/if})</span></a></li>
 {/foreach}
 </ul></div>
 
