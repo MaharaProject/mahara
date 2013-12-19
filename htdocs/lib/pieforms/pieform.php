@@ -92,14 +92,6 @@ class Pieform {/*{{{*/
     /*{{{ Fields */
 
     /**
-     * Maintains a tab index across all created forms, to make it easy for
-     * people to forget about it and have it just work for all of their forms.
-     *
-     * @var int
-     */
-    public static $formtabindex = 1;
-
-    /**
      * The form name. This is required.
      *
      * @var string
@@ -233,7 +225,7 @@ class Pieform {/*{{{*/
 
 
         if (empty($this->data['tabindex'])) {
-            $this->data['tabindex'] = self::$formtabindex++;
+            $this->data['tabindex'] = 0;
         }
 
         if (!is_array($this->data['elements']) || count($this->data['elements']) == 0) {

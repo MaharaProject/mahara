@@ -362,7 +362,7 @@ function saml_auth_generate_login_form() {
     }
     require_once('pieforms/pieform.php');
     if (count_records('institution', 'registerallowed', 1, 'suspended', 0)) {
-        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a><br>';
+        $registerlink = '<a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a><br>';
     }
     else {
         $registerlink = '';
@@ -400,10 +400,10 @@ function saml_auth_generate_login_form() {
             ),
             'register' => array(
                 'value' => '<div id="login-helplinks">' . $registerlink
-                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('lostusernamepassword') . '</a></div>'
+                    . '<a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
             ),
             'loginsaml' => array(
-                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/index.php" tabindex="2">' . get_string('login', 'auth.saml') . '</a>')
+                'value' => ((count_records('auth_instance', 'authname', 'saml') == 0) ? '' : '<a href="' . get_config('wwwroot') . 'auth/saml/index.php">' . get_string('login', 'auth.saml') . '</a>')
             ),
         )
     )));
