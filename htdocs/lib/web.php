@@ -388,6 +388,9 @@ EOF;
         $stylesheets = array_merge($stylesheets, $skinobj->get_stylesheets($viewid));
     }
 
+    // Allow us to set the HTML lang attribute
+    $smarty->assign('LANGUAGE', substr(current_language(), 0, 2));
+
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
         $smarty->assign('LANGDIRECTION', 'rtl');
