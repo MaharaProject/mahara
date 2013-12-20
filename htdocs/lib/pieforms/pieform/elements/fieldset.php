@@ -121,9 +121,13 @@ function pieform_update_legends(element) {
         if (legend.firstChild.tagName == 'A') {
             connect(legend.firstChild, 'onclick', function(e) {
                 toggleElementClass('collapsed', fieldset);
+                var isCollapsed = hasElementClass(fieldset, 'collapsed');
+                if (!isCollapsed) {
+                    jQuery(fieldset).find(':input').not('.open-fieldset-input').first().focus();
+                }
                 var input = getFirstElementByTagAndClassName('input', 'open-fieldset-input', legend);
                 if (input) {
-                    input.value = !hasElementClass(fieldset, 'collapsed');
+                    input.value = !isCollapsed;
                 }
                 e.stop();
             });
