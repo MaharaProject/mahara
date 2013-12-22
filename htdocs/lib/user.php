@@ -1753,6 +1753,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
+    $smarty->assign('offset', $data['offset']);
 
     $params = array();
     if (isset($data['query'])) {

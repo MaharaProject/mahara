@@ -18,7 +18,6 @@ require_once('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
-$returnto = param_alpha('returnto', 'myfriends');
 
 if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester', $id)
     || !($user = get_record('usr', 'id', $id, 'deleted', 0))) {
@@ -26,6 +25,21 @@ if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester',
 }
 
 $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
+$returnto = param_alpha('returnto', 'myfriends');
+$offset = param_integer('offset', 0);
+switch ($returnto) {
+    case 'find':
+        $goto = 'user/find.php';
+        break;
+    case 'view':
+        $goto = profile_url($user, false);
+        break;
+     default:
+        $goto = 'user/myfriends.php';
+}
+$goto .= (strpos($goto,'?') ? '&' : '?') . 'offset=' . $offset;
+$goto = get_config('wwwroot') . $goto;
 
 $form = pieform(array(
     'name' => 'denyrequest',
@@ -40,7 +54,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('denyfriendrequestlower', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? profile_url($user, false) : 'user/myfriends.php')),
+            'goto' => $goto,
         )
     )
 ));
@@ -83,15 +97,19 @@ function denyrequest_submit(Pieform $form, $values) {
     handle_event('removefriendrequest', array('owner' => $loggedinid, 'requester' => $id));
 
     $SESSION->add_ok_msg(get_string('friendformrejectsuccess', 'group'));
+    $offset = param_integer('offset', 0);
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':
-            redirect('/user/find.php');
+            $goto = 'user/find.php';
             break;
         case 'view':
-            redirect(profile_url($user));
+            $goto = profile_url($user, false);
             break;
         default:
-            redirect('/user/myfriends.php');
+            $goto = 'user/myfriends.php';
             break;
     }
+    $goto .= (strpos($goto,'?')) ? '&offset=' . $offset : '?offset=' . $offset;
+    $goto = get_config('wwwroot') . $goto;
+    redirect($goto);
 }
