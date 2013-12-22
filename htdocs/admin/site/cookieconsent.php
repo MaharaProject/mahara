@@ -206,6 +206,7 @@ jQuery(document).ready(function() {
         if (this.checked) {
             // Expand collapsible fieldsets
             j('#cookieconsent fieldset').attr('class', 'pieform-fieldset collapsible');
+            j('#cookieconsent_cookietypes').focus();
         }
         else {
             // Collapse collapsible fieldsets
