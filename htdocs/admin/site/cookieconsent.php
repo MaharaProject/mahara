@@ -77,7 +77,7 @@ $form = pieform(array(
                 'consentmode' => array(
                     'type'  => 'radio',
                     'title' => get_string('consentmode','cookieconsent'),
-                    'description' => get_string('consentmodedesc','cookieconsent') . '<br />'
+                    'description' => get_string('consentmodedesc1','cookieconsent') . '<br />'
                                    . get_string('consentmodedesc2','cookieconsent'),
                     'defaultvalue' => (!empty($configdata['consentmode']) ? hsc($configdata['consentmode']) : 'explicit'),
                     'options' => array(
@@ -222,7 +222,7 @@ $smarty->assign('introtext1', get_string('cookieconsentintro1', 'cookieconsent')
 $smarty->assign('introtext2', get_string('cookieconsentintro2', 'cookieconsent'));
 $smarty->assign('introtext3', get_string('cookieconsentintro3', 'cookieconsent'));
 $smarty->assign('introtext4', get_string('cookieconsentintro4', 'cookieconsent'));
-$smarty->assign('introtext5', get_string('cookieconsentintro5', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/" target="_blank">', '</a>'));
+$smarty->assign('introtext5', get_string('cookieconsentintro51', 'cookieconsent', '<a href="http://sitebeam.net/cookieconsent/" target="_blank">', '</a>'));
 // Official EU languages
 $smarty->assign('languages', array('BG','CS','DA','DE','EL','EN','ES','ET','FI','FR','HU','IT','LT','LV','MT','NL','PL','PT','RO','SK','SL','SV'));
 $smarty->assign('PAGEHEADING', TITLE);

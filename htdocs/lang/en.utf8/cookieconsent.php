@@ -33,10 +33,10 @@
 defined('INTERNAL') || die();
 
 $string['cookieconsent'] = 'Cookie Consent';
-$string['cookieconsentintro1'] = 'Directive 2009/136/EC of the European Parliament and of the Council, which is also known as the "Cookie Directive" or "Cookie Law", is the instrument that defines the requirements for consent for cookies across the EU. This is basically an amendment of earlier directive: Directive 2002/58/EC, and is broadly concerned with the protection of data and privacy on the web and in other forms of electronic communication.';
+$string['cookieconsentintro1'] = 'Directive 2009/136/EC of the European Parliament and of the Council, which is also known as the "Cookie Directive" or "Cookie Law", is the instrument that defines the requirements for consent for cookies across the European Union. Basically, this is an amendment of the earlier directive: Directive 2002/58/EC, and is broadly concerned with the protection of data and privacy on the web and in other forms of electronic communication.';
 $string['cookieconsentintro2'] = 'The new directive came into effect on 25 May 2011. The text of the directive is about 26 pages long, but the most important paragraph about cookies can be found on page 20, which changes the Article 5(3) of the earlier Directive 2002/58/EC:';
 $string['cookieconsentintro3'] = '"Member States shall ensure that the storing of information, or the gaining of access to information already stored, in the terminal equipment of a subscriber or user is only allowed on condition that the subscriber or user concerned has given his or her consent, having been provided with clear and comprehensive information, in accordance with Directive 95/46/EC, inter alia, about the purposes of the processing. This shall not prevent any technical storage or access for the sole purpose of carrying out the transmission of a communication over an electronic communications network, or as strictly necessary in order for the provider of an information society service explicitly requested by the subscriber or user to provide the service."';
-$string['readfulltext'] = 'Read full text of the new directive';
+$string['readfulltext1'] = 'Read the full text of the directive';
 $string['directive2009136'] = 'Directive 2009/136/EC';
 $string['readdirectiveBG'] = 'Read Directive 2009/136/EC in Bulgarian';
 $string['readdirectiveCS'] = 'Read Directive 2009/136/EC in Czech';
@@ -60,14 +60,14 @@ $string['readdirectiveRO'] = 'Read Directive 2009/136/EC in Romanian';
 $string['readdirectiveSK'] = 'Read Directive 2009/136/EC in Slovak';
 $string['readdirectiveSL'] = 'Read Directive 2009/136/EC in Slovene';
 $string['readdirectiveSV'] = 'Read Directive 2009/136/EC in Swedish';
-$string['cookieconsentintro4'] = 'In short this means before somebody can store or retrieve any information from a computer, mobile phone or other device, the user must give informed consent to do so. The intention is to increase the privacy of the end user and prevent organisations from obtaining information about people without them knowing about it.';
-$string['cookieconsentintro5'] = 'First enable the %sCookie Consent plugin by Silktide%s integrated into Mahara, then set the desired options and save changes. You will be redirected to another page with detailed instructions what to modify or how to update your theme header files or <tt>$cfg->additionalhtmlhead</tt> config setting for Cookie Control to take full effect.';
-$string['cookieconsentenable'] = 'Enable Cookie Consent?';
-$string['cookieconsentenabled'] = 'Cookie Consent enabled and the settings saved';
+$string['cookieconsentintro4'] = 'In short, this means before somebody can store or retrieve any information from a computer, mobile phone or other device, the user must give informed consent to do so. The intention is to increase the privacy of the end user and prevent organisations from obtaining information about people without them knowing about it.';
+$string['cookieconsentintro51'] = 'First enable the %sCookie Consent plugin by Silktide%s below, then set the desired options and save your changes. You will be redirected to another page with detailed instructions of what to modify or how to update your theme header files or the <tt>$cfg->additionalhtmlhead</tt> config setting for Cookie Control to take full effect.';
+$string['cookieconsentenable'] = 'Enable Cookie Consent';
+$string['cookieconsentenabled'] = 'Cookie Consent enabled and settings saved';
 $string['cookieconsentdisabled'] = 'Cookie Consent disabled';
 
 $string['cookieconsent2'] = 'Additional site modifications';
-$string['additionalmodifications'] = 'If you want Cookie Control to take full effect you will have to modify or update your theme header files or <tt>$cfg->additionalhtmlhead</tt> config setting.';
+$string['additionalmodifications'] = 'If you want Cookie Control to take full effect, you will have to modify or update your theme header files or the <tt>$cfg->additionalhtmlhead</tt> config setting.';
 $string['instructiontext1'] = 'Find any Javascript elements that set %s cookies. Examples might include %s.';
 $string['instructiontext2'] = 'Modify the <tt>&lt;script&gt;</tt> tag so that the type attribute is "text/plain" rather than "text/javascript"';
 $string['instructiontext3'] = 'Add a class of "%s" to the <tt>&lt;script&gt;</tt> tag';
@@ -78,7 +78,7 @@ $string['example1necessary'] = 'Google AdSense and other targeted advertising pl
 $string['example'] = 'Example';
 $string['examplebefore'] = 'Before:';
 $string['exampleafter'] = 'After (changes are in bold):';
-$string['itdidntwork'] = 'It didn\'t work!';
+$string['itdidntwork'] = 'It didn\'t work.';
 $string['itdidntwork1'] = 'First, try substituting <b>%s</b> for <b>%s</b>. This fixes some Javascript plugins which use <tt>document.write()</tt>.';
 $string['itdidntwork2'] = 'If this doesn\'t help, %scheck out Cookie Consent code examples page%s or ask for help in the %sCookie Consent LinkedIn group%s.';
 
@@ -90,7 +90,7 @@ $string['cookietypesanalytics'] = 'Analytics';
 $string['cookietypesadvertising'] = 'Advertising';
 $string['cookietypesnecessary'] = 'Strictly necessary';
 $string['consentmode'] = 'Consent mode';
-$string['consentmodedesc'] = 'Cookie Consent will always use explicit mode when a browser\'s "do not track" setting is enabled (unless overridden in Feature options below).';
+$string['consentmodedesc1'] = 'Cookie Consent will always use explicit mode when a browser\'s "do not track" setting is enabled (unless overridden in "Feature options" below).';
 $string['consentmodedesc2'] = 'The "do not track" setting is enabled by default in the latest versions of Internet Explorer.';
 $string['consentmodeexplicit'] = 'Explicit - no cookies will be set until a visitor consents';
 $string['consentmodeimplicit'] = 'Implied - set cookies and allow visitors to opt out';
@@ -116,15 +116,11 @@ $string['hideprivacytabdesc'] = 'If you plan to use your own privacy settings li
 
 $string['featureoptions'] = 'Feature options';
 $string['pagerefresh'] = 'Page refresh';
-$string['pagerefreshdesc'] = 'If you use have a server side application that needs to be aware of the consent to cookies, selecting this option will cause the page to be reloaded after consent has been gained.';
+$string['pagerefreshdesc'] = 'If you have a server-side application that needs to be aware of the consent to cookies, selecting this option will cause the page to be reloaded after consent has been given.';
 $string['ignoredonottrack'] = 'Ignore "do not track"';
-$string['ignoredonottrackdesc'] = 'Enabling this setting will mean Cookie Consent ignores any do not track headers from the visitor\'s browser.';
+$string['ignoredonottrackdesc'] = 'Enabling this setting will mean Cookie Consent ignores any "do not track" headers from the visitor\'s browser.';
 $string['usessl'] = 'Use SSL';
 $string['usessldesc'] = 'If any of the pages Cookie Consent appears on use SSL, you will need to select this option.';
-
-$string['addcodetoheaddesc'] = 'Add code to HEAD of each page to show Cookie Consent plugin to visitors of your site.';
-$string['addcode'] = 'Add code';
-$string['codealreadyadded'] = 'Code already added. You can %sremove it%s.';
 
 /* ===== COOKIE CONSENT strings ===== */
 /* ----- General ----- */

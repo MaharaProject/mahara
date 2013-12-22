@@ -5,7 +5,7 @@
             <table class="cb fullwidth">
               <thead class="expandable-head">
                 <tr class="toggle">
-                  <td colspan="2" class="toggle-padding"><strong>{str tag=readfulltext section=cookieconsent}</strong></td>
+                  <td colspan="2" class="toggle-padding"><strong>{str tag=readfulltext1 section=cookieconsent}</strong></td>
                 </tr>
               </thead>
               <tbody class="expandable-body">
