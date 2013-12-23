@@ -1626,7 +1626,8 @@ function profile_url($user, $full=true, $useid=false) {
     }
     else if (is_numeric($user)) {
         $id = $user;
-        $urlid = $wantclean ? get_user_for_display($id)->urlid : null;
+        $user = get_user_for_display($id);
+        $urlid = ($wantclean && !empty($user->urlid)) ? $user->urlid : null;
     }
     else if (isset($user->id)) {
         $id = $user->id;
