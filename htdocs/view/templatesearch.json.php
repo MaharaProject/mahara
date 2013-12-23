@@ -28,7 +28,18 @@ $views->copyableby = (object) array('group' => $group, 'institution' => $institu
 if (!($group || $institution)) {
     $views->copyableby->owner = $USER->get('id');
 }
-
+$searchcollection = param_integer('searchcollection', null);
+$sort[] = array('column' => 'title',
+                'desc' => 0,
+                );
+if ($searchcollection) {
+    array_unshift($sort, array('column' => 'collection',
+                               'desc' => 0,
+                               'tablealias' => 'cv'
+                               ));
+    $views->collection = $searchcollection;
+}
+$views->sort = (object) $sort;
 View::get_templatesearch_data($views);
 
 json_reply(false, array(

@@ -18,8 +18,8 @@ require_once(get_config('libroot') . 'group.php');
 $owner = param_integer('owner', 0);;
 $groupid = param_integer('group', null);
 $institution = param_alphanum('institution', null);
-
-View::set_nav($groupid, $institution);
+$searchcollection = param_integer('searchcollection', false);
+View::set_nav($groupid, $institution, false, $searchcollection);
 
 if ($usetemplate = param_integer('usetemplate', null)) {
     // If a form has been submitted, build it now and pieforms will
@@ -65,6 +65,17 @@ else {
     $views->copyableby->owner = $USER->get('id');
     $helptext = get_string('choosetemplatepageandcollectiondescription', 'view');
 }
+$sort[] = array('column' => 'title',
+                'desc' => 0,
+                );
+if ($searchcollection) {
+    array_unshift($sort, array('column' => 'collection',
+                               'desc' => 0,
+                               'tablealias' => 'cv'
+                               ));
+    $views->collection = $searchcollection;
+}
+$views->sort = (object) $sort;
 View::get_templatesearch_data($views);
 
 $strpreview = json_encode(get_string('Preview','view'));
