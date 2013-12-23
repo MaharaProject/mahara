@@ -2796,6 +2796,42 @@ function xmldb_core_upgrade($oldversion=0) {
             }
         }
     }
+    if ($oldversion < 2013121300) {
+        // view_rows_columns can be missing the 'id' column if upgrading from version
+        // earlier than v1.8 and because we are adding a sequential primary column after
+        // the table is already made we need to
+        // - check that the column doesn't exist then add it without key or sequence
+        // - update the values for the new id column to be sequential
+        // - then add the primary key and finally make the column sequential
+        if ($records = get_records_sql_array('SELECT * FROM {view_rows_columns}', array())) {
+            if (empty($records[0]->id)) {
+                $table = new XMLDBTable('view_rows_columns');
+                $field = new XMLDBField('id');
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 1, 'view');
+                add_field($table, $field);
+                $x = 1;
+                foreach ($records as $record) {
+                    execute_sql('UPDATE {view_rows_columns} SET id = ? WHERE view = ? AND row = ? AND columns = ?',
+                                array($x, $record->view, $record->row, $record->columns));
+                    $x++;
+                }
+                // we can't add a sequence on a field unless it has a primary key
+                $key = new XMLDBKey('primary');
+                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                add_key($table, $key);
+                $field = new XMLDBField('id');
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+                change_field_type($table, $field);
+                // but when we change field type postgres drops the keys for the column so we need
+                // to add the primary key back again - see line 2205 for more info
+                if (is_postgres()) {
+                    $key = new XMLDBKey('primary');
+                    $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                    add_key($table, $key);
+                }
+            }
+        }
+    }
 
     return $status;
 }
