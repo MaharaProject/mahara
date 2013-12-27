@@ -624,16 +624,17 @@ function institution_submit(Pieform $form, $values) {
 
     db_begin();
     // Update the basic institution record...
-    $newinstitution = new StdClass;
     if ($add) {
-        $institution = $newinstitution->name = strtolower($values['name']);
+        $newinstitution = new Institution();
+        $newinstitution->initialise($values['name'], $values['displayname']);
+        $institution = $newinstitution->name;
     }
     else {
+        $newinstitution = new Institution($institution);
+        $newinstitution->displayname = $values['displayname'];
         $oldinstitution = get_record('institution', 'name', $institution);
     }
 
-    $newinstitution->displayname                  = $values['displayname'];
-    $newinstitution->authplugin                   = empty($values['authplugin']) ? null : $values['authplugin'];
     $newinstitution->showonlineusers              = !isset($values['showonlineusers']) ? 2 : $values['showonlineusers'];
     if (get_config('usersuniquebyusername')) {
         // Registering absolutely not allowed when this setting is on, it's a 
@@ -707,6 +708,7 @@ function institution_submit(Pieform $form, $values) {
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
 
+    // TODO: Move handling of authentication instances within the Institution class as well?
     if (!empty($values['authplugin'])) {
         $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
@@ -753,9 +755,11 @@ function institution_submit(Pieform $form, $values) {
         }
     }
 
+    // Save the changes to the DB
+    $newinstitution->commit();
+
     if ($add) {
-        insert_record('institution', $newinstitution);
-        // If registration has been turned on, then we automatically insert an 
+        // If registration has been turned on, then we automatically insert an
         // internal authentication authinstance
         if ($newinstitution->registerallowed) {
             $authinstance = (object)array(
@@ -766,11 +770,6 @@ function institution_submit(Pieform $form, $values) {
             );
             insert_record('auth_instance', $authinstance);
         }
-    }
-    else {
-        $where = new StdClass;
-        $where->name = $institution;
-        update_record('institution', $newinstitution, $where);
     }
 
     if (is_null($newinstitution->style) && !empty($oldinstitution->style)) {
