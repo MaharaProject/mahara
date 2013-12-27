@@ -344,6 +344,26 @@ if ($institution || $add) {
             'defaultvalue' => $data->defaultmembershipperiod,
             'help'   => true,
         );
+
+        $languages = get_languages();
+        // Get the default language. If the institution has one stored, use that. Otherwise, use 'sitedefault'
+        $defaultlang = false;
+        if (!empty($data->name)) {
+            $defaultlang = get_config_institution($data->name, 'lang');
+        }
+        // If the defaultlang they provided is no longer valid, use "site default"
+        if (!$defaultlang || !array_key_exists($defaultlang, $languages)) {
+            $defaultlang = 'sitedefault';
+        }
+        $elements['lang'] = array(
+            'type' => 'select',
+            'defaultvalue' => $defaultlang,
+            'title' => get_string('institutionlanguage', 'admin'),
+            'description' => get_string('institutionlanguagedescription', 'admin'),
+            'options' => array_merge(array('sitedefault' => get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')'), $languages),
+            'ignore' => (count($languages) < 2),
+        );
+
         $elements['logo'] = array(
             'type'        => 'file',
             'title'       => get_string('Logo', 'admin'),
@@ -617,6 +637,10 @@ function institution_validate(Pieform $form, $values) {
             $form->set_error('logo', get_string('profileiconimagetoobig', 'artefact.file', $width, $height, $imagemaxwidth, $imagemaxheight));
         }
     }
+
+    if (!empty($values['lang']) && $values['lang'] != 'sitedefault' && !array_key_exists($values['lang'], get_languages())) {
+        $form->set_error('lang', get_string('institutionlanginvalid', 'admin'));
+    }
 }
 
 function institution_submit(Pieform $form, $values) {
@@ -646,6 +670,16 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
         $newinstitution->registerconfirm              = ($values['registerconfirm']) ? 1 : 0;
     }
+
+    if (!empty($values['lang'])) {
+        if ($values['lang'] == 'sitedefault') {
+            $newinstitution->lang = null;
+        }
+        else {
+            $newinstitution->lang = $values['lang'];
+        }
+    }
+
     $newinstitution->theme                        = (empty($values['theme']) || $values['theme'] == 'sitedefault') ? null : $values['theme'];
     $newinstitution->dropdownmenu                 = (!empty($values['dropdownmenu'])) ? 1 : 0;
     $newinstitution->skins                 = (!empty($values['skins'])) ? 1 : 0;

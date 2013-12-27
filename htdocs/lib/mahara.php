@@ -1185,19 +1185,21 @@ function set_locale_for_language($lang) {
 }
 
 /**
- * This function returns the current 
- * language to use, either for a given user
- * or sitewide, or the default
+ * This function returns the current language to use, either for a given user
+ * or sitewide, or the default.
+ *
+ * This method is invoked in every call to get_string(), so make it performant!
  *
  * @return string
  */
 function current_language() {
     global $USER, $CFG, $SESSION;
 
-    static $userlang, $lastlang;
+    static $userlang, $lastlang, $instlang;
 
     $loggedin = $USER instanceof User && $USER->is_logged_in();
 
+    // Retrieve & cache the user lang pref (if the user is logged in)
     if (!isset($userlang) && $loggedin) {
         $userlang = $USER->get_account_preference('lang');
         if ($userlang !== null && $userlang != 'default') {
@@ -1208,16 +1210,36 @@ function current_language() {
         }
     }
 
+    // Retrieve & cache the institution language (if the user is logged in)
+    if (!isset($instlang) && $loggedin) {
+        $instlang = get_user_institution_language();
+    }
+
+    // Retrieve the $SESSION lang (from the user selecting a language while logged-out)
+    // Note that if the user selected a language while logged out, and then logs in,
+    // we will have set their user account pref to match that lang, over in
+    // LiveUser->authenticate().
+    if (!$loggedin && is_a($SESSION, 'Session')) {
+        $sesslang = $SESSION->get('lang');
+    }
+    else {
+        $sesslang = null;
+    }
+
+    // Logged-in user's language preference
     if (!empty($userlang) && $userlang != 'default') {
         $lang = $userlang;
     }
-    else if (!$loggedin && is_a($SESSION, 'Session')) {
-        $sesslang = $SESSION->get('lang');
-        if (!empty($sesslang) && $sesslang != 'default') {
-            $lang = $sesslang;
-        }
+    // Logged-out user's language menu selection
+    else if (!empty($sesslang) && $sesslang != 'default') {
+        $lang = $sesslang;
+    }
+    // Logged-in user's institution language setting
+    else if (!empty($instlang) && $instlang != 'default') {
+        $lang = $instlang;
     }
 
+    // If there's no language from the user pref or the logged-out lang menu...
     if (empty($lang)) {
         $lang = !empty($CFG->lang) ? $CFG->lang : 'en.utf8';
     }
@@ -1230,6 +1252,41 @@ function current_language() {
 
     return $lastlang = $lang;
 }
+
+
+/**
+ * Find out a user's institution language. If they belong to one institution that has specified
+ * a language, then this will be that institution's language. If they belong to multiple
+ * institutions that have specified languages, it will be the arbitrarily "first" institution.
+ * If they belong to no institution that has specified a language, it will return null.
+ *
+ * @param int $userid Which user to check (defaults to $USER)
+ * @param string $sourceinst If provided, the source institution for the language will be
+ *     returned here by reference
+ * @return string A language, or 'default'
+ */
+function get_user_institution_language($userid = null, &$sourceinst = null) {
+    global $USER;
+    if ($userid == null) {
+        $userid = $USER->id;
+    }
+    $instlangs = get_configs_user_institutions('lang', $userid);
+    // Every user belongs to at least one institution
+    foreach ($instlangs as $name => $lang) {
+        $sourceinst = $name;
+        $instlang = $lang;
+        // If the user belongs to multiple institutions, arbitrarily use the language
+        // from the first one that has specified a language.
+        if (!empty($instlang) && $instlang != 'default' && language_installed($instlang)) {
+            break;
+        }
+    }
+    if (!$instlang) {
+        $instlang = 'default';
+    }
+    return $instlang;
+}
+
 
 /**
  * Helper function to sprintf language strings
