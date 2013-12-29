@@ -38,14 +38,16 @@ if (!$skin->can_edit()) {
 
 define('TITLE', get_string('deletespecifiedskin', 'skin', $skin->get('title')));
 
+$numberofpagesuseskin = count_records('view', 'skin', $skin->get('id'));
+
 $form = pieform(array(
     'name' => 'deleteskin',
     'autofocus' => false,
+    'renderer' => 'div',
     'method' => 'post',
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => get_string('deleteskinconfirm', 'skin'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . $goto,
         )
@@ -53,9 +55,10 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('PAGEHEADING', hsc(TITLE));
+$smarty->assign('PAGEHEADING', get_string('deletespecifiedskin', 'skin', $skin->get('title')));
+$smarty->assign('safemessage', (($numberofpagesuseskin > 0) ? get_string('deleteskinusedinpages', 'skin', $numberofpagesuseskin) . '<br/>' : '') . get_string('deleteskinconfirm', 'skin'));
 $smarty->assign('form', $form);
-$smarty->display('form.tpl');
+$smarty->display('skin/delete.tpl');
 
 function deleteskin_submit(Pieform $form, $values) {
     global $SESSION, $USER, $skinid, $redirect;
