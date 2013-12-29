@@ -2817,7 +2817,12 @@ function xmldb_core_upgrade($oldversion=0) {
                 log_warn("Couldn't set a primary key on table view_autocreate_grouptype across columns (view, grouptype). (Probably those columns contain some non-unique values.)");
             }
         }
+    }
 
+    if ($oldversion < 2013101407) {
+        // Reset the view's skin value, if the skin does not exist
+        execute_sql("UPDATE {view} v SET skin = NULL WHERE v.skin IS NOT NULL AND NOT EXISTS (SELECT
+                        id FROM {skin} s WHERE v.skin = s.id)");
     }
 
     return $status;
