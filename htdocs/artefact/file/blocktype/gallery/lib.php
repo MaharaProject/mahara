@@ -388,7 +388,9 @@ class PluginBlocktypeGallery extends PluginBlocktype {
         $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('count', count($images));
         $smarty->assign('images', $images);
+        $smarty->assign('showdescription', (!empty($configdata['showdescription'])) ? $configdata['showdescription'] : false);
         $smarty->assign('width', $width);
+        $smarty->assign('captionwidth', (get_config_plugin('blocktype', 'gallery', 'photoframe') ? $width + 8 : $width));
         if (isset($height)) {
             $smarty->assign('height', $height);
         }
@@ -551,6 +553,12 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 'options' => $style_options,
                 'defaultvalue' => (isset($configdata['style'])) ? $configdata['style'] : 2, // Square thumbnails should be default...
                 'separator' => '<br>',
+            ),
+            'showdescription' => array(
+                'type'  => 'checkbox',
+                'title' => get_string('showdescriptions', 'blocktype.file/gallery'),
+                'description' => get_string('showdescriptionsdescription', 'blocktype.file/gallery'),
+                'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             ),
             'width' => array(
                 'type' => 'text',

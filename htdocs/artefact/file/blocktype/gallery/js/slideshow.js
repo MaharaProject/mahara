@@ -7,11 +7,19 @@ function Slideshow(id, count) {
         if (to == this.current || to < 0 || to > this.count) {
             return false;
         }
+        if ($j("#description_" + id + "_" + this.current)) {
+            $j("#description_" + id + "_" + this.current).css('display', 'none');
+        }
         $j(this.id).height($j(this.id + " img:eq(" + this.current + ")").height() + 10);
         $j(this.id + " img:eq(" + this.current + ")").fadeOut(500, function() {
+            var extraheight = 0;
             self.current = to;
+            if ($j("#description_" + id + "_" + self.current)) {
+                $j("#description_" + id + "_" + self.current).css('display','block');
+                extraheight = $j("#description_" + id + "_" + self.current).height();
+            }
+            $j(self.id).height($j(self.id + " img:eq(" + self.current + ")").height() + extraheight + 10);
             $j(self.id + " img:eq(" + self.current + ")").fadeIn(500);
-            $j(self.id).height($j(self.id + " img:eq(" + self.current + ")").height() + 10);
         });
         $j(this.id + ' td.control span').removeClass('disabled');
         if (to == 0) {
