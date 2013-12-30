@@ -110,9 +110,15 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $found_tinymce = $check[$key];
                     $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
-                    $language = substr(current_language(), 0, 2);
+                    $language = current_language();
+                    $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
+                    $language = strtolower(str_replace('_', '-', $language));
                     if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                        $language = 'en';
+                        // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
+                        $language = substr($language, 0, 2);
+                        if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
+                            $language = 'en';
+                        }
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
