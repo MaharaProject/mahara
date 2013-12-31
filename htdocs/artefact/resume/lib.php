@@ -910,15 +910,15 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 var tableRenderers = {};
 
 function toggleCompositeForm(type) {
-    var elemName = '';
-    elemName = type + 'form';
-    if (hasElementClass(elemName, 'hidden')) {
-        removeElementClass(elemName, 'hidden');
-        $('add' + type + 'button').innerHTML = {$cancelstr};
+    var elem = \$j('#' + type + 'form');
+    if (elem.hasClass('hidden')) {
+        elem.removeClass('hidden');
+        elem.find(':input').first().focus();
+        \$j('#add' + type + 'button').html({$cancelstr});
     }
     else {
-        $('add' + type + 'button').innerHTML = {$addstr};
-        addElementClass(elemName, 'hidden');
+        \$j('#add' + type + 'button').html({$addstr});
+        elem.addClass('hidden');
     }
 }
 
