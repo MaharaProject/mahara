@@ -14,7 +14,7 @@ define('MENUITEM', 'content/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
-define('RESUME_SUBPAGE', 'licenses');
+define('RESUME_SUBPAGE', 'license');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
