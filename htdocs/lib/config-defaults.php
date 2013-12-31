@@ -512,7 +512,7 @@ $cfg->additionalhtmltopofbody = '';
 /**
  * @global string $cfg->additionalhtmlfooter Added as the last item before the closing </body> tag
  */
-$cfg->additionalhtlmfooter = '';
+$cfg->additionalhtmlfooter = '';
 
 /**
  * @global string $cfg->auth_ldap_debug_sync_cron Whether to display extended debugging messages in
