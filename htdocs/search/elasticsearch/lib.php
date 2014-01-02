@@ -76,8 +76,7 @@ class PluginSearchElasticsearch extends PluginSearch {
      * as the sitewide search plugin (i.e. get_config('searchplugin'))
      */
     public static function is_available_for_site_setting() {
-        // It only works in postgres, because of the triggers
-        return is_postgres();
+        return true;
     }
 
     /**
@@ -131,23 +130,6 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     public static function get_config_options() {
-
-        if (!is_postgres()) {
-            $smarty = smarty_core();
-            $smarty->assign('header', get_string('noticepostgresrequiredtitle', 'search.elasticsearch'));
-            $smarty->assign('notice', get_string('noticepostgresrequired', 'search.elasticsearch'));
-            $requirepostgreshtml = $smarty->fetch('Search:elasticsearch:configwarning.tpl');
-            unset($smarty);
-            $config = array(
-                'elements' => array(
-                    'requirespostgres' => array(
-                        'type' => 'html',
-                        'value' => $requirepostgreshtml,
-                    )
-                )
-            );
-            return $config;
-        }
 
         if (get_config('searchplugin') == 'elasticsearch') {
             $smarty = smarty_core();
@@ -297,10 +279,10 @@ class PluginSearchElasticsearch extends PluginSearch {
 
         if (count($types) > 0) {
             $item_by_type_in_queue = array();
-            $rs = get_records_sql_array('SELECT type, count(*) FROM {search_elasticsearch_queue} GROUP BY type', array());
+            $rs = get_records_sql_array('SELECT type, count(*) AS total FROM {search_elasticsearch_queue} GROUP BY type', array());
             if ($rs) {
                 foreach ($rs as $record) {
-                    $item_by_type_in_queue[$record->type] = $record->count;
+                    $item_by_type_in_queue[$record->type] = $record->total;
                 }
             }
 
@@ -344,14 +326,7 @@ class PluginSearchElasticsearch extends PluginSearch {
     }
 
     public function save_config_options($values) {
-
-        // Plugin only supports postgres. Don't bother saving anything if not Postgres.
-        if (!is_postgres()) {
-            return true;
-        }
-
         set_config_plugin('search', 'elasticsearch', 'cronlimit', $values['cronlimit']);
-
 
         // Changes in artefact types:
         //       - we need to add the newly selected artefact types (for indexing)
@@ -965,6 +940,9 @@ abstract class ElasticsearchType
 
     protected $item_to_index;
     protected $mapping;
+
+    private static $mysqltriggeroperations = array('insert', 'update', 'delete');
+
     /**
      *   $conditions was originally used to filter only active, non deleted records to insert into the queue,
      *   but as we will now use it to determine if the record has to be indexed or removed from the index.
@@ -1098,12 +1076,30 @@ abstract class ElasticsearchType
      */
     public static function create_triggers() {
         $type = $this::$type;
-        $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
-        execute_sql($sql);
+        if (is_postgres()) {
+            $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
+            execute_sql($sql);
 
-        $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
-            FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_trigger}()";
-        execute_sql($sql);
+            $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
+                FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_trigger}()";
+            execute_sql($sql);
+        }
+        else {
+            foreach (self::$mysqltriggeroperations as $operation) {
+                $sql = "DROP TRIGGER IF EXISTS {search_elasticsearch_{$type}_{$operation}};";
+                execute_sql($sql);
+
+                $oldid = ($operation == 'insert' ? 'null' : 'OLD.id');
+                $newid = ($operation == 'delete' ? 'null' : 'NEW.id');
+                $tablename = get_config('dbprefix') . ($type);
+
+                // For inserts, the NEW.id is not available until AFTER the record is insereted.
+                $triggertime = ($operation == 'insert' ? 'AFTER' : 'BEFORE');
+                $sql = "CREATE TRIGGER {search_elasticsearch_{$type}_{$operation}} {$triggertime} {$operation} ON {{$type}}
+                    FOR EACH ROW CALL {search_elasticsearch_queue_trigger}('{$tablename}', '{$operation}', {$oldid}, {$newid})";
+                execute_sql($sql);
+            }
+        }
     }
 }
 
@@ -1354,6 +1350,9 @@ class ElasticsearchPseudotype_all
  */
 class ElasticsearchIndexing {
 
+    // mysql tables require a trigger for each operation - insert, update, delete.
+    private static $mysqltriggeroperations = array('insert', 'update', 'delete');
+
     /**
      * Creates the Index on the elasticsearch server itself, first dropping if it already
      * exists.
@@ -1461,19 +1460,26 @@ class ElasticsearchIndexing {
      * CASCADE, this will also delete the triggers which use these functions
      */
     public static function drop_trigger_functions() {
-        // The trigger function syntax is postgresql specific
-        if (!is_postgres()) {
-            return;
+        if (is_postgres()) {
+            $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue_trigger}() CASCADE;';
+            execute_sql($sql);
+
+            $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue_artefact_trigger}() CASCADE;';
+            execute_sql($sql);
+
+            $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue2_trigger}() CASCADE;';
+            execute_sql($sql);
         }
+        else {
+            $sql = 'DROP PROCEDURE IF EXISTS {search_elasticsearch_queue_trigger};';
+            execute_sql($sql);
 
-        $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue_trigger}() CASCADE;';
-        execute_sql($sql);
+            $sql = 'DROP PROCEDURE IF EXISTS {search_elasticsearch_queue_artefact_trigger};';
+            execute_sql($sql);
 
-        $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue_artefact_trigger}() CASCADE;';
-        execute_sql($sql);
-
-        $sql = 'DROP FUNCTION IF EXISTS {search_elasticsearch_queue2_trigger}() CASCADE;';
-        execute_sql($sql);
+            $sql = 'DROP PROCEDURE IF EXISTS {search_elasticsearch_queue2_trigger};';
+            execute_sql($sql);
+        }
     }
 
     /**
@@ -1488,12 +1494,6 @@ class ElasticsearchIndexing {
      * triggers you want to retain, after you call this function.
      */
     public static function create_trigger_functions() {
-
-        // The trigger and function syntax is postgresql specific
-        if (!is_postgres()) {
-            return;
-        }
-
         // Delete the trigger functions first.
         // NOTE: This also deletes ALL the elasticsearch triggers.
         self::drop_trigger_functions();
@@ -1502,12 +1502,13 @@ class ElasticsearchIndexing {
 
         // We'll use this to trim the prefix from table names before inserting them into
         // search_elasticsearch_queue.type
-        $prefixlength = strlen(get_config('dbprefix'));
+        $dbprefix = get_config('dbprefix');
+        $prefixlength = strlen($dbprefix);
         if ($prefixlength) {
-            $tablewithoutprefix = "RIGHT(TG_TABLE_NAME, -{$prefixlength})";
+            $tablewithoutprefix = (is_postgres() ? "RIGHT(TG_TABLE_NAME, -{$prefixlength})" : "SUBSTRING(tablename, " . ($prefixlength + 1) . ")");
         }
         else {
-            $tablewithoutprefix=  'TG_TABLE_NAME';
+            $tablewithoutprefix= (is_postgres() ? 'TG_TABLE_NAME' : "tablename");
         }
 
         //----------------------------------------------------------------------------------------------------
@@ -1516,39 +1517,74 @@ class ElasticsearchIndexing {
         //  - Set it to monitor the table the type is named after
         //  - On an INSERT, UPDATE, or DELETE, just inserts the record ID and the name of the type in the queue table
         //  - When you modify a view, you also insert a record for every artefact in that view
-        $sql = 'CREATE FUNCTION {search_elasticsearch_queue_trigger}() RETURNS trigger AS $search_elasticsearch_queue_trigger$
-            BEGIN
-                IF (TG_OP=\'DELETE\') THEN
-                    IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.id AND type = '.$tablewithoutprefix.') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (OLD.id, '.$tablewithoutprefix.');
-                    END IF;
-                    IF (TG_TABLE_NAME=\'{view}\') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type)
-                        SELECT va.artefact, \'artefact\' AS type
-                        FROM {view_artefact} va
-                        INNER JOIN {artefact} a ON va.artefact = a.id
-                        WHERE va.view = OLD.id
+        if (is_postgres()) {
+            $sql = 'CREATE FUNCTION {search_elasticsearch_queue_trigger}() RETURNS trigger AS $search_elasticsearch_queue_trigger$
+                BEGIN
+                    IF (TG_OP=\'DELETE\') THEN
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.id AND type = '.$tablewithoutprefix.') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (OLD.id, '.$tablewithoutprefix.');
+                        END IF;
+                        IF (TG_TABLE_NAME=\'{view}\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT va.artefact, \'artefact\' AS type
+                            FROM {view_artefact} va
+                            INNER JOIN {artefact} a ON va.artefact = a.id
+                            WHERE va.view = OLD.id
+                                AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = \'artefact\')
+                                AND a.artefacttype IN ' . $artefacttypes_str .';
+                        END IF;
+                        RETURN OLD;
+                    ELSE
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.id AND type = ' . $tablewithoutprefix . ') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (NEW.id, ' . $tablewithoutprefix . ');
+                        END IF;
+                        IF (TG_TABLE_NAME=\'{view}\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT va.artefact, \'artefact\' AS type
+                            FROM {view_artefact} va
+                            INNER JOIN {artefact} a ON va.artefact = a.id
+                            WHERE va.view = NEW.id
                             AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = \'artefact\')
                             AND a.artefacttype IN ' . $artefacttypes_str .';
+                        END IF;
+                        RETURN NEW;
                     END IF;
-                    RETURN OLD;
-                ELSE
-                    IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.id AND type = ' . $tablewithoutprefix . ') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (NEW.id, ' . $tablewithoutprefix . ');
+                END;
+                $search_elasticsearch_queue_trigger$ LANGUAGE plpgsql;';
+        }
+        else {
+            $sql = 'CREATE PROCEDURE {search_elasticsearch_queue_trigger}
+                        (tablename varchar(64), operation varchar(10), oldid bigint, newid bigint)
+                BEGIN
+                    IF (operation=\'delete\') THEN
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = oldid AND type = '.$tablewithoutprefix.') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (oldid, '.$tablewithoutprefix.');
+                        END IF;
+                        IF (tablename=\'' . $dbprefix . 'view\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT va.artefact, \'artefact\' AS type
+                            FROM {view_artefact} va
+                            INNER JOIN {artefact} a ON va.artefact = a.id
+                            WHERE va.view = oldid
+                                AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = \'artefact\')
+                                AND a.artefacttype IN ' . $artefacttypes_str .';
+                        END IF;
+                    ELSE
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = newid AND type = ' . $tablewithoutprefix . ') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (newid, ' . $tablewithoutprefix . ');
+                        END IF;
+                        IF (tablename=\'' . $dbprefix . 'view\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT va.artefact, \'artefact\' AS type
+                            FROM {view_artefact} va
+                            INNER JOIN {artefact} a ON va.artefact = a.id
+                            WHERE va.view = newid
+                            AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = \'artefact\')
+                            AND a.artefacttype IN ' . $artefacttypes_str .';
+                        END IF;
                     END IF;
-                    IF (TG_TABLE_NAME=\'{view}\') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type)
-                        SELECT va.artefact, \'artefact\' AS type
-                        FROM {view_artefact} va
-                        INNER JOIN {artefact} a ON va.artefact = a.id
-                        WHERE va.view = NEW.id
-                        AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = \'artefact\')
-                        AND a.artefacttype IN ' . $artefacttypes_str .';
-                    END IF;
-                    RETURN NEW;
-                END IF;
-            END;
-            $search_elasticsearch_queue_trigger$ LANGUAGE plpgsql;';
+                END';
+        }
         execute_sql($sql);
 
         //----------------------------------------------------------------------------------------------------
@@ -1557,42 +1593,76 @@ class ElasticsearchIndexing {
         //   - Set it to monitor the artefact table
         //   - The main difference from the search_elasticsearch_queue_trigger, is that it also populates the
         //     artefacttype column in the queue table.
-        $sql = 'CREATE FUNCTION {search_elasticsearch_queue_artefact_trigger}() RETURNS trigger AS $search_elasticsearch_queue_artefact_trigger$
-            BEGIN
-                IF (TG_OP=\'DELETE\') THEN
-                    IF (OLD.artefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.id AND type = ' . $tablewithoutprefix . ') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (OLD.id, ' . $tablewithoutprefix . ', OLD.artefacttype);
+        if (is_postgres()) {
+            $sql = 'CREATE FUNCTION {search_elasticsearch_queue_artefact_trigger}() RETURNS trigger AS $search_elasticsearch_queue_artefact_trigger$
+                BEGIN
+                    IF (TG_OP=\'DELETE\') THEN
+                        IF (OLD.artefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.id AND type = ' . $tablewithoutprefix . ') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (OLD.id, ' . $tablewithoutprefix . ', OLD.artefacttype);
+                        END IF;
+                        RETURN OLD;
+                    ELSE
+                        IF (NEW.artefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.id AND type = '.$tablewithoutprefix.') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (NEW.id, '.$tablewithoutprefix.', NEW.artefacttype);
+                        END IF;
+                        RETURN NEW;
                     END IF;
-                    RETURN OLD;
-                ELSE
-                    IF (NEW.artefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.id AND type = '.$tablewithoutprefix.') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (NEW.id, '.$tablewithoutprefix.', NEW.artefacttype);
+                END;
+                $search_elasticsearch_queue_artefact_trigger$ LANGUAGE plpgsql;';
+        }
+        else {
+            $sql = 'CREATE PROCEDURE {search_elasticsearch_queue_artefact_trigger}
+                        (tablename varchar(64), operation varchar(10), oldid bigint, oldartefacttype varchar(255), newid bigint, newartefacttype varchar(255))
+                BEGIN
+                    IF (operation=\'delete\') THEN
+                        IF (oldartefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = oldid AND type = ' . $tablewithoutprefix . ') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (oldid, ' . $tablewithoutprefix . ', oldartefacttype);
+                        END IF;
+                    ELSE
+                        IF (newartefacttype IN ' . $artefacttypes_str . ') AND NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = newid AND type = ' . $tablewithoutprefix . ') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype) VALUES (newid, ' . $tablewithoutprefix . ', newartefacttype);
+                        END IF;
                     END IF;
-                    RETURN NEW;
-                END IF;
-            END;
-            $search_elasticsearch_queue_artefact_trigger$ LANGUAGE plpgsql;';
+                END';
+        }
         execute_sql($sql);
 
         //----------------------------------------------------------------------------------------------------
         // search_elasticsearch_queue2_trigger
         //   - For the view_artefact table
         //   - Whenever that table is modified, add a record into the queue table for the artefact mentioned
-        $sql = 'CREATE FUNCTION {search_elasticsearch_queue2_trigger}() RETURNS trigger AS $search_elasticsearch_queue2_trigger$
-            BEGIN
-                IF (TG_OP=\'DELETE\') THEN
-                    IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.artefact AND type = \'artefact\') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (OLD.artefact, \'artefact\');
+        if (is_postgres()) {
+            $sql = 'CREATE FUNCTION {search_elasticsearch_queue2_trigger}() RETURNS trigger AS $search_elasticsearch_queue2_trigger$
+                BEGIN
+                    IF (TG_OP=\'DELETE\') THEN
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = OLD.artefact AND type = \'artefact\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (OLD.artefact, \'artefact\');
+                        END IF;
+                        RETURN OLD;
+                    ELSE
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.artefact AND type = \'artefact\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (NEW.artefact, \'artefact\');
+                        END IF;
+                        RETURN NEW;
                     END IF;
-                    RETURN OLD;
-                ELSE
-                    IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = NEW.artefact AND type = \'artefact\') THEN
-                        INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (NEW.artefact, \'artefact\');
+                END;
+                $search_elasticsearch_queue2_trigger$ LANGUAGE plpgsql;';
+        }
+        else {
+            $sql = 'CREATE PROCEDURE {search_elasticsearch_queue2_trigger}
+                        (tablename varchar(64), operation varchar(10), oldartefact bigint, newartefact bigint)
+                BEGIN
+                    IF (operation=\'delete\') THEN
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = oldartefact AND type = \'artefact\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (oldartefact, \'artefact\');
+                        END IF;
+                    ELSE
+                        IF NOT EXISTS (SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = newartefact AND type = \'artefact\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (newartefact, \'artefact\');
+                        END IF;
                     END IF;
-                    RETURN NEW;
-                END IF;
-            END;
-            $search_elasticsearch_queue2_trigger$ LANGUAGE plpgsql;';
+                END';
+        }
         execute_sql($sql);
     }
 
@@ -1604,15 +1674,36 @@ class ElasticsearchIndexing {
     public static function drop_triggers($type) {
         // The artefact type uses different trigger functions than the other types
         if ($type == 'artefact') {
-            $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
-            execute_sql($sql);
+            if (is_postgres()) {
+                $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
+                execute_sql($sql);
 
-            $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_view_artefact}() CASCADE;";
-            execute_sql($sql);
+                $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_view_artefact}() CASCADE;";
+                execute_sql($sql);
+            }
+            else {
+                // need to drop 3 triggers for INSERT, UPDATE and DELETE
+                foreach (self::$mysqltriggeroperations as $operation) {
+                    $sql = "DROP TRIGGER IF EXISTS {search_elasticsearch_{$type}_{$operation}};";
+                    execute_sql($sql);
+
+                    $sql = "DROP TRIGGER IF EXISTS {search_elasticsearch_view_artefact_{$operation}};";
+                    execute_sql($sql);
+                }
+            }
         }
         else {
-            $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
-            execute_sql($sql);
+            if (is_postgres()) {
+                $sql = "DROP FUNCTION IF EXISTS {search_elasticsearch_{$type}}() CASCADE;";
+                execute_sql($sql);
+            }
+            else {
+                // need to drop 3 triggers for INSERT, UPDATE and DELETE
+                foreach (self::$mysqltriggeroperations as $operation) {
+                    $sql = "DROP TRIGGER IF EXISTS {search_elasticsearch_{$type}_{$operation}}";
+                    execute_sql($sql);
+                }
+            }
         }
     }
 
@@ -1627,21 +1718,66 @@ class ElasticsearchIndexing {
         self::drop_triggers($type);
         // The artefact type uses different trigger functions than the other types
         if ($type == 'artefact') {
-            $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
-                    FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_artefact_trigger}()";
-            execute_sql($sql);
+            if (is_postgres()) {
+                $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
+                        FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_artefact_trigger}()";
+                execute_sql($sql);
 
-            $sql = "CREATE TRIGGER {search_elasticsearch_view_artefact} BEFORE INSERT OR UPDATE OR DELETE ON {view_artefact}
-                    FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue2_trigger}()";
-            execute_sql($sql);
+                $sql = "CREATE TRIGGER {search_elasticsearch_view_artefact} BEFORE INSERT OR UPDATE OR DELETE ON {view_artefact}
+                        FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue2_trigger}()";
+                execute_sql($sql);
+            }
+            else {
+                foreach (self::$mysqltriggeroperations as $operation) {
+                    $oldid = ($operation == 'insert' ? 'null' : 'OLD.id');
+                    $newid = ($operation == 'delete' ? 'null' : 'NEW.id');
+                    $oldartefacttype = ($operation == 'insert' ? 'null' : 'OLD.artefacttype');
+                    $newartefacttype = ($operation == 'delete' ? 'null' : 'NEW.artefacttype');
+                    $oldartefact = ($operation == 'insert' ? 'null' : 'OLD.artefact');
+                    $newartefact = ($operation == 'delete' ? 'null' : 'NEW.artefact');
+                    // For inserts, the NEW.id is not available until AFTER the record is insereted.
+                    $triggertime = ($operation == 'insert' ? 'AFTER' : 'BEFORE');
+                    // To remove confusion, include the table prefix if it exists as we'll be
+                    // passing the actual table name to the stored procedure.
+                    $tablename = get_config('dbprefix') . $type;
+                    $viewtablename = get_config('dbprefix') . 'view_artefact';
+
+                    // create 3 triggers on the artefact table.
+                    $sql = "CREATE TRIGGER {search_elasticsearch_{$type}_{$operation}} {$triggertime} {$operation} ON {{$type}}
+                            FOR EACH ROW CALL {search_elasticsearch_queue_artefact_trigger}('{$tablename}', '{$operation}', {$oldid}, {$oldartefacttype}, {$newid}, {$newartefacttype})";
+                    execute_sql($sql);
+
+                    // create 3 triggers on the view_artefact table.
+                    $sql = "CREATE TRIGGER {search_elasticsearch_view_artefact_{$operation}} {$triggertime} {$operation} ON {view_artefact}
+                            FOR EACH ROW CALL {search_elasticsearch_queue2_trigger}('{$viewtablename}', '{$operation}', {$oldartefact}, {$newartefact})";
+                    execute_sql($sql);
+                }
+            }
         }
         else {
-            $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
-                FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_trigger}()";
-            execute_sql($sql);
+            if (is_postgres()) {
+                $sql = "CREATE TRIGGER {search_elasticsearch_{$type}} BEFORE INSERT OR UPDATE OR DELETE ON {{$type}}
+                    FOR EACH ROW EXECUTE PROCEDURE {search_elasticsearch_queue_trigger}()";
+                execute_sql($sql);
+            }
+            else {
+                // create the 3 triggers on the table.
+                foreach (self::$mysqltriggeroperations as $operation) {
+                    $oldid = ($operation == 'insert' ? 'null' : 'OLD.id');
+                    $newid = ($operation == 'delete' ? 'null' : 'NEW.id');
+                    // For inserts, the NEW.id is not available until AFTER the record is insereted.
+                    $triggertime = ($operation == 'insert' ? 'AFTER' : 'BEFORE');
+                    // To remove confusion, include the table prefix if it exists as we'll be
+                    // passing the actual table name to the stored procedure.
+                    $tablename = get_config('dbprefix') . ($type);
+
+                    $sql = "CREATE TRIGGER {search_elasticsearch_{$type}_{$operation}} {$triggertime} {$operation} ON {{$type}}
+                            FOR EACH ROW CALL {search_elasticsearch_queue_trigger}('{$tablename}', '{$operation}', {$oldid}, {$newid})";
+                    execute_sql($sql);
+                }
+            }
         }
     }
-
 
     public static function artefacttypes_filter_string() {
 
