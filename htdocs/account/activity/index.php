@@ -108,17 +108,19 @@ function showHideMessage(id) {
         var unread = getFirstElementByTagAndClassName(
             'input', 'tocheckread', message.parentNode.parentNode
         );
-        var unreadicon = getFirstElementByTagAndClassName(
-            'img', 'unreadmessage', message.parentNode.parentNode
+        var subject = getFirstElementByTagAndClassName(
+            'a', 'inbox-showmessage', message.parentNode
+        );
+        var unreadText = getFirstElementByTagAndClassName(
+            null, 'accessible-hidden', subject
         );
         if (unread) {
             var pd = {'readone':id};
             sendjsonrequest('index.json.php', pd, 'GET', function(data) {
                 swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$strread}}));
-                if (unreadicon) {
-                    swapDOM(unreadicon, IMG({'src' : {$readicon}, 'alt' : getNodeAttribute(unreadicon, 'alt') + ' - ' + {$strread}}));
-                };
                 updateUnreadCount(data);
+                removeElementClass(subject, 'unread');
+                removeElement(unreadText);
             });
         }
         removeElementClass(message, 'hidden');
