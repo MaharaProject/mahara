@@ -950,6 +950,8 @@ function jsstrings() {
                 'home',
                 'youhavenottaggedanythingyet',
                 'wanttoleavewithoutsaving?',
+                'Help',
+                'closehelp'
             ),
         ),
         'tablerenderer' => array(

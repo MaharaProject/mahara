@@ -324,19 +324,20 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 contextualHelpOpened      = false;
+contextualHelpLink        = null;
 badIE = false;
 
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
         {'href': null},
-        IMG({'alt': '?', 'src': get_themeurl('images/help.png')})
+        IMG({'alt': get_string('Help'), 'src': get_themeurl('images/help.png')})
     );
     connect(link, 'onclick', function (e) {
         e.stop();
         contextualHelp(formName, helpName, pluginType, pluginName, page, section, link);
     });
 
-    return link;
+    return SPAN({'class':'help'}, link);
 }
 
 function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
@@ -348,7 +349,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         'pluginname': pluginName
     };
 
-    var parentElement = 'messages';
+    contextualHelpLink = ref;
 
     // deduce the key
     if (page) {
@@ -386,11 +387,25 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     // create and display the container
     contextualHelpContainer = DIV({
             'style': 'position: absolute;',
-            'class': 'contextualHelp hidden'
+            'class': 'contextualHelp hidden',
+            'role' : 'dialog'
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
-    appendChildNodes($(parentElement), contextualHelpContainer);
+    var parent = ref.parentNode;
+    var inserted = false;
+    var illegalParents = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'legend'];
+    while (parent != null) {
+        if (illegalParents.indexOf(parent.nodeName.toLowerCase()) >= 0) {
+            insertSiblingNodesAfter(parent, contextualHelpContainer);
+            inserted = true;
+            break;
+        }
+        parent = parent.parentNode;
+    }
+    if (!inserted) {
+        insertSiblingNodesAfter(ref.parentNode, contextualHelpContainer);
+    }
 
     var position = getElementPosition(ref);
     var dimensions = getElementDimensions(contextualHelpContainer);
@@ -449,13 +464,12 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         },
         function (error) {
             contextualHelpCache[key] = get_string('couldnotgethelp');
-            contextualHelpContainer.innerHTML = contextualHelpCache[key];
+            buildContextualHelpBox(contextualHelpCache[key]);
             processingStop();
             contextualHelpOpened = true;
         },
         true, true);
     }
-    contextualHelpContainer.focus();
 }
 
 /*
@@ -464,12 +478,16 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  * help closing the box
  */
 function buildContextualHelpBox(content) {
-    var result = '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/btn_close.png'] + '" alt="X"></a></div>';
+    var result = '<div class="fr">';
+    result += '<a href="" class="help-dismiss" onclick="return false;"><img src="' + config.theme['images/btn_close.png'] + '" alt="' + get_string('closehelp') + '"></a>';
+    result += '</div>';
     result += '<div id="helpstop">';
     result += content;
     result += '</div>';
     contextualHelpContainer.innerHTML = result;
+
     connect('helpstop', 'onclick', function(e) { if (e.target().nodeName != "A") { e.stop(); } });
+    getFirstElementByTagAndClassName(null, 'help-dismiss', contextualHelpContainer).focus();
 }
 
 /*
@@ -494,6 +512,10 @@ connect(document, 'onclick', function(e) {
         contextualHelpContainer = null;
         contextualHelpSelected = null;
         contextualHelpOpened = false;
+        if (contextualHelpLink) {
+            contextualHelpLink.focus();
+            contextualHelpLink = null;
+        }
     }
     badIE = false;
 });
