@@ -702,6 +702,7 @@ class View {
         }
 
         if (isset($this->tags)) {
+            $this->tags = check_case_sensitive($this->tags, 'view_tag');
             delete_records('view_tag', 'view', $this->get('id'));
             foreach ($this->get_tags() as $tag) {
                 //truncate the tag before insert it into the database

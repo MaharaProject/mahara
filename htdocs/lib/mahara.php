@@ -3251,3 +3251,26 @@ function generate_csv($data, $csvfields) {
     }
     return $csv;
 }
+
+/**
+ * Check to make sure table is case sensitive (currently only for MySql)
+ * If it is not then reduce supplied array to a case insensitive version
+ * Preserving the first occurance of any duplicates.
+ * E.g. 'Test,test,cat,TEST,CAT,Cat' will return 'Test,cat'
+ *
+ * @param array     Array of case senstive strings
+ * @param string    Name of table
+ *
+ * @return array    Array of strings
+ */
+function check_case_sensitive($a, $table) {
+    if (is_mysql()) {
+        $db = get_config('dbname');
+        $result = recordset_to_array(get_recordset_sql("SHOW TABLE STATUS IN `$db` WHERE Name = ?", array($table)));
+        if (preg_match('/_ci/', $result[0]->Collation)) {
+            $b = array_unique(array_map('strtolower', $a));
+            $a = array_intersect_key($a, array_flip(array_keys($b)));
+        }
+    }
+    return $a;
+}
