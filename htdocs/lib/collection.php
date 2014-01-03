@@ -166,7 +166,8 @@ class Collection {
 
         if (isset($this->tags)) {
             delete_records('collection_tag', 'collection', $this->get('id'));
-            foreach ($this->get_tags() as $tag) {
+            $tags = check_case_sensitive($this->get_tags(), 'collection_tag');
+            foreach ($tags as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
                 insert_record('collection_tag', (object)array( 'collection' => $this->get('id'), 'tag' => $tag));

@@ -487,6 +487,7 @@ function edituser_site_submit(Pieform $form, $values) {
 
     delete_records('usr_tag', 'usr', $user->id);
     if (is_array($values['tags'])) {
+        $values['tags'] = check_case_sensitive($values['tags'], 'usr_tag');
         foreach(array_unique($values['tags']) as $tag) {
             if (empty($tag)) {
                 continue;
