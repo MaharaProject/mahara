@@ -34,6 +34,7 @@ addLoadEvent(function() {
                     removeElementClass(fieldset, 'safe-hidden');
                     removeElementClass(fieldset, 'collapsed');
                     fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ' ' + get_string('selected') + ')';
+                    $j(fieldset).find(':input').first().focus();
                     $('designskinform_fs').value = fsid;
                 }
                 else {

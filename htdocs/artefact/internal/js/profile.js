@@ -37,6 +37,7 @@ addLoadEvent(function() {
                     removeElementClass(fieldset, 'safe-hidden');
                     removeElementClass(fieldset, 'collapsed');
                     fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ' ' + get_string('selected') + ')';
+                    $j(fieldset).find(':input').first().focus();
                     $('profileform_fs').value = fsid;
                 }
                 else if (hasElementClass(fieldset.tabLink.parentNode, 'current-tab')) {
