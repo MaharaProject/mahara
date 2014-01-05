@@ -564,7 +564,12 @@ $designskinform = pieform(array(
 ));
 
 
-$smarty = smarty(array('jquery', 'js/skindesign.js'), array(), array(), array());
+$smarty = smarty(array('jquery', 'js/skindesign.js'), array(), array(
+    'mahara' => array(
+        'tab',
+        'selected',
+    ),
+), array());
 $smarty->assign('LANG', substr($CFG->lang, 0, 2));
 $smarty->assign('USER', $USER);
 $smarty->assign('designskinform', $designskinform);

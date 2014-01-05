@@ -211,7 +211,8 @@ ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
+ul.in-page-tabs li input.linkbtn,
+ul.in-page-tabs li button.linkbtn {
 	color: #333333;
 }
 /******************** Sidebar ********************/

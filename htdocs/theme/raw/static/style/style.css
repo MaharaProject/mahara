@@ -163,6 +163,14 @@ form.oneline.inline div,
 .inline {
     display: inline;
 }
+/* Hides the element but leaves it accessible to screen readers */
+.accessible-hidden {
+    display: inline;
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+}
 .hidden,
 .dontshow {
     display: none;
@@ -179,13 +187,6 @@ form.oneline.inline div,
     height: 0;
     margin: 0;
     padding: 0;
-}
-/* Hides the element but leaves it accessible to screen readers */
-.accessible-hidden {
-    position: absolute !important;
-    clip: rect(1px 1px 1px 1px); /* IE7 */
-    clip: rect(1px, 1px, 1px, 1px);
-    overflow: hidden;
 }
 .nojs-hidden-inline,
 .nojs-hidden-block,
@@ -1567,6 +1568,7 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
 ul.in-page-tabs li input.linkbtn,
+ul.in-page-tabs li button.linkbtn,
 ul.searchtab li span.inactive {
     text-decoration: none;
     display: inline-block;
@@ -1582,14 +1584,16 @@ ul.searchtab li span.inactive {
 .ie7 ul.in-page-tabs li a:link,
 .ie7 ul.in-page-tabs li a:visited,
 .ie7 ul.in-page-tabs li a:active,
-.ie7 ul.in-page-tabs li input.linkbtn {
+.ie7 ul.in-page-tabs li input.linkbtn,
+.ie7 ul.in-page-tabs li button.linkbtn {
     margin: 0 0 0 3px;
 }
 ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active,
-ul.in-page-tabs li input.current-tab {
+ul.in-page-tabs li input.current-tab,
+ul.in-page-tabs li button.current-tab {
     color: #333333;
     text-decoration: none;
     cursor: default;

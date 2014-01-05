@@ -666,6 +666,7 @@ ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
 ul.in-page-tabs li input.linkbtn,
+ul.in-page-tabs li button.linkbtn,
 ul.searchtab li span.inactive {
     color: #1E6297;
     background: none;
@@ -679,14 +680,16 @@ ul.searchtab li span.inactive {
     border-radius: 0;
 }
 ul.in-page-tabs li a:hover,
-ul.in-page-tabs li input:hover {
+ul.in-page-tabs li input:hover,
+ul.in-page-tabs li button:hover {
 	color: #7E7327;
 }
 ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active,
-ul.in-page-tabs li input.current-tab {
+ul.in-page-tabs li input.current-tab,
+ul.in-page-tabs li button.current-tab {
     color: #000;
     background: #FFFFFF url(../images/tabs-active.gif) repeat-x 0 0;
     border-left: 1px solid #FFFFFF;

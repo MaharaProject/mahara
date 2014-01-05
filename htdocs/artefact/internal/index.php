@@ -431,7 +431,9 @@ $smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
         'emailtoolong',
-        'tabs'
+        'tabs',
+        'tab',
+        'selected',
     ),
     'artefact.internal' => array(
         'loseyourchanges',

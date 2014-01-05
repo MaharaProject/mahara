@@ -16,7 +16,12 @@ addLoadEvent(function() {
     var tabs = [];
     forEach(legends, function(legend) {
         var a = A({'href': ''}, scrapeText(legend));
+        var accessibleText = SPAN({'class':'accessible-hidden'}, '(' + get_string('tab') + ')');
+        appendChildNodes(a, accessibleText);
+
         legend.parentNode.tabLink = a;
+        legend.parentNode.tabAccessibleText = accessibleText;
+
         // Pieforms is unhelpful with legend/fieldset ids; get it from children
         var fsid = 'general';
         var row = getFirstElementByTagAndClassName('tr', 'html', legend.parentNode);
@@ -31,12 +36,14 @@ addLoadEvent(function() {
                     addElementClass(fieldset.tabLink, 'current-tab');
                     removeElementClass(fieldset, 'safe-hidden');
                     removeElementClass(fieldset, 'collapsed');
+                    fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ' ' + get_string('selected') + ')';
                     $('profileform_fs').value = fsid;
                 }
-                else {
+                else if (hasElementClass(fieldset.tabLink.parentNode, 'current-tab')) {
                     removeElementClass(fieldset.tabLink.parentNode, 'current-tab');
                     removeElementClass(fieldset.tabLink, 'current-tab');
                     addElementClass(fieldset, 'collapsed');
+                    fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ')';
                 }
             });
             e.stop();
@@ -68,6 +75,7 @@ addLoadEvent(function() {
             // not collapsed by default, probably was the default one to show
             addElementClass(fieldset.tabLink.parentNode, 'current-tab');
             addElementClass(fieldset.tabLink, 'current-tab');
+            fieldset.tabAccessibleText.innerHTML = '(' + get_string('tab') + ' ' + get_string('selected') + ')';
         }
     });
 

@@ -357,13 +357,15 @@ ul.in-page-tabs li a,
 ul.in-page-tabs li a:link,
 ul.in-page-tabs li a:visited,
 ul.in-page-tabs li a:active,
-ul.in-page-tabs li input.linkbtn {
+ul.in-page-tabs li input.linkbtn,
+ul.in-page-tabs li button.linkbtn {
     color: #FFFFFF;
     background: #00084F;
     border: 1px solid #00084F;
 }
 ul.in-page-tabs li a:hover,
-ul.in-page-tabs li input:hover {
+ul.in-page-tabs li input:hover,
+ul.in-page-tabs li button:hover {
     text-decoration: underline;
     color: #1F97D5;
 }
@@ -371,7 +373,8 @@ ul.in-page-tabs li a.current-tab,
 ul.in-page-tabs li a.current-tab:link,
 ul.in-page-tabs li a.current-tab:visited,
 ul.in-page-tabs li a.current-tab:active,
-ul.in-page-tabs li input.current-tab {
+ul.in-page-tabs li input.current-tab,
+ul.in-page-tabs li button.current-tab {
     color: #14336F;
     background-color: #FFFFFF;
     border-bottom: 1px solid #FFFFFF;
