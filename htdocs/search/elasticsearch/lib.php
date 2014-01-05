@@ -1363,8 +1363,10 @@ class ElasticsearchIndexing {
         // Create the index, deleting it first if it already exists
         $elasticaIndex->create(
             array(
-                'number_of_shards' => 5,
-                'number_of_replicas' => 1,
+// Uncomment the following if you want to overwrite the number of shards/replicas set by ElasticSearch's
+// default, or the settings specified in elasticsearch.yml file.
+//                'number_of_shards' => 5,
+//                'number_of_replicas' => 1,
                 'analysis' => array(
                     'analyzer' => array(
                         'mahara_analyzer' => array(
