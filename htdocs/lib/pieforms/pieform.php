@@ -1116,6 +1116,10 @@ EOF;
             $result .= ' title="' . self::hsc($element['elementtitle']) . '"';
         }
 
+        if (isset($element['description'])) {
+            $result .= ' aria-describedby="' . $element['id'] . '_description"';
+        }
+
         if (!in_array('maxlength', $exclude) && isset($element['rules']['maxlength'])) {
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }

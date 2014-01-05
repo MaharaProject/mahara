@@ -68,9 +68,17 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $numberinput = '<input';
     $numberinput .= ' type="text" size="6" name="' . $name . '"';
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
-    $numberinput .= (isset($element['error']) ? ' class="error"' : '') . ">\n";
+    $numberinput .= (isset($element['error']) ? ' class="error"' : '');
+    if (isset($element['description'])) {
+        $numberinput .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+    }
+    $numberinput .= ">\n";
 
-    $uselect = '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . "\">\n";
+    $uselect = '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
+    if (isset($element['description'])) {
+        $uselect .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+    }
+    $uselect .= ">\n";
     foreach (pieform_element_bytes_get_bytes_units() as $u) {
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>'
             . $form->i18n('element', 'bytes', $u, $element) . "</option>\n";

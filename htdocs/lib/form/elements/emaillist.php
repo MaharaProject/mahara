@@ -57,6 +57,10 @@ function pieform_element_emaillist(Pieform $form, $element) {
     $smarty->assign('validationemailstr', json_encode(get_string('validationemailwillbesent', 'artefact.internal')));
     $smarty->assign('disabled', !empty($element['disabled']));
 
+    if (isset($element['description'])) {
+        $smarty->assign('describedby', $form->get_name() . '_' . $element['id'] . '_description');
+    }
+
     return $smarty->fetch('form/emaillist.tpl');
 }
 
