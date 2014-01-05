@@ -991,28 +991,25 @@ EOF;
             function showhideComposite(r, content, attachments) {
                 // get the reference for the title we just clicked on
                 var titleTD = $('composite-' + r.artefact + '-' + r.id);
-                var theRow = titleTD.parentNode;
-                var bodyRow = $('composite-body-' + r.artefact +  '-' + r.id);
-                if (bodyRow) {
-                    if (hasElementClass(bodyRow, 'hidden')) {
-                        removeElementClass(bodyRow, 'hidden');
+                var bodyNode = $('composite-body-' + r.artefact +  '-' + r.id);
+                if (bodyNode) {
+                    if (hasElementClass(bodyNode, 'hidden')) {
+                        removeElementClass(bodyNode, 'hidden');
                     }
                     else {
-                        addElementClass(bodyRow, 'hidden');
+                        addElementClass(bodyNode, 'hidden');
                     }
                     return false;
                 }
-                // we have to actually create the dom node too
-                var colspan = theRow.childNodes.length;
                 if (attachments) {
-                    var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        TD({'colspan': colspan}, DIV({'class':'compositedesc'}, content), attachments));
+                    var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
+                        DIV({'class':'compositedesc'}, content), attachments);
                 }
                 else {
-                    var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id},
-                        TD({'colspan': colspan}, DIV({'class':'compositedesc'}, content)));
+                    var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
+                        DIV({'class':'compositedesc'}, content));
                 }
-                insertSiblingNodesAfter(theRow, newRow);
+                appendChildNodes(titleTD, newNode);
             }
         ";
     }
