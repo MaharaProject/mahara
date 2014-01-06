@@ -18,6 +18,7 @@ $string['element.bytes.gigabytes'] = 'Gigabytes';
 $string['element.bytes.invalidvalue'] = 'Value must be a number';
 
 $string['element.calendar.invalidvalue'] = 'Invalid date/time specified';
+$string['element.calendar.opendatepicker'] = 'Open date picker';
 
 $string['element.date.or'] = 'or';
 $string['element.date.monthnames'] = 'January,February,March,April,May,June,July,August,September,October,November,December';

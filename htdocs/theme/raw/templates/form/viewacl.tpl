@@ -250,7 +250,7 @@ function makeCalendarLink(item, type) {
         'class'  : 'pieform-calendar-toggle'},
         IMG({
             'src': '{{theme_url filename='images/btn_calendar.png'}}',
-            'alt': ''})
+            'alt': get_string('element.calendar.opendatepicker', 'pieforms')})
     );
 
     return link;

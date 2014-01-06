@@ -48,11 +48,13 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     if (isset($element['imagefile'])) {
         $result .= '<a href="" id="'. $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
             . ' tabindex="' . $element['tabindex'] . '">'
-            . '<img src="' . $element['imagefile'] . '" alt=""></a>';
+            . '<img src="' . $element['imagefile'] . '" alt="' . get_string('element.calendar.opendatepicker', 'pieforms') . '"></a>';
     }
     else {
-        $result .= '<input type="button" id="' . $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
-            . ' value="..." tabindex="' . $element['tabindex'] . '">';
+        $result .= '<button type="button" id="' . $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
+            . ' tabindex="' . $element['tabindex'] . '">';
+        $result .= '<span class="accessible-hidden">' . get_string('element.calendar.opendatepicker', 'pieforms') . '</span>';
+        $result .= '...</button>';
     }
 
     // Build the configuring javascript

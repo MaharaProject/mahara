@@ -953,6 +953,9 @@ function jsstrings() {
                 'Help',
                 'closehelp'
             ),
+            'pieforms' => array(
+                'element.calendar.opendatepicker'
+            )
         ),
         'tablerenderer' => array(
             'mahara' => array(
