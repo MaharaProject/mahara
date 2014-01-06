@@ -375,7 +375,10 @@ $cfg->sslproxy = false;
 // $cfg->externallogin = 'http://moodle.example.com/auth/mnet/jump.php?hostwwwroot={wwwroot}&wantsurl={shorturlencoded}';
 
 /**
- * @global bool $cfg->renamecopies If true, new copies of views & collections will have 'Copy of' prepended to the title.
+ * @global bool $cfg->renamecopies If true, new copies of views & collections will have "Copy of" prepended to the title,
+ * and if a page already exists with that title, a number will be appended to the end of the title.
+ *
+ * If false, "Copy of" will NOT be prepended, but a number may still be appended to the end of the title.
  */
 $cfg->renamecopies = true;
 
