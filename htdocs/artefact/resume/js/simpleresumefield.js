@@ -28,10 +28,12 @@ function connect_editbuttons() {
         $j("#" + t + "edit_container").addClass("hidden");
         $j("#" + t + "edit_container").removeClass("nojs-hidden-block");
         if (typeof tinyMCE != 'undefined') {
-            tinyMCE.get(t).show();
+            var editor = tinyMCE.get(t);
+            editor.show()
+            editor.focus();
         }
         else {
-            $j("#" + t).removeClass("js-hidden");
+            $j("#" + t).removeClass("js-hidden").focus();
         }
     });
 }
@@ -52,6 +54,7 @@ function connect_cancelbuttons() {
         else {
             $j("#" + t).addClass("js-hidden");
         }
+        $j("#" + t + "edit_container").find('input.openedit').focus();
     });
 }
 
