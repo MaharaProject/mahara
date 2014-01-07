@@ -989,7 +989,8 @@ input#releaseview_submit {
     padding: 5px 10px;
 }
 /* buttons that look like links */
-.linkbtn {
+.linkbtn,
+.linkbtn:hover {
     border: 0;
     cursor: pointer;
     background: none;
