@@ -21,6 +21,7 @@ $string['skindeleted'] = 'Skin deleted';
 $string['cantdeleteskin'] = 'You cannot delete this skin.';
 $string['deletespecifiedskin'] = 'Delete skin \'%s\'';
 $string['deleteskinconfirm'] = 'Do you really want to delete this skin? It cannot be undone.';
+$string['deleteskinusedinpages'] = 'The skin you are about to delete is used in %d page(s).';
 $string['importskins'] = 'Import skin(s)';
 $string['importskinsnotice'] = 'Please select a valid XML file to import, which contains the definition(s) of the skin(s).';
 $string['validxmlfile'] = 'Valid XML file';
