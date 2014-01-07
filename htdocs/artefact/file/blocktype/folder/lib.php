@@ -110,6 +110,14 @@ class PluginBlocktypeFolder extends PluginBlocktype {
                 'options' => array('asc' => get_string('ascending'), 'desc' => get_string('descending')),
             ),
         );
+        if (get_config_plugin('artefact', 'file', 'folderdownloadzip')) {
+            $elements['folderdownloadzip'] = array(
+                'type' => 'checkbox',
+                'labelhtml' => get_string('downloadfolderzipblock', 'artefact.file'),
+                'description' => get_string('downloadfolderzipdescriptionblock', 'artefact.file'),
+                'defaultvalue' => isset($configdata['folderdownloadzip']) ? $configdata['folderdownloadzip'] : get_config_plugin('artefact', 'file', 'folderdownloadzip'),
+            );
+        }
         return $elements;
     }
 

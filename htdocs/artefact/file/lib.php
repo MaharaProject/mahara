@@ -1702,7 +1702,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
         $smarty->assign('folderid', $this->get('id'));
-        $smarty->assign('downloadfolderzip', get_config_plugin('artefact', 'file', 'folderdownloadzip'));
+        $smarty->assign('downloadfolderzip', (isset($options['folderdownloadzip']) ? $options['folderdownloadzip'] : get_config_plugin('artefact', 'file', 'folderdownloadzip')));
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);

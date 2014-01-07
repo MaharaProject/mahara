@@ -290,7 +290,9 @@ $string['filepermission.republish'] = 'Publish';
 
 // Download Folder as zip
 $string['downloadfolderzip'] = 'Download folders as a zip file';
+$string['downloadfolderzipblock'] = 'Show download link';
 $string['downloadfolderzipdescription'] = 'If checked, users can download a folder, displayed via the Media -> Folder block, as a zip file.';
+$string['downloadfolderzipdescriptionblock'] = 'If checked, users can download the folder as a zip file.';
 $string['downloadfolderziplink'] = 'Download';
 $string['folderdownloadnofolderfound'] = 'Unable to find the folder with ID %d';
 $string['zipfilenameprefix'] = 'folder';
