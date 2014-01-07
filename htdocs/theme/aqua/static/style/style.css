@@ -300,7 +300,7 @@ div.pagination a {
     color: #FFFFFF;
     font-weight: normal;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
     color: #1F97D5;
     text-decoration: underline;
 }
@@ -349,7 +349,7 @@ div.pagination a {
     background: #00084F;
     color: #FFFFFF;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     background: #1F97D5;
 }
 /******************** Tabs ********************/

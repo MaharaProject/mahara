@@ -1465,7 +1465,7 @@ div.rel {
     text-decoration: none;
     font-weight: bold;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
     background: #E9E9E9;
 }
 .ie7 .main-nav li {
@@ -1517,7 +1517,7 @@ div.rel {
 .ie7 .main-nav .dropdown-sub {
     top: 36px;
 }
-.main-nav li:hover .dropdown-sub {
+.main-nav li:hover .dropdown-sub, .main-nav li .dropdown-sub.show-menu {
     display: block;
 }
 .main-nav .dropdown-sub li {
@@ -1542,7 +1542,7 @@ div.rel {
 .main-nav .dropdown-sub li.selected a {
     font-weight: bold;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     background: #DDDDDD;
 }
 /******************** Tabs ********************/

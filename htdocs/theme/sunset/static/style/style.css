@@ -295,7 +295,7 @@ div.pagination a {
 .main-nav li a:active {
     color: #FFFFFF;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
     color: #FFFFFF;
 	background: none;
 }
@@ -347,7 +347,7 @@ div.pagination a {
     color: #8E1901;
     background: #e1cfa1;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     color: #FFFFFF;
     background: #c66c14;
 }

@@ -158,7 +158,7 @@ div.pagination a {
 	background: none;
     color: #FFFFFF;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
 	background: none;
 }
 .main-nav li.selected a,
@@ -202,7 +202,7 @@ div.pagination a {
     color: #FFFFFF;
     background: #F6871F;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     color: #1A428F;
     background: #FFF4EA;
 }

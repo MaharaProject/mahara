@@ -554,11 +554,12 @@ $string['processing']     = 'Processing';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 
 // menu
-$string['overview']    = 'Overview';
-$string['home']        = 'Home';
-$string['Content']     = 'Content';
-$string['myportfolio'] = 'Portfolio';
-$string['settings']    = 'Settings';
+$string['dropdownmenu'] = 'menu';
+$string['overview']     = 'Overview';
+$string['home']         = 'Home';
+$string['Content']      = 'Content';
+$string['myportfolio']  = 'Portfolio';
+$string['settings']     = 'Settings';
 $string['myfriends']          = 'My friends';
 $string['findfriends']        = 'Find friends';
 $string['groups']             = 'Groups';

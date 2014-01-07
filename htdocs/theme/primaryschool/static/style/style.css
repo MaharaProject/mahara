@@ -325,7 +325,7 @@ div.pagination a {
 	line-height: 40px;
 	background-color: transparent;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
 	color: #f6871f;
 	background-color: transparent;
 }
@@ -504,7 +504,7 @@ div.pagination a {
 	border-top: 1px solid #0f1978;
 	border-bottom: 1px solid #000533;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
 	background: #0b1960;
 	color: #ffd64d;
 }

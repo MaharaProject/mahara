@@ -5,7 +5,7 @@
             <ul id="{if $DROPDOWNMENU}dropdown-nav{else}nav{/if}">
 {strip}
 {foreach from=$MAINNAV item=item}
-                <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} selected{/if}{if $DROPDOWNMENU} dropdown-nav-home{/if}"><span><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}</a></span>
+                <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} selected{/if}{if $DROPDOWNMENU} dropdown-nav-home{/if}"><span><a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if}">{$item.title}{if $DROPDOWNMENU && $item.submenu} <span class="accessible-hidden">({str tag=dropdownmenu})</span>{/if}</a></span>
 {if $item.submenu}
                     <ul class="{if $DROPDOWNMENU}dropdown-sub {/if}rd-subnav">
 {strip}

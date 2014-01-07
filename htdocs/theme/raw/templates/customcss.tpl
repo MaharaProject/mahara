@@ -57,7 +57,7 @@ a:focus {
 .main-nav li a:link,
 .main-nav li a:visited,
 .main-nav li a:active,
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
     color: {$data.navfg};
 }
 .main-nav li.selected a,
@@ -85,7 +85,7 @@ a:focus {
     color: {$data.navfg} !important;
     background: {$data.navbg} !important;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     color: {$data.subfg} !important;
     background: {$data.subbg} !important;
 }

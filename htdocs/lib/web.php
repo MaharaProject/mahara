@@ -429,6 +429,7 @@ EOF;
 
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
+        $javascript_array[] = $jsroot . 'dropdown-nav.js';
     }
 
     $smarty->assign('MOBILE', $SESSION->get('mobile'));

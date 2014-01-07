@@ -315,7 +315,7 @@ div.warning,
     color: #FFFFFF;
     font-weight: normal;
 }
-.main-nav li a:hover {
+.main-nav li a:hover, .main-nav li a:focus {
     color: #FFFFFF;
 }
 .main-nav li.selected a,
@@ -361,7 +361,7 @@ div.warning,
     background: #1b3b46;
     color: #FFFFFF;
 }
-.main-nav .dropdown-sub li a:hover {
+.main-nav .dropdown-sub li a:hover, .main-nav .dropdown-sub li a:focus {
     background: #00aef1;
     color: #FFFFFF;
 }
