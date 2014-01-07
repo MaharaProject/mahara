@@ -1061,6 +1061,21 @@ class View {
             }
         }
 
+        $owner = $this->owner;
+        $group = null;
+        if ($this->get('group') !== null && $this->get('group') > 0) {
+            $group = $this->group;
+            $owner = null;
+            $andclause = 'AND ucl.group = ?';
+        }
+        else if (isset($owner)) {
+            $andclause = 'AND ucl.usr = ?';
+        }
+        else {
+            // no group or owner, must be site or insitution page
+            $andclause = 'AND ucl.usr IS NULL AND ucl.group IS NULL';
+        }
+
         // check for existing layout
         $sql = 'SELECT vlrc.viewlayout AS id
                 FROM
@@ -1081,13 +1096,22 @@ class View {
                 AND (
                    vl.iscustom = 0
                    OR (
-                       vl.iscustom = 1 AND ucl.usr = ?
+                       vl.iscustom = 1 ' . $andclause . '
                       )
                 )
                 GROUP BY vlrc.viewlayout
                 HAVING count(*) = ?
                 LIMIT 1';
-        $layoutids = get_records_sql_array($sql, array($numrows, $this->owner, $numrows));
+        if (isset($owner)) {
+            $layoutids = get_records_sql_array($sql, array($numrows, $owner, $numrows));
+        }
+        else if (isset($group)) {
+            $layoutids = get_records_sql_array($sql, array($numrows, $group, $numrows));
+        }
+        else {
+            // no user or group set
+            $layoutids = get_records_sql_array($sql, array($numrows, $numrows));
+        }
 
         if ($layoutids) {
             $data = array('layoutid' => $layoutids[0]->id, 'newlayout' => 0);
@@ -1103,7 +1127,15 @@ class View {
                 throw new SystemException("View::addcustomlayout: Couldn't create new layout record.");
             }
 
-            $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $this->owner, 'layout' => $newlayoutid));
+            if (isset($owner)) {
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => $owner, 'group' => null, 'layout' => $newlayoutid));
+            }
+            else if (isset($group)) {
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => $group, 'layout' => $newlayoutid));
+            }
+            else {
+                $newcustomlayout = insert_record('usr_custom_layout', (object) array('usr' => null, 'group' => null, 'layout' => $newlayoutid));
+            }
             if (!$newcustomlayout) {
                 db_rollback();
                 throw new SystemException("View::addcustomlayout: Couldn't create new usr custom layout record.");
@@ -2669,12 +2701,30 @@ class View {
         $layoutid = $this->get('layout');
         $numrows = $this->get('numrows');
         $columnsperrow = $this->get('columnsperrow');
+        $owner = $this->get('owner');
+        $queryarray = array($owner, $numrows);
+        $group = null;
+
+        if (isset($owner)) {
+            $andclause = '(ucl.usr = 0 OR ucl.usr = ?)';
+        }
+        else if ($this->get('group') !== null && $this->get('group') > 0) {
+            $owner = null;
+            $group = $this->get('group');
+            $andclause = '(ucl.usr = 0 OR ucl.group = ?)';
+            $queryarray = array($group, $numrows);
+        }
+        else {
+            $andclause = '(ucl.usr = 0 OR (ucl.usr IS NULL AND ucl.group IS NULL))';
+            $queryarray = array($numrows);
+        }
 
         // get all valid possible layout records
-        $validlayouts = get_records_sql_assoc('SELECT * FROM {view_layout} vl
-                                               JOIN {usr_custom_layout} ucl
-                                               ON ((vl.id = ucl.layout) AND (ucl.usr = 0 OR ucl.usr = ?))
-                                               WHERE rows = ?', array($this->get('owner'), $numrows));
+        $validlayouts = get_records_sql_assoc('
+                SELECT * FROM {view_layout} vl
+                JOIN {usr_custom_layout} ucl
+                ON ((vl.id = ucl.layout) AND ' . $andclause . ')
+                WHERE rows = ?', $queryarray);
 
         if ($layoutid) {
             $layout->id = $layoutid;
@@ -3471,16 +3521,35 @@ class View {
     }
 
     public function get_layoutrows() {
-        global $USER;
-        $userid = $USER->get('id');
         $layoutrows = array();
-        // get built-in layout options (owner=0) and any custom created layouts (owner=current user id)
+        $owner = $this->get('owner');
+        $group = null;
+        $queryarray = array($owner);
+
+        // get built-in layout options (owner=0) and any custom created layouts
+        if (isset($owner)) {
+            // view owned by individual
+            $whereclause = '(ucl.usr = 0 OR ucl.usr = ?)';
+        }
+        else if ($this->get('group') !== null && $this->get('group') > 0) {
+            // view owned by group
+            $group = $this->get('group');
+            $owner = null;
+            $whereclause = '(ucl.usr = 0 OR ucl.group = ?)';
+            $queryarray = array($group);
+        }
+        else {
+            // view owned by site or institution
+            $whereclause = '(ucl.usr = 0 OR (ucl.usr IS NULL AND ucl.group IS NULL))';
+            $queryarray = array();
+        }
+
         $layoutsrowscols = get_records_sql_array('
-            SELECT vlrc.viewlayout, vlrc.row, vlrc.columns
-            FROM {view_layout_rows_columns} vlrc
-                JOIN {view_layout} vl ON vlrc.viewlayout = vl.id
-                JOIN {usr_custom_layout} ucl ON (vl.id = ucl.layout)
-            WHERE (ucl.usr = 0 OR ucl.usr = ?)', array($userid));
+                SELECT vlrc.viewlayout, vlrc.row, vlrc.columns
+                FROM {view_layout_rows_columns} vlrc
+                    JOIN {view_layout} vl ON vlrc.viewlayout = vl.id
+                    JOIN {usr_custom_layout} ucl ON (vl.id = ucl.layout)
+                WHERE ' . $whereclause, $queryarray);
 
         foreach ($layoutsrowscols as $layout) {
             $layoutrows[$layout->viewlayout][$layout->row] = $layout->columns;
