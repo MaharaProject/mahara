@@ -64,6 +64,7 @@ if ($forums) {
                 'validatecallback' => 'subscribe_forum_validate',
                 'successcallback' => 'subscribe_forum_submit',
                 'autofocus' => false,
+                'renderer' => 'div',
                 'elements' => array(
                     'submit' => array(
                     'type'  => 'submit',
