@@ -6,7 +6,7 @@
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='title' new=$new}
-<div class="subpage rel">
+<div class="subpage">
 			{$editview|safe}
 </div>
 

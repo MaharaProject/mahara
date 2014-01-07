@@ -6,7 +6,7 @@
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='layout' new=$new}
-<div class="subpage rel">
+<div class="subpage">
 {$form|safe}
 </div>
 

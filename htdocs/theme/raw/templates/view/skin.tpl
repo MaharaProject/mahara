@@ -6,7 +6,7 @@
 {/if}
 
 {include file="view/editviewtabs.tpl" selected='skin' new=$new}
-<div class="subpage rel">
+<div class="subpage">
     <div class="rbuttons skinsbtns">
         <a class="btn" href="{$WWWROOT}skin/index.php"><span class="btn-config">{str tag=manageskins section=skin}</span></a>
     </div>

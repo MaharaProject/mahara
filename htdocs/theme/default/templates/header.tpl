@@ -41,5 +41,5 @@
 {/foreach}
                 </ul>
               </div>
-              <div class="subpage rel">
+              <div class="subpage">
 {/if}
