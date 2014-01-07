@@ -945,9 +945,13 @@ function search_submit(Pieform $form, $values) {
     redirect('/admin/users/institutions.php' . ((isset($values['query']) && ($values['query'] != '')) ? '?query=' . urlencode($values['query']) : ''));
 }
 
-// Hide custom colour boxes unless theme selector is on 'custom'
-$customthemejs = '
+// Hide/disable options based on theme selected
+$themeoptionsjs = '
 $j(function() {
+    if ($j("#institution_theme").val() == "sitedefault") {
+        $j("#institution_dropdownmenu").attr("disabled", true);
+        $j("#institution_dropdownmenu").attr("checked", false);
+    }
     $j("#institution_theme").change(function() {
         if ($(this).value == "custom") {
             $j(".customtheme").removeClass("js-hidden");
@@ -955,12 +959,19 @@ $j(function() {
         else {
             $j(".customtheme").addClass("js-hidden");
         }
+        if ($(this).value == "sitedefault") {
+            $j("#institution_dropdownmenu").attr("disabled", true);
+            $j("#institution_dropdownmenu").attr("checked", false);
+        }
+        else {
+            $j("#institution_dropdownmenu").removeAttr("disabled");
+        }
     });
 });
 ';
 
 $smarty = smarty();
-$smarty->assign('INLINEJAVASCRIPT', $customthemejs);
+$smarty->assign('INLINEJAVASCRIPT', $themeoptionsjs);
 $smarty->assign('institution_form', $institutionform);
 $smarty->assign('instancestring', $instancestring);
 $smarty->assign('add', $add);
