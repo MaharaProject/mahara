@@ -1054,62 +1054,103 @@ function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $
 }
 
 /**
- * Fetch an institution configuration
- * TODO: If needed, create a corresponding set_config_institution()
+ * Fetch an institution configuration (from either the "institution" or "institution_config" table)
+ *
+ * TODO: If needed, create a corresponding set_config_institution(). This would be most useful if there's
+ * a situation where you need to manipulate individual institution configs. If you want to manipulate
+ * them in batch, you can use the Institution class's __set() and commit() methods.
+ *
  * @param string $institutionname
  * @param string $key
  * @return mixed The value of the key or NULL if the key is not valid
  */
 function get_config_institution($institutionname, $key) {
+    global $CFG;
     require_once(get_config('docroot').'/lib/institution.php');
-    // Note that this
-    static $fetchedinst = array();
-    if (isset($fetchedinst[$institutionname])) {
-        $inst = $fetchedinst[$institutionname];
+
+    // First, check the cache for an Institution object with this name
+    if (isset($CFG->fetchedinst->{$institutionname})) {
+        $inst = $CFG->fetchedinst->{$institutionname};
     }
     else {
+        // No cache hit, so instatiate a new Institution object
         try {
             $inst = new Institution($institutionname);
+
+            // Cache it (in $CFG so if we ever write set_config_institution() we can make it update the cache)
+            if (!isset($CFG->fetchedinst)) {
+                $CFG->fetchedinst = new stdClass();
+            }
+            $CFG->fetchedinst->{$institutionname} = $inst;
         }
         catch (ParamOutOfRangeException $e) {
             return null;
         }
     }
+
     // Use the magical __get() function of the Institution class
     return $inst->{$key};
 }
 
 
 /**
- * Fetch a config setting for the specified user's institution.
+ * Fetch a config setting for the specified user's institutions (from either the "institution" or "institution_config" table)
+ *
  * @param string $key
- * @param int $userid (Optional) If not supplied, fetch for the current user's institution
+ * @param int $userid (Optional) If not supplied, fetch for the current user's institutions
+ * @return array The results for the all the users' institutions, in the order
+ *               supplied by load_user_institutions(). Array key is institution name.
  */
-function get_config_user_institution($key, $userid = null) {
+function get_configs_user_institutions($key, $userid = null) {
     global $USER;
     if ($userid === null) {
         $userid = $USER->id;
     }
 
-    static $cache = array();
-    if (isset($cache[$userid][$key])) {
-        return $cache[$userid][$key];
+    // Check for the user and key in the cache (The cache is stored in $CFG so it can be cleared/updated
+    // if we ever write a set_config_institution() method)
+    $userobj = "user{$userid}";
+    if (isset($CFG->userinstconf->{$userobj}->{$key})) {
+        return $CFG->userinstconf->{$userobj}->{$key};
     }
-    if ($userid == null) {
+
+    // We didn't hit the cache, so retrieve the config from their
+    // institution.
+
+    // First, get a list of their institution names
+    if (!$userid) {
+        // The logged-out user has no institutions.
+        $institutions = false;
+    }
+    else if ($userid == $USER->id) {
+        // Institutions for current logged-in user
         $institutions = $USER->get('institutions');
     }
     else {
         $institutions = load_user_institutions($userid);
     }
+
     // If the user belongs to no institution, check the Mahara institution
     if (!$institutions) {
-        $institutions = get_records_assoc('institution', 'name', 'mahara');
+        // For compatibility with $USER->get('institutions') and
+        // load_user_institutions(), we only really care about the
+        // array keys
+        $institutions = array('mahara' => 'mahara');
     }
     $results = array();
     foreach ($institutions as $instname => $inst) {
         $results[$instname] = get_config_institution($instname, $key);
     }
-    $cache[$userid][$key] = $results;
+
+    // Cache the result
+    if (!isset($CFG->userinstconf)) {
+        $CFG->userinstconf = new stdClass();
+    }
+    if (!isset($CFG->userinstconf->{$userobj})) {
+        $CFG->userinstconf->{$userobj} = new stdClass();
+    }
+    $CFG->userinstconf->{$userobj}->{$key} = $results;
+
     return $results;
 }
 

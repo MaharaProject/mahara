@@ -3981,7 +3981,7 @@ function can_use_skins($userid = null) {
 
     // A user can belong to multiple institutions. If any of their institutions allow it, then
     // let them use skins!
-    $results = get_config_user_institution('skins', $userid);
+    $results = get_configs_user_institutions('skins', $userid);
     foreach ($results as $r) {
         if ($r) {
             return true;

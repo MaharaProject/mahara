@@ -22,17 +22,59 @@ class Institution {
     const   PERSISTENT     = 2;
 
     protected $initialized = self::UNINITIALIZED;
-    protected $members = array(
+
+    /**
+     * The institution properties stored in the institution table, and their default values. The
+     * actual instance values will be in this->fields;
+     *
+     * Note that there's a dual system for institution properties. All required values and several
+     * older ones are stored in the institution table itself. Optional and/or newer values are
+     * stored in the institution_config table and go in $this->configs
+     *
+     * TODO: If we have problems with future developers adding columns and forgetting to add them
+     * here, perhaps replace this with a system that determines the DB columns of the institution
+     * table dynamically, by the same method as insert_record().
+     *
+     * @var unknown_type
+     */
+    static $dbfields = array(
         'name' => '',
         'displayname' => '',
         'registerallowed' => 1,
-        'theme' => 'default',
+        'registerconfirm' => 1,
+        'theme' => null,
         'defaultmembershipperiod' => 0,
         'maxuseraccounts' => null,
-        'skins' => 1,
-        );
+        'expiry' => null,
+        'expirymailsent' => 0,
+        'suspended' => 0,
+        'priority' => 1,
+        'defaultquota' => null,
+        'showonlineusers' => 2,
+        'allowinstitutionpublicviews' => 1,
+        'logo' => null,
+        'style' => null,
+        'licensedefault' => null,
+        'licensemandatory' => 0,
+        'dropdownmenu' => 0,
+        'skins' => true
+    );
+
+    // This institution's config settings
+    protected $configs = array();
+
+    // Configs that have been updated and need to be saved on commit
+    protected $dirtyconfigs = array();
+
+    // This institution's properties
+    protected $fields = array();
+
+    // Fields that have been updated and need to be saved on commit
+    protected $dirtyfields = array();
 
     public function __construct($name = null) {
+        $this->fields = self::$dbfields;
+
         if (is_null($name)) {
             return $this;
         }
@@ -43,50 +85,80 @@ class Institution {
     }
 
     public function __get($name) {
-        if (array_key_exists($name, $this->members)) {
-            return $this->members[$name];
+
+        // If it's an institution DB field, use the setting from $this->fields or null if that's empty for whatever reason
+        if (array_key_exists($name, self::$dbfields)) {
+            if (array_key_exists($name, $this->fields)) {
+                return $this->fields[$name];
+            }
+            else {
+                return null;
+            }
         }
+
+        // If there's a config setting for it, use that
+        if (array_key_exists($name, $this->configs)) {
+            return $this->configs[$name];
+        }
+
         return null;
     }
 
+
     public function __set($name, $value) {
-        if (!is_string($name) | !array_key_exists($name, $this->members)) {
+        if (!is_string($name)) {
             throw new ParamOutOfRangeException();
         }
-        if ($name == 'name') {
-            if (!is_string($value) || empty($value) || strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'name' should be a string between 1 and 255 characters in length");
+
+        // Validate the DB fields
+        switch ($name) {
+            // char 255
+            case 'name':
+            case 'displayname':
+                if (!is_string($value) || empty($value) || strlen($value) > 255) {
+                    throw new ParamOutOfRangeException("'{$name}' should be a string between 1 and 255 characters in length");
+                }
+                break;
+
+            // int 1 (i.e. true/false)
+            case 'registerallowed':
+            case 'skins':
+            case 'suspended':
+            case 'licensemandatory':
+            case 'expirymailsent':
+                $value = $value ? 1 : 0;
+                break;
+
+            case 'defaultmembershipperiod':
+            case 'maxuseraccounts':
+            case 'showonlineusers':
+                $value = (int) $value;
+                break;
+        }
+
+        if (array_key_exists($name, self::$dbfields)) {
+            if ($this->fields[$name] !== $value) {
+                $this->fields[$name] = $value;
+                $this->dirtyfields[$name] = true;
             }
         }
-        else if ($name == 'displayname') {
-            if (!is_string($value) || empty($value) || strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'displayname' ($value) should be a string between 1 and 255 characters in length");
+        else {
+            // Anything else goes in institution_config.
+            // Since it's a DB field, the value must be a number, string, or NULL.
+            if (is_bool($value)) {
+                $value = $value ? 1 : 0;
+            }
+            if ($value !== NULL && !is_float($value) && !is_int($value) && !is_string($value)) {
+                throw new ParameterException("Attempting to set institution config field \"{$name}\" to a non-scalar value.");
+            }
+
+            // A NULL here means you should drop the config from the DB
+            $existingvalue = array_key_exists($name, $this->configs) ? $this->configs[$name] : NULL;
+            if ($value != $existingvalue) {
+                $this->configs[$name] = $value;
+                $this->dirtyconfigs[$name] = true;
             }
         }
-        else if ($name == 'registerallowed') {
-            if (!is_numeric($value) || $value < 0 || $value > 1) {
-                throw new ParamOutOfRangeException("'registerallowed' should be zero or one");
-            }
-        }
-        else if ($name == 'theme') {
-            if (!empty($value) && is_string($value) && strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'theme' ($value) should be less than 255 characters in length");
-            }
-        }
-        else if ($name == 'defaultmembershipperiod') {
-            if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
-                throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
-            }
-        }
-        else if ($name == 'maxuseraccounts') {
-            if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
-                throw new ParamOutOfRangeException("'maxuseraccounts' should be a number between 1 and 9,999,999,999");
-            }
-        }
-        else if ($name == 'skins') {
-            $value = (bool) $value;
-        }
-        $this->members[$name] = $value;
     }
 
     public function findByName($name) {
@@ -108,25 +180,31 @@ class Institution {
     }
 
     public function initialise($name, $displayname) {
-        if (empty($name) || !is_string($name)) {
+        if (!is_string($name)) {
+            return false;
+        }
+        $name = strtolower($name);
+        if (empty($name)) {
             return false;
         }
 
         $this->name = $name;
+
         if (empty($displayname) || !is_string($displayname)) {
             return false;
         }
 
         $this->displayname = $displayname;
         $this->initialized = max(self::INITIALIZED, $this->initialized);
+        $this->dirtyfields = self::$dbfields;
         return true;
     }
 
     public function verifyReady() {
-        if (empty($this->members['name']) || !is_string($this->members['name'])) {
+        if (empty($this->fields['name']) || !is_string($this->fields['name'])) {
             return false;
         }
-        if (empty($this->members['displayname']) || !is_string($this->members['displayname'])) {
+        if (empty($this->fields['displayname']) || !is_string($this->fields['displayname'])) {
             return false;
         }
         $this->initialized = max(self::INITIALIZED, $this->initialized);
@@ -138,31 +216,66 @@ class Institution {
             throw new SystemException('Commit failed');
         }
 
-        $record = new stdClass();
-        $record->name                         = $this->name;
-        $record->displayname                  = $this->displayname;
-        $record->theme                        = $this->theme;
-        $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
-        $record->maxuseraccounts              = $this->maxuseraccounts;
-        $record->skins                        = $this->skins;
+        $result = true;
+        if (count($this->dirtyfields)) {
+            $record = new stdClass();
+            foreach (array_keys($this->dirtyfields) as $fieldname) {
+                $record->{$fieldname} = $this->{$fieldname};
+            }
 
-        if ($this->initialized == self::INITIALIZED) {
-            return insert_record('institution', $record);
-        } elseif ($this->initialized == self::PERSISTENT) {
-            return update_record('institution', $record, array('name' => $this->name));
+            if ($this->initialized == self::INITIALIZED) {
+                $result = insert_record('institution', $record);
+            }
+            else if ($this->initialized == self::PERSISTENT) {
+                $result = update_record('institution', $record, array('name' => $this->name));
+            }
         }
-        // Shouldn't happen but who noes?
-        return false;
+        if ($result) {
+            return $this->_commit_configs();
+        }
+        else {
+            // Shouldn't happen but who noes?
+            return false;
+        }
+    }
+
+    /**
+     * Commit the config values for this institution. Called as part of commit();
+     */
+    protected function _commit_configs() {
+        $result = true;
+        foreach (array_keys($this->dirtyconfigs) as $confkey) {
+            $newvalue = $this->configs[$confkey];
+
+            if ($newvalue === NULL) {
+                delete_records('institution_config', 'institution', $this->name, 'field', $confkey);
+            }
+            else {
+
+                $todb = new stdClass();
+                $todb->institution = $this->name;
+                $todb->field = $confkey;
+                $todb->value = $this->configs[$confkey];
+
+                if (!record_exists('institution_config', 'institution', $this->name, 'field', $confkey)) {
+                    $result = $result && insert_record('institution_config', $todb);
+                }
+                else {
+                    $result = $result && update_record('institution_config', $todb, array('institution', 'field'));
+                }
+            }
+        }
+        return $result;
     }
 
     protected function populate($result) {
-        $this->name                         = $result->name;
-        $this->displayname                  = $result->displayname;
-        $this->registerallowed              = $result->registerallowed;
-        $this->theme                        = $result->theme;
-        $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
-        $this->maxuseraccounts              = $result->maxuseraccounts;
-        $this->skins                        = $result->skins;
+        foreach (array_keys(self::$dbfields) as $fieldname) {
+            $this->{$fieldname} = $result->{$fieldname};
+        }
+        $this->configs = get_records_menu('institution_config', 'institution', $result->name, 'field', 'field, value');
+        if (!$this->configs) {
+            $this->configs = array();
+        }
         $this->verifyReady();
     }
 
