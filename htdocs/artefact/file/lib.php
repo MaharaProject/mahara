@@ -78,6 +78,8 @@ class PluginArtefactFile extends PluginArtefact {
             // Set default quotas to 50MB
             set_config_plugin('artefact', 'file', 'defaultquota', 52428800);
             set_config_plugin('artefact', 'file', 'defaultgroupquota', 52428800);
+            set_config_plugin('artefact', 'file', 'folderdownloadzip', 1);
+            set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', 3600);
         }
         set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
