@@ -294,3 +294,5 @@ $string['downloadfolderzipdescription'] = 'If checked, users can download a fold
 $string['downloadfolderziplink'] = 'Download';
 $string['folderdownloadnofolderfound'] = 'Unable to find the folder with ID %d';
 $string['zipfilenameprefix'] = 'folder';
+$string['keepzipfor'] = 'How long to keep zip files for';
+$string['keepzipfordescription'] = 'How many seconds should the zips files be kept for.';

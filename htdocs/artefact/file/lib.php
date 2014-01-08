@@ -1521,8 +1521,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
                 'folderdownloadkeepzipfor' => array(
                     'type' => 'text',
-                    'title' => 'How long to keep zip files for',
-                    'description' => 'How many seconds should the zips files be kept for.',
+                    'title' => get_string('keepzipfor', 'artefact.file'),
+                    'description' => get_string('keepzipfordescription', 'artefact.file'),
                     'defaultvalue' => empty($keepfor) ? 3600 : $keepfor,
                     'size' => 4,
                     'rules' => array(
