@@ -185,7 +185,7 @@
     function link_thumbs_to_radio_buttons() {
         $('div.layoutthumb img').each(function(event) {
             $(this).click(function(e) {
-                $(this).closest('div.layoutoption').children(':radio').attr('checked', 'checked');
+                $(this).closest('div.layoutoption').children(':radio').attr('checked', 'checked').trigger('click');
                 $('#viewlayout_layoutselect').val( $(this).closest('div.layoutoption').children(':radio').val() );
             });
         });
