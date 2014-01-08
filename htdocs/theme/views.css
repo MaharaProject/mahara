@@ -1036,7 +1036,7 @@ td.incomplete {
 }
 .feedback_form_overlay {
     display: block;
-    position: absolute;
+    position: fixed;
     z-index: 1;
     width: 600px;
 }
