@@ -25,7 +25,7 @@ $string['cannotextractfilesubmitted'] = 'You cannot extract a file in a submitte
 $string['cannotextractfileinfoldersubmitted'] = 'You cannot extract a file in a folder in a submitted page.';
 $string['changessaved'] = 'Changes saved';
 $string['clickanddragtomovefile'] = 'Click and drag to move %s';
-$string['contents'] = 'Contents';
+$string['foldercontents'] = 'Folder contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['Created'] = 'Created';
@@ -136,6 +136,7 @@ $string['notpublishable'] = 'You do not have the permission to publish this file
 $string['overwrite'] = 'Overwrite';
 $string['Owner'] = 'Owner';
 $string['parentfolder'] = 'Parent folder';
+$string['phpzipneeded'] = 'PHP Zip extension is needed to be able to use this functionality';
 $string['Preview'] = 'Preview';
 $string['requireagreement'] = 'Require agreement';
 $string['removingfailed'] = 'Removing failed: file or folder does not exist any more.';
@@ -286,3 +287,10 @@ $string['unzipprogress'] = '%s files/folders created.';
 $string['filepermission.view'] = 'View';
 $string['filepermission.edit'] = 'Edit';
 $string['filepermission.republish'] = 'Publish';
+
+// Download Folder as zip
+$string['downloadfolderzip'] = 'Download folders as a zip file';
+$string['downloadfolderzipdescription'] = 'If checked, users can download a folder, displayed via the Media -> Folder block, as a zip file.';
+$string['downloadfolderziplink'] = 'Download';
+$string['folderdownloadnofolderfound'] = 'Unable to find the folder with ID %d';
+$string['zipfilenameprefix'] = 'folder';

@@ -1507,6 +1507,33 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true,
         );
 
+        $keepfor = get_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor');
+
+        $elements['folderdownloadzip'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('downloadfolderzip', 'artefact.file'),
+            'elements' => array(
+                'folderdownloadzip' => array(
+                    'type' => 'checkbox',
+                    'title' => get_string('downloadfolderzip', 'artefact.file'),
+                    'description' => get_string('downloadfolderzipdescription', 'artefact.file'),
+                    'defaultvalue' => get_config_plugin('artefact', 'file', 'folderdownloadzip'),
+                ),
+                'folderdownloadkeepzipfor' => array(
+                    'type' => 'text',
+                    'title' => 'How long to keep zip files for',
+                    'description' => 'How many seconds should the zips files be kept for.',
+                    'defaultvalue' => empty($keepfor) ? 3600 : $keepfor,
+                    'size' => 4,
+                    'rules' => array(
+                        'required' => true,
+                        'integer'  => true,
+                    ),
+                ),
+            ),
+            'collapsible' => true,
+        );
+
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -1541,6 +1568,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'resizeonuploaduseroption', $values['resizeonuploaduseroption']);
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth', $values['resizeonuploadmaxwidth']);
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxheight', $values['resizeonuploadmaxheight']);
+        set_config_plugin('artefact', 'file', 'folderdownloadzip', $values['folderdownloadzip']);
+        set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', $values['folderdownloadkeepzipfor']);
         $data = new StdClass;
         $data->name    = 'uploadcopyright';
         $data->content = $values['customagreement'];
@@ -1672,6 +1701,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('owner', $this->get('owner'));
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
+        $smarty->assign('folderid', $this->get('id'));
+        $smarty->assign('downloadfolderzip', get_config_plugin('artefact', 'file', 'folderdownloadzip'));
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);
