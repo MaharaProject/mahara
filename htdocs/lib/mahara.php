@@ -1102,7 +1102,7 @@ function get_config_institution($institutionname, $key) {
  *               supplied by load_user_institutions(). Array key is institution name.
  */
 function get_configs_user_institutions($key, $userid = null) {
-    global $USER;
+    global $USER, $CFG;
     if ($userid === null) {
         $userid = $USER->id;
     }
