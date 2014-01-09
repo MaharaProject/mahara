@@ -17,6 +17,10 @@
             <div class="grouppageswrap">
 {$searchform|safe}
 
+{if $query}
+                <h2 id="searchresultsheading" class="accessible-hidden">{str tag=Results}</h2>
+{/if}
+
 {if $views}
                 <div id="myviews" class="listing">
 {foreach from=$views item=view}

@@ -163,6 +163,10 @@ form.oneline.inline div,
 .inline {
     display: inline;
 }
+.hidefocus:focus,
+.hidefocus:active {
+    outline: 0;
+}
 /* Hides the element but leaves it accessible to screen readers */
 .accessible-hidden {
     display: inline;

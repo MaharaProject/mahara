@@ -3705,9 +3705,15 @@ function build_pagination($params) {
     if (isset($params['jsonscript']) && isset($params['datatable'])) {
         $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
         $datatable    = json_encode($params['datatable']);
+        if (!empty($params['searchresultsheading'])) {
+            $heading  = json_encode($params['searchresultsheading']);
+        }
+        else {
+            $heading  = 'null';
+        }
         $jsonscript   = json_encode($params['jsonscript']);
         $extradata    = json_encode($params['extradata']);
-        $js .= "new Paginator($id, $datatable, $jsonscript, $extradata);";
+        $js .= "new Paginator($id, $datatable, $heading, $jsonscript, $extradata);";
     }
     else {
         $js .= "new Paginator($id, null, null, null);";
