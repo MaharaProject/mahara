@@ -783,6 +783,15 @@ function is_FF() {
     return false;
 }
 
+// Fix for Chrome and IE, which don't change focus when going to a fragment identifier link
+// Manually focuses the main content when the "skip to main content" link is activated
+jQuery(document).ready(function() {
+    $j('a.skiplink').click(function() {
+        var id = $j(this).attr('href');
+        $j(id).attr('tabIndex', -1).focus();
+    });
+});
+
 /**
 * Allow the js / no-js toggle on all pages for theme styling
 */

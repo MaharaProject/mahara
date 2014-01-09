@@ -33,6 +33,7 @@ button {
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
 #container,
+.skiplink,
 .sitemessage,
 #switchwrap {  /* Use a 12px base font size with a 16px line height */
     font-size: 0.75em; /* 16px x .75 = 12px */
@@ -1304,6 +1305,20 @@ div.rel {
     min-height: 0;  /* IE layout hack */
 }
 /******************** Header ********************/
+/* skip to content link */
+.skiplink {
+    background-color: #f3f7ec;
+    display: block;
+    padding: 5px 10px;
+    position: absolute;
+    top: -999px;
+    left: 47%;
+    -webkit-box-shadow: 0px 0px 5px 0px #333333;
+    box-shadow: 0px 0px 5px 0px #333333;
+}
+.skiplink:focus {
+    top: 0;
+}
 /* top bar / site message */
 .sitemessage {
     background-color: #FEE7E7;
