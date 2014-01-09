@@ -12,3 +12,8 @@ $theme = new StdClass;
 
 $theme->displayname  = 'Raw';
 $theme->formrenderer = 'table';
+
+/**
+ * There are more themeconfig options available. For an explanation of
+ * all the themeconfig options please look in theme/default/themeconfig.php
+ */
