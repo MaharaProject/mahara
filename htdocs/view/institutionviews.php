@@ -42,12 +42,20 @@ if ($institution === false) {
 
 list($searchform, $data, $pagination) = View::views_by_owner(null, $institution);
 
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+});
+
+{$s['institutionselectorjs']}
+EOF;
+
 $createviewform = pieform(create_view_form(null, $institution));
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('institutionselector', $s['institutionselector']);
-$smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
