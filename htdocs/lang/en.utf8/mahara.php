@@ -554,6 +554,7 @@ $string['processing']     = 'Processing';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 
 // menu
+$string['skipmenu']     = 'Skip to main content';
 $string['dropdownmenu'] = 'menu';
 $string['overview']     = 'Overview';
 $string['home']         = 'Home';
