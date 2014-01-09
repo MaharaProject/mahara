@@ -14,6 +14,7 @@
         <div class="currentskin">
             <h2>{str tag=currentskin section=skin}</h2>
             {if !$saved}<div class="message warning">{str tag=notsavedyet section=skin}</div>{/if}
+            {if $incompatible}<div class="message warning">{$incompatible}</div>{/if}
             <h3 class="title">{$currenttitle|safe}</h3>
             <img src="{$WWWROOT}skin/thumb.php?id={$currentskin}" width="240" height="135" alt="{$currenttitle}">
             <div class="submitcancel">{$form|safe}</div>
