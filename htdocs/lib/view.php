@@ -1405,8 +1405,13 @@ class View {
 
         // Ensure view is correct
         $access->view = $this->id;
-
-        ensure_record_exists('view_access', $access, $access);
+        $whereobject = clone $access;
+        unset($whereobject->ctime);
+        // Add ctime if needing to insert row
+        if (!isset($access->ctime)) {
+            $access->ctime = db_format_timestamp(time());
+        }
+        ensure_record_exists('view_access', $whereobject, $access);
     }
 
     public function add_owner_institution_access($instnames=array()) {
