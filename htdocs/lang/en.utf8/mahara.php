@@ -42,6 +42,7 @@ $string['general'] = 'General';
 $string['tabs'] = 'TABS';
 $string['tab'] = 'tab';
 $string['selected'] = 'selected';
+$string['disabled'] = 'disabled';
 $string['admin'] = 'ADMIN';
 $string['menu'] = 'MENU';
 
