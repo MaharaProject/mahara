@@ -2648,10 +2648,21 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $field = new XMLDBField('usr');
             $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            change_field_type($table, $field, true, true);
+            try {
+                change_field_type($table, $field, true, true);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't change artefact_access_usr.usr column to NOT NULL (it probably contains some NULL values)");
+            }
+
             $key = new XMLDBKey('usrfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column artefact_access_usr.usr referencing usr.id (the column probably contains some nonexistent user id's");
+            }
         }
 
         $index = new XMLDBIndex('artefactfk');
@@ -2659,16 +2670,31 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $field = new XMLDBField('artefact');
             $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            change_field_type($table, $field, true, true);
+            try {
+                change_field_type($table, $field, true, true);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't change artefact_access_usr.artefact column to NOT NULL (it probably contains some NULL values)");
+            }
             $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column artefact_access_usr.artefact referencing artefact.id (the column probably contains some nonexistent artefact id's)");
+            }
         }
 
         $key = new XMLDBKey('primary');
         $key->setAttributes(XMLDB_KEY_PRIMARY, array('usr', 'artefact'));
         if (!db_key_exists($table, $key)) {
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a primary key on table artefact_access_usr across columns (usr, artefact). (Probably the table contains some non-unique values in those columns)");
+            }
         }
 
         $table = new XMLDBTable('artefact_access_role');
@@ -2678,16 +2704,31 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $field = new XMLDBField('artefact');
             $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            change_field_type($table, $field, true, true);
+            try {
+                change_field_type($table, $field, true, true);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't change artefact_access_role.artefact column to NOT NULL (it probably contains some NULL values)");
+            }
             $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column artefact_access_role.artefact referencing artefact.id (the column probably contains some nonexistente artefact id's)");
+            }
         }
 
         $key = new XMLDBKey('primary');
         $key->setAttributes(XMLDB_KEY_PRIMARY, array('role', 'artefact'));
         if (!db_key_exists($table, $key)) {
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a primary key on table artefact_access_role across columns (role, artefact). (Probably there are some non-unique values in those columns.)");
+            }
         }
 
         $table = new XMLDBTable('artefact_attachment');
@@ -2695,7 +2736,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $index = new XMLDBIndex('artefactfk');
         $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('artefact'));
         if (!index_exists($table, $index)) {
-            add_index($table, $index);
+            try {
+                add_index($table, $index);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a non-unique index on column artefact_attachment.artefact");
+            }
         }
 
         $table = new XMLDBTable('group');
@@ -2703,7 +2749,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $key = new XMLDBKey('grouptypefk');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
         if (!db_key_exists($table, $key)) {
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column group.grouptype referencing grouptype.name (the column probably contains some nonexistent grouptypes)");
+            }
         }
 
         $table = new XMLDBTable('grouptype_roles');
@@ -2713,13 +2764,23 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $key = new XMLDBKey('grouptypefk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column grouptype_roles.grouptype referencing grouptype.name (the column probably contains some nonexistent grouptypes");
+            }
         }
 
         $key = new XMLDBKey('primary');
         $key->setAttributes(XMLDB_KEY_PRIMARY, array('grouptype', 'role'));
         if (!db_key_exists($table, $key)) {
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a primary key on table grouptype_roles across columns (grouptype, role). (Probably there are some non-unique values in those columns.)");
+            }
         }
 
         $table = new XMLDBTable('view_autocreate_grouptype');
@@ -2729,10 +2790,20 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $field = new XMLDBField('view');
             $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
-            change_field_type($table, $field, true, true);
+            try {
+                change_field_type($table, $field, true, true);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't change column view_autocreate_grouptype.view to NOT NULL (probably the column contains some NULL values)");
+            }
             $key = new XMLDBKey('viewfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column view_autocreate_grouptype.view referencing view.id (probably the column contains some nonexistent view IDs");
+            }
         }
 
         $index = new XMLDBIndex('grouptypefk');
@@ -2740,13 +2811,23 @@ function xmldb_core_upgrade($oldversion=0) {
         if (!index_exists($table, $index)) {
             $key = new XMLDBKey('grouptypefk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('grouptype'), 'grouptype', array('name'));
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a foreign key on column view_autocreate_grouptype.grouptype referencing grouptype.name (probably the column contains some nonexistent grouptypes");
+            }
         }
 
         $key = new XMLDBKey('primary');
         $key->setAttributes(XMLDB_KEY_PRIMARY, array('view', 'grouptype'));
         if (!db_key_exists($table, $key)) {
-            add_key($table, $key);
+            try {
+                add_key($table, $key);
+            }
+            catch (SQLException $e) {
+                log_warn("Couldn't set a primary key on table view_autocreate_grouptype across columns (view, grouptype). (Probably those columns contain some non-unique values.)");
+            }
         }
 
     }
