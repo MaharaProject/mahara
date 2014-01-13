@@ -86,6 +86,12 @@ if (empty($CFG->directorypermissions)) {
 }
 $CFG->filepermissions = $CFG->directorypermissions & 0666;
 
+// Now that we've loaded the configs, we can override the default error settings
+// from errors.php
+$errorlevel = $CFG->error_reporting;
+error_reporting($errorlevel);
+set_error_handler('error', $errorlevel);
+
 // core libraries
 require('mahara.php');
 ensure_sanity();
