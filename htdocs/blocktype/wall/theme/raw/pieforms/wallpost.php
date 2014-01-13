@@ -5,7 +5,7 @@
 
 echo $form_tag;
 echo '<div id="wall"><div class="description">' . $elements['postsizelimit']['html'] . ' ' . $elements['text']['description'] . '</div>';
-echo '<div>' . $elements['text']['html'] .'</div>';
+echo '<div>' . $elements['text']['labelhtml'] . $elements['text']['html'] .'</div>';
 if (isset($elements['text']['error'])) {
     echo '<div>' . $elements['text']['error'] . '</div>';
 }

@@ -135,6 +135,8 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'elements' => array(
                 'text' => array(
                     'type' => 'textarea',
+                    'title' => get_string('Post', 'blocktype.wall'),
+                    'hiddenlabel' => true,
                     'description' => bbcode_format_post_message(),
                     'rows' => 3,
                     'cols' => 50,
