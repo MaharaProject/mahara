@@ -395,8 +395,11 @@ $cfg->favicondisplay = 'http://www.google.com/s2/favicons?domain=%s';
 
 /**
  * @global bool $cfg->productionmode If false, a message is shown at the top of the screen saying that the
- * site is not in production mode, and that some data may be missing and/or
- * out of date
+ * site is not in production mode; and a number of other parameters are overridden with sensible defaults
+ * for a dev site. (See init.php for the full effect).
+ *
+ * Because productionmode=false overrides a lot of settings with sensible dev mode defaults, if you want to
+ * fine-tune your settings on your dev site, you'll paradoxically need to set productionmode=true.
  */
 $cfg->productionmode = true;
 
