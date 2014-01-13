@@ -108,6 +108,15 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 // but probably only warnings are useful on a live site.
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+// What level of errors to print to the Mahara logs. Gets passed directly
+// to the PHP function "error_reporting()".
+//
+// NOTE: There are some limitations in this method, because it doesn't get called until several scripts
+// have already been compiled: init.php, config.php, config-defaults.php, errors.php, and the file directly
+// invoked in the URL. So, compile-time errors in those files (which includes most strict errors) will be
+// unaffected by this setting.
+$cfg->error_reporting = E_ALL & ~E_STRICT;
+
 // Developer mode
 // When set, the following things (among others) will happen:
 //

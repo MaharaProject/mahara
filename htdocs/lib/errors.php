@@ -65,9 +65,11 @@ define('DEVMODE_UNPACKEDJS', 8);
 /**#@-*/
 
 
-// Tell PHP about our error settings
-error_reporting(E_ALL);
-set_error_handler('error');
+// Default error reporting settings. Some of these may be changed
+// later in init.php after we've loaded config.php
+$errorlevel = E_ALL & ~E_STRICT;
+error_reporting($errorlevel);
+set_error_handler('error', $errorlevel);
 set_exception_handler('exception');
 
 
@@ -406,7 +408,8 @@ function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
         E_WARNING => 'Warning',
-        // Not sure if these ever get handled here
+        E_STRICT => 'Strict',
+        // These won't get handled here unless PHP's behavior changes
         E_ERROR => 'Error',
         // These three are not used by this application but may be used by third parties
         E_USER_NOTICE => 'User Notice',
