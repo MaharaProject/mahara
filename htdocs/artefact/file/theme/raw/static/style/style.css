@@ -67,6 +67,15 @@ tr.folderhover a,
     display: table-cell;
     vertical-align: top;
 }
+.file-move-list {
+    list-style-type: none;
+}
+.file-move-list li {
+    margin-left: 0;
+}
+.file-move-list li:before {
+    content: '\2192 ';
+}
 /* File list edit box */
 #files_filebrowser_edit_row #files_filebrowser_edit_heading {
     font-size: 1.3333em;
