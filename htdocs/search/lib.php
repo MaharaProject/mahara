@@ -211,7 +211,9 @@ abstract class PluginSearch extends Plugin {
                         'query' => array(
                                 'type'           => 'text',
                                 'defaultvalue'   => get_string('searchusers'),
+                                'title'          => get_string('searchusers'),
                                 'class'          => 'emptyonfocus',
+                                'hiddenlabel'    => true,
                         ),
                         'submit' => array(
                                 'type' => 'submit',

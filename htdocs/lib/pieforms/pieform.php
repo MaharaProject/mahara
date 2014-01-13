@@ -1404,12 +1404,19 @@ EOF;
                 $requiredmarker = '';
             }
 
+            if (!empty($element['hiddenlabel'])) {
+                $labelclass = ' class="accessible-hidden"';
+            }
+            else {
+                $labelclass = '';
+            }
+
             if (!empty($element['nolabel'])) {
                 // Don't bother with a label for the element
                 $element['labelhtml'] = $title . $requiredmarker;
             }
             else {
-                $element['labelhtml'] = '<label for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
+                $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
             }
         }
 
