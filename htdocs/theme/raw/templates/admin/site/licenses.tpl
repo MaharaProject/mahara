@@ -22,7 +22,7 @@
         <tbody>
         {foreach from=$licenses key=i item=l}
             <tr class="{cycle values='r0,r1'}">
-                <td>{if $l->icon}<img src="{license_icon_url($l->icon)}">{/if}</td>
+                <td>{if $l->icon}<img src="{license_icon_url($l->icon)}" alt="{$l->displayname}">{/if}</td>
                 <td><a href="{$l->name}">{$l->displayname}</a></td>
                 <td>{$l->shortname}</td>
                 <td><a href="{$l->name}">{$l->name}</a></td>
