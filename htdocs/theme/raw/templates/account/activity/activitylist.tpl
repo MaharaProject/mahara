@@ -24,9 +24,11 @@
   {if $item->read}
       <img src="{theme_url filename='images/star.png'}" alt="{str tag=read section=activity}">
   {else}
-      <input type="checkbox" class="tocheckread" name="unread-{$item->id}">
+      <label class="accessible-hidden" for="unread-{$item->id}">{str tag=markasread section=activity}</label>
+      <input id="unread-{$item->id}" type="checkbox" class="tocheckread" name="unread-{$item->id}">
   {/if}
     </td>
-    <td class="center"><input type="checkbox" class="tocheckdel" name="delete-{$item->id}"></td>
+    <td class="center"><label class="accessible-hidden" for="delete-{$item->id}">{str tag=delete section=mahara}</label>
+    <input id="delete-{$item->id}" type="checkbox" class="tocheckdel" name="delete-{$item->id}"></td>
   </tr>
 {/foreach}
