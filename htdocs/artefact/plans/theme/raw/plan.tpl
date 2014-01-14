@@ -5,7 +5,7 @@
     </div>
     {if $tags}<p class="tags s"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</p>{/if}
 {if !$tasks.data}
-    <div>{str tag="planstasksdesc" section="artefact.plans"}</div>
+    <div>{$planstasksdescription}</div>
     <div class="message">{$strnotasksaddone|safe}</div>
 {else}
 <table id="taskslist" class="fullwidth listing">
