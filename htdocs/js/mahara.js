@@ -651,9 +651,9 @@ function augment_tags_control(elem, returnContainer) {
 
                         if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
                             // If at the start of the string, remove it and the comma/spaces after
-                            elem.value = elem.value.replace(new RegExp('^' + tag.tag + ',? *'), '');
+                            elem.value = elem.value.replace(new RegExp('^' + escapeRegExp(tag.tag) + ',? *'), '');
                             // Otherwise, remove the comma/spaces before it
-                            elem.value = elem.value.replace(new RegExp(', *' + tag.tag), '');
+                            elem.value = elem.value.replace(new RegExp(', *' + escapeRegExp(tag.tag)), '');
                             return;
                         }
 
@@ -781,6 +781,11 @@ function is_FF() {
         return true;
     }
     return false;
+}
+
+// Escapes all special characters for RegExp, code from https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions
+function escapeRegExp(string) {
+  return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
 // Fix for Chrome and IE, which don't change focus when going to a fragment identifier link
