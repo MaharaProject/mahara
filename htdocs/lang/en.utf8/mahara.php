@@ -687,6 +687,7 @@ $string['nopublishpermissiononartefact'] = 'You do not have permission to publis
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
 $string['attachment'] = 'Attachment';
+$string['editaccess'] = 'Edit access';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';
