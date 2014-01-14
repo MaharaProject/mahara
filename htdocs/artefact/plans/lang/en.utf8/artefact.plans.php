@@ -55,6 +55,7 @@ $string['savetask'] = 'Save task';
 $string['task'] = 'task';
 $string['Task'] = 'Task';
 $string['tasks'] = 'tasks';
+$string['Tasks'] = 'Tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
 $string['tasksavedsuccessfully'] = 'Task saved successfully.';
 $string['ntasks'] = array(

@@ -22,7 +22,7 @@ if (!PluginArtefactPlans::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('plans','artefact.plans')));
 }
 
-define('TITLE', get_string('tasks','artefact.plans'));
+define('TITLE', get_string('Tasks','artefact.plans'));
 
 $id = param_integer('id');
 
