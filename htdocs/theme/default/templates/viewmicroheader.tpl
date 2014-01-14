@@ -18,14 +18,6 @@
     <div id="loading-box"></div>
     <div id="top-wrapper"><div id="header">
       <div class="viewheadertop">
-        <div class="fr links">
-          {if $microheaderlinks}
-            {foreach from=$microheaderlinks item=item}
-              <a class="btn" href="{$item.url}">{$item.name}</a>
-            {/foreach}
-          {/if}
-          <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>
-        </div>
         <div class="fl">
           <a class="small-logo" href="{$WWWROOT}"><img src="{theme_url filename=$maharalogofilename}" alt="{$sitename}"></a>
         </div>
@@ -43,15 +35,21 @@
           {elseif $USER->is_institutional_admin()}
             <a href="{$WWWROOT}admin/users/search.php">{str tag="administration"}</a> |
           {/if}
-
           {if $mnethost}<a href="{$mnethost.url}">{str tag=backto arg1=$mnethost.name}</a>&nbsp;{/if}
           <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
         </div>
        </div>
 {/if}
+        <div class="fr links">
+          {if $microheaderlinks}
+            {foreach from=$microheaderlinks item=item}
+              <a class="btn" href="{$item.url}">{$item.name}</a>
+            {/foreach}
+          {/if}
+          <a class="btn nojs-hidden-inline" href="javascript:history.back()"><span class="btn-back">{str tag=back}</span></a>
+        </div>
       </div>
       <div id="viewheader" class="viewheader">
-
 {if $collection}
         <div id="collection"><h1 class="collection-title">{$microheadertitle|safe}<span class="rd-coltab"></span></h1>{include file=collectionnav.tpl}<div class="cb"></div></div>
 {else}
