@@ -198,6 +198,9 @@ function editnote_callback(form, data) {
 
 EOF;
 
+$othernotecount = count_records('view_artefact', 'artefact', $artefact->get('id'));
+$othernotesmsg = '<div class="warning">' . get_string('textusedinothernotes',  'blocktype.internal/textbox', $othernotecount) . '</div>';
+
 $smarty = smarty(array(), array(), array(), array(
     'tinymcesetup' => "ed.addCommand('mceImage', noteImageWindow);",
     'sideblocks' => array(
@@ -211,6 +214,7 @@ $smarty = smarty(array(), array(), array(), array(
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('form', $form);
 $smarty->assign('PAGEHEADING', $artefact->get('title'));
+$smarty->assign('pagedescriptionhtml', $othernotesmsg);
 $smarty->display('form.tpl');
 
 
