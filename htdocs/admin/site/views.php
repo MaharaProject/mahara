@@ -25,10 +25,17 @@ define('TITLE', $title);
 
 list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
 
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+});
+EOF;
+
 $createviewform = pieform(create_view_form(null, 'mahara'));
 
-$smarty = smarty();
+$smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);

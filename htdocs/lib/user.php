@@ -204,6 +204,7 @@ function expected_account_preferences() {
                  'resizeonuploaduserdefault' => 1,
                  'devicedetection' => 1,
                  'licensedefault' => '',
+                 'viewsperpage' => 20,
                  );
 }
 

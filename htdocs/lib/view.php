@@ -3462,10 +3462,18 @@ class View {
     }
 
     public static function views_by_owner($group=null, $institution=null) {
+        global $USER;
 
         // Pagination configuration
         $setlimit = true;
-        $limit  = param_integer('limit', 20);
+        $limit = param_integer('limit', 0);
+        $userlimit = get_account_preference($USER->get('id'), 'viewsperpage');
+        if ($limit > 0 && $limit != $userlimit) {
+            $USER->set_account_preference('viewsperpage', $limit);
+        }
+        else {
+            $limit = $userlimit;
+        }
         $offset = param_integer('offset', 0);
 
         $query  = param_variable('query', null);
