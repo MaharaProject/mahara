@@ -64,6 +64,7 @@ $smarty->assign_by_ref('plan', $id);
 $smarty->assign('strnotasksaddone',
     get_string('notasksaddone', 'artefact.plans',
     '<a href="' . get_config('wwwroot') . 'artefact/plans/new.php?id='.$plan->get('id').'">', '</a>'));
+$smarty->assign('planstasksdescription', get_string('planstasksdescription', 'artefact.plans', get_string('newtask', 'artefact.plans')));
 $smarty->assign('PAGEHEADING', get_string("planstasks", "artefact.plans",$plan->get('title')));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:plans:plan.tpl');
