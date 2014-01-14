@@ -54,7 +54,7 @@ class JavascriptDetector {
         if (isset($_POST['javascriptenabled'])) {
             $SESSION->set('javascriptenabled', true);
         }
-        if ($SESSION->get('javascriptenabled') ===  null) {
+        if ($SESSION->get('javascriptenabled') ===  null && !defined('JSON')) {
             $SESSION->set('javascriptenabled', false);
             echo <<<JS
     <form name="jsdetector_form" id="jsdetector_form" method="post">

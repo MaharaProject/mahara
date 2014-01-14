@@ -13,6 +13,8 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'blog');
+define('JSON', 1);
+define('NOSESSKEY', 1);
 
 $json = array();
 
