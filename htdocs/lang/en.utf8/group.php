@@ -239,11 +239,11 @@ $string['addedtofriendslistmessage'] = '%s added you as a friend. This means tha
     . ' Click on the link below to see their profile page.';
 
 $string['requestedfriendlistsubject'] = 'New friend request';
-$string['requestedfriendlistmessage'] = '%s has requested that you add them as a friend.  '
-    .' You can either do this from the link below or from your friends list page';
+$string['requestedfriendlistinboxmessage'] = '%s has requested that you add them as a friend.  '
+    .' You can either do this by clicking the following link or by going to your friends list page.';
 
-$string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
-    . ' You can either do this from the link below or from your friends list page.'
+$string['requestedfriendlistmessageexplanation'] = '%s has requested that you add them as a friend.'
+    . ' You can either do this by clicking the following link or by going to your friends list page'
     . ' Their reason was:
     ';
 
