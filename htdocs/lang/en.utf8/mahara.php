@@ -190,6 +190,12 @@ $string['pendingfriends'] = 'pending friends';
 $string['profile'] = 'profile';
 $string['views'] = 'Pages';
 
+// Progress bar sideblock strings
+$string['profilecompleteness'] = 'Profile completion';
+$string['profilecompletenesspreview'] = 'Profile completion preview';
+$string['profilecompletenesstips'] = 'Profile completion tips';
+$string['for'] = 'for';
+
 // Online users sideblock strings
 $string['onlineusers'] = 'Online users';
 $string['lastminutes'] = 'Last %s minutes';

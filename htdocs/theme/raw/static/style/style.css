@@ -13,11 +13,11 @@ html {
     padding: 0;
 }
 .clearfix:after {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 body,
 caption,
@@ -1790,6 +1790,73 @@ ul.in-page-tabs li button.current-tab {
     text-align: center;
     margin: 0;
 }
+/* Sidebar progress bar */
+/* Institutions > Progress bar */
+#progressbarform table {
+    width: 100%;
+}
+#progressbarform th {
+    width: 30%;
+}
+#progressbarform th label {
+    white-space: nowrap;
+}
+#progressbarform legend {
+    font-size: 1em;
+}
+#progressbarform fieldset {
+    border-color: #D1D1D1;
+}
+#progressbar-construct {
+    width: 100%;
+    float: left;
+}
+#progressbar-preview {
+    width: 230 px;
+    float: right;
+    padding: 10px;
+    border: 1px solid #D1D1D1;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#progress_bar_fill {
+    background-image: url("../images/progress_bar_highlight.png");
+    height: 28px;
+    margin: 0 5px;
+    position: absolute;
+}
+#progress_bar {
+    background: url("../images/progress_bar_bg.png") no-repeat scroll 0 0 transparent;
+    height: 28px;
+    margin: 0;
+    text-align: center;
+    width: 210px;
+}
+#progress_bar_percentage {
+    color: #000000;
+    font-size: 1.167em;
+    font-weight: bold;
+    line-height: 28px;
+    position: relative;
+    z-index: 1;
+}
+#progress_bar_100 {
+    background: url("../images/progress_bar_full.png") no-repeat scroll 0 0 transparent;
+    height: 28px;
+    margin: 0;
+    text-align: center;
+    width: 210px;
+}
+#progressbarwrap {
+    text-align: center;
+    width: 210px;
+    margin: 0 auto;
+}
+#profile_completeness_tips {
+    text-align: left;
+    margin-top: 10px;
+}
 /* Sidebar portfolio search */
 
 /* Sidebar friends control */
@@ -2182,7 +2249,7 @@ a.persona-button:after {
     border-radius: 5px;
     background-color: #EEEEEE;
     -webkit-box-shadow: inset 0px 0px 3px 0px #888888;
-	box-shadow: inset 0px 0px 3px 0px #888888;
+    box-shadow: inset 0px 0px 3px 0px #888888;
 }
 .no-js #file_dropzone_container {
     display: none;
@@ -3750,7 +3817,7 @@ form#requestfriendship {
 }
 #universal-search-container input#search_submit {
     font-size: 1.5em;
-	padding: 4px 10px;
+    padding: 4px 10px;
 }
 @media screen and (min-width:0\0) {
     #universal-search-container input#search_submit {
@@ -4136,9 +4203,9 @@ ul.searchtab li span.inactive {
 
 /* For styling attachment notice in Resume fieldsets */
 .attachmessage {
-	font-size: .9167em;
-	font-style: italic;
-	color: #888;
+    font-size: .9167em;
+    font-style: italic;
+    color: #888;
 }
 
 .inline-button {

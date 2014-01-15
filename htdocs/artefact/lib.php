@@ -81,6 +81,15 @@ abstract class PluginArtefact extends Plugin {
         return array();
     }
 
+    /**
+     * Returns the relative URL path to the place in mahara that relates
+     * to the artefact.
+     * E.g. For plan artefact the link will be 'artefact/plans/index.php'
+     * @return string Url path to artefact.
+     */
+    public static function progressbar_link() {
+        return '';
+    }
 
     /**
      * When filtering searches, some artefact types are classified the same way
@@ -90,6 +99,102 @@ abstract class PluginArtefact extends Plugin {
      * @return array of artefacttype => array of filter content types
      */
     public static function get_artefact_type_content_types() {
+        return array();
+    }
+
+    /**
+     * Returns any artefact options allowed to be included in the progress_bar
+     * @param string $plugin The plugin artefact type
+     * @return array of objects each containing name, title, plugin, active, iscountable
+     */
+    public static function get_progressbar_options($plugin) {
+        if (file_exists(get_config('docroot') . 'artefact/' . $plugin . '/lib.php')) {
+            require_once(get_config('docroot') . 'artefact/' . $plugin . '/lib.php');
+        }
+        else {
+            return array();
+        }
+
+        $records = array();
+        $classname = generate_class_name('artefact', $plugin);
+        $names = call_static_method($classname, 'get_artefact_types');
+        foreach ($names as $name) {
+            // check if any of the artefact types want to opt out
+            if (call_static_method('ArtefactType' . ucfirst($name), 'is_allowed_in_progressbar') == false) {
+                continue;
+            }
+            $record = new stdClass();
+            $record->name = $name;
+            $record->title = (method_exists('ArtefactType' . ucfirst($name), 'get_title_progressbar')) ? call_static_method('ArtefactType' . ucfirst($name), 'get_title_progressbar') : ucfirst(get_string($name, 'artefact.' . $plugin));
+            $record->plugin = call_static_method($classname, 'get_plugin_name');
+            $record->active = (method_exists($classname, 'is_active')) ? call_static_method($classname, 'is_active') : true;
+            $record->iscountable = call_static_method('ArtefactType' . ucfirst($name), 'is_countable_progressbar');
+            $records[] = $record;
+        }
+        // add any special cases
+        if (is_array($specials = call_static_method($classname, 'progressbar_additional_items'))) {
+            foreach ($specials as $special) {
+                array_push($records, $special);
+            }
+        }
+        return $records;
+    }
+
+    /**
+     * Dealing with things to count in progressbar that are not true artefacts
+     * and therefore are not countable by adding up how many instances exist in
+     * the artefact table. Or if you want to count an artefact differently.
+     * For example: Social -> Make a friend
+     * @param string name of artefact plugin
+     * @return array of objects each containing artefacttype, completed
+     * (where completed represents the number completed)
+     */
+    public static function get_progressbar_metaartefact($plugin) {
+
+        if (file_exists(get_config('docroot') . 'artefact/' . $plugin . '/lib.php')) {
+            require_once(get_config('docroot') . 'artefact/' . $plugin . '/lib.php');
+        }
+        else {
+            return array();
+        }
+
+        $results = array();
+        $classname = generate_class_name('artefact', $plugin);
+        // Check the artefacttypes to see if they have a special metaartefact count
+        if (method_exists($classname, 'progressbar_metaartefact_count')) {
+            $names = call_static_method($classname, 'get_artefact_types');
+            foreach ($names as $name) {
+                $record = new stdClass();
+                $record->name = $name;
+                $record->is_metaartefact = call_static_method('ArtefactType' . ucfirst($name), 'is_metaartefact');
+                if (is_object($meta = call_user_func($classname . '::progressbar_metaartefact_count', $record))) {
+                    array_push($results, $meta);
+                }
+            }
+            // Also check the special artefacts
+            if (is_array($specials = call_static_method($classname, 'progressbar_additional_items'))) {
+                foreach ($specials as $special) {
+                    if (empty($special->is_metaartefact)) {
+                        // check to see if it can have mataartefact count
+                        $special->is_metaartefact = call_static_method('ArtefactType' . ucfirst($special->name), 'is_metaartefact');
+                    }
+                    if (!empty($special->is_metaartefact)) {
+                        // Now check if they have a special metaartefact count
+                        if (is_object($meta = call_user_func($classname . '::progressbar_metaartefact_count', $special))) {
+                            array_push($results, $meta);
+                        }
+                    }
+                }
+            }
+        }
+        return $results;
+    }
+
+    /**
+     * Add any special progress items that may not exist as an artefact type.
+     * @return array of objects each containing name, title, plugin, active, iscountable
+     */
+    public static function progressbar_additional_items() {
         return array();
     }
 }
@@ -1236,6 +1341,36 @@ abstract class ArtefactType {
             return array();
         }
         return $tags;
+    }
+
+    /**
+     * Checks to see if artefact type is allowed to be part of the progress bar.
+     * By default all artefacts are included in progress bar. To remove an artefact
+     * from being a progress bar option have your artefacttype return false for this.
+     * @return boolean
+     */
+    public static function is_allowed_in_progressbar() {
+        return true;
+    }
+
+    /**
+     * Checks to see if artefact for the progress bar is countable.
+     * By default all artefacts are counted as true/false (1 or 0). If you need to have
+     * more then one instance counting towards progress, say image upload, you can specify
+     * it to be countable. This will show a select box rather than a check box on the
+     * progress admin screen.
+     * @return boolean
+     */
+    public static function is_countable_progressbar() {
+        return false;
+    }
+
+    /**
+     * Check if artefacttype is meant to be handled as a meta artefact by progress bar
+     * @return boolean
+     */
+    public static function is_metaartefact() {
+        return false;
     }
 }
 

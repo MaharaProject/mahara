@@ -16,6 +16,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
     this.config.sesskey = globalconfig.sesskey;
     this.config.theme = globalconfig.theme;
     this.nextupload = 0;
+    this.createfolder_is_connected = false;
 
     this.init = function () {
         self.form = getFirstParentByTagAndClassName(self.id + '_filelist_container', 'form', 'pieform');
@@ -184,6 +185,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             replaceChildNodes(self.id + '_createfolder_messages', makeMessage(message, 'error'));
             return false;
         }
+        progressbarUpdate('folder');
     }
 
     this.edit_submit = function (e) {
@@ -224,6 +226,10 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
 
         quotaUpdate(data.quotaused, data.quota);
+        if (data.returnCode == '0') {
+            // pass the artefacttype to update progress bar
+            progressbarUpdate(data.artefacttype, data.deleted);
+        }
         var newmessage = makeMessage(DIV(null,' ', data.message), infoclass);
         setNodeAttribute(newmessage, 'id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
@@ -457,8 +463,9 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 return false;
             });
         });
-        if ($(self.id + '_createfolder')) {
+        if ($(self.id + '_createfolder') && !self.createfolder_is_connected) {
             connect($(self.id + '_createfolder'), 'onclick', self.createfolder_submit);
+            self.createfolder_is_connected = true;
         }
         if (self.config.select) {
             self.connect_select_buttons();

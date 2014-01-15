@@ -216,6 +216,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('masqueradingnotified'),
                     'disabled'     => in_array('masqueradingnotified', $OVERRIDDEN),
                 ),
+                'showprogressbar' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('showprogressbar', 'admin'),
+                    'description'  => get_string('showprogressbardescription', 'admin'),
+                    'defaultvalue' => get_config('showprogressbar'),
+                    'disabled'     => in_array('showprogressbar', $OVERRIDDEN),
+                ),
             ),
         ),
         'searchsettings' => array(
@@ -740,7 +747,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
-        'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
+        'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
         'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',

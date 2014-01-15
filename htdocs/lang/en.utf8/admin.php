@@ -1114,3 +1114,14 @@ $string['masqueradingnotloggedwarning'] = '<b>Note</b>: Logging of masquerading 
 $string['masqueradenotificationsubject'] = 'An administrator logged in as you';
 $string['masqueradenotificationnoreason'] = 'The administrator %s logged into your account on %s.';
 $string['masqueradenotificationreason'] = 'The administrator %s logged into your account on %s. The reason was: %s';
+
+// Progress bar / Profile completion
+$string['progressbar'] = 'Profile completion';
+$string['showprogressbar'] = 'Show profile completion';
+$string['progressbarsaved'] = 'Progress bar saved successfully.';
+$string['showprogressbardescription'] = 'If checked, a progress bar with tips about what to complete in the user profile will be displayed as a side block to users. They have the option to disable it.';
+$string['progressbardisablednote'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "User settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before users will be able to track their progress towards completing their profile.';
+
+$string['profilecompletenessdesc'] = 'Select artefacts that will count towards the user profile completion for your institution. Please tick the checkboxes next to the artefact that users should provide or select how many items of certain artefact types your users should have to make their profile complete.';
+$string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
+

@@ -207,6 +207,7 @@ function expected_account_preferences() {
                  'hiderealname'   => 0,
                  'multipleblogs' => 0,
                  'showhomeinfo' => 1,
+                 'showprogressbar' => 1,
                  'mobileuploadtoken' => '',
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
@@ -373,6 +374,14 @@ function general_account_prefs_form_elements($prefs) {
             'title' => get_string('showhomeinfo1', 'account'),
             'description' => get_string('showhomeinfodescription', 'account', hsc(get_config('sitename'))),
             'help' => 'true'
+        );
+    }
+    if (get_config('showprogressbar')) {
+        $elements['showprogressbar'] = array(
+            'type' => 'checkbox',
+            'defaultvalue' => $prefs->showprogressbar,
+            'title' => get_string('showprogressbar', 'account'),
+            'description' => get_string('showprogressbardescription', 'account', hsc(get_config('sitename'))),
         );
     }
     if (get_config('allowmobileuploads')) {
@@ -1532,12 +1541,12 @@ function can_send_message($from, $to) {
     if (empty($from)) {
         return false; // not logged in
     }
-	if (!is_object($from)) {
-	    $from = get_record('usr', 'id', $from);
-	}
-	if (is_object($to)) {
-	    $to = $to->id;
-	}
+    if (!is_object($from)) {
+        $from = get_record('usr', 'id', $from);
+    }
+    if (is_object($to)) {
+        $to = $to->id;
+    }
     $messagepref = get_account_preference($to, 'messages');
     return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->admin;
 }
@@ -1685,7 +1694,7 @@ function profile_url($user, $full=true, $useid=false) {
  * @return array containing the users in the order from $userids
  */
 function get_users_data($userids, $getviews=true) {
-	global $USER;
+    global $USER;
 
     $userids = array_map('intval', $userids);
 

@@ -48,6 +48,10 @@ class PluginArtefactPlans extends PluginArtefact {
             'task' => array('text'),
         );
     }
+
+    public static function progressbar_link() {
+        return 'artefact/plans/index.php';
+    }
 }
 
 class ArtefactTypePlan extends ArtefactType {
@@ -308,6 +312,10 @@ class ArtefactTypePlan extends ArtefactType {
         $smarty->assign('tags', $this->get('tags'));
 
         return array('html' => $smarty->fetch('artefact:plans:viewplan.tpl'), 'javascript' => '');
+    }
+
+    public static function is_countable_progressbar() {
+        return true;
     }
 }
 
@@ -665,5 +673,9 @@ class ArtefactTypeTask extends ArtefactType {
             $tasks['pagination'] = $pagination['html'];
             $tasks['pagination_js'] = $pagination['javascript'];
         }
+    }
+
+    public static function is_countable_progressbar() {
+        return true;
     }
 }

@@ -2875,6 +2875,183 @@ function tags_sideblock() {
 }
 
 
+function progressbar_artefact_link($artefacttype, $pluginname) {
+    return call_user_func(generate_class_name('artefact', $pluginname) . '::progressbar_link', $artefacttype);
+}
+
+function progressbar_sideblock($preview=false) {
+    global $USER;
+
+    $institution = param_alphanum('i', null);
+    if (is_array($USER->institutions) && count($USER->institutions) > 0) {
+        // Get all institutions where user is member
+        $institutions = array();
+        foreach ($USER->institutions as $inst) {
+            $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
+        }
+        // Set user's first institution in case that institution isn't
+        // set yet or user is not member of currently set institution.
+        if (!$institution || !array_key_exists($institution, $institutions)) {
+            $institution = key(array_slice($institutions, 0, 1));
+        }
+    }
+    else {
+        $institutions = array();
+        $institution = 'mahara';
+    }
+
+    // Set appropriate preview according to institution, if the institutio is selected
+    // If the institution isn't selected then show preview for first institution, which
+    // is also selected as a default value in institution selection box
+    if ($preview) {
+        $default = get_column('institution', 'name');
+        $institution = param_alphanum('institution', $default[0]);
+    }
+
+    // Get artefacts that count towards profile completeness
+    if ($field = get_field('institution_data', 'value', 'institution', $institution, 'type', 'progressbar')) {
+        $counting = unserialize($field);
+        // Without locked ones (site locked and institution locked)
+        $sitelocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', 'mahara');
+        $instlocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
+        $locked = array_merge($sitelocked, $instlocked);
+        foreach ($counting as $key => $value) {
+            if (in_array($key, $locked)) {
+                unset($counting[$key]);
+            }
+        }
+
+        foreach ($counting as $key => $value) {
+            // Set non-selected checkboxes to 0
+            if (!$value) {
+                $counting[$key] = '0';
+            }
+        }
+        $totalcounting = 0;
+        foreach ($counting as $c) {
+            $totalcounting = $totalcounting + $c;
+        }
+
+        // Get all artefacts for progressbar and create data structure
+        $data = array();
+        $plugins = get_column('artefact_installed', 'name');
+        $artefacts = array();
+        $pluginartefacts = array();
+        foreach ($plugins as $plugin) {
+            $results = PluginArtefact::get_progressbar_options($plugin);
+            foreach ($results as $result) {
+                $artefacts[] = $result->name;
+                $pluginartefacts[$result->name] = $plugin;
+            }
+        }
+
+        // ignore comment as we will be dealing with it as 'social -> feedback'
+        $artefacts = array_diff($artefacts, array('comment'));
+        $artefacts = array_diff($artefacts, $locked);
+        foreach ($artefacts as $artefact) {
+            $countingartefact = isset($counting[$artefact]) ? $counting[$artefact] : 0;
+            $data[$artefact] = array(
+                'artefact'  => $artefact,
+                'link'      => progressbar_artefact_link($artefact,  $pluginartefacts[$artefact]),
+                'counting'  => $countingartefact,
+                'completed' => 0,
+                'display'   => $countingartefact,
+                'label'     => get_string('progress_' . $artefact, 'artefact.' . $pluginartefacts[$artefact], $countingartefact),
+            );
+        }
+
+        if (!$preview) {
+            // Replace data values of artefacts that user already entered/completed
+            $sql = "SELECT artefacttype, COUNT(*) AS completed
+                    FROM {artefact}
+                    WHERE owner = ? AND artefacttype NOT IN
+                    ('aimscreenname', 'icqnumber', 'jabberusername',
+                     'msnnumber', 'skypeusername', 'yahoochat')
+                    GROUP BY artefacttype";
+            $records = get_records_sql_array($sql, array($USER->get('id')));
+            $totalcompleted = 0;
+            foreach ($records as $record) {
+                $countingartefact = (array_key_exists($record->artefacttype, $counting) ? $counting[$record->artefacttype] : 0);
+                $display = $countingartefact - $record->completed;
+                $label = get_string('progress_' . $record->artefacttype, 'artefact.' . $pluginartefacts[$record->artefacttype], $display);
+                $data[$record->artefacttype] = array(
+                    'artefact'  => $record->artefacttype,
+                    'link'      => progressbar_artefact_link($record->artefacttype, $pluginartefacts[$record->artefacttype]),
+                    // how many are counting towards
+                    'counting'  => $countingartefact,
+                    // how many user has completed
+                    'completed' => $record->completed,
+                    // how many need to be displayed
+                    'display'   => $display,
+                    'label'     => $label,
+                );
+                if ($countingartefact > 0) {
+                    $totalcompleted = $totalcompleted + min($countingartefact, $record->completed);
+                }
+            }
+
+            $metaartefacts = array();
+            foreach ($plugins as $plugin) {
+                if (is_array($records = PluginArtefact::get_progressbar_metaartefact($plugin))) {
+                    foreach ($records as $record) {
+                        array_push($metaartefacts, $record);
+                    }
+                }
+            }
+            foreach ($metaartefacts as $record) {
+                $countingartefact = (array_key_exists($record->artefacttype, $counting) ? $counting[$record->artefacttype] : 0);
+                $display = $countingartefact - $record->completed;
+                $label = get_string('progress_' . $record->artefacttype, 'artefact.' . $pluginartefacts[$record->artefacttype], $display);
+                $data[$record->artefacttype] = array(
+                    'artefact'  => $record->artefacttype,
+                    'link'      => progressbar_artefact_link($record->artefacttype, $pluginartefacts[$record->artefacttype]),
+                    // how many are counting towards
+                    'counting'  => $countingartefact,
+                    // how many user has completed
+                    'completed' => $record->completed,
+                    // how many need to be displayed
+                    'display'   => $display,
+                    'label'     => $label,
+                );
+                if ($countingartefact > 0) {
+                    $totalcompleted = $totalcompleted + min($countingartefact, $record->completed);
+                }
+            }
+
+            $percent = round(($totalcompleted/$totalcounting)*100);
+            if ($percent > 100) {
+                $percent = 100;
+            }
+        }
+        else {
+            // Show 0 percent and all counting artefacts at preview
+            $percent = 0;
+        }
+        return array(
+            'data' => $data,
+            'percent' => $percent,
+            'preview' => $preview,
+            'count' => ($preview ? 1 : count($institutions)),
+            // This is important if user is member
+            // of more than one institution ...
+            'institutions' => $institutions,
+            'institution' => $institution,
+            'totalcompleted' => !empty($totalcompleted) ? $totalcompleted : 0,
+            'totalcounting' => $totalcounting,
+        );
+    }
+
+    return array(
+        'data' => null,
+        'percent' => 0,
+        'preview' => $preview,
+        'count' => 1,
+        'institutions' => null,
+        'institution' => 'mahara',
+    );
+}
+
+
 /**
  * Cronjob to recalculate how much quota each user is using and update it as 
  * appropriate.

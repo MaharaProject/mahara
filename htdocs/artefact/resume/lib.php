@@ -136,6 +136,37 @@ class PluginArtefactResume extends PluginArtefact {
         }
         return $artefacts;
     }
+
+    public static function progressbar_link($artefacttype) {
+        switch ($artefacttype) {
+            case 'coverletter':
+            case 'personalinformation':
+                return 'artefact/resume/index.php';
+                break;
+            case 'educationhistory':
+            case 'employmenthistory':
+                return 'artefact/resume/employment.php';
+                break;
+            case 'certification':
+            case 'book':
+            case 'membership':
+                return 'artefact/resume/achievements.php';
+                break;
+            case 'personalgoal':
+            case 'academicgoal':
+            case 'careergoal':
+            case 'personalskill':
+            case 'academicskill':
+            case 'workskill':
+                return 'artefact/resume/goalsandskills.php';
+                break;
+            case 'interest':
+                return 'artefact/resume/interests.php';
+                break;
+            default:
+                return '';
+        }
+    }
 }
 
 class ArtefactTypeResume extends ArtefactType {
@@ -310,6 +341,9 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
         return $fields;
     }
 
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
 }
 
 class ArtefactTypePersonalinformation extends ArtefactTypeResume {

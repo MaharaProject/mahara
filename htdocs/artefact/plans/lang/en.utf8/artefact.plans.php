@@ -69,3 +69,12 @@ $string['duplicatedplan'] = 'Duplicated plan';
 $string['existingplans'] = 'Existing plans';
 $string['duplicatedtask'] = 'Duplicated task';
 $string['existingtasks'] = 'Existing tasks';
+
+$string['progress_plan'] = array(
+    'Add a plan',
+    'Add %s plans',
+);
+$string['progress_task'] = array(
+    'Add a task to a plan',
+    'Add %s tasks to a plan',
+);

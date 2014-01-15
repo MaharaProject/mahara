@@ -618,6 +618,22 @@ EOF;
                     'data'   => onlineusers_sideblock(),
                 );
             }
+            if (get_config('showprogressbar') && $USER->get_account_preference('showprogressbar')) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'progressbar',
+                    'id'     => 'sb-progressbar',
+                    'weight' => -10,
+                    'data'   => progressbar_sideblock(),
+                );
+            }
+        }
+
+        if ($USER->is_logged_in() && $adminsection && defined('SECTION_PAGE') && SECTION_PAGE == 'progressbar') {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'progressbar',
+                'id'     => 'sb-progressbar',
+                'data'   => progressbar_sideblock(true),
+            );
         }
 
         if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
@@ -2080,6 +2096,12 @@ function admin_nav() {
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
             'weight' => 50,
+        ),
+        'manageinstitutions/progressbar' => array(
+            'path'   => 'manageinstitutions/progressbar',
+            'url'    => 'admin/users/progressbar.php',
+            'title'  => get_string('progressbar', 'admin'),
+            'weight' => 55,
         ),
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',

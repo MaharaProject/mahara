@@ -65,6 +65,9 @@ $string['hiderealnamedescription'] = 'Check this box if you have set a display n
 $string['showhomeinfo1'] = 'Homepage information';
 $string['showhomeinfodescription'] = 'Display information about how to use %s on the homepage.';
 
+$string['showprogressbar'] = 'Progress bar';
+$string['showprogressbardescription'] = 'Display progress bar and tips on how to complete your %s profile.';
+
 $string['mobileuploadtoken'] = 'Mobile upload token';
 $string['badmobileuploadtoken'] = 'Sorry that mobile upload token is invalid. Tokens must be at least 6 characters long.';
 

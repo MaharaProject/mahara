@@ -279,6 +279,82 @@ class PluginArtefactInternal extends PluginArtefact {
 
         return $bi;
     }
+
+    public static function progressbar_additional_items() {
+        $specials = array('messaging');
+        $records = false;
+        foreach ($specials as $special) {
+            $record = new StdClass();
+            $record->name = $special;
+            $record->title = get_string($special, 'artefact.internal');
+            $record->plugin = 'internal';
+            $record->active = true;
+            $record->iscountable = false;
+            $record->is_metaartefact = true;
+            $records[] = $record;
+        }
+        return $records;
+    }
+
+    public static function progressbar_metaartefact_count($plugin) {
+        global $USER;
+
+        if (!$plugin->is_metaartefact) {
+            return false;
+        }
+
+        $meta = new StdClass();
+        $meta->artefacttype = $plugin->name;
+        $meta->completed = 0;
+        switch ($plugin->name) {
+         case 'messaging':
+            // Add messaging group data and
+            // use user's entered values of individual messaging artefacts
+            $sql = "SELECT COUNT(*) AS completed FROM {artefact}
+                   WHERE owner = ? AND artefacttype IN
+                     ('aimscreenname', 'icqnumber', 'jabberusername',
+                      'msnnumber', 'skypeusername', 'yahoochat')";
+            $count = get_records_sql_array($sql, array($USER->get('id')));
+            $meta->completed = $count[0]->completed;
+            break;
+        }
+        return $meta;
+    }
+
+    public static function progressbar_link($artefacttype) {
+        switch ($artefacttype) {
+         case 'firstname':
+         case 'lastname':
+         case 'studentid':
+         case 'preferredname':
+         case 'introduction':
+            return 'artefact/internal/index.php';
+            break;
+         case 'email':
+         case 'officialwebsite':
+         case 'personalwebsite':
+         case 'blogaddress':
+         case 'address':
+         case 'town':
+         case 'city':
+         case 'country':
+         case 'homenumber':
+         case 'businessnumber':
+         case 'mobilenumber':
+         case 'faxnumber':
+            return 'artefact/internal/index.php?fs=contact';
+            break;
+         case 'messaging':
+            return 'artefact/internal/index.php?fs=messaging';
+            break;
+         case 'occupation':
+         case 'industry':
+            return 'artefact/internal/index.php?fs=general';
+            break;
+         default:
+            return 'view/index.php';
+        }
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {
@@ -690,12 +766,42 @@ class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
 class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeFaxnumber extends ArtefactTypeProfileField {}
-class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {}
-class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {}
-class ArtefactTypeAimscreenname extends ArtefactTypeProfileField {}
-class ArtefactTypeYahoochat extends ArtefactTypeProfileField {}
-class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {}
-class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
+class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
+class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
+class ArtefactTypeAimscreenname extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
+class ArtefactTypeYahoochat extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
+class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
+class ArtefactTypeJabberusername extends ArtefactTypeProfileField {
+
+    public static function is_allowed_in_progressbar() {
+        return false;
+    }
+}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
@@ -757,5 +863,9 @@ class ArtefactTypeHtml extends ArtefactType {
             'html' => $smarty->fetch('artefact.tpl'),
             'javascript'=>''
         );
+    }
+
+    public static function is_allowed_in_progressbar() {
+        return false;
     }
 }

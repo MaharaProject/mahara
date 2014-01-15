@@ -105,6 +105,10 @@ class PluginArtefactBlog extends PluginArtefact {
             'blogpost' => array('text'),
         );
     }
+
+    public static function progressbar_link() {
+        return 'artefact/blog/view/index.php';
+    }
 }
 
 /**
@@ -1038,5 +1042,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public function get_referenced_artefacts_from_postbody() {
         return artefact_get_references_in_html($this->get('description'));
+    }
+
+    public static function is_countable_progressbar() {
+        return true;
     }
 }

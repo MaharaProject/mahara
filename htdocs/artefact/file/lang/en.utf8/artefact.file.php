@@ -71,6 +71,7 @@ $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['Details'] = 'Details';
 $string['View'] = 'View';
+$string['document'] = 'Document';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';
@@ -306,3 +307,32 @@ $string['folderdownloadnofolderfound'] = 'Unable to find the folder with ID %d';
 $string['zipfilenameprefix'] = 'folder';
 $string['keepzipfor'] = 'Length of time to keep zip files';
 $string['keepzipfordescription'] = 'Zip files created during the downloading of folders should be kept for this amount of time (in seconds).';
+
+$string['progress_archive'] = array(
+    'Add 1 archive file',
+    'Add %s archive files',
+);
+$string['progress_audio'] = array(
+    'Add 1 audio file',
+    'Add %s audio files',
+);
+$string['progress_file'] = array(
+    'Add 1 file',
+    'Add %s files',
+);
+$string['progress_folder'] = array(
+    'Add 1 folder',
+    'Add %s folders',
+);
+$string['progress_image'] = array(
+    'Add 1 image',
+    'Add %s images',
+);
+$string['progress_profileicon'] = array(
+    'Add 1 profile picture',
+    'Add %s profile pictures',
+);
+$string['progress_video'] = array(
+    'Add 1 video',
+    'Add %s videos',
+);

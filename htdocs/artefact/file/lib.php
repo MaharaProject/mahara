@@ -290,6 +290,16 @@ class PluginArtefactFile extends PluginArtefact {
         }
         return array();
     }
+
+    public static function progressbar_link($artefacttype) {
+        switch ($artefacttype) {
+         case 'profileicon':
+            return 'artefact/file/profileicons.php';
+            break;
+         default:
+            return 'artefact/file/index.php';
+        }
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
@@ -1642,6 +1652,13 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return (bool) $this->get('group');
     }
 
+    public static function is_countable_progressbar() {
+        return true;
+    }
+
+    public static function get_title_progressbar() {
+        return get_string('document','artefact.file');
+    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
@@ -1891,6 +1908,9 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
     }
 
+    public static function is_countable_progressbar() {
+        return true;
+    }
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
@@ -2016,6 +2036,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             . '" alt=""></a></div>' . $result['html'];
         return $result;
     }
+
+    public static function get_title_progressbar() {
+        return get_string('image','artefact.file');
+    }
 }
 
 class ArtefactTypeProfileIcon extends ArtefactTypeImage {
@@ -2073,6 +2097,9 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         return null;
     }
 
+    public static function get_title_progressbar() {
+        return get_string('profileicon','artefact.file');
+    }
 }
 
 class ArtefactTypeArchive extends ArtefactTypeFile {
@@ -2404,6 +2431,9 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
         return $this->data;
     }
 
+    public static function get_title_progressbar() {
+        return get_string('archive','artefact.file');
+    }
 }
 
 class ArtefactTypeVideo extends ArtefactTypeFile {
@@ -2462,6 +2492,9 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
         return $THEME->get_url('images/video.png');
     }
 
+    public static function get_title_progressbar() {
+        return get_string('video','artefact.file');
+    }
 }
 
 class ArtefactTypeAudio extends ArtefactTypeFile {
@@ -2507,5 +2540,9 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
     public static function get_icon($options=null) {
         global $THEME;
         return $THEME->get_url('images/audio.png');
+    }
+
+    public static function get_title_progressbar() {
+        return ucfirst(get_string('audio','artefact.file'));
     }
 }

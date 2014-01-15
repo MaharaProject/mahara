@@ -152,3 +152,9 @@ $string['duplicatedblog'] = 'Duplicated journal';
 $string['existingblogs'] = 'Existing journals';
 $string['duplicatedpost'] = 'Duplicated journal entry';
 $string['existingposts'] = 'Existing journal entries';
+
+$string['progress_blog'] = 'Add a journal';
+$string['progress_blogpost'] = array(
+    'Add 1 entry to a journal',
+    'Add %s entries to a journal',
+);

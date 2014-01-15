@@ -708,6 +708,46 @@ function augment_tags_control(elem, returnContainer) {
     appendChildNodes(newNode, tagContainer, elem, ' ', help);
 };
 
+function progressbarUpdate(artefacttype, remove) {
+    if (! $('progress_bar')) {
+        return;
+    }
+    // are we adding or deleting?
+    var change = 1;
+    if (remove) {
+        change = -1;
+    }
+
+    // if we have the artefacttype and it needs to be updated
+    if (typeof artefacttype != 'undefined') {
+        if ($('progress_counting_' + artefacttype)) {
+            var counting = parseInt($('progress_counting_' + artefacttype).innerHTML);
+            var oldcompleted = parseInt($('progress_completed_' + artefacttype).innerHTML);
+            var completed = oldcompleted + change;
+            $('progress_completed_' + artefacttype).innerHTML = completed;
+            var progressitem = $('progress_item_' + artefacttype);
+            progressitem.innerHTML = progressitem.innerHTML.replace(/-?\d+/, counting - completed);
+
+            // when progress is met
+            if ((counting - completed) <= 0) {
+                addElementClass(progressitem.parentNode.parentNode,'hidden');
+            }
+            else {
+                removeElementClass(progressitem.parentNode.parentNode,'hidden');
+            }
+            // now update the totals if we need to
+            if ((oldcompleted > 0 && oldcompleted <= counting && remove ) || (completed <= counting && !remove)) {
+                var totalcounting = parseInt($('progress_counting_total').innerHTML);
+                var totalcompleted = parseInt($('progress_completed_total').innerHTML) + change;
+                $('progress_completed_total').innerHTML = totalcompleted;
+                var percentage = roundToFixed((totalcompleted / totalcounting) * 100, 0);
+                $('progress_bar_percentage').innerHTML = percentage + '%';
+                setStyle($('progress_bar_fill'), {'width': (percentage*2) + 'px'});
+            }
+        }
+    }
+}
+
 function quotaUpdate(quotaused, quota) {
     if ($('instconf')) {
         return;

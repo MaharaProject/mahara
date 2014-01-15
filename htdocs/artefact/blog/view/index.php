@@ -86,6 +86,7 @@ function delete_success(form, data) {
     }
     addElementClass('postdescription_' + data.id, 'hidden');
     addElementClass('posttitle_' + data.id, 'hidden');
+    progressbarUpdate('blogpost', true);
 }
 EOF;
 

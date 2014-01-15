@@ -982,6 +982,8 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     }
 
     $result['highlight'] = $newid;
+    $artefact = artefact_instance_from_id($newid);
+    $result['artefacttype'] = $artefact->get('artefacttype');
     $result['uploaded'] = true;
     $result['newlist'] = pieform_element_filebrowser_build_filelist($form, $element, $parentfolder, $newid);
     if (defined('GROUP')) {
@@ -1212,6 +1214,7 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
     $result = array(
         'error' => false,
         'deleted' => true,
+        'artefacttype' => $artefact->get('artefacttype'),
         'message' => get_string('filethingdeleted', 'artefact.file',
                                 get_string($artefact->get('artefacttype'), 'artefact.file') . ' ' . $artefact->get('title')),
         'maxuploadsize' => display_size(get_max_upload_size(!$institution && !$group)),
