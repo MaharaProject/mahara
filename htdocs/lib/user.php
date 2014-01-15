@@ -178,11 +178,9 @@ function get_user_language($userid) {
     if (empty($langpref) || $langpref == 'default') {
 
         // Check for an institution language
-        $langlist = get_configs_user_institutions('lang', $userid);
-        foreach($langlist as $l) {
-            if (!empty($l) && $l != 'default') {
-                return $l;
-            }
+        $instlang = get_user_institution_language($userid);
+        if (!empty($instlang) && $instlang != 'default') {
+            return $instlang;
         }
 
         // Use the site language
