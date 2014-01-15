@@ -411,6 +411,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'src' => $THEME->get_url('images/btn_deleteremove.png'),
                     'elementtitle' => get_string('delete', 'artefact.blog'),
                     'confirm' => get_string('deleteblog?', 'artefact.blog'),
+                    'value' => get_string('delete', 'artefact.blog')
                 ),
             ),
         ));
@@ -900,6 +901,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'src' => $THEME->get_url('images/btn_deleteremove.png'),
                     'elementtitle' => get_string('delete', 'artefact.blog'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
+                    'value' => get_string('delete', 'artefact.blog'),
                 ),
             ),
         ));
