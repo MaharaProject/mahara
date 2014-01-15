@@ -176,6 +176,16 @@ function get_account_preference($userid, $field) {
 function get_user_language($userid) {
     $langpref = get_account_preference($userid, 'lang');
     if (empty($langpref) || $langpref == 'default') {
+
+        // Check for an institution language
+        $langlist = get_configs_user_institutions('lang', $userid);
+        foreach($langlist as $l) {
+            if (!empty($l) && $l != 'default') {
+                return $l;
+            }
+        }
+
+        // Use the site language
         return get_config('lang');
     }
     return $langpref;
@@ -261,11 +271,19 @@ function general_account_prefs_form_elements($prefs) {
         'help' => true,
     );
     $languages = get_languages();
+    // Determine default language.
+    $instlang = get_user_institution_language($USER->id, $instlanginstname);
+    if (!empty($instlang) && $instlang != 'default') {
+        $sitedefaultlabel = get_string('defaultlangforinstitution', 'admin', get_config_institution($instlanginstname, 'displayname')) . ' (' . $languages[$instlang] . ')';
+    }
+    else {
+        $sitedefaultlabel = get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')';
+    }
     $elements['lang'] = array(
         'type' => 'select',
         'defaultvalue' => $prefs->lang,
         'title' => get_string('language', 'account'),
-        'options' => array_merge(array('default' => get_string('sitedefault', 'admin') . ' (' . $languages[get_config('lang')] . ')'), $languages),
+        'options' => array_merge(array('default' => $sitedefaultlabel), $languages),
         'help' => true,
         'ignore' => count($languages) < 2,
     );

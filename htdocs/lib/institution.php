@@ -287,13 +287,11 @@ class Institution {
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
         }
-        if ($user instanceof User) {
-            $lang = $user->get_account_preference('lang');
-            if (empty($lang) || $lang == 'default') {
-                $lang = get_config('lang');
-            }
+        // The user hasn't been added yet, so we have to manually use this institution's lang
+        if ($this->lang != 'default') {
+            $lang = $this->lang;
         }
-        else { // stdclass object
+        else {
             $lang = get_user_language($user->id);
         }
         $userinst = new StdClass;
