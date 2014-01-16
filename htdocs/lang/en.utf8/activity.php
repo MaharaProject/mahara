@@ -29,6 +29,7 @@ $string['type'] = 'Activity type';
 $string['attime'] = 'at';
 $string['prefsdescr'] = 'If you select either of the email options, notifications will still arrive in your inbox, but they will be automatically marked as read.';
 
+$string['messagetype'] = 'Message type';
 $string['subject'] = 'Subject';
 $string['date'] = 'Date';
 $string['read'] = 'Read';
