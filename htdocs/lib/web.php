@@ -1845,6 +1845,7 @@ function admin_nav() {
             'url'    => 'admin/index.php',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
+            'accesskey' => 'a',
         ),
         'adminhome/home' => array(
             'path'   => 'adminhome/home',
@@ -1869,6 +1870,7 @@ function admin_nav() {
             'url'    => 'admin/site/options.php',
             'title'  => get_string('configsite', 'admin'),
             'weight' => 20,
+            'accesskey' => 'c',
         ),
         'configsite/siteoptions' => array(
             'path'   => 'configsite/siteoptions',
@@ -1935,6 +1937,7 @@ function admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('users'),
             'weight' => 30,
+            'accesskey' => 'u',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -1977,6 +1980,7 @@ function admin_nav() {
             'url'    => 'admin/groups/groups.php',
             'title'  => get_string('groups', 'admin'),
             'weight' => 40,
+            'accesskey' => 'g',
         ),
         'managegroups/groups' => array(
             'path'   => 'managegroups/groups',
@@ -2007,6 +2011,7 @@ function admin_nav() {
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 50,
+            'accesskey' => 'i',
         ),
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
@@ -2079,6 +2084,7 @@ function admin_nav() {
             'url'    => 'admin/extensions/plugins.php',
             'title'  => get_string('Extensions', 'admin'),
             'weight' => 60,
+            'accesskey' => 'e',
         ),
         'configextensions/pluginadmin' => array(
             'path'   => 'configextensions/pluginadmin',
@@ -2138,6 +2144,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('users'),
             'weight' => 10,
+            'accesskey' => 'u',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2168,6 +2175,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/groups/uploadcsv.php',
             'title'  => get_string('groups', 'admin'),
             'weight' => 20,
+            'accesskey' => 'g',
         ),
         'managegroups/uploadcsv' => array(
             'path'   => 'managegroups/uploadcsv',
@@ -2186,6 +2194,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/institutions.php',
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 30,
+            'accesskey' => 'i',
         ),
         'manageinstitutions/institutions' => array(
             'path'   => 'manageinstitutions/institutions',
@@ -2260,6 +2269,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/statistics.php',
             'title'  => get_string('site', 'admin'),
             'weight' => 40,
+            'accesskey' => 'a',
         );
         $ret['adminhome/statistics'] = array(
             'path'   => 'adminhome/statistics',
@@ -2285,18 +2295,21 @@ function staff_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
+            'accesskey' => 'u',
         ),
         'statistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/statistics.php',
             'title'  => get_string('sitestatistics', 'admin'),
             'weight' => 20,
+            'accesskey' => 's',
         ),
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 30,
+            'accesskey' => 'i',
         ),
     );
 }
@@ -2313,12 +2326,14 @@ function institutional_staff_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
+            'accesskey' => 'u',
         ),
         'institutionalstatistics' => array(
             'path'   => 'statistics',
             'url'    => 'admin/users/statistics.php',
             'title'  => get_string('institutionstatistics', 'admin'),
             'weight' => 20,
+            'accesskey' => 'i',
         ),
     );
 }
@@ -2339,20 +2354,21 @@ function mahara_standard_nav() {
             'url' => '',
             'title' => get_string('dashboard', 'view'),
             'weight' => 10,
-            'accesskey' => 'h',
+            'accesskey' => 'd',
         ),
         'content' => array(
             'path' => 'content',
             'url'  => 'artefact/internal/index.php', // @todo possibly do path aliasing and dispatch?
             'title' => get_string('Content'),
             'weight' => 20,
+            'accesskey' => 'c',
         ),
         'myportfolio' => array(
             'path' => 'myportfolio',
             'url' => 'view/index.php',
             'title' => get_string('myportfolio'),
             'weight' => 30,
-            'accesskey' => 'v',
+            'accesskey' => 'p',
         ),
         'myportfolio/views' => array(
             'path' => 'myportfolio/views',
