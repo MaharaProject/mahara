@@ -591,15 +591,6 @@ EOF;
             }
         }
 
-        if(defined('GROUP')) {
-            $SIDEBLOCKS[] = array(
-                'name'   => 'group',
-                'id'     => 'sb-groupnav',
-                'weight' => -10,
-                'data'   => group_sideblock()
-            );
-        }
-
         if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
             $SIDEBLOCKS[] = array(
                 'name'   => 'login',
