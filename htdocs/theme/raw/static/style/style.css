@@ -4076,3 +4076,8 @@ ul.searchtab li span.inactive {
 	font-style: italic;
 	color: #888;
 }
+
+.inline-delete {
+    vertical-align: middle;
+    margin: 4px 0px;
+}

@@ -31,7 +31,7 @@
                     INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': {{$name}}_newrefinput.value}),
                     ' ',
                     {{$name}}_newrefinput.value,
-                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
+                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-delete', 'alt': '{{str tag=delete}}', 'src':'{{theme_url filename="images/btn_deleteremove.png"}}'})),
                     ' ' + {{$validationemailstr|safe}}
                 ));
                 if (typeof formchangemanager !== 'undefined') {
@@ -98,14 +98,14 @@
         <label><input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email}}">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
         {{$email}}</label>
-        <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
+        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-delete"alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
     </div>
 {{/foreach}}
 {{foreach from=$unvalidated item=email}}
     <div class="unvalidated">
         <input type="hidden" name="{{$name}}_invalid[]" value="{{$email}}">
         {{$email}}
-        <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
+        <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-delete" alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
         <span>{{str tag=validationemailsent section=artefact.internal}}</span>
     </div>
 {{/foreach}}
