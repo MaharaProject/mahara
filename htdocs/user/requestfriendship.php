@@ -54,7 +54,7 @@ $form = pieform(array(
             'type'  => 'textarea',
             'title' => get_string('message'),
             'cols'  => 50,
-            'rows'  => 4,       
+            'rows'  => 4,
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -72,14 +72,14 @@ $smarty->display('user/requestfriendship.tpl');
 
 function requestfriendship_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id, $goto;
-    
+
     $loggedinid = $USER->get('id');
     $user = get_record('usr', 'id', $id);
 
     // friend db record
     $f = new StdClass;
     $f->ctime = db_format_timestamp(time());
-    
+
     // notification info
     $n = new StdClass;
     $n->url = profile_url($USER, false);
@@ -96,10 +96,10 @@ function requestfriendship_submit(Pieform $form, $values) {
     insert_record('usr_friend_request', $f);
     $n->subject = get_string_from_language($lang, 'requestedfriendlistsubject', 'group');
     if (isset($values['message']) && !empty($values['message'])) {
-        $n->message = get_string_from_language($lang, 'requestedfriendlistmessagereason', 'group', $displayname) . $values['message'];
+        $n->message = get_string_from_language($lang, 'requestedfriendlistmessageexplanation', 'group', $displayname) . $values['message'];
     }
     else {
-        $n->message = get_string_from_language($lang, 'requestedfriendlistmessage', 'group', $displayname);
+        $n->message = get_string_from_language($lang, 'requestedfriendlistinboxmessage', 'group', $displayname);
     }
     require_once('activity.php');
     activity_occurred('maharamessage', $n);
