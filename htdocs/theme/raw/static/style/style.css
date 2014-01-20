@@ -246,9 +246,6 @@ form.oneline.inline div,
 .help a:hover {
     cursor: help;
 }
-.help a:focus {
-    outline: none;
-}
 .contextualHelp {
     padding: 10px;
     margin: 0;
@@ -371,14 +368,6 @@ div.warning,
 }
 .dull {
     color: #888888;
-}
-a,
-a:visited,
-a:link,
-a:active,
-a:hover,
-a:focus {
-    outline: none;
 }
 /* some common listing text styles */
 .title,
@@ -712,14 +701,6 @@ input[type=password] {
     border-right: 1px solid #DBDFE6;
     border-bottom: 1px solid #E3E9EF;
     border-left: 1px solid #E2E3EA;
-}
-/* removes dotted outline of buttons */
-input {
-    outline: none;
-}
-/* removes dotted outline of buttons in firefox */
-input::-moz-focus-inner {
-    border: 0;
 }
 /* hidden */
 .no-js .nojs-hidden-inline {
@@ -1561,6 +1542,10 @@ div.rel {
     background: #DDDDDD;
 }
 /******************** Tabs ********************/
+/* reset responsive tabs (profile tabs are in the form not template) */
+.rd-tab-title {
+    display: none;
+}
 ul.in-page-tabs {
     font-size: 1.167em;
     list-style: none;
