@@ -8,7 +8,7 @@
 {else}
                 <td class="plantasktitle">{$task->title}</td>
 {/if}
-                <td class="c3 incomplete"><img src="{$WWWROOT}theme/raw/static/images/failure_small.png" alt="" /></td>
+                <td class="c3 incomplete"><img src="{$WWWROOT}theme/raw/static/images/failure_small.png" alt="{str tag=overdue section=artefact.plans}" /></td>
             </tr>
         {else}
             <tr class="{cycle values='r0,r1'}">
@@ -20,9 +20,9 @@
                 <td class="plantasktitle">{$task->title}</td>
 {/if}
                 {if $task->completed == 1}
-                    <td class="c3 completed"><img src="{$WWWROOT}theme/raw/static/images/success_small.png" alt="" /></td>
+                    <td class="c3 completed"><img src="{$WWWROOT}theme/raw/static/images/success_small.png" alt="{str tag=completed section=artefact.plans}" /></td>
                 {else}
-                    <td>&nbsp;</td>
+                    <td><span class="accessible-hidden">{str tag=incomplete section=artefact.plans}</span></td>
                 {/if}
             </tr>
         {/if}
