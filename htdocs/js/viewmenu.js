@@ -33,6 +33,18 @@ function objectionSuccess(form, data) {
     formSuccess(form, data);
 }
 
+function moveFeedbackForm(tinymceused) {
+    if (tinymceused) {
+        tinyMCE.execCommand('mceRemoveControl', false, 'add_feedback_form_message');
+    }
+    form = $('add_feedback_form');
+    removeElement(form);
+    appendChildNodes($('add_feedback_link').parentNode, form);
+    if (tinymceused) {
+       tinyMCE.execCommand('mceAddControl', false, 'add_feedback_form_message');
+    }
+}
+
 function rewriteCancelButtons() {
     if ($('add_feedback_form')) {
         var buttons = getElementsByTagAndClassName('input', 'cancel', 'add_feedback_form');
@@ -70,20 +82,23 @@ addLoadEvent(function () {
                 (!document.documentElement || typeof(document.documentElement.style.maxHeight) == "undefined");
 
             connect('add_feedback_link', 'onclick', function(e) {
+                var tinymceused = typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined';
+
                 e.stop();
                 if ($('objection_form')) {
                     addElementClass('objection_form', 'hidden');
                 }
                 removeElementClass('add_feedback_form', 'js-hidden');
                 removeElementClass('add_feedback_form', 'hidden');
-                if (feedbacklinkinblock) {
+                if (typeof(feedbacklinkinblock) != 'undefined') {
                     // need to display it as a 'popup' form
+                    moveFeedbackForm(tinymceused);
                     addElementClass('add_feedback_form', 'blockinstance');
                     addElementClass('add_feedback_form', 'configure');
                     addElementClass('add_feedback_form', 'feedback_form_overlay');
                     var formposition = new Object();
                     formposition.x = (((getViewportDimensions().w / 2) - 300) > 0) ? (getViewportDimensions().w / 2) - 300 : 0;
-                    formposition.y = getViewportPosition().y + 30;
+                    formposition.y = 30;
                     setElementPosition('add_feedback_form', formposition);
                     appendChildNodes(document.body, DIV({id: 'overlay'}));
                 }
@@ -92,6 +107,13 @@ addLoadEvent(function () {
                 // the submit handler
                 if (isIE6) {
                     disconnectAll('add_feedback_form', 'onsubmit');
+                }
+
+                if (tinymceused) {
+                    tinyMCE.get('add_feedback_form_message').focus();
+                }
+                else {
+                    $('add_feedback_form_message').focus();
                 }
 
                 return false;
