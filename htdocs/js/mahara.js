@@ -407,30 +407,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         insertSiblingNodesAfter(ref.parentNode, contextualHelpContainer);
     }
 
-    var position = getElementPosition(ref);
-    var dimensions = getElementDimensions(contextualHelpContainer);
-
-    // Adjust the position. The element is moved towards the centre of the
-    // screen, based on which quadrant of the screen the help icon is in
-    screenDimensions = getViewportDimensions();
-    if (position.x + dimensions.w < screenDimensions.w) {
-        // Left of the screen - there's enough room for it
-        position.x += 15;
-    }
-    else if (position.x - dimensions.w < 0) {
-        if (dimensions.w >= screenDimensions.w) {
-            // Very small screen, let them scroll
-            position.x = 0;
-        }
-        else {
-            // Otherwise center it
-            position.x = (screenDimensions.w / 2) - (dimensions.w / 2);
-        }
-    }
-    else {
-        position.x -= dimensions.w;
-    }
-    position.y -= 10;
+    var position = contextualHelpPosition(ref, contextualHelpContainer);
 
     // Once it has been positioned, make it visible
     setElementPosition(contextualHelpContainer, position);
@@ -491,15 +468,58 @@ function buildContextualHelpBox(content) {
 }
 
 /*
+ * Positions the box so that it's next to the link that was activated
+ */
+function contextualHelpPosition(ref, contextualHelpContainer) {
+    $j(contextualHelpContainer).css('visibility', 'hidden').removeClass('hidden');
+
+    var position = $j(ref).position();
+    var offset = $j(ref).offset();
+    var containerwidth = $j(contextualHelpContainer).outerWidth(true);
+
+    // Adjust the position. The element is moved towards the centre of the
+    // screen, based on which quadrant of the screen the help icon is in
+    var screenwidth = $j(window).width();
+    if (offset.left + containerwidth < screenwidth) {
+        // Left of the screen - there's enough room for it
+        position.left += 15;
+    }
+    else if (offset.left - containerwidth < 0) {
+        var oldoffset = $j(contextualHelpContainer).offset();
+        var oldposition = $j(contextualHelpContainer).position();
+
+        if (containerwidth >= screenwidth) {
+            // Very small screen, resize the help box to fit
+            var margin = containerwidth - $j(contextualHelpContainer).width();
+            $j(contextualHelpContainer).css('width', screenwidth - margin);
+            position.left = oldposition.left - oldoffset.left;
+        }
+        else {
+            // Otherwise center it
+            position.left = (screenwidth / 2) - (containerwidth / 2) - oldoffset.left + oldposition.left;
+        }
+    }
+    else {
+        position.left -= containerwidth;
+    }
+    position.top -= 10;
+
+    $j(contextualHelpContainer).css('visibility', 'visible');
+
+    return {x: position.left, y: position.top};
+}
+
+/*
  * Ensures that the contextual help box given is fully visible on screen. This
  * will adjust the position of the help vertically if the help has opened right
  * next to the bottom or top of the viewport
  */
 function ensureHelpIsOnScreen(container, position) {
-    var dimensions = getElementDimensions(container);
-    if (position.y + dimensions.h > screenDimensions.h + getFirstElementByTagAndClassName('html').scrollTop) {
-        position.y -= dimensions.h - 18;
-        setElementPosition(container, position);
+    var screenheight = $j(window).height();
+    var containerheight = $j(container).height();
+    if (position.y + containerheight > screenheight + $j('html').scrollTop()) {
+        position.y -= containerheight - 18;
+        $j(container).css('top', position.y);
     }
 }
 
