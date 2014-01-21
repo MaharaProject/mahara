@@ -33,7 +33,6 @@ button {
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
 }
 #container,
-.skiplink,
 .sitemessage,
 #switchwrap {  /* Use a 12px base font size with a 16px line height */
     font-size: 0.75em; /* 16px x .75 = 12px */

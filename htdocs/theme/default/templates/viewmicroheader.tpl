@@ -5,7 +5,6 @@
 <html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if}>
 {include file="header/head.tpl"}
 <body id="micro" class="no-js">
-<div class="center"><a class="skiplink" href="#viewheader">{str tag=skipmenu}</a></div>
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
     {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
     {if !$PRODUCTIONMODE}<div class="sitemessage center">{str tag=notproductionsite section=error}</div>{/if}
@@ -13,6 +12,7 @@
     {if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}</div>{/if}
 <div id="container">
+    <div class="center"><a class="skiplink" href="#viewheader">{str tag=skipmenu}</a></div>
     <div id="loading-box"></div>
     <div id="top-wrapper"><div id="header">
       <div class="viewheadertop">

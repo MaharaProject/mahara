@@ -4,7 +4,6 @@
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
 <body class="no-js">
-<div class="center"><a class="skiplink" href="#mainmiddle">{str tag=skipmenu}</a></div>
 {if $ADDITIONALHTMLTOPOFBODY}{$ADDITIONALHTMLTOPOFBODY|safe}{/if}
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}<div class="sitemessages">{/if}
     {if $USERMASQUERADING}<div class="sitemessage"><img src="{theme_url filename='images/failure.png'}" alt="">{$masqueradedetails} {$becomeyouagain|safe}</div>{/if}
@@ -13,6 +12,7 @@
     {if $SITETOP}<div id="switchwrap">{$SITETOP|safe}</div>{/if}
 {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}</div>{/if}
 <div id="container">
+    <div class="center"><a class="skiplink" href="#mainmiddle">{str tag=skipmenu}</a></div>
     <div id="loading-box"></div>
     <div id="top-wrapper">
         <div id="header"><h1 id="site-logo"><a href="{$WWWROOT}"><img src="{$sitelogo}" alt="{$sitename}"></a></h1>
