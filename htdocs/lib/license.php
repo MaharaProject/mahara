@@ -241,6 +241,10 @@ function license_form_files($prefix, $prefix2=null) {
         'id="' . $prefix . '_' . $prefix . '_',
         'id="' . $prefix . '_',
         $html);
+    $html = str_replace(
+        'for="' . $prefix . '_' . $prefix . '_',
+        'for="' . $prefix . '_',
+        $html);
     return $html;
 }
 
