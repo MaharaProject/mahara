@@ -69,6 +69,8 @@ if ($USER->get('institutions')) {
 }
 
 $searchform['elements']['query'] = array(
+    'title' => get_string('search'),
+    'hiddenlabel' => true,
     'type' => 'text',
     'defaultvalue' => $query,
 );

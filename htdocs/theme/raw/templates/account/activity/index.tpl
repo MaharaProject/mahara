@@ -2,7 +2,7 @@
 
 			<div id="notifications">
 			<form method="post">
-			<label>{str section='activity' tag='type'}:</label>
+			<label for="notifications_type">{str section='activity' tag='type'}:</label>
 			<select id="notifications_type" name="type">
 				<option value="all">--</option>
 			{foreach from=$options item=name key=t}

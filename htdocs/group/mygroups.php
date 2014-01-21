@@ -28,6 +28,8 @@ $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 $results = group_get_associated_groups($USER->get('id'), $filter, $groupsperpage, $offset, $groupcategory);
 $elements = array();
 $elements['options'] = array(
+            'title' => get_string('filter'),
+            'hiddenlabel' => true,
             'type' => 'select',
             'options' => array(
                 'all'     => get_string('allmygroups', 'group'),
@@ -43,6 +45,8 @@ if (get_config('allowgroupcategories')
     $options[-1] = get_string('categoryunassigned', 'group');
     $options += $groupcategories;
     $elements['groupcategory'] = array(
+                'title'        => get_string('groupcategory', 'group'),
+                'hiddenlabel'  => true,
                 'type'         => 'select',
                 'options'      => $options,
                 'defaultvalue' => $groupcategory,
