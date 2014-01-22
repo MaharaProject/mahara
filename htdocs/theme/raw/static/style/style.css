@@ -249,7 +249,7 @@ form.oneline.inline div,
 .contextualHelp {
     padding: 10px;
     margin: 0;
-    width: 30%;
+    width: 500px;
     max-height: 400px;
     overflow: auto;
     background-color: #F9F9F9;
