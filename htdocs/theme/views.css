@@ -264,9 +264,17 @@ ul.colnav li.selected span {
 .no-js .blocktype img, .withradio .blocktype img {
 	margin: 0;
 }
+.blocktype .blocktypelink {
+    display: block;
+    color: #474220;
+    cursor: inherit;
+}
+.blocktype .blocktypelink:hover, .blocktype .blocktypelink:focus {
+    text-decoration: none;
+}
 .blocktypetitle {
-    margin-left: 4px;
     vertical-align: middle;
+    font-weight: normal;
 }
 #editcontent-sidebar.collapsed .blocktype .blocktypetitle {
     display: none;
@@ -376,6 +384,25 @@ ul.colnav li.selected span {
 .no-js #fileimagevideo,
 .no-js #external { 
 	margin-top: -2px;
+}
+/* adding blocks */
+.cellchooser {
+    width: 150px;
+    display: table;
+}
+.cellchooser label {
+    display: table-cell;
+    width: 1%;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    height: 20px;
+    background: #555;
+}
+.cellchooser label.active {
+    background: #333;
+}
+.cellchooser label.focused {
+    outline: 1px dotted;
 }
 /* theme selector */
 #select-theme {
@@ -537,6 +564,18 @@ input.newblockhere {
     padding: 0;
     cursor: pointer;
     margin: 0 0 0 5px;
+}
+.blockinstance-controls input.keyboardmovebutton {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    clip: rect(0px, 0px, 0px, 0px);
+}
+.blockinstance-controls input.keyboardmovebutton:focus {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    clip: none;
 }
 /* retractable blocks */
 img.retractablebtn {

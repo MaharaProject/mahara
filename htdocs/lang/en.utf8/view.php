@@ -230,6 +230,13 @@ $string['blockconfigurationrenderingerror'] = 'Configuration failed because the 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
 $string['blocksinstructionajax'] = 'This area shows a preview of what your page will look like.<br>Drag blocks below this line to add them to your page layout. You can drag blocks around your page layout to position them.';
 
+$string['addblock'] = 'Add block: %s';
+$string['blockcell'] = 'Cell';
+$string['cellposition'] = 'Row %s Column %s';
+$string['blockorder'] = 'Position';
+$string['blockordertop'] = 'Top of column';
+$string['blockorderafter'] = 'After "%s"';
+
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';
@@ -243,9 +250,12 @@ $string['moveblockup'] = "Move %s block up";
 $string['movethisblockup'] = "Move this block up";
 $string['moveblockright'] = "Move %s block right";
 $string['movethisblockright'] = "Move this block right";
+$string['moveblock'] = 'Move %s block';
+$string['movethisblock'] = 'Move this block';
 $string['Configure'] = 'Configure';
 $string['configureblock'] = 'Configure %s block';
 $string['configurethisblock'] = 'Configure this block';
+$string['closeconfiguration'] = 'Close configuration';
 $string['removeblock'] = 'Remove %s block';
 $string['removethisblock'] = 'Remove this block';
 $string['blocktitle'] = 'Block title';

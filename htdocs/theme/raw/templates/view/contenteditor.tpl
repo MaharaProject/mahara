@@ -4,12 +4,18 @@
         <div id="blocktype-common" class="blocktype-list">
             {* If you are wanting to have some options always showing place the code here. *}
             <div class="blocktype">
-                <input type="radio" class="blocktype-radio" name="blocktype" value="textbox">
-                <img width="24" height="24" title="{str tag=description section=blocktype.internal/textbox}" alt="{str tag=description section=blocktype.internal/textbox}" src="{$WWWROOT}thumb.php?type=blocktype&bt=textbox&ap=internal"><span class="blocktypetitle">{str tag='textbox' section='view'}</span>
+                <a class="blocktypelink" href="#">
+                    <input type="radio" class="blocktype-radio" id="blocktype-radio-textbox" name="blocktype" value="textbox">
+                    <img width="24" height="24" title="{str tag=description section=blocktype.internal/textbox}" alt="{str tag=description section=blocktype.internal/textbox}" src="{$WWWROOT}thumb.php?type=blocktype&bt=textbox&ap=internal">
+                    <label for="blocktype-radio-textbox" class="blocktypetitle">{str tag='textbox' section='view'}</label>
+                </a>
             </div>
             <div class="blocktype lastrow">
-                <input type="radio" class="blocktype-radio" name="blocktype" value="image">
-                <img width="24" height="24" title="{str tag=description section=blocktype.file/image}" alt="{str tag=description section=blocktype.file/image}" src="{$WWWROOT}thumb.php?type=blocktype&bt=image&ap=file"><span class="blocktypetitle">{str tag='image' section='view'}</span>
+                <a class="blocktypelink" href="#">
+                    <input type="radio" id="blocktype-radio-image" class="blocktype-radio" name="blocktype" value="image">
+                    <img width="24" height="24" title="{str tag=description section=blocktype.file/image}" alt="{str tag=description section=blocktype.file/image}" src="{$WWWROOT}thumb.php?type=blocktype&bt=image&ap=file">
+                    <label for="blocktype-radio-image" class="blocktypetitle">{str tag='image' section='view'}</label>
+                </a>
             </div>
         </div>
         <div id="accordion">

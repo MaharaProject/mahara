@@ -146,7 +146,44 @@ $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs'])
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 
-$smarty = smarty($javascript, $stylesheets, false, $extraconfig);
+// The form for adding blocks via the keyboard
+$addform = pieform(array(
+    'name' => 'addblock',
+    'method' => 'post',
+    'jsform' => true,
+    'renderer' => 'table',
+    'autofocus' => false,
+    'elements' => array(
+        'cellchooser' => array(
+            'type' => 'radio',
+            'title' => get_string('blockcell', 'view'),
+            'rowsize' => 2,
+            'separator' => '<br />',
+            'options' => array('R1C1', 'R1C2', 'R2C1'),
+        ),
+        'position' => array(
+            'type' => 'select',
+            'title' => get_string('blockorder', 'view'),
+            'options' => array('Top', 'After 1', 'After 2'),
+        ),
+        'submit' => array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('save'), get_string('cancel')),
+        ),
+    ),
+));
+
+$smarty = smarty($javascript, $stylesheets, array(
+    'view' => array(
+        'addblock',
+        'cellposition',
+        'blockordertop',
+        'blockorderafter',
+        'moveblock',
+    ),
+), $extraconfig);
+
+$smarty->assign('addform', $addform);
 
 // The list of categories for the tabbed interface
 $smarty->assign('category_list', $view->build_category_list($category, $new));
