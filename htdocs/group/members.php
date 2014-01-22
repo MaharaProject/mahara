@@ -111,6 +111,7 @@ $searchform = pieform(array(
             'value' => $setlimit
         ),
         'query' => array(
+            'title' => get_string('search') . ': ',
             'type' => 'text',
             'defaultvalue' => $query
         ),

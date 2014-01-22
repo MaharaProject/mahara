@@ -13,7 +13,7 @@
         {/foreach}
         </div>
     {/if}
-        <label>{str tag=search}:</label> {$form|safe}
+        {$form|safe}
     </div>
     <div class="cb"></div>
     {if $membershiptype}<h2>{str tag=pendingmembers section=group}</h2>{/if}

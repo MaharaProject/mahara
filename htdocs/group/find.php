@@ -32,9 +32,13 @@ else { // all or some other text
 }
 $elements = array();
 $elements['query'] = array(
+            'title' => get_string('search'),
+            'hiddenlabel' => true,
             'type' => 'text',
             'defaultvalue' => $query);
 $elements['filter'] = array(
+            'title' => get_string('filter'),
+            'hiddenlabel' => true,
             'type' => 'select',
             'options' => array(
                 'canjoin'   => get_string('groupsicanjoin', 'group'),
@@ -50,6 +54,8 @@ if (get_config('allowgroupcategories')
     $options[-1] = get_string('categoryunassigned', 'group');
     $options += $groupcategories;
     $elements['groupcategory'] = array(
+                'title'        => get_string('groupcategory', 'group'),
+                'hiddenlabel'  => true,
                 'type'         => 'select',
                 'options'      => $options,
                 'defaultvalue' => $groupcategory,

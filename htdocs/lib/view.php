@@ -3505,6 +3505,8 @@ class View {
                     'defaultvalue' => $searchdefault,
                 ),
                 'type' => array(
+                    'title'        => get_string('searchwithin'),
+                    'hiddenlabel'  => true,
                     'type'         => 'select',
                     'options'      => $searchoptions,
                     'defaultvalue' => $searchtype,
