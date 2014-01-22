@@ -844,7 +844,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         // Some messages are all html and when they're 'cleaned' with
         // strip_tags(str_shorten_html($post->body, 200, true)) for display,
         // they are left empty. Use html2text instead.
-        $this->message = str_shorten_html(trim(html2text($post->body)), 200, true); // For internal notifications.
+        $this->message = str_shorten_text(trim(html2text($post->body)), 200, true); // For internal notifications.
 
         $post->textbody = trim(html2text($post->body));
         $post->htmlbody = clean_html($post->body);
