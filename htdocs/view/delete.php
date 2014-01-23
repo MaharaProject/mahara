@@ -25,6 +25,12 @@ if ($groupid && !group_within_edit_window($groupid)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 
+$collectionnote = '';
+$collection = $view->get_collection();
+if ($collection) {
+    $collectionnote = get_string('deleteviewconfirmnote2', 'view', $collection->get_url(), $collection->get('name'));
+}
+
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution);
 
@@ -61,6 +67,7 @@ $smarty = smarty();
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign_by_ref('view', $view);
 $smarty->assign('form', $form);
+$smarty->assign('collectionnote', $collectionnote);
 $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
