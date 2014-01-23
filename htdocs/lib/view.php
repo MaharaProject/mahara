@@ -574,12 +574,24 @@ class View {
         $view->commit();
 
         if (isset($viewdata['group'])) {
+            require_once('activity.php');
+
+            // Although group views are owned by the group, the view creator is treated as owner here.
+            $beforeusers = activity_get_viewaccess_users($view->get('id'), $userid, 'viewaccess');
+
             // By default, group views should be visible to the group
             insert_record('view_access', (object) array(
                 'view'  => $view->get('id'),
                 'group' => $viewdata['group'],
                 'ctime' => db_format_timestamp(time()),
             ));
+
+            // Notify group members
+            $accessdata = new StdClass;
+            $accessdata->view = $view->get('id');
+            $accessdata->owner = $userid;
+            $accessdata->oldusers = $beforeusers;
+            activity_occurred('viewaccess', $accessdata);
         }
 
         if (isset($viewdata['layout'])) {
