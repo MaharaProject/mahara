@@ -64,7 +64,7 @@ if (!param_integer('html', 1)) {
     json_reply(false, $results);
 }
 
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $id, $query, $membershiptype, $setlimit);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $id, $query, $membershiptype, $setlimit, $sortoptionidx);
 
 json_reply(false, array(
     'message' => null,

@@ -1559,7 +1559,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null) {
     return $data;
 }
 
-function group_get_membersearch_data($results, $group, $query, $membershiptype, $setlimit=false) {
+function group_get_membersearch_data($results, $group, $query, $membershiptype, $setlimit=false, $sortoption='') {
     global $USER;
 
     $params = array();
@@ -1568,6 +1568,9 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
     }
     if (!empty($membershiptype)) {
         $params['membershiptype'] = $membershiptype;
+    }
+    if (!empty($sortoption)) {
+        $params['sortoption'] = $sortoption;
     }
     $searchurl = get_config('wwwroot') . 'group/members.php?id=' . $group . (!empty($params) ? ('&' . http_build_query($params)) : '');
 

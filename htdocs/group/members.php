@@ -80,7 +80,7 @@ if ($membershiptype == 'request') {
 }
 
 $results = get_group_user_search_results($group->id, $query, $offset, $limit, $membershiptype, null, null, $sortoptionidx);
-list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype, $setlimit);
+list($html, $pagination, $count, $offset, $membershiptype) = group_get_membersearch_data($results, $group->id, $query, $membershiptype, $setlimit, $sortoptionidx);
 
 // Type-specific instructions
 $instructions = '';
@@ -139,6 +139,7 @@ addLoadEvent(function () {
         var params = {'query': $('search_query').value, 'id':$('search_id').value,
             'membershiptype':$('search_membershiptype').value,
             'setlimit':$('search_setlimit').value,
+            'limit':$('setlimitselect').value,
             'sortoption':$('search_sortoption').value
             };
         p.sendQuery(params);
