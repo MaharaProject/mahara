@@ -73,6 +73,8 @@ else {
 $profileiconattachedtoportfolioitems = json_encode(get_string('profileiconattachedtoportfolioitems', 'artefact.file'));
 $profileiconappearsinviews = json_encode(get_string('profileiconappearsinviews', 'artefact.file'));
 $confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
+$setdefault = json_encode(get_string('setdefault', 'artefact.file'));
+$markfordeletion = json_encode(get_string('markfordeletion', 'artefact.file'));
 $IJS = <<<EOF
 formchangemanager.add('settings');
 
@@ -95,6 +97,7 @@ var table = new TableRenderer(
         },
         function(rowdata) {
             var options = {
+                'id': 'setdefault_' + rowdata.id,
                 'type': 'radio',
                 'name': 'd',
                 'value': rowdata.id
@@ -102,30 +105,22 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            return TD({'class': 'defaultcell'}, INPUT(options));
+            var label = LABEL({'class': 'accessible-hidden', 'for': 'setdefault_' + rowdata.id}, {$setdefault});
+            return TD({'class': 'defaultcell'}, INPUT(options), label);
         },
         function(rowdata) {
-            if (rowdata.id) {
-                return TD({'class': 'deletecell'},
-                        INPUT({
-                            'type'  : 'checkbox',
-                            'class' : 'checkbox',
-                            'name'  : 'icons[' + rowdata.id + ']',
-                            'value' : rowdata.attachcount + ',' + rowdata.viewcount}
-                        )
-                );
+            var options = {
+                'id'      : 'markdelete_' + rowdata.id,
+                'type'    : 'checkbox',
+                'class'   : 'checkbox',
+                'name'    : 'icons[' + rowdata.id + ']',
+                'value'   : rowdata.attachcount + ',' + rowdata.viewcount
+            };
+            if (!rowdata.id) {
+                options.disabled = 'disabled';
             }
-            else {
-                return TD({'class': 'deletecell'},
-                        INPUT({
-                            'disabled': 'disabled',
-                            'type'    : 'checkbox',
-                            'class'   : 'checkbox',
-                            'name'    : 'icons[' + rowdata.id + ']',
-                            'value'   : rowdata.attachcount + ',' + rowdata.viewcount}
-                        )
-                );
-            }
+            var label = LABEL({'class': 'accessible-hidden', 'for': 'markdelete_' + rowdata.id}, {$markfordeletion});
+            return TD({'class': 'deletecell'}, INPUT(options), label);
         }
     ]
 );
