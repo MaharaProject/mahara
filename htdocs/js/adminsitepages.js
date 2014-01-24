@@ -9,10 +9,11 @@
 
 var oldPageContent = '';
 var oldPageName = 'home';
+var changedCheckbox = false;
 var checkOldContent = false;
 
 function updateWYSIWYGText() {
-    if (checkOldContent && oldPageContent != tinyMCE.activeEditor.getContent() && !confirm(get_string('discardpageedits', 'admin'))) {
+    if (((checkOldContent && oldPageContent != tinyMCE.activeEditor.getContent()) || changedCheckbox) && !confirm(get_string('discardpageedits', 'admin'))) {
         $('editsitepage_pagename').value = oldPageName;
         return;
     }
@@ -21,25 +22,58 @@ function updateWYSIWYGText() {
         checkOldContent = true;
     }
     sendjsonrequest(
-        'editchangecontent.json.php',
-        {'contentname' :$('editsitepage_pagename').value},
+        config['wwwroot'] + 'admin/site/editchangecontent.json.php',
+        {'contentname' : $('editsitepage_pagename').value,
+         'institution' : $('editsitepage_pageinstitution').value
+        },
         'POST',
         function(data) {
             if (!data.error) {
                 tinyMCE.activeEditor.setContent(data.content);
                 oldPageContent = tinyMCE.activeEditor.getContent();
                 oldPageName = $('editsitepage_pagename').value;
+                if ($('editsitepage_pageusedefault')) {
+                    $('editsitepage_pageusedefault').checked = (data.pageusedefault) ? true : false;
+                    updateSiteDefault(false);
+                }
             }
         }
     );
 }
 
+function updateSiteDefault(changed) {
+    changedCheckbox = (changed) ? true : false;
+    if ($('editsitepage_pageusedefault').checked == true) {
+        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
+        $('changecheckboxdiv').style.display = 'block';
+        $('changecheckboxdiv').style.zIndex = '5';
+        $('changecheckboxdiv').style.position = 'absolute';
+        $('changecheckboxdiv').style.width = $('editsitepage_pagetext_tbl').offsetWidth + 'px';
+        $('changecheckboxdiv').style.height = $('editsitepage_pagetext_tbl').offsetHeight + 'px';
+        $('changecheckboxdiv').style.top = elementPosition('editsitepage_pagetext_tbl').y + 'px';
+        $('changecheckboxdiv').style.left = elementPosition('editsitepage_pagetext_tbl').x + 'px';
+    }
+    else {
+        tinyMCE.activeEditor.getBody().setAttribute('contenteditable', true);
+        $('changecheckboxdiv').style.display = 'none';
+        $('changecheckboxdiv').style.width = '1px';
+        $('changecheckboxdiv').style.height = '1px';
+    }
+}
+
 function connectElements() {
     connect('editsitepage_pagename', 'onchange', updateWYSIWYGText);
+    connect('editsitepage_pageinstitution', 'onchange', updateWYSIWYGText);
+    if ($('editsitepage_pageusedefault')) {
+        connect('editsitepage_pageusedefault', 'onchange', updateSiteDefault);
+    }
+    // create hidden div to place over tinymce to 'show' when it is disabled from editing
+    appendChildNodes($('editsitepage'), DIV({'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'}, ''));
 }
 
 function contentSaved(form, data) {
     connectElements();
+    changedCheckbox = false;
     if (!tinyMCE.isMSIE) {
         // Disabling changed content check for IE; Need to work out
         // why the getBody() call in getContent fails to return the
@@ -51,5 +85,11 @@ function contentSaved(form, data) {
 
 addLoadEvent(function() {
     connectElements();
-    updateWYSIWYGText();
+    // need to wait until tinyMCE editor is loaded before updating editor's text
+    var checkExists = setInterval(function() {
+        if (tinyMCE.activeEditor != "null") {
+            updateWYSIWYGText();
+            clearInterval(checkExists);
+        }
+    }, 500);
 });

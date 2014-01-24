@@ -28,14 +28,14 @@ $string['homedefaultcontent'] = '<h1>Welcome</h1>
 
 <p>For more information you can read <a href="about.php">About</a> <strong>[<i>please ensure you also edit this page</i>]</strong> or alternatively please feel free to <a href="contact.php">contact us</a>.</p>
 
-<p><i>You can edit this text via "Edit site pages" in "Configure site" in "Site administration"</i></p>';
+<p><i>You can edit this text via %s</i></p>';
 $string['loggedouthomedefaultcontent'] = '<h1>Welcome</h1>
 
 <p>[<i>Name of your installation here</i>] is a fully featured electronic portfolio system with social networking features to create online learning communities.</p>
 
 <p>For more information you can read <a href="about.php">About</a> [<i>please ensure you also edit this page</i>] or alternatively please feel free to <a href="contact.php">contact us</a>.</p>
 
-<p><i>You can edit this text via "Edit site pages" in "Configure site" in "Site administration"</i></p>';
+<p><i>You can edit this text via %s</i></p>';
 $string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
     
 <h2>Introduction</h2>
@@ -128,3 +128,6 @@ $string['licenseshortnamebyncsa'] = 'CC-BY-NC-SA-3.0';
 $string['licenseshortnamebync']   = 'CC-BY-NC-3.0';
 $string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-3.0';
 $string['licenseshortnamegfdl']   = 'GFDL-1.3';
+
+$string['sitepageconfigdefault'] = '"Edit site pages" in "Configure site" in "Site administration"';
+$string['sitepageconfiginstitution'] = '"Edit site pages" in "Institutions" in "Site administration"';

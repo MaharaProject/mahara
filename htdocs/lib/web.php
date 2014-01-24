@@ -2088,6 +2088,12 @@ function admin_nav() {
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 110,
         ),
+        'manageinstitutions/sitepages' => array(
+            'path'   => 'manageinstitutions/sitepages',
+            'url'    => 'admin/users/institutionpages.php',
+            'title'  => get_string('editsitepages', 'admin'),
+            'weight' => 120
+        ),
         'configextensions' => array(
             'path'   => 'configextensions',
             'url'    => 'admin/extensions/plugins.php',
@@ -2270,6 +2276,12 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 110,
+        ),
+        'manageinstitutions/sitepages' => array(
+            'path'   => 'manageinstitutions/sitepages',
+            'url'    => 'admin/users/institutionpages.php',
+            'title'  => get_string('editsitepages', 'admin'),
+            'weight' => 120
         ),
     );
     if ($USER->get('staff')) {
@@ -2716,8 +2728,24 @@ function site_content_pages() {
 }
 
 function get_site_page_content($pagename) {
-    if ($pagedata = get_record('site_content', 'name', $pagename)) {
-        return $pagedata->content;
+    global $USER;
+    $institution = $USER->sitepages_institutionname_by_theme($pagename);
+
+    // try to get the content for this institution and if it fails try to get default site information
+    // first check to see if the db upgrade has been run so the institution column exists
+    if (get_config('version') >= '2014010801') {
+        if ($pagedata = get_record('site_content', 'name', $pagename, 'institution', $institution)) {
+            return $pagedata->content;
+        }
+        else if ($defaultpagedata = get_record('site_content', 'name', $pagename, 'institution', 'mahara')) {
+            return $defaultpagedata->content;
+        }
+        return get_string('sitecontentnotfound', 'mahara', get_string($pagename, $institution));
+    }
+    else {
+        if ($pagedata = get_record('site_content', 'name', $pagename)) {
+            return $pagedata->content;
+        }
     }
     return get_string('sitecontentnotfound', 'mahara', get_string($pagename));
 }

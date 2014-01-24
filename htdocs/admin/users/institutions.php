@@ -157,6 +157,8 @@ if ($institution || $add) {
             delete_records('view_access', 'institution', $values['i']);
             delete_records('institution_data', 'institution', $values['i']);
             delete_records('institution_registration', 'institution', $values['i']);
+            delete_records('site_content', 'institution', $values['i']);
+            delete_records('institution_config', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 
@@ -803,6 +805,26 @@ function institution_submit(Pieform $form, $values) {
                 'authname'     => 'internal',
             );
             insert_record('auth_instance', $authinstance);
+        }
+        // We need to add the default lines to the site_content table for this institution
+        // We also need to set the institution to be using default site pages to begin with
+        // so that using custom institution pages is an opt-in situation
+        $pages = site_content_pages();
+        $now = db_format_timestamp(time());
+        foreach ($pages as $name) {
+            $page = new stdClass();
+            $page->name = $name;
+            $page->ctime = $now;
+            $page->mtime = $now;
+            $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('sitepageconfiginstitution', 'install'));
+            $page->institution = $newinstitution->name;
+            insert_record('site_content', $page);
+
+            $institutionconfig = new stdClass();
+            $institutionconfig->institution = $newinstitution->name;
+            $institutionconfig->field = 'sitepages_' . $name;
+            $institutionconfig->value = 'mahara';
+            insert_record('institution_config', $institutionconfig);
         }
     }
 

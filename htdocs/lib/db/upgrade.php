@@ -3009,5 +3009,53 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2014010801) {
+        // adding institution column to allow for different site content for each institution
+        $table = new XMLDBTable('site_content');
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null);
+        add_field($table, $field);
+
+        // resetting the primary key and updating what is currently there to be
+        // the 'mahara' institution's site pages
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('name'));
+        drop_key($table, $key);
+
+        execute_sql("UPDATE {site_content} SET institution = ?", array('mahara'));
+
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('name', 'institution'));
+        add_key($table, $key);
+
+        $key = new XMLDBKey('institutionfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
+
+        // now add the default site pages for each existing institution with the values of
+        // the 'mahara' institution. These can them be altered via Admin -> Institution -> Edit site pages
+        $sitecontentarray = array();
+        $sitecontents = get_records_array('site_content', 'institution', 'mahara');
+        foreach ($sitecontents as $sitecontent) {
+            $sitecontentarray[$sitecontent->name] = $sitecontent->content;
+        }
+        $pages = site_content_pages();
+        $now = db_format_timestamp(time());
+        $institutions = get_records_array('institution');
+        foreach ($institutions as $institution) {
+            if ($institution->name != 'mahara') {
+                foreach ($pages as $name) {
+                    $page = new stdClass();
+                    $page->name = $name;
+                    $page->ctime = $now;
+                    $page->mtime = $now;
+                    $page->content = $sitecontentarray[$name];
+                    $page->institution = $institution->name;
+                    insert_record('site_content', $page);
+                }
+            }
+        }
+    }
+
     return $status;
 }

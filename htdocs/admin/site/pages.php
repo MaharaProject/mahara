@@ -29,6 +29,7 @@ if ($pagenames = array_merge($corepagenames, $localpagenames)) {
         'site_content', 'name IN (' . join(',', array_fill(0, count($pagenames), '?')) . ')', $pagenames
     );
 }
+
 $pageoptions = array();
 foreach ($sitepages as $page) {
     $section = in_array($page->name, $localpagenames) ? 'local' : 'admin';
@@ -44,6 +45,7 @@ $form = pieform(array(
     'jsform'            => true,
     'jssuccesscallback' => 'contentSaved',
     'elements'          => array(
+        'pageinstitution' => array('type' => 'hidden', 'value' => 'mahara'),
         'pagename'    => array(
             'type'    => 'select',
             'title'   => get_string('pagename', 'admin'),
@@ -77,8 +79,9 @@ function editsitepage_submit(Pieform $form, $values) {
     $data->content = $values['pagetext'];
     $data->mtime   = db_format_timestamp(time());
     $data->mauthor = $USER->get('id');
+    $data->institution = 'mahara';
     try {
-        update_record('site_content', $data, 'name');
+        update_record('site_content', $data, array('name', 'institution'));
     }
     catch (SQLException $e) {
         $form->reply(PIEFORM_ERR, get_string('savefailed', 'admin'));

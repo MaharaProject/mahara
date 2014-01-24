@@ -518,18 +518,6 @@ function upgrade_plugin($upgrade) {
 
 function core_postinst() {
     $status = true;
-    $pages = site_content_pages();
-    $now = db_format_timestamp(time());
-    foreach ($pages as $name) {
-        $page = new stdClass();
-        $page->name = $name;
-        $page->ctime = $now;
-        $page->mtime = $now;
-        $page->content = get_string($page->name . 'defaultcontent', 'install');
-        if (!insert_record('site_content', $page)) {
-            $status = false;
-        }
-    }
 
     // Attempt to create session directories
     $sessionpath = get_config('sessionpath');
@@ -563,6 +551,7 @@ function core_postinst() {
         $status = false;
     }
 
+    $now = db_format_timestamp(time());
     // Set default search plugin
     set_config('searchplugin', 'internal');
 
@@ -678,6 +667,18 @@ function core_install_lastcoredata_defaults() {
     $institution->theme  = 'default';
     $institution->priority = 0;
     insert_record('institution', $institution);
+
+    $pages = site_content_pages();
+    $now = db_format_timestamp(time());
+    foreach ($pages as $name) {
+        $page = new stdClass();
+        $page->name = $name;
+        $page->ctime = $now;
+        $page->mtime = $now;
+        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('sitepageconfigdefault', 'install'));
+        $page->institution = 'mahara';
+        insert_record('site_content', $page);
+    }
 
     $auth_instance = new StdClass;
     $auth_instance->instancename  = 'Internal';
