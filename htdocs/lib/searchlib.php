@@ -310,7 +310,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
 function build_admin_user_search_results($search, $offset, $limit) {
     global $USER, $THEME;
 
-    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate');
+    $wantedparams = array('query', 'f', 'l', 'sortby', 'sortdir', 'loggedin', 'loggedindate', 'institution');
     $params = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
