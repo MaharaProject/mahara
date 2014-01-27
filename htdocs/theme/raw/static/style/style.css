@@ -3630,10 +3630,10 @@ form#requestfriendship {
     text-align: right;
     padding: 0;
 }
-#activitylist td.right input.submit {
+.activity-buttons input.submit {
     font-weight: bold;
 }
-#activitylist td.right input.btn-del {
+.activity-buttons input.btn-del {
     font-weight: normal;
 }
 .inbox-showmessage {

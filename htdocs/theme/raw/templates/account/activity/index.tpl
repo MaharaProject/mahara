@@ -19,23 +19,29 @@
 						<th><span class="accessible-hidden">{str section='activity' tag='messagetype'}</span></th>
 						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='date'}</th>
-						<th class="center">{str section='activity' tag='read'}<br><a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}</a></th>
-						<th class="center">{str tag='delete'}<br><a href="" onclick="toggleChecked('tocheckdel'); return false;">{str section='activity' tag='selectall'}</a></th>
+						<th class="center">{str section='activity' tag='read'}</th>
+						<th class="center">{str tag='delete'}</th>
 					</tr>
 				</thead>
             <tfoot>
 					  <tr>
-						<td colspan="2"></td>
-						<td colspan="3" class="right">
-						  <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
-						  <input class="submit btn-del" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
-						</td>
+						<td colspan="3"></td>
+                        <td class="center">
+                            <a href="" onclick="toggleChecked('tocheckread'); return false;">{str section='activity' tag='selectall'}</a>
+                        </td>
+                        <td class="center">
+                            <a href="" onclick="toggleChecked('tocheckdel'); return false;">{str section='activity' tag='selectall'}</a>
+                        </td>
 				  	</tr>
 				</tfoot>
 				<tbody>
                 {$activitylist.tablerows|safe}
                 </tbody>
 			</table>
+            <div class="right activity-buttons">
+                <input class="submit" type="submit" value="{str tag='markasread' section='activity'}" />
+                <input class="submit btn-del" type="button" value="{str tag='delete'}" onClick="markread(document.notificationlist, 'del'); return false;" />
+            </div>
             {$activitylist.pagination|safe}
 			</form>
 			</div>
