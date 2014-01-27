@@ -10,7 +10,7 @@
             <th class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
             <th class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='qualification' section='artefact.resume'}</th>
-            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
+            <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
             {if $controls}<th class="resumecontrols"></th>{/if}
         </tr>
     </thead>
