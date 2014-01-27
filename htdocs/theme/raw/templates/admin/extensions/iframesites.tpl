@@ -8,7 +8,7 @@
     <tr>
       <th>{str tag=Site}</th>
       <th>{str tag=displayname}</th>
-      <th></th>
+      <th><span class="accessible-hidden">{str tag=edit}</span></th>
     </tr>
   </thead>
   <tbody>

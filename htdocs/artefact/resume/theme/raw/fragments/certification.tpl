@@ -6,11 +6,15 @@
 <table id="certificationlist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth">
     <thead>
         <tr>
-            {if $controls}<th class="resumecontrols"></th>{/if}
+            {if $controls}<th class="resumecontrols">
+                <span class="accessible-hidden">{str tag=move}</span>
+            </th>{/if}
             <th class="resumedate">{str tag='date' section='artefact.resume'}</th>
             <th>{str tag='title' section='artefact.resume'}</th>
             <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
-            {if $controls}<th class="resumecontrols"></th>{/if}
+            {if $controls}<th class="resumecontrols">
+                <span class="accessible-hidden">{str tag=edit}</span>
+            </th>{/if}
         </tr>
     </thead>
     <tbody>

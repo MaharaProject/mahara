@@ -10,8 +10,12 @@
 	<tr>
 		<th>{str tag="name" section="interaction.forum"}</th>
 		<th class="center">{str tag="Topics" section="interaction.forum"}</th>
-		<th class="subscribeth"></th>
-		<th class="right btns2"></th>
+		<th class="subscribeth">
+            <span class="accessible-hidden">{str tag=Subscribe section=interaction.forum}</span>
+        </th>
+		<th class="right btns2">
+            <span class="accessible-hidden">{str tag=edit}</span>
+        </th>
 	</tr>
     {foreach from=$forums item=forum}
     <tr class="{cycle values='r0,r1'}">

@@ -18,6 +18,7 @@ $string['cancel']  = 'Cancel';
 $string['delete']  = 'Delete';
 $string['edit']    = 'Edit';
 $string['editing'] = 'Editing';
+$string['move']    = 'Move';
 $string['save']    = 'Save';
 $string['submit']  = 'Submit';
 $string['update']  = 'Update';

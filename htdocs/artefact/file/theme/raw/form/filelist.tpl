@@ -17,7 +17,9 @@
   {if $editmeta}
    <th class="right"></th>
   {/if}
-   <th class="right nowrap"></th>
+   <th class="right nowrap">
+       <span class="accessible-hidden">{str tag=edit}</span>
+   </th>
   </tr>
  </thead>
  <tbody>
