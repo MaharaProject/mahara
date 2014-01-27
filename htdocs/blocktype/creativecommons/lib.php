@@ -43,7 +43,13 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         }
 
         $licensetype = reset(preg_grep('/^([a-z\-]+)$/', array($configdata['license'])));
-        $licenseurl = "http://creativecommons.org/licenses/$licensetype/3.0/";
+        if (isset($configdata['version'])) {
+            $licenseversion = get_string('version' . $configdata['version'], 'blocktype.creativecommons');
+        }
+        else {
+            $licenseversion = get_string('version30', 'blocktype.creativecommons');
+        }
+        $licenseurl = "http://creativecommons.org/licenses/$licensetype/$licenseversion/";
 
         $view = $instance->get_view();
         $workname = '<span rel="dc:type" href="http://purl.org/dc/dcmitype/Text" property="dc:title">'
@@ -51,7 +57,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         $authorurl = $view->owner_link();
         $authorname = hsc($view->formatted_owner());
 
-        $licensename = get_string('cclicensename', 'blocktype.creativecommons', get_string($licensetype, 'blocktype.creativecommons'));
+        $licensename = get_string('cclicensename', 'blocktype.creativecommons', get_string($licensetype, 'blocktype.creativecommons'), $licenseversion);
         $licenselink = '<a rel="license" href="' . $licenseurl . '">' . $licensename . '</a>';
         $attributionlink = '<a rel="cc:attributionURL" property="cc:attributionName" href="' . $authorurl . '">' . $authorname . '</a>';
         $licensestatement = get_string('cclicensestatement', 'blocktype.creativecommons', $workname, $attributionlink, $licenselink);
@@ -84,12 +90,13 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         if (1 == $values['noderivatives']) {
             $license .= '-' . self::sharealike;
         }
-        elseif (2 == $values['noderivatives']) {
+        else if (2 == $values['noderivatives']) {
             $license .= '-' . self::noderivatives;
         }
 
         $configdata = array('title' => $values['title'],
-                            'license' => $license);
+                            'license' => $license,
+                            'version' => $values['version']);
         return $configdata;
     }
 
@@ -107,7 +114,7 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
             if (strpos($configdata['license'], self::noderivatives) !== false) {
                 $noderivatives = 2;
             }
-            elseif (strpos($configdata['license'], self::sharealike) !== false) {
+            else if (strpos($configdata['license'], self::sharealike) !== false) {
                 $noderivatives = 1;
             }
         }
@@ -116,6 +123,8 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
         if (0 == $noncommercial and $noderivatives < 2) {
             $displayseal = '';
         }
+
+        $version = isset($configdata['version']) ? $configdata['version'] : 30;
 
         // Dirty hack to display the seal just before the table
         // TODO: add a way to append stuff to the header in the maharatable pieform renderer
@@ -158,6 +167,19 @@ class PluginBlocktypeCreativecommons extends SystemBlocktype {
                 'separator' => '<br>',
                 'help' => true,
                 'rules' => array('required'    => true),
+            ),
+
+            'version' => array(
+                'type' => 'radio',
+                'title' => get_string('config:version', 'blocktype.creativecommons'),
+                'options' => array(
+                    30 => get_string('version30', 'blocktype.creativecommons'),
+                    40 => get_string('version40', 'blocktype.creativecommons'),
+                    ),
+                'defaultvalue' => $version,
+                'separator' => '<br>',
+                'help' => true,
+                'rules' => array('required' => true),
             ),
         );
     }

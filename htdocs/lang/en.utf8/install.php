@@ -113,20 +113,20 @@ $string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upl
 
 // Note: these license names (long and short) are taken from the SPDX License
 // List "Full name" and "Identifier" columns. See: http://spdx.org/licenses
-$string['licensedisplaynamebysa']   = 'Creative Commons Attribution Share Alike 3.0';
-$string['licensedisplaynameby']     = 'Creative Commons Attribution 3.0';
-$string['licensedisplaynamebynd']   = 'Creative Commons Attribution No Derivatives 3.0';
-$string['licensedisplaynamebyncsa'] = 'Creative Commons Attribution Non Commercial Share Alike 3.0';
-$string['licensedisplaynamebync']   = 'Creative Commons Attribution Non Commercial 3.0';
-$string['licensedisplaynamebyncnd'] = 'Creative Commons Attribution Non Commercial No Derivatives 3.0';
+$string['licensedisplaynamebysa']   = 'Creative Commons Attribution Share Alike 4.0';
+$string['licensedisplaynameby']     = 'Creative Commons Attribution 4.0';
+$string['licensedisplaynamebynd']   = 'Creative Commons Attribution No Derivatives 4.0';
+$string['licensedisplaynamebyncsa'] = 'Creative Commons Attribution Non Commercial Share Alike 4.0';
+$string['licensedisplaynamebync']   = 'Creative Commons Attribution Non Commercial 4.0';
+$string['licensedisplaynamebyncnd'] = 'Creative Commons Attribution Non Commercial No Derivatives 4.0';
 $string['licensedisplaynamegfdl']   = 'GNU Free Documentation License v1.3';
 
-$string['licenseshortnamebysa']   = 'CC-BY-SA-3.0';
-$string['licenseshortnameby']     = 'CC-BY-3.0';
-$string['licenseshortnamebynd']   = 'CC-BY-ND-3.0';
-$string['licenseshortnamebyncsa'] = 'CC-BY-NC-SA-3.0';
-$string['licenseshortnamebync']   = 'CC-BY-NC-3.0';
-$string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-3.0';
+$string['licenseshortnamebysa']   = 'CC-BY-SA-4.0';
+$string['licenseshortnameby']     = 'CC-BY-4.0';
+$string['licenseshortnamebynd']   = 'CC-BY-ND-4.0';
+$string['licenseshortnamebyncsa'] = 'CC-BY-NC-SA-4.0';
+$string['licenseshortnamebync']   = 'CC-BY-NC-4.0';
+$string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-4.0';
 $string['licenseshortnamegfdl']   = 'GFDL-1.3';
 
 $string['sitepageconfigdefault'] = '"Edit site pages" in "Configure site" in "Site administration"';

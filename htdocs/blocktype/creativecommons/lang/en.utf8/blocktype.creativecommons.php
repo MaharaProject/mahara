@@ -17,14 +17,17 @@ $string['description'] = 'Attach a Creative Commons license to your page';
 $string['blockcontent'] = 'Block content';
 
 $string['alttext'] = 'Creative Commons license';
-$string['cclicensename'] = 'Creative Commons %s 3.0 Unported';
+$string['cclicensename'] = 'Creative Commons %s %s Unported';
 $string['cclicensestatement'] = "%s by %s is licensed under a %s license.";
 $string['otherpermissions'] = 'Permissions beyond the scope of this license may be available from %s.';
 $string['sealalttext'] = 'This license is acceptable for Free Cultural Works.';
+$string['version30'] = '3.0';
+$string['version40'] = '4.0';
 
 $string['config:noncommercial'] = 'Allow commercial uses of your work?';
 $string['config:noderivatives'] = 'Allow modifications of your work?';
 $string['config:sharealike'] = 'Yes, as long as others share alike';
+$string['config:version'] = 'License version';
 
 $string['by'] = 'Attribution';
 $string['by-sa'] = 'Attribution-Share Alike';

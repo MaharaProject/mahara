@@ -3062,5 +3062,72 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {view} v SET skin = NULL WHERE v.skin IS NOT NULL AND NOT EXISTS (SELECT id FROM {skin} s WHERE v.skin = s.id)");
     }
 
+    if ($oldversion < 2014021200) {
+        // Adding new Creative Commons 4.0 licenses.
+        // CC4.0 will be added only if:
+        // -- The CC4.0 URL doesn't already exist;
+        // -- And CC3.0 hasn't been deleted earlier.
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by-sa/4.0/';
+        $license->displayname = get_string('licensedisplaynamebysa', 'install');
+        $license->shortname = get_string('licenseshortnamebysa', 'install');
+        $license->icon = 'license:by-sa.png';
+        $version30 = 'http://creativecommons.org/licenses/by-sa/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by/4.0/';
+        $license->displayname = get_string('licensedisplaynameby', 'install');
+        $license->shortname = get_string('licenseshortnameby', 'install');
+        $license->icon = 'license:by.png';
+        $version30 = 'http://creativecommons.org/licenses/by/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by-nd/4.0/';
+        $license->displayname = get_string('licensedisplaynamebynd', 'install');
+        $license->shortname = get_string('licenseshortnamebynd', 'install');
+        $license->icon = 'license:by-nd.png';
+        $version30 = 'http://creativecommons.org/licenses/by-nd/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by-nc-sa/4.0/';
+        $license->displayname = get_string('licensedisplaynamebyncsa', 'install');
+        $license->shortname = get_string('licenseshortnamebyncsa', 'install');
+        $license->icon = 'license:by-nc-sa.png';
+        $version30 = 'http://creativecommons.org/licenses/by-nc-sa/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by-nc/4.0/';
+        $license->displayname = get_string('licensedisplaynamebync', 'install');
+        $license->shortname = get_string('licenseshortnamebync', 'install');
+        $license->icon = 'license:by-nc.png';
+        $version30 = 'http://creativecommons.org/licenses/by-nc/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+
+        $license = new stdClass();
+        $license->name = 'http://creativecommons.org/licenses/by-nc-nd/4.0/';
+        $license->displayname = get_string('licensedisplaynamebyncnd', 'install');
+        $license->shortname = get_string('licenseshortnamebyncnd', 'install');
+        $license->icon = 'license:by-nc-nd.png';
+        $version30 = 'http://creativecommons.org/licenses/by-nc-nd/3.0/';
+        if (!record_exists('artefact_license', 'name', $license->name) && record_exists('artefact_license', 'name', $version30) ) {
+            insert_record('artefact_license', $license);
+        }
+    }
+
     return $status;
 }
