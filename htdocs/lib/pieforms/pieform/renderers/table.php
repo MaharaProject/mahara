@@ -90,9 +90,7 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-        $descriptionid = $form->get_name() . '_' . $element['id'] . '_description';
-
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['descriptionhtml'])) {
         $result .= "\t<tr";
         // Set the class of the enclosing <tr> to match that of the element
         if (!empty($element['class'])) {
@@ -100,18 +98,18 @@ function pieform_renderer_table(Pieform $form, $element) {/*{{{*/
         }
         $result .= ">\n\t\t";
         if ($form->get_property('descriptionintwocells')) {
-            $result .= "<td></td><td class=\"description\" id=\"$descriptionid\">";
+            $result .= "<td></td><td class=\"description\">";
         }
         else {
-            $result .= "<td colspan=\"2\" class=\"description\" id=\"$descriptionid\">";
+            $result .= "<td colspan=\"2\" class=\"description\">";
         }
-        $result .= $element['description'];
+        $result .= $element['descriptionhtml'];
         $result .= "</td>\n\t</tr>\n";
     }
 
-    if (!empty($element['error'])) {
+    if (!empty($element['errorhtml'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
-        $result .= (!empty($element['isescaped'])) ? hsc($element['error']) : $element['error'];
+        $result .= $element['errorhtml'];
         $result .= "</td>\n\t</tr>\n";
     }
 

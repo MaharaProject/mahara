@@ -70,13 +70,13 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $numberinput .= ' id="' . $formname . '_' . $name . '" value="' . Pieform::hsc($values['number']) . '" tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     $numberinput .= (isset($element['error']) ? ' class="error"' : '');
     if (isset($element['description'])) {
-        $numberinput .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+        $numberinput .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $numberinput .= ">\n";
 
     $uselect = '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
-        $uselect .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+        $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $uselect .= ">\n";
     foreach (pieform_element_bytes_get_bytes_units() as $u) {

@@ -1106,9 +1106,12 @@ EOF;
         foreach ($elementattributes as $attribute) {
             if (isset($element[$attribute]) && $element[$attribute] !== '') {
                 if ($attribute == 'id') {
-                    $element[$attribute] = $this->name . '_' . $element[$attribute];
+                    $value = $this->name . '_' . $element[$attribute];
                 }
-                $result .= ' ' . $attribute . '="' . self::hsc($element[$attribute]) . '"';
+                else {
+                    $value = $element[$attribute];
+                }
+                $result .= ' ' . $attribute . '="' . self::hsc($value) . '"';
             }
         }
 
@@ -1116,12 +1119,12 @@ EOF;
             $result .= ' title="' . self::hsc($element['elementtitle']) . '"';
         }
 
-        if (isset($element['description'])) {
-            $result .= ' aria-describedby="' . $element['id'] . '_description"';
-        }
-
         if (!in_array('maxlength', $exclude) && isset($element['rules']['maxlength'])) {
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
+        }
+
+        if (!in_array('aria-describedby', $exclude)) {
+            $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
         }
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
@@ -1132,6 +1135,23 @@ EOF;
         
         return $result;
     }/*}}}*/
+
+    /**
+     * Returns a space-separated list of IDs of nodes which describe the given element
+     * Intended for use as the value of the aria-describedby attribute
+     *
+     * @param array $element The element to find descriptors for
+     */
+    public function element_descriptors($element) {
+        $result = '';
+        if (!empty($element['error'])) {
+            $result .= $this->name . '_' . $element['id'] . '_error ';
+        }
+        if ((!$this->has_errors() || $this->get_property('showdescriptiononerror')) && !empty($element['description'])) {
+            $result .= $this->name . '_' . $element['id'] . '_description ';
+        }
+        return $result;
+    }
 
     /**
      * Includes a plugin file, checking any configured plugin directories.
@@ -1415,6 +1435,19 @@ EOF;
             else {
                 $element['labelhtml'] = '<label for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . '</label>';
             }
+        }
+
+        // Element description
+        if (isset($element['description']) && $element['description'] !== '') {
+            $descriptionid = $this->name . '_' . $element['id'] . '_description';
+            $element['descriptionhtml'] = '<span id="' . $descriptionid . '">' . $element['description'] . '</span>';
+        }
+
+        // Error message
+        if (isset($element['error']) && $element['error'] !== '') {
+            $errorid = $this->name . '_' . $element['id'] . '_error';
+            $errortext = (!empty($element['isescaped'])) ? hsc($element['error']) : $element['error'];
+            $element['errorhtml'] = '<span id="' . $errorid . '">' . $errortext . '</span>';
         }
 
         // Help icon

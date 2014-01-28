@@ -48,7 +48,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
-        $year .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+        $year .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $year .= ">\n";
     for ($i = $element['minyear']; $i <= $element['maxyear']; $i++) {
@@ -62,7 +62,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
-        $month .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+        $month .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $month .= ">\n";
     $monthnames = explode(',', $form->i18n('element', 'date', 'monthnames', $element));
@@ -77,7 +77,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
-        $day .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+        $day .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $day .= ">\n";
     for ($i = 1; $i <= 31; $i++) {
@@ -92,7 +92,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
             . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {
-            $hour .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+            $hour .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
         }
         $hour .= ">\n";
         for ($i = 0; $i <= 23; $i++) {
@@ -106,7 +106,7 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
             . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {
-            $minute .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+            $minute .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
         }
         $minute .= ">\n";
         for ($i = 0; $i <= 59; $i++) {
@@ -147,7 +147,7 @@ EOF;
             . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '"';
         if (isset($element['description'])) {
-            $optional .= ' aria-describedby="' . $form->get_name() . '_' . $element['id'] . '_description' . '"';
+            $optional .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
         }
         $optional .= '>';
         $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'notspecified', $element);
