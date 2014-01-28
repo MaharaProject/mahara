@@ -103,6 +103,9 @@ $compositeform = pieform($cform);
 $javascript = <<<EOF
 function editcomposite_callback(form, data) {
     editcomposite_filebrowser.callback(form, data);
+    if (data.error) {
+        formError(form, data);
+    }
 };
 EOF;
 
