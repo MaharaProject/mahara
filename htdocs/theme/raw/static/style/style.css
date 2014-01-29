@@ -666,6 +666,9 @@ select#adduser_authinstance {
 .checkbox {
     vertical-align: top;
 }
+.radio td div.radio {
+    display: inline;
+}
 /* horizontal rule */
 hr {
     border-bottom: 1px dotted #D1D1D1;
@@ -2914,6 +2917,9 @@ table#designskinform_view_background_image_selectlist {
 }
 #designskinform_body_background_position_container td input,
 #designskinform_view_background_position_container td input {
+    margin: 1px 2px;
+    width: 16px;
+    height: 16px;
     opacity: 0;
 }
 #designskinform_body_background_position_container td input:hover,

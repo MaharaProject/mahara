@@ -23,10 +23,11 @@
 function pieform_element_color(Pieform $form, $element) {
     $result = '';
     $name = Pieform::hsc($element['name']);
+    $baseid = Pieform::hsc($form->get_name() . '_' . $element['name']);
     $value = Pieform::hsc($element['defaultvalue']);
     $transparent = (!empty($element['options']['transparent']) && $element['options']['transparent'] == true);
     // Color Picker (Chooser)
-    $result = '<input type="text" name="' . $name . '_color" id="' . $name . '_color"'
+    $result = '<input type="text" name="' . $name . '_color" id="' . $baseid . '"'
         . ($transparent && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
         . ($transparent ? ' class="color {hash:true,required:false}"' : ' class="color {hash:true}"')
         . ' value="' . ($value == 'transparent' ? '' : $value) . '">';
@@ -49,9 +50,9 @@ function pieform_element_color(Pieform $form, $element) {
 EOF;
         $optional .= ' ' . $form->i18n('element', 'color', 'or', $element) . ' <input type="checkbox" '
             . (isset($element['defaultvalue']) && $element['defaultvalue'] <> 'transparent' ? '' : 'checked="checked" ')
-            . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
+            . 'name="' . $name . '_optional" id="' . $baseid . '_optional" onchange="' . $name . '_toggle(this)" '
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
-        $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'color', 'transparent', $element);
+        $optional .= ' <label for="' . $baseid . '_optional">' . $form->i18n('element', 'color', 'transparent', $element);
 
         $result .= $optional;
     }
