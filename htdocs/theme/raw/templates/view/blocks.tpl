@@ -74,4 +74,13 @@
     {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 </div>
+<div id="configureblock" class="blockinstance cb configure hidden" role="dialog">
+    <div class="blockinstance-controls">
+        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="close_configuration" alt="{str tag=Close}">
+    </div>
+    <div class="blockinstance-header">
+    </div>
+    <div class="blockinstance-content">
+    </div>
+</div>
 {if $microheaders}{include file="microfooter.tpl"}{else}{include file="footer.tpl"}{/if}

@@ -633,7 +633,7 @@
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var blockinstanceId = button.attr('name').substr(button.attr('name').lastIndexOf('_') + 1);
                     $('#blockinstance_' + blockinstanceId).remove();
-                    if ($('#blockinstance_' + blockinstanceId + '_configure').length) {
+                    if (!$('#configureblock').hasClass('hidden')) {
                         removeConfigureBlocks();
                         showMediaPlayers();
                     }
@@ -646,6 +646,7 @@
                         // refresh the 'add block here' buttons
                         ViewManager.displayPage(config['wwwroot'] + 'view/blocks.php?id=' + $('#viewid').val());
                     }
+                    button.removeAttr('disabled');
                 }, function() {
                     button.removeAttr('disabled');
                 });
@@ -667,7 +668,7 @@
             pd[button.attr('name')] = 1;
             sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                 $('#blockinstance_' + blockinstanceId).remove();
-                if ($('#blockinstance_' + blockinstanceId + '_configure').length) {
+                if (!$('#configureblock').hasClass('hidden')) {
                     removeConfigureBlocks();
                     showMediaPlayers();
                 }
@@ -993,6 +994,7 @@
                 event.preventDefault();
                 removeConfigureBlocks();
                 showMediaPlayers();
+                button.focus();
             });
         });
     }
@@ -1016,11 +1018,6 @@
                 $(temp).removeClass('hidden');
             }
         });
-
-        $('body').prepend('<div/>', {
-            id: 'overlay'
-        });
-
     }
 
     function showMediaPlayers() {
@@ -1038,6 +1035,7 @@
             $(this).remove();
         });
         $('#overlay').remove();
+        $('#container').removeAttr('aria-hidden');
     }
 
     /**
@@ -1058,9 +1056,16 @@
     function addConfigureBlock(oldblock, configblock, removeoncancel) {
         hideMediaPlayers();
         var temp = $('<div>').html(configblock.html);
-        var newblock = temp.find('div.blockinstance');
-        newblock.hide();
+        var newblock = $('#configureblock').addClass('hidden');
+        var title = temp.find('.blockinstance .blockinstance-header').html();
+        var content = temp.find('.blockinstance .blockinstance-content').html();
+        newblock.find('.blockinstance-header').html(title);
+        newblock.find('.blockinstance-content').html(content);
         $('body').append(newblock);
+
+        var blockinstanceId = temp.find('.blockinstance').attr('id');
+        blockinstanceId = blockinstanceId.substr(0, blockinstanceId.length - '_configure'.length);
+        blockinstanceId = blockinstanceId.substr(blockinstanceId.lastIndexOf('_') + 1);
 
         var style = {
             'position': 'absolute',
@@ -1098,12 +1103,11 @@
         }
 
         var deletebutton = newblock.find('input.deletebutton');
+        deletebutton.unbind().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
 
         if (removeoncancel) {
             rewriteDeleteButton(deletebutton);
 
-            var oldblockid = newblock.attr('id').substr(0, newblock.attr('id').length - '_configure'.length);
-            var blockinstanceId = oldblockid.substr(oldblockid.lastIndexOf('_') + 1);
             var cancelbutton = $('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
             if (cancelbutton) {
                 cancelbutton.attr('name', deletebutton.attr('name'));
@@ -1112,25 +1116,47 @@
             }
         }
         else {
-            deletebutton.unbind();
             deletebutton.click(function(event) {
                 event.stopPropagation();
                 event.preventDefault();
                 removeConfigureBlocks();
                 showMediaPlayers();
+                oldblock.find('input.configurebutton').focus();
             });
         }
 
-        newblock.show();
+        newblock.removeClass('hidden');
         appendChildNodes(document.body, DIV({id: 'overlay'}));
-        eval(configblock.javascript);
+        (function($) {
+            // configblock.javascript might use MochiKit so $ must have its default value
+            eval(configblock.javascript);
+        })(getElement);
+
+        deletebutton.focus();
+
+        // Lock focus to the newly opened dialog
+        $('#container').attr('aria-hidden', 'true');
+        if (document.addEventListener) {
+            newblock.data('focuslocker', function(e) {
+                if (!newblock[0].contains(e.target) && newblock[0].ownerDocument == e.target.ownerDocument) {
+                    console.log(e.target);
+                    e.stopPropagation();
+                    newblock.find('.deletebutton').focus();
+                }
+            });
+            document.addEventListener('focus', newblock.data('focuslocker'), true);
+        }
     } // end of addConfigureBlock()
 
     function removeConfigureBlocks() {
         // FF3 hangs unless you delay removal of the iframe inside the old configure block
         setTimeout(function() {
             $('div.configure').each( function() {
-                $(this).remove();
+                $(this).addClass('hidden');
+                if (newblock.data('focuslocker')) {
+                    document.removeEventListener(newblock.data('focuslocker'));
+                    newblock.removeData('focuslocker');
+                }
             });
         }, 1);
     }
