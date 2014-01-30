@@ -19,7 +19,6 @@ define('SECTION_PAGE', 'sitepages');
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('license.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('sitelicenses', 'admin'));
 define('DEFAULTPAGE', 'home');
 
 $extralicensessql = "
@@ -31,10 +30,14 @@ $extralicensessql = "
 ";
 
 $edit = param_variable('edit', null);
+$title = get_string('sitelicensesadd', 'admin');
 
 if ($edit !== null) {
     $edit = get_record('artefact_license', 'name', $edit);
+    $title = get_string('sitelicensesedit', 'admin');
 }
+
+define('TITLE', $title);
 
 $elements = array(
     'displayname' => array(
