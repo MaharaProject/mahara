@@ -1035,19 +1035,19 @@ $string['choosetheme'] = 'Choose theme...';
 $string['Hide'] = 'Hide';
 $string['createcollect'] = 'Create and collect';
 $string['createcollectsubtitle'] = 'Develop your portfolio';
-$string['updateyourprofile'] = 'Update your <a href="%s">profile</a>';
-$string['uploadyourfiles'] = 'Upload your <a href="%s">files</a>';
-$string['createyourresume'] = 'Create your <a href="%s">résumé</a>';
-$string['publishablog'] = 'Publish a <a href="%s">journal</a>';
+$string['updateprofile'] = 'Update your profile';
+$string['uploadfiles'] = 'Upload your files';
+$string['createresume'] = 'Create your résumé';
+$string['publishblog'] = 'Publish a journal';
 $string['Organise'] = 'Organise';
 $string['organisesubtitle'] = 'Showcase your portfolio';
 $string['organisedescription'] = 'Organise your portfolio into <a href="%s">pages.</a> Create different pages for different audiences - you choose the elements to include.';
 $string['sharenetwork'] = 'Share and network';
 $string['sharenetworksubtitle'] = 'Find friends and join groups';
-$string['findfriendslinked'] = 'Find <a href="%s">friends</a>';
-$string['joingroups'] = 'Join <a href="%s">groups</a>';
-$string['controlyourprivacylinked'] = 'Control your <a href="%s">privacy</a>';
-$string['discusstopicslinked'] = 'Discuss <a href="%s">topics</a>';
+$string['findfriends'] = 'Find friends';
+$string['joinsomegroups'] = 'Join groups';
+$string['controlyourprivacy'] = 'Control your privacy';
+$string['discusstopics'] = 'Discuss topics';
 $string['howtodisable'] = 'You have hidden the information box. You can control its visibility in <a href="%s">Settings</a>.';
 
 // Blocktype
