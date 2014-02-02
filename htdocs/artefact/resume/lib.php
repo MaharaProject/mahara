@@ -1954,7 +1954,7 @@ function compositeformedit_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
-function simple_resumefield_form($defaults, $goto) {
+function simple_resumefield_form($defaults, $goto, $options = array()) {
     safe_require('artefact', 'file');
     global $USER, $simple_resume_artefacts, $simple_resume_types;
     $simple_resume_artefacts = array();
@@ -1981,6 +1981,13 @@ function simple_resumefield_form($defaults, $goto) {
             $content = $defaults[$t]['default'];
         }
 
+        if (!empty($options['editortitle'])) {
+            $editortitle = $options['editortitle'];
+        }
+        else {
+            $editortitle = get_string('description', 'artefact.resume');
+        }
+
         $fieldset = $t . 'fs';
         $form['elements'][$fieldset] = array(
             'type' => 'fieldset',
@@ -1989,7 +1996,8 @@ function simple_resumefield_form($defaults, $goto) {
                 $t => array(
                     'type'  => 'wysiwyg',
                     'class' => 'js-hidden',
-                    'title' => get_string('description', 'artefact.resume'),
+                    'title' => $editortitle,
+                    'hiddenlabel' => true,
                     'rows'  => 20,
                     'cols'  => 65,
                     'defaultvalue' => $content,

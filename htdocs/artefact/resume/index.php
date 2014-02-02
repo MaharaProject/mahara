@@ -31,7 +31,9 @@ $defaults = array(
         'fshelp' => true,
     ),
 );
-$coverletterform = pieform(simple_resumefield_form($defaults, 'artefact/resume/index.php'));
+$coverletterform = pieform(simple_resumefield_form($defaults, 'artefact/resume/index.php', array(
+    'editortitle' => get_string('coverletter', 'artefact.resume')
+)));
 
 // load up all the artefacts this user already has....
 $personalinformation = null;

@@ -31,7 +31,9 @@ $defaults = array(
         'fshelp' => true,
     ),
 );
-$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/interests.php'));
+$form = pieform(simple_resumefield_form($defaults, 'artefact/resume/interests.php', array(
+    'editortitle' => get_string('interests', 'artefact.resume')
+)));
 
 $smarty = smarty(array('artefact/resume/js/simpleresumefield.js'));
 $smarty->assign('interestsform', $form);
