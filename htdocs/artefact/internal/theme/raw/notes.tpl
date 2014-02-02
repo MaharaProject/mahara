@@ -6,7 +6,7 @@
       <th>{str tag=Note section=artefact.internal}</th>
       <th>{str tag=currenttitle section=artefact.internal}</th>
       <th>{str tag=containedin section=artefact.internal}</th>
-      <th class="center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" /></th>
+      <th class="center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
       <th></th>
     </tr>
   </thead>
