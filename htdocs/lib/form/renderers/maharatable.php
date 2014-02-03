@@ -93,19 +93,19 @@ function pieform_renderer_maharatable(Pieform $form, $element) {
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help
-    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-        $result .= "\t<tr id=\"{$formname}_{$element['name']}_description\"";
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['descriptionhtml'])) {
+        $result .= "\t<tr";
         if (isset($element['class'])) {
             $result .= ' class="' . Pieform::hsc($element['class']) . '"';
         }
         $result .= ">\n\t\t<td class=\"description\">";
-        $result .= $element['description'];
+        $result .= $element['descriptionhtml'];
         $result .= "</td>\n\t</tr>\n";
     }
 
-    if (!empty($element['error'])) {
+    if (!empty($element['errorhtml'])) {
         $result .= "\t<tr>\n\t\t<td class=\"errmsg\">";
-        $result .= hsc($element['error']);
+        $result .= hsc($element['errorhtml']);
         $result .= "</td>\n\t</tr>\n";
     }
 

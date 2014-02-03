@@ -64,12 +64,12 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
-        $result .= '<div class="description"> ' . $element['description'] . "</div>";
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['descriptionhtml'])) {
+        $result .= '<div class="description"> ' . $element['descriptionhtml'] . "</div>";
     }
 
     if (!empty($element['error'])) {
-        $result .= '<div class="errmsg">' . ((!empty($element['isescaped'])) ? hsc($element['error']) : $element['error']) . '</div>';
+        $result .= '<div class="errmsg">' . $element['errorhtml'] . '</div>';
     }
 
     $result .= "</div>\n";

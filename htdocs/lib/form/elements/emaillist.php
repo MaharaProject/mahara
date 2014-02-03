@@ -58,7 +58,7 @@ function pieform_element_emaillist(Pieform $form, $element) {
     $smarty->assign('disabled', !empty($element['disabled']));
 
     if (isset($element['description'])) {
-        $smarty->assign('describedby', $form->get_name() . '_' . $element['id'] . '_description');
+        $smarty->assign('describedby', $form->element_descriptors($element));
     }
 
     return $smarty->fetch('form/emaillist.tpl');
