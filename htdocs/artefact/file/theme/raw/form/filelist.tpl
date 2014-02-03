@@ -29,7 +29,7 @@
     <td class="icon-container">
     {if !$file->isparent}
       {if $editable}
-      <div class="icon-drag" id="drag:{$file->id}">
+      <div class="icon-drag" id="drag:{$file->id}" tabindex="0">
         <img src="{$file->icon}" title="{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}">
       </div>
       {else}
@@ -40,7 +40,10 @@
     <td class="filename">
     {assign var=displaytitle value=$file->title|safe}
     {if $file->artefacttype == 'folder'}
-      <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">{if !$file->isparent}{$displaytitle}{/if}</a>
+      <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder" title="{str tag=gotofolder section=artefact.file arg1=$displaytitle}">
+        <span class="accessible-hidden">{str tag=folder section=artefact.file}:</span>
+        <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
+    </a>
     {elseif !$publishable}
       {$displaytitle}
     {else}

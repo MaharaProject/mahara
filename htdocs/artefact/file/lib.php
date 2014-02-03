@@ -107,6 +107,7 @@ class PluginArtefactFile extends PluginArtefact {
             'filebrowser' => array(
                 'mahara' => array(
                     'remove',
+                    'cancel',
                 ),
                 'artefact.file' => array(
                     'confirmdeletefile',
@@ -128,6 +129,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'upload',
                     'uploadingfiletofolder',
                     'youmustagreetothecopyrightnotice',
+                    'moveto',
                 ),
             ),
         );
