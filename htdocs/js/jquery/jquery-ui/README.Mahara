@@ -4,9 +4,15 @@ jQuery UI in Mahara
 This javascript library is required for the flexible page layout feature developed by Mike Kelly.
 
 Website: http://jqueryui.com/
-Version: 1.8.19
-Dependency package: jquery 1.7.2
+Version: 1.10.2
+Dependency package: jquery 2.1.1
 
 Changes:
 
 * None
+
+Notes:
+
+* Tried using jquery-ui version 1.10.4 but there is a bug in it with
+draggable helper function and scroll offset, that is meant to be fixed
+for version 1.11. See http://bugs.jqueryui.com/ticket/9315

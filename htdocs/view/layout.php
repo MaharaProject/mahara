@@ -157,8 +157,8 @@ $layoutform = array(
 
 $layoutform = pieform($layoutform);
 
-$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.8.19.custom.min.js', 'js/customlayout.js','js/jquery/modernizr.custom.js');
-$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/custom-theme/jquery-ui-1.8.20.custom.css?v=' . get_config('release'). '">';
+$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'js/customlayout.js','js/jquery/modernizr.custom.js');
+$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css?v=' . get_config('release'). '">';
 
 $smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'removethisrow')), array('sidebars' => false));
 

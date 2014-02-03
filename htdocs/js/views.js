@@ -141,12 +141,11 @@
         }
 
         $('#accordion').accordion({
-            clearStyle: true,
             icons: false,
-            autoHeight: false,
+            heightStyle: 'content',
             collapsible: true,
             active: false,
-            change: function(event, ui) {
+            activate: function(event, ui) {
                 var active = $(this).find('.ui-state-active');
                 if (active.length) {
                     var category = active.next('div');
