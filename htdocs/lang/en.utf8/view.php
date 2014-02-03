@@ -154,6 +154,10 @@ $string['moreoptions'] = 'Advanced options';
 $string['moreinstitutions'] = 'More institutions';
 $string['allviews'] = 'All pages';
 
+$string['addaccess'] = 'Add access for "%s"';
+$string['addaccessinstitution'] = 'Add access for institution "%s"';
+$string['addaccessgroup'] = 'Add access for group "%s"';
+
 $string['submitconfirm'] = 'If you submit \'%s\' to %s for assessment, you will not be able to edit its contents until your tutor has finished marking it. Are you sure you want to submit now?';
 $string['viewsubmitted'] = 'Page submitted';
 $string['collectionsubmitted'] = 'Collection submitted';

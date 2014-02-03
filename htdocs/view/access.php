@@ -530,7 +530,7 @@ $smarty = smarty(
     array(),
     array(
         'mahara' => array('From', 'To', 'datetimeformatguide'),
-        'view' => array('startdate', 'stopdate'),
+        'view' => array('startdate', 'stopdate', 'addaccess', 'addaccessinstitution', 'addaccessgroup'),
         'artefact.comment' => array('Comments', 'Allow', 'Moderate')
     ),
     array('sidebars' => false)

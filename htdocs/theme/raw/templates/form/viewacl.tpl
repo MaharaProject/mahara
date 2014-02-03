@@ -60,7 +60,14 @@ var count = 0;
 
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
-    var addButton = BUTTON({'type': 'button'}, {{jstr tag=add}});
+    var accessString;
+    if (item.type == 'group' || item.type == 'institution') {
+        accessString = get_string('addaccess' + item.type, item.name);
+    }
+    else {
+        accessString = get_string('addaccess', item.name);
+    }
+    var addButton = BUTTON({'type': 'button'}, accessString);
     var attribs = {};
     if (item.preset) {
         attribs = {'class': 'preset'};
