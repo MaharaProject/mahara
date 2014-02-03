@@ -2,7 +2,7 @@
   {{foreach from=$validated item=email}}
     <div class="validated">
       <label>
-        <input disabled {{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}">
+        <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}">
         {{$email}}
       </label>
     </div>

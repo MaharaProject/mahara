@@ -45,6 +45,9 @@ function pieform_element_tags(Pieform $form, $element) {
     $smarty->assign('size', $element['size']);
     $smarty->assign('id', $form->get_name() . '_' . $element['id']);
     $smarty->assign('value', join(', ', $value));
+    if (isset($element['description'])) {
+        $smarty->assign('describedby', $form->get_name() . '_' . $element['id'] . '_description');
+    }
 
     $smarty->left_delimiter = '{{';
     $smarty->right_delimiter = '}}';
