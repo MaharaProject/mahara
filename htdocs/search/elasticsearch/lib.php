@@ -57,8 +57,8 @@ class PluginSearchElasticsearch extends PluginSearch {
      *
      * Since I haven't had the time to figure them out, we'll just use PluginSearchInternal's version.
      */
-    public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null) {
-        return PluginSearchInternal::group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof);
+    public static function group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx=null) {
+        return PluginSearchInternal::group_search_user($group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx);
     }
 
     /**
