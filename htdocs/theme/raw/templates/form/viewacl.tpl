@@ -23,7 +23,7 @@
   </fieldset>
 </div>
 
-<table id="accesslisttable" class="fr hidden fullwidth">
+<table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
   <thead>
     <tr class="accesslist-head">
       <th><span class="accessible-hidden">{{str tag=profileicon section=view}}</span></th>
@@ -38,7 +38,7 @@
   </tbody>
 </table>
 
-<table id="accesslisttabledefault" class="fr hidden fullwidth">
+<table id="accesslisttabledefault" class="fr hidden fullwidth hidefocus" tabindex="-1">
   <thead>
     <tr class="accesslist-head">
       <th>{{str tag=Added section=view}}</th>
@@ -74,14 +74,19 @@ function renderPotentialPresetItem(item) {
 
     if (item.type == 'allgroups') {
         connect(addButton, 'onclick', function() {
+            var rows = [];
             forEach(myGroups, function(g) {
-                appendChildNodes('accesslist', renderAccessListItem(g));
+                rows.push(renderAccessListItem(g));
             });
+            if (rows.length > 0) {
+                getFirstElementByTagAndClassName('input', null, rows[0]).focus();
+            }
         });
     }
     else {
         connect(addButton, 'onclick', function() {
-            appendChildNodes('accesslist', renderAccessListItem(item));
+            var row = renderAccessListItem(item);
+            getFirstElementByTagAndClassName('input', null, row).focus();
         });
     }
     appendChildNodes('potentialpresetitems', row);
@@ -191,6 +196,10 @@ function renderAccessListItem(item) {
         removeElement(row);
         if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
             renderAccessListDefault();
+            $('accesslisttabledefault').focus();
+        }
+        else {
+            $('accesslisttable').focus();
         }
         // Update the formchangechecker state
         if (typeof formchangemanager !== 'undefined') {
@@ -220,10 +229,16 @@ function renderAccessListItem(item) {
     if (typeof formchangemanager !== 'undefined') {
         formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
     }
+
+    return row;
 }
 
 function makeCalendarInput(item, type, disabled) {
-    input = INPUT({
+    var label = LABEL({
+        'for': type + 'date_' + count,
+        'class': 'accessible-hidden'
+    }, get_string(type + 'date'));
+    var input = INPUT({
         'type':'text',
         'name': 'accesslist[' + count + '][' + type + 'date]',
         'id'  :  type + 'date_' + count,
@@ -233,7 +248,7 @@ function makeCalendarInput(item, type, disabled) {
 
     input.disabled = (disabled == 0);
 
-    return input;
+    return SPAN(null, label, input);
 }
 
 function makeCalendarLink(item, type) {
