@@ -42,6 +42,36 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         $element['defaultvalue'] = time();
     }
 
+    // Optional control
+    if (!$required) {
+        $optional = <<<EOF
+        <script type="text/javascript">
+            function {$name}_toggle(x) {
+                var elements = [
+                    $('{$name}_hour'),
+                    $('{$name}_minute'),
+                    $('{$name}_day'),
+                    $('{$name}_month'),
+                    $('{$name}_year')
+                ];
+                for (var i in elements) {
+                    if (elements[i]) elements[i].disabled = !x.checked;
+                }
+            }
+        </script>
+EOF;
+        // @todo this needs cleaning up, namely:
+        //   - get_string is a mahara-ism
+        //   - 'optional' => true should be 'required' => false shouldn't it?
+        $optional .= ' <input type="checkbox" '
+            . (!isset($element['defaultvalue']) ? '' : 'checked="checked" ')
+            . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
+            . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
+        $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'specify', $element) . '</label> ';
+
+        $result .= $optional;
+    }
+
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
     $year = '<select name="' . $name . '_year" id="' . $name . '_year"'
@@ -115,44 +145,10 @@ function pieform_element_date(Pieform $form, $element) {/*{{{*/
         $minute .= '</select>';
 
         $at = ' ' . $form->i18n('element', 'date', 'at', $element) . ' ';
-        $result = $year . $month . $day . $at . $hour . $minute;
+        $result .= $year . $month . $day . $at . $hour . $minute;
     }
     else {
         $result = $year . $month . $day;
-    }
-
-    // Optional control
-    if (!$required) {
-        $optional = <<<EOF
-        <script type="text/javascript">
-            function {$name}_toggle(x) {
-                var elements = [
-                    $('{$name}_hour'),
-                    $('{$name}_minute'),
-                    $('{$name}_day'),
-                    $('{$name}_month'),
-                    $('{$name}_year')
-                ];
-                for (var i in elements) {
-                    if (elements[i]) elements[i].disabled = x.checked;
-                }
-            }
-        </script>
-EOF;
-        // @todo this needs cleaning up, namely:
-        //   - get_string is a mahara-ism
-        //   - 'optional' => true should be 'required' => false shouldn't it?
-        $optional .= ' ' . $form->i18n('element', 'date', 'or', $element) . ' <input type="checkbox" '
-            . (isset($element['defaultvalue']) ? '' : 'checked="checked" ')
-            . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
-            . 'tabindex="' . Pieform::hsc($element['tabindex']) . '"';
-        if (isset($element['description'])) {
-            $optional .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
-        }
-        $optional .= '>';
-        $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'notspecified', $element);
-
-        $result .= $optional;
     }
 
     return $result;

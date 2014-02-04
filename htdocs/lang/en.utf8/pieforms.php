@@ -20,9 +20,8 @@ $string['element.bytes.invalidvalue'] = 'Value must be a number';
 $string['element.calendar.invalidvalue'] = 'Invalid date/time specified';
 $string['element.calendar.opendatepicker'] = 'Open date picker';
 
-$string['element.date.or'] = 'or';
 $string['element.date.monthnames'] = 'January,February,March,April,May,June,July,August,September,October,November,December';
-$string['element.date.notspecified'] = 'Not specified';
+$string['element.date.specify'] = 'Set date';
 $string['element.date.at'] = 'at';
 
 $string['element.expiry.days'] = 'Days';
@@ -33,8 +32,7 @@ $string['element.expiry.noenddate'] = 'No end date';
 
 $string['element.select.other'] = 'Other';
 
-$string['element.color.or'] = 'or';
-$string['element.color.transparent'] = 'Use theme colour';
+$string['element.color.custom'] = 'Customise';
 
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 
