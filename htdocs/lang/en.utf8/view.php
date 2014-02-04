@@ -27,7 +27,6 @@ $string['userviewurltaken']       = 'This URL is already taken. Please choose an
 $string['description']            = 'Page description';
 $string['startdate']              = 'Access start date/time';
 $string['stopdate']               = 'Access end date/time';
-$string['accessdates']            = 'Access date/time';
 $string['stopdatecannotbeinpast'] = 'Stop date cannot be in the past';
 $string['startdatemustbebeforestopdate'] = 'Start date must be before stop date';
 $string['newstopdatecannotbeinpast'] = 'The end date for \'%s\' access cannot be in the past.';

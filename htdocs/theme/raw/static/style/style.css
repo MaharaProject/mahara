@@ -2717,15 +2717,8 @@ fieldset#pagestoadd tr#addviews_submit_container td {
     cursor: pointer;
 }
 /* added users */
-.accesslist-head1 th {
+.accesslist-head th {
     border-bottom: none;
-    padding: 0 5px;
-    line-height: 1.25em;
-}
-.accesslist-head2 th {
-    padding-top: 0;
-    line-height: 1.25em;
-    font-size: .917em;
 }
 #accesslistitems td {
     border-bottom: 1px dotted #D1D1D1;
