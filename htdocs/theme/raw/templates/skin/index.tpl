@@ -24,6 +24,15 @@
                     {/if}
                     {if $skin.metadata && $skin.editable}
                         <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">{str tag="viewmetadata" section="skin"}</a>
+                        <div class="skin-metadata {if $id eq $skin.id && $metadata}show{else}hidden{/if}">
+                            <input type="image" class="metadataclose" src="{theme_url images/btn_close.png}" alt="{str tag=closemetadata section=skin}" title="{str tag=closemetadata section=skin}" />
+                            <div class="metadatatitle"><h2 class="title">{str tag=metatitle section=skin}</h2></div>
+                            <div class="metatitle"><span>{str tag=title section=skin}:</span> {$skin.title|escape}</div>
+                            <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> {$skin.metadata.displayname}</div>
+                            <div class="metadescription"><span>{str tag=description section=skin}:</span><br>{$skin.metadata.description|clean_html|safe}</div>
+                            <div class="metacreationdate"><span>{str tag=creationdate section=skin}:</span> {$skin.metadata.ctime}</div>
+                            <div class="metamodifieddate"><span>{str tag=modifieddate section=skin}:</span> {$skin.metadata.mtime}</div>
+                        </div>
                     {/if}
                     {if $skin.removable}
                         <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">{str tag="exportthisskin" section="skin"}</a>
@@ -53,15 +62,6 @@
                     {else}
                     <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135">
                     {/if}
-                </div>
-                <div class="skin-metadata {if $id eq $skin.id && $metadata}show{else}hidden{/if}">
-                    <div class="metadataclose btn-big-close hidden"></div>
-                    <div class="metadatatitle"><h2 class="title">{str tag=metatitle section=skin}</h2></div>
-                    <div class="metatitle"><span>{str tag=title section=skin}:</span> {$skin.title|escape}</div>
-                    <div class="metadisplayname"><span>{str tag=displayname section=skin}:</span> {$skin.metadata.displayname}</div>
-                    <div class="metadescription"><span>{str tag=description section=skin}:</span><br>{$skin.metadata.description|clean_html|safe}</div>
-                    <div class="metacreationdate"><span>{str tag=creationdate section=skin}:</span> {$skin.metadata.ctime}</div>
-                    <div class="metamodifieddate"><span>{str tag=modifieddate section=skin}:</span> {$skin.metadata.mtime}</div>
                 </div>
             </div>
 {/foreach}
