@@ -25,7 +25,6 @@ class Peer {
                              'name' => '',
                              'institution' => '',
                              'ipaddress' => '',
-                             'portno' => 80,
                              'publickey' => '',
                              'publickeyexpires' => 0,
                              'deleted' => 0,
@@ -75,7 +74,6 @@ class Peer {
             !empty($this->name) &&
             !empty($this->institution) &&
             !empty($this->ipaddress) &&
-            !empty($this->portno) &&
             !empty($this->appname) &&
             !empty($this->publickey) &&
             !empty($this->publickeyexpires)) {
@@ -125,7 +123,6 @@ class Peer {
         $host->name             = $this->name;
         $host->publickey        = $this->certificate;
         $host->publickeyexpires = $this->publickeyexpires;
-        $host->portno           = $this->portno;
         $host->lastconnecttime  = $this->lastconnecttime;
         $host->appname          = $this->appname;
         $host->institution      = $this->institution;
