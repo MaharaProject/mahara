@@ -23,33 +23,25 @@
   </fieldset>
 </div>
 
-<table id="accesslisttable" class="fr hidden fullwidth">
+<table id="accesslisttable" class="fr hidden fullwidth hidefocus" tabindex="-1">
   <thead>
-    <tr class="accesslist-head1">
-      <th colspan="2">{{str tag=Added section=view}}</th>
-      <th colspan="2">{{str tag=accessdates section=view}}</th>
-      <th colspan="2" class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
-      <th></th>
-    </tr>
-    <tr class="accesslist-head2">
-      <th colspan="2"></th>
-      <th>{{str tag=From}}:</th>
-      <th>{{str tag=To}}:</th>
-      <th colspan="2" class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Allow section=artefact.comment}} {{str tag=Moderate section=artefact.comment}}</th>
-      <th></th>
+    <tr class="accesslist-head">
+      <th><span class="accessible-hidden">{{str tag=profileicon section=view}}</span></th>
+      <th>{{str tag=Added section=view}}</th>
+      <th>{{str tag=startdate section=view}}</th>
+      <th>{{str tag=stopdate section=view}}</th>
+      <th class="center comments{{if $allowcomments}} hidden{{/if}}">{{str tag=Comments section=artefact.comment}}</th>
+      <th><span class="accessible-hidden">{{str tag=edit}}</span></th>
     </tr>
   </thead>
   <tbody id="accesslistitems">
   </tbody>
 </table>
 
-<table id="accesslisttabledefault" class="fr hidden fullwidth">
+<table id="accesslisttabledefault" class="fr hidden fullwidth hidefocus" tabindex="-1">
   <thead>
-    <tr class="accesslist-head1">
+    <tr class="accesslist-head">
       <th>{{str tag=Added section=view}}</th>
-    </tr>
-    <tr class="accesslist-head2">
-      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody id="accesslistitems">
@@ -82,14 +74,19 @@ function renderPotentialPresetItem(item) {
 
     if (item.type == 'allgroups') {
         connect(addButton, 'onclick', function() {
+            var rows = [];
             forEach(myGroups, function(g) {
-                appendChildNodes('accesslist', renderAccessListItem(g));
+                rows.push(renderAccessListItem(g));
             });
+            if (rows.length > 0) {
+                getFirstElementByTagAndClassName('input', null, rows[0]).focus();
+            }
         });
     }
     else {
         connect(addButton, 'onclick', function() {
-            appendChildNodes('accesslist', renderAccessListItem(item));
+            var row = renderAccessListItem(item);
+            getFirstElementByTagAndClassName('input', null, row).focus();
         });
     }
     appendChildNodes('potentialpresetitems', row);
@@ -110,11 +107,13 @@ function renderAccessListItem(item) {
                         'name': 'accesslist[' + count + '][allowcomments]',
                         'id'  :  'allowcomments' + count,
                         'value':  1});
+    var allowfdbklabel = LABEL({'for': 'allowcomments' + count}, get_string('Allow'));
     var approvefdbk = INPUT({
                         'type': 'checkbox',
                         'name': 'accesslist[' + count + '][approvecomments]',
                         'id'  :  'approvecomments' + count,
                         'value':  1});
+    var approvefdbklabel = LABEL({'for': 'approvecomments' + count}, get_string('Moderate'));
 
     if (item['allowcomments']==1) {
         setNodeAttribute(allowfdbk,'checked',true);
@@ -164,8 +163,8 @@ function renderAccessListItem(item) {
         TD({'class': 'accesslistname'}, name),
         TD(null, makeCalendarInput(item, 'start', notpublicorallowed), makeCalendarLink(item, 'start', notpublicorallowed)),
         TD(null, makeCalendarInput(item, 'stop', notpublicorallowed), makeCalendarLink(item, 'stop', notpublicorallowed)),
-        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, allowfdbk),
-        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}, approvefdbk),
+        TD({'class': 'center comments' + (allowcomments ? ' hidden' : '')}
+            , allowfdbk, allowfdbklabel, ' ', approvefdbk, approvefdbklabel),
         TD({'class': 'right removebutton'}, removeButton,
             INPUT({
                 'type': 'hidden',
@@ -197,6 +196,10 @@ function renderAccessListItem(item) {
         removeElement(row);
         if (!getFirstElementByTagAndClassName('tr', null, 'accesslistitems')) {
             renderAccessListDefault();
+            $('accesslisttabledefault').focus();
+        }
+        else {
+            $('accesslisttable').focus();
         }
         // Update the formchangechecker state
         if (typeof formchangemanager !== 'undefined') {
@@ -226,10 +229,16 @@ function renderAccessListItem(item) {
     if (typeof formchangemanager !== 'undefined') {
         formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
     }
+
+    return row;
 }
 
 function makeCalendarInput(item, type, disabled) {
-    input = INPUT({
+    var label = LABEL({
+        'for': type + 'date_' + count,
+        'class': 'accessible-hidden'
+    }, get_string(type + 'date'));
+    var input = INPUT({
         'type':'text',
         'name': 'accesslist[' + count + '][' + type + 'date]',
         'id'  :  type + 'date_' + count,
@@ -239,7 +248,7 @@ function makeCalendarInput(item, type, disabled) {
 
     input.disabled = (disabled == 0);
 
-    return input;
+    return SPAN(null, label, input);
 }
 
 function makeCalendarLink(item, type) {
