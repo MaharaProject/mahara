@@ -78,6 +78,9 @@
         }
         removeConfigureBlocks();
         showMediaPlayers();
+        setTimeout(function() {
+            newblock.find('input.configurebutton').focus();
+        }, 1);
     };
 
     //Private Methods
@@ -201,6 +204,9 @@
         // Rewrite the delete buttons to be ajax
         rewriteDeleteButtons();
 
+        // Show the keyboard-accessible ajax move buttons
+        rewriteMoveButtons();
+
         // Rewrite the 'add column' buttons to be ajax
         rewriteAddColumnButtons();
 
@@ -209,6 +215,9 @@
 
         // Ensure the enabled/disabled state of the add/remove buttons is correct
         checkColumnButtonDisabledState();
+
+        // Setup the 'add block' dialog
+        setupPositionBlockDialog();
 
         // Set equal column heights
         setTimeout(function() {
@@ -396,6 +405,12 @@
 
     function makeNewBlocksDraggable() {
         $('.blocktype-list div.blocktype').each(function() {
+            $(this).find('.blocktypelink').on('click keydown', function(e) {
+                var keyCode = $.ui.keyCode;
+                if (e.type == 'click' || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) {
+                    startAddBlock($(this));
+                }
+            });
             $(this).draggable({
                 start: function(event, ui) {
                     showColumnBackgrounds();
@@ -415,10 +430,39 @@
                     hideColumnBackgrounds();
                 },
                 appendTo: 'body'
-                });
+            });
         });
     }
 
+    function startAddBlock(element) {
+        var addblockdialog = $('#addblock').removeClass('hidden');
+        addblockdialog.one('dialog.end', function(event, options) {
+            if (options.saved) {
+                addNewBlock(options, element.parent().find('.blocktype-radio').val());
+            }
+            else {
+                element.focus();
+            }
+        });
+        addblockdialog.find('h2.title').text(get_string('addblock', element.text()));
+        computeColumnInputs(addblockdialog);
+        setDialogPosition(addblockdialog);
+
+        if (document.addEventListener) {
+            addblockdialog.data('focuslocker', function(e) {
+                if (!addblockdialog[0].contains(e.target)) {
+                    e.stopPropagation();
+                    addblockdialog.find('.deletebutton').focus();
+                }
+            });
+            document.addEventListener('focus', addblockdialog.data('focuslocker'), true);
+        }
+
+        $('body').append($('<div>').attr('id', 'overlay'));
+
+        var deletebutton = addblockdialog.find('.deletebutton');
+        deletebutton.focus();
+    }
 
     function makeExistingBlocksSortable() {
         // Make existing and new blocks sortable
@@ -433,50 +477,14 @@
                 var whereTo = getBlockinstanceCoordinates(ui.helper);
 
                 if (ui.helper.find('.blocktype-radio').length) {
-                    //add new block
-                    var pd = {
-                            'id': $('#viewid').val(),
-                            'change': 1,
-                            'blocktype': ui.helper.find('input.blocktype-radio').val()
-                        };
-
-                    if (config.blockeditormaxwidth) {
-                        pd['cfheight'] = getViewportDimensions().h - 100;
-                    }
-                    pd['action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
-
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                        var div = $('<div>').html(data.data.display.html);
-                        var blockinstance = div.find('div.blockinstance');
-                        // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
-                        var configureButton = blockinstance.find('input.configurebutton');
-                        if (configureButton) {
-                            rewriteConfigureButton(configureButton);
-                            $('#action-dummy').attr('name', 'action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']);
-                        }
-                        rewriteDeleteButton(blockinstance.find('input.deletebutton'));
-                        insertBlockStub(blockinstance, whereTo);
-                        if (data.data.configure) {
-                            addConfigureBlock(blockinstance, data.data.configure, true);
-                        }
-                    });
+                    addNewBlock(whereTo, ui.helper.find('input.blocktype-radio').val());
                     $('.block-placeholder').siblings('.blocktype').remove();
                 }
                 else {
                     //move existing block
-                    var pd = {
-                        'id': $('#viewid').val(),
-                        'change': 1
-                    };
-                    if (config.blockeditormaxwidth) {
-                        pd['cfheight'] = getViewportDimensions().h - 100;
-                    }
                     var uihId = ui.helper.attr('id');
                     var blockinstanceId = uihId.substr(uihId.lastIndexOf('_') + 1);
-                    pd['action_moveblockinstance_id_' + blockinstanceId + '_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                        hideColumnBackgrounds();
-                    });
+                    moveBlock(whereTo, blockinstanceId);
                 }
             },
 
@@ -504,6 +512,51 @@
             }
         });
     } // end of makeNewBlocksSortable()
+
+    function cellChanged() {
+        $(this).closest('.cellchooser').find('.active').removeClass('active');
+        $(this).parent().addClass('active');
+        var position = $(this).val().split('-');
+        var element = $('.row').eq(parseInt(position[0]) - 1).find('.column').eq(parseInt(position[1]) - 1);
+        var options = [get_string('blockordertop')];
+        element.find('.column-content .blockinstance .blockinstance-header').each(function() {
+            options.push(get_string('blockorderafter', $(this).find('h2.title').text()));
+        });
+        var selectbox = $('#addblock_position');
+        selectbox.html('<option>' + options.join('</option><option>') + '</option>');
+    }
+
+    function addNewBlock(whereTo, blocktype) {
+        var pd = {
+                'id': $('#viewid').val(),
+                'change': 1,
+                'blocktype': blocktype
+            };
+
+        if (config.blockeditormaxwidth) {
+            pd['cfheight'] = getViewportDimensions().h - 100;
+        }
+        pd['action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
+
+        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+            var div = $('<div>').html(data.data.display.html);
+            var blockinstance = div.find('div.blockinstance');
+            // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
+            var configureButton = blockinstance.find('input.configurebutton');
+            if (configureButton) {
+                rewriteConfigureButton(configureButton);
+                $('#action-dummy').attr('name', 'action_addblocktype_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']);
+            }
+            rewriteDeleteButton(blockinstance.find('input.deletebutton'));
+            insertBlockStub(blockinstance, whereTo);
+            if (data.data.configure) {
+                addConfigureBlock(blockinstance, data.data.configure, true);
+            }
+            else {
+                blockinstance.find('.deletebutton').focus();
+            }
+        });
+    }
 
     function showColumnBackgrounds() {
         $('.row .column-content').each(function() {
@@ -598,7 +651,9 @@
     /**
      * Rewrites the blockinstance delete buttons to be AJAX
      */
+    // Why does this exist?
     this.rewriteCategorySelectList = function() {
+        console.log('rewriting category select');
         forEach(getElementsByTagAndClassName('a', null, 'category-list'), function(i) {
             connect(i, 'onclick', function(e) {
                 var queryString = parseQueryString(i.href.substr(i.href.indexOf('?')));
@@ -607,6 +662,7 @@
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', {'id': $('viewid').value, 'action': 'blocktype_list', 'c': queryString['c']}, 'POST', function(data) {
                     setNodeAttribute('category', 'value', queryString['c']);
                     $('blocktype-list').innerHTML = data.data;
+                    console.log(self);
                     self.makeBlockTypesDraggable();
                     self.showBlockTypeDescription();
                 });
@@ -636,6 +692,7 @@
                     if (!$('#configureblock').hasClass('hidden')) {
                         removeConfigureBlocks();
                         showMediaPlayers();
+                        button.focus();
                     }
                     //reset column heights
                     $('.column-content').each(function() {
@@ -659,6 +716,131 @@
         });
     }
 
+    /*
+     * Shows all keyboard-accessible ajax move buttons
+     */
+    function rewriteMoveButtons() {
+        $('#bottom-pane input.keyboardmovebutton').each(function() {
+            rewriteMoveButton($(this));
+        });
+    }
+
+    /*
+     * Shows and sets up one keyboard-accessible ajax move button
+     */
+    function rewriteMoveButton(button) {
+        button.removeClass('hidden');
+
+        button.click(function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            var addblockdialog = $('#addblock').removeClass('hidden');
+
+            computeColumnInputs(addblockdialog);
+            var prevcell = button.closest('.column-content');
+            var order = prevcell.children().index(button.closest('.blockinstance'));
+            var row = $('.row').index(button.closest('.row'));
+            var column = button.closest('.row').children().index(button.closest('.column'));
+            var radio = addblockdialog.find('.cellchooser').children().eq(row).find('input').eq(column);
+            var changefunction = function() {
+                if (radio.prop('checked')) {
+                    $('#addblock_position option').eq(order + 1).remove();
+                }
+            };
+            radio.change(changefunction);
+            radio.prop('checked', true).change();
+            $('#addblock_position').prop('selectedIndex', order);
+
+            addblockdialog.one('dialog.end', function(event, options) {
+                if (options.saved) {
+                    var blockinstanceId = button.attr('name').match(/[0-9]+$/)[0];
+                    moveBlock(options, blockinstanceId);
+                    var newcell = $('#column-container > .row').eq(options['row'] - 1)
+                        .find('.column-content').eq(options['column'] - 1);
+                    var currentblock = button.closest('.blockinstance');
+                    var lastindex = newcell.children().length;
+                    if (newcell[0] == prevcell[0]) {
+                        lastindex -= 1;
+                    }
+                    newcell.append(currentblock);
+                    options['order'] -= 1;
+                    if (options['order'] < lastindex) {
+                        newcell.children().eq(options['order']).before(newcell.children().last());
+                    }
+                }
+                radio.off('change', changefunction);
+                button.focus();
+            });
+            addblockdialog.find('h2.title').text(get_string('moveblock'));
+
+            setDialogPosition(addblockdialog);
+
+            if (document.addEventListener) {
+                addblockdialog.data('focuslocker', function(e) {
+                    if (!addblockdialog[0].contains(e.target)) {
+                        e.stopPropagation();
+                        addblockdialog.find('.deletebutton').focus();
+                    }
+                });
+                document.addEventListener('focus', addblockdialog.data('focuslocker'), true);
+            }
+
+            $('body').append($('<div>').attr('id', 'overlay'));
+
+            var deletebutton = addblockdialog.find('.deletebutton');
+            deletebutton.focus();
+        });
+    }
+
+    function computeColumnInputs(dialog) {
+        var inputcontainer = dialog.find('#addblock_cellchooser_container td');
+        var result = $('<div>').addClass('cellchooser');
+        $('.row').each(function(i) {
+            var row = $('<div>');
+            $(this).find('.column').each(function(j) {
+                var value = (i + 1) + '-' + (j + 1);
+                var radio = $('<input>').addClass('accessible-hidden').attr({
+                    'type': 'radio',
+                    'style': $(this).attr('style'),
+                    'id': 'cellchooser_' + value,
+                    'name': 'cellchooser',
+                    'value': value
+                });
+                radio.change(cellChanged);
+                radio.focus(function() {
+                    $(this).parent().addClass('focused');
+                });
+                radio.blur(function() {
+                    $(this).parent().removeClass('focused');
+                });
+                var label = $('<label>').addClass('cell').attr('for', 'cellchooser_' + value);
+                label.append(radio)
+                    .append($('<span>').addClass('accessible-hidden').html(get_string('cellposition', i + 1, j + 1)));
+                row.append(label);
+            });
+            result.append(row);
+        });
+        inputcontainer.html('').append(result);
+        var firstcell = inputcontainer.find('input').first();
+        firstcell.prop('checked', true);
+        cellChanged.call(firstcell);
+    }
+
+    function moveBlock(whereTo, instanceId) {
+        var pd = {
+            'id': $('#viewid').val(),
+            'change': 1
+        };
+        if (config.blockeditormaxwidth) {
+            pd['cfheight'] = getViewportDimensions().h - 100;
+        }
+        pd['action_moveblockinstance_id_' + instanceId + '_row_' + whereTo['row'] + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
+        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+            hideColumnBackgrounds();
+        });
+    }
+
     /**
      * Rewrites cancel button to remove a block
      */
@@ -671,6 +853,7 @@
                 if (!$('#configureblock').hasClass('hidden')) {
                     removeConfigureBlocks();
                     showMediaPlayers();
+                    button.focus();
                 }
             });
             event.stopPropagation();
@@ -816,6 +999,52 @@
                 }
             });
         });
+    }
+
+    /*
+     * Initialises the dialog used to add and move blocks
+     */
+    function setupPositionBlockDialog() {
+        $('body').append($('#addblock'));
+        $('#addblock').css('width', 500);
+
+        $('#addblock .submit').on('click keydown', function(e) {
+            if (e.type == 'click' || e.keyCode == 13 || e.keyCode == 32) {
+                var position = $('#addblock .cellchooser input:checked').val().split('-');
+                var order = $('#addblock_position').prop('selectedIndex') + 1;
+                closePositionBlockDialog(e, {
+                    'saved': true,
+                    'row': position[0], 'column': position[1], 'order': order
+                });
+            }
+        });
+
+        $('#addblock .cancel, #addblock .deletebutton').on('click keydown', function(e) {
+            // Stops various errors with click event being run on focus
+            if ((e.type == 'click' && e.buttons < 1) || e.keyCode == 32) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            else if (e.type == 'click' || e.keyCode == 13) {
+                closePositionBlockDialog(e, {'saved': false});
+            }
+        });
+    }
+
+    /*
+     * Closes the add/move block dialog
+     */
+    function closePositionBlockDialog(e, options) {
+        e.stopPropagation();
+        e.preventDefault();
+        var addblockdialog = $('#addblock');
+        if (addblockdialog.data('focuslocker')) {
+            document.removeEventListener('focus', addblockdialog.data('focuslocker'));
+            addblockdialog.removeData('focuslocker');
+        }
+        options.trigger = e.type;
+        addblockdialog.addClass('hidden').trigger('dialog.end', options);
+        $('#overlay').remove();
     }
 
     /**
@@ -1067,40 +1296,7 @@
         blockinstanceId = blockinstanceId.substr(0, blockinstanceId.length - '_configure'.length);
         blockinstanceId = blockinstanceId.substr(blockinstanceId.lastIndexOf('_') + 1);
 
-        var style = {
-            'position': 'absolute',
-            'z-index': 1
-        };
-
-        var d = {
-            'w': newblock.outerWidth(),
-            'h': newblock.outerHeight()
-        }
-        var vpdim = {
-            'w': $(window).width(),
-            'h': $(window).height()
-        }
-
-        var h = Math.max(d.h, 200);
-        var w = Math.max(d.w, 500);
-        if (config.blockeditormaxwidth && newblock.find('textarea.wysiwyg').length) {
-            w = vpdim.w - 80;
-            style.height = h + 'px';
-        }
-
-        var tborder = parseFloat(newblock.css('border-top-width'));
-        var tpadding = parseFloat(newblock.css('padding-top'));
-        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
-        style.top = newtop + 'px';
-
-        var lborder = parseFloat(newblock.css('border-left-width'));
-        var lpadding = parseFloat(newblock.css('padding-left'));
-        style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
-        style.width = w + 'px';
-
-        for (var prop in style) {
-            newblock.css(prop, style[prop]);
-        }
+        setDialogPosition(newblock);
 
         var deletebutton = newblock.find('input.deletebutton');
         deletebutton.unbind().attr('name', 'action_removeblockinstance_id_' + blockinstanceId);
@@ -1121,7 +1317,9 @@
                 event.preventDefault();
                 removeConfigureBlocks();
                 showMediaPlayers();
-                oldblock.find('input.configurebutton').focus();
+                setTimeout(function() {
+                    oldblock.find('input.configurebutton').focus();
+                }, 1);
             });
         }
 
@@ -1139,7 +1337,6 @@
         if (document.addEventListener) {
             newblock.data('focuslocker', function(e) {
                 if (!newblock[0].contains(e.target) && newblock[0].ownerDocument == e.target.ownerDocument) {
-                    console.log(e.target);
                     e.stopPropagation();
                     newblock.find('.deletebutton').focus();
                 }
@@ -1153,12 +1350,52 @@
         setTimeout(function() {
             $('div.configure').each( function() {
                 $(this).addClass('hidden');
-                if (newblock.data('focuslocker')) {
-                    document.removeEventListener(newblock.data('focuslocker'));
-                    newblock.removeData('focuslocker');
+                if ($(this).data('focuslocker')) {
+                    document.removeEventListener('focus', $(this).data('focuslocker'));
+                    $(this).removeData('focuslocker');
                 }
             });
         }, 1);
+    }
+
+    /*
+     * Moves the given dialog so that it's centered on the screen
+     */
+    function setDialogPosition(block) {
+        var style = {
+            'position': 'absolute',
+            'z-index': 1
+        };
+
+        var d = {
+            'w': block.width(),
+            'h': block.height()
+        }
+        var vpdim = {
+            'w': $(window).width(),
+            'h': $(window).height()
+        }
+
+        var h = Math.max(d.h, 200);
+        var w = Math.max(d.w, 500);
+        if (config.blockeditormaxwidth && block.find('textarea.wysiwyg').length) {
+            w = vpdim.w - 80;
+            style.height = h + 'px';
+        }
+
+        var tborder = parseFloat(block.css('border-top-width'));
+        var tpadding = parseFloat(block.css('padding-top'));
+        var newtop = getViewportPosition().y + Math.max((vpdim.h - h) / 2 - tborder - tpadding, 5);
+        style.top = newtop + 'px';
+
+        var lborder = parseFloat(block.css('border-left-width'));
+        var lpadding = parseFloat(block.css('padding-left'));
+        style.left = ((vpdim.w - w) / 2 - lborder - lpadding) + 'px';
+        style.width = w + 'px';
+
+        for (var prop in style) {
+            block.css(prop, style[prop]);
+        }
     }
 
     function swapNodes(a, b) {

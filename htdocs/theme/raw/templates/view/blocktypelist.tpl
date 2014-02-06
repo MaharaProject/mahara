@@ -3,8 +3,11 @@
 {foreach from=$blocktypes item=blocktype}
 {* TODO at this point we have now $blocktype.singleonly *}
     <div class="blocktype">
-        <input type="radio" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
-        <img src="{$blocktype.thumbnail_path}" title="{$blocktype.description}" alt="{$blocktype.description}" width="24" height="24"><span class="blocktypetitle">{$blocktype.title}</span>
+        <a class="blocktypelink" href="#">
+            <input type="radio" id="blocktype-list-radio-{$blocktype.name}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
+            <img src="{$blocktype.thumbnail_path}" title="{$blocktype.description}" alt="{$blocktype.description}" width="24" height="24">
+            <label for="blocktype-list-radio-{$blocktype.name}" class="blocktypetitle">{$blocktype.title}</label>
+        </a>
     </div>
 {/foreach}
 </div>

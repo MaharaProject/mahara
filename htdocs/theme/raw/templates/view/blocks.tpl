@@ -74,9 +74,20 @@
     {if $block.javascript}<script type="text/javascript">{$block.javascript|safe}</script>{/if}
 {/if}
 </div>
+<div id="addblock" class="blockinstance cb configure hidden" role="dialog" aria-labelledby="addblock-heading" tabindex="-1">
+    <div class="blockinstance-controls">
+        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="action_removeblockinstance_id_{$id}" alt="{str tag=Close}">
+    </div>
+    <div class="blockinstance-header">
+        <h2 id="addblock-heading" class="title"></h2>
+    </div>
+    <div class="blockinstance-content">
+        {$addform|safe}
+    </div>
+</div>
 <div id="configureblock" class="blockinstance cb configure hidden" role="dialog">
     <div class="blockinstance-controls">
-        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="close_configuration" alt="{str tag=Close}">
+        <input type="image" src="{theme_url filename=images/btn_close.png}" class="deletebutton" name="close_configuration" alt="{str tag=closeconfiguration section=view}">
     </div>
     <div class="blockinstance-header">
     </div>

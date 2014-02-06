@@ -56,10 +56,15 @@ ul.colnav li.selected span {
     border: 1px solid #B3B3B3;
 }
 #block-category-general:hover,
+#block-category-general:focus,
 #block-category-internal:hover,
+#block-category-internal:focus,
 #block-category-fileimagevideo:hover,
+#block-category-fileimagevideo:focus,
 #block-category-external:hover,
-#block-category-blog:hover {
+#block-category-external:focus,
+#block-category-blog:hover,
+#block-category-blog:focus {
     background-color: #FFFFFF;
 }
 /* container around blocktypes under each category */
