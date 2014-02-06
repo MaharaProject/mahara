@@ -3686,7 +3686,7 @@ function build_pagination($params) {
             }
         }
         $output .= '<form class="pagination" action="' . hsc($params['url']) . '" method="POST">
-            <span class="pagination"> ' . $params['limittext'] . '</span>' .
+            <label for="setlimitselect" class="pagination"> ' . $params['limittext'] . ' </label>' .
             '<select id="setlimitselect" class="pagination" name="limit"> '.
                 join(' ', $strlimitoptions) .
             '</select>

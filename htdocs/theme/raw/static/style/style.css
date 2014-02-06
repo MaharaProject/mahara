@@ -1194,7 +1194,8 @@ div.pagination {
     margin: 3px 0;
     line-height: 2em;
 }
-div.pagination span {
+div.pagination span,
+div.pagination label {
     margin: 0 3px;
     display: inline-block;
 }
@@ -1207,6 +1208,9 @@ div.pagination a {
     padding: 3px 5px;
     background: #EEEEEE;
     white-space: nowrap;
+}
+div.pagination label {
+    font-weight: normal;
 }
 div.pagination .disabled {
     color: #C1C1C1;
