@@ -67,6 +67,7 @@ $string['editaccess'] = 'Edit collection access';
 $string['emptycollectionnoeditaccess'] = 'You cannot edit access to empty collections. Add some pages first.';
 $string['emptycollection'] = 'Empty collection';
 $string['manageviews'] = 'Manage pages';
+$string['manageviewsspecific'] = 'Manage pages in "%s"';
 $string['name'] = 'Collection name';
 $string['newcollection'] = 'New collection';
 $string['nocollections'] = 'No collections yet.';

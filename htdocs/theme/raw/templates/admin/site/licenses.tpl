@@ -27,8 +27,11 @@
                 <td>{$l->shortname}</td>
                 <td><a href="{$l->name}">{$l->name}</a></td>
                 <td class="btns2">
-                <a href="license-edit.php?edit={$l->name|escape:url}"><img src="{$THEME->get_url('images/btn_edit.png')}"></a>
-                <input type="image" title="Delete" value="" name="license_delete[{$l->name}]" src="{$THEME->get_url('images/btn_deleteremove.png')}"></td>
+                    <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}">
+                        <img src="{$THEME->get_url('images/btn_edit.png')}" alt="{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}">
+                    </a>
+                    <input type="image" title="{str tag=delete}" value="" name="license_delete[{$l->name}]" src="{$THEME->get_url('images/btn_deleteremove.png')}" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
+                </td>
             </tr>
         {/foreach}
         </tbody>

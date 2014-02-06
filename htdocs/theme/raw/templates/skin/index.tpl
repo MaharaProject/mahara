@@ -20,10 +20,14 @@
             <div class="skinthumb">
                 <div class="skin-controls">
                     {if $skin.editable}
-                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='clickimagetoedit' section='skin'}">{str tag="clickimagetoedit" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='clickimagetoedit' section='skin'}">
+                            {str tag=editspecific arg1=$skin.title}
+                        </a>
                     {/if}
                     {if $skin.metadata && $skin.editable}
-                        <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">{str tag="viewmetadata" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">
+                            {str tag=viewmetadataspecific section=skin arg1=$skin.title}
+                        </a>
                         <div class="skin-metadata {if $id eq $skin.id && $metadata}show{else}hidden{/if}">
                             <input type="image" class="metadataclose" src="{theme_url images/btn_close.png}" alt="{str tag=closemetadata section=skin}" title="{str tag=closemetadata section=skin}" />
                             <div class="metadatatitle"><h2 class="title">{str tag=metatitle section=skin}</h2></div>
@@ -35,18 +39,28 @@
                         </div>
                     {/if}
                     {if $skin.removable}
-                        <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">{str tag="exportthisskin" section="skin"}</a>
-                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">{str tag="deletethisskin" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">
+                            {str tag=exportspecific section=skin arg1=$skin.title}
+                        </a>
+                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">
+                            {str tag=deletespecific arg1=$skin.title}
+                        </a>
                     {else}
                         <div class="skinactions">
                         {if $skin.metadata && !$skin.editable}
-                            <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">{str tag="viewmetadata" section="skin"}</a>
+                            <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">
+                                {str tag=viewmetadataspecific section=skin arg1=$skin.title}
+                            </a>
                         {/if}
                         {if $skin.type == 'public' && $skin.owner != $user}
                             {if !$skin.favorite}
-                                <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" class="btn-addtofavourites" title="{str tag='addtofavorites' section='skin'}">{str tag="addtofavorites" section="skin"}</a>
+                                <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" class="btn-addtofavourites" title="{str tag='addtofavorites' section='skin'}">
+                                    {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
+                                </a>
                             {else}
-                                <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" class="btn-removefromfavourites" title="{str tag='removefromfavorites' section='skin'}">{str tag="removefromfavorites" section="skin"}</a>
+                                <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" class="btn-removefromfavourites" title="{str tag='removefromfavorites' section='skin'}">
+                                    {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
+                                </a>
                             {/if}
 
                         {/if}

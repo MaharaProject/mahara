@@ -284,7 +284,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
         foreach ($result as &$r) {
             if (!$r->locked) {
-                $r->deleteform = ArtefactTypeBlog::delete_form($r->id);
+                $r->deleteform = ArtefactTypeBlog::delete_form($r->id, $r->title);
             }
         }
 
@@ -395,7 +395,7 @@ class ArtefactTypeBlog extends ArtefactType {
             AND bp.published = 1", array($this->get('id')));
     }
 
-    public static function delete_form($id) {
+    public static function delete_form($id, $title = '') {
         global $THEME;
 
         $confirm = get_string('deleteblog?', 'artefact.blog');
@@ -434,9 +434,10 @@ class ArtefactTypeBlog extends ArtefactType {
                 'submit' => array(
                     'type' => 'image',
                     'src' => $THEME->get_url('images/btn_deleteremove.png'),
-                    'elementtitle' => get_string('delete', 'artefact.blog'),
+                    'alt' => get_string('deletespecific', 'mahara', $title),
+                    'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => get_string('delete', 'artefact.blog')
+                    'value' => get_string('delete'),
                 ),
             ),
         ));
@@ -770,7 +771,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             if (is_null($viewoptions)) {
                 // My Blogs area: create forms for changing post status & deleting posts.
                 $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published);
-                $post->delete = ArtefactTypeBlogpost::delete_form($post->id);
+                $post->delete = ArtefactTypeBlogpost::delete_form($post->id, $post->title);
             }
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
@@ -907,7 +908,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         ));
     }
 
-    public static function delete_form($id) {
+    public static function delete_form($id, $title) {
         global $THEME;
         return pieform(array(
             'name' => 'delete_' . $id,
@@ -924,9 +925,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'submit' => array(
                     'type' => 'image',
                     'src' => $THEME->get_url('images/btn_deleteremove.png'),
-                    'elementtitle' => get_string('delete', 'artefact.blog'),
+                    'alt' => get_string('deletespecific', 'mahara', $title),
+                    'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => get_string('delete', 'artefact.blog'),
+                    'value' => get_string('delete'),
                 ),
             ),
         ));

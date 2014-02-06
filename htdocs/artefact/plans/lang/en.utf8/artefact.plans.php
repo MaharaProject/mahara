@@ -20,6 +20,7 @@ $string['deletethisplan'] = 'Delete plan: \'%s\'';
 $string['editplan'] = 'Edit plan';
 $string['editingplan'] = 'Editing plan';
 $string['managetasks'] = 'Manage tasks';
+$string['managetasksspecific'] = 'Manage tasks in "%s"';
 $string['newplan'] = 'New plan';
 $string['noplansaddone'] = 'No plans yet. %sAdd one%s!';
 $string['noplans'] = 'No plans to display';

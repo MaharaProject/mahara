@@ -19,7 +19,7 @@
                 {else}
                     <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php">
                       <input type="hidden" name="id" value="{$post->id}">
-                      <input type="image" src="{theme_url filename="images/btn_edit.png"}" title="{str tag=edit}">
+                      <input type="image" src="{theme_url filename="images/btn_edit.png"}" alt="{str(tag=editspecific arg1=$post->title)|escape:html|safe}" title="{str tag=edit}">
                     </form>
                     {$post->delete|safe}
                 {/if}

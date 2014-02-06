@@ -47,7 +47,6 @@ $string['createasdraftdesc'] = 'This will create the journal entry, but it will 
 $string['createblog'] = 'Create journal';
 $string['dataimportedfrom'] = 'Data imported from %s';
 $string['defaultblogtitle'] = '%s\'s Journal';
-$string['delete'] = 'Delete';
 $string['deleteblog?'] = 'Are you sure you want to delete this journal?';
 $string['deletebloghaspost?'] = array(
     0 => 'This journal contains 1 entry. Are you sure you want to delete this journal?',

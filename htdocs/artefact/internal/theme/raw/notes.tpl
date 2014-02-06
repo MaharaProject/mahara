@@ -69,7 +69,7 @@
       {if $n->locked}
         <span class="s dull">{str tag=Submitted section=view}</span>
       {else}
-        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
+        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$n->title)|escape:html|safe}"></a>
         {if $n->deleteform}{$n->deleteform|safe}{/if}
       {/if}
       </td>

@@ -39,13 +39,17 @@ function groupcategories_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'admin/groups/groupcategories.php');
 }
 
-$strings = array('edit','delete','update','cancel','add','name','unknownerror');
+$strings = array('edit', 'delete', 'update', 'cancel', 'add', 'name', 'unknownerror');
 $adminstrings = array('confirmdeletecategory', 'deletefailed');
+$argumentstrings = array('editspecific', 'deletespecific');
 foreach ($strings as $string) {
     $getstring[$string] = json_encode(get_string($string));
 }
 foreach ($adminstrings as $string) {
     $getstring[$string] = json_encode(get_string($string, 'admin'));
+}
+foreach ($argumentstrings as $string) {
+    $getstring[$string] = json_encode(get_string($string, 'mahara', '%s'));
 }
 
 $thead = array(json_encode(get_string('name', 'admin')), '""');
@@ -71,9 +75,11 @@ function displaymenuitems(itemlist) {
 // Creates one table row
 function formatrow (item) {
     // item has id, type, name, link, linkedto
-    var edit = INPUT({'type':'image','src':config.theme['images/btn_edit.png'],'title':{$getstring['edit']}});
+    var edit = INPUT({'type':'image','src':config.theme['images/btn_edit.png'],
+        'title':{$getstring['edit']},'alt':{$getstring['editspecific']}.replace('%s', item.name)});
     connect(edit, 'onclick', function (e) { e.stop(); edititem(item); });
-    var del = INPUT({'type':'image','src':config.theme['images/btn_deleteremove.png'],'title':{$getstring['delete']}});
+    var del = INPUT({'type':'image','src':config.theme['images/btn_deleteremove.png'],
+        'title':{$getstring['delete']},'alt':{$getstring['deletespecific']}.replace('%s', item.name)});
     connect(del, 'onclick', function (e) { e.stop(); delitem(item.id); });
     var cells = map(
         partial(TD,null),

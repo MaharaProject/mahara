@@ -17,7 +17,13 @@
             {/if}
 
     {/if}
-            <td class="buttonscell btns2 planscontrols"><a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
-            <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str tag=delete}"></a></td>
+            <td class="buttonscell btns2 planscontrols">
+                <a href="{$WWWROOT}artefact/plans/edit/task.php?id={$task->task}" title="{str tag=edit}">
+                    <img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$task->title)|escape:html|safe}">
+                </a>
+                <a href="{$WWWROOT}artefact/plans/delete/task.php?id={$task->task}" title="{str tag=delete}">
+                    <img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$task->title)|escape:html|safe}">
+                </a>
+            </td>
         </tr>
 {/foreach}

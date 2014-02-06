@@ -29,8 +29,12 @@
     </td>
     {if $moderator}
     <td class="right btns2">
-        <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-edit" title="{str tag="edit"}"></a>
-        <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-del" title="{str tag="delete"}"></a>
+        <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-edit" title="{str tag="edit"}">
+            {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
+        </a>
+        <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn-big-del" title="{str tag="delete"}">
+            {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
+        </a>
     </td>
     {/if}
 </tr>

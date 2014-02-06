@@ -41,7 +41,16 @@ function pieform_element_image(Pieform $form, $element) {/*{{{*/
     if (isset($element['confirm'])) {
         $element['onclick'] = 'return confirm(' . json_encode($element['confirm']) . ');';
     }
+    if (!isset($element['alt'])) {
+        if (isset($element['elementtitle'])) {
+            $element['alt'] = $element['elementtitle'];
+        }
+        else {
+            $element['alt'] = '';
+        }
+    }
     return '<input type="image" src="' . Pieform::hsc($element['src']) . '"'
+        . ' alt="' . Pieform::hsc($element['alt']) . '"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }/*}}}*/

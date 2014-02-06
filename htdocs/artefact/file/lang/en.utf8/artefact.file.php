@@ -26,6 +26,8 @@ $string['cannotextractfileinfoldersubmitted'] = 'You cannot extract a file in a 
 $string['changessaved'] = 'Changes saved';
 $string['clickanddragtomovefile'] = 'Move %s by clicking and dragging or by pressing Space';
 $string['moveto'] = 'Move to %s';
+$string['editfolderspecific'] = 'Edit folder "%s"';
+$string['deletefolderspecific'] = 'Delete folder "%s"';
 $string['foldercontents'] = 'Folder contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
@@ -267,6 +269,7 @@ $string['wrongfiletypeforblock'] = 'The file you uploaded was not the correct ty
 $string['Contents'] = 'Contents';
 $string['Continue'] = 'Continue';
 $string['Decompress'] = 'Decompress';
+$string['decompressspecific'] = 'Decompress "%s"';
 $string['nfolders'] = array(
     '%s folder',
     '%s folders',

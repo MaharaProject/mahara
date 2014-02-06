@@ -46,14 +46,16 @@ $string['deletepost'] = 'Delete post';
 $string['deletepostsuccess'] = 'Post deleted successfully';
 $string['deletepostsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['deletetopic'] = 'Delete topic';
-$string['deletetopicvariable'] = 'Delete topic \'%s\'';
+$string['deletetopicspecific'] = 'Delete topic "%s"';
 $string['deletetopicsuccess'] = 'Topic deleted successfully';
 $string['deletetopicsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['editpost'] = 'Edit post';
+
 $string['editpostsuccess'] = 'Post edited successfully';
 $string['editstothispost'] = 'Edits to this post:';
 $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
+$string['edittopicspecific'] = 'Edit topic "%s"';
 $string['edittopicsuccess'] = 'Topic edited successfully';
 $string['forumname'] = 'Forum name';
 $string['forumposthtmltemplate'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>Forum: %s (%s)</strong></div>

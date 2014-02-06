@@ -73,9 +73,20 @@
       {if $file->locked}
         <span class="dull">{str tag=Submitted section=view}</span>
       {elseif !isset($file->can_edit) || $file->can_edit != 0}
-        {if $file->artefacttype == 'archive'}<a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}"><img src="{theme_url filename="images/btn_extract.png"}" alt="{str tag=Unzip section=artefact.file}"/></a>{/if}
-        <input type="image" src="{theme_url filename="images/btn_edit.png"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}" alt="{str tag=edit}" />
-        <input type="image" src="{theme_url filename="images/btn_deleteremove.png"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}" alt="{str tag=delete}" />
+        {if $file->artefacttype == 'archive'}
+        <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}">
+            <img src="{theme_url filename="images/btn_extract.png"}" alt="{str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}"/>
+        </a>
+        {/if}
+        {if $file->artefacttype == 'folder'}
+            {assign var=edittext value=str(tag=editfolderspecific section=artefact.file arg1=$displaytitle)}
+            {assign var=deletetext value=str(tag=deletefolderspecific section=artefact.file arg1=$displaytitle)}
+        {else}
+            {assign var=edittext value=str(tag=editspecific arg1=$displaytitle)}
+            {assign var=deletetext value=str(tag=deletespecific arg1=$displaytitle)}
+        {/if}
+        <input type="image" src="{theme_url filename="images/btn_edit.png"}" name="{$prefix}_edit[{$file->id}]" value="" title="{str tag=edit}" alt="{$edittext|escape:html|safe}" />
+        <input type="image" src="{theme_url filename="images/btn_deleteremove.png"}" name="{$prefix}_delete[{$file->id}]" value="" title="{str tag=delete}" alt="{$deletetext|escape:html|safe}" />
       {/if}
     {/if}
     {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}

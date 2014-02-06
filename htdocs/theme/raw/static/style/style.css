@@ -2856,6 +2856,10 @@ form#search {
     border-radius: 5px;
     padding: 10px;
 }
+.skinthumb .skin-controls a.btn-addtofavourites,
+.skinthumb .skin-controls a.btn-removefromfavourites {
+    display: inline-block;
+}
 .skinthumb .skin-controls a.btn-addtofavourites {
     background: url(../images/rating_star.png) no-repeat 0 0;
     width: 19px;

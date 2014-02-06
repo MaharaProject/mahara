@@ -1,9 +1,15 @@
 {foreach from=$plans.data item=plan}
     <div class="{cycle values='r0,r1'} listrow">
             <div class="fr planstatus">
-                 <a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" title="{str tag="edit"}" ><img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}"></a>
-                 <a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}" title="{str tag=managetasks section=artefact.plans}"><img src="{theme_url filename='images/btn_configure.png'}" alt="{str tag=managetasks}"></a>
-                 <a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id}" title="{str tag="delete"}"><img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str tag=delete}"></a>
+                 <a href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan->id}" title="{str tag=edit}" >
+                    <img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$plan->title)|escape:html|safe}">
+                 </a>
+                 <a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}" title="{str tag=managetasks section=artefact.plans}">
+                    <img src="{theme_url filename='images/btn_configure.png'}" alt="{str(tag=managetasksspecific section=artefact.plans arg1=$plan->title)|escape:html|safe}">
+                 </a>
+                 <a href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan->id}" title="{str tag=delete}">
+                    <img src="{theme_url filename='images/btn_deleteremove.png'}" alt="{str(tag=deletespecific arg1=$plan->title)|escape:html|safe}">
+                 </a>
             </div>
 
             <h3 class="title"><a href="{$WWWROOT}artefact/plans/plan.php?id={$plan->id}">{$plan->title}</a></h3>

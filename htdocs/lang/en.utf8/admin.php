@@ -1041,6 +1041,7 @@ $string['groupadmins'] = 'Administrators';
 $string['grouptype'] = 'Group type';
 $string['groupvisible'] = 'Visibility';
 $string['groupmanage'] = 'Manage';
+$string['groupmanagespecific'] = 'Manage "%s"';
 $string['groupdelete'] = 'Delete';
 $string['managegroupquotadescription'] = 'Use the form below to change the group file quota for this group.';
 $string['managegroupdescription'] = 'Use the form below to promote and demote administrators for this group. If you remove a group administrator they will remain a group member.';

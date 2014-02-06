@@ -1016,8 +1016,12 @@ EOF;
 
     static function get_artefacttype_js($compositetype) {
         global $THEME;
-        $editstr = get_string('edit');
-        $delstr = get_string('delete');
+        $titlestring = call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_title_js_string');
+        $editstr = json_encode(get_string('edit'));
+        $delstr = json_encode(get_string('delete'));
+        $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
+        $deljsstr = json_encode(get_string('deletespecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
+
         $imagemoveblockup   = json_encode($THEME->get_url('images/btn_moveup.png'));
         $imagemoveblockdown = json_encode($THEME->get_url('images/btn_movedown.png'));
         $upstr = get_string('moveup', 'artefact.resume');
@@ -1061,8 +1065,8 @@ EOF;
 
         $js .= <<<EOF
         function (r, d) {
-            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': '{$editstr}'}, IMG({'src': config.theme['images/btn_edit.png'], 'alt':'{$editstr}'}));
-            var dellink = A({'href': '', 'title': '{$delstr}'}, IMG({'src': config.theme['images/btn_deleteremove.png'], 'alt': '[x]'}));
+            var editlink = A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact, 'title': {$editstr}}, IMG({'src': config.theme['images/btn_edit.png'], 'alt':{$editjsstr}}));
+            var dellink = A({'href': '', 'title': {$delstr}}, IMG({'src': config.theme['images/btn_deleteremove.png'], 'alt': {$deljsstr}}));
             connect(dellink, 'onclick', function (e) {
                 e.stop();
                 return deleteComposite(d.type, r.id, r.artefact);

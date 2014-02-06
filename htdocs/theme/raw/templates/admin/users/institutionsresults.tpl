@@ -16,13 +16,13 @@
                         <form action="" method="post">
                                 <input type="hidden" name="i" value="{$institution->name}">
                                 <input type="hidden" name="edit" value=1>
-                                <input type="image" name="edit" title="{str tag="edit"}" src="{theme_url filename="images/btn_edit.png"}">
+                                <input type="image" name="edit" title="{str tag="edit"}" src="{theme_url filename="images/btn_edit.png"}" alt="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
                         </form>
                         {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
                         <form action="" method="post">
                                 <input type="hidden" name="i" value="{$institution->name}">
                                 <input type="hidden" name="delete" value="1">
-                                <input type="image" name="delete" title="{str tag="delete"}" src="{theme_url filename="images/btn_deleteremove.png"}">
+                                <input type="image" name="delete" title="{str tag="delete"}" src="{theme_url filename="images/btn_deleteremove.png"}" alt="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
                         </form>
                         {/if}
                 </td>

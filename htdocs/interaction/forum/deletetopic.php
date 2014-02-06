@@ -60,7 +60,7 @@ if (!$moderator || ($topic->group && !group_within_edit_window($topic->group))) 
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 
-define('TITLE', $topic->title . ' - ' . get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
+define('TITLE', $topic->title . ' - ' . get_string('deletetopicspecific', 'interaction.forum', $topic->subject));
 
 $form = pieform(array(
     'name'     => 'deletetopic',
