@@ -734,6 +734,11 @@ input.calendar.required {
 #mce_fullscreen_container .mceEditor {
     display: block;
 }
+/* files */
+a.btn-addfile {
+    display: inline-block;
+    margin-top: 5px;
+}
 /******************** Buttons ********************/
 /* Default buttons */
 /* default state */
