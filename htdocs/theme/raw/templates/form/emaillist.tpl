@@ -27,10 +27,11 @@
                 alert(get_string('emailtoolong'));
             }
             else {
+                var email = {{$name}}_newrefinput.value;
                 appendChildNodes('{{$name}}_list', DIV({'class': 'unsent'},
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': {{$name}}_newrefinput.value}),
+                    INPUT({'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
-                    {{$name}}_newrefinput.value,
+                    email,
                     A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, IMG({'class':'inline-delete', 'alt': '{{str tag=delete}}', 'src':'{{theme_url filename="images/btn_deleteremove.png"}}'})),
                     ' ' + {{$validationemailstr|safe}}
                 ));
@@ -51,8 +52,8 @@
         }
 
         {{$name}}_newrefinput = INPUT({'type': 'text'});
-        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'value': '{{$addbuttonstr}}'});
-        {{$name}}_newref = DIV(null,{{$name}}_newrefinput,{{$name}}_newrefsubmit);
+        {{$name}}_newrefsubmit = INPUT({'type': 'submit', 'class': 'btn', 'value': '{{$addbuttonstr}}'});
+        {{$name}}_newref = DIV(null,{{$name}}_newrefinput,' ',{{$name}}_newrefsubmit);
 
         appendChildNodes('{{$name}}_list', {{$name}}_newref);
 
@@ -93,11 +94,13 @@
     }
 </script>
 <div id="{{$name}}_list">
-{{foreach from=$validated item=email}}
+{{foreach from=$validated key=i item=email}}
     <div class="validated">
-        <label><input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email}}">
+        <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
-        {{$email}}</label>
+        <label for="{{$name}}_radio_{{$i}}">
+            <span class="accessible-hidden">{{$title}}: </span>{{$email}}
+        </label>
         <a href="" onclick="{{$name}}_remove(this); return false;"><img class="inline-delete"alt="{{str tag=delete}}" src="{{theme_url filename="images/btn_deleteremove.png"}}" /></a>
     </div>
 {{/foreach}}
