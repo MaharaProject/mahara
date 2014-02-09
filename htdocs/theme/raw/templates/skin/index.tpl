@@ -20,7 +20,7 @@
             <div class="skinthumb">
                 <div class="skin-controls">
                     {if $skin.editable}
-                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='clickimagetoedit' section='skin'}">
+                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='editthisskin' section='skin'}">
                             {str tag=editspecific arg1=$skin.title}
                         </a>
                     {/if}
@@ -72,9 +72,11 @@
                 </div>
                 <div class="skin-content">
                     {if $skin.editable}
-                    <a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" title="{str tag='clickimagetoedit' section='skin'}"><img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135"></a>
+                    <a title="{str tag=clicktoedit section=skin}" href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}">
+                        <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" alt="{str(tag=skinpreviewedit section=skin arg1=$skin.title)|escape}" width="240" height="135">
+                    </a>
                     {else}
-                    <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" width="240" height="135">
+                    <img src="{$WWWROOT}skin/thumb.php?id={$skin.id}" alt="{str(tag=skinpreview section=skin arg1=$skin.title)|escape}" width="240" height="135">
                     {/if}
                 </div>
             </div>
