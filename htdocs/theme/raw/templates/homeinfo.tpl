@@ -1,5 +1,11 @@
 <div id="home-info-container">
-            {if $USER->is_logged_in()}<div id="hideinfo" class="nojs-hidden-block"><a title="{str tag=Hide}"><img src="{theme_url filename='images/btn_close.png'}" alt="[x]" /></a></div>{/if}
+    {if $USER->is_logged_in()}
+        <div id="hideinfo" class="nojs-hidden-block">
+            <a href="#" title="{str tag=Hide2}">
+                <img src="{theme_url filename='images/btn_close.png'}" alt="{str tag=Close}" />
+            </a>
+        </div>
+    {/if}
 <table class="home-info-table{if $USER->is_logged_in()} loggedin{/if} fullwidth">
     <tr>
         <th class="home-info home-info-1">
