@@ -67,8 +67,12 @@ if (!empty($_SESSION['registrationcancelled'])) {
 if (isset($key)) {
 
     // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ? AND pending != 1', array($key, db_format_timestamp(time())))) {
-        die_info(get_string('registrationnosuchkey', 'auth.internal'));
+    if (!$registration = get_record_select('usr_registration', '"key" = ? AND pending != 1', array($key))) {
+        die_info(get_string('registrationnosuchkey1', 'auth.internal'));
+    }
+
+    if (strtotime($registration->expiry) < time()) {
+        die_info(get_string('registrationexpiredkey', 'auth.internal'));
     }
 
     // In case a new session has started, reset the session language

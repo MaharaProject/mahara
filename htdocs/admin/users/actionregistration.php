@@ -26,7 +26,7 @@ if (!is_logged_in()) {
 }
 
 if (!$registration = get_record_select('usr_registration', '"id" = ? AND pending = 1', array($id))) {
-    die_info(get_string('registrationnosuchkey', 'auth.internal'));
+    die_info(get_string('registrationnosuchid', 'auth.internal'));
 }
 if (!$inst = get_record('institution', 'name', $registration->institution)) {
     die_info(get_string('nosuchinstitution', 'admin'));

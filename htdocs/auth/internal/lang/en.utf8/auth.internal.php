@@ -45,7 +45,9 @@ to complete the signup process:</p>
 Regards,
 The %s Team</pre>';
 $string['registeredok'] = '<p>You have successfully registered. Please check your email account for instructions on how to activate your account</p>';
-$string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
+$string['registrationexpiredkey'] = 'Sorry, your key is expired. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
+$string['registrationnosuchid'] = 'Sorry, this registration key does not exists, perhaps it is already activated?';
+$string['registrationnosuchkey1'] = 'Sorry, we don\'t have a key that matches your link, perhaps your email program mangled it?';
 $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsuccessful. This is our fault, not yours. Please try again later.';
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken.';
 $string['usernameinvalidform'] = 'Usernames may contain letters, numbers and most common symbols and must be from 3 to 30 characters long. Spaces are not allowed.';
