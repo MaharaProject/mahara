@@ -21,12 +21,32 @@ require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('Views', 'view'));
 
+$offset = param_integer('offest', 0);
+
 list($searchform, $data, $pagination) = View::views_by_owner();
+
 $js = <<< EOF
 addLoadEvent(function () {
     p = {$pagination['javascript']}
-});
 EOF;
+if ($offset > 0) {
+    $js .= <<< EOF
+    if ($('myviews')) {
+        getFirstElementByTagAndClassName('a', null, 'myviews').focus();
+    }
+EOF;
+}
+else {
+    $js .= <<< EOF
+    if ($('searchresultsheading')) {
+        addElementClass('searchresultsheading', 'hidefocus');
+        setNodeAttribute('searchresultsheading', 'tabIndex', -1);
+        $('searchresultsheading').focus();
+    }
+EOF;
+}
+$js .= '});';
+
 $createviewform = pieform(create_view_form());
 
 $smarty = smarty(array('paginator'));
@@ -34,6 +54,7 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('PAGEHEADING', TITLE);
+$smarty->assign('query', param_variable('query', null));
 $smarty->assign('querystring', get_querystring());
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);

@@ -95,8 +95,28 @@ $searchform = pieform($searchform);
 
 $js = <<< EOF
 addLoadEvent(function () {
+    var firstpage = false;
+
+    function SearchPager() {
+        var self = this;
+        paginatorProxy.addObserver(self);
+        connect(self, 'pagechanged', function() {
+            if (firstpage) {
+                firstpage = false;
+                addElementClass('totalresultsdisplay', 'hidefocus');
+                setNodeAttribute('totalresultsdisplay', 'tabindex', -1);
+                $('totalresultsdisplay').focus();
+            }
+            else {
+                getFirstElementByTagAndClassName('a', null, $('universalsearchresults')).focus();
+            }
+        });
+    }
+    var searchPager = new SearchPager();
+
     p = {$data['pagination_js']}
     connect('search_submit', 'onclick', function (event) {
+        firstpage = true;
         replaceChildNodes('messages');
         var params = {'query': $('search_query').value, 'tagsonly': $('search_tagsonly').checked, 'limit': $('setlimitselect').value, 'extradata':serializeJSON({'page':'index'})};
         p.sendQuery(params);
@@ -104,6 +124,16 @@ addLoadEvent(function () {
     });
 });
 EOF;
+
+if (!empty($query)) {
+    $js .= <<< EOF
+addLoadEvent(function() {
+    addElementClass('totalresultsdisplay', 'hidefocus');
+    setNodeAttribute('totalresultsdisplay', 'tabindex', -1);
+    $('totalresultsdisplay').focus();
+});
+EOF;
+}
 
 $javascript = array('paginator');
 

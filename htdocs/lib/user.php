@@ -1797,6 +1797,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
         'url' => get_config('wwwroot') . 'user/' . $page . '.php?' . http_build_query($params),
         'jsonscript' => 'json/friendsearch.php',
         'datatable' => 'friendslist',
+        'searchresultsheading' => 'searchresultsheading',
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],

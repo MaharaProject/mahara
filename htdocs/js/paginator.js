@@ -16,15 +16,28 @@
  *                  pagination data
  * @param limit     Extra data to pass back in the ajax requests to the script
  */
-var Paginator = function(id, datatable, script, extradata) {
+var Paginator = function(id, datatable, heading, script, extradata) {
     var self = this;
 
-    this.init = function(id, datatable, script, extradata) {
+    this.init = function(id, datatable, heading, script, extradata) {
         self.id = id;
         if (script && script.length !== 0) {
             self.datatable = $(datatable);
+            self.heading = $(heading);
             self.jsonScript = config['wwwroot'] + script;
             self.extraData = extradata;
+
+            var index = location.href.indexOf('?');
+            if (index >= 0) {
+                var querystring = parseQueryString(location.href.substr(index));
+                self.query = querystring.query;
+                self.offset = querystring.offset;
+            }
+
+            if (self.heading) {
+                addElementClass(self.heading, 'hidefocus');
+                setNodeAttribute(self.heading, 'tabIndex', 0);
+            }
 
             self.rewritePaginatorLinks();
             self.rewritePaginatorSelectForm();
@@ -97,7 +110,7 @@ var Paginator = function(id, datatable, script, extradata) {
         }
     };
 
-    this.updateResults = function (data) {
+    this.updateResults = function (data, params) {
         var container = self.datatable;
         if (self.datatable.tagName == 'TABLE') {
             container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
@@ -153,11 +166,25 @@ var Paginator = function(id, datatable, script, extradata) {
                 results.innerHTML = data.data.results;
             }
         }
+
+        if (self.heading) {
+            removeElementClass(self.heading, 'hidden');
+        }
+
+        // Focus management based on whether the user searched for something or just changed the page
+        if (self.heading && (params.query != self.query || params.offset == self.offset)) {
+            self.heading.focus();
+        }
+        else {
+            getFirstElementByTagAndClassName('a', null, self.datatable).focus();
+        }
+        self.query = params.query;
+        self.offset = params.offset;
     };
 
     this.sendQuery = function(params) {
         sendjsonrequest(self.jsonScript, params, 'GET', function(data) {
-            self.updateResults(data);
+            self.updateResults(data, params);
             self.alertProxy('pagechanged', data['data']);
         });
     };
@@ -183,7 +210,7 @@ var Paginator = function(id, datatable, script, extradata) {
         }
     };
 
-    this.init(id, datatable, script, extradata);
+    this.init(id, datatable, heading, script, extradata);
 };
 
 /**

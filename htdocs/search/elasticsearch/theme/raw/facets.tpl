@@ -6,7 +6,7 @@
     - sort
     - tagsonly
 *}
-<div class="totalresults">{str tag=xsearchresultsfory section=search.elasticsearch arg1=$totalresults arg2='<a href="`$WWWROOT`search/elasticsearch/index.php?query=`$query`">`$query`</a>'}</div>
+<div id="totalresultsdisplay" class="totalresults">{str tag=xsearchresultsfory section=search.elasticsearch arg1=$totalresults arg2='<a href="`$WWWROOT`search/elasticsearch/index.php?query=`$query`">`$query`</a>'}</div>
 <div class="tabswrap"><ul class="in-page-tabs searchtab">
 {foreach from=$facets item=term}
     {if $term.count > 0}
