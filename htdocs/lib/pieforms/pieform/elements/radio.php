@@ -54,6 +54,11 @@ function pieform_element_radio(Pieform $form, $element) {
     $rowsize = isset($element['rowsize']) ? (int) $element['rowsize'] : 1;
     $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
 
+    $titletext = '';
+    if (!empty($element['title'])) {
+        $titletext = '<span class="accessible-hidden">' . Pieform::hsc($element['title']) . ': </span>';
+    }
+
     $i = 0;
     foreach ($element['options'] as $value => $data) {
         $idsuffix = substr(md5(microtime()), 0, 4);
@@ -75,7 +80,7 @@ function pieform_element_radio(Pieform $form, $element) {
             . (($form_value == $value) ? ' checked="checked"' : '')
             . '>';
             if (!$nolabels) {
-                $result .= ' <label for="' . $form->get_name() . '_' . $uid . '">' . Pieform::hsc($text) . "</label>"
+                $result .= ' <label for="' . $form->get_name() . '_' . $uid . '">' . $titletext . Pieform::hsc($text) . "</label>"
                 . ($description != '' ? '<div class="description">' . $description . '</div>' : '');
             }
         $i++;
