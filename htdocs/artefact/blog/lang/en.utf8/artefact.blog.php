@@ -49,6 +49,14 @@ $string['dataimportedfrom'] = 'Data imported from %s';
 $string['defaultblogtitle'] = '%s\'s Journal';
 $string['delete'] = 'Delete';
 $string['deleteblog?'] = 'Are you sure you want to delete this journal?';
+$string['deletebloghaspost?'] = array(
+    0 => 'This journal contains 1 entry. Are you sure you want to delete this journal?',
+    1 => 'This journal contains %d entries. Are you sure you want to delete this journal?'
+);
+$string['deletebloghasview?'] = array(
+    0 => 'This journal contains entries that are used in 1 page. Are you sure you want to delete this journal?',
+    1 => 'This journal contains entries that are used in %d pages. Are you sure you want to delete this journal?'
+);
 $string['deleteblogpost?'] = 'Are you sure you want to delete this entry?';
 $string['description'] = 'Description';
 $string['dimensions'] = 'Dimensions';
