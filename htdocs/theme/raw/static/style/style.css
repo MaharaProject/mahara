@@ -553,6 +553,9 @@ label {
     font-weight: normal;
     line-height: 1.667em;
 }
+.checkboxes td label {
+    font-weight: normal;
+}
 /* fieldset */
 fieldset {
     padding: 10px 15px;
@@ -2652,6 +2655,12 @@ fieldset#pagestoadd tr#addviews_submit_container td {
     font-weight: bold;
     padding: 0;
 }
+#editaccess_collections_container label.checkbox,
+#editaccess_views_container label.checkbox {
+    margin: 0;
+    font-size: 1em;
+    font-weight: normal;
+}
 #editaccess .checkboxes a {
     padding: 0;
     margin: 0 0 0 10px;
@@ -2808,12 +2817,19 @@ form#search {
     float: left;
     padding: 3px;
     margin: 3px 0;
+    font-weight: bold;
 }
 #search_advanced_container #search_share_container {
     padding-left: 9em;
 }
 #search_advanced_container #search_share_container label {
     margin-left: -9em;
+}
+#search_advanced_container #search_share_container label.checkbox {
+    display: inline;
+    float: none;
+    margin-left: 0;
+    font-weight: normal;
 }
 #search_advanced_container #search_share_container a {
     display: block;
