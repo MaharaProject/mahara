@@ -19,13 +19,13 @@
                     <div class="importcolumn importcolumn2">
                         {if $fieldvalue.duplicateditem}
                         <div class="duplicatedpfield">
-                            <label>{str tag=duplicatedprofilefieldvalue section=artefact.internal}:</label>
+                            <strong>{str tag=duplicatedprofilefieldvalue section=artefact.internal}:</strong>
                             <div id="{$fieldvalue.duplicateditem.id}_duplicatedpfield" class="detail">{$fieldvalue.duplicateditem.html|clean_html|safe}</div>
                         </div>
                         {/if}
                         {if $fieldvalue.existingitems}
                         <div class="existingpfields">
-                            <label>{str tag=existingprofilefieldvalues section=artefact.internal}:</label>
+                            <strong>{str tag=existingprofilefieldvalues section=artefact.internal}:</strong>
                                {foreach from=$fieldvalue.existingitems item=existingitem}
                                <div id="{$existingitem.id}_existingprofilefield" class="detail">{$existingitem.html|clean_html|safe}</div>
                                {/foreach}
@@ -35,8 +35,10 @@
                     <div class="importcolumn importcolumn3">
                         {foreach from=$displaydecisions key=opt item=displayopt}
                             {if !$fieldvalue.disabled[$opt]}
-                            <input class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
-                            {$displayopt}<br>
+                            <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
+                            <label for="decision_{$fieldvalue.id}_{$opt}">
+                                {$displayopt}
+                                <span class="accessible-hidden">({str tag=$fieldname section=artefact.internal}: {$fieldvalue.html|safe|strip_tags|str_shorten_text:80:true})</span></label><br>
                             {/if}
                         {/foreach}
                     </div>

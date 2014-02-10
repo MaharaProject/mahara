@@ -6,7 +6,11 @@
 <div class="{cycle name=rows values='r0,r1'} listrow">
     <div id="entryblog" class="indent1">
         <div class="importcolumn importcolumn1">
-            <h3 class="title"><a class="blogtitle" href="" id="{$blog.id}">{$blog.title|str_shorten_text:80:true}</a></h3>
+            <h3 class="title">
+            {if $blog.description}<a class="blogtitle" href="" id="{$blog.id}">{/if}
+            {$blog.title|str_shorten_text:80:true}
+            {if $blog.description}</a>{/if}
+            </h3>
             <div id="{$blog.id}_desc" class="detail hidden">{$blog.description|clean_html|safe}</div>
             {if $blog.tags}
             <div class="tags">
@@ -37,8 +41,8 @@
         <div class="importcolumn importcolumn3">
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$blog.disabled[$opt]}
-                <input class="blogdecision" id="{$blog.id}" type="radio" name="decision_{$blog.id}" value="{$opt}"{if $blog.decision == $opt} checked="checked"{/if}>
-                {$displayopt}<br>
+                <input id="decision_{$blog.id}_{$opt}" class="blogdecision" id="{$blog.id}" type="radio" name="decision_{$blog.id}" value="{$opt}"{if $blog.decision == $opt} checked="checked"{/if}>
+                <label for="decision_{$blog.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$blog.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>
@@ -48,7 +52,11 @@
     {foreach from=$blog.entryposts item=post}
         <div id="posttitle_{$post.id}" class="{cycle name=rows values='r0,r1'} listrow {if $post.published}published{else}draft{/if}">
             <div class="importcolumn importcolumn1">
-                <h4 class="title"><a class="posttitle" href="" id="{$post.id}">{$post.title|str_shorten_text:80:true}</a></h4>
+                <h4 class="title">
+                    {if $post.description}<a class="posttitle" href="" id="{$post.id}">{/if}
+                    {$post.title|str_shorten_text:80:true}
+                    {if $post.description}</a>{/if}
+                </h4>
                 <div id="{$post.id}_desc" class="detail hidden">
                     {$post.description|clean_html|safe}
                 </div>
@@ -99,8 +107,8 @@
             <div class="importcolumn importcolumn3">
                 {foreach from=$displaydecisions key=opt item=displayopt}
                     {if !$post.disabled[$opt]}
-                    <input class="postdecision" type="radio" name="decision_{$post.id}" value="{$opt}"{if $post.decision == $opt} checked="checked"{/if}>
-                    {$displayopt}<br>
+                    <input id="decision_{$post.id}_{$opt}" class="postdecision" type="radio" name="decision_{$post.id}" value="{$opt}"{if $post.decision == $opt} checked="checked"{/if}>
+                    <label for="decision_{$post.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$post.title})</span></label><br>
                     {/if}
                 {/foreach}
             </div>
