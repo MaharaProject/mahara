@@ -848,8 +848,12 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 if (data.changedowner && data.newtabs && data.newtabdata) {
                     self.tabdata = data.newtabdata;
                     $(self.id+'_ownertabs').innerHTML = data.newtabs;
-                    if ($(self.id+'_ownersubtabs')) {
-                        $(self.id+'_ownersubtabs').innerHTML = data.newsubtabs;
+                    if (data.newsubtabs) {
+                        $(self.id + '_ownersubtabs').innerHTML = data.newsubtabs;
+                        removeElementClass(self.id + '_ownersubtabs', 'hidden')
+                    }
+                    else {
+                        addElementClass(self.id + '_ownersubtabs', 'hidden');
                     }
                     if ($(self.id + '_upload_container')) {
                         if (data.newtabdata.upload) {
