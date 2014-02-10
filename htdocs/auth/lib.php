@@ -509,6 +509,7 @@ function auth_setup () {
         // specify login data immediately
         require_once('pieforms/pieform.php');
         $form = new Pieform(auth_get_login_form());
+        $SESSION->loginform = $form;
         if ($USER->is_logged_in()) {
             return;
         }
@@ -1871,9 +1872,13 @@ function auth_remove_old_session_files() {
  * auth_get_login_form, but keep that in mind when making changes.}}
  */
 function auth_generate_login_form() {
+    global $SESSION;
     require_once('pieforms/pieform.php');
     if (!get_config('installed')) {
         return;
+    }
+    else if ($SESSION->loginform) {
+        return get_login_form_js($SESSION->loginform->build());
     }
     $elements = auth_get_login_form_elements();
     $loginform = get_login_form_js(pieform(array(

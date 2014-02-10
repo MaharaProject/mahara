@@ -1872,6 +1872,7 @@ function pieform_configure() {
         'presubmitcallback'     => 'formStartProcessing',
         'postsubmitcallback'    => 'formStopProcessing',
         'jserrormessage' => get_string('errorprocessingform'),
+        'errormessage' => get_string('errorprocessingform'),
         'configdirs' => get_config('libroot') . 'form/',
         'helpcallback' => 'pieform_get_help',
         'elements'   => array(

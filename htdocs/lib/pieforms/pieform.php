@@ -563,6 +563,10 @@ class Pieform {/*{{{*/
                 $message = $this->get_property('jserrormessage');
                 $this->json_reply(PIEFORM_ERR, array('message' => $message));
             }
+            else {
+                global $SESSION;
+                $SESSION->add_error_msg($this->get_property('errormessage'));
+            }
         }
     }/*}}}*/
 
@@ -971,6 +975,7 @@ EOF;
                     if ($subelement['name'] == $name) {
                         $subelement['error'] = $message;
                         $subelement['isescaped'] = ($isescaped) ? true : false;
+                        $this->data['haserror'] = true;
                         return;
                     }
                 }
@@ -979,6 +984,7 @@ EOF;
                 if ($key == $name) {
                     $element['error'] = $message;
                     $element['isescaped'] = ($isescaped) ? true : false;
+                    $this->data['haserror'] = true;
                     return;
                 }
             }
@@ -1563,6 +1569,10 @@ EOF;
             // if the form is a jsform. This can be used by your application however
             // you choose.
             'jserrormessage' => '',
+
+            // A message to add to the list of global error messages if form submission
+            // fails (and the form isn't a jsform)
+            'errormessage' => '',
 
             // Whether this form can be cancelled, regardless of the presence of
             // 'cancel' buttons or form inputs mischeviously named as to behave

@@ -201,7 +201,7 @@ class Session {
      */
     public function render_messages($placement = 'messages') {
         global $THEME;
-        $result = '<div id="' . $placement . '">';
+        $result = '<div id="' . $placement . '" role="alert" aria-live="assertive">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $key => $data) {
                 if ($data['placement'] == $placement) {
