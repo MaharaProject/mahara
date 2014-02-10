@@ -72,13 +72,11 @@ $css = array(
 
 $inlinejs = <<<EOF
     function toggle_metadata(el) {
-        var meta = el.closest('.skinthumb').find('.skin-metadata');
-        if (meta.is(':visible')) {
-            // need to hide 'popup' box
-            jQuery('#overlay').remove();
-        }
-        else {
+        jQuery('#overlay').remove();
+        var meta = el.closest('.skin-controls').find('.skin-metadata');
+        if (meta.hasClass('hidden')) {
             // need to display 'popup' box
+            meta.removeClass('hidden');
             meta.addClass('skin_metadata_overlay');
             meta.addClass('metadata_block');
             getViewport = function() {
@@ -94,9 +92,13 @@ $inlinejs = <<<EOF
             meta.css('left', (((getViewport().w / 2) - 200) > 0) ? (getViewport().w / 2) - 200 : 0);
             meta.css('top', (getViewport().t + scrolltop));
             jQuery(document.body).append('<div id="overlay"></div>');
+            meta.find('.metadataclose').focus();
         }
-        meta.find('.metadataclose').toggleClass('hidden');
-        meta.toggleClass('hidden');
+        else {
+            // need to hide 'popup' box
+            meta.addClass('hidden');
+            el.focus();
+        }
     }
 
     jQuery(function() {
@@ -107,11 +109,9 @@ $inlinejs = <<<EOF
                 return false;
             });
         });
-        jQuery('div.metadataclose').each(function() {
-            jQuery(this).click(function(i) {
-                toggle_metadata(jQuery(this));
-                return false;
-            });
+        jQuery('.metadataclose').click(function(e) {
+            toggle_metadata(jQuery(this).closest('.skin-controls').find('.btn-big-info'));
+            return false;
         });
     });
 EOF;
