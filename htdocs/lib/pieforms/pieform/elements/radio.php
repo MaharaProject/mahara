@@ -53,6 +53,10 @@ function pieform_element_radio(Pieform $form, $element) {
 
     $rowsize = isset($element['rowsize']) ? (int) $element['rowsize'] : 1;
     $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
+    $classname = '';
+    if (!empty($element['hiddenlabels'])) {
+        $classname = ' class="accessible-hidden"';
+    }
 
     $titletext = '';
     if (!empty($element['title'])) {
@@ -74,15 +78,19 @@ function pieform_element_radio(Pieform $form, $element) {
         }
         $attributes = $form->element_attributes($element);
         $attributes = preg_replace("/aria-describedby=\"[^\"]*{$baseid}{$idsuffix}_description\s*[^\"]*\"/", 'aria-describedby="$1_description"', $attributes);
+
+        $result .= '<div class="radio">';
         $result .= '<input type="radio"'
             . $attributes
             . ' value="' . Pieform::hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
             . '>';
-            if (!$nolabels) {
-                $result .= ' <label for="' . $form->get_name() . '_' . $uid . '">' . $titletext . Pieform::hsc($text) . "</label>"
-                . ($description != '' ? '<div class="description">' . $description . '</div>' : '');
-            }
+        if (!$nolabels) {
+            $result .= ' <label for="' . $form->get_name() . '_' . $uid . '"' . $classname . '>' . $titletext . Pieform::hsc($text) . "</label>"
+            . ($description != '' ? '<div class="description">' . $description . '</div>' : '');
+        }
+        $result .= '</div>';
+
         $i++;
         if ($rowsize <= 1 || $i % $rowsize == 0) {
             $result .= $separator;

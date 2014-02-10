@@ -94,6 +94,12 @@ $skintitle = $skinobj->get('title');
 $skindesc = $skinobj->get('description');
 $skintype = $skinobj->get('type');
 
+$positions = array(
+    1 => 'Top left', 2 => 'Top', 3 => 'Top right',
+    4 => 'Left', 5 => 'Centre', 6 => 'Right',
+    7 => 'Bottom left', 8 => 'Bottom', 9 => 'Bottom right'
+);
+
 $elements = array();
 $elements['id'] = array(
         'type' => 'hidden',
@@ -106,7 +112,7 @@ $elements['viewskin'] = array(
         'elements'     => array(
                 'viewskin_title' => array(
                         'type' => 'text',
-                        'labelhtml' => get_string('skintitle', 'skin'),
+                        'title' => get_string('skintitle', 'skin'),
                         'defaultvalue' => (!empty($skintitle) ? $skintitle : null),
                 ),
                 'viewskin_description' => array(
@@ -114,12 +120,12 @@ $elements['viewskin'] = array(
                         'rows' => 3,
                         'cols' => 40,
                         'resizable' => true,
-                        'labelhtml' => get_string('skindescription', 'skin'),
+                        'title' => get_string('skindescription', 'skin'),
                         'defaultvalue' => (!empty($skindesc) ? $skindesc : null),
                 ),
                 'viewskin_access' => array(
                         'type' => 'select',
-                        'labelhtml' => get_string('skinaccessibility', 'skin'),
+                        'title' => get_string('skinaccessibility', 'skin'),
                         'defaultvalue' => (!empty($skintype) ? $skintype : null),
                         'options' => $accessoptions,
                 ),
@@ -132,7 +138,7 @@ $elements['skinbg'] = array(
     'elements'     => array(
             'body_background_color' => array(
                     'type' => 'color',
-                    'labelhtml' => get_string('bodybgcolor', 'skin'),
+                    'title' => get_string('bodybgcolor', 'skin'),
                     'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
                     'size' => 7,
                     'options' => array(
@@ -172,7 +178,7 @@ if (!$designsiteskin) {
         ),
         'body_background_repeat' => array(
                 'type' => 'select',
-                'labelhtml' => get_string('backgroundrepeat', 'skin'),
+                'title' => get_string('backgroundrepeat', 'skin'),
                 'defaultvalue' => (!empty($viewskin['body_background_repeat']) ? intval($viewskin['body_background_repeat']) : 4),
                 'options' => array(
                         Skin::BACKGROUND_REPEAT_NO => get_string('backgroundrepeatno', 'skin'),
@@ -183,7 +189,7 @@ if (!$designsiteskin) {
         ),
         'body_background_attachment' => array(
                 'type' => 'radio',
-                'labelhtml' => get_string('backgroundattachment', 'skin'),
+                'title' => get_string('backgroundattachment', 'skin'),
                 'defaultvalue' => (!empty($viewskin['body_background_repeat']) ? $viewskin['body_background_attachment'] : 'scroll'),
                 'options' => array(
                         'fixed' => get_string('backgroundfixed', 'skin'),
@@ -192,12 +198,12 @@ if (!$designsiteskin) {
         ),
         'body_background_position' => array(
                 'type' => 'radio',
-                'labelhtml' => get_string('backgroundposition', 'skin'),
+                'title' => get_string('backgroundposition', 'skin'),
                 'defaultvalue' => (!empty($viewskin['body_background_position']) ? intval($viewskin['body_background_position']) : 1),
                 'rowsize' => 3,
-                'nolabels' => true,
+                'hiddenlabels' => true,
                 'separator' => '<br />',
-                'options' => array_combine(range(1, 9), range(1, 9)),
+                'options' => $positions,
         )
     ));
 }
@@ -208,7 +214,7 @@ $elements['viewbg'] = array(
     'elements'     => array(
             'view_background_color' => array(
                     'type' => 'color',
-                    'labelhtml' => get_string('viewbgcolor', 'skin'),
+                    'title' => get_string('viewbgcolor', 'skin'),
                     'defaultvalue' => (!empty($viewskin['view_background_color']) ? $viewskin['view_background_color'] : '#FFFFFF'),
                     'size' => 7,
                     'options' => array(
@@ -246,7 +252,7 @@ if (!$designsiteskin) {
         ),
         'view_background_repeat' => array(
                 'type' => 'select',
-                'labelhtml' => get_string('backgroundrepeat', 'skin'),
+                'title' => get_string('backgroundrepeat', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_background_repeat']) ? intval($viewskin['view_background_repeat']) : 4),
                 'options' => array(
                         Skin::BACKGROUND_REPEAT_NO => get_string('backgroundrepeatno', 'skin'),
@@ -257,7 +263,7 @@ if (!$designsiteskin) {
         ),
         'view_background_attachment' => array(
                 'type' => 'radio',
-                'labelhtml' => get_string('backgroundattachment', 'skin'),
+                'title' => get_string('backgroundattachment', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_background_repeat']) ? $viewskin['view_background_attachment'] : 'scroll'),
                 'options' => array(
                         'fixed' => get_string('backgroundfixed', 'skin'),
@@ -266,16 +272,16 @@ if (!$designsiteskin) {
         ),
         'view_background_position' => array(
                 'type' => 'radio',
-                'labelhtml' => get_string('backgroundposition', 'skin'),
+                'title' => get_string('backgroundposition', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_background_position']) ? intval($viewskin['view_background_position']) : 1),
                 'rowsize' => 3,
-                'nolabels' => true,
+                'hiddenlabels' => true,
                 'separator' => '<br />',
-                'options' => array_combine(range(1, 9), range(1, 9)),
+                'options' => $positions,
         ),
         'view_background_width' => array(
                 'type' => 'select',
-                'labelhtml' => get_string('viewwidth', 'skin'),
+                'title' => get_string('viewwidth', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_background_width']) ? intval($viewskin['view_background_width']) : 90),
                 'options' => array(
                         50 => '50%',
@@ -295,7 +301,7 @@ $elements['viewheader'] = array(
         'elements'     => array(
                 'header_background_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('backgroundcolor', 'skin'),
+                        'title' => get_string('backgroundcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : '#CCCCCC'),
                         'size' => 7,
                         'options' => array(
@@ -304,7 +310,7 @@ $elements['viewheader'] = array(
                 ),
                 'header_text_font_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('textcolor', 'skin'),
+                        'title' => get_string('textcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_text_font_color']) ? $viewskin['header_text_font_color'] : '#000000'),
                         'size' => 7,
                         'options' => array(
@@ -313,7 +319,7 @@ $elements['viewheader'] = array(
                 ),
                 'header_link_normal_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('normallinkcolor', 'skin'),
+                        'title' => get_string('normallinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_link_normal_color']) ? $viewskin['header_link_normal_color'] : '#0000EE'),
                         'size' => 7,
                         'options' => array(
@@ -327,7 +333,7 @@ $elements['viewheader'] = array(
                 ),
                 'header_link_hover_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('hoverlinkcolor', 'skin'),
+                        'title' => get_string('hoverlinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_link_hover_color']) ? $viewskin['header_link_hover_color'] : '#EE0000'),
                         'size' => 7,
                         'options' => array(
@@ -342,7 +348,7 @@ $elements['viewheader'] = array(
                 'header_logo_image' => array(
                         'type' => 'radio',
                         'id' => 'designskinform_header_logo',
-                        'labelhtml' => get_string('headerlogoimage1', 'skin'),
+                        'title' => get_string('headerlogoimage1', 'skin'),
                         'defaultvalue' => (!empty($viewskin['header_logo_image']) ? $viewskin['header_logo_image'] : 'normal'),
                         'options' => array(
                                 'normal' => get_string('headerlogoimagenormal', 'skin'),
@@ -360,21 +366,21 @@ $elements['viewcontent'] = array(
         'elements'     => array(
                 'view_heading_font_family' => array(
                         'type' => 'select',
-                        'labelhtml' => get_string('headingfontfamily', 'skin'),
+                        'title' => get_string('headingfontfamily', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_heading_font_family']) ? $viewskin['view_heading_font_family'] : 'Arial'),
                         'width' => 144,
                         'options' => Skin::get_all_font_options(),
                 ),
                 'view_text_font_family' => array(
                         'type' => 'select',
-                        'labelhtml' => get_string('textfontfamily', 'skin'),
+                        'title' => get_string('textfontfamily', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_family']) ? $viewskin['view_text_font_family'] : 'Arial'),
                         'width' => 144,
                         'options' => Skin::get_textonly_font_options(),
                 ),
                 'view_text_font_size' => array(
                         'type' => 'select',
-                        'labelhtml' => get_string('fontsize', 'skin'),
+                        'title' => get_string('fontsize', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_size']) ? $viewskin['view_text_font_size'] : 'small'),
                         'width' => 144,
                         'height' => 22,
@@ -390,7 +396,7 @@ $elements['viewcontent'] = array(
                 ),
                 'view_text_font_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('textcolor', 'skin'),
+                        'title' => get_string('textcolor', 'skin'),
                         'description' => get_string('textcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_color']) ? $viewskin['view_text_font_color'] : '#000000'),
                         'size' => 7,
@@ -400,7 +406,7 @@ $elements['viewcontent'] = array(
                 ),
                 'view_text_heading_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('headingcolor', 'skin'),
+                        'title' => get_string('headingcolor', 'skin'),
                         'description' => get_string('headingcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] : '#000000'),
                         'size' => 7,
@@ -410,7 +416,7 @@ $elements['viewcontent'] = array(
                 ),
                 'view_text_emphasized_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('emphasizedcolor', 'skin'),
+                        'title' => get_string('emphasizedcolor', 'skin'),
                         'description' => get_string('emphasizedcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_emphasized_color']) ? $viewskin['view_text_emphasized_color'] : '#000000'),
                         'size' => 7,
@@ -420,7 +426,7 @@ $elements['viewcontent'] = array(
                 ),
                 'view_link_normal_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('normallinkcolor', 'skin'),
+                        'title' => get_string('normallinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_link_normal_color']) ? $viewskin['view_link_normal_color'] : '#0000EE'),
                         'size' => 7,
                         'options' => array(
@@ -434,7 +440,7 @@ $elements['viewcontent'] = array(
                 ),
                 'view_link_hover_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('hoverlinkcolor', 'skin'),
+                        'title' => get_string('hoverlinkcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_link_hover_color']) ? $viewskin['view_link_hover_color'] : '#EE0000'),
                         'size' => 7,
                         'options' => array(
@@ -455,7 +461,7 @@ $elements['viewtable'] = array(
         'elements'     => array(
                 'view_table_border_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableborder', 'skin'),
+                        'title' => get_string('tableborder', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_border_color']) ? $viewskin['view_table_border_color'] : '#CCCCCC'),
                         'size' => 7,
                         'options' => array(
@@ -464,7 +470,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_table_header_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableheader', 'skin'),
+                        'title' => get_string('tableheader', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_header_color']) ? $viewskin['view_table_header_color'] : '#CCCCCC'),
                         'size' => 7,
                         'options' => array(
@@ -473,7 +479,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_table_header_text_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableheadertext', 'skin'),
+                        'title' => get_string('tableheadertext', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_header_text_color']) ? $viewskin['view_table_header_text_color'] : '#000000'),
                         'size' => 7,
                         'options' => array(
@@ -482,7 +488,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_table_odd_row_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableoddrows', 'skin'),
+                        'title' => get_string('tableoddrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_odd_row_color']) ? $viewskin['view_table_odd_row_color'] : '#EEEEEE'),
                         'size' => 7,
                         'options' => array(
@@ -491,7 +497,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_table_even_row_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('tableevenrows', 'skin'),
+                        'title' => get_string('tableevenrows', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_table_even_row_color']) ? $viewskin['view_table_even_row_color'] : '#FFFFFF'),
                         'size' => 7,
                         'options' => array(
@@ -500,7 +506,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_button_normal_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('normalbuttoncolor', 'skin'),
+                        'title' => get_string('normalbuttoncolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_normal_color']) ? $viewskin['view_button_normal_color'] : '#CCCCCC'),
                         'options' => array(
                             'transparent' => true,
@@ -508,7 +514,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_button_hover_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('hoverbuttoncolor', 'skin'),
+                        'title' => get_string('hoverbuttoncolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_hover_color']) ? $viewskin['view_button_hover_color'] : '#EEEEEE'),
                         'options' => array(
                             'transparent' => true,
@@ -516,7 +522,7 @@ $elements['viewtable'] = array(
                 ),
                 'view_button_text_color' => array(
                         'type' => 'color',
-                        'labelhtml' => get_string('buttontextcolor', 'skin'),
+                        'title' => get_string('buttontextcolor', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_button_text_color']) ? $viewskin['view_button_text_color'] : '#FFFFFF'),
                         'options' => array(
                             'transparent' => true,
@@ -535,7 +541,7 @@ $elements['viewadvanced'] = array(
                         'cols' => 85,
                         'style' => 'font-family:monospace',
                         'resizable' => true,
-                        'labelhtml' => get_string('skincustomcss','skin'),
+                        'title' => get_string('skincustomcss','skin'),
                         'description' => get_string('skincustomcssdescription', 'skin'),
                         'defaultvalue' => ((!empty($viewskin['view_custom_css'])) ? $viewskin['view_custom_css'] : null),
                 ),
