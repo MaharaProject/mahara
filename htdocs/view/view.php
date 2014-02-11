@@ -190,7 +190,7 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
 }
 $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">');
-
+$headers = array_merge($headers, $view->get_all_blocktype_css());
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
 if ($viewskin && get_config('skins') && can_use_skins($owner) && (!isset($THEME->skins) || $THEME->skins !== false)) {

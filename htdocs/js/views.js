@@ -541,6 +541,7 @@
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
             var div = $('<div>').html(data.data.display.html);
             var blockinstance = div.find('div.blockinstance');
+            addBlockCss(data.css);
             // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
             var configureButton = blockinstance.find('input.configurebutton');
             if (configureButton) {
@@ -554,6 +555,14 @@
             }
             else {
                 blockinstance.find('.deletebutton').focus();
+            }
+        });
+    }
+
+    function addBlockCss(csslist) {
+        $(csslist).each(function(ind, css) {
+            if ($('head link[href="'+$(css).attr('href')+'"]').length == 0) {
+                $('head').prepend($(css));
             }
         });
     }

@@ -28,6 +28,7 @@ if ($view->is_submitted()) {
 if ($change) {
     try {
         $returndata = $view->process_changes();
+        $returndata['css'] = $view->get_all_blocktype_css();
         json_reply(false, $returndata);
     }
     catch (Exception $e) {
