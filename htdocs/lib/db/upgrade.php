@@ -3059,7 +3059,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2014021100) {
         // Reset the view's skin value, if the skin does not exist
-        execute_sql("UPDATE {view} v SET skin = NULL WHERE v.skin IS NOT NULL AND NOT EXISTS (SELECT id FROM {skin} WHERE v.skin = skin.id)");
+        execute_sql("UPDATE {view} v SET skin = NULL WHERE v.skin IS NOT NULL AND NOT EXISTS (SELECT id FROM {skin} s WHERE v.skin = s.id)");
     }
 
     return $status;
