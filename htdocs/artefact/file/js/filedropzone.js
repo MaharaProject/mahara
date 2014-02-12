@@ -78,10 +78,6 @@ jQuery(document).ready(function() {
         current_drop_number ++;
         window[prefix].dragdrop = true;
         window[prefix].upload_presubmit_dropzone(userfile);
-        var response = window[prefix].upload_validate();
-        if (response) {
-            myDropzone.errorProcessing(userfile,response);
-        }
     });
 
     // successful return from the ajax call that will
