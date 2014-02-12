@@ -146,7 +146,23 @@ if ($notrudeform = $view->notrude_form()) {
 
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
+// Set up theme
+$viewtheme = $view->get('theme');
+if ($viewtheme && $THEME->basename != $viewtheme) {
+    $THEME = new Theme($viewtheme);
+}
 $headers = array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css?v=' . get_config('release'). '">',);
+
+// Set up skin, if the page has one
+$owner    = $view->get('owner');
+$viewskin = $view->get('skin');
+if ($viewskin && get_config('skins') && can_use_skins($owner) && (!isset($THEME->skins) || $THEME->skins !== false)) {
+    $skin = array('skinid' => $viewskin, 'viewid' => $view->get('id'));
+    $skindata = unserialize(get_field('skin', 'viewskin', 'id', $viewskin));
+}
+else {
+    $skin = false;
+}
 
 $hasfeed = false;
 $feedlink = '';
@@ -165,6 +181,7 @@ $smarty = smarty(
     array(
         'stylesheets' => $extrastylesheets,
         'sidebars'    => false,
+        'skin' => $skin,
     )
 );
 
@@ -176,6 +193,16 @@ if (get_config('viewmicroheaders')) {
     $smarty->assign('maharalogofilename', 'images/site-logo-small.png');
     $smarty->assign('microheaders', true);
     $smarty->assign('microheadertitle', $view->display_title(true, false));
+
+    // Support for normal, light, or dark small Mahara logo - to use with skins
+    if ($skin) {
+        if ($skindata['header_logo_image'] == 'light') {
+            $smarty->assign('maharalogofilename', 'images/site-logo-small-light.png');
+        }
+        else if ($skindata['header_logo_image'] == 'dark') {
+            $smarty->assign('maharalogofilename', 'images/site-logo-small-dark.png');
+        }
+    }
 }
 
 $smarty->assign('view', $view);
