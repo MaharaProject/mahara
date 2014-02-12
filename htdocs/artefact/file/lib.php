@@ -1389,7 +1389,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'type'         => 'wysiwyg',
                     'rows'         => 10,
                     'cols'         => 80,
-                    'defaultvalue' => get_field('site_content', 'content', 'name', 'uploadcopyright'),
+                    'defaultvalue' => get_field('site_content', 'content', 'name', 'uploadcopyright', 'institution', 'mahara'),
                     'rules'        => array('maxlength' => 65536),
                 ),
             ),
@@ -1579,8 +1579,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $data->content = $values['customagreement'];
         $data->mtime   = db_format_timestamp(time());
         $data->mauthor = $USER->get('id');
-        if (record_exists('site_content', 'name', $data->name)) {
-            update_record('site_content', $data, 'name');
+        $data->institution = 'mahara';
+        if (record_exists('site_content', 'name', $data->name, 'institution', $data->institution)) {
+            update_record('site_content', $data, array('name', 'institution'));
         }
         else {
             $data->ctime = db_format_timestamp(time());
