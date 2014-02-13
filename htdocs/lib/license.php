@@ -252,6 +252,8 @@ function license_form_files($prefix, $prefix2=null) {
  * Given an artefact object, render the license information.
  */
 function render_license($artefact) {
+    global $USER;
+
     if (!$artefact || !($artefact instanceof ArtefactType)) {
         throw new MaharaException('The object ' . $artefact . 'is NOT an artefact');
     }
@@ -262,9 +264,13 @@ function render_license($artefact) {
     if ($license) {
         $details = get_record('artefact_license', 'name', $license);
     }
-    else {
-        return get_string('licensenone');
+    else if ($USER->get('id') == $artefact->get('owner')) {
+        return get_string('licensenonedetailedowner');
     }
+    else {
+        return get_string('licensenonedetailed', 'mahara', $artefact->display_owner());
+    }
+
     if (strpos($license, '://') === FALSE) {
         $license = 'http://' . $license;
     }
