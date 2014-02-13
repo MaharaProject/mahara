@@ -724,4 +724,38 @@ class ArtefactTypeHtml extends ArtefactType {
             '_default' => get_config('wwwroot') . 'artefact/internal/editnote.php?id=' . $id,
         );
     }
+
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('owner', $this->get('owner'));
+        $smarty->assign('tags', $this->get('tags'));
+        $smarty->assign('description', $this->get('description'));
+        if (!empty($options['details']) and get_config('licensemetadata')) {
+            $smarty->assign('license', render_license($this));
+        }
+        else {
+            $smarty->assign('license', false);
+        }
+        $attachments = $this->get_attachments();
+        if ($attachments) {
+            $this->add_to_render_path($options);
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            foreach ($attachments as &$attachment) {
+                $f = artefact_instance_from_id($attachment->id);
+                $attachment->size = $f->describe_size();
+                $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
+                $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                if (isset($options['viewid'])) {
+                    $attachment->downloadpath .= '&view=' . $options['viewid'];
+                }
+            }
+            $smarty->assign('attachments', $attachments);
+        }
+        return array(
+            'html' => $smarty->fetch('artefact.tpl'),
+            'javascript'=>''
+        );
+    }
 }

@@ -258,6 +258,18 @@ function editnote_submit(Pieform $form, array $values) {
             }
         }
     }
+    // need to update the block_instances where this artefact is used - so they have
+    // the correct configuration artefactids
+    if ($blocks = get_column('view_artefact', 'block', 'artefact', $artefact->get('id'))) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        foreach ($blocks as $block) {
+            $bi = new BlockInstance($block);
+            $configdata = $bi->get('configdata');
+            $configdata['artefactids'] = $new;
+            $bi->set('configdata', $configdata);
+            $bi->commit();
+        }
+    }
     db_commit();
 
     $result = array(

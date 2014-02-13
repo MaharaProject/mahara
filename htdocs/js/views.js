@@ -1232,6 +1232,8 @@
                 event.preventDefault();
                 removeConfigureBlocks();
                 showMediaPlayers();
+                removeExpanders($('#blockinstance_' + blockinstanceId));
+                setupExpanders($('body'));
                 button.focus();
             });
         });
@@ -1512,6 +1514,7 @@ function blockConfigSuccess(form, data) {
             ViewManager.replaceConfigureBlock(val);
         });
     }
+    setupExpanders($j('body'));
 }
 
 function blockConfigError(form, data) {

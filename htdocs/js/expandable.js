@@ -23,6 +23,10 @@ function setupExpanders(element) {
     });
 }
 
+function removeExpanders(element) {
+    element.find(".expandable-head a.expandable").removeClass('expandable');
+}
+
 jQuery(document).ready(function() {
     setupExpanders($j('body'));
 });

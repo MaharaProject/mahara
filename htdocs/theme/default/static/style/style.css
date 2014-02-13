@@ -50,6 +50,9 @@ thead th {
 .expandable-head a.toggle:hover, .expandable-head a.toggle:focus {
     text-decoration: none;
 }
+.expandable-head td {
+    background-color: #DDDDDD;
+}
 /******************** Forms ********************/
 /* fieldset */
 fieldset {

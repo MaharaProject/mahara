@@ -523,6 +523,7 @@ td.icon-container img {
 }
 .expandable-head th {
     font-size: 1em;
+    white-space: normal;
 }
 .expandable-head a.toggle {
     font-weight: bold;
