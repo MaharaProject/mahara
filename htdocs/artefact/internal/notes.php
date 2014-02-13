@@ -193,7 +193,7 @@ $j(function() {
     });
 });';
 
-$smarty = smarty();
+$smarty = smarty(array('expandable'));
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign_by_ref('data', $data);
