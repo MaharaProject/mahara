@@ -93,7 +93,7 @@ if (!$restrictedview) {
     $viewcontent = $view->build_rows();
 }
 
-$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'artefact/resume/resumeshowhide.js');
+$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js', 'expandable');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";

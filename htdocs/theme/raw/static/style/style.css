@@ -505,31 +505,27 @@ td.icon-container img {
     white-space: normal;
 }
 /* expandable */
-tr.toggle, td.toggle {
-    width: 10px;
-    height: 10px;
-    padding-left: 18px;
-    background-image: url(../images/expanded.png);
-    background-repeat: no-repeat;
-    background-position: 3px 4px;
-}
-td.toggle-padding {
-    padding-left: 18px;
-}
 .valign-middle {
     vertical-align: middle;
 }
-tr.expandable, td.expandable {
-    cursor: pointer;
+.expandable-head a.toggle {
+    font-weight: bold;
     background-image: url(../images/expand.png);
     background-repeat: no-repeat;
-    background-position: 3px 5px;
+    background-position: 2px 2px;
+    padding-left: 18px;
+    display: inline-block;
 }
-tr.expanded, td.expanded {
-    cursor: pointer;
+.expandable-head a.toggle.textonly {
+    background-image: none;
+    padding-left: inherit;
+}
+.expandable-head a.toggle.expanded {
     background-image: url(../images/expanded.png);
-    background-repeat: no-repeat;
-    background-position: 3px 4px;
+    background-position: 2px 1px;
+}
+.expandable-head a.toggle.textonly.expanded {
+    background-image: none;
 }
 /******************** Forms ********************/
 form {

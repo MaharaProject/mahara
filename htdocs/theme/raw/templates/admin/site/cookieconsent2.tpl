@@ -10,8 +10,8 @@
             </ol>
             <table class="cb attachments fullwidth">
               <thead class="expandable-head">
-                <tr class="toggle">
-                  <td class="toggle-padding"><strong>{str tag=example section=cookieconsent}</strong></td>
+                <tr>
+                  <td><a class="toggle" href="#">{str tag=example section=cookieconsent}</a></td>
                 </tr>
               </thead>
               <tbody class="expandable-body">
@@ -31,8 +31,8 @@
             </table>
             <table class="cb attachments fullwidth">
               <thead class="expandable-head">
-                <tr class="toggle">
-                  <td class="toggle-padding"><strong>{str tag=itdidntwork section=cookieconsent}</strong></td>
+                <tr>
+                  <td><a class="toggle" href="#">{str tag=itdidntwork section=cookieconsent}</a></td>
                 </tr>
               </thead>
               <tbody class="expandable-body">

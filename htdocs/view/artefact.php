@@ -130,7 +130,7 @@ addLoadEvent(function () {
 });
 EOF;
 
-$javascript = array('paginator', 'viewmenu');
+$javascript = array('paginator', 'viewmenu', 'expandable');
 $extrastylesheets = array('style/views.css');
 
 if ($artefact->get('allowcomments')) {

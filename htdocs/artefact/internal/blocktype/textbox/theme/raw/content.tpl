@@ -2,10 +2,11 @@
 {if isset($attachments)}
 <table class="cb attachments fullwidth">
   <thead class="expandable-head">
-    <tr class="toggle">
-      <td {if $icons}colspan="2"{/if} class="toggle-padding"><strong>{str tag=attachedfiles section=artefact.blog}</strong>
-      <span class="fr"><img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">&nbsp;{$count}</span>
-      </td>
+    <tr>
+        <td {if $icons}colspan="2"{/if}>
+            <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
+            <span class="fr"><img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">&nbsp;{$count}</span>
+        </td>
     </tr>
   </thead>
   <tbody class="expandable-body">
