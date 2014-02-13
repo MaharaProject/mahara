@@ -53,13 +53,14 @@ addLoadEvent(function() {
     });
     var tabUL = UL({'class': 'in-page-tabs'}, tabs);
     var tabTitleSpan = SPAN({'class': 'rd-tab'});
-    var tabTitle = H3({'class': 'rd-tab-title'}, get_string('tabs'), tabTitleSpan);
-    tabDIV = DIV({'id': 'profiletabswrap', 'class': 'tabswrap'}, tabTitle, tabUL);
+    var tabTitleLink = A({'href': '#'}, get_string('tabs'), tabTitleSpan);
+    tabDIV = DIV({'id': 'profiletabswrap', 'class': 'tabswrap'}, H3({'class': 'rd-tab-title'}, tabTitleLink), tabUL);
     var isOpen = 0;
-    connect(tabDIV, 'onclick', function(e) {
+    connect(tabTitleLink, 'onclick', function(e) {
         e.stop();
         if (isOpen == 0) {
             addElementClass(tabDIV, 'expand');
+            getFirstElementByTagAndClassName('a', null, tabUL).focus();
         }
         else {
             removeElementClass(tabDIV, 'expand');

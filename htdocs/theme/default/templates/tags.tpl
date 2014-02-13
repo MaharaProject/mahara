@@ -2,7 +2,7 @@
 
 {if $tags}
   <div class="rbuttons"><a class="btn" href="{$WWWROOT}edittags.php">{str tag=edittags}</a></div>
-  <div class="tabswrap"><h3 class="rd-tab-title">{str tag=tabs}<span class="rd-tab"></span></h3><ul class="in-page-tabs">
+  <div class="tabswrap"><h3 class="rd-tab-title"><a href="#">{str tag=tabs}<span class="rd-tab"></span></a></h3><ul class="in-page-tabs">
   {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
     <li{if $selectedsort} class="current-tab"{/if}><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab"{/if}>{str tag=sort$tagsortfield} <span class="accessible-hidden">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
   {/foreach}
