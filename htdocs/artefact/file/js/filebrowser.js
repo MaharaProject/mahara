@@ -328,7 +328,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // Recalculate the width of config block
         if ($('artefactchooser-body')) {
             var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
-            update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+            updateBlockConfigWidth(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
         }
 
         return false;
@@ -907,7 +907,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         // Recalculate the width of config block
         if ($('artefactchooser-body')) {
             var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
-            update_width(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
+            updateBlockConfigWidth(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
         }
     }
 

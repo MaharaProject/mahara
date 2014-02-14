@@ -204,7 +204,7 @@ function updateTextContent(a) {
         removeElementClass('instconf_tagsreadonly_container', 'hidden');
     }
     if (table = getFirstParentByTagAndClassName($('instconf_text_container'), 'table', 'maharatable')) {
-        update_width(getFirstParentByTagAndClassName(table, 'div', 'blockinstance'), getElementDimensions(table).w);
+        updateBlockConfigWidth(getFirstParentByTagAndClassName(table, 'div', 'blockinstance'), getElementDimensions(table).w);
     }
 }
 connect('chooseartefactlink', 'onclick', function(e) {
