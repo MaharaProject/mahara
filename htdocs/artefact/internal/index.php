@@ -174,6 +174,7 @@ $elements = array(
 
 $profileform = pieform(array(
     'name'       => 'profileform',
+    'class'      => 'jstabs',
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
     // will be uncommented when js for tabbed interface is called again after form submit
@@ -427,7 +428,7 @@ function profileform_reply($form, $code, $message) {
 }
 
 
-$smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
+$smarty = smarty(array('tabs'), array(), array(
     'mahara' => array(
         'cannotremovedefaultemail',
         'emailtoolong',
@@ -439,7 +440,6 @@ $smarty = smarty(array('artefact/internal/js/profile.js'), array(), array(
         'loseyourchanges',
     ),
 ));
-
 
 $smarty->assign('profileform', $profileform);
 $smarty->assign('PAGEHEADING', TITLE);

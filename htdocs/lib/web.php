@@ -991,7 +991,8 @@ function jsstrings() {
                 'youhavenottaggedanythingyet',
                 'wanttoleavewithoutsaving?',
                 'Help',
-                'closehelp'
+                'closehelp',
+                'tabs',
             ),
             'pieforms' => array(
                 'element.calendar.opendatepicker'
