@@ -144,7 +144,42 @@ input#designskinform_submit:hover,
 input#cancel_designskinform_submit:hover {
     border-color: #73b332;
     background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
-	color: #FFFFFF;
+    color: #FFFFFF;
+}
+/* focus for buttons */
+tr.submitcancel input.submit:focus,
+tr.submitcancel input.cancel:focus,
+tr.submit input.submit:focus,
+tr.submit input.cancel:focus,
+input#profileform_submit:focus,
+input#files_filebrowser_edit_artefact:focus,
+input#files_filebrowser_edit_cancel:focus,
+input#instconf_folder_edit_artefact:focus,
+input#instconf_folder_edit_cancel:focus,
+input#instconf_artefactids_edit_artefact:focus,
+input#instconf_artefactids_edit_cancel:focus,
+input#instconf_artefactid_edit_artefact:focus,
+input#instconf_artefactid_edit_cancel:focus,
+.rbuttons .btn:focus,
+.rbuttons input.submit:focus,
+#resumewrap input.openedit:focus,
+#resumewrap button:focus,
+#view-wizard-controls input.submit:focus,
+.submitwrap input.submit:focus,
+#editaccess_submit_container input.submitcancel:focus,
+#collectiondonewrap .btn:focus,
+input#export_submit:focus,
+#sitelicenses .btn:focus,
+#adduser #adduser_submit:focus,
+input#login_submit:focus,
+.login-externallink a.btn:focus,
+input#viewlayout_submit:focus,
+input#files_filebrowser_upload:focus,
+input#designskinform_submit:focus,
+input#cancel_designskinform_submit:focus {
+    border-color: #73b332;
+    background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+    color: #FFFFFF;
 }
 /* depress for buttons */
 tr.submitcancel input.submit:active,
@@ -202,6 +237,16 @@ input#usertype_typesubmit:hover,
     background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
     color: #333333;
 }
+#forumslist input.btn-subscribe:focus,
+input#addviews_submit:focus,
+input#edituser_suspend_submit:focus,
+input#friendscontrol_submit:focus,
+input#usertype_typesubmit:focus,
+.subpage .skinsbtns .btn:focus {
+    border: 1px solid #707070;
+    background: url(../images/btn_bkgd_grey_hover.png) repeat-x 0 50%;
+    color: #333333;
+}
 #forumslist input.btn-subscribe:active,
 input#addviews_submit:active,
 input#edituser_suspend_submit:active,
@@ -215,6 +260,7 @@ input#usertype_typesubmit:active,
 /* reset some that need grey button colour text */
 ul.groupuserstatus li .submit input.submit,
 ul.groupuserstatus li .submit input.submit:hover,
+ul.groupuserstatus li .submit input.submit:focus,
 ul.groupuserstatus li .submit input.submit:active {
     color: #333333;
 }
@@ -338,6 +384,12 @@ div.pagination a {
 #sub-nav li:first-child a:active {
     border-left: 0;
 }
+#sub-nav li a:hover,
+#sub-nav li.selected a:hover,
+#sub-nav li a:focus,
+#sub-nav li.selected a:focus {
+    color: #7e7327;
+}
 /******************** Dropdown sub navigation ********************/
 .main-nav .dropdown-sub {
     left: 1px;
@@ -353,17 +405,6 @@ div.pagination a {
     border-left: 0;
     border-right: 0;
 }
-.main-nav .dropdown-sub li a:hover,
-.main-nav .dropdown-sub li.selected a:hover,
-.main-nav .dropdown-sub li a:focus,
-.main-nav .dropdown-sub li.selected a:focus {
-    color: #335804;
-    background: #d5d5d5;
-    border-top: 1px solid #e8e8e8;
-    border-bottom: 1px solid #7d7d7d;
-    border-left: 0;
-    border-right: 0;
-}
 .main-nav .dropdown-sub li.selected a,
 .main-nav .dropdown-sub li.selected a:link,
 .main-nav .dropdown-sub li.selected a:visited,
@@ -372,6 +413,17 @@ div.pagination a {
     color: #335804;
     border-top: 1px solid #d6d6d6;
     border-bottom: 1px solid #c7c7c7;
+    border-left: 0;
+    border-right: 0;
+}
+.main-nav .dropdown-sub li a:hover,
+.main-nav .dropdown-sub li.selected a:hover,
+.main-nav .dropdown-sub li a:focus,
+.main-nav .dropdown-sub li.selected a:focus {
+    color: #4C711D;
+    background: #d5d5d5;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #7d7d7d;
     border-left: 0;
     border-right: 0;
 }
@@ -970,7 +1022,8 @@ ul.searchtab li span.inactive {
 .sideblock h3 a:active {
     color: #1E6297;
 }
-.sideblock h3 a:hover {
+.sideblock h3 a:hover,
+.sideblock h3 a:focus {
     color: #267bbd;
 }
 /* Sidebar quota/group quota bar */

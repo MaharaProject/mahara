@@ -12,7 +12,7 @@
   </thead>
   <tbody>
   {foreach from=$data item=n}
-    <tr class="{cycle values='r0,r1'}">
+    <tr class="{cycle values='r1,r0'}">
       <td class="notetitle">
       {if $n->locked}
         <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>

@@ -76,6 +76,13 @@ p span {
 .backtrace {
     font: normal 110%/1.5em monospace;
 }
+/* links styling for accessibility */
+:focus {
+    outline: 2px solid #FFFF00;
+}
+a, a:hover, a:active {
+    outline: none;
+}
 /******************** Body ********************/
 body {
     color: #333333;
@@ -232,6 +239,9 @@ form.oneline.inline div,
     filter: alpha(opacity=70);
     z-index: 11;
 }
+img.close:focus {
+    border: 1px solid #FFFF00;
+}
 /******************** Ajax login ********************/
 #ajax-login-form {
     border: 5px solid #DDDDDD;
@@ -378,6 +388,7 @@ div.warning,
 .postdetails {
     font-size: 0.917em;
     color: #707070;
+    font-weight: normal;
 }
 .nowrap {
     white-space: nowrap;
@@ -542,7 +553,7 @@ table.attachments thead.expandable-head td {
     font-weight: bold;
     background-image: url(../images/expand.png);
     background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background-position: 2px 50%;
     padding-left: 18px;
     display: inline-block;
 }
@@ -552,7 +563,7 @@ table.attachments thead.expandable-head td {
 }
 .expandable-head a.toggle.expanded {
     background-image: url(../images/expanded.png);
-    background-position: 2px 1px;
+    background-position: 2px 50%;
 }
 .expandable-head a.toggle.textonly.expanded {
     background-image: none;
@@ -669,6 +680,9 @@ select {
     padding: 3px 3px 3px 3px;
 }
 }
+select:focus {
+    outline: 2px solid #FFFF00;
+}
 .ie8 select {
     height: 25px;
     padding: 4px 3px 4px 3px;
@@ -723,6 +737,9 @@ textarea {
     resize: none;
     font-size: 1em;
 }
+textarea:focus {
+    outline: 2px solid #FFFF00;
+}
 /* resizable textbox */
 .resizable-textarea {
     max-width: 100% !important;
@@ -743,6 +760,15 @@ input[type=password] {
     border-right: 1px solid #DBDFE6;
     border-bottom: 1px solid #E3E9EF;
     border-left: 1px solid #E2E3EA;
+}
+input.text:focus,
+input.password:focus,
+input[type=text]:focus,
+input[type=password]:focus {
+    outline: 2px solid #FFFF00;
+}
+input.submit:focus {
+    outline: none;
 }
 /* hidden */
 .no-js .nojs-hidden-inline {
@@ -833,6 +859,24 @@ ul.groupuserstatus li.jointhisgroup form:hover {
     cursor: default;
     color: #333333;
 }
+/* focus state */
+input.submit:focus,
+input.cancel:focus,
+button:focus,
+.buttondk:focus,
+input.button:focus,
+input.select:focus,
+input#files_filebrowser_edit_artefact:focus,
+.btn:focus,
+ul.groupuserstatus li.invite span:focus,
+ul.groupuserstatus li.jointhisgroup form:focus {
+    border-color: #3C7FB1;
+    background: url(../images/btn_bkgd_hover.png) repeat-x 0 50%;
+    text-decoration: none;
+    cursor: default;
+    color: #333333;
+    outline: none;
+}
 /* depress state */
 input.submit:active,
 input.cancel:active,
@@ -899,6 +943,26 @@ input#edituser_institution_rhmoodle_remove:hover,
 input#settings_delete:hover,
 input#edituser_institution_massey_remove:hover,
 input#account_delete_submit:hover {
+    border-color: #950000;
+    background: url(../images/btn_bkgd_red_hover.png) repeat-x 0 50%;
+    color: #FFFFFF;
+}
+/* focus state */
+.deletemessage a.delete:focus,
+#delete_tag_submit:focus,
+#close_site_submit:focus,
+#suspenddelete #delete #edituser_delete_submit:focus,
+#institution_suspend_submit:focus,
+#networkingform_deletesubmit:focus,
+input#buttons_delete:focus,
+input#delete_delete:focus,
+input#deletetaskform_submit:focus,
+input#delete_all_notifications_submit:focus,
+#activitylist input.btn-del:focus,
+input#edituser_institution_rhmoodle_remove:focus,
+input#settings_delete:focus,
+input#edituser_institution_massey_remove:focus,
+input#account_delete_submit:focus {
     border-color: #950000;
     background: url(../images/btn_bkgd_red_hover.png) repeat-x 0 50%;
     color: #FFFFFF;
@@ -1028,7 +1092,8 @@ input#releaseview_submit {
 }
 /* buttons that look like links */
 .linkbtn,
-.linkbtn:hover {
+.linkbtn:hover,
+.linkbtn:focus {
     border: 0;
     cursor: pointer;
     background: none;
@@ -1039,15 +1104,18 @@ input#releaseview_submit {
 }
 /* disabled inputs */
 input[disabled="disabled"],
-input[disabled="disabled"]:hover {
+input[disabled="disabled"]:hover,
+input[disabled="disabled"]:focus {
     border-color: #aaaaaa;
     color: #aaaaaa;
     background: url(../images/btn_bkgd.png) repeat-x 0 50%;
 }
 input.text[disabled="disabled"],
 input.text[disabled="disabled"]:hover,
+input.text[disabled="disabled"]:focus,
 input[type="text"][disabled="disabled"],
-input[type="text"][disabled="disabled"]:hover {
+input[type="text"][disabled="disabled"]:hover,
+input[type="text"][disabled="disabled"]:focus {
     background: #f0f0f0;
     border-top: 1px solid #ABADB3;
     border-right: 1px solid #DBDFE6;
@@ -1055,7 +1123,8 @@ input[type="text"][disabled="disabled"]:hover {
     border-left: 1px solid #E2E3EA;
 }
 input[type="image"][disabled="disabled"],
-input[type="image"][disabled="disabled"]:hover {
+input[type="image"][disabled="disabled"]:hover,
+input[type="image"][disabled="disabled"]:focus {
     opacity: 0.5;
    filter: alpha(opacity=50);
    zoom: 1;
@@ -1130,6 +1199,12 @@ ul.groupuserstatus li .btn {
     background: transparent url(../images/btn_deleteremove.png) no-repeat 0 0 !important;
     color: transparent;
     display: inline-block;
+    overflow-x: hidden;
+}
+.btn-big-del:focus,
+.customrow input:focus {
+    background: transparent url(../images/btn_deleteremove_focus.png) no-repeat 0 0 !important;
+    outline: none;
 }
 .btn-big-close,
 input#editpost_filebrowser_close_upload_browse,
@@ -1150,6 +1225,22 @@ input#instconf_artefactids_close_upload_browse {
     vertical-align: top;
     cursor: pointer !important;
     float: right;
+}
+.btn-big-close:hover,
+input#editpost_filebrowser_close_upload_browse:hover,
+input#editnote_filebrowser_close_upload_browse:hover,
+input#editgoalsandskills_filebrowser_close_upload_browse:hover,
+input#editcomposite_filebrowser_close_upload_browse:hover,
+input#designskinform_body_background_image_close_upload_browse:hover,
+input#designskinform_view_background_image_close_upload_browse:hover,
+.btn-big-close:focus,
+input#editpost_filebrowser_close_upload_browse:focus,
+input#editnote_filebrowser_close_upload_browse:focus,
+input#editgoalsandskills_filebrowser_close_upload_browse:focus,
+input#editcomposite_filebrowser_close_upload_browse:focus,
+input#designskinform_body_background_image_close_upload_browse:focus,
+input#designskinform_view_background_image_close_upload_browse:focus {
+    background: transparent url(../images/btn_close_focus.png) no-repeat 0 0;
 }
 .btn-big-add {
     background: transparent url(../images/btn_add.png) no-repeat 0 0 !important;
@@ -1349,6 +1440,7 @@ div.rel {
 }
 .skiplink:focus {
     top: 0;
+    outline: none;
 }
 /* top bar / site message */
 .sitemessage {
@@ -1375,6 +1467,9 @@ div.rel {
 }
 #site-logo a {
     display: block;
+}
+#site-logo a:active {
+    outline: none;
 }
 /* header right */
 #header-right {
@@ -1446,6 +1541,7 @@ div.rel {
 }
 .viewheadertop .links a.btn {
     margin: 0 0 0 8px;
+    display: inline-block;
 }
 /* site logo */
 .viewheadertop a.small-logo {
@@ -1513,6 +1609,7 @@ div.rel {
 }
 .main-nav li a:hover, .main-nav li a:focus {
     background: #E9E9E9;
+    outline: none;
 }
 .ie7 .main-nav li {
     display: inline;
@@ -1536,11 +1633,15 @@ div.rel {
 }
 #sub-nav li a,
 #sub-nav li a:link,
-#sub-nav li a:visited,
-#sub-nav li a:active {
+#sub-nav li a:visited {
     padding: 5px 10px;
     display: inline-block;
     text-decoration: none;
+}
+#sub-nav li a:active,
+#sub-nav li a:focus {
+    outline: none;
+    background: #cdcdcd;
 }
 #sub-nav li.selected a {
     color: #333333;
@@ -1634,7 +1735,6 @@ ul.searchtab li span.inactive {
 .ie7 ul.in-page-tabs li a,
 .ie7 ul.in-page-tabs li a:link,
 .ie7 ul.in-page-tabs li a:visited,
-.ie7 ul.in-page-tabs li a:active,
 .ie7 ul.in-page-tabs li input.linkbtn,
 .ie7 ul.in-page-tabs li button.linkbtn {
     margin: 0 0 0 3px;
@@ -1651,6 +1751,11 @@ ul.in-page-tabs li button.current-tab {
     font-weight: bold;
     border-bottom: 1px solid #FFFFFF;
     background: 0;
+}
+ul.in-page-tabs li a:focus,
+ul.in-page-tabs li a.current-tab:focus {
+    outline: none;
+    background: #D4D4D4;
 }
 /* tab body */
 .subpage {
@@ -2720,6 +2825,10 @@ ul.favorskins {
     padding: 0;
     font-size: 1em;
 }
+#collectionviews form input.submit:hover,
+#collectionviews form input.submit:focus {
+    background: url(../images/btn_deleteremove_focus.png) no-repeat 0 0;
+}
 fieldset#pagestoadd {
     width: 300px;
     margin: 10px 0 0 -350px;
@@ -2828,6 +2937,10 @@ table.accesslists {
     border: 0;
     cursor: pointer;
 }
+#potentialpresetitems div button:hover,
+#potentialpresetitems div button:focus {
+    background: url(../images/btn_add_focus.png) no-repeat 0 0;
+}
 /* share with other users */
 #viewacl-advanced {
     margin: 0;
@@ -2860,6 +2973,10 @@ table.accesslists {
     border: 0;
     cursor: pointer;
 }
+#viewacl-advanced #results button:hover,
+#viewacl-advanced #results button:focus {
+    background: url(../images/btn_add_focus.png) no-repeat 0 0;
+}
 /* added users */
 .accesslist-head th {
     border-bottom: none;
@@ -2882,6 +2999,10 @@ table.accesslists {
     height: 24px;
     cursor: pointer;
     margin: 0;
+}
+#accesslistitems .removebutton button:hover,
+#accesslistitems .removebutton button:focus {
+    background: url(../images/btn_deleteremove_focus.png) no-repeat 0 0;
 }
 #accesslistitems .item-disabled {
     background: #666666;
@@ -3282,6 +3403,10 @@ ul.groupuserstatus li.admincontrol {
     color: transparent;
     cursor: pointer;
 }
+.listrow ul.groupuserstatus li.admincontrol .btn:hover .btn-edit,
+.listrow ul.groupuserstatus li.admincontrol .btn:focus .btn-edit {
+    background: url(../images/btn_edit_focus.png) no-repeat 0 0;
+}
 .listrow ul.groupuserstatus li.admincontrol .btn .btn-del {
     background: url(../images/btn_deleteremove.png) no-repeat 0 0;
     width: 24px;
@@ -3293,6 +3418,10 @@ ul.groupuserstatus li.admincontrol {
     color: transparent;
     cursor: pointer;
 }
+.listrow ul.groupuserstatus li.admincontrol .btn:hover .btn-del,
+.listrow ul.groupuserstatus li.admincontrol .btn:focus .btn-del {
+    background: url(../images/btn_deleteremove_focus.png) no-repeat 0 0;
+}
 /* status invite */
 ul.groupuserstatus li.invite form {
     margin: 5px 0;
@@ -3301,13 +3430,19 @@ ul.groupuserstatus li.invite form {
 ul.groupuserstatus li.invite span {
     margin: 0 0 0 8px;
 }
-ul.groupuserstatus li.invite span input {
+ul.groupuserstatus li.invite span input,
+ul.groupuserstatus li.invite span input:hover,
+ul.groupuserstatus li.invite span input:focus,
+ul.groupuserstatus li.invite span input:active {
     background: url(../images/deny_small.png) no-repeat 0 50%;
     border: 0;
     padding: 0 0 0 15px;
     margin: 0;
 }
-ul.groupuserstatus li.invite span:first-child input {
+ul.groupuserstatus li.invite span:first-child input,
+ul.groupuserstatus li.invite span:first-child input:hover,
+ul.groupuserstatus li.invite span:first-child input:focus,
+ul.groupuserstatus li.invite span:first-child input:active {
     background: url(../images/approve_small.png) no-repeat 0 50%;
     border: 0;
     padding: 0 0 0 15px;
@@ -3325,6 +3460,7 @@ ul.groupuserstatus li.jointhisgroup form {
 }
 ul.groupuserstatus li.jointhisgroup table td input,
 ul.groupuserstatus li.jointhisgroup table td input:hover,
+ul.groupuserstatus li.jointhisgroup table td input:focus,
 ul.groupuserstatus li.jointhisgroup table td input:active {
     background: url(../images/join_small.png) no-repeat 0 50%;
     border: 0;
@@ -3643,7 +3779,6 @@ ul.actionlist li form input.submit {
 ul.actionlist li form input.submit:hover,
 ul.actionlist li a:hover {
     background-color: #ffffff;
-    color: #000000;
 }
 /* focus state */
 ul.actionlist li form input.submit:focus,
@@ -4077,8 +4212,10 @@ ul.searchtab li span.inactive {
     margin: 2px 0;
     font-size: 1.083em;
 }
-#results_filter .filtername a:hover {
+#results_filter .filtername a:hover,
+#results_filter .filtername a:focus {
     background: #FFFFFF;
+    outline: none;
 }
 #results_filter .filtername a.selected {
     background: #FFFFFF;

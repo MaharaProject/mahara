@@ -974,13 +974,6 @@ nav#collection-nav ul li {
     padding: 10px 0;
     border-top: 1px dotted #D1D1D1;
 }
-.postlist .title {
-    margin-top: 10px;
-    font-size: 1.333em;
-}
-.postlist .tags {
-    margin: 0 0 5px 0;
-}
 .postlist .postdetails {
     margin: 3px 0;
 }

@@ -27,6 +27,10 @@ ul.colnav li.selected span {
     text-decoration: none;
     font-weight: bold;
 }
+ul.colnav li a:focus {
+    background: #E9E9E9;
+    outline: none;
+}
 /******************** Blocktype icons panel ********************/
 #editcontent-sidebar {
     background: #BEBEBE;
@@ -50,6 +54,11 @@ ul.colnav li.selected span {
 .block-category-title .nonjs {
     color: #333333;
 }
+.block-category-title .withjs:focus,
+.block-category-title .nonjs:focus {
+    background-color: #FFFFFF;
+    outline: none;
+}
 #block-category-general,
 #block-category-internal,
 #block-category-fileimagevideo,
@@ -59,16 +68,19 @@ ul.colnav li.selected span {
     border: 1px solid #B3B3B3;
 }
 #block-category-general:hover,
-#block-category-general:focus,
 #block-category-internal:hover,
-#block-category-internal:focus,
 #block-category-fileimagevideo:hover,
-#block-category-fileimagevideo:focus,
 #block-category-external:hover,
+#block-category-blog:hover {
+    background-color: #FFFFFF;
+}
+#block-category-general:focus,
+#block-category-internal:focus,
+#block-category-fileimagevideo:focus,
 #block-category-external:focus,
-#block-category-blog:hover,
 #block-category-blog:focus {
     background-color: #FFFFFF;
+    outline: none;
 }
 /* container around blocktypes under each category */
 #blog,
@@ -156,12 +168,18 @@ ul.artefactchooser-tabs li a:active {
 }
 ul.artefactchooser-tabs li.current a,
 ul.artefactchooser-tabs li.current a:link,
-ul.artefactchooser-tabs li.current a:visited,
-ul.artefactchooser-tabs li.current a:active {
+ul.artefactchooser-tabs li.current a:visited {
     color: #333333;
     font-weight: bold;
     border-bottom: 1px solid #FFFFFF;
     background: none;
+}
+ul.artefactchooser-tabs li a:active,
+ul.artefactchooser-tabs li a:focus,
+ul.artefactchooser-tabs li.current a:active,
+ul.artefactchooser-tabs li.current a:focus {
+    background: #D4D4D4;
+    outline: none;
 }
 /******************** Block config sub tabs ********************/
 ul.artefactchooser-subtabs li.showrightborder {
