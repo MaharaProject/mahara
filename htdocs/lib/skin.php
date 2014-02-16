@@ -196,7 +196,9 @@ class Skin {
      */
     public function delete() {
         db_begin();
-        delete_records('skin','id',$this->id);
+        delete_records('skin', 'id', $this->id);
+        // Reset the view's skin
+        set_field('view', 'skin', null, 'skin', $this->id);
         $this->deleted = true;
         db_commit();
     }
