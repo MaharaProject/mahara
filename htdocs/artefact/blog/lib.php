@@ -397,6 +397,31 @@ class ArtefactTypeBlog extends ArtefactType {
 
     public static function delete_form($id) {
         global $THEME;
+
+        $confirm = get_string('deleteblog?', 'artefact.blog');
+
+        // Check if this blog has posts.
+        $postcnt = count_records_sql("
+            SELECT COUNT(*)
+            FROM {artefact} a
+            INNER JOIN {artefact_blog_blogpost} bp ON a.id = bp.blogpost
+            WHERE a.parent = ?
+            ", array($id));
+        if ($postcnt > 0) {
+            $confirm = get_string('deletebloghaspost?', 'artefact.blog', $postcnt);
+
+            // Check if this blog posts used in views.
+            $viewscnt = count_records_sql("
+                SELECT COUNT(DISTINCT(va.view))
+                FROM {artefact} a
+                INNER JOIN {view_artefact} va ON a.id = va.artefact
+                WHERE a.parent = ? OR a.id = ?
+                ", array($id, $id));
+            if ($viewscnt > 0) {
+                $confirm = get_string('deletebloghasview?', 'artefact.blog', $viewscnt);
+            }
+        }
+
         return pieform(array(
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
@@ -410,7 +435,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'type' => 'image',
                     'src' => $THEME->get_url('images/btn_deleteremove.png'),
                     'elementtitle' => get_string('delete', 'artefact.blog'),
-                    'confirm' => get_string('deleteblog?', 'artefact.blog'),
+                    'confirm' => $confirm,
                     'value' => get_string('delete', 'artefact.blog')
                 ),
             ),
