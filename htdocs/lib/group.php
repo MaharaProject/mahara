@@ -468,7 +468,7 @@ function group_create($data) {
                 'group'       => $id,
                 'title'       => $template->title,
                 'description' => $template->description,
-            ), $template->id);
+            ), $template->id, null, false);
             $view->set_access(array(array(
                 'type'      => 'group',
                 'id'        => $id,
@@ -489,7 +489,7 @@ function group_create($data) {
     if ($templates) {
         require_once('collection.php');
         foreach ($templates as $template) {
-            Collection::create_from_template(array('group' => $id), $template->id, null, null, true);
+            Collection::create_from_template(array('group' => $id), $template->id, null, false, true);
         }
     }
     $data['id'] = $id;

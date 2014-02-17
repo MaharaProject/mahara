@@ -516,7 +516,7 @@ class User {
             'title' => get_field('view', 'title', 'id', $systemprofileviewid),
             'description' => get_string('profiledescription'),
             'type'  => 'profile',
-        ), $systemprofileviewid, $this->get('id'));
+        ), $systemprofileviewid, $this->get('id'), false);
 
         // Add about me block
         $aboutme = new BlockInstance(0, array(
@@ -592,7 +592,7 @@ class User {
             'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
             'description' => get_string('dashboarddescription'),
             'type'  => 'dashboard',
-        ), $systemdashboardviewid, $this->get('id'));
+        ), $systemdashboardviewid, $this->get('id'), false);
 
         db_commit();
 
@@ -1242,10 +1242,8 @@ class User {
      * Makes a literal copy of a list of views and collections for the new user.
      * All site views and collections which set to "copy to new user"
      * will be copied to this user's profile.
-     *
-     * @param $checkviewaccess.
      */
-    public function copy_site_views_collections_to_new_user($checkviewaccess=true) {
+    public function copy_site_views_collections_to_new_user() {
         // Get list of available views which are not in collections
         $templateviewids = get_column_sql("
             SELECT v.id
@@ -1254,7 +1252,7 @@ class User {
             WHERE cv.view IS NULL
                 AND v.institution = 'mahara'
                 AND v.copynewuser = 1", array());
-        $this->copy_views($templateviewids, $checkviewaccess);
+        $this->copy_views($templateviewids, false);
 
         // Get list of available collections
         $templatecollectionids = get_column_sql("
@@ -1267,7 +1265,7 @@ class User {
         if ($templatecollectionids) {
             require_once('collection.php');
             foreach ($templatecollectionids as $templateid) {
-                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
+                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, false, true);
             }
         }
     }
@@ -1278,9 +1276,8 @@ class User {
      * will be copied to this user's profile.
      *
      * @param $institution: ID of the institution to join
-     * @param $checkviewaccess.
      */
-    public function copy_institution_views_collections_to_new_member($institution, $checkviewaccess=true) {
+    public function copy_institution_views_collections_to_new_member($institution) {
         if (empty($institution)) {
             return;
         }
@@ -1292,7 +1289,7 @@ class User {
             WHERE cv.view IS NULL
                 AND v.institution = ?
                 AND v.copynewuser = 1", array($institution));
-        $this->copy_views($templateviewids, $checkviewaccess);
+        $this->copy_views($templateviewids, false);
 
         // Get list of available collections
         $templatecollectionids = get_column_sql("
@@ -1305,7 +1302,7 @@ class User {
         if ($templatecollectionids) {
             require_once('collection.php');
             foreach ($templatecollectionids as $templateid) {
-                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, null, true);
+                Collection::create_from_template(array('owner' => $this->get('id')), $templateid, null, false, true);
             }
         }
     }

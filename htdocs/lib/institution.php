@@ -332,7 +332,7 @@ class Institution {
         $checkviewaccess = empty($user->newuser) && !$USER->get('admin');
         $userobj = new User();
         $userobj->find_by_id($user->id);
-        $userobj->copy_institution_views_collections_to_new_member($this->name, $checkviewaccess);
+        $userobj->copy_institution_views_collections_to_new_member($this->name);
         require_once('activity.php');
         activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
