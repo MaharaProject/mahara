@@ -358,9 +358,10 @@ class cli {
      * Exit the program with a message and set the exit status appropriately
      *
      * @param string $message The message to output
-     * @param mixed $error false if exiting normally; true or the expected
-     * error code if exiting abnormally. If true is used, then an exit code of
-     * 127 is used
+     * @param int|bool $error (default boolean false) Indicates whether this is an error exit.
+     *     If boolean false, exit code 0 (success).
+     *     If boolean true, exit code 127 (failure)
+     *     If an integer value is passed, use the integer as the exit code.
      * @return void
      */
     public function cli_exit($message = null, $error = false) {
@@ -368,10 +369,13 @@ class cli {
             print($message . "\n");
         }
 
-        if ($error === false) {
+        if (is_int($error)) {
+            $exitcode = $error;
+        }
+        else if ($error === false) {
             $exitcode = 0;
         }
-        else if ($error === true || !is_int($error)) {
+        else {
             $exitcode = 127;
         }
         exit($exitcode);
