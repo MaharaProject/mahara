@@ -31,6 +31,8 @@ $string['element.expiry.months'] = 'Months';
 $string['element.expiry.years'] = 'Years';
 $string['element.expiry.noenddate'] = 'No end date';
 
+$string['element.files.addattachment'] = 'Add attachment';
+
 $string['element.select.other'] = 'Other';
 
 $string['element.color.or'] = 'or';
