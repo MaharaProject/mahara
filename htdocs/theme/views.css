@@ -782,6 +782,15 @@ table.maharatable tr#instconf_otherblocksmsg_container td {
     font-style: italic;
 }
 /******************** Different blocktype styles ********************/
+/* Collection navigation block */
+nav#collection-nav ul {
+    list-style: none;
+    margin-top: 0;
+}
+nav#collection-nav ul li {
+    padding: 3px 5px;
+    margin: 0;
+}
 /* External feed block */
 #blocktype_externalfeed_title {
     font-weight: bold;
