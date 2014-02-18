@@ -374,16 +374,18 @@ function build_admin_user_search_results($search, $offset, $limit) {
 
     $results = get_admin_user_search_results($search, $offset, $limit);
 
-    $results['pagination'] = build_pagination(array(
+    $pagination = build_pagination(array(
             'id' => 'admin_usersearch_pagination',
             'class' => 'center',
             'url' => $searchurl,
             'count' => $results['count'],
+            'setlimit' => true,
             'limit' => $limit,
             'jumplinks' => 8,
             'numbersincludeprevnext' => 2,
             'offset' => $offset,
             'datatable' => 'searchresults',
+            'searchresultsheading' => 'resultsheading',
             'jsonscript' => 'admin/users/search.json.php',
     ));
 
@@ -471,14 +473,16 @@ function build_admin_user_search_results($search, $offset, $limit) {
     $smarty->assign_by_ref('results', $results);
     $smarty->assign_by_ref('institutions', $institutions);
     $smarty->assign('USER', $USER);
-    $smarty->assign('searchurl', $searchurl);
-    $smarty->assign('sortby', $search->sortby);
-    $smarty->assign('sortdir', $search->sortdir);
     $smarty->assign('limit', $limit);
     $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
     $smarty->assign('cols', $cols);
     $smarty->assign('ncols', count($cols));
-    return $smarty->fetch('searchresulttable.tpl');
+    $html = $smarty->fetch('searchresulttable.tpl');
+    return array($html, $cols, $pagination, array(
+        'url' => $searchurl,
+        'sortby' => $search->sortby,
+        'sortdir' => $search->sortdir
+    ));
 }
 
 

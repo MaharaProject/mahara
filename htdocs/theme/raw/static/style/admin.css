@@ -325,9 +325,6 @@ form#register table table {
     font-weight: bold;
     text-decoration: none;
 }
-#results thead tr.search-results-pages {
-    display: none;
-}
 #results th.nojs-hidden-table-cell a {
     margin: 0 3px;
 }

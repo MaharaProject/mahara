@@ -76,13 +76,29 @@ $calendarform = new Pieform(array(
 $calendarform->include_plugin('element', 'calendar');
 $loggedindate = pieform_element_calendar($calendarform, $calendar);
 
-$smarty = smarty(array('adminusersearch'));
+list($html, $columns, $pagination, $search) = build_admin_user_search_results($search, $offset, $limit);
+
+$js = <<<EOF
+addLoadEvent(function() {
+    var p = {$pagination['javascript']}
+
+    new UserSearch(p);
+})
+EOF;
+
+$smarty = smarty(array('adminusersearch', 'paginator'));
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
 $smarty->assign('loggedintypes', $loggedintypes);
 $smarty->assign('loggedindate', $loggedindate);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', $institutions);
-$smarty->assign('results', build_admin_user_search_results($search, $offset, $limit));
+$smarty->assign('results', $html);
+$smarty->assign('pagination', $pagination['html']);
+$smarty->assign('columns', $columns);
+$smarty->assign('searchurl', $search['url']);
+$smarty->assign('sortby', $search['sortby']);
+$smarty->assign('sortdir', $search['sortdir']);
+$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/users/search.tpl');

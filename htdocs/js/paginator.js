@@ -30,13 +30,19 @@ var Paginator = function(id, datatable, heading, script, extradata) {
             var index = location.href.indexOf('?');
             if (index >= 0) {
                 var querystring = parseQueryString(location.href.substr(index));
-                self.query = querystring.query;
-                self.offset = querystring.offset;
+                self.params = querystring;
+            }
+            else if (Paginator.oldparams) {
+                // Set if the page has been changed and we're setting up the new pagination controls
+                self.params = Paginator.oldparams;
+            }
+            else {
+                self.params = {};
             }
 
             if (self.heading) {
                 addElementClass(self.heading, 'hidefocus');
-                setNodeAttribute(self.heading, 'tabIndex', 0);
+                setNodeAttribute(self.heading, 'tabIndex', -1);
             }
 
             self.rewritePaginatorLinks();
@@ -110,7 +116,7 @@ var Paginator = function(id, datatable, heading, script, extradata) {
         }
     };
 
-    this.updateResults = function (data, params) {
+    this.updateResults = function (data, params, changedPage) {
         var container = self.datatable;
         if (self.datatable.tagName == 'TABLE') {
             container = getFirstElementByTagAndClassName('tbody', null, self.datatable);
@@ -151,6 +157,8 @@ var Paginator = function(id, datatable, heading, script, extradata) {
             });
         }
 
+        var results;
+
         // Update the pagination
         if ($(self.id)) {
             var tmp = DIV();
@@ -158,10 +166,11 @@ var Paginator = function(id, datatable, heading, script, extradata) {
             swapDOM(self.id, tmp.firstChild);
 
             // Run the pagination js to make it live
+            Paginator.oldparams = params;
             eval(data['data']['pagination_js']);
 
             // Update the result count
-            var results = getFirstElementByTagAndClassName('div', 'results', self.id);
+            results = getFirstElementByTagAndClassName('div', 'results', self.id);
             if (results && data.data.results) {
                 results.innerHTML = data.data.results;
             }
@@ -172,20 +181,36 @@ var Paginator = function(id, datatable, heading, script, extradata) {
         }
 
         // Focus management based on whether the user searched for something or just changed the page
-        if (self.heading && (params.query != self.query || params.offset == self.offset)) {
+        if (self.heading && !changedPage) {
             self.heading.focus();
         }
-        else {
-            getFirstElementByTagAndClassName('a', null, self.datatable).focus();
+        else if (container) {
+            var firstLink = getFirstElementByTagAndClassName('a', null, container);
+            if (firstLink) {
+                firstLink.focus();
+            }
+            else if (results) {
+                setNodeAttribute(results, 'tabindex', -1);
+                addElementClass(results, 'hidefocus');
+                results.focus();
+            }
         }
-        self.query = params.query;
-        self.offset = params.offset;
+        self.params = params;
     };
 
-    this.sendQuery = function(params) {
+    this.sendQuery = function(params, changedPage) {
+        if (params) {
+            params = $j.extend({}, self.params, params);
+        }
+        else {
+            params = self.params;
+        }
         sendjsonrequest(self.jsonScript, params, 'GET', function(data) {
-            self.updateResults(data, params);
-            self.alertProxy('pagechanged', data['data']);
+            self.updateResults(data, params, changedPage);
+            var arg = data['data'];
+            arg.params = params;
+            arg.changedPage = changedPage;
+            self.alertProxy('pagechanged', arg);
         });
     };
 
@@ -200,7 +225,7 @@ var Paginator = function(id, datatable, heading, script, extradata) {
                 queryData.extradata = serializeJSON(self.extraData);
             }
 
-            self.sendQuery(queryData);
+            self.sendQuery(queryData, true);
         });
     };
 

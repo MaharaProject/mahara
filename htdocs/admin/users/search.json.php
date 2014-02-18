@@ -14,29 +14,29 @@ define('JSON', 1);
 define('INSTITUTIONALSTAFF', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('searchlib.php');
 
-$action = param_variable('action');
+$params = new StdClass;
+$params->query          = trim(param_variable('query', ''));
+$params->institution    = param_alphanum('institution', null);
+$params->f              = param_alpha('f', null);
+$params->l              = param_alpha('l', null);
+$params->sortby         = param_alpha('sortby', 'firstname');
+$params->sortdir        = param_alpha('sortdir', 'asc');
+$params->loggedin       = param_alpha('loggedin', 'any');
+$params->loggedindate   = param_variable('loggedindate', null);
+$params->duplicateemail = param_boolean('duplicateemail', false);
 
-if ($action == 'search') {
-    require_once('searchlib.php');
+$offset  = param_integer('offset', 0);
+$limit   = param_integer('limit', 10);
 
-    $params = new StdClass;
-    $params->query          = trim(param_variable('query', ''));
-    $params->institution    = param_alphanum('institution', null);
-    $params->f              = param_alpha('f', null);
-    $params->l              = param_alpha('l', null);
-    $params->sortby         = param_alpha('sortby', 'firstname');
-    $params->sortdir        = param_alpha('sortdir', 'asc');
-    $params->loggedin       = param_alpha('loggedin', 'any');
-    $params->loggedindate   = param_variable('loggedindate', null);
-    $params->duplicateemail = param_boolean('duplicateemail', false);
+list($html, $columns, $pagination, $search) = build_admin_user_search_results($params, $offset, $limit);
 
-    $offset  = param_integer('offset', 0);
-    $limit   = param_integer('limit', 10);
-
-    $data = array();
-    $data['data'] = build_admin_user_search_results($params, $offset, $limit);
-    $data['error'] = false;
-    $data['message'] = null;
-    json_reply(false, $data);
-}
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['javascript']
+    )
+));
