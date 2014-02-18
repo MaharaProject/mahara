@@ -158,7 +158,7 @@ ul.artefactchooser-tabs li.current a:active {
     background: none;
 }
 /******************** Block config sub tabs ********************/
-ul.artefactchooser-subtabs li {
+ul.artefactchooser-subtabs li.showrightborder {
     border-right: 1px solid #D1D1D1;
 }
 ul.artefactchooser-subtabs li.current a,

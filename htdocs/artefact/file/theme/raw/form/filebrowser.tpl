@@ -30,9 +30,9 @@
 {include file="artefact:file:form/ownertabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}
 </div>
 <div id="artefactchooser-body">
-  {if $tabs.subtabs}
-  <div id="{$prefix}_ownersubtabs">{include file="artefact:file:form/ownersubtabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}
-  </div>{/if}
+  <div id="{$prefix}_ownersubtabs" {if !$tabs.subtabs}class="hidden"{/if}>
+  {if $tabs.subtabs}{include file="artefact:file:form/ownersubtabs.tpl" tabs=$tabs prefix=$prefix querybase=$querybase}{/if}
+  </div>
 {/if}
 
 {if $config.upload}
