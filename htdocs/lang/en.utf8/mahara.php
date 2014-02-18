@@ -1035,7 +1035,7 @@ $string['theme'] = 'Theme';
 $string['choosetheme'] = 'Choose theme...';
 
 // Homepage info block
-$string['Hide'] = 'Hide';
+$string['Hide2'] = 'Hide information box';
 $string['createcollect'] = 'Create and collect';
 $string['createcollectsubtitle'] = 'Develop your portfolio';
 $string['updateprofile'] = 'Update your profile';
