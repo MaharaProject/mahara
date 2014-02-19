@@ -103,10 +103,15 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
 
         $sql = 'SELECT p1.id, p1.topic, p1.parent, p1.poster, COALESCE(p1.subject, p2.subject) AS subject, p2.subject,
         p1.body, p1.ctime, p1.deleted, p1.sent, p1.path,
-        u.username, u.preferredname, u.firstname, u.lastname, u.profileicon
+        u.username, u.preferredname, u.firstname, u.lastname, u.profileicon,
+        f.title as forumname, f.id as forumid,
+        g.name as groupname, g.id as groupid
         FROM {interaction_forum_post} p1
         LEFT JOIN {interaction_forum_post} p2 ON p2.parent IS NULL AND p2.topic = p1.topic
         LEFT JOIN {usr} u ON u.id = p1.poster
+        LEFT JOIN {interaction_forum_topic} ift on p1.topic = ift.id
+        LEFT JOIN {interaction_instance} f ON ift.forum = f.id AND f.plugin=\'forum\'
+        LEFT JOIN {group} g ON f.group = g.id
         WHERE p1.id = ?';
 
         $record = get_record_sql($sql, array($id));
@@ -115,7 +120,8 @@ class ElasticsearchType_interaction_forum_post extends ElasticsearchType
         }
 
         $record->body = str_replace(array("\r\n", "\n", "\r"), ' ', strip_tags($record->body));
-
+        $record->ctime = format_date(strtotime($record->ctime));
+        $record->authorlink = '<a href="' . profile_url($record->poster) . '" class="forumuser">' . display_name($record->poster,null,true) . '</a>';
         return $record;
     }
 
