@@ -1,5 +1,7 @@
-    <div class="sidebar-header"><p id="lastminutes">({str tag="lastminutes" args=$sbdata.lastminutes})</p>
-    <h3>{str tag="onlineusers" args=$sbdata.count}</h3></div>
+<div class="sidebar-header">
+    <h3>{str tag="onlineusers" args=$sbdata.count}</h3>
+    <p id="lastminutes">({str tag="lastminutes" args=$sbdata.lastminutes})</p>
+</div>
     <div class="sidebar-content">
         <ul class="cr">
 {foreach from=$sbdata.users item=user}

@@ -393,6 +393,9 @@ div.warning,
 .listing .listrow {
     padding: 3px 5px;
 }
+.listing .listrow h3.title {
+    display: inline-block;
+}
 .listing .tags {
     margin: 3px 0;
 }
@@ -1641,6 +1644,7 @@ ul.in-page-tabs li button.current-tab {
     padding: 5px 10px 10px 10px;
 }
 .sideblock h3 {
+    display: inline-block;
     font-size: 1.333em;
     margin: 0;
 }
@@ -4054,7 +4058,7 @@ ul.searchtab li span.inactive {
     margin-left: 30px;
 }
 .wallpost .controls a {
-    margin: 0 0 0 5px;
+    margin: 0;
 }
 
 /* Import */
