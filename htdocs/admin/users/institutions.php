@@ -807,7 +807,7 @@ function institution_submit(Pieform $form, $values) {
             insert_record('auth_instance', $authinstance);
         }
         // We need to add the default lines to the site_content table for this institution
-        // We also need to set the institution to be using default site pages to begin with
+        // We also need to set the institution to be using default general pages to begin with
         // so that using custom institution pages is an opt-in situation
         $pages = site_content_pages();
         $now = db_format_timestamp(time());
@@ -816,7 +816,7 @@ function institution_submit(Pieform $form, $values) {
             $page->name = $name;
             $page->ctime = $now;
             $page->mtime = $now;
-            $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('sitepageconfiginstitution', 'install'));
+            $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('generalpageconfiginstitution', 'install'));
             $page->institution = $newinstitution->name;
             insert_record('site_content', $page);
 

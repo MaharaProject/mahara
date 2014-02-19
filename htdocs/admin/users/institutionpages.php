@@ -14,10 +14,10 @@ define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'manageinstitutions/sitepages');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'sitepages');
+define('SECTION_PAGE', 'institutiongeneralpages');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('editinstitutionsitepages', 'admin'));
+define('TITLE', get_string('generalinstitutionpages', 'admin'));
 require_once('pieforms/pieform.php');
 require_once('license.php');
 define('DEFAULTPAGE', 'home');
@@ -48,8 +48,8 @@ else if (!empty($institutionselector['options']) && sizeof($institutionselector[
 else if (empty($institutionselector['options'])) {
     // Only the 'no institution' institution exists so we need to display this fact
     $smarty = smarty(array(), array(), array());
-    $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionsitepagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
-    $smarty->assign('noinstitutions', get_string('noinstitutionsitepages', 'admin'));
+    $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutiongeneralpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
+    $smarty->assign('noinstitutions', get_string('noinstitutiongeneralpages', 'admin'));
     $smarty->assign('PAGEHEADING', TITLE);
     $smarty->display('admin/site/pages.tpl');
     exit;
@@ -80,7 +80,7 @@ $form = pieform(array(
         'pageusedefault' => array(
             'type'    => 'checkbox',
             'title'   => get_string('usedefault', 'admin'),
-            'description'  => get_string('usedefaultdescription', 'admin'),
+            'description'  => get_string('usedefaultdescription1', 'admin'),
             'defaultvalue' => (get_config_institution($institutionselector['defaultvalue'], 'sitepages_' . DEFAULTPAGE) == 'mahara' ? 1 : 0),
         ),
         'pagetext' => array(
@@ -105,7 +105,7 @@ $form = pieform(array(
 function editsitepage_validate(Pieform $form, $values) {
     $allowedinstitutions = get_institution_selector(false);
     if (array_search($values['pageinstitution'], array_flip($allowedinstitutions['options'])) === false) {
-        $form->set_error(null, get_string('pageinstitutionbad', 'admin', $values['pageinstitution']));
+        $form->set_error(null, get_string('generalpageinstitutionbad', 'admin', $values['pageinstitution']));
     }
 }
 
@@ -150,7 +150,7 @@ function editsitepage_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
-$smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionsitepagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
+$smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutiongeneralpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('admin/site/pages.tpl');

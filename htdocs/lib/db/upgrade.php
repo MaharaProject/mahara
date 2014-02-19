@@ -3032,8 +3032,8 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
         add_key($table, $key);
 
-        // now add the default site pages for each existing institution with the values of
-        // the 'mahara' institution. These can them be altered via Admin -> Institution -> Edit site pages
+        // now add the default general pages for each existing institution with the values of
+        // the 'mahara' institution. These can them be altered via Administration -> Institutions -> General pages
         $sitecontentarray = array();
         $sitecontents = get_records_array('site_content', 'institution', 'mahara');
         foreach ($sitecontents as $sitecontent) {

@@ -71,13 +71,12 @@ $string['manageinstitutions'] = 'Manage institutions';
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';
 $string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
-$string['editsitepages']     = 'Edit site pages';
-$string['editinstitutionsitepages']     = 'Edit institution site pages';
-$string['pageinstitutionbad'] = "You can't access and/or edit site pages for Institution '%s'";
-$string['institutionsitepages'] = 'Institution site pages';
+$string['generalpages']     = 'General pages';
+$string['generalinstitutionpages']     = 'General institution pages';
+$string['generalpageinstitutionbad'] = "You can't access and/or edit general pages for institution '%s'";
 $string['usedefault'] = 'Use site default';
-$string['usedefaultdescription'] = 'Use the site\'s default \'site pages\' text for this particular page type instead.';
-$string['editsitepagesdescription'] = 'Edit the content of various pages around the site';
+$string['usedefaultdescription1'] = 'Use the site\'s default text for this particular page type instead.';
+$string['generalpagesdescription'] = 'Edit the content of various general pages';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
@@ -416,7 +415,7 @@ $string['sitefilesaccessdescription'] = 'If checked, logged-in users will have a
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
-$string['editsitepagespagedescription'] = 'Here you can edit the content of some pages around the site, such as the homepage (for logged-in and logged-out users separately) and the pages linked to in the footer.';
+$string['generalpagespagedescription'] = 'Here you can edit the content of some general pages, such as the dashboard for logged-in users and the homepage for logged-out users as well as the pages linked to in the footer.';
 $string['home']                = 'Home (Dashboard)';
 $string['loadsitecontentfailed']  = 'Failed to load site page content';
 $string['loggedouthome']       = 'Logged-out home';
@@ -921,8 +920,8 @@ $string['Admins'] = 'Administrators';
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 $string['noinstitutionsstatsdescription'] = 'Institution statistics are not available because there are no institutions available to your user.';
-$string['noinstitutionsitepages'] = 'You do not have permission to edit any institution site pages or no institutions have been created yet.';
-$string['noinstitutionsitepagesadmin'] = 'If you are a site admin please edit the default site pages in <a href="%s">Configure site</a>.';
+$string['noinstitutiongeneralpages'] = 'You do not have permission to edit any institution general pages or no institutions have been created yet.';
+$string['noinstitutiongeneralpagesadmin'] = 'If you are a site administrator, please edit the default general pages in <a href="%s">Configure site</a>.';
 
 $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled checkboxes are for profile fields which are locked in the institution settings for "%s". These profile fields are locked at the site level and cannot be unlocked here.';

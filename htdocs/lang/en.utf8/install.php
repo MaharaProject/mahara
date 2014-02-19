@@ -129,5 +129,5 @@ $string['licenseshortnamebync']   = 'CC-BY-NC-4.0';
 $string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-4.0';
 $string['licenseshortnamegfdl']   = 'GFDL-1.3';
 
-$string['sitepageconfigdefault'] = '"Edit site pages" in "Configure site" in "Site administration"';
-$string['sitepageconfiginstitution'] = '"Edit site pages" in "Institutions" in "Site administration"';
+$string['generalpageconfigdefault'] = '"General pages" in "Configure site" in "Administration"';
+$string['generalpageconfiginstitution'] = '"General pages" in "Institutions" in "Administration"';

@@ -77,7 +77,7 @@
 <h3>{str tag=configsite section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=editsitepages section=admin}</a></strong> - {str tag=editsitepagesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=generalpages section=admin}</a></strong> - {str tag=generalpagesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/licenses.php">{str tag=sitelicenses section=admin}</a></strong> - {str tag=sitelicensesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=menus section=admin}</a></strong> - {str tag=menusdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
