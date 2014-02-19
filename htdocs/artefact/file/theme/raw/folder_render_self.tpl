@@ -1,7 +1,7 @@
 <div>
   {if !$simpledisplay}<h3 class="title">{$title}</h3>{/if}
   <div class="detail">{$description}</div>
-  {if $tags}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$owner tags=$tags}</div>{/if}
+  {if $tags}<div class="tags">{str tag=tags}: {list_tags owner=$owner tags=$tags}</div>{/if}
   <div id="commentfiles">
   {if (isset($children))}
   <h4>{str tag=foldercontents section=artefact.file}:</h4>
@@ -17,7 +17,7 @@
     <tbody>
     {foreach from=$children item=child}
       <tr class="{cycle values='r0,r1'}">
-        <td class="icon-container"><img src="{$child->iconsrc}" border="0" alt="{$child->artefacttype}"></td>
+        <td class="icon-container"><img src="{$child->iconsrc}" alt="{$child->artefacttype}"></td>
         <td class="filename"><a href="{$WWWROOT}view/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">{$child->title}</a></td>
         <td class="filedescription">{$child->description}</td>
         {if !$simpledisplay}

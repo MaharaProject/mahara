@@ -16,8 +16,8 @@
 #taskslist td.completed,
 #taskslist td.incomplete {
     text-align: center;
-    padding-top: 7px;
+    padding-top: 8px;
 }
 .plantaskdescription p {
-    margin: 0 0 10px;
+    margin: 0 0 5px;
 }

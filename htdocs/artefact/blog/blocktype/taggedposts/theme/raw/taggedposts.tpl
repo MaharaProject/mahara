@@ -23,7 +23,7 @@
     <div class="post">
         <h3 class="title"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$view}">{$post->title}</a></h3>
         <div class="detail">{$post->description|clean_html|safe}</div>
-        <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$post->owner tags=$post->taglist}</div>
+        <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->taglist}</div>
         <div class="postdetails">{$post->postedbyon}
         {if $post->allowcomments} | <a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$view}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>{/if}</div>
     </div>

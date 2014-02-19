@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <p>{str tag=notesdescription section=artefact.internal}</p>
-<table id="notes" class="fullwidth">
+<table id="notes" class="fullwidth listing">
   <thead>
     <tr>
       <th>{str tag=Note section=artefact.internal}</th>
@@ -19,51 +19,50 @@
       {else}
         <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h3>
       {/if}
-        {if $n->tags}
-        <div>{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
-        {/if}
-        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
-        {if $n->files}
+      {if $n->tags}
+        <div class="tags">{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
+      {/if}
+       <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
+            {if $n->files}
             <div id="notefiles_{$n->id}">
                 <table class="attachments fullwidth">
-                    <col width="5%">
-                    <col width="40%">
-                    <col width="55%">
                     <thead class="expandable-head">
                         <tr>
-                            <th colspan="3"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a></th>
+                            <th colspan="2"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a></th>
                         </tr>
                     </thead>
                     <tbody class="expandable-body">
                         {foreach from=$n->files item=file}
                             <tr class="{cycle values='r1,r0'}">
-                                <td><img src="{$file->icon}" alt=""></td>
-                                <td class="valign"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-                                <td class="valign">{$file->description}</td>
+                                <td class="icon-container"><img src="{$file->icon}" alt=""></td>
+                                <td class="valign">
+                                    <div><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></div>
+                                    <div class="detail s">{$file->description}</div>
+                                </td>
                             </tr>
                         {/foreach}
                     </tbody>
                 </table>
             </div>
-        </div>
         {/if}
+        </div>
       </td>
       <td>
       {foreach from=$n->blocks item=b}
-        <div>
+        <div class="detail">
           {$b.blocktitle|str_shorten_text:30:true}
         </div>
       {/foreach}
       </td>
       <td>
       {foreach from=$n->views item=v}
-        <div>
+        <div class="detail">
           <a href="{$v.fullurl}">{$v.viewtitle|str_shorten_text:30:true}</a>
           {if $v.ownername} - {str tag=by section=view} {if $v.ownerurl}<a href="{$v.ownerurl}">{/if}{$v.ownername}{if $v.ownerurl}</a>{/if}{/if}
         </div>
         {if $v.extrablocks}
             {for i 1 $v.extrablocks}
-            <div>&nbsp;</div>
+            <div class="detail">&nbsp;</div>
             {/for}
         {/if}
       {/foreach}

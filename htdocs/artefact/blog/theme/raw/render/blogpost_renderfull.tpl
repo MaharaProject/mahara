@@ -5,6 +5,7 @@
     {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
     {$artefactdescription|clean_html|safe}
     {if isset($attachments)}
+        {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
         <table class="cb attachments fullwidth">
             <thead class="expandable-head">
                 <tr>
@@ -18,13 +19,12 @@
                 </tr>
             </thead>
             <tbody class="expandable-body">
-                {if $artefact->get('tags')}<div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
                 {foreach from=$attachments item=item}
                     <tr class="{cycle values='r0,r1'}">
-                        {if $icons}<td class="icon-container"><img src="{$item->iconpath}" alt=""></td>{/if}
+                        <td class="icon-container"><img src="{$item->iconpath}" alt=""></td>
                         <td>
-                            <a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-                            <br>{$item->description}
+                            <h3 class="title"><a href="{$item->viewpath}">{$item->title}</a> <span class="description">({$item->size}) - <a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></span></h3>
+                            <div class="detail">{$item->description}</div>
                         </td>
                     </tr>
                 {/foreach}

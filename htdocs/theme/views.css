@@ -82,6 +82,7 @@ ul.colnav li.selected span {
 }
 .viewfooter .tags {
     margin-bottom: 10px;
+    margin-top: 3px;
 }
 .viewfooter .submissionform {
     margin-bottom: 10px;
@@ -151,6 +152,7 @@ ul.colnav li.selected span {
 #feedbacktable form div {
     display: inline;
     vertical-align: top;
+    margin-left: 3px;
 }
 /* view menu */
 #viewmenu {
@@ -883,7 +885,7 @@ nav#collection-nav ul li {
 }
 /* Folder block */
 #commentfiles {
-    padding: 10px;
+    padding: 10px 2%;
     margin-top: 5px;
 }
 /* Gallery block */
@@ -945,23 +947,26 @@ nav#collection-nav ul li {
 }
 /* Image block */
 .bt-image .blockinstance-content div a img {
-    max-width: 100%;
+    max-width: 98%;
 }
 /* Journal / Tagged journal block */
 .blockinstance-content .shortcut select {
     max-width: 42%;
 }
-#blogpost .tags {
-    margin: 3px 0;
+.bloglicense {
+    margin: 20px 0 10px 0;
 }
 #blogpost .postdetails {
-    margin: 3px 0 10px 0;
+    margin: 3px 0;
+}
+#blogpost .postlicense {
+    margin: 20px 0 10px 0;
 }
 #blogdescription {
     margin: 0 0 10px 0;
 }
 .postlist .post {
-    padding: 0;
+    padding: 10px 0;
     border-top: 1px dotted #D1D1D1;
 }
 .postlist .title {
@@ -972,7 +977,7 @@ nav#collection-nav ul li {
     margin: 0 0 5px 0;
 }
 .postlist .postdetails {
-    padding: 0 0 10px 0;
+    margin: 3px 0;
 }
 /* Latest forum posts block */
 #latestforumposts .right a img {
@@ -997,7 +1002,11 @@ nav#collection-nav ul li {
 }
 img.license-icon {
     float: left;
-    margin-right: 2ex;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.artefactlicense {
+    margin: 20px 0 10px 0;
 }
 /* More link */
 .morelink {
