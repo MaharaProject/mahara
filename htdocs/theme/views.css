@@ -266,7 +266,7 @@ ul.colnav li.selected span {
 }
 .blocktype .blocktypelink {
     display: block;
-    color: #474220;
+    color: #211C00;
     cursor: inherit;
 }
 .blocktype .blocktypelink:hover, .blocktype .blocktypelink:focus {
@@ -1039,6 +1039,7 @@ img.license-icon {
 }
 .plan_incomplete {
     background: #FEE7E7;
+    color: #333333;
 }
 td.completed,
 td.incomplete {

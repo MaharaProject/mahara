@@ -41,9 +41,13 @@ ul.colnav li.selected span {
 #internal,
 #general,
 #fileimagevideo,
-#external {
+#external,
+#select-theme {
     background-color: #78d9ff;
     border-color: #78cff1;
+}
+#select-theme {
+    color: #333333;
 }
 .blocktype {
     background: #f0fbff;

@@ -364,13 +364,13 @@ div.warning,
 .unvalidated,
 .postdetails {
     font-size: 0.917em;
-    color: #888888;
+    color: #707070;
 }
 .nowrap {
     white-space: nowrap;
 }
 .dull {
-    color: #888888;
+    color: #707070;
 }
 /* some common listing text styles */
 .title,
@@ -538,8 +538,7 @@ form {
 }
 /* required */
 .requiredmarker {
-    color: #FF0000;
-    font-weight: normal;
+    color: #EE0000;
 }
 /* description */
 .pieform td.description {
@@ -1230,7 +1229,7 @@ div.pagination .disabled {
     white-space: nowrap;
 }
 div.pagination .results {
-    color: #838383;
+    color: #707070;
     padding: 3px 0;
     line-height: 1.167em;
 }
@@ -1303,7 +1302,7 @@ div.rel {
 /******************** Header ********************/
 /* skip to content link */
 .skiplink {
-    background-color: #f3f7ec;
+    background-color: #EEEEEE;
     display: block;
     padding: 5px 10px;
     position: absolute;
@@ -2188,7 +2187,7 @@ a.persona-button:after {
 }
 #file_dropzone_container .dz-message {
     font-size: 2em;
-    color: #888888;
+    color: #707070;
 }
 /* edit row background */
 tr.editrow,
@@ -2200,7 +2199,7 @@ tr#files_filebrowser_edit_row td {
 }
 /* folder row background */
 tr.folder td {
-    background: #E3E3E3 url(../images/folderrow.png) repeat-x 0 0;
+    background: #EEEEEE url(../images/folderrow.png) repeat-x 0 0;
 }
 /* folder row being moved */
 tr.folderhover td {
@@ -3857,7 +3856,7 @@ ul.searchtab li span.inactive {
 }
 .mytags .tagfreq {
     font-weight: normal;
-    color: #888888;
+    color: #707070;
 }
 .mytags .selected {
     font-weight: bold;

@@ -38,7 +38,8 @@ ul.colnav li a:active {
 #internal,
 #general,
 #fileimagevideo,
-#external {
+#external,
+#select-theme {
     background-color: #dcdfe9;
     border-color: #cbd3ec;
 }
