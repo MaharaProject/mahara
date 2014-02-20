@@ -52,14 +52,16 @@ $string['menu'] = 'MENU';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
-$string['none']   = 'None';
 $string['at'] = 'at';
 $string['From'] = 'From';
 $string['To'] = 'To';
-$string['All'] = 'All';
 $string['ascending'] = 'Ascending';
 $string['descending'] = 'Descending';
 $string['sortorder'] = 'Sort order of files';
+$string['All'] = 'All';
+$string['none']   = 'None';
+$string['selectall']   = 'Select all';
+$string['selectnone']   = 'Select none';
 
 $string['enable'] = 'Enable';
 $string['disable'] = 'Disable';

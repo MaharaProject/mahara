@@ -21,9 +21,9 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     if (count($element['elements']) > 1) {
         $id = hsc($form->get_name() . '_' . $element['name']) . '_container';
-        $result .= '<a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('All') . '</a>'
+        $result .= '<a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', true); return false;">' . get_string('selectall') . '</a>'
             . '&nbsp;'
-            . ' <a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('none') . '</a>';
+            . ' <a href="" onclick="pieform_element_checkboxes_update(\'' . $id . '\', false); return false;">' . get_string('selectnone') . '</a>';
     }
 
     $result .= '<div class="cl"></div>';
@@ -33,19 +33,26 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
     // Number of characters in checkbox labels (use 0 or false for no limit).
     $labelwidth = isset($element['labelwidth']) ? (int) $element['labelwidth'] : 17;
 
+    $elementtitle = '';
+    if (isset($element['title'])) {
+        $elementtitle = '<span class="accessible-hidden">' . $element['title'] . ': </span>';
+    }
+
     foreach ($element['elements'] as $e) {
+        $id = $form->get_name() . '_' . $element['id'];
+        $idsuffix = substr(md5(microtime()), 0, 4);
         if (!$submitted || !empty($e['disabled'])) {
             $checked = $e['defaultvalue'];
         }
         else {
             $checked = !empty($value[$e['value']]) || in_array($e['value'], $value);
         }
+        $attributes = $form->element_attributes($element);
+        $attributes = preg_replace("/\bid=\"{$id}\"/", "id=\"{$id}{$idsuffix}\"", $attributes);
         $title = $labelwidth ? str_shorten_text($e['title'], $labelwidth, true) : $e['title'];
         $result .= '<div class="checkboxes-option"><input type="checkbox" value="' . $e['value'] . '" '
-        . $form->element_attributes($element)
-        . ($checked ? ' checked="checked"' : '')
-        . (!empty($e['disabled']) ? ' disabled' : '')
-        . '>' . Pieform::hsc($title) . '</div>';
+            . $attributes . ($checked ? ' checked="checked"' : '') . (!empty($e['disabled']) ? ' disabled' : '') . '>'
+            . ' <label class="checkbox" for="' . $id . $idsuffix . '">' . $elementtitle . Pieform::hsc($title) . '</label></div>';
     }
     $result .= '<div class="cl"></div>';
 
