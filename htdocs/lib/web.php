@@ -2035,6 +2035,12 @@ function admin_nav() {
             'title'  => get_string('Institutions', 'admin'),
             'weight' => 10,
         ),
+        'manageinstitutions/sitepages' => array(
+            'path'   => 'manageinstitutions/sitepages',
+            'url'    => 'admin/users/institutionpages.php',
+            'title'  => get_string('editsitepages', 'admin'),
+            'weight' => 15
+        ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
@@ -2094,12 +2100,6 @@ function admin_nav() {
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 110,
-        ),
-        'manageinstitutions/sitepages' => array(
-            'path'   => 'manageinstitutions/sitepages',
-            'url'    => 'admin/users/institutionpages.php',
-            'title'  => get_string('editsitepages', 'admin'),
-            'weight' => 120
         ),
         'configextensions' => array(
             'path'   => 'configextensions',
@@ -2224,6 +2224,12 @@ function institutional_admin_nav() {
             'title'  => get_string('settings'),
             'weight' => 10,
         ),
+        'manageinstitutions/sitepages' => array(
+            'path'   => 'manageinstitutions/sitepages',
+            'url'    => 'admin/users/institutionpages.php',
+            'title'  => get_string('editsitepages', 'admin'),
+            'weight' => 15
+        ),
         'manageinstitutions/institutionusers' => array(
             'path'   => 'manageinstitutions/institutionusers',
             'url'    => 'admin/users/institutionusers.php',
@@ -2283,12 +2289,6 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/pendingregistrations.php',
             'title'  => get_string('pendingregistrations', 'admin'),
             'weight' => 110,
-        ),
-        'manageinstitutions/sitepages' => array(
-            'path'   => 'manageinstitutions/sitepages',
-            'url'    => 'admin/users/institutionpages.php',
-            'title'  => get_string('editsitepages', 'admin'),
-            'weight' => 120
         ),
     );
     if ($USER->get('staff')) {
