@@ -2,14 +2,15 @@ TinyMCE
 ========
 
 Website: http://tinymce.moxiecode.com/
-Version: 3.5.8
+Version: 4.0.16
 
-PHP Spellchecker plugin: 2.0.6.1
+Based on development version
 
 Changes:
 
  * Added all of the language packs
- * Removed unused plugins/media/ to fix Debian bug #591200
- * Removed the standard spellchecker plugin and replace with the php spellchecker plugin
- * Edited spellchecker config.php to check if a path for aspell is set
- * Renamed error function in plugins/spellchecker/includes/general.php to mceError
+ * Removed all .min.js and .dev.js files
+ * Removed all files in 'classes' directory since they're packaged into tinymce.js
+ * Removed all .less files from skin
+ * Added rpc.php to the spellchecker plugin to use server side processing rather than client side
+ * Added maharaimage plugin (supports adding attachments)

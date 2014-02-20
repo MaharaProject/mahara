@@ -15,7 +15,7 @@ class PSpell extends SpellChecker {
 	 * @param {Array} $words Array of words to spellcheck.
 	 * @return {Array} Array of misspelled words.
 	 */
-	function &checkWords($lang, $words) {
+	function &spellcheck($lang, $words) {
 		$plink = $this->_getPLink($lang);
 
 		$outWords = array();

@@ -85,14 +85,14 @@ function pieform_element_wysiwyg_get_headdata() {
          . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
-            $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
+            $result .= "    tinyMCE.execCommand('mceAddEditor', false, '$editor');\n";
             $result .= "    $('{$editor}').focus = function() {\n";
             $result .= "        editor_to_focus = '$editor';\n";
             $result .= "    };\n";
         }
         $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
-            $result .= "    tinyMCE.execCommand('mceRemoveControl', false, '$editor');\n";
+            $result .= "    tinyMCE.execCommand('mceRemoveEditor', false, '$editor');\n";
         }
         $result .= "});</script>";
         return array('tinymce', $result);
@@ -133,10 +133,10 @@ function pieform_element_wysiwyg_views_js(Pieform $form, $element) {
         $formname = json_encode($form->get_name());
         $editor = json_encode($form->get_name() . '_' . $element['name']);
         return "\ntinyMCE.idCounter=0;"
-            . "\ntinyMCE.execCommand('mceAddControl', false, $editor);"
+            . "\ntinyMCE.execCommand('mceAddEditor', false, $editor);"
             . "\nPieformManager.connect('onsubmit', $formname, tinyMCE.triggerSave);"
             . "\nPieformManager.connect('onreply', $formname, function () {"
-            . "\n  tinyMCE.execCommand('mceRemoveControl', false, $editor);"
+            . "\n  tinyMCE.execCommand('mceRemoveEditor', false, $editor);"
             . "});";
     }
     return '';

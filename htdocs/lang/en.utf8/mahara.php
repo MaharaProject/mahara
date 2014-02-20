@@ -1099,3 +1099,6 @@ It provides users with tools to create and maintain a digital portfolio of their
 
 // Form change checker
 $string['wanttoleavewithoutsaving?'] = 'You have made changes - do you want to leave the page without saving them?';
+
+// TinyMCE maharaimage plugin
+$string['attachedimage'] = 'Attached image';

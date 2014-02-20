@@ -29,7 +29,7 @@ function connect_editbuttons() {
         $j("#" + t + "edit_container").removeClass("nojs-hidden-block");
         if (typeof tinyMCE != 'undefined') {
             var editor = tinyMCE.get(t);
-            editor.show()
+            editor.show();
             editor.focus();
         }
         else {
@@ -61,4 +61,18 @@ function connect_cancelbuttons() {
 function simple_resumefield_init() {
     connect_editbuttons();
     connect_cancelbuttons();
+
+    var ids = [];
+    $j("#resumefieldform input.submitcancel.cancel").each(function() {
+        var prefix = 'cancel_';
+        var suffix = 'submit';
+        ids.push(this.id.substr(prefix.length, this.id.length - prefix.length - suffix.length));
+    });
+    tinyMCE.EditorManager.on('SetupEditor', function(editor) {
+        if (ids.indexOf(editor.id) >= 0) {
+            editor.on('init', function() {
+                editor.hide();
+            });
+        }
+    });
 }

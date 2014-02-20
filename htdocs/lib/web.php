@@ -93,11 +93,18 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
         }
     }
 
+    // Define the stylesheets array early so that javascript modules can add extras
+    $stylesheets = array();
+
     // Insert the appropriate javascript tags
     $javascript_array = array();
     $jsroot = $wwwroot . 'js/';
 
     $langdirection = get_string('thisdirection', 'langconfig');
+
+    // Make jQuery accessible with $j (Mochikit has $)
+    $javascript_array[] = $jsroot . 'jquery/jquery.js';
+    $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
 
     // TinyMCE must be included first for some reason we're not sure about
     //
@@ -111,11 +118,11 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
             if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
                 if (!$found_tinymce) {
                     $found_tinymce = $check[$key];
-                    $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+                    $javascript_array[] = $jsroot . 'tinymce/tinymce.js';
+                    $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/tinymceskin.css', true))));
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                     $language = current_language();
                     $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
-                    $language = strtolower(str_replace('_', '-', $language));
                     if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
                         // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
                         $language = substr($language, 0, 2);
@@ -124,6 +131,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         }
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
+                    $extramceconfig = isset($extraconfig['tinymceconfig']) ? $extraconfig['tinymceconfig'] : '';
 
                     // Check whether to make the spellchecker available
                     $aspellpath = get_config('pathtoaspell');
@@ -136,69 +144,55 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         $spellchecker_config = 'gecko_spellcheck : true,';
                     }
 
-                    $adv_buttons = array(
-                        "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
-                        "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image{$spellchecker},cleanup,separator,link,unlink,separator,code,fullscreen",
-                        "undo,redo,separator,bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-                        "fontselect,separator,fontsizeselect,separator,formatselect",
+                    $toolbar = array(
+                        '"undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link unlink | fullscreen"',
+                        '"fontselect | fontsizeselect | formatselect | bold italic underline strikethrough | forecolor backcolor"',
+                        '"undo redo | cut copy paste | alignleft aligncenter alignright alignjustify | hr emoticons image image2 spellchecker | link unlink | bullist numlist | table"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
                     $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
                     $toolbar_align = 'left';
 
+                    // Language strings required for TinyMCE
+                    $pagestrings['mahara'] = isset($pagestrings['mahara']) ? $pagestrings['mahara'] : array();
+                    $pagestrings['mahara'][] = 'attachedimage';
+
                     if ($check[$key] == 'tinymce') {
-                        $tinymce_config = <<<EOF
-    mode: "none",
-    theme: "advanced",
-    plugins: "table,emotions,inlinepopups,paste,fullscreen{$spellchecker}",
-    theme_advanced_buttons1 : "{$adv_buttons[1]}",
-    theme_advanced_buttons2 : "{$adv_buttons[2]}",
-    theme_advanced_buttons3 : "{$adv_buttons[3]}",
-    theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "{$toolbar_align}",
+                        $tinymceconfig = <<<EOF
+    theme: "modern",
+    plugins: "textcolor,hr,link,image,table,emoticons,spellchecker,paste,code,fullscreen",
+    toolbar1: {$toolbar[1]},
+    toolbar2: {$toolbar[2]},
     fix_list_elements: true,
+    image_advtab: true,
     {$spellchecker_config}
-    //width: '512',
 EOF;
                     }
                     else {
-                        $tinymce_config = <<<EOF
-    mode: "textareas",
-    editor_selector: 'tinywysiwyg',
-    theme: "advanced",
-    plugins: "fullscreen,inlinepopups,autoresize",
-    theme_advanced_buttons1 : "{$adv_buttons[0]}",
-    theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "{$toolbar_align}",
-    fullscreen_new_window: true,
-    fullscreen_settings: {
-        theme: "advanced",
-        plugins: "table,emotions,iespell,inlinepopups,paste,fullscreen",
-        theme_advanced_buttons1 : "{$adv_buttons[1]}",
-        theme_advanced_buttons2 : "{$adv_buttons[2]}",
-        theme_advanced_buttons3 : "{$adv_buttons[3]}"
-    },
+                        $tinymceconfig = <<<EOF
+    selector: "textarea.tinywysiwyg",
+    theme: "modern",
+    plugins: "fullscreen,autoresize",
+    toolbar: {$toolbar[0]},
 EOF;
                     }
 
                     $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
-    button_tile_map: true,
-    {$tinymce_config}
+    {$tinymceconfig}
+    schema: 'html4',
     extended_valid_elements : "object[width|height|classid|codebase],param[name|value],embed[src|type|width|height|flashvars|wmode],script[src,type,language],+ul[id|type|compact],iframe[src|width|height|align|title|class|type|frameborder|allowfullscreen]",
     urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
-    //document_base_url: {$jswwwroot},
     remove_script_host: false,
     relative_urls: false,
+    {$extramceconfig}
     setup: function(ed) {
-        ed.onInit.add(function(ed) {
+        ed.on('init', function(ed) {
             if (typeof(editor_to_focus) == 'string' && ed.editorId == editor_to_focus) {
                 ed.focus();
             }
@@ -207,24 +201,24 @@ tinyMCE.init({
     }
 });
 function custom_urlconvert (u, n, e) {
-  // Don't convert the url on the skype status buttons.
-  if (u.indexOf('skype:') == 0) {
+    // Don't convert the url on the skype status buttons.
+    if (u.indexOf('skype:') == 0) {
       return u;
-  }
-  var t = tinyMCE.activeEditor, s = t.settings;
+    }
+    var t = tinyMCE.activeEditor, s = t.settings;
 
-  // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-  if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
+    // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+    if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
       return u;
 
-  // Convert to relative
-  if (s.relative_urls)
+    // Convert to relative
+    if (s.relative_urls)
       return t.documentBaseURI.toRelative(u);
 
-  // Convert to absolute
-  u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
+    // Convert to absolute
+    u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
 
-  return u;
+    return u;
 }
 </script>
 
@@ -253,10 +247,6 @@ EOF;
             unset($headers[$key]);
         }
     }
-
-    // Make jQuery accessible with $j (Mochikit has $)
-    $javascript_array[] = $jsroot . 'jquery/jquery.js';
-    $headers[] = '<script type="text/javascript">$j=jQuery;</script>';
 
     if (get_config('developermode') & DEVMODE_UNPACKEDJS) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
@@ -370,7 +360,7 @@ EOF;
     $stringjs .= '</script>';
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
-    $stylesheets = array_reverse(array_values($THEME->get_url('style/style.css', true)));
+    $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/style.css', true))));
     if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
         if ($pluginsheets = $THEME->get_url('style/style.css', true, SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME)) {
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));

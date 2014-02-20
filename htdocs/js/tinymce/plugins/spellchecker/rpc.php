@@ -97,7 +97,12 @@ $input = $json->decode($raw);
 // Execute RPC
 if (isset($config['general.engine'])) {
     $spellchecker = new $config['general.engine']($config);
-    $result = call_user_func_array(array($spellchecker, $input['method']), $input['params']);
+    $lang = $input['params']['lang'];
+    $words = call_user_func(array($spellchecker, 'checkWords'), $lang, $input['params']['words']);
+    $result = array();
+    foreach ($words as $word) {
+        $result[$word] = call_user_func(array($spellchecker, 'getSuggestions'), $lang, $word);
+    }
 }
 else {
     die('{"result":null,"id":null,"error":{"errstr":"You must choose an spellchecker engine in the config.php file.","errfile":"","errline":null,"errcontext":"","level":"FATAL"}}');
