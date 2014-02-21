@@ -13,7 +13,7 @@ addLoadEvent(function() {literal}{{/literal}
 {else}
     {if $lookingatownpage}
         <div class="message">{str tag="trysearchingforfriends" section=group args=$searchingforfriends}</div>
-    {else}
+    {elseif $loggedin}
         {if $relationship == 'none' && $friendscontrol == 'auto'}
             <div class="message">{$newfriendform|safe}</div>
         {elseif $relationship == 'none' && $friendscontrol == 'auth'}

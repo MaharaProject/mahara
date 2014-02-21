@@ -128,6 +128,7 @@ class PluginBlocktypeMyfriends extends SystemBlocktype {
             $smarty->assign('relationship', $relationship);
         }
 
+        $smarty->assign('loggedin', is_logged_in());
         $smarty->assign('lookingatownpage', $USER->get('id') == $userid);
         $smarty->assign('USERID', $userid);
 
