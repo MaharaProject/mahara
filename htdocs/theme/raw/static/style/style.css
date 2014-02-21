@@ -264,6 +264,9 @@ form.oneline.inline div,
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+.help-dismiss {
+    vertical-align: top;
+}
 /**************** Messages ****************/
 div.ok {
     background: #E6F6E0 url(../images/success.png) no-repeat 4px 4px;
