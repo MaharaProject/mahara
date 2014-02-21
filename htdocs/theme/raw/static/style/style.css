@@ -1068,42 +1068,30 @@ ul.groupuserstatus li .btn {
     margin: 0 0 0 8px;
 }
 /* icon buttons */
-.btn-big-edit {
-    background: transparent url(../images/btn_edit.png) no-repeat 0 0 !important;
+.btn-big-edit,
+.btn-big-info,
+.btn-big-del,
+.customrow input {
     border: 0 !important;
     margin-right: 0 !important;
     width: 24px;
     height: 24px;
-    padding: 0px;
+    padding: 0;
+    text-align: left;
     text-indent: -9999px;
     font-size: 1%;
     vertical-align: top;
     cursor: pointer !important;
 }
+.btn-big-edit {
+    background: transparent url(../images/btn_edit.png) no-repeat 0 0 !important;
+}
 .btn-big-info {
     background: transparent url(../images/btn_info.png) no-repeat 0 0 !important;
-    border: 0 !important;
-    margin-right: 0 !important;
-    width: 24px;
-    height: 24px;
-    padding: 0px;
-    text-indent: -9999px;
-    font-size: 1%;
-    vertical-align: top;
-    cursor: pointer !important;
 }
 .btn-big-del,
 .customrow input {
     background: transparent url(../images/btn_deleteremove.png) no-repeat 0 0 !important;
-    border: 0 !important;
-    margin-right: 0 !important;
-    width: 24px;
-    height: 24px;
-    padding: 0px;
-    text-indent: -9999px;
-    font-size: 1%;
-    vertical-align: top;
-    cursor: pointer !important;
     color: transparent;
     display: inline-block;
 }
