@@ -3052,6 +3052,11 @@ function xmldb_core_upgrade($oldversion=0) {
                     $page->content = $sitecontentarray[$name];
                     $page->institution = $institution->name;
                     insert_record('site_content', $page);
+                    $pageconfig = new stdClass();
+                    $pageconfig->institution = $institution->name;
+                    $pageconfig->field = 'sitepages_' . $name;
+                    $pageconfig->value = 'mahara';
+                    insert_record('institution_config', $pageconfig);
                 }
             }
         }
