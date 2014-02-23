@@ -2558,7 +2558,7 @@ function right_nav() {
             'url' => 'account/index.php',
             'title' => get_string('settings'),
             'icon' => $THEME->get_url('images/settings.png'),
-            'alt' => get_string('settings'),
+            'alt' => '',
             'weight' => 10,
         ),
         'inbox' => array(
