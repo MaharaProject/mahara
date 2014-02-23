@@ -61,13 +61,13 @@
 
             $('.blockinstance-header', newblock).mousedown(function() {
                     $('.row .column-content').each(function() {
-                        $(this).animate({backgroundColor:'#F5F5F5'}, 100);
+                        $(this).addClass('block-drop-on', 100);
                     });
                 });
 
             $('.blockinstance-header', newblock).mouseup(function() {
                     $('.row .column-content').each(function() {
-                        $(this).animate({backgroundColor:'#FFFFFF'}, 500);
+                        $(this).removeClass('block-drop-on', 500);
                     });
                 });
 
@@ -560,13 +560,13 @@
 
     function showColumnBackgrounds() {
         $('.row .column-content').each(function() {
-            $(this).animate({backgroundColor:'#F5F5F5'}, 100);
+            $(this).addClass('block-drop-on', 100);
         });
     }
 
     function hideColumnBackgrounds() {
         $('.row .column-content').each(function() {
-            $(this).animate({backgroundColor:'#FFFFFF'}, 500);
+            $(this).removeClass('block-drop-on', 500);
         });
     }
 

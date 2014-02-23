@@ -100,6 +100,9 @@ ul.colnav li.selected span {
     background: #fffadf;
     height: 35px;
 }
+.block-drop-on {
+    background: #f5f5f5;
+}
 /******************** Blocks ********************/
 /* retractable blocks */
 .blockinstance-header .arrow {
