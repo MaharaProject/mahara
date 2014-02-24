@@ -376,8 +376,12 @@ div.pagination a {
 }
 .rd-navmenu .rd-nav-title {
     display: block;
-    padding: 5px 10px;
+    font-size: 1.25em;
     margin: 0 10px;
+}
+.rd-navmenu .rd-nav-title a {
+    display: block;
+    padding: 5px 10px;
     cursor: pointer;
     position: relative;
     background: #547b23 url(../images/mainnav.gif) repeat-x 0 0;
@@ -385,9 +389,12 @@ div.pagination a {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    font-size: 1.25em;
 }
-.rd-navmenu .nav-expand .rd-nav-title {
+.rd-navmenu .rd-nav-title a:hover, .rd-navmenu .rd-nav-title a:focus {
+    text-decoration: none;
+    color: #E4FFB4;
+}
+.rd-navmenu .nav-expand .rd-nav-title a {
     -webkit-border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
@@ -712,14 +719,21 @@ ul.in-page-tabs li:first-child a.current-tab {
     padding: 0;
 }
 .rd-navmenu .rd-tab-title {
-    cursor: pointer;
     display: block;
     margin: 0;
+}
+.rd-navmenu .rd-tab-title a {
+    display: block;
     padding: 7px 10px;
     position: relative;
     border: 1px solid #d1d1d1;
     border-bottom: 0;
     background: #d1d1d1 url(../images/tabs.gif) repeat-x 0 0;
+    color: inherit;
+}
+.rd-navmenu .rd-tab-title a:hover, .rd-navmenu .rd-tab-title a:focus {
+    text-decoration: none;
+    color: #267BBD;
 }
 #mainmiddle .rd-navmenu .rd-tab {
     display: block;

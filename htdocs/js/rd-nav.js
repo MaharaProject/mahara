@@ -36,18 +36,23 @@ $j(document).ready(function(){
     navClass($j('#category-list li'), $j('#top-pane'));
     navClass($j('#main-nav-footer > ul > li'), $j('#footer'));
     // adds expand when click on menu title in responsive menu
-    $j(".rd-nav-title").click(function(event) {
+    $j(".rd-nav-title a").click(function(event) {
         $j(".main-nav").toggleClass("nav-expand");
+        if ($j('.main-nav').hasClass('nav-expand')) {
+            $j('.main-nav ul').find('a').first().focus();
+        }
+        return false;
     });
     // adds expand when click on arrow to expand tabs
-    $j(".rd-tab-title").click(function(event) {
+    $j(".rd-tab-title a").click(function(event) {
         $j(".tabswrap").toggleClass("expand");
-    });
-    // adds expand when click on arrow to expand tabs
-    $j(".rd-edittab").click(function(event) {
-        $j("#category-list").toggleClass("edittab-expand");
+        if ($j('.tabswrap').hasClass('expand')) {
+            $j('.tabswrap ul').find('a').first().focus();
+        }
+        return false;
     });
     // adds expand when click on menu title in responsive footer menu
+    // Why does this exist?
     $j(".rd-nav-footer-title").click(function(event) {
         $j(".main-nav-footer").toggleClass("nav-footer-expand");
     });

@@ -6,7 +6,7 @@
   {include file='admin/stats.tpl' cron=1}
 </div>
 <div class="site-stats-right">
-<div class="tabswrap"><h3 class="rd-tab-title">{str tag=tabs}<span class="rd-tab"></span></h3>
+<div class="tabswrap"><h3 class="rd-tab-title"><a href="#">{str tag=tabs}<span class="rd-tab"></span></a></h3>
 <ul class="in-page-tabs">
 {foreach from=$subpages item=subpage}
   <li{if $subpage == $type} class="current-tab"{/if}><a {if $subpage == $type}class="current-tab" {/if}href="{$WWWROOT}admin/statistics.php?type={$subpage}">{str tag=$subpage}<span class="accessible-hidden">({str tag=tab}{if $subpage == $type} {str tag=selected}{/if})</span></a></li>
