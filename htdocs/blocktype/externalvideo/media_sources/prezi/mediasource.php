@@ -10,17 +10,17 @@ class Media_prezi implements MediaBase {
     private static $default_width  = 550;
     private static $default_height = 400;
 
-    private static $embed_sources;
+    private static $iframe_sources;
 
     function __construct() {
         $this->httpstr = is_https() ? 'https' : 'http';
 
         self::$base_url = $this->httpstr . '://www.prezi.com/';
 
-        self::$embed_sources = array(
+        self::$iframe_sources = array(
             array(
                 'match' => '#https?://prezi.com/([a-zA-Z0-9\-_]+)/.*#',
-                'url'   => $this->httpstr . '://prezi.com/bin/preziloader.swf?prezi_id=$1',
+                'url'   => $this->httpstr . '://prezi.com/embed/$1/',
             ),
         );
     }
@@ -33,12 +33,12 @@ class Media_prezi implements MediaBase {
         $width  = $width  ? (int)$width  : self::$default_width;
         $height = $height ? (int)$height : self::$default_height;
 
-        foreach (self::$embed_sources as $source) {
+        foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 $output = preg_replace($source['match'], $source['url'], $input);
                 $result = array(
                     'videoid' => $output,
-                    'type'    => 'embed',
+                    'type'    => 'iframe',
                     'width'   => $width,
                     'height'  => $height,
                 );
@@ -49,7 +49,7 @@ class Media_prezi implements MediaBase {
     }
 
     public function validate_url($input) {
-        foreach (self::$embed_sources as $source) {
+        foreach (self::$iframe_sources as $source) {
             if (preg_match($source['match'], $input)) {
                 return true;
             }
