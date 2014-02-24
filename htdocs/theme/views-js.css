@@ -8,9 +8,8 @@
  * This file is licensed under the same terms as Mahara itself
  */
 .blocktype,
-.blocktype-clone {
-    cursor: move;
-}
+.blocktype-clone,
+.blocktype *,
 form .blockinstance-header {
     cursor: move;
 }
