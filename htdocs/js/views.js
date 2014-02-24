@@ -407,7 +407,7 @@
         $('.blocktype-list div.blocktype').each(function() {
             $(this).find('.blocktypelink').on('click keydown', function(e) {
                 var keyCode = $.ui.keyCode;
-                if (e.type == 'click' || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) {
+                if ((e.type == 'click' && e.buttons > 0) || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) {
                     startAddBlock($(this));
                 }
             });
