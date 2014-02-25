@@ -1451,6 +1451,10 @@ class LiveUser extends User {
      * @return void
      */
     protected function authenticate($user, $authinstance) {
+
+        // Before we update anything in the DB, we should make sure the user is allowed to log in
+        ensure_user_account_is_active($user);
+
         $this->authenticated  = true;
 
         // If the user has reauthenticated and they were an MNET user, we 
