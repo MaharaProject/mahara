@@ -125,6 +125,12 @@ function editform(item) {
 
     // A text field for the name
     var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
+    connect(name, 'onkeydown', function(e) {
+        if (keypressKeyCode(e) == 13) {
+            signal(save, 'onclick');
+            e.stop();
+        }
+    });
 
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[name,savecancel]));
