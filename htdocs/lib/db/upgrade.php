@@ -3134,5 +3134,20 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014022400) {
+        // Make sure artefacts are properly locked for submitted views.
+        // Can be a problem for older sites
+        $submitted = get_records_sql_array("SELECT v.owner FROM {view_artefact} va
+                        LEFT JOIN {view} v on v.id = va.view
+                        LEFT JOIN {artefact} a on a.id = va.artefact
+                        WHERE (v.submittedgroup IS NOT NULL OR v.submittedhost IS NOT NULL)", array());
+        if ($submitted) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            foreach ($submitted as $record) {
+                ArtefactType::update_locked($record->owner);
+            }
+        }
+    }
+
     return $status;
 }
