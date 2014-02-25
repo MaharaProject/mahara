@@ -1532,6 +1532,9 @@ function login_submit(Pieform $form, $values) {
     }
 
     auth_check_admin_section();
+
+    // This is also checked in $USER->login(), but it's good to check it again here in case a buggy auth plugin
+    // lets a suspended user through somehow.
     ensure_user_account_is_active();
 
     // User is allowed to log in
