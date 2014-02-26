@@ -13,3 +13,8 @@ $theme = new StdClass;
 $theme->displayname   = 'Sunset';
 $theme->parent = 'raw';
 $theme->formrenderer = 'table';
+
+/**
+ * There are more themeconfig options available. For an explanation of
+ * all the themeconfig options please look in theme/default/themeconfig.php
+ */

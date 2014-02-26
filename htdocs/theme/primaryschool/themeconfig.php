@@ -12,3 +12,8 @@ $theme = new StdClass;
 
 $theme->displayname = 'Primary School';
 $theme->parent      = 'raw';
+
+/**
+ * There are more themeconfig options available. For an explanation of
+ * all the themeconfig options please look in theme/default/themeconfig.php
+ */
