@@ -9,7 +9,6 @@
             {if $controls}<th class="resumecontrols">
                 <span class="accessible-hidden">{str tag=move}</span>
             </th>{/if}
-            <th class="resumedate">{str tag='date' section='artefact.resume'}</th>
             <th>{str tag='title' section='artefact.resume'}</th>
             <th class="resumeattachments center"><img src="{theme_url filename="images/attachment.png"}" title="{str tag=Attachments section=artefact.resume}" alt="{str tag=Attachments section=artefact.resume}" /></th>
             {if $controls}<th class="resumecontrols">
@@ -19,35 +18,41 @@
     </thead>
     <tbody>
         {foreach from=$rows item=row}
-        <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
+        <tr class="{cycle values='r0,r1'}">
             {if $controls}<td class="buttonscell"></td>{/if}
-            <td>{$row->date}</td>
-            <td><a class="toggle textonly" href="#">{$row->title}</a></td>
-            <td class="center">{$row->clipcount}</td>
-            {if $controls}<td class="buttonscell"></td>{/if}
-        </tr>
-        <tr class="{cycle values='r0,r0,r1,r1'} expandable-body">
-            {if $controls}<td class="buttonscell"></td>{/if}
-            <td colspan="3">
-                <div class="compositedesc">
-                    {$row->description}
-                    {if $row->url}<p><a href="{$row->url}" target="_blank">{$row->url}</a></p>{/if}
+            <td>
+                <div class="expandable-head">
+                    {if $row->description || $row->attachments || $row->url}<a class="toggle textonly" href="#">{else}<strong>{/if}
+                        {$row->title}
+                    {if $row->description || $row->attachments || $row->url}</a>{else}</strong>{/if}
+                    <div>{$row->date}</div>
                 </div>
-                {if $row->attachments}
-                <table class="cb attachments fullwidth">
-                    <tbody>
-                        <tr><th colspan="2">{str tag='attachedfiles' section='artefact.blog'}:</th></tr>
-                        {foreach from=$row->attachments item=item}
-                        <tr class="{cycle values='r0,r1'}">
-                            {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
-                            <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
-                            <br>{$item->description}</td>
-                        </tr>
-                        {/foreach}
-                    </tbody>
-                </table>
-                {/if}
+                <div class="expandable-body">
+                    <div class="compositedesc">
+                        {$row->description}
+                        {if $row->url}<p><a href="{$row->url}" target="_blank">{$row->url}</a></p>{/if}
+                    </div>
+                    {if $row->attachments}
+                    <table class="cb attachments fullwidth">
+                        <thead class="expandable-head">
+                            <tr>
+                                <th colspan="2"><a class="toggle" href="#">{str tag='attachedfiles' section='artefact.blog'}</a></th>
+                            </tr>
+                        </thead>
+                        <tbody class="expandable-body">
+                            {foreach from=$row->attachments item=item}
+                            <tr>
+                                {if $icons}<td class="iconcell"><img src="{$item->iconpath}" alt=""></td>{/if}
+                                <td><a href="{$item->viewpath}">{$item->title}</a> ({$item->size}) - <strong><a href="{$item->downloadpath}">{str tag=Download section=artefact.file}</a></strong>
+                                <br>{$item->description}</td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                    {/if}
+                </div>
             </td>
+            <td class="center">{$row->clipcount}</td>
             {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
         {/foreach}
