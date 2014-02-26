@@ -15,6 +15,9 @@
                 {$entry->title}
                 {if $entry->link}</a>{/if}
                 </h3>
+                <span class="postdetails">
+                {if $entry->pubdate}{str tag=publishedon section=blocktype.externalfeed arg1=$entry->pubdate}{/if}
+                </span>
                 <div class="feedcontent">{$entry->description|clean_html|safe}</div>
             {/foreach}
         {else}
@@ -23,7 +26,10 @@
                 <li>
                 {if $entry->link}<a href="{$entry->link}">{/if}
                 {$entry->title}
-                {if $entry->link}</a>{/if}
+                {if $entry->link}</a>{/if}<br />
+                <span class="postdetails">
+                {if $entry->pubdate}{str tag=publishedon section=blocktype.externalfeed arg1=$entry->pubdate}{/if}
+                </span>
                 </li>
             {/foreach}
             </ol>
