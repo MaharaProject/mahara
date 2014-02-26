@@ -32,8 +32,12 @@
         {if $post->files}
             <div id="postfiles_{$post->id}">
                 <table class="attachments fullwidth">
-                    <tbody>
-                        <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
+                    <thead class="expandable-head">
+                        <tr>
+                            <th colspan="3"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a></th>
+                        </tr>
+                    </thead>
+                    <tbody class="expandable-body">
                         {foreach from=$post->files item=file}
                             <tr class="{cycle values='r1,r0'}">
                                 <td class="icon-container"><img src="{$file->icon}" alt=""></td>

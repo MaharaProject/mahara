@@ -514,6 +514,9 @@ td.icon-container img {
 .valign-middle {
     vertical-align: middle;
 }
+.expandable-head th {
+    font-size: 1em;
+}
 .expandable-head a.toggle {
     font-weight: bold;
     background-image: url(../images/expand.png);

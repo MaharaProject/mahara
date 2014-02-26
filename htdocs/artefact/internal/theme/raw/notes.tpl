@@ -29,8 +29,12 @@
                     <col width="5%">
                     <col width="40%">
                     <col width="55%">
-                    <tbody>
-                        <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
+                    <thead class="expandable-head">
+                        <tr>
+                            <th colspan="3"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a></th>
+                        </tr>
+                    </thead>
+                    <tbody class="expandable-body">
                         {foreach from=$n->files item=file}
                             <tr class="{cycle values='r1,r0'}">
                                 <td><img src="{$file->icon}" alt=""></td>
