@@ -21,16 +21,26 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-$institutionelement = get_institution_selector(true, false, true, get_config('staffstats'));
+$institution = param_alphanum('institution', null);
+$notallowed = false;
+if (!empty($institution)) {
+    $staffstats = get_config('staffstats');
+    if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) && (!$USER->is_institutional_staff($institution) || ($USER->is_institutional_staff($institution) && empty($staffstats)))) {
+        $notallowed = true;
+    }
+}
 
-if (empty($institutionelement)) {
+if (!$notallowed) {
+    $institutionelement = get_institution_selector(true, false, true, get_config('staffstats'));
+}
+
+if (empty($institutionelement) || $notallowed) {
     $smarty = smarty();
     $smarty->assign('CANCREATEINST', $USER->get('admin'));
     $smarty->display('admin/users/noinstitutionsstats.tpl');
     exit;
 }
 
-$institution = param_alphanum('institution', null);
 if (!$institution || !$USER->can_edit_institution($institution, true)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
