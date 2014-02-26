@@ -264,7 +264,6 @@
                 <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true"/>
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="ipaddress" TYPE="char" LENGTH="39" NOTNULL="true"/>
-                <FIELD NAME="portno" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="80"/>
                 <FIELD NAME="appname" TYPE="char" LENGTH="20" NOTNULL="true"/>
                 <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT=""/>
                 <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true"/>

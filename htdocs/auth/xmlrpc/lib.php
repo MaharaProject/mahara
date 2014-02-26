@@ -777,18 +777,6 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'                => true
         );
 
-        $elements['portno'] = array(
-            'type' => 'text',
-            'title' => get_string('port', 'auth'),
-            'rules' => array(
-                'required' => true,
-                'integer'  => true
-            ),
-            'defaultvalue' => $peer->portno,
-            'size'   => 4,
-            'help'   => true
-        );
-
         $elements['parent'] = array(
             'type'                => 'select',
             'title'               => get_string('parent','auth'),
@@ -931,7 +919,6 @@ class PluginAuthXmlrpc extends PluginAuth {
         $peer->wwwroot              = preg_replace("|\/+$|", "", $values['wwwroot']);
         $peer->name                 = $values['name'];
         $peer->deleted              = $values['deleted'];
-        $peer->portno               = $values['portno'];
         $peer->appname              = $values['appname'];
         $peer->institution          = $values['institution'];
         if (isset($values['publickey'])) {

@@ -14,8 +14,6 @@ defined('INTERNAL') || die();
 // IMAP
 $string['host'] = 'Hostname or address';
 $string['wwwroot'] = 'WWW root';
-
-$string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
 $string['cannotremove']  = "We cannot remove this authentication plugin, as it is the only \nplugin that exists for this institution.";

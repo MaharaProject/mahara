@@ -3149,5 +3149,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014022600) {
+        $table = new XMLDBTable('host');
+        $field = new XMLDBField('portno');
+        drop_field($table, $field);
+    }
+
     return $status;
 }
