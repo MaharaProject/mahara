@@ -192,22 +192,8 @@ $data = array(
     )
 );
 
-
-$js = <<<EOF
-jQuery(document).ready(function() {
-    var j = jQuery.noConflict();
-    j(".expandable-body").hide();
-    j(".toggle").addClass('expandable');
-    j(".expandable-head").click(function(event) {
-        j(this).next('.expandable-body').toggle();
-        j(this).children(".toggle.expandable").toggleClass('expanded');
-    });
-});
-EOF;
-
-$smarty = smarty();
+$smarty = smarty(array('expandable'));
 $smarty->assign('modifications', get_string('additionalmodifications','cookieconsent'));
 $smarty->assign('data', $data);
 $smarty->assign('PAGEHEADING', TITLE);
-$smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('admin/site/cookieconsent2.tpl');

@@ -24,7 +24,7 @@
             {if $controls}<td class="buttonscell"></td>{/if}
             <td class="toggle">{$row->startdate}</td>
             <td>{$row->enddate}</td>
-            <td>{$row->title}</td>
+            <td><a class="toggle textonly" href="#">{$row->title}</a></td>
             <td class="center">{$row->clipcount}</td>
             {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
@@ -64,3 +64,6 @@
 </div>
 {/if}
 </fieldset>
+<script type="text/javascript">
+setupExpanders(jQuery('#membershiplist{$suffix}'));
+</script>

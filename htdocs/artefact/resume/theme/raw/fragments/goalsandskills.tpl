@@ -2,8 +2,8 @@
 {if isset($attachments)}
 <table class="cb attachments fullwidth">
   <thead class="expandable-head">
-    <tr class="toggle">
-      <td colspan="2" class="toggle-padding"><strong>{str tag=attachedfiles section=artefact.blog}</strong>
+    <tr>
+      <td colspan="2"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
       <img class="fr" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
       <span class="fr">{$count}&nbsp;</span>
       </td>
@@ -19,4 +19,7 @@
     {/foreach}
   </tbody>
 </table>
+<script type="text/javascript">
+setupExpanders(jQuery('table.attachments'));
+</script>
 {/if}

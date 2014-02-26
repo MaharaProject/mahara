@@ -22,9 +22,9 @@
         {foreach from=$rows item=row}
         <tr class="{cycle values='r0,r0,r1,r1'} expandable-head">
             {if $controls}<td class="buttonscell"></td>{/if}
-            <td class="toggle">{$row->startdate}</td>
+            <td>{$row->startdate}</td>
             <td>{$row->enddate}</td>
-            <td>{$row->qualification}</td>
+            <td><a class="toggle textonly" href="#">{$row->qualification}</a></td>
             <td class="center">{$row->clipcount}</td>
             {if $controls}<td class="buttonscell"></td>{/if}
         </tr>
@@ -63,3 +63,6 @@
 </div>
 {/if}
 </fieldset>
+<script type="text/javascript">
+setupExpanders(jQuery('#educationhistorylist{$suffix}'));
+</script>

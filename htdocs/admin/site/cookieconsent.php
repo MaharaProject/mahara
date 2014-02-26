@@ -196,12 +196,6 @@ function cookieconsent_submit(Pieform $form, $values) {
 $js = <<<EOF
 jQuery(document).ready(function() {
     var j = jQuery.noConflict();
-    j(".expandable-body").hide();
-    j(".toggle").addClass('expandable');
-    j(".expandable-head").click(function(event) {
-        j(this).next('.expandable-body').toggle();
-        j(this).children(".toggle.expandable").toggleClass('expanded');
-    });
     j('#cookieconsent input[name=enabled]').click(function() {
         if (this.checked) {
             // Expand collapsible fieldsets
@@ -217,7 +211,7 @@ jQuery(document).ready(function() {
 EOF;
 
 
-$smarty = smarty();
+$smarty = smarty(array('expandable'));
 $smarty->assign('form', $form);
 $smarty->assign('introtext1', get_string('cookieconsentintro1', 'cookieconsent'));
 $smarty->assign('introtext2', get_string('cookieconsentintro2', 'cookieconsent'));

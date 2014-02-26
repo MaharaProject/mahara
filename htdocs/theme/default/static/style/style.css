@@ -47,6 +47,10 @@ thead th {
 .r1, .r1 td, .d1 {
     background-color: #f3f7ec;
 }
+/* expanders */
+.expandable-head a.toggle:hover, .expandable-head a.toggle:focus {
+    text-decoration: none;
+}
 /******************** Forms ********************/
 /* fieldset */
 fieldset {
