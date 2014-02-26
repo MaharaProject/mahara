@@ -809,13 +809,17 @@ class Institution {
                         ii.name = \'mahara\', ii.displayname', $queryvalues, $offset, $limit);
 
         if ($showdefault && $institutions && array_key_exists('mahara', $institutions)) {
-            $defaultinstmembers = count_records_sql('
-                SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
+            $defaultinstarray = get_records_sql_assoc('
+                SELECT COUNT(u.id) AS members, COALESCE(SUM(u.staff), 0) AS staff, COALESCE(SUM(u.admin), 0) AS admins
+                FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
                 WHERE u.deleted = 0 AND i.usr IS NULL AND u.id != 0
-            ');
-            $institutions['mahara']->members = $defaultinstmembers;
-            $institutions['mahara']->staff   = '';
-            $institutions['mahara']->admins  = '';
+            ', array());
+            $defaultinst = current($defaultinstarray);
+            $institutions['mahara']->members = $defaultinst->members;
+            $institutions['mahara']->staff   = $defaultinst->staff;
+            $institutions['mahara']->admins  = $defaultinst->admins;
+            $institutions['mahara']->site = true;
+            $institutions['mahara']->maxuseraccounts = 0;
         }
         return $institutions;
     }
