@@ -506,7 +506,7 @@ class BlockInstance {
         if (is_array($id)) {
             foreach ($id as $id) {
                 $file = artefact_instance_from_id($id);
-                if (!$USER->can_publish_artefact($file)) {
+                if (!$USER->can_view_artefact($file)) {
                     // bail out now as at least one attachment is bad
                     return false;
                 }
@@ -514,7 +514,7 @@ class BlockInstance {
         }
         else {
             $file = artefact_instance_from_id($id);
-            if (!$USER->can_publish_artefact($file)) {
+            if (!$USER->can_view_artefact($file)) {
                 return false;
             }
         }
