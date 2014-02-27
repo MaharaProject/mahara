@@ -273,9 +273,11 @@ $cfg->maximageresizememory = 104857600;
 /**
  * Paths and arguments for various system commands
  *
- * @global string $cfg->pathtoaspell Used by the TinyMCE spellchecker
+ * @global string $cfg->pathtoaspell Set this path to use the TinyMCE Spellcheck button in place of the
+ * browser's built-in spellchecker.
  */
-$cfg->pathtoaspell = '/usr/bin/aspell';
+//$cfg->pathtoaspell = '/usr/bin/aspell';
+
 /**
  * @global $cfg->pathtoclam The path to the ClamAV executable (clamscan or clamdscan); disabled by default
  */

@@ -122,9 +122,20 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
 
+                    // Check whether to make the spellchecker available
+                    $aspellpath = get_config('pathtoaspell');
+                    if ($aspellpath && file_exists($aspellpath) && is_executable($aspellpath)) {
+                        $spellchecker = ',spellchecker';
+                        $spellchecker_config = "gecko_spellcheck : false, spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/rpc.php\",";
+                    }
+                    else {
+                        $spellchecker = '';
+                        $spellchecker_config = 'gecko_spellcheck : true,';
+                    }
+
                     $adv_buttons = array(
                         "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,separator,code,fullscreen",
-                        "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,spellchecker,cleanup,separator,link,unlink,separator,code,fullscreen",
+                        "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image{$spellchecker},cleanup,separator,link,unlink,separator,code,fullscreen",
                         "undo,redo,separator,bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
                         "fontselect,separator,fontsizeselect,separator,formatselect",
                     );
@@ -134,18 +145,17 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $toolbar_align = 'left';
 
                     if ($check[$key] == 'tinymce') {
-                        $spellchecker_rpc = $jsroot.'tinymce/plugins/spellchecker/rpc.php';
                         $tinymce_config = <<<EOF
     mode: "none",
     theme: "advanced",
-    plugins: "table,emotions,spellchecker,inlinepopups,paste,fullscreen",
+    plugins: "table,emotions,inlinepopups,paste,fullscreen{$spellchecker}",
     theme_advanced_buttons1 : "{$adv_buttons[1]}",
     theme_advanced_buttons2 : "{$adv_buttons[2]}",
     theme_advanced_buttons3 : "{$adv_buttons[3]}",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "{$toolbar_align}",
     fix_list_elements: true,
-    spellchecker_rpc_url : "{$spellchecker_rpc}",
+    {$spellchecker_config}
     //width: '512',
 EOF;
                     }
