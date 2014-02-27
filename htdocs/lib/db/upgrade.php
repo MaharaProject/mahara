@@ -3155,5 +3155,11 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    if ($oldversion < 2014022700) {
+        if ($data = check_upgrades('artefact.internal')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }
