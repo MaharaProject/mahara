@@ -393,8 +393,12 @@ div.warning,
     font-size: 0.917em;
     line-height: 1.167em;
 }
+ul.listing {
+    list-style: none;
+}
 .listing .listrow {
     padding: 3px 5px;
+    margin: 0;
 }
 .listing .listrow h3.title {
     display: inline-block;
@@ -2336,6 +2340,12 @@ table.attachments {
 }
 #resumelicense_submit_container th {
     display: none;
+}
+th.resumeattachments {
+    width: 30px;
+}
+.compositedesc {
+    margin: 5px 0 10px 0;
 }
 /* Content > Plans */
 tr.incomplete td {

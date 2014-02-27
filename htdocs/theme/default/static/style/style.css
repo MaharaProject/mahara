@@ -1892,6 +1892,18 @@ table.mceLayout td.mceToolbar td {
     .thumbnail-right {
         margin-left: 35px;
     }
+    /* collapse edit buttons */
+    td.btns2 {
+        width: 1px;
+        white-space: normal;
+        text-align: right;
+    }
+    td.btns2 a, td.btns2 a:first-child {
+        margin: 0 0 3px 0;
+    }
+    td.btns2 a:last-child {
+        margin-bottom: 0;
+    }
 }
 /* for 360px or less */
 @media screen and (max-width: 360px) {

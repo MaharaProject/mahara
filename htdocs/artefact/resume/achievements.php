@@ -33,7 +33,7 @@ $compositetypes = array(
 $inlinejs = ArtefactTypeResumeComposite::get_js($compositetypes);
 $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer', 'expandable'));
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('PAGEHEADING', TITLE);

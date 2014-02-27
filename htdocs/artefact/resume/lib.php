@@ -542,6 +542,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public static abstract function get_tablerenderer_title_js_string();
 
+    public static function get_tablerenderer_extra_js_string() {
+        return '';
+    }
+
     public static abstract function get_tablerenderer_body_js_string();
 
     public static function get_tablerenderer_attachments_js_string(){
@@ -970,18 +974,19 @@ EOF;
         return $js;
     }
 
-    static function get_tablerenderer_title_js($titlestring, $bodystring, $attachstring) {
+    static function get_tablerenderer_title_js($titlestring, $extrastring, $bodystring, $attachstring) {
         return "
                 function (r, d) {
                     if (!{$bodystring} && !{$attachstring}) {
-                        return TD(null, {$titlestring});
+                        return TD(null, STRONG(null, {$titlestring}), DIV(null, {$extrastring}));
                     }
-                    var link = A({'href': ''}, {$titlestring});
+                    var link = A({'class': 'toggle textonly', 'href': ''}, {$titlestring});
                     connect(link, 'onclick', function (e) {
                         e.stop();
                         return showhideComposite(r, {$bodystring}, {$attachstring});
                     });
-                    return TD({'id': 'composite-' + r.artefact + '-' + r.id}, link);
+                    var extra = DIV(null, {$extrastring});
+                    return TD({'id': 'composite-' + r.artefact + '-' + r.id}, DIV({'class': 'expandable-head'}, link, extra));
                 },
                 ";
     }
@@ -1009,7 +1014,8 @@ EOF;
                     var newNode = DIV({'id': 'composite-body-' + r.artefact + '-' + r.id},
                         DIV({'class':'compositedesc'}, content));
                 }
-                appendChildNodes(titleTD, newNode);
+                insertSiblingNodesAfter(getFirstElementByTagAndClassName(null, 'expandable-head', titleTD), newNode);
+                setupExpanders(jQuery(newNode));
             }
         ";
     }
@@ -1086,21 +1092,31 @@ EOF;
     }
 
     static function get_composite_js() {
-        $attachmentsstr = json_encode(get_string('Attachments', 'artefact.resume').': ');
+        $attachmentsstr = json_encode(get_string('Attachments', 'artefact.resume'));
+        $downloadstr = json_encode(get_string('Download', 'artefact.file'));
         return <<<EOF
+function formatSize(size) {
+    size = parseInt(size);
+    if (size < 1024) {
+        return size <= 0 ? '0' : size.toFixed(1).replace(/\.0$/, '') + 'b';
+    }
+    if (size < 1048576) {
+        return (size / 1024).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return (size / 1048576).toFixed(1).replace(/\.0$/, '') + 'M';
+}
 function listAttachments(attachments) {
     if (attachments.length > 0) {
-        list = DIV({'class': 'attachments'}, SPAN({'class': 'composite-attachments'}, STRONG({$attachmentsstr})));
+        var togglelink = A({'class': 'toggle', 'href': '#'}, {$attachmentsstr});
+        var thead = THEAD({'class': 'expandable-head'}, TR(null, TH(null, togglelink)));
+        var tbody = TBODY({'class': 'expandable-body'});
         for (var i=0; i < attachments.length; i++) {
-            var link = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
-            if (i+1 < attachments.length) {
-                appendChildNodes(list, A({'href': link}, attachments[i].title), ', ');
-            }
-            else {
-                appendChildNodes(list, A({'href': link}, attachments[i].title));
-            }
+            var item = attachments[i];
+            var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
+            var link = A({'href': href}, {$downloadstr});
+            appendChildNodes(tbody, TR(null, TD(null, item.title + ' (' + formatSize(item.size) + ') - ', STRONG(null, link))));
         }
-        return list;
+        return TABLE({'class': 'cb attachments fullwidth'}, thead, tbody);
     }
     else {
         // No attachments
@@ -1146,11 +1162,9 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     protected $employer;
 
     public static function get_tablerenderer_js() {
-        return "
-                'startdate',
-                'enddate',
-                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+        return ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
@@ -1162,6 +1176,10 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_title_js_string() {
         return " r.jobtitle + ': ' + r.employer";
+    }
+
+    public static function get_tablerenderer_date_js_string() {
+        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
     }
 
     public static function get_tablerenderer_body_js_string() {
@@ -1281,11 +1299,9 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_js() {
 
-        return "
-                'startdate',
-                'enddate',
-                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+        return ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
@@ -1297,6 +1313,10 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_title_js_string() {
         return " formatQualification(r.qualname, r.qualtype, r.institution)";
+    }
+
+    public static function get_tablerenderer_date_js_string() {
+        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
     }
 
     public static function format_render_self_data($data) {
@@ -1459,10 +1479,9 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     protected $date;
 
     public static function get_tablerenderer_js() {
-        return "
-                'date',
-                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+        return ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
@@ -1474,6 +1493,10 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_title_js_string() {
         return "r.title";
+    }
+
+    public static function get_tablerenderer_date_js_string() {
+        return " r.date";
     }
 
     public static function get_tablerenderer_body_js_string() {
@@ -1570,10 +1593,9 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     protected $contribution;
 
     public static function get_tablerenderer_js() {
-        return "
-                'date',
-                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+        return ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
@@ -1585,6 +1607,10 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_title_js_string() {
         return "r.title + ' (' + r.contribution + ')'";
+    }
+
+    public static function get_tablerenderer_date_js_string() {
+        return " r.date";
     }
 
     public static function get_tablerenderer_body_js_string() {
@@ -1694,11 +1720,9 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
     protected $enddate;
 
     public static function get_tablerenderer_js() {
-        return "
-                'startdate',
-                'enddate',
-                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+        return ArtefactTypeResumeComposite::get_tablerenderer_title_js(
                     self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_date_js_string(),
                     self::get_tablerenderer_body_js_string(),
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
@@ -1710,6 +1734,10 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_title_js_string() {
         return "r.title";
+    }
+
+    public static function get_tablerenderer_date_js_string() {
+        return " r.startdate + (r.enddate ? ' - ' + r.enddate : '')";
     }
 
     public static function get_tablerenderer_body_js_string() {

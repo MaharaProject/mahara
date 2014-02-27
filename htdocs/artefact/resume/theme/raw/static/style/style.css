@@ -15,8 +15,7 @@
     margin: 5px 0;
 }
 #resumewrap table table {
-    width: auto;
-    margin: 0;
+    margin: 5px 0;
 }
 .movebuttons a {
     display: block;
@@ -25,15 +24,9 @@
 .movebuttons a.movedown {
     float: right;
 }
-#resumewrap table.tablerenderer th.resumedate {
-    width: 15%;
-}
 #resumefieldform .pieform-fieldset table tr th {
     padding: 0;
 }
 #container #resumewrap table td.errmsg {
     padding-left: 20px;
-}
-th.resumeattachments {
-    width: 30px;
 }
