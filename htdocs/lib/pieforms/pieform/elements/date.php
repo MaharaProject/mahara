@@ -148,7 +148,7 @@ EOF;
         $result .= $year . $month . $day . $at . $hour . $minute;
     }
     else {
-        $result = $year . $month . $day;
+        $result .= $year . $month . $day;
     }
 
     return $result;
