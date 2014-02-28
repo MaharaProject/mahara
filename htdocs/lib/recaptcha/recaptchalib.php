@@ -35,8 +35,7 @@
 /**
  * The reCAPTCHA server URL's
  */
-define("RECAPTCHA_API_SERVER", "http://www.google.com/recaptcha/api");
-define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
+define("RECAPTCHA_API_SERVER", "//www.google.com/recaptcha/api");
 define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
 
 /**
@@ -100,6 +99,7 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
  * @param string $pubkey A public key for reCAPTCHA
  * @param string $error The error given by reCAPTCHA (optional, default is null)
  * @param boolean $use_ssl Should the request be made over ssl? (optional, default is false)
+ *        ($use_ssl now does nothing because we use a protocol-relative API server URL)
 
  * @return string - The HTML to be embedded in the user's form.
  */
@@ -108,12 +108,8 @@ function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
 	if ($pubkey == null || $pubkey == '') {
 		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
 	}
-	
-	if ($use_ssl) {
-                $server = RECAPTCHA_API_SECURE_SERVER;
-        } else {
-                $server = RECAPTCHA_API_SERVER;
-        }
+
+    $server = RECAPTCHA_API_SERVER;
 
         $errorpart = "";
         if ($error) {
