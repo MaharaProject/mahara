@@ -14,7 +14,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'managegroups/categories');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('groups', 'admin'));
+define('TITLE', get_string('groupcategories', 'admin'));
 
 $optionform = pieform(array(
     'name'       => 'groupcategories',
