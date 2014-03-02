@@ -134,7 +134,6 @@ $javascript = array('paginator', 'viewmenu', 'expandable');
 $extrastylesheets = array('style/views.css');
 
 if ($artefact->get('allowcomments')) {
-    $anonfeedback = !$USER->is_logged_in() && view_has_token($viewid, get_cookie('viewaccess:'.$viewid));
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form(false, $artefact->get('approvecomments')));
     $extrastylesheets[] = 'style/jquery.rating.css';
     $javascript[] = 'jquery.rating';
@@ -214,7 +213,6 @@ $smarty->assign('feedlink', $feedlink);
 
 if (isset($addfeedbackform)) {
     $smarty->assign('enablecomments', 1);
-    $smarty->assign('anonfeedback', $anonfeedback);
     $smarty->assign('addfeedbackform', $addfeedbackform);
 }
 $smarty->assign('objectionform', $objectionform);
