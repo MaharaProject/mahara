@@ -61,14 +61,20 @@
                 </span>
                 {if $post.files}
                     <div id="postfiles_{$post.id}">
-                        <table class="attachments fullwidth">
+                       <table class="cb attachments fullwidth">
+                            <thead>
+                                <tr>
+                                    <td colspan="2">
+                                        <strong><a href="#">{str tag=attachedfiles section=artefact.blog}</a></strong>
+                                    </td>
+                                </tr>
+                            </thead>
                             <tbody>
-                                <tr><th colspan=3>{str tag=attachedfiles section=artefact.blog}</th></tr>
                                 {foreach from=$post.files item=file}
                                     <tr class="{cycle values='r1,r0'}">
                                         <td class="icon-container"><img src="{$file->icon}" alt=""></td>
-                                        <td><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-                                        <td>{$file->description}</td>
+                                        <td><h3 class="title"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></h3>
+                                        <div class="detail">{$file->description}</div></td>
                                     </tr>
                                 {/foreach}
                             </tbody>

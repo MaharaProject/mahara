@@ -31,18 +31,24 @@
         </div>
         {if $post->files}
             <div id="postfiles_{$post->id}">
-                <table class="attachments fullwidth">
+                <table class="cb attachments fullwidth">
                     <thead class="expandable-head">
                         <tr>
-                            <th colspan="3"><a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a></th>
+                            <td colspan="2">
+                                <a class="toggle" href="#">{str tag=attachedfiles section=artefact.blog}</a>
+                                <span class="fr">
+                                    <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
+                                    {$post->files|count}
+                                </span>
+                            </td>
                         </tr>
                     </thead>
                     <tbody class="expandable-body">
                         {foreach from=$post->files item=file}
                             <tr class="{cycle values='r1,r0'}">
                                 <td class="icon-container"><img src="{$file->icon}" alt=""></td>
-                                <td><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></td>
-                                <td>{$file->description}</td>
+                                <td><h3 class="title"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a> <span class="description">({$file->size|display_size})</span></h3>
+                                <div class="detail">{$file->description}</div></td>
                             </tr>
                         {/foreach}
                     </tbody>

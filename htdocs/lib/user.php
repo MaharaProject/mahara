@@ -2050,7 +2050,6 @@ function addfriend_form($friendid) {
         'elements' => array(
             'addfriend_submit' => array(
                 'type' => 'submit',
-                'class' => 'linkbtn',
                 'value' => get_string('addtofriendslist', 'group'),
             ),
             'id' => array(

@@ -39,7 +39,7 @@
 #postlist .published,
 #postlist .draft {
     padding: 10px;
-    margin-bottom: 15px;
+    margin: 20px 0;
 }
 .attachments input.unselect {
     font-size: .9167em;

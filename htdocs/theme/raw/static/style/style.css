@@ -375,6 +375,9 @@ div.warning,
 .dull {
     color: #707070;
 }
+.tags {
+    margin: 20px 0 10px 0;
+}
 /* some common listing text styles */
 .title,
 .title:first-child {
@@ -2266,17 +2269,6 @@ tr#unzip_artefact_submit_container td {
 #postlist h2 {
     margin: 0 0 5px 0;
 }
-.ie9 #postlist input.publish {
-    padding: 3px 5px 3px 5px;
-}
-.ie8 #postlist input.publish {
-    padding: 3px 5px 3px 5px;
-}
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-#postlist input.publish {
-    padding: 4px 5px 3px 5px;
-}
-}
 #postlist .poststatus {
     font-weight: bold;
     white-space: nowrap;
@@ -2312,9 +2304,16 @@ tr#unzip_artefact_submit_container td {
 }
 /* attachments */
 table.attachments {
-    border: 2px solid #DDDDDD;
+    border: 1px solid #DDDDDD;
     background-color: #DDDDDD;
-    margin: 3px 0;
+    margin: 5px 0;
+}
+table.attachments thead td {
+    font-size: 1.167em;
+    line-height: 19px;
+}
+table.attachments .title {
+    font-size: 1em;
 }
 /* Content > Journals > Edit */
 /* Content > Notes > Edit */
@@ -2351,10 +2350,20 @@ th.resumeattachments {
 tr.incomplete td {
     background: #FEE7E7;
 }
+#planslist .detail p:first-child {
+    margin-top: 0;
+}
+.completiondate,
+.plantasktitle,
+.plantaskdescription {
+    padding-top: 8px;
+}
 /* Content > My notes */
 #notes td.notetitle .detail iframe {
     overflow-x: hidden;
-    width: 100%!important;
+}
+#notes td.notetitle {
+    width: 40%;
 }
 #notes .detail p {
     margin: 5px 0;
@@ -2632,6 +2641,9 @@ fieldset#pagestoadd tr#addviews_submit_container td {
     padding: 10px 0;
 }
 /* Portfolio > Shared by me */
+table.accesslists {
+    margin-bottom: 20px;
+}
 .accesslists .accesslist {
     width: 40%;
 }
@@ -3202,6 +3214,7 @@ ul.groupuserstatus li.jointhisgroup {
 ul.groupuserstatus li.jointhisgroup form {
     display: inline-block;
     margin: 0;
+    padding: 3px 5px 1px 5px;
 }
 ul.groupuserstatus li.jointhisgroup table td input,
 ul.groupuserstatus li.jointhisgroup table td input:hover,
@@ -3228,6 +3241,9 @@ ul.groupuserstatus li.leavegroup a {
 ul.groupuserstatus li.requesttojoin {
     display: block;
     text-align: right;
+}
+ul.groupuserstatus li.requesttojoin a {
+    line-height: 2.167em;
 }
 /* Groups > Group's Edit */
 #editgroup fieldset tr.html {
@@ -3488,58 +3504,67 @@ ul.actionlist li {
 }
 ul.actionlist li.notbtn,
 ul.actionlist li.nofriend {
-    padding: 5px 0 3px 0;
+    padding: 0 0 3px 0;
     font-weight: bold;
 }
-ul.actionlist li.denyrequest a,
-ul.actionlist li.editgroup a,
-ul.actionlist li.friend a,
-ul.actionlist li.messages a,
-ul.actionlist li.removefriend a,
-ul.actionlist li form input.submit {
+/* default state */
+ul.actionlist li form input.submit,
+ul.actionlist li a {
     border: 1px solid #DADADA;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 7px 5px 7px 25px;
     display: block;
-    color: #333333;
     text-decoration: none;
     background-color: #F7F7F7;
     background-position: 7px 50%;
     background-repeat: no-repeat;
+    color: #333333;
 }
-ul.actionlist li.denyrequest a:hover,
-ul.actionlist li.editgroup a:hover,
-ul.actionlist li.friend a:hover,
-ul.actionlist li.messages a:hover,
-ul.actionlist li.removefriend a:hover,
-ul.actionlist li form input.submit:hover {
+ul.actionlist li form input.submit {
+    padding: 6px 5px 6px 23px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+/* hover state */
+ul.actionlist li form input.submit:hover,
+ul.actionlist li a:hover {
     background-color: #ffffff;
     color: #000000;
 }
-ul.actionlist li.denyrequest a:active,
-ul.actionlist li.editgroup a:active,
-ul.actionlist li.friend a:active,
-ul.actionlist li.messages a:active,
-ul.actionlist li.removefriend a:active,
-ul.actionlist li form input.submit:active {
+/* focus state */
+ul.actionlist li form input.submit:focus,
+ul.actionlist li a:focus {
+    background-color: #ffffff;
+    outline: none;
+}
+/* active state */
+ul.actionlist li form input.submit:active,
+ul.actionlist li a:active {
     background-color: #989898;
     color: #FFFFFF;
     opacity: 0.9;
     border: 1px solid #e3e3e3;
 }
+/* except the member of group link */
+ul.actionlist li.notbtn a {
+    font-weight: normal;
+    background: none;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    padding: 0;
+    display: inline;
+}
+/* icons for buttons */
 ul.actionlist li.approvefriend form input {
     background-image: url(../images/approve_small.png);
 }
 ul.actionlist li.friend form input {
     background-image: url(../images/friend_small.png);
-}
-ul.actionlist li form input.submit {
-    padding: 5px 5px 5px 23px;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
 }
 /* Groups > My/Find Friends > Deny friend page */
 form#denyrequest {
@@ -3966,7 +3991,7 @@ ul.searchtab li span.inactive {
     font-weight: normal;
 }
 #results .tags {
-    margin: 3px 0;
+    margin: 10px 0 3px 0;
 }
 /* My tags page > Edit tags */
 .edittags h3 {
@@ -4050,7 +4075,6 @@ ul.searchtab li span.inactive {
     position: absolute;
     top: 5px;
     right: 5px;
-    width: 24px;
 }
 .wallpost .userinfo {
     margin: 3px 30px;

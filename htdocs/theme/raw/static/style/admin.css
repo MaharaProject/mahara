@@ -491,8 +491,8 @@ form#buttons table#suspendedlist {
     margin-left: 20px;
 }
 #adduser table th {
-    white-space: nowrap;
     padding-top: 8px;
+    white-space: nowrap;
 }
 #adduser .step1 table th label {
     font-weight: normal;
@@ -524,6 +524,9 @@ form#buttons table#suspendedlist {
     width: 36%;
     padding: 10px;
     display: table-cell;
+}
+#adduser select#adduser_authinstance {
+    max-width: 160px;
 }
 #adduser .step3 {
     background: #EFEFEF;
