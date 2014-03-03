@@ -44,7 +44,7 @@ function smarty_core() {
  */
 
 function smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION, $THEME, $HEADDATA;
+    global $USER, $SESSION, $THEME, $HEADDATA, $langselectform;
 
     if (!is_array($headers)) {
         $headers = array();
@@ -57,8 +57,11 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     }
 
     $SIDEBLOCKS = array();
-
-    $langselectform = language_select_form();
+    // Some things like die_info() will try and create a smarty() call when we are already in one, which causes
+    // language_select_form() to throw headdata error as it is called twice.
+    if (!isset($langselectform)) {
+        $langselectform = language_select_form();
+    }
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
