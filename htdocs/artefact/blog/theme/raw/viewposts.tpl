@@ -1,6 +1,7 @@
 {foreach from=$posts item=post}
 <div class="post">
     <h3 class="title"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a></h3>
+    <div class="postdetails">{$post->postedby}</div>
     <div>{$post->description|clean_html|safe}
     {if $post->tags}
     <div class="tags">{str tag=tags}: {list_tags owner=$post->owner tags=$post->tags}</div>
@@ -34,8 +35,6 @@
         </tbody>
     </table>
     {/if}
-    <div class="postdetails">{$post->postedby}
-        {if $options.viewid && $post->allowcomments} | <a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a>{/if}
-    </div>
+    {if $options.viewid && $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a></div>{/if}
 </div>
 {/foreach}

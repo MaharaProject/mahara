@@ -2278,8 +2278,10 @@ tr#unzip_artefact_submit_container td {
 #postlist .draft .poststatus {
     color: #DA7373;
 }
-#postlist .postdescription {
+#postlist .postdate {
     border-top: 1px dotted #D1D1D1;
+}
+#postlist .postdescription {
     padding: 5px 0;
 }
 #postlist .published {

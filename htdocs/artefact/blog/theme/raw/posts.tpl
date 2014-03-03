@@ -26,6 +26,9 @@
             </span>
         </div>
         <h2>{$post->title}</h2>
+        <div id="postdetails_{$post->id}" class="postdetails postdate">
+            {str tag=postedon section=artefact.blog} {$post->ctime}
+        </div>
         <div id="postdescription_{$post->id}" class="postdescription">
             {$post->description|clean_html|safe}
         </div>
@@ -55,8 +58,5 @@
                 </table>
             </div>
         {/if}
-        <div id="postdetails_{$post->id}" class="postdetails">
-            {str tag=postedon section=artefact.blog} {$post->ctime}
-        </div>
     </div>
 {/foreach}
