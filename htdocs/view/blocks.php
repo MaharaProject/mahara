@@ -125,6 +125,7 @@ foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '?v=' . get_config('release'). '">';
 }
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.8.19.custom.css?v=' . get_config('release'). '">';
+$stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.
 if ($viewtheme && !isset($allowedthemes[$viewtheme])) {

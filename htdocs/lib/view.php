@@ -2260,6 +2260,36 @@ class View {
     }
 
     /**
+     * Returns a list of required css files.
+     */
+    public function get_all_blocktype_css() {
+        global $THEME;
+        $cssfiles = array();
+        $view_data = $this->get_row_datastructure();
+        foreach ($view_data as $row_data) {
+            foreach ($row_data as $column) {
+                foreach ($column['blockinstances'] as $blockinstance) {
+                    $pluginname = $blockinstance->get('blocktype');
+                    if (!safe_require_plugin('blocktype', $pluginname)) {
+                        continue;
+                    }
+                    $artefactdir = '';
+                    if ($blockinstance->get('artefactplugin') != '') {
+                        $artefactdir = 'artefact/' . $blockinstance->get('artefactplugin') . '/';
+                    }
+                    $hrefs = $THEME->get_url('style/style.css', true, $artefactdir . 'blocktype/' . $pluginname);
+                    $hrefs = array_reverse($hrefs);
+
+                    foreach ($hrefs as $href) {
+                        $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . $href . '?v=' . get_config('release'). '">';
+                    }
+                }
+            }
+        }
+        return array_unique($cssfiles);
+    }
+
+    /**
      * Returns the full path of a blocktype javascript file if it is internal
      */
     private function add_blocktype_path($blockinstance, $jsfilename) {
