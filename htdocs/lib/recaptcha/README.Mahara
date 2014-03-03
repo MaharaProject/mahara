@@ -9,3 +9,4 @@ This library displays the reCAPTCHA human-verification system.
 Changes:
 
  - Use a protocol-relative URL for the API server
+ - Display the reCAPTCHA form in the current Mahara language
