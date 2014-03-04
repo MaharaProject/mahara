@@ -908,7 +908,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         ));
     }
 
-    public static function delete_form($id, $title) {
+    public static function delete_form($id, $title = '') {
         global $THEME;
         return pieform(array(
             'name' => 'delete_' . $id,
