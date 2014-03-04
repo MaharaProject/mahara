@@ -197,12 +197,12 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://docs.google.com/$1document/pub?id=$2',
                 'type'  => 'iframe',
             ),
-            // docs.google.com - Google document (after Sept 2011) incl. custom domain document
+            // docs.google.com - Google document (updated on Mar 2014)
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the document
             array(
                 'match' => '#.*docs.google.com/([a-zA-Z0-9\_\-\.\/]*)document/d/([a-zA-Z0-9\_\-]+).*#',
-                'url'   => $httpstr . '://docs.google.com/$1document/pub?id=$2',
+                'url'   => $httpstr . '://docs.google.com/$1document/d/$2/pub?embedded=true',
                 'type'  => 'iframe',
             ),
             // docs.google.com - Google spreadsheet document (updated on Mar 2013)
@@ -245,7 +245,14 @@ class PluginBlocktypeGoogleApps extends SystemBlocktype {
                 'url'   => $httpstr . '://spreadsheets.google.com/$1pub?key=$2',
                 'type'  => 'iframe',
             ),
-            // www.google.com/calendar - Google calendar
+            // drive.google.com - Google uploaded file (updated on Mar 2014)
+            // $1 - id, key, etc. of the file
+            array(
+                'match' => '#.*drive.google.com/.*file/d/([a-zA-Z0-9\_\-]+).*#',
+                'url'   => $httpstr . '://docs.google.com/file/d/$1/preview',
+                'type'  => 'iframe',
+            ),
+                // www.google.com/calendar - Google calendar
             array(
                 'match' => '#.*www.google.com/calendar.*src=([a-zA-Z0-9\.\_\-\&\%\=/]+).*#',
                 'url'   => $httpstr . '://www.google.com/calendar/embed?src=$1',
