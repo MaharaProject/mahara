@@ -1385,7 +1385,15 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 
     $status = true;
     foreach($sqlarr as $sql) {
-        if (!execute_sql($sql)) {
+        try {
+            if (!execute_sql($sql)) {
+                $status = false;
+                if (!$continue) {
+                    break;
+                }
+            }
+        }
+        catch (Exception $e) {
             $status = false;
             if (!$continue) {
                 break;
@@ -1790,12 +1798,12 @@ function db_drop_trigger($name, $table) {
     if (is_postgres()) {
         $functionname = $name . '_function';
         $triggername  = $name . '_trigger';
-        execute_sql('DROP TRIGGER {' . $triggername . '} ON {' . $table . '}');
-        execute_sql('DROP FUNCTION {' . $functionname . '}()');
+        execute_sql('DROP TRIGGER IF EXISTS {' . $triggername . '} ON {' . $table . '}');
+        execute_sql('DROP FUNCTION IF EXISTS {' . $functionname . '}()');
     }
     else if (is_mysql()) {
         $triggername = $name . '_trigger';
-        execute_sql('DROP TRIGGER {' . $triggername . '}');
+        execute_sql('DROP TRIGGER IF EXISTS {' . $triggername . '}');
     }
     else {
         throw new SQLException("db_drop_trigger() is not implemented for your database engine");

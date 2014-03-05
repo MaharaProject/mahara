@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2009 Penny Leach
- * 
+ *
  */
 
 require_once(get_config('libroot') . 'view.php');
@@ -58,7 +58,7 @@ class ViewTest extends MaharaUnitTest {
      * make sure what got created makes sense
      */
     public function testViewCreating() {
-        $this->assertType('int', (int) $this->viewid);
+        $this->assertInternalType('int', (int) $this->viewid);
         $this->assertGreaterThan(0, $this->viewid);
 
         // now get it again and make sure it matches
@@ -106,12 +106,14 @@ class ViewTest extends MaharaUnitTest {
      * Test that removing a column updates numcolumns
      */
     public function testRemovecolumn() {
-        $before = $this->view->get('numcolumns');
-        $expect = $before > 1 ? $before - 1 : 1;
+        $before = $this->view->get_row_datastructure();
 
-        $this->view->removecolumn(array('column' => 1));
+        $this->view->removecolumn(array('column' => 1, 'row' => 1));
 
-        $this->assertEquals($this->view->get('numcolumns'), $expect);
+        $after = $this->view->get_row_datastructure();
+
+        $this->assertEquals(count($before), count($after));
+        $this->assertEquals(count($before[1]) - 1, count($after[1]));
     }
 
     /**
@@ -140,7 +142,6 @@ class ViewTest extends MaharaUnitTest {
      */
     public function tearDown() {
         $this->view->delete();
-        $this->view->commit();
         parent::tearDown();
     }
 }

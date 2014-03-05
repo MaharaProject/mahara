@@ -16,7 +16,9 @@ define('PUBLIC', 1);
 // necessary since we're running in a limited scope
 global $CFG, $db, $SESSION, $USER, $THEME;
 
+ob_start();
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+ob_end_clean();
 require_once(get_config('libroot') . 'ddl.php');
 require_once(get_config('libroot') . 'upgrade.php');
 require_once(get_config('libroot') . 'phpunit.php');

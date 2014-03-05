@@ -392,7 +392,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
     global $CFG, $db;
 
     // Do this function silently to avoid output during the install/upgrade process
-    $olddebug = $db->debug;
+    $olddbdebug = $db->debug;
     $db->debug = false;
     if (!table_exists($table)) {
         $db->debug = $olddbdebug;
@@ -483,7 +483,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
     $constraintrec = get_records_sql_array($sql, $params);
     // No constraints of the correct type on this table
     if (!$constraintrec) {
-        $db->debug = $olddebug;
+        $db->debug = $olddbdebug;
         return false;
     }
 
@@ -537,12 +537,12 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
         }
 
         // If they made it this far, then it's a match!
-        $db->debug = $olddebug;
+        $db->debug = $olddbdebug;
         return $c->constraint_name;
     }
 
     // None matched, so return false
-    $db->debug = $olddebug;
+    $db->debug = $olddbdebug;
     return false;
 }
 
@@ -683,11 +683,6 @@ function uninstall_from_xmldb_file($file) {
     if ($tables = array_reverse($structure->getTables())) {
         foreach ($tables as $table) {
             if ($indexes = $table->getIndexes()) {
-                $sortindexes = array();
-                foreach ($indexes as $index) {
-                    $sortindexes[] = find_index_name($table, $index);
-                }
-                array_multisort($indexes, SORT_DESC, $sortindexes);
                 foreach ($indexes as $index) {
                     if ($index->getName() == 'usernameuk' && is_postgres()) {
                         // this is a giant hack, but adodb cannot handle resolving
@@ -702,9 +697,9 @@ function uninstall_from_xmldb_file($file) {
             if ($keys = $table->getKeys()) {
                 $sortkeys = array();
                 foreach ($keys as $key) {
-                    $sortkeys[] = find_key_name($table, $key);
+                    $sortkeys[] = $key->type;
                 }
-                array_multisort($keys, SORT_DESC, $sortkeys);
+                array_multisort($sortkeys, SORT_DESC, $keys);
                 foreach ($keys as $key) {
                     if (!is_postgres() && $key->type != XMLDB_KEY_FOREIGN && $key->type != XMLDB_KEY_FOREIGN_UNIQUE) {
                         // Skip keys for MySQL because these will be

@@ -111,12 +111,28 @@ class UnitTestBootstrap {
         // These constraints must be dropped manually as they cannot be
         // created with xmldb due to ordering issues
         if (is_postgres()) {
-            execute_sql('ALTER TABLE {usr} DROP CONSTRAINT {usr_pro_fk}');
-            execute_sql('ALTER TABLE {institution} DROP CONSTRAINT {inst_log_fk}');
+            try {
+                execute_sql('ALTER TABLE {usr} DROP CONSTRAINT {usr_pro_fk}');
+            }
+            catch (Exception $e) {
+            }
+            try {
+                execute_sql('ALTER TABLE {institution} DROP CONSTRAINT {inst_log_fk}');
+            }
+            catch (Exception $e) {
+            }
         }
         else {
-            execute_sql('ALTER TABLE {usr} DROP FOREIGN KEY {usr_pro_fk}');
-            execute_sql('ALTER TABLE {institution} DROP FOREIGN KEY {inst_log_fk}');
+            try {
+                execute_sql('ALTER TABLE {usr} DROP FOREIGN KEY {usr_pro_fk}');
+            }
+            catch (Exception $e) {
+            }
+            try {
+                execute_sql('ALTER TABLE {institution} DROP FOREIGN KEY {inst_log_fk}');
+            }
+            catch (Exception $e) {
+            }
         }
 
         uninstall_from_xmldb_file(get_config('docroot') . 'lib/db/install.xml');
