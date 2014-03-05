@@ -2766,43 +2766,21 @@ class View {
 
         }
         else if (!$layoutid) {
-            // if $layoutid is not set and we have only one row return the default according to num columns
-            if ($numrows == 1) {
+            // view.layout is NULL, because the user hasn't chosen a stored layout or has been altering
+            // the number of columns in each row using the "add/delete columns" buttons.
 
-                $numcolumns = $columnsperrow[1]->columns;
-                foreach ($validlayouts as $key => $validlayout) {
-                    // get rows and columns for this layout
-                    $layoutsrowscols = get_records_select_array('view_layout_rows_columns', 'viewlayout = ?', array($validlayout->id));
-                    foreach ($layoutsrowscols as $layoutrowcol) {
-                        if (self::$layoutcolumns[$layoutrowcol->columns]->widths == self::$defaultcolumnlayouts[$numcolumns]) {
-                            $layout->id = $validlayout->id;
-                            $layout->rows[1]['widths'] = self::$defaultcolumnlayouts[$numcolumns];
-                            $layout->rows[1]['columns'] = $numcolumns;
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                // multiple rows
-                // get widths for each row, based on equal spacing of columns
-                $layoutid = 0;
-                $layout->id = $layoutid;
-                foreach ($columnsperrow as $row) {
-                    $numcolumns = $row->columns;
-                    $widths = self::$defaultcolumnlayouts[$numcolumns];
-                    $layout->rows[$row->row]['widths'] = $widths;
-                    $layout->rows[$row->row]['columns'] = $numcolumns;
-                }
+            // get widths for each row, based on equal spacing of columns
+            $layoutid = 0;
+            $layout->id = $layoutid;
+            foreach ($columnsperrow as $row) {
+                $numcolumns = $row->columns;
+                $widths = self::$defaultcolumnlayouts[$numcolumns];
+                $layout->rows[$row->row]['widths'] = $widths;
+                $layout->rows[$row->row]['columns'] = $numcolumns;
             }
         }
 
-        if (!$layout->id && $numrows==1) {
-            throw new SystemException("Unknown view layout (id=$layoutid)");
-        }
-        else {
-            return $layout;
-        }
+        return $layout;
     }
 
     /**
