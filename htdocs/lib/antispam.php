@@ -162,3 +162,35 @@ function has_external_links_or_images($text) {
     // (We do this first, in order to avoid any unnecessary hits to the DB
     return (boolean) preg_match('#(://)|(<a\b)#i', $text);
 }
+
+/**
+ * For creating a drop-down menu to set a user's probation points.
+ * @return array Suitable for use in a pieform select element's "options" attribute
+ */
+function probation_form_options() {
+    $options = array();
+    $options[0] = get_string('probationzeropoints', 'admin');
+    for ($i = 1; $i <= PROBATION_MAX_POINTS; $i++ ) {
+        $options[$i] = get_string('probationxpoints', 'admin', $i);
+    }
+    return $options;
+}
+
+/**
+ * Ensures that a number is in the valid range of probation points (from 0 to PROBATION_MAX_POINTS).
+ * It's used primarily in cleaning & validating user input when setting user probation points.
+ *
+ * @param int $points The number of probation points supplied from the UI
+ * @return int A legal number of probation points
+ */
+function ensure_valid_probation_points($points) {
+    if ($points < 0) {
+        return 0;
+    }
+    else if ($points > PROBATION_MAX_POINTS) {
+        return PROBATION_MAX_POINTS;
+    }
+    else {
+        return (int) $points;
+    }
+}

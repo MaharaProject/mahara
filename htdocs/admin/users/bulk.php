@@ -13,6 +13,7 @@ define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once(get_config('docroot') . 'lib/antispam.php');
 
 define('TITLE', get_string('bulkactions', 'admin'));
 
@@ -34,7 +35,8 @@ if (!$USER->get('admin')) {
 $users = get_records_sql_assoc('
     SELECT
         u.id, u.username, u.email, u.firstname, u.lastname, u.suspendedcusr, u.authinstance, u.studentid,
-        u.preferredname, CHAR_LENGTH(u.password) AS haspassword, aru.remoteusername AS remoteuser, u.lastlogin
+        u.preferredname, CHAR_LENGTH(u.password) AS haspassword, aru.remoteusername AS remoteuser, u.lastlogin,
+        u.probation
     FROM {usr} u
         LEFT JOIN {auth_remote_user} aru ON u.id = aru.localusr AND u.authinstance = aru.authinstance
     WHERE id IN (' . join(',', array_fill(0, count($userids), '?')) . ')
@@ -80,6 +82,25 @@ foreach ($authinstances as $authinstance) {
     }
 }
 
+// Suspend users
+$suspendform = pieform(array(
+    'name'     => 'suspend',
+    'class'    => 'bulkactionform',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'users' => $userelement,
+        'reason' => array(
+            'type'        => 'text',
+            'title'       => get_string('suspendedreason', 'admin') . ': ',
+        ),
+        'suspend' => array(
+            'type'        => 'submit',
+            'value'       => get_string('Suspend', 'admin'),
+        ),
+    ),
+));
+
+// Change authentication method
 $changeauthform = null;
 if (count($options) > 1) {
     $changeauthform = pieform(array(
@@ -107,23 +128,29 @@ if (count($options) > 1) {
     ));
 }
 
-// Suspend users
-$suspendform = pieform(array(
-    'name'     => 'suspend',
-    'class'    => 'bulkactionform',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'users' => $userelement,
-        'reason' => array(
-            'type'        => 'text',
-            'title'       => get_string('suspendedreason', 'admin') . ': ',
+// Set probation points
+$probationform = null;
+if (is_using_probation()) {
+    $probationform = pieform(array(
+        'name' => 'probation',
+        'class' => 'bulkactionform',
+        'renderer' => 'oneline',
+        'elements' => array(
+            'users' => $userelement,
+            'probationpoints' => array(
+                'type' => 'select',
+                'title' => get_string('probationbulksetspamprobation', 'admin') . ': ',
+                'options' => probation_form_options(),
+                'defaultvalue' => '0',
+            ),
+            'setprobation' => array(
+                'type' => 'submit',
+                'confirm' => get_string('probationbulkconfirm', 'admin'),
+                'value' => get_string('probationbulkset', 'admin'),
+            )
         ),
-        'suspend' => array(
-            'type'        => 'submit',
-            'value'       => get_string('Suspend', 'admin'),
-        ),
-    ),
-));
+    ));
+}
 
 // Delete users
 $deleteform = pieform(array(
@@ -151,6 +178,7 @@ $smarty->assign('users', $users);
 $smarty->assign('changeauthform', $changeauthform);
 $smarty->assign('suspendform', $suspendform);
 $smarty->assign('deleteform', $deleteform);
+$smarty->assign('probationform', $probationform);
 $smarty->display('admin/users/bulk.tpl');
 
 function changeauth_validate(Pieform $form, $values) {
@@ -266,5 +294,25 @@ function delete_submit(Pieform $form, $values) {
     db_commit();
 
     $SESSION->add_ok_msg(get_string('bulkdeleteuserssuccess', 'admin', count($users)));
+    redirect('/admin/users/search.php');
+}
+
+function probation_submit(Pieform $form, $values) {
+    global $SESSION, $users;
+
+    $newpoints = ensure_valid_probation_points($values['probationpoints']);
+    $paramlist = array($newpoints);
+
+    $sql = '';
+    foreach ($users as $user) {
+        $paramlist[] = $user->id;
+        $sql .= '?,';
+    }
+    // Drop the last comma
+    $sql = substr($sql, 0, -1);
+
+    execute_sql('update {usr} set probation = ? where id in (' . $sql . ')', $paramlist);
+
+    $SESSION->add_ok_msg(get_string('bulkprobationpointssuccess', 'admin', count($users), $newpoints));
     redirect('/admin/users/search.php');
 }

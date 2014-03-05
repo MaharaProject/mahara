@@ -124,17 +124,12 @@ else {
 
 // Probation points
 if (is_using_probation($user->id)) {
-    $options = array();
-    $options[0] = get_string('probationzeropoints', 'admin');
-    for ($i = 1; $i <= PROBATION_MAX_POINTS; $i++ ) {
-        $options[$i] = get_string('probationxpoints', 'admin', $i);
-    }
     $elements['probationpoints'] = array(
         'type' => 'select',
         'title' => get_string('probationtitle', 'admin'),
         'help' => true,
-        'options' => $options,
-        'defaultvalue' => min(max((int) $user->probation, 0), PROBATION_MAX_POINTS),
+        'options' => probation_form_options(),
+        'defaultvalue' => ensure_valid_probation_points($user->probation),
     );
 }
 
@@ -348,7 +343,7 @@ function edituser_site_submit(Pieform $form, $values) {
 
     if (is_using_probation()) {
         // Value should be between 0 and 10 inclusive
-        $user->probation = min(max((int) $values['probationpoints'], 0), PROBATION_MAX_POINTS);
+        $user->probation = ensure_valid_probation_points($values['probationpoints']);
     }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {

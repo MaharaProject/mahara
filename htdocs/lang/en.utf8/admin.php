@@ -748,12 +748,16 @@ $string['confirmdeleteuser'] = 'Are you sure you want to delete this user?';
 $string['filequota1'] = 'File quota';
 $string['quotaused'] = 'Quota used';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
+$string['probationbulkconfirm'] = 'Are you sure you want to change these users\' spam probation status?';
+$string['probationbulksetspamprobation'] = 'Set spam probation: ';
+$string['probationbulkset'] = 'Set';
 $string['probationtitle'] = 'Spammer probation status';
 $string['probationzeropoints'] = 'Not on probation';
 $string['probationxpoints'] = array(
     0 => '%d point',
     1 => '%d points',
 );
+$string['probationreportcolumn'] = 'Probation';
 $string['addusertoinstitution'] = 'Add user to institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
@@ -1026,6 +1030,10 @@ $string['someusersnotinauthinstanceinstitution'] = 'Some of the users you have s
 $string['bulkchangeauthmethodsuccess'] = 'Reset authentication method for %d user(s)';
 $string['bulkchangeauthmethodresetpassword'] = 'You have chosen an authentication method that requires a password. %d user(s) do not have a password and will not be able to log in until their passwords are reset.';
 $string['bulkdeleteuserssuccess'] = 'Deleted %d user(s)';
+$string['bulkprobationpointssuccess'] = array(
+    0 => 'Set probation points to %2$d for %1$d user',
+    1 => 'Set probation points to %2$d for %1$d users'
+);
 $string['selectedusers'] = 'Selected users';
 $string['remoteuser'] = 'Remote username';
 $string['userreports'] = 'User reports';

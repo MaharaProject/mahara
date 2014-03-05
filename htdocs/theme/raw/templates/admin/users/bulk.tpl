@@ -5,6 +5,7 @@
 <div>
   {$suspendform|safe}
   {$changeauthform|safe}
+  {$probationform|safe}
   {$deleteform|safe}
 </div>
 

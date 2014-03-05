@@ -431,6 +431,15 @@ form#changeauth {
     border-radius: 5px;
     display: inline-block;
 }
+form#probation {
+    margin: 0 5px 10px 0;
+    padding: 5px 5px 5px 10px;
+    background: #EEEEEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+}
 form#delete {
     margin: 0 0 10px 0;
     padding: 5px 5px 5px 10px;
