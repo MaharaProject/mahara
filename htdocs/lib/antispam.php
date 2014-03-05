@@ -11,6 +11,8 @@
 
 defined('INTERNAL') || die();
 
+define('PROBATION_MAX_POINTS', 10);
+
 function available_spam_traps() {
     $results = array();
     $handle = opendir(get_config('docroot') . 'lib/antispam');

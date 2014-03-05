@@ -18,6 +18,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
 require_once('activity.php');
+require_once(get_config('docroot') . 'lib/antispam.php');
 
 $id = param_integer('id');
 $user = new User;
@@ -118,6 +119,22 @@ else {
         'title'        => get_string('filequota1', 'admin'),
         'description'  => get_string('filequotadescription', 'admin') . '<br>' . $quotaused,
         'value'        => display_size($user->quota),
+    );
+}
+
+// Probation points
+if (is_using_probation($user->id)) {
+    $options = array();
+    $options[0] = get_string('probationzeropoints', 'admin');
+    for ($i = 1; $i <= PROBATION_MAX_POINTS; $i++ ) {
+        $options[$i] = get_string('probationxpoints', 'admin', $i);
+    }
+    $elements['probationpoints'] = array(
+        'type' => 'select',
+        'title' => get_string('probationtitle', 'admin'),
+        'help' => true,
+        'options' => $options,
+        'defaultvalue' => min(max((int) $user->probation, 0), PROBATION_MAX_POINTS),
     );
 }
 
@@ -327,6 +344,11 @@ function edituser_site_submit(Pieform $form, $values) {
 
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
+    }
+
+    if (is_using_probation()) {
+        // Value should be between 0 and 10 inclusive
+        $user->probation = min(max((int) $values['probationpoints'], 0), PROBATION_MAX_POINTS);
     }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {

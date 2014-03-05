@@ -745,6 +745,12 @@ $string['confirmdeleteuser'] = 'Are you sure you want to delete this user?';
 $string['filequota1'] = 'File quota';
 $string['quotaused'] = 'Quota used';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
+$string['probationtitle'] = 'Spammer probation status';
+$string['probationzeropoints'] = 'Not on probation';
+$string['probationxpoints'] = array(
+    0 => '%d point',
+    1 => '%d points',
+);
 $string['addusertoinstitution'] = 'Add user to institution';
 $string['removeuserfrominstitution'] = 'Remove user from this institution';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
