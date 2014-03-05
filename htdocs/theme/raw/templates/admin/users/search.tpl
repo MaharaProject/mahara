@@ -88,7 +88,34 @@
     </div>
     {/if}
     <div id="results" class="section">
-        {$results|safe}
+        <h2 id="resultsheading">{str tag="Results"}</h2>
+        {if $results}
+        <table id="searchresults" class="tablerenderer fullwidth listing">
+            <thead>
+                <tr>
+                    {foreach from=$columns key=f item=c}
+                    <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
+                        {if $c.sort}
+                            <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{$c.name}</a>
+                        {else}
+                            {$c.name}
+                        {/if}
+                        {if $c.help}
+                            {$c.helplink|safe}
+                        {/if}
+                        {if $c.headhtml}<div style="font-weight: normal;">{$c.headhtml|safe}</div>{/if}
+                    </th>
+                    {/foreach}
+                </tr>
+            </thead>
+            <tbody>
+                {$results|safe}
+            </tbody>
+        </table>
+        {$pagination|safe}
+        {else}
+            <div>{str tag="noresultsfound"}</div>
+        {/if}
     </div>
 
 {include file="footer.tpl"}

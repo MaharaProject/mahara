@@ -1799,6 +1799,7 @@ function build_userlist_html(&$data, $page, $admingroups) {
         'datatable' => 'friendslist',
         'searchresultsheading' => 'searchresultsheading',
         'count' => $data['count'],
+        'setlimit' => true,
         'limit' => $data['limit'],
         'offset' => $data['offset'],
         'jumplinks' => 6,

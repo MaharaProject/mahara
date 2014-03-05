@@ -71,10 +71,12 @@ function pieform_element_calendar(Pieform $form, $element) {/*{{{*/
     }
     $result .= '<script type="text/javascript">
         var updateFormChangerChecker_' . $id . ' = function () {
+            var input = jQuery("input#' . $id . '");
             if (typeof formchangemanager !== \'undefined\') {
-                var form = jQuery("input#' . $id . '").closest(\'form\')[0];
+                var form = input.closest(\'form\')[0];
                 formchangemanager.setFormState(form, FORM_CHANGED);
             }
+            input.change();
         }
         Calendar.setup(' . $encodedoptions . ');
     </script>';
