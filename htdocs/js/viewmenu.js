@@ -82,7 +82,7 @@ addLoadEvent(function () {
                 (!document.documentElement || typeof(document.documentElement.style.maxHeight) == "undefined");
 
             connect('add_feedback_link', 'onclick', function(e) {
-                var tinymceused = typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined';
+                var tinymceused = (typeof(tinyMCE) != 'undefined' && typeof(tinyMCE.get('add_feedback_form_message')) != 'undefined');
 
                 e.stop();
                 if ($('objection_form')) {
