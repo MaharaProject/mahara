@@ -44,9 +44,6 @@ function pieform_element_userlist(Pieform $form, $element) {
     }
 
     $smarty->assign('name', $element['name']);
-    if (!empty($element['filter'])) {
-        $smarty->assign('filter', true);
-    }
 
     if (!empty($element['lefttitle'])) {
         $smarty->assign('lefttitle', $element['lefttitle']);
@@ -101,12 +98,4 @@ function pieform_element_userlist_rule_required(Pieform $form, $value, $element)
     }
 
     return $form->i18n('rule', 'required', 'required', $element);
-}
-
-function pieform_element_userlist_set_attributes($element) {
-    // By default, use the filter select box
-    if (!isset($element['filter'])) {
-        $element['filter'] = true;
-    }
-    return $element;
 }

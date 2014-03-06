@@ -112,7 +112,6 @@ class PluginInteractionForum extends PluginInteraction {
                         'defaultvalue' => isset($moderators) ? $moderators : null,
                         'group' => $group->id,
                         'includeadmins' => false,
-                        'filter' => false,
                         'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
                         'righttitle' => get_string('currentmoderators', 'interaction.forum')
                     ),

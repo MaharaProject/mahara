@@ -45,7 +45,6 @@ $form = pieform(array(
             'righttitle' => get_string('userstobeinvited', 'group'),
             'searchscript' => 'group/membersearchresults.json.php',
             'defaultvalue' => array(),
-            'filter' => false,
             'searchparams' => array(
                 'id' => GROUP,
                 'limit' => 100,

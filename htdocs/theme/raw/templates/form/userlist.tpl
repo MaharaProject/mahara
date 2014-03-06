@@ -140,16 +140,6 @@
     });
 </script>
 <table class="userlisttable fullwidth">
-    <tr>
-        {{if $filter}}
-        <td colspan="3">
-            <select id="{{$name}}_groups">
-                <option value="all">All Users</option>
-                <option value="all">Test Community</option>
-            </select>
-        </td>
-        {{/if}}
-    </tr>
     {{if $lefttitle || $righttitle}}
     <tr>
         <th>{{$lefttitle}}</th>

@@ -33,7 +33,6 @@ $form = pieform(array(
             'type' => 'userlist',
             'title' => get_string('adminusers', 'admin'),
             'defaultvalue' => $adminusers,
-            'filter' => false,
             'lefttitle' => get_string('potentialadmins', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
             'searchparams' => array(

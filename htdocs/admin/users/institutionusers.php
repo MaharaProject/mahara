@@ -129,7 +129,6 @@ else if ($usertype == 'invited') {
 }
 
 $userlistelement['type'] = 'userlist';
-$userlistelement['filter'] = false;
 $userlistelement['searchscript'] = 'admin/users/userinstitutionsearch.json.php';
 $userlistelement['defaultvalue'] = array();
 $userlistelement['searchparams']['limit'] = 100;

@@ -67,7 +67,6 @@ $groupadminsform = pieform(array(
             'type' => 'userlist',
             'title' => get_string('groupadmins', 'group'),
             'defaultvalue' => $admins,
-            'filter' => false,
             'lefttitle' => get_string('potentialadmins', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
         ),

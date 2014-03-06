@@ -45,7 +45,6 @@ $form = array(
             'type' => 'userlist',
             'title' => get_string('staffusers', 'admin'),
             'defaultvalue' => $staffusers,
-            'filter' => false,
             'lefttitle' => get_string('institutionmembers', 'admin'),
             'righttitle' => get_string('institutionstaff', 'admin'),
             'searchparams' => array('limit' => 100, 'query' => '', 'member' => 1, 
