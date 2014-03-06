@@ -63,7 +63,8 @@ legend {
 th,
 th label,
 #files_filebrowser_agreement label,
-.uploadform label {
+.uploadform label,
+.lrfieldlists label {
     color: #42637B;
 }
 /******************** Buttons ********************/

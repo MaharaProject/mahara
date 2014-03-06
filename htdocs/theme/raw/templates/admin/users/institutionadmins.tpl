@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-			<p>{str tag="institutionadminuserspagedescription" section="admin"}</p>
+			<p>{str tag="institutionadminuserspagedescription1" section="admin"}</p>
 
 			{$institutionselector|safe}
             <div class="userlistform">
