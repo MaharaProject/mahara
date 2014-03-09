@@ -985,7 +985,10 @@ $string['requestto'] = 'Request to';
 $string['useradded'] = 'User added';
 $string['invitationsent'] = 'Invitation sent';
 $string['withselectedusers'] = 'With selected users';
+$string['withselectedusersedit'] = 'Edit selected users';
+$string['withselectedusersreports'] = 'Get reports for selected users';
 $string['getreports'] = 'Get reports';
+$string['selectuser'] = 'Select user "%s"';
 
 // Bulk actions & user reports
 $string['bulkactions'] = 'Bulk actions';
