@@ -40,7 +40,9 @@
                 }
 
                 replaceChildNodes('{{$name}}_potential', results);
-
+                if (typeof params.query != 'undefined') {
+                    $('{{$name}}_potential').focus();
+                }
                 // work around IE7's magical shrinking select box. Only
                 // Internet Explorer has the "brilliance" to slowly shrink the
                 // select box every time you put a new option into it :(
