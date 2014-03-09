@@ -178,6 +178,7 @@ $string['editfont'] = 'Edit font';
 $string['fontedited'] = 'Font edited successfully';
 $string['editproperties'] = 'Edit font properties';
 $string['viewfontspecimen'] = 'View font specimen';
+$string['viewfontspecimenfor'] = ' for \'%s\'';
 $string['deletefont'] = 'Delete font';
 $string['deletespecifiedfont'] = 'Delete font \'%s\'';
 $string['deletefontconfirm'] = 'Do you really want to delete this font? It cannot be undone.';
