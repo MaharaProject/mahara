@@ -23,13 +23,31 @@ require_once('pieforms/pieform.php');
 $title = get_string('siteviews', 'admin');
 define('TITLE', $title);
 
+$offset = param_integer('offset', 0);
+
 list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
 
 $js = <<< EOF
 addLoadEvent(function () {
     p = {$pagination['javascript']}
-});
 EOF;
+if ($offset > 0) {
+    $js .= <<< EOF
+    if ($('myviews')) {
+        getFirstElementByTagAndClassName('a', null, 'myviews'). focus();
+    }
+EOF;
+}
+else {
+    $js .= <<< EOF
+    if ($('searchresultsheading')) {
+        addElementClass('searchresultsheading', 'hidefocus');
+        setNodeAttribute('searchresultsheading', 'tabIndex', -1);
+        $('searchresultsheading').focus();
+    }
+EOF;
+}
+$js .= '});';
 
 $createviewform = pieform(create_view_form(null, 'mahara'));
 
@@ -39,6 +57,8 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('query', param_variable('query', null));
+$smarty->assign('querystring', get_querystring());
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
