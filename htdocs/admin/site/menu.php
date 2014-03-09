@@ -36,14 +36,14 @@ $thead = array(json_encode(get_string('type', 'admin')), json_encode(get_string(
 $ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
 $ijs .= "var externallink = " . json_encode(get_string('externallink', 'admin')) . ";\n";
 $ijs .= "var sitefile = " . json_encode(get_string('sitefile','admin')) . ";\n";
-
+$namelabel = json_encode(get_string('name', 'admin'));
+$linkedtolabel = json_encode(get_string('linkedto', 'admin'));
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
     sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'GET',
                     function(data) { displaymenuitems(data.menuitems); });
 }
-
 // Get a list of the available admin files
 function getadminfiles() {
     sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 
@@ -100,8 +100,8 @@ function addform(type) {
 function editform(item) {
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'externallink'});
-    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'sitefile'});
+    var elink = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'id':'type_'+item.id+'_externallink','value':'externallink'});
+    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'id':'type_'+item.id+'_sitefile','value':'sitefile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
@@ -138,7 +138,7 @@ function editform(item) {
     }
 
     // A text field for the name
-    var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
+    var name = SPAN(null,LABEL({'for':'name'+item.id,'class':'accessible-hidden'},$namelabel),INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name}));
 
     if (item.type == 'sitefile') {
         if (adminfiles == null) {
@@ -148,25 +148,26 @@ function editform(item) {
         }
         else {
             // Select the currently selected file.
-            linkedto = SELECT({'id':'linkedto'+item.id});
+            linkedtoselect = SELECT({'id':'linkedto'+item.id});
+            linkedto = SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'accessible-hidden'},$linkedtolabel), linkedtoselect);
             for (var i = 0; i < adminfiles.length; i++) {
                 if (item.file == adminfiles[i].id) {
-                    appendChildNodes(linkedto, OPTION({'value':adminfiles[i].id, 'selected':true}, adminfiles[i].name));
+                    appendChildNodes(linkedtoselect, OPTION({'value':adminfiles[i].id, 'selected':true}, adminfiles[i].name));
                 }
                 else {
-                    appendChildNodes(linkedto, OPTION({'value':adminfiles[i].id}, adminfiles[i].name));
+                    appendChildNodes(linkedtoselect, OPTION({'value':adminfiles[i].id}, adminfiles[i].name));
                 }
             }
         }
         setNodeAttribute(afile,'checked',true);
     }
     else { // type = externallist
-        linkedto = INPUT({'type':'text','class':'text','id':'linkedto'+item.id,
-                          'value':item.linkedto});
+        linkedto =  SPAN(null,LABEL({'for':'linkedto'+item.id,'class':'accessible-hidden'},$linkedtolabel),
+                         INPUT({'type':'text','class':'text','id':'linkedto'+item.id,'value':item.linkedto}));
         setNodeAttribute(elink,'checked',true);
     }
-    var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminexternallink')),
-                  DIV(null, LABEL(null,afile,{$getstring['sitefile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminsitefile'))];
+    var radios = [DIV(null, LABEL({'for':'type_'+item.id+'_externallink'},elink,{$getstring['externallink']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminexternallink')),
+                  DIV(null, LABEL({'for':'type_'+item.id+'_sitefile'},afile,{$getstring['sitefile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminsitefile'))];
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;

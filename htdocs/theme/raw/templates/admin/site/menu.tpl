@@ -4,7 +4,7 @@
 			
 			<div id="editmenus">
 			
-			<label>{str tag=edit}:</label>
+			<label for="menuselect">{str tag=edit}:</label>
 			<select id="menuselect" name="menuselect">
 			{foreach from=$MENUS item=menu}
 				<option value={$menu.value}>{$menu.name}</option>
