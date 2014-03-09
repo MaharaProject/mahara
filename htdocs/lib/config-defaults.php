@@ -577,3 +577,10 @@ $cfg->usersuniquebyusername = false;
  * @global bool $cfg->publicsearchallowed Activates the display of the search box for logged-out users
  */
 $cfg->publicsearchallowed = false;
+
+/**
+ * @global bool $cfg->alwaysallowselfdelete Set this to "true" to allow all users on the site to delete
+ * their accounts. Leave on the default "false" to only allow users to delete their accounts if they
+ * belong to an institution that allows self-registration.
+ */
+//$cfg->alwaysallowselfdelete = true;
