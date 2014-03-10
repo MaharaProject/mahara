@@ -45,11 +45,11 @@
         <td align="center">{$n->count}</td>
         <td class="right buttonscell btns2">
         {if $n->exists}
-        <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit}">
+        <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
             <img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}">
         </a>
         {else}
-        <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit}">
+        <a id="goals_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
             <img src="{theme_url filename='images/btn_edit.png'}" alt="{str tag=edit}">
         </a>
         {/if}
