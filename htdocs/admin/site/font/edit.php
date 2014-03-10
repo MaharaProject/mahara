@@ -43,18 +43,18 @@ $form = pieform(array(
         ),
         'fonttitle' => array(
             'type' => 'text',
-            'labelhtml' => get_string('fontname', 'skin'),
+            'title' => get_string('fontname', 'skin'),
             'defaultvalue' => (!empty($fontdata->title) ? $fontdata->title : null),
         ),
         'fontnotice' => array(
             'type' => 'text',
-            'labelhtml' => get_string('fontnotice', 'skin'),
+            'title' => get_string('fontnotice', 'skin'),
             'description' => get_string('fontnoticedescription', 'skin'),
             'defaultvalue' => (!empty($fontdata->notice) ? $fontdata->notice : null),
         ),
         'fonttype' => array(
             'type' => 'radio',
-            'labelhtml' => get_string('fonttype', 'skin'),
+            'title' => get_string('fonttype', 'skin'),
             'defaultvalue' => (!empty($fontdata->onlyheading) && ($fontdata->onlyheading == 1) ? 'heading' : 'text'),
             'options' => array(
                 'text' => get_string('headingandtext', 'skin'),
@@ -64,7 +64,7 @@ $form = pieform(array(
         ),
         'genericfont' => array(
             'type' => 'select',
-            'labelhtml' => get_string('genericfontfamily', 'skin'),
+            'title' => get_string('genericfontfamily', 'skin'),
             'defaultvalue' => (!empty($fontdata->genericfont) ? $fontdata->genericfont : 'sans-serif'),
             'options' => array(
                 'serif' => 'serif',

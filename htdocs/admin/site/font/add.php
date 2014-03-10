@@ -46,7 +46,7 @@ $form = pieform(array(
         ),
         'fontstyle' => array(
             'type' => 'select',
-            'labelhtml' => get_string('fontstyle', 'skin'),
+            'title' => get_string('fontstyle', 'skin'),
             'defaultvalue' => 'regular',
             'options' => array(
                 'regular' => get_string('regular', 'skin'),
@@ -62,25 +62,25 @@ $form = pieform(array(
             'elements' => array(
                 'fontfileEOT' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfileeot', 'skin'),
+                    'title' => get_string('fontfileeot', 'skin'),
                     'description' => get_string('eotdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileSVG' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilesvg', 'skin'),
+                    'title' => get_string('fontfilesvg', 'skin'),
                     'description' => get_string('svgdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileTTF' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilettf', 'skin'),
+                    'title' => get_string('fontfilettf', 'skin'),
                     'description' => get_string('ttfdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileWOFF' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilewoff', 'skin'),
+                    'title' => get_string('fontfilewoff', 'skin'),
                     'description' => get_string('woffdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),

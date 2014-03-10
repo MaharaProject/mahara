@@ -39,17 +39,17 @@ $form = pieform(array(
         ),
         'fonttitle' => array(
             'type' => 'text',
-            'labelhtml' => get_string('fontname', 'skin'),
+            'title' => get_string('fontname', 'skin'),
             'rules'   => array('required' => true),
         ),
         'fontnotice' => array(
             'type' => 'text',
-            'labelhtml' => get_string('fontnotice', 'skin'),
+            'title' => get_string('fontnotice', 'skin'),
             'description' => get_string('fontnoticedescription', 'skin'),
         ),
         'fontstyle' => array(
             'type' => 'select',
-            'labelhtml' => get_string('fontstyle', 'skin'),
+            'title' => get_string('fontstyle', 'skin'),
             'defaultvalue' => 'regular',
             'options' => array(
                 'regular' => get_string('regular', 'skin'),
@@ -61,7 +61,7 @@ $form = pieform(array(
         ),
         'fonttype' => array(
             'type' => 'radio',
-            'labelhtml' => get_string('fonttype', 'skin'),
+            'title' => get_string('fonttype', 'skin'),
             'defaultvalue' => 'text',
             'options' => array(
                 'text' => get_string('headingandtext', 'skin'),
@@ -72,7 +72,7 @@ $form = pieform(array(
         ),
         'genericfont' => array(
             'type' => 'select',
-            'labelhtml' => get_string('genericfontfamily', 'skin'),
+            'title' => get_string('genericfontfamily', 'skin'),
             'defaultvalue' => 'sans-serif',
             'options' => array(
                 'serif' => 'serif',
@@ -90,31 +90,31 @@ $form = pieform(array(
             'elements' => array(
                 'fontfileEOT' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfileeot', 'skin'),
+                    'title' => get_string('fontfileeot', 'skin'),
                     'description' => get_string('eotdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileSVG' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilesvg', 'skin'),
+                    'title' => get_string('fontfilesvg', 'skin'),
                     'description' => get_string('svgdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileTTF' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilettf', 'skin'),
+                    'title' => get_string('fontfilettf', 'skin'),
                     'description' => get_string('ttfdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfileWOFF' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilewoff', 'skin'),
+                    'title' => get_string('fontfilewoff', 'skin'),
                     'description' => get_string('woffdescription', 'skin'),
                     'rules'   => array('required' => true),
                 ),
                 'fontfilelicence' => array(
                     'type' => 'file',
-                    'labelhtml' => get_string('fontfilelicence', 'skin'),
+                    'title' => get_string('fontfilelicence', 'skin'),
                     'rules'   => array('required' => true),
                 ),
             )
