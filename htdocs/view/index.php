@@ -21,7 +21,7 @@ require_once(get_config('libroot') . 'view.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('Views', 'view'));
 
-$offset = param_integer('offest', 0);
+$offset = param_integer('offset', 0);
 
 list($searchform, $data, $pagination) = View::views_by_owner();
 
