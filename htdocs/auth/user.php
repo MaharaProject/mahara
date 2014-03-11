@@ -1203,6 +1203,11 @@ class User {
 
     public function can_delete_self() {
         if (!$this->get('admin')) {
+
+            if (get_config('alwaysallowselfdelete')) {
+                return true;
+            }
+
             // Users who belong to an institution that doesn't allow
             // registration cannot delete themselves.
             foreach ($this->get('institutions') as $i) {
