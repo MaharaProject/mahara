@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginArtefactResume extends Plugin {
+class PluginArtefactResume extends PluginArtefact {
 
     public static function get_artefact_types() {
         return array(
