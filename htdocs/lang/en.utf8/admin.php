@@ -204,6 +204,7 @@ $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
 $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
+$string['addnewgroupcategory'] = 'Enter new group category';
 
 // Register your Mahara
 $string['Field'] = 'Field';

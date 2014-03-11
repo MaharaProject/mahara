@@ -33,7 +33,7 @@ if ($itemid == 'new') {
             }
         }
         $data->displayorder = $max;
-        insert_record('group_category', $data);
+        $itemid = insert_record('group_category', $data, 'id', true);
     }
     catch (Exception $e) {
         json_reply('local',get_string('savefailed','admin'));
@@ -48,5 +48,4 @@ else {
         json_reply('local',get_string('savefailed','admin'));
     }
 }
-
-json_reply(false, null);
+json_reply(false, array('id' => (int)$itemid));

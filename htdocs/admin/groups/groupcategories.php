@@ -40,7 +40,7 @@ function groupcategories_submit(Pieform $form, $values) {
 }
 
 $strings = array('edit', 'delete', 'update', 'cancel', 'add', 'name', 'unknownerror');
-$adminstrings = array('confirmdeletecategory', 'deletefailed');
+$adminstrings = array('confirmdeletecategory', 'deletefailed', 'addnewgroupcategory');
 $argumentstrings = array('editspecific', 'deletespecific');
 foreach ($strings as $string) {
     $getstring[$string] = json_encode(get_string($string));
@@ -57,25 +57,31 @@ $ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]))
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
-function getitems() {
-    sendjsonrequest('getgroupcategories.json.php', {}, 'GET',
-                    function(data) { displaymenuitems(data.groupcategories); });
+function getitems(r) {
+    sendjsonrequest('getgroupcategories.json.php', {}, 'GET', function(data) {
+        data.focusid = (typeof r != 'undefined') ? r.id : false;
+        displaymenuitems(data);
+    });
 }
 
 
 // Puts the list of menu items into the empty table.
-function displaymenuitems(itemlist) {
+function displaymenuitems(data) {
+    var itemlist = data.groupcategories;
     var rows = map(formatrow,itemlist);
     var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
                          'encoding':'multipart/form-data'},
                     TABLE({'class':'nohead'},TBODY(null,[thead,rows,addform()])));
     replaceChildNodes($('menuitemlist'),form);
+    if (data.focusid) {
+        $('item' + data.focusid).focus();
+    }
 }
 
 // Creates one table row
 function formatrow (item) {
     // item has id, type, name, link, linkedto
-    var edit = INPUT({'type':'image','src':config.theme['images/btn_edit.png'],
+    var edit = INPUT({'id':'item' + item.id,'type':'image','src':config.theme['images/btn_edit.png'],
         'title':{$getstring['edit']},'alt':{$getstring['editspecific']}.replace('%s', item.name)});
     connect(edit, 'onclick', function (e) { e.stop(); edititem(item); });
     var del = INPUT({'type':'image','src':config.theme['images/btn_deleteremove.png'],
@@ -110,6 +116,7 @@ function editform(item) {
     var rowtype = 'add';
     if (!item.name) {
         item.name = '';
+        item.label = {$getstring['addnewgroupcategory']};
         // The save button says 'add', and there's no cancel button.
         setNodeAttribute(save,'value',{$getstring['add']});
         savecancel = [save];
@@ -121,9 +128,11 @@ function editform(item) {
         var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
         connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
+        item.label = {$getstring['edit']};
     }
 
     // A text field for the name
+    var label = LABEL({'for':'name'+item.id,'class':'accessible-hidden'}, null, item.label);
     var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
     connect(name, 'onkeydown', function(e) {
         if (keypressKeyCode(e) == 13) {
@@ -131,9 +140,9 @@ function editform(item) {
             e.stop();
         }
     });
-
+    var parentspan = createDOM('span',null,label,name);
     var row = TR({'id':'row'+item.id, 'class':rowtype},
-                 map(partial(TD,null),[name,savecancel]));
+                 map(partial(TD,null),[parentspan,savecancel]));
     return row;
 }
 
@@ -157,6 +166,7 @@ function edititem(item) {
     addElementClass(menuitem,'hidden');
     var newrow = editform(item);
     insertSiblingNodesBefore(menuitem, newrow);
+    $('name' + item.id).focus();
 }
 
 // Receive standard json error message
@@ -178,7 +188,9 @@ function saveitem(itemid) {
 
     var data = {'name':name,
                 'itemid':itemid};
-    sendjsonrequest('updategroup.json.php', data, 'POST', getitems);
+    sendjsonrequest('updategroup.json.php', data, 'POST', function(r) {
+        getitems(r);
+    });
     return false;
 }
 
