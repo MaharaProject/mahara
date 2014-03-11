@@ -118,7 +118,8 @@ if (!empty($sitefonts)) {
     $css[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'admin/site/font/css.php?family=' . $sitefonts . '">';
 }
 if (!empty($googlefonts)) {
-    $css[] = '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=' . $googlefonts . '">';
+    $protocol = (is_https()) ? 'https://' : 'http://';
+    $css[] = '<link rel="stylesheet" type="text/css" href="' . $protocol . 'fonts.googleapis.com/css?family=' . $googlefonts . '">';
 }
 
 
