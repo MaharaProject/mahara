@@ -3704,15 +3704,23 @@ class View {
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
+        // Query parameters
+        $fromparams = array();
+        $whereparams = array();
+
         $from = '
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
             LEFT OUTER JOIN {collection} c ON cv.collection = c.id
+            LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
             ';
 
         $where = '
             WHERE (v.owner IS NULL OR v.owner > 0)
-                AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))';
+                AND (v.group IS NULL OR v.group NOT IN (SELECT id FROM {group} WHERE deleted = 1))
+                AND (qu.suspendedctime is null OR v.owner = ?)';
+
+        $whereparams[] = $viewerid;
 
         if (is_array($types) && !empty($types)) {
             $where .= ' AND v.type IN (';
@@ -3744,21 +3752,19 @@ class View {
                 LEFT JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
             $where .= "
                 AND (v.title $like '%' || ? || '%' OR v.description $like '%' || ? || '%' OR vt.tag = ?";
-            $ph = array($query, $query, $query, $query);
+            array_push($fromparams, $query);
+            array_push($whereparams, $query, $query, $query);
             if ($collection) {
                 $where .= "
                     OR c.name $like '%' || ? || '%' OR c.description $like '%' || ? || '%' ";
-                array_push($ph, $query, $query);
+                array_push($whereparams, $query, $query);
             }
             $where .= ")";
         }
         else if ($tag) { // Filter by the tag
             $from .= "
                 INNER JOIN {view_tag} vt ON (vt.view = v.id AND vt.tag = ?)";
-            $ph = array($tag);
-        }
-        else {
-            $ph = array();
+            $fromparams[] = $tag;
         }
 
         if (is_array($accesstypes)) {
@@ -3780,8 +3786,8 @@ class View {
                         FROM {group_member} m JOIN {group} g ON m.member = ? AND m.group = g.id
                         WHERE m.role = 'admin' OR g.editroles = 'all' OR (g.editroles != 'admin' AND m.role != 'member')
                     )";
-            $ph[] = $viewerid;
-            $ph[] = $viewerid;
+            $whereparams[] = $viewerid;
+            $whereparams[] = $viewerid;
         }
         else {
             $editablesql = 'FALSE';
@@ -3818,8 +3824,8 @@ class View {
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                             )";
-                $ph[] = $viewerid;
-                $ph[] = $viewerid;
+                $whereparams[] = $viewerid;
+                $whereparams[] = $viewerid;
             }
             else if ($t == 'user') {
                 $accesssql[] = "v.id IN ( -- user access
@@ -3829,7 +3835,7 @@ class View {
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                             )";
-                $ph[] = $viewerid;
+                $whereparams[] = $viewerid;
             }
             else if ($t == 'group') {
                 $accesssql[] = "v.id IN ( -- group access
@@ -3841,7 +3847,7 @@ class View {
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                             )";
-                $ph[] = $viewerid;
+                $whereparams[] = $viewerid;
             }
             else if ($t == 'institution') {
                 $accesssql[] = "v.id IN ( -- institution access
@@ -3853,7 +3859,7 @@ class View {
                                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
                             )";
-                $ph[] = $viewerid;
+                $whereparams[] = $viewerid;
             }
         }
 
@@ -3873,7 +3879,6 @@ class View {
 
         if (!$ownedby && $ownerquery) {
             $from .= '
-            LEFT OUTER JOIN {usr} qu ON (v.owner = qu.id)
             LEFT OUTER JOIN {group} qg ON (v.group = qg.id)
             LEFT OUTER JOIN {institution} qi ON (v.institution = qi.name)';
             if (strpos(strtolower(get_config('sitename')), strtolower($ownerquery)) !== false) {
@@ -3891,7 +3896,7 @@ class View {
                     OR qi.displayname $like '%' || ? || '%'
                     $sitequery
                 )";
-            $ph = array_merge($ph, array($ownerquery,$ownerquery,$ownerquery,$ownerquery,$ownerquery));
+            $whereparams = array_merge($whereparams, array($ownerquery,$ownerquery,$ownerquery,$ownerquery,$ownerquery));
         }
 
         $orderby = 'title ASC';
@@ -3937,6 +3942,7 @@ class View {
             }
         }
 
+        $ph = array_merge($fromparams, $whereparams);
         $count = count_records_sql('SELECT COUNT(*) ' . $from . $where, $ph);
 
         $viewdata = get_records_sql_assoc('
