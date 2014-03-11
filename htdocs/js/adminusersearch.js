@@ -52,6 +52,14 @@ function UserSearch(pager) {
 
                 $j(this).closest('thead').find('th').removeClass('asc').removeClass('desc');
                 $j(this).parent().addClass(sortdir);
+                var re1 = new RegExp(strings.descending);
+                var re2 = new RegExp(strings.ascending);
+                $j(this).closest('tr').find('span').each(function(i, el) {
+                    el.innerHTML = el.innerHTML.replace(re1, strings.ascending);
+                });
+                if (sortdir == 'asc') {
+                    $j(this).find('span').html($j(this).find('span').html().replace(re2, strings.descending));
+                }
                 sortdir = (sortdir == 'desc') ? 'asc' : 'desc';
 
                 pager.sendQuery();

@@ -86,7 +86,7 @@ addLoadEvent(function() {
 })
 EOF;
 
-$smarty = smarty(array('adminusersearch', 'paginator'));
+$smarty = smarty(array('adminusersearch', 'paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
 $smarty->assign('loggedintypes', $loggedintypes);

@@ -127,6 +127,7 @@ $string['sortalpha'] = 'Sort tags alphabetically';
 $string['sortfreq'] = 'Sort tags by frequency';
 $string['sortresultsby'] = 'Sort results by:';
 $string['sortedby'] = 'sorted by:';
+$string['sortby'] = 'Sort by:';
 $string['adminfirst'] = 'Admin first';
 $string['nameatoz'] = 'Name A to Z';
 $string['nameztoa'] = 'Name Z to A';
