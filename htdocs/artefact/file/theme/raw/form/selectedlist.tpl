@@ -20,7 +20,7 @@
     </td>
     <td class="filedescription">{$file->description}</td>
     <td class="right s">
-       <input type="submit" class="button submit unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" />
+       <input type="submit" class="button submit unselect" name="{$prefix}_unselect[{$file->id}]" value="{str tag=remove}" id="{$prefix}_unselect_{$file->id}" />
        <input type="hidden" class="hidden" id="{$prefix}_selected[{$file->id}]" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">
     </td>
   </tr>

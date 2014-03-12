@@ -207,6 +207,7 @@ ul.artefactchooser-subtabs li.current a:active {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+    margin-top: 5px;
 }
 /* feedback */
 #feedbacktable .commentrightwrap {
@@ -267,4 +268,7 @@ ul.artefactchooser-subtabs li.current a:active {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+.artefactlicense {
+    margin-top: 8px;
 }

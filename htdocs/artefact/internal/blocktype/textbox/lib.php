@@ -107,7 +107,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             'selectjscallback' => 'updateTextContent',
             'getblocks'        => true,
             'ownerinfo'        => true,
-            'returnfields'     => array('id', 'title', 'description', 'tags', 'license', 'licensor', 'licensorurl', 'safedescription', 'safetags', 'safelicense', 'editable'),
+            'returnfields'     => array('id', 'title', 'description', 'tags', 'license', 'licensor', 'licensorurl', 'safedescription', 'safetags', 'safelicense', 'editable', 'attachments'),
             'artefacttypes'    => array('html'),
             'template'         => 'artefact:internal:html-artefactchooser-element.tpl',
         );
@@ -178,6 +178,19 @@ function updateTextContent(a) {
             }
             else {
                 jQuery(blockcountmsg).addClass('hidden');
+            }
+        }
+
+        if (typeof a.attachments != 'undefined') {
+            // remove any attached files
+            for (var key in instconf_artefactids.selecteddata) {
+                signal($('instconf_artefactids_unselect_' + key), 'onclick', instconf_artefactids.unselect);
+            }
+            // add in ones we need
+            if (a.attachments.length > 0) {
+                for (var i = 0; i < a.attachments.length; i++) {
+                    instconf_artefactids.add_to_selected_list(a.attachments[i]);
+                }
             }
         }
     }

@@ -3061,6 +3061,13 @@ class View {
                             $returnartefacts[$artefact->id]['safedescription'] = clean_html($artefact->description);
                             continue;
                         }
+                        if ($f == 'attachments') {
+                            // Check if the artefact has attachments - we need to update the instance config form
+                            // to have those attachments selected.
+                            $attachment_ids = get_column('artefact_attachment','attachment', 'artefact', $artefact->id);
+                            $returnartefacts[$artefact->id]['attachments'] = $attachment_ids;
+                            continue;
+                        }
                         $returnartefacts[$artefact->id][$f] = $artefact->$f;
                     }
                 }
