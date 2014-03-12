@@ -5,7 +5,11 @@
 <div class="{cycle name=rows values='r0,r1'} listrow">
     <div id="entryview" class="indent1 fullwidth">
         <div class="importcolumn importcolumn1">
-            <h3 class="title"><a class="viewtitle" href="" id="{$view.id}">{$view.title|str_shorten_text:80:true}</a></h3>
+            <h3 class="title">
+            {if $view.description}<a class="viewtitle" href="" id="{$view.id}">{/if}
+            {$view.title|str_shorten_text:80:true}
+            {if $view.description}</a>{/if}
+            </h3>
             <div id="{$view.id}_desc" class="detail hidden">{$view.description|clean_html|safe}</div>
         </div>
         <div class="importcolumn importcolumn2">
@@ -13,8 +17,8 @@
         <div class="importcolumn importcolumn3">
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$view.disabled[$opt]}
-                <input class="viewdecision" id="{$view.id}" type="radio" name="decision_{$view.id}" value="{$opt}"{if $view.decision == $opt} checked="checked"{/if}>
-                {$displayopt}<br>
+                <input id="decision_{$view.id}_{$opt}" class="viewdecision" id="{$view.id}" type="radio" name="decision_{$view.id}" value="{$opt}"{if $view.decision == $opt} checked="checked"{/if}>
+                <label for="decision_{$view.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$view.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>

@@ -6,7 +6,11 @@
 <div class="{cycle name=rows values='r0,r1'} listrow">
     <div id="entryplan" class="indent1">
         <div class="importcolumn importcolumn1">
-            <h3 class="title"><a class="plantitle" href="" id="{$plan.id}">{$plan.title|str_shorten_text:80:true}</a></h3>
+            <h3 class="title">
+            {if $plan.description}<a class="plantitle" href="" id="{$plan.id}">{/if}
+            {$plan.title|str_shorten_text:80:true}
+            {if $plan.description}</a>{/if}
+            </h3>
             <div id="{$plan.id}_desc" class="detail hidden">{$plan.description|clean_html|safe}</div>
             {if $plan.tags}
             <div class="tags">
@@ -14,7 +18,10 @@
             </div>
             {/if}
             <div class="tasks">
-                <label>{str tag=tasks section=artefact.plans}:</label> <a class="showtasks" href="" id="{$plan.id}">{str tag=ntasks section=artefact.plans arg1=count($plan.entrytasks)}</a>
+                <label>{str tag=tasks section=artefact.plans}:</label>
+                {if count($plan.entrytasks)}<a class="showtasks" href="" id="{$plan.id}">{/if}
+                {str tag=ntasks section=artefact.plans arg1=count($plan.entrytasks)}
+                {if count($plan.entrytasks)}</a>{/if}
             </div>
         </div>
         <div class="importcolumn importcolumn2">
@@ -37,8 +44,8 @@
         <div class="importcolumn importcolumn3">
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$plan.disabled[$opt]}
-                <input class="plandecision" id="{$plan.id}" type="radio" name="decision_{$plan.id}" value="{$opt}"{if $plan.decision == $opt} checked="checked"{/if}>
-                {$displayopt}<br>
+                <input id="decision_{$plan.id}_{$opt}" class="plandecision" id="{$plan.id}" type="radio" name="decision_{$plan.id}" value="{$opt}"{if $plan.decision == $opt} checked="checked"{/if}>
+                <label for="decision_{$plan.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$plan.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>
@@ -61,8 +68,8 @@
             <div class="importcolumn importcolumn3">
                 {foreach from=$displaydecisions key=opt item=displayopt}
                     {if !$task.disabled[$opt]}
-                    <input class="taskdecision" type="radio" name="decision_{$task.id}" value="{$opt}"{if $task.decision == $opt} checked="checked"{/if}>
-                    {$displayopt}<br>
+                    <input id="decision_{$task.id}_{$opt}" class="taskdecision" type="radio" name="decision_{$task.id}" value="{$opt}"{if $task.decision == $opt} checked="checked"{/if}>
+                    <label for="decision_{$task.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$task.title})</span></label><br>
                     {/if}
                 {/foreach}
             </div>

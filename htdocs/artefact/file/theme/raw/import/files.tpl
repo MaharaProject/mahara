@@ -6,7 +6,11 @@
 <div class="{cycle name=rows values='r0,r1'} listrow">
     <div id="entryfile" class="indent1 fullwidth">
         <div class="importcolumn importcolumn1">
-            <h3 class="title"><a class="filetitle" href="" id="{$file.id}">{$file.title|str_shorten_text:80:true}</a></h3>
+            <h3 class="title">
+                {if $file.description}<a class="filetitle" href="" id="{$file.id}">{/if}
+                {$file.title|str_shorten_text:80:true}
+                {if $file.description}</a>{/if}
+            </h3>
             <div id="{$file.id}_desc" class="detail hidden">{$file.description|clean_html|safe}</div>
             {if $file.filesize}
             <div class="filesize">
@@ -24,8 +28,8 @@
         <div class="importcolumn importcolumn3">
             {foreach from=$displaydecisions key=opt item=displayopt}
                 {if !$file.disabled[$opt]}
-                <input class="filedecision" id="{$file.id}" type="radio" name="decision_{$file.id}" value="{$opt}"{if $file.decision == $opt} checked="checked"{/if}>
-                {$displayopt}<br>
+                <input id="decision_{$file.id}_{$opt}" class="filedecision" id="{$file.id}" type="radio" name="decision_{$file.id}" value="{$opt}"{if $file.decision == $opt} checked="checked"{/if}>
+                <label for="decision_{$file.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$file.title})</span></label><br>
                 {/if}
             {/foreach}
         </div>

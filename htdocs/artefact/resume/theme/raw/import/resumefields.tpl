@@ -35,8 +35,8 @@
                     <div class="importcolumn importcolumn3">
                         {foreach from=$displaydecisions key=opt item=displayopt}
                             {if !$fieldvalue.disabled[$opt]}
-                            <input class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
-                            {$displayopt}<br>
+                            <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
+                            <label for="decision_{$fieldvalue.id}_{$opt}">{$displayopt}<span class="accessible-hidden">({$fieldname})</span></label><br>
                             {/if}
                         {/foreach}
                     </div>

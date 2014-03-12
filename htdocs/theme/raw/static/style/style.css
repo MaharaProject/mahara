@@ -4124,6 +4124,9 @@ ul.searchtab li span.inactive {
 .indent2 {
     padding-left: 20px;
 }
+.importcolumn3 label {
+    font-weight: normal;
+}
 
 /* For styling attachment notice in Resume fieldsets */
 .attachmessage {
