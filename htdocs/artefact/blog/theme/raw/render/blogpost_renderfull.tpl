@@ -3,6 +3,7 @@
 *}
 <div id="blogpost">
     {if $artefacttitle}<h3 class="title">{$artefacttitle|safe}</h3>{/if}
+    <div class="postdetails">{$postedbyon}</div>
     {$artefactdescription|clean_html|safe}
     {if isset($attachments)}
         {if $artefact->get('tags')}<div class="tags">{str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}</div>{/if}
@@ -31,12 +32,10 @@
             </tbody>
         </table>
     {/if}
-    <div class="postdetails">{$postedbyon}
-        {if isset($commentcount) && $artefact->get('allowcomments')} | <a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a>{/if}
-    </div>
     {if $license}
     <div class="postlicense">
         {$license|safe}
     </div>
     {/if}
+    {if isset($commentcount) && $artefact->get('allowcomments')}<div class="postdetails"><a href="{$artefacturl}">{str tag=Comments section=artefact.comment} ({$commentcount})</a></div>{/if}
 </div>

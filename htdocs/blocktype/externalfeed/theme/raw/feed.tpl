@@ -15,9 +15,9 @@
                 {$entry->title}
                 {if $entry->link}</a>{/if}
                 </h3>
-                <span class="postdetails">
+                <div class="postdetails">
                 {if $entry->pubdate}{str tag=publishedon section=blocktype.externalfeed arg1=$entry->pubdate}{/if}
-                </span>
+                </div>
                 <div class="feedcontent">{$entry->description|clean_html|safe}</div>
             {/foreach}
         {else}

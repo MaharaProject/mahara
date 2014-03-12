@@ -812,8 +812,11 @@ nav#collection-nav ul li {
     padding-bottom: 5px;
     border-bottom: 1px dotted #D1D1D1;
 }
+#blocktype_externalfeed_entries .postdetails {
+    margin: 3px 0;
+}
 #blocktype_externalfeed_entries .title {
-    margin: 10px 0;
+    margin: 13px 0 3px 0;
 }
 #blocktype_externalfeed_entries ol,
 #blocktype_externalfeed_entries ul {
