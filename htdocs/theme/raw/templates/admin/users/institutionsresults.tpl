@@ -1,16 +1,26 @@
 {foreach from=$institutions item=institution}
         <tr class="{cycle values='r0,r1'}">
-                <td><a href="{$WWWROOT}institution/index.php?institution={$institution->name}">{$institution->displayname}</a></td>
+                <td>
+                    {if !$institution->site}<a href="{$WWWROOT}institution/index.php?institution={$institution->name}">{/if}
+                        {$institution->displayname}
+                    {if !$institution->site}</a>{/if}
+                </td>
                 <td class="center">
-                  {if $institution->name != 'mahara'}
+                  {if !$institution->site}
                         <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&amp;institution={$institution->name}">{$institution->members}</a>
                   {else}
                         <a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
                   {/if}
                 </td>
-                <td class="center">{$institution->maxuseraccounts}</td>
-                <td class="center"><a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{$institution->staff}</a></td>
-                <td class="center"><a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{$institution->admins}</a></td>
+                <td class="center">{if $institution->maxuseraccounts}{$institution->maxuseraccounts}{/if}</td>
+                <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{/if}
+                        {$institution->staff}
+                    {if !$institution->site}</a>{/if}</td>
+                <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{/if}
+                        {$institution->admins}
+                    {if !$institution->site}</a>{/if}</td>
                 <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
                 <td class="controls">
                         <form action="" method="post">
