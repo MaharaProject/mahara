@@ -417,6 +417,13 @@ class Pieform {/*{{{*/
                 $function = 'pieform_element_' . $element['type'] . '_set_attributes';
                 if (function_exists($function)) {
                     $element = $function($element);
+
+                    // Allow an element to remove itself from the form
+                    if (!$element) {
+                        unset($this->data['elements'][$name]);
+                        unset($this->elementrefs[$name]);
+                        continue;
+                    }
                 }
 
                 // Force the form method to post if there is a file to upload
