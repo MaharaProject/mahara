@@ -2192,22 +2192,6 @@ function get_view_from_token($token, $visible=true) {
 }
 
 /**
- * Determine whether a view is accessible by a given token
- */
-function view_has_token($view, $token) {
-    if (!$view || !$token) {
-        return false;
-    }
-    return record_exists_select(
-        'view_access',
-        'view = ? AND token = ? AND visible = ?
-         AND (startdate IS NULL OR startdate < current_timestamp)
-         AND (stopdate IS NULL OR stopdate > current_timestamp)',
-        array($view, $token, (int)$visible)
-    );
-}
-
-/**
  * get the views that a user can see belonging
  * to the given users
  *
