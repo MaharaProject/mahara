@@ -374,6 +374,20 @@ EOF;
         );
     }
 
+    public static function group_menu_items($group) {
+        $role = group_user_access($group->id);
+        $menu = array();
+        if ($group->public || $role) {
+            $menu['forums'] = array(// @todo: make forums an artefact plugin
+                'path' => 'groups/forums',
+                'url' => 'interaction/forum/index.php?group=' . $group->id,
+                'title' => get_string('nameplural', 'interaction.forum'),
+                'weight' => 40,
+            );
+        }
+        return $menu;
+    }
+
     /**
      * When a user joins a group, subscribe them automatically to all forums 
      * that should be subscribable

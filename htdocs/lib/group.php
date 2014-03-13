@@ -1728,14 +1728,14 @@ function group_get_menu_tabs() {
         );
     }
 
-    if ($group->public || $role) {
-        $menu['forums'] = array(  // @todo: get this from a function in the interaction plugin (or better, make forums an artefact plugin)
-            'path' => 'groups/forums',
-            'url' => 'interaction/forum/index.php?group='.$group->id,
-            'title' => get_string('nameplural', 'interaction.forum'),
-            'weight' => 40,
-        );
+    if ($interactionplugins = plugins_installed('interaction')) {
+        foreach ($interactionplugins as $plugin) {
+            safe_require('interaction', $plugin->name);
+            $plugin_menu = call_static_method(generate_class_name('interaction', $plugin->name), 'group_menu_items', $group);
+            $menu = array_merge($menu, $plugin_menu);
+        }
     }
+
     $menu['views'] = array(
         'path' => 'groups/views',
         'url' => 'view/groupviews.php?group='.$group->id,
