@@ -125,16 +125,16 @@ function UserSearch(pager) {
                 $j(this).prop('checked', true);
             }
         });
-        if ($j('#selectall').length > 0) {
+        if ($j('#selectall')) {
             $j('#selectall').click(function() {
-                $('#searchresults input.selectusers').each(function() {
+                $j('#searchresults input.selectusers').each(function() {
                     self.selectusers[$j(this).val()] = 1;
                     $j(this).prop('checked', true);
                 });
                 return false;
             });
             $j('#selectnone').click(function() {
-                $('#searchresults input.selectusers').each(function() {
+                $j('#searchresults input.selectusers').each(function() {
                     delete self.selectusers[$j(this).val()];
                     $j(this).prop('checked', false);
                 });
