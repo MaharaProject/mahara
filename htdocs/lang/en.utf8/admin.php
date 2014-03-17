@@ -94,6 +94,8 @@ $string['siteviews']          = 'Site pages';
 $string['siteviewsdescription'] = 'Create and administer pages and page templates for the entire site';
 $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';
+$string['cookieconsent'] = 'Cookie Consent';
+$string['cookieconsentdescription'] = 'Configure the "Cookie Consent" user privacy system.';
 
 $string['staffusers'] = 'Staff users';
 $string['staffusersdescription'] = 'Assign users staff permissions';

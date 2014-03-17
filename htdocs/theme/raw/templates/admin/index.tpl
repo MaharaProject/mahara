@@ -85,6 +85,7 @@
         <li><strong><a href="{$WWWROOT}artefact/file/sitefiles.php">{str tag=sitefiles section=admin}</a></strong> - {str tag=sitefilesdescription section=admin}</li>
         {ifconfig key=skins}<li><strong><a href="{$WWWROOT}admin/site/skins.php">{str tag=siteskins section=admin}</a></strong> - {str tag=siteskinsdescription section=admin}</li>{/ifconfig}
         {ifconfig key=skins}<li><strong><a href="{$WWWROOT}admin/site/fonts.php">{str tag=sitefonts section=admin}</a></strong> - {str tag=sitefontsdescription section=admin}</li>{/ifconfig}
+        <li><strong><a href="{$WWWROOT}admin/site/cookieconsent.php">{str tag=cookieconsent section=admin}</a></strong> - {str tag=cookieconsentdescription section=admin}</li>
     </ul>
 
 <h3>{str tag=configusers section=admin}</h3>
