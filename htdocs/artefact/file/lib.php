@@ -118,6 +118,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'editfolder',
                     'fileappearsinviews',
                     'fileattachedtoportfolioitems',
+                    'fileappearsinskins',
                     'filewithnameexists',
                     'folderappearsinviews',
                     'foldercontainsprofileicons',
@@ -368,7 +369,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $select = '
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon,
-                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount,
+                COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
                 COUNT(DISTINCT api.id) AS profileiconcount';
         $from = '
             FROM {artefact} a
@@ -377,6 +378,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact} api ON api.parent = a.id AND api.artefacttype = \'profileicon\'
                 LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id
+                LEFT OUTER JOIN {skin} s ON (s.bodybgimg = a.id OR s.viewbgimg = a.id)
                 LEFT OUTER JOIN {usr} u ON a.id = u.profileicon AND a.owner = u.id';
 
         if (!empty($filters['artefacttype'])) {

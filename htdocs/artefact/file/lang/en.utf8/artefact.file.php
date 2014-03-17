@@ -88,8 +88,10 @@ $string['fileattachedtoportfolioitems'] = array(
     0 => 'This file is attached to %s other item in your portfolio.',
     1 => 'This file is attached to %s other items in your portfolio.',
 );
+$string['fileappearsinskins'] = 'This file is used as a background image in one or more of your skins.';
 $string['profileiconattachedtoportfolioitems'] = 'This profile picture is attached to other items in your portfolio.';
 $string['profileiconappearsinviews'] = 'This profile picture appears in one or more of your pages.';
+$string['profileiconappearsinskins'] = 'This profile picture is used as a background image in one or more of your skins.';
 $string['fileremoved'] = 'File removed';
 $string['files'] = 'files';
 $string['Files'] = 'Files';

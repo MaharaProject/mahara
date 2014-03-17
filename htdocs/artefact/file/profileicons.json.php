@@ -14,10 +14,11 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $result = get_records_sql_array('SELECT a.id, a.title, a.note, (u.profileicon = a.id) AS isdefault,
-        COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount
+        COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount
     FROM {artefact} a
     LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
     LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id
+    LEFT OUTER JOIN {skin} s ON (s.bodybgimg = a.id OR s.viewbgimg = a.id)
     LEFT OUTER JOIN {usr} u ON (u.id = a.owner)
     WHERE artefacttype = \'profileicon\'
     AND a.owner = ?
