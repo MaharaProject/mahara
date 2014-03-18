@@ -926,7 +926,7 @@ class Skin {
         if ($skin['body_background_image'] <> null) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['body_background_image'];
-            $fileobj = new ArtefactTypeImage($fileid);
+            $fileobj = artefact_instance_from_id($fileid);
             $filetype = $fileobj->get('filetype');
 
             switch ($filetype) {
@@ -970,7 +970,7 @@ class Skin {
         if ($skin['view_background_image'] <> null) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['view_background_image'];
-            $fileobj = new ArtefactTypeImage($fileid);
+            $fileobj = artefact_instance_from_id($fileid);
             $filetype = $fileobj->get('filetype');
 
             switch ($filetype) {
