@@ -316,6 +316,9 @@ function settings_submit_delete(Pieform $form, $values) {
             $iconartefact = artefact_instance_from_id($icon);
             // Just to be sure
             if ($iconartefact->get('artefacttype') == 'profileicon' && $iconartefact->get('owner') == $USER->get('id')) {
+                // Remove the skin background and update the skin thumbs
+                require_once(get_config('libroot') . 'skin.php');
+                Skin::remove_background($iconartefact->get('id'));
                 $iconartefact->delete();
             }
             else {

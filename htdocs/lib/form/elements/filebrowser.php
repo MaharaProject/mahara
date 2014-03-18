@@ -1183,6 +1183,11 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
     }
 
     $parentfolder = $artefact->get('parent');
+
+    // Remove the skin background and update the skin thumbs
+    require_once(get_config('libroot') . 'skin.php');
+    Skin::remove_background($artefact->get('id'));
+
     $artefact->delete();
 
     $result = array(

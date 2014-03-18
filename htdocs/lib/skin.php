@@ -1056,6 +1056,29 @@ class Skin {
 
 
     /**
+     * Given a background image to delete, remove it from skin and update the skin thumbs
+     *
+     * @param int $aid Artefact id of the background image to remove from skins
+     */
+    public static function remove_background($aid) {
+        $skinstoupdate = get_records_select_array('skin', 'bodybgimg = ? OR viewbgimg = ?', array($aid, $aid), 'id');
+        if (!empty($skinstoupdate) && is_array($skinstoupdate)) {
+            foreach ($skinstoupdate as $skin) {
+                $skin = new Skin($skin->id);
+                $viewskin = $skin->get('viewskin');
+                if (isset($viewskin['body_background_image']) && $viewskin['body_background_image'] == $aid) {
+                    $viewskin['body_background_image'] = 0;
+                }
+                if (isset($viewskin['view_background_image']) && $viewskin['view_background_image'] == $aid) {
+                    $viewskin['view_background_image'] = 0;
+                }
+                $skin->set('viewskin', $viewskin);
+                $skin->commit();
+            }
+        }
+    }
+
+    /**
      * Fetches data about site fonts
      * @param int $limit
      * @param int $offset
