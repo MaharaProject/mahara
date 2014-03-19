@@ -1,7 +1,9 @@
 <input type="hidden" id="{{$id}}" name="{{$name}}" {{if $describedby}}aria-describedby="{{$describedby}}"{{/if}} value="{{$value}}"/>
 
 <script type="text/javascript">
+{{if !$inblockconfig}}
 addLoadEvent(function () {
+{{/if}}
     jQuery("#{{$id}}").select2({
         initSelection : function(element, callback) {
             callback({{$initvalue|safe}});
@@ -30,6 +32,8 @@ addLoadEvent(function () {
         },
         {{$extraparams|safe}}
     });
+{{if !$inblockconfig}}
 });
+{{/if}}
 jQuery("#{{$id}}").prop('disabled', {{$disabled}});
 </script>

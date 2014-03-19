@@ -46,11 +46,22 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('view', $view);
-
+        $viewownerdisplay = null;
         // Display all posts, from all blogs, owned by this user
+        $configdata['tagselect'] = (!empty($configdata['tagselect'])) ? $configdata['tagselect'] : array();
         if (!empty($configdata['tagselect'])) {
             $tagselect = $configdata['tagselect'];
-
+            $tagsin = $tagsout = array();
+            foreach ($tagselect as $key => $value) {
+                if (!empty($value)) {
+                    $tagsin[] = $key;
+                }
+                else {
+                    $tagsout[] = $key;
+                }
+            }
+            $tagsout = array_filter($tagsout);
+            $sqlvalues = array($view);
             $sql =
                 'SELECT a.title, p.title AS parenttitle, a.id, a.parent, a.owner, a.description, a.allowcomments, at.tag, a.ctime
                 FROM {artefact} a
@@ -58,13 +69,44 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 JOIN {artefact_blog_blogpost} ab ON (ab.blogpost = a.id AND ab.published = 1)
                 JOIN {artefact_tag} at ON (at.artefact = a.id)
                 WHERE a.artefacttype = \'blogpost\'
-                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)
-                AND at.tag = ?
-                ORDER BY a.ctime DESC, a.id DESC
-                LIMIT ?';
-
-            $results = get_records_sql_array($sql, array($view, $tagselect, $limit));
-
+                AND a.owner = (SELECT "owner" from {view} WHERE id = ?)';
+            if (!empty($tagsin)) {
+                foreach ($tagsin as $tagin) {
+                    $sql .= ' AND EXISTS (
+                        SELECT * FROM {artefact_tag} AS at
+                        WHERE a.id = at.artefact
+                        AND at.tag = ?
+                    )';
+                }
+                $sqlvalues = array_merge($sqlvalues, $tagsin);
+            }
+            if (!empty($tagsout)) {
+                foreach ($tagsout as $tagout) {
+                    $sql .= ' AND NOT EXISTS (
+                        SELECT * FROM {artefact_tag} AS at
+                        WHERE a.id = at.artefact
+                        AND at.tag = ?
+                    )';
+                }
+                $sqlvalues = array_merge($sqlvalues, $tagsout);
+            }
+            $sql .= ' ORDER BY a.ctime DESC, a.id DESC';
+            $results = get_records_sql_array($sql, $sqlvalues);
+            // We need to filter this down to unique results
+            if (!empty($results)) {
+                $used = array();
+                foreach ($results as $key => $result) {
+                    if (array_search($result->id, $used) === false) {
+                        $used[] = $result->id;
+                    }
+                    else {
+                        unset($results[$key]);
+                    }
+                }
+                if (!empty($limit)) {
+                    $results = array_slice($results, 0, $limit);
+                }
+            }
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('editing', $editing);
             if ($editing) {
@@ -73,13 +115,14 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
                 if (!$viewowner || !$blogs = get_records_select_array('artefact', 'artefacttype = \'blog\' AND owner = ?', array($viewowner), 'title ASC', 'id, title')) {
                     $blogs = array();
                 }
-                $smarty->assign('tagselect', $tagselect);
+                $smarty->assign('tagselect', implode(', ', $tagsin));
                 $smarty->assign('blogs', $blogs);
             }
 
             // if posts are not found with the selected tag, notify the user
             if (!$results) {
-                $smarty->assign('badtag', $tagselect);
+                $smarty->assign('badtag', implode(', ', array_keys($tagselect,1)));
+                $smarty->assign('badnotag', implode(', ', array_keys($tagselect,0)));
                 return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
             }
 
@@ -128,21 +171,60 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
             // check if the user viewing the page is the owner of the selected tag
             $owner = $results[0]->owner;
             if ($USER->id != $owner) {
-                $viewowner = get_user_for_display($owner);
-                $smarty->assign('viewowner', $viewowner);
+                $viewownerdisplay = get_user_for_display($owner);
             }
-
-            $smarty->assign('tag', $tagselect);
+            $smarty->assign('tagsin', $tagsin);
+            $smarty->assign('tagsout', $tagsout);
+        }
+        else if (!self::get_tags()) {
+            // error if block configuration fails
+            $smarty->assign('configerror', get_string('notagsavailableerror', 'blocktype.blog/taggedposts'));
+            return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
         }
         else {
             // error if block configuration fails
-            $smarty->assign('configerror', true);
+            $smarty->assign('configerror', get_string('configerror', 'blocktype.blog/taggedposts'));
             return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
         }
 
+        // add any needed links to the tags
+        $tagstr = $tagomitstr = '';
+        foreach ($tagsin as $key => $tag) {
+            if ($key > 0) {
+                $tagstr .= ', ';
+            }
+            $tagstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . $tag . '&sort=name&type=text">' . $tag . '</a>"';
+        }
+        if (!empty($tagsout)) {
+            foreach ($tagsout as $key => $tag) {
+                if ($key > 0) {
+                    $tagomitstr .= ', ';
+                }
+                $tagomitstr .= ($viewownerdisplay) ? '"' . $tag . '"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . $tag . '&sort=name&type=text">' . $tag . '</a>"';
+            }
+        }
+        $blockheading = get_string('blockheadingtags', 'blocktype.blog/taggedposts', count($tagsin), $tagstr);
+        $blockheading .= (!empty($tagomitstr)) ? get_string('blockheadingtagsomit', 'blocktype.blog/taggedposts', count($tagsout), $tagomitstr) : '';
+        $blockheading .= ($viewownerdisplay) ? ' ' . get_string('by', 'artefact.blog') . ' <a href="' . profile_url($viewownerdisplay) . '">' . display_name($viewownerdisplay) . '</a>' : '';
         $smarty->assign('full', $full);
         $smarty->assign('results', $results);
+        $smarty->assign('blockheading', $blockheading);
         return $smarty->fetch('blocktype:taggedposts:taggedposts.tpl');
+    }
+
+    private static function get_tags() {
+        global $USER;
+
+        return get_records_sql_array("
+            SELECT at.tag
+            FROM {artefact_tag} at
+            JOIN {artefact} a
+            ON a.id = at.artefact
+            WHERE a.owner = ?
+            AND a.artefacttype = 'blogpost'
+            GROUP BY at.tag
+            ORDER BY at.tag ASC
+            ", array($USER->id));
     }
 
     public static function has_instance_config() {
@@ -153,30 +235,47 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         global $USER;
 
         $configdata = $instance->get('configdata');
-
-        $tags = get_records_sql_array("
-            SELECT at.tag
-            FROM {artefact_tag} at
-            JOIN {artefact} a
-            ON a.id = at.artefact
-            WHERE a.owner = ?
-            AND a.artefacttype = 'blogpost'
-            GROUP BY at.tag
-            ORDER BY at.tag ASC
-            ", array($USER->id));
+        $tags = self::get_tags();
 
         $elements = array();
-        $options = array();
+        $tagselect = array();
         if (!empty($tags)) {
-            foreach ($tags as $tag) {
-                $options[$tag->tag] = $tag->tag;
+            if (!empty($configdata['tagselect'])) {
+                foreach ($configdata['tagselect'] as $tag => $option) {
+                    if ($option == '1') {
+                        $tagselect[] = $tag;
+                    }
+                    else {
+                        $tagselect[] = '-' . $tag;
+                    }
+                }
             }
+            // The javascript to alter the display for the excluded tags
+            $excludetag = get_string('excludetag', 'blocktype.blog/taggedposts');
+            $formatSelection = <<<EOF
+function (item, container) {
+    if (item.id[0] == "-") {
+        container.parent().addClass("tagexcluded");
+        item.text = '<span class="accessible-hidden">{$excludetag}</span>' + item.text;
+    }
+    return item.text;
+}
+EOF;
             $elements['tagselect'] = array(
-                'type'          => 'select',
+                'type'          => 'autocomplete',
                 'title'         => get_string('taglist','blocktype.blog/taggedposts'),
-                'options'       => $options,
-                'defaultvalue'  => !empty($configdata['tagselect']) ? $configdata['tagselect'] : $tags[0]->tag,
+                'description'   => get_string('taglistdesc', 'blocktype.blog/taggedposts'),
+                'defaultvalue'  => $tagselect,
+                'ajaxurl' => get_config('wwwroot') . 'artefact/blog/blocktype/taggedposts/taggedposts.json.php',
+                'initfunction' => 'translate_ids_to_tags',
+                'multiple' => true,
+                'ajaxextraparams' => array(),
+                'rules'         => array('required' => 'true'),
                 'required'      => true,
+                'blockconfig'   => true,
+                'help'          => true,
+                'mininputlength' => 0,
+                'extraparams'   => array('formatSelection' => "$formatSelection"),
             );
             $elements['count']  = array(
                 'type'          => 'text',
@@ -207,6 +306,39 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
 
     }
 
+    public static function instance_config_validate($form, $values) {
+
+        if (empty($values['tagselect'])) {
+            // We don't have a tagselect field due to no journal entries having a tag
+            $form->set_error(null, get_string('notagsavailableerror', 'blocktype.blog/taggedposts'));
+        }
+        else {
+            // Need to fully check that the returned array is empty
+            $values['tagselect'] = array_filter($values['tagselect']);
+            if (empty($values['tagselect'])) {
+                $result['message'] = get_string('required', 'mahara');
+                $form->set_error('tagselect', $form->i18n('rule', 'required', 'required'), false);
+                $form->reply(PIEFORM_ERR, $result);
+            }
+        }
+    }
+
+    public static function instance_config_save($values) {
+        $tagselect = $values['tagselect'];
+        unset($values['tagselect']);
+        if (!empty($tagselect)) {
+            foreach ($tagselect as $tag) {
+                $value = 1;
+                if (substr($tag, 0, 1) == '-') {
+                    $value = 0;
+                    $tag = substr($tag, 1);
+                }
+                $values['tagselect'][$tag] = $value;
+            }
+        }
+        return $values;
+    }
+
     public static function default_copy_type() {
         return 'nocopy';
     }
@@ -219,4 +351,16 @@ class PluginBlocktypeTaggedposts extends SystemBlocktype {
         return $view->get('owner') != null;
     }
 
+}
+
+function translate_ids_to_tags(array $ids) {
+    $ids = array_diff($ids, array(''));
+    $results = array();
+    if (!empty($ids)) {
+        foreach ($ids as $id) {
+            $text = (substr($id, 0, 1) == '-') ? substr($id, 1) : $id;
+            $results[] = (object) array('id' => $id, 'text' => $text);
+        }
+    }
+    return $results;
 }

@@ -49,6 +49,7 @@
 //                        that you expect will be wide enough to display your entries.
 //      'extraparams'  => array(key => value, key2 => value2,  ...), // Optional additional configuration parameters for
 //                        the select2 ajax library.
+//      'inblockconfig' => If the field is a block config field we need to handle the js autocomplete js slightly differently
 // ),
 
 defined('INTERNAL') || die();
@@ -94,7 +95,7 @@ function pieform_element_autocomplete(Pieform $form, $element) {
     $extraparams = '';
     if (!empty($element['extraparams'])) {
         foreach ($element['extraparams'] as $k => $v) {
-            if (!is_numeric($v)) {
+            if (!is_numeric($v) && !preg_match('/^function/', $v)) {
                 if (preg_match('/^\'(.*)\'$/', $v, $match)) {
                     $v = $match[1];
                 }
@@ -117,6 +118,7 @@ function pieform_element_autocomplete(Pieform $form, $element) {
     $smarty->assign('sesskey', $USER->get('sesskey'));
     $smarty->assign('hint', empty($element['hint']) ? get_string('defaulthint') : $element['hint']);
     $smarty->assign('extraparams', $extraparams);
+    $smarty->assign('inblockconfig', !empty($element['inblockconfig']) ? 'true' : 'false');
     if (isset($element['description'])) {
         $smarty->assign('describedby', $form->element_descriptors($element));
     }

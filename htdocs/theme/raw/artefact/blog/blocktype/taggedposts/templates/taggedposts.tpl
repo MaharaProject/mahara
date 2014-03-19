@@ -10,11 +10,9 @@
 </div>
 {/if}
 
-<p>{str tag='blockheading' section='blocktype.blog/taggedposts'}
-{if $viewowner}{$tag} {str tag='by' section='artefact.blog'} <a href="{profile_url($viewowner)}">{$viewowner|display_name}</a>
-{else}<a href="{$WWWROOT}tags.php?tag={$tag}&sort=name&type=text">{$tag}</a>{/if}</p>
-
-{if $configerror}{str tag='configerror' section='blocktype.blog/taggedposts'}
+<p>{$blockheading|safe}</p>
+{if $configerror}{$configerror}
+{elseif $badtag && $badnotag}{str tag='notagsboth' section='blocktype.blog/taggedposts' arg1=$badtag arg2=$badnotag}
 {elseif $badtag}{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}
 {elseif $full}
 <div id="blogdescription">
