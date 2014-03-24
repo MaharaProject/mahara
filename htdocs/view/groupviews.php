@@ -22,6 +22,8 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
 require_once('pieforms/pieform.php');
 
+$offset = param_integer('offset', 0);
+
 define('GROUP', param_integer('group'));
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
@@ -40,7 +42,6 @@ $can_edit = $role && group_role_can_edit_views($group, $role);
 if (!$can_edit) {
 
     $limit   = param_integer('limit', 5);
-    $offset  = param_integer('offset', 0);
 
     $data = View::view_search(null, null, (object) array('group' => $group->id), null, $limit, $offset);
     // Add a copy view form for all templates in the list
@@ -56,35 +57,48 @@ if (!$can_edit) {
         'limit' => $limit,
         'offset' => $offset,
     ));
-    $js = <<< EOF
-addLoadEvent(function () {
-    p = {$pagination['javascript']}
-});
-EOF;
-
-    $smarty = smarty(array('paginator'));
-    $smarty->assign('INLINEJAVASCRIPT', $js);
-    $smarty->assign('views', $data->data);
-    $smarty->assign('pagination', $pagination['html']);
-    $smarty->display('view/groupviews.tpl');
-    exit;
-
 }
-
-list($searchform, $data, $pagination) = View::views_by_owner($group->id);
+else {
+    list($searchform, $data, $pagination) = View::views_by_owner($group->id);
+    $createviewform = pieform(create_view_form($group->id));
+}
 $js = <<< EOF
 addLoadEvent(function () {
     p = {$pagination['javascript']}
-});
 EOF;
-
-$createviewform = pieform(create_view_form($group->id));
+if ($offset > 0) {
+    $js .= <<< EOF
+    if ($('groupviews')) {
+        getFirstElementByTagAndClassName('a', null, 'groupviews').focus();
+    }
+    if ($('myviews')) {
+        getFirstElementByTagAndClassName('a', null, 'myviews').focus();
+    }
+EOF;
+}
+else {
+    $js .= <<< EOF
+    if ($('searchresultsheading')) {
+        addElementClass('searchresultsheading', 'hidefocus');
+        setNodeAttribute('searchresultsheading', 'tabIndex', -1);
+        $('searchresultsheading').focus();
+    }
+EOF;
+}
+$js .= '});';
 
 $smarty = smarty(array('paginator'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('editlocked', $role == 'admin');
 $smarty->assign('views', $data->data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('searchform', $searchform);
-$smarty->assign('createviewform', $createviewform);
-$smarty->display('view/index.tpl');
+if (!$can_edit) {
+    $smarty->display('view/groupviews.tpl');
+}
+else {
+    $smarty->assign('query', param_variable('query', null));
+    $smarty->assign('querystring', get_querystring());
+    $smarty->assign('editlocked', $role == 'admin');
+    $smarty->assign('searchform', $searchform);
+    $smarty->assign('createviewform', $createviewform);
+    $smarty->display('view/index.tpl');
+}

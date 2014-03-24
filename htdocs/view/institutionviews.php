@@ -22,6 +22,7 @@ require_once(get_config('libroot') . 'institution.php');
 require_once('pieforms/pieform.php');
 
 $institution = param_alpha('institution', false);
+$offset = param_integer('offset', 0);
 
 if ($institution == 'mahara') {
     redirect('/admin/site/views.php');
@@ -45,6 +46,24 @@ list($searchform, $data, $pagination) = View::views_by_owner(null, $institution)
 $js = <<< EOF
 addLoadEvent(function () {
     p = {$pagination['javascript']}
+EOF;
+if ($offset > 0) {
+    $js .= <<< EOF
+    if ($('myviews')) {
+        getFirstElementByTagAndClassName('a', null, 'myviews').focus();
+    }
+EOF;
+}
+else {
+    $js .= <<< EOF
+    if ($('searchresultsheading')) {
+        addElementClass('searchresultsheading', 'hidefocus');
+        setNodeAttribute('searchresultsheading', 'tabIndex', -1);
+        $('searchresultsheading').focus();
+    }
+EOF;
+}
+$js .= <<< EOF
 });
 
 {$s['institutionselectorjs']}
@@ -59,6 +78,8 @@ $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('institution', $institution);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('query', param_variable('query', null));
+$smarty->assign('querystring', get_querystring());
 $smarty->assign('searchform', $searchform);
 $smarty->assign('createviewform', $createviewform);
 $smarty->display('view/index.tpl');
