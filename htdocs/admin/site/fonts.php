@@ -32,6 +32,7 @@ $fonttype     = !is_null($SESSION->get('fonttype')) ? $SESSION->get('fonttype') 
 
 $limit   = param_integer('limit', 10);
 $offset  = param_integer('offset', 0);
+$query   = param_integer('query', null);
 
 $previewform = pieform(array(
     'name' => 'preview',
@@ -127,11 +128,36 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
+    'setlimit' => true,
     'resultcounttextsingular' => get_string('font', 'skin'),
     'resultcounttextplural' => get_string('fonts', 'skin')
 ));
 
-$smarty = smarty(array(), $css, array(), array());
+$js = <<< EOF
+addLoadEvent(function () {
+    p = {$pagination['javascript']}
+EOF;
+if ($offset > 0) {
+    $js .= <<< EOF
+    if ($('fontlist')) {
+        getFirstElementByTagAndClassName('a', null, 'fontlist').focus();
+    }
+EOF;
+}
+else {
+    $js .= <<< EOF
+    if ($('searchresultsheading')) {
+        addElementClass('searchresultsheading', 'hidefocus');
+        setNodeAttribute('searchresultsheading', 'tabIndex', 0);
+        $('searchresultsheading').focus();
+    }
+EOF;
+}
+$js .= '});';
+
+$smarty = smarty(array('paginator'), $css, array(), array());
+$smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('query', $query);
 $smarty->assign('sitefonts', $data->data);
 $smarty->assign('form', $previewform);
 $smarty->assign('preview', $fontpreview); // Transfer $SESSION value into template
@@ -146,5 +172,5 @@ function preview_submit(Pieform $form, $values) {
     $SESSION->set('fontpreview', $values['fontpreview']);
     $SESSION->set('fontsize', $values['fontsize']);
     $SESSION->set('fonttype', $values['fonttype']);
-    redirect(get_config('wwwroot') . 'admin/site/fonts.php?offset=' . $values['offset'] . '&limit=' . $values['limit']);
+    redirect(get_config('wwwroot') . 'admin/site/fonts.php?offset=' . $values['offset'] . '&limit=' . $values['limit'] . '&query=1');
 }
