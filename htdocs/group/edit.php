@@ -14,6 +14,7 @@ define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('group.php');
+require_once(get_config('libroot') . 'antispam.php');
 
 if ($id = param_integer('id', null)) {
     define('TITLE', get_string('editgroup', 'group'));
@@ -234,6 +235,7 @@ else {
 }
 
 $publicallowed = get_config('createpublicgroups') == 'all' || (get_config('createpublicgroups') == 'admins' && $USER->get('admin'));
+$publicallowed = $publicallowed && !is_probationary_user();
 
 if (!$id && !param_exists('pieform_editgroup')) {
     // If a 'public=0' parameter is passed on the first page load, hide the
@@ -440,7 +442,7 @@ function editgroup_cancel_submit() {
 }
 
 function editgroup_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $group_data;
+    global $USER, $SESSION, $group_data, $publicallowed;
 
     $values['public'] = (isset($values['public'])) ? $values['public'] : 0;
     $values['usersautoadded'] = (isset($values['usersautoadded'])) ? $values['usersautoadded'] : 0;
@@ -454,7 +456,7 @@ function editgroup_submit(Pieform $form, $values) {
         'controlled'     => intval($values['controlled']),
         'request'        => intval($values['request']),
         'usersautoadded' => intval($values['usersautoadded']),
-        'public'         => intval($values['public']),
+        'public'         => ($publicallowed ? intval($values['public']) : 0),
         'viewnotify'     => intval($values['viewnotify']),
         'submittableto'  => intval($values['submittableto']),
         'editroles'      => $values['editroles'],

@@ -129,7 +129,7 @@ class PluginBlocktypeWall extends SystemBlocktype {
             'jsform'    => true,
             'template'  => 'wallpost.php',
             'templatedir' => pieform_template_dir('wallpost.php', 'blocktype/wall'),
-            // 'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
+            'validatecallback' => array('PluginBlocktypeWall', 'wallpost_validate'),
             'successcallback' => array('PluginBlocktypeWall', 'wallpost_submit'),
             'jssuccesscallback' => 'wallpost_success',
             'elements' => array(
@@ -190,6 +190,14 @@ function wallpost_success(form, data) {
 }
 EOF;
         return "<script>$js</script>";
+    }
+
+    public static function wallpost_validate(Pieform $form, $values) {
+        require_once(get_config('libroot') . 'antispam.php');
+        $result = probation_validate_content($values['text']);
+        if ($result !== true) {
+            $form->set_error('text', get_string('newuserscantpostlinksorimages'));
+        }
     }
 
     public static function wallpost_submit(Pieform $form, $values) {

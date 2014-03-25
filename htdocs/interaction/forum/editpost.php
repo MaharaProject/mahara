@@ -176,6 +176,10 @@ function editpost_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
     }
+    $result = probation_validate_content($values['body']);
+    if ($result !== true) {
+        $form->set_error('body', get_string('newuserscantpostlinksorimages'));
+    }
 }
 
 function editpost_submit(Pieform $form, $values) {
@@ -244,6 +248,12 @@ function addpost_submit(Pieform $form, $values) {
         PluginInteractionForum::interaction_forum_new_post(array($postid));
     }
     $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
+
+    if (is_using_probation() && $post->parent) {
+        $parentposter = get_field('interaction_forum_post', 'poster', 'id', $post->parent);
+        vouch_for_probationary_user($parentposter);
+    }
+
     redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $values['topic'] . '&post=' . $postid);
 }
 

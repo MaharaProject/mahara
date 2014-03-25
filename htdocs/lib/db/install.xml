@@ -162,6 +162,7 @@
                 <FIELD NAME="logintries" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="unread" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="urlid" TYPE="char" LENGTH="30" NOTNULL="false" />
+                <FIELD NAME="probation" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <!-- If adding a datetime column, you should also update the relevant
                 functions in htdocs/auth/user.php and htdocs/lib/user.php to convert the
                 value to a timestamp when a record is retrieved -->

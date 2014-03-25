@@ -28,8 +28,12 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $value = $form->get_value($element);
 
     // Look for the presets and split them into two groups
+    require_once(get_config('libroot') . 'antispam.php');
     $public = false;
-    if (get_config('allowpublicviews') && $USER->institution_allows_public_views()) {
+    if (is_probationary_user()) {
+        $public = false;
+    }
+    else if (get_config('allowpublicviews') && $USER->institution_allows_public_views()) {
         $public = true;
     }
     else if (get_config('allowpublicprofiles') && $element['viewtype'] == 'profile') {

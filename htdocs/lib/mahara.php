@@ -2017,13 +2017,13 @@ function can_view_view($view, $user_id=null) {
     $publicviews = get_config('allowpublicviews');
     $publicprofiles = get_config('allowpublicprofiles');
 
+    // If the user is logged out and the publicviews & publicprofiles sitewide configs are false,
+    // we can deny access without having to hit the database at all
     if (!$user_id && !$publicviews && !$publicprofiles) {
         return false;
     }
 
-    if (!class_exists('View')) {
-        require_once(get_config('libroot') . 'view.php');
-    }
+    require_once(get_config('libroot') . 'view.php');
     if ($view instanceof View) {
         $view_id = $view->get('id');
     }
@@ -2031,14 +2031,35 @@ function can_view_view($view, $user_id=null) {
         $view = new View($view_id = $view);
     }
 
-    // group views and logged in users are not affected by
-    // the institution level config for public views
-    if (empty($user_id) && $ownerobj = $view->get_owner_object()) {
-        $owner = new User();
-        $owner->find_by_id($ownerobj->id);
-        if (!$owner->institution_allows_public_views()) {
+    // If the page belongs to an individual, check for individual-specific overrides
+    if ($view->get('owner')) {
+
+        $ownerobj = $view->get_owner_object();
+
+        // Suspended user
+        if ($ownerobj->suspendedctime) {
             return false;
         }
+
+        // Probationary user (no public pages or profiles)
+        // (setting these here instead of doing a return-false, so that we can do checks for
+        // logged-in users later)
+        require_once(get_config('libroot') . 'antispam.php');
+        $onprobation = is_probationary_user($ownerobj->id);
+        $publicviews = $publicviews && !$onprobation;
+        $publicprofiles = $publicprofiles && !$onprobation;
+
+        // Member of an institution that prohibits public pages
+        // (group views and logged in users are not affected by
+        // the institution level config for public views)
+        $owner = new User();
+        $owner->find_by_id($ownerobj->id);
+        $publicviews = $publicviews && $owner->institution_allows_public_views();
+    }
+
+    // Now that we've examined the page owner, check again for whether it can be viewed by a logged-out user
+    if (!$user_id && !$publicviews && !$publicprofiles) {
+        return false;
     }
 
     if ($user_id && $user->can_edit_view($view)) {
