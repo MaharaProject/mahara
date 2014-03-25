@@ -152,6 +152,12 @@ class ElasticsearchType_usr extends ElasticsearchType
                     WHERE v.id = va.view AND v.type = 'profile' AND v.owner = ? ORDER BY x.ordering";
 
         }
+        else {
+            $join = "'" . join('\',\'', $accessrank) . "'";
+            $sql = "SELECT va.accesstype FROM {view} v, {view_access} va
+                    WHERE v.id = va.view AND v.type = 'profile' AND v.owner = ?
+                    AND accesstype IN (" . $join . ") ORDER BY FIELD(va.accesstype, " . $join . ")";
+        }
         $profileviewaccess = recordset_to_array(get_recordset_sql($sql, array($record->id)));
         $record->access['general'] = (!empty($profileviewaccess)) ? $profileviewaccess[0]->accesstype : 'none';
         // always allow user to search themselves for vanity reasons

@@ -1593,6 +1593,15 @@ class ElasticsearchIndexing {
                         END IF;
                         IF (tablename=\'' . $dbprefix . 'view\') THEN
                             INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT u.id, \'usr\' AS type FROM {usr} u
+                            INNER JOIN {view} v ON v.owner = u.id
+                            WHERE v.type = \'profile\'
+                                AND v.id = oldid
+                                AND NOT EXISTS (
+                                    SELECT q.id FROM {search_elasticsearch_queue} q
+                                    WHERE q.type = \'usr\' AND q.itemid = u.id
+                                );
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
                             SELECT va.artefact, \'artefact\' AS type
                             FROM {view_artefact} va
                             INNER JOIN {artefact} a ON va.artefact = a.id
@@ -1605,6 +1614,15 @@ class ElasticsearchIndexing {
                             INSERT INTO {search_elasticsearch_queue} (itemid, type) VALUES (newid, ' . $tablewithoutprefix . ');
                         END IF;
                         IF (tablename=\'' . $dbprefix . 'view\') THEN
+                            INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                            SELECT u.id, \'usr\' AS type FROM {usr} u
+                            INNER JOIN {view} v ON v.owner = u.id
+                            WHERE v.type = \'profile\'
+                                AND v.id = newid
+                                AND NOT EXISTS (
+                                    SELECT q.id FROM {search_elasticsearch_queue} q
+                                    WHERE q.type = \'usr\' AND q.itemid = u.id
+                                );
                             INSERT INTO {search_elasticsearch_queue} (itemid, type)
                             SELECT va.artefact, \'artefact\' AS type
                             FROM {view_artefact} va
