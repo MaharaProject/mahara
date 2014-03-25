@@ -1213,12 +1213,13 @@ class Skin {
         $skindata = $this->viewskin;
         // If google web font is selected, than add appropriate CSS...
         $textfont = get_field('skin_fonts', 'fonttype', 'name', $skindata['view_text_font_family']);
+        $protocol = (is_https()) ? 'https://' : 'http://';
         if ($textfont == 'google') {
-            $sheets[] = 'http://fonts.googleapis.com/css?family=' . str_replace('_', '+', $skindata['view_text_font_family']);
+            $sheets[] = $protocol . 'fonts.googleapis.com/css?family=' . str_replace('_', '+', $skindata['view_text_font_family']);
         }
         $headingfont = get_field('skin_fonts', 'fonttype', 'name', $skindata['view_heading_font_family']);
         if ($headingfont == 'google') {
-            $sheets[] = 'http://fonts.googleapis.com/css?family=' . str_replace('_', '+', $skindata['view_heading_font_family']);
+            $sheets[] = $protocol . 'fonts.googleapis.com/css?family=' . str_replace('_', '+', $skindata['view_heading_font_family']);
         }
         return $sheets;
     }
