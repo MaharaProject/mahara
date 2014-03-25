@@ -142,30 +142,25 @@
     });
 </script>
 <table class="userlisttable fullwidth">
-    {{if $lefttitle || $righttitle}}
-    <tr>
-        <th>{{$lefttitle}}</th>
-        <th></th>
-        <th>{{$righttitle}}</th>
-    </tr>
-    {{/if}}
     <tr>
         <td colspan="3" id="{{$name}}_messages">
         </td>
     </tr>
     <tr>
         <td class="lrfieldlists">
+            {{if $lefttitle}}<label for="{{$name}}_potential">{{$lefttitle}}</label>{{/if}}
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
         <td class="lrbuttons">
-            <button type="button" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow">&gt;</button><br>
-            <button type="button" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow">&lt;</button>
+            <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow">&gt;</button><br>
+            <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow">&lt;</button>
         </td>
         <td class="lrfieldlists">
+            {{if $righttitle}}<label for="{{$name}}_members">{{$righttitle}}</label>{{/if}}
             <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
-{{foreach from=$options key=id item=user}}
+            {{foreach from=$options key=id item=user}}
                 <option value="{{$id}}">{{$user}}</option>
-{{/foreach}}
+            {{/foreach}}
             </select>
         </td>
     </tr>
