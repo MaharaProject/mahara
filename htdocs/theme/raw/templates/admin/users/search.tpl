@@ -3,7 +3,7 @@
     <p>{str tag="usersearchinstructions" section="admin"}</p>
     <div id="initials">
         <div id="firstnamelist">
-          <label>{str tag="firstname"}:</label>
+          <strong>{str tag="firstname"}:</strong>
            <span class="first-initial{if !$search->f} selected{/if} all">
             <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
            </span>
@@ -14,7 +14,7 @@
            {/foreach}
         </div>
         <div id="lastnamelist">
-          <label>{str tag="lastname"}:</label>
+          <strong>{str tag="lastname"}:</strong>
            <span class="last-initial{if !$search->l} selected{/if} all">
             <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
            </span>
@@ -57,11 +57,11 @@
             <input type="checkbox" name="duplicateemail" id="duplicateemail" value="1"{if $search->duplicateemail} checked{/if}>
         </div>
         <div class="usersearchform">
-            <label>{str tag='Search' section='admin'}:</label>
+            <label for="query">{str tag='Search' section='admin'}:</label>
             <input type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             {if count($institutions) > 1}
             <span class="institutions">
-                <label>{str tag='Institution' section='admin'}:</label>
+                <label for="institution">{str tag='Institution' section='admin'}:</label>
                 <select name="institution" id="institution">
                     <option value="all"{if !$.request.institution} selected="selected"{/if}>{str tag=All}</option>
                     {foreach from=$institutions item=i}
@@ -75,14 +75,16 @@
     </form>
     {if $USER->get('admin') || $USER->is_institutional_admin() || get_config('staffreports')}
     <div class="withselectedusers">
-        <label>{str tag=withselectedusers section=admin}: </label>
+        <strong>{str tag=withselectedusers section=admin}: </strong>
         {if $USER->get('admin') || $USER->is_institutional_admin()}
         <form class="nojs-hidden-inline" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
-            <input type="button" class="button" name="edit" value="{str tag=edit}">
+            <label class="accessible-hidden" for="editbtn">{str tag=withselectedusersedit section=admin}</label>
+            <input type="button" class="button" name="edit" id="editbtn" value="{str tag=edit}">
         </form>
         {/if}
         <form class="nojs-hidden-inline" id="report" action="{$WWWROOT}admin/users/report.php" method="post">
-            <input type="button" class="button" name="reports" value="{str tag=getreports section=admin}">
+            <label class="accessible-hidden" for="reportsbtn">{str tag=withselectedusersreports section=admin}</label>
+            <input type="button" class="button" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
         </form>
         <div id="nousersselected" class="hidden error">{str tag=nousersselected section=admin}</div>
     </div>
