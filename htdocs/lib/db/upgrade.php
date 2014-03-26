@@ -3190,5 +3190,9 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2014032600) {
+        install_watchlist_notification();
+    }
+
     return $status;
 }

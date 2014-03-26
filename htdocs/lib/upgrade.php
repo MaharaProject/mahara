@@ -748,6 +748,9 @@ function core_install_lastcoredata_defaults() {
     // the order of installation stuff.
 
     install_blocktype_extras();
+
+    // also install the new watchlist notification
+    install_watchlist_notification();
 }
 
 function core_install_firstcoredata_defaults() {
@@ -1436,4 +1439,63 @@ function site_warnings() {
     }
 
     return $warnings;
+}
+
+function install_watchlist_notification() {
+        if (!record_exists('config', 'field', 'watchlistnotification_delay')) {
+            set_config('watchlistnotification_delay', 20);
+        }
+
+        if (!table_exists(new XMLDBTable('watchlist_queue'))) {
+            $table = new XMLDBTable('watchlist_queue');
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, null, false);
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('changed_on', XMLDB_TYPE_DATETIME,  null, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+            $table->addKeyInfo('blockfk', XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            create_table($table);
+        }
+
+        // new event type: delete blockinstance
+        $e = new StdClass;
+        $e->name = 'deleteblockinstance';
+        ensure_record_exists('event_type', $e, $e);
+
+        // install the core event subscriptions
+        $subs = array(
+            array(
+                'event'         => 'blockinstancecommit',
+                'callfunction'  => 'watchlist_record_changes',
+            ),
+            array(
+                'event'         => 'deleteblockinstance',
+                'callfunction'  => 'watchlist_block_deleted',
+            ),
+            array(
+                'event'         => 'saveartefact',
+                'callfunction'  => 'watchlist_record_changes',
+            ),
+            array(
+                'event'         => 'saveview',
+                'callfunction'  => 'watchlist_record_changes',
+            ),
+        );
+
+        foreach ($subs as $sub) {
+            ensure_record_exists('event_subscription', (object)$sub, (object)$sub);
+        }
+
+        // install the cronjobs...
+        $cron = new StdClass;
+        $cron->callfunction = 'watchlist_process_notifications';
+        $cron->minute       = '*';
+        $cron->hour         = '*';
+        $cron->day          = '*';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        ensure_record_exists('cron', $cron, $cron);
 }

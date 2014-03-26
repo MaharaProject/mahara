@@ -422,6 +422,8 @@ $string['eventloglevelmasq'] = 'Masquerading';
 $string['eventloglevelall'] = 'All';
 $string['sitefilesaccess'] = 'Access to site files';
 $string['sitefilesaccessdescription'] = 'If checked, logged-in users will have access to site files in subfolders. By default, only files in the top level directory are accessible to them.';
+$string['watchlistdelaydescription'] = 'The delay in minutes between sending emails regarding watchlist changes.';
+$string['watchlistdelaytitle'] = 'Watchlist notification delay';
 
 // Site content
 $string['about']               = 'About';

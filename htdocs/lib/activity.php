@@ -224,6 +224,232 @@ function activity_process_queue() {
     }
 }
 
+/**
+ * event-listener is called when an artefact is changed or a block instance
+ * is commited. Saves the view, the block instance, user and time into the
+ * database
+ *
+ * @global User $USER
+ * @param string $event
+ * @param object $eventdata
+ */
+function watchlist_record_changes($event){
+    global $USER;
+
+    // don't catch root's changes, especially not when installing...
+    if ($USER->get('id') <= 0) {
+        return;
+    }
+    if ($event instanceof BlockInstance) {
+        if (record_exists('usr_watchlist_view', 'view', $event->get('view'))) {
+            $whereobj = new stdClass();
+            $whereobj->block = $event->get('id');
+            $whereobj->view = $event->get('view');
+            $whereobj->usr = $USER->get('id');
+            $dataobj = clone $whereobj;
+            $dataobj->changed_on = date('Y-m-d H:i:s');
+            ensure_record_exists('watchlist_queue', $whereobj, $dataobj);
+        }
+    }
+    else if ($event instanceof ArtefactType) {
+        $blockid = $event->get('id');
+        $getcolumnquery = '
+            SELECT DISTINCT
+             "view", "block"
+            FROM
+             {view_artefact}
+            WHERE
+             artefact =' . $blockid;
+        $relations = get_records_sql_array($getcolumnquery, array());
+
+        // fix unnecessary type-inconsistency of get_records_sql_array
+        if (false === $relations) {
+            $relations = array();
+        }
+
+        foreach ($relations as $rel) {
+            if (!record_exists('usr_watchlist_view', 'view', $rel->view)) {
+                continue;
+            }
+            $whereobj = new stdClass();
+            $whereobj->block = $rel->block;
+            $whereobj->view = $rel->view;
+            $whereobj->usr = $USER->get('id');
+            $dataobj = clone $whereobj;
+            $dataobj->changed_on = date('Y-m-d H:i:s');
+            ensure_record_exists('watchlist_queue', $whereobj, $dataobj);
+        }
+    }
+    else if (!is_object($event) && !empty($event['id'])) {
+        $viewid = $event['id'];
+        if (record_exists('usr_watchlist_view', 'view', $viewid)) {
+            $whereobj = new stdClass();
+            $whereobj->view = $viewid;
+            $whereobj->usr = $USER->get('id');
+            $whereobj->block = null;
+            $dataobj = clone $whereobj;
+            $dataobj->changed_on = date('Y-m-d H:i:s');
+            ensure_record_exists('watchlist_queue', $whereobj, $dataobj);
+        }
+    }
+    else {
+        return;
+    }
+}
+
+/**
+ * is triggered when a blockinstance is deleted. Deletes all watchlist_queue
+ * entries that refer to this blockinstance
+ *
+ * @param BlockInstance $blockinstance
+ */
+function watchlist_block_deleted(BlockInstance $block) {
+    global $USER;
+
+    // don't catch root's changes, especially not when installing...
+    if ($USER->get('id') <= 0) {
+        return;
+    }
+
+    delete_records('watchlist_queue', 'block', $block->get('id'));
+
+    if (record_exists('usr_watchlist_view', 'view', $block->get('view'))) {
+        $whereobj = new stdClass();
+        $whereobj->view = $block->get('view');
+        $whereobj->block = null;
+        $whereobj->usr = $USER->get('id');
+        $dataobj = clone $whereobj;
+        $dataobj->changed_on = date('Y-m-d H:i:s');
+        ensure_record_exists('watchlist_queue', $whereobj, $dataobj);
+    }
+}
+
+/**
+ * is called by the cron-job to process the notifications stored into
+ * watchlist_queue.
+ */
+function watchlist_process_notifications() {
+    $delayMin = get_config('watchlistnotification_delay');
+    $comparetime = time() - $delayMin * 60;
+
+    $sql = "SELECT usr, view, MAX(changed_on) AS time
+            FROM {watchlist_queue}
+            GROUP BY usr, view";
+    $results = get_records_sql_array($sql, array());
+
+    if (false === $results) {
+        return;
+    }
+
+    foreach ($results as $viewuserdaterow) {
+        if ($viewuserdaterow->time > date('Y-m-d H:i:s', $comparetime)) {
+            continue;
+        }
+
+        // don't send a notification if only blockinstances are referenced
+        // that were deleted (block exists but corresponding
+        // block_instance doesn't)
+        $sendnotification = false;
+
+        $blockinstance_ids = get_column('watchlist_queue', 'block', 'usr', $viewuserdaterow->usr, 'view', $viewuserdaterow->view);
+        if (is_array($blockinstance_ids)) {
+            $blockinstance_ids = array_unique($blockinstance_ids);
+        }
+
+        $viewuserdaterow->blocktitles = array();
+
+        // need to check if view has an owner, group or institution
+        $view = get_record('view', 'id', $viewuserdaterow->view);
+        if (empty($view->owner) && empty($view->group) && empty($view->institution)) {
+            continue;
+        }
+        // ignore root pages, owner = 0, this account is not meant to produce content
+        if (isset($view->owner) && empty($view->owner)) {
+            continue;
+        }
+
+        foreach ($blockinstance_ids as $blockinstance_id) {
+            if (empty($blockinstance_id)) {
+                // if no blockinstance is given, assume that the form itself
+                // was changed, e.g. the theme, or a block was removed
+                $sendnotification = true;
+                continue;
+            }
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+
+            try {
+                $block = new BlockInstance($blockinstance_id);
+            }
+            catch (BlockInstanceNotFoundException $exc) {
+                // maybe the block was deleted
+                continue;
+            }
+
+            $blocktype = $block->get('blocktype');
+            $title = '';
+
+            // try to get title rendered by plugin-class
+            safe_require('blocktype', $blocktype);
+            if (class_exists(generate_class_name('blocktype', $blocktype))) {
+                $title = $block->get_title();
+            }
+            else {
+                log_warn('class for blocktype could not be loaded: ' . $blocktype);
+                $title = $block->get('title');
+            }
+
+            // if no title was given to the blockinstance, try to get one
+            // from the artefact
+            if (empty($title)) {
+                $configdata = $block->get('configdata');
+
+                if (array_key_exists('artefactid', $configdata)) {
+                    try {
+                        $artefact = $block->get_artefact_instance($configdata['artefactid']);
+                        $title = $artefact->get('title');
+                    }
+                    catch(Exception $exc) {
+                        log_warn('couldn\'t identify title of blockinstance ' .
+                                 $block->get('id') . $exc->getMessage());
+                    }
+                }
+            }
+
+            // still no title, maybe the default-name for the blocktype
+            if (empty($title)) {
+                $title = get_string('title', 'blocktype.' . $blocktype);
+            }
+
+            // no title could be retrieved, so let's tell the user at least
+            // what type of block was changed
+            if (empty($title)) {
+                $title = '[' . $blocktype . '] (' .
+                    get_string('nonamegiven', 'activity') . ')';
+            }
+
+            $viewuserdaterow->blocktitles[] = $title;
+            $sendnotification = true;
+        }
+
+        // only send notification if there is something to talk about (don't
+        // send notification for example when new blockelement was aborted)
+        if ($sendnotification) {
+            try{
+                $watchlistnotification = new ActivityTypeWatchlistnotification($viewuserdaterow, false);
+                $watchlistnotification->notify_users();
+            }
+            catch (ViewNotFoundException $exc) {
+                // Seems like the view has been deleted, don't do anything
+            }
+            catch (SystemException $exc) {
+                // if the view that was changed doesn't have an owner
+            }
+        }
+
+        delete_records('watchlist_queue', 'usr', $viewuserdaterow->usr, 'view', $viewuserdaterow->view);
+    }
+}
+
 function activity_get_viewaccess_users($view, $owner, $type) {
     $type = activity_locate_typerecord($type);
     $sql = "SELECT userid, u.*, p.method, ap.value AS lang
@@ -932,6 +1158,62 @@ class ActivityTypeWatchlist extends ActivityType {
 
     public function get_required_parameters() {
         return array('view');
+    }
+}
+
+/**
+ * extending ActivityTypeWatchlist to reuse the funcinality and structure
+ */
+class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
+    protected $view;
+    protected $viewinfo;
+    protected $blocktitles = array();
+    protected $usr;
+
+    /**
+     * @param array $data Parameters:
+     *                    - view (int)
+     *                    - blocktitles (array: int)
+     *                    - usr (int)
+     */
+    public function __construct($data, $cron) {
+        parent::__construct($data, $cron);
+
+        $this->blocktitles = $data->blocktitles;
+        $this->usr = $data->usr;
+
+
+        $this->viewinfo = new View($this->view);
+    }
+
+    /**
+     * override function get_message to add information about the changed
+     * blockinstances
+     *
+     * @param type $user
+     * @return type
+     */
+    public function get_message($user) {
+        $message = get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
+                                        $this->viewinfo->get('title'), display_name($this->usr, $user));
+
+        try {
+            foreach ($this->blocktitles as $blocktitle) {
+                $message .= "\n" . get_string_from_language($user->lang, 'blockinstancenotification', 'activity', $blocktitle);
+            }
+        }
+        catch(Exception $exc) {
+            var_log(var_export($exc, true));
+        }
+
+        return $message;
+    }
+
+    /**
+     * overwrite get_type to obfuscate that we are not really an Activity_type
+     */
+    public function get_type() {
+        return('watchlist');
     }
 }
 

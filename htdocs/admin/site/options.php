@@ -667,6 +667,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('sitefilesaccess'),
                     'disabled'     => in_array('sitefilesaccess', $OVERRIDDEN),
                 ),
+                'watchlistnotification_delay' => array(
+                    'type'         => 'text',
+                    'title'        => get_string('watchlistdelaytitle', 'admin'),
+                    'description'  => get_string('watchlistdelaydescription', 'admin'),
+                    'defaultvalue' => get_config('watchlistnotification_delay'),
+                    'disabled'     => in_array('watchlistnotification_delay', $OVERRIDDEN),
+                ),
             ),
         ),
         'loggingsettings' => array(
@@ -728,7 +735,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'defaultnotificationmethod', 'homepageinfo', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'allowmobileuploads', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'wysiwyg',
-        'staffreports', 'staffstats', 'userscandisabledevicedetection',
+        'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
         'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'sitefilesaccess',
     );
