@@ -171,6 +171,15 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $smarty->assign('initjs', $initjs);
     $smarty->assign('querybase', $element['page'] . (strpos($element['page'], '?') === false ? '?' : '&'));
 
+    $params = 'folder=' . $folder;
+    if ($group) {
+        $params .= '&group=' . $group;
+    }
+    if ($institution) {
+        $params .= '&institution=' . $institution;
+    }
+    $smarty->assign('folderparams', $params);
+
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
 
@@ -279,6 +288,16 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     $smarty->assign('filelist', $filedata);
     $smarty->assign('querybase', $querybase);
     $smarty->assign('prefix', $prefix);
+
+    $params = 'folder=' . ($folder === null ? 0 : $folder);
+    if ($group !== null) {
+        $params .= '&group=' . $group;
+    }
+    if ($institution !== null) {
+        $params .= '&institution=' . $institution;
+    }
+
+    $smarty->assign('folderparams', $params);
 
     return array(
         'data' => $filedata,

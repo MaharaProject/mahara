@@ -96,14 +96,28 @@ $options = array(
 );
 
 if ($artefact->get('artefacttype') == 'folder') {
-    // get folder block sort order - returns the first instance of folder on view
-    // why you'd want more than one folder block on the same view is m̶a̶d̶n̶e̶s̶s̶ user preference.
-    if ($block = get_records_sql_array('SELECT block FROM {view_artefact} WHERE view = ? AND artefact = ?', array($viewid, $baseobject->get('id')),0,1)) {
+    // get folder block sort order - returns the first instance of folder on view unless $blockid is set.
+    // Why you'd want more than one folder block on the same view is m̶a̶d̶n̶e̶s̶s̶ user preference.
+    // TO DO: get the clicking on a subfolder to carry the block id as well - that way we can get exact configdata
+    if ($block = get_records_sql_array('SELECT block FROM {view_artefact} WHERE view = ? AND artefact = ?', array($viewid, $baseobject->get('id')))) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $bi = new BlockInstance($block[0]->block);
+        $key = 0;
+        // If we have a $blockid then we will use that one's configdata
+        if ($blockid) {
+            foreach ($block as $k => $b) {
+                if ($b->block == $blockid) {
+                    $key = $k;
+                    break;
+                }
+            }
+        }
+        $bi = new BlockInstance($block[$key]->block);
         $configdata = $bi->get('configdata');
         if (!empty($configdata['sortorder'])) {
             $options['sortorder'] = $configdata['sortorder'];
+        }
+        if (!empty($configdata['folderdownloadzip'])) {
+            $options['folderdownloadzip'] = true;
         }
     }
 }

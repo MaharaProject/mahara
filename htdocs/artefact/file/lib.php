@@ -1081,7 +1081,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public function download_title() {
         $extn = $this->get('oldextension');
         $name = $this->get('title');
-        if (substr($name, -1-strlen($extn)) == '.' . $extn) {
+        if (empty($extn) || substr($name, -1-strlen($extn)) == '.' . $extn) {
             return $name;
         }
         return $name . (substr($name, -1) == '.' ? '' : '.') . $extn;
@@ -1517,14 +1517,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         $elements['folderdownloadzip'] = array(
             'type' => 'fieldset',
-            'legend' => get_string('downloadfolderzip', 'artefact.file'),
+            'legend' => get_string('zipdownloadheading', 'artefact.file'),
             'elements' => array(
-                'folderdownloadzip' => array(
-                    'type' => 'checkbox',
-                    'title' => get_string('downloadfolderzip', 'artefact.file'),
-                    'description' => get_string('downloadfolderzipdescription', 'artefact.file'),
-                    'defaultvalue' => get_config_plugin('artefact', 'file', 'folderdownloadzip'),
-                ),
                 'folderdownloadkeepzipfor' => array(
                     'type' => 'text',
                     'title' => get_string('keepzipfor', 'artefact.file'),
@@ -1574,7 +1568,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'resizeonuploaduseroption', $values['resizeonuploaduseroption']);
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth', $values['resizeonuploadmaxwidth']);
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxheight', $values['resizeonuploadmaxheight']);
-        set_config_plugin('artefact', 'file', 'folderdownloadzip', $values['folderdownloadzip']);
         set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', $values['folderdownloadkeepzipfor']);
         $data = new StdClass;
         $data->name    = 'uploadcopyright';
@@ -1709,7 +1702,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('viewid', isset($options['viewid']) ? $options['viewid'] : 0);
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
         $smarty->assign('folderid', $this->get('id'));
-        $smarty->assign('downloadfolderzip', (isset($options['folderdownloadzip']) ? $options['folderdownloadzip'] : get_config_plugin('artefact', 'file', 'folderdownloadzip')));
+        $smarty->assign('downloadfolderzip', get_config_plugin('blocktype', 'folder', 'folderdownloadzip') ? !empty($options['folderdownloadzip']) : false);
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);

@@ -100,4 +100,7 @@
   {/foreach}
  </tbody>
 </table>
+<p>
+  <a href="{$WWWROOT}artefact/file/downloadfolder.php?{$folderparams|safe}">{str tag=downloadfolderziplink section=artefact.file}</a>
+</p>
 {/if}

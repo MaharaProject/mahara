@@ -296,12 +296,13 @@ $string['filepermission.edit'] = 'Edit';
 $string['filepermission.republish'] = 'Publish';
 
 // Download Folder as zip
+$string['zipdownloadheading'] = 'Folder downloads';
 $string['downloadfolderzip'] = 'Download folders as a zip file';
 $string['downloadfolderzipblock'] = 'Show download link';
 $string['downloadfolderzipdescription'] = 'If checked, users can download a folder, displayed via the Media -> Folder block, as a zip file.';
 $string['downloadfolderzipdescriptionblock'] = 'If checked, users can download the folder as a zip file.';
-$string['downloadfolderziplink'] = 'Download';
+$string['downloadfolderziplink'] = 'Download folder content as a zip file';
 $string['folderdownloadnofolderfound'] = 'Unable to find the folder with ID %d';
 $string['zipfilenameprefix'] = 'folder';
-$string['keepzipfor'] = 'How long to keep zip files for';
-$string['keepzipfordescription'] = 'How many seconds should the zips files be kept for.';
+$string['keepzipfor'] = 'Length of time to keep zip files';
+$string['keepzipfordescription'] = 'Zip files created during the downloading of folders should be kept for this amount of time (in seconds).';

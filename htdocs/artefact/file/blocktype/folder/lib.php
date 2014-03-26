@@ -78,6 +78,18 @@ class PluginBlocktypeFolder extends PluginBlocktype {
                 )
             ),
         );
+        $elements['downloadfolderzip'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('zipdownloadheading', 'artefact.file'),
+            'elements' => array(
+                'folderdownloadzip' => array(
+                    'type' => 'checkbox',
+                    'title' => get_string('downloadfolderzip', 'artefact.file'),
+                    'description' => get_string('downloadfolderzipdescription', 'artefact.file'),
+                    'defaultvalue' => get_config_plugin('blocktype', 'folder', 'folderdownloadzip'),
+                ),
+            ),
+        );
         return array(
             'elements' => $elements,
         );
@@ -85,6 +97,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
 
     public static function save_config_options($values) {
         set_config_plugin('blocktype', 'folder', 'sortorder', $values['sortorder']);
+        set_config_plugin('blocktype', 'folder', 'folderdownloadzip', $values['folderdownloadzip']);
     }
 
     public static function postinst($prevversion) {
@@ -110,12 +123,12 @@ class PluginBlocktypeFolder extends PluginBlocktype {
                 'options' => array('asc' => get_string('ascending'), 'desc' => get_string('descending')),
             ),
         );
-        if (get_config_plugin('artefact', 'file', 'folderdownloadzip')) {
+        if (get_config_plugin('blocktype', 'folder', 'folderdownloadzip')) {
             $elements['folderdownloadzip'] = array(
                 'type' => 'checkbox',
                 'labelhtml' => get_string('downloadfolderzipblock', 'artefact.file'),
                 'description' => get_string('downloadfolderzipdescriptionblock', 'artefact.file'),
-                'defaultvalue' => isset($configdata['folderdownloadzip']) ? $configdata['folderdownloadzip'] : get_config_plugin('artefact', 'file', 'folderdownloadzip'),
+                'defaultvalue' => isset($configdata['folderdownloadzip']) ? $configdata['folderdownloadzip'] : get_config_plugin('blocktype', 'folder', 'folderdownloadzip'),
             );
         }
         return $elements;
