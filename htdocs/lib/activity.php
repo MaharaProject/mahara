@@ -513,8 +513,40 @@ function generate_activity_class_name($name, $plugintype, $pluginname) {
     return 'ActivityType' . $name;
 }
 
-/** activity type classes **/
+/**
+ * To implement a new activity type, you must subclass this class. Your subclass
+ * MUST at minimum include the following:
+ *
+ * 1. Override the __construct method with one which first calls parent::__construct
+ *    and then populates $this->users with the list of recipients for this activity.
+ *
+ * 2. Implement the get_required_parameters method.
+ */
 abstract class ActivityType {
+
+    /**
+     * NOTE: Child classes MUST call the parent constructor, AND populate
+     * $this->users with a list of user records which should receive the message!
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
+    public function __construct($data, $cron=false) {
+        $this->cron = $cron;
+        $this->set_parameters($data);
+        $this->ensure_parameters();
+        $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
+    }
+
+    /**
+     * This method should return an array which names the fields that must be present in the
+     * $data that was passed to the class's constructor. It should include all necessary data
+     * to determine the recipient(s) of the notification and to determine its content.
+     *
+     * @return array
+     */
+    abstract function get_required_parameters();
+
     /**
      * The number of users in a split chunk to notify
      */
@@ -568,26 +600,12 @@ abstract class ActivityType {
         return $this->users;
     }
 
-    /**
-     * NOTE: Child classes MUST call the parent constructor, AND populate
-     * $this->users with a list of user records which should receive the message!
-     *
-     * @param array $data The data needed to send the notification
-     * @param boolean $cron Indicates whether this is being called by the cron job
-     */
-    public function __construct($data, $cron=false) {
-        $this->cron = $cron;
-        $this->set_parameters($data);
-        $this->ensure_parameters();
-        $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
-    }
-
     private function set_parameters($data) {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
-        }   
+        }
     }
 
     private function ensure_parameters() {
@@ -654,8 +672,6 @@ abstract class ActivityType {
     protected function update_url() {
         return false;
     }
-
-    abstract function get_required_parameters();
 
     public function notify_user($user) {
         $changes = new stdClass;
