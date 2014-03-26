@@ -568,6 +568,13 @@ abstract class ActivityType {
         return $this->users;
     }
 
+    /**
+     * NOTE: Child classes MUST call the parent constructor, AND populate
+     * $this->users with a list of user records which should receive the message!
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
     public function __construct($data, $cron=false) {
         $this->cron = $cron;
         $this->set_parameters($data);
