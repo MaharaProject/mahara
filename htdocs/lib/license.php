@@ -29,8 +29,10 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
     }
     global $USER;
     $licenses = get_records_assoc('artefact_license', null, null, 'displayname');
-    foreach ($licenses as $l) {
-        $options[$l->name] = $l->displayname;
+    if ($licenses) {
+        foreach ($licenses as $l) {
+            $options[$l->name] = $l->displayname;
+        }
     }
 
     // Determine whether to include the "none selected" option in the list of licenses
