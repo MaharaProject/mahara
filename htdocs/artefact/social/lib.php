@@ -100,6 +100,10 @@ class ArtefactTypeFeedback extends ArtefactType {
     public static function is_countable_progressbar() {
         return true;
     }
+
+    public static function is_metaartefact() {
+        return true;
+    }
 }
 
 class ArtefactTypeJoingroup extends ArtefactType {
@@ -119,6 +123,10 @@ class ArtefactTypeJoingroup extends ArtefactType {
     public static function is_countable_progressbar() {
         return true;
     }
+
+    public static function is_metaartefact() {
+        return true;
+    }
 }
 
 class ArtefactTypeMakefriend extends ArtefactType {
@@ -136,6 +144,10 @@ class ArtefactTypeMakefriend extends ArtefactType {
     }
 
     public static function is_countable_progressbar() {
+        return true;
+    }
+
+    public static function is_metaartefact() {
         return true;
     }
 }
