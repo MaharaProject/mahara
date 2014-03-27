@@ -99,10 +99,7 @@ $elements['accountoptionsdesc'] = array(
 
 // Add general account options
 $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
-// make licensedefault's defaultvalue more sane - remove '(institution default)'
-if (array_search($elements['licensedefault']['defaultvalue'], array_keys($elements['licensedefault']['options'])) === false) {
-    $elements['licensedefault']['defaultvalue'] = '';
-}
+
 $blogcount = count_records('artefact', 'artefacttype', 'blog', 'owner', $USER->get('id')) ;
 if ($blogcount != 1 && $prefs->multipleblogs == 1) {
     $elements['multipleblogs']['readonly'] = true;

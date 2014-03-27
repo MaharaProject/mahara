@@ -2175,14 +2175,16 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         set_profile_field($user->id, $k, $v);
     }
 
-    if (!empty($institution) && $institution != 'mahara') {
-        if (is_string($institution)) {
+    if (!empty($institution)) {
+        if (is_string($institution) && $institution != 'mahara') {
             $institution = new Institution($institution);
         }
         if ($institution->name != 'mahara') {
             $institution->addUserAsMember($user); // uses $user->newuser
+            if (empty($accountprefs['licensedefault'])) {
+                $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
+            }
         }
-        $accountprefs['licensedefault'] = LICENSE_INSTITUTION_DEFAULT;
     }
     $authobj = get_record('auth_instance', 'id', $user->authinstance);
     $authinstance = AuthFactory::create($authobj->id);
