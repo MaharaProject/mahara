@@ -118,9 +118,8 @@ class FormRendererMultiColumnTable {/*{{{*/
                 $result .= $builtelement;
 
                 // Contextual help
-                if (!empty($rawelement['help'])) {
-                    $result .= ' <span class="help"><a href="#" title="' 
-                        . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+                if (isset($rawelement['helphtml'])) {
+                    $result .= ' ' . $rawelement['helphtml'];
                 }
                 $result .= "</td>\n\t";
 
