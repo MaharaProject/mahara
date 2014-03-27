@@ -146,8 +146,8 @@ $string['skincustomcssdescription'] = 'Custom CSS will not be reflected in skin 
 $string['chooseviewskin'] = 'Choose page skin';
 $string['chooseskin'] = 'Choose skin';
 $string['notsavedyet'] = 'Not saved yet.';
-$string['notcompatiblewiththeme'] = 'Your Mahara site theme, "%s", does not support page skins. This means the skin you select will have no effect on how you see this page, but it may affect the page\'s appearance for other users viewing the site with a different theme.';
-$string['notcompatiblewithpagetheme'] = 'This page\'s theme, "%s", does not support page skins. The skin you choose here will have no effect on the page\'s appearance until you select a different theme.';
+$string['notcompatiblewiththeme'] = 'Your Mahara site theme "%s" does not support page skins. This means the skin you select will have no effect on how you see this page, but it may affect the page\'s appearance for other users viewing the site with a different theme.';
+$string['notcompatiblewithpagetheme'] = 'This page\'s theme "%s" does not support page skins. The skin you choose here will have no effect on the page\'s appearance until you select a different theme.';
 $string['viewskinchanged'] = 'Page skin changed';
 $string['manageskins'] = 'Manage skins';
 
