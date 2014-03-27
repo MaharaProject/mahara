@@ -821,7 +821,7 @@ function siteoptions_submit(Pieform $form, $values) {
         $initialize = call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
         if (!$initialize) {
             $form->reply(PIEFORM_ERR, array(
-                'message' => get_string('searchconfigerror', 'admin', $values['searchplugin']),
+                'message' => get_string('searchconfigerror1', 'admin', $values['searchplugin']),
                 'goto'    => '/admin/site/options.php',
             ));
         }
