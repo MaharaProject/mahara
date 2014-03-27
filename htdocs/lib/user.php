@@ -2185,7 +2185,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
     }
 
     if (!empty($institution)) {
-        if (is_string($institution) && $institution != 'mahara') {
+        if (is_string($institution)) {
             $institution = new Institution($institution);
         }
         if ($institution->name != 'mahara') {
