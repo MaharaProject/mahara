@@ -3188,5 +3188,16 @@ function xmldb_core_upgrade($oldversion=0) {
         install_watchlist_notification();
     }
 
+    if ($oldversion < 2014032700) {
+        // Remove bad data created by the upload user via csv where users in no institution
+        // have 'licensedefault' set causing an error
+        execute_sql("DELETE FROM {usr_account_preference} WHERE FIELD = 'licensedefault' AND usr IN (
+                        SELECT u.id FROM {usr} u
+                        LEFT JOIN {usr_account_preference} uap ON uap.usr = u.id
+                        LEFT JOIN {usr_institution} ui ON ui.usr = u.id
+                        WHERE uap.field = 'licensedefault' AND (ui.institution = 'mahara' OR ui.institution is null)
+                     )");
+    }
+
     return $status;
 }
