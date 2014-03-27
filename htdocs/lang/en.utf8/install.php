@@ -37,7 +37,7 @@ $string['loggedouthomedefaultcontent'] = '<h1>Welcome</h1>
 
 <p><i>You can edit this text via %s</i></p>';
 $string['privacydefaultcontent'] = '<h1>Privacy statement</h1>
-    
+
 <h2>Introduction</h2>
 
 <p>[<i>This is a default privacy statement for your legal department to edit</i>].</p>
@@ -129,5 +129,5 @@ $string['licenseshortnamebync']   = 'CC-BY-NC-4.0';
 $string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-4.0';
 $string['licenseshortnamegfdl']   = 'GFDL-1.3';
 
-$string['generalpageconfigdefault'] = '"General pages" in "Configure site" in "Administration"';
-$string['generalpageconfiginstitution'] = '"General pages" in "Institutions" in "Administration"';
+$string['staticpageconfigdefault'] = '"Static pages" in "Configure site" in "Administration"';
+$string['staticpageconfiginstitution'] = '"Static pages" in "Institutions" in "Administration"';

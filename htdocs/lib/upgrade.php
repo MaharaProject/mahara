@@ -675,7 +675,7 @@ function core_install_lastcoredata_defaults() {
         $page->name = $name;
         $page->ctime = $now;
         $page->mtime = $now;
-        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('generalpageconfigdefault', 'install'));
+        $page->content = get_string($page->name . 'defaultcontent', 'install', get_string('staticpageconfigdefault', 'install'));
         $page->institution = 'mahara';
         insert_record('site_content', $page);
     }

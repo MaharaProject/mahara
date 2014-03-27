@@ -1929,7 +1929,7 @@ function admin_nav() {
         'configsite/sitepages' => array(
             'path'   => 'configsite/sitepages',
             'url'    => 'admin/site/pages.php',
-            'title'  => get_string('generalpages', 'admin'),
+            'title'  => get_string('staticpages', 'admin'),
             'weight' => 20
         ),
         'configsite/sitemenu' => array(
@@ -2070,7 +2070,7 @@ function admin_nav() {
         'manageinstitutions/sitepages' => array(
             'path'   => 'manageinstitutions/sitepages',
             'url'    => 'admin/users/institutionpages.php',
-            'title'  => get_string('generalpages', 'admin'),
+            'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
         ),
         'manageinstitutions/institutionusers' => array(
@@ -2265,7 +2265,7 @@ function institutional_admin_nav() {
         'manageinstitutions/sitepages' => array(
             'path'   => 'manageinstitutions/sitepages',
             'url'    => 'admin/users/institutionpages.php',
-            'title'  => get_string('generalpages', 'admin'),
+            'title'  => get_string('staticpages', 'admin'),
             'weight' => 15
         ),
         'manageinstitutions/institutionusers' => array(

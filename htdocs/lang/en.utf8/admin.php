@@ -71,12 +71,12 @@ $string['manageinstitutions'] = 'Manage institutions';
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';
 $string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
-$string['generalpages']     = 'General pages';
-$string['generalinstitutionpages']     = 'General institution pages';
-$string['generalpageinstitutionbad'] = "You can't access and/or edit general pages for institution '%s'";
+$string['staticpages']     = 'Static pages';
+$string['institutionstaticpages']     = 'Institution static pages';
+$string['staticpageinstitutionbad'] = "You can't access and/or edit static pages for institution '%s'";
 $string['usedefault'] = 'Use site default';
 $string['usedefaultdescription1'] = 'Use the site\'s default text for this particular page type instead.';
-$string['generalpagesdescription'] = 'Edit the content of various general pages';
+$string['staticpagesdescription'] = 'Edit the content of static pages in Mahara (Home, Terms and Conditions, etc)';
 $string['menus'] = 'Menus';
 $string['menusdescription'] = 'Manage the links and files within the "Links and resources" and footer menus';
 $string['sitefiles']          = 'Site files';
@@ -430,7 +430,7 @@ $string['watchlistdelaytitle'] = 'Watchlist notification delay';
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
-$string['generalpagespagedescription'] = 'Here you can edit the content of some general pages, such as the dashboard for logged-in users and the homepage for logged-out users as well as the pages linked to in the footer.';
+$string['staticpagespagedescription'] = 'Here you can edit the content of some of Mahara\'s built-in pages, such as the dashboard for logged-in users and the homepage for logged-out users as well as the pages linked to in the footer.';
 $string['home']                = 'Home (Dashboard)';
 $string['loadsitecontentfailed']  = 'Failed to load site page content';
 $string['loggedouthome']       = 'Logged-out home';
@@ -946,8 +946,8 @@ $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 $string['noinstitutionsstats'] = 'Unable to view institution statistics';
 $string['noinstitutionsstatsdescription1'] = 'Staff statistics access needs to be turned on for the site to allow staff to view their institution statistics. A site administrator can turn this setting on in "User settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
-$string['noinstitutiongeneralpages'] = 'You do not have permission to edit any institution general pages or no institutions have been created yet.';
-$string['noinstitutiongeneralpagesadmin'] = 'If you are a site administrator, please edit the default general pages in <a href="%s">Configure site</a>.';
+$string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
+$string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 
 $string['Lockedfields'] = 'Locked fields';
 $string['disabledlockedfieldhelp'] = 'Note: Disabled checkboxes are for profile fields which are locked in the institution settings for "%s". These profile fields are locked at the site level and cannot be unlocked here.';

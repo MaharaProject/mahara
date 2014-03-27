@@ -3,7 +3,7 @@
             {if $noinstitutions}
                 <p>{$noinstitutions}</p>
             {else}
-                <p>{str tag=generalpagespagedescription section=admin}</p>
+                <p>{str tag=staticpagespagedescription section=admin}</p>
             {/if}
             {$pageeditform|safe}
 {include file="footer.tpl"}
