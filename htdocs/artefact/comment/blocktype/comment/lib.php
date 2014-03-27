@@ -36,7 +36,7 @@ class PluginBlocktypeComment extends SystemBlocktype {
         global $USER;
 
         if ($editing) {
-            return get_string('ineditordescription', 'blocktype.comment/comment');
+            return get_string('ineditordescription1', 'blocktype.comment/comment');
         }
         // Feedback list pagination requires limit/offset params
         $limit       = param_integer('limit', 10);

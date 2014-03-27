@@ -13,4 +13,4 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Feedback';
 $string['description'] = 'A block to display feedback';
-$string['ineditordescription'] = 'Feedback for this page will display here rather than in the footer of the page.';
+$string['ineditordescription1'] = 'Feedback for this page will be displayed here rather than at the bottom of the page.';
