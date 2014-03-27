@@ -160,29 +160,31 @@ abstract class PluginArtefact extends Plugin {
 
         $results = array();
         $classname = generate_class_name('artefact', $plugin);
+
         // Check the artefacttypes to see if they have a special metaartefact count
-        if (method_exists($classname, 'progressbar_metaartefact_count')) {
-            $names = call_static_method($classname, 'get_artefact_types');
-            foreach ($names as $name) {
-                $record = new stdClass();
-                $record->name = $name;
-                $record->is_metaartefact = call_static_method('ArtefactType' . ucfirst($name), 'is_metaartefact');
-                if (is_object($meta = call_user_func($classname . '::progressbar_metaartefact_count', $record))) {
+        $names = call_static_method($classname, 'get_artefact_types');
+        foreach ($names as $name) {
+            $is_metaartefact = call_static_method('ArtefactType' . ucfirst($name), 'is_metaartefact');
+            if ($is_metaartefact) {
+                $meta = call_user_func($classname . '::progressbar_metaartefact_count', $name);
+                if (is_object($meta)) {
                     array_push($results, $meta);
                 }
             }
-            // Also check the special artefacts
-            if (is_array($specials = call_static_method($classname, 'progressbar_additional_items'))) {
-                foreach ($specials as $special) {
-                    if (empty($special->is_metaartefact)) {
-                        // check to see if it can have mataartefact count
-                        $special->is_metaartefact = call_static_method('ArtefactType' . ucfirst($special->name), 'is_metaartefact');
-                    }
-                    if (!empty($special->is_metaartefact)) {
-                        // Now check if they have a special metaartefact count
-                        if (is_object($meta = call_user_func($classname . '::progressbar_metaartefact_count', $special))) {
-                            array_push($results, $meta);
-                        }
+        }
+
+        // Also check the special artefacts
+        if (is_array($specials = call_static_method($classname, 'progressbar_additional_items'))) {
+            foreach ($specials as $special) {
+                if (empty($special->is_metaartefact)) {
+                    // check to see if it can have mataartefact count
+                    $special->is_metaartefact = call_static_method('ArtefactType' . ucfirst($special->name), 'is_metaartefact');
+                }
+                if (!empty($special->is_metaartefact)) {
+                    // Now check if they have a special metaartefact count
+                    $meta = call_user_func($classname . '::progressbar_metaartefact_count', $special->name);
+                    if (is_object($meta)) {
+                        array_push($results, $meta);
                     }
                 }
             }
@@ -196,6 +198,17 @@ abstract class PluginArtefact extends Plugin {
      */
     public static function progressbar_additional_items() {
         return array();
+    }
+
+    /**
+     * If this plugin provides some progress bar metaartefacts, then this method should
+     * provide the logic to count them.
+     * @param string $name The name of the meta-artefact to count
+     * @return object A record containing the count data to be displayed in the sidebar.
+     *                It should contain the fields "artefacttype" and "completion"
+     */
+    public static function progressbar_metaartefact_count($name) {
+        return false;
     }
 }
 

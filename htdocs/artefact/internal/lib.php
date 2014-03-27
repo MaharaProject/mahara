@@ -296,27 +296,25 @@ class PluginArtefactInternal extends PluginArtefact {
         return $records;
     }
 
-    public static function progressbar_metaartefact_count($plugin) {
+    public static function progressbar_metaartefact_count($name) {
         global $USER;
 
-        if (!$plugin->is_metaartefact) {
-            return false;
-        }
-
         $meta = new StdClass();
-        $meta->artefacttype = $plugin->name;
+        $meta->artefacttype = $name;
         $meta->completed = 0;
-        switch ($plugin->name) {
-         case 'messaging':
-            // Add messaging group data and
-            // use user's entered values of individual messaging artefacts
-            $sql = "SELECT COUNT(*) AS completed FROM {artefact}
-                   WHERE owner = ? AND artefacttype IN
-                     ('aimscreenname', 'icqnumber', 'jabberusername',
-                      'msnnumber', 'skypeusername', 'yahoochat')";
-            $count = get_records_sql_array($sql, array($USER->get('id')));
-            $meta->completed = $count[0]->completed;
-            break;
+        switch ($name) {
+            case 'messaging':
+                // Add messaging group data and
+                // use user's entered values of individual messaging artefacts
+                $sql = "SELECT COUNT(*) AS completed FROM {artefact}
+                       WHERE owner = ? AND artefacttype IN
+                         ('aimscreenname', 'icqnumber', 'jabberusername',
+                          'msnnumber', 'skypeusername', 'yahoochat')";
+                $count = get_records_sql_array($sql, array($USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            default:
+                return false;
         }
         return $meta;
     }
