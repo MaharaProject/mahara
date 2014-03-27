@@ -48,34 +48,36 @@ class PluginArtefactSocial extends PluginArtefact {
         }
     }
 
-    public static function progressbar_metaartefact_count($plugin) {
+    public static function progressbar_metaartefact_count($name) {
         global $USER;
         $meta = new StdClass();
-        $meta->artefacttype = $plugin->name;
+        $meta->artefacttype = $name;
         $meta->completed = 0;
-        switch ($plugin->name) {
-         case 'feedback':
-            $sql = "SELECT COUNT(*) AS completed
-                     FROM {artefact}
-                   WHERE artefacttype='comment'
-                     AND owner <> ? AND author = ?";
-            $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
-            $meta->completed = $count[0]->completed;
-            break;
-         case 'joingroup':
-            $sql = "SELECT COUNT(*) AS completed
-                     FROM {group_member}
-                   WHERE member = ?";
-            $count = get_records_sql_array($sql, array($USER->get('id')));
-            $meta->completed = $count[0]->completed;
-            break;
-         case 'makefriend':
-            $sql = "SELECT COUNT(*) AS completed
-                     FROM {usr_friend}
-                   WHERE usr1 = ?";
-            $count = get_records_sql_array($sql, array($USER->get('id')));
-            $meta->completed = $count[0]->completed;
-            break;
+        switch ($name) {
+            case 'feedback':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {artefact}
+                       WHERE artefacttype='comment'
+                         AND owner <> ? AND author = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            case 'joingroup':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {group_member}
+                       WHERE member = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            case 'makefriend':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {usr_friend}
+                       WHERE usr1 = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            default:
+                return false;
         }
         return $meta;
     }
