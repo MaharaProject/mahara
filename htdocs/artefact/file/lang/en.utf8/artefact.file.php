@@ -71,7 +71,6 @@ $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['Details'] = 'Details';
 $string['View'] = 'View';
-$string['document'] = 'Document';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
 $string['downloadoriginalversion'] = 'Download the original version';
@@ -336,3 +335,4 @@ $string['progress_video'] = array(
     'Add 1 video',
     'Add %s videos',
 );
+$string['anytypeoffile'] = 'File (any type)';

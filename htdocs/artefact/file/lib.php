@@ -300,6 +300,25 @@ class PluginArtefactFile extends PluginArtefact {
             return 'artefact/file/index.php';
         }
     }
+
+    /**
+     * The "file" artefact type should count uploads of all file types.
+     * @param object $plugin
+     * @return object
+     */
+    public static function progressbar_metaartefact_count($name) {
+        global $USER;
+        if ($name == 'file') {
+            $meta = new stdClass();
+            $meta->artefacttype = $name;
+            $count = count_records_select('artefact', "owner=? and artefacttype in ('file','image','archive','video','audio')", array($USER->get('id')));
+            $meta->completed = $count;
+            return $meta;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 abstract class ArtefactTypeFileBase extends ArtefactType {
@@ -1657,7 +1676,16 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public static function get_title_progressbar() {
-        return get_string('document','artefact.file');
+        return get_string('anytypeoffile','artefact.file');
+    }
+
+    /**
+     * For the progress bar, this one is a metaartefact. Its progress should be based
+     * on how many of *any* file type has been uploaded.
+     * @return boolean
+     */
+    public static function is_metaartefact() {
+        return true;
     }
 }
 
@@ -2039,6 +2067,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public static function get_title_progressbar() {
         return get_string('image','artefact.file');
+    }
+
+    public static function is_metaartefact() {
+        return false;
     }
 }
 
@@ -2434,6 +2466,10 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
     public static function get_title_progressbar() {
         return get_string('archive','artefact.file');
     }
+
+    public static function is_metaartefact() {
+        return false;
+    }
 }
 
 class ArtefactTypeVideo extends ArtefactTypeFile {
@@ -2495,6 +2531,10 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
     public static function get_title_progressbar() {
         return get_string('video','artefact.file');
     }
+
+    public static function is_metaartefact() {
+        return false;
+    }
 }
 
 class ArtefactTypeAudio extends ArtefactTypeFile {
@@ -2544,5 +2584,9 @@ class ArtefactTypeAudio extends ArtefactTypeFile {
 
     public static function get_title_progressbar() {
         return ucfirst(get_string('audio','artefact.file'));
+    }
+
+    public static function is_metaartefact() {
+        return false;
     }
 }
