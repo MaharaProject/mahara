@@ -356,7 +356,7 @@ $string['remoteavatars'] = 'Display remote avatars';
 $string['remoteavatarsdescription'] = 'If checked, the <a href="http://www.gravatar.com">Gravatar</a> service will be used for users\' default profile pictures.';
 $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
-$string['searchconfigerror'] = 'The configuration settings for search plugin "%s" are incorrect, please check the configuration settings under Extensions -> Plugin type: search. You may need to hit the search\'s \'reset\' button when done.';
+$string['searchconfigerror1'] = 'The configuration settings for the search plugin "%s" are incorrect. Please check the configuration settings under "Extensions" → "Plugin type: search". You may need to hit the search\'s \'reset\' button when done.';
 $string['searchusernames'] = 'Search usernames';
 $string['searchusernamesdescription'] = 'If checked, allow usernames to be searched on as part of "Search users".';
 $string['searchuserspublic'] = 'Show users in public search';
