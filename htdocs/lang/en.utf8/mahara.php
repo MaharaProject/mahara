@@ -46,12 +46,12 @@ $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
 // responsive design strings
-$string['tabs'] = 'TABS';
+$string['tabs'] = 'Tabs';
 $string['tab'] = 'tab';
 $string['selected'] = 'selected';
 $string['disabled'] = 'disabled';
-$string['admin'] = 'ADMIN';
-$string['menu'] = 'MENU';
+$string['admin'] = 'Admin';
+$string['menu'] = 'Menu';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';

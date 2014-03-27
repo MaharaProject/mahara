@@ -48,7 +48,7 @@ $string['flickrsets'] = 'Flickr sets';
 // Photobucket
 $string['pbsettings'] = 'Photobucket settings';
 $string['pbapikey'] = 'Photobucket API key';
-$string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a valid API key and API private key.<br>Go to the <a href="http://developer.photobucket.com/" target="_blank">Photobucket developer web site</a>, agree to the terms of service, sign up, and get the API keys.';
+$string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a valid API key and API private key.<br>Go to the <a href="http://developer.photobucket.com/" target="_blank">Photobucket developer website</a>, agree to the terms of service, sign up, and get the API keys.';
 $string['pbapiprivatekey'] = 'Photobucket API private key';
 $string['photobucketphotosandalbums'] = 'Photobucket user photos and albums';
 
