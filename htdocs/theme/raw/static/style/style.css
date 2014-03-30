@@ -2958,7 +2958,8 @@ form#search {
     padding: 10px;
 }
 .skinthumb .skin-controls a.btn-addtofavourites,
-.skinthumb .skin-controls a.btn-removefromfavourites {
+.skinthumb .skin-controls a.btn-removefromfavourites,
+.skinthumb .skin-controls a.btn-big-info {
     display: inline-block;
 }
 .skinthumb .skin-controls a.btn-addtofavourites {
