@@ -1519,6 +1519,7 @@ function plugin_types_installed() {
  * for the given plugin type.
  * 
  * @param string $plugintype type of plugin
+ * @return array of objects with fields (version (int), release (str), active (bool), name (str))
  */
 function plugins_installed($plugintype, $all=false) {
     static $records = array();
