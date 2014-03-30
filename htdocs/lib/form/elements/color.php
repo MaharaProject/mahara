@@ -31,12 +31,14 @@ function pieform_element_color(Pieform $form, $element) {
     if ($transparent) {
         $optional = <<<EOF
         <script type="text/javascript">
+            var {$baseid}_oldval = '';
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
-                    $('{$baseid}').value   = '#FFFFFF';
+                    $('{$baseid}').value   = {$baseid}_oldval;
                     $('{$baseid}').disabled   = false;
                 }
                 else {
+                    {$baseid}_oldval = $('{$baseid}').value;
                     $('{$baseid}').value   = '';
                     $('{$baseid}').disabled   = true;
                 }
@@ -78,7 +80,7 @@ EOF;
 function pieform_element_color_get_value(Pieform $form, $element) {
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if ($form->is_submitted() && isset($global[$name . '_color']) && !isset($global[$name . '_optional'])) {
+    if ($form->is_submitted() && isset($global[$name . '_color']) && isset($global[$name . '_optional'])) {
         $color = $global[$name . '_color'];
 
         // Whitelist for a 6-digit hex color
