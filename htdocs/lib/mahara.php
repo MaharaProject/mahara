@@ -2970,20 +2970,21 @@ function progressbar_sideblock($preview=false) {
         $progressbaritems = array_diff($progressbaritems, $locked);
 
         // Get the data link about every item
-        foreach ($counting as $itemname => $c) {
-            $parts = explode('_', $itemname);
-            $pluginname = $parts[1];
-            $artefactname = $parts[2];
-            $target = $c->value;
-            $completed = 0;
-            $data[$itemname] = array(
-                'artefact'  => $artefactname,
-                'link'      => progressbar_artefact_link($pluginname,  $artefactname),
-                'counting'  => $target,
-                'completed' => $completed,
-                'display'   => ((bool) $c->value),
-                'label'     => progressbar_artefact_task_label($pluginname, $artefactname, $target, $completed),
-            );
+        foreach ($progressbaritems as $pluginname => $itemlist) {
+            foreach ($itemlist as $artefactname => $item) {
+                $itemname = "progressbaritem_{$pluginname}_{$artefactname}";
+                $c = $counting[$itemname];
+                $target = $c->value;
+                $completed = 0;
+                $data[$itemname] = array(
+                    'artefact'  => $artefactname,
+                    'link'      => progressbar_artefact_link($pluginname,  $artefactname),
+                    'counting'  => $target,
+                    'completed' => $completed,
+                    'display'   => ((bool) $c->value),
+                    'label'     => progressbar_artefact_task_label($pluginname, $artefactname, $target, $completed),
+                );
+            }
         }
 
         if ($preview) {

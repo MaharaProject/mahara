@@ -1918,6 +1918,44 @@ function artefact_get_progressbar_items($onlythese = false) {
         }
     }
 
+    // Put the core artefact types into the order that makes the most sense.
+    // 3rd party ones will be placed at the end of the list in alphabetical order
+    uksort($options, function($item1, $item2) {
+        static $expectedorder = array(
+                'internal',
+                'resume',
+                'plans',
+                'blog',
+                'file',
+                'social'
+        );
+
+        $val1 = array_search($item1, $expectedorder);
+        $val2 = array_search($item2, $expectedorder);
+        if ($val1 === false) {
+            if ($val2 === false) {
+                // Neither one is core, sort alphabetically
+                return strcmp($item1, $item2);
+            }
+            else {
+                return 1;
+            }
+        }
+        else {
+            if ($val2 === false) {
+                return -1;
+            }
+            else {
+                return ($val1 - $val2);
+            }
+        }
+    });
+
+    // An opportunity for users to override this sort order (and maybe accomodate 3rd party plugins)
+    if (function_exists('local_progressbar_sortorder')) {
+        $options = local_progressbar_sortorder($options);
+    }
+
     return $options;
 }
 

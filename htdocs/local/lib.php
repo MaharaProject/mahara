@@ -9,4 +9,5 @@
  *  - local_main_nav_update($menu):        modify the main navigation menu in the header
  *  - local_xmlrpc_services():              add custom xmlrpc functions
  *  - local_can_remove_viewtype($viewtype): stop users from deleting views of a particular type
+ *  - local_progressbar_sortorder($options): Change the order of items in the profile completion progress bar
  */
