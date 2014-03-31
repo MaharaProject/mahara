@@ -124,6 +124,10 @@ class PluginArtefactComment extends PluginArtefact {
         safe_require('notification', 'internal');
         PluginNotificationInternal::clean_notifications(array('feedback'));
     }
+
+    public static function has_progressbar_options() {
+        return false;
+    }
 }
 
 class ArtefactTypeComment extends ArtefactType {

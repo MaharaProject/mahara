@@ -2876,13 +2876,15 @@ function tags_sideblock() {
 }
 
 
-function progressbar_artefact_link($artefacttype, $pluginname) {
+function progressbar_artefact_link($pluginname, $artefacttype) {
     return call_user_func(generate_class_name('artefact', $pluginname) . '::progressbar_link', $artefacttype);
 }
 
 function progressbar_sideblock($preview=false) {
     global $USER;
 
+    // TODO: Remove this URL param from here, and when previewing pass institution
+    // by function param instead
     $institution = param_alphanum('i', null);
     if (is_array($USER->institutions) && count($USER->institutions) > 0) {
         // Get all institutions where user is member
@@ -2906,116 +2908,128 @@ function progressbar_sideblock($preview=false) {
     // is also selected as a default value in institution selection box
     if ($preview) {
         $default = get_column('institution', 'name');
+        // TODO: Remove this URL param from here, and when previewing pass institution
+        // by function param instead
         $institution = param_alphanum('institution', $default[0]);
     }
 
     // Get artefacts that count towards profile completeness
-    if ($field = get_field('institution_data', 'value', 'institution', $institution, 'type', 'progressbar')) {
-        $counting = unserialize($field);
+    if ($counting = get_records_select_assoc('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($institution), 'field', 'field, value')) {
         // Without locked ones (site locked and institution locked)
         $sitelocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', 'mahara');
         $instlocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
         $locked = array_merge($sitelocked, $instlocked);
-        foreach ($counting as $key => $value) {
-            if (in_array($key, $locked)) {
-                unset($counting[$key]);
-            }
+        foreach ($locked as $l) {
+            unset($counting["progressbaritem_internal_{$l}"]);
         }
 
-        foreach ($counting as $key => $value) {
-            // Set non-selected checkboxes to 0
-            if (!$value) {
-                $counting[$key] = '0';
-            }
-        }
         $totalcounting = 0;
         foreach ($counting as $c) {
-            $totalcounting = $totalcounting + $c;
+            $totalcounting = $totalcounting + $c->value;
         }
 
         // Get all artefacts for progressbar and create data structure
         $data = array();
-        $plugins = get_column('artefact_installed', 'name');
-        $artefacts = array();
-        $pluginartefacts = array();
-        foreach ($plugins as $plugin) {
-            $results = PluginArtefact::get_progressbar_options($plugin);
-            foreach ($results as $result) {
-                $artefacts[] = $result->name;
-                $pluginartefacts[$result->name] = $plugin;
-            }
-        }
 
-        // ignore comment as we will be dealing with it as 'social -> feedback'
-        $artefacts = array_diff($artefacts, array('comment'));
-        $artefacts = array_diff($artefacts, $locked);
-        foreach ($artefacts as $artefact) {
-            $countingartefact = isset($counting[$artefact]) ? $counting[$artefact] : 0;
-            $data[$artefact] = array(
-                'artefact'  => $artefact,
-                'link'      => progressbar_artefact_link($artefact,  $pluginartefacts[$artefact]),
-                'counting'  => $countingartefact,
+        // For the artefact_get_progressbar_items function, we want them indexed by plugin
+        // and then subindexed by artefact. For most other purposes, having them indexed
+        // by config name is sufficient
+        $onlytheseplugins = array();
+        foreach($counting as $key => $obj) {
+            // This one has no value. So remove it from the list.
+            if (!($obj->value)) {
+                unset($counting[$key]);
+                continue;
+            }
+            $parts = explode('_', $obj->field);
+            $plugin = $parts[1];
+            $item = $parts[2];
+            if (empty($onlytheseplugins[$plugin])) {
+                $onlytheseplugins[$plugin] = array();
+            }
+            $onlytheseplugins[$plugin][$item] = $item;
+        }
+        $progressbaritems = artefact_get_progressbar_items($onlytheseplugins);
+
+        $progressbaritems = array_diff($progressbaritems, $locked);
+
+        // Get the data link about every item
+        foreach ($counting as $itemname => $c) {
+            $parts = explode('_', $itemname);
+            $pluginname = $parts[1];
+            $artefactname = $parts[2];
+            $remaining = $counting[$itemname]->value;
+            $data[$itemname] = array(
+                'artefact'  => $artefactname,
+                'link'      => progressbar_artefact_link($pluginname,  $artefactname),
+                'counting'  => $c->value,
                 'completed' => 0,
-                'display'   => $countingartefact,
-                'label'     => get_string('progress_' . $artefact, 'artefact.' . $pluginartefacts[$artefact], $countingartefact),
+                'display'   => ((bool) $c->value),
+                'label'     => get_string('progress_' . $artefactname, 'artefact.' . $pluginname, $remaining),
             );
         }
 
-        if (!$preview) {
-            // Replace data values of artefacts that user already entered/completed
-            $sql = "SELECT artefacttype, COUNT(*) AS completed
-                    FROM {artefact}
-                    WHERE owner = ? AND artefacttype NOT IN
-                    ('aimscreenname', 'icqnumber', 'jabberusername',
-                     'msnnumber', 'skypeusername', 'yahoochat')
-                    GROUP BY artefacttype";
-            $records = get_records_sql_array($sql, array($USER->get('id')));
-            $totalcompleted = 0;
-            foreach ($records as $record) {
-                $countingartefact = (array_key_exists($record->artefacttype, $counting) ? $counting[$record->artefacttype] : 0);
-                $display = $countingartefact - $record->completed;
-                $label = get_string('progress_' . $record->artefacttype, 'artefact.' . $pluginartefacts[$record->artefacttype], $display);
-                $data[$record->artefacttype] = array(
-                    'artefact'  => $record->artefacttype,
-                    'link'      => progressbar_artefact_link($record->artefacttype, $pluginartefacts[$record->artefacttype]),
-                    // how many are counting towards
-                    'counting'  => $countingartefact,
-                    // how many user has completed
-                    'completed' => $record->completed,
-                    // how many need to be displayed
-                    'display'   => $display,
-                    'label'     => $label,
-                );
-                if ($countingartefact > 0) {
-                    $totalcompleted = $totalcompleted + min($countingartefact, $record->completed);
+        if ($preview) {
+            $percent = 0;
+        }
+        else {
+            // Since this is not a preview, gather data about the users' actual progress,
+            // and update the records we placed in $data.
+
+            // Get a list of all the basic artefact types in this progress bar.
+            $nonmeta = array();
+            foreach($progressbaritems as $plugin=>$pluginitems) {
+                foreach($pluginitems as $itemname=>$item) {
+                    if (!$item->ismeta) {
+                        $nonmeta[] = $itemname;
+                    }
                 }
             }
 
+            if ($nonmeta) {
+                // To reduce the number of queries, we gather data about all the user's artefacts
+                // at once. (Metaartefacts are handled separately, below)
+                $insql = "'" . implode("','", $nonmeta) . "'";
+                $sql = "SELECT artefacttype, (select plugin from {artefact_installed_type} ait where ait.name=a.artefacttype) as plugin, COUNT(*) AS completed
+                        FROM {artefact} a
+                        WHERE owner = ?
+                        AND artefacttype in ({$insql})
+                        GROUP BY artefacttype";
+                $normalartefacts = get_records_sql_array($sql, array($USER->get('id')));
+            }
+            else {
+                // No basic artefacts in this one, so we just use an empty array for this.
+                $normalartefacts = array();
+            }
+            $totalcompleted = 0;
+
             $metaartefacts = array();
-            foreach ($plugins as $plugin) {
-                if (is_array($records = PluginArtefact::get_progressbar_metaartefact($plugin))) {
+            foreach ($progressbaritems as $plugin => $pluginitems) {
+                if (is_array($records = artefact_get_progressbar_metaartefacts($plugin, $pluginitems))) {
                     foreach ($records as $record) {
+                        $record->plugin = $plugin;
                         array_push($metaartefacts, $record);
                     }
                 }
             }
-            foreach ($metaartefacts as $record) {
-                $countingartefact = (array_key_exists($record->artefacttype, $counting) ? $counting[$record->artefacttype] : 0);
-                $display = $countingartefact - $record->completed;
-                $label = get_string('progress_' . $record->artefacttype, 'artefact.' . $pluginartefacts[$record->artefacttype], $display);
-                $data[$record->artefacttype] = array(
-                    'artefact'  => $record->artefacttype,
-                    'link'      => progressbar_artefact_link($record->artefacttype, $pluginartefacts[$record->artefacttype]),
-                    // how many are counting towards
-                    'counting'  => $countingartefact,
-                    // how many user has completed
-                    'completed' => $record->completed,
-                    // how many need to be displayed
-                    'display'   => $display,
-                    'label'     => $label,
-                );
-                if ($countingartefact > 0) {
-                    $totalcompleted = $totalcompleted + min($countingartefact, $record->completed);
+
+            foreach (array_merge($normalartefacts, $metaartefacts) as $record) {
+                $itemname = "progressbaritem_{$record->plugin}_{$record->artefacttype}";
+
+                // It's not an item we're tracking, so skip it.
+                if (!array_key_exists($itemname, $counting)) {
+                    continue;
+                }
+                $target = $counting[$itemname]->value;
+                $remaining = max(0, $target - $record->completed);
+
+                // Override the data for this item
+                $data[$itemname]['completed'] = $record->completed;
+                $data[$itemname]['display'] = ($remaining > 0);
+                $data[$itemname]['label'] = $label = get_string('progress_' . $record->artefacttype, 'artefact.' . $record->plugin, $remaining);
+
+                if ($target > 0) {
+                    $totalcompleted = $totalcompleted + min($target, $record->completed);
                 }
             }
 
@@ -3023,10 +3037,6 @@ function progressbar_sideblock($preview=false) {
             if ($percent > 100) {
                 $percent = 100;
             }
-        }
-        else {
-            // Show 0 percent and all counting artefacts at preview
-            $percent = 0;
         }
         return array(
             'data' => $data,

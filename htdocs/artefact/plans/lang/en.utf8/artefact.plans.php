@@ -12,6 +12,8 @@
 defined('INTERNAL') || die();
 
 /* Plans */
+$string['pluginname'] = 'Plans';
+
 $string['canteditdontownplan'] = 'You cannot edit this plan because you do not own it.';
 $string['description'] = 'Description';
 $string['deleteplanconfirm'] = 'Are you sure you wish to delete this plan? Deleting this plan will also remove any tasks it contains.';

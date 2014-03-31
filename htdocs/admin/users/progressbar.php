@@ -51,8 +51,19 @@ $institutionselector = pieform(array(
 
 
 // Selected artefacts that count towards completing progress bar
-if ($data = get_field('institution_data', 'value', 'institution', $institution, 'type', 'progressbar')) {
-    $selected = unserialize($data);
+$recs = get_records_select_array('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($institution), 'field', 'field, value');
+if ($recs) {
+    $selected = array();
+    foreach($recs as $rec) {
+        $obj = new stdClass();
+        $obj->raw = $rec->field;
+        $parts = explode('_', $rec->field);
+        // Check format
+        if (count($parts) < 3) {
+            continue;
+        }
+        $selected[$rec->field] = $rec->value;
+    }
 }
 else {
     $selected = array();
@@ -63,149 +74,144 @@ $sitelocked = (array) get_column('institution_locked_profile_field', 'profilefie
 $instlocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 $locked = array_merge($sitelocked, $instlocked);
 
+// Figure out the form elements in the configuration form
+$elements = array();
+$possibleitems = artefact_get_progressbar_items();
+foreach($possibleitems as $plugin => $itemlist) {
+    $subelements = array();
+    $fscollapsed = true;
+    foreach($itemlist as $artefact) {
+        $pbname = "progressbaritem_{$artefact->plugin}_{$artefact->name}";
 
-function build_artefact_options($name, $values) {
-    global $locked;
-    if (is_null($name)) {
-        throw new InvalidArgumentException("Artefact category is expected, but not defined.");
-    }
-    else {
-        // Select all possible artefacts for progressbar except for those artefactst
-        // that wish to opt out. Also include special case options.
-        $records = PluginArtefact::get_progressbar_options($name);
-
-        $elements = array();
-        foreach ($records as $artefact) {
-            if ($artefact->iscountable) {
-                $options = array(
-                    0 => '0',
-                    1 => '1',
-                    2 => '2',
-                    3 => '3',
-                    4 => '4',
-                    5 => '5',
-                   10 => '10',
-                   15 => '15',
-                   20 => '20',
-                   25 => '25',
-                   50 => '50',
-                  100 => '100',
-                );
-                $elements[$artefact->name] = array(
-                    'type' => 'select',
-                    'title' => $artefact->title,
-                    'disabled' => ($artefact->active && !in_array($artefact->name, $locked) ? false : true),
-                    'defaultvalue' => (array_key_exists($artefact->name, $values) && isset($values[$artefact->name])
-                                       && !in_array($artefact->name, $locked) ? $values[$artefact->name] : null),
-                    'options' => $options
-                );
-            }
-            else {
-                $elements[$artefact->name] = array(
-                    'type' => 'checkbox',
-                    'title' => $artefact->title,
-                    'disabled' => ($artefact->active && !in_array($artefact->name, $locked) ? false : true),
-                    'defaultvalue' => (array_key_exists($artefact->name, $values) && isset($values[$artefact->name])
-                                       && !in_array($artefact->name, $locked) ? $values[$artefact->name] : null),
-                );
-                if (in_array($artefact->name, array('email'))) {
-                    $elements[$artefact->name]['defaultvalue'] = 1;
-                    $elements[$artefact->name]['readonly'] = 1;
-                }
-            }
+        // Check if this one is a locked profile field.
+        if ($plugin == 'internal' && in_array($artefact->name, $locked)) {
+            $islocked = true;
+        }
+        else {
+            $islocked = false;
         }
 
-        return $elements;
+        // Check if this one has a default value (i.e. a value stored in the DB)
+        if (!$islocked && array_key_exists($pbname, $selected)) {
+            $defaultvalue = $selected[$pbname];
+        }
+        else {
+            $defaultvalue = null;
+        }
+
+        // If there are any selected elements in this fieldset, don't pre-collapse it.
+        $fscollapsed = $fscollapsed && !$defaultvalue;
+
+        if ($artefact->iscountable) {
+            $options = array(
+                0 => '0',
+                1 => '1',
+                2 => '2',
+                3 => '3',
+                4 => '4',
+                5 => '5',
+               10 => '10',
+               15 => '15',
+               20 => '20',
+               25 => '25',
+               50 => '50',
+              100 => '100',
+            );
+            $subelements[$pbname] = array(
+                'type' => 'select',
+                'title' => $artefact->title,
+                'disabled' => ($artefact->active && !$islocked ? false : true),
+                'defaultvalue' => $defaultvalue,
+                'options' => $options
+            );
+        }
+        else {
+            $subelements[$pbname] = array(
+                'type' => 'checkbox',
+                'title' => $artefact->title,
+                'disabled' => ($artefact->active && !$islocked ? false : true),
+                'defaultvalue' => $defaultvalue,
+            );
+        }
     }
+    $elements["fs{$plugin}"] = array(
+            'type' => 'fieldset',
+            'collapsible' => true,
+            'collapsed' => $fscollapsed,
+            'legend' => get_string('pluginname', "artefact.{$plugin}"),
+            'elements' => $subelements,
+    );
 }
 
+$elements['institution'] = array(
+    'type' => 'hidden',
+    'value' => $institution,
+);
+$elements['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('submit')
+);
 
 $form = pieform(array(
     'name'        => 'progressbarform',
     'renderer'    => 'table',
     'plugintype'  => 'core',
     'pluginname'  => 'admin',
-    'elements'    => array(
-        'fsinternal' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('profile', 'artefact.internal'),
-            'elements'    => build_artefact_options('internal', $selected)
-        ),
-        'fsresume' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('resume', 'artefact.resume'),
-            'elements'    => build_artefact_options('resume', $selected)
-        ),
-        'fsplans' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('plan', 'artefact.plans'),
-            'elements'    => build_artefact_options('plans', $selected)
-        ),
-        'fsblog' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('blog', 'artefact.blog'),
-            'elements'    => build_artefact_options('blog', $selected)
-        ),
-        'fsfile' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('file', 'artefact.file'),
-            'elements'    => build_artefact_options('file', $selected)
-        ),
-        'fssocial' => array(
-            'type'        => 'fieldset',
-            'collapsible' => true,
-            'collapsed'   => true,
-            'legend'      => get_string('Social', 'artefact.social'),
-            'elements'    => build_artefact_options('social', $selected)
-        ),
-        'institution' => array(
-            'type' => 'hidden',
-            'value' => $institution,
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('submit')
-        ),
-    )
+    'elements'    => $elements,
 ));
 
-
-function progressbarform_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
-
+function progressbarform_validate(Pieform $form, $values) {
+    global $USER;
     $inst = $values['institution'];
     if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
         redirect('/admin/users/progressbar.php');
     }
+}
 
-    unset($values['submit']);
-    unset($values['sesskey']);
-    unset($values['institution']);
-    $where = (object) array(
-        'institution' => $inst,
-        'type' => 'progressbar',
-    );
-    $data = (object) array(
-        'ctime' => db_format_timestamp(time()),
-        'institution' => $inst,
-        'type' => 'progressbar',
-        'value' => serialize($values)
-    );
+function progressbarform_submit(Pieform $form, $values) {
+    global $SESSION, $USER, $possibleitems;
 
-    ensure_record_exists('institution_data', $where, $data);
+    $institution = $values['institution'];
+
+    // Pre-fetching the current settings to reduce SELECT queries
+    $currentsettings = get_records_select_assoc('institution_config', 'institution=? and field like \'progressbaritem_%\'', array($institution), 'field', 'field, value');
+    if (!$currentsettings) {
+        $currentsettings = array();
+    }
+
+    foreach ($possibleitems as $plugin => $pluginitems) {
+        foreach ($pluginitems as $artefact) {
+            $itemname = "progressbaritem_{$plugin}_{$artefact->name}";
+
+            // Format the value into an integer or 0/1
+            $val = $values[$itemname];
+            if ($artefact->iscountable) {
+                $val = (int) $val;
+            }
+            else {
+                $val = (int)((bool) $val);
+            }
+
+            // Update the record if it already exists, or create the record if it doesn't
+            if (array_key_exists($itemname, $currentsettings)) {
+                if ($val) {
+                    set_field('institution_config', 'value', $val, 'institution', $institution, 'field', $itemname);
+                }
+                else {
+                    delete_records('institution_config', 'institution', $institution, 'field', $itemname);
+                }
+            }
+            else {
+                if ($val) {
+                    insert_record('institution_config', (object) array('institution'=>$institution, 'field'=>$itemname, 'value'=>$val));
+                }
+            }
+        }
+    }
+
     $SESSION->add_ok_msg(get_string('progressbarsaved', 'admin'));
-    redirect('/admin/users/progressbar.php?institution=' . $inst);
+    redirect('/admin/users/progressbar.php?institution=' . $institution);
 }
 
 

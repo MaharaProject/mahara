@@ -708,6 +708,10 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
         }
         return array('html' => $html, 'javascript' => null);
     }
+
+    static public function is_allowed_in_progressbar() {
+        return false;
+    }
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeCachedProfileField {}
