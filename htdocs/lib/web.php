@@ -1868,9 +1868,10 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
 }
 
 function pieform_get_help(Pieform $form, $element) {
-    return get_help_icon($form->get_property('plugintype'),
-        $form->get_property('pluginname'),
-        $form->get_name(), $element['name']);
+    $plugintype = isset($element['helpplugintype']) ? $element['helpplugintype'] : $form->get_property('plugintype');
+    $pluginname = isset($element['helppluginname']) ? $element['helppluginname'] : $form->get_property('pluginname');
+    $formname = isset($element['helpformname']) ? $element['helpformname'] : $form->get_name();
+    return get_help_icon($plugintype, $pluginname, $formname, $element['name']);
 }
 
 /**

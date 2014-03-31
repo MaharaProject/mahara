@@ -436,7 +436,7 @@ class User {
      */
     public function get_activity_preference($key) {
         $activityprefs = $this->get('activityprefs');
-        return isset($activityprefs[$key]) ? $activityprefs[$key] : null;
+        return array_key_exists($key, $activityprefs) ? $activityprefs[$key] : false;
     }
 
     /** @todo document this method */

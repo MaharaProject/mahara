@@ -319,7 +319,9 @@ EOF;
             (object)array(
                 'name' => 'newpost',
                 'admin' => 0,
-                'delay' => 1
+                'delay' => 1,
+                'allownonemethod' => 1,
+                'defaultmethod' => 'email',
             )
         );
     }

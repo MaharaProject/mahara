@@ -536,8 +536,7 @@ $string['emailsmtpsecuressl'] = 'SSL';
 $string['emailsmtpsecuretls'] = 'TLS';
 $string['emailnoreplyaddress'] = 'System mail address';
 $string['emailnoreplyaddressdescription'] = 'Emails come out as from this address';
-$string['defaultnotificationmethod'] = 'Default notification method';
-$string['defaultnotificationmethoddescription'] = 'Notification method for new users';
+$string['notificationsettings'] = 'Notification settings';
 
 
 

@@ -135,9 +135,6 @@ function change_language($userid, $oldlang, $newlang) {
  * @param string $method notification method to set.
  */
 function set_activity_preference($userid, $activity, $method) {
-    if (empty($method)) {
-        return delete_records('usr_activity_preference', 'activity', $activity, 'usr', $userid);
-    }
     if (record_exists('usr_activity_preference', 'usr', $userid, 'activity', $activity)) {
         set_field('usr_activity_preference', 'method', $method, 'usr', $userid, 'activity', $activity);
     }

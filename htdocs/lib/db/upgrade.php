@@ -3249,5 +3249,29 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_default($table, $field);
     }
 
+    if ($oldversion < 2014041600) {
+        // Add allownonemethod and defaultmethod fields to activity_type table.
+        $table = new XMLDBTable('activity_type');
+
+        $field = new XMLDBField('allownonemethod');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL, null, null, null, 1, 'delay');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+
+        $field = new XMLDBField('defaultmethod');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null, null, null, null, 'email', 'allownonemethod');
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+
+        // Allow null method in usr_activity_preference.
+        // Null indicates "none", no record indicates "not yet set" so use the default.
+        $table = new XMLDBTable('usr_activity_preference');
+        $field = new XMLDBField('method');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, null, null, null, null, null);
+        change_field_notnull($table, $field);
+    }
+
     return $status;
 }

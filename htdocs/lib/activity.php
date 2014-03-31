@@ -132,21 +132,6 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 }
 
 
-function activity_default_notification_method() {
-    static $method = null;
-    if (is_null($method)) {
-        if (!$method = get_config('defaultnotificationmethod')) {
-            if (in_array('email', array_keys(plugins_installed('notification')))) {
-                $method = 'email';
-            }
-            else {
-                $method = 'internal';
-            }
-        }
-    }
-    return $method;
-}
-
 /**
  * this function inserts a default set of activity preferences for a given user
  * id
@@ -154,21 +139,18 @@ function activity_default_notification_method() {
 function activity_set_defaults($eventdata) {
     $user_id = $eventdata['id'];
     $activitytypes = get_records_array('activity_type', 'admin', 0);
-    $method = activity_default_notification_method();
 
     foreach ($activitytypes as $type) {
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
             'activity' => $type->id,
-            'method' => $method,
+            'method' => $type->defaultmethod,
         ));
     }
-    
 }
 
 function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
-    $method = activity_default_notification_method();
 
     foreach ($activitytypes as $type) {
         foreach ($userids as $id) {
@@ -176,7 +158,7 @@ function activity_add_admin_defaults($userids) {
                 insert_record('usr_activity_preference', (object)array(
                     'usr' => $id,
                     'activity' => $type->id,
-                    'method' => $method,
+                    'method' => $type->defaultmethod,
                 ));
             }
         }
@@ -578,6 +560,7 @@ abstract class ActivityType {
     protected $activity_queue_id;
     protected $overridemessagecontents;
     protected $parent;
+    protected $defaultmethod;
 
     public function get_id() {
         if (!isset($this->id)) {
@@ -586,7 +569,15 @@ abstract class ActivityType {
         }
         return $this->id;
     }
-    
+
+    public function get_default_method() {
+        if (!isset($this->defaultmethod)) {
+            $tmp = activity_locate_typerecord($this->get_id());
+            $this->defaultmethod = $tmp->defaultmethod;
+        }
+        return $this->defaultmethod;
+    }
+
     public function get_type() {
         $prefix = 'ActivityType';
         return strtolower(substr(get_class($this), strlen($prefix)));
@@ -685,7 +676,16 @@ abstract class ActivityType {
             $user->lang = get_config('lang');
         }
         if (empty($user->method)) {
-            $user->method = call_static_method(get_class($this), 'default_notification_method');
+            // If method is not set then either the user has selected 'none' or their setting has not been set (so use default).
+            if (record_exists('usr_activity_preference', 'usr', $user->id, 'activity', $this->get_id())) {
+                // The user specified 'none' as their notification type.
+                return;
+            }
+            $user->method = $this->get_default_method();
+            if (empty($user->method)) {
+                // The default notification type is 'none' for this activity type.
+                return;
+            }
         }
 
         // always do internal
@@ -793,10 +793,6 @@ abstract class ActivityType {
             }
         }
         return 0;
-    }
-
-    public static function default_notification_method() {
-        return activity_default_notification_method();
     }
 }
 
@@ -1463,4 +1459,123 @@ function activitylist_html($type='all', $limit=10, $offset=0) {
     $result['tablerows'] = $smarty->fetch('account/activity/activitylist.tpl');
 
     return $result;
+}
+
+/**
+ * Get a table of elements that can be used to set notification settings for the specified user, or for the site defaults.
+ *
+ * @param object $user whose settings are being displayed or...
+ * @param bool $sitedefaults true if the elements should be loaded from the site default settings.
+ * @return array of elements suitable for adding to a pieforms form.
+ */
+function get_notification_settings_elements($user = null, $sitedefaults = false) {
+    global $SESSION;
+
+    if ($user == null && !$sitedefaults) {
+        throw new SystemException("Function get_notification_settings_elements requires a user or sitedefaults must be true");
+    }
+
+    if ($sitedefaults || $user->get('admin') || $user->is_institutional_admin()) {
+        $activitytypes = get_records_array('activity_type', '', '', 'id');
+    }
+    else {
+        $activitytypes = get_records_array('activity_type', 'admin', 0, 'id');
+    }
+
+    $notifications = plugins_installed('notification');
+
+    $elements = array();
+    $options = array();
+    foreach ($notifications as $n) {
+         $options[$n->name] = get_string('name', 'notification.' . $n->name);
+    }
+
+    $maildisabledmsg = false;
+    foreach ($activitytypes as $type) {
+        if ($sitedefaults) {
+            $dv = $type->defaultmethod;
+        }
+        else {
+            $dv = $user->get_activity_preference($type->id);
+            if ($dv === false) {
+                $dv = $type->defaultmethod;
+            }
+        }
+        if (empty($dv)) {
+            $dv = 'none';
+        }
+        if (!empty($type->plugintype)) {
+            $section = $type->plugintype . '.' . $type->pluginname;
+        }
+        else {
+            $section = 'activity';
+        }
+        if (!$sitedefaults && $dv == 'email' && !isset($maildisabledmsg) && get_account_preference($user->get('id'), 'maildisabled')) {
+            $SESSION->add_error_msg(get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/index.php'), false);
+            $maildisabledmsg = true;
+        }
+        if (empty($type->plugintype)) {
+            $key = "activity_{$type->name}";
+        }
+        else {
+            $key = "activity_{$type->name}_{$type->plugintype}_{$type->pluginname}";
+        }
+        $elements[$key] = array(
+            'defaultvalue' => $dv,
+            'type' => 'select',
+            'title' => get_string('type' . $type->name, $section),
+            'options' => $options,
+            'help' => true,
+        );
+        $elements[$key]['helpformname'] = 'activityprefs';
+        if (empty($type->plugintype)) {
+            $elements[$key]['helpplugintype'] = 'core';
+            $elements[$key]['helppluginname'] = 'account';
+        }
+        else {
+            $elements[$key]['helpplugintype'] = $type->plugintype;
+            $elements[$key]['helppluginname'] = $type->pluginname;
+        }
+        if ($type->allownonemethod) {
+            $elements[$key]['options']['none'] = get_string('none');
+        }
+    }
+
+    return $elements;
+}
+
+/**
+ * Save the notification settings.
+ *
+ * @param array $values returned from submitting a pieforms form.
+ * @param object $user whose settings are being updated or...
+ * @param bool $sitedefaults true if the elements should be saved to the site default settings.
+ */
+function save_notification_settings($values, $user = null, $sitedefaults = false) {
+    if ($user == null && !$sitedefaults) {
+        throw new SystemException("Function save_notification_settings requires a user or sitedefaults must be true");
+    }
+
+    if ($sitedefaults || $user->get('admin') || $user->is_institutional_admin()) {
+        $activitytypes = get_records_array('activity_type');
+    }
+    else {
+        $activitytypes = get_records_array('activity_type', 'admin', 0);
+    }
+
+    foreach ($activitytypes as $type) {
+        if (empty($type->plugintype)) {
+            $key = "activity_{$type->name}";
+        }
+        else {
+            $key = "activity_{$type->name}_{$type->plugintype}_{$type->pluginname}";
+        }
+        $value = $values[$key] == 'none' ? null : $values[$key];
+        if ($sitedefaults) {
+            execute_sql("UPDATE {activity_type} SET defaultmethod = ? WHERE id = ?", array($value, $type->id));
+        }
+        else {
+            $user->set_activity_preference($type->id, $value);
+        }
+    }
 }

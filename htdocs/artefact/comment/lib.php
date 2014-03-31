@@ -60,6 +60,8 @@ class PluginArtefactComment extends PluginArtefact {
                 'name' => 'feedback',
                 'admin' => 0,
                 'delay' => 0,
+                'allownonemethod' => 1,
+                'defaultmethod' => 'email',
             )
         );
     }
