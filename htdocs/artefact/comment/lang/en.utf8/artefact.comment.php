@@ -59,6 +59,10 @@ $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription'] = 'Comments will remain private until they are approved by you.';
 $string['newfeedbacknotificationsubject'] = 'New feedback on %s';
 $string['placefeedback'] = 'Place feedback';
+$string['progress_feedback'] = array(
+    'Comment on another user\'s page',
+    'Comment on %s other users\' pages',
+);
 $string['rating'] = 'Rating';
 $string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';
 $string['thiscommentisprivate'] = 'This comment is private';
