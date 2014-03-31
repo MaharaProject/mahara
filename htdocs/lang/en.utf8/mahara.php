@@ -194,7 +194,11 @@ $string['views'] = 'Pages';
 $string['profilecompleteness'] = 'Profile completion';
 $string['profilecompletenesspreview'] = 'Profile completion preview';
 $string['profilecompletenesstips'] = 'Profile completion tips';
-$string['for'] = 'for';
+$string['progressbargenerictask'] = array(
+    0 => 'Add one: %2$s',
+    1 => 'Add %d: %s'
+);
+$string['profilecompletionforwhichinstitution'] = 'for';
 
 // Online users sideblock strings
 $string['onlineusers'] = 'Online users';

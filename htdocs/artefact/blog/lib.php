@@ -106,7 +106,7 @@ class PluginArtefactBlog extends PluginArtefact {
         );
     }
 
-    public static function progressbar_link() {
+    public static function progressbar_link($artefacttype) {
         return 'artefact/blog/view/index.php';
     }
 }

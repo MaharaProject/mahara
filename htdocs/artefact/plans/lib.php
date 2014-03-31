@@ -49,7 +49,7 @@ class PluginArtefactPlans extends PluginArtefact {
         );
     }
 
-    public static function progressbar_link() {
+    public static function progressbar_link($artefacttype) {
         return 'artefact/plans/index.php';
     }
 }

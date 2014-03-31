@@ -13,7 +13,7 @@
         <form class="pieform" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">
         <table cellspacing="0"><tbody>
             <tr id="progresssidebarselect_institution_container" class="select">
-                <th><label for="progresssidebarselect_institution">{str tag=for}</label></th>
+                <th><label for="progresssidebarselect_institution">{str tag=profilecompletionforwhichinstitution}</label></th>
                 <td><select class="select autofocus" id="progresssidebarselect_institution" name="institution" tabindex="1" style="">
                 {foreach from=$sbdata.institutions key=inst item=displayname}
                     <option value="{$inst}"{if $inst == $sbdata.institution} selected="selected"{/if}>{$displayname|str_shorten_html:25:true}</option>

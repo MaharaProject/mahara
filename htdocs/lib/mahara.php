@@ -2875,7 +2875,23 @@ function tags_sideblock() {
     return null;
 }
 
+/**
+ * Get the string to display for a given progress bar item (in the sideblock).
+ * eg: Upload 2 files
+ * @param string $pluginname
+ * @param string $artefacttype
+ * @param int $target How many items need to be created
+ * @param int $completed How many items have been created
+ */
+function progressbar_artefact_task_label($pluginname, $artefacttype, $target, $completed) {
+    return call_user_func(generate_class_name('artefact', $pluginname) . '::progressbar_task_label', $artefacttype, $target, $completed);
+}
 
+/**
+ * Get the link to link on a given progress bar item (in the sideblock)
+ * @param string $pluginname
+ * @param string $artefacttype
+ */
 function progressbar_artefact_link($pluginname, $artefacttype) {
     return call_user_func(generate_class_name('artefact', $pluginname) . '::progressbar_link', $artefacttype);
 }
@@ -2958,14 +2974,15 @@ function progressbar_sideblock($preview=false) {
             $parts = explode('_', $itemname);
             $pluginname = $parts[1];
             $artefactname = $parts[2];
-            $remaining = $counting[$itemname]->value;
+            $target = $c->value;
+            $completed = 0;
             $data[$itemname] = array(
                 'artefact'  => $artefactname,
                 'link'      => progressbar_artefact_link($pluginname,  $artefactname),
-                'counting'  => $c->value,
-                'completed' => 0,
+                'counting'  => $target,
+                'completed' => $completed,
                 'display'   => ((bool) $c->value),
-                'label'     => get_string('progress_' . $artefactname, 'artefact.' . $pluginname, $remaining),
+                'label'     => progressbar_artefact_task_label($pluginname, $artefactname, $target, $completed),
             );
         }
 

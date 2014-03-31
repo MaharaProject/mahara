@@ -82,19 +82,9 @@ abstract class PluginArtefact extends Plugin {
     }
 
     /**
-     * Returns the relative URL path to the place in mahara that relates
-     * to the artefact.
-     * E.g. For plan artefact the link will be 'artefact/plans/index.php'
-     * @return string Url path to artefact.
-     */
-    public static function progressbar_link() {
-        return '';
-    }
-
-    /**
      * When filtering searches, some artefact types are classified the same way
      * even when they come from different artefact plugins.  This function allows
-     * artefact plugins to declare which search filter content type each of their 
+     * artefact plugins to declare which search filter content type each of their
      * artefact types belong to.
      * @return array of artefacttype => array of filter content types
      */
@@ -111,6 +101,34 @@ abstract class PluginArtefact extends Plugin {
      */
     public static function has_progressbar_options() {
         return true;
+    }
+
+    /**
+     * Returns the relative URL path to the place in mahara that relates
+     * to the artefact.
+     * E.g. For plan artefact the link will be 'artefact/plans/index.php'
+     * @param int The name of the artefact type (in case different ones need different links)
+     * @return string Url path to artefact.
+     */
+    public static function progressbar_link($artefacttype) {
+        return '';
+    }
+
+    public static function progressbar_task_label($artefacttype, $target, $completed) {
+        // By default we check to see if they provided a string called "progress_{$artefacttype}"
+        // in the plugin lang file (which takes one param with the count remaining)
+        $label = get_string('progress_' . $artefacttype, 'artefact.' . static::get_plugin_name(), ($target - $completed));
+
+        // Kind of a hack: if get_string() gave us a result indicating the string could not be found,
+        // try to construct one using the plugin and artefact name.
+        if (substr($label, 0, 2) == '[[') {
+            $artname = get_string($artefacttype, 'artefact.' . static::get_plugin_name());
+            if (substr($artname, 0, 2) == '[[') {
+                $artname = $artefacttype;
+            }
+            $label = get_string('progressbargenerictask', 'mahara', ($target - $completed), $artname);
+        }
+        return $label;
     }
 
     /**
