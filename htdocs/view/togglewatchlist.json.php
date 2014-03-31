@@ -14,22 +14,30 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$view = param_integer('view');
+$viewid = param_integer('view');
+$artefact = param_integer('artefact', null);
 
 $data = new StdClass;
-$data->view = $view;
+$data->view = $viewid;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 
 $result = new StdClass;
-
-if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
-    if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
+require_once(get_config('libroot') . 'view.php');
+$view = new View($viewid);
+$title = $view->get('title');
+if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
+    if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $viewid)) {
         $result->message = get_string('updatewatchlistfailed', 'view');
         json_reply('local', $result);
     }
     $result->message = get_string('removedfromwatchlist', 'view');
-    $result->newtext = get_string('addtowatchlist', 'view');
+    if ($artefact) {
+        $result->newtext = get_string('addtowatchlistartefact', 'view', $title);
+    }
+    else {
+        $result->newtext = get_string('addtowatchlist', 'view');
+    }
     json_reply(false, $result);
 }
 
@@ -39,5 +47,10 @@ if (!insert_record('usr_watchlist_view', $data)) {
 }
 
 $result->message = get_string('addedtowatchlist', 'view');
-$result->newtext = get_string('removefromwatchlist', 'view');
+if ($artefact) {
+    $result->newtext = get_string('removefromwatchlistartefact', 'view', $title);
+}
+else {
+    $result->newtext = get_string('removefromwatchlist', 'view');
+}
 json_reply(false, $result);

@@ -102,7 +102,10 @@ addLoadEvent(function () {
     if ($('toggle_watchlist_link')) {
         connect('toggle_watchlist_link', 'onclick', function (e) {
             e.stop();
-            sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid}, 'POST', function(data) {
+            if (typeof artefactid === 'undefined') {
+                artefactid = null;
+            }
+            sendjsonrequest(config.wwwroot + 'view/togglewatchlist.json.php', {'view': viewid, 'artefact': artefactid}, 'POST', function(data) {
                 $('toggle_watchlist_link').innerHTML = data.newtext;
             });
         });
