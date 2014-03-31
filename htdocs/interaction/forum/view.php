@@ -43,11 +43,11 @@ $forum = get_record_sql(
     array(0, $userid, $forumid)
 );
 
-define('GROUP', $forum->groupid);
-
 if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
+
+define('GROUP', $forum->groupid);
 
 $membership = user_can_access_forum((int)$forumid);
 $admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
@@ -57,6 +57,17 @@ $publicgroup = $group->public;
 if (!$membership && !$publicgroup) {
     throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
+
+$otherforums = get_records_sql_array(
+    'SELECT *
+    FROM {interaction_instance} f
+    WHERE f.id <> ?
+        AND f.group = ?
+        AND f.deleted = 0
+        AND f.plugin = ?
+    ORDER BY f.title',
+    array($forumid, $forum->groupid, 'forum')
+);
 
 $ineditwindow = group_within_edit_window($group);
 if (!$ineditwindow) {
@@ -100,6 +111,16 @@ if ($membership && isset($_POST['checked'])) {
         else if ($moderator && $type == 'open') {
             set_field_select('interaction_forum_topic', 'closed', 0, 'id IN (' . implode(',', $checked) . ')', array());
             $SESSION->add_ok_msg(get_string('topicopenedsuccess', 'interaction.forum'));
+        }
+        else if ($moderator && $type == 'moveto') {
+            $newforumid = param_integer('newforum');
+            // Check if the new forum is in the current group
+            $newforum = interaction_instance_from_id($newforumid);
+            if ($newforum && $newforum->get('group') == $forum->groupid) {
+                set_field_select('interaction_forum_topic', 'forum', $newforumid, 'id IN (' . implode(',', $checked) . ')', array());
+                PluginInteractionForum::interaction_forum_new_post($checked);
+                $SESSION->add_ok_msg(get_string('topicmovedsuccess', 'interaction.forum', count($checked)));
+            }
         }
         else if ($type == 'subscribe' && !$forum->subscribed) {
             db_begin();
@@ -234,6 +255,16 @@ addLoadEvent(function() {
             }
         });
     });
+    if (action = document.getElementById('action')) {
+        connect(action, 'onchange', function(e) {
+            if (this.options[this.selectedIndex].value == 'moveto') {
+                \$j('#otherforums').removeClass('hidden');
+            }
+            else {
+                \$j('#otherforums').addClass('hidden');
+            }
+        });
+    }
 });
 EOF;
 
@@ -246,6 +277,7 @@ $smarty = smarty(array(), $headers, array(), array());
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('forum', $forum);
+$smarty->assign('otherforums', $otherforums);
 $smarty->assign('publicgroup', $publicgroup);
 $smarty->assign('ineditwindow', $ineditwindow);
 $smarty->assign('feedlink', $feedlink);
