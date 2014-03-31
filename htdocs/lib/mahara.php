@@ -1801,6 +1801,15 @@ class Plugin {
     public static function can_be_disabled() {
         return true;
     }
+
+    /**
+    * Can this plugin be installed?
+    * Override to implement individual dependencies, for example special
+    * php extensions or artefact types installed by other plugins.
+    * To disable installation, throw an InstallationException
+    */
+    public static function sanity_check() {
+    }
 }
 
 /**
