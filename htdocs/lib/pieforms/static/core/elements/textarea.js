@@ -53,7 +53,7 @@ function absolutePosition(el) {//{{{
  *
  * Provides a 'grippie' for resizing a textarea vertically.
  */
-function PieformTextarea(element) {//{{{
+function PieformTextarea(element, fullwidth) {//{{{
     var self = this;
 
     this.element = element;
@@ -70,7 +70,10 @@ function PieformTextarea(element) {//{{{
     this.grippie.dimensions = getElementDimensions(this.grippie);
 
     // Set wrapper and textarea dimensions
-    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1, 'w': this.dimensions.w});
+    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1});
+    if (!fullwidth) {
+        setElementDimensions(this.wrapper, {'w': this.dimensions.w});
+    }
     setStyle(this.element, {
         'margin-bottom': '0',
         'width': '100%'

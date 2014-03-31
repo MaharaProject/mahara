@@ -538,9 +538,10 @@ $elements['viewadvanced'] = array(
                 'view_custom_css' => array(
                         'type' => 'textarea',
                         'rows' => 10,
-                        'cols' => 85,
+                        'cols' => 50,
                         'style' => 'font-family:monospace',
                         'resizable' => true,
+                        'fullwidth' => true,
                         'title' => get_string('skincustomcss','skin'),
                         'description' => get_string('skincustomcssdescription', 'skin'),
                         'defaultvalue' => ((!empty($viewskin['view_custom_css'])) ? $viewskin['view_custom_css'] : null),
@@ -559,6 +560,7 @@ $elements['submit'] = array(
 
 $designskinform = pieform(array(
         'name'       => 'designskinform',
+        'class'      => 'jstabs',
         'method'     => 'post',
         //'jsform'     => true,
         'plugintype' => 'core',
@@ -570,7 +572,7 @@ $designskinform = pieform(array(
 ));
 
 
-$smarty = smarty(array('jquery', 'js/skindesign.js'), array(), array(
+$smarty = smarty(array('jquery', 'tabs'), array(), array(
     'mahara' => array(
         'tab',
         'selected',

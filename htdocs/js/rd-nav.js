@@ -8,33 +8,35 @@
 
 // MAIN NAV (dropdown nav option NOT selected)
 // tests size of main nav against window size and adds class if window size is smaller
+function responsiveNav(navTarget, wrapper) {
+    if (wrapper.length == 0) {
+        return;
+    }
+    var navWidth = 0;
+    navTarget.each(function() {
+        navWidth += $j(this).outerWidth();
+    });
+    // Use the media query from theme/default/static/style/style.css
+    var breakpoint = 768;
+    $j(window).bind('load resize orientationchange', function() {
+        // get window width
+        var windowWidth = $j(window).width();
+        var wrapperWidth = wrapper.width();
+        // test if nav item combined width is greater than window width, add class if it is and vice versa
+        if (windowWidth < breakpoint || wrapperWidth < navWidth) {
+            wrapper.addClass('rd-navmenu');
+        }
+        else if (windowWidth >= breakpoint || wrapperWidth >= navWidth) {
+            wrapper.removeClass('rd-navmenu');
+        }
+    });
+}
 $j(document).ready(function(){
     $j('body').removeClass('no-js').addClass('js');
-    function navClass(navTarget, wrapper) {
-        // This is from theme/default/static/style/style.css (a media query)
-        var navBuffer = 768;
-        $j(window).bind('load resize orientationchange', function() {
-            // get window width
-            var windowWidth = $j(window).width();
-            // test if nav item combined width is greater than window width, add class if it is and vice versa
-            if (windowWidth <= navBuffer) {
-                wrapper.addClass('rd-navmenu');
-                if ($j('#profiletabswrap')) {
-                    $j('#profiletabswrap').addClass('rd-navmenu');
-                }
-            }
-            if (windowWidth >= navBuffer) {
-                wrapper.removeClass('rd-navmenu');
-                if ($j('#profiletabswrap')) {
-                    $j('#profiletabswrap').removeClass('rd-navmenu');
-                }
-            }
-        });
-    }
-    navClass($j('#main-nav > ul > li'), $j('#top-wrapper'));
-    navClass($j('.tabswrap li'), $j('.tabswrap'));
-    navClass($j('#category-list li'), $j('#top-pane'));
-    navClass($j('#main-nav-footer > ul > li'), $j('#footer'));
+    responsiveNav($j('#main-nav > ul > li'), $j('#top-wrapper'));
+    responsiveNav($j('.tabswrap li'), $j('.tabswrap'));
+    responsiveNav($j('#category-list li'), $j('#top-pane'));
+    responsiveNav($j('#main-nav-footer > ul > li'), $j('#footer'));
     // adds expand when click on menu title in responsive menu
     $j(".rd-nav-title a").click(function(event) {
         $j(".main-nav").toggleClass("nav-expand");

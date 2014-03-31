@@ -23,10 +23,6 @@ input#myfriends_addfriend_add {
     text-decoration: none;
     margin-left: 5px;
 }
-.profile-fieldsets fieldset {
-    border: none;
-    padding: 0;
-}
 fieldset.safe-hidden .mceEditor {
     display: none;
 }

@@ -60,10 +60,10 @@ function pieform_element_textarea(Pieform $form, $element) {/*{{{*/
         Pieform::info('No value for cols or width specified for textarea "' . $element['name'] . '"');
     }
     $element['style'] = (isset($element['style'])) ? $style . $element['style'] : $style;
-
+    $fullwidth = (!empty($element['fullwidth'])) ? 'true' : 'false';
     if (!empty($element['resizable'])) {
         $element['class'] = (isset($element['class']) && $element['class']) ? $element['class'] . ' resizable' : 'resizable';
-        $_PIEFORM_TEXTAREAS[] = array('formname' => $form->get_name(), 'elementname' => $form->get_name() . '_' . $element['id']);
+        $_PIEFORM_TEXTAREAS[] = array('formname' => $form->get_name(), 'elementname' => $form->get_name() . '_' . $element['id'], 'fullwidth' => $fullwidth);
     }
 
     return '<textarea'
@@ -96,7 +96,7 @@ function pieform_element_textarea_get_headdata() {/*{{{*/
     $result  = '<script type="text/javascript">';
     $result .= "PieformManager.loadPlugin('element', 'textarea');\n";
     foreach ($_PIEFORM_TEXTAREAS as $textarea) {
-        $result .= 'PieformManager.connect("onload", "'.$textarea['formname'].'", function(){new PieformTextarea($("' . $textarea['elementname'] . '"));});' . "\n";
+        $result .= 'PieformManager.connect("onload", "' . $textarea['formname'] . '", function(){new PieformTextarea($("' . $textarea['elementname'] . '"),' . $textarea['fullwidth'] . ');});' . "\n";
     }
     $result .= "</script>";
     return array($result);

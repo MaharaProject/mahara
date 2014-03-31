@@ -611,6 +611,10 @@ fieldset.collapsed table {
     display: inherit;
     position: inherit;
 }
+.tabbed-fieldsets fieldset {
+    border: none;
+    padding: 0;
+}
 /* legend */
 legend {
     font-weight: bold;
