@@ -3193,9 +3193,8 @@ function xmldb_core_upgrade($oldversion=0) {
         // have 'licensedefault' set causing an error
         execute_sql("DELETE FROM {usr_account_preference} WHERE FIELD = 'licensedefault' AND usr IN (
                         SELECT u.id FROM {usr} u
-                        LEFT JOIN {usr_account_preference} uap ON uap.usr = u.id
                         LEFT JOIN {usr_institution} ui ON ui.usr = u.id
-                        WHERE uap.field = 'licensedefault' AND (ui.institution = 'mahara' OR ui.institution is null)
+                        WHERE ui.institution = 'mahara' OR ui.institution is null
                      )");
     }
 
