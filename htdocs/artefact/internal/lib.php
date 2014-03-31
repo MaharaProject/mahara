@@ -281,19 +281,32 @@ class PluginArtefactInternal extends PluginArtefact {
     }
 
     public static function progressbar_additional_items() {
-        $specials = array('messaging');
-        $records = false;
-        foreach ($specials as $special) {
-            $record = new StdClass();
-            $record->name = $special;
-            $record->title = get_string($special, 'artefact.internal');
-            $record->plugin = 'internal';
-            $record->active = true;
-            $record->iscountable = false;
-            $record->is_metaartefact = true;
-            $records[] = $record;
-        }
-        return $records;
+        return array(
+                (object)array(
+                    'name' => 'messaging',
+                    'title' => get_string('progressbaritem_messaging', 'artefact.internal'),
+                    'plugin' => 'internal',
+                    'active' => true,
+                    'iscountable' => false,
+                    'is_metaartefact' => true,
+                ),
+                (object)array(
+                    'name' => 'joingroup',
+                    'title' => get_string('progressbaritem_joingroup', 'artefact.internal'),
+                    'plugin' => 'internal',
+                    'active' => true,
+                    'iscountable' => true,
+                    'is_metaartefact' => true,
+                ),
+                (object)array(
+                    'name' => 'makefriend',
+                    'title' => get_string('progressbaritem_makefriend', 'artefact.internal'),
+                    'plugin' => 'internal',
+                    'active' => true,
+                    'iscountable' => true,
+                    'is_metaartefact' => true,
+                )
+        );
     }
 
     public static function progressbar_metaartefact_count($name) {
@@ -313,6 +326,20 @@ class PluginArtefactInternal extends PluginArtefact {
                 $count = get_records_sql_array($sql, array($USER->get('id')));
                 $meta->completed = $count[0]->completed;
                 break;
+            case 'joingroup':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {group_member}
+                       WHERE member = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            case 'makefriend':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {usr_friend}
+                       WHERE usr1 = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
             default:
                 return false;
         }
@@ -321,36 +348,42 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function progressbar_link($artefacttype) {
         switch ($artefacttype) {
-         case 'firstname':
-         case 'lastname':
-         case 'studentid':
-         case 'preferredname':
-         case 'introduction':
-            return 'artefact/internal/index.php';
-            break;
-         case 'email':
-         case 'officialwebsite':
-         case 'personalwebsite':
-         case 'blogaddress':
-         case 'address':
-         case 'town':
-         case 'city':
-         case 'country':
-         case 'homenumber':
-         case 'businessnumber':
-         case 'mobilenumber':
-         case 'faxnumber':
-            return 'artefact/internal/index.php?fs=contact';
-            break;
-         case 'messaging':
-            return 'artefact/internal/index.php?fs=messaging';
-            break;
-         case 'occupation':
-         case 'industry':
-            return 'artefact/internal/index.php?fs=general';
-            break;
-         default:
-            return 'view/index.php';
+            case 'firstname':
+            case 'lastname':
+            case 'studentid':
+            case 'preferredname':
+            case 'introduction':
+                return 'artefact/internal/index.php';
+                break;
+            case 'email':
+            case 'officialwebsite':
+            case 'personalwebsite':
+            case 'blogaddress':
+            case 'address':
+            case 'town':
+            case 'city':
+            case 'country':
+            case 'homenumber':
+            case 'businessnumber':
+            case 'mobilenumber':
+            case 'faxnumber':
+                return 'artefact/internal/index.php?fs=contact';
+                break;
+            case 'messaging':
+                return 'artefact/internal/index.php?fs=messaging';
+                break;
+            case 'occupation':
+            case 'industry':
+                return 'artefact/internal/index.php?fs=general';
+                break;
+            case 'joingroup':
+                return 'group/find.php';
+                break;
+            case 'makefriend':
+                return 'user/find.php';
+                break;
+            default:
+                return 'view/index.php';
         }
     }
 }

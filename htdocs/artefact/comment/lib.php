@@ -125,8 +125,45 @@ class PluginArtefactComment extends PluginArtefact {
         PluginNotificationInternal::clean_notifications(array('feedback'));
     }
 
-    public static function has_progressbar_options() {
-        return false;
+    public static function progressbar_link($artefacttype) {
+        switch ($artefacttype) {
+            case 'feedback':
+                return 'view/sharedviews.php';
+                break;
+        }
+    }
+
+    public static function progressbar_additional_items() {
+        return array(
+            (object)array(
+                    'name' => 'feedback',
+                    'title' => get_string('placefeedback', 'artefact.comment'),
+                    'plugin' => 'comment',
+                    'active' => true,
+                    'iscountable' => true,
+                    'is_metaartefact' => true,
+            )
+        );
+    }
+
+    public static function progressbar_metaartefact_count($name) {
+        global $USER;
+        $meta = new stdClass();
+        $meta->artefacttype = $name;
+        $meta->completed = 0;
+        switch ($name) {
+            case 'feedback':
+                $sql = "SELECT COUNT(*) AS completed
+                         FROM {artefact}
+                       WHERE artefacttype='comment'
+                         AND owner <> ? AND author = ?";
+                $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
+                $meta->completed = $count[0]->completed;
+                break;
+            default:
+                return false;
+        }
+        return $meta;
     }
 }
 
@@ -150,6 +187,10 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
         }
+    }
+
+    public static function is_allowed_in_progressbar() {
+        return false;
     }
 
 

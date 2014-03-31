@@ -3014,6 +3014,9 @@ function progressbar_sideblock($preview=false) {
                         AND artefacttype in ({$insql})
                         GROUP BY artefacttype";
                 $normalartefacts = get_records_sql_array($sql, array($USER->get('id')));
+                if (!$normalartefacts) {
+                    $normalartefacts = array();
+                }
             }
             else {
                 // No basic artefacts in this one, so we just use an empty array for this.

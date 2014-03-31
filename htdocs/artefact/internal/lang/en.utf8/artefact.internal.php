@@ -130,6 +130,9 @@ $string['html'] = 'Note';
 $string['duplicatedprofilefieldvalue'] = 'Duplicated value';
 $string['existingprofilefieldvalues'] = 'Existing values';
 
+$string['progressbaritem_messaging'] = 'Messaging';
+$string['progressbaritem_joingroup'] = 'Join a group';
+$string['progressbaritem_makefriend'] = 'Make a friend';
 $string['progress_firstname'] = 'Add your first name';
 $string['progress_lastname'] = 'Add your last name';
 $string['progress_studentid'] = 'Add your student ID';
@@ -150,3 +153,11 @@ $string['progress_faxnumber'] = 'Add your fax number';
 $string['progress_messaging'] = 'Add messaging information';
 $string['progress_occupation'] = 'Add your occupation';
 $string['progress_industry'] = 'Add your industry';
+$string['progress_joingroup'] = array(
+    'Join a group',
+    'Join %s groups',
+);
+$string['progress_makefriend'] = array(
+    'Make a friend',
+    'Make %s friends',
+);
