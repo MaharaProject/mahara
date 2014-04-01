@@ -3204,5 +3204,43 @@ function xmldb_core_upgrade($oldversion=0) {
         update_magicdb_path();
     }
 
+    // Add id field and corresponding index to institution table.
+    if ($oldversion < 2014040400) {
+
+        $table = new XMLDBTable('institution');
+
+        // Add id field.
+        $field = new XMLDBField('id');
+        if (!field_exists($table, $field)) {
+            // Field.
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 1, 'name');
+            add_field($table, $field);
+
+            // Update ids.
+            $institutions = get_records_array('institution');
+            $x = 1;
+            foreach ($institutions as $institution) {
+                execute_sql('UPDATE {institution} SET id = ? WHERE name = ?', array($x, $institution->name));
+                $x++;
+            }
+
+            $key = new XMLDBKey('inst_id_uk');
+            $key->setAttributes(XMLDB_KEY_UNIQUE, array('id'));
+            add_key($table, $key);
+
+            // Add sequence.
+            $field = new XMLDBField('id');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            change_field_type($table, $field);
+
+            // In postgres, keys and indexes are removed when a field is changed ("Add sequence" above), so add the key back.
+            if (is_postgres()) {
+                $key = new XMLDBKey('inst_id_uk');
+                $key->setAttributes(XMLDB_KEY_UNIQUE, array('id'));
+                add_key($table, $key);
+            }
+        }
+    }
+
     return $status;
 }
