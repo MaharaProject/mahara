@@ -222,13 +222,10 @@ $cfg->unziplistarg = '-l';
 // you must change this to something unique, eg /tmp/mahara1/ and /tmp/mahara2/
 // $cfg->unziptempdir = '/tmp/mahara/';
 
-// Whether to use PHP's internal magicdb or an external one, and if external,
-// where it's located.
+// Set this value to specify where the PHP fileinfo "magic" DB is.
 //
-// * (default) NULL: use the magicdb at /usr/share/misc/magic, or if that's a
-//                   symlink or directory, use /usr/share/misc/magic.mgc
-// * FALSE: use PHP's internal magicdb
-// * Anything else: Use this value as the path to the magicdb
+// If this value is NULL, Mahara will attempt to use PHP's internal magic db, or to
+// autolocate your system's magic DB.
 $cfg->pathtomagicdb = NULL;
 
 // How often Mahara should update the last access time for users. Setting this

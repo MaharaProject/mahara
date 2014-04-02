@@ -3132,5 +3132,11 @@ function xmldb_core_upgrade($oldversion=0) {
         update_safe_iframe_regex();
     }
 
+    if ($oldversion < 2012080623) {
+        // Figure out where the magicdb is, and stick with that.
+        require_once(get_config('libroot') . 'file.php');
+        update_magicdb_path();
+    }
+
     return $status;
 }
