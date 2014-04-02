@@ -271,14 +271,10 @@ $cfg->pathtoaspell = '/usr/bin/aspell';
 $cfg->pathtoclam = '';
 
 /**
- * @global mixed $cfg->pathtomagicdb Whether to use PHP's internal magicdb or an external one, and if external,
- * where it's located.
+ * @global mixed $cfg->pathtomagicdb Set this value to specify where the PHP fileinfo "magic" DB is.
  *
- * The following values each has a different meaning:
- * * (default) NULL: use the magicdb at /usr/share/misc/magic, or if that's a
- *                   symlink or directory, use /usr/share/misc/magic.mgc
- * * FALSE: use PHP's internal magicdb
- * * Anything else: Use this value as the path to the magicdb
+ * If this value is NULL, Mahara will attempt to use PHP's internal magic db, or to
+ * autolocate your system's magic DB.
  */
 $cfg->pathtomagicdb = NULL;
 
