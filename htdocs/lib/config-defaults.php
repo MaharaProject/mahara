@@ -222,8 +222,17 @@ $cfg->unziplistarg = '-l';
 // you must change this to something unique, eg /tmp/mahara1/ and /tmp/mahara2/
 // $cfg->unziptempdir = '/tmp/mahara/';
 
-// How often Mahara should update the last access time for users. Setting this 
-// lower means the field will be updated more regularly, but means a database 
+// Whether to use PHP's internal magicdb or an external one, and if external,
+// where it's located.
+//
+// * (default) NULL: use the magicdb at /usr/share/misc/magic, or if that's a
+//                   symlink or directory, use /usr/share/misc/magic.mgc
+// * FALSE: use PHP's internal magicdb
+// * Anything else: Use this value as the path to the magicdb
+$cfg->pathtomagicdb = NULL;
+
+// How often Mahara should update the last access time for users. Setting this
+// lower means the field will be updated more regularly, but means a database
 // write will be required for more requests.
 // Setting it to zero means the access time will be updated every request
 $cfg->accesstimeupdatefrequency = 300;
