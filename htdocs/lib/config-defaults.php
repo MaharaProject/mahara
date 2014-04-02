@@ -286,14 +286,15 @@ $cfg->pathtoclam = '';
 /**
  * @global mixed $cfg->pathtomagicdb Whether to use PHP's internal magicdb or an external one, and if external,
  * where it's located.
+ * If you're having problems with Mahara recognizing uploaded filetypes correctly, try changing this setting.
  *
  * The following values each has a different meaning:
- * * (default) NULL: use the magicdb at /usr/share/misc/magic, or if that's a
+ * * (default) FALSE: use PHP's internal magicdb
+ * * NULL: use the magicdb at /usr/share/misc/magic, or if that's a
  *                   symlink or directory, use /usr/share/misc/magic.mgc
- * * FALSE: use PHP's internal magicdb
  * * Anything else: Use this value as the path to the magicdb
  */
-$cfg->pathtomagicdb = NULL;
+$cfg->pathtomagicdb = false;
 
 /**
  * @global string $cfg->pathtogzip
