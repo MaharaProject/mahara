@@ -665,6 +665,9 @@ function core_postinst() {
     );
     update_safe_iframes($iframesources, $iframedomains);
 
+    require_once(get_config('docroot') . 'lib/file.php');
+    update_magicdb_path();
+
     return $status;
 }
 

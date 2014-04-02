@@ -302,28 +302,17 @@ function get_mime_type($file) {
 function file_mime_type($file, $originalfilename=false) {
     static $mimetypes = null;
 
-    if (class_exists('finfo')) {
-        // upstream bug in php #54714
-        // http://bugs.php.net/bug.php?id=54714
-        //
-        // according to manual (http://www.php.net/manual/en/function.finfo-open.php)
-        // default option is /usr/share/misc/magic, then /usr/share/misc/magic.mgc
-        //
-        // if /usr/share/misc/magic is a directory then finfo still succeeds and
-        // doesn't fall back onto the .mcg magic_file
-        // force /usr/share/misc/magic.mgc instead in this case
-        $MAGICPATH = get_config('pathtomagicdb');
-        if ($MAGICPATH === null) {
-            $MAGICPATH = '/usr/share/misc/magic';
-            $magicfile = null;
-            if (is_dir($MAGICPATH) or is_link($MAGICPATH)) {
-                $magicfile = '/usr/share/misc/magic.mgc';
-            }
-        }
-        else {
-            $magicfile = $MAGICPATH;
-        }
+    if (get_config('pathtomagicdb') !== null) {
+        // Manually specified magicdb path in config.php
+        $magicfile = get_config('pathtomagicdb');
+    }
+    else {
+        // Using one of the system presets (or if no matching system preset, this
+        // will return false, indicating we shouldn't bother with fileinfo
+        $magicfile = standard_magic_paths(get_config('defaultmagicdb'));
+    }
 
+    if ($magicfile !== false && class_exists('finfo') ) {
         if (defined('FILEINFO_MIME_TYPE')) {
             if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
                 $type = @$finfo->file($file);
@@ -368,6 +357,74 @@ function file_mime_type($file, $originalfilename=false) {
     return 'application/octet-stream';
 }
 
+
+/**
+ * The standard locations we would expect the magicdb to be. The keys of the array returned
+ * by this value, are the values stored in the config
+ * @param int $key (optional)
+ * @return multitype:string If a key is supplied, return the path matching that key. If no
+ * key is supplied, return the full array of possible magic locations.
+ */
+function standard_magic_paths($key = 'fullarray') {
+    static $standardmagicpaths = array(
+        1=>'',
+        2=>'/usr/share/misc/magic',
+        3=>'/usr/share/misc/magic.mgc',
+    );
+
+    if ($key === 'fullarray') {
+        return $standardmagicpaths;
+    }
+
+    if (array_key_exists($key, $standardmagicpaths)) {
+        return $standardmagicpaths[$key];
+    }
+    else {
+        return false;
+    }
+}
+
+
+/**
+ * Try a few different likely possibilities for the magicdb and see which of them returns
+ * the correct response. Then store that configuration option for later use, in the config
+ * setting 'defaultmagicdb'. Because this is a DB-settable setting, we don't store the file
+ * path directly in it, but instead just store a key corresponding to a path specified in
+ * standard_magic_paths().
+ */
+function update_magicdb_path() {
+    // Determine where the server's "magic" db is\
+    if (class_exists('finfo')) {
+        $file = get_config('docroot') . 'theme/raw/static/images/powered-by-mahara.png';
+
+        $magicpathstotry = standard_magic_paths();
+        $workingpath = false;
+        foreach ($magicpathstotry as $i=>$magicfile) {
+            $type = false;
+            if (defined('FILEINFO_MIME_TYPE')) {
+                if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
+                    $type = @$finfo->file($file);
+                }
+            }
+            else if ($finfo = @new finfo(FILEINFO_MIME, $magicfile)) {
+                if ($typecharset = @$finfo->file($file)) {
+                    if ($bits = explode(';', $typecharset)) {
+                        $type = $bits[0];
+                    }
+                }
+            }
+            if ($type == 'image/png') {
+                $workingpath = $i;
+                break;
+            }
+        }
+        if (!$workingpath) {
+            log_debug('Could not locate the path to your fileinfo magic db. Please set it manually using $cfg->pathtomagicdb.');
+            $workingpath = 0;
+        }
+        set_config('defaultmagicdb', $workingpath);
+    }
+}
 
 /**
  * Given a mimetype (perhaps returned by {@link get_mime_type}, returns whether
