@@ -2592,8 +2592,12 @@ class View {
                 $expr = 'a.owner IS NOT NULL AND a.owner = ?';
                 array_unshift($selectph, $user->get('id'));
             }
-            $type = is_mysql() ? 'UNSIGNED' : 'INTEGER';
-            $cols .= ", CAST($expr AS $type) AS editable";
+            if (is_mysql()) {
+                $cols .= ", ($expr) AS editable";
+            }
+            else {
+                $cols .= ", CAST($expr AS INTEGER) AS editable";
+            }
         }
 
         $artefacts = get_records_sql_assoc(
