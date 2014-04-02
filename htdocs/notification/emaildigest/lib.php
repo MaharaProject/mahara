@@ -35,7 +35,10 @@ class PluginNotificationEmaildigest extends PluginNotification {
         $toinsert = new StdClass;
         $toinsert->type = $data->type;
         $toinsert->usr = $user->id;
-        $toinsert->message = $data->message;
+        // Some messages are all html (or the message is not required).
+        // When they're 'cleaned' for display, they are left empty.
+        // Make sure something is in the field as it's NOT NULL in the database.
+        $toinsert->message = (empty($data->message) ? ' ' : $data->message);
         $toinsert->ctime = db_format_timestamp(time());
         if (!empty($data->url)) {
             $toinsert->url = $data->url;
