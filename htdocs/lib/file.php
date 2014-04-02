@@ -288,17 +288,8 @@ function file_mime_type($file, $originalfilename=false) {
             $magicfile = $MAGICPATH;
         }
 
-        if (defined('FILEINFO_MIME_TYPE')) {
-            if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
-                $type = @$finfo->file($file);
-            }
-        }
-        else if ($finfo = @new finfo(FILEINFO_MIME, $magicfile)) {
-            if ($typecharset = @$finfo->file($file)) {
-                if ($bits = explode(';', $typecharset)) {
-                    $type = $bits[0];
-                }
-            }
+        if ($finfo = @new finfo(FILEINFO_MIME_TYPE, $magicfile)) {
+            $type = @$finfo->file($file);
         }
     }
     else if (function_exists('mime_content_type')) {
