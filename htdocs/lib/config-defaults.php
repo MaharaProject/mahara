@@ -284,17 +284,12 @@ $cfg->maximageresizememory = 104857600;
 $cfg->pathtoclam = '';
 
 /**
- * @global mixed $cfg->pathtomagicdb Whether to use PHP's internal magicdb or an external one, and if external,
- * where it's located.
- * If you're having problems with Mahara recognizing uploaded filetypes correctly, try changing this setting.
+ * @global mixed $cfg->pathtomagicdb Set this value to specify where the PHP fileinfo "magic" DB is.
  *
- * The following values each has a different meaning:
- * * (default) FALSE: use PHP's internal magicdb
- * * NULL: use the magicdb at /usr/share/misc/magic, or if that's a
- *                   symlink or directory, use /usr/share/misc/magic.mgc
- * * Anything else: Use this value as the path to the magicdb
+ * If this value is NULL, Mahara will attempt to use PHP's internal magic db, or to
+ * autolocate your system's magic DB.
  */
-$cfg->pathtomagicdb = false;
+$cfg->pathtomagicdb = NULL;
 
 /**
  * @global string $cfg->pathtogzip
