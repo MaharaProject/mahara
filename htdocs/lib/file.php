@@ -324,13 +324,19 @@ function file_mime_type($file, $originalfilename=false) {
         // according to manual (http://www.php.net/manual/en/function.finfo-open.php)
         // default option is /usr/share/misc/magic, then /usr/share/misc/magic.mgc
         //
-        // if /usr/share/misc/magic is a directory then finfo still succeeds and 
+        // if /usr/share/misc/magic is a directory then finfo still succeeds and
         // doesn't fall back onto the .mcg magic_file
         // force /usr/share/misc/magic.mgc instead in this case
-        $MAGICPATH = '/usr/share/misc/magic';
-        $magicfile = null;
-        if (is_dir($MAGICPATH) or is_link($MAGICPATH)) {
-            $magicfile = '/usr/share/misc/magic.mgc';
+        $MAGICPATH = get_config('pathtomagicdb');
+        if ($MAGICPATH === null) {
+            $MAGICPATH = '/usr/share/misc/magic';
+            $magicfile = null;
+            if (is_dir($MAGICPATH) or is_link($MAGICPATH)) {
+                $magicfile = '/usr/share/misc/magic.mgc';
+            }
+        }
+        else {
+            $magicfile = $MAGICPATH;
         }
 
         if (defined('FILEINFO_MIME_TYPE')) {
