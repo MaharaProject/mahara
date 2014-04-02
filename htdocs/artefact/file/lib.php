@@ -943,15 +943,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return new ArtefactTypeImage(0, $data);
         }
 
-        // If $data->filetype is set here, it's probably the claim made by the
-        // browser during upload or by a Leap2a file.  Generally we believe this
-        // claim, because it gives better results when serving the file on
-        // download.  If there's no claimed mimetype, use file_mime_type to make
-        // a guess, and give each file artefact type access to both the claimed
-        // and guessed mimetypes.
         $data->guess = file_mime_type($path, "foo.{$data->oldextension}");
-
-        if (empty($data->filetype) || $data->filetype == 'application/octet-stream') {
+        // The guessed mimetype tends to be more accurate than what the browser tells us.
+        // Use the guess, unless it failed to find a match.
+        // But if it failed to find a match *and* there is no browser-supplied mimetype,
+        // then just use the guess.
+        if ($data->guess != 'application/octet-stream' || empty($data->filetype)) {
             $data->filetype = $data->guess;
         }
 
