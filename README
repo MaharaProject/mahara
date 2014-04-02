@@ -27,7 +27,7 @@ The system requirements for the most recent version of Mahara are here:
 
   https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Requirements
 
-Mahara 1.9 requires:
+Mahara 1.10 requires:
 
  * Database:
  ** Postgres 8.3 or later
