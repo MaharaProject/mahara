@@ -282,6 +282,19 @@ $cfg->maximageresizememory = 104857600;
  * @global $cfg->pathtoclam The path to the ClamAV executable (clamscan or clamdscan); disabled by default
  */
 $cfg->pathtoclam = '';
+
+/**
+ * @global mixed $cfg->pathtomagicdb Whether to use PHP's internal magicdb or an external one, and if external,
+ * where it's located.
+ *
+ * The following values each has a different meaning:
+ * * (default) NULL: use the magicdb at /usr/share/misc/magic, or if that's a
+ *                   symlink or directory, use /usr/share/misc/magic.mgc
+ * * FALSE: use PHP's internal magicdb
+ * * Anything else: Use this value as the path to the magicdb
+ */
+$cfg->pathtomagicdb = NULL;
+
 /**
  * @global string $cfg->pathtogzip
  * @global string $cfg->pathtounzip
