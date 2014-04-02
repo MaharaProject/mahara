@@ -260,9 +260,10 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
  * file extension in the artefact_file_mime_types table
  *
  * @param string $file The file to check
+ * @param string $originalfilename The original name of the file (so we can check its extension)
  * @return string      The mime type of the file
  */
-function file_mime_type($file) {
+function file_mime_type($file, $originalfilename=false) {
     static $mimetypes = null;
 
     if (class_exists('finfo')) {
@@ -306,7 +307,12 @@ function file_mime_type($file) {
     // cares about.  For now, use the artefact_file_mime_types table,
     // even though it's in a plugin and the description column doesn't
     // really contain filename extensions.
-    $basename = basename($file);
+    if ($originalfilename) {
+        $basename = $originalfilename;
+    }
+    else {
+        $basename = basename($file);
+    }
     if (strpos($basename, '.', 1)) {
         if (is_null($mimetypes)) {
             $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
