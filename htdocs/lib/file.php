@@ -255,42 +255,6 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
 
 
 /**
- * Given a file path, retrieves the mime type of the file using the
- * unix 'file' program.
- *
- * This is only implemented for non-windows based operating systems. Mahara
- * does not support windows at this time.
- *
- * Sometimes file will be unable to detect the mimetype, in which case
- * it will return the empty string.
- *
- *
- * This function should no longer be required.  Mime types are now
- * stored along with files in the artefact tables, and passed directly
- * to serve_file.  Left in place for the upgrade to initially populate
- * the mime type of existing files.
- * See htdocs/artefact/file/db/upgrade.php.
- *
- *
- * @param string $file The file to check
- * @return string      The mime type of the file, or false if file is not available.
- */
-function get_mime_type($file) {
-    switch (strtolower(PHP_OS)) {
-    case 'win' :
-        throw new SystemException('retrieving filetype not supported in windows');
-    default : 
-        $filepath = get_config('pathtofile');
-        if (!empty($filepath)) {
-            list($output,) = preg_split('/[\s;]/', exec($filepath . ' -ib ' . escapeshellarg($file)));
-            return $output;
-        }
-        return false;
-    }
-}
-
-
-/**
  * Given a file path, guesses the mime type of the file using the
  * php functions finfo_file, mime_content_type, or looking for the
  * file extension in the artefact_file_mime_types table

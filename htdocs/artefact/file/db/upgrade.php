@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_artefact_file_upgrade($oldversion=0) {
-    
+
     $status = true;
 
     if ($oldversion < 2007010900) {
@@ -150,7 +150,18 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
                     $type = $size['mime'];
                 }
                 else if ($a->artefacttype == 'file') {
-                    $type = get_mime_type(get_config('dataroot') . 'artefact/file/originals/' . ($a->fileid % 256) . '/' . $a->fileid);
+                    $file = get_config('dataroot') . 'artefact/file/originals/' . ($a->fileid % 256) . '/' . $a->fileid;
+                    switch (strtolower(PHP_OS)) {
+                        case 'win' :
+                            throw new SystemException('retrieving filetype not supported in windows');
+                        default :
+                            $filepath = get_config('pathtofile');
+                            if (!empty($filepath)) {
+                                list($output,) = preg_split('/[\s;]/', exec($filepath . ' -ib ' . escapeshellarg($file)));
+                                $type = $output;
+                            }
+                            $type = false;
+                    }
                 }
                 if ($type) {
                     set_field('artefact_file_files', 'filetype', $type, 'artefact', $a->artefact);
