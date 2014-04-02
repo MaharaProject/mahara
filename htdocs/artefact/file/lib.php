@@ -914,7 +914,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // download.  If there's no claimed mimetype, use file_mime_type to make
         // a guess, and give each file artefact type access to both the claimed
         // and guessed mimetypes.
-        $data->guess = file_mime_type($path);
+        $data->guess = file_mime_type($path, "foo.{$data->oldextension}");
 
         if (empty($data->filetype) || $data->filetype == 'application/octet-stream') {
             $data->filetype = $data->guess;
