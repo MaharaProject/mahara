@@ -1,25 +1,69 @@
-Mahara Readme
--------------
+Thanks for downloading Mahara!
 
-Thanks for downloading Mahara! To install, please follow the instructions here:
+SUPPORT: The best ways of obtaining support are:
+
+ * http://manual.mahara.org/ - the Mahara online manual
+ * http://www.mahara.org/forums - the Mahara project forums
+ * #mahara on freenode (IRC) - live chat with other users and developers
+
+INSTALLATION:
+
+To install, please follow the instructions here:
 
   https://wiki.mahara.org/System_Administrator%27s_Guide/Installing_Mahara
+
+UPGRADING:
 
 If you already have a Mahara you wish to upgrade, follow the instructions here:
 
   https://wiki.mahara.org/System_Administrator%27s_Guide/Upgrading_Mahara
 
-The best ways of obtaining support are:
+SYSTEM REQUIREMENTS:
 
- * #mahara on freenode (IRC) - live chat with other users and developers
- * http://www.mahara.org/forums - the Mahara project forums
+The system requirements for the most recent version of Mahara are here:
 
-You can get language packs from:
+  https://wiki.mahara.org/index.php/System_Administrator%27s_Guide/Requirements
+
+Mahara 1.6 requires:
+
+ * Database:
+ ** Postgres 8.3 or later
+ ** or MySQL 5.1 or later
+
+ * Web Server: Mahara is only officially supported on Apache 2 or later,
+   although it will probably run in any web server with the proper PHP
+   extensions.
+
+ * PHP 5.3 or later, with the following extensions:
+ ** gd (including Freetype support)
+ ** json
+ ** curl
+ ** libxml
+ ** SimpleXML
+ ** session
+ ** pgsql; or mysqli
+ ** openssl and xmlrpc (for networking support)
+ ** mbstring
+ ** mime_magic; or fileinfo
+ ** mcrypt
+ ** imagick (optional)
+ ** zlib (optional)
+ ** zip (optional)
+ ** bz2 (optional)
+ ** ... and ensure that the magic_quotes and register_globals settings are off.
+
+ * OS: Mahara is only officially supported on Debian (5.0/"Lenny" or later) and
+   Ubuntu (10.04/"Lucid Lynx" or later), however it will probably run in any
+   OS with a suitable web server
+ ** For zip/unzip support, the command-line "zip" and "unzip" utilities must
+    be installed
+
+TRANSLATIONS: You can get language packs from:
 
   https://wiki.mahara.org/Download_Mahara
 
-Documentation on integrating Mahara with Moodle can be found in the 3.1MB PDF
-here:
+MOODLE: Documentation on integrating Mahara with Moodle can be found in the
+3.1MB PDF here:
 
   https://wiki.mahara.org/images/d/d5/Mahoodle.pdf
 
@@ -29,13 +73,12 @@ here:
 Copyright notice
 ----------------
 
-Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012 Catalyst IT Ltd
-and others (see: https://wiki.mahara.org/index.php/Contributors)
+Copyright (C) 2006-2014 Catalyst IT and others; see:
+https://wiki.mahara.org/index.php/Contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation, version 3 or later of the License.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
