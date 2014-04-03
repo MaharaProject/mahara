@@ -1,3 +1,25 @@
+1.7.5 (2014-04-03)
+- Bug #1058416: Copying page in a collection only gives "untitled" title for clean URLs
+- Bug #1081947: Use of CAST() causes extreme slowdown in large MySQL sites
+- Bug #1249858: Mahara can't figure out mime types because of a finfo() bug
+- Bug #1266976: Update to HTMLPurifier 4.6.0
+- Bug #1284876: Suspended users can log in via password reset email
+- Bug #1284878: external feed rss not updating
+- Bug #1287350: New Google Drive URL
+- Bug #974855: "Generate sitemap" option has empty help file
+- Bug #1053708: A full list of Pages don't show up
+- Bug #1070046: select query uses more than MAX_JOIN_SIZE on mysql
+- Bug #1099811: group files error after upgrade
+- Bug #1239928: Prezi doesn't load
+- Bug #1255361: Error adding files to Institution pages
+- Bug #1259377: Explanation when there are no tasks in a plan is unclear
+- Bug #996337: Forum post delay setting only sticks after you clicked "Save"
+- Bug #1075760: reporting objectional material with no message doesn't get sent to admin with digest emails
+- Bug #1195120: Delete superflous fullstop on /admin/groups/uploadcsv.php
+- Bug #1203082: Change password warning contains escaped html
+- Bug #1246024: error message disappears too fast
+- Bug #1253462: Undefined property: stdClass::$urlid after doing feedback
+
 1.7.4 (2013-10-29)
 - 
 
