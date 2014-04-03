@@ -232,6 +232,8 @@ function forgotpasschange_submit(Pieform $form, $values) {
         // Remove the password request(s) for the user
         delete_records('usr_password_request', 'usr', $values['user']);
 
+        ensure_user_account_is_active($user);
+
         $USER->reanimate($user->id, $user->authinstance);
         $SESSION->add_ok_msg(get_string('passwordchangedok'));
         redirect();
