@@ -1,3 +1,37 @@
+1.8.2 (2014-04-03)
+- Bug 1239461: External feed has duplicate rows causing problems
+- Bug 1249858: Mahara can't figure out mime types because of a finfo() bug
+- Bug 1256118: elasticsearch install hangs if ElasticSearch Server not running
+- Bug 1257953: public group forum info do not show up in elasticsearch
+- Bug 1262050: Same profile picture used on "Shared with me"
+- Bug 1264105: Problem with deleting skins that are attached to a portfolio page
+- Bug 1265049: forum post notifications have escaped <br> in message in inbox
+- Bug 1266317: Institution/group ownership of custom flexible layouts
+- Bug 1266976: Update to HTMLPurifier 4.6.0
+- Bug 1268788: mobile_api_json_reply sends extra stuff at the top, making it invalid json
+- Bug 1270752: "shared with me" pagination fails with IE 9
+- Bug 1284876: Suspended users can log in via password reset email
+- Bug 1284878: external feed rss not updating
+- Bug 1287350: New Google Drive URL
+- Bug 1290649: fonts not working under https
+- Bug 1064780: Default journal of a Persona auth account doesn't have user's name
+- Bug 1070046: select query uses more than MAX_JOIN_SIZE on mysql
+- Bug 1086569: Lang string misleading when inst. staff doesn't have stats access
+- Bug 1099811: group files error after upgrade
+- Bug 1239928: Prezi doesn't load
+- Bug 1259377: Explanation when there are no tasks in a plan is unclear
+- Bug 1262932: Bad data in the DB can cause the schema correction SQL to throw a fatal error
+- Bug 1278667: Two error messages when uploading files without accepting upload agreement
+- Bug 1284869: Suspended user login attempts show up in "Online Users" list
+- Bug 1287262: unable to create group home page
+- Bug 1064219: "Add page to watchlist" not clear on artefact page
+- Bug 1067724: Unable to read language directory
+- Bug 1195120: Delete superflous fullstop on /admin/groups/uploadcsv.php
+- Bug 1203082: Change password warning contains escaped html
+- Bug 1231920: Duplicate tags in page creation gives error message
+- Bug 1253462: Undefined property: stdClass::$urlid after doing feedback
+- Bug 1267240: Clicking on new change layout icon needs to warn if navigating away without saving
+
 1.8.1 (2013-12-18)
 - Bug 1247715: MySQLi driver errors out with non-default port number
 - Bug 1246024: Error message fading too fast to read
