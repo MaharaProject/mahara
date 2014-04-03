@@ -1,3 +1,23 @@
+1.6.9 (2014-04-03)
+- Bug 1249858: Incorrect detection of uploaded file types
+- Bug 1058416: Copied pages from collections have "untitled" as clean URL
+- Bug 1081947: Use of CAST() causes slowdown in MySQL
+- Bug 1266976: Updating HTMLPurifier to 4.6.0
+- Bug 1284876: Suspended users can login via password reset email
+- Bug 1287350: Updating Google Drive embed address
+- Bug 974855: Missing "Generate sitemap" help file
+- Bug 1053708: Pagination issues when changing the number of items per page
+- Bug 1070046: Overriding MAX_JOIN_SIZE for MySQL optimization
+- Bug 1099811: Watched group/institution page errors
+- Bug 1239928: Problems loading Prezi iframes
+- Bug 1259377: Clarifying text for when there are no tasks in a plan
+- Bug 996337: Problems changing forum post delay setting
+- Bug 1075760: Objectional Material reports with no content don't get sent to admins
+- Bug 1195120: Superfluous fullstop in admin/groups/uploadcsv.php
+- Bug 1203082: Escaped HTML in change password warning
+- Bug 1253462: Undefined property warning after doing feedback
+- 
+
 1.6.8 (2013-10-29)
 - 
 
