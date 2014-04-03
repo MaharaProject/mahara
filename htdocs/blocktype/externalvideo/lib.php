@@ -225,6 +225,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
         if (!filter_var($values['videoid'], FILTER_VALIDATE_URL)) {
             // Not a url, treat the input as html to be sanitised when rendered.
+            $httpstr = is_https() ? 'https' : 'http';
+            $values['videoid'] = preg_replace('#https?://#', $httpstr . '://', $values['videoid']);
             $values['html'] = $values['videoid'];
             return $values;
         }
@@ -314,6 +316,14 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
 
     public static function default_copy_type() {
         return 'full';
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            ensure_record_exists('iframe_source_icon', (object) array('name' => 'Prezi', 'domain' => 'prezi.com'), (object) array('name' => 'Prezi', 'domain' => 'prezi.com'));
+            ensure_record_exists('iframe_source', (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'), (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'));
+            update_safe_iframe_regex();
+        }
     }
 
 }
