@@ -1,4 +1,4 @@
-1.0.15 (2010-07-02)
+1.0.15 (2010-07-02) 
 - Multiple XSS vulnerabilities (CVE-2010-1667)
 - Multiple CSRF vulnerabilities (CVE-2010-1668)
 - Removal of dangerous auth plugin configuration options (CVE-2010-1670)
