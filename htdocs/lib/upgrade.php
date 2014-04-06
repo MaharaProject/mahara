@@ -230,6 +230,21 @@ function check_upgrades($name=null) {
             if (property_exists($config, 'requires_parent')) {
                 $plugininfo->requires_parent = $config->requires_parent;
             }
+
+            $classname = generate_class_name($plugintype, $pluginname);
+            safe_require($plugintype, $pluginname);
+            try {
+                $classname::sanity_check();
+            }
+            catch (InstallationException $exc) {
+                $plugininfo->to = get_string('notinstalled', 'admin');
+                $plugininfo->torelease = get_string('notinstalled', 'admin');
+                $plugininfo->errormsg = $exc->getMessage();
+                $toupgrade[$pluginkey] = $plugininfo;
+
+                continue;
+            }
+
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version > $pluginversion) {
@@ -251,6 +266,21 @@ function check_upgrades($name=null) {
             if (property_exists($config, 'requires_parent')) {
                 $plugininfo->requires_parent = $config->requires_parent;
             }
+
+            $classname = generate_class_name($plugintype, $pluginname);
+            safe_require($plugintype, $pluginname);
+            try {
+                $classname::sanity_check();
+            }
+            catch (InstallationException $exc) {
+                $plugininfo->to = $config->version;
+                $plugininfo->torelease = $pluginrelease;
+                $plugininfo->errormsg = $exc->getMessage();
+                $toupgrade[$pluginkey] = $plugininfo;
+
+                continue;
+            }
+
             $toupgrade[$pluginkey] = $plugininfo;
         }
     }

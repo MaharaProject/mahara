@@ -64,6 +64,13 @@ if ($install) {
 }
 
 if (!empty($upgrade)) {
+    if (!empty($upgrade->errormsg)) {
+        $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
+        $data['install'] = false;
+        $data['error'] = false;
+        $data['message'] = get_string('notinstalled', 'admin') . ': ' . $upgrade->errormsg;
+        json_reply('local', $data);
+    }
     $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
     if ($name == 'core') {
         $funname = 'upgrade_core';

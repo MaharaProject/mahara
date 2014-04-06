@@ -99,6 +99,8 @@ foreach (array_keys($plugins) as $plugin) {
                 $plugins[$plugin]['notinstalled'][$dir] = array();
                 try {
                     validate_plugin($plugin, $dir);
+                    $classname = generate_class_name($plugin, $dir);
+                    $classname::sanity_check();
                 }
                 catch (InstallationException $e) {
                     $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();
