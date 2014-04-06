@@ -9,6 +9,23 @@
         {assign var="installed" value=$plugins.installed}
         {assign var="notinstalled" value=$plugins.notinstalled}
             <ul>
+                {if $notinstalled}
+                <li class="notinstalled"><b>{str tag='notinstalledplugins'}</b>
+                    <ul id="{$plugintype}.notinstalled">
+                    {foreach from=$notinstalled key='plugin' item='data'}
+                        <li id="{$plugintype}.{$plugin}">{$plugin}
+                        {if $data.notinstallable}
+                            {str tag='notinstallable'}: {$data.notinstallable}
+                        {else}
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}</a>)</span>
+                        {/if}
+                        <span id="{$plugintype}.{$plugin}.message"></span>
+                        </li>
+                    {/foreach}
+                    </ul>
+                </li>
+                {/if}
+            
                 <li><b>{str tag='installedplugins'}</b>
                     <ul id="{$plugintype}.installed">
                     {foreach from=$installed key='plugin' item='data'}
@@ -35,22 +52,6 @@
                     {/foreach}
                     </ul>
                 </li>
-                {if $notinstalled}
-                <li><b>{str tag='notinstalledplugins'}</b>
-                    <ul id="{$plugintype}.notinstalled">
-                    {foreach from=$notinstalled key='plugin' item='data'}
-                        <li id="{$plugintype}.{$plugin}">{$plugin}
-                        {if $data.notinstallable}
-                            {str tag='notinstallable'}: {$data.notinstallable}
-                        {else}
-                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}</a>)</span>
-                        {/if}
-                        <span id="{$plugintype}.{$plugin}.message"></span>
-                        </li>
-                    {/foreach}
-                    </ul>
-                </li>
-                {/if}
             </ul>
         </li>
     {/foreach}
