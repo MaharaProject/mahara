@@ -2494,8 +2494,11 @@ function install_system_dashboard_view() {
  * gravatar.
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
-    global $THEME;
 
+    // Getting icon when feedback is done by anonymous user
+    if (empty($user)) {
+        return anonymous_icon_url($maxwidth, $maxheight);
+    }
     $user = get_user_for_display($user);
 
     if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
@@ -2519,13 +2522,26 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
         return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
     }
 
+    return anonymous_icon_url($maxwidth, $maxheight, $user->email);
+}
+
+/**
+ * Return icon to show when there is no user profile icon.
+ *
+ * @param int  $maxwidth       Maximum width of image
+ * @param int  $maxheight      Maximum height of image
+ * @param string $email        email address to use for remote_avatar, if any.
+ */
+function anonymous_icon_url($maxwidth=40, $maxheight=40, $email=null) {
+    global $THEME;
+
     // Assume we have the right size available in docroot, so we don't
     // have to call thumb.php
     $notfoundwidth = $maxwidth == 100 ? '' : $maxwidth;
     $notfound = $THEME->get_url('images/no_userphoto' . $notfoundwidth . '.png');
 
-    if (get_config('remoteavatars')) {
-        return remote_avatar($user->email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
+    if (!empty($email) && get_config('remoteavatars')) {
+        return remote_avatar($email, array('maxw' => $maxwidth, 'maxh' => $maxheight), $notfound);
     }
     return $notfound;
 }
