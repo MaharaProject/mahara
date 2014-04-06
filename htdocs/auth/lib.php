@@ -989,6 +989,15 @@ function requiredfields_submit(Pieform $form, $values) {
         }
         if ($field == 'email') {
             $email = $values['email'];
+            // Need to update the admin email on installation
+            if ($USER->get('id') == '1') {
+                $oldemail = get_field('usr', 'email', 'id', $USER->get('id'));
+                if ($oldemail == 'admin@example.org') {
+                    // we are dealing with the dummy email that is set on install
+                    update_record('usr', array('email' => $email), array('id' => $USER->get('id')));
+                    update_record('artefact_internal_profile_email', array('email' => $email), array('owner' => $USER->get('id')));
+                }
+            }
             // Check if a validation email has been sent, if not send one
             if (!record_exists('artefact_internal_profile_email', 'owner', $USER->get('id'))) {
                 $key = get_random_key();
