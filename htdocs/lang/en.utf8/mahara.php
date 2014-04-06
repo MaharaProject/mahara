@@ -676,6 +676,7 @@ $string['nohelpfound'] = 'There was no help found for this item.';
 $string['nohelpfoundpage'] = 'There was no help found for this page.';
 $string['couldnotgethelp'] = 'An error occurred trying to retrieve the help page.';
 $string['profileimagetext'] = "%s's profile picture";
+$string['profileimagetextanonymous'] = "anonymous profile picture";
 $string['primaryemailinvalid'] = 'Your primary email address is invalid.';
 $string['addemail'] = 'Add email address';
 
