@@ -1,9 +1,13 @@
 {foreach from=$data item=item}
   <div class="{cycle name=rows values='r0,r1'}{if $item->highlight} highlight{/if}{if $item->makepublicform} private{/if}">
       <div class="commentleft">
+      {if $item->author}
         <a href="{$item->author->profileurl}">
           <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{$item->author|display_name}">
         </a>
+      {else}
+            <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}">
+      {/if}
       </div>
       <div class="commentrightwrap">
         <div class="fr">
