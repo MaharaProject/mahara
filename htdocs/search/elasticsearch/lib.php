@@ -912,7 +912,7 @@ class ElasticsearchFilterAcl extends \Elastica\Filter\BoolOr
 
     private function getGroupsList(){
         $list = array();
-        $groups = group_get_user_groups($this->user->get('id'));
+        list($groups) = group_get_user_groups($this->user->get('id'));
         foreach ($groups as $group) {
             $list[$group->role][] = $group->id;
             $list['member'][] = $group->id;

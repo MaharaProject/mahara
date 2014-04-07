@@ -204,6 +204,7 @@ function accountprefs_submit(Pieform $form, $values) {
     // Remember the user's language & theme prefs, so we can reload the page if they change them
     $oldlang = $USER->get_account_preference('lang');
     $oldtheme = $USER->get_account_preference('theme');
+    $oldgroupsideblockmaxgroups = $USER->get_account_preference('groupsideblockmaxgroups');
 
     if (get_config('allowmobileuploads')) {
         // Make sure the mobile token is formatted / saved correctly
@@ -248,6 +249,9 @@ function accountprefs_submit(Pieform $form, $values) {
         // and when logged out.
         $SESSION->set('lang', $values['lang']);
         $returndata['message'] = get_string_from_language($values['lang'], 'prefssaved', 'account');
+        $reload = true;
+    }
+    if (isset($values['groupsideblockmaxgroups']) && $values['groupsideblockmaxgroups'] != $oldgroupsideblockmaxgroups) {
         $reload = true;
     }
 

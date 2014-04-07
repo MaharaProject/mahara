@@ -2010,7 +2010,6 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
         if ($sort == 'latest') {
             $order = 'gm.ctime DESC, ';
         }
-        $limitby = (!empty($limit)) ? " LIMIT " . $limit : '';
 
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
@@ -2021,14 +2020,18 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
                 LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
             WHERE gm.member = ?
                 AND g.deleted = 0
-            ORDER BY " . $order . "g.name, gm.role = 'admin' DESC, gm.role, g.id" . $limitby,
+            ORDER BY " . $order . "g.name, gm.role = 'admin' DESC, gm.role, g.id",
             array($loggedinid, $userid)
         );
         $usergroups[$userid] = $groups ? $groups : array();
     }
 
     if (empty($roles) && $userid == $loggedinid) {
-        return $usergroups[$userid];
+        $count = count($usergroups[$userid]);
+        if (!empty($limit)) {
+            $usergroups[$userid] = array_slice($usergroups[$userid], 0, $limit);
+        }
+        return array($usergroups[$userid], $count);
     }
 
     $filtered = array();
@@ -2040,14 +2043,18 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
             $filtered[] = $g;
         }
     }
-
-    return $filtered;
+    $count = count($filtered);
+    if (!empty($limit)) {
+        array_slice($filtered, 0, $limit);
+    }
+    return array($filtered, $count);
 }
 
 function group_get_user_admintutor_groups() {
     $groups = array();
 
-    foreach (group_get_user_groups() as $g) {
+    list($usergroups) = group_get_user_groups();
+    foreach ($usergroups as $g) {
         if ($g->role == 'admin' || $g->see_submitted_views) {
             $groups[] = $g;
         }

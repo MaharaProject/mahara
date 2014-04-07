@@ -21,3 +21,7 @@ $string['latest'] = 'Latest joined';
 $string['alphabetical'] = 'A to Z';
 $string['limitto'] = 'Maximum groups displayed';
 $string['limittodesc'] = 'Maximum number of groups to display in the block. Leave empty to show all your groups.';
+$string['limittodescsideblock'] = 'Maximum number of groups to display in the your "My groups" list. Leave blank to show all your groups.';
+$string['numberofmygroupsshowing'] = 'Showing %s of %s my groups';
+$string['numberofmygroupsshowingearliest'] = 'Showing earlist %s of %s groups';
+$string['numberofmygroupsshowinglatest'] = 'Showing latest %s of %s groups';
