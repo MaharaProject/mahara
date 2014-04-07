@@ -17,7 +17,7 @@ $viewid = param_integer('id');
 
 $view = new View($viewid, null);
 
-if (!$view || !$USER->can_edit_view($view)) {
+if (!$view || $view->get('owner') == "0" || !$USER->can_edit_view($view)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 $groupid = $view->get('group');

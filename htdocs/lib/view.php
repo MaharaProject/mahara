@@ -802,7 +802,7 @@ class View {
     }
 
     public function get_owner_object() {
-        if (is_null($this->owner)) {
+        if (empty($this->owner)) {
             return false;
         }
         if (!isset($this->ownerobj)) {
@@ -3135,7 +3135,7 @@ class View {
         else if ($owner instanceof User) {
             $user = $owner;
         }
-        else if (intval($owner) != 0) {
+        else if (intval($owner) != 0 || $owner == "0") {
             $user = new User();
             $user->find_by_id(intval($owner));
         }
@@ -3595,6 +3595,23 @@ class View {
             return $views;
         }
         return array();
+    }
+
+    public function get_template_views() {
+        $views = get_records_sql_array(
+            "SELECT v.*
+               FROM {view} v
+              WHERE v.owner = 0
+              ORDER BY v.title, v.id", array());
+        $results = array();
+        if ($views) {
+            foreach ($views as $view) {
+                $view->displaytitle = get_string('template' . $view->type, 'view');
+                $view->issitetemplate = true;
+                $results[] = (array)$view;
+            }
+        }
+        return $results;
     }
 
     public function get_layoutrows() {
@@ -4308,7 +4325,7 @@ class View {
             define('GROUP', $this->group);
             define('NOGROUPMENU', 1);
         }
-        else if ($this->institution == 'mahara') {
+        else if ($this->institution == 'mahara' || $this->owner == "0") {
             define('ADMIN', 1);
             define('MENUITEM', 'configsite/siteviews');
         }
@@ -4602,7 +4619,10 @@ class View {
      * @return string
      */
     public function get_url($full=true, $useid=false) {
-        if ($this->type == 'profile') {
+        if ($this->owner == "0") {
+            return null;
+        }
+        else if ($this->type == 'profile') {
             if (!$useid) {
                 return profile_url($this->get_owner_object(), $full);
             }

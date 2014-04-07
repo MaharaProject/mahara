@@ -51,18 +51,24 @@
     </form>
 
     <div id="view-wizard-controls" class="center">
-        <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}{$groupurl}{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view/index.php{/if}" method="GET">
-        {if $groupid}
-            {if $viewtype == 'grouphomepage'}
-            <input type="hidden" name="id" value="{$groupid}">
-            {else}
-            <input type="hidden" name="group" value="{$groupid}">
+        {if $issitetemplate}
+            <form action="{$WWWROOT}admin/site/views.php" method="GET">
+                <input class="submit" type="submit" value="{str tag='done'}">
+            </form>
+        {else}
+            <form action="{$WWWROOT}{if $groupid}{if $viewtype == 'grouphomepage'}{$groupurl}{else}view/groupviews.php{/if}{elseif $institution}view/institutionviews.php{else}view/index.php{/if}" method="GET">
+            {if $groupid}
+                {if $viewtype == 'grouphomepage'}
+                <input type="hidden" name="id" value="{$groupid}">
+                {else}
+                <input type="hidden" name="group" value="{$groupid}">
+                {/if}
+            {elseif $institution}
+                <input type="hidden" name="institution" value="{$institution}">
             {/if}
-        {elseif $institution}
-            <input type="hidden" name="institution" value="{$institution}">
+                <input class="submit" type="submit" value="{str tag='done'}">
+            </form>
         {/if}
-            <input class="submit" type="submit" value="{str tag='done'}">
-        </form>
     </div>
 
 {elseif $block}

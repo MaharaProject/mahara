@@ -43,6 +43,10 @@ class PluginBlocktypeGroupMembers extends SystemBlocktype {
     public static function render_instance (BlockInstance $instance, $editing = false) {
         global $USER;
 
+        if ($instance->get_view()->get('owner') == "0") {
+            return '';
+        }
+
         $configdata = $instance->get('configdata');
         $rows = isset($configdata['rows']) ? $configdata['rows'] : 1;
         $columns = isset($configdata['columns']) ? $configdata['columns'] : 6;

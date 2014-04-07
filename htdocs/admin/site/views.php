@@ -25,7 +25,14 @@ define('TITLE', $title);
 
 $offset = param_integer('offset', 0);
 
+$templateviews = View::get_template_views();
 list($searchform, $data, $pagination) = View::views_by_owner(null, 'mahara');
+if ($data->data) {
+    $views = array_merge($templateviews, $data->data);
+}
+else {
+    $views = $templateviews;
+}
 
 $js = <<< EOF
 addLoadEvent(function () {
@@ -54,7 +61,7 @@ $createviewform = pieform(create_view_form(null, 'mahara'));
 $smarty = smarty(array('paginator'));
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
-$smarty->assign('views', $data->data);
+$smarty->assign('views', $views);
 $smarty->assign('institution', 'mahara');
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('query', param_variable('query', null));

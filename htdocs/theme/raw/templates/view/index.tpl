@@ -25,7 +25,13 @@
                 <div id="myviews" class="listing">
 {foreach from=$views item=view}
                     <div class="listrow {cycle values='r0,r1'}">
-                        <h3 class="title"><a href="{$view.fullurl}">{$view.displaytitle}</a></h3>
+                        <h3 class="title">
+                        {if $view.issitetemplate}
+                            {$view.displaytitle}
+                        {else}
+                            <a href="{$view.fullurl}">{$view.displaytitle}</a>
+                        {/if}
+                        </h3>
                         <div class="fr btns2">
 {if !$view.submittedto && (!$view.locked || $editlocked)}
                             <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}"><img src="{theme_url filename='images/btn_edit.png'}" alt="{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}"></a>

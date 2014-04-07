@@ -209,6 +209,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     public static function rewrite_blockinstance_config(View $view, $configdata) {
+        safe_require('artefact', 'internal');
         if ($view->get('owner') !== null) {
             $artefacttypes = array_diff(PluginArtefactInternal::get_profile_artefact_types(), array('email'));
             $artefactids = get_column_sql('

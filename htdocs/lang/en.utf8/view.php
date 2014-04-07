@@ -41,6 +41,9 @@ $string['profileviewtitle']       = 'Profile page';
 $string['dashboardviewtitle']     = 'Dashboard page';
 $string['grouphomepageviewtitle'] = 'Group homepage';
 $string['viewname']               = 'Page name';
+$string['templatedashboard']      = 'Dashboard template';
+$string['templategrouphomepage']  = 'Group homepage template';
+$string['templateprofile']        = 'Profile template';
 
 // my views
 $string['artefacts'] = 'Artefacts';
