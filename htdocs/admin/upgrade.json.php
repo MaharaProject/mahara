@@ -88,6 +88,7 @@ if (!empty($upgrade)) {
             log_info('- ' . str_pad($data['key'], 30, ' ') . ' ' . $data['newversion']);
         }
         else {
+            $data['upgrade'] = true;
             log_info('Upgraded ' . $data['key'] . ' to ' . $data['newversion']);
         }
         $data['error'] = false;
