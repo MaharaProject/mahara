@@ -92,6 +92,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false) {
+        global $THEME;
+
         $configdata = $instance->get('configdata');
         $width  = (!empty($configdata['width'])) ? hsc($configdata['width']) : 0;
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : 0;
@@ -126,10 +128,38 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         }
 
         $smarty = smarty_core();
+        // don't load html for auto retracted blocks to speed up page load time
+        if (!empty($configdata['retractedonload']) && !$editing) {
+            $smarty->assign('html', '<div id="block_' . $instance->get('id') . '_waiting">' . get_string('loading', 'mahara') . '</div>');
+            $is_src = preg_match('/src=\"(.*?)\"/', $configdata['html'], $src);
+            $is_width = preg_match('/ width=\"(.*?)\"/', $configdata['html'], $widthmatch);
+            $is_height = preg_match('/ height=\"(.*?)\"/', $configdata['html'], $heightmatch);
+            if ($is_src) {
+                $smarty->assign('jsurl', $src[1]);
+                // check if is embed rather than iframe
+                $is_flashvars = preg_match('/flashvars=\"(.*?)\"/', $configdata['html'], $flashvars);
+                if ($is_flashvars) {
+                    $smarty->assign('jsflashvars', $flashvars[1]);
+                }
+                if (empty($width) && !empty($widthmatch)) {
+                    $width = $widthmatch[1];
+                }
+                if (empty($height) && !empty($heightmatch)) {
+                    $height = $heightmatch[1];
+                }
+            }
+            else {
+                // need to fall back to handling this normally
+                $smarty->assign('html', $configdata['html']);
+            }
+        }
+        else {
+            $smarty->assign('html', $configdata['html']);
+        }
         $smarty->assign('width', $width);
         $smarty->assign('height', $height);
         $smarty->assign('blockid', $instance->get('id'));
-        $smarty->assign('html', $configdata['html']);
+
         return $smarty->fetch('blocktype:externalvideo:content.tpl');
     }
 
