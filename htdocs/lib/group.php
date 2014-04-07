@@ -1988,7 +1988,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 }
 
 
-function group_get_user_groups($userid=null, $roles=null) {
+function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null) {
     global $USER;
 
     static $usergroups = array();
@@ -1999,17 +1999,26 @@ function group_get_user_groups($userid=null, $roles=null) {
         $userid = $loggedinid;
     }
 
-    if (!isset($usergroups[$userid])) {
+    if (!isset($usergroups[$userid]) || !empty($sort)) {
+        $order = '';
+        if ($sort == 'earliest') {
+            $order = 'gm.ctime ASC, ';
+        }
+        if ($sort == 'latest') {
+            $order = 'gm.ctime DESC, ';
+        }
+        $limitby = (!empty($limit)) ? " LIMIT " . $limit : '';
+
         $groups = get_records_sql_array("
             SELECT g.id, g.name, gm.role, g.jointype, g.request, g.grouptype, gtr.see_submitted_views, g.category,
-                g.hidemembers, g.invitefriends, g.urlid, gm1.role AS loggedinrole
+                g.hidemembers, g.invitefriends, g.urlid, gm.ctime, gm1.role AS loggedinrole
             FROM {group} g
                 JOIN {group_member} gm ON gm.group = g.id
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
                 LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?
             WHERE gm.member = ?
                 AND g.deleted = 0
-            ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
+            ORDER BY " . $order . "g.name, gm.role = 'admin' DESC, gm.role, g.id" . $limitby,
             array($loggedinid, $userid)
         );
         $usergroups[$userid] = $groups ? $groups : array();

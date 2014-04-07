@@ -33,8 +33,47 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         return array('profile', 'dashboard');
     }
 
+    /**
+     * This function renders a list of items as html
+     *
+     * @param array items
+     * @param string template
+     * @param array options
+     * @param array pagination
+     */
+    public function render_items(&$items, $template, $options, $pagination) {
+        $smarty = smarty_core();
+        $smarty->assign('options', $options);
+        $smarty->assign('items', $items['data']);
+        $items['tablerows'] = $smarty->fetch($template);
+        if ($items['limit'] && $pagination) {
+            $pagination = build_pagination(array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'count' => $items['count'],
+                'limit' => $items['limit'],
+                'offset' => $items['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
+                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+            ));
+            $items['pagination'] = $pagination['html'];
+            $items['pagination_js'] = $pagination['javascript'];
+        }
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
-        $userid = $instance->get_view()->get('owner');
+        $configdata = $instance->get('configdata');
+        $sort = !empty($configdata['sort']) ? $configdata['sort'] : null;
+        $limit = !empty($configdata['limitto']) ? $configdata['limitto'] : null;
+        $view = $instance->get_view();
+        $baseurl = ($view->get('type') == 'dashboard') ? $view->get_url() . '?id=' . $view->get('id') : $view->get_url();
+        $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $instance->get('id');
+
+        $userid = $view->get('owner');
         if (!$userid) {
             return '';
         }
@@ -42,17 +81,64 @@ class PluginBlocktypeMyGroups extends SystemBlocktype {
         $smarty = smarty_core();
         require_once('group.php');
         // Group stuff
-        $usergroups = group_get_user_groups($userid);
+        $usergroups = group_get_user_groups($userid, null, $sort, $limit);
+        $count =  count(group_get_user_groups($userid, null, $sort, null));
 
         foreach ($usergroups as $group) {
             $group->roledisplay = get_string($group->role, 'grouptype.'.$group->grouptype);
         }
-        $smarty->assign('USERGROUPS', $usergroups);
+        $groups = array('data' => $usergroups,
+                        'count' => $count,
+                        'limit' => $limit,
+                        'offset' => 0,
+                        );
+        $pagination = array(
+            'baseurl' => $baseurl,
+            'id' => 'mygroups_pagination',
+            'datatable' => 'usergroupstable',
+            'jsonscript' => 'blocktype/mygroups/mygroups.json.php',
+            'resultcounttextsingular' => get_string('group', 'group'),
+            'resultcounttextplural' => get_string('groups', 'group'),
+        );
+        self::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
+        $smarty->assign('USERGROUPS', $groups);
         return $smarty->fetch('blocktype:mygroups:mygroups.tpl');
     }
 
     public static function has_instance_config() {
-        return false;
+        return true;
+    }
+
+    public static function instance_config_form($instance) {
+        $configdata = $instance->get('configdata');
+
+        return array(
+            'sort' => array(
+                'type'  => 'select',
+                'title' => get_string('sortby', 'blocktype.mygroups'),
+                'options' => array(
+                    'latest' => get_string('latest', 'blocktype.mygroups'),
+                    'earliest' => get_string('earliest', 'blocktype.mygroups'),
+                    'alphabetical'  => get_string('alphabetical', 'blocktype.mygroups'),
+                ),
+                'defaultvalue' => isset($configdata['sort']) ? $configdata['sort'] : 'alphabetical',
+            ),
+            'limitto' => array(
+                'type'  => 'text',
+                'title' => get_string('limitto', 'blocktype.mygroups'),
+                'description' => get_string('limittodesc', 'blocktype.mygroups'),
+                'width' => '30%',
+                'defaultvalue' => isset($configdata['limitto']) ? $configdata['limitto'] : 20,
+                'rules' => array(
+                    'maxlength' => 4,
+                ),
+            ),
+        );
+    }
+
+    public static function instance_config_save($values) {
+        $values['limitto'] = !empty($values['limitto']) ? (int)$values['limitto'] : '';
+        return $values;
     }
 
     public static function default_copy_type() {

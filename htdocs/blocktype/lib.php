@@ -832,12 +832,6 @@ class BlockInstance {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'));
 
-        // @todo: If we know the title is going to be overridden in override_instance_title(),
-        // hide or disable the title field in the form.  Currently not a problem, because the
-        // blocktypes that override the instance title don't have configurable instances.
-        // Maybe just remove or simplify title in the elements list below and make all the
-        // blocktype classes pass the title element in their instance_config_form().
-
         // Block types may specify a method to generate a default title for a block
         $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
 
@@ -846,17 +840,26 @@ class BlockInstance {
         $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
         $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
 
+        if (call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+            $titleelement = array(
+                'type' => 'hidden',
+                'value' => $title,
+            );
+        }
+        else {
+            $titleelement = array(
+                'type' => 'text',
+                'title' => get_string('blocktitle', 'view'),
+                'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
+                'defaultvalue' => $title,
+                'rules' => array('maxlength' => 255),
+                'hidewhenempty' => $hasdefault,
+                'expandtext'    => get_string('setblocktitle'),
+            );
+        }
         $elements = array_merge(
             array(
-                'title' => array(
-                    'type' => 'text',
-                    'title' => get_string('blocktitle', 'view'),
-                    'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
-                    'defaultvalue' => $title,
-                    'rules' => array('maxlength' => 255),
-                    'hidewhenempty' => $hasdefault,
-                    'expandtext'    => get_string('setblocktitle'),
-                ),
+                'title' => $titleelement,
                 'blockconfig' => array(
                     'type'  => 'hidden',
                     'value' => $this->get('id'),
