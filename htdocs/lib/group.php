@@ -435,7 +435,7 @@ function group_create($data) {
             'suggestfriends' => $data['suggestfriends'],
             'editwindowstart' => $data['editwindowstart'],
             'editwindowend'  => $data['editwindowend'],
-            'sendnow'        => $data['sendnow'],
+            'sendnow'        => isset($data['sendnow']) ? $data['sendnow'] : null,
         ),
         'id',
         true
