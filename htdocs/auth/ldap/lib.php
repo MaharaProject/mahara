@@ -98,7 +98,7 @@ class AuthLdap extends Auth {
         );
         foreach ($lists as $listkey) {
             if (isset($this->config[$listkey]) && !is_array($this->config[$listkey]) && $this->config[$listkey] !== '') {
-                $this->config[$listkey] = explode(',', $this->config[$listkey]);
+                $this->config[$listkey] = preg_split('/\s*,\s*/', trim($this->config[$listkey]));
             }
         }
 
@@ -1405,31 +1405,12 @@ class AuthLdap extends Auth {
 
         $nbadded = 0;
         foreach ($groups as $group) {
+            $nomatch = false;
 
             log_debug("Processing group '{$group}'");
 
-            // Check whether we should skip this group
-            if (!empty($includelist)) {
-                foreach ($includelist as $regexp) {
-                    if (empty($regexp)) {
-                        continue;
-                    }
-                    if (!filter_var($group, FILTER_VALIDATE_REGEXP, array("options" => array('regexp' => '/' . $regexp . '/')))) {
-                        log_debug($group . " skipped because not in include list \n");
-                        continue 2;
-                    }
-                }
-            }
-            if (!empty($excludelist)) {
-                foreach ($excludelist as $regexp) {
-                    if (empty($regexp)) {
-                        continue;
-                    }
-                    if (filter_var($group, FILTER_VALIDATE_REGEXP, array("options" => array('regexp' => '/' . $regexp . '/')))) {
-                        log_debug($group . " skipped because in exclude list \n");
-                        continue 2;
-                    }
-                }
+            if (!ldap_sync_filter_name($group, $includelist, $excludelist)) {
+                continue;
             }
 
             if (get_config('auth_ldap_debug_sync_cron')) {
@@ -2181,13 +2162,13 @@ function auth_ldap_sync_groups(
         $instance->set_config('syncgroupsbyuserfield', $syncbyattribute);
         if ($excludelist !== null) {
             if (!is_array($excludelist)) {
-                $excludelist = explode(',', $excludelist);
+                $excludelist = preg_split('/\s*,\s*/', trim($excludelist));
             }
             $instance->set_config('syncgroupsexcludelist', $excludelist);
         }
         if ($includelist !== null) {
             if (!is_array($includelist)) {
-                $includelist = explode(',', $includelist);
+                $includelist = preg_split('/\s*,\s*/', trim($includelist));
             }
             $instance->set_config('syncgroupsincludelist', $includelist);
         }
@@ -2217,4 +2198,47 @@ function auth_ldap_sync_groups(
     }
     log_info('---------- finished institution group sync at ' . date('r', time()) . ' ----------');
     return $result;
+}
+
+/**
+ *
+ * Filter an LDAP group name against two arrays of regular expressions
+ * @param string  $name
+ * @param array of string $includes
+ * @param array of string $excludes
+ * @return boolean
+ * revised 11/02/2013 see https://mahara.org/interaction/forum/topic.php?id=6082&offset=0&limit=10#post25989
+ * ported to mahara core 24 Mar 2014
+ */
+
+function ldap_sync_filter_name($name, $includes, $excludes) {
+    if (!empty($includes)) {
+        $found = false;
+        foreach ($includes as $regexp) {
+            if (empty($regexp)) {
+                continue;
+            }
+            if (filter_var($name, FILTER_VALIDATE_REGEXP, array("options" => array('regexp' => '/' . $regexp . '/')))) {
+                $found = true;
+                log_debug($name . " processed because in include list \n");
+                break;  // match found in include list go check for exclude
+            }
+        }
+        if (!$found) {
+            log_debug($name . " skipped because not in include list \n");
+            return false;
+        }
+    }
+    if (!empty($excludes)) {
+        foreach ($excludes as $regexp) {
+            if (empty($regexp)) {
+                continue;
+            }
+            if (filter_var($name, FILTER_VALIDATE_REGEXP, array("options" => array('regexp' => '/' . $regexp . '/')))) {
+                log_debug($name . " skipped because in exclude list \n");
+                return false;
+            }
+        }
+    }
+    return true;
 }
