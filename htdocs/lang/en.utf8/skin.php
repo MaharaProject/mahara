@@ -34,6 +34,7 @@ $string['exportspecific'] = 'Export "%s"';
 $string['exportskins'] = 'Export skin(s)';
 $string['createskin'] = 'Create skin';
 $string['editthisskin'] = 'Edit this skin';
+$string['editsiteskin?'] = 'This is a site skin. Do you want to edit it?';
 $string['editskin'] = 'Edit skin';
 $string['skinsaved'] = 'Skin saved successfully';
 $string['skinimported'] = 'Skin imported successfully';

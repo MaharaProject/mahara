@@ -20,7 +20,8 @@
             <div class="skinthumb">
                 <div class="skin-controls">
                     {if $skin.editable}
-                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='editthisskin' section='skin'}">
+                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" class="btn-big-edit" title="{str tag='editthisskin' section='skin'}"
+                            {if $skin.type == 'site'}onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if}>
                             {str tag=editspecific arg1=$skin.title}
                         </a>
                     {/if}
@@ -33,7 +34,7 @@
                         <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">
                             {str tag=exportspecific section=skin arg1=$skin.title}
                         </a>
-                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">
+                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">
                             {str tag=deletespecific arg1=$skin.title}
                         </a>
                     {else}

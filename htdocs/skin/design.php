@@ -72,7 +72,8 @@ else {
 }
 
 // Set the Skin access options (for creating or editing form)...
-if ($designsiteskin or (isset($skindata) and $skinobj->get('type') == 'site')) {
+$designsiteskin = $designsiteskin || (isset($skinobj) && $skinobj->get('type') == 'site');
+if ($designsiteskin) {
     $accessoptions = array(
             'site' => get_string('siteskinaccess', 'skin')
     );
