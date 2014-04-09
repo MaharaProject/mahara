@@ -34,13 +34,13 @@ function pieform_element_color(Pieform $form, $element) {
             var {$baseid}_oldval = '';
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
-                    $('{$baseid}').value   = {$baseid}_oldval;
-                    $('{$baseid}').disabled   = false;
-                }
-                else {
                     {$baseid}_oldval = $('{$baseid}').value;
                     $('{$baseid}').value   = '';
                     $('{$baseid}').disabled   = true;
+                }
+                else {
+                    $('{$baseid}').value   = {$baseid}_oldval;
+                    $('{$baseid}').disabled   = false;
                 }
             }
         </script>
@@ -52,18 +52,18 @@ EOF;
         }
 
         $optional .= ' <input type="checkbox" '
-            . (isset($element['defaultvalue']) && $element['defaultvalue'] == 'transparent' ? '' : 'checked="checked" ')
+          . (isset($element['defaultvalue']) && $element['defaultvalue'] == 'transparent' ? 'checked="checked" ' : '')
             . 'name="' . $name . '_optional" id="' . $baseid . '_optional" onchange="' . $baseid . '_toggle(this)" '
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
         $optional .= ' <label for="' . $baseid . '_optional">'
-            . $title . $form->i18n('element', 'color', 'custom', $element) . '</label> ';
+            . $title . $form->i18n('element', 'color', 'transparent', $element) . '</label> ';
 
         $result .= $optional;
     }
 
     // Color Picker (Chooser)
     $result .= '<input type="text" name="' . $name . '_color" id="' . $baseid . '"'
-        . ($transparent && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+        . ($transparent && (!isset($element['defaultvalue']) || $element['defaultvalue'] == 'transparent') ? ' disabled="disabled"' : '')
         . ($transparent ? ' class="color {hash:true,required:false}"' : ' class="color {hash:true}"')
         . ' value="' . ($value == 'transparent' ? '' : $value) . '">';
 
@@ -80,7 +80,7 @@ EOF;
 function pieform_element_color_get_value(Pieform $form, $element) {
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if ($form->is_submitted() && isset($global[$name . '_color']) && isset($global[$name . '_optional'])) {
+    if ($form->is_submitted() && isset($global[$name . '_color']) && !isset($global[$name . '_optional'])) {
         $color = $global[$name . '_color'];
 
         // Whitelist for a 6-digit hex color
