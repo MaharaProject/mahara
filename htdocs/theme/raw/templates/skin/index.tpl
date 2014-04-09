@@ -20,14 +20,19 @@
             <div class="skinthumb">
                 <div class="skin-controls">
                     {if $skin.editable}
-                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-edit" title="{str tag='clickimagetoedit' section='skin'}">{str tag="clickimagetoedit" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" class="btn-big-edit" title="{str tag='editthisskin' section='skin'}"
+                            {if $skin.type == 'site'}onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if}>
+                            {str tag=clickimagetoedit section="skin"}
+                        </a>
                     {/if}
                     {if $skin.metadata && $skin.editable}
                         <a href="{$WWWROOT}skin/index.php?id={$skin.id}&metadata=1" class="btn-big-info" title="{str tag='viewmetadata' section='skin'}">{str tag="viewmetadata" section="skin"}</a>
                     {/if}
                     {if $skin.removable}
                         <a href="{$WWWROOT}skin/export.php?id={$skin.id}" class="btn-big-export"  title="{str tag='exportthisskin' section='skin'}">{str tag="exportthisskin" section="skin"}</a>
-                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $siteskins}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">{str tag="deletethisskin" section="skin"}</a>
+                        <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" class="btn-big-del" title="{str tag='deletethisskin' section='skin'}">
+                            {str tag=deletethisskin section="skin"}
+                        </a>
                     {else}
                         <div class="skinactions">
                         {if $skin.metadata && !$skin.editable}
