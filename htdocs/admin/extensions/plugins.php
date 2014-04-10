@@ -162,7 +162,12 @@ function installplugin(name) {
             // new parent node
             var bits = name.split('\.');
             var newparent = $(bits[0] + '.installed');
-            appendChildNodes(newparent, $(name));
+            var oldparent = $(name).parentNode;
+            insertSiblingNodesBefore(newparent, $(name));
+            // If there are no more plugins left for this type to be installed
+            if (oldparent.children.length == 0) {
+                oldparent.parentNode.style.display = 'none';
+            }
         }
         else {
             var message = '';

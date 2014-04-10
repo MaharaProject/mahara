@@ -764,6 +764,9 @@ input#institution_suspend_submit {
     list-style: none;
     margin: 3px 0 0 0;
 }
+#adminplugin ul.adminpluginstypes ul li.notinstalled {
+    margin-bottom: 10px;
+}
 #adminplugin ul.adminpluginstypes ul ul ul li {
     list-style: disc;
     margin: 0 0 3px 15px;
