@@ -408,7 +408,8 @@
             $(this).find('.blocktypelink').off('click keydown'); // remove old event handlers
             $(this).find('.blocktypelink').on('click keydown', function(e) {
                 var keyCode = $.ui.keyCode;
-                if ((e.type == 'click' && e.buttons > 0) || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) {
+                // Add a block when click left button or press 'Space bar' or 'Enter' key
+                if (((e.type == 'click' && e.button == 0) || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) && ($('#addblock').is(':hidden'))) {
                     startAddBlock($(this));
                 }
             });
