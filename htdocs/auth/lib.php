@@ -990,7 +990,7 @@ function requiredfields_submit(Pieform $form, $values) {
         if ($field == 'email') {
             $email = $values['email'];
             // Need to update the admin email on installation
-            if ($USER->get('id') == '1') {
+            if ($USER->get('admin')) {
                 $oldemail = get_field('usr', 'email', 'id', $USER->get('id'));
                 if ($oldemail == 'admin@example.org') {
                     // we are dealing with the dummy email that is set on install
