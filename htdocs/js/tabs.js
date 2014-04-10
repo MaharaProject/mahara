@@ -129,7 +129,9 @@
         );
 
         // Make the tabs responsive
-        responsiveNav($j('.tabswrap ul li'), $j('.tabswrap'));
+        if (typeof responsiveNav === 'function') {
+            responsiveNav($j('.tabswrap ul li'), $j('.tabswrap'));
+        }
 
         // Now unhide the form
         hideElement(formid + '-loading');
