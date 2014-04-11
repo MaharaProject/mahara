@@ -164,6 +164,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     plugins: "textcolor,hr,link,image,table,emoticons,spellchecker,paste,code,fullscreen",
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
+    menubar: false,
     fix_list_elements: true,
     image_advtab: true,
     {$spellchecker_config}
