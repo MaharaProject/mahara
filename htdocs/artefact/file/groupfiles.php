@@ -50,4 +50,5 @@ $smarty = smarty(
 $smarty->assign('heading', $group->name);
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
+$smarty->assign('group', $group->name);
 $smarty->display('artefact:file:files.tpl');

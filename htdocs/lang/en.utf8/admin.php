@@ -479,7 +479,7 @@ $string['footerupdated']       = 'Footer updated';
 $string['footercustomlink'] = 'You can override the default page, <em>%s</em>, by entering a URL here or leave it empty to use the default value.';
 
 // Admin Files
-$string['adminfilespagedescription'] = 'Here you can upload files that can be included in the %s"Links and resources"%s menu. Files in the home directory will be able to be added to the logged-in menu, while files in the public directory will be able to be added to the public menu.';
+$string['adminfilespagedescription1'] = 'Here are files that can be included in the %s"Links and resources"%s menu. Files in the home directory will be able to be added to the logged-in menu, while files in the public directory will be able to be added to the public menu.';
 
 // License settings
 $string['extralicensesdescription'] = 'Note: The following licenses are used by some content but have not been configured.';

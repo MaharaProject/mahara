@@ -910,6 +910,7 @@ function institution_selector_for_page($institution, $page) {
 
     $institutionselector = pieform(array(
         'name' => 'institutionselect',
+        'checkdirtychange' => false,
         'elements' => array(
             'institution' => $institutionelement,
         )
