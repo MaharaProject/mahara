@@ -38,6 +38,20 @@ if ($fontdata->fonttype == 'common') {
 
 define('TITLE', get_string('deletespecifiedfont', 'skin', $fontdata->title));
 
+// Check to see if the font is being used in a skin and if so indicate this to admin
+$usedinskins = 0;
+$skins = get_records_array('skin');
+if (is_array($skins)) {
+    foreach ($skins as $skin) {
+        $options = unserialize($skin->viewskin);
+        foreach ($options as $key => $option) {
+            if (preg_match('/font_family/', $key) && $option == $fontdata->name) {
+                $usedinskins ++;
+            }
+        }
+    }
+}
+$submittitle = get_string('deletefontconfirm1', 'skin') . (($usedinskins) ? get_string('deletefontconfirmused', 'skin', $usedinskins) : ' ') . get_string('deletefontconfirm2', 'skin');
 $form = pieform(array(
     'name' => 'deletefontform',
     'autofocus' => false,
@@ -49,7 +63,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => get_string('deletefontconfirm', 'skin'),
+            'title' => $submittitle,
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'admin/site/fonts.php',
         )
@@ -70,6 +84,25 @@ function deletefontform_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('cantdeletefont', 'skin'));
     }
     else {
+        // Check to see if the font is being used in a skin. If it is remove it from
+        // the skin's viewskin data
+        $skins = get_records_array('skin');
+        if (is_array($skins)) {
+            foreach ($skins as $skin) {
+                $options = unserialize($skin->viewskin);
+                foreach ($options as $key => $option) {
+                    if (preg_match('/font_family/', $key) && $option == $fontname) {
+                        require_once(get_config('docroot') . 'lib/skin.php');
+                        $skinobj = new Skin($skin->id);
+                        $viewskin = $skinobj->get('viewskin');
+                        $viewskin[$key] = false;
+                        $skinobj->set('viewskin', $viewskin);
+                        $skinobj->commit();
+                    }
+                }
+            }
+        }
+
         // Also delete all the files in the appropriate folder and the folder itself...
         $fontpath = get_config('dataroot') . 'skins/fonts/' . $fontname . '/';
         if ($handle = opendir($fontpath)) {
