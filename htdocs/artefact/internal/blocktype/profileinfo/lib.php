@@ -223,6 +223,14 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
                     unset($configdata['email']);
                 }
             }
+            if (isset($configdata['profileicon'])) {
+                if ($newicon = get_field('usr', 'profileicon', 'id', $view->get('owner'))) {
+                    $configdata['profileicon'] = $newicon;
+                }
+                else {
+                    unset($configdata['profileicon']);
+                }
+            }
         }
         else {
             $configdata['artefactids'] = array();
