@@ -173,7 +173,12 @@ $string['editproperties'] = 'Edit font properties';
 $string['viewfontspecimen'] = 'View font specimen';
 $string['deletefont'] = 'Delete font';
 $string['deletespecifiedfont'] = 'Delete font \'%s\'';
-$string['deletefontconfirm'] = 'Do you really want to delete this font? It cannot be undone.';
+$string['deletefontconfirm1'] = 'Do you really want to delete this font?';
+$string['deletefontconfirm2'] = 'It cannot be undone.';
+$string['deletefontconfirmused'] = array(
+    ' This font is used in %s skin. ',
+    ' This font is used in %s skins. ',
+);
 $string['fontdeleted'] = 'Font deleted';
 $string['cantdeletefont'] = 'You cannot delete this font.';
 
