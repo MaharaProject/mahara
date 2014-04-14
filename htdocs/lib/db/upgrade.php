@@ -3204,5 +3204,12 @@ function xmldb_core_upgrade($oldversion=0) {
         update_magicdb_path();
     }
 
+    if ($oldversion < 2014032704) {
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('registerallowed');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, '0');
+        change_field_default($table, $field);
+    }
+
     return $status;
 }
