@@ -302,6 +302,27 @@ function get_mime_type($file) {
 function file_mime_type($file, $originalfilename=false) {
     static $mimetypes = null;
 
+    // Try the filename extension in case it's a file that Mahara
+    // cares about.  For now, use the artefact_file_mime_types table,
+    // even though it's in a plugin and the description column doesn't
+    // really contain filename extensions.
+    if ($originalfilename) {
+        $basename = $originalfilename;
+    }
+    else {
+        $basename = basename($file);
+    }
+    if (strpos($basename, '.', 1)) {
+        if (is_null($mimetypes)) {
+            $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
+        }
+        $ext = strtolower(array_pop(explode('.', $basename)));
+        if (isset($mimetypes[$ext])) {
+            return $mimetypes[$ext]->mimetype;
+        }
+    }
+
+    // Try detecting it with the magic.mgc file
     if (get_config('pathtomagicdb') !== null) {
         // Manually specified magicdb path in config.php
         $magicfile = get_config('pathtomagicdb');
@@ -330,28 +351,8 @@ function file_mime_type($file, $originalfilename=false) {
         $type = mime_content_type($file);
     }
 
-    if (!empty($type) && $type != 'application/octet-stream') {
+    if (!empty($type)) {
         return $type;
-    }
-
-    // Try the filename extension in case it's a file that Mahara
-    // cares about.  For now, use the artefact_file_mime_types table,
-    // even though it's in a plugin and the description column doesn't
-    // really contain filename extensions.
-    if ($originalfilename) {
-        $basename = $originalfilename;
-    }
-    else {
-        $basename = basename($file);
-    }
-    if (strpos($basename, '.', 1)) {
-        if (is_null($mimetypes)) {
-            $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
-        }
-        $ext = strtolower(array_pop(explode('.', $basename)));
-        if (isset($mimetypes[$ext])) {
-            return $mimetypes[$ext]->mimetype;
-        }
     }
 
     return 'application/octet-stream';
