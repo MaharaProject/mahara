@@ -405,6 +405,7 @@
 
     function makeNewBlocksDraggable() {
         $('.blocktype-list div.blocktype').each(function() {
+            $(this).find('.blocktypelink').off('click keydown'); // remove old event handlers
             $(this).find('.blocktypelink').on('click keydown', function(e) {
                 var keyCode = $.ui.keyCode;
                 if ((e.type == 'click' && e.buttons > 0) || e.keyCode == keyCode.SPACE || e.keyCode == keyCode.ENTER) {
