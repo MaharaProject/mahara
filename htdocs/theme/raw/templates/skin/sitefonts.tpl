@@ -19,8 +19,8 @@
                     <td>
                         <h3 class="title">{$font.title}</h3>
                         <div style="font-family:'{$font.title|escape_css_string}';font-size:{$size}pt;line-height:{$size}pt;padding:3px 0;">
-                        {if $preview == 10}{$font.title}{/if}
-                        {if $preview >= 11}{str tag="sampletext$preview" section="skin"{/if}
+                            {if $preview == 10}{$font.title}{/if}
+                            {if $preview >= 11}{str tag="sampletext$preview" section="skin"}{/if}
                         </div>
                     </td>
                     <td>
