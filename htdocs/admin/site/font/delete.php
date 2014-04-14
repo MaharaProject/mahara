@@ -24,14 +24,15 @@ if (!get_config('skins')) {
     throw new FeatureNotEnabledException();
 }
 
-$font = param_alphanum('font');
+$font = param_alphanumext('font');
 
 $fontdata = null;
 $fontdata = get_record('skin_fonts', 'name', $font);
 if ($fontdata == false) {
     throw new AccessDeniedException("Font not found");
 }
-if ($fontdata->fonttype != 'site') {
+// Admins can not delete 'common' fonts
+if ($fontdata->fonttype == 'common') {
     throw new AccessDeniedException("Cannot delete this font");
 }
 
