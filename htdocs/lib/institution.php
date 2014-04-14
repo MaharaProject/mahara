@@ -40,7 +40,7 @@ class Institution {
     static $dbfields = array(
         'name' => '',
         'displayname' => '',
-        'registerallowed' => 1,
+        'registerallowed' => 0,
         'registerconfirm' => 1,
         'theme' => null,
         'defaultmembershipperiod' => 0,
@@ -296,7 +296,7 @@ class Institution {
         }
         $userinst = new StdClass;
         $userinst->institution = $this->name;
-        $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id, 
+        $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id,
                                'institution', $this->name);
         if (!empty($studentid)) {
             $userinst->studentid = $studentid;
