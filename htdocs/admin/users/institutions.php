@@ -225,7 +225,7 @@ if ($institution || $add) {
         $data->displayname = '';
         $data->expiry = null;
         if (!get_config('usersuniquebyusername')) {
-            $data->registerallowed = 1;
+            $data->registerallowed = 0;
             $data->registerconfirm = 1;
         }
         $data->theme = 'sitedefault';
@@ -796,17 +796,15 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->commit();
 
     if ($add) {
-        // If registration has been turned on, then we automatically insert an
-        // internal authentication authinstance
-        if ($newinstitution->registerallowed) {
-            $authinstance = (object)array(
-                'instancename' => 'internal',
-                'priority'     => 0,
-                'institution'  => $newinstitution->name,
-                'authname'     => 'internal',
-            );
-            insert_record('auth_instance', $authinstance);
-        }
+        // Automatically create an internal authentication authinstance
+        $authinstance = (object)array(
+            'instancename' => 'internal',
+            'priority'     => 0,
+            'institution'  => $newinstitution->name,
+            'authname'     => 'internal',
+        );
+        insert_record('auth_instance', $authinstance);
+
         // We need to add the default lines to the site_content table for this institution
         // We also need to set the institution to be using default static pages to begin with
         // so that using custom institution pages is an opt-in situation
