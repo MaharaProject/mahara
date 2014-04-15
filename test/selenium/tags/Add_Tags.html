@@ -62,11 +62,6 @@
 	<td>folder</td>
 </tr>
 <tr>
-	<td>setSpeed</td>
-	<td>500</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>link=Journal</td>
 	<td></td>
@@ -108,7 +103,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Add one</td>
+	<td>link=New plan</td>
 	<td></td>
 </tr>
 <tr>
@@ -137,13 +132,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>id=addplan_submit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Add one</td>
+	<td>link=New task</td>
 	<td></td>
 </tr>
 <tr>
@@ -242,13 +237,23 @@
 	<td>box1,test</td>
 </tr>
 <tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//input[@class='submitcancel submit']</td>
+	<td>//input[starts-with(@id, 'instconf_action_configureblockinstance_id_')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Portfolio</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>500</td>
 	<td></td>
 </tr>
 </tbody></table>
