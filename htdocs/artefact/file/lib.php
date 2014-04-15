@@ -68,6 +68,26 @@ class PluginArtefactFile extends PluginArtefact {
                 'event'        => 'createuser',
                 'callfunction' => 'newuser',
             ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'saveartefact',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'deleteartefact',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'deleteartefacts',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
+            (object)array(
+                'plugin'        => 'file',
+                'event'         => 'updateuser',
+                'callfunction'  => 'eventlistener_savedeleteartefact',
+            ),
         );
 
         return $subscriptions;
@@ -80,9 +100,72 @@ class PluginArtefactFile extends PluginArtefact {
             set_config_plugin('artefact', 'file', 'defaultgroupquota', 52428800);
             set_config_plugin('artefact', 'file', 'folderdownloadzip', 1);
             set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', 3600);
+            self::set_quota_triggers();
         }
         set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
+    }
+
+    public static function set_quota_triggers() {
+        set_config_plugin('artefact', 'file', 'quotanotifylimit', 80);
+        set_config_plugin('artefact', 'file', 'quotanotifyadmin', false);
+
+        // Create triggers to reset the quota notification flag
+        if (is_postgres()) {
+            $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_notified_on_update_setting}() CASCADE;";
+            execute_sql($sql);
+            $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_notified_on_update_usr_setting}() CASCADE;";
+            execute_sql($sql);
+            db_create_trigger(
+                'unmark_quota_exeed_notified_on_update_setting',
+                'AFTER', 'UPDATE', 'artefact_config', "
+                IF NEW.plugin = 'file'
+                AND NEW.field = 'quotanotifylimit' THEN
+                    UPDATE {usr_account_preference}
+                    SET value = 0 FROM {usr}
+                    WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
+                    AND {usr_account_preference}.usr = {usr}.id
+                    AND CAST({usr}.quotaused AS float)/CAST({usr}.quota AS float) < CAST(NEW.value AS float)/100;
+                END IF;"
+            );
+
+            db_create_trigger(
+                'unmark_quota_exeed_notified_on_update_usr_setting',
+                'AFTER', 'UPDATE', 'usr', "
+                UPDATE {usr_account_preference}
+                SET value = 0 FROM {artefact_config}
+                WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
+                AND {usr_account_preference}.usr = NEW.id
+                AND {artefact_config}.plugin = 'file'
+                AND {artefact_config}.field = 'quotanotifylimit'
+                AND CAST(NEW.quotaused AS float)/CAST(NEW.quota AS float) < CAST({artefact_config}.value AS float)/100;"
+            );
+        }
+        else {
+            db_create_trigger(
+                'unmark_quota_exeed_notified_on_update_setting',
+                'AFTER', 'UPDATE', 'artefact_config', "
+                IF NEW.plugin = 'file'
+                AND NEW.field = 'quotanotifylimit' THEN
+                    UPDATE {usr_account_preference}, {usr}
+                    SET {usr_account_preference}.value = 0
+                    WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
+                    AND {usr_account_preference}.usr = {usr}.id
+                    AND {usr}.quotaused/{usr}.quota < NEW.value/100;
+                END IF;"
+            );
+            db_create_trigger(
+                'unmark_quota_exeed_notified_on_update_usr_setting',
+                'AFTER', 'UPDATE', 'usr', "
+                UPDATE {usr_account_preference}, {artefact_config}
+                SET {usr_account_preference}.value = 0
+                WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
+                AND {usr_account_preference}.usr = NEW.id
+                AND {artefact_config}.plugin = 'file'
+                AND {artefact_config}.field = 'quotanotifylimit'
+                AND NEW.quotaused/NEW.quota < {artefact_config}.value/100;"
+            );
+        }
     }
 
     public static function newuser($event, $user) {
@@ -317,6 +400,98 @@ class PluginArtefactFile extends PluginArtefact {
         }
         else {
             return false;
+        }
+    }
+
+    /**
+     * eventlistener to respond to saveartefact, deleteartefact and
+     * deleteartefacts.
+     * Check if the user just passed the critical amount of his quota with a new
+     * artefact or just deleted an artefact and now is below the critical percentage
+     *
+     * @param type $event
+     * @param type $eventdata
+     */
+    public static function eventlistener_savedeleteartefact($event, $eventdata) {
+        $userid = null;
+        $owner = null;
+        $addsize = 0;
+
+        safe_require('notification', 'internal');
+
+        $quotatypes = array('file','audio','video','image');
+        if (('saveartefact' === $event) && in_array($eventdata->get('artefacttype'), $quotatypes)) {
+            $owner = array($eventdata->get('owner'));
+            $addsize = $eventdata->get('size');
+        }
+        else if (('deleteartefact' === $event) && ('file' === $eventdata->get('artefacttype'))) {
+            $owner = array($eventdata->get('owner'));
+        }
+        else if ('updateuser' === $event) {
+            $userid = $eventdata;
+        }
+        else if (is_array($eventdata)) {
+            foreach ($eventdata as $artefactid) {
+                if (!is_int($artefactid)) {
+                    continue;
+                }
+                $artefact = artefact_instance_from_id($artefactid);
+                $owner = $artefact->get('owner');
+                break;
+            }
+        }
+
+        if (is_array($owner)) {
+            $userid = reset($owner);
+        }
+
+        if ($userid !== null) {
+            $userdata = get_user($userid);
+
+            $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+            if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
+                $quotanotifylimit = 100;
+            }
+
+            $quotausedpercent = ($userdata->quotaused + $addsize ) / $userdata->quota * 100;
+            $passed = false;
+            if ($quotanotifylimit <= $quotausedpercent) {
+                $passed = true;
+            }
+
+            $notified = get_field('usr_account_preference', 'value', 'field', 'quota_exceeded_notified', 'usr', $userid);
+
+            if ($passed && '1' !== $notified) {
+                // notify user
+                $data = array(
+                    'subject' => get_string('usernotificationsubject', 'artefact.file'),
+                    'message' => get_string('usernotificationmessage', 'artefact.file', ceil((int)$quotausedpercent), display_size($userdata->quota)),
+                    'users' => array($userid),
+                    'type' => 1,
+                );
+                $activity = new ActivityTypeMaharamessage($data);
+                $activity->notify_users();
+
+                // notify admin
+                $notifyadmin = get_config_plugin('artefact', 'file', 'quotanotifyadmin');
+                if ($notifyadmin) {
+
+                    $data = array(
+                        'subject'   => get_string('adm_notificationsubject', 'artefact.file'),
+                        'message'   => get_string('adm_notificationmessage', 'artefact.file', display_name($userdata) , ceil((int)$quotausedpercent), display_size($userdata->quota)),
+                        'users'     => get_column('usr', 'id', 'admin', 1),
+                        'url'       => 'admin/users/edit.php?id=' . $userid,
+                        'urltext'   => get_string('textlinktouser', 'artefact.file', display_name($userdata)),
+                        'type'      => 1,
+                    );
+                    $activity = new ActivityTypeMaharamessage($data);
+                    $activity->notify_users();
+                }
+                set_account_preference($userid, 'quota_exceeded_notified', true);
+            }
+            else if ($notified && !$passed) {
+                set_account_preference($userid, 'quota_exceeded_notified', false);
+            }
         }
     }
 }
@@ -1560,6 +1735,31 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             'collapsible' => true,
         );
 
+        $elements['quotanotification'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('quotanotificationheader', 'artefact.file'),
+            'elements' => array(
+                'quotanotifylimit' => array(
+                    'type'          => 'text',
+                    'size'          => 4,
+                    'title'         => get_string('quotanotifylimittitle', 'artefact.file'),
+                    'description'   => get_string('quotanotifylimitdescr', 'artefact.file'),
+                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifylimit'),
+                    'rules' => array(
+                        'required' => true,
+                        'integer'  => true,
+                    ),
+                ),
+                'quotanotifyadmin' => array(
+                    'type'          => 'checkbox',
+                    'title'         => get_string('quotanotifyadmin', 'artefact.file'),
+                    'description'   => get_string('quotanotifyadmindescr', 'artefact.file'),
+                    'defaultvalue'  => get_config_plugin('artefact', 'file', 'quotanotifyadmin'),
+                ),
+            ),
+            'collapsible' => true,
+        );
+
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -1570,6 +1770,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         global $USER;
         if ($values['maxquotaenabled'] && $values['maxquota'] < $values['defaultquota']) {
             $form->set_error('maxquota', get_string('maxquotatoolow', 'artefact.file'));
+        }
+        if (!is_numeric($values['quotanotifylimit']) || 0 > $values['quotanotifylimit'] || $values['quotanotifylimit'] > 100) {
+            $form->set_error('quotanotifylimit', get_string('quotanotifylimitoutofbounds', 'artefact.file'));
         }
     }
 
@@ -1595,6 +1798,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxwidth', $values['resizeonuploadmaxwidth']);
         set_config_plugin('artefact', 'file', 'resizeonuploadmaxheight', $values['resizeonuploadmaxheight']);
         set_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor', $values['folderdownloadkeepzipfor']);
+        set_config_plugin('artefact', 'file', 'quotanotifylimit', $values['quotanotifylimit']);
+        set_config_plugin('artefact', 'file', 'quotanotifyadmin', $values['quotanotifyadmin']);
         $data = new StdClass;
         $data->name    = 'uploadcopyright';
         $data->content = $values['customagreement'];
@@ -1683,8 +1888,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      */
     public static function is_metaartefact() {
         return true;
-    }
-}
+    }}
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 

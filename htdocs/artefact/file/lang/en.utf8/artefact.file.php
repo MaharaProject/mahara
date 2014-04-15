@@ -173,6 +173,18 @@ $string['fileuploadedtofolderas'] = '%s uploaded to %s as "%s"';
 $string['fileuploadedas'] = '%s uploaded as "%s"';
 $string['insufficientmemoryforresize'] = ' (Not enough memory available to resize the image. Consider resizing manually before uploading)';
 
+// quotanotification
+$string['quotanotificationheader'] = 'Quota notification';
+$string['quotanotifylimitoutofbounds'] = 'The notificationlimit is given in percent and has to be a number between 0 and 100.';
+$string['usernotificationsubject']  = 'Your file storage is almost full';
+$string['usernotificationmessage']  = 'You are using %s%% of your %s quota. You should get in touch with your site administrator about having your limit increased.';
+$string['adm_notificationsubject']  = 'A user has nearly reached their file quota limit';
+$string['adm_notificationmessage']  = 'User %s has arrived at %s%% percent of their %s quota. ';
+$string['textlinktouser'] = 'Edit profile of %s';
+$string['quotanotifylimittitle'] = 'Quota notify limit';
+$string['quotanotifylimitdescr'] = 'At what percentage of a filled quota should a user (and maybe the admin) get notified, so they can delete old files or increase the quota?';
+$string['quotanotifyadmin'] = 'Notify site admins?';
+$string['quotanotifyadmindescr'] = 'Should the site admins also be notified when a user nearly reaches their quota?';
 
 // File types
 $string['ai'] = 'Postscript document';
