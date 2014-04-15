@@ -20,6 +20,8 @@ require_once(get_config('libroot') . 'view.php');
  */
 class ViewTest extends MaharaUnitTest {
 
+    /** The id of the user created in setUp. */
+    private $testuserid;
     /** the view created in setUp */
     private $view;
     /** the id of our shared view. kept for persistency after we delete the view */
@@ -44,13 +46,13 @@ class ViewTest extends MaharaUnitTest {
      */
     public function setUp() {
         parent::setUp();
-        $this->require_test_user();
+        $this->testuserid = $this->create_test_user();
         // set the owner of the view to the test user we created
-        $this->fields['owner'] = array($this->users['test'], $this->users['test']);
+        $this->fields['owner'] = array($this->testuserid, $this->testuserid);
         $this->view = View::create(array(
             'title'       => $this->fields['title'][0],
             'description' => $this->fields['description'][0],
-        ), $this->users['test']);
+        ), $this->testuserid);
         $this->viewid = $this->view->get('id');
     }
 
@@ -124,7 +126,7 @@ class ViewTest extends MaharaUnitTest {
         $todelete = View::create(array(
             'title'       => $this->fields['title'][0],
             'description' => $this->fields['description'][0],
-        ), $this->users['test']);
+        ), $this->testuserid);
         $todeleteid = $todelete->get('id');
         $todelete->delete();
         $todelete->commit();
