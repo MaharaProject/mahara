@@ -92,9 +92,8 @@ foreach ($columnlayouts as $layout => $percents) {
 }
 
 // provide a simple default to build custom layouts with
-$defaultcustomlayout = array(1 => 5); // row => column layout id
-$customlayout = $defaultcustomlayout[1];
-$defaultlayout = get_record('view_layout_columns', 'id', $customlayout );
+$defaultcustomlayout = $view->default_columnsperrow();
+$defaultlayout = get_record('view_layout_columns', 'columns', $defaultcustomlayout[1]->columns, 'widths', $defaultcustomlayout[1]->widths);
 $clnumcolumnsdefault = $defaultlayout->columns;
 $clwidths = $defaultlayout->widths;
 
@@ -125,6 +124,10 @@ $elements['layoutselect'] = array(
         'value' => $currentlayout,
         'sesskey' =>  $USER->get('sesskey'),
 );
+$elements['layoutfallback'] = array(
+        'type'  => 'hidden',
+        'value' => $defaultlayout->id,
+);
 $elements['submit'] = array(
         'type' => 'submit',
         'value' => get_string('save'),
@@ -138,7 +141,7 @@ $templatedata = array(
         'clnumcolumnsoptions' => $clnumcolumnsoptions,
         'clnumcolumnsdefault' => $clnumcolumnsdefault,
         'columnlayoutoptions' => $columnlayoutoptions,
-        'customlayout' => $customlayout,
+        'customlayout' => $defaultlayout->id,
         'clwidths' => $clwidths,
         'maxrows' => $maxrows
         );
@@ -178,7 +181,7 @@ $smarty->display('view/layout.tpl');
 function viewlayout_validate(Pieform $form, $values) {
     global $layoutrows;
     if (!isset($layoutrows[$values['layoutselect']]) ) {
-        $form->set_error('invalidlayout');
+        $form->set_error(null, get_string('invalidlayoutselection', 'error'));
     }
 }
 

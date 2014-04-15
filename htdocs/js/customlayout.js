@@ -138,21 +138,21 @@
         $('#viewlayout_basic_container legend a, #viewlayout_adv_container legend a').click(function(event) {
             $('.basiclayoutfieldset').toggleClass('collapsed');
             $('.advancedlayoutfieldset').toggleClass('collapsed');
-            $selected = $('#viewlayout_layoutselect').val();
-            var fallback = 5; // 1 row, 3 columns
-            if ($('.layoutselect :radio[value=' + $selected +']').length ) {
-                $('.layoutselect :radio[value=' + $selected +']').attr("checked","checked");
+            var layoutselected = $('#viewlayout_layoutselect').val();
+            var layoutfallback = $('#viewlayout_layoutfallback').val();
+            if ($('.layoutselect :radio[value=' + layoutselected +']').length ) {
+                $('.layoutselect :radio[value=' + layoutselected +']').attr("checked","checked");
             }
             else {
-                $('.layoutselect :radio[value=' + fallback + ']').attr("checked","checked");
-                $('#viewlayout_layoutselect').val(fallback);
+                $('.layoutselect :radio[value=' + layoutfallback + ']').attr("checked","checked");
+                $('#viewlayout_layoutselect').val(layoutfallback);
             }
-            if ($('.advancedlayoutselect :radio[value=' + $selected +']').length ) {
-                $('.advancedlayoutselect :radio[value=' + $selected +']').attr("checked","checked");
+            if ($('.advancedlayoutselect :radio[value=' + layoutselected +']').length ) {
+                $('.advancedlayoutselect :radio[value=' + layoutselected +']').attr("checked","checked");
             }
             else {
-                $('.advancedlayoutselect :radio[value=' + fallback + ']').attr("checked","checked");
-                $('#viewlayout_layoutselect').val(fallback);
+                $('.advancedlayoutselect :radio[value=' + layoutfallback + ']').attr("checked","checked");
+                $('#viewlayout_layoutselect').val(layoutfallback);
             }
         });
 

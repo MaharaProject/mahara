@@ -295,10 +295,6 @@ class View {
             $this->ownerobj = $USER;
         }
 
-        if (empty(self::$layoutcolumns)) {
-            self::$layoutcolumns = get_records_assoc('view_layout_columns', '', '', 'columns,id');
-        }
-
         $this->atime = time();
         $this->rows = array();
         $this->columns = array();
@@ -557,7 +553,7 @@ class View {
         $defaultdata = array(
             'numcolumns'    => 2,
             'numrows'       => 1,
-            'columnsperrow' => array(1 => (object)array('row' => 1, 'columns' => 3)),
+            'columnsperrow' => self::default_columnsperrow(),
             'template'      => 0,
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
@@ -606,6 +602,14 @@ class View {
         }
 
         return new View($view->get('id')); // Reread to ensure defaults are set
+    }
+
+    public function default_columnsperrow() {
+        $default = array(1 => (object)array('row' => 1, 'columns' => 3, 'widths' => '33,33,33'));
+        if (!$id = get_field('view_layout_columns', 'id', 'columns', $default[1]->columns, 'widths', $default[1]->widths)) {
+            throw new SystemException("View::default_columnsperrow: Default columns = 3, widths = '33,33,33' not in view_layout_columns table");
+        }
+        return $default;
     }
 
     public function get($field) {
@@ -2822,6 +2826,7 @@ class View {
             foreach ($columnsperrow as $row) {
                 $numcolumns = $row->columns;
                 $widths = self::$defaultcolumnlayouts[$numcolumns];
+                $layout->id = get_field('view_layout_columns', 'id', 'columns', $numcolumns, 'widths', $widths);
                 $layout->rows[$row->row]['widths'] = $widths;
                 $layout->rows[$row->row]['columns'] = $numcolumns;
             }
