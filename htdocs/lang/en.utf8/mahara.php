@@ -45,6 +45,13 @@ $string['Help'] = 'Help';
 $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
+// Objectionable strings.
+$string['complaint'] = 'Complaint';
+$string['notifyadministrator'] = 'Notify administrator';
+$string['notifyadministratorconfirm'] = 'Are you sure you wish to report this page as containing objectionable material?';
+$string['notobjectionable'] = 'Not objectionable';
+$string['reportobjectionablematerial'] = 'Report objectionable material';
+$string['reportsent'] = 'Your report has been sent.';
 // responsive design strings
 $string['tabs'] = 'Tabs';
 $string['tab'] = 'tab';

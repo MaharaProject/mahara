@@ -1,5 +1,5 @@
 {if $LOGGEDIN}
-  <a id="objection_link" class="objection" href="">{str tag=reportobjectionablematerial section=view}</a>
+  <a id="objection_link" class="objection" href="">{str tag=reportobjectionablematerial}</a>
 {/if}
 <a id="print_link" class="print" href="" onclick="window.print(); return false;">{str tag=print section=view}</a>
 {if $LOGGEDIN}

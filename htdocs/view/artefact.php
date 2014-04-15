@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'artefact');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'objectionable.php');
 safe_require('artefact', 'comment');
 
 $artefactid = param_integer('artefact');
@@ -153,7 +154,7 @@ if ($artefact->get('allowcomments')) {
     $javascript[] = 'jquery.rating';
 }
 $objectionform = pieform(objection_form());
-if ($notrudeform = $view->notrude_form()) {
+if ($notrudeform = notrude_form()) {
     $notrudeform = pieform($notrudeform);
 }
 
