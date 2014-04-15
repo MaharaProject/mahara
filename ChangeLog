@@ -1,3 +1,288 @@
+1.9.0 (2014-04-15)
+- New Features:
+- Accessibility! W3C WCAG 2.0 level AA (except for some admin pages)
+- Profile completion progress bar
+- Institutions can customise static pages (Dashboard, Terms & Conditions, etc)
+- Institutions can customise their default language
+- Support for reCAPTCHA on self-registration page
+- "New user probation" system to discourage spam
+- "Cookie Consent" system for compliance with the EU cookie law
+- "Post now" option for forum posts, to bypass post delay
+- Support for Creative Commons 4.0 licenses
+- New "Feedback" block, allows placing feedback as a block intead of at the bottom of the page
+- Can now show image descriptions in "Image Gallery" block
+- Can specify the sort order of files in a "Folder" block
+- "Folder" block can now have "Download all as zip" link
+- Improvements to watchlist notifications
+- Notification sent to admins when an institution reaches its allowed member limit
+- "New group page" notification
+- Elasticsearch shows forum post dates in search results
+- Elasticsearch plugin now works with MySQL
+- API: Blocks can provide a custom stylesheet
+- API: Themes can disable Page Skins
+- 
+- Security bugs:
+- Security Bug #1266976: Update to HTMLPurifier 4.6.0
+- Security Bug #1284876: Suspended users can log in via password reset email
+- 
+- Other bugs:
+- Bug #778254: Split multiple user activity notifications into chunks
+- Bug #1058416: Copying page in a collection only gives "untitled" title for clean URLs
+- Bug #1081947: Use of CAST() causes extreme slowdown in large MySQL sites 
+- Bug #1237198: Make Elasticsearch plugin work with MySQL 
+- Bug #1239271: Skin description is not displayed
+- Bug #1247715: Upgrade to 1.8.0 fails - can't connect to mysql
+- Bug #1248307: Content chooser panel doesn't work on tablet 
+- Bug #1249123: Users who are in "No Institution" can't use skins 
+- Bug #1249858: Mahara can't figure out mime types because of a finfo() bug
+- Bug #1252497: editing a skin deletes the creation time from db
+- Bug #1254394: Can't change auth method on /admin/users/edit.php 
+- Bug #1256118: elasticsearch install hangs if ElasticSearch Server not running
+- Bug #1257953: public group forum info do not show up in elasticsearch
+- Bug #1259359: Use of tabindex is confusing for screen readers
+- Bug #1259378: Profile pictures have inconsistent alt text
+- Bug #1259393: Required form fields are not obvious to screen readers
+- Bug #1259397: Dropdown navigation is not accessible
+- Bug #1259408: The status of notifications in "Recent Activity" is not accessible to screen readers
+- Bug #1262867: Site search box does not have a label
+- Bug #1262870: Textarea for posting to a user's wall does not have a label
+- Bug #1262933: Drag-and-drop page editor is not keyboard-accessible
+- Bug #1264105: Problem with deleting skins that are attached to a portfolio page 
+- Bug #1265049: forum post notifications have escaped <br> in message in inbox
+- Bug #1265629: elasticsearch setup by mahara causes Elasticsearch Server status to go from green to yellow
+- Bug #1266317: Institution/group ownership of custom flexible layouts
+- Bug #1267668: Add a "Cookie Consent" link to the Admin Home page. 
+- Bug #1268788: mobile_api_json_reply sends extra stuff at the top, making it invalid json
+- Bug #1270752: "shared with me" pagination fails with IE 9
+- Bug #1270846: no message when incorrect username entered
+- Bug #1270987: Modal dialogs are not accessible
+- Bug #1271301: Search and filter forms need labels
+- Bug #1273492: Group members list cannot be sorted when using elasticsearch
+- Bug #1275995: Navigation and tabs are broken in IE11
+- Bug #1278013: LDAP sync enter list of groups 
+- Bug #1278428: No groups and group files visible although there must be many in 1.8.1 
+- Bug #1279468: Error with saving extensions - > artefact -> file configuration
+- Bug #1279523: "Use content from another text box" stops working if pagination is used 
+- Bug #1279530: Attachments section for Text box blocks is not accessible
+- Bug #1281787: Artefacts not locked in in submitted view
+- Bug #1283869: page editor adds blank block and screen goes black
+- Bug #1284878: external feed rss not updating
+- Bug #1287350: New Google Drive URL 
+- Bug #1287922: error when deleting a journal entry
+- Bug #1288490: upgrade from 1.8 error
+- Bug #1288542: Can't open feedback form when HTML editor is turned off
+- Bug #1290156: spelling mistake in view/index.php 'offest'
+- Bug #1290649: fonts not working under https
+- Bug #1292303: Clicking 'All' and 'None' does not work in 'User search' page 
+- Bug #1293803: Adding an profile picture as a background image for a skin causes errors 
+- Bug #1296915: settings page error Undefined index: licensedefault
+- Bug #1297510: Deleting fonts causes 'Invalid Parameter' error:  
+- Bug #1298717: Saving a customised color in a skin does not work
+- Bug #1300741: installation doesn't save email address
+- Bug #1302251: MS Office files being seen as zip archives
+- Bug #1305275: custom theme goes white on save:  
+- Bug #1305308: Site admin should not add background images to site skins
+- Bug #1305361: Pages are not displayed in many themes except 'default'
+- Bug #1305451: Content editor sidebar doesn't work on Chrome 
+- Bug #1305481: Adding content to page buggy on Firefox
+- Bug #1306365: when copy page the originators profile picture carries over
+- Bug #661602: Dates on external feed entries are not shown
+- Bug #974855: "Generate sitemap" option has empty help file
+- Bug #993676: Members did not show up in second search if the first search found no results
+- Bug #1013022: Wishlist : enabling to download an entire folder
+- Bug #1051500: Warning message before deleting journal
+- Bug #1053708: A full list of Pages don't show up
+- Bug #1058850: Warning when editing note that all instances are changed
+- Bug #1064780: Default journal of a Persona auth account doesn't have user's name
+- Bug #1070046: select query uses more than MAX_JOIN_SIZE on mysql:  
+- Bug #1085744: Could not remove tags with special characters
+- Bug #1086569: Lang string misleading when inst. staff doesn't have stats access
+- Bug #1089136: "Add me as friend" results in error message
+- Bug #1099811: group files error after upgrade
+- Bug #1145156: Improve resume usability
+- Bug #1174623: Correct schema drift during 1.0 -> 1.8 upgrades
+- Bug #1187212: Handle timezone mismatch between webserver and DB (MySQL) server
+- Bug #1224750: Site files located in a subfolder cannot be accessed by normal users
+- Bug #1237177: Elastic Search does not find media in a group
+- Bug #1239928: Prezi doesn't load
+- Bug #1240244: Deleting an image used for a skin should give a popup warning
+- Bug #1242220: Show file description on Leap2a import screen
+- Bug #1245638: elasticsearch 'textbox' results should be under text rather than media
+- Bug #1246576: Upgrade MobileDetect library to 2.7.1
+- Bug #1246580: Upgrade PHPMailer to 5.2.7
+- Bug #1247722: Update PEAR libraries for 1.9.0
+- Bug #1252885: Hide suspended users' pages from the "Latest Pages" block
+- Bug #1254396: Skins description textbox should be expandable
+- Bug #1255361: Error adding files to Institution pages
+- Bug #1255378: Fill in the missing "key_exists()" method in ddl.php
+- Bug #1255780: copying collection needs to sort table by collection
+- Bug #1258970: "Menu" is hardcoded when viewed on small device
+- Bug #1259372: "Edit Access" image has missing string for alt text
+- Bug #1259373: HTML editor is not disabled when leaving feedback
+- Bug #1259377: Explanation when there are no tasks in a plan is unclear
+- Bug #1259379: Delete buttons need a descriptive (and consistent) value
+- Bug #1259387: Tabs should include textual information to show their state
+- Bug #1259388: Input help text should be linked using ARIA
+- Bug #1259394: Help links in forms are not keyboard-accessible
+- Bug #1259395: HTML lang attribute is not specified
+- Bug #1259405: Screen readers are confused by Unsubscribe button in forums
+- Bug #1259409: "Delete" and "Mark Read" checkboxes in Inbox need labels
+- Bug #1259411: Table headers in Inbox are not read properly by screen readers
+- Bug #1259685: Datepicker is not accessible to screen readers
+- Bug #1259746: Username links are not always read out when using a screen reader
+- Bug #1259764: Feedback form should use focus management
+- Bug #1261239: Expanders in forms should use focus management
+- Bug #1261610: JSDetector adds output to command-line scripts
+- Bug #1261694: remember the limit parameter on view pages
+- Bug #1262483: Forms should consistently have errors above the top-level heading
+- Bug #1262903: The alt text of icons in the file browser should be changed
+- Bug #1262904: Files cannot be moved from one folder to another without using the mouse
+- Bug #1262918: Add/Edit buttons in Resume should use focus management
+- Bug #1262932: Bad data in the DB can cause the schema correction SQL to throw a fatal error
+- Bug #1263440: Improve lang strings for Cookie Consent
+- Bug #1264014: Collection Navigation should be a list not a table
+- Bug #1264429: Set up an institution_config table for configuring institutions
+- Bug #1265086: "Completed" column for tasks is unclear for screen reader users
+- Bug #1265102: Focus is not visually apparent when tabbing through the page
+- Bug #1265104: spelling mistake in additionalhtmlfooter config variable
+- Bug #1265696: Can't edit access to profile after "Logged-in profile access" turned on
+- Bug #1265982: Add Creative Commons 4.0 as licence types to CC block
+- Bug #1266923: Focus should be set to search results if they are loaded with AJAX
+- Bug #1266934: Institution option for dropdown menus should take precedence over site option
+- Bug #1267311: Elasticsearch page doesn't have textual description of tab state
+- Bug #1267861: Page shared to group: notification to page owner
+- Bug #1268746: Squelch PHP 5.4+ strict standards errors
+- Bug #1271779: Resume layout on mobile devices
+- Bug #1272297: Authentication plugin up/down and delete links should be buttons
+- Bug #1273448: "Attachments" icon in Resume needs alt text
+- Bug #1273841: Specific form errors should be linked with ARIA
+- Bug #1273937: Skins form needs to use label elements
+- Bug #1274083: View an artefact with related skin or theme
+- Bug #1275481: Dwoo doesn't support Smarty's nl2br syntax
+- Bug #1276397: Edit and delete buttons need descriptive alt text
+- Bug #1277276: Results per page combobox needs a label
+- Bug #1277290: Resume attachments form element should be made accessible
+- Bug #1277297: Radio buttons in email selector need labels
+- Bug #1278198: Close button in homepage information should be made accessible
+- Bug #1278202: Skin previews need descriptive alt text
+- Bug #1278216: Checkboxes when editing permissions for a page need labels
+- Bug #1278238: Radio buttons used when importing need labels
+- Bug #1278667: Two error messages when uploading files without accepting upload agreement
+- Bug #1279943: Textbox attachments not showing on htdocs/view/artefact.php page
+- Bug #1280009: Skin edit form should use responsive tabs
+- Bug #1281877: Colour contrast needs to be improved for accessibility (default theme)
+- Bug #1282214: Move "Edit site pages" under institution menu
+- Bug #1282219: Rename "Edit site pages" to "General pages" to "Static pages"
+- Bug #1283839: institution general pages not set as site default on upgrade
+- Bug #1284869: Suspended user login attempts show up in "Online Users" list
+- Bug #1286941: double call of language_select_form()
+- Bug #1287262: unable to create group home page
+- Bug #1300289: commentlist shows logged in user's icon for anonymous comments
+- Bug #1307240: on delete of font alert if being used  
+- Bug #1307294: Disable self-registration by default
+- Bug #609167: Add group categories default action is page submit, not add
+- Bug #620161: Distinction between Name and Profile not clear
+- Bug #633658: Shouldn't viewing and downloading files have the same process?
+- Bug #646691: Blog account settings still available when blog disabled
+- Bug #707161: opensslcnf not set (on rhel at least)
+- Bug #731062: Feedback ratings are not exportable
+- Bug #731647: Ignore duplicates in CSV upload
+- Bug #746418: Institution authentication plugin option doesn't exist when creating new institution
+- Bug #852304: Sending a friend request should return you to the page you were previously on
+- Bug #892684: Remove the Contact Info block
+- Bug #898470: Inconsistent "required field" behavior on institution membership page
+- Bug #995761: Use the same paginator throughout
+- Bug #996337: Forum post delay setting only sticks after you clicked "Save"
+- Bug #1034213: When editing the group editablity times with a end date before the start date both dates are greyed out after validation 
+- Bug #1047481: Groups menu 'I want to join' - improvement
+- Bug #1053223: Publish/Unpublish a journal's entry should change the background
+- Bug #1064219: "Add page to watchlist" not clear on artefact page
+- Bug #1067550: /admin/users/bulk.php shows submit button for changing auth method even if only 1 auth method
+- Bug #1067724: Unable to read language directory
+- Bug #1075760: reporting objectional material with no message doesn't get sent to admin with digest emails
+- Bug #1115638: Empty masquerading report needs "none found" type string
+- Bug #1195120: Delete superflous fullstop on /admin/groups/uploadcsv.php
+- Bug #1196213: Linking of tags in tag search
+- Bug #1203082: Change password warning contains escaped html
+- Bug #1212541: GoogleSpell has been discontinued -- remove it from TinyMCE spellchecker
+- Bug #1220410: MNet with port number requires port to be in wwwroot
+- Bug #1220943: Warning when creating a new auth instance in 1.8dev
+- Bug #1231920: Duplicate tags in page creation gives error message
+- Bug #1240306: Styling error on add user page if there's a very long institution name
+- Bug #1246024: error message disappears too fast
+- Bug #1246573: Upgrade htmlpurifier to 4.5.0
+- Bug #1246933: image slider display error
+- Bug #1247729: Elastic Search: Set the second column to sort by to score
+- Bug #1247729: Elastic Search: Set the second column to sort by to score
+- Bug #1250235: View gives error if user could make skins then had option revoked
+- Bug #1250239: Saving 'no institution' institution gives errors
+- Bug #1250256: Support for changing the session directory
+- Bug #1251089: Invalid value for licensedefault
+- Bug #1253462: Undefined property: stdClass::$urlid after doing feedback
+- Bug #1253835: Make profile page tabs design responsive
+- Bug #1259366: Title of 'Tasks' page should be capitalised
+- Bug #1259401: Dashboard info (Create and Collect, ...) is hard to understand when using a screen reader
+- Bug #1259402: "Learn more" link when posting on a Wall is not descriptive
+- Bug #1259689: Skin metadata lightbox is not keyboard-accessible
+- Bug #1259757: Gender radio buttons need descriptive labels
+- Bug #1261231: Allow a VERP "bounceprefix" that's not exactly 4 characters
+- Bug #1261233: Allow a VERP "bounces_ratio" of 0
+- Bug #1262487: Row headers in "Edit Access" table are confusing for screen reader users
+- Bug #1262490: Add buttons in "Edit Access" should have more descriptive text
+- Bug #1262899: Add buttons in "Edit Access" should move focus to the inserted row
+- Bug #1262911: In-page tabs should use focus management
+- Bug #1265061: Add support for regional languages to TinyMCE language detection
+- Bug #1265088: Description of dual listbox (in Admin) is unclear to screen reader users
+- Bug #1265091: Pieforms date elements should have "Not specified" before the date picker
+- Bug #1265098: Register site page title should be more descriptive
+- Bug #1265099: Some form elements in Administration area need labels
+- Bug #1265101: License icons need alt text
+- Bug #1266300: hover over unselected tabs in admin -> users ->reports not showing pointer cursor
+- Bug #1266624: When using small headers, action buttons break the logical ordering of the page
+- Bug #1267240: Clicking on new change layout icon needs to warn if navigating away without saving
+- Bug #1267296: Focus should be set to search results if loaded with AJAX (Administration)
+- Bug #1267633: It's confusing to hide the "copy for new users" site page access option
+- Bug #1271391: focus on help box close button in chromium has gap
+- Bug #1275617: Allow CLI api to specify exit code
+- Bug #1279529: All attachments tables should be collapsable
+- Bug #1281121: Method view_has_token uses uninitialized variable
+- Bug #1282872: Top right "Settings" image should not have alt text
+- Bug #1285414: User search column headers should include text to explain sort order
+- Bug #1285890: Set focus to new row when adding a group category
+- Bug #1285892: Title of "Group categories" page should be made more descriptive
+- Bug #1290672: PluginArtefactResume should extend PluginArtefact
+- Bug #1297516: Font preview page did NOT display properly
+- Bug #1298129: Multicolumntable pieform help is broken
+- Bug #1298671: The link in the skin thumbnail header should be not displayed in Chromium
+- Bug #1301096: Eliminate redundant &obsolete get_mime_type() function
+- Bug #817372: Override forum post delay for individual groups and/or forums
+- Bug #817373: Add ability to 'send now' on a forum post
+- Bug #833867: Add "Show Description" to Image Gallery
+- Bug #1027260: Warning when deleting a page that is used in a collection
+- Bug #1041228: Improve watchlist notifications
+- Bug #1204699: Mahara does not notify administrators if institutional membership is full
+- Bug #1223069: Site files accessible in "Links and resources" sidebar
+- Bug #1233896: Sort files in the "Folder" block
+- Bug #1237013: Allow theme to turn off skins
+- Bug #1245679: Place feedback for a view in a block rather at base of page
+- Bug #1246547: Give a different error message for an expired registration key than for an invalid registration key
+- Bug #1248318: Allow $SESSION messages to be displayed in alternative places
+- Bug #1252098: Wishlist: reCAPTCHA support
+- Bug #1252101: Wishlist: Prevent new users from taking spammy actions
+- Bug #1254299: Institutional Specific Dashboard
+- Bug #1258130: Directive on Privacy and Electronic Communications
+- Bug #1259538: "Progress bar" based on Institution selected preferences
+- Bug #1259741: "Jump to Content" link should be included for screen reader users
+- Bug #1259773: Having group links as a bulleted list in sidebar is confusing for screen reader users
+- Bug #1262477: First column in Inbox should have a hidden header
+- Bug #1266320: Feature request: Institution-specific default languages
+- Bug #1266907: Edit/Add License page titles should be more descriptive
+- Bug #1272240: New group page notification
+- Bug #1273542: Add Creative Commons 4.0 as licence types to the admin-controlled licenses
+- Bug #1273931: It is impossible to add custom CSS for blocks
+- Bug #1281364: Let users from controlled-registration institutions delete their accounts
+- Bug #1281847: Elasticsearch: Show forum post dates in search results
+
 1.8.2 (2014-04-03)
 - Bug 1239461: External feed has duplicate rows causing problems
 - Bug 1249858: Mahara can't figure out mime types because of a finfo() bug
