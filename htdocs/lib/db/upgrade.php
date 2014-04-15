@@ -2832,51 +2832,6 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
-    if ($oldversion < 2013120200) {
-        log_debug('Cleaning up duplicate feeds in the externalfeed blocktype');
-        log_debug('1. Find the duplicate feed urls');
-        // Setting these to be empty strings instead of NULL will make our SQL a lot simpler in the next section
-        execute_sql("update {blocktype_externalfeed_data} set authuser='' where authuser is null");
-        execute_sql("update {blocktype_externalfeed_data} set authpassword='' where authpassword is null");
-        if ($duplicatefeeds = get_records_sql_array("SELECT COUNT(url), url, authuser, authpassword FROM {blocktype_externalfeed_data} GROUP BY url, authuser, authpassword HAVING COUNT(url) > 1 ORDER BY url, authuser, authpassword", array())) {
-            log_debug('2. Get all feed ids for the duplicated feed urls');
-            // Use the 1st one found to be the feed id for the block instances that need updating
-            $feedstoupdate = array();
-            foreach ($duplicatefeeds as $feed) {
-                $feedids = get_column('blocktype_externalfeed_data', 'id', 'url', $feed->url, 'authuser', $feed->authuser, 'authpassword', $feed->authpassword);
-                $feedstoupdate[$feed->url] = $feedids;
-            }
-            log_debug('3. Updating blocks to use correct feed id');
-            // Find the block instances using external feeds. Check to see if they are not using the 'true' id and update them accordingly
-            require_once(get_config('docroot') . 'blocktype/lib.php');
-            $blockids = get_records_array('block_instance', 'blocktype', 'externalfeed', 'id ASC', 'id');
-            foreach ($blockids as $blockid) {
-                $blockinstance = new BlockInstance($blockid->id);
-                $configdata = $blockinstance->get('configdata');
-                if (!empty($configdata['feedid'])) {
-                    foreach ($feedstoupdate as $url => $ids) {
-                        foreach ($ids as $key => $id) {
-                            if ($id == $configdata['feedid'] && $key != '0') {
-                                $configdata['feedid'] = $ids[0];
-                                $blockinstance->set('configdata', $configdata);
-                                $blockinstance->set('dirty', true);
-                                $blockinstance->commit();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            log_debug('4. Removing orphaned feed rows');
-            foreach ($feedstoupdate as $url => $ids) {
-                foreach ($ids as $key => $id) {
-                    if ($key != '0') {
-                        execute_sql("DELETE FROM {blocktype_externalfeed_data} WHERE id = ?", array($id));
-                    }
-                }
-            }
-        }
-    }
     if ($oldversion < 2013121300) {
         // view_rows_columns can be missing the 'id' column if upgrading from version
         // earlier than v1.8 and because we are adding a sequential primary column after
