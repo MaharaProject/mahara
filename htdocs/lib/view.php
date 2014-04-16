@@ -1855,13 +1855,7 @@ class View {
         // This often returns the default layout for number of rows, as layout is often null at this point
         $layout = $this->get_layout();
         $i = 0;
-        $is_ie6 = isset($_SERVER['HTTP_USER_AGENT']) && (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0'));
         foreach (explode(',', $layout->rows[$row]['widths']) as $width) {
-            // IE6 has interesting padding issues that mean we have to tell
-            // porkies so all the columns stay beside each other
-            if ($is_ie6) {
-                $width -= 2;
-            }
             $this->columns[$row][++$i]['width'] = $width;
         }
 

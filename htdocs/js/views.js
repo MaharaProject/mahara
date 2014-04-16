@@ -21,16 +21,14 @@
     var viewsLoading = null;
     var navBuffer = 660;
 
-    //Public Properties
-    // Whether the browser is IE7 - needed for some hacks
-    ViewManager.isIE8 = $.browser.msie && $.browser.version == 8.0;
-    ViewManager.isIE7 = $.browser.msie && $.browser.version == 7.0;
-    ViewManager.isIE6 = $.browser.msie && $.browser.version == 6.0;
+    // Public Properties
+    // Whether the browser is IE - needed for some hacks
     ViewManager.isOldIE = $.browser.msie && $.browser.version < 9.0;
     ViewManager.contentEditorWidth = 145;
+    ViewManager.isMobile = config['handheld_device'] || (navigator.userAgent.match(/iPhone/i))
+                           || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i));
     // Whether the brower is iPhone, IPad or IPod
-    if (config['handheld_device'] || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
-        ViewManager.isIE6 = true;
+    if (ViewManager.isMobile) {
         ViewManager.contentEditorWidth = 175;
     }
     //Public Methods
@@ -92,7 +90,23 @@
         viewThemeSelect = $('#viewtheme-select');
         viewsLoading = $('#views-loading');
 
-        if (!ViewManager.isIE6) {
+        if (ViewManager.isMobile) {
+            // Unhide the radio button if the browser is iPhone, IPad or IPod
+            $('#editcontent-sidebar').addClass('withradio');
+            $('#page').addClass('withradio');
+            $('#content-editor input.blocktype-radio').each(function() {
+                $(this).show();
+            });
+            $('#accordion a.nonjs').each(function() {
+                $(this).hide();
+            });
+            $('#accordion div.withjs').each(function() {
+                $(this).show();
+            });
+            $('#accordion *').css('zoom', '1');
+            $('#main-column-container .tabswrap ul li a').css('float', 'left'); // fix li elements not floating left by floating anchors
+        }
+        else {
             // Hide 'new block here' buttons
             $('#bottom-pane div.add-button').each(function() {
                 $(this).remove();
@@ -105,7 +119,7 @@
 
             // Remove radio buttons for moving block types into place
             $('#content-editor input.blocktype-radio').each(function() {
-                if (ViewManager.isIE6 || ViewManager.isIE7 || ViewManager.isIE8) {
+                if (ViewManager.isOldIE) {
                     $(this).hide();
                 }
                 else {
@@ -122,22 +136,6 @@
             $('#accordion div.withjs').each(function() {
                 $(this).show();
             });
-        }
-        else if (config['handheld_device'] || ViewManager.isIE6 || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
-            // Unhide the radio button if the browser is iPhone, IPad or IPod
-            $('#editcontent-sidebar').addClass('withradio');
-            $('#page').addClass('withradio');
-            $('#content-editor input.blocktype-radio').each(function() {
-                $(this).show();
-            });
-            $('#accordion a.nonjs').each(function() {
-                $(this).hide();
-            });
-            $('#accordion div.withjs').each(function() {
-                $(this).show();
-            });
-            $('#accordion *').css('zoom', '1');
-            $('#main-column-container .tabswrap ul li a').css('float', 'left'); // fix li elements not floating left by floating anchors
         }
 
         $('#accordion').accordion({
@@ -162,7 +160,7 @@
                         makeNewBlocksDraggable();
                         showColumnBackgroundsOnSort();
                         // Unhide the radio button if the browser is iPhone, IPad or IPod
-                        if (config['handheld_device'] || ViewManager.isIE6 || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+                        if (ViewManager.isMobile) {
                             // Unhide the radio button if the browser is iPhone, IPad or IPod
                             $('#editcontent-sidebar').addClass('withradio');
                             $('#page').addClass('withradio');
@@ -228,10 +226,8 @@
 
         rewriteViewThemeSelector();
 
-        if (!ViewManager.isIE6) {
-            makeNewBlocksDraggable();
-            makeExistingBlocksSortable();
-        }
+        makeNewBlocksDraggable();
+        makeExistingBlocksSortable();
 
         $(viewsLoading).remove();
 
@@ -490,12 +486,10 @@
             },
 
             update: function(event, ui) {
-                if (!ViewManager.isIE6) {
-                    $('.row .column-content').each(function() {
-                        $(this).css('min-height', '');
-                    });
-                    setEqualColumnHeights('.row', 40);
-                }
+                $('.row .column-content').each(function() {
+                    $(this).css('min-height', '');
+                });
+                setEqualColumnHeights('.row', 40);
             },
 
             start: function(event, ui) {
@@ -610,10 +604,6 @@
                     currentTallest = $(this).height();
                 }
             });
-            // for ie6, set height since min-height isn't supported
-            if (ViewManager.isIE6) {
-                $(this).find('.column-content').css({'height': currentTallest});
-            }
             $(this).find('.column-content').css({'min-height': currentTallest});
         });
     }
@@ -709,10 +699,6 @@
                         $(this).css('min-height', '');
                     });
                     setEqualColumnHeights($('.row'), 50);
-                    if (ViewManager.isIE6) {
-                        // refresh the 'add block here' buttons
-                        ViewManager.displayPage(config['wwwroot'] + 'view/blocks.php?id=' + $('#viewid').val());
-                    }
                     button.removeAttr('disabled');
                 }, function() {
                     button.removeAttr('disabled');
@@ -882,7 +868,7 @@
         if (typeof(arguments[0]) != 'undefined') {
             parentNode = arguments[0];
             // Make the top pane a dropzone for cancelling adding block types
-            if (!self.isIE6 && self.topPane) {
+            if (self.topPane) {
                 var count = 0;
                 new Droppable('top-pane', {
                     'onhover': function() {
@@ -896,7 +882,7 @@
             }
         }
         // Unhide the radio button if the browser is iPhone, IPad or IPod
-        else if (config['handheld_device'] || (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i)) && self.topPane) {
+        else if (ViewManager.isMobile && self.topPane) {
             forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
                     setNodeAttribute(i, 'style', 'display:inline');
                 });
@@ -904,9 +890,6 @@
             $('#top-pane input.blocktype-radio').each(function() {
                 //$(this).attr('type', 'hidden'); // not allowed in jquery
                 $(this).get(0).type = 'hidden'; // TODO need to test this across browsers
-                if (ViewManager.isIE7 || ViewManager.isIE6) {
-                    $(this).hide();
-                }
             });
         }
         else {
@@ -1195,10 +1178,6 @@
                     currentTallest = $(this).height();
                 }
             });
-            // for ie6, set height since min-height isn't supported
-            if (ViewManager.isIE6) {
-                $(this).find('.column-content').css({'height': currentTallest});
-            }
             $(this).find('.column-content').css({'min-height': currentTallest});
         });
         setEqualColumnHeights('.row', 40);
@@ -1505,9 +1484,6 @@ function blockConfigSuccess(form, data) {
         eval(data.formelementsuccess + '(form, data)');
     }
     if (data.blockid) {
-        if (ViewManager.isIE6 && data.viewid) {
-            document.location.href = config['wwwroot'] + 'view/blocks.php?id=' + data.viewid;
-        }
         ViewManager.replaceConfigureBlock(data);
     }
     if (data.otherblocks) {

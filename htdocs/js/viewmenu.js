@@ -77,9 +77,6 @@ function rewriteCancelButtons() {
 addLoadEvent(function () {
     if ($('add_feedback_form')) {
         if ($('add_feedback_link')) {
-            var isIE6 = document.all && !window.opera &&
-                (!document.documentElement || typeof(document.documentElement.style.maxHeight) == "undefined");
-
             if (typeof(tinyMCE) != 'undefined') {
                 tinyMCE.on('SetupEditor', function(editor) {
                     if (editor.id == 'add_feedback_form_message') {
@@ -109,12 +106,6 @@ addLoadEvent(function () {
                     formposition.y = 30;
                     setElementPosition('add_feedback_form', formposition);
                     appendChildNodes(document.body, DIV({id: 'overlay'}));
-                }
-                // IE6 fails to hide tinymce properly after feedback
-                // submission, so force it to reload the page by disconnecting
-                // the submit handler
-                if (isIE6) {
-                    disconnectAll('add_feedback_form', 'onsubmit');
                 }
 
                 if (tinymceused) {

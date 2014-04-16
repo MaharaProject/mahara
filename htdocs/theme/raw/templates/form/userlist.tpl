@@ -43,17 +43,6 @@
                 if (typeof params.query != 'undefined') {
                     $('{{$name}}_potential').focus();
                 }
-                // work around IE7's magical shrinking select box. Only
-                // Internet Explorer has the "brilliance" to slowly shrink the
-                // select box every time you put a new option into it :(
-                // It turns out by altering the contents of the container
-                // object, IE decides it might be a good time to recalculate
-                // the width of other children.
-                var td = $('{{$name}}_potential').parentNode;
-                appendChildNodes(td, ' ');
-                removeElement(td.lastChild);
-                // </rant>
-
 
                 if(users.count > users.limit) {
                     replaceChildNodes('{{$name}}_messages',

@@ -621,11 +621,6 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
                 }
             }
         });
-        // Draggable sets position = 'relative', but we set it back
-        // here because with position = 'relative' in IE6 the rows
-        // stay put instead of moving down when the create/upload
-        // forms are opened on the page.
-        elem.style.position = 'static';
     };
 
     this.select_init = function () {

@@ -11,8 +11,6 @@
     </div>
 {/foreach}
 </div>
-{* The div below is an IE6 fix *}
-<div class="cb" style="line-height: 0;">&nbsp;</div>
 {else}
 <div id="noblocks">{str tag='noblocks' section='view'}</div>
 {/if}
