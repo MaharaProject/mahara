@@ -2492,6 +2492,12 @@ function install_system_dashboard_view() {
  * Avoids reloading the 'no user photo' image for each user separately
  * when we know they have no profile icon, and avoids the redirect to
  * gravatar.
+ *
+ * @param int|object|array $user A user ID, user object, or user data array. If an
+ * object, should contain profileicon or email attributes, or a user ID.
+ * @param int $maxwidth
+ * @param int $maxheight
+ * @return bool|string The URL of the image or FALSE if none was found
  */
 function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
 
@@ -2501,12 +2507,19 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
     }
     $user = get_user_for_display($user);
 
-    if (!property_exists($user, 'profileicon') || !property_exists($user, 'email')) {
-        if (!is_numeric($user->id)) {
-            throw new SystemException('profile_icon_url requires a user with profileicon & email properties');
+    // If we were originally passed a $user that was lacking profileicon and email,
+    // get_user_for_display() usually won't have found it for us. So we should try
+    // to fill that in now, and then cache it for later calls.
+    if (!isset($user->profileicon) && !isset($user->email)) {
+        if (!isset($user->id) || !is_numeric($user->id)) {
+            // No data. We'll just show the anonymous icon, but log a warning message for the devs.
+            log_debug("profile_icon_url was passed a user object without a numeric id, a profileicon, or an email address. This is probably a coding error.");
         }
-        log_debug("profile_icon_url was passed a user without profileicon & email properties");
-        $user = get_record('usr', 'id', $user->id);
+        else {
+            $user = get_record('usr', 'id', $user->id, null, null, null, null, 'id, profileicon, email');
+            // Cache this for subsequent calls
+            $user = get_user_for_display($user);
+        }
     }
 
     // Available sizes of the 'no_userphoto' image:
@@ -2522,7 +2535,7 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
         return $thumb . '?type=profileiconbyid&' . $sizeparams . '&id=' . $user->profileicon;
     }
 
-    return anonymous_icon_url($maxwidth, $maxheight, $user->email);
+    return anonymous_icon_url($maxwidth, $maxheight, (!empty($user->email) ? $user->email : null));
 }
 
 /**
