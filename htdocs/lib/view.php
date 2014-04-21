@@ -4034,7 +4034,10 @@ class View {
     function get_views_and_collections($owner=null, $group=null, $institution=null, $matchconfig=null, $includeprofile=true, $submittedgroup=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
-
+        // Anonymous public viewing of a group with 'Allow submissions' checked needs to avoid including the dummy root profile page.
+        if ($owner == '0') {
+            $includeprofile = false;
+        }
         $sql = "
             SELECT v.id, v.type, v.title, v.accessconf, v.ownerformat, v.startdate, v.stopdate, v.template,
                 v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
