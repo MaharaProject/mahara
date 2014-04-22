@@ -1462,13 +1462,27 @@ function institution_view_type_graph(&$institutiondata) {
     if ($institutiondata['views'] == 0) {
         return;
     }
+    $institution = $institutiondata['name'];
+    $values = array();
     // Draw a pie graph of views broken down by view type.
+    $values[] = 'dashboard';
+    if ($institution == 'mahara') {
+            $where = 'institution IS NULL';
+    }
+    else {
+        $where = 'institution = ?';
+        $values[] = $institution;
+    }
+    $values[] = $institution;
     $viewtypes = get_records_sql_array('
         SELECT type, COUNT(id) AS views
         FROM {view} WHERE type != ?
-        AND id IN (' . join(',', array_fill(0, $institutiondata['views'], '?')) . ')
-        GROUP BY type',
-        array_merge(array('dashboard'), $institutiondata['viewids'])
+        AND id IN (
+            SELECT id FROM {view} WHERE owner IS NOT NULL AND owner IN (
+                SELECT u.id FROM {usr} u LEFT JOIN {usr_institution} ui ON u.id = ui.usr
+                WHERE ' . $where . ' AND u.id != 0 AND deleted = 0
+            ) UNION SELECT id FROM {view} WHERE institution IS NOT NULL AND institution = ?
+        ) GROUP BY type', $values
     );
 
     if (count($viewtypes) > 1) {
