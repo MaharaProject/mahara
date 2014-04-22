@@ -19,6 +19,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
+require_once(get_config('libroot') . 'objectionable.php');
 require_once('institution.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
@@ -175,7 +176,7 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
 }
 if ($USER->is_logged_in()) {
     $objectionform = pieform(objection_form());
-    if ($notrudeform = $view->notrude_form()) {
+    if ($notrudeform = notrude_form()) {
         $notrudeform = pieform($notrudeform);
     }
 }

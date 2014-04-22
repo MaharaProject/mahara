@@ -889,6 +889,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         if (empty($this->strings->subject)) {
             $this->overridemessagecontents = true;
             $viewtitle = $this->view->get('title');
+            $this->strings = new stdClass();
             if (empty($this->artefact)) {
                 $this->strings->subject = (object) array(
                     'key'     => 'objectionablecontentview',
