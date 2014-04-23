@@ -1716,26 +1716,10 @@ function mixed_array_to_field_array($array, $field) {
     return array_map($repl_fun, $array, $fields);
 }
 
-
-/** 
- * Adds stuff to the log
- * @todo write this function
- *
- * @param string $plugintype plugin type or core
- * @param string $pluginname plugin name or core component (eg 'view')
- * @param string $action action string (like 'add')
- * @param int $user id of user making the action
- * @param int $id relevant id (ie, profile view would have id of profile owner)
- * 
- */
-function add_to_log($plugintype, $pluginname, $action, $user, $id=0) {
-
-}
-
 /**
  * Used by XMLDB
  */
-function debugging ($message, $level) {
+function debugging($message, $level) {
     log_debug($message);
 }
 function xmldb_dbg($message) {
@@ -2409,21 +2393,50 @@ function _get_views_trim_list(&$list, &$users, $limit, &$results) {
     return false;
 }
 
+/**
+ * Checks if artefact or at least one of its ancestors is in view
+ *
+ * @param int|object $artefact ID of an artefact or object itself.
+ *                   Will load object if ID is supplied.
+ * @param int $view ID of a page that contains artefact.
+ *
+ * @return boolean True if artefact is in view, False otherwise.
+ */
 function artefact_in_view($artefact, $view) {
-    $sql = 'SELECT a.id 
-            FROM {view_artefact} a WHERE "view" = ? AND artefact = ?
-            UNION
-            SELECT c.parent 
-            FROM {view_artefact} top JOIN {artefact_parent_cache} c
-              ON c.parent = top.artefact
-            WHERE top.view = ? AND c.artefact = ?
-            UNION
-            SELECT s.id
-            FROM {view} v INNER JOIN {skin} s ON v.skin = s.id
-            WHERE v.id = ? AND ? in (s.bodybgimg, s.viewbgimg)
-    ';
+    if (!is_object($artefact)) {
+        $artefact = artefact_instance_from_id($artefact);
+    }
 
-    return record_exists_sql($sql, array($view, $artefact, $view, $artefact, $view, $artefact));
+    $ancestors = $artefact->get_item_ancestors();
+
+    $params = array($view, $artefact->get('id'), $artefact->get('id'));
+    $extrasql = '';
+    if ($ancestors) {
+        $extrasql = "SELECT a.parent
+                FROM {view_artefact} top JOIN {artefact} a
+                    ON a.parent = top.artefact
+                WHERE top.view = ? AND top.artefact IN (" . implode(',', $ancestors) . ")
+                UNION";
+        $params[] = $view;
+    }
+
+    $sql = "SELECT a.id
+            FROM {view_artefact} a WHERE \"view\" = ? AND artefact = ?
+            UNION
+            SELECT aa.artefact
+            FROM {artefact} a INNER JOIN {artefact_attachment} aa
+                ON a.id = aa.artefact
+            WHERE aa.attachment = ?
+            UNION
+            $extrasql
+            SELECT s.id
+            FROM {view} v INNER JOIN {skin} s
+                ON v.skin = s.id
+            WHERE v.id = ? AND ? in (s.bodybgimg, s.viewbgimg)
+    ";
+    $params = array_merge($params, array($view, $artefact->get('id')));
+
+    return record_exists_sql($sql, $params);
 }
 
 function get_dir_contents($directory) {

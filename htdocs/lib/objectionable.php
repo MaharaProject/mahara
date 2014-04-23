@@ -83,7 +83,7 @@ function objection_form_submit(Pieform $form, $values) {
     db_commit();
 
     if ($artefact) {
-        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
+        $goto = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $artefact->get('id') . '&view='.$view->get('id');
     }
     else {
         $goto = $view->get_url();
@@ -180,7 +180,7 @@ function notrude_form_submit(Pieform $form, $values) {
     $reportername = display_default_name($USER);
 
     if ($artefact) {
-        $goto = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefact->get('id') . '&view=' . $view->get('id');
+        $goto = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $artefact->get('id') . '&view=' . $view->get('id');
     }
     else {
         $goto = $view->get_url();

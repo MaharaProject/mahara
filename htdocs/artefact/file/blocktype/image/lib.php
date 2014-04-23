@@ -51,7 +51,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         }
 
         $smarty = smarty_core();
-        $smarty->assign('url', $wwwroot . 'view/artefact.php?artefact=' . $id . '&view=' . $viewid);
+        $smarty->assign('url', $wwwroot . 'artefact/artefact.php?artefact=' . $id . '&view=' . $viewid);
         $smarty->assign('src', $src);
         $smarty->assign('description', $description);
         $smarty->assign('showdescription', !empty($configdata['showdescription']) && !empty($description));

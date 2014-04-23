@@ -194,8 +194,6 @@ class ArtefactTypeBlog extends ArtefactType {
      * @return array  A two key array, 'html' and 'javascript'.
      */
     public function render_self($options) {
-        $this->add_to_render_path($options);
-
         if (!isset($options['limit'])) {
             $limit = self::pagination;
         }
@@ -216,7 +214,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $template = 'artefact:blog:viewposts.tpl';
 
-        $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        $baseurl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->id;
         if (!empty($options['viewid'])) {
             $baseurl .= '&view=' . $options['viewid'];
         }
@@ -231,7 +229,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $smarty = smarty_core();
         if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'artefact/artefact.php?artefact='
                                              . $this->get('id') . '&view=' . $options['viewid']
                                              . '">' . hsc($this->get('title')) . '</a>');
         }
@@ -622,7 +620,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
     public function render_self($options) {
         $smarty = smarty_core();
-        $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->get('id');
+        $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->get('id');
         if (isset($options['viewid'])) {
             $artefacturl .= '&view=' . $options['viewid'];
         }
@@ -660,13 +658,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         $attachments = $this->get_attachments();
         if ($attachments) {
-            $this->add_to_render_path($options);
             require_once(get_config('docroot') . 'artefact/lib.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();
                 $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
+                $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 if (isset($options['viewid'])) {
                     $attachment->downloadpath .= '&view=' . $options['viewid'];
@@ -752,7 +749,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if ($files) {
             safe_require('artefact', 'file');
             foreach ($files as &$file) {
-                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
+                $params = array('id' => $file->attachment);
+                if (!empty($viewoptions['viewid'])) {
+                    $params['viewid'] = $viewoptions['viewid'];
+                }
+                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', $params);
                 $data[$file->artefact]->files[] = $file;
             }
         }

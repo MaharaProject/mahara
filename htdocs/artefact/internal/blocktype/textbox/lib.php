@@ -45,13 +45,12 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
 
             $attachments = $artefact->get_attachments();
             if ($attachments) {
-                $artefact->add_to_render_path($options);
                 require_once(get_config('docroot') . 'artefact/lib.php');
                 foreach ($attachments as &$attachment) {
                     $f = artefact_instance_from_id($attachment->id);
                     $attachment->size = $f->describe_size();
                     $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                    $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($viewid) ? $viewid : 0);
+                    $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($viewid) ? $viewid : 0);
                     $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                     if (isset($viewid)) {
                         $attachment->downloadpath .= '&view=' . $viewid;
@@ -64,7 +63,7 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
             if ($artefact->get('allowcomments')) {
                 $commentcount = ArtefactTypeComment::count_comments(null, array($configdata['artefactid']));
                 $commentcount = isset($commentcount[$configdata['artefactid']]) ? $commentcount[$configdata['artefactid']]->comments : 0;
-                $artefacturl = get_config('wwwroot') . 'view/artefact.php?view=' . $viewid . '&artefact=' . $configdata['artefactid'];
+                $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?view=' . $viewid . '&artefact=' . $configdata['artefactid'];
                 $smarty->assign('artefacturl', $artefacturl);
                 $smarty->assign('commentcount', $commentcount);
             }

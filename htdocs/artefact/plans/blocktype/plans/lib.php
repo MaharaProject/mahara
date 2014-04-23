@@ -78,7 +78,7 @@ class PluginBlocktypePlans extends PluginBlocktype {
             ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination);
 
             if ($exporter && $tasks['count'] > $tasks['limit']) {
-                $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $configdata['artefactid']
+                $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $configdata['artefactid']
                     . '&view=' . $instance->get('view');
                 $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
             }

@@ -3301,5 +3301,40 @@ function xmldb_core_upgrade($oldversion=0) {
         $view->moveblockinstance(array('id' => $aboutme->get('id'), 'row' => 1, 'column' => 1, 'order' => 1));
     }
 
+    if ($oldversion < 2014050901) {
+        require_once(get_config('docroot') . 'artefact/lib.php');
+
+        // First drop artefact_parent_cache table.
+        $table = new XMLDBTable('artefact_parent_cache');
+        if (table_exists($table)) {
+            drop_table($table, true);
+        }
+
+        // Remove cron jobs from DB.
+        delete_records('cron', 'callfunction', 'rebuild_artefact_parent_cache_dirty');
+        delete_records('cron', 'callfunction', 'rebuild_artefact_parent_cache_complete');
+
+        // Add path field to artefact table.
+        $table = new XMLDBTable('artefact');
+        $field = new XMLDBField('path');
+        $field->setAttributes(XMLDB_TYPE_CHAR, '1024', null, null, null, null, null);
+
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+        // Fill the new field with path data.
+        $artefacts = get_records_array('artefact', '', '', '', 'id, parent');
+        $artefact_relations = get_records_menu('artefact', '', '', '', 'id, parent');
+        if ($artefacts && $artefact_relations) {
+            foreach ($artefacts as $artefact) {
+                $path = '/' . implode('/', artefact_get_lineage($artefact_relations, $artefact->id));
+                $todb = new stdClass();
+                $todb->id = $artefact->id;
+                $todb->path = $path;
+                update_record('artefact', $todb);
+            }
+        }
+    }
+
     return $status;
 }

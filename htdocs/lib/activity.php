@@ -883,7 +883,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             $this->url = $this->view->get_url(false);
         }
         else {
-            $this->url = 'view/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
+            $this->url = 'artefact/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id');
         }
 
         if (empty($this->strings->subject)) {

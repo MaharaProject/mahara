@@ -8,7 +8,7 @@
     {/if}
 {/if}
 {if $record->link}
-    <h3 class="title"><a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a> 
+    <h3 class="title"><a href="{$WWWROOT}{$record->link}">{$record->title|str_shorten_html:50:true|safe}</a>
 {else}
     <h3 class="title">{$record->title|str_shorten_html:50:true|safe} 
 {/if}
@@ -44,7 +44,7 @@
                 {if $secfacetterm != "Profile"}
                      |
                     <span class="viewartefact">
-                    <a href="{$WWWROOT}view/artefact.php?artefact={$record->id}&view={$id}">view 
+                    <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">view
                     {if $secfacetterm == "Journalentry"}
                       {str tag=blogpost section=search.elasticsearch}
                     {elseif $secfacetterm == "Forumpost"}
@@ -71,7 +71,7 @@
                 {if $secfacetterm != "Profile"}
                      |
                     <span class="viewartefact">
-                    <a href="{$WWWROOT}view/artefact.php?artefact={$record->id}&view={$id}">view 
+                    <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">view
                     {if $secfacetterm == "Journalentry"}
                       {str tag=blogpost section=search.elasticsearch}
                     {elseif $secfacetterm == "Forumpost"}

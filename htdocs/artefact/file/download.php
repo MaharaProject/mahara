@@ -33,18 +33,21 @@ else {
 
 if ($viewid && $fileid) {
     $file = artefact_instance_from_id($fileid);
-    $parent = $file->get('parent');
+    $ancestors = $file->get_item_ancestors();
     $artefactok = false;
-    if (artefact_in_view($file->get('id'), $viewid)) {
+
+    if (artefact_in_view($file, $viewid)) {
         $artefactok = true;
     }
-    // Check to see if the artefact has a parent that is allowed to be in this view
-    // for example subdirectory of a folder artefact on a view
-    while ($parent !== null) {
-        $parentobj = artefact_instance_from_id($parent);
-        $parent = $parentobj->get('parent');
-        if (artefact_in_view($parentobj->get('id'), $viewid)) {
-            $artefactok = true;
+    // Check to see if the artefact has a parent that is allowed to be in this view.
+    // For example, subdirectory of a folder artefact on a view.
+    if (!empty($ancestors) && !$artefactok) {
+        foreach ($ancestors as $ancestor) {
+            $pathitem = artefact_instance_from_id($ancestor);
+            if (artefact_in_view($pathitem, $viewid)) {
+                $artefactok = true;
+                break;
+            }
         }
     }
 
@@ -81,7 +84,7 @@ else {
 
     // If the file is in the public directory, it's fine to serve
     $fileispublic = $file->get('institution') == 'mahara';
-    $fileispublic = $fileispublic && (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $fileid, 'parent', ArtefactTypeFolder::admin_public_folder_id());
+    $fileispublic = $fileispublic && (bool)get_field('artefact', 'id', 'id', $fileid, 'parent', ArtefactTypeFolder::admin_public_folder_id());
 
     if (!$fileispublic) {
         // If the file is in the logged in menu and the user is logged in then

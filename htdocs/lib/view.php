@@ -3241,11 +3241,14 @@ class View {
             // by the user's institutions.
             safe_require('artefact', 'file');
 
-            $from .= "
-            LEFT OUTER JOIN {artefact_parent_cache} apc ON (a.id = apc.artefact AND a.institution = 'mahara' AND apc.parent = ?)";
-
+            $public = (int) ArtefactTypeFolder::admin_public_folder_id();
             $select = '(
                 a.owner = ?
+                OR a.id IN (
+                    SELECT id
+                    FROM {artefact}
+                        WHERE (path = ? OR path LIKE ?) AND institution = \'mahara\'
+                )
                 OR a.id IN (
                     SELECT aar.artefact
                     FROM {group_member} m
@@ -3255,16 +3258,12 @@ class View {
                 )
                 OR a.id IN (SELECT artefact FROM {artefact_access_usr} WHERE usr = ? AND can_republish = 1)';
 
-            $ph = array((int) ArtefactTypeFolder::admin_public_folder_id(), $user->get('id'), $user->get('id'), $user->get('id'));
+            $ph = array($user->get('id'), "/$public", db_like_escape("/$public/") . '%', $user->get('id'), $user->get('id'));
 
             $institutions = array_keys($user->get('institutions'));
 
             if ($user->get('admin')) {
                 $institutions[] = 'mahara';
-            }
-            else {
-                $select .= "
-                OR (apc.parent IS NOT NULL)";
             }
 
             if ($institutions) {

@@ -435,15 +435,21 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             if ($institution == 'mahara' && !$USER->get('admin')) {
                 // If non-admins are browsing site files, only let them see the public folder & its contents
                 $publicfolder = ArtefactTypeFolder::admin_public_folder_id();
-                $from .= '
-                LEFT OUTER JOIN {artefact_parent_cache} pub ON (a.id = pub.artefact AND pub.parent = ?)';
                 $where .= '
-                AND (pub.parent = ? OR a.id = ?)';
-                $phvals = array($publicfolder, $publicfolder, $publicfolder);
+                AND (a.path = ? OR a.path LIKE ?)';
+                $phvals = array("/$publicfolder", "/$publicfolder/%");
             }
-            $where .= '
-            AND a.institution = ? AND a.owner IS NULL';
-            $phvals[] = $institution;
+            else {
+                $from .= '
+                    LEFT OUTER JOIN {usr_institution} ui ON ui.institution = a.institution';
+                $where .= ' AND a.institution = ? ';
+                $phvals[] = $institution;
+                // Check if user is an admin in this institution.
+                if (!$USER->get('admin')) {
+                    $where .= ' AND ui.admin = 1 AND ui.usr = ? ';
+                    $phvals[] = $USER->get('id');
+                }
+            }
         }
         else if ($group) {
             $select .= ',
@@ -453,12 +459,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     SELECT ar.artefact, ar.can_edit, ar.can_view, ar.can_republish
                     FROM {artefact_access_role} ar
                     INNER JOIN {group_member} gm ON ar.role = gm.role
-                    WHERE gm.group = ? AND gm.member = ? 
+                    WHERE gm.group = ? AND gm.member = ?
                 ) r ON r.artefact = a.id';
             $phvals[] = $group;
             $phvals[] = $USER->get('id');
             $where .= '
-            AND a.group = ? AND a.owner IS NULL AND (r.can_view = 1 OR a.author = ?)';
+            AND a.group = ? AND (r.can_view = 1 OR a.author = ?)';
             $phvals[] = $group;
             $phvals[] = $USER->get('id');
             $groupby .= ', r.can_edit, r.can_view, r.can_republish, a.author';
@@ -1747,7 +1753,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('downloadfolderzip', get_config_plugin('blocktype', 'folder', 'folderdownloadzip') ? !empty($options['folderdownloadzip']) : false);
 
         if ($childrecords = $this->folder_contents()) {
-            $this->add_to_render_path($options);
             $sortorder = (isset($options['sortorder']) && $options['sortorder'] == 'desc') ? 'my_files_cmp_desc' : 'my_files_cmp';
             usort($childrecords, array('ArtefactTypeFileBase', $sortorder));
             $children = array();
@@ -2039,7 +2044,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function render_self($options) {
         $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
-        $url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->id;
+        $url = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $this->id;
         if (isset($options['viewid'])) {
             $downloadpath .= '&view=' . $options['viewid'];
             $url .= '&view=' . $options['viewid'];

@@ -12,7 +12,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PLUGINNAME', 'core');
 define('SECTION_PAGE', 'artefact');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -22,8 +22,7 @@ safe_require('artefact', 'comment');
 
 $artefactid = param_integer('artefact');
 $viewid     = param_integer('view');
-$blockid    = param_integer('block',null);
-$path       = param_variable('path', null);
+$blockid    = param_integer('block', null);
 
 $view = new View($viewid);
 if (!can_view_view($view)) {
@@ -32,31 +31,35 @@ if (!can_view_view($view)) {
 
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
-// Build the path to the artefact, through its parents
+
+if (!$artefact->in_view_list()) {
+    throw new AccessDeniedException(get_string('artefactonlyviewableinview', 'error'));
+}
+
+// Build the path to the artefact through its parents.
 $artefactpath = array();
-$parent = $artefact->get('parent');
+$ancestors = $artefact->get_item_ancestors();
 $artefactok = false;
-if (artefact_in_view($artefact->get('id'), $viewid)) {
+
+if (artefact_in_view($artefact, $viewid)) {
     $artefactok = true;
     $baseobject = $artefact;
 }
-while ($parent !== null) {
-    // This loop could get expensive when there are a lot of parents. But at least
-    // it works, unlike the old attempt
-    $parentobj = artefact_instance_from_id($parent);
-    if (artefact_in_view($parent, $viewid)) {
-        array_unshift($artefactpath, array(
-            'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
-            'title' => $parentobj->display_title(),
-        ));
-    }
 
-    $parent = $parentobj->get('parent');
-    if (artefact_in_view($parentobj->get('id'), $viewid)) {
-        $artefactok = true;
-        $baseobject = $parentobj;
+if (!empty($ancestors)) {
+    foreach ($ancestors as $ancestor) {
+        $pathitem = artefact_instance_from_id($ancestor);
+        if (artefact_in_view($pathitem, $viewid)) {
+            $artefactpath[] = array(
+                'url'   => get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $pathitem->get('id') . '&view=' . $viewid,
+                'title' => $pathitem->display_title(),
+            );
+            $artefactok = true;
+            $baseobject = $pathitem;
+        }
     }
 }
+
 if ($artefactok == false) {
     throw new AccessDeniedException(get_string('artefactnotinview', 'error', $artefactid, $viewid));
 }
@@ -66,16 +69,12 @@ $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
 $showcomment = param_integer('showcomment', null);
 
-
 if ($artefact && $viewid && $blockid) {
     // use the block instance title rather than the artefact title if it exists
     $title = artefact_title_for_view_and_block($artefact, $viewid, $blockid);
 }
 else {
     $title = $artefact->display_title();
-}
-if (!$artefact->in_view_list()) {
-    throw new AccessDeniedException(get_string('artefactsonlyviewableinview', 'error'));
 }
 
 // Create the "make feedback private form" now if it's been submitted
@@ -91,19 +90,17 @@ define('TITLE', $title . ' ' . get_string('in', 'view') . ' ' . $view->get('titl
 // Render the artefact
 $options = array(
     'viewid' => $viewid,
-    'path' => $path,
     'details' => true,
     'metadata' => 1,
 );
 
 if ($artefact->get('artefacttype') == 'folder') {
-    // get folder block sort order - returns the first instance of folder on view unless $blockid is set.
-    // Why you'd want more than one folder block on the same view is m̶a̶d̶n̶e̶s̶s̶ user preference.
-    // TO DO: get the clicking on a subfolder to carry the block id as well - that way we can get exact configdata
+    // Get folder block sort order - returns the first instance of folder on view unless $blockid is set.
+    // TODO: get the clicking on a subfolder to carry the block id as well - that way we can get exact configdata.
     if ($block = get_records_sql_array('SELECT block FROM {view_artefact} WHERE view = ? AND artefact = ?', array($viewid, $baseobject->get('id')))) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $key = 0;
-        // If we have a $blockid then we will use that one's configdata
+        // If we have a $blockid, then we will use block's configdata.
         if ($blockid) {
             foreach ($block as $k => $b) {
                 if ($b->block == $blockid) {
@@ -128,11 +125,6 @@ if (!empty($rendered['javascript'])) {
     $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
 }
 $content .= $rendered['html'];
-
-$artefactpath[] = array(
-    'url' => '',
-    'title' => $title,
-);
 
 // Feedback
 $feedback = ArtefactTypeComment::get_comments($limit, $offset, $showcomment, $view, $artefact);
@@ -181,10 +173,10 @@ else {
 $hasfeed = false;
 $feedlink = '';
 // add a link to the ATOM feed in the header if the view is public
-if($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
+if ($artefact->get('artefacttype') == 'blog' && $view->is_public()) {
     $hasfeed = true;
     $feedlink = get_config('wwwroot') . 'artefact/blog/atom.php?artefact=' .
-        $artefactid . '&view=' . $viewid;
+                $artefactid . '&view=' . $viewid;
     $headers[] = '<link rel="alternate" type="application/atom+xml" href="' . $feedlink . '">';
 }
 
@@ -195,7 +187,7 @@ $smarty = smarty(
     array(
         'stylesheets' => $extrastylesheets,
         'sidebars'    => false,
-        'skin' => $skin,
+        'skin'        => $skin,
     )
 );
 
@@ -234,4 +226,4 @@ $smarty->assign('objectionform', $objectionform);
 $smarty->assign('notrudeform', $notrudeform);
 $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
-$smarty->display('view/artefact.tpl');
+$smarty->display('artefact/artefact.tpl');

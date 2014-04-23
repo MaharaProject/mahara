@@ -476,6 +476,7 @@
                 <FIELD NAME="license" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="licensor" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="licensorurl" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="path" TYPE="char" LENGTH="1024" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -518,18 +519,6 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="artefact,tag" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_parent_cache">
-            <FIELDS>
-                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="artefact,parent" />
-                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact_access_usr">
