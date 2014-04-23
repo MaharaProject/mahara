@@ -880,6 +880,7 @@ function core_install_firstcoredata_defaults() {
         'rebuild_artefact_parent_cache_dirty'       => array('*', '*', '*', '*', '*'),
         'rebuild_artefact_parent_cache_complete'    => array('0', '4', '*', '*', '*'),
         'auth_clean_partial_registrations'          => array('5', '0', '*', '*', '*'),
+        'auth_clean_expired_password_requests'      => array('5', '0', '*', '*', '*'),
         'auth_handle_account_expiries'              => array('5', '10', '*', '*', '*'),
         'auth_handle_institution_expiries'          => array('5', '9', '*', '*', '*'),
         'activity_process_queue'                    => array('*/5', '*', '*', '*', '*'),

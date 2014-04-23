@@ -50,6 +50,10 @@ if (isset($_GET['key'])) {
         die_info(get_string('nosuchpasswordrequest'));
     }
 
+    if (strtotime($pwrequest->expiry) < time()) {
+        die_info(get_string('passwordresetexpired'));
+    }
+
     $form = array(
         'name' => 'forgotpasschange',
         'method' => 'post',
