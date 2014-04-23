@@ -369,7 +369,7 @@ $elements['usersautoadded'] = array(
 $elements['viewnotify'] = array(
     'type' => 'checkbox',
     'title' => get_string('viewnotify', 'group'),
-    'description' => get_string('viewnotifydescription', 'group'),
+    'description' => get_string('viewnotifydescription1', 'group'),
     'defaultvalue' => $group_data->viewnotify
 );
 if ($cancreatecontrolled) {
