@@ -3166,5 +3166,17 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_default($table, $field);
     }
 
+    if ($oldversion < 2014032709) {
+        $data = array('callfunction' => 'auth_clean_expired_password_requests',
+                      'nextrun' => null,
+                      'minute' => '5',
+                      'hour' => '0',
+                      'day' => '*',
+                      'month' => '*',
+                      'dayofweek' => '*',
+                      );
+        ensure_record_exists('cron', (object)$data, (object)$data);
+    }
+
     return $status;
 }

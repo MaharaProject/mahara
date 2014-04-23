@@ -1650,6 +1650,13 @@ function auth_clean_partial_registrations() {
         WHERE expiry < ?', array(db_format_timestamp(time())));
 }
 
+/**
+ * Removes password reset requests that were not completed in the allowed amount of time
+ */
+function auth_clean_expired_password_requests() {
+    delete_records_sql('DELETE FROM {usr_password_request}
+        WHERE expiry < ?', array(db_format_timestamp(time())));
+}
 
 function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
     try {
