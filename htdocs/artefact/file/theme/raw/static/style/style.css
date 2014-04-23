@@ -87,8 +87,15 @@ tr.folderhover a,
 #editpost_filebrowser_upload_container,
 #editnote_filebrowser_upload_container,
 #editgoalsandskills_filebrowser_upload_container,
-#editcomposite_filebrowser_upload_container {
-    margin-top: 10px;
+#editcomposite_filebrowser_upload_container,
+#instconf_artefactids_ownertabs {
+    margin-top: 20px;
+}
+#instconf_artefactids_ownertabs li.current a {
+    background-color: #FFFFFF;
+}
+#instconf_artefactids_upload_browse #artefactchooser-body {
+    background-color: #FFFFFF;
 }
 #editpost_filebrowser_upload_browse,
 #editpost_filebrowser_open_upload_browse_container,
@@ -97,7 +104,9 @@ tr.folderhover a,
 #editgoalsandskills_filebrowser_upload_browse,
 #editgoalsandskills_filebrowser_open_upload_browse_container,
 #editcomposite_filebrowser_upload_browse,
-#editcomposite_filebrowser_open_upload_browse_container {
+#editcomposite_filebrowser_open_upload_browse_container,
+#instconf_artefactids_upload_browse,
+#instconf_artefactids_open_upload_browse_container {
     padding: 5px;
 }
 #editpost_filebrowser_agreement,
