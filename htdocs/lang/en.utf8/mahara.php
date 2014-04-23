@@ -493,6 +493,7 @@ $string['forgotpassnosuchemailaddressorusername'] = 'The email address or userna
 $string['forgotpassuserusingexternalauthentication'] = 'The user you requested uses an external authentication method. <a href="%s">Ask your administrator</a> for help with changing your password. Or provide another username or email address.';
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue.';
 $string['nosuchpasswordrequest'] = 'No such password request';
+$string['passwordresetexpired'] = 'The password reset key has expired';
 $string['passwordchangedok'] = 'Your password was successfully changed.';
 
 // Reset password when moving from external to internal auth.
