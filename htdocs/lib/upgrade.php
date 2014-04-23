@@ -34,6 +34,8 @@ function check_upgrades($name=null) {
     $pluginstocheck = plugin_types();
 
     $toupgrade = array();
+    $toupgradecount = 0;
+    $newinstallcount = 0;
     $installing = false;
     $disablelogin = false;
 
@@ -217,11 +219,18 @@ function check_upgrades($name=null) {
         }
 
         if (empty($pluginversion)) {
+            $newinstall = false;
             if (empty($installing) && $pluginkey != $name) {
-                continue;
+                $newinstall = true;
             }
             $plugininfo = new StdClass;
             $plugininfo->install = true;
+            if ($newinstall) {
+                $plugininfo->from = get_string('notinstalled', 'admin');
+                $plugininfo->fromrelease = get_string('notinstalled', 'admin');
+                $plugininfo->newinstall = true;
+                $newinstallcount ++;
+            }
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
             if (property_exists($config, 'requires_config')) {
@@ -254,6 +263,7 @@ function check_upgrades($name=null) {
                                           . " ($config->minupgraderelease) first "
                                           . " (you have $pluginversion ($pluginrelease))");
             }
+            $toupgradecount ++;
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
@@ -300,6 +310,8 @@ function check_upgrades($name=null) {
         $toupgrade = array();
     }
     uksort($toupgrade, 'sort_upgrades');
+    $toupgrade['newinstallcount'] = $newinstallcount;
+    $toupgrade['toupgradecount'] = $toupgradecount;
     return $toupgrade;
 }
 

@@ -11,7 +11,7 @@
 </div>
 {/if}
 
-{if $upgrades}
+{if $upgrades['toupgradecount']}
 <div class="message" id="runupgrade">
 <h3>{str tag="upgrades" section=admin}</h3>
 <div class="fr"><span class="upgrade"><a class="btn" href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
@@ -26,10 +26,38 @@
     </thead>
     <tbody>
 {foreach from=$upgrades key=key item=upgrade}
-{if $key != 'disablelogin'}
+{if $key != 'disablelogin' && $upgrade->upgrade}
     <tr>
         <td><strong>{$key}</strong></td>
         <td>{$upgrade->fromrelease} ({$upgrade->from})</td>
+        <td>{$upgrade->torelease} ({$upgrade->to})</td>
+    </tr>
+{/if}
+{/foreach}
+    </tbody>
+</table>
+</div>
+{/if}
+
+{if $upgrades['newinstallcount']}
+<div class="warning" id="runinstall">
+<h3>{str tag="newplugins" section=admin}</h3>
+<div class="fr"><span class="upgrade"><a class="btn" href="extensions/plugins.php">{str tag=gotoinstallpage section=admin}</a></span></div>
+<h4>{str tag=thefollowingpluginsareready section=admin}</h4>
+<table id="upgradestable" class="fullwidth">
+    <thead>
+    <tr>
+        <th>{str tag=Plugin section=admin}</th>
+        <th>{str tag=From}</th>
+        <th>{str tag=To}</th>
+    </tr>
+    </thead>
+    <tbody>
+{foreach from=$upgrades key=key item=upgrade}
+{if $key != 'disablelogin' && $upgrade->install}
+    <tr>
+        <td><strong>{$key}</strong></td>
+        <td>{$upgrade->fromrelease}</td>
         <td>{$upgrade->torelease} ({$upgrade->to})</td>
     </tr>
 {/if}

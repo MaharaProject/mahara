@@ -129,6 +129,16 @@ if (!empty($upgrades['core']->install)) {
     $upgrades['localpostinst'] = true;
     $smarty->assign('install', true);
 }
+// If we are coming from the upgrade plugins on the 'Admin home' page
+if (isset($upgrades['newinstallcount'])) {
+    unset($upgrades['newinstallcount']);
+    unset($upgrades['toupgradecount']);
+}
+foreach ($upgrades as $key => $upgrade) {
+    if (isset($upgrade->newinstall)) {
+        unset($upgrades[$key]);
+    }
+}
 
 $js = <<< EOJS
             function processNext() {
