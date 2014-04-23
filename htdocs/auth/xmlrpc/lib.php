@@ -162,6 +162,7 @@ class AuthXmlrpc extends Auth {
             if (!empty($this->config['weautocreateusers'])) {
                 $institution = new Institution($this->institution);
                 if ($institution->isFull()) {
+                    $institution->send_admin_institution_is_full_message();
                     throw new XmlrpcClientException('SSO attempt from ' . $institution->displayname . ' failed - institution is full');
                 }
                 $user = new User;

@@ -165,6 +165,7 @@ function adduser_validate(Pieform $form, $values) {
 
     // Don't exceed max user accounts for the institution
     if ($institution->isFull()) {
+        $institution->send_admin_institution_is_full_message();
         $form->set_error('authinstance', get_string('institutionmaxusersexceeded', 'admin'));
         return;
     }
