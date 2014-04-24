@@ -513,8 +513,8 @@ class Pieform {/*{{{*/
                             $function = "{$this->data['successcallback']}_{$name}";
                             if (function_exists($function)) {
                                 $function($this, $values);
-                                $submitted = true;
-                                break;
+                                log_debug('button-submit form ' . $function . ' should provide a redirect.');
+                                return;
                             }
                         }
                     }
