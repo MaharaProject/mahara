@@ -654,7 +654,7 @@ if ( !$USER->get('admin') ) { // for institution admins
     $institutions = array_intersect_key($institutions, $admin_institutions);
 }
 
-$allinstitutions = get_records_assoc('institution', '', '', 'displayname');
+$allinstitutions = get_records_assoc('institution', '', '', 'displayname', 'name, displayname');
 foreach ($institutions as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
