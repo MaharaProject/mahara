@@ -20,7 +20,7 @@ $j(document).ready(function(){
             if (windowWidth <= navBuffer) {
                 wrapper.addClass('rd-navmenu');
             }
-            if (windowWidth >= navBuffer) {
+            if (windowWidth > navBuffer) {
                 wrapper.removeClass('rd-navmenu');
             }
         });
