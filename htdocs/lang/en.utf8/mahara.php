@@ -46,6 +46,8 @@ $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
 $string['units'] = 'Units';
+$string['toggletoolbarson'] = 'Toggle toolbars on. Show full list of buttons';
+$string['toggletoolbarsoff'] = 'Toggle toolbars off. Show basic buttons';
 // Objectionable strings.
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';
