@@ -15,6 +15,8 @@ define('MENUITEM', 'groups/topics');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('interaction', 'forum');
+require_once('group.php');
+
 define('TITLE', get_string('Topics', 'interaction.forum'));
 
 if (!$USER->is_logged_in()) {
@@ -30,7 +32,7 @@ $data = PluginInteractionForum::get_active_topics($limit, $offset, $category);
 $pagination = build_pagination(array(
     'id' => 'topics_pagination',
     'url' => get_config('wwwroot') . 'group/topics.php' . ($category ? ('?category=' . (int) $category) : ''),
-    'jsonscript' => '/json/topics.php',
+    'jsonscript' => 'json/topics.php',
     'datatable' => 'topiclist',
     'count' => $data['count'],
     'limit' => $limit,
@@ -40,6 +42,6 @@ $pagination = build_pagination(array(
 $smarty = smarty(array('paginator'));
 $smarty->assign_by_ref('topics', $data['data']);
 $smarty->assign_by_ref('pagination', $pagination['html']);
-$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() {' . $pagination['javascript'] . '});');
+$smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function() { p = ' . $pagination['javascript'] . '});');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->display('group/topics.tpl');
