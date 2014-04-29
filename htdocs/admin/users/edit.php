@@ -519,7 +519,7 @@ function edituser_site_submit(Pieform $form, $values) {
         }
     }
     db_commit();
-
+    $SESSION->add_ok_msg(get_string('usersitesettingschanged', 'admin'));
     redirect('/admin/users/edit.php?id='.$user->id);
 }
 
@@ -739,7 +739,7 @@ function edituser_institution_submit(Pieform $form, $values) {
     }
     $userinstitutions = $user->get('institutions');
 
-    global $USER;
+    global $USER, $SESSION;
     foreach ($userinstitutions as $i) {
         if ($USER->can_edit_institution($i->institution)) {
             if (isset($values[$i->institution.'_submit'])) {
@@ -762,13 +762,17 @@ function edituser_institution_submit(Pieform $form, $values) {
                 }
                 handle_event('updateuser', $user->id);
                 db_commit();
+                $SESSION->add_ok_msg(get_string('userinstitutionupdated', 'admin', $i->displayname));
                 break;
-            } else if (isset($values[$i->institution.'_remove'])) {
+            }
+            else if (isset($values[$i->institution.'_remove'])) {
                 if ($user->id == $USER->id) {
                     $USER->leave_institution($i->institution);
-                } else {
+                }
+                else {
                     $user->leave_institution($i->institution);
                 }
+                $SESSION->add_ok_msg(get_string('userinstitutionremoved', 'admin', $i->displayname));
                 // Institutional admins can no longer access this page
                 // if they remove the user from the institution, so
                 // send them back to user search.
@@ -792,6 +796,8 @@ function edituser_institution_submit(Pieform $form, $values) {
         else {
             $user->join_institution($values['addinstitution']);
         }
+        $userinstitutions = $user->get('institutions');
+        $SESSION->add_ok_msg(get_string('userinstitutionjoined', 'admin', $userinstitutions[$values['addinstitution']]->displayname));
     }
 
     redirect('/admin/users/edit.php?id='.$user->id);
