@@ -29,7 +29,7 @@ $settingsform = new Pieform(array(
             'value' => get_string('Default', 'artefact.file'),
         ),
         'delete' => array(
-            'type'  => 'submit', 
+            'type'  => 'submit',
             'value' => get_string('Delete', 'artefact.file'),
         ),
     )
@@ -292,15 +292,14 @@ function settings_submit_default(Pieform $form, $values) {
         }
 
         $USER->profileicon = $default;
-        $USER->commit();
-        $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.file'));
-        redirect('/artefact/file/profileicons.php');
     }
     else {
         $USER->profileicon = null;
-        $USER->commit();
-        $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.file'));
     }
+    $USER->commit();
+
+    $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.file'));
+    redirect('/artefact/file/profileicons.php');
 }
 
 function settings_submit_delete(Pieform $form, $values) {
