@@ -87,7 +87,9 @@ else if ($view->get('type') == 'dashboard') {
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('grouphomepage', 'view');
-    $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
+    if ($view->get('owner') != "0") {
+        $groupurl = group_homepage_url(get_record('group', 'id', $view->get('group')), false);
+    }
     define('TITLE', $title . ': ' . get_string('editcontent', 'view'));
 }
 else if ($new) {
@@ -247,8 +249,7 @@ if (isset($groupurl)) {
 }
 $smarty->assign('institution', $institution);
 
-if (get_config('userscanchooseviewthemes')
-    && $view->is_themeable()) {
+if (get_config('userscanchooseviewthemes') && $view->is_themeable() && $view->get('owner') != "0") {
     $smarty->assign('viewtheme', $viewtheme);
     $smarty->assign('viewthemes', $allowedthemes);
 }
@@ -271,5 +272,9 @@ else {
     $smarty->assign('columns', $columns);
 }
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
+
+if ($view->get('owner') == "0") {
+    $smarty->assign('issitetemplate', true);
+}
 
 $smarty->display('view/blocks.tpl');

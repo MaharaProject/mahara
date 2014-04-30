@@ -26,6 +26,7 @@ $issiteview = $view->get('institution') == 'mahara';
 if (!can_use_skins(null, false, $issiteview)) {
     throw new FeatureNotEnabledException();
 }
+
 $view->set_edit_nav();
 $view->set_user_theme();
 // Is page skin already saved/set for current page?
@@ -61,7 +62,7 @@ $userskins   = Skin::get_user_skins();
 $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
 
-if (!$USER->can_edit_view($view)) {
+if (!$USER->can_edit_view($view) || $view->get('owner') == "0") {
     throw new AccessDeniedException();
 }
 

@@ -519,28 +519,6 @@ class User {
             'type'  => 'profile',
         ), $systemprofileviewid, $this->get('id'), false);
 
-        // Add about me block
-        $aboutme = new BlockInstance(0, array(
-            'blocktype'  => 'profileinfo',
-            'title'      => get_string('aboutme', 'blocktype.internal/profileinfo'),
-            'view'       => $view->get('id'),
-            'row'        => 1,
-            'column'     => 1,
-            'order'      => 1,
-        ));
-        $configdata = array('artefactids' => array());
-        if ($intro = get_field('artefact', 'id', 'owner', $this->get('id'), 'artefacttype', 'introduction')) {
-            $configdata['artefactids'][] = $intro;
-        }
-        else {
-            $configdata['introtext'] = '';
-        }
-        if ($this->get('profileicon')) {
-            $configdata['profileicon'] = $this->get('profileicon');
-        }
-        $aboutme->set('configdata', $configdata);
-        $view->addblockinstance($aboutme);
-
         // Set view access
         $access = array(
             array(
@@ -1127,6 +1105,9 @@ class User {
     public function can_edit_view($v) {
         $owner = $v->get('owner');
         if ($owner > 0 && $owner == $this->get('id')) {
+            return true;
+        }
+        if ($owner == "0" && $this->get('admin')) {
             return true;
         }
         $institution = $v->get('institution');

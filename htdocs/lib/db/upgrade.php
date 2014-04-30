@@ -3273,5 +3273,33 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_notnull($table, $field);
     }
 
+    // Add about me block to existing profile template.
+    if ($oldversion < 2014043000) {
+        $systemprofileviewid = get_field('view', 'id', 'owner', 0, 'type', 'profile');
+
+        // Find out how many blocks already exist.
+        $existingblocks = count_records('block_instance',
+                'view', $systemprofileviewid,
+                'row', 1,
+                'column', 1);
+
+        // Create the block at the end of the cell.
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $aboutme = new BlockInstance(0, array(
+            'blocktype'  => 'profileinfo',
+            'title'      => get_string('aboutme', 'blocktype.internal/profileinfo'),
+            'view'       => $systemprofileviewid,
+            'row'        => 1,
+            'column'     => 1,
+            'order'      => $existingblocks + 1,
+        ));
+        $aboutme->commit();
+
+        // Move the block to the start of the cell.
+        require_once(get_config('libroot') . 'view.php');
+        $view = new View($systemprofileviewid);
+        $view->moveblockinstance(array('id' => $aboutme->get('id'), 'row' => 1, 'column' => 1, 'order' => 1));
+    }
+
     return $status;
 }

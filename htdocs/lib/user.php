@@ -2371,15 +2371,16 @@ function install_system_profile_view() {
     $view->set_access(array(array(
         'type' => 'loggedin'
     )));
-    $blocktypes = array('myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
+    $blocktypes = array('profileinfo' => 1, 'myviews' => 1, 'mygroups' => 1, 'myfriends' => 2, 'wall' => 2);  // column ids
     $installed = get_column_sql('SELECT name FROM {blocktype_installed} WHERE name IN (' . join(',', array_map('db_quote', array_keys($blocktypes))) . ')');
     $weights = array(1 => 0, 2 => 0);
     foreach (array_keys($blocktypes) as $blocktype) {
         if (in_array($blocktype, $installed)) {
             $weights[$blocktypes[$blocktype]]++;
+            $title = ($blocktype == 'profileinfo') ? get_string('aboutme', 'blocktype.internal/profileinfo') : get_string('title', 'blocktype.' . $blocktype);
             $newblock = new BlockInstance(0, array(
                 'blocktype'  => $blocktype,
-                'title'      => get_string('title', 'blocktype.' . $blocktype),
+                'title'      => $title,
                 'view'       => $view->get('id'),
                 'row'        => 1,
                 'column'     => $blocktypes[$blocktype],
