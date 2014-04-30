@@ -664,6 +664,11 @@ EOF;
             }
         }
 
+        // local_sideblocks_update allows sites to customise the sideblocks by munging the $SIDEBLOCKS array.
+        if (function_exists('local_sideblocks_update')) {
+            local_sideblocks_update($SIDEBLOCKS);
+        }
+
         usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
 
         // Place all sideblocks on the right. If this structure is munged
