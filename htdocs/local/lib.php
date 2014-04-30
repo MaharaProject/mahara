@@ -14,7 +14,8 @@
  *  - local_get_allowed_blocktype_categories($view): Limit which blocktype categories are allowed
  *  on a view
  *
- *  - local_header_top_content(): Returned data is printed at top of <head>
+ *  - local_header_top_content(): Returned string (which may contain HTML) is printed near the top
+ *  of each page.
  *
  *  - local_init_user(): Called after $USER is initialized on each page load. This is useful for
  *  changing the user's theme before $THEME is initialized.
