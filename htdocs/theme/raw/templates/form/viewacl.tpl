@@ -486,7 +486,6 @@ addLoadEvent(function () {
         });
     }
     {{/if}}
-    update_loggedin_access();
 });
 
 addLoadEvent(function() {
