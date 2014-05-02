@@ -40,7 +40,7 @@
  *
  *  - local_right_nav_update(&$menu): Modify the right column navigation menu by reference
  *
- *  - local_sideblocks_update(&$SIDEBLOCKS): Modify sideblocks column by reference
+ *  - local_sideblocks_update(&$sideblocks): Modify sideblocks column by reference
  *
  *  - local_site_content_pages(): Add to the list of "static pages" types.
  *

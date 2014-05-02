@@ -56,7 +56,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
         $extraconfig = array();
     }
 
-    $SIDEBLOCKS = array();
+    $sideblocks = array();
     // Some things like die_info() will try and create a smarty() call when we are already in one, which causes
     // language_select_form() to throw headdata error as it is called twice.
     if (!isset($langselectform)) {
@@ -562,7 +562,7 @@ EOF;
             $data = site_menu();
             if (!empty($data)) {
                 $smarty->assign('SITEMENU', site_menu());
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'linksandresources',
                     'weight' => 10,
                     'data'   => $data,
@@ -573,14 +573,14 @@ EOF;
         if ($USER->is_logged_in() && defined('MENUITEM') &&
             (substr(MENUITEM, 0, 11) == 'myportfolio' || substr(MENUITEM, 0, 7) == 'content')) {
             if (get_config('showselfsearchsideblock')) {
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'selfsearch',
                     'weight' => 0,
                     'data'   => array(),
                 );
             }
             if (get_config('showtagssideblock')) {
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'tags',
                     'id'     => 'sb-tags',
                     'weight' => 0,
@@ -590,7 +590,7 @@ EOF;
         }
 
         if ($USER->is_logged_in() && !$adminsection) {
-            $SIDEBLOCKS[] = array(
+            $sideblocks[] = array(
                 'name'   => 'profile',
                 'id'     => 'sb-profile',
                 'weight' => -20,
@@ -611,7 +611,7 @@ EOF;
                 }
             }
             if (get_config('showonlineuserssideblock') && $showusers > 0) {
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'onlineusers',
                     'id'     => 'sb-onlineusers',
                     'weight' => -10,
@@ -619,7 +619,7 @@ EOF;
                 );
             }
             if (get_config('showprogressbar') && $USER->get_account_preference('showprogressbar')) {
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'progressbar',
                     'id'     => 'sb-progressbar',
                     'weight' => -10,
@@ -629,7 +629,7 @@ EOF;
         }
 
         if ($USER->is_logged_in() && $adminsection && defined('SECTION_PAGE') && SECTION_PAGE == 'progressbar') {
-            $SIDEBLOCKS[] = array(
+            $sideblocks[] = array(
                 'name'   => 'progressbar',
                 'id'     => 'sb-progressbar',
                 'data'   => progressbar_sideblock(true),
@@ -637,7 +637,7 @@ EOF;
         }
 
         if (!$USER->is_logged_in() && !(get_config('siteclosed') && get_config('disablelogin'))) {
-            $SIDEBLOCKS[] = array(
+            $sideblocks[] = array(
                 'name'   => 'login',
                 'weight' => -10,
                 'id'     => 'sb-loginbox',
@@ -650,7 +650,7 @@ EOF;
         if (get_config('enablenetworking')) {
             require_once(get_config('docroot') .'api/xmlrpc/lib.php');
             if ($USER->is_logged_in() && $ssopeers = get_service_providers($USER->authinstance)) {
-                $SIDEBLOCKS[] = array(
+                $sideblocks[] = array(
                     'name'   => 'ssopeers',
                     'weight' => 1,
                     'data'   => $ssopeers,
@@ -660,26 +660,26 @@ EOF;
 
         if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
             foreach ($extraconfig['sideblocks'] as $sideblock) {
-                $SIDEBLOCKS[] = $sideblock;
+                $sideblocks[] = $sideblock;
             }
         }
 
-        // local_sideblocks_update allows sites to customise the sideblocks by munging the $SIDEBLOCKS array.
+        // local_sideblocks_update allows sites to customise the sideblocks by munging the $sideblocks array.
         if (function_exists('local_sideblocks_update')) {
-            local_sideblocks_update($SIDEBLOCKS);
+            local_sideblocks_update($sideblocks);
         }
 
-        usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+        usort($sideblocks, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
 
         // Place all sideblocks on the right. If this structure is munged
         // appropriately, you can put blocks on the left. In future versions of
         // Mahara, we'll make it easy to do this.
-        $sidebars = $sidebars && !empty($SIDEBLOCKS);
-        $SIDEBLOCKS = array('left' => array(), 'right' => $SIDEBLOCKS);
+        $sidebars = $sidebars && !empty($sideblocks);
+        $sideblocks = array('left' => array(), 'right' => $sideblocks);
 
         $smarty->assign('userauthinstance', $SESSION->get('authinstance'));
         $smarty->assign('MNETUSER', $SESSION->get('mnetuser'));
-        $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
+        $smarty->assign('SIDEBLOCKS', $sideblocks);
         $smarty->assign('SIDEBARS', $sidebars);
 
     }
