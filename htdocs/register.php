@@ -132,8 +132,7 @@ if (isset($key)) {
             // Else, since there are multiple, request to join
             else {
                 if ($registration->pending == 2) {
-                    if (get_config('requireregistrationconfirm')
-                        || get_field('institution', 'registerconfirm', 'name', $registration->institution)) {
+                    if ($confirm = get_field('institution', 'registerconfirm', 'name', $registration->institution)) {
                         $user->join_institution($registration->institution);
                     }
                 }

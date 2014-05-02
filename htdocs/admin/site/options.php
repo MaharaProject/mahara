@@ -123,13 +123,6 @@ $siteoptionform = array(
             'collapsed'    => true,
             'legend'       => get_string('usersettingslegend', 'admin'),
             'elements'     => array(
-                'requireregistrationconfirm' => array(
-                    'type'         => 'checkbox',
-                    'title'        => get_string('requireregistrationconfirm', 'admin'),
-                    'description'  => get_string('requireregistrationconfirmdescription', 'admin'),
-                    'defaultvalue' => get_config('requireregistrationconfirm'),
-                    'help'         => true,
-                ),
                 'userscanchooseviewthemes' => array(
                     'type'         => 'checkbox',
                     'title'        => get_string('userscanchooseviewthemes', 'admin'),
@@ -698,7 +691,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'sitename','lang','theme', 'dropdownmenu',
         'defaultaccountlifetime', 'defaultregistrationexpirylifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn',
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'generatesitemap',
-        'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
+        'registration_sendweeklyupdates', 'institutionexpirynotification', 'institutionautosuspend',
         'showselfsearchsideblock', 'searchusernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'viewmicroheaders', 'userscanchooseviewthemes',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'loggedinprofileviewaccess', 'disableexternalresources',

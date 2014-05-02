@@ -330,8 +330,7 @@ if ($institution || $add) {
         $elements['registerconfirm'] = array(
             'type'         => 'checkbox',
             'title'        => get_string('registrationconfirm', 'admin'),
-            'description'  => get_string('registrationconfirmdescription1', 'admin'),
-            'disabled'     => get_config('requireregistrationconfirm') == true,
+            'description'  => get_string('registrationconfirmdescription', 'admin'),
             'defaultvalue' => $data->registerconfirm,
         );
     }

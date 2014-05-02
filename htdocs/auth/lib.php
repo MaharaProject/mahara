@@ -2026,7 +2026,7 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
         $options = array();
         foreach ($institutions as $institution) {
             $options[$institution->name] = $institution->displayname;
-            if ($registerconfirm[$institution->name] = (get_config('requireregistrationconfirm') || $institution->registerconfirm)) {
+            if ($registerconfirm[$institution->name] = $institution->registerconfirm) {
                 if ($authname != 'internal') {
                     $authinstance = get_record('auth_instance', 'institution', $institution->name, 'authname', $authname);
                     $auth = AuthFactory::create($authinstance->id);
@@ -2255,7 +2255,7 @@ function auth_register_submit(Pieform $form, $values) {
 
     // If the institution requires approval, mark the record as pending
     // @todo the expiry date should be configurable
-    if ($confirm = (get_config('requireregistrationconfirm') || get_field('institution', 'registerconfirm', 'name', $values['institution']))) {
+    if ($confirm = get_field('institution', 'registerconfirm', 'name', $values['institution'])) {
         if (isset($values['authtype']) && $values['authtype'] != 'internal') {
             $authinstance = get_record('auth_instance', 'institution', $values['institution'], 'authname', $values['authtype'] ? $values['authtype'] : 'internal');
             $auth = AuthFactory::create($authinstance->id);
