@@ -17,7 +17,7 @@ class EnchantSpell extends SpellChecker {
 	 * @param Array $words Array of words to check.
 	 * @return Array of misspelled words.
 	 */
-	function &checkWords($lang, $words) {
+	function &spellcheck($lang, $words) {
 		$r = enchant_broker_init();
 		
 		if (enchant_broker_dict_exists($r,$lang)) {

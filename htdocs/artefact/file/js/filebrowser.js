@@ -714,7 +714,8 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
             'id': id,
             'artefacttype': self.filedata[id].artefacttype,
             'title': self.filedata[id].title,
-            'description': self.filedata[id].description
+            'description': self.filedata[id].description,
+            'url': self.filedata[id].url
         };
         if ($(self.id + '_select_' + id)) {
             addElementClass(self.id + '_select_' + id, 'hidden');

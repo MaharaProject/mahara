@@ -121,72 +121,16 @@ $form = pieform(array(
 $wwwroot = get_config('wwwroot');
 $noimagesmessage = json_encode(get_string('noimageshavebeenattachedtothispost', 'artefact.blog'));
 $javascript = <<<EOF
-
-// Override the image button on the tinyMCE editor.  Rather than the
-// normal image popup, open up a modified popup which allows the user
-// to select an image from the list of image files attached to the
-// resume goals or skills.
-
-// Get all the files in the attached files list that have been
-// recognised as images.  This function is called by the the popup
-// window, but needs access to the attachment list on this page
-function attachedImageList() {
-    var images = [];
-    var attachments = editgoalsandskills_filebrowser.selecteddata;
-    for (var a in attachments) {
-        if (attachments[a].artefacttype == 'image' || attachments[a].artefacttype == 'profileicon') {
-            images.push({
-                'id': attachments[a].id,
-                'name': attachments[a].title,
-                'description': attachments[a].description ? attachments[a].description : ''
-            });
-        }
-    }
-    return images;
-}
-
-function imageSrcFromId(imageid) {
-    return config.wwwroot + 'artefact/file/download.php?file=' + imageid;
-}
-
-function imageIdFromSrc(src) {
-    var artefactstring = 'download.php?file=';
-    var ind = src.indexOf(artefactstring);
-    if (ind != -1) {
-        return src.substring(ind+artefactstring.length, src.length);
-    }
-    return '';
-}
-
-var imageList = {};
-
-function goalsandskillsImageWindow(ui, v) {
-    var t = tinyMCE.activeEditor;
-
-    imageList = attachedImageList();
-
-    var template = new Array();
-
-    template['file'] = '{$wwwroot}artefact/blog/image_popup.php';
-    template['width'] = 355;
-    template['height'] = 275 + (tinyMCE.isMSIE ? 25 : 0);
-
-    // Language specific width and height addons
-    template['width'] += t.getLang('lang_insert_image_delta_width', 0);
-    template['height'] += t.getLang('lang_insert_image_delta_height', 0);
-    template['inline'] = true;
-
-    t.windowManager.open(template);
-}
-
 function editgoalsandskills_callback(form, data) {
     editgoalsandskills_filebrowser.callback(form, data);
 };
-
 EOF;
 
 $smarty = smarty(array(), array(), array(), array(
-    'tinymcesetup' => "ed.addCommand('mceImage', goalsandskillsImageWindow);",
+    'tinymceconfig' => '
+        plugins: "textcolor,hr,link,maharaimage,table,emoticons,spellchecker,paste,code,fullscreen",
+        image_filebrowser: "editgoalsandskills_filebrowser",
+    ',
     'sideblocks' => array(
         array(
             'name'   => 'quota',

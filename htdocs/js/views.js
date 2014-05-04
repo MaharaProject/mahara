@@ -1263,8 +1263,8 @@
     }
 
     function showMediaPlayers() {
-        if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.editorId) {
-            tinyMCE.execCommand('mceRemoveControl', false, tinyMCE.activeEditor.editorId);
+        if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
+            tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
         }
         $('#column-container .mediaplayer-container').each(function() {
             $(this).css({'height': ''});

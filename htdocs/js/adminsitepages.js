@@ -17,7 +17,7 @@ function updateWYSIWYGText() {
         $('editsitepage_pagename').value = oldPageName;
         return;
     }
-    if (!tinyMCE.isMSIE) {
+    if (!tinyMCE.Env.ie) {
         // Disable changed content check for IE (see below)
         checkOldContent = true;
     }
@@ -74,7 +74,7 @@ function connectElements() {
 function contentSaved(form, data) {
     connectElements();
     changedCheckbox = false;
-    if (!tinyMCE.isMSIE) {
+    if (!tinyMCE.Env.ie) {
         // Disabling changed content check for IE; Need to work out
         // why the getBody() call in getContent fails to return the
         // body element.

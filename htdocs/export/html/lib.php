@@ -483,7 +483,7 @@ class PluginExportHtml extends PluginExport {
         }
 
         // Smilies
-        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emotions/img'] = $staticdir . 'smilies/';
+        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emoticons/img'] = $staticdir . 'smilies/';
 
         $filestocopy = array(
             get_config('docroot') . 'theme/views.css' => $staticdir . 'views.css',
@@ -638,7 +638,7 @@ class HtmlExportOutputFilter {
                 // We don't care about javascript
                 '#<script[^>]*>.*?</script>#si',
                 // Fix simlies from tinymce
-                '#<img ([^>]*)src="(' . $wwwroot . ')?/?js/tinymce/plugins/emotions/img/([^"]+)"([^>]+)>#',
+                '#<img ([^>]*)src="(' . $wwwroot . ')?/?js/tinymce/plugins/emoticons/img/([^"]+)"([^>]+)>#',
                 // No forms
                 '#<form[^>]*>.*?</form>#si',
                 // Gratuitous hack for the RSS blocktype
