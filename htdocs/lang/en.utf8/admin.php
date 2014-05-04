@@ -685,7 +685,7 @@ $string['invalidlistingfile'] = 'Invalid username listing. Did you use the Mahar
 
 // Admin Users
 $string['adminuserspagedescription1'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Potential administrators" field.</p><p>The system must have at least one administrator.</p>';
-$string['institutionadminuserspagedescription1'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Institution memebers" field.';
+$string['institutionadminuserspagedescription1'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed in the "Current administrators" field, and potential administrators are in the "Institution members" field.';
 $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
 $string['adminusersupdated'] = 'Administrators updated';
