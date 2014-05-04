@@ -2948,7 +2948,7 @@ function progressbar_sideblock($preview=false) {
         // Without locked ones (site locked and institution locked)
         $sitelocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', 'mahara');
         $instlocked = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
-        $locked = array_merge($sitelocked, $instlocked);
+        $locked = $sitelocked + $instlocked;
         foreach ($locked as $l) {
             unset($counting["progressbaritem_internal_{$l}"]);
         }
@@ -2980,8 +2980,6 @@ function progressbar_sideblock($preview=false) {
             $onlytheseplugins[$plugin][$item] = $item;
         }
         $progressbaritems = artefact_get_progressbar_items($onlytheseplugins);
-
-        $progressbaritems = array_diff($progressbaritems, $locked);
 
         // Get the data link about every item
         foreach ($progressbaritems as $pluginname => $itemlist) {
