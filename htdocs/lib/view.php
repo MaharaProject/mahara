@@ -4753,7 +4753,8 @@ class View {
                 }
             }
 
-            if ($a->allowcomments) {
+            if ($a->allowcomments && (($a->accesstype == 'objectionable' && ($user->get('admin')
+                || $user->is_institutional_admin()) || $a->accesstype != 'objectionable'))) {
                 $allowcomments = $allowcomments || $a->allowcomments;
                 $approvecomments = $approvecomments && $a->approvecomments;
             }
