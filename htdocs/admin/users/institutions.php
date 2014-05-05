@@ -100,11 +100,19 @@ if ($institution || $add) {
             global $SESSION;
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
+            $collectionids = get_column('collection', 'id', 'institution', $values['i']);
             $viewids = get_column('view', 'id', 'institution', $values['i']);
             $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
             $regdataids = get_column('institution_registration', 'id', 'institution', $values['i']);
 
             db_begin();
+            if ($collectionids) {
+                require_once(get_config('libroot') . 'collection.php');
+                foreach ($collectionids as $collectionid) {
+                    $collection = new Collection($collectionid);
+                    $collection->delete();
+                }
+            }
             if ($viewids) {
                 require_once(get_config('libroot') . 'view.php');
                 foreach ($viewids as $viewid) {
@@ -159,6 +167,8 @@ if ($institution || $add) {
             delete_records('institution_registration', 'institution', $values['i']);
             delete_records('site_content', 'institution', $values['i']);
             delete_records('institution_config', 'institution', $values['i']);
+            delete_records('usr_custom_layout', 'institution', $values['i']);
+            delete_records('usr_registration', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 
