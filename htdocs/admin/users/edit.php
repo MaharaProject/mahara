@@ -348,6 +348,26 @@ function edituser_site_submit(Pieform $form, $values) {
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         $user->quota = $values['quota'];
+        // check if the user has gone over the quota notify limit
+        $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+        if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
+            $quotanotifylimit = 100;
+        }
+        $user->quotausedpercent = $user->quotaused / $user->quota * 100;
+        $overlimit = false;
+        if ($quotanotifylimit <= $user->quotausedpercent) {
+            $overlimit = true;
+        }
+        $notified = get_field('usr_account_preference', 'value', 'field', 'quota_exceeded_notified', 'usr', $user->id);
+        if ($overlimit && '1' !== $notified) {
+            require_once(get_config('docroot') . 'artefact/file/lib.php');
+            ArtefactTypeFile::notify_users_threshold_exceeded(array($user), false);
+            // no need to email admin as we can alert them right now
+            $SESSION->add_error_msg(get_string('useroverquotathreshold', 'artefact.file', display_name($user)));
+        }
+        else if ($notified && !$overlimit) {
+            set_account_preference($user->id, 'quota_exceeded_notified', false);
+        }
     }
 
     $unexpire = $user->expiry && strtotime($user->expiry) < time() && (empty($values['expiry']) || $values['expiry'] > time());
