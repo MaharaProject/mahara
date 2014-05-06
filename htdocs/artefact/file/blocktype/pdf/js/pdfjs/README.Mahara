@@ -1,13 +1,21 @@
 PDF.js in Mahara
 ==================
 
-Website: https://github.com/mozilla/pdf.js/wiki
-Version: 0.8.75 (updated 25 Apr 2013)
+Website: http://mozilla.github.io/pdf.js/getting_started/#download
+Version: 1.0.21
 License: Apache License 2.0
 
 PDF.js is used in the Mahara to provide a javascript library for 
 viewing PDF file
- 
+
+Build Instructions:
+
+1. Have Node.JS installed.
+2. Clone the pdf.js git repo ( https://github.com/mozilla/pdf.js/ )
+3. Navigate into the repo, and run "node make generic"
+4. Copy the contents of build/generic into this directory.
+5. You may also need to alter the path to pdf.js and other files.
+
 Changes:
 
-* by Son Nguyen, 26 Apr 13: updated location of pdfjs.js in viewer.html and viewer.js
+* by Son Nguyen, 26 Apr 13: updated location of pdf.js in viewer.html and viewer.js

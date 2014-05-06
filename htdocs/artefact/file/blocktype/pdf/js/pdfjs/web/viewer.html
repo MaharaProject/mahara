@@ -1,38 +1,50 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<!--
+Copyright 2012 Mozilla Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Adobe CMap resources are covered by their own copyright and license:
+http://sourceforge.net/adobe/cmap/wiki/License/
+-->
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>PDF viewer</title>
+    <meta name="google" content="notranslate">
+    <title>PDF.js viewer</title>
 
-    <link rel="stylesheet" href="js/pdfjs/web/viewer.css"/>
 
-    <script type="text/javascript" src="js/pdfjs/web/compatibility.js"></script>
+    <link rel="stylesheet" href="viewer.css"/>
 
-    <script type="text/javascript">
-        var wwwroot = '{$WWWROOT}';
-        var fileurl = "{$url|safe}";
-        // to handle showing download link when javascript is turned off
-        window.onload = function() {
-            document.body.className = 'js';
-            document.body.style.display = 'block';
-            document.getElementById('nojsdownload').style.display = 'none';
-            document.getElementById('outerContainer').className = 'loadingInProgress';
-        }
-    </script>
+    <script type="text/javascript" src="compatibility.js"></script>
 
-    <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties"/>
-    <script type="text/javascript" src="js/pdfjs/web/l10n.js"></script>
-    <script type="text/javascript" src="js/pdfjs/build/pdf.js"></script>
 
-    <script type="text/javascript" src="js/pdfjs/web/debugger.js"></script>
-    <script type="text/javascript" src="js/pdfjs/web/viewer.js"></script>
+
+<!-- This snippet is used in production, see Makefile -->
+<link rel="resource" type="application/l10n" href="locale/locale.properties"/>
+<script type="text/javascript" src="l10n.js"></script>
+<script type="text/javascript" src="../build/pdf.js"></script>
+
+
+
+    <script type="text/javascript" src="debugger.js"></script>
+    <script type="text/javascript" src="viewer.js"></script>
 
   </head>
 
-  <body class="no-js">
-    <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
-    <div id="outerContainer" class="loadingInProgress js">
+  <body tabindex="1">
+    <div id="outerContainer" class="loadingInProgress">
 
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
@@ -307,7 +319,7 @@
               <span data-l10n-id="document_properties_page_count">Page Count:</span> <p id="pageCountField">-</p>
             </div>
             <div class="buttonRow">
-              <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
+	          <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
             </div>
           </div>
         </div>
@@ -315,4 +327,78 @@
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
-</body>
+<div id="mozPrintCallback-shim" hidden>
+  <style scoped>
+#mozPrintCallback-shim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9999999;
+
+  display: block;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#mozPrintCallback-shim[hidden] {
+  display: none;
+}
+@media print {
+  #mozPrintCallback-shim {
+    display: none;
+  }
+}
+
+#mozPrintCallback-shim .mozPrintCallback-dialog-box {
+  display: inline-block;
+  margin: -50px auto 0;
+  position: relative;
+  top: 45%;
+  left: 0;
+  min-width: 220px;
+  max-width: 400px;
+
+  padding: 9px;
+
+  border: 1px solid hsla(0, 0%, 0%, .5);
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+  background-color: #474747;
+
+  color: hsl(0, 0%, 85%);
+  font-size: 16px;
+  line-height: 20px;
+}
+#mozPrintCallback-shim .progress-row {
+  clear: both;
+  padding: 1em 0;
+}
+#mozPrintCallback-shim progress {
+  width: 100%;
+}
+#mozPrintCallback-shim .relative-progress {
+  clear: both;
+  float: right;
+}
+#mozPrintCallback-shim .progress-actions {
+  clear: both;
+}
+  </style>
+  <div class="mozPrintCallback-dialog-box">
+    <!-- TODO: Localise the following strings -->
+    Preparing document for printing...
+    <div class="progress-row">
+      <progress value="0" max="100"></progress>
+      <span class="relative-progress">0%</span>
+    </div>
+    <div class="progress-actions">
+      <input type="button" value="Cancel" class="mozPrintCallback-cancel">
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>
+
