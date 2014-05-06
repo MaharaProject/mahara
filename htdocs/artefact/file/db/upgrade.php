@@ -389,5 +389,16 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         PluginArtefactFile::set_quota_triggers();
     }
 
+    if ($oldversion < 2014061000) {
+        // Remove the not needed quota notify on update config trigger from previous update
+        if (is_postgres()) {
+            $sql = 'DROP TRIGGER IF EXISTS {unmark_quota_exeed_notified_on_update_setting_trigger} ON {artefact_config};';
+        }
+        else {
+            $sql = 'DROP TRIGGER IF EXISTS {unmark_quota_exeed_notified_on_update_setting_trigger};';
+        }
+        execute_sql($sql);
+    }
+
     return $status;
 }

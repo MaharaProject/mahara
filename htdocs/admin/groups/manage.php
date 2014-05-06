@@ -43,10 +43,24 @@ $quotasform = pieform(array(
 function groupquotasform_submit(Pieform $form, $values) {
     global $SESSION;
 
+    $oldquota = get_field('group', 'quota', 'id', $values['groupid']);
     $group = new StdClass;
     $group->id = $values['groupid'];
     $group->quota = $values['quota'];
     update_record('group', $group);
+
+    if (!empty($values['quota']) && $values['quota'] != $oldquota) {
+        // We need to alert group admins that the group may now be over the threshold
+        $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+        $sqlwhere = " ((g.quotaused / g.quota) * 100) ";
+        if (is_postgres()) {
+            $sqlwhere = " ((CAST(g.quotaused AS float) / CAST(g.quota AS float)) * 100) ";
+        }
+        if ($groups = get_records_sql_assoc("SELECT g.id, g.name, g.quota, " . $sqlwhere . " AS quotausedpercent FROM {group} g WHERE " . $sqlwhere . " >= ? AND id = ?", array($quotanotifylimit, $values['groupid']))) {
+            require_once(get_config('docroot') . 'artefact/file/lib.php');
+            ArtefactTypeFile::notify_groups_threshold_exceeded($groups);
+        }
+    }
 
     $SESSION->add_ok_msg(get_string('groupquotaupdated', 'admin'));
     redirect(get_config('wwwroot').'admin/groups/groups.php');

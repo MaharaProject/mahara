@@ -768,6 +768,33 @@ function institution_submit(Pieform $form, $values) {
                 "UPDATE {usr} SET quota = ? WHERE id IN (SELECT usr FROM {usr_institution} WHERE institution = ?)",
                 array($values['defaultquota'], $institution)
             );
+            // get all the users from the institution and make sure that they are still below
+            // their quota threshold
+            if ($users = get_records_sql_array('SELECT * FROM {usr} u LEFT JOIN {usr_institution} ui ON u.id = ui.usr AND ui.institution = ?', array($institution))) {
+                $quotanotifylimit = get_config_plugin('artefact', 'file', 'quotanotifylimit');
+                if ($quotanotifylimit <= 0 || $quotanotifylimit >= 100) {
+                    $quotanotifylimit = 100;
+                }
+                foreach ($users as $user) {
+                    $user->quota = $values['defaultquota'];
+                    // check if the user has gone over the quota notify limit
+                    $user->quotausedpercent = $user->quotaused / $user->quota * 100;
+                    $overlimit = false;
+                    if ($quotanotifylimit <= $user->quotausedpercent) {
+                        $overlimit = true;
+                    }
+                    $notified = get_field('usr_account_preference', 'value', 'field', 'quota_exceeded_notified', 'usr', $user->id);
+                    if ($overlimit && '1' !== $notified) {
+                        require_once(get_config('docroot') . 'artefact/file/lib.php');
+                        ArtefactTypeFile::notify_users_threshold_exceeded(array($user), false);
+                        // no need to email admin as we can alert them right now
+                        $SESSION->add_error_msg(get_string('useroverquotathreshold', 'artefact.file', display_name($user)));
+                    }
+                    else if ($notified && !$overlimit) {
+                        set_account_preference($user->id, 'quota_exceeded_notified', false);
+                    }
+                }
+            }
         }
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
