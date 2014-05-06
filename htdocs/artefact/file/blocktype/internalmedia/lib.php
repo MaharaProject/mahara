@@ -244,7 +244,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $url = self::get_download_link($artefact, $block);
         $params = array('play' => 'true');
         $html =  '<a href="' . $url . '">' . hsc($artefact->get('title')) . '</a><br>
-               <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
+               <span class="blocktype_internalmedia_mp3" id="' . $id . '">('
                . get_string('flashanimation', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
                     var so = new SWFObject("' . $url . '","player","' . $width . '","' . ($height + 20). '","7");
@@ -290,7 +290,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             $type = 'type: "audio",'; // force the player to use the audio plugin
             $buffering = 'false'; // without this autoPlay will also be set to true
             $audio = ', audio: {
-		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.2.swf"
+		                  url: "' . $baseurl . 'flowplayer.audio/flowplayer.audio-3.2.11.swf"
 		             }';
         }
 
@@ -436,7 +436,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     }
 
     private static function get_download_link(ArtefactTypeFile $artefact, BlockInstance $instance, $wmp=false) {
-        return get_config('wwwroot') . 'artefact/file/download.php?file=' 
+        return get_config('wwwroot') . 'artefact/file/download.php?file='
             . $artefact->get('id') . '&view=' . $instance->get('view')
             . ($wmp ? '&download=1' : '');
     }
