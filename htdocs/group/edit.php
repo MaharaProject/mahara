@@ -54,7 +54,7 @@ else {
         'category'       => 0,
         'public'         => 0,
         'usersautoadded' => 0,
-        'viewnotify'     => 1,
+        'viewnotify'     => GROUP_ROLES_ALL,
         'submittableto'  => 0,
         'editroles'      => 'all',
         'hidden'         => 0,
@@ -66,7 +66,8 @@ else {
         'urlid'          => null,
         'editwindowstart' => null,
         'editwindowend'  => null,
-        'sendnow'        => 0
+        'sendnow'        => 0,
+        'feedbacknotify' => GROUP_ROLES_ALL,
     );
 }
 
@@ -366,11 +367,20 @@ $elements['usersautoadded'] = array(
             'defaultvalue' => $group_data->usersautoadded,
             'help'         => true,
             'ignore'       => !$USER->get('admin'));
+$notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
 $elements['viewnotify'] = array(
-    'type' => 'checkbox',
+    'type' => 'select',
     'title' => get_string('viewnotify', 'group'),
-    'description' => get_string('viewnotifydescription1', 'group'),
+    'options' => $notifyroles,
+    'description' => get_string('viewnotifydescription2', 'group'),
     'defaultvalue' => $group_data->viewnotify
+);
+$elements['feedbacknotify'] = array(
+    'type' => 'select',
+    'title' => get_string('feedbacknotify', 'group'),
+    'options' => $notifyroles,
+    'description' => get_string('feedbacknotifydescription', 'group'),
+    'defaultvalue' => $group_data->feedbacknotify
 );
 if ($cancreatecontrolled) {
     $elements['sendnow'] = array(
@@ -468,7 +478,8 @@ function editgroup_submit(Pieform $form, $values) {
         'suggestfriends' => intval($values['suggestfriends']),
         'editwindowstart' => db_format_timestamp($values['editwindowstart']),
         'editwindowend'  => db_format_timestamp($values['editwindowend']),
-        'sendnow'        => intval($values['sendnow'])
+        'sendnow'        => intval($values['sendnow']),
+        'feedbacknotify'     => intval($values['feedbacknotify']),
     );
 
     if (

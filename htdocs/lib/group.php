@@ -11,6 +11,11 @@
 
 defined('INTERNAL') || die();
 
+// Constants for the different group roles
+define('GROUP_ROLES_ALL', 1);
+define('GROUP_ROLES_NONMEMBER', 2);
+define('GROUP_ROLES_ADMIN', 3);
+
 // Role related functions
 
 /**
@@ -439,6 +444,8 @@ function group_create($data) {
             'editwindowstart' => $data['editwindowstart'],
             'editwindowend'  => $data['editwindowend'],
             'sendnow'        => isset($data['sendnow']) ? $data['sendnow'] : null,
+            'viewnotify'     => isset($data['viewnotify']) ? $data['viewnotify'] : null,
+            'feedbacknotify' => isset($data['feedbacknotify']) ? $data['feedbacknotify'] : null,
         ),
         'id',
         true
@@ -1684,12 +1691,20 @@ function group_get_grouptype_options($currentgrouptype=null) {
     return $groupoptions;
 }
 
-function group_get_editroles_options() {
-    return array(
+function group_get_editroles_options($intkeys = false) {
+    if ($intkeys) {
+        return array(GROUP_ROLES_ALL => get_string('allgroupmembers', 'group'),
+                     GROUP_ROLES_NONMEMBER => get_string('allexceptmember', 'group'),
+                     GROUP_ROLES_ADMIN => get_string('groupadmins', 'group'),
+                     );
+    }
+    $options = array(
         'all'       => get_string('allgroupmembers', 'group'),
         'notmember' => get_string('allexceptmember', 'group'),
         'admin'     => get_string('groupadmins', 'group'),
     );
+
+    return $options;
 }
 
 function group_can_list_members($group, $role) {

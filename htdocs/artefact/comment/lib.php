@@ -1252,6 +1252,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             $artefactinstance = artefact_instance_from_id($onartefact);
             if ($artefactinstance->feedback_notify_owner()) {
                 $userid = $artefactinstance->get('owner');
+                $groupid = $artefactinstance->get('group');
             }
             if (empty($this->url)) {
                 $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
@@ -1263,24 +1264,43 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
             }
             $userid = $viewrecord->owner;
+            $groupid = $viewrecord->group;
             if (empty($this->url)) {
                 $this->url = 'view/view.php?id=' . $onview;
             }
         }
-        if (empty($userid)) {
+
+        if (!empty($userid)) {
+            $this->users = activity_get_users($this->get_id(), array($userid));
+        }
+        else if (!empty($groupid)) {
+            require_once(get_config('docroot') . 'lib/group.php');
+            $this->users = get_records_sql_array("SELECT u.* from {usr} u, {group_member} m, {group} g
+                                                       WHERE g.id = m.group AND m.member = u.id AND m.group = ?
+                                                       AND (g.feedbacknotify = " . GROUP_ROLES_ALL . "
+                                                           OR (g.feedbacknotify = " . GROUP_ROLES_NONMEMBER . " AND (m.role = 'tutor' OR m.role = 'admin'))
+                                                           OR (g.feedbacknotify = " . GROUP_ROLES_ADMIN . " AND m.role = 'admin')
+                                                       )", array($groupid));
+        }
+        if (empty($userid) && empty($groupid)) {
+            return;
+        }
+        if (empty($this->users)) {
+            // no one to notify - possibe if group 'feedbacknotify' is set to 0
             return;
         }
 
-        $this->users = activity_get_users($this->get_id(), array($userid));
         $title = $onartefact ? $artefactinstance->get('title') : $viewrecord->title;
         $this->urltext = $title;
         $body = $comment->get('description');
         $posttime = strftime(get_string('strftimedaydatetime'), $comment->get('ctime'));
-        $user = $this->users[0];
-        $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
 
         // Internal
         $this->message = strip_tags(str_shorten_html($body, 200, true));
+        // Seen as things like emaildigest base the message on $this->message
+        // we need to set the language for the $removedbyline here based on first user.
+        $user = $this->users[0];
+        $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
 
         // Comment deleted notification
         if ($deletedby = $comment->get('deletedby')) {
@@ -1295,15 +1315,26 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             $removedbyline = get_string_from_language($lang, $deletedmessage[$deletedby], 'artefact.comment');
             $this->message = $removedbyline . ":\n" . $this->message;
 
-            // Email
-            $this->users[0]->htmlmessage = get_string_from_language(
-                $lang, 'feedbackdeletedhtml', 'artefact.comment',
-                hsc($title), $removedbyline, clean_html($body), get_config('wwwroot') . $this->url, hsc($title)
-            );
-            $this->users[0]->emailmessage = get_string_from_language(
-                $lang, 'feedbackdeletedtext', 'artefact.comment',
-                $title, $removedbyline, trim(html2text($body)), $title, get_config('wwwroot') . $this->url
-            );
+            foreach ($this->users as $key => $user) {
+                if (empty($user->lang) || $user->lang == 'default') {
+                    // check to see if we need to show institution language
+                    $instlang = get_user_institution_language($user->id);
+                    $lang = (empty($instlang) || $instlang == 'default') ? get_config('lang') : $instlang;
+                }
+                else {
+                    $lang = $user->lang;
+                }
+                // For email we can send the message in the user's preferred language
+                $removedbyline = get_string_from_language($lang, $deletedmessage[$deletedby], 'artefact.comment');
+                $this->users[$key]->htmlmessage = get_string_from_language(
+                    $lang, 'feedbackdeletedhtml', 'artefact.comment',
+                    hsc($title), $removedbyline, clean_html($body), get_config('wwwroot') . $this->url, hsc($title)
+                );
+                $this->users[$key]->emailmessage = get_string_from_language(
+                    $lang, 'feedbackdeletedtext', 'artefact.comment',
+                    $title, $removedbyline, trim(html2text($body)), $title, get_config('wwwroot') . $this->url
+                );
+            }
             return;
         }
 
@@ -1319,16 +1350,25 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
 
         // Email
         $author = $comment->get('author');
-        $authorname = empty($author) ? $comment->get('authorname') : display_name($author, $user);
-
-        $this->users[0]->htmlmessage = get_string_from_language(
-            $lang, 'feedbacknotificationhtml', 'artefact.comment',
-            hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
-        );
-        $this->users[0]->emailmessage = get_string_from_language(
-            $lang, 'feedbacknotificationtext', 'artefact.comment',
-            $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
-        );
+        foreach ($this->users as $key => $user) {
+            $authorname = empty($author) ? $comment->get('authorname') : display_name($author, $user);
+            if (empty($user->lang) || $user->lang == 'default') {
+                // check to see if we need to show institution language
+                $instlang = get_user_institution_language($user->id);
+                $lang = (empty($instlang) || $instlang == 'default') ? get_config('lang') : $instlang;
+            }
+            else {
+                $lang = $user->lang;
+            }
+            $this->users[$key]->htmlmessage = get_string_from_language(
+                $lang, 'feedbacknotificationhtml', 'artefact.comment',
+                hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
+            );
+            $this->users[$key]->emailmessage = get_string_from_language(
+                $lang, 'feedbacknotificationtext', 'artefact.comment',
+                $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
+            );
+        }
     }
 
     public function get_plugintype(){
