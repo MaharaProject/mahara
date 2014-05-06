@@ -3399,5 +3399,62 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_enum($table, $field);
     }
 
+    // Activity records, artefact access and artefact watchlist tables.
+    if ($oldversion < 2014060500) {
+        // Add activity table.
+        $table = new XMLDBTable('activity');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('activitytype', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('activitysubtype', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('objecttype', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('objectid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('additionalid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addIndexInfo('objectix', XMLDB_INDEX_NOTUNIQUE, array('objectid, objecttype'));
+        $table->addIndexInfo('ctimeix', XMLDB_INDEX_NOTUNIQUE, array('ctime'));
+
+        if (!table_exists($table)) {
+            create_table($table);
+        }
+
+        // Add artefact_access table.
+        $table = new XMLDBTable('artefact_access');
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('accesstype', XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends', 'objectionable'));
+        $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+        $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        $table->addIndexInfo('accesstypeix', XMLDB_INDEX_NOTUNIQUE, array('accesstype'));
+
+        if (!table_exists($table)) {
+            create_table($table);
+        }
+
+        // Add onlyapplyifwatched field to activity_type table.
+        $table = new XMLDBTable('activity_type');
+        $field = new XMLDBField('onlyapplyifwatched');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0, 'defaultmethod');
+
+        if (!field_exists($table, $field)) {
+            add_field($table, $field);
+        }
+
+        // Enable both the activity stream block and the home stream notification method.
+        if ($data = check_upgrades('blocktype.activitystream')) {
+            upgrade_plugin($data);
+        }
+        if ($data = check_upgrades('notification.homestream')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

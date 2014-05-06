@@ -322,6 +322,7 @@ EOF;
                 'admin' => 0,
                 'delay' => 1,
                 'allownonemethod' => 1,
+                'onlyapplyifwatched' => 0,
                 'defaultmethod' => 'email',
             ),
             (object)array(

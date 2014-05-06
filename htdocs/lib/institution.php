@@ -38,6 +38,7 @@ class Institution {
      * @var unknown_type
      */
     static $dbfields = array(
+        'id' => null,
         'name' => '',
         'displayname' => '',
         'registerallowed' => 0,
@@ -80,7 +81,7 @@ class Institution {
         }
 
         if (!$this->findByName($name)) {
-            throw new ParamOutOfRangeException('No such institution');
+            throw new ParamOutOfRangeException('No such institution: ' . $name);
         }
     }
 
@@ -129,6 +130,7 @@ class Institution {
                 $value = $value ? 1 : 0;
                 break;
 
+            case 'id':
             case 'defaultmembershipperiod':
             case 'maxuseraccounts':
             case 'showonlineusers':

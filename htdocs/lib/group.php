@@ -405,6 +405,9 @@ function group_create($data) {
     if (!isset($data['editwindowend'])) {
         $data['editwindowend'] = null;
     }
+    if (!isset($data['sendnow'])) {
+        $data['sendnow'] = null;
+    }
 
     db_begin();
 

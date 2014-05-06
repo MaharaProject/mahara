@@ -105,3 +105,9 @@ To see %s online, follow this link:
 
 $string['artefactdefaultpermissions'] = 'Default comment permission';
 $string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation. Users can override these settings for individual artefacts.';
+
+// Activity stream helper messages.
+$string['activitystreamcommentartefactone'] = '%s left %d comment on %s artefact "%s": %s';
+$string['activitystreamcommentartefactmany'] = '%s left %d comments on %s artefact "%s": %s';
+$string['activitystreamcommentviewone'] = '%s left %d comment on %s page "%s": %s';
+$string['activitystreamcommentviewmany'] = '%s left %d comments on %s page "%s": %s';

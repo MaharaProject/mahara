@@ -877,18 +877,18 @@ function core_install_firstcoredata_defaults() {
         insert_record('event_subscription', (object)$sub);
     }
 
-    // install the activity types
+    // Install the activity types. Name, admin, delay, allownonemethod, onlyapplyifwatched, defaultmethod.
     $activitytypes = array(
-        array('maharamessage',      0, 0, 0, 'email'),
-        array('usermessage',        0, 0, 0, 'email'),
-        array('watchlist',          0, 1, 1, 'email'),
-        array('viewaccess',         0, 1, 1, 'email'),
-        array('contactus',          1, 1, 1, 'email'),
-        array('objectionable',      1, 1, 1, 'email'),
-        array('virusrepeat',        1, 1, 1, 'email'),
-        array('virusrelease',       1, 1, 1, 'email'),
-        array('institutionmessage', 0, 0, 1, 'email'),
-        array('groupmessage',       0, 1, 1, 'email'),
+        array('maharamessage',      0, 0, 0, 0, 'email'),
+        array('usermessage',        0, 0, 0, 0, 'email'),
+        array('watchlist',          0, 1, 1, 0, 'email'),
+        array('viewaccess',         0, 1, 1, 0, 'email'),
+        array('contactus',          1, 1, 1, 0, 'email'),
+        array('objectionable',      1, 1, 1, 0, 'email'),
+        array('virusrepeat',        1, 1, 1, 0, 'email'),
+        array('virusrelease',       1, 1, 1, 0, 'email'),
+        array('institutionmessage', 0, 0, 1, 0, 'email'),
+        array('groupmessage',       0, 1, 1, 0, 'email'),
     );
 
     foreach ($activitytypes as $at) {
@@ -897,7 +897,8 @@ function core_install_firstcoredata_defaults() {
         $a->admin = $at[1];
         $a->delay = $at[2];
         $a->allownonemethod = $at[3];
-        $a->defaultmethod = $at[4];
+        $a->onlyapplyifwatched = $at[4];
+        $a->defaultmethod = $at[5];
         insert_record('activity_type', $a);
     }
 

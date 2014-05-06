@@ -123,6 +123,7 @@ $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
 
 $string['missingparam'] = 'Required parameter %s was empty for activity type %s';
+$string['nonstandardactivityparam'] = 'Activity type %s must not return the non-standard paramter %s in get_required_parameters';
 
 $string['institutionrequestsubject'] = '%s has requested membership of %s.';
 $string['institutionrequestmessage'] = 'You can add users to institutions on the "Institution members" page:';
@@ -137,3 +138,19 @@ $string['viewsubmittedsubject1'] = 'Submission to %s';
 $string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s';
 
 $string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
+
+// Activity stream participants and owners.
+$string['participantsmany'] = '%s and %d others';
+$string['participantsnone'] = 'No users';
+$string['participantsone'] = '%s';
+$string['participantstwo'] = '%s and %s';
+$string['participantsselffirst'] = 'You';
+$string['participantsselfsecond'] = 'you';
+$string['owneryour'] = 'your';
+$string['ownertheir'] = 'their';
+$string['owners'] = '%s\'s';
+$string['missingactivitystreamhelperparameter'] = 'A parameter required by the activity stream helper was not supplied: %s';
+
+// Activity stream helper messages.
+$string['activitystreamviewaccessone'] = '%s made %d change to sharing on %s page "%s"';
+$string['activitystreamviewaccessmany'] = '%s made %d changes to sharing on %s page "%s"';

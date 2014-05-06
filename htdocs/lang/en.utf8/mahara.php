@@ -376,6 +376,7 @@ $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled or is
 $string['institution'] = 'Institution';
 $string['institutioncontacts'] = '\'%s\' contacts';
 $string['institutionlink'] = '<a href="%s">%s</a>';
+$string['link'] = '<a href="%s">%s</a>';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';

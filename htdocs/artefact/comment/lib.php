@@ -61,6 +61,7 @@ class PluginArtefactComment extends PluginArtefact {
                 'admin' => 0,
                 'delay' => 0,
                 'allownonemethod' => 1,
+                'onlyapplyifwatched' => 0,
                 'defaultmethod' => 'email',
             )
         );
@@ -1005,8 +1006,10 @@ function delete_comment_submit(Pieform $form, $values) {
     if ($deletedby != 'owner' && $comment->get('owner') != $USER->get('id')) {
         // Notify owner
         $data = (object) array(
-            'commentid' => $comment->get('id'),
-            'viewid'    => $view->get('id'),
+            'usr' => $comment->get('author'),
+            'objecttype' => ActivityType::OBJECTTYPE_VIEW,
+            'objectid' => $view->get('id'),
+            'additionalid' => $comment->get('id'),
         );
         activity_occurred('feedback', $data, 'artefact', 'comment');
     }
@@ -1188,10 +1191,17 @@ function add_feedback_form_submit(Pieform $form, $values) {
     }
 
     require_once('activity.php');
-    $data = (object) array(
-        'commentid' => $comment->get('id'),
-        'viewid'    => $view->get('id')
-    );
+    $data->usr = $comment->get('author');
+    if ($artefact) {
+        $data->objecttype = ActivityType::OBJECTTYPE_ARTEFACT;
+        $data->objectid = $data->onartefact;
+    }
+    else {
+        $data->objecttype = ActivityType::OBJECTTYPE_VIEW;
+        $data->objectid = $data->onview;
+    }
+    $data->additionalid = $comment->get('id');
+
     activity_occurred('feedback', $data, 'artefact', 'comment');
 
     if (isset($moderatemsg)) {
@@ -1229,21 +1239,19 @@ function add_feedback_form_cancel_submit(Pieform $form) {
     ));
 }
 
-class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
-
-    protected $viewid;
-    protected $commentid;
+class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin implements ActivityStreamable {
 
     /**
      * @param array $data Parameters:
-     *                    - viewid (int)
-     *                    - commentid (int)
+     *                    - objecttype (ActivityType::OBJECTTYPE_VIEW or ActivityType::OBJECTTYPE_ARTEFACT)
+     *                    - objectid (view or artefact id int)
+     *                    - usr (user id int
+     *                    - additionalid (comment id int)
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
 
-        $comment = new ArtefactTypeComment($this->commentid);
-
+        $comment = new ArtefactTypeComment($data->additionalid);
         $this->overridemessagecontents = true;
 
         if ($onartefact = $comment->get('onartefact')) { // feedback on artefact
@@ -1254,7 +1262,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $userid = $artefactinstance->get('owner');
             }
             if (empty($this->url)) {
-                $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
+                $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->objectid;
             }
         }
         else { // feedback on view.
@@ -1267,6 +1275,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $this->url = 'view/view.php?id=' . $onview;
             }
         }
+
         if (empty($userid)) {
             return;
         }
@@ -1331,6 +1340,10 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         );
     }
 
+    public function get_required_parameters() {
+        return array('objecttype', 'objectid', 'usr', 'additionalid');
+    }
+
     public function get_plugintype(){
         return 'artefact';
     }
@@ -1339,7 +1352,66 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         return 'comment';
     }
 
-    public function get_required_parameters() {
-        return array('commentid', 'viewid');
+    public static function get_activity_body($activity) {
+        $helperinfo = new stdClass();
+
+        $subactivity = $activity->subactivity[0];
+        $comment = new ArtefactTypeComment($subactivity->additionalid);
+
+        $helperinfo->activity = $activity;
+        $helperinfo->activitysection = 'artefact.comment';
+        $helperinfo->includesubactivitycounts = true;
+        $helperinfo->snippet = $comment->get('description');
+
+        $artefactid = $comment->get('onartefact');
+        $viewid = $comment->get('onview');
+        if ($artefactid) {
+            self::set_helperinfo_with_artefact($helperinfo, $artefactid);
+        }
+        else {
+            self::set_helperinfo_with_view($helperinfo, $viewid);
+        }
+
+        return ActivityStreamHelper::get_standard_activity_body($helperinfo);
+    }
+
+    /**
+     * Configure the abhelper for a given artefact.
+     *
+     * @param int $artefactid
+     */
+    private static function set_helperinfo_with_artefact($helperinfo, $artefactid) {
+        $helperinfo->activityidentifier = 'activitystreamcommentartefact';
+        $artefact = get_record('artefact', 'id', $artefactid);
+        $artefactowner = reset(artefact_get_owner_info(array($artefactid)));
+        $helperinfo->ownername = $artefactowner->name;
+        $helperinfo->ownerurl = $artefactowner->url;
+        $owneruserid = $artefact->owner;
+        if ($owneruserid) {
+            $helperinfo->owneruserid = $owneruserid;
+        }
+        $helperinfo->objecttitle = $artefact->title;
+        $helperinfo->objecturl = null; // TODO Link to artefact in future patch.
+    }
+
+    /**
+     * Prepare the abhelper for a given view.
+     *
+     * @param int $viewid
+     */
+    private static function set_helperinfo_with_view($helperinfo, $viewid) {
+        $helperinfo->activityidentifier = 'activitystreamcommentview';
+        $view = new View($viewid);
+        $owneruserid = $view->get('owner');
+        $groupid = $view->get('group');
+        if ($owneruserid) {
+            $helperinfo->owneruserid = $owneruserid;
+        }
+        else if ($groupid) {
+            $helperinfo->ownername = $view->formatted_owner();
+            $helperinfo->ownerurl = get_config('wwwroot') . 'group/view.php?id=' . $groupid;
+        }
+        $helperinfo->objecttitle = $view->get('title');
+        $helperinfo->objecturl = $view->get_url();
     }
 }

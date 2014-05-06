@@ -1,0 +1,37 @@
+/**
+ * CSS rules for the activity stream block
+ *
+ * @author     Nathan Lewis <nathan.lewis@totaralms.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ */
+
+.activitystream {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.activitystream .as-activity {
+    border: 3px solid #F3F3F3;
+    padding: 5px;
+    margin: 5px;
+}
+
+.activitystream .as-topsection {
+    display: inline-block;
+    width: 100%;
+}
+
+.activitystream .usericon {
+    float: left;
+    margin: 0;
+}
+
+.activitystream .as-toprightsection {
+    margin-left: 55px;
+}
+
+.activitystream .as-ctime {
+    float: right;
+    margin: 0;
+}

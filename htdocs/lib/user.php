@@ -1671,7 +1671,7 @@ function profile_url($user, $full=true, $useid=false) {
         }
         $url = get_config('cleanurluserdefault') . '/' . $urlid;
     }
-    else if (!empty($id)) {
+    else if (!is_null($id)) {
         $url = 'user/view.php?id=' . (int) $id;
     }
     else {

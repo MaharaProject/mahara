@@ -573,7 +573,7 @@ class View {
             require_once('activity.php');
 
             // Although group views are owned by the group, the view creator is treated as owner here.
-            $beforeusers = activity_get_viewaccess_users($view->get('id'), $userid, 'viewaccess');
+            $beforeusers = activity_get_viewaccess_users($view->get('id'));
 
             // By default, group views should be visible to the group
             insert_record('view_access', (object) array(
@@ -584,8 +584,9 @@ class View {
 
             // Notify group members
             $accessdata = new StdClass;
-            $accessdata->view = $view->get('id');
-            $accessdata->owner = $userid;
+            $accessdata->usr = $userid;
+            $accessdata->objecttype = ActivityType::OBJECTTYPE_VIEW;
+            $accessdata->objectid = $view->get('id');
             $accessdata->oldusers = $beforeusers;
             activity_occurred('viewaccess', $accessdata);
         }
@@ -826,9 +827,11 @@ class View {
     }
 
     public function delete() {
+        require_once(get_config('libroot') . 'activity.php');
         safe_require('artefact', 'comment');
         db_begin();
         ArtefactTypeComment::delete_view_comments($this->id);
+        delete_records('activity', 'objecttype', ActivityType::OBJECTTYPE_VIEW, 'objectid', $this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_autocreate_grouptype', 'view', $this->id);
         delete_records('view_tag','view',$this->id);
@@ -1233,7 +1236,7 @@ class View {
         require_once('group.php');
         require_once('institution.php');
 
-        $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
+        $beforeusers = activity_get_viewaccess_users($this->get('id'));
 
         $select = 'view = ? AND visible = 1 AND token IS NULL';
 
@@ -1332,8 +1335,9 @@ class View {
         }
 
         $data = new StdClass;
-        $data->view = $this->get('id');
-        $data->owner = $USER->get('id');
+        $data->usr = $USER->get('id');
+        $data->objecttype = ActivityType::OBJECTTYPE_VIEW;
+        $data->objectid = $this->get('id');
         $data->oldusers = $beforeusers;
         activity_occurred('viewaccess', $data);
         handle_event('saveview', $this->get('id'));
@@ -2720,42 +2724,65 @@ class View {
     }
 
     /**
-     * This function formats a user's name
-     * according to their view preference
+     * This function formats the owner's name according to their view preference
      *
+     * @param bool $includelink true if the result should be wrapped in an html anchor link
      * @return string formatted name
      */
-    public function formatted_owner() {
+    public function formatted_owner($includelink = false) {
 
         if ($this->get('owner')) {
             $user = $this->get_owner_object();
 
             switch ($this->ownerformat) {
             case FORMAT_NAME_FIRSTNAME:
-                return $user->firstname;
+                $name = $user->firstname;
+                break;
             case FORMAT_NAME_LASTNAME:
-                return $user->lastname;
+                $name = $user->lastname;
+                break;
             case FORMAT_NAME_FIRSTNAMELASTNAME:
-                return $user->firstname . ' ' . $user->lastname;
+                $name = $user->firstname . ' ' . $user->lastname;
+                break;
             case FORMAT_NAME_PREFERREDNAME:
-                return $user->preferredname;
+                $name = $user->preferredname;
+                break;
             case FORMAT_NAME_STUDENTID:
-                return $user->studentid;
+                $name = $user->studentid;
+                break;
             case FORMAT_NAME_DISPLAYNAME:
             default:
-                return display_name($user);
+                $name = display_name($user);
+                break;
+            }
+            if ($includelink) {
+                return get_string('link', 'mahara', get_config('wwwroot') . 'user/view.php?id=' . $user->id, $name);
+            }
+            else {
+                return $name;
             }
         }
         else if ($this->get('group')) {
             $group = $this->get_group_object();
-            return $group->name;
+            if ($includelink) {
+                return get_string('link', 'mahara', get_config('wwwroot') . 'group/view.php?id=' . $group->id, $group->name);
+            }
+            else {
+                return $group->name;
+            }
         }
         else if ($i = $this->get('institution')) {
             if ($i == 'mahara') {
                 return get_config('sitename');
             }
             $institution = $this->get_institution_object();
-            return $institution->displayname;
+            if ($includelink) {
+                return get_string('link', 'mahara', get_config('wwwroot') . 'institution/index.php?institution=' .
+                        $institution->name, $institution->displayname);
+            }
+            else {
+                return $institution->displayname;
+            }
         }
         return null;
     }
