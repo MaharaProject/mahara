@@ -38,9 +38,9 @@ var SCALE_SELECT_PADDING = 22;
 var PAGE_NUMBER_LOADING_INDICATOR = 'visiblePageIsLoading';
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
-PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = '../build/pdf.worker.min.js';
-  PDFJS.cMapUrl = '../web/cmaps/';
+PDFJS.imageResourcesPath = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/images/';
+  PDFJS.workerSrc = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/build/pdf.worker.min.js';
+  PDFJS.cMapUrl = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/web/cmaps/';
   PDFJS.cMapPacked = true;
 
 var mozL10n = document.mozL10n || document.webL10n;
@@ -6220,6 +6220,7 @@ function webViewerInitialized() {
   var queryString = document.location.search.substring(1);
   var params = PDFViewerApplication.parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
+  file = fileurl;
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
