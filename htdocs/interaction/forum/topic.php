@@ -106,11 +106,12 @@ if (!empty($postid)) {
     redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '&offset=' . $offset . '&limit=' . $limit . '#post' . $postid);
 }
 
+$order = ($indentmode == 'no_indent') ? 'p.ctime, p.id' : 'p.path, p.ctime, p.id';
 $posts = get_records_sql_array(
     'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted
     FROM {interaction_forum_post} p
     WHERE p.topic = ?
-    ORDER BY p.path, p.ctime, p.id',
+    ORDER BY ' . $order,
     array($topicid),
     $offset,
     $limit
