@@ -54,9 +54,9 @@ var FindStates = {
   FIND_PENDING: 3
 };
 
-PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = '../build/pdf.worker.js';
-  PDFJS.cMapUrl = '../web/cmaps/';
+PDFJS.imageResourcesPath = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/images/';
+  PDFJS.workerSrc = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/build/pdf.worker.js';
+  PDFJS.cMapUrl = wwwroot + 'artefact/file/blocktype/pdf/js/pdfjs/web/cmaps/';
   PDFJS.cMapPacked = true;
 
 var mozL10n = document.mozL10n || document.webL10n;
@@ -5063,6 +5063,7 @@ function webViewerLoad(evt) {
 function webViewerInitialized() {
   var params = PDFView.parseQueryString(document.location.search.substring(1));
   var file = 'file' in params ? params.file : DEFAULT_URL;
+  file = fileurl;
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
