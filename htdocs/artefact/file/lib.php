@@ -1489,7 +1489,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'type'         => 'checkbox',
                 )
             ),
-            'collapsible' => true
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         $override = get_config_plugin('artefact', 'file', 'institutionaloverride');
@@ -1507,6 +1508,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
             ),
             'collapsible' => true,
+            'collapsed' => true
         );
 
         $maxquota = get_config_plugin('artefact', 'file', 'maxquota');
@@ -1532,7 +1534,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'defaultvalue' => $maxquota,
                 ),
             ),
-            'collapsible' => true
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         $defaultgroupquota = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -1557,7 +1560,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'type'         => 'checkbox',
                 )
             ),
-            'collapsible' => true
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         // Require user agreement before uploading files
@@ -1596,7 +1600,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'rules'        => array('maxlength' => 65536),
                 ),
             ),
-            'collapsible' => true
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         // Option to resize images on upload
@@ -1612,49 +1617,51 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $elements['resizeonuploadfieldset'] = array(
-                    'type' => 'fieldset',
-                    'legend' => get_string('resizeonupload', 'artefact.file'),
-                        'elements' => array(
-                            'resizeonuploaddescription' => array(
-                                'value' => get_string('resizeonuploaddescription', 'artefact.file'),
-                        ),
-                        'resizeonuploadenable' => array(
-                            'type'         => 'checkbox',
-                            'title'        => get_string('resizeonuploadenable1', 'artefact.file'),
-                            'defaultvalue' => $resizeonuploadenable,
-                            'description'  => get_string('resizeonuploadenabledescription1', 'artefact.file'),
-                        ),
-                        'resizeonuploaduseroption' => array(
-                            'title'        => get_string('resizeonuploaduseroption1', 'artefact.file'),
-                            'type'         => 'checkbox',
-                            'defaultvalue' => $resizeonuploaduseroption,
-                            'description'  => get_string('resizeonuploaduseroptiondescription1', 'artefact.file'),
-                        ),
-                        'resizeonuploadmaxwidth' => array(
-                            'type' => 'text',
-                            'size' => 4,
-                            'suffix' => get_string('widthshort'),
-                            'title' => get_string('resizeonuploadmaxwidth', 'artefact.file'),
-                            'defaultvalue' => $currentmaxwidth,
-                            'rules' => array(
-                                'required' => true,
-                                'integer'  => true,
-                            )
-                        ),
-                        'resizeonuploadmaxheight' => array(
-                            'type' => 'text',
-                            'suffix' => get_string('heightshort'),
-                            'size' => 4,
-                            'title' => get_string('resizeonuploadmaxheight', 'artefact.file'),
-                            'defaultvalue' => $currentmaxheight,
-                            'rules' => array(
-                                'required' => true,
-                                'integer'  => true,
-                                ),
-                            'help' => true,
-                        ),
+            'type' => 'fieldset',
+            'legend' => get_string('resizeonupload', 'artefact.file'),
+            'elements' => array(
+                'resizeonuploaddescription' => array(
+                    'type' => 'html',
+                    'value' => get_string('resizeonuploaddescription', 'artefact.file'),
+                ),
+                'resizeonuploadenable' => array(
+                    'type'         => 'checkbox',
+                    'title'        => get_string('resizeonuploadenable1', 'artefact.file'),
+                    'defaultvalue' => $resizeonuploadenable,
+                    'description'  => get_string('resizeonuploadenabledescription1', 'artefact.file'),
+                ),
+                'resizeonuploaduseroption' => array(
+                    'title'        => get_string('resizeonuploaduseroption1', 'artefact.file'),
+                    'type'         => 'checkbox',
+                    'defaultvalue' => $resizeonuploaduseroption,
+                    'description'  => get_string('resizeonuploaduseroptiondescription1', 'artefact.file'),
+                ),
+                'resizeonuploadmaxwidth' => array(
+                     'type' => 'text',
+                     'size' => 4,
+                     'suffix' => get_string('widthshort'),
+                     'title' => get_string('resizeonuploadmaxwidth', 'artefact.file'),
+                     'defaultvalue' => $currentmaxwidth,
+                     'rules' => array(
+                         'required' => true,
+                         'integer'  => true,
+                     )
+                ),
+                'resizeonuploadmaxheight' => array(
+                    'type' => 'text',
+                    'suffix' => get_string('heightshort'),
+                    'size' => 4,
+                    'title' => get_string('resizeonuploadmaxheight', 'artefact.file'),
+                    'defaultvalue' => $currentmaxheight,
+                    'rules' => array(
+                        'required' => true,
+                        'integer'  => true,
                     ),
-                    'collapsible' => true
+                    'help' => true,
+                ),
+            ),
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         // Profile icon size
@@ -1688,7 +1695,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                     'help' => true,
                 ),
             ),
-            'collapsible' => true
+            'collapsible' => true,
+            'collapsed' => true
         );
 
         $commentdefaults = array();
@@ -1712,6 +1720,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
             ),
             'collapsible' => true,
+            'collapsed' => true
         );
 
         $keepfor = get_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor');
@@ -1733,6 +1742,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
             ),
             'collapsible' => true,
+            'collapsed' => true
         );
 
         $elements['quotanotification'] = array(
@@ -1758,6 +1768,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 ),
             ),
             'collapsible' => true,
+            'collapsed' => true
         );
 
         return array(
