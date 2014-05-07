@@ -1253,6 +1253,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             if ($artefactinstance->feedback_notify_owner()) {
                 $userid = $artefactinstance->get('owner');
                 $groupid = $artefactinstance->get('group');
+                $institutionid = $artefactinstance->get('institution');
             }
             if (empty($this->url)) {
                 $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
@@ -1265,11 +1266,13 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             }
             $userid = $viewrecord->owner;
             $groupid = $viewrecord->group;
+            $institutionid =  $viewrecord->institution;
             if (empty($this->url)) {
                 $this->url = 'view/view.php?id=' . $onview;
             }
         }
-
+        // Now fetch the users that will need to get notified about this event
+        // depending on whether the page has an owner, group, or institution id set.
         if (!empty($userid)) {
             $this->users = activity_get_users($this->get_id(), array($userid));
         }
@@ -1282,9 +1285,13 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                                                            OR (g.feedbacknotify = " . GROUP_ROLES_ADMIN . " AND m.role = 'admin')
                                                        )", array($groupid));
         }
-        if (empty($userid) && empty($groupid)) {
-            return;
+        else if (!empty($institutionid)) {
+            require_once(get_config('libroot') .'institution.php');
+            $institution = new Institution($institutionid);
+            $admins = $institution->institution_and_site_admins();
+            $this->users = get_records_sql_array("SELECT * FROM {usr} WHERE id IN (" . implode(',', $admins) . ")", array());
         }
+
         if (empty($this->users)) {
             // no one to notify - possibe if group 'feedbacknotify' is set to 0
             return;
