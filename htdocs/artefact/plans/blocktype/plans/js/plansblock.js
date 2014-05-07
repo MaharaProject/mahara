@@ -21,7 +21,7 @@ var taskPagers = [];
 
 function initNewPlansBlock(blockid) {
     if ($('plans_page_container_' + blockid)) {
-        new Paginator('block' + blockid + '_pagination', 'tasktable_' + blockid, 'artefact/plans/viewtasks.json.php', null);
+        new Paginator('block' + blockid + '_pagination', 'tasktable_' + blockid, null, 'artefact/plans/viewtasks.json.php', null);
         taskPagers.push(new TaskPager(blockid));
     }
     rewriteTaskTitles(blockid);
