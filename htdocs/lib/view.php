@@ -1203,6 +1203,16 @@ class View {
         }
     }
 
+    /**
+     * Returns true if the view is currently marked as objectionable
+     *
+     * @return boolean True if view is objectionable
+     */
+    public function is_objectionable() {
+        $params = array('view', $this->id);
+        return record_exists_select('objectionable', 'objecttype = ? AND objectid = ? AND resolvedby IS NULL', $params);
+    }
+
     public function is_public() {
         $accessrecords = self::user_access_records($this->id, 0);
         if (!$accessrecords) {
@@ -4828,7 +4838,7 @@ class View {
                 WHERE va.view = ?
                     AND (va.startdate IS NULL OR va.startdate < current_timestamp)
                     AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)
-                    AND (va.accesstype IN ('public', 'loggedin', 'friends', 'objectionable')
+                    AND (va.accesstype IN ('public', 'loggedin', 'friends')
                          OR va.usr = ? OR va.token IS NOT NULL OR gm.member IS NOT NULL OR va.institution IS NOT NULL)
                 ORDER BY va.token IS NULL DESC, va.accesstype != 'friends' DESC",
                 array($userid, $viewid, $userid)
@@ -4909,8 +4919,9 @@ class View {
                 }
             }
 
-            if ($a->allowcomments && (($a->accesstype == 'objectionable' && ($user->get('admin')
-                || $user->is_institutional_admin()) || $a->accesstype != 'objectionable'))) {
+            $objectionable = $this->is_objectionable();
+            if ($a->allowcomments && (($objectionable && ($user->get('admin')
+                || $user->is_institutional_admin()) || !$objectionable))) {
                 $allowcomments = $allowcomments || $a->allowcomments;
                 $approvecomments = $approvecomments && $a->approvecomments;
             }

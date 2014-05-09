@@ -3336,5 +3336,68 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // Make objectionable independent of view_access page.
+    if ($oldversion < 2014060300) {
+        // Create 'objectionable' table.
+        $table = new XMLDBTable('objectionable');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('objecttype', XMLDB_TYPE_CHAR, 20, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('objectid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('reportedby', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('report', XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('reportedtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('resolvedby', XMLDB_TYPE_INTEGER, 10, null, null);
+        $table->addFieldInfo('resolvedtime', XMLDB_TYPE_DATETIME, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('reporterfk', XMLDB_KEY_FOREIGN, array('reportedby'), 'usr', array('id'));
+        $table->addKeyInfo('resolverfk', XMLDB_KEY_FOREIGN, array('resolvedby'), 'usr', array('id'));
+        $table->addIndexInfo('objectix', XMLDB_INDEX_NOTUNIQUE, array('objectid', 'objecttype'));
+
+        if (!table_exists($table)) {
+            create_table($table);
+        }
+
+        // Migrate data to a new format.
+        // Since we don't have report or name of the user, use root ID.
+        // Table 'notification_internal_activity' contains data that is
+        // not possible to extract in any reasonable way.
+        $objectionable = get_records_array('view_access', 'accesstype', 'objectionable');
+
+        db_begin();
+
+        if (!empty($objectionable)) {
+            foreach ($objectionable as $record) {
+                $todb = new stdClass();
+                $todb->objecttype = 'view';
+                $todb->objectid   = $record->view;
+                $todb->reportedby = 0;
+                $todb->report = '';
+                $todb->reportedtime = $record->ctime;
+                if (!empty($record->stopdate)) {
+                    // Since we can't get an ID of a user who resolved an issue, use root ID.
+                    $todb->resolvedby = 0;
+                    $todb->resolvedtime = $record->stopdate;
+                }
+                insert_record('objectionable', $todb);
+            }
+        }
+
+        // Delete data from 'view_access' table as we don't need it any more.
+        delete_records('view_access', 'accesstype', 'objectionable');
+
+        db_commit();
+
+        // Need to run this to avoid contraints problems on Postgres.
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view_access} DROP CONSTRAINT {viewacce_acc_ck}');
+        }
+
+        // Update accesstype in 'view_access' not to use 'objectionable'.
+        $table = new XMLDBTable('view_access');
+        $field = new XMLDBField('accesstype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 16, null, null, null, XMLDB_ENUM, array('public', 'loggedin', 'friends'));
+        change_field_enum($table, $field);
+    }
+
     return $status;
 }

@@ -1,6 +1,6 @@
 {if $microheaders}{include file="viewmicroheader.tpl"}{else}{include file="header.tpl"}{/if}
 
-{if $notrudeform}<div class="message delete">{$notrudeform|safe}</div>{/if}
+{if $notrudeform}<div class="message deletemessage">{$notrudeform|safe}</div>{/if}
 
         <h2>
             {$view->display_title()|safe}{foreach from=$artefactpath item=a}:

@@ -2140,7 +2140,7 @@ function can_view_view($view, $user_id=null) {
                     continue;
                 }
             }
-            else if ($a->accesstype == 'objectionable') {
+            else if ($view->is_objectionable()) {
                 if ($owner = $view->get('owner')) {
                     if ($user->is_admin_for_user($owner)) {
                         return true;

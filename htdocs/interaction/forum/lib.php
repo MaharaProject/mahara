@@ -836,9 +836,10 @@ class InteractionForumInstance extends InteractionInstance {
     */
    public function has_objectionable() {
        $reported = count_records_sql(
-           'SELECT count(fp.id) FROM {interaction_forum_topic} ft
+           "SELECT count(fp.id) FROM {interaction_forum_topic} ft
             JOIN {interaction_forum_post} fp ON (ft.id = fp.topic)
-            WHERE fp.deleted = 0 AND fp.reported = 1 AND ft.forum = ?', array($this->id)
+            JOIN {objectionable} o ON (o.objecttype = 'forum' AND o.objectid = fp.id)
+            WHERE fp.deleted = 0 AND o.resolvedby IS NULL AND o.resolvedtime IS NULL AND ft.forum = ?", array($this->id)
        );
        return (bool) $reported;
    }

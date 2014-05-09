@@ -54,20 +54,20 @@ function objection_form_submit(Pieform $form, $values) {
 
     db_begin();
 
-    // The objectionable access record ensures the view is visible
-    // to admins, and also marks the view as objectionable.
+    $objection = new stdClass();
+    if ($artefact) {
+        $objection->objecttype = 'artefact';
+        $objection->objectid   = $artefact->get('id');
+    }
+    else {
+        $objection->objecttype = 'view';
+        $objection->objectid   = $view->get('id');
+    }
+    $objection->reportedby = $USER->get('id');
+    $objection->report = $values['message'];
+    $objection->reportedtime = db_format_timestamp(time());
 
-    $accessrecord = (object) array(
-        'view'            => $view->get('id'),
-        'accesstype'      => 'objectionable',
-        'allowcomments'   => 1,
-        'approvecomments' => 0,
-        'visible'         => 0,
-        'ctime'           => db_format_timestamp(time()),
-    );
-
-    delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);
-    insert_record('view_access', $accessrecord);
+    insert_record('objectionable', $objection);
 
     $data = new StdClass();
     $data->view       = $view->get('id');
@@ -111,29 +111,20 @@ function objection_form_cancel_submit(Pieform $form) {
  * @returns array Form elements.
  */
 function notrude_form() {
-    global $USER, $view;
+    global $USER, $view, $artefact;
     $owner = $view->get('owner');
     if (!(($owner && ($USER->get('admin') || $USER->is_admin_for_user($owner)))
             || ($view->get('group') && $USER->get('admin')))) {
         return;
     }
 
-    $access = View::user_access_records($view->get('id'), $USER->get('id'));
-
-    if (empty($access)) {
-        return;
+    if ($artefact) {
+        $params = array('artefact', $artefact->get('id'));
     }
-
-    $isrude = false;
-    foreach ($access as $a) {
-        // Nasty hack: If the objectionable access record has a stop date, it
-        // means that one of the admins has already dealt with it, so we don't
-        // mark the view as objectionable.
-        if ($a->accesstype == 'objectionable' && empty($a->stopdate)) {
-            $isrude = true;
-            break;
-        }
+    else {
+        $params = array('view', $view->get('id'));
     }
+    $isrude = get_record_select('objectionable', 'objecttype = ? AND objectid = ? AND resolvedby IS NULL LIMIT 1', $params);
 
     if (!$isrude) {
         return;
@@ -143,6 +134,10 @@ function notrude_form() {
         'name'     => 'notrude_form',
         'method'   => 'post',
         'elements' => array(
+            'objection' => array(
+                'type' => 'hidden',
+                'value' => $isrude->id,
+            ),
             'text' => array(
                 'type' => 'html',
                 'value' => get_string('viewobjectionableunmark', 'view'),
@@ -162,19 +157,19 @@ function notrude_form_submit(Pieform $form, $values) {
 
     db_begin();
 
-    // Set exipiry date on view access record.
-    $accessrecord = (object) array(
-        'view'            => $view->get('id'),
-        'accesstype'      => 'objectionable',
-        'allowcomments'   => 1,
-        'approvecomments' => 0,
-        'visible'         => 0,
-        'stopdate'        => db_format_timestamp(time() + 60*60*24*7),
-        'ctime'           => db_format_timestamp(time()),
-    );
+    $objection = new stdClass();
+    if ($artefact) {
+        $objection->objecttype = 'artefact';
+        $objection->objectid   = $artefact->get('id');
+    }
+    else {
+        $objection->objecttype = 'view';
+        $objection->objectid   = $view->get('id');
+    }
+    $objection->resolvedby = $USER->get('id');
+    $objection->resolvedtime = db_format_timestamp(time());
 
-    delete_records('view_access', 'view', $view->get('id'), 'accesstype', 'objectionable', 'visible', 0);
-    insert_record('view_access', $accessrecord);
+    update_record('objectionable', $objection, array('id' => $values['objection']));
 
     // Send notification to other admins.
     $reportername = display_default_name($USER);

@@ -23,7 +23,8 @@ require_once('pieforms/pieform.php');
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.reported, p.reportedreason, m.user AS moderator, t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ',
+            m.user AS moderator, t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -79,21 +80,19 @@ $form = pieform(array(
 
 
 function reportpost_submit(Pieform $form, $values) {
-    global $SESSION, $USER, $postid, $post;
+    global $SESSION, $USER, $postid;
     $ctime = time();
-    $reportedreason = array();
-    if ($post->reported) {
-        $reportedreason = unserialize($post->reportedreason);
-    }
-    array_push($reportedreason, array('reporter' => $USER->get('id'), 'ctime' => $ctime, 'message' => $values['message']));
-    update_record(
-        'interaction_forum_post',
-        array('reported' => 1, 'reportedreason' => serialize($reportedreason)),
-        array('id' => $postid, 'topic' => $values['topic'])
-    );
 
-    // Trigger activity
-    $data = new StdClass;
+    $objection = new stdClass();
+    $objection->objecttype = 'forum';
+    $objection->objectid   = $postid;
+    $objection->reportedby = $USER->get('id');
+    $objection->report = $values['message'];
+    $objection->reportedtime = db_format_timestamp($ctime);
+    insert_record('objectionable',  $objection);
+
+    // Trigger activity.
+    $data = new StdClass();
     $data->postid     = $postid;
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');

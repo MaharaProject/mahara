@@ -862,7 +862,7 @@
         <TABLE NAME="view_access">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends', 'objectionable'" />
+                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="false" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" />
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="role" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false" />
@@ -1210,6 +1210,26 @@
                 <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id"/>
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
             </KEYS>
+        </TABLE>
+        <TABLE NAME="objectionable">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="objecttype" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="objectid" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="reportedby" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="report" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="reportedtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="resolvedby" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="resolvedtime" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="reporterfk" TYPE="foreign" FIELDS="reportedby" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="resolverfk" TYPE="foreign" FIELDS="resolvedby" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="objectix" UNIQUE="false" FIELDS="objectid, objecttype"/>
+            </INDEXES>
         </TABLE>
     </TABLES>
 </XMLDB>

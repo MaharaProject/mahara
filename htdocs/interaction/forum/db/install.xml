@@ -39,8 +39,6 @@
                 <FIELD NAME="body" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="reported" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="reportedreason" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="sent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="path" TYPE="char" LENGTH="2048" NOTNULL="false" />
             </FIELDS>

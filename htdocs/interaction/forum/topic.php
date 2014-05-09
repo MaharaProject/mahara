@@ -107,7 +107,7 @@ if (!empty($postid)) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted, p.reported, p.reportedreason
+    'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted
     FROM {interaction_forum_post} p
     WHERE p.topic = ?
     ORDER BY p.path, p.ctime, p.id',
@@ -133,7 +133,9 @@ foreach ($posts as $postid => $post) {
     // If this is the own post
     $post->ownpost = ($USER->get('id') == $post->poster) ? true : false;
     // Reported reason data
-    $post->reportedreason = unserialize($post->reportedreason);
+    $post->reports = get_records_select_array('objectionable',
+                        'objecttype = ? AND objectid = ? AND resolvedby IS NULL AND resolvedtime IS NULL',
+                        array('forum', $post->id));
 
 
     // Consolidate deleted message posts by the same author into one "X posts by Spammer Joe were deleted"
@@ -230,21 +232,22 @@ function buildpostlist($posts, $mode, $max_depth) {
  * @param int $indent indent value
  * @return string html output
  */
-
 function renderpost($post, $indent) {
     global $moderator, $topic, $groupadmins, $membership, $ineditwindow, $USER;
-    $reportedaction = ($moderator && (bool)$post->reported);
+    $reportedaction = ($moderator && !empty($post->reports));
     $highlightreported = false;
 
     if ($reportedaction) {
         $highlightreported = true;
         $reportedreason = array();
-        foreach ($post->reportedreason as $reporteddata) {
-            $reportedreason['msg_' . $reporteddata['ctime']] = array(
+        $objections = array();
+        foreach ($post->reports as $report) {
+            $reportedreason['msg_' . strtotime($report->reportedtime)] = array(
                 'type' => 'html',
-                'value' => get_string('reportedpostdetails', 'interaction.forum', display_default_name($reporteddata['reporter']),
-                        strftime(get_string('strftimedaydatetime'), $reporteddata['ctime']), $reporteddata['message']),
+                'value' => get_string('reportedpostdetails', 'interaction.forum', display_default_name($report->reportedby),
+                            strftime(get_string('strftimedaydatetime'), strtotime($report->reportedtime)), $report->report),
             );
+            $objections[] = $report->id;
         }
         $post->postnotobjectionableform = pieform(array(
             'name'     => 'postnotobjectionable_' . $post->id,
@@ -255,6 +258,10 @@ function renderpost($post, $indent) {
             'pluginname' => 'forum',
             'autofocus' => false,
             'elements' => array(
+                'objection' => array(
+                    'type' => 'hidden',
+                    'value' => implode(',', $objections),
+                ),
                 'text' => array(
                     'type' => 'html',
                     'class' => 'postnotobjectionable',
@@ -279,9 +286,9 @@ function renderpost($post, $indent) {
             )
         ));
     }
-    else if (is_array($post->reportedreason)) {
-        foreach ($post->reportedreason as $reason) {
-            if ($reason['reporter'] == $USER->get('id')) {
+    else if (!empty($post->reports)) {
+        foreach ($post->reports as $report) {
+            if ($report->reportedby == $USER->get('id')) {
                 $highlightreported = true;
                 break;
             }
@@ -341,11 +348,19 @@ function postnotobjectionable_validate(Pieform $form, $values) {
 
 function postnotobjectionable_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topicid;
-    update_record(
-        'interaction_forum_post',
-        array('reported' => 0, 'reportedreason' => ''),
-        array('id' => $values['postid'], 'topic' => $topicid)
-    );
+
+    db_begin();
+
+    $objections = explode(',', $values['objection']);
+
+    // Mark records as resolved.
+    foreach ($objections as $objection) {
+        $todb = new stdClass();
+        $todb->resolvedby = $USER->get('id');
+        $todb->resolvedtime = db_format_timestamp(time());
+
+        update_record('objectionable', $todb, array('id' => $objection));
+    }
 
     // Trigger activity.
     $data = new StdClass();
@@ -355,6 +370,8 @@ function postnotobjectionable_submit(Pieform $form, $values) {
     $data->ctime      = time();
     $data->event      = MAKE_NOT_OBJECTIONABLE;
     activity_occurred('reportpost', $data, 'interaction', 'forum');
+
+    db_commit();
 
     $SESSION->add_ok_msg(get_string('postnotobjectionablesuccess', 'interaction.forum'));
 

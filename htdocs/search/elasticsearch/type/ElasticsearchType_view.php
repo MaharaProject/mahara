@@ -200,9 +200,9 @@ class ElasticsearchType_view extends ElasticsearchType
                 SELECT va.view AS view_id, va.accesstype, va.group, va.role, va.usr, va.institution
                 FROM {view_access} va
                 WHERE va.view = ?
-                AND (startdate IS NULL OR startdate < current_timestamp)
-                AND (stopdate IS NULL OR stopdate > current_timestamp)
-                AND (accesstype != \'objectionable\' OR accesstype IS NULL)',
+                    AND (startdate IS NULL OR startdate < current_timestamp)
+                    AND (stopdate IS NULL OR stopdate > current_timestamp)
+                    AND accesstype IS NULL',
                 array($viewid)
         );
 

@@ -275,8 +275,9 @@ function setup_topics(&$topics) {
             $topic->containsobjectionable = false;
             if ($moderator) {
                 $topic->containsobjectionable = (bool) count_records_sql(
-                    'SELECT count(fp.id) FROM {interaction_forum_post} fp
-                     WHERE fp.deleted = 0 AND fp.reported = 1 AND fp.topic = ?', array($topic->id));
+                    "SELECT count(fp.id) FROM {interaction_forum_post} fp
+                     JOIN {objectionable} o ON (o.objecttype = 'forum' AND o.objectid = fp.id)
+                     WHERE fp.deleted = 0 AND o.resolvedby IS NULL AND o.resolvedtime IS NULL AND fp.topic = ?", array($topic->id));
             }
         }
     }

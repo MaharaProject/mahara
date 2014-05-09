@@ -143,5 +143,18 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         activity_add_admin_defaults($adminusers);
     }
 
+    if ($oldversion < 2014060500) {
+        // Drop unused fields.
+        $table = new XMLDBTable('interaction_forum_post');
+        $field = new XMLDBField('reported');
+        if (field_exists($table, $field)) {
+            drop_field($table, $field, true);
+        }
+        $field = new XMLDBField('reportedreason');
+        if (field_exists($table, $field)) {
+            drop_field($table, $field, true);
+        }
+    }
+
     return true;
 }
