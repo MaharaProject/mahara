@@ -27,13 +27,12 @@ $institution = param_alpha('institution', 0);
 * current user can view the view)
 */
 function can_download_artefact($artefact) {
-    global $USER;
-    global $viewid;
+    global $USER, $viewid;
 
     if ($USER->can_view_artefact($artefact)) {
         return true;
     }
-    else if (artefact_in_view($artefact->get('id'), $viewid)) {
+    else if (artefact_in_view($artefact, $viewid)) {
         return can_view_view($viewid);
     }
 
@@ -41,7 +40,7 @@ function can_download_artefact($artefact) {
     while ($parent !== null) {
         $parentobj = artefact_instance_from_id($parent);
         $parent = $parentobj->get('parent');
-        if (artefact_in_view($parentobj->get('id'), $viewid)) {
+        if (artefact_in_view($parentobj, $viewid)) {
             return can_view_view($viewid);
         }
     }
@@ -216,11 +215,9 @@ if ($folderid === 0) {
             if ($institution == 'mahara' && !$USER->get('admin')) {
                 // If non-admins are browsing site files, only let them see the public folder & its contents
                 $publicfolder = ArtefactTypeFolder::admin_public_folder_id();
-                $from .= '
-                LEFT OUTER JOIN {artefact_parent_cache} pub ON (a.id = pub.artefact AND pub.parent = ?)';
                 $where .= '
-                AND (pub.parent = ? OR a.id = ?)';
-                $phvals = array($publicfolder, $publicfolder, $publicfolder);
+                    AND (a.path = ? OR a.path LIKE ?)';
+                $phvals = array("/$publicfolder", db_like_escape("/$publicfolder/") . '%');
             }
             $where .= '
             AND a.institution = ? AND a.owner IS NULL';

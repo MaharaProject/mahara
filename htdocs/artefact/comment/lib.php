@@ -601,7 +601,7 @@ class ArtefactTypeComment extends ArtefactType {
         $data->jsonscript = 'artefact/comment/comments.json.php';
 
         if (!empty($data->artefact)) {
-            $data->baseurl = get_config('wwwroot') . 'view/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
+            $data->baseurl = get_config('wwwroot') . 'artefact/artefact.php?view=' . $data->view . '&artefact=' . $data->artefact;
             $extradata['artefact'] = $data->artefact;
         }
         else {
@@ -751,7 +751,7 @@ class ArtefactTypeComment extends ArtefactType {
 
     public function get_view_url($viewid, $showcomment=true, $full=true) {
         if ($artefact = $this->get('onartefact')) {
-            $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+            $url = 'artefact/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
         }
         else {
             $url = 'view/view.php?id=' . $viewid;
@@ -959,7 +959,7 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $viewid = $view->get('id');
     if ($artefact = $comment->get('onartefact')) {
-        $url = 'view/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
+        $url = 'artefact/artefact.php?view=' . $viewid . '&artefact=' . $artefact;
     }
     else {
         $url = $view->get_url(false);
@@ -1254,7 +1254,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
                 $userid = $artefactinstance->get('owner');
             }
             if (empty($this->url)) {
-                $this->url = 'view/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
+                $this->url = 'artefact/artefact.php?artefact=' . $onartefact . '&view=' . $this->viewid;
             }
         }
         else { // feedback on view.

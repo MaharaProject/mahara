@@ -49,7 +49,7 @@ else {
     $tasks = ArtefactTypeTask::get_tasks($planid, $offset, $limit);
 
     $template = 'artefact:plans:taskrows.tpl';
-    $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $planid . '&view=' . $options['viewid'];
+    $baseurl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $planid . '&view=' . $options['viewid'];
     $pagination = array(
         'baseurl' => $baseurl,
         'id' => 'task_pagination',

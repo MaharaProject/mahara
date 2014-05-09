@@ -796,7 +796,7 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         if (!empty($configdata['artefactid'])) {
             if (call_static_method($classname, 'has_title_link')) {
-                $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/artefact.php?artefact='
+                $smarty->assign('viewartefacturl', get_config('wwwroot') . 'artefact/artefact.php?artefact='
                     . $configdata['artefactid'] . '&view=' . $this->get('view') . '&block=' . $this->get('id'));
             }
         }

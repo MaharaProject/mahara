@@ -122,7 +122,7 @@ function column_collation_is_default($table, $column) {
  * @uses $db
  * @param string $command The sql string you wish to be executed.
  * @param array $values When using prepared statements, this is the value array (optional).
- * @return string
+ * @return boolean
  * @throws SQLException
  */
 function execute_sql($command, $values=null) {
@@ -133,11 +133,6 @@ function execute_sql($command, $values=null) {
     }
 
     $command = db_quote_table_placeholders($command);
-
-    // @todo need to do more research into this flag - what is it for, we
-    // probably want to just turn it off because we can catch the exceptions
-    $olddebug = $db->debug;
-    $db->debug = false;
 
     try {
         if (!empty($values) && is_array($values) && count($values) > 0) {
@@ -150,11 +145,9 @@ function execute_sql($command, $values=null) {
     }
     catch (ADODB_Exception $e) {
         log_debug($e->getMessage() . "Command was: $command");
-        $db->debug = $olddebug;
         throw new SQLException('Could not execute command: ' . $command);
     }
 
-    $db->debug = $olddebug;
     return true;
 }
 
@@ -1637,6 +1630,17 @@ function db_ilike() {
         return 'LIKE';
     }
     return 'ILIKE';
+}
+/**
+ * Escape sql LIKE special characters like '_' or '%'.
+ * @param string $text The string containing characters needing escaping.
+ *
+ * @return string The escaped sql LIKE string.
+ */
+function db_like_escape($text) {
+    $text = str_replace('_', '\\_', $text);
+    $text = str_replace('%', '\\%', $text);
+    return $text;
 }
 
 function db_random() {

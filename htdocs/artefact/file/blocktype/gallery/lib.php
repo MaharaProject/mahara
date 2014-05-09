@@ -364,7 +364,7 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                     $link = $src . '&maxwidth=' . get_config_plugin('blocktype', 'gallery', 'previewwidth');
                 }
                 else {
-                    $link = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefactid . '&view=' . $instance->get('view');
+                    $link = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $artefactid . '&view=' . $instance->get('view');
                 }
 
                 // If the Thumbnails are Square or not...

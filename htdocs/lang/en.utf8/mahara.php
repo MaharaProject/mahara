@@ -714,6 +714,8 @@ $string['republish'] = 'Publish';
 $string['view'] = 'Page';
 $string['artefactnotpublishable'] = 'Artefact %s is not publishable in page %s';
 $string['nopublishpermissiononartefact'] = 'You do not have permission to publish %s.';
+$string['nopathfound'] = 'No path found for this artefact.';
+$string['cantmoveitem'] = 'Cannot move this artefact.';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';

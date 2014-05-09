@@ -42,7 +42,7 @@ if ($blockid = param_integer('block', null)) {
     ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
 }
 else {
-    // No block, we're just rendering the blog by itself on view/artefact.php
+    // No block, we're just rendering the blog by itself.
     $limit  = param_integer('limit', ArtefactTypeBlog::pagination);
     $blogid = param_integer('artefact');
     $viewid = param_integer('view');
@@ -56,7 +56,7 @@ else {
     $posts = ArtefactTypeBlogpost::get_posts($blogid, $limit, $offset, $options);
 
     $template = 'artefact:blog:viewposts.tpl';
-    $baseurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $blogid . '&view=' . $viewid;
+    $baseurl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $blogid . '&view=' . $viewid;
     $pagination = array(
         'baseurl' => $baseurl,
         'id' => 'blogpost_pagination',

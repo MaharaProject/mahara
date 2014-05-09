@@ -1,6 +1,6 @@
 {foreach from=$posts item=post}
 <div class="post">
-    <h3 class="title"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a></h3>
+    <h3 class="title"><a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a></h3>
     <div class="postdetails">{$post->postedby}</div>
     <div>{$post->description|clean_html|safe}
     {if $post->tags}
@@ -25,7 +25,7 @@
                 <td class="icon-container"><img src="{$file->icon}" alt=""></td>
                 <td>
                     <h3 class="title">
-                        <a href="{$WWWROOT}view/artefact.php?artefact={$file->attachment}&view={$options.viewid}">{$file->title}</a>
+                        <a href="{$WWWROOT}artefact/artefact.php?artefact={$file->attachment}&view={$options.viewid}">{$file->title}</a>
                         <span class="description">({$file->size|display_size}) - <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&view={$options.viewid}">{str tag=Download section=artefact.file}</a></span>
                     </h3>
                     <div class="detail">{$file->description}</div>
@@ -35,6 +35,6 @@
         </tbody>
     </table>
     {/if}
-    {if $options.viewid && $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}view/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a></div>{/if}
+    {if $options.viewid && $post->allowcomments}<div class="postdetails"><a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{str tag=Comments section=artefact.comment} ({$post->commentcount})</a></div>{/if}
 </div>
 {/foreach}

@@ -76,7 +76,7 @@ class PluginBlocktypeBlog extends PluginBlocktype {
 
             $smarty = smarty_core();
             if (isset($configdata['viewid'])) {
-                $artefacturl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $blog->get('id') . '&view='
+                $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $blog->get('id') . '&view='
                     . $configdata['viewid'];
                 $smarty->assign('artefacttitle', '<a href="' . $artefacturl . '">' . hsc($blog->get('title')) . '</a>');
                 if ($exporter && $posts['count'] > $limit) {

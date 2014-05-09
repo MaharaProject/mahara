@@ -968,7 +968,7 @@ class User {
         if ($a instanceof ArtefactTypeFileBase) {
             $publicfolderid = ArtefactTypeFolder::admin_public_folder_id();
             $fileispublic = ($a->get('id') == $publicfolderid)
-                         || (($a->get('institution') == 'mahara') && (bool)get_field('artefact_parent_cache', 'artefact', 'artefact', $a->get('id'), 'parent', $publicfolderid));
+                         || (($a->get('institution') == 'mahara') && (bool)get_field('artefact', 'id', 'id', $a->get('id'), 'parent', $publicfolderid));
             if ($fileispublic) {
                 return true;
             }
