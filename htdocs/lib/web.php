@@ -3751,7 +3751,7 @@ function build_pagination($params) {
         $js .= "new Paginator($id, $datatable, $heading, $jsonscript, $extradata);";
     }
     else {
-        $js .= "new Paginator($id, null, null, null);";
+        $js .= "new Paginator($id, null, null, null, null);";
     }
 
     // Output the count of results
