@@ -489,5 +489,60 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/xml'), (object) array('mimetype' => 'application/xml', 'description' => 'xml'));
     }
 
+    if ($oldversion < 2014051200) {
+        require_once(get_config('docroot') . '/lib/file.php');
+
+        // Re-examine only those files where their current identified mimetype is
+        // different from how we would identify their mimetype based on file extension
+        $rs = get_recordset_sql('
+            select a.id, aff.oldextension, aff.filetype
+            from
+                {artefact} a
+                inner join {artefact_file_files} aff
+                    on a.id = aff.artefact
+            where a.artefacttype = \'archive\'
+                and not exists (
+                    select 1 from {artefact_file_mime_types} afmt
+                    where afmt.description = aff.oldextension
+                    and afmt.mimetype = aff.filetype
+                )
+            order by a.id
+        ');
+
+        $total = 0;
+        $done = 0;
+
+        while ($zf = $rs->FetchRow()) {
+            if ($done % 100 == 0) {
+                log_debug('Verifying filetypes: ' . $done . '/' . $rs->RecordCount());
+            }
+            $done++;
+            $file = artefact_instance_from_id($zf['id']);
+            $path = $file->get_path();
+
+            // Check what our improved file detection system thinks it is
+            $guess = file_mime_type($path, 'foo.' . $zf['oldextension']);
+
+            if ($guess != 'application/octet-stream') {
+                $data = new stdClass();
+                $data->filetype = $data->guess = $guess;
+                foreach (array('video', 'audio', 'archive') as $artefacttype) {
+                    $classname = 'ArtefactType' . ucfirst($artefacttype);
+                    if (call_user_func_array(array($classname, 'is_valid_file'), array($file->get_path(), &$data))) {
+                        set_field('artefact', 'artefacttype', $artefacttype, 'id', $zf['id']);
+                        set_field('artefact_file_files', 'filetype', $data->filetype, 'artefact', $zf['id']);
+                        continue 2;
+                    }
+                }
+
+                // It wasn't any of those special ones, so just make it a normal file artefact
+                set_field('artefact', 'artefacttype', 'file', 'id', $zf['id']);
+                set_field('artefact_file_files', 'filetype', $data->filetype, 'artefact', $zf['id']);
+            }
+        }
+        log_debug('Verifying filetypes: ' . $done . '/' . $rs->RecordCount());
+        $rs->Close();
+    }
+
     return $status;
 }
