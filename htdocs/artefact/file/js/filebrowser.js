@@ -921,7 +921,7 @@ function FileBrowser(idprefix, folderid, config, globalconfig) {
         }
         // Recalculate the width of config block
         if ($('artefactchooser-body')) {
-            var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'td', null)).w;
+            var width = getElementDimensions(getFirstParentByTagAndClassName($('artefactchooser-body'), 'table', 'maharatable')).w;
             updateBlockConfigWidth(getFirstParentByTagAndClassName(self.form, 'div', 'blockinstance'), width);
         }
     }
