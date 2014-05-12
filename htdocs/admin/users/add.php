@@ -270,7 +270,7 @@ function adduser_submit(Pieform $form, $values) {
     global $USER, $SESSION, $TRANSPORTER;
     db_begin();
 
-    ini_set('max_execution_time', 180);
+    raise_time_limit(180);
 
     // Create user
     $user = (object)array(
