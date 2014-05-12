@@ -137,6 +137,8 @@ $localsuccess  = json_encode(get_string('localdatasuccess', 'admin'));
 // Check if Mahara is being installed. An extra hook is required to insert core
 // data if so.
 if (!empty($upgrades['core']->install)) {
+    raise_time_limit(120);
+    raise_memory_limit('256M');
     $upgrades['firstcoredata'] = true;
     $upgrades['localpreinst'] = true;
     $upgrades['lastcoredata'] = true;

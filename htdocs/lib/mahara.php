@@ -2368,6 +2368,37 @@ function raise_memory_limit ($newlimit) {
 }
 
 /**
+ * Function to raise the max execution time to a new value.
+ * Will respect the time limit if it is higher, thus allowing
+ * settings in php.ini, apache conf or command line switches
+ * to override it
+ *
+ * @param int $newlimit the new max execution time limit (in seconds)
+ * @return bool Whether we were able to raise the limit or not
+ */
+function raise_time_limit($newlimit) {
+    if (empty($newlimit)) {
+        return false;
+    }
+    $newlimit = intval($newlimit);
+    $cur = @ini_get('max_execution_time');
+    if (empty($cur)) {
+        $cur = 0;
+    }
+    // Currently set as umlimited so don't change
+    if ($cur == '0') {
+        return false;
+    }
+    if ($newlimit > $cur) {
+        // this won't work in safe mode - but we shouldn't be in safe mode
+        // as that has been checked for already
+        ini_set('max_execution_time', $newlimit);
+        return true;
+    }
+    return false;
+}
+
+/**
  * Converts numbers like 10M into bytes.
  *
  * @param string $size The size to be converted

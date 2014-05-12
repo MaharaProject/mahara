@@ -31,7 +31,7 @@ define('BULKEXPORT', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
 raise_memory_limit("1024M");
-ini_set('max_execution_time', 300); // 5 minutes
+raise_time_limit(300);
 
 // Download the export file if it's been generated
 if ($exportfile = $SESSION->get('exportfile')) {

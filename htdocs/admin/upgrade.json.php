@@ -42,7 +42,8 @@ if (!$install) {
         auth_setup();
     }
 }
-
+raise_time_limit(120);
+raise_memory_limit('256M');
 $data = array(
     'key'        => $name
 );             
