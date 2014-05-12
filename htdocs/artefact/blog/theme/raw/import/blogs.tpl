@@ -68,21 +68,24 @@
                     {/if}
                 </span>
                 {if $post.files}
-                    <div id="postfiles_{$post.id}">
+                    <div id="postfiles">
                        <table class="cb attachments fullwidth">
-                            <thead>
+                            <thead class="expandable-head">
                                 <tr>
-                                    <td colspan="2">
-                                        <strong><a href="#">{str tag=attachedfiles section=artefact.blog}</a></strong>
+                                    <td>
+                                        <a class="showpostfiles toggle expandable" id="{$blog.id}_{$post.id}" href="">{str tag=attachedfiles section=artefact.blog}</a>
+                                        <span class="fr">
+                                            <img class="fl" src="{theme_url filename='images/attachment.png'}" alt="{str tag=Attachments section=artefact.resume}">
+                                            {$post.files|count}
+                                        </span>
                                     </td>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="{$blog.id}_{$post.id}_postfiles" class="expandable-body hidden">
                                 {foreach from=$post.files item=file}
                                     <tr class="{cycle values='r1,r0'}">
-                                        <td class="icon-container"><img src="{$file->icon}" alt=""></td>
-                                        <td><h3 class="title"><a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">{$file->title}</a></h3>
-                                        <div class="detail">{$file->description}</div></td>
+                                        <td><h3 class="title">{$file.title}</h3>
+                                        <div class="detail">{$file.description}</div></td>
                                     </tr>
                                 {/foreach}
                             </tbody>
@@ -154,6 +157,10 @@
         jQuery("a.showposts").click(function(e) {
             e.preventDefault();
             jQuery("#" + this.id + "_posts").toggleClass("hidden");
+        });
+        jQuery("a.showpostfiles").click(function(e) {
+            e.preventDefault();
+            jQuery("#" + this.id + "_postfiles").toggleClass("hidden");
         });
         jQuery("input.blogdecision").change(function(e) {
             e.preventDefault();

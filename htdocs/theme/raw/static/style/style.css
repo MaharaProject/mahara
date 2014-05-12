@@ -525,6 +525,9 @@ td.icon-container img {
     font-size: 1em;
     white-space: normal;
 }
+table.attachments thead.expandable-head td {
+    background-color: #DDDDDD;
+}
 .expandable-head a.toggle {
     font-weight: bold;
     background-image: url(../images/expand.png);
