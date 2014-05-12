@@ -1,3 +1,6 @@
+1.8.3 (2014-05-13)
+- 
+
 1.8.2 (2014-04-03)
 - Bug 1239461: External feed has duplicate rows causing problems
 - Bug 1249858: Mahara can't figure out mime types because of a finfo() bug
