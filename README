@@ -3,6 +3,12 @@ Mahara Readme
 
 Thanks for downloading Mahara!
 
+Note that Mahara 1.7.8 is the FINAL minor release for the Mahara 1.6 series.
+In order to receive future bug fixes and security updates, you should upgrade
+to Mahara 1.8 or later, as soon as possible.
+
+
+
 SUPPORT: The best ways of obtaining support are:
 
  * http://manual.mahara.org/ - the Mahara online manual
@@ -21,7 +27,7 @@ Mahara 1.7 supports direct upgrades from previous Mahara versions 1.1.0 and late
 To upgrade an existing Mahara installation, follow the instructions here:
 
   https://wiki.mahara.org/System_Administrator%27s_Guide/Upgrading_Mahara
-
+  
 SYSTEM REQUIREMENTS:
 
 The system requirements for the most recent version of Mahara are here:
