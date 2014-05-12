@@ -18,6 +18,7 @@ require_once(get_config('libroot') . 'pieforms/pieform.php');
 
 $id = param_integer('id');
 $limit = param_integer('limit', 5);
+$setlimit = param_integer('setlimit', 0);
 $offset = param_integer('offset', 0);
 
 if (!$USER->can_edit_artefact(new ArtefactTypeBlog($id))) {
@@ -31,6 +32,7 @@ $pagination = array(
     'id'         => 'blogpost_pagination',
     'jsonscript' => 'artefact/blog/view/index.json.php',
     'datatable'  => 'postlist',
+    'setlimit'   => $setlimit,
 );
 ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 

@@ -30,6 +30,15 @@ if ($delete = param_integer('delete', null)) {
 }
 
 $id = param_integer('id', null);
+
+if ($blogpost = param_integer('blogpost', null)) {
+    $post = ArtefactTypeBlogPost::get_post_data($blogpost);
+    $id = $post->blogid;
+    $limit = 1;
+    $setlimit = 1;
+    $offset = $post->offset;
+}
+
 if (is_null($id)) {
     if (!$records = get_records_select_array(
             'artefact',
@@ -47,8 +56,17 @@ else {
 }
 $blog->check_permission();
 
-$limit = param_integer('limit', 5);
-$offset = param_integer('offset', 0);
+if (!isset($limit)) {
+    $limit = param_integer('limit', 5);
+}
+
+if (!isset($setlimit)) {
+    $setlimit = 0;
+}
+
+if (!isset($offset)) {
+    $offset = param_integer('offset', 0);
+}
 
 $posts = ArtefactTypeBlogPost::get_posts($id, $limit, $offset);
 $template = 'artefact:blog:posts.tpl';
@@ -57,6 +75,7 @@ $pagination = array(
     'id'         => 'blogpost_pagination',
     'jsonscript' => 'artefact/blog/view/index.json.php',
     'datatable'  => 'postlist',
+    'setlimit'   => $setlimit,
 );
 ArtefactTypeBlogPost::render_posts($posts, $template, array(), $pagination);
 
