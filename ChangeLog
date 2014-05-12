@@ -1,3 +1,16 @@
+1.9.1 (2014-05-13)
+- Bugs:
+- Bug #1250302: A site admin who belongs to an institution with skins disabled, gets an error trying to edit site skins
+- Bug #1305451: Content editor sidebar doesn't work on Chrome
+- Bug #1307760: Problems saving view layout - no option selected by default
+- Bug #1310761: public group and allow submissions problem
+- Bug #1311876: textbox attachment chooser tabs cause the config form to shrink
+- Bug #1311940: Error shown when changing your profile icon to default "Standard or external avatar"
+- Bug #1315226: Can't expand "Share with other users and groups" for sharing institution pages
+- Bug #1317295: Problem with pagination and plan blocks
+- Bug #1318430: php max execution time needs to be increased for install
+- Bug #1308479: License help not found for blocks
+
 1.9.0 (2014-04-15)
 - New Features:
 - Accessibility! W3C WCAG 2.0 level AA (except for some admin pages)
