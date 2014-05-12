@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
     global $SESSION;
-    ini_set('max_execution_time', 120); // Let's be safe
+    raise_time_limit(120);
     raise_memory_limit('256M');
 
     $status = true;
