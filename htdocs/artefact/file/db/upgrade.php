@@ -425,5 +425,141 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2013031200) {
+        // Update MIME types for Microsoft video files: avi, asf, wm, and wmv
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-asf', 'description' => 'asf'), (object) array('mimetype' => 'video/x-ms-asf'));
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-wm', 'description' => 'wm'), (object) array('mimetype' => 'video/x-ms-wm'));
+        update_record('artefact_file_mime_types', (object) array('mimetype' => 'video/x-ms-wmv', 'description' => 'wmv'), (object) array('mimetype' => 'video/x-ms-wmv'));
+    }
+
+    if ($oldversion < 2014040800) {
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/aac'), (object) array('mimetype' => 'audio/aac', 'description' => 'aac'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/msaccess'), (object) array('mimetype' => 'application/msaccess', 'description' => 'accdb'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'shockwave/director'), (object) array('mimetype' => 'shockwave/director', 'description' => 'cct'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-csh'), (object) array('mimetype' => 'application/x-csh', 'description' => 'cs'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/css'), (object) array('mimetype' => 'text/css', 'description' => 'css'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/csv'), (object) array('mimetype' => 'text/csv', 'description' => 'csv'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'video/x-dv'), (object) array('mimetype' => 'video/x-dv', 'description' => 'dv'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'description' => 'docx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-word.document.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-word.document.macroEnabled.12', 'description' => 'docm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'description' => 'dotx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-word.template.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-word.template.macroEnabled.12', 'description' => 'dotm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-director'), (object) array('mimetype' => 'application/x-director', 'description' => 'dcr'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/epub+zip'), (object) array('mimetype' => 'application/epub+zip', 'description' => 'epub'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-smarttech-notebook'), (object) array('mimetype' => 'application/x-smarttech-notebook', 'description' => 'gallery'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/mac-binhex40'), (object) array('mimetype' => 'application/mac-binhex40', 'description' => 'hqx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/x-component'), (object) array('mimetype' => 'text/x-component', 'description' => 'htc'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/xhtml+xml'), (object) array('mimetype' => 'application/xhtml+xml', 'description' => 'xhtml'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'image/vnd.microsoft.icon'), (object) array('mimetype' => 'image/vnd.microsoft.icon', 'description' => 'ico'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/calendar'), (object) array('mimetype' => 'text/calendar', 'description' => 'ics'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/inspiration'), (object) array('mimetype' => 'application/inspiration', 'description' => 'isf'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/inspiration.template'), (object) array('mimetype' => 'application/inspiration.template', 'description' => 'ist'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/java-archive'), (object) array('mimetype' => 'application/java-archive', 'description' => 'jar'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-java-jnlp-file'), (object) array('mimetype' => 'application/x-java-jnlp-file', 'description' => 'jnlp'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.moodle.backup'), (object) array('mimetype' => 'application/vnd.moodle.backup', 'description' => 'mbz'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-msaccess'), (object) array('mimetype' => 'application/x-msaccess', 'description' => 'mdb'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'message/rfc822'), (object) array('mimetype' => 'message/rfc822', 'description' => 'mht'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.moodle.profiling'), (object) array('mimetype' => 'application/vnd.moodle.profiling', 'description' => 'mpr'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.oasis.opendocument.graphics-template'), (object) array('mimetype' => 'application/vnd.oasis.opendocument.graphics-template', 'description' => 'otg'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.oasis.opendocument.presentation-template'), (object) array('mimetype' => 'application/vnd.oasis.opendocument.presentation-template', 'description' => 'otp'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.oasis.opendocument.spreadsheet-template'), (object) array('mimetype' => 'application/vnd.oasis.opendocument.spreadsheet-template', 'description' => 'ots'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/ogg'), (object) array('mimetype' => 'audio/ogg', 'description' => 'oga'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'video/ogg'), (object) array('mimetype' => 'video/ogg', 'description' => 'ogv'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'image/pict'), (object) array('mimetype' => 'image/pict', 'description' => 'pct'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'description' => 'pptx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12', 'description' => 'pptm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.template'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.template', 'description' => 'potx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-powerpoint.template.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-powerpoint.template.macroEnabled.12', 'description' => 'potm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12', 'description' => 'ppam'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'description' => 'ppsx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12', 'description' => 'ppsm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/x-realaudio-plugin'), (object) array('mimetype' => 'audio/x-realaudio-plugin', 'description' => 'ra'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'audio/x-pn-realaudio-plugin'), (object) array('mimetype' => 'audio/x-pn-realaudio-plugin', 'description' => 'ram'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.rn-realmedia-vbr'), (object) array('mimetype' => 'application/vnd.rn-realmedia-vbr', 'description' => 'rmvb'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/richtext'), (object) array('mimetype' => 'text/richtext', 'description' => 'rtx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-stuffit'), (object) array('mimetype' => 'application/x-stuffit', 'description' => 'sit'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/smil'), (object) array('mimetype' => 'application/smil', 'description' => 'smi'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'image/svg+xml'), (object) array('mimetype' => 'image/svg+xml', 'description' => 'svg'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.writer'), (object) array('mimetype' => 'application/vnd.sun.xml.writer', 'description' => 'sxw'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.writer.template'), (object) array('mimetype' => 'application/vnd.sun.xml.writer.template', 'description' => 'stw'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.calc'), (object) array('mimetype' => 'application/vnd.sun.xml.calc', 'description' => 'sxc'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.calc.template'), (object) array('mimetype' => 'application/vnd.sun.xml.calc.template', 'description' => 'stc'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.draw'), (object) array('mimetype' => 'application/vnd.sun.xml.draw', 'description' => 'sxd'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.draw.template'), (object) array('mimetype' => 'application/vnd.sun.xml.draw.template', 'description' => 'std'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.impress'), (object) array('mimetype' => 'application/vnd.sun.xml.impress', 'description' => 'sxi'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.impress.template'), (object) array('mimetype' => 'application/vnd.sun.xml.impress.template', 'description' => 'sti'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.writer.global'), (object) array('mimetype' => 'application/vnd.sun.xml.writer.global', 'description' => 'sxg'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.sun.xml.math'), (object) array('mimetype' => 'application/vnd.sun.xml.math', 'description' => 'sxm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'image/tiff'), (object) array('mimetype' => 'image/tiff', 'description' => 'tif'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-tex'), (object) array('mimetype' => 'application/x-tex', 'description' => 'tex'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/x-texinfo'), (object) array('mimetype' => 'application/x-texinfo', 'description' => 'texi'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'text/tab-separated-values'), (object) array('mimetype' => 'text/tab-separated-values', 'description' => 'tsv'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'video/webm'), (object) array('mimetype' => 'video/webm', 'description' => 'webm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-excel'), (object) array('mimetype' => 'application/vnd.ms-excel', 'description' => 'xls'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'description' => 'xlsx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-excel.sheet.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-excel.sheet.macroEnabled.12', 'description' => 'xlsm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template'), (object) array('mimetype' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'description' => 'xltx'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-excel.template.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-excel.template.macroEnabled.12', 'description' => 'xltm'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12', 'description' => 'xlsb'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/vnd.ms-excel.addin.macroEnabled.12'), (object) array('mimetype' => 'application/vnd.ms-excel.addin.macroEnabled.12', 'description' => 'xlam'));
+        ensure_record_exists('artefact_file_mime_types', (object) array('mimetype' => 'application/xml'), (object) array('mimetype' => 'application/xml', 'description' => 'xml'));
+    }
+
+    if ($oldversion < 2014051200) {
+        require_once(get_config('docroot') . '/lib/file.php');
+        $mimetypes = get_records_assoc('artefact_file_mime_types', '', '', '', 'description,mimetype');
+
+        // Re-examine only those files where their current identified mimetype is
+        // different from how we would identify their mimetype based on file extension
+        $rs = get_recordset_sql('
+            select a.id, aff.oldextension, aff.filetype
+            from
+                {artefact} a
+                inner join {artefact_file_files} aff
+                    on a.id = aff.artefact
+            where a.artefacttype = \'archive\'
+                and not exists (
+                    select 1 from {artefact_file_mime_types} afmt
+                    where afmt.description = aff.oldextension
+                    and afmt.mimetype = aff.filetype
+                )
+            order by a.id
+        ');
+
+        $total = 0;
+        $done = 0;
+
+        while ($zf = $rs->FetchRow()) {
+            if ($done % 100 == 0) {
+                log_debug('Verifying filetypes: ' . $done . '/' . $rs->RecordCount());
+            }
+            $done++;
+            $file = artefact_instance_from_id($zf['id']);
+            $path = $file->get_path();
+
+            // Check what our improved file detection system thinks it is
+            $guess = file_mime_type($path, 'foo.' . $zf['oldextension']);
+
+            if ($guess != 'application/octet-stream') {
+                $data = new stdClass();
+                $data->filetype = $data->guess = $guess;
+                foreach (array('video', 'audio', 'archive') as $artefacttype) {
+                    $classname = 'ArtefactType' . ucfirst($artefacttype);
+                    if (call_user_func_array(array($classname, 'is_valid_file'), array($file->get_path(), &$data))) {
+                        set_field('artefact', 'artefacttype', $artefacttype, 'id', $zf['id']);
+                        set_field('artefact_file_files', 'filetype', $data->filetype, 'artefact', $zf['id']);
+                        continue 2;
+                    }
+                }
+
+                // It wasn't any of those special ones, so just make it a normal file artefact
+                set_field('artefact', 'artefacttype', 'file', 'id', $zf['id']);
+                set_field('artefact_file_files', 'filetype', $data->filetype, 'artefact', $zf['id']);
+            }
+        }
+        log_debug('Verifying filetypes: ' . $done . '/' . $rs->RecordCount());
+        $rs->Close();
+    }
+
     return $status;
 }
