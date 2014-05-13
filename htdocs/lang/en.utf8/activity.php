@@ -67,7 +67,7 @@ $string['newcontactus'] = 'New contact us';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the page "%s" by %s';
 $string['newviewaccessmessagenoowner'] = 'You have been added to the access list for the page "%s"';
-$string['newviewaccesssubject'] = 'New page access';
+$string['newviewaccesssubject1'] = 'New access to page "%s"';
 
 $string['viewmodified'] = 'has changed their page';
 $string['ongroup'] = 'on group';
