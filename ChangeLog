@@ -1,3 +1,8 @@
+1.6.10 (2014-05-13)
+- Bug 1302251: MS Office files being seen as zip archives
+- Bug 1306365: When copying a page, the originator's profile picture carries over
+- Bug 1308857: The menu of the default theme doesn't close on iPad
+
 1.6.9 (2014-04-03)
 - Bug 1249858: Incorrect detection of uploaded file types
 - Bug 1058416: Copied pages from collections have "untitled" as clean URL
