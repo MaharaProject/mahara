@@ -1,3 +1,10 @@
+1.7.6 (2014-05-13)
+- Bug 1302251: MS Office files being seen as zip archives
+- Bug 1306365: When copying a page the originator's profile picture carries over
+- Bug 1308857: The menu of the default theme doesn't close on the iPad
+- Bug 1310761: Warning messages in error log when making a group public
+- Bug 1318430: Increasing PHP max_execution_time during installation
+
 1.7.5 (2014-04-03)
 - Bug #1058416: Copying page in a collection only gives "untitled" title for clean URLs
 - Bug #1081947: Use of CAST() causes extreme slowdown in large MySQL sites
