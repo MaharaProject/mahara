@@ -124,10 +124,14 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $language = current_language();
                     $language = substr($language, 0, ((substr_count($language, '_') > 0) ? 5 : 2));
                     if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                        // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
-                        $language = substr($language, 0, 2);
-                        if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                            $language = 'en';
+                        // In case the language file exists as a string with both lower and upper case, eg fr_FR we test for this
+                        $language = substr($language, 0, 2) . '_' . strtoupper(substr($language, 0, 2));
+                        if (!file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
+                            // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
+                            $language = substr($language, 0, 2);
+                            if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
+                                $language = 'en';
+                            }
                         }
                     }
                     $extrasetup = isset($extraconfig['tinymcesetup']) ? $extraconfig['tinymcesetup'] : '';
