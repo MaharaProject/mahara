@@ -43,15 +43,17 @@ function updateWYSIWYGText() {
 
 function updateSiteDefault(changed) {
     changedCheckbox = (changed) ? true : false;
+    var editor = getFirstElementByTagAndClassName('td', null, $('editsitepage_pagetext_container'));
+    editor.style.padding = '0px';
     if ($('editsitepage_pageusedefault').checked == true) {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', false);
         $('changecheckboxdiv').style.display = 'block';
         $('changecheckboxdiv').style.zIndex = '5';
         $('changecheckboxdiv').style.position = 'absolute';
-        $('changecheckboxdiv').style.width = $('editsitepage_pagetext_tbl').offsetWidth + 'px';
-        $('changecheckboxdiv').style.height = $('editsitepage_pagetext_tbl').offsetHeight + 'px';
-        $('changecheckboxdiv').style.top = elementPosition('editsitepage_pagetext_tbl').y + 'px';
-        $('changecheckboxdiv').style.left = elementPosition('editsitepage_pagetext_tbl').x + 'px';
+        $('changecheckboxdiv').style.width = editor.offsetWidth + 'px';
+        $('changecheckboxdiv').style.height = editor.offsetHeight + 'px';
+        $('changecheckboxdiv').style.top = elementPosition(editor).y + 'px';
+        $('changecheckboxdiv').style.left = elementPosition(editor).x + 'px';
     }
     else {
         tinyMCE.activeEditor.getBody().setAttribute('contenteditable', true);
