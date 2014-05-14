@@ -123,7 +123,7 @@ $stylesheets = array('<link rel="stylesheet" type="text/css" href="' . get_confi
 foreach (array_reverse($THEME->get_url('style/style.css', true, 'artefact/file')) as $sheet) {
     $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . $sheet . '?v=' . get_config('release'). '">';
 }
-$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.8.19.custom.css?v=' . get_config('release'). '">';
+$stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/jquery/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.min.css?v=' . get_config('release'). '">';
 $stylesheets = array_merge($stylesheets, $view->get_all_blocktype_css());
 // Tell the user to change the view theme if the current one is no
 // longer available to them.
@@ -139,7 +139,7 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
-$javascript = array('views', 'tinymce', 'paginator', 'expandable', 'js/jquery/jquery-ui/js/jquery-ui-1.8.19.custom.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js');
+$javascript = array('views', 'tinymce', 'paginator', 'expandable', 'js/jquery/jquery-ui/js/jquery-ui-1.10.2.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js', 'lib/pieforms/static/core/pieforms.js','js/jquery/modernizr.custom.js');
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = "addLoadEvent( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";

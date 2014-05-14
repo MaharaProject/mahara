@@ -43,6 +43,9 @@ ul.colnav li.selected span {
     background: #989898;
     color: #FFFFFF;
 }
+#accordion .block-category-title {
+    padding: 0;
+}
 .block-category-title .withjs,
 .block-category-title .nonjs {
     color: #333333;
