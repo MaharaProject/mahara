@@ -82,6 +82,9 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         if (!isset($configdata['showsharedviews'])) {
             $configdata['showsharedviews'] = 1;
         }
+        if (!isset($configdata['showsharedcollections'])) {
+            $configdata['showsharedcollections'] = 1;
+        }
         $groupid = $instance->get_view()->get('group');
         if (!$groupid) {
             return '';
@@ -109,6 +112,21 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             );
             self::render_items($sharedviews, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
             $dwoo->assign('sharedviews', $sharedviews);
+        }
+        if (!empty($configdata['showsharedcollections']) && isset($data['sharedcollections'])) {
+            $sharedcollections = (array)$data['sharedcollections'];
+            $baseurl = $instance->get_view()->get_url();
+            $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
+            $pagination = array(
+                'baseurl'    => $baseurl,
+                'id'         => 'sharedcollections_pagination',
+                'datatable'  => 'sharedcollectionlist',
+                'jsonscript' => 'blocktype/groupviews/sharedcollections.json.php',
+                'resultcounttextsingular' => get_string('collection', 'collection'),
+                'resultcounttextplural'   => get_string('collections', 'collection'),
+            );
+            self::render_items($sharedcollections, 'blocktype:groupviews:sharedcollections.tpl', $configdata, $pagination);
+            $dwoo->assign('sharedcollections', $sharedcollections);
         }
         if (isset($data['allsubmitted'])) {
             $dwoo->assign('allsubmitted', $data['allsubmitted']);
@@ -144,13 +162,32 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             'showsharedviews' => array(
                 'type' => 'radio',
                 'title' => get_string('displaysharedviews', 'blocktype.groupviews'),
-                'description' => get_string('displaysharedviewsdesc', 'blocktype.groupviews'),
+                'description' => get_string('displaysharedviewsdesc1', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
                 ),
                 'separator' => '<br>',
                 'defaultvalue' => isset($configdata['showsharedviews']) ? $configdata['showsharedviews'] : 1,
+            ),
+            'showsharedcollections' => array(
+                'type' => 'radio',
+                'title' => get_string('displaysharedcollections', 'blocktype.groupviews'),
+                'description' => get_string('displaysharedcollectionsdesc', 'blocktype.groupviews'),
+                'options' => array(
+                    1 => get_string('yes'),
+                    0 => get_string('no'),
+                ),
+                'separator' => '<br>',
+                'defaultvalue' => isset($configdata['showsharedcollections']) ? $configdata['showsharedcollections'] : 1,
+            ),
+            'count' => array(
+                'type' => 'text',
+                'title' => get_string('itemstoshow', 'blocktype.groupviews'),
+                'description'  => get_string('itemstoshowdesc', 'blocktype.groupviews'),
+                'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 5,
+                'size'         => 3,
+                'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             ),
         );
     }
@@ -191,11 +228,14 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
                 }
             }
 
+            $data['sharedcollections'] = View::get_sharedcollections_data($limit, 0, $group->id);
+
             if (group_user_can_assess_submitted_views($group->id, $USER->get('id'))) {
                 // Display a list of views submitted to the group
                 list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $group->id);
                 $data['allsubmitted'] = array_merge(array_values($collections), array_values($views));
             }
+
         }
 
         if ($group->submittableto) {

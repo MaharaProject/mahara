@@ -18,7 +18,7 @@
 
 {if $sharedviews}
     <div class="groupviewsection">
-        <h3 class="title">{str tag="viewssharedtogroupbyothers" section="view"}</h3>
+        <h3 class="title">{str tag="viewssharedtogroup" section="view"}</h3>
         <div id="sharedviewlist" class="fullwidth listing">
             {$sharedviews.tablerows|safe}
         </div>
@@ -33,6 +33,28 @@
         {literal}}{/literal});
     </script>
     {/if}
+    </div>
+{/if}
+
+
+{if $sharedcollections}
+    <div class="groupviewsection">
+        <h3 class="title">{str tag="collectionssharedtogroup" section="collection"}</h3>
+        <div id="sharedcollectionlist" class="fullwidth listing">
+            {$sharedcollections.tablerows|safe}
+        </div>
+    {if $sharedcollections.pagination}
+        <div id="sharedcollections_page_container" class="hidden center">{$sharedcollections.pagination|safe}</div>
+    {/if}
+    {if $sharedcollections.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$sharedcollections.pagination_js|safe}
+            removeElementClass('sharedcollections_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
+    </div>
 {/if}
 
 
