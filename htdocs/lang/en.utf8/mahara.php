@@ -50,6 +50,7 @@ $string['units'] = 'Units';
 $string['toggletoolbarson'] = 'Toggle toolbars on. Show full list of buttons';
 $string['toggletoolbarsoff'] = 'Toggle toolbars off. Show basic buttons';
 $string['defaulthint'] = 'Type in a search term';
+$string['imagexofy'] = 'Image {x} of {y}';
 // Objectionable strings.
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';

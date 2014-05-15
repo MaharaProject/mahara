@@ -1055,6 +1055,7 @@ function jsstrings() {
                 'tabs',
                 'toggletoolbarson',
                 'toggletoolbarsoff',
+                'imagexofy',
             ),
             'pieforms' => array(
                 'element.calendar.opendatepicker'

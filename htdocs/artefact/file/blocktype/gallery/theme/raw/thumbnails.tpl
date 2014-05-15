@@ -2,7 +2,7 @@
     {foreach from=$images item=image}
         <div style="float:left;{if $frame} padding: 3px;{/if}" class="thumb">
         <a rel="{$image.slimbox2}" href="{$image.link}" title="{$image.title}" target="_blank">
-            <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" {if $frame}class="frame"{/if} />
+            <img src="{$image.source}" {if $image.height}height="{$image.height}"{/if} alt="{$image.title}" title="{$image.title}" {if $frame}class="frame"{/if} />
         </a>
         {if $showdescription && $image.title}<div class="caption" style="width: {$captionwidth}px;">{$image.title|safe}</div>{/if}
         </div>

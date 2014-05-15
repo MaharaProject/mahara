@@ -370,14 +370,19 @@ class PluginBlocktypeGallery extends PluginBlocktype {
                 // If the Thumbnails are Square or not...
                 if ($style == 2) {
                     $src .= '&size=' . $width . 'x' . $width;
+                    $height = $width;
                 }
                 else {
                     $src .= '&maxwidth=' . $width;
+                    $imgwidth = $image->get('width');
+                    $imgheight = $image->get('height');
+                    $height = ($imgwidth > $width) ? intval(($width / $imgwidth) * $imgheight) : $imgheight;
                 }
 
                 $images[] = array(
                     'link' => $link,
                     'source' => $src,
+                    'height' => $height,
                     'title' => $image->get('description'),
                     'slimbox2' => $slimbox2attr
                 );
