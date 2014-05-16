@@ -429,6 +429,9 @@ class PluginArtefactFile extends PluginArtefact {
         }
         else if ('updateuser' === $event) {
             $userid = $eventdata;
+            if (is_array($userid)) {
+                $userid = reset($userid);
+            }
         }
         else if (is_array($eventdata)) {
             foreach ($eventdata as $artefactid) {
