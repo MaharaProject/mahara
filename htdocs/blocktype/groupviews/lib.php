@@ -53,7 +53,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             return '';
         }
 
-        $data = self::get_data($groupid);
+        $data = self::get_data($groupid, $editing);
 
         $dwoo = smarty_core();
         $dwoo->assign('group', $data['group']);
@@ -113,7 +113,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         return 'shallow';
     }
 
-    protected static function get_data($groupid) {
+    protected static function get_data($groupid, $editing=false) {
         global $USER;
 
         if(!defined('GROUP')) {
@@ -127,7 +127,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             $sort = array(array('column' => 'type=\'grouphomepage\'', 'desc' => true));
             $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id), null, null, 0, true, $sort);
             foreach ($data['groupviews']->data as &$view) {
-                if (isset($view['template']) && $view['template']) {
+                if (!$editing && isset($view['template']) && $view['template']) {
                     $view['form'] = pieform(create_view_form(null, null, $view['id']));
                 }
             }
@@ -136,7 +136,7 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             // shared to the group
             $data['sharedviews'] = View::get_sharedviews_data(null, 0, $group->id);
             foreach ($data['sharedviews']->data as &$view) {
-                if (isset($view['template']) && $view['template']) {
+                if (!$editing && isset($view['template']) && $view['template']) {
                     $view['form'] = pieform(create_view_form($group, null, $view->id));
                 }
             }
@@ -159,7 +159,10 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             list($collections, $views) = View::get_views_and_collections($USER->get('id'), null, null, null, false, $group->id);
             $data['mysubmitted'] = array_merge(array_values($collections), array_values($views));
 
-            $data['group_view_submission_form'] = group_view_submission_form($group->id);
+            // Only render the submission form in viewing mode
+            if (!$editing) {
+                $data['group_view_submission_form'] = group_view_submission_form($group->id);
+            }
         }
         $data['group'] = $group;
         return $data;
