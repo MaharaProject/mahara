@@ -83,7 +83,7 @@ $string['viewadvancedoptions'] = 'Advanced';
 // Create Skin Form
 $string['skintitle'] = 'Skin title';
 $string['skindescription'] = 'Skin description';
-$string['skinaccessibility'] = 'Skin accessibility';
+$string['skinaccessibility1'] = 'Skin access';
 $string['privateskinaccess'] = 'This is a private skin';
 $string['publicskinaccess'] = 'This is a public skin';
 $string['siteskinaccess'] = 'This is a site skin';
