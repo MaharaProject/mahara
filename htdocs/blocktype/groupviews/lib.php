@@ -39,6 +39,40 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
         return true;
     }
 
+    /**
+     * This function renders a list of items (views/collections) as html
+     *
+     * @param array items
+     * @param string template
+     * @param array options
+     * @param array pagination
+     */
+    public function render_items(&$items, $template, $options, $pagination) {
+        $smarty = smarty_core();
+        $smarty->assign('options', $options);
+        $smarty->assign('items', $items['data']);
+
+        $items['tablerows'] = $smarty->fetch($template);
+
+        if ($items['limit'] && $pagination) {
+            $pagination = build_pagination(array(
+                'id' => $pagination['id'],
+                'class' => 'center',
+                'datatable' => $pagination['datatable'],
+                'url' => $pagination['baseurl'],
+                'jsonscript' => $pagination['jsonscript'],
+                'count' => $items['count'],
+                'limit' => $items['limit'],
+                'offset' => $items['offset'],
+                'numbersincludefirstlast' => false,
+                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
+                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+            ));
+            $items['pagination'] = $pagination['html'];
+            $items['pagination_js'] = $pagination['javascript'];
+        }
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false) {
         $configdata = $instance->get('configdata');
         if (!isset($configdata['showgroupviews'])) {
@@ -62,7 +96,19 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
             $dwoo->assign('groupviews', $data['groupviews']->data);
         }
         if (!empty($configdata['showsharedviews']) && isset($data['sharedviews'])) {
-            $dwoo->assign('sharedviews', $data['sharedviews']->data);
+            $sharedviews = (array)$data['sharedviews'];
+            $baseurl = $instance->get_view()->get_url();
+            $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
+            $pagination = array(
+                'baseurl'    => $baseurl,
+                'id'         => 'sharedviews_pagination',
+                'datatable'  => 'sharedviewlist',
+                'jsonscript' => 'blocktype/groupviews/sharedviews.json.php',
+                'resultcounttextsingular' => get_string('view', 'view'),
+                'resultcounttextplural'   => get_string('views', 'view'),
+            );
+            self::render_items($sharedviews, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
+            $dwoo->assign('sharedviews', $sharedviews);
         }
         if (isset($data['allsubmitted'])) {
             $dwoo->assign('allsubmitted', $data['allsubmitted']);
@@ -134,7 +180,11 @@ class PluginBlocktypeGroupViews extends SystemBlocktype {
 
             // For group members, display a list of views that others have
             // shared to the group
-            $data['sharedviews'] = View::get_sharedviews_data(null, 0, $group->id);
+            $bi = group_get_homepage_view_groupview_block($group->id);
+            $configdata = $bi->get('configdata');
+            $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
+            $limit = ($limit > 0) ? $limit : 5;
+            $data['sharedviews'] = View::get_sharedviews_data($limit, 0, $group->id);
             foreach ($data['sharedviews']->data as &$view) {
                 if (isset($view['template']) && $view['template']) {
                     $view['form'] = pieform(create_view_form($group, null, $view->id));

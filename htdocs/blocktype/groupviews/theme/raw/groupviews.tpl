@@ -19,33 +19,20 @@
 {if $sharedviews}
     <div class="groupviewsection">
         <h3 class="title">{str tag="viewssharedtogroupbyothers" section="view"}</h3>
-        <div class="fullwidth listing">
-        {foreach from=$sharedviews item=view}
-            <div class="{cycle values='r0,r1'} listrow">
-            {if $view.template}
-                <div class="s fr">{$view.form|safe}</div>
-            {/if}
-                <h4 class="title"><a href="{$view.fullurl}">{$view.title}</a>
-                {if $view.sharedby}
-                    <span class="owner"> {str tag=by section=view}
-                        {if $view.group}
-                            <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
-                        {elseif $view.owner}
-                            <a href="{profile_url($view.user)}">{$view.sharedby}</a>
-                        {else}
-                            {$view.sharedby}
-                        {/if}
-                    </span>
-                {/if}
-                </h4>
-                <div class="detail">{$view.description|str_shorten_html:100:true|strip_tags|safe}</div>
-             {if $view.tags}
-                <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$view.owner tags=$view.tags}</div>
-             {/if}
-            </div>
-        {/foreach}
+        <div id="sharedviewlist" class="fullwidth listing">
+            {$sharedviews.tablerows|safe}
         </div>
-    </div>
+    {if $sharedviews.pagination}
+        <div id="sharedviews_page_container" class="hidden center">{$sharedviews.pagination|safe}</div>
+    {/if}
+    {if $sharedviews.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$sharedviews.pagination_js|safe}
+            removeElementClass('sharedviews_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
 {/if}
 
 
