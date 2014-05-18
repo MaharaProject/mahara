@@ -126,7 +126,7 @@ $elements['viewskin'] = array(
                 ),
                 'viewskin_access' => array(
                         'type' => 'select',
-                        'title' => get_string('skinaccessibility', 'skin'),
+                        'title' => get_string('skinaccessibility1', 'skin'),
                         'defaultvalue' => (!empty($skintype) ? $skintype : null),
                         'options' => $accessoptions,
                 ),
