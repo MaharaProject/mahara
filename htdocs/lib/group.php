@@ -2142,6 +2142,25 @@ function group_get_homepage_view($groupid) {
 }
 
 /**
+ * Return the groupview block object of this group's homepage view
+ *
+ * @param int $groupid the id of the group to fetch the view for
+ * @return object block instance
+ * @throws SQLException if there are more than one groupview block instance
+ */
+function group_get_homepage_view_groupview_block($groupid) {
+    $bi = get_record_sql('
+        SELECT bi.id
+        FROM {view} v
+            INNER JOIN {block_instance} bi ON v.id = bi.view
+        WHERE bi.blocktype = ?
+            AND v.group = ? AND v.type = ?',
+        array('groupviews', $groupid, 'grouphomepage')
+    );
+    return new BlockInstance($bi->id);
+}
+
+/**
  * install the group homepage view
  * This creates a template at system level
  * which is subsequently copied to group hompages

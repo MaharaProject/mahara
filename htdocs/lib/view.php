@@ -4176,8 +4176,10 @@ class View {
         }
 
         return (object) array(
-            'data'  => array_values($viewdata),
-            'count' => $count,
+            'data'   => array_values($viewdata),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
         );
     }
 
