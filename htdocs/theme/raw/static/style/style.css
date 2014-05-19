@@ -2718,7 +2718,7 @@ ul.favorskins {
 }
 fieldset#pagestoadd {
     width: 300px;
-    margin: -25px 0 0 -350px;
+    margin: 10px 0 0 -350px;
     float: left;
     padding: 10px;
 }

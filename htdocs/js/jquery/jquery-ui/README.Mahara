@@ -32,3 +32,21 @@ Dependency package: jquery-ui
 Changes:
 
 * None
+
+
+jQuery UI plugin touch-punch
+============================
+
+This javascript library is required for jQuery UI draggable / droppable / sortable to work on mobile devices
+
+Website: http://touchpunch.furf.com/
+Version: 0.2.3
+Dependency package: jquery-ui
+
+Changes:
+
+* None
+
+Notes:
+
+* Touch Punch works by using simulated events to map touch events to their mouse event analogs.

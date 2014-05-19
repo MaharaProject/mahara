@@ -633,35 +633,40 @@ class Collection {
     /**
      * Sets the displayorder for a view
      *
-     * @param integer view
-     * @param string direction
-     *
+     * @param integer   $id   view id
+     * @param mixed  direction - either string consisting 'up' or 'down' to
+     *               indicate which way to move $id item, or an array containing
+     *               the ids in order you want them saved
      */
     public function set_viewdisplayorder($id, $direction) {
+        if (is_array($direction)) {
+            // we already have new sort order
+            $neworder = $direction;
+        }
+        else {
+            $ids = get_column_sql('
+                SELECT view FROM {collection_view}
+                WHERE collection = ?
+                ORDER BY displayorder', array($this->get('id')));
 
-        $ids = get_column_sql('
-            SELECT view FROM {collection_view}
-            WHERE collection = ?
-            ORDER BY displayorder', array($this->get('id')));
+            foreach ($ids as $k => $v) {
+                if ($v == $id) {
+                    $oldorder = $k;
+                    break;
+                }
+            }
 
-        foreach ($ids as $k => $v) {
-            if ($v == $id) {
-                $oldorder = $k;
-                break;
+            if ($direction == 'up' && $oldorder > 0) {
+                $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
+                                        array($id, $ids[$oldorder-1]),
+                                        array_slice($ids, $oldorder+1));
+            }
+            else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
+                $neworder = array_merge(array_slice($ids, 0, $oldorder),
+                                        array($ids[$oldorder+1], $id),
+                                        array_slice($ids, $oldorder+2));
             }
         }
-
-        if ($direction == 'up' && $oldorder > 0) {
-            $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
-                                    array($id, $ids[$oldorder-1]),
-                                    array_slice($ids, $oldorder+1));
-        }
-        else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
-            $neworder = array_merge(array_slice($ids, 0, $oldorder),
-                                    array($ids[$oldorder+1], $id),
-                                    array_slice($ids, $oldorder+2));
-        }
-
         if (isset($neworder)) {
             foreach ($neworder as $k => $v) {
                 set_field('collection_view', 'displayorder', $k, 'view', $v, 'collection',$this->get('id'));
