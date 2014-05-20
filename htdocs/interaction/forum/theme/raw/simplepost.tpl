@@ -1,7 +1,7 @@
 {if $post->id}<a name="post{$post->id}"></a>{/if}
 
 
-<table class="forumpost fullwidth">
+<table class="forumpost fullwidth {if $highlightreported}reported{/if}">
 <tr>
 	<td class="forumpostleft">
       <div class="author">

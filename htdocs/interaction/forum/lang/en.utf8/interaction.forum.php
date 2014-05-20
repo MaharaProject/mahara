@@ -29,6 +29,7 @@ $string['cantedittopic'] = 'You are not allowed to edit this topic';
 $string['cantfindforum'] = 'Could not find forum with id %s';
 $string['cantfindpost'] = 'Could not find post with id %s';
 $string['cantfindtopic'] = 'Could not find topic with id %s';
+$string['cantmakenonobjectionable'] = 'You are not allowed to mark this post as not objectionable.';
 $string['cantviewforums'] = 'You are not allowed to view forums in this group';
 $string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
 $string['chooseanaction'] = 'Choose an action';
@@ -36,6 +37,7 @@ $string['clicksetsubject'] = 'Click to set a subject';
 $string['Closed'] = 'Closed';
 $string['Close'] = 'Close';
 $string['closeddescription'] = 'Closed topics can only be replied to by moderators and the group administrators';
+$string['complaint'] = 'Complaint';
 $string['Count'] = 'Count';
 $string['createtopicusersdescription'] = 'If set to "All group members", anyone can create new topics and reply to existing topics. If set to "Moderators and group administrators", only moderators and group administrators can start new topics, but once topics exist, all users can post replies to them.';
 $string['currentmoderators'] = 'Current moderators';
@@ -98,6 +100,17 @@ $string['newtopic'] = 'New topic';
 $string['noforumpostsyet'] = 'There are no posts in this group yet';
 $string['noforums'] = 'There are no forums in this group';
 $string['notopics'] = 'There are no topics in this forum';
+$string['notifyadministrator'] = 'Notify administrator';
+$string['objectionablepostdeletedsubject'] = 'Objectionable post in forum topic "%s" was deleted by %s.';
+$string['objectionablepostdeletedbody'] = '%s has looked at post by %s previously reported as objectionable and deleted it.
+
+The objectionable post content was:
+%s';
+$string['objectionabletopicdeletedsubject'] = 'Objectionable forum topic "%s" was deleted by %s.';
+$string['objectionabletopicdeletedbody'] = '%s has looked at topic by %s previously reported as objectionable and deleted it.
+
+The objectionable topic content was:
+%s';
 $string['Open'] = 'Open';
 $string['Order'] = 'Order';
 $string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
@@ -109,6 +122,12 @@ $string['postdelay'] = 'Post delay';
 $string['postdelaydescription'] = 'The minimum time (in minutes) that must pass before a new post can be mailed out to forum subscribers. The author of a post may make edits during this time.';
 $string['postedin'] = '%s posted in %s';
 $string['Poster'] = 'Poster';
+$string['postobjectionable'] = 'This post has been reported by you as containing objectionable content.';
+$string['postnotobjectionable'] = 'This post has been reported as containing objectionable content. If this is not the case, you can click the button to remove this notice and notify the other administrators.';
+$string['postnotobjectionablebody'] = '%s has looked at post by %s and marked it as no longer containing objectionable material.';
+$string['postnotobjectionablesubject'] = 'Post in forum topic "%s" was marked as not objectionable by %s.';
+$string['postnotobjectionablesuccess'] = 'Post was marked as not objectionable.';
+$string['postnotobjectionablesubmit'] = 'Not objectionable';
 $string['postreply'] = 'Post reply';
 $string['Posts'] = 'Posts';
 $string['allposts'] = 'All posts';
@@ -120,6 +139,11 @@ $string['Reply'] = 'Reply';
 $string['replyforumpostnotificationsubjectline'] = 'Re: %s';
 $string['Re:'] = 'Re: ';
 $string['replyto'] = 'Reply to: ';
+$string['reporteddetails'] = 'Reported details';
+$string['reportedpostdetails'] = '<b>Reported by %s on %s:</b><p>%s</p>';
+$string['reportobjectionablematerial'] = 'Report';
+$string['reportpost'] = 'Report post';
+$string['reportpostsuccess'] = 'Post reported successfully';
 $string['sendnow'] = 'Send message now';
 $string['sendnowdescription'] = 'Send message immediately instead of waiting at least %s minutes for it to be sent.';
 $string['Sticky'] = 'Sticky';
@@ -144,6 +168,7 @@ $string['topicunstickysuccess'] = 'Topic unset as sticky successfully';
 $string['topicunsubscribesuccess'] = 'Topics unsubscribed successfully';
 $string['topicupdatefailed'] = 'Topics update failed';
 $string['typenewpost'] = 'New forum post';
+$string['typereportpost'] = 'Objectionable content in forum';
 $string['Unsticky'] = 'Unsticky';
 $string['Unsubscribe'] = 'Unsubscribe';
 $string['unsubscribefromforum'] = 'Unsubscribe from forum';
@@ -173,3 +198,38 @@ $string['closetopicsdescription'] = 'If checked, all new topics in this forum wi
 $string['activetopicsdescription'] = 'Recently updated topics in your groups.';
 
 $string['timeleftnotice'] = 'You have %s minutes left to finish editing.';
+
+$string['objectionablecontentpost'] = 'Objectionable content on forum topic "%s" reported by %s';
+$string['objectionablecontentposthtml'] = '<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">Objectionable content on forum topic "%s" reported by %s
+<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="padding: 0.5em 0; border-bottom: 1px solid #999;">The objectionable post content is:
+<br>%s</div>
+
+<div style="margin: 1em 0;">%s</div>
+
+<div style="font-size: smaller; border-top: 1px solid #999;">
+<p>Complaint relates to: <a href="%s">%s</a></p>
+<p>Reported by: <a href="%s">%s</a></p>
+</div>';
+$string['objectionablecontentposttext'] = 'Objectionable content on forum topic "%s" reported by %s
+%s
+------------------------------------------------------------------------
+
+%s
+
+------------------------------------------------------------------------
+
+The objectionable post content is:
+%s
+------------------------------------------------------------------------
+
+%s
+
+-----------------------------------------------------------------------
+To see the post, follow this link:
+%s
+To see the reporter\'s profile, follow this link:
+%s';

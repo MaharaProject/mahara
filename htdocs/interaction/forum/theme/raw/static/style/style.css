@@ -150,3 +150,43 @@
     margin-top: 0.8em;
     font-size: .9167em;
 }
+/* objection */
+.btn-objection {
+    background: url(../images/objectionable.png) no-repeat 0 0;
+    padding-left: 21px !important;
+}
+#reportpost {
+    background: #FEE7E7;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.forumpost.reported {
+    border-color: #FEE7E7;
+}
+.forumpost.reported .postedits {
+    background-color: #FEE7E7;
+}
+.reportedaction {
+    background-color: #FEE7E7;
+    clear: both;
+    padding: 5px 5px;
+}
+.reportedaction .postnotobjectionable {
+    display: inline-block;
+    width: 80%;
+    font-weight: bold;
+}
+.reportedaction .btn-notobjectionable {
+    float: right;
+    display: inline-block;
+    position: relative;
+    right: -2px;
+}
+
+.reportedaction fieldset.collapsible legend {
+    font-size: 1em;
+}
+
+#forumtopicstable .containobjectionable td {
+    background-color: #FEE7E7;
+}

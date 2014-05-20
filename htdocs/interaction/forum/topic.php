@@ -107,7 +107,7 @@ if (!empty($postid)) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted
+    'SELECT p.id, p.parent, p.path, p.poster, p.subject, p.body, ' . db_format_tsfield('p.ctime', 'ctime') . ', p.deleted, p.reported, p.reportedreason
     FROM {interaction_forum_post} p
     WHERE p.topic = ?
     ORDER BY p.path, p.ctime, p.id',
@@ -130,6 +130,11 @@ foreach ($posts as $postid => $post) {
     $post->moderator = is_moderator($post->poster)? $post->poster : null;
     // Update the subject of posts
     $post->subject = !empty($post->subject) ? $post->subject : get_string('re', 'interaction.forum', get_ancestorpostsubject($post->id));
+    // If this is the own post
+    $post->ownpost = ($USER->get('id') == $post->poster) ? true : false;
+    // Reported reason data
+    $post->reportedreason = unserialize($post->reportedreason);
+
 
     // Consolidate deleted message posts by the same author into one "X posts by Spammer Joe were deleted"
     if ($post->deleted) {
@@ -227,9 +232,64 @@ function buildpostlist($posts, $mode, $max_depth) {
  */
 
 function renderpost($post, $indent) {
-    global $moderator, $topic, $groupadmins, $membership, $ineditwindow;
+    global $moderator, $topic, $groupadmins, $membership, $ineditwindow, $USER;
+    $reportedaction = ($moderator && (bool)$post->reported);
+    $highlightreported = false;
+
+    if ($reportedaction) {
+        $highlightreported = true;
+        $reportedreason = array();
+        foreach ($post->reportedreason as $reporteddata) {
+            $reportedreason['msg_' . $reporteddata['ctime']] = array(
+                'type' => 'html',
+                'value' => get_string('reportedpostdetails', 'interaction.forum', display_default_name($reporteddata['reporter']),
+                        strftime(get_string('strftimedaydatetime'), $reporteddata['ctime']), $reporteddata['message']),
+            );
+        }
+        $post->postnotobjectionableform = pieform(array(
+            'name'     => 'postnotobjectionable_' . $post->id,
+            'validatecallback' => 'postnotobjectionable_validate',
+            'successcallback'  => 'postnotobjectionable_submit',
+            'renderer' => 'div',
+            'plugintype' => 'interaction',
+            'pluginname' => 'forum',
+            'autofocus' => false,
+            'elements' => array(
+                'text' => array(
+                    'type' => 'html',
+                    'class' => 'postnotobjectionable',
+                    'value' => get_string('postnotobjectionable', 'interaction.forum'),
+                ),
+                'submit' => array(
+                   'type'  => 'submit',
+                   'class' => 'btn-notobjectionable',
+                   'value' => get_string('postnotobjectionablesubmit', 'interaction.forum'),
+                ),
+                'postid' => array(
+                    'type' => 'hidden',
+                    'value' => $post->id,
+                ),
+                'details' => array(
+                    'type'         => 'fieldset',
+                    'collapsible'  => true,
+                    'collapsed'    => true,
+                    'legend'       => get_string('reporteddetails', 'interaction.forum'),
+                    'elements'     => $reportedreason,
+                ),
+            )
+        ));
+    }
+    else if (is_array($post->reportedreason)) {
+        foreach ($post->reportedreason as $reason) {
+            if ($reason['reporter'] == $USER->get('id')) {
+                $highlightreported = true;
+                break;
+            }
+        }
+    }
 
     $smarty = smarty_core();
+    $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     $smarty->assign('post', $post);
     $smarty->assign('width', 100 - $indent*2);
     $smarty->assign('groupadmins', $groupadmins);
@@ -237,6 +297,8 @@ function renderpost($post, $indent) {
     $smarty->assign('membership', $membership);
     $smarty->assign('closed', $topic->closed);
     $smarty->assign('ineditwindow', $ineditwindow);
+    $smarty->assign('highlightreported', $highlightreported);
+    $smarty->assign('reportedaction', $reportedaction);
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
@@ -268,6 +330,36 @@ function subscribe_topic_submit(Pieform $form, $values) {
         );
     }
     redirect('/interaction/forum/topic.php?id=' . $values['topic']);
+}
+
+function postnotobjectionable_validate(Pieform $form, $values) {
+    global $moderator;
+    if (!$moderator) {
+        throw new AccessDeniedException(get_string('cantmakenonobjectionable', 'interaction.forum'));
+    }
+}
+
+function postnotobjectionable_submit(Pieform $form, $values) {
+    global $SESSION, $USER, $topicid;
+    update_record(
+        'interaction_forum_post',
+        array('reported' => 0, 'reportedreason' => ''),
+        array('id' => $values['postid'], 'topic' => $topicid)
+    );
+
+    // Trigger activity.
+    $data = new StdClass();
+    $data->postid     = $values['postid'];
+    $data->message    = '';
+    $data->reporter   = $USER->get('id');
+    $data->ctime      = time();
+    $data->event      = MAKE_NOT_OBJECTIONABLE;
+    activity_occurred('reportpost', $data, 'interaction', 'forum');
+
+    $SESSION->add_ok_msg(get_string('postnotobjectionablesuccess', 'interaction.forum'));
+
+    $redirecturl = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '&post=' . $values['postid'];
+    redirect($redirecturl);
 }
 
 /* Return the number of posts submitted by a poster

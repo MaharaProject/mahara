@@ -1,8 +1,12 @@
 {foreach from=$topics item=topic}
+{$objectionableclass = ''}
+{if $topic->containsobjectionable}
+    {$objectionableclass = 'containobjectionable'}
+{/if}
 {if $sticky}
-<tr class="stickytopic">
+<tr class="stickytopic {$objectionableclass}">
 {else}
-<tr class="{cycle values='r0,r1'}">
+<tr class="{cycle values='r0,r1'} {$objectionableclass}">
 {/if}
     <td class="narrow center">
     {if $topic->closed}<img src="{$closedicon}" alt="{str tag="Closed" section="interaction.forum"}">{/if}

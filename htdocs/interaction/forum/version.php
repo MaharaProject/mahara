@@ -9,5 +9,5 @@
  *
  */
 
-$config->version = 2012071100;
-$config->release = '1.2.1';
+$config->version = 2014050800;
+$config->release = '1.2.2';
