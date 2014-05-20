@@ -39,10 +39,7 @@ if ($shownav) {
     }
 }
 
-ob_start();
-$smarty->display('collection/viewcontent.tpl');
-$html = ob_get_contents();
-ob_end_clean();
+$html = $smarty->fetch('collection/viewcontent.tpl');
 
 json_reply(false, array(
     'message' => null,
