@@ -1308,7 +1308,7 @@ class ActivityTypeViewaccess extends ActivityType {
     }
 
     public function get_subject($user) {
-        return get_string('newviewaccesssubject', 'activity');
+        return get_string('newviewaccesssubject1', 'activity', $this->title);
     }
     
     public function get_message($user) {
