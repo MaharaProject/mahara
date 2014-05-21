@@ -11,6 +11,7 @@
 
 define('INTERNAL', 1);
 define('NOCHECKPASSWORDCHANGE', 1);
+define('NOCHECKREQUIREDFIELDS', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('activity.php');
 
