@@ -85,14 +85,19 @@
 {if $allsubmitted}
     <div class="groupviewsection">
         <h3 class="title">{str tag="submissionstogroup" section="view"}</h3>
-        <div class="fullwidth listing" id="allsubmitted">
-        {foreach from=$allsubmitted item=item}
-            <div class="{cycle values='r0,r1'} listrow">
-                <h4 class="title"><a href="{$item.url}">{$item.name|str_shorten_text:60:true}</a>
-                <span class="owner">{str tag=by section=view} <a href="{$item.ownerurl}">{$item.ownername}</a></span></h4>
-                <div class="detail">{str tag=timeofsubmission section=view}: {$item.submittedtime|format_date}</div>
-            </div>
-        {/foreach}
+        <div id="allsubmissionlist" class="fullwidth listing">
+            {$allsubmitted.tablerows|safe}
         </div>
+        {if $allsubmitted.pagination}
+            <div id="allsubmitted_page_container" class="hidden center">{$allsubmitted.pagination|safe}</div>
+        {/if}
+        {if $allsubmitted.pagination_js}
+        <script>
+            addLoadEvent(function() {literal}{{/literal}
+                {$allsubmitted.pagination_js|safe}
+                removeElementClass('allsubmitted_page_container', 'hidden');
+            {literal}}{/literal});
+        </script>
+        {/if}
     </div>
 {/if}

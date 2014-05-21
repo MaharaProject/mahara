@@ -62,7 +62,9 @@ $string['accessbetweendates2'] = 'Nobody else can see this page before %s or aft
 $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
 $string['view'] = 'page';
+$string['vieworcollection'] = 'page or collection';
 $string['views'] = 'pages';
+$string['viewsandcollections'] = 'pages and collections';
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
 $string['viewsubmittedtogroup'] = 'This page has been submitted to <a href="%s">%s</a>.';
