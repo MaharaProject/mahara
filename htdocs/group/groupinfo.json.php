@@ -21,10 +21,7 @@ $group = group_get_groupinfo_data($group);
 
 $smarty = smarty_core();
 $smarty->assign('group', $group);
-ob_start();
-$smarty->display('group/groupdata.tpl');
-$html = ob_get_contents();
-ob_end_clean();
+$html = $smarty->fetch('group/groupdata.tpl');
 
 json_reply(false, array(
     'message' => null,

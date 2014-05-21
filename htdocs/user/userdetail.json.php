@@ -19,10 +19,7 @@ $user->introduction = get_field('artefact', 'title', 'artefacttype', 'introducti
 
 $smarty = smarty_core();
 $smarty->assign('user', $user);
-ob_start();
-$smarty->display('user/simpleuser.tpl');
-$html = ob_get_contents();
-ob_end_clean();
+$html = $smarty->fetch('user/simpleuser.tpl');
 
 json_reply(false, array(
     'message' => null,
