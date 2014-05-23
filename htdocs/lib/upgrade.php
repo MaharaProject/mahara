@@ -1361,6 +1361,8 @@ function activate_plugin_form($plugintype, $plugin) {
             'submit'     => array(
                 'type'  => 'submit',
                 'class' => 'linkbtn',
+                'title' => ($plugin->active ? get_string('hide') : get_string('show')) . ' ' . $plugintype . ' ' . $plugin->name,
+                'hiddenlabel' => true,
                 'value' => $plugin->active ? get_string('hide') : get_string('show')
             ),
         ),
