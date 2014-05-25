@@ -198,6 +198,12 @@ form.oneline.inline div,
 .nojs-hidden-table-cell {
     display: none;
 }
+.bar-before {
+    border-left: 1px solid #D1D1D1;
+}
+#footer-nav .bar-before {
+    border-left: 1px solid #5B5C5C;
+}
 /******************** Loading ********************/
 #loading-box {
     background-color: #DDDDDD;
