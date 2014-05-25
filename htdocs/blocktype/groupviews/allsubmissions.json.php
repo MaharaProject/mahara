@@ -10,7 +10,7 @@
  */
 
 /**
- * returns shared views in a given group id
+ * returns all submissions to a given group id
  */
 
 define('INTERNAL', 1);
@@ -33,31 +33,34 @@ if (!can_view_view($group_homepage_view)) {
 }
 
 $configdata = $bi->get('configdata');
-if (!isset($configdata['showsharedviews'])) {
-    $configdata['showsharedviews'] = 1;
+if (!isset($configdata['showsubmitted'])) {
+    $configdata['showsubmitted'] = 1;
 }
 
 $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
 $limit = ($limit > 0) ? $limit : 5;
 
-$sharedviews = (array)View::get_sharedviews_data($limit, $offset, $groupid);
-foreach ($sharedviews['data'] as &$view) {
-    if (isset($view['template']) && $view['template']) {
-        $view['form'] = pieform(create_view_form($group_homepage_view, null, $view->id));
-    }
-}
-if (!empty($configdata['showsharedviews']) && isset($sharedviews)) {
+list($collections, $views) = View::get_views_and_collections(null, null, null, null, false, $groupid);
+$allsubmitted = array_merge(array_values($collections), array_values($views));
+$allsubmitted = array(
+    'data'   => array_slice($allsubmitted, $offset, $limit),
+    'count'  => count($allsubmitted),
+    'limit'  => $limit,
+    'offset' => $offset,
+);
+
+if (!empty($configdata['showsubmitted'])) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
     $pagination = array(
         'baseurl'    => $baseurl,
-        'id'         => 'sharedviews_pagination',
-        'datatable'  => 'sharedviewlist',
-        'jsonscript' => 'blocktype/groupviews/sharedviews.json.php',
-        'resultcounttextsingular' => get_string('view', 'view'),
-        'resultcounttextplural'   => get_string('views', 'view'),
+        'id'         => 'allsubmitted_pagination',
+        'datatable'  => 'allsubmissionlist',
+        'jsonscript' => 'blocktype/groupviews/allsubmissions.json.php',
+        'resultcounttextsingular' => get_string('vieworcollection', 'view'),
+        'resultcounttextplural'   => get_string('viewsandcollections', 'view'),
     );
-    PluginBlocktypeGroupViews::render_items($sharedviews, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
+    PluginBlocktypeGroupViews::render_items($allsubmitted, 'blocktype:groupviews:allsubmissions.tpl', $configdata, $pagination);
 }
 
-json_reply(false, array('data' => $sharedviews));
+json_reply(false, array('data' => $allsubmitted));

@@ -4145,7 +4145,7 @@ class View {
 
     /**
      * Get views which have been explicitly shared to a group and are
-     * not owned by the group
+     * not owned by the group excluding the view in collections
      */
     public static function get_sharedviews_data($limit=10, $offset=0, $groupid) {
         global $USER;
@@ -4158,12 +4158,13 @@ class View {
             FROM {view} v
             INNER JOIN {view_access} a ON (a.view = v.id)
             INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
-            WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)';
+            WHERE a.group = ? AND m.member = ? AND (v.group IS NULL OR v.group != ?)
+               AND NOT EXISTS (SELECT 1 FROM {collection_view} cv WHERE cv.view = v.id)';
         $ph = array($groupid, $userid, $groupid);
 
-        $count = count_records_sql('SELECT COUNT(*) ' . $from, $ph);
+        $count = count_records_sql('SELECT COUNT(DISTINCT(v.id)) ' . $from, $ph);
         $viewdata = get_records_sql_assoc('
-            SELECT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid ' . $from . '
+            SELECT DISTINCT v.id,v.title,v.startdate,v.stopdate,v.description,v.group,v.owner,v.ownerformat,v.institution,v.urlid ' . $from . '
             ORDER BY v.title, v.id',
             $ph, $offset, $limit
         );
@@ -4177,6 +4178,53 @@ class View {
 
         return (object) array(
             'data'   => array_values($viewdata),
+            'count'  => $count,
+            'limit'  => $limit,
+            'offset' => $offset,
+        );
+    }
+
+    /**
+     * Get collections which have been explicitly shared to a group and are
+     * not owned by the group
+     * @param $limit, $offset for pagination
+     * @param $groupid
+     * @return array of collections
+     */
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid) {
+        global $USER;
+
+        $userid = $USER->get('id');
+        require_once(get_config('libroot') . 'group.php');
+
+        if (!group_user_access($groupid)) {
+            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        }
+
+        $from = '
+            FROM {collection} c
+                INNER JOIN {collection_view} cv ON (cv.collection = c.id)
+                INNER JOIN {view_access} a ON (a.view = cv.view)
+                INNER JOIN {group_member} m ON (a.group = m.group AND (a.role = m.role OR a.role IS NULL))
+            WHERE a.group = ? AND m.member = ? AND (c.group IS NULL OR c.group != ?)';
+        $ph = array($groupid, $userid, $groupid);
+
+        $count = count_records_sql('SELECT COUNT(DISTINCT c.id) ' . $from, $ph);
+        $collectiondata = get_records_sql_assoc('
+            SELECT DISTINCT c.id,c.name,c.description,c.owner,c.group,c.institution ' . $from . '
+            ORDER BY c.name, c.id',
+            $ph, $offset, $limit
+        );
+
+        if ($collectiondata) {
+            View::get_extra_collection_info($collectiondata, false);
+        }
+        else {
+            $collectiondata = array();
+        }
+
+        return (object) array(
+            'data'   => array_values($collectiondata),
             'count'  => $count,
             'limit'  => $limit,
             'offset' => $offset,
@@ -4288,6 +4336,86 @@ class View {
                 $v['displaytitle'] = $view->display_title_editing();
                 $v['url'] = $view->get_url(false);
                 $v['fullurl'] = $needsubdomain ? $view->get_url(true) : ($wwwroot . $v['url']);
+            }
+        }
+    }
+
+    /**
+     * Get more info for the collections: owner, url, tags
+     *
+     * @param array a list of collections $collectiondata
+     * @return array updated collection data
+     */
+    public static function get_extra_collection_info(&$collectiondata) {
+        if ($collectiondata) {
+            // Get view owner details for display
+            $owners = array();
+            $groups = array();
+            $institutions = array();
+            foreach ($collectiondata as $c) {
+                if (!empty($c->owner) && !isset($owners[$c->owner])) {
+                    $owners[$c->owner] = (int)$c->owner;
+                }
+                else if (!empty($c->group) && !isset($groups[$c->group])) {
+                    $groups[$c->group] = (int)$c->group;
+                }
+                else if (!empty($c->institution) && !isset($institutions[$c->institution])) {
+                    $institutions[$c->institution] = $c->institution;
+                }
+            }
+
+            if (!empty($owners)) {
+                global $USER;
+                $userid = $USER->get('id');
+                $fields = array(
+                    'id', 'username', 'firstname', 'lastname', 'preferredname', 'admin', 'staff', 'studentid', 'email',
+                    'profileicon', 'urlid', 'suspendedctime',
+                );
+                if (count($owners) == 1 && isset($owners[$userid])) {
+                    $owners = array($userid => new StdClass);
+                    foreach ($fields as $f) {
+                        $owners[$userid]->$f = $USER->get($f);
+                    }
+                }
+                else {
+                    $owners = get_records_select_assoc(
+                        'usr', 'id IN (' . join(',', array_fill(0, count($owners), '?')) . ')', $owners, '',
+                        join(',', $fields)
+                    );
+                }
+            }
+            if (!empty($groups)) {
+                $groups = get_records_select_assoc('group', 'id IN (' . join(',', $groups) . ')', null, '', 'id,name,urlid');
+            }
+            if (!empty($institutions)) {
+                $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+                $institutions['mahara']->displayname = get_config('sitename');
+            }
+
+            $wwwroot = get_config('wwwroot');
+            $needsubdomain = get_config('cleanurlusersubdomains');
+
+            foreach ($collectiondata as &$c) {
+                if (!empty($c->owner)) {
+                    $c->sharedby = display_name($owners[$c->owner]);
+                    $c->user = $owners[$c->owner];
+                }
+                else if (!empty($c->group)) {
+                    $c->sharedby = $groups[$c->group]->name;
+                    $c->groupdata = $groups[$c->group];
+                }
+                else if (!empty($c->institution)) {
+                    $c->sharedby = $institutions[$c->institution]->displayname;
+                }
+                $c = (array)$c;
+
+                // Now that we have the owner & group records, create a temporary Collection object
+                // so that we can use get_url method.
+                require_once(get_config('libroot') . 'collection.php');
+
+                $collection = new Collection(0, $c);
+                $c['url'] = $collection->get_url(false);
+                $c['fullurl'] = $needsubdomain ? $collection->get_url(true) : ($wwwroot . $c['url']);
             }
         }
     }

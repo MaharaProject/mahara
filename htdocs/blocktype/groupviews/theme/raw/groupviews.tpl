@@ -18,7 +18,7 @@
 
 {if $sharedviews}
     <div class="groupviewsection">
-        <h3 class="title">{str tag="viewssharedtogroupbyothers" section="view"}</h3>
+        <h3 class="title">{str tag="viewssharedtogroup" section="view"}</h3>
         <div id="sharedviewlist" class="fullwidth listing">
             {$sharedviews.tablerows|safe}
         </div>
@@ -33,6 +33,28 @@
         {literal}}{/literal});
     </script>
     {/if}
+    </div>
+{/if}
+
+
+{if $sharedcollections}
+    <div class="groupviewsection">
+        <h3 class="title">{str tag="collectionssharedtogroup" section="collection"}</h3>
+        <div id="sharedcollectionlist" class="fullwidth listing">
+            {$sharedcollections.tablerows|safe}
+        </div>
+    {if $sharedcollections.pagination}
+        <div id="sharedcollections_page_container" class="hidden center">{$sharedcollections.pagination|safe}</div>
+    {/if}
+    {if $sharedcollections.pagination_js}
+    <script>
+        addLoadEvent(function() {literal}{{/literal}
+            {$sharedcollections.pagination_js|safe}
+            removeElementClass('sharedcollections_page_container', 'hidden');
+        {literal}}{/literal});
+    </script>
+    {/if}
+    </div>
 {/if}
 
 
@@ -63,14 +85,19 @@
 {if $allsubmitted}
     <div class="groupviewsection">
         <h3 class="title">{str tag="submissionstogroup" section="view"}</h3>
-        <div class="fullwidth listing" id="allsubmitted">
-        {foreach from=$allsubmitted item=item}
-            <div class="{cycle values='r0,r1'} listrow">
-                <h4 class="title"><a href="{$item.url}">{$item.name|str_shorten_text:60:true}</a>
-                <span class="owner">{str tag=by section=view} <a href="{$item.ownerurl}">{$item.ownername}</a></span></h4>
-                <div class="detail">{str tag=timeofsubmission section=view}: {$item.submittedtime|format_date}</div>
-            </div>
-        {/foreach}
+        <div id="allsubmissionlist" class="fullwidth listing">
+            {$allsubmitted.tablerows|safe}
         </div>
+        {if $allsubmitted.pagination}
+            <div id="allsubmitted_page_container" class="hidden center">{$allsubmitted.pagination|safe}</div>
+        {/if}
+        {if $allsubmitted.pagination_js}
+        <script>
+            addLoadEvent(function() {literal}{{/literal}
+                {$allsubmitted.pagination_js|safe}
+                removeElementClass('allsubmitted_page_container', 'hidden');
+            {literal}}{/literal});
+        </script>
+        {/if}
     </div>
 {/if}
