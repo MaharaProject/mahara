@@ -525,9 +525,11 @@ class Collection {
     }
 
     /**
-     * Get the available views the current user can choose from
+     * Get the available views the current user can choose to add to their collections.
+     * Restrictions on this list include:
      * - currently dashboard, group and profile views are ignored to solve access issues
      * - each view can only belong to one collection
+     * - locked/submitted views can't be added to collections
      *
      * @return array $views
      */
@@ -553,6 +555,8 @@ class Collection {
             WHERE " . $wherestm .
             "   AND cv.view IS NULL
                 AND v.type NOT IN ('dashboard','grouphomepage','profile')
+                AND v.submittedgroup IS NULL
+                AND v.submittedhost IS NULL
             GROUP BY v.id, v.title
             ORDER BY v.title ASC
             ", $values))
