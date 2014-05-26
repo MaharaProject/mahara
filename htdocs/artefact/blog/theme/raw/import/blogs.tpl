@@ -14,23 +14,23 @@
             <div id="{$blog.id}_desc" class="detail hidden">{$blog.description|clean_html|safe}</div>
             {if $blog.tags}
             <div class="tags">
-                <label>{str tag=tags}:</label> {list_tags owner=0 tags=$blog.tags}
+                <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$blog.tags}
             </div>
             {/if}
             <div class="posts">
-                <label>{str tag=blogpost section=artefact.blog}:</label> <a class="showposts" href="" id="{$blog.id}">{str tag=nposts section=artefact.blog arg1=count($blog.entryposts)}</a>
+                <strong>{str tag=blogpost section=artefact.blog}:</strong> <a class="showposts" href="" id="{$blog.id}">{str tag=nposts section=artefact.blog arg1=count($blog.entryposts)}</a>
             </div>
         </div>
         <div class="importcolumn importcolumn2">
             {if $blog.duplicateditem}
             <div class="duplicatedblog">
-                <label>{str tag=duplicatedblog section=artefact.blog}:</label> <a class="showduplicatedblog" href="" id="{$blog.duplicateditem.id}">{$blog.duplicateditem.title|str_shorten_text:80:true}</a>
+                <strong>{str tag=duplicatedblog section=artefact.blog}:</strong> <a class="showduplicatedblog" href="" id="{$blog.duplicateditem.id}">{$blog.duplicateditem.title|str_shorten_text:80:true}</a>
                 <div id="{$blog.duplicateditem.id}_duplicatedblog" class="detail hidden">{$blog.duplicateditem.html|clean_html|safe}</div>
             </div>
             {/if}
             {if $blog.existingitems}
             <div class="existingblogs">
-                <label>{str tag=existingblogs section=artefact.blog}:</label>
+                <strong>{str tag=existingblogs section=artefact.blog}:</strong>
                    {foreach from=$blog.existingitems item=existingitem}
                    <a class="showexistingblog" href="" id="{$existingitem.id}">{$existingitem.title|str_shorten_text:80:true}</a><br>
                    <div id="{$existingitem.id}_existingblog" class="detail hidden">{$existingitem.html|clean_html|safe}</div>
@@ -99,13 +99,13 @@
             <div class="importcolumn importcolumn2">
                 {if $post.duplicateditem}
                 <div class="duplicatedpost">
-                    <label>{str tag=duplicatedpost section=artefact.blog}:</label> <a class="showduplicatedpost" href="" id="{$post.duplicateditem.id}">{$post.duplicateditem.title|str_shorten_text:80:true}</a>
+                    <strong>{str tag=duplicatedpost section=artefact.blog}:</strong> <a class="showduplicatedpost" href="" id="{$post.duplicateditem.id}">{$post.duplicateditem.title|str_shorten_text:80:true}</a>
                     <div id="{$post.duplicateditem.id}_duplicatedpost" class="detail hidden">{$post.duplicateditem.html|clean_html|safe}</div>
                 </div>
                 {/if}
                 {if $post.existingitems}
                 <div class="existingposts">
-                    <label>{str tag=existingposts section=artefact.blog}:</label>
+                    <strong>{str tag=existingposts section=artefact.blog}:</strong>
                        {foreach from=$post.existingitems item=existingitem}
                        <a class="showexistingpost" href="" id="{$existingitem.id}">{$existingitem.title|str_shorten_text:80:true}</a><br>
                        <div id="{$existingitem.id}_existingpost" class="detail hidden">{$existingitem.html|clean_html|safe}</div>

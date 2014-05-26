@@ -179,7 +179,7 @@ if ($institution) {
         );
         $form['elements']['more']['elements']['copyfornewgroups'] = array(
             'type'         => 'html',
-            'value'        => '<label>' . get_string('copyfornewgroups', 'view') . '</label>',
+            'value'        => '<strong>' . get_string('copyfornewgroups', 'view') . '</strong>',
         );
         $form['elements']['more']['elements']['copyfornewgroupsdescription1'] = array(
             'type'         => 'html',

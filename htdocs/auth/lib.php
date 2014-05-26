@@ -1282,7 +1282,7 @@ function auth_get_login_form_elements() {
     if (!empty($extraelements) && $showbasicform) {
         $loginlabel = array(
             'type' => 'markup',
-            'value' => '<label>'.get_string('orloginvia') . '</label>'
+            'value' => '<strong>'.get_string('orloginvia') . '</strong>'
         );
         $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
         $keys = array_keys($extraelements);

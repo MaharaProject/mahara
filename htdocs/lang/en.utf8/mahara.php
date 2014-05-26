@@ -45,6 +45,7 @@ $string['Help'] = 'Help';
 $string['closehelp'] = 'Close help';
 $string['applychanges'] = 'Apply changes';
 $string['general'] = 'General';
+$string['units'] = 'Units';
 // Objectionable strings.
 $string['complaint'] = 'Complaint';
 $string['notifyadministrator'] = 'Notify administrator';
@@ -168,6 +169,7 @@ $string['resultsperpage'] = 'Results per page';
 // License metadata
 $string['license'] = 'License';
 $string['licenseother'] = 'Other license (enter URL)';
+$string['licenseotherurl'] = 'Enter URL';
 $string['licensedesc'] = 'The license for this content.';
 $string['licensenone'] = 'None selected';
 $string['licensenonedetailed'] = '%s has not chosen a license for this content.';
@@ -561,8 +563,10 @@ $string['noenddate'] = 'No end date';
 $string['day']       = 'day';
 $string['days']      = 'days';
 $string['weeks']     = 'weeks';
+$string['month']    = 'month';
 $string['months']    = 'months';
 $string['years']     = 'years';
+$string['year']     = 'year';
 // Boolean site option
 
 // Site content pages
@@ -689,6 +693,7 @@ $string['addemail'] = 'Add email address';
 
 // Search
 $string['search'] = 'Search';
+$string['searchtype'] = 'Search type';
 $string['searchusers'] = 'Search users';
 $string['Query'] = 'Search';
 $string['query'] = 'Search';

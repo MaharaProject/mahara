@@ -15,7 +15,7 @@
         </h4>
         <div class="detail">{$collection.description|str_shorten_html:100:true|strip_tags|safe}</div>
      {if $collection.tags}
-        <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$collection.owner tags=$collection.tags}</div>
+        <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$collection.owner tags=$collection.tags}</div>
      {/if}
     </div>
 {/foreach}

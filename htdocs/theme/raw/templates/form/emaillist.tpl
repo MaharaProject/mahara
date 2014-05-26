@@ -1,10 +1,11 @@
 {{if $disabled}}
   {{foreach from=$validated item=email}}
     <div class="validated">
-      <label>
-        <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}">
+        <label for="{{$form}}_{{$name}}">
+            <span class="accessible-hidden">{{$title}}: </span>
+        </label>
+        <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}" id="{{$form}}_{{$name}}">
         {{$email}}
-      </label>
     </div>
     <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
     {{if $email == $default}}<input type="hidden" name="{{$name}}_selected" value="{{$email}}">{{/if}}

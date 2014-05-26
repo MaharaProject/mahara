@@ -6,7 +6,7 @@
       <h3 class="title">{$suspendedby}</h3>
       {if $user->get('suspendedreason')}
       <div class="detail">
-        <label>{str tag="suspendedreason" section="admin"}:</label> {$user->suspendedreason}
+        <strong>{str tag="suspendedreason" section="admin"}:</strong> {$user->suspendedreason}
       </div>
       {/if}
       {$suspendform2|safe}

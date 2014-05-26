@@ -10,7 +10,7 @@
 *}
 <div id="universalsearch-results-sort">
     <input type="hidden" id="search-filter-sort-url" value="{$WWWROOT}search/elasticsearch/index.php?query={$query}&mainfacetterm={$selected}&secfacetterm={$contentfilterselected}&license={$license}&owner={$owner}{if $tagsonly}&tagsonly=true{/if}&limit={$limit}" />
-    <label>
+    <label for="search-filter-sort">
         {str tag=sortby section=search.elasticsearch}:
     </label>
     <select id="search-filter-sort">

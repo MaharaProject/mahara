@@ -45,7 +45,7 @@
   <div id="{$prefix}_upload_messages"></div>
   {if $config.uploadagreement}
   <div id="{$prefix}_agreement" class="uploadform">
-    <label>{str tag='uploadfile' section='artefact.file'}</label>
+    <label for="{$prefix}_notice">{str tag='uploadfile' section='artefact.file'}</label>
       <input type="checkbox" name="{$prefix}_notice" id="{$prefix}_notice" />
       {$agreementtext|clean_html|safe}
   </div>

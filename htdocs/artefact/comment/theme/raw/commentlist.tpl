@@ -56,7 +56,7 @@
       {else}
         {strip}
         {foreach $item->attachments item=a name=attachments}
-          {if $.foreach.attachments.first}<label>{str tag=Attachments section=artefact.comment}:</label>{else},{/if} <span class="attachment"><a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle}</a> <span class="attachsize">({$a->attachsize})</span></span>
+          {if $.foreach.attachments.first}<strong>{str tag=Attachments section=artefact.comment}:</strong>{else},{/if} <span class="attachment"><a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">{$a->attachtitle}</a> <span class="attachsize">({$a->attachsize})</span></span>
         {/foreach}
         {/strip}
       {/if}</div>

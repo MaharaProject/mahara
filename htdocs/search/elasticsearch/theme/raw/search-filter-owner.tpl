@@ -10,7 +10,7 @@
 *}
 <div id="universalsearch-filter-owner">
     <input type="hidden" id="search-filter-owner-url" value="{$WWWROOT}search/elasticsearch/index.php?query={$query}&mainfacetterm={$selected}&secfacetterm={$contentfilterselected}&license={$license}&sort={$sort}{if $tagsonly}&tagsonly=true{/if}&limit={$limit}" />
-    <label>
+    <label for="search-filter-owner">
         {if $selected eq 'Text' || $selected eq 'Media' || $selected eq 'Portfolio'}
             {str tag=owner section=search.elasticsearch}:
         {else}

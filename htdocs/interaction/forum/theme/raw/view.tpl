@@ -67,7 +67,7 @@
 </div>
 
 <div class="forumfooter">
-	<label>{str tag="groupadminlist" section="interaction.forum"}</label>
+	<strong>{str tag="groupadminlist" section="interaction.forum"}</strong>
 	{foreach from=$groupadmins item=groupadmin}
     <span class="s inlinelist">
         <a href="{profile_url($groupadmin)}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupadmin}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></a>
@@ -76,7 +76,7 @@
     {/foreach}
 	{if $moderators}
     <div>
-    <label>{str tag="moderatorslist" section="interaction.forum"}</label>
+    <strong>{str tag="moderatorslist" section="interaction.forum"}</strong>
         {foreach from=$moderators item=mod}
         <span class="s inlinelist">
             <a href="{profile_url($mod)}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt=""></a>

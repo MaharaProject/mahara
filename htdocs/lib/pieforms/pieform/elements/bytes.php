@@ -73,8 +73,8 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
         $numberinput .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }
     $numberinput .= ">\n";
-
-    $uselect = '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
+    $uselect = '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden">' . get_string('units') . '</label>';
+    $uselect .= '<select name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';
     }

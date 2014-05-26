@@ -1035,20 +1035,25 @@ EOF;
      * Element IDs are used for <label>s, so use this method to ensure that
      * an element gets an ID.
      *
-     * The element's existing 'id' and 'name' attributes are checked first. If
-     * they are not specified, a random ID is created
+     * The element is assigned a random ID. Then overridden by 'name' and/or 'id'
+     * if they are specified. If formname is required this is prepended to the string.
      *
      * @param array $element The element to make an ID for
+     * @param bool           Add the form name to the element ID string
      * @return string        The ID for the element
      */
-    public function make_id($element) {/*{{{*/
-        if (isset($element['id'])) {
-            return self::hsc($element['id']);
-        }
+    public function make_id($element, $formname = false) {/*{{{*/
+        $elementid = 'a' . substr(md5(mt_rand()), 0, 4);
         if (isset($element['name'])) {
-            return self::hsc($element['name']);
+            $elementid = self::hsc($element['name']);
         }
-        return 'a' . substr(md5(mt_rand()), 0, 4);
+        if (isset($element['id'])) {
+            $elementid = self::hsc($element['id']);
+        }
+        if ($formname) {
+            $elementid = $this->name . '_' . $elementid;
+        }
+        return $elementid;
     }/*}}}*/
 
     /**
@@ -1447,9 +1452,10 @@ EOF;
             else {
                 $labelclass = '';
             }
-
-            if (!empty($element['nolabel'])) {
-                // Don't bother with a label for the element
+            $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes');
+            if (!empty($element['nolabel']) || in_array($element['type'], $nolabeltypes)) {
+                // Don't bother with a label for the element.
+                // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).
                 $element['labelhtml'] = $title . $requiredmarker;
             }
             else {

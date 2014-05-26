@@ -80,6 +80,8 @@ $searchform = array(
 $searchform['elements']['query'] = array(
     'type' => 'text',
     'defaultvalue' => $query,
+    'title'        => get_string('pagetitle', 'search.elasticsearch'),
+    'hiddenlabel'  => true,
 );
 $searchform['elements']['submit'] = array(
     'type' => 'submit',
@@ -88,7 +90,7 @@ $searchform['elements']['submit'] = array(
 $searchform['elements']['tagsonly'] = array(
     'type'         => 'checkbox',
     'value'        => (isset($options['tagsonly']) && $options['tagsonly'] == true) ? true : false,
-    'posthtml'     => get_string('tagsonly', 'search.elasticsearch'),
+    'title'        => get_string('tagsonly', 'search.elasticsearch'),
 );
 
 $searchform = pieform($searchform);

@@ -21,7 +21,7 @@
             </a></li>
 {/if}
 {if $sbdata.groups}
-            <li id="groups"><label><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></label>
+            <li id="groups"><strong><a href="{$WWWROOT}group/mygroups.php">{str tag="mygroups"}:</a></strong>
                 <ul>
 {foreach from=$sbdata.groups item=group}
                     <li><a href="{group_homepage_url($group)}">{$group->name}</a>{if $group->role == 'admin'} ({str tag=Admin section=group}){/if}</li>
@@ -29,7 +29,7 @@
                 </ul></li>
 {/if}
 {if $sbdata.views}
-            <li id="views"><label><a href="{$WWWROOT}view/">{str tag="views"}:</a></label>
+            <li id="views"><strong><a href="{$WWWROOT}view/">{str tag="views"}:</a></strong>
                 <ul>
 {foreach from=$sbdata.views item=view}
                     <li><a href="{$view->fullurl}">{$view->title}</a></li>
@@ -39,11 +39,13 @@
 {/if}
 {if $sbdata.artefacts}
             <li class="artefacts">
-                <label>{str tag="Artefacts"}:</label>
+                <strong>{str tag="Artefacts"}:</strong>
                 <ul>
 {foreach from=$sbdata.artefacts item=artefact}
 {if $artefact->artefacttype == 'blog'}
                     <li><a href="{$WWWROOT}artefact/blog/view/index.php?id={$artefact->id}">{$artefact->title}</a></li>
+{elseif $artefact->artefacttype == 'blogpost'}
+                    <li><a href="{$WWWROOT}artefact/blog/view/index.php?id={$artefact->blogid}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image' || $artefact->artefacttype == 'profileicon' || $artefact->artefacttype == 'archive'}
                     <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title}</a></li>
 {elseif $artefact->artefacttype == 'folder'}

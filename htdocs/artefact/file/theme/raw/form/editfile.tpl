@@ -9,17 +9,17 @@
             </th>
           </tr>
           <tr class="required">
-            <th><label>{str tag=name}</label> <span class="requiredmarker">*</span></th>
+            <th><label for="{$prefix}_edit_title">{str tag=name}</label> <span class="requiredmarker">*</span></th>
             <td><input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" /></td>
           </tr>
           {if $fileinfo->artefacttype != 'profileicon'}
           <tr>
-            <th><label>{str tag=description}</label></th>
+            <th><label for="{$prefix}_edit_description">{str tag=description}</label></th>
             <td><input type="text" class="text" name="{$prefix}_edit_description" id="{$prefix}_edit_description" value="{$fileinfo->description}" size="40" /></td>
           </tr>
           {/if}
           <tr class="tags">
-            <th><label>{str tag=tags}</label></th>
+            <th><label for="{$prefix}_edit_tags">{str tag=tags}</label></th>
             <td>
               <input name="{$prefix}_edit_tags" size="40" id="{$prefix}_edit_tags" value="{foreach from=$fileinfo->tags item=tag name=tags}{if !$.foreach.tags.first}, {/if}{$tag}{/foreach}" />
               <span>{contextualhelp plugintype='artefact' pluginname='file' section='tags'}</span>
@@ -31,7 +31,7 @@
           </tr>
 {if $groupinfo}
           <tr>
-            <th><label>{str tag=Permissions}</label></th>
+            <th><strong>{str tag=Permissions}</strong></th>
             <td>
               <table class="editpermissions">
                 <tbody>
@@ -46,9 +46,11 @@
                     <td>{$role->display}</td>
     {foreach from=$groupinfo.perm item=whocares key=permid}
       {if $fileinfo}
-                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permid}"{if $fileinfo->permissions.$r.$permid} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
+                    <td><label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label>
+                        <input type="checkbox" class="permission" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}"{if $fileinfo->permissions.$r.$permid} checked{/if}{if $r == 'admin'} disabled{/if} /></td>
       {else}
-                    <td><input type="checkbox" class="permission" name="{$prefix}_permission:{$r}:{$permid}" {if $r == 'admin'} checked disabled{/if}/></td>
+                    <td><label for="{$prefix}_permission_{$r}_{$permid}">{str tag=changerolepermissions section=group arg1=$permid arg2=$r}</label>
+                        <input type="checkbox" class="permission" id="{$prefix}_permission_{$r}_{$permid}" name="{$prefix}_permission:{$r}:{$permid}" {if $r == 'admin'} checked disabled{/if}/></td>
       {/if}
     {/foreach}
                   </tr>
@@ -60,7 +62,7 @@
 {/if}
           {license_form_files($prefix, 'edit')}
           <tr>
-            <th><label>{str tag=allowcomments section=artefact.comment}</label></th>
+            <th><label for="{$prefix}_edit_allowcomments">{str tag=allowcomments section=artefact.comment}</label></th>
             <td><input type="checkbox" name="{$prefix}_edit_allowcomments" id="{$prefix}_edit_allowcomments" {if $fileinfo->allowcomments}checked {/if}/></td>
           </tr>
           <tr>

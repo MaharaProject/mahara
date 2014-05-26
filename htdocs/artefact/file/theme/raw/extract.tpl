@@ -4,16 +4,16 @@
   <h5>{$file->get('title')}</h5>
   {if $zipinfo}
   <p>
-      <span><label>{str tag=Files section=artefact.file}:</label> {$zipinfo->files}&nbsp;</span>
-      <span><label>{str tag=Folders section=artefact.file}:</label> {$zipinfo->folders}</span>
-      <span><label>{str tag=spacerequired section=artefact.file}:</label> {$zipinfo->displaysize}</span>
+      <span><strong>{str tag=Files section=artefact.file}:</strong> {$zipinfo->files}&nbsp;</span>
+      <span><strong>{str tag=Folders section=artefact.file}:</strong> {$zipinfo->folders}</span>
+      <span><strong>{str tag=spacerequired section=artefact.file}:</strong> {$zipinfo->displaysize}</span>
   </p>
   {/if}
   <p>{$message}</p>
   {if $zipinfo}
   {$form|safe}
   <p>
-      <div><label>{str tag=Contents section=artefact.file}:</label></div>
+      <div><strong>{str tag=Contents section=artefact.file}:</strong></div>
 {foreach from=$zipinfo->names item=name}
       <div>{$name}</div>
 {/foreach}

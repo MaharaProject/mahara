@@ -39,7 +39,7 @@
                 <div class="detail">{$collection->description}</div>
 
                 <div class="detail">
-                    <label>{str tag=Views section=view}:</label>
+                    <strong>{str tag=Views section=view}:</strong>
                     {if $collection->views}
                         {foreach from=$collection->views item=view name=cviews}
                             <a href="{$view->fullurl}">{$view->title}</a>{if !$.foreach.cviews.last}, {/if}

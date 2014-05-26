@@ -18,7 +18,7 @@
 
 {if $relationship == 'pending'}
                     	<div class="message attentionmessage">
-                            <label>{str tag='whymakemeyourfriend' section='group'}</label>: {$message}
+                            <strong>{str tag='whymakemeyourfriend' section='group'}</strong> {$message}
                             <div class="attentionform">
                               {$acceptform|safe}
                               <a class="btn" id="approve_deny_friendrequest_deny" href="{$WWWROOT}user/denyrequest.php?id={$USERID}&returnto=view">{str tag=denyrequest section=group}</a>
@@ -44,14 +44,14 @@
 {/if}
                     </div>
 {if $invitedlist}
-						<span class="invitedtojoin"><label>{str tag=groupinvitesfrom section=group}</label> {$invitedlist}</span>
+						<span class="invitedtojoin"><strong>{str tag=groupinvitesfrom section=group}</strong> {$invitedlist}</span>
 {/if}
 {if $inviteform}
 						<span class="addform">{$inviteform|safe}</span>
 {/if}
 
 {if $requestedlist}
-						<span class="requestedmembership"><label>{str tag=requestedmembershipin section=group}</label> {$requestedlist}
+						<span class="requestedmembership"><strong>{str tag=requestedmembershipin section=group}</strong> {$requestedlist}
 {/if}
 {if $addform}
 						<span class="addform">{$addform|safe}</span>

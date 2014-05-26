@@ -52,6 +52,7 @@ function pieform_element_emaillist(Pieform $form, $element) {
         $smarty->assign('default', $value['default']);
     }
 
+    $smarty->assign('form', $form->get_name());
     $smarty->assign('name', $element['name']);
     $smarty->assign('title', $element['title']);
     $smarty->assign('addbuttonstr', get_string('addbutton', 'artefact.internal'));

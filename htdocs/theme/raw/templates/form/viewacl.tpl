@@ -7,7 +7,8 @@
   <fieldset id="viewacl-advanced" class="collapsible collapsed">
     <legend><a href="" id="viewacl-advanced-show">{{str tag=otherusersandgroups section=view}}</a></legend>
       <div class="viewacl-advanced-search">
-        <label>{{str tag=search}}</label>
+        <label for="search">{{str tag=search}}</label>
+        <label class="accessible-hidden" for="type">{{str tag=searchtype}}</label>
         <select name="type" id="type">
           <option value="friend" selected="selected">{{str tag=friends section=view}}</option>
           <option value="group">{{str tag=groups}}</option>

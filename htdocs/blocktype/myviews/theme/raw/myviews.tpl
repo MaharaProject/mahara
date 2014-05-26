@@ -7,7 +7,7 @@
                   <div class="detail">{$item.description|str_shorten_html:100:true|strip_tags|safe}</div>
                 {/if}
                 {if $item.tags}
-                  <div class="tags"><label>{str tag=tags}:</label> {list_tags owner=$item.owner tags=$item.tags}</div>
+                  <div class="tags"><strong>{str tag=tags}:</strong> {list_tags owner=$item.owner tags=$item.tags}</div>
                 {/if}
             </div>
     {/foreach}
