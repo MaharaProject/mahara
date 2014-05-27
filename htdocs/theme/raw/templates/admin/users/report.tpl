@@ -24,7 +24,7 @@
   {if $csv}
   <div class="fr">
     <span class="bulkaction-title">{str tag=exportusersascsv section=admin}:</span>
-    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin}</a>
+    <a href="{$WWWROOT}download.php" target="_blank">{str tag=Download section=admin} <span class="accessible-hidden">{str tag=downloadusersascsv section=admin}</span></a>
   </div>
   {/if}
   <h2>{str tag=selectedusers section=admin} ({count($users)})</h2>
