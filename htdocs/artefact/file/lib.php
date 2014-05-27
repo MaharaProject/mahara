@@ -2307,6 +2307,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
                 // set the file extension for later use (eg by flowplayer)
                 $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
+                $this->data['template']->oldextension = $this->data['template']->extension;
 
                 if (substr($name, -1) == '/') {
                     $this->create_folder($folder);
@@ -2353,6 +2354,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
                 // set the file extension for later use (eg by flowplayer)
                 $this->data['template']->extension = pathinfo($this->data['template']->title, PATHINFO_EXTENSION);
+                $this->data['template']->oldextension = $this->data['template']->extension;
 
                 if (substr($name, -1) != '/') {
                     $h = fopen($tempfile, 'w');
