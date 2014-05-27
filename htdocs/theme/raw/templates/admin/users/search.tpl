@@ -1,26 +1,27 @@
 {include file="header.tpl"}
 
     <p>{str tag="usersearchinstructions" section="admin"}</p>
+    <span class="accessible-hidden" tabindex="0">{str tag="filterresultsby"}</span>
     <div id="initials">
         <div id="firstnamelist">
-          <strong>{str tag="firstname"}:</strong>
+          <strong id="firstname">{str tag="firstname"}:</strong>
            <span class="first-initial{if !$search->f} selected{/if} all">
-            <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+            <a aria-labelledby="firstname" aria-label="{str tag="firstnameall"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
            </span>
            {foreach from=$alphabet item=a}
            <span class="first-initial{if $a == $search->f} selected{/if}">
-            <a href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+            <a aria-labelledby="firstname" aria-label="{str tag="firstname"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
            </span>
            {/foreach}
         </div>
         <div id="lastnamelist">
-          <strong>{str tag="lastname"}:</strong>
+          <strong id="lastname">{str tag="lastname"}:</strong>
            <span class="last-initial{if !$search->l} selected{/if} all">
-            <a href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
+            <a aria-labelledby="lastname" aria-label="{str tag="lastnameall"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
            </span>
            {foreach from=$alphabet item=a}
            <span class="last-initial{if $a == $search->l} selected{/if}">
-            <a href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
+            <a aria-labelledby="lastname" aria-label="{str tag="lastname"}" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
            </span>
            {/foreach}
         </div>
