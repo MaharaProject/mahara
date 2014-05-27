@@ -104,6 +104,9 @@
                             </a>
                         {else}
                             {$c.name}
+                            {if $c.accessible}
+                                <span class="accessible-hidden">{$c.accessible}</span>
+                            {/if}
                         {/if}
                         {if $c.help}
                             {$c.helplink|safe}

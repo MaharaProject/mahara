@@ -410,6 +410,8 @@ $string['mustspecifyoldpassword'] = 'You must specify your current password.';
 $string['Site'] = 'Site';
 
 // Misc. register stuff that could be used elsewhere
+$string['profileicon'] = 'Profile image';
+$string['bulkselect'] = 'Select users for editing / reports';
 $string['emailaddress'] = 'Email address';
 $string['emailaddressdescription'] = ' ';
 $string['firstname'] = 'First name';
