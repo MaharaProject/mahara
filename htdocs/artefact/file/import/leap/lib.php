@@ -459,7 +459,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         else {
             $usr = $importer->get('usrobj');
         }
-
+        $data->oldextension = end(explode('.', $data->title));
         // This API sucks, but that's not my problem
         if (!$id = ArtefactTypeFile::save_file($data->pathname, $data, $usr, true)) {
             $importer->trace("WARNING: the file for entry $entryid does not exist in the import (path={$data->pathname})");

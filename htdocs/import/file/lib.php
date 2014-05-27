@@ -99,6 +99,7 @@ class PluginImportFile extends PluginImport {
             try {
                 $data = (object)array(
                     'title' => $f->wantsfilename,
+                    'oldextension' => end(explode('.', $f->wantsfilename)),
                     'description' => $f->wantsfilename . ' (' . get_string('importedfrom', 'mahara', $this->get('importertransport')->get_description()) . ')',
                     'parent' => $this->importdir,
                     'owner' => $this->get('usr'),
