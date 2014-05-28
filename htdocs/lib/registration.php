@@ -513,12 +513,12 @@ function user_statistics($limit, $offset, &$sitedata) {
     $meanfriends = 2 * count_records('usr_friend') / $sitedata['users'];
     if ($maxfriends) {
         $data['strmaxfriends'] = get_string(
-            'statsmaxfriends',
+            'statsmaxfriends1',
             'admin',
+            $maxfriends->friends,
             round($meanfriends, 1),
             profile_url($maxfriends),
-            hsc(display_name($maxfriends, null, true)),
-            $maxfriends->friends
+            hsc(display_name($maxfriends, null, true))
         );
     }
     else {
@@ -534,12 +534,12 @@ function user_statistics($limit, $offset, &$sitedata) {
     $maxviews = $maxviews[0];
     if ($maxviews) {
         $data['strmaxviews'] = get_string(
-            'statsmaxviews',
+            'statsmaxviews1',
             'admin',
+            $maxviews->views,
             $sitedata['viewsperuser'],
             profile_url($maxviews),
-            hsc(display_name($maxviews, null, true)),
-            $maxviews->views
+            hsc(display_name($maxviews, null, true))
         );
     }
     else {
@@ -555,12 +555,12 @@ function user_statistics($limit, $offset, &$sitedata) {
     $maxgroups = $maxgroups[0];
     if ($maxgroups) {
         $data['strmaxgroups'] = get_string(
-            'statsmaxgroups',
+            'statsmaxgroups1',
             'admin',
+            $maxgroups->groups,
             $sitedata['groupmemberaverage'],
             profile_url($maxgroups),
-            hsc(display_name($maxgroups, null, true)),
-            $maxgroups->groups
+            hsc(display_name($maxgroups, null, true))
         );
     }
     else {
@@ -574,7 +574,7 @@ function user_statistics($limit, $offset, &$sitedata) {
         LIMIT 1", array());
     $maxquotaused = $maxquotaused[0];
     $data['strmaxquotaused'] = get_string(
-        'statsmaxquotaused',
+        'statsmaxquotaused1',
         'admin',
         display_size(get_field('usr', 'AVG(quotaused)', 'deleted', 0)),
         profile_url($maxquotaused),
@@ -736,7 +736,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
                 ) tmp', array_merge($institutiondata['members'], $institutiondata['members'])) / $institutiondata['users'];
     if ($maxfriends) {
         $data['strmaxfriends'] = get_string(
-            'statsmaxfriends',
+            'statsmaxfriends1',
             'admin',
             round($meanfriends, 1),
             profile_url($maxfriends),
@@ -757,7 +757,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     $maxviews = $maxviews[0];
     if ($maxviews) {
         $data['strmaxviews'] = get_string(
-            'statsmaxviews',
+            'statsmaxviews1',
             'admin',
             $institutiondata['viewsperuser'],
             profile_url($maxviews),
@@ -778,7 +778,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
     $maxgroups = $maxgroups[0];
     if ($maxgroups) {
         $data['strmaxgroups'] = get_string(
-            'statsmaxgroups',
+            'statsmaxgroups1',
             'admin',
             $institutiondata['groupmemberaverage'],
             profile_url($maxgroups),
@@ -802,7 +802,7 @@ function institution_user_statistics($limit, $offset, &$institutiondata) {
         WHERE id IN (" . join(',', array_fill(0, $institutiondata['users'], '?')) . ")
         ", $institutiondata['members']);
     $data['strmaxquotaused'] = get_string(
-        'statsmaxquotaused',
+        'statsmaxquotaused1',
         'admin',
         display_size($avgquota),
         profile_url($maxquotaused),
