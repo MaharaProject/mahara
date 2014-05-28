@@ -666,22 +666,21 @@ function auth_get_auth_instances_for_institution($institution=null) {
  * @return  array   array of record objects
  */
 function auth_get_auth_instances_for_wwwroot($wwwroot) {
-
-    // TODO: we just need ai.id and ai.authname... rewrite query, or
-    // just drop this function
     $query = "  SELECT
-                    ai.*,
-                    aic.*,
-                    i.*
+                    ai.id,
+                    ai.authname,
+                    i.id as institutionid,
+                    i.displayname,
+                    i.suspended
                 FROM
-                    {auth_instance} ai,
-                    {auth_instance_config} aic,
-                    {institution} i
+                    {auth_instance} ai
+                    INNER JOIN {institution} i
+                        ON ai.institution = i.name
+                    INNER JOIN {auth_instance_config} aic
+                        ON aic.field = 'wwwroot'
+                        AND aic.instance = ai.id
                 WHERE
-                    aic.field = 'wwwroot' AND
-                    aic.value = ? AND
-                    aic.instance = ai.id AND
-                    i.name = ai.institution";
+                    aic.value = ?";
 
     return get_records_sql_array($query, array('value' => $wwwroot));
 }
