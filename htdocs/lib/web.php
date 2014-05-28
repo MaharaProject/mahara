@@ -3535,7 +3535,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  * @param array $params Options for the pagination
  */
 function build_pagination($params) {
-    $limitoptions = array(10, 20, 50, 100, 500);
+    $limitoptions = array(1, 10, 20, 50, 100, 500);
     // Bail if the required attributes are not present
     $required = array('url', 'count', 'limit', 'offset');
     foreach ($required as $option) {

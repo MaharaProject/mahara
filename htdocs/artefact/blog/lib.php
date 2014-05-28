@@ -697,6 +697,43 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /**
+     * This function returns the blog id and offset for a given post.
+     *
+     * @param integer $postid The id of the required blog post
+     * @return object An object containing the required data
+     */
+    public static function get_post_data($postid) {
+        $post = new stdClass();
+
+        $post->blogid = get_field('artefact', 'parent', 'id', $postid, 'artefacttype', 'blogpost');
+
+        if (is_postgres()) {
+            $rownum = get_field_sql("SELECT rownum
+                                    FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY id DESC) AS rownum
+                                        FROM {artefact}
+                                        WHERE parent = ?
+                                        ORDER BY id DESC) AS posts
+                                    WHERE id = ?",
+                    array($post->blogid, $postid));
+        }
+        else if (is_mysql()) {
+            $initvar = execute_sql("SET @row_num = 0");
+            if ($initvar) {
+                $rownum = get_field_sql("SELECT rownum
+                                        FROM (SELECT id, @row_num := @row_num + 1 AS rownum
+                                            FROM {artefact}
+                                            WHERE parent = ?
+                                            ORDER BY id DESC) AS posts
+                                        WHERE id = ?",
+                        array($post->blogid, $postid));
+            }
+        }
+        $post->offset = $rownum - 1;
+
+        return $post;
+    }
+
+    /**
      * This function returns a list of posts in a given blog.
      *
      * @param integer
@@ -824,6 +861,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'jsonscript' => $pagination['jsonscript'],
                 'count' => $posts['count'],
                 'limit' => $posts['limit'],
+                'setlimit' => $pagination['setlimit'],
                 'offset' => $posts['offset'],
                 'numbersincludefirstlast' => false,
                 'resultcounttextsingular' => get_string('post', 'artefact.blog'),
@@ -968,7 +1006,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $wwwroot = get_config('wwwroot');
 
         return array(
-            '_default'                                  => $wwwroot . 'artefact/blog/post.php?blogpost=' . $id,
+            '_default' => $wwwroot . 'artefact/blog/view/index.php?blogpost=' . $id,
         );
     }
 
