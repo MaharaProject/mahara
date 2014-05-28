@@ -71,7 +71,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
     $result .= ' class="' . implode(' ', $classes) . '"';
     $result .= ">\n";
     if (isset($element['legend'])) {
-        $result .= '<legend>';
+        $result .= '<legend><h4>';
         if (!empty($element['collapsible'])) {
             $result .= '<a href="">' . Pieform::hsc($element['legend']) . '</a>';
             if (isset($openparam)) {
@@ -92,7 +92,7 @@ function pieform_element_fieldset(Pieform $form, $element) {/*{{{*/
                 $result .= '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
         }
-        $result .= "</legend>\n";
+        $result .= "</h4></legend>\n";
     }
 
     foreach ($element['elements'] as $subname => $subelement) {
@@ -118,14 +118,15 @@ function pieform_update_legends(element) {
             return;
         }
         var legend = getFirstElementByTagAndClassName('legend', null, fieldset);
-        if (legend.firstChild.tagName == 'A') {
-            connect(legend.firstChild, 'onclick', function(e) {
+        var legendh4 = getFirstElementByTagAndClassName('h4', null, legend);
+        if (legendh4.firstChild.tagName == 'A') {
+            connect(legendh4.firstChild, 'onclick', function(e) {
                 toggleElementClass('collapsed', fieldset);
                 var isCollapsed = hasElementClass(fieldset, 'collapsed');
                 if (!isCollapsed) {
                     jQuery(fieldset).find(':input').not('.open-fieldset-input').first().focus();
                 }
-                var input = getFirstElementByTagAndClassName('input', 'open-fieldset-input', legend);
+                var input = getFirstElementByTagAndClassName('input', 'open-fieldset-input', legendh4);
                 if (input) {
                     input.value = !isCollapsed;
                 }

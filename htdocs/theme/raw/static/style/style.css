@@ -623,6 +623,10 @@ legend {
     font-weight: bold;
     font-size: 1.333em;
 }
+legend h4 {
+    font-size: 1em;
+    margin: 0;
+}
 fieldset.collapsible legend {
     font-size: 1.167em;
 }
