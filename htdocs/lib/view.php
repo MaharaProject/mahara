@@ -4633,6 +4633,9 @@ class View {
         else if ($this->group) {
             return group_homepage_url($this->get_group_object());
         }
+        else if ($this->institution) {
+            return get_config('wwwroot') . 'institution/index.php?institution=' . $this->institution;
+        }
         return null;
     }
 
@@ -4674,6 +4677,36 @@ class View {
     }
 
     public function display_author() {
+        $view = null;
+
+        if (!empty($this->owner)) {
+            $userobj = new User();
+            $userobj->find_by_id($this->owner);
+            $view = $userobj->get_profile_view();
+
+            // Hide author if profile isn't visible to user
+            if (!$view || !can_view_view($view)) {
+                return null;
+            }
+        }
+        else if (!empty($this->group)) {
+            $view = group_get_homepage_view($this->group);
+
+            // Hide author if profile isn't visible to user
+            if (!$view || !can_view_view($view)) {
+                return null;
+            }
+        }
+        else if (!empty($this->institution)) {
+            global $USER;
+            if (!$USER->is_logged_in() || (
+                    !get_field('institution', 'registerallowed', 'name', $this->institution) &&
+                    !$USER->in_institution($this->institution) &&
+                    !$USER->get('admin'))) {
+                return null;
+            }
+        }
+
         $ownername = hsc($this->formatted_owner());
         $ownerlink = hsc($this->owner_link());
         return get_string('viewauthor', 'view', $ownerlink, $ownername);
