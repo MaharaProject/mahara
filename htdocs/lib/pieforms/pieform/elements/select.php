@@ -27,6 +27,43 @@
 /**
  * Renders a dropdown list, including support for multiple choices.
  *
+ * Configuration options:
+ *
+ * In addition to the standard pieform element configuration options, the select element
+ * can take these. Each one must include an "options", "optgroups", or "optionurl"
+ * parameter, because otherwise it won't have any options.
+ *
+ * - "options" (array): The list of items in the menu. A little confusingly, the array key
+ * for each array entry is used as the "value" attribute for the <option> tag. Each array
+ * value should usually be a string, in which case it will be displayed as the text between
+ * the <option> tags. Or for more advanced functionality each array value can be an array
+ * with these keys:
+ * --- "value": The string to display inside the <option> tags
+ * --- "disabled" (boolean default false): Set to true to disable this option
+ * --- "style": CSS styling to set on this option
+ * --- "label": sets a "label" attribute on the <option> tag
+ *
+ * - "optgroups" (array of arrays): Provide this INSTEAD of "options" if you want to use
+ * optgroups. This should be an array of arrays. Each entry in the array represents an
+ * optgroup (the key is ignored). Each optgroup array should contain an item with the
+ * key "label", which will be the user-displayed label, and an item with the key "options",
+ * which should be a list of options to go in that outgroup, with the same format as a
+ * standard "options" array.
+ *
+ * - "multiple" (boolean, default false): Indicates whether to allow multiple items to be selected
+ *
+ * - "collapseifoneoption" (boolean, default true): If there's only one option, print it as a string
+ * instead of as a menu.
+ *
+ * - "allowother" (boolean, default false): Says to add an "other" free text field to the menu. If there
+ * is a menu option with value "other", then selecting this will display the free text
+ * field. If there is no menu option with value "other", one will be added to the option
+ * list.
+ *
+ * - "width" (deprecated): How wide to make this select element in pixels. Better to do this with CSS.
+ *
+ * - "height" (deprecated): How tall to make this select element in pixels. Better to do this with CSS.
+ *
  * @todo Currently, putting a junk defaultvalue/value for a multiple select
  * does not trigger any kind of error, it should perhaps trigger a
  * Pieform::info
