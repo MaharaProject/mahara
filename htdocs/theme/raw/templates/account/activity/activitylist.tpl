@@ -9,9 +9,11 @@
     </td>
     <td>
   {if $item->message}
-      <a href="" onclick="showHideMessage({$item->id}); return false;" class="inbox-showmessage{if !$item->read} unread{/if}">{if !$item->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$item->subject}</a>
+      <a href="" onclick="showHideMessage({$item->id}); return false;" class="inbox-showmessage{if !$item->read} unread{/if}">{if !$item->read}<span class="accessible-hidden">{str tag=unread section=activity}: </span>{/if}{$item->subject} <span class="accessible-hidden">{str tag=clickformore}</span></a>
       <div id="message-{$item->id}" class="hidden inbox-message">{$item->message|safe}
-      {if $item->url}<br><a href="{$WWWROOT}{$item->url}">{if $item->urltext}{$item->urltext} &raquo;{else}{str tag="more..."}{/if}</a>{/if}
+      {if $item->url}<br>
+          <a href="{$WWWROOT}{$item->url}">{if $item->urltext}{str tag=goto arg1=$item->urltext}{else}{str tag=gotomore}{/if}</a>
+      {/if}
       </div>
   {elseif $item->url}
       <a href="{$WWWROOT}{$item->url}">{$item->subject}</a>

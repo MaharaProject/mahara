@@ -15,12 +15,9 @@
     <tr class="{cycle values='r0,r1'}">
       <td class="notetitle">
       {if $n->locked}
-        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h3>
+        <h3 class="title"><a class="notetitle" href="" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>
       {else}
-        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true}</a></h3>
-      {/if}
-      {if $n->tags}
-        <div class="tags">{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
+        <h3 class="title"><a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">{$n->title|str_shorten_text:80:true} <span class="accessible-hidden">{str tag=clickformore}</span></a></h3>
       {/if}
        <div id="n{$n->id}_desc" class="hidden detail">{$n->description|clean_html|safe}
             {if $n->files}
@@ -50,8 +47,11 @@
                     </tbody>
                 </table>
             </div>
-        {/if}
-        </div>
+            {/if}
+       </div>
+      {if $n->tags}
+        <div class="tags">{str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}</div>
+      {/if}
       </td>
       <td>
       {foreach from=$n->blocks item=b}
