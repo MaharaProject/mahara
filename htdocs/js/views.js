@@ -26,8 +26,11 @@
     ViewManager.isOldIE = $.browser.msie && $.browser.version < 9.0;
     ViewManager.contentEditorWidth = 145;
     ViewManager.isMobile = config['handheld_device'] || (navigator.userAgent.match(/iPhone/i))
-                           || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i));
-    // Whether the brower is iPhone, IPad or IPod
+                           || (navigator.userAgent.match(/iPod/i))
+                           || (navigator.userAgent.match(/iPad/i))
+                           || (navigator.platform.toLowerCase().indexOf("win") !== -1 && navigator.userAgent.toLowerCase().indexOf("touch") !== -1)
+                           || (navigator.platform.toLowerCase().indexOf("win") !== -1 && navigator.userAgent.indexOf("ARM") !== -1);
+    // Whether the brower is iPhone, IPad, IPod, Windows 8 Tablet or using Windows RT
     if (ViewManager.isMobile) {
         ViewManager.contentEditorWidth = 175;
     }
