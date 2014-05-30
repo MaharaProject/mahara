@@ -1529,7 +1529,7 @@ function plugin_types_installed() {
 function plugins_installed($plugintype, $all=false) {
     static $records = array();
 
-    if (defined('INSTALLER') || !isset($records[$plugintype][true])) {
+    if (defined('INSTALLER') || defined('TESTSRUNNING') || !isset($records[$plugintype][true])) {
 
         $sort = $plugintype == 'blocktype' ? 'artefactplugin,name' : 'name';
 

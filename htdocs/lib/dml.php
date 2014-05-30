@@ -1768,6 +1768,8 @@ function db_create_trigger($name, $time, $event, $table, $body) {
     if ($time != 'AFTER' || ($event != 'INSERT' && $event != 'UPDATE' && $event != 'DELETE')) {
         throw new SQLException("db_create_trigger() not implemented for $time $event");
     }
+    // Delete the trigger first, in case it already exists.
+    db_drop_trigger($name, $table);
     if (is_postgres()) {
         $functionname = $name . '_function';
         $triggername  = $name . '_trigger';
