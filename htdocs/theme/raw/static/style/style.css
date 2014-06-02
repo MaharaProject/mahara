@@ -4158,6 +4158,13 @@ ul.searchtab li span.inactive {
     top: 5px;
     right: 5px;
 }
+.wall ul {
+    margin: 0;
+}
+li.wallpost {
+    list-style-type: none;
+    margin: 0;
+}
 .wallpost .userinfo {
     margin: 3px 30px;
 }

@@ -180,7 +180,7 @@ function wallpost_success(form, data) {
         var wall = getFirstElementByTagAndClassName('div', 'wall', 'blockinstance_' + data.block);
         var temp = DIV();
         temp.innerHTML = data.posts;
-        newposts = getElementsByTagAndClassName('div', 'wallpost', temp);
+        newposts = getElementsByTagAndClassName('li', 'wallpost', temp);
         replaceChildNodes(wall, newposts);
         if ($('wallpost_' + data.block + '_text')) {
             $('wallpost_' + data.block + '_text').value = '';
