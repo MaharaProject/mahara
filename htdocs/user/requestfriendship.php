@@ -52,7 +52,8 @@ $form = pieform(array(
     'elements' => array(
         'message' => array(
             'type'  => 'textarea',
-            'title' => get_string('message'),
+            'title' => get_string('messageoptional'),
+            'labelescaped' => true,
             'cols'  => 50,
             'rows'  => 4,
         ),

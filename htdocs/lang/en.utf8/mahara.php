@@ -574,6 +574,7 @@ $string['email']                    = 'Email';
 $string['emails']                    = 'Emails';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
+$string['messageoptional']          = 'Message <span class="accessible-hidden">(optional)</span>';
 $string['messagesent']              = 'Your message has been sent';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
