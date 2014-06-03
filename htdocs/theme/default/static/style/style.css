@@ -1296,6 +1296,9 @@ table.mceLayout td.mceToolbar td {
         display: block;
         margin-bottom: 10px;
     }
+    #right-nav li.settings {
+        border-left: none;
+    }
     #usf {
         float: none;
         clear: both;

@@ -29,7 +29,7 @@
              displaying them on your site to spread the word! -->
         <div id="footer-nav">
         {foreach from=$FOOTERMENU item=item name=footermenu}
-          {if !$.foreach.footermenu.first}| {/if}<a href="{$item.url}">{$item.title}</a>
+          {if !$.foreach.footermenu.first}<span class="bar-before">{/if}<a href="{$item.url}">{$item.title}</a>{if !$.foreach.footermenu.first}</span>{/if}
         {/foreach}
         </div>
         <!-- there is a div id="performance-info" wrapping this -->{mahara_performance_info}
