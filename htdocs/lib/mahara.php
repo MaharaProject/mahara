@@ -3617,10 +3617,14 @@ function generate_csv($data, $csvfields) {
 function check_case_sensitive($a, $table) {
     if (is_mysql()) {
         $db = get_config('dbname');
-        $result = recordset_to_array(get_recordset_sql("SHOW TABLE STATUS IN `$db` WHERE Name = ?", array($table)));
-        if (preg_match('/_ci/', $result[0]->Collation)) {
+        $table = get_config('dbprefix') . $table;
+        $result = get_records_sql_array("SHOW TABLE STATUS IN `$db` WHERE Name = ?", array($table));
+        if (is_array($result) && count($result) === 1 && preg_match('/_ci/', $result[0]->Collation)) {
             $b = array_unique(array_map('strtolower', $a));
             $a = array_intersect_key($a, array_flip(array_keys($b)));
+        }
+        else {
+            throw new SQLException($table . " is not found or can not be accessed, check log for errors.");
         }
     }
     return $a;
