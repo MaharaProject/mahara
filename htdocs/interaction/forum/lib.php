@@ -1121,7 +1121,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
         $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
         return get_string_from_language(
-            $user->lang, 'objectionablecontentviewtext', 'interaction.forum',
+            $user->lang, 'objectionablecontentposttext', 'interaction.forum',
             $post->topicsubject, display_default_name($this->reporter), $ctime,
             $this->message, $post->posttime, $post->textbody, get_config('wwwroot') . $this->url, $reporterurl
         );
